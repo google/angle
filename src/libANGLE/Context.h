@@ -34,6 +34,7 @@ class Renderer;
 namespace egl
 {
 class Surface;
+struct Config;
 }
 
 namespace gl
@@ -57,7 +58,7 @@ class TransformFeedback;
 class Context
 {
   public:
-    Context(int clientVersion, const Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess);
+    Context(const egl::Config *config, int clientVersion, const Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess);
 
     virtual ~Context();
 
@@ -179,6 +180,10 @@ class Context
 
     virtual int getClientVersion() const;
 
+    EGLint getConfigID() const;
+    EGLenum getClientType() const;
+    EGLenum getRenderBuffer() const;
+
     const Caps &getCaps() const;
     const TextureCapsMap &getTextureCaps() const;
     const Extensions &getExtensions() const;
@@ -224,6 +229,10 @@ class Context
     State mState;
 
     int mClientVersion;
+
+    EGLint mConfigID;
+    EGLenum mClientType;
+    EGLenum mRenderBuffer;
 
     TextureMap mZeroTextures;
 

@@ -13,6 +13,7 @@
 #include "common/platform.h"
 #include "libANGLE/Compiler.h"
 #include "libANGLE/Buffer.h"
+#include "libANGLE/Config.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
@@ -36,7 +37,7 @@
 namespace gl
 {
 
-Context::Context(int clientVersion, const Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess)
+Context::Context(const egl::Config *config, int clientVersion, const Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess)
     : mRenderer(renderer)
 {
     ASSERT(robustAccess == false);   // Unimplemented
@@ -45,6 +46,10 @@ Context::Context(int clientVersion, const Context *shareContext, rx::Renderer *r
     mState.initialize(mCaps, clientVersion);
 
     mClientVersion = clientVersion;
+
+    mConfigID = config->configID;
+    mClientType = EGL_OPENGL_ES_API;
+    mRenderBuffer = EGL_NONE;
 
     mFenceNVHandleAllocator.setBaseHandle(0);
 
@@ -186,6 +191,8 @@ void Context::makeCurrent(egl::Surface *surface)
                                                           mRenderer->createDefaultAttachment(GL_STENCIL, surface));
 
     setFramebufferZero(framebufferZero);
+
+    mRenderBuffer = surface->getRenderBuffer();
 }
 
 // NOTE: this function should not assume that this context is current!
@@ -1272,6 +1279,21 @@ bool Context::isResetNotificationEnabled()
 int Context::getClientVersion() const
 {
     return mClientVersion;
+}
+
+EGLint Context::getConfigID() const
+{
+    return mConfigID;
+}
+
+EGLenum Context::getClientType() const
+{
+    return mClientType;
+}
+
+EGLenum Context::getRenderBuffer() const
+{
+    return mRenderBuffer;
 }
 
 const Caps &Context::getCaps() const

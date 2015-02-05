@@ -624,10 +624,27 @@ EGLBoolean EGLAPIENTRY QueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attri
         return EGL_FALSE;
     }
 
-    UNIMPLEMENTED();   // FIXME
+    switch (attribute)
+    {
+      case EGL_CONFIG_ID:
+        *value = context->getConfigID();
+        break;
+      case EGL_CONTEXT_CLIENT_TYPE:
+        *value = context->getClientType();
+        break;
+      case EGL_CONTEXT_CLIENT_VERSION:
+        *value = context->getClientVersion();
+        break;
+      case EGL_RENDER_BUFFER:
+        *value = context->getRenderBuffer();
+        break;
+      default:
+        SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
+        return EGL_FALSE;
+    }
 
     SetGlobalError(Error(EGL_SUCCESS));
-    return 0;
+    return EGL_TRUE;
 }
 
 EGLBoolean EGLAPIENTRY WaitGL(void)

@@ -50,6 +50,7 @@
             '<(angle_path)/tests/angle_tests/VertexAttributeTest.cpp',
             '<(angle_path)/tests/angle_tests/ViewportTest.cpp',
             '<(angle_path)/tests/standalone_tests/EGLThreadTest.cpp',
+            '<(angle_path)/tests/standalone_tests/EGLQueryContextTest.cpp',
         ],
     },
     'dependencies':
