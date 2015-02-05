@@ -16,6 +16,24 @@
       "revId": "72769f401f7a8c9b0287a84931223fd50fc930bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc2b18c2_a954ddbd",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-05T14:50:47Z",
+      "side": 1,
+      "message": "Hmm, I hadn\u0027t thought about that, I will re-think the storage on this.",
+      "parentUuid": "1c142487_243772e3",
+      "revId": "72769f401f7a8c9b0287a84931223fd50fc930bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
