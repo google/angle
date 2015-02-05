@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7c2520ee_ea01a7a9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-02-05T16:49:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9cdbb405_b0c41831",
+      "revId": "99ea9df6080e0325a4db93e1d5531934a62a10a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc9d9026_5e68510d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2015-02-04T19:03:40Z",
       "side": 1,
       "message": "nit: right-align \u0026",
+      "range": {
+        "startLine": 1187,
+        "startChar": 62,
+        "endLine": 1187,
+        "endChar": 63
+      },
+      "revId": "99ea9df6080e0325a4db93e1d5531934a62a10a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c2520ee_6a82d7e2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1187,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-02-05T16:49:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc9d9026_5e68510d",
       "range": {
         "startLine": 1187,
         "startChar": 62,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "9c073452_96048c3b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1190,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-02-05T16:49:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc9d9026_7e88ad88",
+      "range": {
+        "startLine": 1190,
+        "startChar": 4,
+        "endLine": 1190,
+        "endChar": 130
+      },
+      "revId": "99ea9df6080e0325a4db93e1d5531934a62a10a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bcd6b8d9_91f23ca2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 1
@@ -76,6 +142,30 @@
       "writtenOn": "2015-02-04T19:03:40Z",
       "side": 1,
       "message": "the only time this will be false, is if XFB goes from off to on, or on to off. It shouldn\u0027t change during the lifetime of a Renderer. (note, for the edge case of ES2 to ES3, and vice versa, the number of available buffers should not change). Hence we could instead use bool mStreamOutEnabled instead of an int (mirroring transformFeedbackActive).",
+      "range": {
+        "startLine": 1219,
+        "startChar": 4,
+        "endLine": 1219,
+        "endChar": 49
+      },
+      "revId": "99ea9df6080e0325a4db93e1d5531934a62a10a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c073452_561d0460",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1219,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-02-05T16:49:56Z",
+      "side": 1,
+      "message": "I don’t follow you here. numFXBBindings will depend on the number of buffers bound to your XFB object.\n\nI am trying to force the renderer to unbind any remaining stream out binding when XFB is not active. I agree that I could achieve that with bool mAppliedStreamOutEnabled instead of an int; however the value would change everytime that XFB is enabled or disabled — and is not constant for the lifetime of the Renderer.",
+      "parentUuid": "bcd6b8d9_91f23ca2",
       "range": {
         "startLine": 1219,
         "startChar": 4,
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "7c2520ee_ca9dc346",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-02-05T16:49:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bcd6b8d9_d1a6849f",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 91,
+        "endChar": 11
+      },
+      "revId": "99ea9df6080e0325a4db93e1d5531934a62a10a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bcd6b8d9_5178545f",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 1
@@ -134,6 +248,30 @@
     },
     {
       "key": {
+        "uuid": "7c2520ee_6a27775e",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1383,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-02-05T16:49:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bcd6b8d9_5178545f",
+      "range": {
+        "startLine": 1383,
+        "startChar": 61,
+        "endLine": 1383,
+        "endChar": 62
+      },
+      "revId": "99ea9df6080e0325a4db93e1d5531934a62a10a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bcd6b8d9_f1a3888c",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
         "patchSetId": 1
@@ -145,6 +283,30 @@
       "writtenOn": "2015-02-04T19:03:40Z",
       "side": 1,
       "message": "nit: style updates (override, \u0026 alignment)",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 11
+      },
+      "revId": "99ea9df6080e0325a4db93e1d5531934a62a10a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c1a1cb5_e61b9ee8",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-02-05T16:49:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bcd6b8d9_f1a3888c",
       "range": {
         "startLine": 93,
         "startChar": 4,
