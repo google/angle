@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "fc103097_c37c969f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-05T15:19:16Z",
+      "side": 1,
+      "message": "also please add BUG\u003dangle:895 to associate this with the tracker",
+      "revId": "7f35a8c1a919f904ff4107eb34dd8ae820aaf518",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc103097_2362caff",
         "filename": "tests/standalone_tests/EGLQueryContextTest.cpp",
         "patchSetId": 1
