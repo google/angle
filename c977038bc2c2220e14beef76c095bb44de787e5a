@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc103097_c355b607",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-05T15:24:37Z",
+      "side": 1,
+      "message": "suggestion: I recall a lengthy discussion about whether to return errors from validation helpers or record/globally set them immediately. The conclusion was to report the immediately, and return a bool.",
+      "range": {
+        "startLine": 23,
+        "startChar": 15,
+        "endLine": 23,
+        "endChar": 20
+      },
+      "revId": "c977038bc2c2220e14beef76c095bb44de787e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
