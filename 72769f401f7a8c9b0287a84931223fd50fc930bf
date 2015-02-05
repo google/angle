@@ -34,6 +34,24 @@
       "revId": "72769f401f7a8c9b0287a84931223fd50fc930bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cc26457_fd279bd6",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-05T22:38:13Z",
+      "side": 1,
+      "message": "Have to agree. It\u0027s legal for multiple threads to call eglMakeCurrent with different contexts, rendering to different surfaces, but referring to the same display.\n\nIf the Current struct in global_state.cpp were exported and generalized, could that address this CL differently? What\u0027s the deeper problem here?\n\nNote: I\u0027ve been thinking we could eventually compile ANGLE in a \"thread-unsafe\" mode by turning the thread-local storage into static variables. The hope would be that only a couple of functions\u0027 implementation would need to change.",
+      "parentUuid": "bc2b18c2_a954ddbd",
+      "revId": "72769f401f7a8c9b0287a84931223fd50fc930bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
