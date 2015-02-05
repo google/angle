@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bc2b18c2_09e1a9d9",
+        "filename": "src/libANGLE/Config.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-05T14:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3cc2c81e_70f46ee4",
+      "range": {
+        "startLine": 18,
+        "startChar": 10,
+        "endLine": 18,
+        "endChar": 15
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ce0c0af_f2f5c68c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-04T20:14:19Z",
       "side": 1,
       "message": "nit: static_cast",
+      "range": {
+        "startLine": 501,
+        "startChar": 46,
+        "endLine": 501,
+        "endChar": 50
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c142487_84ff46bb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-05T14:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ce0c0af_f2f5c68c",
       "range": {
         "startLine": 501,
         "startChar": 46,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "bc2b18c2_69e665f3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-05T14:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3cc2c81e_8d3ea105",
+      "range": {
+        "startLine": 502,
+        "startChar": 27,
+        "endLine": 502,
+        "endChar": 37
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ccfc448_ec796b17",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 10
@@ -82,6 +154,30 @@
       "writtenOn": "2015-02-04T20:14:19Z",
       "side": 1,
       "message": "quick comment here?",
+      "range": {
+        "startLine": 514,
+        "startChar": 27,
+        "endLine": 514,
+        "endChar": 41
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcf75097_cb72f579",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-05T14:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ccfc448_ec796b17",
       "range": {
         "startLine": 514,
         "startChar": 27,
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "bc2b18c2_49eba1b7",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-05T14:03:46Z",
+      "side": 1,
+      "message": "Whoops, I fixed the 565 one but the RGB8 was intentional, it was mapped right back to GL_BGRA8 and discarded for being a duplicate config.",
+      "parentUuid": "3cc2c81e_6dd1f586",
+      "range": {
+        "startLine": 414,
+        "startChar": 4,
+        "endLine": 418,
+        "endChar": 6
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3cc2c81e_2d820d69",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 10
@@ -151,6 +271,30 @@
       "writtenOn": "2015-02-04T20:14:19Z",
       "side": 1,
       "message": "comment here could help explain what\u0027s up",
+      "range": {
+        "startLine": 465,
+        "startChar": 27,
+        "endLine": 465,
+        "endChar": 39
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c142487_c4f93ed6",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-05T14:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3cc2c81e_2d820d69",
       "range": {
         "startLine": 465,
         "startChar": 27,
@@ -186,6 +330,30 @@
     },
     {
       "key": {
+        "uuid": "fc103097_43d54641",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-05T14:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ccfc448_2c3a1366",
+      "range": {
+        "startLine": 466,
+        "startChar": 46,
+        "endLine": 466,
+        "endChar": 50
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ccfc448_2caf732d",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 10
@@ -209,6 +377,30 @@
     },
     {
       "key": {
+        "uuid": "1c142487_041996a6",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-05T14:03:46Z",
+      "side": 1,
+      "message": "I believe so, yes.  It was always forced to 0 in Config.cpp so I left it that way.",
+      "parentUuid": "1ccfc448_2caf732d",
+      "range": {
+        "startLine": 480,
+        "startChar": 20,
+        "endLine": 480,
+        "endChar": 46
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3cc2c81e_2df44d11",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 10
@@ -220,6 +412,24 @@
       "writtenOn": "2015-02-04T20:14:19Z",
       "side": 1,
       "message": "maybe add an assert down here that the result is not empty (if there isn\u0027t one in a higher level of code)",
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c142487_44238ed8",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-05T14:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3cc2c81e_2df44d11",
       "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
