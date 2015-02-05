@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc103097_2362caff",
+        "filename": "tests/standalone_tests/EGLQueryContextTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-05T15:17:57Z",
+      "side": 1,
+      "message": "place license at the top of the file",
+      "revId": "7f35a8c1a919f904ff4107eb34dd8ae820aaf518",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc2b18c2_89ef5989",
+        "filename": "tests/standalone_tests/EGLQueryContextTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-05T15:17:57Z",
+      "side": 1,
+      "message": "nit: include order, system includes first",
+      "range": {
+        "startLine": 3,
+        "startChar": 10,
+        "endLine": 3,
+        "endChar": 13
+      },
+      "revId": "7f35a8c1a919f904ff4107eb34dd8ae820aaf518",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc2b18c2_a9f7bd5c",
+        "filename": "tests/standalone_tests/EGLQueryContextTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-05T15:17:57Z",
+      "side": 1,
+      "message": "it might make sense to make this a parameter to the class as a template parameter, and inherit from it to specialize the GetClientVersion test.\n\nEG:\n\n template \u003cint clientVersion\u003e\n class EGLQueryContextTest ....\n\n class EGLQueryContextTestES2 : public EGLQueryContextTest\u003c2\u003e ...\n\n TEST_F(EGLQueryContextTestES2, GetClientVersion)\n ...\n TEST_F(EGLQueryContextTestES3, GetClientVersion)\n ...",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 24
+      },
+      "revId": "7f35a8c1a919f904ff4107eb34dd8ae820aaf518",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc103097_c32776d7",
+        "filename": "tests/standalone_tests/EGLQueryContextTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-05T15:17:57Z",
+      "side": 1,
+      "message": "nit: { and } on a new line (in a few places in this file)",
+      "range": {
+        "startLine": 10,
+        "startChar": 25,
+        "endLine": 10,
+        "endChar": 26
+      },
+      "revId": "7f35a8c1a919f904ff4107eb34dd8ae820aaf518",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc103097_636cc2f0",
+        "filename": "tests/standalone_tests/EGLQueryContextTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-05T15:17:57Z",
+      "side": 1,
+      "message": "nit: 4 space indent",
+      "range": {
+        "startLine": 11,
+        "startChar": 4,
+        "endLine": 11,
+        "endChar": 6
+      },
+      "revId": "7f35a8c1a919f904ff4107eb34dd8ae820aaf518",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
