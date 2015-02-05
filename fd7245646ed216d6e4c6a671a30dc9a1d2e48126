@@ -141,6 +141,30 @@
       "revId": "fd7245646ed216d6e4c6a671a30dc9a1d2e48126",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc2b18c2_09988959",
+        "filename": "tests/angle_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-05T14:03:42Z",
+      "side": 1,
+      "message": "Unfortunate, moved this change to the next patch.",
+      "parentUuid": "7ce0c0af_f2a066bb",
+      "range": {
+        "startLine": 19,
+        "startChar": 8,
+        "endLine": 19,
+        "endChar": 32
+      },
+      "revId": "fd7245646ed216d6e4c6a671a30dc9a1d2e48126",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
