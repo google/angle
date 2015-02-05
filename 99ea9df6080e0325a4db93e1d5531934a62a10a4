@@ -178,6 +178,30 @@
     },
     {
       "key": {
+        "uuid": "bcd07810_a1d97e7d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1219,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-05T17:40:27Z",
+      "side": 1,
+      "message": "Hey Gregoire, if you look in State.cpp you\u0027ll see that getTransformFeedbackBufferIndexRange returns mTransformFeedbackBuffers.size(). The only place in the code where this size changes is in State::initialize, where we set it to caps.maxTransformFeedbackSeparateAttributes. This should be consistent based on the Renderer, as long as we don\u0027t change our caps based on the Context, which is why I mentioned the point about ES2 to ES3.",
+      "parentUuid": "9c073452_561d0460",
+      "range": {
+        "startLine": 1219,
+        "startChar": 4,
+        "endLine": 1219,
+        "endChar": 49
+      },
+      "revId": "99ea9df6080e0325a4db93e1d5531934a62a10a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bcd6b8d9_d1a6849f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
         "patchSetId": 1
