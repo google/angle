@@ -1281,22 +1281,21 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorBuf
     D3DFORMAT renderTargetFormat = D3DFMT_UNKNOWN;
 
     bool renderTargetChanged = false;
-
-    // Apply the render target on the device
-    RenderTarget9 *renderTarget = NULL;
-    gl::Error error = d3d9::GetAttachmentRenderTarget(colorBuffer, &renderTarget);
-    if (error.isError())
+    unsigned int renderTargetSerial = GetAttachmentSerial(colorBuffer);
+    if (renderTargetSerial != mAppliedRenderTargetSerial)
     {
-        return error;
-    }
-    ASSERT(renderTarget);
+        // Apply the render target on the device
+        RenderTarget9 *renderTarget = NULL;
+        gl::Error error = d3d9::GetAttachmentRenderTarget(colorBuffer, &renderTarget);
+        if (error.isError())
+        {
+            return error;
+        }
+        ASSERT(renderTarget);
 
-    IDirect3DSurface9 *renderTargetSurface = renderTarget->getSurface();
-    uintptr_t renderTargetUintPtr = reinterpret_cast<uintptr_t>(renderTargetSurface);
-    ASSERT(renderTargetSurface);
+        IDirect3DSurface9 *renderTargetSurface = renderTarget->getSurface();
+        ASSERT(renderTargetSurface);
 
-    if (renderTargetUintPtr != mAppliedRenderTarget)
-    {
         mDevice->SetRenderTarget(0, renderTargetSurface);
         SafeRelease(renderTargetSurface);
 
@@ -1304,58 +1303,56 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorBuf
         renderTargetHeight = renderTarget->getHeight();
         renderTargetFormat = renderTarget->getD3DFormat();
 
-        mAppliedRenderTarget = renderTargetUintPtr;
+        mAppliedRenderTargetSerial = renderTargetSerial;
         renderTargetChanged = true;
     }
 
-    unsigned int depthSize = 0;
-    unsigned int stencilSize = 0;
-
-    // Apply the depth stencil on the device
-    if (depthStencilBuffer)
+    unsigned int depthStencilSerial = (depthStencilBuffer != nullptr) ? GetAttachmentSerial(depthStencilBuffer) : 0;
+    if (depthStencilSerial != mAppliedDepthStencilSerial || !mDepthStencilInitialized)
     {
-        RenderTarget9 *depthStencilRenderTarget = NULL;
-        gl::Error error = d3d9::GetAttachmentRenderTarget(depthStencilBuffer, &depthStencilRenderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
-        ASSERT(depthStencilRenderTarget);
+        unsigned int depthSize = 0;
+        unsigned int stencilSize = 0;
 
-        IDirect3DSurface9 *depthStencilSurface = depthStencilRenderTarget->getSurface();
-        uintptr_t depthStencilUintPtr = reinterpret_cast<uintptr_t>(depthStencilSurface);
-        ASSERT(depthStencilSurface);
-
-        if (depthStencilUintPtr != mAppliedDepthStencil || !mDepthStencilInitialized)
+        // Apply the depth stencil on the device
+        if (depthStencilBuffer)
         {
+            RenderTarget9 *depthStencilRenderTarget = NULL;
+            gl::Error error = d3d9::GetAttachmentRenderTarget(depthStencilBuffer, &depthStencilRenderTarget);
+            if (error.isError())
+            {
+                return error;
+            }
+            ASSERT(depthStencilRenderTarget);
+
+            IDirect3DSurface9 *depthStencilSurface = depthStencilRenderTarget->getSurface();
+            ASSERT(depthStencilSurface);
+
             mDevice->SetDepthStencilSurface(depthStencilSurface);
             SafeRelease(depthStencilSurface);
 
             depthSize = depthStencilBuffer->getDepthSize();
             stencilSize = depthStencilBuffer->getStencilSize();
-
-            mAppliedDepthStencil = depthStencilUintPtr;
         }
-    }
-    else if (mAppliedDepthStencil != 0)
-    {
-        mDevice->SetDepthStencilSurface(NULL);
-        mAppliedDepthStencil = 0;
-    }
+        else
+        {
+            mDevice->SetDepthStencilSurface(NULL);
+        }
 
-    if (!mDepthStencilInitialized || depthSize != mCurDepthSize)
-    {
-        mCurDepthSize = depthSize;
-        mForceSetRasterState = true;
-    }
+        if (!mDepthStencilInitialized || depthSize != mCurDepthSize)
+        {
+            mCurDepthSize = depthSize;
+            mForceSetRasterState = true;
+        }
 
-    if (!mDepthStencilInitialized || stencilSize != mCurStencilSize)
-    {
-        mCurStencilSize = stencilSize;
-        mForceSetDepthStencilState = true;
-    }
+        if (!mDepthStencilInitialized || stencilSize != mCurStencilSize)
+        {
+            mCurStencilSize = stencilSize;
+            mForceSetDepthStencilState = true;
+        }
 
-    mDepthStencilInitialized = true;
+        mAppliedDepthStencilSerial = depthStencilSerial;
+        mDepthStencilInitialized = true;
+    }
 
     if (renderTargetChanged || !mRenderTargetDescInitialized)
     {
@@ -2176,11 +2173,8 @@ gl::Error Renderer9::clear(const gl::ClearParameters &clearParams, const gl::Fra
 
 void Renderer9::markAllStateDirty()
 {
-    // dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
-    const uintptr_t dirtyPointer = -1;
-
-    mAppliedRenderTarget = dirtyPointer;
-    mAppliedDepthStencil = dirtyPointer;
+    mAppliedRenderTargetSerial = 0;
+    mAppliedDepthStencilSerial = 0;
     mDepthStencilInitialized = false;
     mRenderTargetDescInitialized = false;
 
