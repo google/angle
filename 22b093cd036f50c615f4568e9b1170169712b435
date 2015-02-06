@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcd60c82_ea6be7d6",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1337,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-06T20:34:12Z",
+      "side": 1,
+      "message": "The issue was with these lines, the sizes are now always set so they get updated properly below.",
+      "range": {
+        "startLine": 1336,
+        "startChar": 8,
+        "endLine": 1337,
+        "endChar": 59
+      },
+      "revId": "22b093cd036f50c615f4568e9b1170169712b435",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
