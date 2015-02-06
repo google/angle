@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "dc81ac4d_7252b8d2",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-02-06T16:09:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c5184a8_1c2b35a6",
+      "range": {
+        "startLine": 301,
+        "startChar": 7,
+        "endLine": 301,
+        "endChar": 12
+      },
+      "revId": "8c616752781fc00e6793796c9b35d20ca0264dc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c305c7e_7605b034",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-06T15:00:07Z",
       "side": 1,
       "message": "there\u0027s a funny interaction with InstanceID and global static init, that I\u0027m not sure dEQP tests. In a shader, have a global variable initialize itself from gl_InstanceID. See GLSLTest.GlobalStaticAndVarying.\n\nCan you add a test case for InstanceID and confirm things initialize properly? I think it should work fine, a test could confirm.",
+      "range": {
+        "startLine": 504,
+        "startChar": 20,
+        "endLine": 504,
+        "endChar": 44
+      },
+      "revId": "8c616752781fc00e6793796c9b35d20ca0264dc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c90c099_6fa41196",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 504,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-02-06T16:09:20Z",
+      "side": 1,
+      "message": "Yes, it works fine.\n\nDone",
+      "parentUuid": "5c305c7e_7605b034",
       "range": {
         "startLine": 504,
         "startChar": 20,
