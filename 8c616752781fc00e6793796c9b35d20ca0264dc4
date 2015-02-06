@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c0d20bb_6708924e",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-02-06T10:55:45Z",
+      "side": 1,
+      "message": "I am not really a big fan of the string comparison however I am not aware of any better way.\n\nPerhaps the struct Attribute could have an enum semantic member to discriminate attributes which have a special meaning (e.g. SV_InstanceID, SV_VertexID).",
+      "range": {
+        "startLine": 396,
+        "startChar": 20,
+        "endLine": 396,
+        "endChar": 59
+      },
+      "revId": "8c616752781fc00e6793796c9b35d20ca0264dc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
