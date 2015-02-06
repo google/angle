@@ -22,6 +22,30 @@
       "revId": "21ff81097558b79382530ede36464737e0a6b567",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c726491_940444f8",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-06T22:47:51Z",
+      "side": 1,
+      "message": "EGL differs from GL in this way, the global error is only for the last function called on the current thread.",
+      "parentUuid": "fc6cb049_06141c70",
+      "range": {
+        "startLine": 464,
+        "startChar": 4,
+        "endLine": 464,
+        "endChar": 18
+      },
+      "revId": "21ff81097558b79382530ede36464737e0a6b567",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
