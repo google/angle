@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c5184a8_7cbb59c0",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-06T15:18:47Z",
+      "side": 1,
+      "message": "nit:sort with the other includes",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 28
+      },
+      "revId": "ff193474840e8e51093bbabde85e512a368b4042",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c3d744f_805cb633",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-06T15:18:47Z",
+      "side": 1,
+      "message": "Method should be const.",
+      "range": {
+        "startLine": 185,
+        "startChar": 4,
+        "endLine": 185,
+        "endChar": 30
+      },
+      "revId": "ff193474840e8e51093bbabde85e512a368b4042",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c305c7e_567674c2",
+        "filename": "tests/standalone_tests/EGLQueryContextTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-06T15:18:47Z",
+      "side": 1,
+      "message": "nit: these can be typedefs instead of new classes.",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 2
+      },
+      "revId": "ff193474840e8e51093bbabde85e512a368b4042",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
