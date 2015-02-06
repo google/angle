@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c5184a8_dc3cedf5",
+        "filename": "tests/standalone_tests/EGLQueryContextTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-06T14:02:11Z",
+      "side": 1,
+      "message": "we might need to use the PlatformGetDisplay extension here, as at some point Geoff wanted to remove support for the GetDisplay with special negative values \"hack\".",
+      "range": {
+        "startLine": 17,
+        "startChar": 19,
+        "endLine": 17,
+        "endChar": 67
+      },
+      "revId": "06fef91d73820a9ff2d7bb538bd00d2a944028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
