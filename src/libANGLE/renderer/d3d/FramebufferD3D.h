@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_FRAMBUFFERD3D_H_
 #define LIBANGLE_RENDERER_D3D_FRAMBUFFERD3D_H_
 
+#include "libANGLE/renderer/DefaultAttachmentImpl.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
 
 #include <vector>

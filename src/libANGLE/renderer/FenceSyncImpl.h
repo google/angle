@@ -1,13 +1,13 @@
 //
-// Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2015 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
 
-// FenceImpl.h: Defines the rx::FenceNVImpl and rx::FenceSyncImpl classes.
+// FenceSyncImpl.h: Defines the rx::FenceSyncImpl class.
 
-#ifndef LIBANGLE_RENDERER_FENCEIMPL_H_
-#define LIBANGLE_RENDERER_FENCEIMPL_H_
+#ifndef LIBANGLE_RENDERER_FENCESYNCIMPL_H_
+#define LIBANGLE_RENDERER_FENCESYNCIMPL_H_
 
 #include "libANGLE/Error.h"
 
@@ -17,20 +17,6 @@
 
 namespace rx
 {
-
-class FenceNVImpl
-{
-  public:
-    FenceNVImpl() { };
-    virtual ~FenceNVImpl() { };
-
-    virtual gl::Error set() = 0;
-    virtual gl::Error test(bool flushCommandBuffer, GLboolean *outFinished) = 0;
-    virtual gl::Error finishFence(GLboolean *outFinished) = 0;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(FenceNVImpl);
-};
 
 class FenceSyncImpl
 {
@@ -49,4 +35,4 @@ class FenceSyncImpl
 
 }
 
-#endif // LIBANGLE_RENDERER_FENCEIMPL_H_
+#endif // LIBANGLE_RENDERER_FENCESYNCIMPL_H_

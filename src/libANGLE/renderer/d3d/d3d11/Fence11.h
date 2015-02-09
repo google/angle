@@ -9,7 +9,8 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_FENCE11_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_FENCE11_H_
 
-#include "libANGLE/renderer/FenceImpl.h"
+#include "libANGLE/renderer/FenceNVImpl.h"
+#include "libANGLE/renderer/FenceSyncImpl.h"
 
 namespace rx
 {

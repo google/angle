@@ -36,28 +36,6 @@ class ProgramImpl
     ProgramImpl() { }
     virtual ~ProgramImpl();
 
-    const std::vector<gl::LinkedUniform*> &getUniforms() const { return mUniforms; }
-    const std::vector<gl::VariableLocation> &getUniformIndices() const { return mUniformIndex; }
-    const std::vector<gl::UniformBlock*> &getUniformBlocks() const { return mUniformBlocks; }
-    const std::vector<gl::LinkedVarying> &getTransformFeedbackLinkedVaryings() const { return mTransformFeedbackLinkedVaryings; }
-    const sh::Attribute *getShaderAttributes() const { return mShaderAttributes; }
-    const SemanticIndexArray &getSemanticIndexes() const { return mSemanticIndex; }
-
-    std::vector<gl::LinkedUniform*> &getUniforms() { return mUniforms; }
-    std::vector<gl::VariableLocation> &getUniformIndices() { return mUniformIndex; }
-    std::vector<gl::UniformBlock*> &getUniformBlocks() { return mUniformBlocks; }
-    std::vector<gl::LinkedVarying> &getTransformFeedbackLinkedVaryings() { return mTransformFeedbackLinkedVaryings; }
-    sh::Attribute *getShaderAttributes() { return mShaderAttributes; }
-    SemanticIndexArray &getSemanticIndexes() { return mSemanticIndex; }
-
-    gl::LinkedUniform *getUniformByLocation(GLint location) const;
-    gl::LinkedUniform *getUniformByName(const std::string &name) const;
-    gl::UniformBlock *getUniformBlockByIndex(GLuint blockIndex) const;
-
-    GLint getUniformLocation(std::string name);
-    GLuint getUniformIndex(std::string name);
-    GLuint getUniformBlockIndex(std::string name) const;
-
     virtual bool usesPointSize() const = 0;
     virtual int getShaderVersion() const = 0;
     virtual GLenum getTransformFeedbackBufferMode() const = 0;
@@ -99,8 +77,6 @@ class ProgramImpl
     virtual void getUniformiv(GLint location, GLint *params) = 0;
     virtual void getUniformuiv(GLint location, GLuint *params) = 0;
 
-    virtual void reset();
-
     // TODO: The following functions are possibly only applicable to D3D backends. The should be carefully evaluated to
     // determine if they can be removed from this interface.
     virtual GLint getSamplerMapping(gl::SamplerType type, unsigned int samplerIndex, const gl::Caps &caps) const = 0;
@@ -121,6 +97,30 @@ class ProgramImpl
     virtual gl::Error applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers, const gl::Caps &caps) = 0;
     virtual bool assignUniformBlockRegister(gl::InfoLog &infoLog, gl::UniformBlock *uniformBlock, GLenum shader,
                                             unsigned int registerIndex, const gl::Caps &caps) = 0;
+
+    const std::vector<gl::LinkedUniform*> &getUniforms() const { return mUniforms; }
+    const std::vector<gl::VariableLocation> &getUniformIndices() const { return mUniformIndex; }
+    const std::vector<gl::UniformBlock*> &getUniformBlocks() const { return mUniformBlocks; }
+    const std::vector<gl::LinkedVarying> &getTransformFeedbackLinkedVaryings() const { return mTransformFeedbackLinkedVaryings; }
+    const sh::Attribute *getShaderAttributes() const { return mShaderAttributes; }
+    const SemanticIndexArray &getSemanticIndexes() const { return mSemanticIndex; }
+
+    std::vector<gl::LinkedUniform*> &getUniforms() { return mUniforms; }
+    std::vector<gl::VariableLocation> &getUniformIndices() { return mUniformIndex; }
+    std::vector<gl::UniformBlock*> &getUniformBlocks() { return mUniformBlocks; }
+    std::vector<gl::LinkedVarying> &getTransformFeedbackLinkedVaryings() { return mTransformFeedbackLinkedVaryings; }
+    sh::Attribute *getShaderAttributes() { return mShaderAttributes; }
+    SemanticIndexArray &getSemanticIndexes() { return mSemanticIndex; }
+
+    gl::LinkedUniform *getUniformByLocation(GLint location) const;
+    gl::LinkedUniform *getUniformByName(const std::string &name) const;
+    gl::UniformBlock *getUniformBlockByIndex(GLuint blockIndex) const;
+
+    GLint getUniformLocation(std::string name);
+    GLuint getUniformIndex(std::string name);
+    GLuint getUniformBlockIndex(std::string name) const;
+
+    virtual void reset();
 
   protected:
     DISALLOW_COPY_AND_ASSIGN(ProgramImpl);

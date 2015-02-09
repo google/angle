@@ -96,7 +96,7 @@ std::string ShaderD3D::getDebugInfo() const
 
 void ShaderD3D::parseVaryings(ShHandle compiler)
 {
-    if (!mHlsl.empty())
+    if (!mTranslatedSource.empty())
     {
         const std::vector<sh::Varying> *varyings = ShGetVaryings(compiler);
         ASSERT(varyings);
@@ -106,18 +106,18 @@ void ShaderD3D::parseVaryings(ShHandle compiler)
             mVaryings.push_back(gl::PackedVarying((*varyings)[varyingIndex]));
         }
 
-        mUsesMultipleRenderTargets = mHlsl.find("GL_USES_MRT")                  != std::string::npos;
-        mUsesFragColor             = mHlsl.find("GL_USES_FRAG_COLOR")           != std::string::npos;
-        mUsesFragData              = mHlsl.find("GL_USES_FRAG_DATA")            != std::string::npos;
-        mUsesFragCoord             = mHlsl.find("GL_USES_FRAG_COORD")           != std::string::npos;
-        mUsesFrontFacing           = mHlsl.find("GL_USES_FRONT_FACING")         != std::string::npos;
-        mUsesPointSize             = mHlsl.find("GL_USES_POINT_SIZE")           != std::string::npos;
-        mUsesPointCoord            = mHlsl.find("GL_USES_POINT_COORD")          != std::string::npos;
-        mUsesDepthRange            = mHlsl.find("GL_USES_DEPTH_RANGE")          != std::string::npos;
-        mUsesFragDepth             = mHlsl.find("GL_USES_FRAG_DEPTH")           != std::string::npos;
-        mUsesDiscardRewriting      = mHlsl.find("ANGLE_USES_DISCARD_REWRITING") != std::string::npos;
-        mUsesNestedBreak           = mHlsl.find("ANGLE_USES_NESTED_BREAK")      != std::string::npos;
-        mUsesDeferredInit          = mHlsl.find("ANGLE_USES_DEFERRED_INIT")     != std::string::npos;
+        mUsesMultipleRenderTargets = mTranslatedSource.find("GL_USES_MRT")                  != std::string::npos;
+        mUsesFragColor             = mTranslatedSource.find("GL_USES_FRAG_COLOR")           != std::string::npos;
+        mUsesFragData              = mTranslatedSource.find("GL_USES_FRAG_DATA")            != std::string::npos;
+        mUsesFragCoord             = mTranslatedSource.find("GL_USES_FRAG_COORD")           != std::string::npos;
+        mUsesFrontFacing           = mTranslatedSource.find("GL_USES_FRONT_FACING")         != std::string::npos;
+        mUsesPointSize             = mTranslatedSource.find("GL_USES_POINT_SIZE")           != std::string::npos;
+        mUsesPointCoord            = mTranslatedSource.find("GL_USES_POINT_COORD")          != std::string::npos;
+        mUsesDepthRange            = mTranslatedSource.find("GL_USES_DEPTH_RANGE")          != std::string::npos;
+        mUsesFragDepth             = mTranslatedSource.find("GL_USES_FRAG_DEPTH")           != std::string::npos;
+        mUsesDiscardRewriting      = mTranslatedSource.find("ANGLE_USES_DISCARD_REWRITING") != std::string::npos;
+        mUsesNestedBreak           = mTranslatedSource.find("ANGLE_USES_NESTED_BREAK")      != std::string::npos;
+        mUsesDeferredInit          = mTranslatedSource.find("ANGLE_USES_DEFERRED_INIT")     != std::string::npos;
     }
 }
 
@@ -134,7 +134,7 @@ void ShaderD3D::uncompile()
 {
     // set by compileToHLSL
     mCompilerOutputType = SH_ESSL_OUTPUT;
-    mHlsl.clear();
+    mTranslatedSource.clear();
     mInfoLog.clear();
 
     mUsesMultipleRenderTargets = false;
@@ -198,7 +198,7 @@ void ShaderD3D::compileToHLSL(ShHandle compiler, const std::string &source)
 
     if (result)
     {
-        mHlsl = ShGetObjectCode(compiler);
+        mTranslatedSource = ShGetObjectCode(compiler);
 
 #ifdef _DEBUG
         // Prefix hlsl shader with commented out glsl shader
@@ -218,8 +218,8 @@ void ShaderD3D::compileToHLSL(ShHandle compiler, const std::string &source)
             curPos = (nextLine == std::string::npos) ? std::string::npos : (nextLine + 1);
         }
         hlslStream << "\n\n";
-        hlslStream << mHlsl;
-        mHlsl = hlslStream.str();
+        hlslStream << mTranslatedSource;
+        mTranslatedSource = hlslStream.str();
 #endif
 
         mUniforms = *GetShaderVariables(ShGetUniforms(compiler));

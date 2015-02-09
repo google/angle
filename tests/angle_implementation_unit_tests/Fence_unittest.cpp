@@ -7,7 +7,8 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "libANGLE/Fence.h"
-#include "libANGLE/renderer/FenceImpl.h"
+#include "libANGLE/renderer/FenceNVImpl.h"
+#include "libANGLE/renderer/FenceSyncImpl.h"
 
 using ::testing::_;
 using ::testing::Return;

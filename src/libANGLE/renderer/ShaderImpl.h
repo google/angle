@@ -24,9 +24,10 @@ class ShaderImpl
     virtual ~ShaderImpl() { }
 
     virtual bool compile(gl::Compiler *compiler, const std::string &source) = 0;
-    virtual const std::string &getInfoLog() const = 0;
-    virtual const std::string &getTranslatedSource() const = 0;
     virtual std::string getDebugInfo() const = 0;
+
+    virtual const std::string &getInfoLog() const { return mInfoLog; }
+    virtual const std::string &getTranslatedSource() const { return mTranslatedSource; }
 
     const std::vector<gl::PackedVarying> &getVaryings() const { return mVaryings; }
     const std::vector<sh::Uniform> &getUniforms() const { return mUniforms; }
@@ -42,6 +43,9 @@ class ShaderImpl
 
   protected:
     DISALLOW_COPY_AND_ASSIGN(ShaderImpl);
+
+    std::string mInfoLog;
+    std::string mTranslatedSource;
 
     std::vector<gl::PackedVarying> mVaryings;
     std::vector<sh::Uniform> mUniforms;

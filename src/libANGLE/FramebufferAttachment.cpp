@@ -8,12 +8,13 @@
 // objects and related functionality. [OpenGL ES 2.0.24] section 4.4.3 page 108.
 
 #include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/Texture.h"
-#include "libANGLE/formatutils.h"
-#include "libANGLE/Renderbuffer.h"
-#include "libANGLE/renderer/FramebufferImpl.h"
 
 #include "common/utilities.h"
+#include "libANGLE/Renderbuffer.h"
+#include "libANGLE/Texture.h"
+#include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/DefaultAttachmentImpl.h"
+#include "libANGLE/renderer/FramebufferImpl.h"
 
 namespace gl
 {

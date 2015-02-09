@@ -32,8 +32,6 @@ class ShaderD3D : public ShaderImpl
     static const ShaderD3D *makeShaderD3D(const ShaderImpl *impl);
 
     // ShaderImpl implementation
-    virtual const std::string &getInfoLog() const { return mInfoLog; }
-    virtual const std::string &getTranslatedSource() const { return mHlsl; }
     virtual std::string getDebugInfo() const;
 
     // D3D-specific methods
@@ -82,8 +80,6 @@ class ShaderD3D : public ShaderImpl
     bool mUsesDeferredInit;
 
     ShShaderOutput mCompilerOutputType;
-    std::string mHlsl;
-    std::string mInfoLog;
     std::string mDebugInfo;
     std::map<std::string, unsigned int> mUniformRegisterMap;
     std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;

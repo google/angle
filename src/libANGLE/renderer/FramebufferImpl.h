@@ -4,10 +4,10 @@
 // found in the LICENSE file.
 //
 
-// FramebufferImpl.h: Defines the abstract rx::DefaultAttachmentImpl class.
+// FramebufferImpl.h: Defines the abstract rx::FramebufferImpl class.
 
-#ifndef LIBANGLE_RENDERER_FRAMBUFFERIMPL_H_
-#define LIBANGLE_RENDERER_FRAMBUFFERIMPL_H_
+#ifndef LIBANGLE_RENDERER_FRAMEBUFFERIMPL_H_
+#define LIBANGLE_RENDERER_FRAMEBUFFERIMPL_H_
 
 #include "angle_gl.h"
 #include "common/angleutils.h"
@@ -23,21 +23,6 @@ struct Rectangle;
 
 namespace rx
 {
-
-class DefaultAttachmentImpl
-{
-  public:
-    DefaultAttachmentImpl() {}
-    virtual ~DefaultAttachmentImpl() {};
-
-    virtual GLsizei getWidth() const = 0;
-    virtual GLsizei getHeight() const = 0;
-    virtual GLenum getInternalFormat() const = 0;
-    virtual GLsizei getSamples() const = 0;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(DefaultAttachmentImpl);
-};
 
 class FramebufferImpl
 {
@@ -77,4 +62,4 @@ class FramebufferImpl
 
 }
 
-#endif // LIBANGLE_RENDERER_FRAMBUFFERIMPL_H_
+#endif // LIBANGLE_RENDERER_FRAMEBUFFERIMPL_H_

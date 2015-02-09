@@ -11,7 +11,9 @@
 
 #include "common/angleutils.h"
 #include "libANGLE/Caps.h"
+#include "libANGLE/Config.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/renderer/Renderer.h"
 
 #include <set>
 #include <vector>
@@ -21,7 +23,6 @@ namespace egl
 class AttributeMap;
 class Display;
 struct Config;
-class ConfigSet;
 class Surface;
 }
 
@@ -63,9 +64,9 @@ class DisplayImpl
 
     virtual bool isValidNativeWindow(EGLNativeWindowType window) const = 0;
 
-    const egl::Caps &getCaps() const;
-
     virtual std::string getVendorString() const = 0;
+
+    const egl::Caps &getCaps() const;
 
     typedef std::set<egl::Surface*> SurfaceSet;
     const SurfaceSet &getSurfaceSet() const { return mSurfaceSet; }

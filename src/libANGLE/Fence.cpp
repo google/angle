@@ -8,7 +8,9 @@
 // extension and GLES3 sync objects.
 
 #include "libANGLE/Fence.h"
-#include "libANGLE/renderer/FenceImpl.h"
+
+#include "libANGLE/renderer/FenceNVImpl.h"
+#include "libANGLE/renderer/FenceSyncImpl.h"
 #include "libANGLE/renderer/Renderer.h"
 #include "common/utilities.h"
 
