@@ -22,6 +22,52 @@
       "revId": "3ff0f1f48b64c6577bbd816e8e79970a8483217c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b187c328_89a659d7",
+        "filename": "src/compiler/translator/DetectCallDepth.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-09T22:01:23Z",
+      "side": 1,
+      "message": "we\u0027ll need a design here that doesn\u0027t use unordered_map, due to cross-platform limitations. (OSX/Android)",
+      "range": {
+        "startLine": 25,
+        "startChar": 9,
+        "endLine": 25,
+        "endChar": 22
+      },
+      "revId": "3ff0f1f48b64c6577bbd816e8e79970a8483217c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b187c328_a9715dc6",
+        "filename": "src/compiler/translator/DetectCallDepth.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-09T22:01:23Z",
+      "side": 1,
+      "message": "depending on the order of operations, IE, if this happens after we check for recursion (which is invalid in GLSL ES), this should be an ASSERT. note, that may make this function not need to return a bool.",
+      "range": {
+        "startLine": 105,
+        "startChar": 12,
+        "endLine": 107,
+        "endChar": 13
+      },
+      "revId": "3ff0f1f48b64c6577bbd816e8e79970a8483217c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
