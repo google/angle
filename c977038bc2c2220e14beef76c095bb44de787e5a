@@ -46,6 +46,30 @@
       "revId": "c977038bc2c2220e14beef76c095bb44de787e5a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91071f52_30ecc81c",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-09T14:39:13Z",
+      "side": 1,
+      "message": "The equivalent would be SetGlobalError(...); return false;",
+      "parentUuid": "3c8c88b9_3dcd0f65",
+      "range": {
+        "startLine": 23,
+        "startChar": 15,
+        "endLine": 23,
+        "endChar": 20
+      },
+      "revId": "c977038bc2c2220e14beef76c095bb44de787e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
