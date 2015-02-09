@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef LIBANGLE_RENDERER_D3D_MEMORYBUFFER_H_
-#define LIBANGLE_RENDERER_D3D_MEMORYBUFFER_H_
+#ifndef COMMON_MEMORYBUFFER_H_
+#define COMMON_MEMORYBUFFER_H_
 
 #include "common/angleutils.h"
 
@@ -37,4 +37,4 @@ class MemoryBuffer
 
 }
 
-#endif // LIBANGLE_RENDERER_D3D_MEMORYBUFFER_H_
+#endif // COMMON_MEMORYBUFFER_H_

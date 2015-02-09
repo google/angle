@@ -9,10 +9,10 @@
 #ifndef LIBANGLE_RENDERER_D3D_RENDERERD3D_H_
 #define LIBANGLE_RENDERER_D3D_RENDERERD3D_H_
 
+#include "common/MemoryBuffer.h"
 #include "libANGLE/Data.h"
 #include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
-#include "libANGLE/renderer/d3d/MemoryBuffer.h"
 #include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
 
 //FIXME(jmadill): std::array is currently prohibited by Chromium style guide

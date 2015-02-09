@@ -4,11 +4,12 @@
 // found in the LICENSE file.
 //
 
-#include "libANGLE/renderer/d3d/MemoryBuffer.h"
-#include "common/debug.h"
+#include "common/MemoryBuffer.h"
 
 #include <algorithm>
 #include <cstdlib>
+
+#include "common/debug.h"
 
 namespace rx
 {

@@ -8,6 +8,7 @@
 
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 
+#include "common/MemoryBuffer.h"
 #include "common/utilities.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Framebuffer.h"
@@ -18,7 +19,6 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/DisplayD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
-#include "libANGLE/renderer/d3d/MemoryBuffer.h"
 
 namespace rx
 {
