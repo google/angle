@@ -10,7 +10,7 @@
 #include "common/angleutils.h"
 
 #include <cstddef>
-#include <cstdint>
+#include <stdint.h>
 
 namespace rx
 {
