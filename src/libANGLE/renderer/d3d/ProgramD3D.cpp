@@ -1463,29 +1463,27 @@ void ProgramD3D::defineUniform(const ShaderD3D *shader, const sh::ShaderVariable
 
         gl::LinkedUniform *linkedUniform = getUniformByName(fullName);
 
+        // Advance the uniform offset, to track registers allocation for structs
+        sh::BlockMemberInfo blockInfo = encoder->encodeType(uniform.type, uniform.arraySize, false);
+
         if (!linkedUniform)
         {
             linkedUniform = new gl::LinkedUniform(uniform.type, uniform.precision, fullName, uniform.arraySize,
-                                              -1, sh::BlockMemberInfo::getDefaultBlockInfo());
+                                                  -1, sh::BlockMemberInfo::getDefaultBlockInfo());
             ASSERT(linkedUniform);
-            linkedUniform->registerElement = encoder->getCurrentElement();
+            linkedUniform->registerElement = sh::HLSLBlockEncoder::getBlockRegisterElement(blockInfo);
             mUniforms.push_back(linkedUniform);
         }
 
-        ASSERT(linkedUniform->registerElement == encoder->getCurrentElement());
-
         if (shader->getShaderType() == GL_FRAGMENT_SHADER)
         {
-            linkedUniform->psRegisterIndex = encoder->getCurrentRegister();
+            linkedUniform->psRegisterIndex = sh::HLSLBlockEncoder::getBlockRegister(blockInfo);
         }
         else if (shader->getShaderType() == GL_VERTEX_SHADER)
         {
-            linkedUniform->vsRegisterIndex = encoder->getCurrentRegister();
+            linkedUniform->vsRegisterIndex = sh::HLSLBlockEncoder::getBlockRegister(blockInfo);
         }
         else UNREACHABLE();
-
-        // Advance the uniform offset, to track registers allocation for structs
-        encoder->encodeType(uniform.type, uniform.arraySize, false);
 
         // Arrays are treated as aggregate types
         if (uniform.isArray())
