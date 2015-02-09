@@ -326,6 +326,15 @@ void OutputHLSL::header(const BuiltInFunctionEmulatorHLSL *builtInFunctionEmulat
     out << mUniformHLSL->uniformsHeader(mOutputType, mReferencedUniforms);
     out << mUniformHLSL->interfaceBlocksHeader(mReferencedInterfaceBlocks);
 
+    if (!mStructEqualityFunctions.empty())
+    {
+        out << "\n// Structure equality functions\n\n";
+        for (const auto &eqFunction : mStructEqualityFunctions)
+        {
+            out << eqFunction.functionDefinition << "\n";
+        }
+    }
+
     if (mUsesDiscardRewriting)
     {
         out << "#define ANGLE_USES_DISCARD_REWRITING\n";
@@ -1533,50 +1542,23 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 outputTriplet(visit, "(", " != ", ")");
             }
         }
-        else if (node->getLeft()->getBasicType() == EbtStruct)
-        {
-            if (node->getOp() == EOpEqual)
-            {
-                out << "(";
-            }
-            else
-            {
-                out << "!(";
-            }
-
-            const TStructure &structure = *node->getLeft()->getType().getStruct();
-            const TFieldList &fields = structure.fields();
-
-            for (size_t i = 0; i < fields.size(); i++)
-            {
-                const TField *field = fields[i];
-
-                node->getLeft()->traverse(this);
-                out << "." + DecorateField(field->name(), structure) + " == ";
-                node->getRight()->traverse(this);
-                out << "." + DecorateField(field->name(), structure);
-
-                if (i < fields.size() - 1)
-                {
-                    out << " && ";
-                }
-            }
-
-            out << ")";
-
-            return false;
-        }
         else
         {
-            ASSERT(node->getLeft()->isMatrix() || node->getLeft()->isVector());
-
-            if (node->getOp() == EOpEqual)
+            if (visit == PreVisit && node->getOp() == EOpNotEqual)
             {
-                outputTriplet(visit, "all(", " == ", ")");
+                out << "!";
+            }
+
+            if (node->getLeft()->getBasicType() == EbtStruct)
+            {
+                const TStructure &structure = *node->getLeft()->getType().getStruct();
+                const TString &functionName = addStructEqualityFunction(structure);
+                outputTriplet(visit, functionName + "(", ", ", ")");
             }
             else
             {
-                outputTriplet(visit, "!all(", " == ", ")");
+                ASSERT(node->getLeft()->isMatrix() || node->getLeft()->isVector());
+                outputTriplet(visit, "all(", " == ", ")");
             }
         }
         break;
@@ -2859,6 +2841,67 @@ void OutputHLSL::writeDeferredGlobalInitializers(TInfoSinkBase &out)
 
     out << "}\n"
         << "\n";
+}
+
+TString OutputHLSL::addStructEqualityFunction(const TStructure &structure)
+{
+    const TFieldList &fields = structure.fields();
+
+    for (const auto &eqFunction : mStructEqualityFunctions)
+    {
+        if (eqFunction.structure == &structure)
+        {
+            return eqFunction.functionName;
+        }
+    }
+
+    const TString &structNameString = StructNameString(structure);
+
+    StructEqualityFunction function;
+    function.structure = &structure;
+    function.functionName = "angle_eq_" + structNameString;
+
+    TString &func = function.functionDefinition;
+
+    func = "bool " + function.functionName + "(" + structNameString + " a, " + structNameString + " b)\n" +
+           "{\n"
+           "    return ";
+
+    for (size_t i = 0; i < fields.size(); i++)
+    {
+        const TField *field = fields[i];
+        const TType *fieldType = field->type();
+
+        const TString &fieldNameA = "a." + Decorate(field->name());
+        const TString &fieldNameB = "b." + Decorate(field->name());
+
+        if (i > 0)
+        {
+            func += " && ";
+        }
+
+        if (fieldType->getBasicType() == EbtStruct)
+        {
+            const TStructure &fieldStruct = *fieldType->getStruct();
+            const TString &functionName = addStructEqualityFunction(fieldStruct);
+            func += functionName + "(" + fieldNameA + ", " + fieldNameB + ")";
+        }
+        else if (fieldType->isScalar())
+        {
+            func += "(" + fieldNameA + " == " + fieldNameB + ")";
+        }
+        else
+        {
+            ASSERT(fieldType->isMatrix() || fieldType->isVector());
+            func += "all(" + fieldNameA + " == " + fieldNameB + ")";
+        }
+    }
+
+    func = func + ";\n" + "}\n";
+
+    mStructEqualityFunctions.push_back(function);
+
+    return function.functionName;
 }
 
 }

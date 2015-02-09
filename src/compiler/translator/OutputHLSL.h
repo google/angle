@@ -73,6 +73,9 @@ class OutputHLSL : public TIntermTraverser
     bool writeSameSymbolInitializer(TInfoSinkBase &out, TIntermSymbol *symbolNode, TIntermTyped *expression);
     void writeDeferredGlobalInitializers(TInfoSinkBase &out);
 
+    // Returns the function name
+    TString addStructEqualityFunction(const TStructure &structure);
+
     TParseContext &mContext;
     const ShShaderOutput mOutputType;
     UnfoldShortCircuit *mUnfoldShortCircuit;
@@ -160,6 +163,17 @@ class OutputHLSL : public TIntermTraverser
     // shader input structure, which we set in the D3D main function. Instead, we can initialize
     // these static globals after we initialize our other globals.
     std::vector<std::pair<TIntermSymbol*, TIntermTyped*>> mDeferredGlobalInitializers;
+
+    // A list of structure equality comparison functions. It's important to preserve the order at
+    // which we add the functions, since nested structures call each other recursively.
+    struct StructEqualityFunction
+    {
+        const TStructure *structure;
+        TString functionName;
+        TString functionDefinition;
+    };
+
+    std::vector<StructEqualityFunction> mStructEqualityFunctions;
 };
 
 }
