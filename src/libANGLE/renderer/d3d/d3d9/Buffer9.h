@@ -9,9 +9,9 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D9_BUFFER9_H_
 #define LIBANGLE_RENDERER_D3D_D3D9_BUFFER9_H_
 
-#include "libANGLE/renderer/d3d/BufferD3D.h"
-#include "libANGLE/renderer/d3d/MemoryBuffer.h"
+#include "common/MemoryBuffer.h"
 #include "libANGLE/angletypes.h"
+#include "libANGLE/renderer/d3d/BufferD3D.h"
 
 namespace rx
 {

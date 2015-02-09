@@ -8,6 +8,8 @@
         # These file lists are shared with the GN build.
         'libangle_common_sources':
         [
+            'common/MemoryBuffer.cpp',
+            'common/MemoryBuffer.h',
             'common/angleutils.cpp',
             'common/angleutils.h',
             'common/blocklayout.cpp',
@@ -177,8 +179,6 @@
             'libANGLE/renderer/d3d/IndexBuffer.h',
             'libANGLE/renderer/d3d/IndexDataManager.cpp',
             'libANGLE/renderer/d3d/IndexDataManager.h',
-            'libANGLE/renderer/d3d/MemoryBuffer.cpp',
-            'libANGLE/renderer/d3d/MemoryBuffer.h',
             'libANGLE/renderer/d3d/ProgramD3D.cpp',
             'libANGLE/renderer/d3d/ProgramD3D.h',
             'libANGLE/renderer/d3d/RenderbufferD3D.cpp',
