@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9120ffdf_8852b7cb",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-09T16:42:03Z",
+      "side": 1,
+      "message": "if any of thse parameters are derivable from mDisplay, please use them. I didn\u0027t actually check if there are any. same goes for other methods.",
+      "range": {
+        "startLine": 137,
+        "startChar": 54,
+        "endLine": 138,
+        "endChar": 92
+      },
+      "revId": "071ef6003ab757061111e551633f164d8de943bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
