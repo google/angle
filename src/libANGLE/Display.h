@@ -79,6 +79,9 @@ class Display final
     const std::string &getExtensionString() const;
     const std::string &getVendorString() const;
 
+    const AttributeMap &getAttributeMap() const { return mAttributeMap; }
+    EGLNativeDisplayType getNativeDisplayId() const { return mDisplayId; }
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);
 

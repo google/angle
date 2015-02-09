@@ -139,7 +139,7 @@ Error Display::initialize()
         return Error(EGL_SUCCESS);
     }
 
-    Error error = mImplementation->initialize(this, mDisplayId, mAttributeMap);
+    Error error = mImplementation->initialize(this);
     if (error.isError())
     {
         return error;

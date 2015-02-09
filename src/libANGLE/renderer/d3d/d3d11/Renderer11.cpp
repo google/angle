@@ -145,9 +145,8 @@ ID3D11Resource *GetViewResource(ID3D11View *view)
 
 }
 
-Renderer11::Renderer11(egl::Display *display, EGLNativeDisplayType hDc, const egl::AttributeMap &attributes)
+Renderer11::Renderer11(egl::Display *display)
     : RendererD3D(display),
-      mDc(hDc),
       mStateCache(this)
 {
     mVertexDataManager = NULL;
@@ -180,6 +179,8 @@ Renderer11::Renderer11(egl::Display *display, EGLNativeDisplayType hDc, const eg
     mAppliedVertexShader = NULL;
     mAppliedGeometryShader = NULL;
     mAppliedPixelShader = NULL;
+
+    const auto &attributes = mDisplay->getAttributeMap();
 
     EGLint requestedMajorVersion = attributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE);
     EGLint requestedMinorVersion = attributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE);
@@ -300,7 +301,7 @@ EGLint Renderer11::initialize()
     // In order to create a swap chain for an HWND owned by another process, DXGI 1.2 is required.
     // The easiest way to check is to query for a IDXGIDevice2.
     bool requireDXGI1_2 = false;
-    HWND hwnd = WindowFromDC(mDc);
+    HWND hwnd = WindowFromDC(mDisplay->getNativeDisplayId());
     if (hwnd)
     {
         DWORD currentProcessId = GetCurrentProcessId();

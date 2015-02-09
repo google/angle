@@ -39,7 +39,7 @@ class Blit9;
 class Renderer9 : public RendererD3D
 {
   public:
-    Renderer9(egl::Display *display, EGLNativeDisplayType hDc, const egl::AttributeMap &attributes);
+    explicit Renderer9(egl::Display *display);
     virtual ~Renderer9();
 
     static Renderer9 *makeRenderer9(Renderer *renderer);
@@ -225,7 +225,6 @@ class Renderer9 : public RendererD3D
     D3DPOOL getBufferPool(DWORD usage) const;
 
     HMODULE mD3d9Module;
-    HDC mDc;
 
     void initializeDevice();
     D3DPRESENT_PARAMETERS getDefaultPresentParameters();

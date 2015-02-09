@@ -77,9 +77,8 @@ enum
     MAX_TEXTURE_IMAGE_UNITS_VTF_SM3 = 4
 };
 
-Renderer9::Renderer9(egl::Display *display, EGLNativeDisplayType hDc, const egl::AttributeMap &attributes)
-    : RendererD3D(display),
-      mDc(hDc)
+Renderer9::Renderer9(egl::Display *display)
+    : RendererD3D(display)
 {
     mD3d9Module = NULL;
 
@@ -202,7 +201,7 @@ EGLint Renderer9::initialize()
         return EGL_NOT_INITIALIZED;
     }
 
-    if (mDc != NULL)
+    if (mDisplay->getNativeDisplayId() != nullptr)
     {
     //  UNIMPLEMENTED();   // FIXME: Determine which adapter index the device context corresponds to
     }

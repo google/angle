@@ -20,7 +20,7 @@ class DisplayD3D : public DisplayImpl
   public:
     DisplayD3D();
 
-    egl::Error initialize(egl::Display *display, EGLNativeDisplayType nativeDisplay, const egl::AttributeMap &attribMap) override;
+    egl::Error initialize(egl::Display *display) override;
     virtual void terminate() override;
 
     SurfaceImpl *createWindowSurface(egl::Display *display, const egl::Config *config,

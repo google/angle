@@ -42,7 +42,7 @@ class DisplayImpl
     DisplayImpl();
     virtual ~DisplayImpl();
 
-    virtual egl::Error initialize(egl::Display *display, EGLNativeDisplayType nativeDisplay, const egl::AttributeMap &attribMap) = 0;
+    virtual egl::Error initialize(egl::Display *display) = 0;
     virtual void terminate() = 0;
 
     virtual SurfaceImpl *createWindowSurface(egl::Display *display, const egl::Config *config,
