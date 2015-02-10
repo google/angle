@@ -93,6 +93,30 @@
       "revId": "fe96aa90d4a025d02d1533aac42db7983d2b543b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11208f81_4415ae62",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-02-10T22:34:27Z",
+      "side": 1,
+      "message": "If you make it a pointer I believe you can change the cache (just not the pointer). Anyway, that\u0027s unnecessary overhead by itself. Caching is a good use case of \u0027mutable\u0027.",
+      "parentUuid": "11c40fd1_44182eec",
+      "range": {
+        "startLine": 149,
+        "startChar": 4,
+        "endLine": 149,
+        "endChar": 11
+      },
+      "revId": "fe96aa90d4a025d02d1533aac42db7983d2b543b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
