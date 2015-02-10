@@ -140,6 +140,30 @@
       "revId": "071ef6003ab757061111e551633f164d8de943bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1116cf00_34d9d07b",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-10T18:44:18Z",
+      "side": 1,
+      "message": "Would it make sense to pass the attrib map itself?",
+      "parentUuid": "9102bfb9_b85039a3",
+      "range": {
+        "startLine": 137,
+        "startChar": 54,
+        "endLine": 138,
+        "endChar": 92
+      },
+      "revId": "071ef6003ab757061111e551633f164d8de943bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
