@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "91647f9b_28184beb",
+        "filename": "src/libANGLE/renderer/SurfaceImpl.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-10T16:10:18Z",
+      "side": 0,
+      "message": "In my sources this is still initialized to -1 here, and I\u0027m concerned that the move to SurfaceD3D and the initialization to 1 will make the setSwapInterval(1) call in Surface\u0027s constructor a no-op since mSwapIntervalDirty won\u0027t be set to true in SurfaceD3D::setSwapInterval. Can you check to make sure nothing will be broken with this change?",
+      "range": {
+        "startLine": 24,
+        "startChar": 19,
+        "endLine": 24,
+        "endChar": 20
+      },
+      "revId": "071ef6003ab757061111e551633f164d8de943bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
