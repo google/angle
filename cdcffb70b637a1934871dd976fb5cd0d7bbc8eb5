@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56fbdd33_7ea89177",
+        "filename": "src/libANGLE/renderer/gl/FenceGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2015-02-10T23:15:41Z",
+      "side": 1,
+      "message": "Looks like this file needs to be regenerated?",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 10
+      },
+      "revId": "cdcffb70b637a1934871dd976fb5cd0d7bbc8eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
