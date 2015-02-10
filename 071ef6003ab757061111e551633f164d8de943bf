@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "b16fc375_89be1990",
+        "filename": "src/libANGLE/renderer/SurfaceImpl.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-10T15:52:15Z",
+      "side": 1,
+      "message": "It looks to me like this initialization doesn\u0027t have the same effect as the removed call to setSwapInterval(1) from Surface\u0027s constructor. In particular, that set mSwapIntervalDirty, and I suspect this setting will be lost. Could you get a review from @bajones in particular, since he worked on this recently? Is there any way to write a test for this? It\u0027s subtle but important functionality that\u0027s easy to break.",
+      "range": {
+        "startLine": 24,
+        "startChar": 6,
+        "endLine": 24,
+        "endChar": 19
+      },
+      "revId": "071ef6003ab757061111e551633f164d8de943bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91647f9b_e80b13cf",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-10T15:52:15Z",
+      "side": 1,
+      "message": "Would it be better to refactor this non-D3D-specific code querying the AttributeMap into the common code, and change the method signature to just pass these as arguments?",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 135,
+        "endChar": 5
+      },
+      "revId": "071ef6003ab757061111e551633f164d8de943bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9120ffdf_8852b7cb",
         "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
         "patchSetId": 10
