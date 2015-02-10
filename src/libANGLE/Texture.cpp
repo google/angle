@@ -112,22 +112,18 @@ GLenum Texture::getInternalFormat(GLenum target, size_t level) const
 
 bool Texture::isSamplerComplete(const SamplerState &samplerState, const Data &data) const
 {
-    GLenum baseTarget = getBaseImageTarget();
-    size_t width = getWidth(baseTarget, samplerState.baseLevel);
-    size_t height = getHeight(baseTarget, samplerState.baseLevel);
-    size_t depth = getDepth(baseTarget, samplerState.baseLevel);
-    if (width == 0 || height == 0 || depth == 0)
+    const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), samplerState.baseLevel);
+    if (baseImageDesc.size.width == 0 || baseImageDesc.size.height == 0 || baseImageDesc.size.depth == 0)
     {
         return false;
     }
 
-    if (mTarget == GL_TEXTURE_CUBE_MAP && width != height)
+    if (mTarget == GL_TEXTURE_CUBE_MAP && baseImageDesc.size.width != baseImageDesc.size.height)
     {
         return false;
     }
 
-    GLenum internalFormat = getInternalFormat(baseTarget, samplerState.baseLevel);
-    const TextureCaps &textureCaps = data.textureCaps->get(internalFormat);
+    const TextureCaps &textureCaps = data.textureCaps->get(baseImageDesc.internalFormat);
     if (!textureCaps.filterable && !IsPointSampled(samplerState))
     {
         return false;
@@ -136,8 +132,8 @@ bool Texture::isSamplerComplete(const SamplerState &samplerState, const Data &da
     bool npotSupport = data.extensions->textureNPOT || data.clientVersion >= 3;
     if (!npotSupport)
     {
-        if ((samplerState.wrapS != GL_CLAMP_TO_EDGE && !gl::isPow2(width)) ||
-            (samplerState.wrapT != GL_CLAMP_TO_EDGE && !gl::isPow2(height)))
+        if ((samplerState.wrapS != GL_CLAMP_TO_EDGE && !gl::isPow2(baseImageDesc.size.width)) ||
+            (samplerState.wrapT != GL_CLAMP_TO_EDGE && !gl::isPow2(baseImageDesc.size.height)))
         {
             return false;
         }
@@ -147,7 +143,7 @@ bool Texture::isSamplerComplete(const SamplerState &samplerState, const Data &da
     {
         if (!npotSupport)
         {
-            if (!gl::isPow2(width) || !gl::isPow2(height))
+            if (!gl::isPow2(baseImageDesc.size.width) || !gl::isPow2(baseImageDesc.size.height))
             {
                 return false;
             }
@@ -171,7 +167,7 @@ bool Texture::isSamplerComplete(const SamplerState &samplerState, const Data &da
     // depth and stencil format (see table 3.13), the value of TEXTURE_COMPARE_-
     // MODE is NONE, and either the magnification filter is not NEAREST or the mini-
     // fication filter is neither NEAREST nor NEAREST_MIPMAP_NEAREST.
-    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(baseImageDesc.internalFormat);
     if (formatInfo.depthBits > 0 && data.clientVersion > 2)
     {
         if (samplerState.compareMode == GL_NONE)
@@ -192,20 +188,18 @@ bool Texture::isCubeComplete() const
 {
     ASSERT(mTarget == GL_TEXTURE_CUBE_MAP);
 
-    GLenum baseTarget = FirstCubeMapTextureTarget;
-    size_t width = getWidth(baseTarget, 0);
-    size_t height = getWidth(baseTarget, 0);
-    if (width == 0 || width != height)
+    const ImageDesc &baseImageDesc = getImageDesc(FirstCubeMapTextureTarget, 0);
+    if (baseImageDesc.size.width == 0 || baseImageDesc.size.width != baseImageDesc.size.height)
     {
         return false;
     }
 
-    GLenum internalFormat = getInternalFormat(baseTarget, 0);
-    for (GLenum face = baseTarget + 1; face <= LastCubeMapTextureTarget; face++)
+    for (GLenum face = FirstCubeMapTextureTarget + 1; face <= LastCubeMapTextureTarget; face++)
     {
-        if (getWidth(face, 0) != width ||
-            getHeight(face, 0) != height ||
-            getInternalFormat(face, 0) != internalFormat)
+        const ImageDesc &faceImageDesc = getImageDesc(face, 0);
+        if (faceImageDesc.size.width != baseImageDesc.size.width ||
+            faceImageDesc.size.height != baseImageDesc.size.height ||
+            faceImageDesc.internalFormat != baseImageDesc.internalFormat)
         {
             return false;
         }
@@ -446,17 +440,14 @@ GLenum Texture::getBaseImageTarget() const
 
 size_t Texture::getExpectedMipLevels() const
 {
-    GLenum baseTarget = getBaseImageTarget();
-    size_t width = getWidth(baseTarget, 0);
-    size_t height = getHeight(baseTarget, 0);
+    const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), 0);
     if (mTarget == GL_TEXTURE_3D)
     {
-        size_t depth = getDepth(baseTarget, 0);
-        return log2(std::max(std::max(width, height), depth)) + 1;
+        return log2(std::max(std::max(baseImageDesc.size.width, baseImageDesc.size.height), baseImageDesc.size.depth)) + 1;
     }
     else
     {
-        return log2(std::max(width, height)) + 1;
+        return log2(std::max(baseImageDesc.size.width, baseImageDesc.size.height)) + 1;
     }
 }
 
@@ -501,10 +492,8 @@ bool Texture::isLevelComplete(GLenum target, size_t level,
         return true;
     }
 
-    size_t width = getWidth(target, samplerState.baseLevel);
-    size_t height = getHeight(target, samplerState.baseLevel);
-    size_t depth = getDepth(target, samplerState.baseLevel);
-    if (width == 0 || height == 0 || depth == 0)
+    const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), samplerState.baseLevel);
+    if (baseImageDesc.size.width == 0 || baseImageDesc.size.height == 0 || baseImageDesc.size.depth == 0)
     {
         return false;
     }
@@ -515,31 +504,32 @@ bool Texture::isLevelComplete(GLenum target, size_t level,
         return true;
     }
 
-    if (getInternalFormat(target, level) != getInternalFormat(target, samplerState.baseLevel))
+    const ImageDesc &levelImageDesc = getImageDesc(target, level);
+    if (levelImageDesc.internalFormat != baseImageDesc.internalFormat)
     {
         return false;
     }
 
-    if (getWidth(target, level) != std::max<size_t>(1, width >> level))
+    if (levelImageDesc.size.width != std::max(1, baseImageDesc.size.width >> level))
     {
         return false;
     }
 
-    if (getHeight(target, level) != std::max<size_t>(1, height >> level))
+    if (levelImageDesc.size.height != std::max(1, baseImageDesc.size.height >> level))
     {
         return false;
     }
 
     if (mTarget == GL_TEXTURE_3D)
     {
-        if (getDepth(target, level) != std::max<size_t>(1, depth >> level))
+        if (levelImageDesc.size.depth != std::max(1, baseImageDesc.size.depth >> level))
         {
             return false;
         }
     }
     else if (mTarget == GL_TEXTURE_2D_ARRAY)
     {
-        if (getDepth(target, level) != depth)
+        if (levelImageDesc.size.depth != baseImageDesc.size.depth)
         {
             return false;
         }
