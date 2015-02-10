@@ -45,6 +45,30 @@
       "revId": "2d527eb1c2c753f70b4f91cca107e30b63b09b34",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31759377_d52ddc8f",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-10T21:56:27Z",
+      "side": 1,
+      "message": "Aha. Yeah I can move them in to a more common location.",
+      "parentUuid": "511cc71e_369438a1",
+      "range": {
+        "startLine": 618,
+        "startChar": 33,
+        "endLine": 618,
+        "endChar": 63
+      },
+      "revId": "2d527eb1c2c753f70b4f91cca107e30b63b09b34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
