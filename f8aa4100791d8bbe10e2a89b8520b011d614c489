@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "91647f9b_8bce11b6",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-10T16:35:27Z",
+      "side": 0,
+      "message": "don\u0027t you still need size_t?",
+      "range": {
+        "startLine": 535,
+        "startChar": 46,
+        "endLine": 535,
+        "endChar": 55
+      },
+      "revId": "f8aa4100791d8bbe10e2a89b8520b011d614c489",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
