@@ -22,6 +22,29 @@
       "revId": "2d527eb1c2c753f70b4f91cca107e30b63b09b34",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "511cc71e_369438a1",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-02-10T21:47:23Z",
+      "side": 1,
+      "message": "I think we need to add this to libEGL and ANGLE_common too. I couldn\u0027t get the annotations to work without this.\n\nIt already appears to be defined in libGLESv2.",
+      "range": {
+        "startLine": 618,
+        "startChar": 33,
+        "endLine": 618,
+        "endChar": 63
+      },
+      "revId": "2d527eb1c2c753f70b4f91cca107e30b63b09b34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
