@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "51f3e71a_7ef4d18b",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-10T17:08:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91647f9b_a850bb47",
+      "range": {
+        "startLine": 382,
+        "startChar": 0,
+        "endLine": 385,
+        "endChar": 1
+      },
+      "revId": "f8aa4100791d8bbe10e2a89b8520b011d614c489",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91e9df2d_60539220",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-10T16:33:14Z",
       "side": 1,
       "message": "nit: might as well merge this line with the below",
+      "range": {
+        "startLine": 133,
+        "startChar": 4,
+        "endLine": 133,
+        "endChar": 51
+      },
+      "revId": "f8aa4100791d8bbe10e2a89b8520b011d614c489",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51f3e71a_5ef1159a",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-10T17:08:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91e9df2d_60539220",
       "range": {
         "startLine": 133,
         "startChar": 4,
