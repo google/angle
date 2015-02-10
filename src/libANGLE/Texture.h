@@ -124,14 +124,13 @@ class Texture final : public RefCountObject
     bool isLevelComplete(GLenum target, size_t level,
                          const gl::SamplerState &samplerState) const;
 
-    const ImageDesc &getImageDesc(const ImageIndex &index) const;
-    void setImageDesc(const ImageIndex &index, const ImageDesc &desc);
+    const ImageDesc &getImageDesc(GLenum target, size_t level) const;
+    void setImageDesc(GLenum target, size_t level, const ImageDesc &desc);
     void setImageDescChain(size_t levels, Extents baseSize, GLenum sizedInternalFormat);
-    void clearImageDesc(const ImageIndex &index);
+    void clearImageDesc(GLenum target, size_t level);
     void clearImageDescs();
 
-    typedef std::map<ImageIndex, ImageDesc> ImageDescMap;
-    ImageDescMap mImageDescs;
+    std::vector<ImageDesc> mImageDescs;
 
     egl::Surface *mBoundSurface;
 };
