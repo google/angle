@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9102bfb9_7bddfb13",
+        "filename": "src/libANGLE/renderer/SurfaceImpl.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-10T18:40:48Z",
+      "side": 1,
+      "message": "Thanks for catching this.  It ended up not being a problem because SurfaceD3D hasn\u0027t created it\u0027s swap chain yet so the mSwapIntervalDirty has no effect.  I updated the constructor of SurfaceD3D to initialize mSwapIntervalDirty to false to be sure.\n\nI\u0027m not sure how to cover this in a test, verifying that the surface is swapping with the correct interval will be tough.  Brandon, does chrome have a way of testing the correct swapping is being done other than by inspection?",
+      "parentUuid": "b16fc375_89be1990",
+      "range": {
+        "startLine": 24,
+        "startChar": 6,
+        "endLine": 24,
+        "endChar": 19
+      },
+      "revId": "071ef6003ab757061111e551633f164d8de943bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91647f9b_e80b13cf",
         "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
         "patchSetId": 10
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "91647f9b_6e62cb7d",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-10T18:40:48Z",
+      "side": 1,
+      "message": "These parameters were all from extensions, (EGL_ANGLE_window_fixed_size and EGL_NV_post_sub_buffer) so I leaned towards resolving them down here.  I didn\u0027t want to make the higher level create*Surface functions have lots of parameters for extensions that may not be supported but if they\u0027re limited then it\u0027s might be ok.",
+      "parentUuid": "91647f9b_e80b13cf",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 135,
+        "endChar": 5
+      },
+      "revId": "071ef6003ab757061111e551633f164d8de943bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9120ffdf_8852b7cb",
         "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
         "patchSetId": 10
@@ -59,6 +107,30 @@
       "writtenOn": "2015-02-09T16:42:03Z",
       "side": 1,
       "message": "if any of thse parameters are derivable from mDisplay, please use them. I didn\u0027t actually check if there are any. same goes for other methods.",
+      "range": {
+        "startLine": 137,
+        "startChar": 54,
+        "endLine": 138,
+        "endChar": 92
+      },
+      "revId": "071ef6003ab757061111e551633f164d8de943bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9102bfb9_b85039a3",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-10T18:40:48Z",
+      "side": 1,
+      "message": "Unfortunately not, the parameters all come from the attribute map passed to eglCreate*Surface.",
+      "parentUuid": "9120ffdf_8852b7cb",
       "range": {
         "startLine": 137,
         "startChar": 54,
