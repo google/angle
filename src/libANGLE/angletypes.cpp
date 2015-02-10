@@ -40,6 +40,31 @@ bool SamplerState::swizzleRequired() const
            swizzleBlue != GL_BLUE || swizzleAlpha != GL_ALPHA;
 }
 
+bool SamplerState::operator==(const SamplerState &other) const
+{
+    return minFilter == other.minFilter &&
+           magFilter == other.magFilter &&
+           wrapS == other.wrapS &&
+           wrapT == other.wrapT &&
+           wrapR == other.wrapR &&
+           maxAnisotropy == other.maxAnisotropy &&
+           baseLevel == other.baseLevel &&
+           maxLevel == other.maxLevel &&
+           minLod == other.minLod &&
+           maxLod == other.maxLod &&
+           compareMode == other.compareMode &&
+           compareFunc == other.compareFunc &&
+           swizzleRed == other.swizzleRed &&
+           swizzleGreen == other.swizzleGreen &&
+           swizzleBlue == other.swizzleBlue &&
+           swizzleAlpha == other.swizzleAlpha;
+}
+
+bool SamplerState::operator!=(const SamplerState &other) const
+{
+    return !(*this == other);
+}
+
 static void MinMax(int a, int b, int *minimum, int *maximum)
 {
     if (a < b)
