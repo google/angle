@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "16cfa548_2c48d36f",
+        "filename": "src/libANGLE/renderer/gl/FenceGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-11T14:47:26Z",
+      "side": 1,
+      "message": "Probably removed. It gets replaced with specific files for NV and Sync.",
+      "parentUuid": "56fbdd33_7ea89177",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 10
+      },
+      "revId": "cdcffb70b637a1934871dd976fb5cd0d7bbc8eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56c59d22_8e13fb80",
         "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
         "patchSetId": 9
