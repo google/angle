@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "766b81dd_7768d086",
+        "filename": "src/angle.gyp",
+        "patchSetId": 9
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:26:36Z",
+      "side": 1,
+      "message": "It might be a good idea to leave this off by default initially, and then turn it on in a second patch. That way if there\u0027s some build or run-time problem the whole CL doesn\u0027t need to be reverted.",
+      "range": {
+        "startLine": 25,
+        "startChar": 17,
+        "endLine": 25,
+        "endChar": 32
+      },
+      "revId": "cdcffb70b637a1934871dd976fb5cd0d7bbc8eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56fbdd33_7ea89177",
         "filename": "src/libANGLE/renderer/gl/FenceGL.cpp",
         "patchSetId": 9
@@ -18,6 +41,98 @@
         "startChar": 4,
         "endLine": 24,
         "endChar": 10
+      },
+      "revId": "cdcffb70b637a1934871dd976fb5cd0d7bbc8eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56c59d22_8e13fb80",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:26:36Z",
+      "side": 1,
+      "message": "Add TODO about querying the underlying GL limits here? Or at least making these more realistic.",
+      "range": {
+        "startLine": 171,
+        "startChar": 16,
+        "endLine": 171,
+        "endChar": 23
+      },
+      "revId": "cdcffb70b637a1934871dd976fb5cd0d7bbc8eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "766b81dd_d7567cc3",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:26:36Z",
+      "side": 1,
+      "message": "Perhaps in the future it\u0027ll be possible to expose a larger line width than 1.0. :-P",
+      "range": {
+        "startLine": 186,
+        "startChar": 13,
+        "endLine": 186,
+        "endChar": 32
+      },
+      "revId": "cdcffb70b637a1934871dd976fb5cd0d7bbc8eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "766b81dd_376258a7",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:26:36Z",
+      "side": 1,
+      "message": "It\u0027ll be necessary to test for context loss coming from the driver when the context is created with the \"lose_context_on_reset\" flag coming from the robustness extension.",
+      "range": {
+        "startLine": 62,
+        "startChar": 50,
+        "endLine": 62,
+        "endChar": 59
+      },
+      "revId": "cdcffb70b637a1934871dd976fb5cd0d7bbc8eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "766b81dd_975004c6",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 9
+      },
+      "lineNbr": 613,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:26:36Z",
+      "side": 1,
+      "message": "Will this dependency cause a problem because of conflicts with the Direct3D DLLs? I would think that OpenGL32.dll should always be dynamically loaded, and all of the entry points -- even the core wgl ones like wglGetProcAddress, wglCreateContext and wglMakeCurrent -- should be looked up at run time.\n\nI noticed that libGLESv2.dll has a dependency on d3d9.dll -- I wonder whether that will also cause problems with the coming GL backend, and whether it should be dynamically loaded (is that technically possible?).",
+      "range": {
+        "startLine": 613,
+        "startChar": 37,
+        "endLine": 613,
+        "endChar": 45
       },
       "revId": "cdcffb70b637a1934871dd976fb5cd0d7bbc8eb5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
