@@ -2588,6 +2588,53 @@ TPublicType TParseContext::addStructure(const TSourceLoc& structLine, const TSou
     return publicType;
 }
 
+TIntermTyped *TParseContext::addUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc)
+{
+    TIntermTyped *node = intermediate.addUnaryMath(op, child, loc);
+    if (node == 0)
+    {
+        unaryOpError(loc, GetOperatorString(op), child->getCompleteString());
+        recover();
+        return child;
+    }
+    return node;
+}
+
+TIntermTyped *TParseContext::addUnaryMathLValue(TOperator op, TIntermTyped *child, const TSourceLoc &loc)
+{
+    if (lValueErrorCheck(loc, GetOperatorString(op), child))
+        recover();
+    return addUnaryMath(op, child, loc);
+}
+
+TIntermTyped *TParseContext::addBinaryMath(TOperator op, TIntermTyped *left, TIntermTyped *right,
+    const TSourceLoc &loc)
+{
+    TIntermTyped *node = intermediate.addBinaryMath(op, left, right, loc);
+    if (node == 0)
+    {
+        binaryOpError(loc, GetOperatorString(op), left->getCompleteString(), right->getCompleteString());
+        recover();
+        return left;
+    }
+    return node;
+}
+
+TIntermTyped *TParseContext::addBinaryMathBooleanResult(TOperator op, TIntermTyped *left, TIntermTyped *right,
+    const TSourceLoc &loc)
+{
+    TIntermTyped *node = intermediate.addBinaryMath(op, left, right, loc);
+    if (node == 0)
+    {
+        binaryOpError(loc, GetOperatorString(op), left->getCompleteString(), right->getCompleteString());
+        recover();
+        ConstantUnion *unionArray = new ConstantUnion[1];
+        unionArray->setBConst(false);
+        return intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), loc);
+    }
+    return node;
+}
+
 //
 // Parse an array of strings using yyparse.
 //
