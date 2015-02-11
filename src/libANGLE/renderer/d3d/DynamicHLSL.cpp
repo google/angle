@@ -98,11 +98,21 @@ DynamicHLSL::DynamicHLSL(RendererD3D *const renderer)
 
 static bool packVarying(PackedVarying *varying, const int maxVaryingVectors, VaryingPacking packing)
 {
-    GLenum transposedType = TransposeMatrixType(varying->type);
+    // Make sure we use transposed matrix types to count registers correctly.
+    int registers = 0;
+    int elements = 0;
 
-    // matrices within varying structs are not transposed
-    int registers = (varying->isStruct() ? HLSLVariableRegisterCount(*varying) : VariableRowCount(transposedType)) * varying->elementCount();
-    int elements = (varying->isStruct() ? 4 : VariableColumnCount(transposedType));
+    if (varying->isStruct())
+    {
+        registers = HLSLVariableRegisterCount(*varying, true) * varying->elementCount();
+        elements = 4;
+    }
+    else
+    {
+        GLenum transposedType = TransposeMatrixType(varying->type);
+        registers = VariableRowCount(transposedType) * varying->elementCount();
+        elements = VariableColumnCount(transposedType);
+    }
 
     if (elements >= 2 && elements <= 4)
     {
@@ -340,15 +350,16 @@ std::string DynamicHLSL::generateVaryingHLSL(const ShaderD3D *shader) const
                       default:  UNREACHABLE();
                     }
 
-                    unsigned int semanticIndex = elementIndex * variableRows + varying.columnIndex * mRenderer->getRendererCaps().maxVaryingVectors + varying.registerIndex + row;
+                    unsigned int semanticIndex = elementIndex * variableRows +
+                                                 varying.columnIndex * mRenderer->getRendererCaps().maxVaryingVectors +
+                                                 varying.registerIndex + row;
                     std::string n = Str(semanticIndex);
 
                     std::string typeString;
 
                     if (varying.isStruct())
                     {
-                        // matrices within structs are not transposed, so
-                        // do not use the special struct prefix "rm"
+                        // TODO(jmadill): pass back translated name from the shader translator
                         typeString = decorateVariable(varying.structName);
                     }
                     else

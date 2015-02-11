@@ -121,7 +121,8 @@ void Std140BlockEncoder::advanceOffset(GLenum type, unsigned int arraySize, bool
 }
 
 HLSLBlockEncoder::HLSLBlockEncoder(HLSLBlockEncoderStrategy strategy)
-    : mEncoderStrategy(strategy)
+    : mEncoderStrategy(strategy),
+      mTransposeMatrices(false)
 {
 }
 
@@ -134,8 +135,10 @@ void HLSLBlockEncoder::exitAggregateType()
 {
 }
 
-void HLSLBlockEncoder::getBlockLayoutInfo(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int *arrayStrideOut, int *matrixStrideOut)
+void HLSLBlockEncoder::getBlockLayoutInfo(GLenum typeIn, unsigned int arraySize, bool isRowMajorMatrix, int *arrayStrideOut, int *matrixStrideOut)
 {
+    GLenum type = (mTransposeMatrices ? gl::TransposeMatrixType(typeIn) : typeIn);
+
     // We assume we are only dealing with 4 byte components (no doubles or half-words currently)
     ASSERT(gl::VariableComponentSize(gl::VariableComponentType(type)) == BytesPerComponent);
 
@@ -179,8 +182,10 @@ void HLSLBlockEncoder::getBlockLayoutInfo(GLenum type, unsigned int arraySize, b
     *arrayStrideOut = arrayStride;
 }
 
-void HLSLBlockEncoder::advanceOffset(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int arrayStride, int matrixStride)
+void HLSLBlockEncoder::advanceOffset(GLenum typeIn, unsigned int arraySize, bool isRowMajorMatrix, int arrayStride, int matrixStride)
 {
+    GLenum type = (mTransposeMatrices ? gl::TransposeMatrixType(typeIn) : typeIn);
+
     if (arraySize > 0)
     {
         mCurrentOffset += arrayStride * (arraySize - 1);
@@ -243,9 +248,10 @@ void HLSLVariableRegisterCount(const ShaderVarType &variable, HLSLBlockEncoder *
     }
 }
 
-unsigned int HLSLVariableRegisterCount(const Varying &variable)
+unsigned int HLSLVariableRegisterCount(const Varying &variable, bool transposeMatrices)
 {
     HLSLBlockEncoder encoder(HLSLBlockEncoder::ENCODE_PACKED);
+    encoder.setTransposeMatrices(transposeMatrices);
     HLSLVariableRegisterCount(variable, &encoder);
 
     const size_t registerBytes = (encoder.BytesPerComponent * encoder.ComponentsPerRegister);
