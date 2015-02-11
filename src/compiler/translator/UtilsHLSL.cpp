@@ -175,6 +175,13 @@ TString StructNameString(const TStructure &structure)
         return "";
     }
 
+    // For structures at global scope (tagged with ID 0) we use a consistent
+    // translation so that we can link varying structs.
+    if (structure.uniqueId() == 0)
+    {
+        return Decorate(structure.name());
+    }
+
     return "ss" + str(structure.uniqueId()) + "_" + structure.name();
 }
 
