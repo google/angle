@@ -74,16 +74,16 @@ class Buffer11 : public BufferD3D
   private:
     DISALLOW_COPY_AND_ASSIGN(Buffer11);
 
-    class BufferStorage11;
-    class NativeBuffer11;
-    class PackStorage11;
+    class BufferStorage;
+    class NativeStorage;
+    class PackStorage;
 
     Renderer11 *mRenderer;
     size_t mSize;
 
-    BufferStorage11 *mMappedStorage;
+    BufferStorage *mMappedStorage;
 
-    std::map<BufferUsage, BufferStorage11*> mBufferStorages;
+    std::map<BufferUsage, BufferStorage*> mBufferStorages;
 
     typedef std::pair<ID3D11Buffer *, ID3D11ShaderResourceView *> BufferSRVPair;
     std::map<DXGI_FORMAT, BufferSRVPair> mBufferResourceViews;
@@ -93,11 +93,11 @@ class Buffer11 : public BufferD3D
     unsigned int mReadUsageCount;
 
     void markBufferUsage();
-    NativeBuffer11 *getStagingBuffer();
-    PackStorage11 *getPackStorage();
+    NativeStorage *getStagingStorage();
+    PackStorage *getPackStorage();
 
-    BufferStorage11 *getBufferStorage(BufferUsage usage);
-    BufferStorage11 *getLatestBufferStorage() const;
+    BufferStorage *getBufferStorage(BufferUsage usage);
+    BufferStorage *getLatestBufferStorage() const;
 };
 
 }
