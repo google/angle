@@ -610,6 +610,7 @@ declaration
         TIntermAggregate *prototype = new TIntermAggregate;
         prototype->setType(function.getReturnType());
         prototype->setName(function.getMangledName());
+        prototype->setFunctionId(function.getUniqueId());
         
         for (size_t i = 0; i < function.getParamCount(); i++)
         {
@@ -1663,6 +1664,12 @@ function_definition
             context->recover();
         }
         prevDec->setDefined();
+        //
+        // Overload the unique ID of the definition to be the same unique ID as the declaration.
+        // Eventually we will probably want to have only a single definition and just swap the
+        // arguments to be the definition's arguments.
+        //
+        function->setUniqueId(prevDec->getUniqueId());
 
         //
         // Raise error message if main function takes any parameters or return anything other than void
@@ -1735,6 +1742,7 @@ function_definition
         context->intermediate.setAggregateOperator($$, EOpFunction, @1);
         $$->getAsAggregate()->setName($1.function->getMangledName().c_str());
         $$->getAsAggregate()->setType($1.function->getReturnType());
+        $$->getAsAggregate()->setFunctionId($1.function->getUniqueId());
 
         // store the pragma information for debug and optimize and other vendor specific
         // information. This information can be queried from the parse tree

@@ -435,6 +435,9 @@ class TIntermAggregate : public TIntermOperator
     void setDebug(bool debug) { mDebug = debug; }
     bool getDebug() const { return mDebug; }
 
+    void setFunctionId(int functionId) { mFunctionId = functionId; }
+    int getFunctionId() const { return mFunctionId; }
+
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
 
@@ -447,6 +450,7 @@ class TIntermAggregate : public TIntermOperator
     TIntermSequence mSequence;
     TString mName;
     bool mUserDefined; // used for user defined function names
+    int mFunctionId;
 
     bool mOptimize;
     bool mDebug;
