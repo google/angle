@@ -170,7 +170,7 @@ protected:
 const char* ExpressionLimitTest::kExpressionTooComplex =
     "Expression too complex";
 const char* ExpressionLimitTest::kCallStackTooDeep =
-    "call stack too deep";
+    "Call stack too deep";
 const char* ExpressionLimitTest::kHasRecursion =
     "Function recursion detected";
 
@@ -481,10 +481,11 @@ TEST_F(ExpressionLimitTest, Recursion)
     EXPECT_TRUE(CheckShaderCompilation(
         vertexCompiler, shaderWithRecursion5,
         compileOptions, kHasRecursion));
-    // Check unused recursions passes.
+
+    // Check some more forms of recursion
     EXPECT_TRUE(CheckShaderCompilation(
         vertexCompiler, shaderWithRecursion6,
-        compileOptions, NULL));
+        compileOptions, kHasRecursion));
     EXPECT_TRUE(CheckShaderCompilation(
         vertexCompiler, shaderWithRecursion7,
         compileOptions, kHasRecursion));
