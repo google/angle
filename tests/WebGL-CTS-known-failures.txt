@@ -1,12 +1,6 @@
 Known failures in the WebGL CTS 1.0.4, top of tree, using Chromium
 https://www.khronos.org/registry/webgl/sdk/tests/webgl-conformance-tests.html
 
-flaky:
-
-conformance/canvas/framebuffer-bindings-affected-by-to-data-url.html: 2 tests failed (1 timed out)
-
-failing:
-
 conformance/context/user-defined-properties-on-context.html: 1 tests failed
 conformance/extensions/ext-frag-depth.html: 1 tests failed
 conformance/extensions/ext-shader-texture-lod.html: 1 tests failed
@@ -14,12 +8,10 @@ conformance/extensions/oes-standard-derivatives.html: 1 tests failed
 conformance/glsl/bugs/pow-of-small-constant-in-user-defined-function.html: 1 tests failed
 conformance/glsl/bugs/sampler-struct-function-arg.html: 1 tests failed
 conformance/glsl/misc/const-variable-initialization.html: 207 tests failed
-conformance/glsl/misc/struct-equals.html: 3 tests failed
 conformance/glsl/misc/struct-specifiers-in-uniforms.html: 12 tests failed
 conformance/glsl/misc/ternary-operators-in-global-initializers.html: 12 tests failed
 deqp/data/gles2/shaders/constant_expressions.html: 4 tests failed
 deqp/data/gles2/shaders/fragdata.html: 3 tests failed
 deqp/data/gles2/shaders/functions.html: 14 tests failed
-deqp/data/gles2/shaders/linkage.html: 1 tests failed
 deqp/data/gles2/shaders/preprocessor.html: 41 tests failed
 deqp/data/gles2/shaders/scoping.html: 12 tests failed
