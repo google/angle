@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96d55502_20a80a77",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1282,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-11T21:13:22Z",
+      "side": 1,
+      "message": "nit: can you merge this into just \n\n   if (requriresUpdate || numXFBBindings !\u003d mAppliedNumXFBBindings)",
+      "range": {
+        "startLine": 1277,
+        "startChar": 3,
+        "endLine": 1282,
+        "endChar": 23
+      },
+      "revId": "e9bf8c250d19e00453b49cc8a06664755e6b78af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
