@@ -160,11 +160,11 @@ Renderer9 *Renderer9::makeRenderer9(Renderer *renderer)
     return static_cast<Renderer9*>(renderer);
 }
 
-EGLint Renderer9::initialize()
+egl::Error Renderer9::initialize()
 {
     if (!mCompiler.initialize())
     {
-        return EGL_NOT_INITIALIZED;
+        return egl::Error(EGL_NOT_INITIALIZED, "Compiler failed to initialize.");
     }
 
     TRACE_EVENT0("gpu", "GetModuleHandle_d3d9");
@@ -172,8 +172,7 @@ EGLint Renderer9::initialize()
 
     if (mD3d9Module == NULL)
     {
-        ERR("No D3D9 module found - aborting!\n");
-        return EGL_NOT_INITIALIZED;
+        return egl::Error(EGL_NOT_INITIALIZED, "No D3D9 module found.");
     }
 
     typedef HRESULT (WINAPI *Direct3DCreate9ExFunc)(UINT, IDirect3D9Ex**);
@@ -197,8 +196,7 @@ EGLint Renderer9::initialize()
 
     if (!mD3d9)
     {
-        ERR("Could not create D3D9 device - aborting!\n");
-        return EGL_NOT_INITIALIZED;
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not create D3D9 device.");
     }
 
     if (mDisplay->getNativeDisplayId() != nullptr)
@@ -224,8 +222,7 @@ EGLint Renderer9::initialize()
             }
             else if (FAILED(result))   // D3DERR_OUTOFVIDEOMEMORY, E_OUTOFMEMORY, D3DERR_INVALIDDEVICE, or another error we can't recover from
             {
-                ERR("failed to get device caps (0x%x)\n", result);
-                return EGL_NOT_INITIALIZED;
+                return egl::Error(EGL_NOT_INITIALIZED, "Failed to get device caps: Error code 0x%x\n", result);
             }
         }
     }
@@ -238,16 +235,14 @@ EGLint Renderer9::initialize()
 
     if (mDeviceCaps.PixelShaderVersion < D3DPS_VERSION(minShaderModel, 0))
     {
-        ERR("Renderer does not support PS %u.%u. aborting!\n", minShaderModel, 0);
-        return EGL_NOT_INITIALIZED;
+        return egl::Error(EGL_NOT_INITIALIZED, "Renderer does not support PS %u.%u.aborting!", minShaderModel, 0);
     }
 
     // When DirectX9 is running with an older DirectX8 driver, a StretchRect from a regular texture to a render target texture is not supported.
     // This is required by Texture2D::ensureRenderTarget.
     if ((mDeviceCaps.DevCaps2 & D3DDEVCAPS2_CAN_STRETCHRECT_FROM_TEXTURES) == 0)
     {
-        ERR("Renderer does not support stretctrect from textures!\n");
-        return EGL_NOT_INITIALIZED;
+        return egl::Error(EGL_NOT_INITIALIZED, "Renderer does not support StretctRect from textures.");
     }
 
     {
@@ -272,7 +267,7 @@ EGLint Renderer9::initialize()
     }
     if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DEVICELOST)
     {
-        return EGL_BAD_ALLOC;
+        return egl::Error(EGL_BAD_ALLOC, "CreateDevice failed: device lost of out of memory");
     }
 
     if (FAILED(result))
@@ -283,7 +278,7 @@ EGLint Renderer9::initialize()
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_NOTAVAILABLE || result == D3DERR_DEVICELOST);
-            return EGL_BAD_ALLOC;
+            return egl::Error(EGL_BAD_ALLOC, "CreateDevice2 failed: device lost, not available, or of out of memory");
         }
     }
 
@@ -312,7 +307,7 @@ EGLint Renderer9::initialize()
 
     initializeDevice();
 
-    return EGL_SUCCESS;
+    return egl::Error(EGL_SUCCESS);
 }
 
 // do any one-time device initialization
@@ -2403,7 +2398,7 @@ bool Renderer9::resetRemovedDevice()
     // adapters and create another Direct3D device. If application continues rendering without
     // calling Reset, the rendering calls will succeed. Applies to Direct3D 9Ex only.
     release();
-    return (initialize() == EGL_SUCCESS);
+    return !initialize().isError();
 }
 
 VendorID Renderer9::getVendorId() const

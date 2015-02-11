@@ -54,9 +54,9 @@ class RendererD3D : public Renderer
     explicit RendererD3D(egl::Display *display);
     virtual ~RendererD3D();
 
-    static RendererD3D *makeRendererD3D(Renderer *renderer);
+    virtual egl::Error initialize() = 0;
 
-    virtual EGLint initialize() = 0;
+    static RendererD3D *makeRendererD3D(Renderer *renderer);
 
     virtual egl::ConfigSet generateConfigs() const = 0;
 

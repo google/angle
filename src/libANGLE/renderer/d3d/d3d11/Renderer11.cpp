@@ -229,11 +229,11 @@ Renderer11 *Renderer11::makeRenderer11(Renderer *renderer)
 #define D3D11_MESSAGE_ID_DEVICE_DRAW_RENDERTARGETVIEW_NOT_SET ((D3D11_MESSAGE_ID)3146081)
 #endif
 
-EGLint Renderer11::initialize()
+egl::Error Renderer11::initialize()
 {
     if (!mCompiler.initialize())
     {
-        return EGL_NOT_INITIALIZED;
+        return egl::Error(EGL_NOT_INITIALIZED, "Failed to initialize compiler.");
     }
 
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
@@ -242,8 +242,7 @@ EGLint Renderer11::initialize()
 
     if (mD3d11Module == NULL || mDxgiModule == NULL)
     {
-        ERR("Could not load D3D11 or DXGI library - aborting!\n");
-        return EGL_NOT_INITIALIZED;
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not load D3D11 or DXGI library.");
     }
 
     // create the D3D11 device
@@ -252,8 +251,7 @@ EGLint Renderer11::initialize()
 
     if (D3D11CreateDevice == NULL)
     {
-        ERR("Could not retrieve D3D11CreateDevice address - aborting!\n");
-        return EGL_NOT_INITIALIZED;
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not retrieve D3D11CreateDevice address.");
     }
 #endif
 
@@ -291,8 +289,8 @@ EGLint Renderer11::initialize()
 
         if (!mDevice || FAILED(result))
         {
-            ERR("Could not create D3D11 device - aborting!\n");
-            return EGL_NOT_INITIALIZED;   // Cleanup done by destructor through glDestroyRenderer
+            // Cleanup done by destructor through glDestroyRenderer
+            return egl::Error(EGL_NOT_INITIALIZED, "Could not create D3D11 device.");
         }
     }
 
@@ -320,8 +318,7 @@ EGLint Renderer11::initialize()
         result = mDevice->QueryInterface(__uuidof(IDXGIDevice2), (void**)&dxgiDevice2);
         if (FAILED(result))
         {
-            ERR("DXGI 1.2 required to present to HWNDs owned by another process.\n");
-            return EGL_NOT_INITIALIZED;
+            return egl::Error(EGL_NOT_INITIALIZED, "DXGI 1.2 required to present to HWNDs owned by another process.");
         }
         SafeRelease(dxgiDevice2);
     }
@@ -338,16 +335,14 @@ EGLint Renderer11::initialize()
 
     if (FAILED(result))
     {
-        ERR("Could not query DXGI device - aborting!\n");
-        return EGL_NOT_INITIALIZED;
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not query DXGI device.");
     }
 
     result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&mDxgiAdapter);
 
     if (FAILED(result))
     {
-        ERR("Could not retrieve DXGI adapter - aborting!\n");
-        return EGL_NOT_INITIALIZED;
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not retrieve DXGI adapter");
     }
 
     SafeRelease(dxgiDevice);
@@ -386,8 +381,7 @@ EGLint Renderer11::initialize()
 
     if (!mDxgiFactory || FAILED(result))
     {
-        ERR("Could not create DXGI factory - aborting!\n");
-        return EGL_NOT_INITIALIZED;
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not create DXGI factory.");
     }
 
     // Disable some spurious D3D11 debug warnings to prevent them from flooding the output log
@@ -413,7 +407,7 @@ EGLint Renderer11::initialize()
 
     initializeDevice();
 
-    return EGL_SUCCESS;
+    return egl::Error(EGL_SUCCESS);
 }
 
 // do any one-time device initialization
@@ -2066,11 +2060,11 @@ bool Renderer11::resetDevice()
 {
     // recreate everything
     release();
-    EGLint result = initialize();
+    egl::Error result = initialize();
 
-    if (result != EGL_SUCCESS)
+    if (result.isError())
     {
-        ERR("Could not reinitialize D3D11 device: %08X", result);
+        ERR("Could not reinitialize D3D11 device: %08X", result.getCode());
         return false;
     }
 

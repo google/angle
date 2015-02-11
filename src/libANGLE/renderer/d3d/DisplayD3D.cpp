@@ -97,12 +97,12 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
 #       endif
     }
 
-    EGLint result = EGL_NOT_INITIALIZED;
+    egl::Error result(EGL_NOT_INITIALIZED, "No available renderers.");
     for (size_t i = 0; i < rendererCreationFunctions.size(); i++)
     {
         RendererD3D *renderer = rendererCreationFunctions[i](display);
         result = renderer->initialize();
-        if (result == EGL_SUCCESS)
+        if (!result.isError())
         {
             *outRenderer = renderer;
             break;
@@ -114,7 +114,7 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
         }
     }
 
-    return egl::Error(result);
+    return result;
 }
 
 DisplayD3D::DisplayD3D()

@@ -54,7 +54,7 @@ class Renderer11 : public RendererD3D
 
     static Renderer11 *makeRenderer11(Renderer *renderer);
 
-    virtual EGLint initialize();
+    egl::Error initialize() override;
     virtual bool resetDevice();
 
     egl::ConfigSet generateConfigs() const override;
