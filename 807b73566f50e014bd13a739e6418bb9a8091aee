@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7131cbd0_e736a27e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2549,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-02-11T00:01:08Z",
+      "side": 1,
+      "message": "type: depper -\u003e deeper",
+      "range": {
+        "startLine": 2549,
+        "startChar": 17,
+        "endLine": 2549,
+        "endChar": 23
+      },
+      "revId": "807b73566f50e014bd13a739e6418bb9a8091aee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
