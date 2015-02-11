@@ -1,0 +1,251 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "766b81dd_770c501f",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:14:58Z",
+      "side": 1,
+      "message": "Will linking against OpenGL32.lib to pick up core wgl symbols like wglGetProcAddress cause conflicts with Direct3D? I don\u0027t remember whether it\u0027s legal to have dependencies on both the OpenGL and Direct3D DLLs, or whether it\u0027s just forbidden to use both APIs at run-time. It may also be necessary to stop linking libGLESv2.dll against D3D9.lib.\n\nI think it may be worth it to bootstrap things, by looking up wglGetProcAddress and the other core WGL symbols (wglCreateContext, wglMakeCurrent, etc.) in the HMODULE for OpenGL32.dll. DisplayWGL could provide helper methods for other classes like SurfaceWGL to call functions like wglCreateContext through function pointers.",
+      "range": {
+        "startLine": 25,
+        "startChar": 33,
+        "endLine": 25,
+        "endChar": 50
+      },
+      "revId": "2db4f1641495bd8a6c5f41a36cb9f94f185e3e2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56c59d22_ced7c346",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:14:58Z",
+      "side": 1,
+      "message": "The constructor should initialize all of the data members, especially the function pointers to NULL.",
+      "range": {
+        "startLine": 35,
+        "startChar": 6,
+        "endLine": 35,
+        "endChar": 15
+      },
+      "revId": "2db4f1641495bd8a6c5f41a36cb9f94f185e3e2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "766b81dd_b7f1889d",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:14:58Z",
+      "side": 1,
+      "message": "Should check the return value for NULL, and also strlen of the return value.",
+      "range": {
+        "startLine": 147,
+        "startChar": 16,
+        "endLine": 147,
+        "endChar": 36
+      },
+      "revId": "2db4f1641495bd8a6c5f41a36cb9f94f185e3e2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "766b81dd_77969030",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:14:58Z",
+      "side": 1,
+      "message": "The result of this query should be cached in a data member. Also, it should probably be tokenized and placed in an array of (C++) strings to avoid confusing extensions whose names have common substrings. It\u0027s fine if these are left as TODOs.",
+      "range": {
+        "startLine": 458,
+        "startChar": 4,
+        "endLine": 458,
+        "endChar": 5
+      },
+      "revId": "2db4f1641495bd8a6c5f41a36cb9f94f185e3e2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56c59d22_2eec4718",
+        "filename": "src/libANGLE/renderer/gl/wgl/SurfaceWGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:14:58Z",
+      "side": 1,
+      "message": "Should this be mChildWGLContext \u003d NULL?",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 15
+      },
+      "revId": "2db4f1641495bd8a6c5f41a36cb9f94f185e3e2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56c59d22_ce002333",
+        "filename": "src/libANGLE/renderer/gl/wgl/SurfaceWGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:14:58Z",
+      "side": 1,
+      "message": "mChildWindow",
+      "revId": "2db4f1641495bd8a6c5f41a36cb9f94f185e3e2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6834dc3_257458e8",
+        "filename": "src/libANGLE/renderer/gl/wgl/SurfaceWGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:14:58Z",
+      "side": 1,
+      "message": "Is it correct for SurfaceWGL to be creating and owning a context? I would assume that SurfaceWGL should refer to the drawable -- like the HDC of the window -- and there should be a separate ContextWGL class which would own the context. The context and surface are supposed to be separate concepts, and it\u0027s supposed to be legal to make a context current to multiple surfaces (one at a time).",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 20
+      },
+      "revId": "2db4f1641495bd8a6c5f41a36cb9f94f185e3e2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "766b81dd_b79bc84e",
+        "filename": "src/libANGLE/renderer/gl/wgl/SurfaceWGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:14:58Z",
+      "side": 1,
+      "message": "mChildWGLContext?",
+      "range": {
+        "startLine": 101,
+        "startChar": 45,
+        "endLine": 101,
+        "endChar": 56
+      },
+      "revId": "2db4f1641495bd8a6c5f41a36cb9f94f185e3e2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6834dc3_856f6417",
+        "filename": "src/libANGLE/renderer/gl/wgl/SurfaceWGL.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:14:58Z",
+      "side": 1,
+      "message": "What is mWGLContext used for or what will it be used for? Should it instead be renamed something like mShareContext? Is it just to set up resource sharing for the newly created context?",
+      "range": {
+        "startLine": 51,
+        "startChar": 10,
+        "endLine": 51,
+        "endChar": 21
+      },
+      "revId": "2db4f1641495bd8a6c5f41a36cb9f94f185e3e2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6834dc3_656a600a",
+        "filename": "src/libANGLE/renderer/gl/wgl/SurfaceWGL.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:14:58Z",
+      "side": 1,
+      "message": "It may avoid confusion and mistakes to name these mParentWGLContext and mParentWindow.",
+      "range": {
+        "startLine": 53,
+        "startChar": 9,
+        "endLine": 53,
+        "endChar": 16
+      },
+      "revId": "2db4f1641495bd8a6c5f41a36cb9f94f185e3e2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6834dc3_45795cdd",
+        "filename": "src/libANGLE/renderer/gl/wgl/wgl_utils.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-11T12:14:58Z",
+      "side": 1,
+      "message": "PFD_GENERIC_ACCELERATED too?",
+      "range": {
+        "startLine": 22,
+        "startChar": 36,
+        "endLine": 22,
+        "endChar": 54
+      },
+      "revId": "2db4f1641495bd8a6c5f41a36cb9f94f185e3e2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
