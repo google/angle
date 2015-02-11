@@ -22,6 +22,30 @@
       "revId": "f8ae3e2bc48a1e176c1e1df0f10d20ea19231e22",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6ba6d9b_ea062744",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-11T14:46:00Z",
+      "side": 1,
+      "message": "Thanks for pointing this out, I\u0027ll update the comment (it\u0027s just plain wrong)",
+      "parentUuid": "760f0125_77de7018",
+      "range": {
+        "startLine": 104,
+        "startChar": 79,
+        "endLine": 104,
+        "endChar": 83
+      },
+      "revId": "f8ae3e2bc48a1e176c1e1df0f10d20ea19231e22",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
