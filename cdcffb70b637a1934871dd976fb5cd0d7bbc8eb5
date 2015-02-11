@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "36402975_ddce4b31",
+        "filename": "src/angle.gyp",
+        "patchSetId": 9
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-11T18:39:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "766b81dd_7768d086",
+      "range": {
+        "startLine": 25,
+        "startChar": 17,
+        "endLine": 25,
+        "endChar": 32
+      },
+      "revId": "cdcffb70b637a1934871dd976fb5cd0d7bbc8eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56fbdd33_7ea89177",
         "filename": "src/libANGLE/renderer/gl/FenceGL.cpp",
         "patchSetId": 9
@@ -72,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "164de5ae_1c655508",
+        "filename": "src/libANGLE/renderer/gl/FenceGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-11T18:39:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16cfa548_2c48d36f",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 10
+      },
+      "revId": "cdcffb70b637a1934871dd976fb5cd0d7bbc8eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56c59d22_8e13fb80",
         "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
         "patchSetId": 9
@@ -83,6 +131,30 @@
       "writtenOn": "2015-02-11T12:26:36Z",
       "side": 1,
       "message": "Add TODO about querying the underlying GL limits here? Or at least making these more realistic.",
+      "range": {
+        "startLine": 171,
+        "startChar": 16,
+        "endLine": 171,
+        "endChar": 23
+      },
+      "revId": "cdcffb70b637a1934871dd976fb5cd0d7bbc8eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5643dd80_fedb411e",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-11T18:39:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56c59d22_8e13fb80",
       "range": {
         "startLine": 171,
         "startChar": 16,
@@ -118,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "36402975_3d7acf56",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-11T18:39:39Z",
+      "side": 1,
+      "message": "Yep :P",
+      "parentUuid": "766b81dd_d7567cc3",
+      "range": {
+        "startLine": 186,
+        "startChar": 13,
+        "endLine": 186,
+        "endChar": 32
+      },
+      "revId": "cdcffb70b637a1934871dd976fb5cd0d7bbc8eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "766b81dd_376258a7",
         "filename": "src/libANGLE/renderer/gl/RendererGL.h",
         "patchSetId": 9
@@ -141,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "36402975_bd6d3f9e",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-11T18:39:39Z",
+      "side": 1,
+      "message": "Yep, removed the comment.",
+      "parentUuid": "766b81dd_376258a7",
+      "range": {
+        "startLine": 62,
+        "startChar": 50,
+        "endLine": 62,
+        "endChar": 59
+      },
+      "revId": "cdcffb70b637a1934871dd976fb5cd0d7bbc8eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "766b81dd_975004c6",
         "filename": "src/libGLESv2.gypi",
         "patchSetId": 9
@@ -152,6 +272,30 @@
       "writtenOn": "2015-02-11T12:26:36Z",
       "side": 1,
       "message": "Will this dependency cause a problem because of conflicts with the Direct3D DLLs? I would think that OpenGL32.dll should always be dynamically loaded, and all of the entry points -- even the core wgl ones like wglGetProcAddress, wglCreateContext and wglMakeCurrent -- should be looked up at run time.\n\nI noticed that libGLESv2.dll has a dependency on d3d9.dll -- I wonder whether that will also cause problems with the coming GL backend, and whether it should be dynamically loaded (is that technically possible?).",
+      "range": {
+        "startLine": 613,
+        "startChar": 37,
+        "endLine": 613,
+        "endChar": 45
+      },
+      "revId": "cdcffb70b637a1934871dd976fb5cd0d7bbc8eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36402975_fd5067c6",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 9
+      },
+      "lineNbr": 613,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-11T18:39:39Z",
+      "side": 1,
+      "message": "It\u0027s probably possible to load some more stuff entirely dynamically, I\u0027ll add a TODO in the DisplayWGL::initialize.",
+      "parentUuid": "766b81dd_975004c6",
       "range": {
         "startLine": 613,
         "startChar": 37,
