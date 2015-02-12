@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1647a53f_4cb07f09",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-02-12T19:40:37Z",
+      "side": 1,
+      "message": "I don’t know if I should write UNIMPLEMENTED() or UNREACHABLE(). Currently it is impossible to reach this point in ANGLE since format conversion is only needed when the framebuffer is copied to a texture.",
+      "range": {
+        "startLine": 474,
+        "startChar": 12,
+        "endLine": 474,
+        "endChar": 28
+      },
+      "revId": "ea8f8bdb43afc487c3abef04044e6d9662cd46d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
