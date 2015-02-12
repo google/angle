@@ -604,10 +604,10 @@ gl::Error Renderer11::generateSwizzle(gl::Texture *texture)
         if (texStorage)
         {
             TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(texStorage);
-            gl::Error error = storage11->generateSwizzles(texture->getSamplerState().swizzleRed,
-                                                          texture->getSamplerState().swizzleGreen,
-                                                          texture->getSamplerState().swizzleBlue,
-                                                          texture->getSamplerState().swizzleAlpha);
+            error = storage11->generateSwizzles(texture->getSamplerState().swizzleRed,
+                                                texture->getSamplerState().swizzleGreen,
+                                                texture->getSamplerState().swizzleBlue,
+                                                texture->getSamplerState().swizzleAlpha);
             if (error.isError())
             {
                 return error;
@@ -643,7 +643,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type, int index, gl::Textu
         if (mForceSetPixelSamplerStates[index] || memcmp(&samplerStateInternal, &mCurPixelSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
             ID3D11SamplerState *dxSamplerState = NULL;
-            gl::Error error = mStateCache.getSamplerState(samplerStateInternal, &dxSamplerState);
+            error = mStateCache.getSamplerState(samplerStateInternal, &dxSamplerState);
             if (error.isError())
             {
                 return error;
@@ -664,7 +664,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type, int index, gl::Textu
         if (mForceSetVertexSamplerStates[index] || memcmp(&samplerStateInternal, &mCurVertexSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
             ID3D11SamplerState *dxSamplerState = NULL;
-            gl::Error error = mStateCache.getSamplerState(samplerStateInternal, &dxSamplerState);
+            error = mStateCache.getSamplerState(samplerStateInternal, &dxSamplerState);
             if (error.isError())
             {
                 return error;
