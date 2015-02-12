@@ -22,6 +22,30 @@
       "revId": "ba822b9b41ea60088c35e7f5410547e2a49a43b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6b2595a_315d702e",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-12T16:16:50Z",
+      "side": 1,
+      "message": "Done, could you verify the new enums?",
+      "parentUuid": "5c293c84_91e9fe84",
+      "range": {
+        "startLine": 65,
+        "startChar": 58,
+        "endLine": 65,
+        "endChar": 65
+      },
+      "revId": "ba822b9b41ea60088c35e7f5410547e2a49a43b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
