@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "568d9d43_6e5f6fb0",
+        "filename": "src/libANGLE/renderer/SurfaceImpl.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2015-02-12T18:52:51Z",
+      "side": 1,
+      "message": "I don\u0027t know of any way to programatically test that a given swap interval is working correctly other than rendering a simple scene and seeing if it runs at native refresh or higher than native refresh. Even that can be a bit tricky, though, since there\u0027s other external factors that may impose limits on this.",
+      "parentUuid": "9102bfb9_7bddfb13",
+      "range": {
+        "startLine": 24,
+        "startChar": 6,
+        "endLine": 24,
+        "endChar": 19
+      },
+      "revId": "071ef6003ab757061111e551633f164d8de943bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91647f9b_e80b13cf",
         "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
         "patchSetId": 10
