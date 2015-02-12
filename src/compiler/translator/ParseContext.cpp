@@ -2545,12 +2545,7 @@ TPublicType TParseContext::addStructure(const TSourceLoc& structLine, const TSou
     TStructure* structure = new TStructure(structName, fieldList);
     TType* structureType = new TType(structure);
 
-    // Check for global struct, and do not assign an ID if so, to prevent us from
-    // rewriting the struct name to avoid scoping conflicts.
-    if (!symbolTable.atGlobalLevel())
-    {
-        structure->setUniqueId(TSymbolTable::nextUniqueId());
-    }
+    structure->setUniqueId(TSymbolTable::nextUniqueId());
 
     if (!structName->empty())
     {

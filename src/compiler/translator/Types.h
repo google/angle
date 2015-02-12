@@ -134,6 +134,7 @@ class TStructure : public TFieldListCollection
 
     int uniqueId() const
     {
+        ASSERT(mUniqueId != 0);
         return mUniqueId;
     }
 
