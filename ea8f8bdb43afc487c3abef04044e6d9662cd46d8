@@ -2,6 +2,138 @@
   "comments": [
     {
       "key": {
+        "uuid": "abecb07a_c1d0e2d3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-12T22:15:24Z",
+      "side": 1,
+      "message": "suggest making a gl::Extents with the texture size, to match format, and assigning to it based on the desc query below, instead of storing the D3D11_TEXTURE2D_DESC. same for samples.",
+      "revId": "ea8f8bdb43afc487c3abef04044e6d9662cd46d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3623c98f_659c6647",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-12T22:15:24Z",
+      "side": 1,
+      "message": "don\u0027t think we need this union, you can scope source3D in the block below, since its not referenced elsewhere, and just use a source2D variable scoped to this function.",
+      "range": {
+        "startLine": 357,
+        "startChar": 0,
+        "endLine": 361,
+        "endChar": 6
+      },
+      "revId": "ea8f8bdb43afc487c3abef04044e6d9662cd46d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3623c98f_c5835ae6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-12T22:15:24Z",
+      "side": 1,
+      "message": "I think we should try to avoid this init syntax in general (though I think it works on MSVS). Can replace with memset, or skip it entirely.",
+      "range": {
+        "startLine": 363,
+        "startChar": 38,
+        "endLine": 363,
+        "endChar": 52
+      },
+      "revId": "ea8f8bdb43afc487c3abef04044e6d9662cd46d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3623c98f_a5957e23",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-12T22:15:24Z",
+      "side": 1,
+      "message": "nit: fix pointer alignment",
+      "range": {
+        "startLine": 401,
+        "startChar": 22,
+        "endLine": 401,
+        "endChar": 23
+      },
+      "revId": "ea8f8bdb43afc487c3abef04044e6d9662cd46d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3623c98f_85908234",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-12T22:15:24Z",
+      "side": 1,
+      "message": "nit: cache this value in a bool and re-use below",
+      "range": {
+        "startLine": 402,
+        "startChar": 11,
+        "endLine": 402,
+        "endChar": 92
+      },
+      "revId": "ea8f8bdb43afc487c3abef04044e6d9662cd46d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "363ae9a9_ed8925be",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-12T22:15:24Z",
+      "side": 1,
+      "message": "nit: pointer alignment",
+      "range": {
+        "startLine": 417,
+        "startChar": 27,
+        "endLine": 417,
+        "endChar": 28
+      },
+      "revId": "ea8f8bdb43afc487c3abef04044e6d9662cd46d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1647a53f_4cb07f09",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
         "patchSetId": 2
@@ -18,6 +150,53 @@
         "startChar": 12,
         "endLine": 474,
         "endChar": 28
+      },
+      "revId": "ea8f8bdb43afc487c3abef04044e6d9662cd46d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "abecb07a_a14efe2a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-12T22:15:24Z",
+      "side": 1,
+      "message": "Use ASSERT(dim \u003d\u003d D3D11_RESOURCE_DIMENSION_TEXTURE2D) and skip the if in this case",
+      "parentUuid": "1647a53f_4cb07f09",
+      "range": {
+        "startLine": 474,
+        "startChar": 12,
+        "endLine": 474,
+        "endChar": 28
+      },
+      "revId": "ea8f8bdb43afc487c3abef04044e6d9662cd46d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "abecb07a_01580af3",
+        "filename": "tests/angle_tests/MipmapTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-12T22:15:24Z",
+      "side": 1,
+      "message": "nit: formatting",
+      "range": {
+        "startLine": 296,
+        "startChar": 8,
+        "endLine": 308,
+        "endChar": 10
       },
       "revId": "ea8f8bdb43afc487c3abef04044e6d9662cd46d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
