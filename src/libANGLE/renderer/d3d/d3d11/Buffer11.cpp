@@ -549,7 +549,7 @@ Buffer11::BufferStorage *Buffer11::getBufferStorage(BufferUsage usage)
             NativeStorage *stagingBuffer = getStagingStorage();
 
             stagingBuffer->copyFromStorage(latestBuffer, 0, latestBuffer->getSize(), 0);
-            newStorage->setDataRevision(latestBuffer->getDataRevision());
+            stagingBuffer->setDataRevision(latestBuffer->getDataRevision());
 
             latestBuffer = stagingBuffer;
         }
