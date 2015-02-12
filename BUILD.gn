@@ -162,6 +162,7 @@ if (is_win) {
 }  # is_win
 
 config("libANGLE_config") {
+  cflags = []
   defines = []
   if (angle_enable_d3d9) {
     defines += [ "ANGLE_ENABLE_D3D9" ]
@@ -174,6 +175,9 @@ config("libANGLE_config") {
     "GL_GLEXT_PROTOTYPES=",
     "EGLAPI=",
   ]
+  if (is_win) {
+    cflags += [ "/wd4530" ]  # C++ exception handler used, but unwind semantics are not enabled.
+  }
 }
 
 static_library("libANGLE") {
