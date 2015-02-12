@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36f0290f_bd381f6f",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-12T12:36:06Z",
+      "side": 1,
+      "message": "Delete commented-out code.",
+      "range": {
+        "startLine": 219,
+        "startChar": 6,
+        "endLine": 219,
+        "endChar": 11
+      },
+      "revId": "ef0d868e1ff246391c0ab377d1e36c9aef10d1ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f0290f_dd37eb7a",
+        "filename": "src/libANGLE/renderer/gl/wgl/SurfaceWGL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-12T12:36:06Z",
+      "side": 1,
+      "message": "Reindent this block?",
+      "range": {
+        "startLine": 65,
+        "startChar": 36,
+        "endLine": 65,
+        "endChar": 50
+      },
+      "revId": "ef0d868e1ff246391c0ab377d1e36c9aef10d1ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
