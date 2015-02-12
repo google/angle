@@ -113,7 +113,8 @@ class TStructure : public TFieldListCollection
     TStructure(const TString *name, TFieldList *fields)
         : TFieldListCollection(name, fields),
           mDeepestNesting(0),
-          mUniqueId(0)
+          mUniqueId(0),
+          mAtGlobalScope(false)
     {
     }
 
@@ -138,6 +139,16 @@ class TStructure : public TFieldListCollection
         return mUniqueId;
     }
 
+    void setAtGlobalScope(bool atGlobalScope)
+    {
+        mAtGlobalScope = atGlobalScope;
+    }
+
+    bool atGlobalScope() const
+    {
+        return mAtGlobalScope;
+    }
+
   private:
     DISALLOW_COPY_AND_ASSIGN(TStructure);
 
@@ -159,6 +170,7 @@ class TStructure : public TFieldListCollection
 
     mutable int mDeepestNesting;
     int mUniqueId;
+    bool mAtGlobalScope;
 };
 
 class TInterfaceBlock : public TFieldListCollection
