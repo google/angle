@@ -69,6 +69,8 @@
             'compiler/translator/LoopInfo.h',
             'compiler/translator/MMap.h',
             'compiler/translator/NodeSearch.h',
+            'compiler/translator/Operator.cpp',
+            'compiler/translator/Operator.h',
             'compiler/translator/OutputESSL.cpp',
             'compiler/translator/OutputESSL.h',
             'compiler/translator/OutputGLSL.cpp',
