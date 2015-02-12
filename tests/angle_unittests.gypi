@@ -17,6 +17,7 @@
         [
             '<(angle_path)/tests/compiler_tests/API_test.cpp',
             '<(angle_path)/tests/compiler_tests/CollectVariables_test.cpp',
+            '<(angle_path)/tests/compiler_tests/ConstantFolding_test.cpp',
             '<(angle_path)/tests/compiler_tests/DebugShaderPrecision_test.cpp',
             '<(angle_path)/tests/compiler_tests/ExpressionLimit_test.cpp',
             '<(angle_path)/tests/compiler_tests/ShaderExtension_test.cpp',
