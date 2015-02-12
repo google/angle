@@ -355,6 +355,30 @@
       "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6ad0dfe_929ffc70",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-12T16:16:46Z",
+      "side": 1,
+      "message": "I opted to drop the _SOFTWARE enum entirely and replace it with a _WARP enum that is valid for D3D11 only.",
+      "parentUuid": "7c5d2031_67dc9220",
+      "range": {
+        "startLine": 229,
+        "startChar": 6,
+        "endLine": 230,
+        "endChar": 43
+      },
+      "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
