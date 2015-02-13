@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7658e11a_1223ea52",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3279,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-02-13T19:13:56Z",
+      "side": 1,
+      "message": "Nit",
+      "range": {
+        "startLine": 3279,
+        "startChar": 1,
+        "endLine": 3279,
+        "endChar": 2
+      },
+      "revId": "4a833c0cc7073b3d8582fc9195653df755a41c25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
