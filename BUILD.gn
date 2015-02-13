@@ -148,6 +148,7 @@ action("commit_id") {
 
 angle_enable_d3d9 = false
 angle_enable_d3d11 = false
+angle_enable_gl = false
 
 if (is_win) {
   angle_enable_d3d9 = true
@@ -170,6 +171,9 @@ config("libANGLE_config") {
   if (angle_enable_d3d11) {
     defines += [ "ANGLE_ENABLE_D3D11" ]
   }
+  if (angle_enable_gl) {
+    defines += [ "ANGLE_ENABLE_OPENGL" ]
+  }
   defines += [
     "GL_APICALL=",
     "GL_GLEXT_PROTOTYPES=",
@@ -183,6 +187,7 @@ config("libANGLE_config") {
 static_library("libANGLE") {
   sources = rebase_path(gles_gypi.libangle_sources, ".", "src")
 
+  include_dirs = []
   libs = []
   defines = [
     "LIBANGLE_IMPLEMENTATION",
@@ -207,6 +212,15 @@ static_library("libANGLE") {
     sources += rebase_path(gles_gypi.libangle_d3d11_sources, ".", "src")
     sources += rebase_path(gles_gypi.libangle_d3d11_win32_sources, ".", "src")
     libs += [ "dxguid.lib" ]
+  }
+
+  if (angle_enable_gl) {
+    sources += rebase_path(gles_gypi.libangle_gl_sources, ".", "src")
+    include_dirs += [ "src/third_party/khronos" ]
+
+    if (is_win) {
+      sources += rebase_path(gles_gypi.libangle_gl_wgl_sources, ".", "src")
+    }
   }
 
   if (is_debug) {
