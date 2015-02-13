@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b8094c4_19d42fc1",
+        "filename": "generate_winrt_projects.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-02-13T21:03:14Z",
+      "side": 1,
+      "message": "I think this will work.  It matches the same pattern for excluding d3d9 in the winrt builds.",
+      "range": {
+        "startLine": 29,
+        "startChar": 17,
+        "endLine": 29,
+        "endChar": 37
+      },
+      "revId": "421a58861517d4c8ceaa376247567a6cedcf3c99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
