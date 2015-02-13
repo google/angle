@@ -46,6 +46,7 @@ enum TOperator
     EOpSub,
     EOpMul,
     EOpDiv,
+    EOpIMod,
     EOpEqual,
     EOpNotEqual,
     EOpVectorEqual,
@@ -205,7 +206,7 @@ enum TOperator
     EOpMatrixTimesMatrixAssign,
 
     EOpDivAssign,
-    EOpModAssign,
+    EOpIModAssign,
     EOpBitShiftLeftAssign,
     EOpBitShiftRightAssign,
     EOpBitwiseAndAssign,

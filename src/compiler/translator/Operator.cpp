@@ -27,6 +27,7 @@ const char *GetOperatorString(TOperator op)
       case EOpSub: return "-";
       case EOpMul: return "*";
       case EOpDiv: return "/";
+      case EOpIMod: return "%";
       case EOpEqual: return "==";
       case EOpNotEqual: return "!=";
       case EOpVectorEqual: return "equal";
@@ -92,7 +93,7 @@ const char *GetOperatorString(TOperator op)
       case EOpFloor: return "floor";
       case EOpCeil: return "ceil";
       case EOpFract: return "fract";
-      case EOpMod: return "%"; // TODO: Separate % and mod() into different operators
+      case EOpMod: return "mod";
       case EOpMin: return "min";
       case EOpMax: return "max";
       case EOpClamp: return "clamp";
@@ -174,7 +175,7 @@ const char *GetOperatorString(TOperator op)
       case EOpMatrixTimesMatrixAssign: return "*=";
 
       case EOpDivAssign: return "/=";
-      case EOpModAssign: return "%=";
+      case EOpIModAssign: return "%=";
       case EOpBitShiftLeftAssign: return "<<=";
       case EOpBitShiftRightAssign: return ">>=";
       case EOpBitwiseAndAssign: return "&=";

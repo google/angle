@@ -223,7 +223,7 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
       case EOpDivAssign:
         writeTriplet(visit, "(", " /= ", ")");
         break;
-      case EOpModAssign:
+      case EOpIModAssign:
         writeTriplet(visit, "(", " %= ", ")");
         break;
       // Notice the fall-through.
@@ -358,7 +358,7 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
       case EOpDiv:
         writeTriplet(visit, "(", " / ", ")");
         break;
-      case EOpMod:
+      case EOpIMod:
         writeTriplet(visit, "(", " % ", ")");
         break;
       case EOpBitShiftLeft:

@@ -2760,7 +2760,7 @@ yyreduce:
 
     {
         ES3_ONLY("%", (yylsp[-1]), "integer modulus operator");
-        (yyval.interm.intermTypedNode) = context->addBinaryMath(EOpMod, (yyvsp[-2].interm.intermTypedNode), (yyvsp[0].interm.intermTypedNode), (yylsp[-1]));
+        (yyval.interm.intermTypedNode) = context->addBinaryMath(EOpIMod, (yyvsp[-2].interm.intermTypedNode), (yyvsp[0].interm.intermTypedNode), (yylsp[-1]));
     }
 
     break;
@@ -3026,7 +3026,7 @@ yyreduce:
 
     {
         ES3_ONLY("%=", (yyloc), "integer modulus operator");
-        (yyval.interm).op = EOpModAssign;
+        (yyval.interm).op = EOpIModAssign;
     }
 
     break;

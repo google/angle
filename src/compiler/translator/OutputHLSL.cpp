@@ -1430,7 +1430,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         }
         break;
       case EOpDivAssign:               outputTriplet(visit, "(", " /= ", ")");          break;
-      case EOpModAssign:               outputTriplet(visit, "(", " %= ", ")");          break;
+      case EOpIModAssign:              outputTriplet(visit, "(", " %= ", ")");          break;
       case EOpBitShiftLeftAssign:      outputTriplet(visit, "(", " <<= ", ")");         break;
       case EOpBitShiftRightAssign:     outputTriplet(visit, "(", " >>= ", ")");         break;
       case EOpBitwiseAndAssign:        outputTriplet(visit, "(", " &= ", ")");          break;
@@ -1523,7 +1523,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpSub:               outputTriplet(visit, "(", " - ", ")"); break;
       case EOpMul:               outputTriplet(visit, "(", " * ", ")"); break;
       case EOpDiv:               outputTriplet(visit, "(", " / ", ")"); break;
-      case EOpMod:               outputTriplet(visit, "(", " % ", ")"); break;
+      case EOpIMod:              outputTriplet(visit, "(", " % ", ")"); break;
       case EOpBitShiftLeft:      outputTriplet(visit, "(", " << ", ")"); break;
       case EOpBitShiftRight:     outputTriplet(visit, "(", " >> ", ")"); break;
       case EOpBitwiseAnd:        outputTriplet(visit, "(", " & ", ")"); break;

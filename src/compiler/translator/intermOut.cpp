@@ -131,7 +131,7 @@ bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary *node)
       case EOpDivAssign:
         out << "divide second child into first child";
         break;
-      case EOpModAssign:
+      case EOpIModAssign:
         out << "modulo second child into first child";
         break;
       case EOpBitShiftLeftAssign:
@@ -178,7 +178,7 @@ bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary *node)
       case EOpDiv:
         out << "divide";
         break;
-      case EOpMod:
+      case EOpIMod:
         out << "modulo";
         break;
       case EOpBitShiftLeft:
