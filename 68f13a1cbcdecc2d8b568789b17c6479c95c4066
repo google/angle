@@ -45,6 +45,30 @@
       "revId": "68f13a1cbcdecc2d8b568789b17c6479c95c4066",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ba13c5e_9cd025d3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-13T15:33:10Z",
+      "side": 1,
+      "message": "I like this idea as well. You could set a mask of bits to use to check formatSupport. eg:\n\n  UINT formatSupportMask \u003d 2D | CUBE;\n\n  if (es3)\n  {\n     formatSupportMask |\u003d 3D;\n  }\n\n  texureCaps.texturable \u003d (formatSupport \u0026 formatSupportMask) \u003d\u003d formatSupportMask;",
+      "parentUuid": "0b4cdc89_a46a82fb",
+      "range": {
+        "startLine": 260,
+        "startChar": 8,
+        "endLine": 264,
+        "endChar": 9
+      },
+      "revId": "68f13a1cbcdecc2d8b568789b17c6479c95c4066",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
