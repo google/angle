@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "6bb9d8a9_4722ce1b",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-02-13T21:55:06Z",
+      "side": 1,
+      "message": "I suggest make compileTree() a private function of the class, call it compileTreeImpl(), and expose another function like compileTreeForTesting(), which calls compileTreeImpl.",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 68,
+        "endChar": 15
+      },
+      "revId": "568d2f892631cb68914dd49c49b0306a92e53d98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "abbf508b_8fa2193b",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-02-13T21:55:06Z",
+      "side": 1,
+      "message": "I know a lot of names in the class violates the code style, but new ones should follow, so mSourcePath.",
+      "range": {
+        "startLine": 180,
+        "startChar": 16,
+        "endLine": 180,
+        "endChar": 26
+      },
+      "revId": "568d2f892631cb68914dd49c49b0306a92e53d98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb76a8c4_13cdecbc",
         "filename": "src/compiler/translator/TranslatorHLSL.cpp",
         "patchSetId": 2
@@ -13,6 +59,30 @@
       "writtenOn": "2015-02-13T16:15:03Z",
       "side": 1,
       "message": "I think you can remove all of these parameters, since they\u0027re already implicit from passing the \"this\" pointer for the compiler object.",
+      "range": {
+        "startLine": 18,
+        "startChar": 36,
+        "endLine": 19,
+        "endChar": 47
+      },
+      "revId": "568d2f892631cb68914dd49c49b0306a92e53d98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bb9d8a9_87dd2695",
+        "filename": "src/compiler/translator/TranslatorHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-02-13T21:55:06Z",
+      "side": 1,
+      "message": "Actually I would suggest the opposite: remove parentTranslator from the param list instead, if it doesn\u0027t require adding another 10 params to pass to OutputHLSL.",
+      "parentUuid": "eb76a8c4_13cdecbc",
       "range": {
         "startLine": 18,
         "startChar": 36,
