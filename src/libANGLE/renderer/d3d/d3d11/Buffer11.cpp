@@ -90,6 +90,8 @@ class Buffer11::BufferStorage
     virtual uint8_t *map(size_t offset, size_t length, GLbitfield access) = 0;
     virtual void unmap() = 0;
 
+    gl::Error setData(const uint8_t *data, size_t offset, size_t size);
+
   protected:
     DISALLOW_COPY_AND_ASSIGN(BufferStorage);
 
@@ -117,8 +119,6 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
 
     uint8_t *map(size_t offset, size_t length, GLbitfield access) override;
     void unmap() override;
-
-    gl::Error setData(D3D11_MAP mapMode, const uint8_t *data, size_t size, size_t offset);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(NativeStorage);
@@ -276,12 +276,7 @@ gl::Error Buffer11::setSubData(const void *data, size_t size, size_t offset)
             }
         }
 
-        gl::Error error = stagingBuffer->setData(D3D11_MAP_WRITE, reinterpret_cast<const uint8_t *>(data), size, offset);
-        if (error.isError())
-        {
-            return error;
-        }
-
+        stagingBuffer->setData(static_cast<const uint8_t *>(data), offset, size);
         stagingBuffer->setDataRevision(stagingBuffer->getDataRevision() + 1);
     }
 
@@ -639,6 +634,23 @@ Buffer11::BufferStorage::BufferStorage(Renderer11 *renderer, BufferUsage usage)
 {
 }
 
+gl::Error Buffer11::BufferStorage::setData(const uint8_t *data, size_t offset, size_t size)
+{
+    ASSERT(isMappable());
+
+    uint8_t *writePointer = map(offset, size, GL_MAP_WRITE_BIT);
+    if (!writePointer)
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to map internal buffer.");
+    }
+
+    memcpy(writePointer, data, size);
+
+    unmap();
+
+    return gl::Error(GL_NO_ERROR);
+}
+
 Buffer11::NativeStorage::NativeStorage(Renderer11 *renderer, BufferUsage usage)
     : BufferStorage(renderer, usage),
       mNativeStorage(NULL)
@@ -817,25 +829,6 @@ uint8_t *Buffer11::NativeStorage::map(size_t offset, size_t length, GLbitfield a
     ASSERT(SUCCEEDED(result));
 
     return static_cast<uint8_t*>(mappedResource.pData) + offset;
-}
-
-gl::Error Buffer11::NativeStorage::setData(D3D11_MAP mapMode, const uint8_t *data, size_t size, size_t offset)
-{
-    ID3D11DeviceContext *context = mRenderer->getDeviceContext();
-
-    D3D11_MAPPED_SUBRESOURCE mappedResource;
-    HRESULT result = context->Map(mNativeStorage, 0, mapMode, 0, &mappedResource);
-    if (FAILED(result))
-    {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to map internal buffer, result: 0x%X.", result);
-    }
-
-    uint8_t *offsetBufferPointer = reinterpret_cast<uint8_t *>(mappedResource.pData) + offset;
-    memcpy(offsetBufferPointer, data, size);
-
-    context->Unmap(mNativeStorage, 0);
-
-    return gl::Error(GL_NO_ERROR);
 }
 
 void Buffer11::NativeStorage::unmap()
