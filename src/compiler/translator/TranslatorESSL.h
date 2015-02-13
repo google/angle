@@ -14,7 +14,7 @@ public:
     TranslatorESSL(sh::GLenum type, ShShaderSpec spec);
 
 protected:
-    virtual void translate(TIntermNode* root);
+    virtual void translate(TIntermNode *root, int compileOptions);
 
 private:
     void writeExtensionBehavior();

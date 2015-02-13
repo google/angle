@@ -22,7 +22,7 @@ class TranslatorHLSL : public TCompiler
     unsigned int getUniformRegister(const std::string &uniformName) const;
 
   protected:
-    virtual void translate(TIntermNode* root);
+    virtual void translate(TIntermNode *root, int compileOptions);
 
     std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;
     std::map<std::string, unsigned int> mUniformRegisterMap;

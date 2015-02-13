@@ -6,7 +6,6 @@
 
 #include "compiler/translator/TranslatorHLSL.h"
 
-#include "compiler/translator/InitializeParseContext.h"
 #include "compiler/translator/OutputHLSL.h"
 
 TranslatorHLSL::TranslatorHLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
@@ -14,12 +13,15 @@ TranslatorHLSL::TranslatorHLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutpu
 {
 }
 
-void TranslatorHLSL::translate(TIntermNode *root)
+void TranslatorHLSL::translate(TIntermNode *root, int compileOptions)
 {
-    TParseContext& parseContext = *GetGlobalParseContext();
-    sh::OutputHLSL outputHLSL(parseContext, this);
+    const ShBuiltInResources &resources = getResources();
+    int numRenderTargets = resources.EXT_draw_buffers ? resources.MaxDrawBuffers : 1;
 
-    outputHLSL.output();
+    sh::OutputHLSL outputHLSL(getShaderType(), getShaderVersion(), getExtensionBehavior(),
+        getSourcePath(), getOutputType(), numRenderTargets, getUniforms(), compileOptions);
+
+    outputHLSL.output(root, getInfoSink().obj);
 
     mInterfaceBlockRegisterMap = outputHLSL.getInterfaceBlockRegisterMap();
     mUniformRegisterMap = outputHLSL.getUniformRegisterMap();

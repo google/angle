@@ -19,7 +19,7 @@ class StructureHLSL;
 class UniformHLSL
 {
   public:
-    UniformHLSL(StructureHLSL *structureHLSL, TranslatorHLSL *translator);
+    UniformHLSL(StructureHLSL *structureHLSL, ShShaderOutput outputType, const std::vector<Uniform> &uniforms);
 
     void reserveUniformRegisters(unsigned int registerCount);
     void reserveInterfaceBlockRegisters(unsigned int registerCount);

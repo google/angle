@@ -15,7 +15,7 @@ class TranslatorGLSL : public TCompiler
     TranslatorGLSL(sh::GLenum type, ShShaderSpec spec);
 
   protected:
-    virtual void translate(TIntermNode *root);
+    virtual void translate(TIntermNode *root, int compileOptions);
 
   private:
     void writeVersion(TIntermNode *root);

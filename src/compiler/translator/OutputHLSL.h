@@ -29,10 +29,15 @@ typedef std::map<TString, TIntermSymbol*> ReferencedSymbols;
 class OutputHLSL : public TIntermTraverser
 {
   public:
-    OutputHLSL(TParseContext &context, TranslatorHLSL *parentTranslator);
+    OutputHLSL(sh::GLenum shaderType, int shaderVersion,
+        const TExtensionBehavior &extensionBehavior,
+        const char *sourcePath, ShShaderOutput outputType,
+        int numRenderTargets, const std::vector<Uniform> &uniforms,
+        int compileOptions);
+
     ~OutputHLSL();
 
-    void output();
+    void output(TIntermNode *treeRoot, TInfoSinkBase &objSink);
 
     const std::map<std::string, unsigned int> &getInterfaceBlockRegisterMap() const;
     const std::map<std::string, unsigned int> &getUniformRegisterMap() const;
@@ -76,8 +81,13 @@ class OutputHLSL : public TIntermTraverser
     // Returns the function name
     TString addStructEqualityFunction(const TStructure &structure);
 
-    TParseContext &mContext;
+    sh::GLenum mShaderType;
+    int mShaderVersion;
+    const TExtensionBehavior &mExtensionBehavior;
+    const char *mSourcePath;
     const ShShaderOutput mOutputType;
+    int mCompileOptions;
+
     UnfoldShortCircuit *mUnfoldShortCircuit;
     bool mInsideFunction;
 

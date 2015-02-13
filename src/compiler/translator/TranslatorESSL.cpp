@@ -14,7 +14,7 @@ TranslatorESSL::TranslatorESSL(sh::GLenum type, ShShaderSpec spec)
     : TCompiler(type, spec, SH_ESSL_OUTPUT) {
 }
 
-void TranslatorESSL::translate(TIntermNode* root) {
+void TranslatorESSL::translate(TIntermNode *root, int) {
     TInfoSinkBase& sink = getInfoSink().obj;
 
     writePragma();

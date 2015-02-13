@@ -36,6 +36,7 @@ class TIntermTyped;
 class TIntermSymbol;
 class TIntermLoop;
 class TInfoSink;
+class TInfoSinkBase;
 class TIntermRaw;
 
 //

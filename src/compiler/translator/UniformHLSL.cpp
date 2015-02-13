@@ -11,7 +11,6 @@
 
 #include "common/utilities.h"
 #include "compiler/translator/StructureHLSL.h"
-#include "compiler/translator/TranslatorHLSL.h"
 #include "compiler/translator/UtilsHLSL.h"
 #include "compiler/translator/blocklayout.h"
 #include "compiler/translator/util.h"
@@ -61,13 +60,13 @@ static TString InterfaceBlockStructName(const TInterfaceBlock &interfaceBlock)
     return DecoratePrivate(interfaceBlock.name()) + "_type";
 }
 
-UniformHLSL::UniformHLSL(StructureHLSL *structureHLSL, TranslatorHLSL *translator)
+UniformHLSL::UniformHLSL(StructureHLSL *structureHLSL, ShShaderOutput outputType, const std::vector<Uniform> &uniforms)
     : mUniformRegister(0),
       mInterfaceBlockRegister(0),
       mSamplerRegister(0),
       mStructureHLSL(structureHLSL),
-      mOutputType(translator->getOutputType()),
-      mUniforms(translator->getUniforms())
+      mOutputType(outputType),
+      mUniforms(uniforms)
 {}
 
 void UniformHLSL::reserveUniformRegisters(unsigned int registerCount)

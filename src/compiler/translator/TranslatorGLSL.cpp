@@ -15,7 +15,7 @@ TranslatorGLSL::TranslatorGLSL(sh::GLenum type, ShShaderSpec spec)
     : TCompiler(type, spec, SH_GLSL_OUTPUT) {
 }
 
-void TranslatorGLSL::translate(TIntermNode* root) {
+void TranslatorGLSL::translate(TIntermNode *root, int) {
     TInfoSinkBase& sink = getInfoSink().obj;
 
     // Write GLSL version.

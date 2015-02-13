@@ -19,7 +19,7 @@ class OutputHLSL;
 class UnfoldShortCircuit : public TIntermTraverser
 {
   public:
-    UnfoldShortCircuit(TParseContext &context, OutputHLSL *outputHLSL);
+    UnfoldShortCircuit(OutputHLSL *outputHLSL);
 
     void traverse(TIntermNode *node);
     bool visitBinary(Visit visit, TIntermBinary*);
@@ -29,7 +29,6 @@ class UnfoldShortCircuit : public TIntermTraverser
     int getNextTemporaryIndex();
 
   protected:
-    TParseContext &mContext;
     OutputHLSL *const mOutputHLSL;
 
     int mTemporaryIndex;

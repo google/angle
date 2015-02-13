@@ -95,12 +95,21 @@ bool OutputHLSL::TextureFunction::operator<(const TextureFunction &rhs) const
     return false;
 }
 
-OutputHLSL::OutputHLSL(TParseContext &context, TranslatorHLSL *parentTranslator)
+OutputHLSL::OutputHLSL(sh::GLenum shaderType, int shaderVersion,
+    const TExtensionBehavior &extensionBehavior,
+    const char *sourcePath, ShShaderOutput outputType,
+    int numRenderTargets, const std::vector<Uniform> &uniforms,
+    int compileOptions)
     : TIntermTraverser(true, true, true),
-      mContext(context),
-      mOutputType(parentTranslator->getOutputType())
+      mShaderType(shaderType),
+      mShaderVersion(shaderVersion),
+      mExtensionBehavior(extensionBehavior),
+      mSourcePath(sourcePath),
+      mOutputType(outputType),
+      mNumRenderTargets(numRenderTargets),
+      mCompileOptions(compileOptions)
 {
-    mUnfoldShortCircuit = new UnfoldShortCircuit(context, this);
+    mUnfoldShortCircuit = new UnfoldShortCircuit(this);
     mInsideFunction = false;
 
     mUsesFragColor = false;
@@ -116,9 +125,6 @@ OutputHLSL::OutputHLSL(TParseContext &context, TranslatorHLSL *parentTranslator)
     mUsesDiscardRewriting = false;
     mUsesNestedBreak = false;
 
-    const ShBuiltInResources &resources = parentTranslator->getResources();
-    mNumRenderTargets = resources.EXT_draw_buffers ? resources.MaxDrawBuffers : 1;
-
     mUniqueIndex = 0;
 
     mContainsLoopDiscontinuity = false;
@@ -130,11 +136,11 @@ OutputHLSL::OutputHLSL(TParseContext &context, TranslatorHLSL *parentTranslator)
     mExcessiveLoopIndex = NULL;
 
     mStructureHLSL = new StructureHLSL;
-    mUniformHLSL = new UniformHLSL(mStructureHLSL, parentTranslator);
+    mUniformHLSL = new UniformHLSL(mStructureHLSL, outputType, uniforms);
 
     if (mOutputType == SH_HLSL9_OUTPUT)
     {
-        if (mContext.shaderType == GL_FRAGMENT_SHADER)
+        if (mShaderType == GL_FRAGMENT_SHADER)
         {
             // Reserve registers for dx_DepthRange, dx_ViewCoords and dx_DepthFront
             mUniformHLSL->reserveUniformRegisters(3);
@@ -157,26 +163,26 @@ OutputHLSL::~OutputHLSL()
     SafeDelete(mUniformHLSL);
 }
 
-void OutputHLSL::output()
+void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
 {
-    mContainsLoopDiscontinuity = mContext.shaderType == GL_FRAGMENT_SHADER && containsLoopDiscontinuity(mContext.treeRoot);
-    mContainsAnyLoop = containsAnyLoop(mContext.treeRoot);
-    const std::vector<TIntermTyped*> &flaggedStructs = FlagStd140ValueStructs(mContext.treeRoot);
+    mContainsLoopDiscontinuity = mShaderType == GL_FRAGMENT_SHADER && containsLoopDiscontinuity(treeRoot);
+    mContainsAnyLoop = containsAnyLoop(treeRoot);
+    const std::vector<TIntermTyped*> &flaggedStructs = FlagStd140ValueStructs(treeRoot);
     makeFlaggedStructMaps(flaggedStructs);
 
     // Work around D3D9 bug that would manifest in vertex shaders with selection blocks which
     // use a vertex attribute as a condition, and some related computation in the else block.
-    if (mOutputType == SH_HLSL9_OUTPUT && mContext.shaderType == GL_VERTEX_SHADER)
+    if (mOutputType == SH_HLSL9_OUTPUT && mShaderType == GL_VERTEX_SHADER)
     {
-        RewriteElseBlocks(mContext.treeRoot);
+        RewriteElseBlocks(treeRoot);
     }
 
     BuiltInFunctionEmulatorHLSL builtInFunctionEmulator;
-    builtInFunctionEmulator.MarkBuiltInFunctionsForEmulation(mContext.treeRoot);
+    builtInFunctionEmulator.MarkBuiltInFunctionsForEmulation(treeRoot);
 
     // Output the body and footer first to determine what has to go in the header
     mInfoSinkStack.push(&mBody);
-    mContext.treeRoot->traverse(this);
+    treeRoot->traverse(this);
     mInfoSinkStack.pop();
 
     mInfoSinkStack.push(&mFooter);
@@ -190,10 +196,9 @@ void OutputHLSL::output()
     header(&builtInFunctionEmulator);
     mInfoSinkStack.pop();
 
-    TInfoSinkBase& sink = mContext.infoSink().obj;
-    sink << mHeader.c_str();
-    sink << mBody.c_str();
-    sink << mFooter.c_str();
+    objSink << mHeader.c_str();
+    objSink << mBody.c_str();
+    objSink << mFooter.c_str();
 
     builtInFunctionEmulator.Cleanup();
 }
@@ -353,16 +358,16 @@ void OutputHLSL::header(const BuiltInFunctionEmulatorHLSL *builtInFunctionEmulat
            "#define FLATTEN\n"
            "#endif\n";
 
-    if (mContext.shaderType == GL_FRAGMENT_SHADER)
+    if (mShaderType == GL_FRAGMENT_SHADER)
     {
-        TExtensionBehavior::const_iterator iter = mContext.extensionBehavior().find("GL_EXT_draw_buffers");
-        const bool usingMRTExtension = (iter != mContext.extensionBehavior().end() && (iter->second == EBhEnable || iter->second == EBhRequire));
+        TExtensionBehavior::const_iterator iter = mExtensionBehavior.find("GL_EXT_draw_buffers");
+        const bool usingMRTExtension = (iter != mExtensionBehavior.end() && (iter->second == EBhEnable || iter->second == EBhRequire));
 
         out << "// Varyings\n";
         out <<  varyings;
         out << "\n";
 
-        if (mContext.getShaderVersion() >= 300)
+        if (mShaderVersion >= 300)
         {
             for (ReferencedSymbols::const_iterator outputVariableIt = mReferencedOutputVariables.begin(); outputVariableIt != mReferencedOutputVariables.end(); outputVariableIt++)
             {
@@ -2051,7 +2056,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                     bool bias = (arguments->size() > mandatoryArgumentCount);   // Bias argument is optional
 
-                    if (lod0 || mContext.shaderType == GL_VERTEX_SHADER)
+                    if (lod0 || mShaderType == GL_VERTEX_SHADER)
                     {
                         if (bias)
                         {
@@ -2180,7 +2185,7 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
         // however flattening all the ifs in branch heavy shaders made D3D error too.
         // As a temporary workaround we flatten the ifs only if there is at least a loop
         // present somewhere in the shader.
-        if (mContext.shaderType == GL_FRAGMENT_SHADER && mContainsAnyLoop)
+        if (mShaderType == GL_FRAGMENT_SHADER && mContainsAnyLoop)
         {
             out << "FLATTEN ";
         }
@@ -2649,16 +2654,16 @@ void OutputHLSL::outputTriplet(Visit visit, const TString &preString, const TStr
 
 void OutputHLSL::outputLineDirective(int line)
 {
-    if ((mContext.compileOptions & SH_LINE_DIRECTIVES) && (line > 0))
+    if ((mCompileOptions & SH_LINE_DIRECTIVES) && (line > 0))
     {
         TInfoSinkBase &out = getInfoSink();
 
         out << "\n";
         out << "#line " << line;
 
-        if (mContext.sourcePath)
+        if (mSourcePath)
         {
-            out << " \"" << mContext.sourcePath << "\"";
+            out << " \"" << mSourcePath << "\"";
         }
 
         out << "\n";

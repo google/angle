@@ -25,13 +25,12 @@ struct TMatrixFields {
 // they can be passed to the parser without needing a global.
 //
 struct TParseContext {
-    TParseContext(TSymbolTable& symt, TExtensionBehavior& ext, TIntermediate& interm, sh::GLenum type, ShShaderSpec spec, int options, bool checksPrecErrors, const char* sourcePath, TInfoSink& is, bool debugShaderPrecisionSupported) :
+    TParseContext(TSymbolTable& symt, TExtensionBehavior& ext, TIntermediate& interm, sh::GLenum type, ShShaderSpec spec, int options, bool checksPrecErrors, TInfoSink& is, bool debugShaderPrecisionSupported) :
             intermediate(interm),
             symbolTable(symt),
             shaderType(type),
             shaderSpec(spec),
             compileOptions(options),
-            sourcePath(sourcePath),
             treeRoot(0),
             loopNestingLevel(0),
             structNestingLevel(0),
@@ -51,7 +50,6 @@ struct TParseContext {
     ShShaderSpec shaderSpec;              // The language specification compiler conforms to - GLES2 or WebGL.
     int shaderVersion;
     int compileOptions;
-    const char* sourcePath;      // Path of source file or NULL.
     TIntermNode* treeRoot;       // root of parse tree being created
     int loopNestingLevel;        // 0 if outside all loops
     int structNestingLevel;      // incremented while parsing a struct declaration
