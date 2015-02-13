@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "0b7a1caa_145e34e4",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-13T16:25:11Z",
+      "side": 1,
+      "message": "Do you want to set this to NULL to avoid accidents?",
+      "range": {
+        "startLine": 300,
+        "startChar": 4,
+        "endLine": 300,
+        "endChar": 14
+      },
+      "revId": "d73a0c8654b58b90fe4b8c3251d712ca9ee8b156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cbd1e4e3_f2d3885d",
         "filename": "src/libANGLE/renderer/gl/wgl/FunctionsWGL.cpp",
         "patchSetId": 1
