@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0bcf7c48_4caf5f7c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-13T18:23:00Z",
+      "side": 1,
+      "message": "nit: I think you can move this to the innermost scope (the else case below)",
+      "range": {
+        "startLine": 238,
+        "startChar": 3,
+        "endLine": 242,
+        "endChar": 5
+      },
+      "revId": "53d81ac916f0418256a6886620839966449a1245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bdb6c05_f3faaac7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 920,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-13T18:23:00Z",
+      "side": 1,
+      "message": "nit: you can move this to the top of the file, since it\u0027s a static local function. Also fix the case indentation. you could also make this a public function and make isES3Capable in Renderer11 use this method.",
+      "range": {
+        "startLine": 920,
+        "startChar": 13,
+        "endLine": 920,
+        "endChar": 36
+      },
+      "revId": "53d81ac916f0418256a6886620839966449a1245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
