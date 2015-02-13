@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ba13c5e_dca9cd6b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-13T14:59:30Z",
+      "side": 1,
+      "message": "We have a utility for this, see formatutils.h.\n\n   gl::GetInternalFormatInfo(internalFormat).compressed",
+      "range": {
+        "startLine": 231,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 1
+      },
+      "revId": "68f13a1cbcdecc2d8b568789b17c6479c95c4066",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b4cdc89_a46a82fb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-13T14:59:30Z",
+      "side": 1,
+      "message": "This could be problematic since we do need 3D versions of these formats for ES3.\n\nInstead, could you pass in a \u0027maxClientVersion\u0027 into this function and only check for 3D texture support if ES3 is needed?  Below in GenerateCaps, you can pass ES3 only if the feature level is greater than 9.3.",
+      "range": {
+        "startLine": 260,
+        "startChar": 8,
+        "endLine": 264,
+        "endChar": 9
+      },
+      "revId": "68f13a1cbcdecc2d8b568789b17c6479c95c4066",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
