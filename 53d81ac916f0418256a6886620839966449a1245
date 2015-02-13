@@ -45,6 +45,53 @@
       "revId": "53d81ac916f0418256a6886620839966449a1245",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7658e11a_92dc3ae7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 920,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-02-13T18:44:02Z",
+      "side": 1,
+      "message": "+1 to making isES3Capable use this",
+      "parentUuid": "8bdb6c05_f3faaac7",
+      "range": {
+        "startLine": 920,
+        "startChar": 13,
+        "endLine": 920,
+        "endChar": 36
+      },
+      "revId": "53d81ac916f0418256a6886620839966449a1245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b8d2cf5_40214e11",
+        "filename": "tests/angle_tests/CompressedTextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-02-13T18:44:02Z",
+      "side": 1,
+      "message": "I\u0027m slightly surprised that these tests all work on 9_3. I\u0027m not sure if they should. It\u0027s worth noting that these tests don\u0027t read back any pixel data; they just assume that \"No GL error\" \u003d \"the textures work correctly\".\n\nHave you considered adding some compressed texture tests that actually check that the textures can be used correctly?",
+      "range": {
+        "startLine": 5,
+        "startChar": 66,
+        "endLine": 5,
+        "endChar": 81
+      },
+      "revId": "53d81ac916f0418256a6886620839966449a1245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
