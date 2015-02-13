@@ -153,6 +153,7 @@ angle_enable_gl = false
 if (is_win) {
   angle_enable_d3d9 = true
   angle_enable_d3d11 = true
+  angle_enable_gl = true
 
   import("//build/config/win/visual_studio_version.gni")
   copy("copy_compiler_dll") {
