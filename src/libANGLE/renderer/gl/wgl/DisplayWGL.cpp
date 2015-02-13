@@ -12,6 +12,7 @@
 #include "libANGLE/Config.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/renderer/gl/wgl/FunctionsWGL.h"
 #include "libANGLE/renderer/gl/wgl/SurfaceWGL.h"
 #include "libANGLE/renderer/gl/wgl/wgl_utils.h"
 
@@ -22,27 +23,12 @@
 namespace rx
 {
 
-template <typename T>
-static T GetWGLProcAddress(HMODULE glModule, const std::string &name)
-{
-    T proc = reinterpret_cast<T>(wglGetProcAddress(name.c_str()));
-    if (proc)
-    {
-        return proc;
-    }
-
-    return reinterpret_cast<T>(GetProcAddress(glModule, name.c_str()));
-}
-
 DisplayWGL::DisplayWGL()
     : DisplayGL(),
       mOpenGLModule(nullptr),
       mGLVersionMajor(0),
       mGLVersionMinor(0),
-      mExtensions(),
-      mCreateContextAttribsARB(nullptr),
-      mGetPixelFormatAttribivARB(nullptr),
-      mSwapIntervalEXT(nullptr),
+      mFunctionsWGL(nullptr),
       mWindowClass(0),
       mWindow(nullptr),
       mDeviceContext(nullptr),
@@ -85,6 +71,9 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     {
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to load OpenGL library.");
     }
+
+    mFunctionsWGL = new FunctionsWGL();
+    mFunctionsWGL->intialize(mOpenGLModule, nullptr);
 
     // WGL can't grab extensions until it creates a context because it needs to load the driver's DLLs first.
     // Create a dummy context to load the driver and determine which GL versions are available.
@@ -145,13 +134,13 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to set the pixel format on the intermediate OpenGL window.");
     }
 
-    HGLRC dummyWGLContext = wglCreateContext(dummyDeviceContext);
+    HGLRC dummyWGLContext = mFunctionsWGL->createContext(dummyDeviceContext);
     if (!dummyDeviceContext)
     {
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to create a WGL context for the dummy OpenGL window.");
     }
 
-    if (!wglMakeCurrent(dummyDeviceContext, dummyWGLContext))
+    if (!mFunctionsWGL->makeCurrent(dummyDeviceContext, dummyWGLContext))
     {
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to make the dummy WGL context current.");
     }
@@ -173,45 +162,12 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     GLuint maxGLVersionMajor = dummyGLVersionString[0] - '0';
     GLuint maxGLVersionMinor = dummyGLVersionString[2] - '0';
 
-    // Grab WGL extensions
-    PFNWGLGETEXTENSIONSSTRINGEXTPROC getExtensionStringEXT = GetWGLProcAddress<PFNWGLGETEXTENSIONSSTRINGEXTPROC>(mOpenGLModule, "wglGetExtensionsStringEXT");
-    PFNWGLGETEXTENSIONSSTRINGARBPROC getExtensionStringARB = GetWGLProcAddress<PFNWGLGETEXTENSIONSSTRINGARBPROC>(mOpenGLModule, "wglGetExtensionsStringARB");
-    const char *extensions = "";
-    if (getExtensionStringEXT)
-    {
-        extensions = getExtensionStringEXT();
-    }
-    else if (getExtensionStringARB)
-    {
-        extensions = getExtensionStringARB(dummyDeviceContext);
-    }
-
-    // Put all the extensions into a vector
-    std::stringstream stream(extensions);
-    std::string extension;
-    while (std::getline(stream, extension, ' '))
-    {
-        mExtensions.push_back(extension);
-    }
-
-    if (isWGLExtensionSupported("WGL_ARB_create_context"))
-    {
-        mCreateContextAttribsARB = GetWGLProcAddress<PFNWGLCREATECONTEXTATTRIBSARBPROC>(mOpenGLModule, "wglCreateContextAttribsARB");
-    }
-
-    if (isWGLExtensionSupported("WGL_ARB_pixel_format"))
-    {
-        mGetPixelFormatAttribivARB = GetWGLProcAddress<PFNWGLGETPIXELFORMATATTRIBIVARBPROC>(mOpenGLModule, "wglGetPixelFormatAttribivARB");
-    }
-
-    if (isWGLExtensionSupported("WGL_EXT_swap_control"))
-    {
-        mSwapIntervalEXT = GetWGLProcAddress<PFNWGLSWAPINTERVALEXTPROC>(mOpenGLModule, "wglSwapIntervalEXT");
-    }
+    // Reinitialize the wgl functions to grab the extensions
+    mFunctionsWGL->intialize(mOpenGLModule, dummyDeviceContext);
 
     // Destroy the dummy window and context
-    wglMakeCurrent(dummyDeviceContext, NULL);
-    wglDeleteContext(dummyWGLContext);
+    mFunctionsWGL->makeCurrent(dummyDeviceContext, NULL);
+    mFunctionsWGL->deleteContext(dummyWGLContext);
     ReleaseDC(dummyWindow, dummyDeviceContext);
     DestroyWindow(dummyWindow);
 
@@ -253,7 +209,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to set the pixel format on the intermediate OpenGL window.");
     }
 
-    if (mCreateContextAttribsARB)
+    if (mFunctionsWGL->createContextAttribsARB)
     {
         int flags = 0;
         // TODO: also allow debug contexts through a user flag
@@ -294,7 +250,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         contextCreationAttibutes.push_back(0);
         contextCreationAttibutes.push_back(0);
 
-        mWGLContext = mCreateContextAttribsARB(mDeviceContext, NULL, &contextCreationAttibutes[0]);
+        mWGLContext = mFunctionsWGL->createContextAttribsARB(mDeviceContext, NULL, &contextCreationAttibutes[0]);
     }
 
     // If wglCreateContextAttribsARB is unavailable or failed, try the standard wglCreateContext
@@ -304,7 +260,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         mGLVersionMajor = maxGLVersionMajor;
         mGLVersionMinor = maxGLVersionMinor;
 
-        mWGLContext = wglCreateContext(mDeviceContext);
+        mWGLContext = mFunctionsWGL->createContext(mDeviceContext);
     }
 
     if (!mWGLContext)
@@ -312,7 +268,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to create a WGL context for the intermediate OpenGL window.");
     }
 
-    if (!wglMakeCurrent(mDeviceContext, mWGLContext))
+    if (!mFunctionsWGL->makeCurrent(mDeviceContext, mWGLContext))
     {
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to make the intermediate WGL context current.");
     }
@@ -328,8 +284,8 @@ void DisplayWGL::terminate()
 {
     DisplayGL::terminate();
 
-    wglMakeCurrent(mDeviceContext, NULL);
-    wglDeleteContext(mWGLContext);
+    mFunctionsWGL->makeCurrent(mDeviceContext, NULL);
+    mFunctionsWGL->deleteContext(mWGLContext);
     mWGLContext = NULL;
 
     ReleaseDC(mWindow, mDeviceContext);
@@ -341,18 +297,17 @@ void DisplayWGL::terminate()
     UnregisterClassA(reinterpret_cast<const char*>(mWindowClass), NULL);
     mWindowClass = NULL;
 
+    SafeDelete(mFunctionsWGL);
+
     FreeLibrary(mOpenGLModule);
-    mExtensions.clear();
-    mCreateContextAttribsARB = NULL;
-    mGetPixelFormatAttribivARB = NULL;
-    mSwapIntervalEXT = NULL;
+    mOpenGLModule = nullptr;
 }
 
 egl::Error DisplayWGL::createWindowSurface(const egl::Config *configuration, EGLNativeWindowType window,
                                            const egl::AttributeMap &attribs, SurfaceImpl **outSurface)
 {
     SurfaceWGL *surface = new SurfaceWGL(mDisplay, configuration, EGL_FALSE, EGL_FALSE, EGL_NO_TEXTURE, EGL_NO_TEXTURE,
-                                         window, mWindowClass, mPixelFormat, mWGLContext, mSwapIntervalEXT);
+                                         window, mWindowClass, mPixelFormat, mWGLContext, mFunctionsWGL);
     egl::Error error = surface->initialize();
     if (error.isError())
     {
@@ -395,7 +350,7 @@ egl::ConfigSet DisplayWGL::generateConfigs() const
 
     int minSwapInterval = 1;
     int maxSwapInterval = 1;
-    if (mSwapIntervalEXT)
+    if (mFunctionsWGL->swapIntervalEXT)
     {
         // No defined maximum swap interval in WGL_EXT_swap_control, use a reasonable number
         minSwapInterval = 0;
@@ -486,11 +441,6 @@ void DisplayWGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 void DisplayWGL::generateCaps(egl::Caps *outCaps) const
 {
     outCaps->textureNPOT = true;
-}
-
-bool DisplayWGL::isWGLExtensionSupported(const std::string &name) const
-{
-    return std::find(mExtensions.begin(), mExtensions.end(), name) != mExtensions.end();
 }
 
 }

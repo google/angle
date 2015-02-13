@@ -16,6 +16,8 @@
 namespace rx
 {
 
+class FunctionsWGL;
+
 class DisplayWGL : public DisplayGL
 {
   public:
@@ -50,19 +52,11 @@ class DisplayWGL : public DisplayGL
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 
-    bool isWGLExtensionSupported(const std::string &name) const;
-
     HMODULE mOpenGLModule;
     GLuint mGLVersionMajor;
     GLuint mGLVersionMinor;
 
-    std::vector<std::string> mExtensions;
-
-    PFNWGLCREATECONTEXTATTRIBSARBPROC mCreateContextAttribsARB;
-
-    PFNWGLGETPIXELFORMATATTRIBIVARBPROC mGetPixelFormatAttribivARB;
-
-    PFNWGLSWAPINTERVALEXTPROC mSwapIntervalEXT;
+    FunctionsWGL *mFunctionsWGL;
 
     ATOM mWindowClass;
     HWND mWindow;

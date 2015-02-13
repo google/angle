@@ -16,12 +16,14 @@
 namespace rx
 {
 
+class FunctionsWGL;
+
 class SurfaceWGL : public SurfaceGL
 {
   public:
     SurfaceWGL(egl::Display *display, const egl::Config *config, EGLint fixedSize, EGLint postSubBufferSupported,
                EGLenum textureFormat, EGLenum textureType, EGLNativeWindowType window, ATOM windowClass, int pixelFormat,
-               HGLRC wglContext, PFNWGLSWAPINTERVALEXTPROC swapIntervalExt);
+               HGLRC wglContext, const FunctionsWGL *functions);
 
     ~SurfaceWGL() override;
 
@@ -54,7 +56,7 @@ class SurfaceWGL : public SurfaceGL
     HWND mChildWindow;
     HDC mChildDeviceContext;
 
-    PFNWGLSWAPINTERVALEXTPROC mSwapIntervalEXT;
+    const FunctionsWGL *mFunctionsWGL;
 };
 
 }

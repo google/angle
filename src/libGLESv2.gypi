@@ -398,6 +398,8 @@
         [
             'libANGLE/renderer/gl/wgl/DisplayWGL.cpp',
             'libANGLE/renderer/gl/wgl/DisplayWGL.h',
+            'libANGLE/renderer/gl/wgl/FunctionsWGL.cpp',
+            'libANGLE/renderer/gl/wgl/FunctionsWGL.h',
             'libANGLE/renderer/gl/wgl/SurfaceWGL.cpp',
             'libANGLE/renderer/gl/wgl/SurfaceWGL.h',
             'libANGLE/renderer/gl/wgl/wgl_utils.cpp',
@@ -606,19 +608,6 @@
                     [
                         'ANGLE_ENABLE_OPENGL',
                     ],
-                    'link_settings':
-                    {
-                        'msvs_settings':
-                        {
-                            'VCLinkerTool':
-                            {
-                                'AdditionalDependencies':
-                                [
-                                    'OpenGL32.lib',
-                                ],
-                            },
-                        },
-                    },
                     'conditions':
                     [
                         ['OS=="win"',

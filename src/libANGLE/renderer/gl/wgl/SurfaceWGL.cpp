@@ -9,6 +9,7 @@
 #include "libANGLE/renderer/gl/wgl/SurfaceWGL.h"
 
 #include "common/debug.h"
+#include "libANGLE/renderer/gl/wgl/FunctionsWGL.h"
 #include "libANGLE/renderer/gl/wgl/wgl_utils.h"
 
 namespace rx
@@ -16,7 +17,7 @@ namespace rx
 
 SurfaceWGL::SurfaceWGL(egl::Display *display, const egl::Config *config, EGLint fixedSize, EGLint postSubBufferSupported,
                        EGLenum textureFormat, EGLenum textureType, EGLNativeWindowType window, ATOM windowClass, int pixelFormat,
-                       HGLRC wglContext, PFNWGLSWAPINTERVALEXTPROC swapIntervalExt)
+                       HGLRC wglContext, const FunctionsWGL *functions)
     : SurfaceGL(display, config, fixedSize, postSubBufferSupported, textureFormat, textureType),
       mWindowClass(windowClass),
       mPixelFormat(pixelFormat),
@@ -24,7 +25,7 @@ SurfaceWGL::SurfaceWGL(egl::Display *display, const egl::Config *config, EGLint 
       mParentWindow(window),
       mChildWindow(nullptr),
       mChildDeviceContext(nullptr),
-      mSwapIntervalEXT(swapIntervalExt)
+      mFunctionsWGL(functions)
 {
 }
 
@@ -34,14 +35,12 @@ SurfaceWGL::~SurfaceWGL()
     mPixelFormat = 0;
     mShareWGLContext = nullptr;
 
-    wglMakeCurrent(mChildDeviceContext, nullptr);
+    mFunctionsWGL->makeCurrent(mChildDeviceContext, nullptr);
     ReleaseDC(mChildWindow, mChildDeviceContext);
     mChildDeviceContext = nullptr;
 
     DestroyWindow(mChildWindow);
     mChildWindow = nullptr;
-
-    mSwapIntervalEXT = nullptr;
 }
 
 SurfaceWGL *SurfaceWGL::makeSurfaceWGL(SurfaceImpl *impl)
@@ -94,7 +93,7 @@ egl::Error SurfaceWGL::initialize()
 
 egl::Error SurfaceWGL::makeCurrent()
 {
-    if (!wglMakeCurrent(mChildDeviceContext, mShareWGLContext))
+    if (!mFunctionsWGL->makeCurrent(mChildDeviceContext, mShareWGLContext))
     {
         // TODO: What error type here?
         return egl::Error(EGL_CONTEXT_LOST, "Failed to make the WGL context current.");
@@ -154,9 +153,9 @@ egl::Error SurfaceWGL::releaseTexImage(EGLint buffer)
 
 void SurfaceWGL::setSwapInterval(EGLint interval)
 {
-    if (mSwapIntervalEXT)
+    if (mFunctionsWGL->swapIntervalEXT)
     {
-        mSwapIntervalEXT(interval);
+        mFunctionsWGL->swapIntervalEXT(interval);
     }
 }
 
