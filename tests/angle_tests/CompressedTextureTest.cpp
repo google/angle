@@ -2,7 +2,7 @@
 #include "media/pixel.inl"
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(CompressedTextureTest, ES2_D3D9, ES2_D3D11);
+ANGLE_TYPED_TEST_CASE(CompressedTextureTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3);
 
 template<typename T>
 class CompressedTextureTest : public ANGLETest
@@ -171,7 +171,7 @@ ANGLE_TYPED_TEST_CASE(CompressedTextureTestES3, ES3_D3D11);
 template<typename T>
 class CompressedTextureTestES3 : public CompressedTextureTest<T> { };
 
-ANGLE_TYPED_TEST_CASE(CompressedTextureTestD3D11, ES2_D3D11, ES3_D3D11);
+ANGLE_TYPED_TEST_CASE(CompressedTextureTestD3D11, ES2_D3D11, ES3_D3D11, ES2_D3D11_FL9_3);
 
 template<typename T>
 class CompressedTextureTestD3D11 : public CompressedTextureTest<T> { };

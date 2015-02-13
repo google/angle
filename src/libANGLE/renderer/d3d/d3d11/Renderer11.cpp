@@ -3275,6 +3275,11 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const 
     return result;
 }
 
+bool Renderer11::isES3Capable() const
+{
+    return (d3d11_gl::GetMaximumClientVersion(mFeatureLevel) > 2);
+};
+
 ID3D11Texture2D *Renderer11::resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource)
 {
     D3D11_TEXTURE2D_DESC textureDesc;

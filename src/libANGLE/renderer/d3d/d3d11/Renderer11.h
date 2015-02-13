@@ -209,7 +209,7 @@ class Renderer11 : public RendererD3D
                                    RenderTargetD3D *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,
                                    bool colorBlit, bool depthBlit, bool stencilBlit);
 
-    bool isES3Capable() const { return mFeatureLevel >= D3D_FEATURE_LEVEL_10_0; };
+    bool isES3Capable() const;
     D3D_FEATURE_LEVEL getFeatureLevel() const { return mFeatureLevel; };
 
   private:

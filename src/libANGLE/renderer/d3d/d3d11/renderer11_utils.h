@@ -50,6 +50,7 @@ D3D11_QUERY ConvertQueryType(GLenum queryType);
 namespace d3d11_gl
 {
 
+GLint GetMaximumClientVersion(D3D_FEATURE_LEVEL featureLevel);
 void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions);
 
 }
