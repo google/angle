@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "eb76a8c4_93b25c0d",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-13T16:51:22Z",
+      "side": 1,
+      "message": "Our SafeDelete takes care of that.",
+      "parentUuid": "0b7a1caa_145e34e4",
+      "range": {
+        "startLine": 300,
+        "startChar": 4,
+        "endLine": 300,
+        "endChar": 14
+      },
+      "revId": "d73a0c8654b58b90fe4b8c3251d712ca9ee8b156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cbd1e4e3_f2d3885d",
         "filename": "src/libANGLE/renderer/gl/wgl/FunctionsWGL.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-13T16:22:51Z",
       "side": 1,
       "message": "nit: alignment",
+      "range": {
+        "startLine": 17,
+        "startChar": 67,
+        "endLine": 17,
+        "endChar": 68
+      },
+      "revId": "d73a0c8654b58b90fe4b8c3251d712ca9ee8b156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbd1e4e3_723798dc",
+        "filename": "src/libANGLE/renderer/gl/wgl/FunctionsWGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-13T16:51:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cbd1e4e3_f2d3885d",
       "range": {
         "startLine": 17,
         "startChar": 67,
