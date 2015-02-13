@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b9440fe_1db973c6",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 836,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-13T15:28:05Z",
+      "side": 1,
+      "message": "can you add ASSERT(op \u003d\u003d EOpMod)?",
+      "revId": "32c45f7049837cfb5c49b4e4bbf90dd49898f4da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ba13c5e_dc578dc3",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 861,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-13T15:28:05Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "32c45f7049837cfb5c49b4e4bbf90dd49898f4da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ba13c5e_fc54c9c0",
+        "filename": "tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-13T15:28:05Z",
+      "side": 1,
+      "message": "nit: newline for {",
+      "range": {
+        "startLine": 16,
+        "startChar": 47,
+        "endLine": 16,
+        "endChar": 48
+      },
+      "revId": "32c45f7049837cfb5c49b4e4bbf90dd49898f4da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
