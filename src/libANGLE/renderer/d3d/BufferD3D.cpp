@@ -52,6 +52,9 @@ void BufferD3D::invalidateStaticData()
     {
         SafeDelete(mStaticVertexBuffer);
         SafeDelete(mStaticIndexBuffer);
+
+        // Re-init static data to track that we're in a static buffer
+        initializeStaticData();
     }
 
     mUnmodifiedDataUse = 0;
