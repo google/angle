@@ -91,7 +91,7 @@ class Buffer11::BufferStorage
     virtual void unmap() = 0;
 
   protected:
-    DISALLOW_COPY_AND_ASSIGN(Buffer11::BufferStorage);
+    DISALLOW_COPY_AND_ASSIGN(BufferStorage);
 
     BufferStorage(Renderer11 *renderer, BufferUsage usage);
 
@@ -121,7 +121,7 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
     gl::Error setData(D3D11_MAP mapMode, const uint8_t *data, size_t size, size_t offset);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Buffer11::NativeStorage);
+    DISALLOW_COPY_AND_ASSIGN(NativeStorage);
 
     static void fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Renderer11 *renderer, BufferUsage usage, unsigned int bufferSize);
 
@@ -146,7 +146,7 @@ class Buffer11::PackStorage : public Buffer11::BufferStorage
     gl::Error packPixels(ID3D11Texture2D *srcTexure, UINT srcSubresource, const PackPixelsParams &params);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Buffer11::PackStorage);
+    DISALLOW_COPY_AND_ASSIGN(PackStorage);
 
     gl::Error flushQueuedPackCommand();
 
