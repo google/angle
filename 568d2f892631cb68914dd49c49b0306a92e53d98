@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb76a8c4_13cdecbc",
+        "filename": "src/compiler/translator/TranslatorHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-13T16:15:03Z",
+      "side": 1,
+      "message": "I think you can remove all of these parameters, since they\u0027re already implicit from passing the \"this\" pointer for the compiler object.",
+      "range": {
+        "startLine": 18,
+        "startChar": 36,
+        "endLine": 19,
+        "endChar": 47
+      },
+      "revId": "568d2f892631cb68914dd49c49b0306a92e53d98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ba13c5e_7c00b97c",
+        "filename": "src/compiler/translator/intermOut.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 623,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-13T16:15:03Z",
+      "side": 1,
+      "message": "Instead of making this a member of TIntermNode, I\u0027d suggest making it a static member of TIntermediate and passing the infoSink as well, or adding a new static method that takes a parameter for the infoSink. TIntermNode implementations belong in intermNode.cpp and this method doesn\u0027t need to access any private data in TIntermNode.",
+      "range": {
+        "startLine": 613,
+        "startChar": 0,
+        "endLine": 623,
+        "endChar": 1
+      },
+      "revId": "568d2f892631cb68914dd49c49b0306a92e53d98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
