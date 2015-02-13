@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b0f1825_372c788c",
+        "filename": "extensions/ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-02-13T00:06:40Z",
+      "side": 1,
+      "message": "I think I didn\u0027t leave enough room before the enum for EGL_CONTEXT_OPENGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE. Can you update that one to 0x320F in this CL?",
+      "range": {
+        "startLine": 54,
+        "startChar": 59,
+        "endLine": 55,
+        "endChar": 65
+      },
+      "revId": "871737345060d9e9231c8a6e6cf07ccdeb1d5c7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
