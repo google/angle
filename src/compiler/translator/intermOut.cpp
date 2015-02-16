@@ -421,6 +421,7 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpVectorNotEqual:   out << "NotEqual";                      break;
 
       case EOpMod:           out << "mod";         break;
+      case EOpModf:          out << "modf";        break;
       case EOpPow:           out << "pow";         break;
 
       case EOpAtan:          out << "arc tangent"; break;

@@ -108,6 +108,7 @@ struct TParseContext {
     bool extensionErrorCheck(const TSourceLoc& line, const TString&);
     bool singleDeclarationErrorCheck(TPublicType &publicType, const TSourceLoc& identifierLocation, const TString &identifier);
     bool layoutLocationErrorCheck(const TSourceLoc& location, const TLayoutQualifier &layoutQualifier);
+    bool functionCallLValueErrorCheck(const TFunction *fnCandidate, TIntermAggregate *);
 
     const TPragma& pragma() const { return directiveHandler.pragma(); }
     const TExtensionBehavior& extensionBehavior() const { return directiveHandler.extensionBehavior(); }

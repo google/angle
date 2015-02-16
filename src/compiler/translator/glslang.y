@@ -360,6 +360,9 @@ function_call
                         aggregate->setType(fnCandidate->getReturnType());
                         aggregate->setPrecisionFromChildren();
                         $$ = aggregate;
+
+                        // Some built-in functions have out parameters too.
+                        context->functionCallLValueErrorCheck(fnCandidate, aggregate);
                     }
                 } else {
                     // This is a real function call
@@ -380,16 +383,7 @@ function_call
 
                     $$ = aggregate;
 
-                    TQualifier qual;
-                    for (size_t i = 0; i < fnCandidate->getParamCount(); ++i) {
-                        qual = fnCandidate->getParam(i).type->getQualifier();
-                        if (qual == EvqOut || qual == EvqInOut) {
-                            if (context->lValueErrorCheck($$->getLine(), "assign", (*($$->getAsAggregate()->getSequence()))[i]->getAsTyped())) {
-                                context->error($1.intermNode->getLine(), "Constant value cannot be passed for 'out' or 'inout' parameters.", "Error");
-                                context->recover();
-                            }
-                        }
-                    }
+                    context->functionCallLValueErrorCheck(fnCandidate, aggregate);
                 }
             } else {
                 // error message was put out by PaFindFunction()

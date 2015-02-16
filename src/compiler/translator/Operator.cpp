@@ -94,6 +94,7 @@ const char *GetOperatorString(TOperator op)
       case EOpCeil: return "ceil";
       case EOpFract: return "fract";
       case EOpMod: return "mod";
+      case EOpModf: return "modf";
       case EOpMin: return "min";
       case EOpMax: return "max";
       case EOpClamp: return "clamp";

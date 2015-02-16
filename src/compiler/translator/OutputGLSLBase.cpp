@@ -864,6 +864,9 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpMod:
         writeBuiltInFunctionTriplet(visit, "mod(", useEmulatedFunction);
         break;
+      case EOpModf:
+        writeBuiltInFunctionTriplet(visit, "modf(", useEmulatedFunction);
+        break;
       case EOpPow:
         writeBuiltInFunctionTriplet(visit, "pow(", useEmulatedFunction);
         break;

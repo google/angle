@@ -290,6 +290,20 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float3, "smoothstep", float1, float1, float3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float4, "smoothstep", float1, float1, float4);
 
+    TType *outFloat1 = new TType(EbtFloat);
+    TType *outFloat2 = new TType(EbtFloat, 2);
+    TType *outFloat3 = new TType(EbtFloat, 3);
+    TType *outFloat4 = new TType(EbtFloat, 4);
+    outFloat1->setQualifier(EvqOut);
+    outFloat2->setQualifier(EvqOut);
+    outFloat3->setQualifier(EvqOut);
+    outFloat4->setQualifier(EvqOut);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "modf", float1, outFloat1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float2, "modf", float2, outFloat2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float3, "modf", float3, outFloat3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "modf", float4, outFloat4);
+
     TType *bool1 = new TType(EbtBool);
     TType *bool2 = new TType(EbtBool, 2);
     TType *bool3 = new TType(EbtBool, 3);
@@ -905,6 +919,7 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
 
     symbolTable.relateToOperator(ESSL3_BUILTINS, "abs",           EOpAbs);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "sign",          EOpSign);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "modf",          EOpModf);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "min",           EOpMin);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "max",           EOpMax);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "clamp",         EOpClamp);

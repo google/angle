@@ -2139,6 +2139,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         ASSERT(node->getUseEmulatedFunction());
         writeEmulatedFunctionTriplet(visit, "mod(");
         break;
+      case EOpModf:             outputTriplet(visit, "modf(", ", ", ")");              break;
       case EOpPow:              outputTriplet(visit, "pow(", ", ", ")");               break;
       case EOpAtan:
         ASSERT(node->getSequence()->size() == 2);   // atan(x) is a unary operator

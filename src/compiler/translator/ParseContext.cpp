@@ -991,6 +991,26 @@ bool TParseContext::layoutLocationErrorCheck(const TSourceLoc& location, const T
     return false;
 }
 
+bool TParseContext::functionCallLValueErrorCheck(const TFunction *fnCandidate, TIntermAggregate *aggregate)
+{
+    for (size_t i = 0; i < fnCandidate->getParamCount(); ++i)
+    {
+        TQualifier qual = fnCandidate->getParam(i).type->getQualifier();
+        if (qual == EvqOut || qual == EvqInOut)
+        {
+            TIntermTyped *node = (*(aggregate->getSequence()))[i]->getAsTyped();
+            if (lValueErrorCheck(node->getLine(), "assign", node))
+            {
+                error(node->getLine(),
+                    "Constant value cannot be passed for 'out' or 'inout' parameters.", "Error");
+                recover();
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 bool TParseContext::supportsExtension(const char* extension)
 {
     const TExtensionBehavior& extbehavior = extensionBehavior();
