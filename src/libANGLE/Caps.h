@@ -215,6 +215,20 @@ struct Extensions
     bool colorBufferFloat;
 };
 
+struct TypePrecision
+{
+    TypePrecision();
+
+    void setIEEEFloat();
+    void setTwosComplementInt(unsigned int bits);
+    void setSimulatedInt(unsigned int range);
+
+    void get(GLint *returnRange, GLint *returnPrecision) const;
+
+    GLint range[2];
+    GLint precision;
+};
+
 struct Caps
 {
     Caps();
@@ -242,6 +256,18 @@ struct Caps
     std::vector<GLenum> compressedTextureFormats;
     std::vector<GLenum> programBinaryFormats;
     std::vector<GLenum> shaderBinaryFormats;
+    TypePrecision vertexHighpFloat;
+    TypePrecision vertexMediumpFloat;
+    TypePrecision vertexLowpFloat;
+    TypePrecision vertexHighpInt;
+    TypePrecision vertexMediumpInt;
+    TypePrecision vertexLowpInt;
+    TypePrecision fragmentHighpFloat;
+    TypePrecision fragmentMediumpFloat;
+    TypePrecision fragmentLowpFloat;
+    TypePrecision fragmentHighpInt;
+    TypePrecision fragmentMediumpInt;
+    TypePrecision fragmentLowpInt;
     GLuint64 maxServerWaitTimeout;
 
     // Table 6.31, implementation dependent vertex shader limits

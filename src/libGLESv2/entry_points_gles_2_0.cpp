@@ -2366,39 +2366,66 @@ void GL_APIENTRY GetShaderPrecisionFormat(GLenum shadertype, GLenum precisiontyp
         switch (shadertype)
         {
           case GL_VERTEX_SHADER:
+            switch (precisiontype)
+            {
+              case GL_LOW_FLOAT:
+                context->getCaps().vertexLowpFloat.get(range, precision);
+                break;
+              case GL_MEDIUM_FLOAT:
+                context->getCaps().vertexMediumpFloat.get(range, precision);
+                break;
+              case GL_HIGH_FLOAT:
+                context->getCaps().vertexHighpFloat.get(range, precision);
+                break;
+
+              case GL_LOW_INT:
+                context->getCaps().vertexLowpInt.get(range, precision);
+                break;
+              case GL_MEDIUM_INT:
+                context->getCaps().vertexMediumpInt.get(range, precision);
+                break;
+              case GL_HIGH_INT:
+                context->getCaps().vertexHighpInt.get(range, precision);
+                break;
+
+              default:
+                context->recordError(Error(GL_INVALID_ENUM));
+                return;
+            }
+            break;
           case GL_FRAGMENT_SHADER:
-            break;
+            switch (precisiontype)
+            {
+              case GL_LOW_FLOAT:
+                context->getCaps().fragmentLowpFloat.get(range, precision);
+                break;
+              case GL_MEDIUM_FLOAT:
+                context->getCaps().fragmentMediumpFloat.get(range, precision);
+                break;
+              case GL_HIGH_FLOAT:
+                context->getCaps().fragmentHighpFloat.get(range, precision);
+                break;
 
+              case GL_LOW_INT:
+                context->getCaps().fragmentLowpInt.get(range, precision);
+                break;
+              case GL_MEDIUM_INT:
+                context->getCaps().fragmentMediumpInt.get(range, precision);
+                break;
+              case GL_HIGH_INT:
+                context->getCaps().fragmentHighpInt.get(range, precision);
+                break;
+
+              default:
+                context->recordError(Error(GL_INVALID_ENUM));
+                return;
+            }
+            break;
           default:
             context->recordError(Error(GL_INVALID_ENUM));
             return;
         }
 
-        switch (precisiontype)
-        {
-          case GL_LOW_FLOAT:
-          case GL_MEDIUM_FLOAT:
-          case GL_HIGH_FLOAT:
-            // Assume IEEE 754 precision
-            range[0] = 127;
-            range[1] = 127;
-            *precision = 23;
-            break;
-
-          case GL_LOW_INT:
-          case GL_MEDIUM_INT:
-          case GL_HIGH_INT:
-            // Some (most) hardware only supports single-precision floating-point numbers,
-            // which can accurately represent integers up to +/-16777216
-            range[0] = 24;
-            range[1] = 24;
-            *precision = 0;
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
-            return;
-        }
     }
 }
 
