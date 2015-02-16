@@ -187,6 +187,27 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float3, "min", float3, float3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float4, "min", float4, float4);
 
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int1, "min", int1, int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "min", int2, int2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "min", int3, int3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "min", int4, int4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "min", int2, int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "min", int3, int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "min", int4, int1);
+
+    TType *uint1 = new TType(EbtUInt);
+    TType *uint2 = new TType(EbtUInt, 2);
+    TType *uint3 = new TType(EbtUInt, 3);
+    TType *uint4 = new TType(EbtUInt, 4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint1, "min", uint1, uint1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint2, "min", uint2, uint2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint3, "min", uint3, uint3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "min", uint4, uint4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint2, "min", uint2, uint1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint3, "min", uint3, uint1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "min", uint4, uint1);
+
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float1, "max", float1, float1);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float2, "max", float2, float1);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float3, "max", float3, float1);
@@ -195,6 +216,22 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float3, "max", float3, float3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float4, "max", float4, float4);
 
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int1, "max", int1, int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "max", int2, int2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "max", int3, int3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "max", int4, int4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "max", int2, int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "max", int3, int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "max", int4, int1);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint1, "max", uint1, uint1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint2, "max", uint2, uint2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint3, "max", uint3, uint3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "max", uint4, uint4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint2, "max", uint2, uint1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint3, "max", uint3, uint1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "max", uint4, uint1);
+
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float1, "clamp", float1, float1, float1);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float2, "clamp", float2, float1, float1);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float3, "clamp", float3, float1, float1);
@@ -202,6 +239,22 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float2, "clamp", float2, float2, float2);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float3, "clamp", float3, float3, float3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float4, "clamp", float4, float4, float4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int1, "clamp", int1, int1, int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "clamp", int2, int1, int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "clamp", int3, int1, int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "clamp", int4, int1, int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "clamp", int2, int2, int2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "clamp", int3, int3, int3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "clamp", int4, int4, int4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint1, "clamp", uint1, uint1, uint1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint2, "clamp", uint2, uint1, uint1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint3, "clamp", uint3, uint1, uint1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "clamp", uint4, uint1, uint1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint2, "clamp", uint2, uint2, uint2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint3, "clamp", uint3, uint3, uint3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "clamp", uint4, uint4, uint4);
 
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float1, "mix", float1, float1, float1);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float2, "mix", float2, float2, float1);
@@ -226,11 +279,6 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float2, "smoothstep", float1, float1, float2);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float3, "smoothstep", float1, float1, float3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float4, "smoothstep", float1, float1, float4);
-
-    TType *uint1 = new TType(EbtUInt);
-    TType *uint2 = new TType(EbtUInt, 2);
-    TType *uint3 = new TType(EbtUInt, 3);
-    TType *uint4 = new TType(EbtUInt, 4);
 
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int1, "floatBitsToInt", float1);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "floatBitsToInt", float2);
@@ -803,6 +851,10 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
     symbolTable.relateToOperator(COMMON_BUILTINS, "mix",          EOpMix);
     symbolTable.relateToOperator(COMMON_BUILTINS, "step",         EOpStep);
     symbolTable.relateToOperator(COMMON_BUILTINS, "smoothstep",   EOpSmoothStep);
+
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "min",           EOpMin);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "max",           EOpMax);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "clamp",         EOpClamp);
 
     symbolTable.relateToOperator(ESSL3_BUILTINS, "floatBitsToInt",  EOpFloatBitsToInt);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "floatBitsToUint", EOpFloatBitsToUint);
