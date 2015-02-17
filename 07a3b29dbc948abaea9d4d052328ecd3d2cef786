@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6b81d816_67279258",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-02-17T08:54:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b8a802f_ed2285c2",
+      "range": {
+        "startLine": 190,
+        "startChar": 30,
+        "endLine": 190,
+        "endChar": 45
+      },
+      "revId": "07a3b29dbc948abaea9d4d052328ecd3d2cef786",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2b8a802f_0d67d10b",
         "filename": "tests/angle_unittests.gypi",
         "patchSetId": 1
@@ -42,6 +66,47 @@
         "endLine": 22,
         "endChar": 80
       },
+      "revId": "07a3b29dbc948abaea9d4d052328ecd3d2cef786",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab875028_a90b1d9d",
+        "filename": "tests/angle_unittests.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-02-17T08:54:32Z",
+      "side": 1,
+      "message": "Will remove this unit test as all min/max/clamp variants are covered by dEQP tests.",
+      "parentUuid": "2b8a802f_0d67d10b",
+      "range": {
+        "startLine": 22,
+        "startChar": 48,
+        "endLine": 22,
+        "endChar": 80
+      },
+      "revId": "07a3b29dbc948abaea9d4d052328ecd3d2cef786",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b1a54b5_f5ed02be",
+        "filename": "tests/compiler_tests/GLES3BuiltInCommonFunctionsTests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-02-17T08:54:32Z",
+      "side": 1,
+      "message": "Will remove this unit test as all min/max/clamp variants are covered by dEQP tests.",
       "revId": "07a3b29dbc948abaea9d4d052328ecd3d2cef786",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
