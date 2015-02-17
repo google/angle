@@ -22,6 +22,30 @@
       "revId": "871737345060d9e9231c8a6e6cf07ccdeb1d5c7a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bb5bcf7_bcf90189",
+        "filename": "extensions/ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-17T17:47:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b0f1825_372c788c",
+      "range": {
+        "startLine": 54,
+        "startChar": 59,
+        "endLine": 55,
+        "endChar": 65
+      },
+      "revId": "871737345060d9e9231c8a6e6cf07ccdeb1d5c7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
