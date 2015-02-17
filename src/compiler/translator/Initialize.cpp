@@ -413,6 +413,10 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool3, "lessThan", int3, int3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool4, "lessThan", int4, int4);
 
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool2, "lessThan", uint2, uint2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool3, "lessThan", uint3, uint3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool4, "lessThan", uint4, uint4);
+
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool2, "lessThanEqual", float2, float2);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool3, "lessThanEqual", float3, float3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool4, "lessThanEqual", float4, float4);
@@ -420,6 +424,10 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool2, "lessThanEqual", int2, int2);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool3, "lessThanEqual", int3, int3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool4, "lessThanEqual", int4, int4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool2, "lessThanEqual", uint2, uint2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool3, "lessThanEqual", uint3, uint3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool4, "lessThanEqual", uint4, uint4);
 
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool2, "greaterThan", float2, float2);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool3, "greaterThan", float3, float3);
@@ -429,6 +437,10 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool3, "greaterThan", int3, int3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool4, "greaterThan", int4, int4);
 
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool2, "greaterThan", uint2, uint2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool3, "greaterThan", uint3, uint3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool4, "greaterThan", uint4, uint4);
+
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool2, "greaterThanEqual", float2, float2);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool3, "greaterThanEqual", float3, float3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool4, "greaterThanEqual", float4, float4);
@@ -437,6 +449,10 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool3, "greaterThanEqual", int3, int3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool4, "greaterThanEqual", int4, int4);
 
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool2, "greaterThanEqual", uint2, uint2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool3, "greaterThanEqual", uint3, uint3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool4, "greaterThanEqual", uint4, uint4);
+
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool2, "equal", float2, float2);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool3, "equal", float3, float3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool4, "equal", float4, float4);
@@ -444,6 +460,10 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool2, "equal", int2, int2);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool3, "equal", int3, int3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool4, "equal", int4, int4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool2, "equal", uint2, uint2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool3, "equal", uint3, uint3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool4, "equal", uint4, uint4);
 
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool2, "equal", bool2, bool2);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool3, "equal", bool3, bool3);
@@ -456,6 +476,10 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool2, "notEqual", int2, int2);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool3, "notEqual", int3, int3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool4, "notEqual", int4, int4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool2, "notEqual", uint2, uint2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool3, "notEqual", uint3, uint3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool4, "notEqual", uint4, uint4);
 
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool2, "notEqual", bool2, bool2);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool3, "notEqual", bool3, bool3);
@@ -814,7 +838,14 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
     symbolTable.relateToOperator(COMMON_BUILTINS, "greaterThan",      EOpGreaterThan);
     symbolTable.relateToOperator(COMMON_BUILTINS, "lessThanEqual",    EOpLessThanEqual);
     symbolTable.relateToOperator(COMMON_BUILTINS, "greaterThanEqual", EOpGreaterThanEqual);
-    
+
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "equal",             EOpVectorEqual);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "notEqual",          EOpVectorNotEqual);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "lessThan",          EOpLessThan);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "greaterThan",       EOpGreaterThan);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "lessThanEqual",     EOpLessThanEqual);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "greaterThanEqual",  EOpGreaterThanEqual);
+
     symbolTable.relateToOperator(COMMON_BUILTINS, "radians",      EOpRadians);
     symbolTable.relateToOperator(COMMON_BUILTINS, "degrees",      EOpDegrees);
     symbolTable.relateToOperator(COMMON_BUILTINS, "sin",          EOpSin);
