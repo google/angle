@@ -32,6 +32,7 @@
             [
                 '_CRT_SECURE_NO_DEPRECATE',
                 '_SCL_SECURE_NO_WARNINGS',
+                '_HAS_EXCEPTIONS=0',
                 'NOMINMAX',
             ],
         },
