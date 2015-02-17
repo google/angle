@@ -13,11 +13,12 @@
 
 namespace rx
 {
+class FunctionsGL;
 
 class RendererGL : public Renderer
 {
   public:
-    RendererGL();
+    RendererGL(const FunctionsGL *functions);
     ~RendererGL() override;
 
     gl::Error flush() override;
@@ -73,6 +74,8 @@ class RendererGL : public Renderer
 
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureCaps, gl::Extensions *outExtensions) const override;
     Workarounds generateWorkarounds() const override;
+
+    const FunctionsGL *mFunctions;
 };
 
 }

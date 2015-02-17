@@ -23,12 +23,45 @@
 namespace rx
 {
 
+class FunctionsGLWindows : public FunctionsGL
+{
+  public:
+    FunctionsGLWindows(HMODULE openGLModule)
+        : mOpenGLModule(openGLModule)
+        , mGetProcAddressWGL(nullptr)
+    {
+        ASSERT(mOpenGLModule);
+        mGetProcAddressWGL = reinterpret_cast<PFNWGLGETPROCADDRESSPROC>(GetProcAddress(mOpenGLModule, "wglGetProcAddress"));
+    }
+
+    virtual ~FunctionsGLWindows()
+    {
+    }
+
+  private:
+    void *loadProcAddress(const std::string &function) override
+    {
+        void *proc = mGetProcAddressWGL(function.c_str());
+        if (!proc)
+        {
+            proc = GetProcAddress(mOpenGLModule, function.c_str());
+        }
+        return proc;
+    }
+
+    HMODULE mOpenGLModule;
+
+    typedef PROC(WINAPI *PFNWGLGETPROCADDRESSPROC)(LPCSTR);
+    PFNWGLGETPROCADDRESSPROC mGetProcAddressWGL;
+};
+
 DisplayWGL::DisplayWGL()
     : DisplayGL(),
       mOpenGLModule(nullptr),
       mGLVersionMajor(0),
       mGLVersionMinor(0),
       mFunctionsWGL(nullptr),
+      mFunctionsGL(nullptr),
       mWindowClass(0),
       mWindow(nullptr),
       mDeviceContext(nullptr),
@@ -277,6 +310,9 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     mGLVersionMajor = versionString[0] - '0';
     mGLVersionMinor = versionString[2] - '0';
 
+    mFunctionsGL = new FunctionsGLWindows(mOpenGLModule);
+    mFunctionsGL->initialize(mGLVersionMajor, mGLVersionMinor);
+
     return DisplayGL::initialize(display);
 }
 
@@ -298,6 +334,7 @@ void DisplayWGL::terminate()
     mWindowClass = NULL;
 
     SafeDelete(mFunctionsWGL);
+    SafeDelete(mFunctionsGL);
 
     FreeLibrary(mOpenGLModule);
     mOpenGLModule = nullptr;
@@ -431,6 +468,11 @@ std::string DisplayWGL::getVendorString() const
 {
     UNIMPLEMENTED();
     return "";
+}
+
+const FunctionsGL *DisplayWGL::getFunctionsGL() const
+{
+    return mFunctionsGL;
 }
 
 void DisplayWGL::generateExtensions(egl::DisplayExtensions *outExtensions) const

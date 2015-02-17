@@ -15,6 +15,7 @@
 #include "libANGLE/renderer/gl/FenceNVGL.h"
 #include "libANGLE/renderer/gl/FenceSyncGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
+#include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/ProgramGL.h"
 #include "libANGLE/renderer/gl/QueryGL.h"
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
@@ -26,9 +27,12 @@
 namespace rx
 {
 
-RendererGL::RendererGL()
-    : Renderer()
-{}
+RendererGL::RendererGL(const FunctionsGL *functions)
+    : Renderer(),
+      mFunctions(functions)
+{
+    ASSERT(mFunctions);
+}
 
 RendererGL::~RendererGL()
 {}

@@ -49,6 +49,8 @@ class DisplayWGL : public DisplayGL
   private:
     DISALLOW_COPY_AND_ASSIGN(DisplayWGL);
 
+    const FunctionsGL *getFunctionsGL() const override;
+
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 
@@ -57,6 +59,7 @@ class DisplayWGL : public DisplayGL
     GLuint mGLVersionMinor;
 
     FunctionsWGL *mFunctionsWGL;
+    FunctionsGL *mFunctionsGL;
 
     ATOM mWindowClass;
     HWND mWindow;

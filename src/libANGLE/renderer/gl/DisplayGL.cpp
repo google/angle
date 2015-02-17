@@ -28,7 +28,7 @@ DisplayGL::~DisplayGL()
 
 egl::Error DisplayGL::initialize(egl::Display *display)
 {
-    mRenderer = new RendererGL();
+    mRenderer = new RendererGL(getFunctionsGL());
     return egl::Error(EGL_SUCCESS);
 }
 

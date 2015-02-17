@@ -375,6 +375,8 @@
             'libANGLE/renderer/gl/FenceSyncGL.h',
             'libANGLE/renderer/gl/FramebufferGL.cpp',
             'libANGLE/renderer/gl/FramebufferGL.h',
+            'libANGLE/renderer/gl/FunctionsGL.cpp',
+            'libANGLE/renderer/gl/FunctionsGL.h',
             'libANGLE/renderer/gl/ProgramGL.cpp',
             'libANGLE/renderer/gl/ProgramGL.h',
             'libANGLE/renderer/gl/QueryGL.cpp',
@@ -393,6 +395,8 @@
             'libANGLE/renderer/gl/TransformFeedbackGL.h',
             'libANGLE/renderer/gl/VertexArrayGL.cpp',
             'libANGLE/renderer/gl/VertexArrayGL.h',
+            'libANGLE/renderer/gl/functionsgl_enums.h',
+            'libANGLE/renderer/gl/functionsgl_typedefs.h',
         ],
         'libangle_gl_wgl_sources':
         [
