@@ -10,20 +10,21 @@
 
 #include "libANGLE/Display.h"
 
+#include <algorithm>
+#include <iterator>
+#include <map>
+#include <sstream>
+#include <vector>
+
+#include <platform/Platform.h>
+#include <EGL/eglext.h>
+
 #include "common/debug.h"
 #include "common/mathutil.h"
 #include "common/platform.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/DisplayImpl.h"
-
-#include <algorithm>
-#include <map>
-#include <vector>
-#include <sstream>
-#include <iterator>
-
-#include <EGL/eglext.h>
 
 #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
 #   include "libANGLE/renderer/d3d/DisplayD3D.h"
@@ -40,6 +41,44 @@
 namespace egl
 {
 
+namespace
+{
+
+class DefaultPlatform : public angle::Platform
+{
+public:
+    DefaultPlatform() {}
+    ~DefaultPlatform() override {}
+};
+
+DefaultPlatform *defaultPlatform = nullptr;
+
+void InitDefaultPlatformImpl()
+{
+    if (angle::Platform::current() == nullptr)
+    {
+        if (defaultPlatform == nullptr)
+        {
+            defaultPlatform = new DefaultPlatform();
+        }
+
+        angle::Platform::initialize(defaultPlatform);
+    }
+}
+
+void DeinitDefaultPlatformImpl()
+{
+    if (defaultPlatform != nullptr)
+    {
+        if (angle::Platform::current() == defaultPlatform)
+        {
+            angle::Platform::shutdown();
+        }
+
+        SafeDelete(defaultPlatform);
+    }
+}
+
 typedef std::map<EGLNativeDisplayType, Display*> DisplayMap;
 static DisplayMap *GetDisplayMap()
 {
@@ -47,8 +86,13 @@ static DisplayMap *GetDisplayMap()
     return &displays;
 }
 
+}
+
 Display *Display::getDisplay(EGLNativeDisplayType displayId, const AttributeMap &attribMap)
 {
+    // Initialize the global platform if not already
+    InitDefaultPlatformImpl();
+
     Display *display = NULL;
 
     DisplayMap *displays = GetDisplayMap();
@@ -195,6 +239,9 @@ void Display::terminate()
 
     mImplementation->terminate();
     mInitialized = false;
+
+    // De-init default platform
+    DeinitDefaultPlatformImpl();
 }
 
 std::vector<const Config*> Display::getConfigs(const egl::AttributeMap &attribs) const

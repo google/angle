@@ -9,10 +9,9 @@
 #ifndef LIBGLESV2_ENTRYPOINTGLES20EXT_H_
 #define LIBGLESV2_ENTRYPOINTGLES20EXT_H_
 
-#include "libGLESv2/export.h"
-
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+#include <export.h>
 
 namespace gl
 {

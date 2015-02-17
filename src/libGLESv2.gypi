@@ -25,6 +25,8 @@
         ],
         'libangle_includes':
         [
+            '../include/angle_gl.h',
+            '../include/export.h',
             '../include/EGL/egl.h',
             '../include/EGL/eglext.h',
             '../include/EGL/eglplatform.h',
@@ -37,7 +39,7 @@
             '../include/GLSLANG/ShaderLang.h',
             '../include/GLSLANG/ShaderVars.h',
             '../include/KHR/khrplatform.h',
-            '../include/angle_gl.h',
+            '../include/platform/Platform.h',
         ],
         'libangle_sources':
         [
@@ -74,6 +76,7 @@
             'libANGLE/HandleAllocator.h',
             'libANGLE/ImageIndex.h',
             'libANGLE/ImageIndex.cpp',
+            'libANGLE/Platform.cpp',
             'libANGLE/Program.cpp',
             'libANGLE/Program.h',
             'libANGLE/Query.cpp',
@@ -426,7 +429,6 @@
             'libGLESv2/entry_points_gles_3_0.h',
             'libGLESv2/entry_points_gles_3_0_ext.cpp',
             'libGLESv2/entry_points_gles_3_0_ext.h',
-            'libGLESv2/export.h',
             'libGLESv2/global_state.cpp',
             'libGLESv2/global_state.h',
             'libGLESv2/libGLESv2.cpp',
