@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b8a802f_ed2285c2",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-17T07:46:48Z",
+      "side": 1,
+      "message": "Use ESSL3_BUILTINS for all the variants that are new in ESSL3.",
+      "range": {
+        "startLine": 190,
+        "startChar": 30,
+        "endLine": 190,
+        "endChar": 45
+      },
+      "revId": "07a3b29dbc948abaea9d4d052328ecd3d2cef786",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b8a802f_0d67d10b",
+        "filename": "tests/angle_unittests.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-17T07:46:48Z",
+      "side": 1,
+      "message": "nit: End the file name with _test.cpp to be consistent with the rest of the file names. So \"GLES3BuiltInCommonFunctions_test.cpp\"",
+      "range": {
+        "startLine": 22,
+        "startChar": 48,
+        "endLine": 22,
+        "endChar": 80
+      },
+      "revId": "07a3b29dbc948abaea9d4d052328ecd3d2cef786",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b7c4cf2_28ef2b0c",
+        "filename": "tests/compiler_tests/GLES3BuiltInCommonFunctionsTests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-17T07:46:48Z",
+      "side": 1,
+      "message": "I don\u0027t think that testing vertex and fragment shaders separately is necessary here. Just test once to conserve testing time.",
+      "range": {
+        "startLine": 18,
+        "startChar": 8,
+        "endLine": 18,
+        "endChar": 24
+      },
+      "revId": "07a3b29dbc948abaea9d4d052328ecd3d2cef786",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ba36cb2_f0c9804c",
+        "filename": "tests/compiler_tests/GLES3BuiltInCommonFunctionsTests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-17T07:46:48Z",
+      "side": 1,
+      "message": "int() should not be necessary here. -10 is already an integer literal.",
+      "range": {
+        "startLine": 39,
+        "startChar": 35,
+        "endLine": 39,
+        "endChar": 38
+      },
+      "revId": "07a3b29dbc948abaea9d4d052328ecd3d2cef786",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ba36cb2_d0cc7c5f",
+        "filename": "tests/compiler_tests/GLES3BuiltInCommonFunctionsTests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-17T07:46:48Z",
+      "side": 1,
+      "message": "Typo.",
+      "range": {
+        "startLine": 53,
+        "startChar": 72,
+        "endLine": 53,
+        "endChar": 80
+      },
+      "revId": "07a3b29dbc948abaea9d4d052328ecd3d2cef786",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b7c4cf2_68e92303",
+        "filename": "tests/compiler_tests/GLES3BuiltInCommonFunctionsTests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-17T07:46:48Z",
+      "side": 1,
+      "message": "Unsigned int literals can be written like \"10u\" to make the code clearer.",
+      "range": {
+        "startLine": 58,
+        "startChar": 38,
+        "endLine": 58,
+        "endChar": 42
+      },
+      "revId": "07a3b29dbc948abaea9d4d052328ecd3d2cef786",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
