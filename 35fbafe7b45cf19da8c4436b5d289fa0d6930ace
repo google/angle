@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb97245d_6219961f",
+        "filename": "extensions/ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-02-17T18:04:52Z",
+      "side": 1,
+      "message": "Sorry, I meant leave this one at 0x320E to retain the contiguous range, but update the enum in the robust initialization extension to be 0x320F.\n\n(But if you\u0027re just sick of messing with it, it\u0027s not that big a deal.)",
+      "range": {
+        "startLine": 55,
+        "startChar": 59,
+        "endLine": 55,
+        "endChar": 65
+      },
+      "revId": "35fbafe7b45cf19da8c4436b5d289fa0d6930ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
