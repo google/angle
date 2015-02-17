@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cbd1e4e3_d2fd24c2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-17T16:34:35Z",
+      "side": 1,
+      "message": "Use the new GetAs function?",
+      "range": {
+        "startLine": 255,
+        "startChar": 4,
+        "endLine": 256,
+        "endChar": 100
+      },
+      "revId": "f2496248da6cc381e3c004de496fe370e8c69ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b76d413_068c1ad2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1045,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-17T16:34:35Z",
+      "side": 1,
+      "message": "nit: Maybe another assert here that the source is mappable?",
+      "revId": "f2496248da6cc381e3c004de496fe370e8c69ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b76d413_668b0eb9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1069,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-17T16:34:35Z",
+      "side": 1,
+      "message": "nit: Also assert that buffer size is at least offset + length.",
+      "range": {
+        "startLine": 1069,
+        "startChar": 4,
+        "endLine": 1069,
+        "endChar": 33
+      },
+      "revId": "f2496248da6cc381e3c004de496fe370e8c69ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b76d413_269116eb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1070,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-17T16:34:35Z",
+      "side": 1,
+      "message": "Need to add the offset.",
+      "range": {
+        "startLine": 1070,
+        "startChar": 11,
+        "endLine": 1070,
+        "endChar": 30
+      },
+      "revId": "f2496248da6cc381e3c004de496fe370e8c69ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
