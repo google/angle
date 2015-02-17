@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6bb398fa_5da96bf3",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-02-17T18:06:44Z",
+      "side": 1,
+      "message": "Nit: no need for \"else\".  This is against Google coding style.",
+      "range": {
+        "startLine": 319,
+        "startChar": 4,
+        "endLine": 319,
+        "endChar": 8
+      },
+      "revId": "5091d53835de9646c56bf7ec16a8afc1c83d600d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
