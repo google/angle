@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4bd4142e_f9279358",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-17T21:01:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6bb398fa_7a21d511",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 39
+      },
+      "revId": "b25dc5536951f07a1b9ff81a2d9ce999a71df6f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4b76d413_a6f18664",
         "filename": "include/platform/Platform.h",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-17T16:11:53Z",
       "side": 1,
       "message": "Should probably move the definition of these into the cpp file.  I think there could be issues if other DLLs inline the definitions.",
+      "range": {
+        "startLine": 76,
+        "startChar": 4,
+        "endLine": 102,
+        "endChar": 27
+      },
+      "revId": "b25dc5536951f07a1b9ff81a2d9ce999a71df6f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb99e484_35105a4e",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-17T21:01:00Z",
+      "side": 1,
+      "message": "I don\u0027t believe so -- this is what blink::Platform does and I tested this with my Chromium build.",
+      "parentUuid": "4b76d413_a6f18664",
       "range": {
         "startLine": 76,
         "startChar": 4,
@@ -95,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "4bd4142e_791ca310",
+        "filename": "src/libANGLE/platform_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-17T21:01:00Z",
+      "side": 1,
+      "message": "I re-organized this code. The default platform impl stuff now lives in Display, and I renamed this file Platform.cpp, with just the Platform method implementations.",
+      "parentUuid": "6bb398fa_1ac9b9e2",
+      "range": {
+        "startLine": 56,
+        "startChar": 23,
+        "endLine": 56,
+        "endChar": 31
+      },
+      "revId": "b25dc5536951f07a1b9ff81a2d9ce999a71df6f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb99e484_35a13ab5",
         "filename": "src/libGLESv2/export.h",
         "patchSetId": 3
@@ -106,6 +178,30 @@
       "writtenOn": "2015-02-17T16:11:53Z",
       "side": 1,
       "message": "I think this may cause warnings if the static libANGLE tries to mark functions as dllexport (it probably isn\u0027t doing what you want anyways though).",
+      "range": {
+        "startLine": 13,
+        "startChar": 40,
+        "endLine": 13,
+        "endChar": 76
+      },
+      "revId": "b25dc5536951f07a1b9ff81a2d9ce999a71df6f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb99e484_5515de3c",
+        "filename": "src/libGLESv2/export.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-17T21:01:00Z",
+      "side": 1,
+      "message": "Seems to do what I want. With this define I mark my libANGLE methods as exported in libANGLE, and imported if used in Chromium. Is there some specific case where you know this would generate warnings? I have tested this code with a full Chromium build.",
+      "parentUuid": "cb99e484_35a13ab5",
       "range": {
         "startLine": 13,
         "startChar": 40,
