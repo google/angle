@@ -3,8 +3,8 @@
   "type": "float",
   "components": 4,
   "normalized": false,
-  "update_size": 300,
-  "buffer_size": 1048576,
+  "update_size": 3000,
+  "buffer_size": 67000000,
   "iterations": 10,
   "update_rate": 1
 }

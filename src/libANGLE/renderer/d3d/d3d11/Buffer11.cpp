@@ -7,6 +7,8 @@
 // Buffer11.cpp Defines the Buffer11 class.
 
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
+
+#include "common/MemoryBuffer.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 
@@ -79,9 +81,9 @@ class Buffer11::BufferStorage
     DataRevision getDataRevision() const { return mRevision; }
     BufferUsage getUsage() const { return mUsage; }
     size_t getSize() const { return mBufferSize; }
-    bool isMappable() const { return (mUsage == BUFFER_USAGE_STAGING || mUsage == BUFFER_USAGE_PIXEL_PACK); }
-
     void setDataRevision(DataRevision rev) { mRevision = rev; }
+
+    virtual bool isMappable() const = 0;
 
     virtual bool copyFromStorage(BufferStorage *source, size_t sourceOffset,
                                  size_t size, size_t destOffset) = 0;
@@ -111,6 +113,8 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
     NativeStorage(Renderer11 *renderer, BufferUsage usage);
     ~NativeStorage() override;
 
+    bool isMappable() const override { return mUsage == BUFFER_USAGE_STAGING; }
+
     ID3D11Buffer *getNativeStorage() const { return mNativeStorage; }
 
     bool copyFromStorage(BufferStorage *source, size_t sourceOffset,
@@ -133,8 +137,10 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
 class Buffer11::PackStorage : public Buffer11::BufferStorage
 {
   public:
-    PackStorage(Renderer11 *renderer);
+    explicit PackStorage(Renderer11 *renderer);
     ~PackStorage() override;
+
+    bool isMappable() const override { return true; }
 
     bool copyFromStorage(BufferStorage *source, size_t sourceOffset,
                          size_t size, size_t destOffset) override;
@@ -159,13 +165,39 @@ class Buffer11::PackStorage : public Buffer11::BufferStorage
     bool mDataModified;
 };
 
+// System memory storage stores a CPU memory buffer with our buffer data.
+// For dynamic data, it's much faster to update the CPU memory buffer than
+// it is to update a D3D staging buffer and read it back later.
+class Buffer11::SystemMemoryStorage : public Buffer11::BufferStorage
+{
+  public:
+    explicit SystemMemoryStorage(Renderer11 *renderer);
+    ~SystemMemoryStorage() override {}
+
+    bool isMappable() const override { return true; }
+
+    bool copyFromStorage(BufferStorage *source, size_t sourceOffset,
+                         size_t size, size_t destOffset) override;
+    gl::Error resize(size_t size, bool preserveData) override;
+
+    uint8_t *map(size_t offset, size_t length, GLbitfield access) override;
+    void unmap() override;
+
+    MemoryBuffer *getSystemCopy() { return &mSystemCopy; }
+
+  protected:
+    DISALLOW_COPY_AND_ASSIGN(SystemMemoryStorage);
+
+    MemoryBuffer mSystemCopy;
+};
+
 Buffer11::Buffer11(Renderer11 *renderer)
     : BufferD3D(),
       mRenderer(renderer),
       mSize(0),
       mMappedStorage(NULL),
-      mResolvedDataRevision(0),
-      mReadUsageCount(0)
+      mReadUsageCount(0),
+      mHasSystemMemoryStorage(false)
 {}
 
 Buffer11::~Buffer11()
@@ -200,54 +232,34 @@ gl::Error Buffer11::setData(const void *data, size_t size, GLenum usage)
 
 gl::Error Buffer11::getData(const uint8_t **outData)
 {
-    NativeStorage *stagingBuffer = getStagingStorage();
+    SystemMemoryStorage *systemMemoryStorage = nullptr;
+    gl::Error error = getSystemMemoryStorage(&systemMemoryStorage);
 
-    if (!stagingBuffer)
+    if (error.isError())
     {
-        // Out-of-memory
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to get internal staging buffer.");
-    }
-
-    if (stagingBuffer->getDataRevision() > mResolvedDataRevision)
-    {
-        if (stagingBuffer->getSize() > mResolvedData.size())
-        {
-            if (!mResolvedData.resize(stagingBuffer->getSize()))
-            {
-                return gl::Error(GL_OUT_OF_MEMORY, "Failed to resize data resolve buffer.");
-            }
-        }
-
-        ID3D11DeviceContext *context = mRenderer->getDeviceContext();
-
-        D3D11_MAPPED_SUBRESOURCE mappedResource;
-        HRESULT result = context->Map(stagingBuffer->getNativeStorage(), 0, D3D11_MAP_READ, 0, &mappedResource);
-        if (FAILED(result))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to map internal buffer, result: 0x%X.", result);
-        }
-
-        memcpy(mResolvedData.data(), mappedResource.pData, stagingBuffer->getSize());
-
-        context->Unmap(stagingBuffer->getNativeStorage(), 0);
-
-        mResolvedDataRevision = stagingBuffer->getDataRevision();
+        *outData = nullptr;
+        return error;
     }
 
     mReadUsageCount = 0;
 
-    // Only happens if we initialized the buffer with no data (NULL)
-    if (mResolvedData.empty())
+    ASSERT(systemMemoryStorage->getSize() >= mSize);
+
+    *outData = systemMemoryStorage->getSystemCopy()->data();
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error Buffer11::getSystemMemoryStorage(SystemMemoryStorage **storageOut)
+{
+    BufferStorage *memStorageUntyped = getBufferStorage(BUFFER_USAGE_SYSTEM_MEMORY);
+
+    if (memStorageUntyped == nullptr)
     {
-        if (!mResolvedData.resize(mSize))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to resize data resolve buffer.");
-        }
+        // TODO(jmadill): convert all to errors
+        return gl::Error(GL_OUT_OF_MEMORY);
     }
 
-    ASSERT(mResolvedData.size() >= mSize);
-
-    *outData = mResolvedData.data();
+    *storageOut = GetAs<SystemMemoryStorage>(memStorageUntyped);
     return gl::Error(GL_NO_ERROR);
 }
 
@@ -257,27 +269,46 @@ gl::Error Buffer11::setSubData(const void *data, size_t size, size_t offset)
 
     if (data && size > 0)
     {
-        NativeStorage *stagingBuffer = getStagingStorage();
+        // Use system memory storage for dynamic buffers.
 
-        if (!stagingBuffer)
+        BufferStorage *writeBuffer = nullptr;
+        if (supportsDirectBinding())
         {
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate internal staging buffer.");
+            writeBuffer = getStagingStorage();
+
+            if (!writeBuffer)
+            {
+                return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate internal buffer.");
+            }
         }
+        else
+        {
+            SystemMemoryStorage *systemMemoryStorage = nullptr;
+            gl::Error error = getSystemMemoryStorage(&systemMemoryStorage);
+            if (error.isError())
+            {
+                return error;
+            }
+
+            writeBuffer = systemMemoryStorage;
+        }
+
+        ASSERT(writeBuffer);
 
         // Explicitly resize the staging buffer, preserving data if the new data will not
         // completely fill the buffer
-        if (stagingBuffer->getSize() < requiredSize)
+        if (writeBuffer->getSize() < requiredSize)
         {
             bool preserveData = (offset > 0);
-            gl::Error error = stagingBuffer->resize(requiredSize, preserveData);
+            gl::Error error = writeBuffer->resize(requiredSize, preserveData);
             if (error.isError())
             {
                 return error;
             }
         }
 
-        stagingBuffer->setData(static_cast<const uint8_t *>(data), offset, size);
-        stagingBuffer->setDataRevision(stagingBuffer->getDataRevision() + 1);
+        writeBuffer->setData(static_cast<const uint8_t *>(data), offset, size);
+        writeBuffer->setDataRevision(writeBuffer->getDataRevision() + 1);
     }
 
     mSize = std::max(mSize, requiredSize);
@@ -403,12 +434,17 @@ void Buffer11::markBufferUsage()
 {
     mReadUsageCount++;
 
+    // Free the system memory storage if we decide it isn't being used very often.
     const unsigned int usageLimit = 5;
 
-    if (mReadUsageCount > usageLimit && mResolvedData.size() > 0)
+    if (mReadUsageCount > usageLimit && mHasSystemMemoryStorage)
     {
-        mResolvedData.resize(0);
-        mResolvedDataRevision = 0;
+        auto systemMemoryStorageIt = mBufferStorages.find(BUFFER_USAGE_SYSTEM_MEMORY);
+        ASSERT(systemMemoryStorageIt != mBufferStorages.end());
+
+        SafeDelete(systemMemoryStorageIt->second);
+        mBufferStorages.erase(systemMemoryStorageIt);
+        mHasSystemMemoryStorage = false;
     }
 }
 
@@ -515,6 +551,11 @@ Buffer11::BufferStorage *Buffer11::getBufferStorage(BufferUsage usage)
         {
             newStorage = new PackStorage(mRenderer);
         }
+        else if (usage == BUFFER_USAGE_SYSTEM_MEMORY)
+        {
+            newStorage = new SystemMemoryStorage(mRenderer);
+            mHasSystemMemoryStorage = true;
+        }
         else
         {
             // buffer is not allocated, create it
@@ -537,9 +578,12 @@ Buffer11::BufferStorage *Buffer11::getBufferStorage(BufferUsage usage)
     BufferStorage *latestBuffer = getLatestBufferStorage();
     if (latestBuffer && latestBuffer->getDataRevision() > newStorage->getDataRevision())
     {
-        // if copying from a pack buffer to a non-staging native buffer, we must first
-        // copy through the staging buffer, because other native buffers can't be mapped
-        if (latestBuffer->getUsage() == BUFFER_USAGE_PIXEL_PACK && !newStorage->isMappable())
+        // Copy through a staging buffer if we're copying from or to a non-staging, mappable
+        // buffer storage. This is because we can't map a GPU buffer, and copy CPU
+        // data directly. If we're already using a staging buffer we're fine.
+        if (latestBuffer->getUsage() != BUFFER_USAGE_STAGING &&
+            newStorage->getUsage() != BUFFER_USAGE_STAGING &&
+            (!latestBuffer->isMappable() || !newStorage->isMappable()))
         {
             NativeStorage *stagingBuffer = getStagingStorage();
 
@@ -678,9 +722,10 @@ bool Buffer11::NativeStorage::copyFromStorage(BufferStorage *source, size_t sour
         resize(source->getSize(), preserveData);
     }
 
-    if (source->getUsage() == BUFFER_USAGE_PIXEL_PACK)
+    if (source->getUsage() == BUFFER_USAGE_PIXEL_PACK ||
+        source->getUsage() == BUFFER_USAGE_SYSTEM_MEMORY)
     {
-        ASSERT(HAS_DYNAMIC_TYPE(PackStorage*, source));
+        ASSERT(source->isMappable());
 
         uint8_t *sourcePointer = source->map(sourceOffset, size, GL_MAP_READ_BIT);
 
@@ -987,6 +1032,46 @@ gl::Error Buffer11::PackStorage::flushQueuedPackCommand()
     }
 
     return gl::Error(GL_NO_ERROR);
+}
+
+Buffer11::SystemMemoryStorage::SystemMemoryStorage(Renderer11 *renderer)
+    : Buffer11::BufferStorage(renderer, BUFFER_USAGE_SYSTEM_MEMORY)
+{}
+
+bool Buffer11::SystemMemoryStorage::copyFromStorage(BufferStorage *source, size_t sourceOffset,
+                                                    size_t size, size_t destOffset)
+{
+    ASSERT(source->isMappable());
+    const uint8_t *sourceData = source->map(sourceOffset, size, GL_MAP_READ_BIT);
+    ASSERT(destOffset + size <= mSystemCopy.size());
+    memcpy(mSystemCopy.data() + destOffset, sourceData, size);
+    source->unmap();
+    return true;
+}
+
+gl::Error Buffer11::SystemMemoryStorage::resize(size_t size, bool preserveData)
+{
+    if (mSystemCopy.size() < size)
+    {
+        if (!mSystemCopy.resize(size))
+        {
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to resize SystemMemoryStorage");
+        }
+        mBufferSize = size;
+    }
+
+    return gl::Error(GL_NO_ERROR);
+}
+
+uint8_t *Buffer11::SystemMemoryStorage::map(size_t offset, size_t length, GLbitfield access)
+{
+    ASSERT(!mSystemCopy.empty() && offset + length <= mSystemCopy.size());
+    return mSystemCopy.data() + offset;
+}
+
+void Buffer11::SystemMemoryStorage::unmap()
+{
+    // No-op
 }
 
 }
