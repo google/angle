@@ -244,6 +244,21 @@ bool TIntermSelection::replaceChildNode(
     return false;
 }
 
+bool TIntermSwitch::replaceChildNode(
+    TIntermNode *original, TIntermNode *replacement)
+{
+    REPLACE_IF_IS(mInit, TIntermTyped, original, replacement);
+    REPLACE_IF_IS(mStatementList, TIntermAggregate, original, replacement);
+    return false;
+}
+
+bool TIntermCase::replaceChildNode(
+    TIntermNode *original, TIntermNode *replacement)
+{
+    REPLACE_IF_IS(mCondition, TIntermTyped, original, replacement);
+    return false;
+}
+
 //
 // Say whether or not an operation node changes the value of a variable.
 //

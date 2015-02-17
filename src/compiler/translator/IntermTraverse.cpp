@@ -194,6 +194,60 @@ void TIntermSelection::traverse(TIntermTraverser *it)
 }
 
 //
+// Traverse a switch node.  Same comments in binary node apply here.
+//
+void TIntermSwitch::traverse(TIntermTraverser *it)
+{
+    bool visit = true;
+
+    if (it->preVisit)
+        visit = it->visitSwitch(PreVisit, this);
+
+    if (visit)
+    {
+        it->incrementDepth(this);
+        if (it->rightToLeft)
+        {
+            if (mStatementList)
+                mStatementList->traverse(it);
+            if (it->inVisit)
+                visit = it->visitSwitch(InVisit, this);
+            if (visit)
+                mInit->traverse(it);
+        }
+        else
+        {
+            mInit->traverse(it);
+            if (it->inVisit)
+                visit = it->visitSwitch(InVisit, this);
+            if (visit && mStatementList)
+                mStatementList->traverse(it);
+        }
+        it->decrementDepth();
+    }
+
+    if (visit && it->postVisit)
+        it->visitSwitch(PostVisit, this);
+}
+
+//
+// Traverse a switch node.  Same comments in binary node apply here.
+//
+void TIntermCase::traverse(TIntermTraverser *it)
+{
+    bool visit = true;
+
+    if (it->preVisit)
+        visit = it->visitCase(PreVisit, this);
+
+    if (visit && mCondition)
+        mCondition->traverse(it);
+
+    if (visit && it->postVisit)
+        it->visitCase(PostVisit, this);
+}
+
+//
 // Traverse a loop node.  Same comments in binary node apply here.
 //
 void TIntermLoop::traverse(TIntermTraverser *it)

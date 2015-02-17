@@ -164,6 +164,10 @@ struct TParseContext {
 
     bool structNestingErrorCheck(const TSourceLoc& line, const TField& field);
 
+    TIntermSwitch *addSwitch(TIntermTyped *init, TIntermAggregate *statementList, const TSourceLoc &loc);
+    TIntermCase *addCase(TIntermTyped *condition, const TSourceLoc &loc);
+    TIntermCase *addDefault(const TSourceLoc &loc);
+
     TIntermTyped *addUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &);
     TIntermTyped *addUnaryMathLValue(TOperator op, TIntermTyped *child, const TSourceLoc &);
     TIntermTyped *addBinaryMath(TOperator op, TIntermTyped *left, TIntermTyped *right,

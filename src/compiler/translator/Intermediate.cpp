@@ -458,6 +458,22 @@ TIntermTyped *TIntermediate::addSelection(
     return node;
 }
 
+TIntermSwitch *TIntermediate::addSwitch(
+    TIntermTyped *init, TIntermAggregate *statementList, const TSourceLoc &line)
+{
+    mInfoSink.info.message(EPrefixInternalError, line,
+        "Switch statements are disabled for now");
+    return nullptr;
+}
+
+TIntermCase *TIntermediate::addCase(
+    TIntermTyped *condition, const TSourceLoc &line)
+{
+    mInfoSink.info.message(EPrefixInternalError, line,
+        "Case labels and default labels are disabled for now");
+    return nullptr;
+}
+
 //
 // Constant terminal nodes.  Has a union that contains bool, float or int constants
 //
