@@ -75,7 +75,8 @@ EGLint ConfigSet::add(const Config &config)
 
 const Config &ConfigSet::get(EGLint id) const
 {
-    return mConfigs.at(id);
+    ASSERT(mConfigs.find(id) != mConfigs.end());
+    return mConfigs.find(id)->second;
 }
 
 void ConfigSet::clear()
