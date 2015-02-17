@@ -22,6 +22,30 @@
       "revId": "35fbafe7b45cf19da8c4436b5d289fa0d6930ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "abc5907a_d9de13e4",
+        "filename": "extensions/ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-17T18:18:01Z",
+      "side": 1,
+      "message": "Sure, I\u0027ll update the other extension.",
+      "parentUuid": "cb97245d_6219961f",
+      "range": {
+        "startLine": 55,
+        "startChar": 59,
+        "endLine": 55,
+        "endChar": 65
+      },
+      "revId": "35fbafe7b45cf19da8c4436b5d289fa0d6930ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
