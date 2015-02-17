@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb99e484_b58c4a4f",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-17T16:23:12Z",
+      "side": 1,
+      "message": "Maybe typedef this as ErrorID, it could be useful for gl::Error too.",
+      "range": {
+        "startLine": 51,
+        "startChar": 28,
+        "endLine": 51,
+        "endChar": 37
+      },
+      "revId": "6051ab65a2abe9ab20ec6997ebe41afc4ec12676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
