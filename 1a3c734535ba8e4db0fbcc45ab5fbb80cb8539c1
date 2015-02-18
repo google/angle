@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab0d90eb_391f0f5f",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-18T10:37:55Z",
+      "side": 1,
+      "message": "Let\u0027s try to keep the ordering here close to the spec. So move these after \"smoothstep\"",
+      "revId": "1a3c734535ba8e4db0fbcc45ab5fbb80cb8539c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b69d873_67c0b221",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-18T10:37:55Z",
+      "side": 1,
+      "message": "You should also add any new operators to Operator.cpp. There\u0027s some overlap with intermOut.cpp, but it\u0027s a pretty big refactoring to get rid of that.\n\nAlso use consistent name formatting: EOpIsInf and EOpIsNan.",
+      "range": {
+        "startLine": 124,
+        "startChar": 4,
+        "endLine": 124,
+        "endChar": 12
+      },
+      "revId": "1a3c734535ba8e4db0fbcc45ab5fbb80cb8539c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab0d90eb_990f3b2e",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-18T10:37:55Z",
+      "side": 1,
+      "message": "Nit: indenting is inconsistent here.",
+      "range": {
+        "startLine": 521,
+        "startChar": 10,
+        "endLine": 521,
+        "endChar": 19
+      },
+      "revId": "1a3c734535ba8e4db0fbcc45ab5fbb80cb8539c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
