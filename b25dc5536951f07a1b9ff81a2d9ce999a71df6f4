@@ -283,6 +283,30 @@
       "revId": "b25dc5536951f07a1b9ff81a2d9ce999a71df6f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0babfcf0_ac3103ea",
+        "filename": "src/libGLESv2/export.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-18T16:20:15Z",
+      "side": 1,
+      "message": "There will never be a case where they are unreferenced, since they\u0027re used internally to set up the default platform.",
+      "parentUuid": "8b028cb9_38b38966",
+      "range": {
+        "startLine": 13,
+        "startChar": 40,
+        "endLine": 13,
+        "endChar": 76
+      },
+      "revId": "b25dc5536951f07a1b9ff81a2d9ce999a71df6f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
