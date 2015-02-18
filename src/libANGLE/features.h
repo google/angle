@@ -37,13 +37,4 @@
 #define ANGLE_SHADER_DEBUG_INFO ANGLE_DISABLED
 #endif
 
-// Should we compile the D3D vertex and pixel shaders on separate threads at glLinkProgram() time?
-#if !defined(ANGLE_MULTITHREADED_D3D_SHADER_COMPILE)
-#if defined(_MSC_VER) // Other compilers (e.g. Clang) might not support exceptions
-#define ANGLE_MULTITHREADED_D3D_SHADER_COMPILE ANGLE_ENABLED
-#else
-#define ANGLE_MULTITHREADED_D3D_SHADER_COMPILE ANGLE_DISABLED
-#endif
-#endif
-
 #endif // LIBANGLE_FEATURES_H_
