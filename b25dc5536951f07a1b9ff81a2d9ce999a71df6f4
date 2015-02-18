@@ -235,6 +235,30 @@
       "revId": "b25dc5536951f07a1b9ff81a2d9ce999a71df6f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b644c9b_ae7be3d5",
+        "filename": "src/libGLESv2/export.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-18T16:02:39Z",
+      "side": 1,
+      "message": "Geoff, from that article:\n\n\"If you reference any other symbol in the obj file, the whole obj file will be included in the image, so the dllexport-ed function will actually get exported.\"\n\nThis patch references symbols in the obj file so it will be included in the image.",
+      "parentUuid": "8b644c9b_ce217717",
+      "range": {
+        "startLine": 13,
+        "startChar": 40,
+        "endLine": 13,
+        "endChar": 76
+      },
+      "revId": "b25dc5536951f07a1b9ff81a2d9ce999a71df6f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
