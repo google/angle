@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0babfcf0_cc1f2f8d",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 4
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-18T15:40:40Z",
+      "side": 1,
+      "message": "this block is getting pretty big -- if you feel inclined, you could move this code block into the ParseContext.cpp file in a first refactoring patch before you update the code for the modf support.",
+      "range": {
+        "startLine": 291,
+        "startChar": 6,
+        "endLine": 291,
+        "endChar": 29
+      },
+      "revId": "9a0fab666613d5bb95e3f93844c88b08b75a1b5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
