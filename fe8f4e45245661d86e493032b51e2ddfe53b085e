@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0babfcf0_8cb9a7fa",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-18T16:04:08Z",
+      "side": 1,
+      "message": "I\u0027d prefer to not make assumptions here, none of the other caps do and I don\u0027t want some of the caps initialization to be skippable sometimes because of knowledge of the default values.  If you use a TypePrecision struct, it could have some helpers for initializing the IEEE-754 32-bit float info in the GenerateCaps functions.",
+      "range": {
+        "startLine": 398,
+        "startChar": 6,
+        "endLine": 410,
+        "endChar": 37
+      },
+      "revId": "fe8f4e45245661d86e493032b51e2ddfe53b085e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b644c9b_ee71dbf7",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-18T16:04:08Z",
+      "side": 1,
+      "message": "Looking better, thanks. I have a couple small suggestions though:  Even though we expect the float range to only have 1 value, it\u0027s probably better to have both because we\u0027ll be querying it from GL drivers and who knows what we\u0027ll get on some platforms.  Can we encompass the precision into a struct?\n\n   struct TypePrecision\n   {\n       GLuint range[2];\n       GLuint precision;\n   };\n\nIt would reduce the members and make them consistent.",
+      "range": {
+        "startLine": 245,
+        "startChar": 4,
+        "endLine": 262,
+        "endChar": 35
+      },
+      "revId": "fe8f4e45245661d86e493032b51e2ddfe53b085e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
