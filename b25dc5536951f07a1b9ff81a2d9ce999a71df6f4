@@ -259,6 +259,30 @@
       "revId": "b25dc5536951f07a1b9ff81a2d9ce999a71df6f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b028cb9_38b38966",
+        "filename": "src/libGLESv2/export.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-18T16:17:00Z",
+      "side": 1,
+      "message": "Yes, but if something changes where it is not referenced, we may have issues where initialize is exported but not shutdown or something.\n\nFrom the article:\n\"The best solution is to use an explicit DEF file, since that also gives you a chance to do other things like remove the decorations from the function (so that it can be Get­Proc­Addressed).\"",
+      "parentUuid": "8b644c9b_ae7be3d5",
+      "range": {
+        "startLine": 13,
+        "startChar": 40,
+        "endLine": 13,
+        "endChar": 76
+      },
+      "revId": "b25dc5536951f07a1b9ff81a2d9ce999a71df6f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
