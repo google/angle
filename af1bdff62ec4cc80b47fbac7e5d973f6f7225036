@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b75f43c_94bcec97",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-02-18T21:23:43Z",
+      "side": 1,
+      "message": "Please don\u0027t do this. We want one code path for all compilers.",
+      "revId": "af1bdff62ec4cc80b47fbac7e5d973f6f7225036",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
