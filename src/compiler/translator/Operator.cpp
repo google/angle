@@ -100,6 +100,8 @@ const char *GetOperatorString(TOperator op)
       case EOpMix: return "mix";
       case EOpStep: return "step";
       case EOpSmoothStep: return "smoothstep";
+      case EOpIsNan: return "isnan";
+      case EOpIsInf: return "isinf";
 
       case EOpFloatBitsToInt: return "floatBitsToInt";
       case EOpFloatBitsToUint: return "floatBitsToUint";

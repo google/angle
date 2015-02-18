@@ -280,6 +280,21 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float3, "smoothstep", float1, float1, float3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float4, "smoothstep", float1, float1, float4);
 
+    TType *bool1 = new TType(EbtBool);
+    TType *bool2 = new TType(EbtBool, 2);
+    TType *bool3 = new TType(EbtBool, 3);
+    TType *bool4 = new TType(EbtBool, 4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool1, "isnan", float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool2, "isnan", float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool3, "isnan", float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool4, "isnan", float4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool1, "isinf", float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool2, "isinf", float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool3, "isinf", float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, bool4, "isinf", float4);
+
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int1, "floatBitsToInt", float1);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "floatBitsToInt", float2);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "floatBitsToInt", float3);
@@ -396,11 +411,6 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat2, "inverse", mat2);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat3, "inverse", mat3);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat4, "inverse", mat4);
-
-    TType *bool1 = new TType(EbtBool);
-    TType *bool2 = new TType(EbtBool, 2);
-    TType *bool3 = new TType(EbtBool, 3);
-    TType *bool4 = new TType(EbtBool, 4);
 
     //
     // Vector relational functions.
@@ -886,6 +896,8 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
     symbolTable.relateToOperator(ESSL3_BUILTINS, "min",           EOpMin);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "max",           EOpMax);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "clamp",         EOpClamp);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "isnan",         EOpIsNan);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "isinf",         EOpIsInf);
 
     symbolTable.relateToOperator(ESSL3_BUILTINS, "floatBitsToInt",  EOpFloatBitsToInt);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "floatBitsToUint", EOpFloatBitsToUint);
