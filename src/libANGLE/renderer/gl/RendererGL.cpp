@@ -21,6 +21,7 @@
 #include "libANGLE/renderer/gl/QueryGL.h"
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
 #include "libANGLE/renderer/gl/ShaderGL.h"
+#include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/TransformFeedbackGL.h"
 #include "libANGLE/renderer/gl/VertexArrayGL.h"
@@ -30,13 +31,17 @@ namespace rx
 
 RendererGL::RendererGL(const FunctionsGL *functions)
     : Renderer(),
-      mFunctions(functions)
+      mFunctions(functions),
+      mStateManager(nullptr)
 {
     ASSERT(mFunctions);
+    mStateManager = new StateManagerGL(mFunctions);
 }
 
 RendererGL::~RendererGL()
-{}
+{
+    SafeDelete(mStateManager);
+}
 
 gl::Error RendererGL::flush()
 {

@@ -14,6 +14,7 @@
 namespace rx
 {
 class FunctionsGL;
+class StateManagerGL;
 
 class RendererGL : public Renderer
 {
@@ -76,6 +77,7 @@ class RendererGL : public Renderer
     Workarounds generateWorkarounds() const override;
 
     const FunctionsGL *mFunctions;
+    StateManagerGL *mStateManager;
 };
 
 }

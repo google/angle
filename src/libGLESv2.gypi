@@ -390,6 +390,8 @@
             'libANGLE/renderer/gl/RendererGL.h',
             'libANGLE/renderer/gl/ShaderGL.cpp',
             'libANGLE/renderer/gl/ShaderGL.h',
+            'libANGLE/renderer/gl/StateManagerGL.cpp',
+            'libANGLE/renderer/gl/StateManagerGL.h',
             'libANGLE/renderer/gl/SurfaceGL.cpp',
             'libANGLE/renderer/gl/SurfaceGL.h',
             'libANGLE/renderer/gl/TextureGL.cpp',
