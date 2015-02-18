@@ -22,6 +22,30 @@
       "revId": "9a0fab666613d5bb95e3f93844c88b08b75a1b5b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eba78821_4b0cc563",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 4
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-18T15:45:58Z",
+      "side": 1,
+      "message": "I was planning to move this out eventually, but this patch does reduce code in this block rather than add to it, so I don\u0027t think there\u0027s a pressing need. I wouldn\u0027t want to spend the extra time required to rebase, so let\u0027s do more refactoring here as a follow-up instead.",
+      "parentUuid": "0babfcf0_cc1f2f8d",
+      "range": {
+        "startLine": 291,
+        "startChar": 6,
+        "endLine": 291,
+        "endChar": 29
+      },
+      "revId": "9a0fab666613d5bb95e3f93844c88b08b75a1b5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
