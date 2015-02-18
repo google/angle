@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "abe4b051_044e18b1",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-02-18T11:43:21Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "ab0d90eb_391f0f5f",
+      "revId": "1a3c734535ba8e4db0fbcc45ab5fbb80cb8539c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b69d873_67c0b221",
         "filename": "src/compiler/translator/Operator.h",
         "patchSetId": 1
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "eb54e8b2_03420e81",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-02-18T11:43:21Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "6b69d873_67c0b221",
+      "range": {
+        "startLine": 124,
+        "startChar": 4,
+        "endLine": 124,
+        "endChar": 12
+      },
+      "revId": "1a3c734535ba8e4db0fbcc45ab5fbb80cb8539c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ab0d90eb_990f3b2e",
         "filename": "src/compiler/translator/OutputGLSLBase.cpp",
         "patchSetId": 1
@@ -53,6 +95,30 @@
       "writtenOn": "2015-02-18T10:37:55Z",
       "side": 1,
       "message": "Nit: indenting is inconsistent here.",
+      "range": {
+        "startLine": 521,
+        "startChar": 10,
+        "endLine": 521,
+        "endChar": 19
+      },
+      "revId": "1a3c734535ba8e4db0fbcc45ab5fbb80cb8539c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "abe4b051_e4521455",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-02-18T11:43:21Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "ab0d90eb_990f3b2e",
       "range": {
         "startLine": 521,
         "startChar": 10,
