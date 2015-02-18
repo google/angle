@@ -211,6 +211,30 @@
       "revId": "b25dc5536951f07a1b9ff81a2d9ce999a71df6f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b644c9b_ce217717",
+        "filename": "src/libGLESv2/export.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-18T15:46:26Z",
+      "side": 1,
+      "message": "It wont necessarily be exported unless it\u0027s referenced by something when linking, it means that a standalone build of ANGLE may not export it. See http://blogs.msdn.com/b/oldnewthing/archive/2014/03/21/10509670.aspx\n\nThey may have to be made global functions and exported through the def file to be safe.",
+      "parentUuid": "cb99e484_5515de3c",
+      "range": {
+        "startLine": 13,
+        "startChar": 40,
+        "endLine": 13,
+        "endChar": 76
+      },
+      "revId": "b25dc5536951f07a1b9ff81a2d9ce999a71df6f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
