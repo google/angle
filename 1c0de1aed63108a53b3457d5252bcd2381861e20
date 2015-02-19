@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8baca9b_8a8a0b2f",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-19T21:38:34Z",
+      "side": 1,
+      "message": "nit: order (f \u003c w)",
+      "range": {
+        "startLine": 414,
+        "startChar": 38,
+        "endLine": 414,
+        "endChar": 59
+      },
+      "revId": "1c0de1aed63108a53b3457d5252bcd2381861e20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
