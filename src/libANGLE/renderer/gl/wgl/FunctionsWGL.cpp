@@ -11,8 +11,6 @@
 namespace rx
 {
 
-typedef PROC(WINAPI *PFNWGLGETPROCADDRESSPROC)(LPCSTR);
-
 template <typename T>
 static void GetWGLProcAddress(HMODULE glModule, PFNWGLGETPROCADDRESSPROC getProcAddressWGL,
                               const std::string &procName, T *outProcAddress)
@@ -49,6 +47,7 @@ FunctionsWGL::FunctionsWGL()
     : createContext(nullptr),
       deleteContext(nullptr),
       makeCurrent(nullptr),
+      getProcAddress(nullptr),
       createContextAttribsARB(nullptr),
       getPixelFormatAttribivARB(nullptr),
       swapIntervalEXT(nullptr)
@@ -58,20 +57,19 @@ FunctionsWGL::FunctionsWGL()
 void FunctionsWGL::intialize(HMODULE glModule, HDC context)
 {
     // First grab the wglGetProcAddress function from the gl module
-    PFNWGLGETPROCADDRESSPROC getProcAddressWGL = nullptr;
-    GetWGLProcAddress(glModule, nullptr, "wglGetProcAddress", &getProcAddressWGL);
+    GetWGLProcAddress(glModule, nullptr, "wglGetProcAddress", &getProcAddress);
 
     // Load the core wgl functions
-    GetWGLProcAddress(glModule, getProcAddressWGL, "wglCreateContext", &createContext);
-    GetWGLProcAddress(glModule, getProcAddressWGL, "wglDeleteContext", &deleteContext);
-    GetWGLProcAddress(glModule, getProcAddressWGL, "wglMakeCurrent", &makeCurrent);
+    GetWGLProcAddress(glModule, getProcAddress, "wglCreateContext", &createContext);
+    GetWGLProcAddress(glModule, getProcAddress, "wglDeleteContext", &deleteContext);
+    GetWGLProcAddress(glModule, getProcAddress, "wglMakeCurrent", &makeCurrent);
 
     // Load extension string getter functions
     PFNWGLGETEXTENSIONSSTRINGEXTPROC getExtensionStringEXT = nullptr;
-    GetWGLProcAddress(glModule, getProcAddressWGL, "wglGetExtensionsStringEXT", &getExtensionStringEXT);
+    GetWGLProcAddress(glModule, getProcAddress, "wglGetExtensionsStringEXT", &getExtensionStringEXT);
 
     PFNWGLGETEXTENSIONSSTRINGARBPROC getExtensionStringARB = nullptr;
-    GetWGLProcAddress(glModule, getProcAddressWGL, "wglGetExtensionsStringARB", &getExtensionStringARB);
+    GetWGLProcAddress(glModule, getProcAddress, "wglGetExtensionsStringARB", &getExtensionStringARB);
 
     std::string extensions = "";
     if (getExtensionStringEXT)
@@ -84,9 +82,9 @@ void FunctionsWGL::intialize(HMODULE glModule, HDC context)
     }
 
     // Load the wgl extension functions by checking if the context supports the extension first
-    GetWGLExtensionProcAddress(glModule, getProcAddressWGL, extensions, "WGL_ARB_create_context", "wglCreateContextAttribsARB", &createContextAttribsARB);
-    GetWGLExtensionProcAddress(glModule, getProcAddressWGL, extensions, "WGL_ARB_pixel_format", "wglGetPixelFormatAttribivARB", &getPixelFormatAttribivARB);
-    GetWGLExtensionProcAddress(glModule, getProcAddressWGL, extensions, "WGL_EXT_swap_control", "wglSwapIntervalEXT", &swapIntervalEXT);
+    GetWGLExtensionProcAddress(glModule, getProcAddress, extensions, "WGL_ARB_create_context", "wglCreateContextAttribsARB", &createContextAttribsARB);
+    GetWGLExtensionProcAddress(glModule, getProcAddress, extensions, "WGL_ARB_pixel_format", "wglGetPixelFormatAttribivARB", &getPixelFormatAttribivARB);
+    GetWGLExtensionProcAddress(glModule, getProcAddress, extensions, "WGL_EXT_swap_control", "wglSwapIntervalEXT", &swapIntervalEXT);
 }
 
 }
