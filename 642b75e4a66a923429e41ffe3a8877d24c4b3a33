@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "685d5e31_67101281",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-19T16:12:50Z",
+      "side": 1,
+      "message": "nit: could you wrap this in parens?",
+      "range": {
+        "startLine": 406,
+        "startChar": 27,
+        "endLine": 406,
+        "endChar": 87
+      },
+      "revId": "642b75e4a66a923429e41ffe3a8877d24c4b3a33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "685d5e31_87f546d8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-19T16:12:50Z",
+      "side": 1,
+      "message": "Could you add a comment about why 3D textures will never get here? format \u003d\u003d mDXGIFormat being false doesn\u0027t explain enough.",
+      "range": {
+        "startLine": 472,
+        "startChar": 8,
+        "endLine": 472,
+        "endChar": 58
+      },
+      "revId": "642b75e4a66a923429e41ffe3a8877d24c4b3a33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
