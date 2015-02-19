@@ -14,6 +14,23 @@
 namespace sh
 {
 
+namespace
+{
+
+InterpolationType GetNonAuxiliaryInterpolationType(InterpolationType interpolation)
+{
+    return (interpolation == INTERPOLATION_CENTROID ? INTERPOLATION_SMOOTH : interpolation);
+}
+
+}
+// The ES 3.0 spec is not clear on this point, but the ES 3.1 spec, and discussion
+// on Khronos.org, clarifies that a smooth/flat mismatch produces a link error,
+// but auxiliary qualifier mismatch (centroid) does not.
+bool InterpolationTypesMatch(InterpolationType a, InterpolationType b)
+{
+    return (GetNonAuxiliaryInterpolationType(a) == GetNonAuxiliaryInterpolationType(b));
+}
+
 ShaderVariable::ShaderVariable()
     : type(0),
       precision(0),

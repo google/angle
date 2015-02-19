@@ -1543,7 +1543,7 @@ bool Program::linkValidateVaryings(InfoLog &infoLog, const std::string &varyingN
         return false;
     }
 
-    if (vertexVarying.interpolation != fragmentVarying.interpolation)
+    if (!sh::InterpolationTypesMatch(vertexVarying.interpolation, fragmentVarying.interpolation))
     {
         infoLog.append("Interpolation types for %s differ between vertex and fragment shaders", varyingName.c_str());
         return false;
