@@ -39,6 +39,8 @@ class UniformHLSL
     }
 
   private:
+    DISALLOW_COPY_AND_ASSIGN(UniformHLSL);
+
     TString interfaceBlockString(const TInterfaceBlock &interfaceBlock, unsigned int registerIndex, unsigned int arrayIndex);
     TString interfaceBlockMembersString(const TInterfaceBlock &interfaceBlock, TLayoutBlockStorage blockStorage);
     TString interfaceBlockStructString(const TInterfaceBlock &interfaceBlock);

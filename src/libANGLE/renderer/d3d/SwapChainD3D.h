@@ -52,6 +52,9 @@ class SwapChainD3D
     const GLenum mDepthBufferFormat;
 
     HANDLE mShareHandle;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(SwapChainD3D);
 };
 
 }

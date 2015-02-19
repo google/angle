@@ -27,7 +27,9 @@ class Std140PaddingHelper
 {
   public:
     explicit Std140PaddingHelper(const std::map<TString, int> &structElementIndexes,
-                                 unsigned *uniqueCounter);
+                                 unsigned int *uniqueCounter);
+    Std140PaddingHelper(const Std140PaddingHelper &other);
+    Std140PaddingHelper &operator=(const Std140PaddingHelper &other);
 
     int elementIndex() const { return mElementIndex; }
     int prePadding(const TType &type);
@@ -39,7 +41,7 @@ class Std140PaddingHelper
 
     unsigned *mPaddingCounter;
     int mElementIndex;
-    const std::map<TString, int> &mStructElementIndexes;
+    const std::map<TString, int> *mStructElementIndexes;
 };
 
 class StructureHLSL
@@ -56,6 +58,8 @@ class StructureHLSL
     Std140PaddingHelper getPaddingHelper();
 
   private:
+    DISALLOW_COPY_AND_ASSIGN(StructureHLSL);
+
     unsigned mUniquePaddingCounter;
 
     std::map<TString, int> mStd140StructElementIndexes;

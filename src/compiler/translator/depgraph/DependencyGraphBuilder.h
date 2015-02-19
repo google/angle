@@ -115,6 +115,9 @@ class TDependencyGraphBuilder : public TIntermTraverser
         ~TNodeSetMaintainer() { mSets.popSet(); }
       protected:
         TNodeSetStack &mSets;
+
+      private:
+        DISALLOW_COPY_AND_ASSIGN(TNodeSetMaintainer);
     };
 
     //
@@ -133,6 +136,8 @@ class TDependencyGraphBuilder : public TIntermTraverser
         ~TNodeSetPropagatingMaintainer() { mSets.popSetIntoNext(); }
       protected:
         TNodeSetStack &mSets;
+      private:
+        DISALLOW_COPY_AND_ASSIGN(TNodeSetPropagatingMaintainer);
     };
 
     //
@@ -169,6 +174,8 @@ class TDependencyGraphBuilder : public TIntermTraverser
       protected:
         TSymbolStack& mLeftmostSymbols;
         bool mNeedsPlaceholderSymbol;
+      private:
+        DISALLOW_COPY_AND_ASSIGN(TLeftmostSymbolMaintainer);
     };
 
     TDependencyGraphBuilder(TDependencyGraph *graph)

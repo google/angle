@@ -106,18 +106,21 @@ bool IsRowMajorLayout(const sh::ShaderVariable &var)
 struct AttributeSorter
 {
     AttributeSorter(const ProgramImpl::SemanticIndexArray &semanticIndices)
-        : originalIndices(semanticIndices)
+        : originalIndices(&semanticIndices)
     {
     }
 
     bool operator()(int a, int b)
     {
-        if (originalIndices[a] == -1) return false;
-        if (originalIndices[b] == -1) return true;
-        return (originalIndices[a] < originalIndices[b]);
+        int indexA = (*originalIndices)[a];
+        int indexB = (*originalIndices)[b];
+
+        if (indexA == -1) return false;
+        if (indexB == -1) return true;
+        return (indexA < indexB);
     }
 
-    const ProgramImpl::SemanticIndexArray &originalIndices;
+    const ProgramImpl::SemanticIndexArray *originalIndices;
 };
 
 }

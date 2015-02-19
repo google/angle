@@ -21,8 +21,22 @@ Std140PaddingHelper::Std140PaddingHelper(const std::map<TString, int> &structEle
                                          unsigned *uniqueCounter)
     : mPaddingCounter(uniqueCounter),
       mElementIndex(0),
-      mStructElementIndexes(structElementIndexes)
+      mStructElementIndexes(&structElementIndexes)
 {}
+
+Std140PaddingHelper::Std140PaddingHelper(const Std140PaddingHelper &other)
+    : mPaddingCounter(other.mPaddingCounter),
+      mElementIndex(other.mElementIndex),
+      mStructElementIndexes(other.mStructElementIndexes)
+{}
+
+Std140PaddingHelper &Std140PaddingHelper::operator=(const Std140PaddingHelper &other)
+{
+    mPaddingCounter = other.mPaddingCounter;
+    mElementIndex = other.mElementIndex;
+    mStructElementIndexes = other.mStructElementIndexes;
+    return *this;
+}
 
 TString Std140PaddingHelper::next()
 {
@@ -107,7 +121,7 @@ TString Std140PaddingHelper::postPaddingString(const TType &type, bool useHLSLRo
     {
         const TString &structName = QualifiedStructNameString(*structure,
                                                               useHLSLRowMajorPacking, true);
-        numComponents = mStructElementIndexes.find(structName)->second;
+        numComponents = mStructElementIndexes->find(structName)->second;
 
         if (numComponents == 0)
         {

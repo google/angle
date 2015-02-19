@@ -7,6 +7,7 @@
 #ifndef COMPILER_TRANSLATOR_DIAGNOSTICS_H_
 #define COMPILER_TRANSLATOR_DIAGNOSTICS_H_
 
+#include "common/angleutils.h"
 #include "compiler/preprocessor/DiagnosticsBase.h"
 
 class TInfoSink;
@@ -36,6 +37,8 @@ class TDiagnostics : public pp::Diagnostics
                        const std::string& text);
 
   private:
+    DISALLOW_COPY_AND_ASSIGN(TDiagnostics);
+
     TInfoSink& mInfoSink;
     int mNumErrors;
     int mNumWarnings;

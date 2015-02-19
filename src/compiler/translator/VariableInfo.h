@@ -33,6 +33,8 @@ class CollectVariables : public TIntermTraverser
     virtual bool visitBinary(Visit visit, TIntermBinary *binaryNode);
 
   private:
+    DISALLOW_COPY_AND_ASSIGN(CollectVariables);
+
     template <typename VarT>
     void visitVariable(const TIntermSymbol *variable, std::vector<VarT> *infoList) const;
 

@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <queue>
 
+#include "common/angleutils.h"
 #include "compiler/translator/Common.h"
 #include "compiler/translator/Types.h"
 #include "compiler/translator/ConstantUnion.h"
@@ -589,6 +590,9 @@ class TIntermTraverser
     // During traversing, save all the changes that need to happen into
     // mReplacements, then do them by calling updateTree().
     std::vector<NodeUpdateEntry> mReplacements;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TIntermTraverser);
 };
 
 //
@@ -610,10 +614,13 @@ class TMaxDepthTraverser : public TIntermTraverser
     virtual bool visitLoop(Visit, TIntermLoop *) { return depthCheck(); }
     virtual bool visitBranch(Visit, TIntermBranch *) { return depthCheck(); }
 
-protected:
+  protected:
     bool depthCheck() const { return mMaxDepth < mDepthLimit; }
 
     int mDepthLimit;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TMaxDepthTraverser);
 };
 
 #endif  // COMPILER_TRANSLATOR_INTERMNODE_H_
