@@ -338,6 +338,8 @@ bool TIntermUnary::promote(TInfoSink &)
         break;
 
       // operators for built-ins are already type checked against their prototype
+      case EOpAbs:
+      case EOpSign:
       case EOpAny:
       case EOpAll:
       case EOpVectorLogicalNot:
