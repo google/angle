@@ -44,12 +44,30 @@ static void GetWGLExtensionProcAddress(HMODULE glModule, PFNWGLGETPROCADDRESSPRO
 }
 
 FunctionsWGL::FunctionsWGL()
-    : createContext(nullptr),
+    : copyContext(nullptr),
+      createContext(nullptr),
+      createLayerContext(nullptr),
       deleteContext(nullptr),
-      makeCurrent(nullptr),
+      getCurrentContext(nullptr),
+      getCurrentDC(nullptr),
       getProcAddress(nullptr),
+      makeCurrent(nullptr),
+      shareLists(nullptr),
+      useFontBitmapsA(nullptr),
+      useFontBitmapsW(nullptr),
+      swapBuffers(nullptr),
+      useFontOutlinesA(nullptr),
+      useFontOutlinesW(nullptr),
+      describeLayerPlane(nullptr),
+      setLayerPaletteEntries(nullptr),
+      getLayerPaletteEntries(nullptr),
+      realizeLayerPalette(nullptr),
+      swapLayerBuffers(nullptr),
+      swapMultipleBuffers(nullptr),
       createContextAttribsARB(nullptr),
       getPixelFormatAttribivARB(nullptr),
+      getExtensionStringEXT(nullptr),
+      getExtensionStringARB(nullptr),
       swapIntervalEXT(nullptr)
 {
 }
@@ -60,15 +78,28 @@ void FunctionsWGL::intialize(HMODULE glModule, HDC context)
     GetWGLProcAddress(glModule, nullptr, "wglGetProcAddress", &getProcAddress);
 
     // Load the core wgl functions
+    GetWGLProcAddress(glModule, getProcAddress, "wglCopyContext", &copyContext);
     GetWGLProcAddress(glModule, getProcAddress, "wglCreateContext", &createContext);
+    GetWGLProcAddress(glModule, getProcAddress, "wglCreateLayerContext", &createLayerContext);
     GetWGLProcAddress(glModule, getProcAddress, "wglDeleteContext", &deleteContext);
+    GetWGLProcAddress(glModule, getProcAddress, "wglGetCurrentContext", &getCurrentContext);
+    GetWGLProcAddress(glModule, getProcAddress, "wglGetCurrentDC", &getCurrentDC);
     GetWGLProcAddress(glModule, getProcAddress, "wglMakeCurrent", &makeCurrent);
+    GetWGLProcAddress(glModule, getProcAddress, "wglShareLists", &shareLists);
+    GetWGLProcAddress(glModule, getProcAddress, "wglUseFontBitmapsA", &useFontBitmapsA);
+    GetWGLProcAddress(glModule, getProcAddress, "wglUseFontBitmapsW", &useFontBitmapsW);
+    swapBuffers = SwapBuffers; // SwapBuffers is statically linked from GDI
+    GetWGLProcAddress(glModule, getProcAddress, "wglUseFontOutlinesA", &useFontOutlinesA);
+    GetWGLProcAddress(glModule, getProcAddress, "wglUseFontOutlinesW", &useFontOutlinesW);
+    GetWGLProcAddress(glModule, getProcAddress, "wglDescribeLayerPlane", &describeLayerPlane);
+    GetWGLProcAddress(glModule, getProcAddress, "wglSetLayerPaletteEntries", &setLayerPaletteEntries);
+    GetWGLProcAddress(glModule, getProcAddress, "wglGetLayerPaletteEntries", &getLayerPaletteEntries);
+    GetWGLProcAddress(glModule, getProcAddress, "wglRealizeLayerPalette", &realizeLayerPalette);
+    GetWGLProcAddress(glModule, getProcAddress, "wglSwapLayerBuffers", &swapLayerBuffers);
+    GetWGLProcAddress(glModule, getProcAddress, "wglSwapMultipleBuffers", &swapMultipleBuffers);
 
     // Load extension string getter functions
-    PFNWGLGETEXTENSIONSSTRINGEXTPROC getExtensionStringEXT = nullptr;
     GetWGLProcAddress(glModule, getProcAddress, "wglGetExtensionsStringEXT", &getExtensionStringEXT);
-
-    PFNWGLGETEXTENSIONSSTRINGARBPROC getExtensionStringARB = nullptr;
     GetWGLProcAddress(glModule, getProcAddress, "wglGetExtensionsStringARB", &getExtensionStringARB);
 
     std::string extensions = "";

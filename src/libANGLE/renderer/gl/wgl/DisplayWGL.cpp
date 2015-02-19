@@ -26,12 +26,12 @@ namespace rx
 class FunctionsGLWindows : public FunctionsGL
 {
   public:
-    FunctionsGLWindows(HMODULE openGLModule)
-        : mOpenGLModule(openGLModule)
-        , mGetProcAddressWGL(nullptr)
+    FunctionsGLWindows(HMODULE openGLModule, PFNWGLGETPROCADDRESSPROC getProcAddressWGL)
+        : mOpenGLModule(openGLModule),
+          mGetProcAddressWGL(getProcAddressWGL)
     {
         ASSERT(mOpenGLModule);
-        mGetProcAddressWGL = reinterpret_cast<PFNWGLGETPROCADDRESSPROC>(GetProcAddress(mOpenGLModule, "wglGetProcAddress"));
+        ASSERT(mGetProcAddressWGL);
     }
 
     virtual ~FunctionsGLWindows()
@@ -50,8 +50,6 @@ class FunctionsGLWindows : public FunctionsGL
     }
 
     HMODULE mOpenGLModule;
-
-    typedef PROC(WINAPI *PFNWGLGETPROCADDRESSPROC)(LPCSTR);
     PFNWGLGETPROCADDRESSPROC mGetProcAddressWGL;
 };
 
@@ -310,7 +308,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     mGLVersionMajor = versionString[0] - '0';
     mGLVersionMinor = versionString[2] - '0';
 
-    mFunctionsGL = new FunctionsGLWindows(mOpenGLModule);
+    mFunctionsGL = new FunctionsGLWindows(mOpenGLModule, mFunctionsWGL->getProcAddress);
     mFunctionsGL->initialize(mGLVersionMajor, mGLVersionMinor);
 
     return DisplayGL::initialize(display);

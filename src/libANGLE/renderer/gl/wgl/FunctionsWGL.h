@@ -6,19 +6,11 @@
 
 // FunctionsWGL.h: Defines the FuntionsWGL class to contain loaded WGL functions
 
-#include "common/debug.h"
-#include "common/platform.h"
-#include "libANGLE/Error.h"
-
-#include <GL/wglext.h>
+#include "common/angleutils.h"
+#include "libANGLE/renderer/gl/wgl/functionswgl_typedefs.h"
 
 namespace rx
 {
-
-typedef HGLRC(WINAPI *PFNWGLCREATECONTEXTPROC)(HDC);
-typedef BOOL(WINAPI *PFNWGLDELETECONTEXTPROC)(HGLRC);
-typedef BOOL(WINAPI *PFNWGLMAKECURRENTPROC)(HDC, HGLRC);
-typedef PROC(WINAPI *PFNWGLGETPROCADDRESSPROC)(LPCSTR);
 
 class FunctionsWGL
 {
@@ -29,14 +21,32 @@ class FunctionsWGL
     void intialize(HMODULE glModule, HDC context);
 
     // Base WGL functions
+    PFNWGLCOPYCONTEXTPROC copyContext;
     PFNWGLCREATECONTEXTPROC createContext;
+    PFNWGLCREATELAYERCONTEXTPROC createLayerContext;
     PFNWGLDELETECONTEXTPROC deleteContext;
-    PFNWGLMAKECURRENTPROC makeCurrent;
+    PFNWGLGETCURRENTCONTEXTPROC getCurrentContext;
+    PFNWGLGETCURRENTDCPROC getCurrentDC;
     PFNWGLGETPROCADDRESSPROC getProcAddress;
+    PFNWGLMAKECURRENTPROC makeCurrent;
+    PFNWGLSHARELISTSPROC shareLists;
+    PFNWGLUSEFONTBITMAPSAPROC useFontBitmapsA;
+    PFNWGLUSEFONTBITMAPSWPROC useFontBitmapsW;
+    PFNSWAPBUFFERSPROC swapBuffers;
+    PFNWGLUSEFONTOUTLINESAPROC useFontOutlinesA;
+    PFNWGLUSEFONTOUTLINESWPROC useFontOutlinesW;
+    PFNWGLDESCRIBELAYERPLANEPROC describeLayerPlane;
+    PFNWGLSETLAYERPALETTEENTRIESPROC setLayerPaletteEntries;
+    PFNWGLGETLAYERPALETTEENTRIESPROC getLayerPaletteEntries;
+    PFNWGLREALIZELAYERPALETTEPROC realizeLayerPalette;
+    PFNWGLSWAPLAYERBUFFERSPROC swapLayerBuffers;
+    PFNWGLSWAPMULTIPLEBUFFERSPROC swapMultipleBuffers;
 
     // Extension functions, may be NULL
     PFNWGLCREATECONTEXTATTRIBSARBPROC createContextAttribsARB;
     PFNWGLGETPIXELFORMATATTRIBIVARBPROC getPixelFormatAttribivARB;
+    PFNWGLGETEXTENSIONSSTRINGEXTPROC getExtensionStringEXT;
+    PFNWGLGETEXTENSIONSSTRINGARBPROC getExtensionStringARB;
     PFNWGLSWAPINTERVALEXTPROC swapIntervalEXT;
 
   private:

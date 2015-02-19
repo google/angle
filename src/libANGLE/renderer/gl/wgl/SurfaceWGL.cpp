@@ -118,7 +118,7 @@ egl::Error SurfaceWGL::swap()
         return egl::Error(EGL_CONTEXT_LOST, "Failed to move the child window.");
     }
 
-    if (!SwapBuffers(mChildDeviceContext))
+    if (!mFunctionsWGL->swapBuffers(mChildDeviceContext))
     {
         // TODO: What error type here?
         return egl::Error(EGL_CONTEXT_LOST, "Failed to swap buffers on the child window.");

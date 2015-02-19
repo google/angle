@@ -409,6 +409,7 @@
             'libANGLE/renderer/gl/wgl/FunctionsWGL.h',
             'libANGLE/renderer/gl/wgl/SurfaceWGL.cpp',
             'libANGLE/renderer/gl/wgl/SurfaceWGL.h',
+            'libANGLE/renderer/gl/wgl/functionswgl_typedefs.h',
             'libANGLE/renderer/gl/wgl/wgl_utils.cpp',
             'libANGLE/renderer/gl/wgl/wgl_utils.h',
             'third_party/khronos/GL/wglext.h',
