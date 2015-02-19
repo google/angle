@@ -46,6 +46,26 @@ enum
     MAX_FRAGMENT_UNIFORM_VECTORS_D3D11 = 1024
 };
 
+// Possible reasons RendererD3D initialize can fail
+enum D3D11InitError
+{
+    // The renderer loaded successfully
+    D3D11_INIT_SUCCESS = 0,
+    // Failed to load the ANGLE & D3D compiler libraries
+    D3D11_INIT_COMPILER_ERROR,
+    // Failed to load a necessary DLL (non-compiler)
+    D3D11_INIT_MISSING_DEP,
+    // CreateDevice returned E_INVALIDARG
+    D3D11_INIT_CREATEDEVICE_INVALIDARG,
+    // CreateDevice failed with an error other than invalid arg
+    D3D11_INIT_CREATEDEVICE_ERROR,
+    // DXGI 1.2 required but not found
+    D3D11_INIT_INCOMPATIBLE_DXGI,
+    // Other initialization error
+    D3D11_INIT_OTHER_ERROR,
+    NUM_D3D11_INIT_ERRORS
+};
+
 class Renderer11 : public RendererD3D
 {
   public:
@@ -211,6 +231,8 @@ class Renderer11 : public RendererD3D
 
     bool isES3Capable() const;
     D3D_FEATURE_LEVEL getFeatureLevel() const { return mFeatureLevel; };
+
+    RendererClass getRendererClass() const override { return RENDERER_D3D11; }
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);

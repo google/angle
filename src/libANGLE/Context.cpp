@@ -9,18 +9,20 @@
 
 #include "libANGLE/Context.h"
 
-#include "common/utilities.h"
+#include <iterator>
+#include <sstream>
+
 #include "common/platform.h"
-#include "libANGLE/Compiler.h"
+#include "common/utilities.h"
 #include "libANGLE/Buffer.h"
-#include "libANGLE/Config.h"
+#include "libANGLE/Compiler.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Query.h"
+#include "libANGLE/Renderbuffer.h"
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/Sampler.h"
 #include "libANGLE/Surface.h"
@@ -30,9 +32,6 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/validationES.h"
 #include "libANGLE/renderer/Renderer.h"
-
-#include <sstream>
-#include <iterator>
 
 namespace gl
 {
@@ -936,6 +935,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             *numParams = mCaps.shaderBinaryFormats.size();
         }
         return true;
+
       case GL_MAX_VERTEX_ATTRIBS:
       case GL_MAX_VERTEX_UNIFORM_VECTORS:
       case GL_MAX_VARYING_VECTORS:

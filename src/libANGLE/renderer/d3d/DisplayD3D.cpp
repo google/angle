@@ -15,6 +15,7 @@
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/SurfaceD3D.h"
 #include "libANGLE/renderer/d3d/SwapChainD3D.h"
+#include "platform/Platform.h"
 
 #include <EGL/eglext.h>
 
@@ -102,6 +103,16 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
     {
         RendererD3D *renderer = rendererCreationFunctions[i](display);
         result = renderer->initialize();
+
+        if (renderer->getRendererClass() == RENDERER_D3D11)
+        {
+            ASSERT(result.getID() >= 0 && result.getID() < NUM_D3D11_INIT_ERRORS);
+
+            angle::Platform *platform = angle::Platform::current();
+            platform->histogramEnumeration("GPU.ANGLE.D3D11InitializeResult",
+                                           result.getID(), NUM_D3D11_INIT_ERRORS);
+        }
+
         if (!result.isError())
         {
             *outRenderer = renderer;

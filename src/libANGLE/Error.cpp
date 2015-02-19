@@ -87,13 +87,27 @@ namespace egl
 
 Error::Error(EGLint errorCode)
     : mCode(errorCode),
-      mMessage(NULL)
+      mID(0),
+      mMessage(nullptr)
 {
 }
 
 Error::Error(EGLint errorCode, const char *msg, ...)
     : mCode(errorCode),
-      mMessage(NULL)
+      mID(0),
+      mMessage(nullptr)
+{
+    va_list vararg;
+    va_start(vararg, msg);
+    createMessageString();
+    *mMessage = FormatString(msg, vararg);
+    va_end(vararg);
+}
+
+Error::Error(EGLint errorCode, EGLint id, const char *msg, ...)
+    : mCode(errorCode),
+      mID(id),
+      mMessage(nullptr)
 {
     va_list vararg;
     va_start(vararg, msg);
@@ -104,9 +118,10 @@ Error::Error(EGLint errorCode, const char *msg, ...)
 
 Error::Error(const Error &other)
     : mCode(other.mCode),
-      mMessage(NULL)
+      mID(other.mID),
+      mMessage(nullptr)
 {
-    if (other.mMessage != NULL)
+    if (other.mMessage != nullptr)
     {
         createMessageString();
         *mMessage = *(other.mMessage);
@@ -121,8 +136,9 @@ Error::~Error()
 Error &Error::operator=(const Error &other)
 {
     mCode = other.mCode;
+    mID = other.mID;
 
-    if (other.mMessage != NULL)
+    if (other.mMessage != nullptr)
     {
         createMessageString();
         *mMessage = *(other.mMessage);

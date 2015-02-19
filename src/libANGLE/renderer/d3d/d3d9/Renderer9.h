@@ -203,6 +203,8 @@ class Renderer9 : public RendererD3D
 
     gl::Error copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
 
+    RendererClass getRendererClass() const override { return RENDERER_D3D9; }
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer9);
 

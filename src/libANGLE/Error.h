@@ -48,11 +48,13 @@ class Error
   public:
     explicit Error(EGLint errorCode);
     Error(EGLint errorCode, const char *msg, ...);
+    Error(EGLint errorCode, EGLint id, const char *msg, ...);
     Error(const Error &other);
     ~Error();
     Error &operator=(const Error &other);
 
     EGLint getCode() const { return mCode; }
+    EGLint getID() const { return mID; }
     bool isError() const { return (mCode != EGL_SUCCESS); }
 
     const std::string &getMessage() const;
@@ -61,6 +63,7 @@ class Error
     void createMessageString() const;
 
     EGLint mCode;
+    EGLint mID;
     mutable std::string *mMessage;
 };
 
