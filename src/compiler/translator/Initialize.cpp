@@ -151,10 +151,20 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float3, "abs", float3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float4, "abs", float4);
 
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int1, "abs", int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "abs", int2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "abs", int3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "abs", int4);
+
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float1, "sign", float1);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float2, "sign", float2);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float3, "sign", float3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float4, "sign", float4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int1, "sign", int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "sign", int2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "sign", int3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "sign", int4);
 
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float1, "floor", float1);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float2, "floor", float2);
@@ -907,6 +917,8 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
     symbolTable.relateToOperator(COMMON_BUILTINS, "step",         EOpStep);
     symbolTable.relateToOperator(COMMON_BUILTINS, "smoothstep",   EOpSmoothStep);
 
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "abs",           EOpAbs);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "sign",          EOpSign);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "modf",          EOpModf);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "min",           EOpMin);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "max",           EOpMax);

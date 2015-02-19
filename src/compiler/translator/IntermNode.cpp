@@ -337,7 +337,8 @@ bool TIntermUnary::promote(TInfoSink &)
             return false;
         break;
 
-      // operators for built-ins are already type checked against their prototype
+      // Operators for built-ins are already type checked against their prototype
+      // and some of them get the type of their return value assigned elsewhere.
       case EOpAny:
       case EOpAll:
       case EOpVectorLogicalNot:
@@ -347,6 +348,10 @@ bool TIntermUnary::promote(TInfoSink &)
       case EOpUnpackUnorm2x16:
       case EOpUnpackHalf2x16:
         return true;
+
+      case EOpAbs:
+      case EOpSign:
+        break;
 
       default:
         if (mOperand->getBasicType() != EbtFloat)

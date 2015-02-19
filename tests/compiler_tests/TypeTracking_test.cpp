@@ -336,3 +336,38 @@ TEST_F(TypeTrackingTest, UnpackHalfResultTypeAndPrecision)
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("unpack half 2x16 (mediump 2-component vector of float)"));
 };
+
+TEST_F(TypeTrackingTest, BuiltInAbsSignFunctionFloatResultTypeAndPrecision)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform float fval1;\n"
+        "void main() {\n"
+        "   float fval2 = abs(fval1);\n"
+        "   float fval3 = sign(fval1);\n"
+        "   gl_FragColor = vec4(fval1, 0.0, 0.0, 1.0); \n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("Absolute value (mediump float)"));
+    ASSERT_TRUE(foundInIntermediateTree("Sign (mediump float)"));
+};
+
+TEST_F(TypeTrackingTest, BuiltInAbsSignFunctionIntResultTypeAndPrecision)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "precision mediump int;\n"
+        "uniform int ival1;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   int ival2 = abs(ival1);\n"
+        "   int ival3 = sign(ival1);\n"
+        "   my_FragColor = vec4(0.0, 0.0, 0.0, 1.0); \n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("Absolute value (mediump int)"));
+    ASSERT_TRUE(foundInIntermediateTree("Sign (mediump int)"));
+};
