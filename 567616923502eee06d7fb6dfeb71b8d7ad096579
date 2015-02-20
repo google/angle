@@ -16,6 +16,24 @@
       "revId": "567616923502eee06d7fb6dfeb71b8d7ad096579",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a8c5967a_3953cfd9",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-20T18:11:07Z",
+      "side": 1,
+      "message": "I\u0027m not opposed to it. Some objects, like shaders, don\u0027t need to bind anything but I imagine that is an edge case.",
+      "parentUuid": "e8b14e0e_1b159bb9",
+      "revId": "567616923502eee06d7fb6dfeb71b8d7ad096579",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
