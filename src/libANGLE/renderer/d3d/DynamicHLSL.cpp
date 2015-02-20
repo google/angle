@@ -386,6 +386,26 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(const std::string &s
     int semanticIndex = 0;
     unsigned int inputIndex = 0;
 
+    // If gl_PointSize is used in the shader then pointsprites rendering is expected.
+    // If the renderer does not support Geometry shaders then Instanced PointSprite emulation
+    // must be used.
+    bool usesPointSize = sourceShader.find("GL_USES_POINT_SIZE") != std::string::npos;
+    bool useInstancedPointSpriteEmulation = usesPointSize && mRenderer->getWorkarounds().useInstancedPointSpriteEmulation;
+
+    // Instanced PointSprite emulation requires additional entries in the
+    // VS_INPUT structure to support the vertices that make up the quad vertices.
+    // These values must be in sync with the cooresponding values added during inputlayout creation
+    // in InputLayoutCache::applyVertexBuffers().
+    //
+    // The additional entries must appear first in the VS_INPUT layout because
+    // Windows Phone 8 era devices require per vertex data to physically come
+    // before per instance data in the shader.
+    if (useInstancedPointSpriteEmulation)
+    {
+        structHLSL += "    float3 spriteVertexPos : SPRITEPOSITION0;\n";
+        structHLSL += "    float2 spriteTexCoord : SPRITETEXCOORD0;\n";
+    }
+
     for (unsigned int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
         const sh::Attribute &shaderAttribute = shaderAttributes[attributeIndex];
@@ -449,22 +469,6 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(const std::string &s
 
             inputIndex += VariableRowCount(TransposeMatrixType(shaderAttribute.type));
         }
-    }
-
-    // If gl_PointSize is used in the shader then pointsprites rendering is expected.
-    // If the renderer does not support Geometry shaders then Instanced PointSprite emulation
-    // may must be used.
-    bool usesPointSize = sourceShader.find("GL_USES_POINT_SIZE") != std::string::npos;
-    bool useInstancedPointSpriteEmulation = usesPointSize && mRenderer->getWorkarounds().useInstancedPointSpriteEmulation;
-
-    // Instanced PointSprite emulation requires additional entries in the
-    // VS_INPUT structure to support the vertices that make up the quad vertices.
-    // These values must be in sync with the cooresponding values added during inputlayout creation
-    // in InputLayoutCache::applyVertexBuffers().
-    if (useInstancedPointSpriteEmulation)
-    {
-        structHLSL += "    float3 spriteVertexPos : SPRITEPOSITION0;\n";
-        structHLSL += "    float2 spriteTexCoord : SPRITETEXCOORD0;\n";
     }
 
     std::string replacementHLSL = "struct VS_INPUT\n"
