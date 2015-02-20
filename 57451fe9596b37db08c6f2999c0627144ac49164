@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "88eff2fe_16dd7c68",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 6
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-20T21:33:49Z",
+      "side": 1,
+      "message": "nit: this brace goes on a new line",
+      "range": {
+        "startLine": 14,
+        "startChar": 30,
+        "endLine": 14,
+        "endChar": 31
+      },
+      "revId": "57451fe9596b37db08c6f2999c0627144ac49164",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
