@@ -34,6 +34,10 @@
         ['component=="shared_library"',
         {
             'defines': [ 'COMPONENT_BUILD' ],
+            'msvs_disabled_warnings':
+            [
+                4251, # STL objects do not have DLL interface, needed by ShaderVars.h
+            ],
         }],
     ],
     'msvs_settings':
