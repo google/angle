@@ -82,7 +82,7 @@ ShaderImpl *RendererGL::createShader(GLenum type)
 
 ProgramImpl *RendererGL::createProgram()
 {
-    return new ProgramGL();
+    return new ProgramGL(mFunctions, mStateManager);
 }
 
 DefaultAttachmentImpl *RendererGL::createDefaultAttachment(GLenum type, egl::Surface *surface)

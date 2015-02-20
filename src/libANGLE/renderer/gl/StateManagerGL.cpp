@@ -14,9 +14,19 @@ namespace rx
 {
 
 StateManagerGL::StateManagerGL(const FunctionsGL *functions)
-    : mFunctions(functions)
+    : mFunctions(functions),
+      mProgram(0)
 {
     ASSERT(mFunctions);
+}
+
+void StateManagerGL::setProgram(GLuint program)
+{
+    if (mProgram != program)
+    {
+        mProgram = program;
+        mFunctions->useProgram(mProgram);
+    }
 }
 
 }

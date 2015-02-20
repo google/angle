@@ -10,6 +10,7 @@
 #define LIBANGLE_RENDERER_GL_STATEMANAGERGL_H_
 
 #include "common/debug.h"
+#include "libANGLE/renderer/gl/functionsgl_typedefs.h"
 
 namespace rx
 {
@@ -21,10 +22,14 @@ class StateManagerGL
   public:
     StateManagerGL(const FunctionsGL *functions);
 
+    void setProgram(GLuint program);
+
   private:
     DISALLOW_COPY_AND_ASSIGN(StateManagerGL);
 
     const FunctionsGL *mFunctions;
+
+    GLuint mProgram;
 };
 
 }
