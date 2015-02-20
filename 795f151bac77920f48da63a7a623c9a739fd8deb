@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a8211633_59d6a352",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-20T22:12:11Z",
+      "side": 1,
+      "message": "ANGLE already reports the equivalent ES extension.. perhaps the logic should change in the dependent code to check for the ES extension, or we should add an equivalent ES extension if EXT_texture_format_BGRA8888 doesn\u0027t encompass the right functionality.",
+      "range": {
+        "startLine": 150,
+        "startChar": 27,
+        "endLine": 150,
+        "endChar": 57
+      },
+      "revId": "795f151bac77920f48da63a7a623c9a739fd8deb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
