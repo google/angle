@@ -101,6 +101,8 @@
             'compiler/translator/ValidateLimitations.h',
             'compiler/translator/ValidateOutputs.cpp',
             'compiler/translator/ValidateOutputs.h',
+            'compiler/translator/ValidateSwitch.cpp',
+            'compiler/translator/ValidateSwitch.h',
             'compiler/translator/VariableInfo.cpp',
             'compiler/translator/VariableInfo.h',
             'compiler/translator/VariablePacker.cpp',
