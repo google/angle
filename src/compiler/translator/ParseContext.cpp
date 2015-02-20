@@ -2610,6 +2610,17 @@ TPublicType TParseContext::addStructure(const TSourceLoc& structLine, const TSou
 
 TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init, TIntermAggregate *statementList, const TSourceLoc &loc)
 {
+    TBasicType switchType = init->getBasicType();
+    if ((switchType != EbtInt && switchType != EbtUInt) ||
+        init->isMatrix() ||
+        init->isArray() ||
+        init->isVector())
+    {
+        error(init->getLine(), "init-expression in a switch statement must be a scalar integer", "switch");
+        recover();
+        return nullptr;
+    }
+
     TIntermSwitch *node = intermediate.addSwitch(init, statementList, loc);
     if (node == nullptr)
     {
@@ -2622,6 +2633,32 @@ TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init, TIntermAggregate *st
 
 TIntermCase *TParseContext::addCase(TIntermTyped *condition, const TSourceLoc &loc)
 {
+    if (mSwitchNestingLevel == 0)
+    {
+        error(loc, "case labels need to be inside switch statements", "case");
+        recover();
+        return nullptr;
+    }
+    if (condition == nullptr)
+    {
+        error(loc, "case label must have a condition", "case");
+        recover();
+        return nullptr;
+    }
+    if ((condition->getBasicType() != EbtInt && condition->getBasicType() != EbtUInt) ||
+        condition->isMatrix() ||
+        condition->isArray() ||
+        condition->isVector())
+    {
+        error(condition->getLine(), "case label must be a scalar integer", "case");
+        recover();
+    }
+    TIntermConstantUnion *conditionConst = condition->getAsConstantUnion();
+    if (conditionConst == nullptr)
+    {
+        error(condition->getLine(), "case label must be constant", "case");
+        recover();
+    }
     TIntermCase *node = intermediate.addCase(condition, loc);
     if (node == nullptr)
     {
@@ -2634,6 +2671,12 @@ TIntermCase *TParseContext::addCase(TIntermTyped *condition, const TSourceLoc &l
 
 TIntermCase *TParseContext::addDefault(const TSourceLoc &loc)
 {
+    if (mSwitchNestingLevel == 0)
+    {
+        error(loc, "default labels need to be inside switch statements", "default");
+        recover();
+        return nullptr;
+    }
     TIntermCase *node = intermediate.addCase(nullptr, loc);
     if (node == nullptr)
     {
@@ -2703,9 +2746,9 @@ TIntermBranch *TParseContext::addBranch(TOperator op, const TSourceLoc &loc)
         }
         break;
       case EOpBreak:
-        if (mLoopNestingLevel <= 0)
+        if (mLoopNestingLevel <= 0 && mSwitchNestingLevel <= 0)
         {
-            error(loc, "break statement only allowed in loops", "");
+            error(loc, "break statement only allowed in loops and switch statements", "");
             recover();
         }
         break;

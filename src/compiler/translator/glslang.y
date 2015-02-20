@@ -1606,8 +1606,9 @@ selection_rest_statement
     ;
 
 switch_statement
-    : SWITCH LEFT_PAREN expression RIGHT_PAREN compound_statement {
-        $$ = context->addSwitch($3, $5, @1);
+    : SWITCH LEFT_PAREN expression RIGHT_PAREN { ++context->mSwitchNestingLevel; } compound_statement {
+        $$ = context->addSwitch($3, $6, @1);
+        --context->mSwitchNestingLevel;
     }
     ;
 

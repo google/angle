@@ -34,6 +34,7 @@ struct TParseContext {
             treeRoot(0),
             mLoopNestingLevel(0),
             structNestingLevel(0),
+            mSwitchNestingLevel(0),
             currentFunctionType(NULL),
             mFunctionReturnsValue(false),
             checksPrecisionErrors(checksPrecErrors),
@@ -53,6 +54,7 @@ struct TParseContext {
     TIntermNode* treeRoot;       // root of parse tree being created
     int mLoopNestingLevel;       // 0 if outside all loops
     int structNestingLevel;      // incremented while parsing a struct declaration
+    int mSwitchNestingLevel;     // 0 if outside all switch statements
     const TType* currentFunctionType;  // the return type of the function that's currently being parsed
     bool mFunctionReturnsValue;  // true if a non-void function has a return
     bool checksPrecisionErrors;  // true if an error will be generated when a variable is declared without precision, explicit or implicit.
