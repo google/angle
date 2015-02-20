@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68a63ed5_e227e828",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-02-20T20:00:00Z",
+      "side": 1,
+      "message": "Even cl.exe warns about this now that C4530 is no longer suppressed, no?",
+      "revId": "7535117eb3ae6c27297176e4a0069c3903ce7a22",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
