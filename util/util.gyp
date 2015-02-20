@@ -30,6 +30,7 @@
                     ],
                     'sources':
                     [
+                        'com_utils.h',
                         'keyboard.h',
                         'mouse.h',
                         'path_utils.h',

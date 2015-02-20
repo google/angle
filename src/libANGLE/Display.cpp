@@ -190,7 +190,8 @@ Display::Display(EGLNativeDisplayType displayId)
       mCaps(),
       mDisplayExtensions(),
       mDisplayExtensionString(),
-      mVendorString()
+      mVendorString(),
+      mDevice(nullptr)
 {
 }
 
@@ -205,6 +206,7 @@ Display::~Display()
         displays->erase(iter);
     }
 
+    SafeDelete(mDevice);
     SafeDelete(mImplementation);
 }
 
@@ -246,6 +248,21 @@ Error Display::initialize()
     initDisplayExtensions();
     initVendorString();
 
+    if (mDisplayExtensions.deviceQuery)
+    {
+        rx::DeviceImpl *impl = nullptr;
+        error = mImplementation->getDevice(&impl);
+        if (error.isError())
+        {
+            return error;
+        }
+        mDevice = new Device(this, impl);
+    }
+    else
+    {
+        mDevice = nullptr;
+    }
+
     mInitialized = true;
     return Error(EGL_SUCCESS);
 }
@@ -262,6 +279,7 @@ void Display::terminate()
     mConfigSet.clear();
 
     mImplementation->terminate();
+
     mInitialized = false;
 
     // De-init default platform
@@ -670,6 +688,11 @@ const std::string &Display::getExtensionString() const
 const std::string &Display::getVendorString() const
 {
     return mVendorString;
+}
+
+Device *Display::getDevice() const
+{
+    return mDevice;
 }
 
 }
