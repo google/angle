@@ -1558,7 +1558,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             {
                 const TStructure &structure = *node->getLeft()->getType().getStruct();
                 const TString &functionName = addStructEqualityFunction(structure);
-                outputTriplet(visit, functionName + "(", ", ", ")");
+                outputTriplet(visit, (functionName + "(").c_str(), ", ", ")");
             }
             else
             {
@@ -2126,7 +2126,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         {
             const TString &structName = StructNameString(*node->getType().getStruct());
             mStructureHLSL->addConstructor(node->getType(), structName, node->getSequence());
-            outputTriplet(visit, structName + "_ctor(", ", ", ")");
+            outputTriplet(visit, (structName + "_ctor(").c_str(), ", ", ")");
         }
         break;
       case EOpLessThan:         outputTriplet(visit, "(", " < ", ")");                 break;
@@ -2637,7 +2637,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
     return false;   // Not handled as an excessive loop
 }
 
-void OutputHLSL::outputTriplet(Visit visit, const TString &preString, const TString &inString, const TString &postString)
+void OutputHLSL::outputTriplet(Visit visit, const char *preString, const char *inString, const char *postString)
 {
     TInfoSinkBase &out = getInfoSink();
 
@@ -2715,7 +2715,7 @@ TString OutputHLSL::initializer(const TType &type)
     return "{" + string + "}";
 }
 
-void OutputHLSL::outputConstructor(Visit visit, const TType &type, const TString &name, const TIntermSequence *parameters)
+void OutputHLSL::outputConstructor(Visit visit, const TType &type, const char *name, const TIntermSequence *parameters)
 {
     TInfoSinkBase &out = getInfoSink();
 
@@ -2723,7 +2723,7 @@ void OutputHLSL::outputConstructor(Visit visit, const TType &type, const TString
     {
         mStructureHLSL->addConstructor(type, name, parameters);
 
-        out << name + "(";
+        out << name << "(";
     }
     else if (visit == InVisit)
     {
