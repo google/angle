@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "88a1b2bc_2025caa3",
+        "filename": "src/libANGLE/renderer/gl/CompilerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-20T15:59:28Z",
+      "side": 1,
+      "message": "Looks like we have an extension value for this, using it now.",
+      "parentUuid": "88a1b2bc_80a8169f",
+      "range": {
+        "startLine": 44,
+        "startChar": 15,
+        "endLine": 44,
+        "endChar": 37
+      },
+      "revId": "88853e004270794b25b2708b67ff2e28ce8f8900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6881de16_e7e542a5",
         "filename": "src/libANGLE/renderer/gl/CompilerGL.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-20T15:46:40Z",
       "side": 1,
       "message": "shader model 2+? maybe these comments need to be updated",
+      "range": {
+        "startLine": 46,
+        "startChar": 44,
+        "endLine": 46,
+        "endChar": 118
+      },
+      "revId": "88853e004270794b25b2708b67ff2e28ce8f8900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48ab3a9e_1e0b4d4d",
+        "filename": "src/libANGLE/renderer/gl/CompilerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-20T15:59:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6881de16_e7e542a5",
       "range": {
         "startLine": 46,
         "startChar": 44,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "88a1b2bc_c02cde8d",
+        "filename": "src/libANGLE/renderer/gl/CompilerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-20T15:59:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "88a1b2bc_c0bdfee2",
+      "range": {
+        "startLine": 102,
+        "startChar": 4,
+        "endLine": 102,
+        "endChar": 11
+      },
+      "revId": "88853e004270794b25b2708b67ff2e28ce8f8900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88a372b2_f6a17880",
         "filename": "src/libANGLE/renderer/gl/CompilerGL.cpp",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2015-02-20T15:46:40Z",
       "side": 1,
       "message": "kind of odd we don\u0027t have a specific value to test for invalid. Maybe use nullptr here",
+      "range": {
+        "startLine": 107,
+        "startChar": 8,
+        "endLine": 107,
+        "endChar": 20
+      },
+      "revId": "88853e004270794b25b2708b67ff2e28ce8f8900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88a1b2bc_e037e2da",
+        "filename": "src/libANGLE/renderer/gl/CompilerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-20T15:59:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "88a372b2_f6a17880",
       "range": {
         "startLine": 107,
         "startChar": 8,
