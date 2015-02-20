@@ -2242,6 +2242,18 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
     return false;
 }
 
+bool OutputHLSL::visitSwitch(Visit, TIntermSwitch *)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool OutputHLSL::visitCase(Visit, TIntermCase *)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 void OutputHLSL::visitConstantUnion(TIntermConstantUnion *node)
 {
     writeConstantUnion(node->getType(), node->getUnionArrayPointer());

@@ -37,6 +37,8 @@ class TOutputGLSLBase : public TIntermTraverser
     virtual bool visitBinary(Visit visit, TIntermBinary *node);
     virtual bool visitUnary(Visit visit, TIntermUnary *node);
     virtual bool visitSelection(Visit visit, TIntermSelection *node);
+    virtual bool visitSwitch(Visit visit, TIntermSwitch *node);
+    virtual bool visitCase(Visit visit, TIntermCase *node);
     virtual bool visitAggregate(Visit visit, TIntermAggregate *node);
     virtual bool visitLoop(Visit visit, TIntermLoop *node);
     virtual bool visitBranch(Visit visit, TIntermBranch *node);

@@ -461,17 +461,19 @@ TIntermTyped *TIntermediate::addSelection(
 TIntermSwitch *TIntermediate::addSwitch(
     TIntermTyped *init, TIntermAggregate *statementList, const TSourceLoc &line)
 {
-    mInfoSink.info.message(EPrefixInternalError, line,
-        "Switch statements are disabled for now");
-    return nullptr;
+    TIntermSwitch *node = new TIntermSwitch(init, statementList);
+    node->setLine(line);
+
+    return node;
 }
 
 TIntermCase *TIntermediate::addCase(
     TIntermTyped *condition, const TSourceLoc &line)
 {
-    mInfoSink.info.message(EPrefixInternalError, line,
-        "Case labels and default labels are disabled for now");
-    return nullptr;
+    TIntermCase *node = new TIntermCase(condition);
+    node->setLine(line);
+
+    return node;
 }
 
 //

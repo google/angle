@@ -638,6 +638,18 @@ bool TOutputGLSLBase::visitSelection(Visit visit, TIntermSelection *node)
     return false;
 }
 
+bool TOutputGLSLBase::visitSwitch(Visit, TIntermSwitch *)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool TOutputGLSLBase::visitCase(Visit, TIntermCase *)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     bool visitChildren = true;
