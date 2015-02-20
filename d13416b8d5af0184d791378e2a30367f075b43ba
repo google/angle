@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "88a1b2bc_205a6a3a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2698,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-20T15:35:28Z",
+      "side": 1,
+      "message": "nit: newline before else",
+      "revId": "d13416b8d5af0184d791378e2a30367f075b43ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
