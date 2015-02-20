@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6881de16_a7550abe",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2677,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-20T15:20:37Z",
+      "side": 1,
+      "message": "nit: brace on newline",
+      "range": {
+        "startLine": 2677,
+        "startChar": 59,
+        "endLine": 2677,
+        "endChar": 60
+      },
+      "revId": "f490426a824cbd6f9c8aa5171eeeb63e753af4ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88a1b2bc_c06f3edf",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2692,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-20T15:20:37Z",
+      "side": 1,
+      "message": "nit: maybe prefix this with m as well?",
+      "range": {
+        "startLine": 2692,
+        "startChar": 4,
+        "endLine": 2692,
+        "endChar": 24
+      },
+      "revId": "f490426a824cbd6f9c8aa5171eeeb63e753af4ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88a1b2bc_e06a42d1",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2693,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-20T15:20:37Z",
+      "side": 1,
+      "message": "nit: braces on newlines here as well (and below)",
+      "range": {
+        "startLine": 2693,
+        "startChar": 56,
+        "endLine": 2693,
+        "endChar": 57
+      },
+      "revId": "f490426a824cbd6f9c8aa5171eeeb63e753af4ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
