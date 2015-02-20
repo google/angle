@@ -1014,7 +1014,15 @@ void OutputHLSL::header(const BuiltInFunctionEmulatorHLSL *builtInFunctionEmulat
                 }
                 else if (IsShadowSampler(textureFunction->sampler))
                 {
-                    out << "x.SampleCmp(s, ";
+                    switch(textureFunction->method)
+                    {
+                      case TextureFunction::IMPLICIT: out << "x.SampleCmp(s, ";          break;
+                      case TextureFunction::BIAS:     out << "x.SampleCmp(s, ";          break;
+                      case TextureFunction::LOD:      out << "x.SampleCmp(s, ";          break;
+                      case TextureFunction::LOD0:     out << "x.SampleCmpLevelZero(s, "; break;
+                      case TextureFunction::LOD0BIAS: out << "x.SampleCmpLevelZero(s, "; break;
+                      default: UNREACHABLE();
+                    }
                 }
                 else
                 {
@@ -1145,11 +1153,20 @@ void OutputHLSL::header(const BuiltInFunctionEmulatorHLSL *builtInFunctionEmulat
                     else if (IsShadowSampler(textureFunction->sampler))
                     {
                         // Compare value
-                        switch(textureFunction->coords)
+                        if (textureFunction->proj)
                         {
-                          case 3: out << "), t.z"; break;
-                          case 4: out << "), t.w"; break;
-                          default: UNREACHABLE();
+                            // According to ESSL 3.00.4 sec 8.8 p95 on textureProj:
+                            // The resulting third component of P' in the shadow forms is used as Dref
+                            out << "), t.z" << proj;
+                        }
+                        else
+                        {
+                            switch(textureFunction->coords)
+                            {
+                              case 3: out << "), t.z"; break;
+                              case 4: out << "), t.w"; break;
+                              default: UNREACHABLE();
+                            }
                         }
                     }
                     else
@@ -1165,11 +1182,20 @@ void OutputHLSL::header(const BuiltInFunctionEmulatorHLSL *builtInFunctionEmulat
                 else if (IsShadowSampler(textureFunction->sampler))
                 {
                     // Compare value
-                    switch(textureFunction->coords)
+                    if (textureFunction->proj)
                     {
-                      case 3: out << "), t.z"; break;
-                      case 4: out << "), t.w"; break;
-                      default: UNREACHABLE();
+                        // According to ESSL 3.00.4 sec 8.8 p95 on textureProj:
+                        // The resulting third component of P' in the shadow forms is used as Dref
+                        out << "), t.z" << proj;
+                    }
+                    else
+                    {
+                        switch(textureFunction->coords)
+                        {
+                          case 3: out << "), t.z"; break;
+                          case 4: out << "), t.w"; break;
+                          default: UNREACHABLE();
+                        }
                     }
                 }
                 else
