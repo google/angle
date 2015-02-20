@@ -9,6 +9,7 @@
 #include "libANGLE/renderer/gl/RendererGL.h"
 
 #include "common/debug.h"
+#include "libANGLE/Data.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
 #include "libANGLE/renderer/gl/CompilerGL.h"
 #include "libANGLE/renderer/gl/DefaultAttachmentGL.h"
@@ -66,7 +67,7 @@ gl::Error RendererGL::drawElements(const gl::Data &data, GLenum mode, GLsizei co
 
 CompilerImpl *RendererGL::createCompiler(const gl::Data &data)
 {
-    return new CompilerGL();
+    return new CompilerGL(data);
 }
 
 ShaderImpl *RendererGL::createShader(GLenum type)
