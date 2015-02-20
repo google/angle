@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "883d324f_63917c68",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-02-20T21:56:37Z",
+      "side": 1,
+      "message": "nit: I\u0027d disable this in the gyp file, with a comment. You probably think this is ok to export stl classes in all files, after all.\n\n(Chromium only disables this if component\u003d\u003d\"shared_library\", that\u0027s something that\u0027s possible in the gyp file too.)",
+      "revId": "9616256cdc90f950d6553bcb475eee0aaffca20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
