@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48ab3a9e_1e4a2de8",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-20T17:35:05Z",
+      "side": 1,
+      "message": "we should leave shaderlang.h untouched by particular system defines. if HLSL is disabled, using these enums can produce a runtime error, similar to how we handle unsupported renderers.",
+      "range": {
+        "startLine": 86,
+        "startChar": 7,
+        "endLine": 86,
+        "endChar": 24
+      },
+      "revId": "a30c27bd892fe9a6d1b2c6deb28c4fc3624dd700",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8b14e0e_bb5ea7e0",
+        "filename": "src/compiler/translator/CodeGen.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-20T17:35:05Z",
+      "side": 1,
+      "message": "return an error here if called with an HLSL enum and the define is disabled",
+      "range": {
+        "startLine": 26,
+        "startChar": 7,
+        "endLine": 26,
+        "endChar": 24
+      },
+      "revId": "a30c27bd892fe9a6d1b2c6deb28c4fc3624dd700",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8b14e0e_dbdf33de",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-20T17:35:05Z",
+      "side": 1,
+      "message": "can leave this in to match the other suggestions",
+      "range": {
+        "startLine": 46,
+        "startChar": 7,
+        "endLine": 46,
+        "endChar": 24
+      },
+      "revId": "a30c27bd892fe9a6d1b2c6deb28c4fc3624dd700",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8b14e0e_3bd057d2",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-20T17:35:05Z",
+      "side": 1,
+      "message": "change these from ASSERTs to return false on NULL. We should leave the entry point signature untouched",
+      "range": {
+        "startLine": 338,
+        "startChar": 4,
+        "endLine": 338,
+        "endChar": 10
+      },
+      "revId": "a30c27bd892fe9a6d1b2c6deb28c4fc3624dd700",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48ab3a9e_9e8bddb7",
+        "filename": "src/compiler/translator/StructureHLSL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-20T17:35:05Z",
+      "side": 1,
+      "message": "rather than putting enables in these headers, we should not include them using #ifdefs in places where they get included from GLSL code (if any)",
+      "range": {
+        "startLine": 13,
+        "startChar": 7,
+        "endLine": 13,
+        "endChar": 24
+      },
+      "revId": "a30c27bd892fe9a6d1b2c6deb28c4fc3624dd700",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
