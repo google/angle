@@ -72,7 +72,7 @@ CompilerImpl *RendererGL::createCompiler(const gl::Data &data)
 
 ShaderImpl *RendererGL::createShader(GLenum type)
 {
-    return new ShaderGL();
+    return new ShaderGL(type, mFunctions);
 }
 
 ProgramImpl *RendererGL::createProgram()
