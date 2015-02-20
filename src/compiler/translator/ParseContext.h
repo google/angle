@@ -32,10 +32,10 @@ struct TParseContext {
             shaderSpec(spec),
             compileOptions(options),
             treeRoot(0),
-            loopNestingLevel(0),
+            mLoopNestingLevel(0),
             structNestingLevel(0),
             currentFunctionType(NULL),
-            functionReturnsValue(false),
+            mFunctionReturnsValue(false),
             checksPrecisionErrors(checksPrecErrors),
             defaultMatrixPacking(EmpColumnMajor),
             defaultBlockStorage(EbsShared),
@@ -51,10 +51,10 @@ struct TParseContext {
     int shaderVersion;
     int compileOptions;
     TIntermNode* treeRoot;       // root of parse tree being created
-    int loopNestingLevel;        // 0 if outside all loops
+    int mLoopNestingLevel;       // 0 if outside all loops
     int structNestingLevel;      // incremented while parsing a struct declaration
     const TType* currentFunctionType;  // the return type of the function that's currently being parsed
-    bool functionReturnsValue;   // true if a non-void function has a return
+    bool mFunctionReturnsValue;  // true if a non-void function has a return
     bool checksPrecisionErrors;  // true if an error will be generated when a variable is declared without precision, explicit or implicit.
     bool fragmentPrecisionHigh;  // true if highp precision is supported in the fragment language.
     TLayoutMatrixPacking defaultMatrixPacking;
@@ -170,6 +170,9 @@ struct TParseContext {
         const TSourceLoc &);
     TIntermTyped *addBinaryMathBooleanResult(TOperator op, TIntermTyped *left, TIntermTyped *right,
         const TSourceLoc &);
+
+    TIntermBranch *addBranch(TOperator op, const TSourceLoc &loc);
+    TIntermBranch *addBranch(TOperator op, TIntermTyped *returnValue, const TSourceLoc &loc);
 };
 
 int PaParseStrings(size_t count, const char* const string[], const int length[],

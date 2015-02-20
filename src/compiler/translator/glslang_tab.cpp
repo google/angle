@@ -712,8 +712,8 @@ static const yytype_uint16 yyrline[] =
     1535,  1536,  1536,  1536,  1546,  1547,  1551,  1551,  1552,  1552,
     1557,  1560,  1570,  1573,  1579,  1580,  1584,  1592,  1596,  1606,
     1611,  1628,  1628,  1633,  1633,  1640,  1640,  1648,  1651,  1657,
-    1660,  1666,  1670,  1677,  1684,  1691,  1698,  1709,  1718,  1722,
-    1729,  1732,  1738,  1738
+    1660,  1666,  1670,  1677,  1680,  1683,  1686,  1689,  1698,  1702,
+    1709,  1712,  1718,  1718
 };
 #endif
 
@@ -4687,7 +4687,7 @@ yyreduce:
 
   case 241:
 
-    { context->symbolTable.push(); ++context->loopNestingLevel; }
+    { context->symbolTable.push(); ++context->mLoopNestingLevel; }
 
     break;
 
@@ -4696,14 +4696,14 @@ yyreduce:
     {
         context->symbolTable.pop();
         (yyval.interm.intermNode) = context->intermediate.addLoop(ELoopWhile, 0, (yyvsp[-2].interm.intermTypedNode), 0, (yyvsp[0].interm.intermNode), (yylsp[-5]));
-        --context->loopNestingLevel;
+        --context->mLoopNestingLevel;
     }
 
     break;
 
   case 243:
 
-    { ++context->loopNestingLevel; }
+    { ++context->mLoopNestingLevel; }
 
     break;
 
@@ -4714,14 +4714,14 @@ yyreduce:
             context->recover();
 
         (yyval.interm.intermNode) = context->intermediate.addLoop(ELoopDoWhile, 0, (yyvsp[-2].interm.intermTypedNode), 0, (yyvsp[-5].interm.intermNode), (yylsp[-4]));
-        --context->loopNestingLevel;
+        --context->mLoopNestingLevel;
     }
 
     break;
 
   case 245:
 
-    { context->symbolTable.push(); ++context->loopNestingLevel; }
+    { context->symbolTable.push(); ++context->mLoopNestingLevel; }
 
     break;
 
@@ -4730,7 +4730,7 @@ yyreduce:
     {
         context->symbolTable.pop();
         (yyval.interm.intermNode) = context->intermediate.addLoop(ELoopFor, (yyvsp[-3].interm.intermNode), reinterpret_cast<TIntermTyped*>((yyvsp[-2].interm.nodePair).node1), reinterpret_cast<TIntermTyped*>((yyvsp[-2].interm.nodePair).node2), (yyvsp[0].interm.intermNode), (yylsp[-6]));
-        --context->loopNestingLevel;
+        --context->mLoopNestingLevel;
     }
 
     break;
@@ -4788,11 +4788,7 @@ yyreduce:
   case 253:
 
     {
-        if (context->loopNestingLevel <= 0) {
-            context->error((yylsp[-1]), "continue statement only allowed in loops", "");
-            context->recover();
-        }
-        (yyval.interm.intermNode) = context->intermediate.addBranch(EOpContinue, (yylsp[-1]));
+        (yyval.interm.intermNode) = context->addBranch(EOpContinue, (yylsp[-1]));
     }
 
     break;
@@ -4800,11 +4796,7 @@ yyreduce:
   case 254:
 
     {
-        if (context->loopNestingLevel <= 0) {
-            context->error((yylsp[-1]), "break statement only allowed in loops", "");
-            context->recover();
-        }
-        (yyval.interm.intermNode) = context->intermediate.addBranch(EOpBreak, (yylsp[-1]));
+        (yyval.interm.intermNode) = context->addBranch(EOpBreak, (yylsp[-1]));
     }
 
     break;
@@ -4812,11 +4804,7 @@ yyreduce:
   case 255:
 
     {
-        (yyval.interm.intermNode) = context->intermediate.addBranch(EOpReturn, (yylsp[-1]));
-        if (context->currentFunctionType->getBasicType() != EbtVoid) {
-            context->error((yylsp[-1]), "non-void function must return a value", "return");
-            context->recover();
-        }
+        (yyval.interm.intermNode) = context->addBranch(EOpReturn, (yylsp[-1]));
     }
 
     break;
@@ -4824,15 +4812,7 @@ yyreduce:
   case 256:
 
     {
-        (yyval.interm.intermNode) = context->intermediate.addBranch(EOpReturn, (yyvsp[-1].interm.intermTypedNode), (yylsp[-2]));
-        context->functionReturnsValue = true;
-        if (context->currentFunctionType->getBasicType() == EbtVoid) {
-            context->error((yylsp[-2]), "void function cannot return a value", "return");
-            context->recover();
-        } else if (*(context->currentFunctionType) != (yyvsp[-1].interm.intermTypedNode)->getType()) {
-            context->error((yylsp[-2]), "function return is not matching type:", "return");
-            context->recover();
-        }
+        (yyval.interm.intermNode) = context->addBranch(EOpReturn, (yyvsp[-1].interm.intermTypedNode), (yylsp[-2]));
     }
 
     break;
@@ -4841,7 +4821,7 @@ yyreduce:
 
     {
         FRAG_ONLY("discard", (yylsp[-1]));
-        (yyval.interm.intermNode) = context->intermediate.addBranch(EOpKill, (yylsp[-1]));
+        (yyval.interm.intermNode) = context->addBranch(EOpKill, (yylsp[-1]));
     }
 
     break;
@@ -4926,7 +4906,7 @@ yyreduce:
         // Remember the return type for later checking for RETURN statements.
         //
         context->currentFunctionType = &(prevDec->getReturnType());
-        context->functionReturnsValue = false;
+        context->mFunctionReturnsValue = false;
 
         //
         // Insert parameters into the symbol table.
@@ -4965,7 +4945,7 @@ yyreduce:
         }
         context->intermediate.setAggregateOperator(paramNodes, EOpParameters, (yylsp[0]));
         (yyvsp[0].interm).intermAggregate = paramNodes;
-        context->loopNestingLevel = 0;
+        context->mLoopNestingLevel = 0;
     }
 
     break;
@@ -4975,7 +4955,7 @@ yyreduce:
     {
         //?? Check that all paths return a value if return type != void ?
         //   May be best done as post process phase on intermediate code
-        if (context->currentFunctionType->getBasicType() != EbtVoid && ! context->functionReturnsValue) {
+        if (context->currentFunctionType->getBasicType() != EbtVoid && ! context->mFunctionReturnsValue) {
             context->error((yylsp[-2]), "function does not return a value:", "", (yyvsp[-2].interm).function->getName().c_str());
             context->recover();
         }

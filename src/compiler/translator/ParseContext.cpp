@@ -2655,6 +2655,56 @@ TIntermTyped *TParseContext::addBinaryMathBooleanResult(TOperator op, TIntermTyp
     return node;
 }
 
+TIntermBranch *TParseContext::addBranch(TOperator op, const TSourceLoc &loc)
+{
+    switch (op)
+    {
+      case EOpContinue:
+        if (mLoopNestingLevel <= 0)
+        {
+            error(loc, "continue statement only allowed in loops", "");
+            recover();
+        }
+        break;
+      case EOpBreak:
+        if (mLoopNestingLevel <= 0)
+        {
+            error(loc, "break statement only allowed in loops", "");
+            recover();
+        }
+        break;
+      case EOpReturn:
+        if (currentFunctionType->getBasicType() != EbtVoid)
+        {
+            error(loc, "non-void function must return a value", "return");
+            recover();
+        }
+        break;
+      default:
+        // No checks for discard
+        break;
+    }
+    return intermediate.addBranch(op, loc);
+}
+
+TIntermBranch *TParseContext::addBranch(TOperator op, TIntermTyped *returnValue, const TSourceLoc &loc)
+{
+    ASSERT(op == EOpReturn);
+    mFunctionReturnsValue = true;
+    if (currentFunctionType->getBasicType() == EbtVoid)
+    {
+        error(loc, "void function cannot return a value", "return");
+        recover();
+    }
+    else if (*currentFunctionType != returnValue->getType())
+    {
+        error(loc, "function return is not matching type:", "return");
+        recover();
+    }
+    return intermediate.addBranch(op, returnValue, loc);
+}
+
+
 //
 // Parse an array of strings using yyparse.
 //
