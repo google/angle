@@ -255,10 +255,10 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
         /* The *Grad* variants are new to both vertex and fragment shaders; the fragment
          * shader specific pieces are added separately below.
          */
-        symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DGradEXT", sampler2D, float2, float2, float2);
-        symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DProjGradEXT", sampler2D, float3, float2, float2);
-        symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DProjGradEXT", sampler2D, float4, float2, float2);
-        symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "textureCubeGradEXT", samplerCube, float3, float3, float3);
+        symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4, "texture2DGradEXT", sampler2D, float2, float2, float2);
+        symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4, "texture2DProjGradEXT", sampler2D, float3, float2, float2);
+        symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4, "texture2DProjGradEXT", sampler2D, float4, float2, float2);
+        symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4, "textureCubeGradEXT", samplerCube, float3, float3, float3);
     }
 
     if (type == GL_FRAGMENT_SHADER)
@@ -270,17 +270,17 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
 
         if (resources.OES_standard_derivatives)
         {
-            symbolTable.insertBuiltIn(ESSL1_BUILTINS, EOpDFdx, genType, "dFdx", genType);
-            symbolTable.insertBuiltIn(ESSL1_BUILTINS, EOpDFdy, genType, "dFdy", genType);
-            symbolTable.insertBuiltIn(ESSL1_BUILTINS, EOpFwidth, genType, "fwidth", genType);
+            symbolTable.insertBuiltIn(ESSL1_BUILTINS, EOpDFdx, "GL_OES_standard_derivatives", genType, "dFdx", genType);
+            symbolTable.insertBuiltIn(ESSL1_BUILTINS, EOpDFdy, "GL_OES_standard_derivatives", genType, "dFdy", genType);
+            symbolTable.insertBuiltIn(ESSL1_BUILTINS, EOpFwidth, "GL_OES_standard_derivatives", genType, "fwidth", genType);
         }
 
         if (resources.EXT_shader_texture_lod)
         {
-            symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DLodEXT", sampler2D, float2, float1);
-            symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DProjLodEXT", sampler2D, float3, float1);
-            symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DProjLodEXT", sampler2D, float4, float1);
-            symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "textureCubeLodEXT", samplerCube, float3, float1);
+            symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4, "texture2DLodEXT", sampler2D, float2, float1);
+            symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4, "texture2DProjLodEXT", sampler2D, float3, float1);
+            symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4, "texture2DProjLodEXT", sampler2D, float4, float1);
+            symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4, "textureCubeLodEXT", samplerCube, float3, float1);
         }
     }
 
@@ -352,9 +352,9 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
 
     if (type == GL_FRAGMENT_SHADER)
     {
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpDFdx, genType, "dFdx", genType);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpDFdy, genType, "dFdy", genType);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpFwidth, genType, "fwidth", genType);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpDFdx, "GL_OES_standard_derivatives", genType, "dFdx", genType);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpDFdy, "GL_OES_standard_derivatives", genType, "dFdy", genType);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpFwidth, "GL_OES_standard_derivatives", genType, "fwidth", genType);
     }
 
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureOffset", gsampler2D, float2, int2);
@@ -493,21 +493,20 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
             symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_FragColor"), TType(EbtFloat, EbpMedium, EvqFragColor,   4)));
             symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_FragData[gl_MaxDrawBuffers]"), TType(EbtFloat, EbpMedium, EvqFragData,    4)));
             if (resources.EXT_frag_depth) {
-                symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_FragDepthEXT"), TType(EbtFloat, resources.FragmentPrecisionHigh ? EbpHigh : EbpMedium, EvqFragDepth, 1)));
-                symbolTable.relateToExtension(ESSL1_BUILTINS, "gl_FragDepthEXT", "GL_EXT_frag_depth");
+                symbolTable.insert(ESSL1_BUILTINS, "GL_EXT_frag_depth", new TVariable(NewPoolTString("gl_FragDepthEXT"), TType(EbtFloat, resources.FragmentPrecisionHigh ? EbpHigh : EbpMedium, EvqFragDepth, 1)));
             }
             if (resources.EXT_shader_framebuffer_fetch)
             {
-                symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_LastFragData[gl_MaxDrawBuffers]"), TType(EbtFloat, EbpMedium, EvqLastFragData,   4)));
+                symbolTable.insert(ESSL1_BUILTINS, "GL_EXT_shader_framebuffer_fetch", new TVariable(NewPoolTString("gl_LastFragData[gl_MaxDrawBuffers]"), TType(EbtFloat, EbpMedium, EvqLastFragData,   4)));
             }
             else if (resources.NV_shader_framebuffer_fetch)
             {
-                symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_LastFragColor"), TType(EbtFloat, EbpMedium, EvqLastFragColor,   4)));
-                symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_LastFragData[gl_MaxDrawBuffers]"), TType(EbtFloat, EbpMedium, EvqLastFragData,   4)));
+                symbolTable.insert(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch", new TVariable(NewPoolTString("gl_LastFragColor"), TType(EbtFloat, EbpMedium, EvqLastFragColor,   4)));
+                symbolTable.insert(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch", new TVariable(NewPoolTString("gl_LastFragData[gl_MaxDrawBuffers]"), TType(EbtFloat, EbpMedium, EvqLastFragData,   4)));
             }
             else if (resources.ARM_shader_framebuffer_fetch)
             {
-                symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_LastFragColorARM"), TType(EbtFloat, EbpMedium, EvqLastFragColor,   4)));
+                symbolTable.insert(ESSL1_BUILTINS, "GL_ARM_shader_framebuffer_fetch", new TVariable(NewPoolTString("gl_LastFragColorARM"), TType(EbtFloat, EbpMedium, EvqLastFragColor,   4)));
             }
         } else {
             symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("css_MixColor"), TType(EbtFloat, EbpMedium, EvqGlobal,      4)));
@@ -525,42 +524,6 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
     default: assert(false && "Language not supported");
     }
 
-    // Map language-specific operators.
-    switch(type) {
-    case GL_VERTEX_SHADER:
-        break;
-    case GL_FRAGMENT_SHADER:
-        if (resources.OES_standard_derivatives)
-        {
-            symbolTable.relateToExtension(ESSL1_BUILTINS, "dFdx", "GL_OES_standard_derivatives");
-            symbolTable.relateToExtension(ESSL1_BUILTINS, "dFdy", "GL_OES_standard_derivatives");
-            symbolTable.relateToExtension(ESSL1_BUILTINS, "fwidth", "GL_OES_standard_derivatives");
-        }
-        if (resources.EXT_shader_texture_lod)
-        {
-            symbolTable.relateToExtension(ESSL1_BUILTINS, "texture2DLodEXT", "GL_EXT_shader_texture_lod");
-            symbolTable.relateToExtension(ESSL1_BUILTINS, "texture2DProjLodEXT", "GL_EXT_shader_texture_lod");
-            symbolTable.relateToExtension(ESSL1_BUILTINS, "textureCubeLodEXT", "GL_EXT_shader_texture_lod");
-        }
-        if (resources.NV_shader_framebuffer_fetch)
-        {
-            symbolTable.relateToExtension(ESSL1_BUILTINS, "gl_LastFragColor", "GL_NV_shader_framebuffer_fetch");
-        }
-        else if (resources.ARM_shader_framebuffer_fetch)
-        {
-            symbolTable.relateToExtension(ESSL1_BUILTINS, "gl_LastFragColorARM", "GL_ARM_shader_framebuffer_fetch");
-        }
-        break;
-    default: break;
-    }
-
-    if (resources.EXT_shader_texture_lod)
-    {
-        symbolTable.relateToExtension(ESSL1_BUILTINS, "texture2DGradEXT", "GL_EXT_shader_texture_lod");
-        symbolTable.relateToExtension(ESSL1_BUILTINS, "texture2DProjGradEXT", "GL_EXT_shader_texture_lod");
-        symbolTable.relateToExtension(ESSL1_BUILTINS, "textureCubeGradEXT", "GL_EXT_shader_texture_lod");
-    }
-
     // Finally add resource-specific variables.
     switch(type) {
     case GL_FRAGMENT_SHADER:
@@ -574,15 +537,14 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
                 // Set up gl_LastFragData.  The array size.
                 TType lastFragData(EbtFloat, EbpMedium, EvqLastFragData, 4, 1, true);
                 lastFragData.setArraySize(resources.MaxDrawBuffers);
-                symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_LastFragData"), lastFragData));
 
                 if (resources.EXT_shader_framebuffer_fetch)
                 {
-                    symbolTable.relateToExtension(ESSL1_BUILTINS, "gl_LastFragData", "GL_EXT_shader_framebuffer_fetch");
+                    symbolTable.insert(ESSL1_BUILTINS, "GL_EXT_shader_framebuffer_fetch", new TVariable(NewPoolTString("gl_LastFragData"), lastFragData));
                 }
                 else if (resources.NV_shader_framebuffer_fetch)
                 {
-                    symbolTable.relateToExtension(ESSL1_BUILTINS, "gl_LastFragData", "GL_NV_shader_framebuffer_fetch");
+                    symbolTable.insert(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch", new TVariable(NewPoolTString("gl_LastFragData"), lastFragData));
                 }
             }
         }

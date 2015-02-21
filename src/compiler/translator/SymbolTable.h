@@ -186,13 +186,14 @@ class TFunction : public TSymbol
           defined(false)
     {
     }
-    TFunction(const TString *name, const TType &retType, TOperator tOp = EOpNull)
+    TFunction(const TString *name, const TType &retType, TOperator tOp = EOpNull, const char *ext = "")
         : TSymbol(name),
           returnType(retType),
           mangledName(TFunction::mangleName(*name)),
           op(tOp),
           defined(false)
     {
+        relateToExtension(ext);
     }
     virtual ~TFunction();
     virtual bool isFunction() const
@@ -289,8 +290,6 @@ class TSymbolTableLevel
 
     TSymbol *find(const TString &name) const;
 
-    void relateToExtension(const char *name, const TString &ext);
-
   protected:
     tLevel level;
 };
@@ -358,6 +357,12 @@ class TSymbolTable
         return table[level]->insert(symbol);
     }
 
+    bool insert(ESymbolLevel level, const char *ext, TSymbol *symbol)
+    {
+        symbol->relateToExtension(ext);
+        return table[level]->insert(symbol);
+    }
+
     bool insertConstInt(ESymbolLevel level, const char *name, int value)
     {
         TVariable *constant = new TVariable(
@@ -366,13 +371,25 @@ class TSymbolTable
         return insert(level, constant);
     }
 
-    void insertBuiltIn(ESymbolLevel level, TOperator op, TType *rvalue, const char *name,
-                       TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0,
-                       TType *ptype4 = 0, TType *ptype5 = 0);
+    void insertBuiltIn(ESymbolLevel level, TOperator op, const char *ext, TType *rvalue, const char *name,
+                       TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0, TType *ptype5 = 0);
 
-    void insertBuiltIn(ESymbolLevel level, TType *rvalue, const char *name, TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0, TType *ptype5 = 0)
+    void insertBuiltIn(ESymbolLevel level, TType *rvalue, const char *name,
+                       TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0, TType *ptype5 = 0)
     {
-        insertBuiltIn(level, EOpNull, rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, EOpNull, "", rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
+    }
+
+    void insertBuiltIn(ESymbolLevel level, const char *ext, TType *rvalue, const char *name,
+                       TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0, TType *ptype5 = 0)
+    {
+        insertBuiltIn(level, EOpNull, ext, rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
+    }
+
+    void insertBuiltIn(ESymbolLevel level, TOperator op, TType *rvalue, const char *name,
+                       TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0, TType *ptype5 = 0)
+    {
+        insertBuiltIn(level, op, "", rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
     }
 
     TSymbol *find(const TString &name, int shaderVersion,
@@ -385,10 +402,6 @@ class TSymbolTable
         return table[currentLevel() - 1];
     }
 
-    void relateToExtension(ESymbolLevel level, const char *name, const TString &ext)
-    {
-        table[level]->relateToExtension(name, ext);
-    }
     void dump(TInfoSink &infoSink) const;
 
     bool setDefaultPrecision(const TPublicType &type, TPrecision prec)
