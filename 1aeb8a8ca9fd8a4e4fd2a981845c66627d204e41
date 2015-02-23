@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "08c4e2d0_845a26c6",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-23T15:50:31Z",
+      "side": 1,
+      "message": "https://code.google.com/p/angleproject/wiki/CodingStandard gives an example where both braces of an empty function are on the same line as the function parameters. Doesn\u0027t that apply to constructors or constructors with initializer lists specifically? I think that clarifying the style rules here would be useful. It\u0027s especially hard to follow them in a case like this where the surrounding code is not written according to style rules.",
+      "parentUuid": "88a1b2bc_e305acf6",
+      "range": {
+        "startLine": 505,
+        "startChar": 40,
+        "endLine": 505,
+        "endChar": 42
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48ab3a9e_9e087da4",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-23T15:27:11Z",
       "side": 1,
       "message": "nit: include param name",
+      "range": {
+        "startLine": 507,
+        "startChar": 43,
+        "endLine": 507,
+        "endChar": 44
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "688abe9e_9f653305",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-23T15:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48ab3a9e_9e087da4",
       "range": {
         "startLine": 507,
         "startChar": 43,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "688abe9e_bf6af7cf",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-23T15:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "88a1b2bc_0301b0ea",
+      "range": {
+        "startLine": 512,
+        "startChar": 4,
+        "endLine": 512,
+        "endChar": 11
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8b14e0e_7b6a5f50",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 3
@@ -82,6 +154,30 @@
       "writtenOn": "2015-02-23T15:27:11Z",
       "side": 1,
       "message": "nits also apply here",
+      "range": {
+        "startLine": 524,
+        "startChar": 6,
+        "endLine": 524,
+        "endChar": 17
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08c4e2d0_a455a29a",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-23T15:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8b14e0e_7b6a5f50",
       "range": {
         "startLine": 524,
         "startChar": 6,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "08c4e2d0_c427fe56",
+        "filename": "src/compiler/translator/IntermTraverse.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-23T15:50:31Z",
+      "side": 1,
+      "message": "Already fixed in #4",
+      "parentUuid": "e8b14e0e_fba30f46",
+      "range": {
+        "startLine": 211,
+        "startChar": 32,
+        "endLine": 211,
+        "endChar": 33
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "289e06d1_b054b645",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 3
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "e8c06ec1_43714641",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 1528,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-23T15:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "289e06d1_b054b645",
+      "range": {
+        "startLine": 1528,
+        "startChar": 0,
+        "endLine": 1528,
+        "endChar": 65
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8885328c_20f5ea88",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 3
@@ -151,6 +295,30 @@
       "writtenOn": "2015-02-23T15:27:11Z",
       "side": 1,
       "message": "your definition here is different from the spec grammar. I think the practical difference is your code allows empty-bodied switch statements:\n\n  switch (5) {}\n\nwhile the spec\u0027s does not? but I\u0027m not sure. will have to check to see if there are any tests in dEQP for that.",
+      "range": {
+        "startLine": 1609,
+        "startChar": 47,
+        "endLine": 1609,
+        "endChar": 65
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "688abe9e_5f272bd5",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 1609,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-23T15:50:31Z",
+      "side": 1,
+      "message": "If I\u0027m reading the spec correctly, empty switch statements are indeed allowed.",
+      "parentUuid": "8885328c_20f5ea88",
       "range": {
         "startLine": 1609,
         "startChar": 47,
