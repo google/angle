@@ -59,25 +59,6 @@ TSymbol *TSymbolTableLevel::find(const TString &name) const
 
 //
 // Change all function entries in the table with the non-mangled name
-// to be related to the provided built-in operation.  This is a low
-// performance operation, and only intended for symbol tables that
-// live across a large number of compiles.
-//
-void TSymbolTableLevel::relateToOperator(const char *name, TOperator op)
-{
-    for (tLevel::iterator it = level.begin(); it != level.end(); ++it)
-    {
-        if ((*it).second->isFunction())
-        {
-            TFunction *function = static_cast<TFunction*>((*it).second);
-            if (function->getName() == name)
-                function->relateToOperator(op);
-        }
-    }
-}
-
-//
-// Change all function entries in the table with the non-mangled name
 // to be related to the provided built-in extension. This is a low
 // performance operation, and only intended for symbol tables that
 // live across a large number of compiles.
@@ -206,7 +187,7 @@ TType *VectorType(TType *type, int size)
     }
 }
 
-void TSymbolTable::insertBuiltIn(ESymbolLevel level, TType *rvalue, const char *name, TType *ptype1, TType *ptype2, TType *ptype3, TType *ptype4, TType *ptype5)
+void TSymbolTable::insertBuiltIn(ESymbolLevel level, TOperator op, TType *rvalue, const char *name, TType *ptype1, TType *ptype2, TType *ptype3, TType *ptype4, TType *ptype5)
 {
     if (ptype1->getBasicType() == EbtGSampler2D)
     {
@@ -239,21 +220,21 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level, TType *rvalue, const char *
     else if (IsGenType(rvalue) || IsGenType(ptype1) || IsGenType(ptype2) || IsGenType(ptype3))
     {
         ASSERT(!ptype4 && !ptype5);
-        insertBuiltIn(level, SpecificType(rvalue, 1), name, SpecificType(ptype1, 1), SpecificType(ptype2, 1), SpecificType(ptype3, 1));
-        insertBuiltIn(level, SpecificType(rvalue, 2), name, SpecificType(ptype1, 2), SpecificType(ptype2, 2), SpecificType(ptype3, 2));
-        insertBuiltIn(level, SpecificType(rvalue, 3), name, SpecificType(ptype1, 3), SpecificType(ptype2, 3), SpecificType(ptype3, 3));
-        insertBuiltIn(level, SpecificType(rvalue, 4), name, SpecificType(ptype1, 4), SpecificType(ptype2, 4), SpecificType(ptype3, 4));
+        insertBuiltIn(level, op, SpecificType(rvalue, 1), name, SpecificType(ptype1, 1), SpecificType(ptype2, 1), SpecificType(ptype3, 1));
+        insertBuiltIn(level, op, SpecificType(rvalue, 2), name, SpecificType(ptype1, 2), SpecificType(ptype2, 2), SpecificType(ptype3, 2));
+        insertBuiltIn(level, op, SpecificType(rvalue, 3), name, SpecificType(ptype1, 3), SpecificType(ptype2, 3), SpecificType(ptype3, 3));
+        insertBuiltIn(level, op, SpecificType(rvalue, 4), name, SpecificType(ptype1, 4), SpecificType(ptype2, 4), SpecificType(ptype3, 4));
     }
     else if (IsVecType(rvalue) || IsVecType(ptype1) || IsVecType(ptype2) || IsVecType(ptype3))
     {
         ASSERT(!ptype4 && !ptype5);
-        insertBuiltIn(level, VectorType(rvalue, 2), name, VectorType(ptype1, 2), VectorType(ptype2, 2), VectorType(ptype3, 2));
-        insertBuiltIn(level, VectorType(rvalue, 3), name, VectorType(ptype1, 3), VectorType(ptype2, 3), VectorType(ptype3, 3));
-        insertBuiltIn(level, VectorType(rvalue, 4), name, VectorType(ptype1, 4), VectorType(ptype2, 4), VectorType(ptype3, 4));
+        insertBuiltIn(level, op, VectorType(rvalue, 2), name, VectorType(ptype1, 2), VectorType(ptype2, 2), VectorType(ptype3, 2));
+        insertBuiltIn(level, op, VectorType(rvalue, 3), name, VectorType(ptype1, 3), VectorType(ptype2, 3), VectorType(ptype3, 3));
+        insertBuiltIn(level, op, VectorType(rvalue, 4), name, VectorType(ptype1, 4), VectorType(ptype2, 4), VectorType(ptype3, 4));
     }
     else
     {
-        TFunction *function = new TFunction(NewPoolTString(name), *rvalue);
+        TFunction *function = new TFunction(NewPoolTString(name), *rvalue, op);
 
         TParameter param1 = {0, ptype1};
         function->addParameter(param1);
