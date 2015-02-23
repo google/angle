@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "283a86a9_4dfeb933",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-02-23T20:11:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8df2a7e_22950edc",
+      "revId": "24145eb80f67e65ab686c65f1df56b2bae8acc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0816a200_74a5088c",
         "filename": "src/compiler/translator/SymbolTable.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-23T10:46:19Z",
       "side": 1,
       "message": "Nit: indent the case statements.",
+      "revId": "24145eb80f67e65ab686c65f1df56b2bae8acc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "283a86a9_6dfb7542",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-02-23T20:11:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0816a200_74a5088c",
       "revId": "24145eb80f67e65ab686c65f1df56b2bae8acc81",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "283a86a9_8d28a12b",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-02-23T20:11:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6869de73_a7278a57",
+      "revId": "24145eb80f67e65ab686c65f1df56b2bae8acc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0816a200_9469c487",
         "filename": "src/compiler/translator/SymbolTable.cpp",
         "patchSetId": 2
@@ -64,6 +118,30 @@
       "writtenOn": "2015-02-23T10:46:19Z",
       "side": 1,
       "message": "How about TypeFromGenType(), GenTypeToType() or something similar as the function name here? Now the function name sounds like it would return a genType, though it does the exact opposite of that.",
+      "range": {
+        "startLine": 242,
+        "startChar": 29,
+        "endLine": 242,
+        "endChar": 36
+      },
+      "revId": "24145eb80f67e65ab686c65f1df56b2bae8acc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a83756c2_893259ec",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-02-23T20:11:24Z",
+      "side": 1,
+      "message": "I agree the name doesn\u0027t fully convey what it does. But that seems largely the cause of the spec\u0027s choice of name. I mean, VecType doesn\u0027t really have the same problem.\n\nMaking the function name longer wouldn\u0027t help the understanding much, in my opinion. The input can be a non-genType! So to truly understand these functions you still have to take a peek at what they do. Any related name would work equally well/badly, so I chose the most concise ones.",
+      "parentUuid": "0816a200_9469c487",
       "range": {
         "startLine": 242,
         "startChar": 29,
