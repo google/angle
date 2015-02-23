@@ -68,6 +68,30 @@
       "revId": "35102278d4417957625bf1fa38209e3478ac1bb8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8c06ec1_03c3ce0f",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 6
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1114374
+      },
+      "writtenOn": "2015-02-23T14:42:35Z",
+      "side": 1,
+      "message": "I wanted to get the define into all angle projects so\nI set it in angle_common as a direct_dependent_settings but if a project then depend on angle_common without listing it it would not get the define set.\n\nThis was before the #ifdef was removed from the header files so it is not sure the define needs to be available all over angle anymore so this might not be needed.",
+      "parentUuid": "289e06d1_b028362b",
+      "range": {
+        "startLine": 295,
+        "startChar": 49,
+        "endLine": 295,
+        "endChar": 61
+      },
+      "revId": "35102278d4417957625bf1fa38209e3478ac1bb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
