@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c87baa5e_028b8a00",
+        "filename": "extensions/EGL_ANGLE_device_base.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-02-23T20:24:36Z",
+      "side": 1,
+      "message": "If the value being returned as an EGLAttrib is a pointer, wouldn\u0027t uintptr_t be a better fit?  I am worried about proper 64-bit systems and pointer truncation.",
+      "range": {
+        "startLine": 61,
+        "startChar": 16,
+        "endLine": 61,
+        "endChar": 24
+      },
+      "revId": "f2a9df048df7475400de70ff6a30ff29388d721e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48a17a0b_f4fab079",
+        "filename": "extensions/EGL_ANGLE_device_base.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-02-23T20:24:36Z",
+      "side": 1,
+      "message": "What type does this typedef to? void*?",
+      "range": {
+        "startLine": 123,
+        "startChar": 46,
+        "endLine": 123,
+        "endChar": 60
+      },
+      "revId": "f2a9df048df7475400de70ff6a30ff29388d721e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
