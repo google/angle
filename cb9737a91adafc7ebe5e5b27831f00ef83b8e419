@@ -1,0 +1,112 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "882c527c_e8959326",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T21:00:10Z",
+      "side": 1,
+      "message": "nit: missing space",
+      "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c832cad2_8d00a5e8",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T21:00:10Z",
+      "side": 1,
+      "message": "nit: missing space",
+      "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "882c527c_286deb94",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T21:00:10Z",
+      "side": 1,
+      "message": "I\u0027d second Olli\u0027s suggestion to using a better name, which I think can still be concise. Specific seems to be the opposite of Generic, so ToSpecificType or just SpecificType seems appropriate. What do you think? You could also add a short comment here explaining we\u0027re de-genericizing the type here.",
+      "range": {
+        "startLine": 167,
+        "startChar": 7,
+        "endLine": 167,
+        "endChar": 14
+      },
+      "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "882c527c_487a1f50",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T21:00:10Z",
+      "side": 1,
+      "message": "nit: missing space",
+      "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "882c527c_6877e366",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T21:00:10Z",
+      "side": 1,
+      "message": "nit: missing space",
+      "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2823668f_0504923d",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T21:00:10Z",
+      "side": 1,
+      "message": "nit: missing space (and a few more places, going to stop marking)",
+      "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
