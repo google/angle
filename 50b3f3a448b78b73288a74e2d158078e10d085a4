@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0505adfd_bcef41b7",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-02-23T22:14:33Z",
+      "side": 1,
+      "message": "It would have to work as a constexpr to avoid adding new overhead. I\u0027ll try that in a follow-on patch.",
+      "parentUuid": "288c46b9_ddd42bc5",
+      "range": {
+        "startLine": 37,
+        "startChar": 68,
+        "endLine": 37,
+        "endChar": 77
+      },
+      "revId": "50b3f3a448b78b73288a74e2d158078e10d085a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8885328c_e038626c",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-23T16:44:10Z",
       "side": 1,
       "message": "use a different name here, instead of overloading functions which already take a large number of parameters. Also, default parameter values are not allowed by ANGLE style guide, so in new code, we should not use them (though I can\u0027t ask you to correct legacy code)",
+      "range": {
+        "startLine": 373,
+        "startChar": 9,
+        "endLine": 373,
+        "endChar": 22
+      },
+      "revId": "50b3f3a448b78b73288a74e2d158078e10d085a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0505adfd_dc944da7",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-02-23T22:14:33Z",
+      "side": 1,
+      "message": "The Google C++ style guide says default parameters are allowed when simulating variable length argument lists. The alternative would have been lots of nullptrs in Initialize.cpp, or overloaded functions which take fewer parameters and set the defaults for the next one, both of which just make things less readable.",
+      "parentUuid": "8885328c_e038626c",
       "range": {
         "startLine": 373,
         "startChar": 9,
