@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08206281_c4e43e2f",
+        "filename": "tests/angle_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T21:13:00Z",
+      "side": 1,
+      "message": "might be worth checking for gl error in these programs. AFAIK CompileShader doesn\u0027t explicitly check that.",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 13
+      },
+      "revId": "dbcf3f17aec82d0dee3e82a5fc505972a78494f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
