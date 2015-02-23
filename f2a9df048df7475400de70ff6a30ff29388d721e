@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0847823f_ef375d08",
+        "filename": "extensions/EGL_ANGLE_device_base.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T20:54:49Z",
+      "side": 1,
+      "message": "I would agree if it were under our control, but this comes from the standard EGL header definition for EGL 1.5. It\u0027s redefined here in case we don\u0027t support EGL 1.5, as is the case for ANGLE.",
+      "parentUuid": "c87baa5e_028b8a00",
+      "range": {
+        "startLine": 61,
+        "startChar": 16,
+        "endLine": 61,
+        "endChar": 24
+      },
+      "revId": "f2a9df048df7475400de70ff6a30ff29388d721e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48a17a0b_f4fab079",
         "filename": "extensions/EGL_ANGLE_device_base.txt",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-23T20:24:36Z",
       "side": 1,
       "message": "What type does this typedef to? void*?",
+      "range": {
+        "startLine": 123,
+        "startChar": 46,
+        "endLine": 123,
+        "endChar": 60
+      },
+      "revId": "f2a9df048df7475400de70ff6a30ff29388d721e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c832cad2_8d4ee580",
+        "filename": "extensions/EGL_ANGLE_device_base.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T20:54:49Z",
+      "side": 1,
+      "message": "this is a typo. Should be EGLAttrib. I think it came from the original spec using EGLAttribEXT.",
+      "parentUuid": "48a17a0b_f4fab079",
       "range": {
         "startLine": 123,
         "startChar": 46,
