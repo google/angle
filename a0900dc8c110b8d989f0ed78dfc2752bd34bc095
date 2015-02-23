@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08722291_9409a42c",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T18:22:40Z",
+      "side": 1,
+      "message": "same comments as for last patch. slightly different name for the overloads would be good \u0026 we\u0027re technically not allowed to use default arguments.",
+      "range": {
+        "startLine": 377,
+        "startChar": 9,
+        "endLine": 377,
+        "endChar": 22
+      },
+      "revId": "a0900dc8c110b8d989f0ed78dfc2752bd34bc095",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08722291_d4131c5a",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T18:22:40Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 389,
+        "startChar": 9,
+        "endLine": 389,
+        "endChar": 22
+      },
+      "revId": "a0900dc8c110b8d989f0ed78dfc2752bd34bc095",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
