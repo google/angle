@@ -22,7 +22,7 @@ VertexArrayGL::~VertexArrayGL()
 
 void VertexArrayGL::setElementArrayBuffer(const gl::Buffer *buffer)
 {
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
 }
 
 void VertexArrayGL::setAttribute(size_t idx, const gl::VertexAttribute &attr)

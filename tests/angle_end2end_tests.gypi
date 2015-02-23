@@ -40,6 +40,7 @@
             '<(angle_path)/tests/angle_tests/ProgramBinaryTest.cpp',
             '<(angle_path)/tests/angle_tests/ReadPixelsTest.cpp',
             '<(angle_path)/tests/angle_tests/RendererTest.cpp',
+            '<(angle_path)/tests/angle_tests/SimpleOperationTest.cpp',
             '<(angle_path)/tests/angle_tests/SRGBTextureTest.cpp',
             '<(angle_path)/tests/angle_tests/SwizzleTest.cpp',
             '<(angle_path)/tests/angle_tests/TextureTest.cpp',

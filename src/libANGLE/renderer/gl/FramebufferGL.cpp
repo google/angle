@@ -22,32 +22,32 @@ FramebufferGL::~FramebufferGL()
 
 void FramebufferGL::setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment)
 {
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
 }
 
 void FramebufferGL::setDepthttachment(const gl::FramebufferAttachment *attachment)
 {
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
 }
 
 void FramebufferGL::setStencilAttachment(const gl::FramebufferAttachment *attachment)
 {
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
 }
 
 void FramebufferGL::setDepthStencilAttachment(const gl::FramebufferAttachment *attachment)
 {
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
 }
 
 void FramebufferGL::setDrawBuffers(size_t count, const GLenum *buffers)
 {
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
 }
 
 void FramebufferGL::setReadBuffer(GLenum buffer)
 {
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
 }
 
 gl::Error FramebufferGL::invalidate(size_t count, const GLenum *attachments)

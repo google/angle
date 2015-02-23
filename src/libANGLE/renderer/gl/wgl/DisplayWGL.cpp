@@ -441,13 +441,13 @@ egl::ConfigSet DisplayWGL::generateConfigs() const
 
 bool DisplayWGL::isDeviceLost() const
 {
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
     return false;
 }
 
 bool DisplayWGL::testDeviceLost()
 {
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
     return false;
 }
 
@@ -464,7 +464,7 @@ bool DisplayWGL::isValidNativeWindow(EGLNativeWindowType window) const
 
 std::string DisplayWGL::getVendorString() const
 {
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
     return "";
 }
 
@@ -475,7 +475,7 @@ const FunctionsGL *DisplayWGL::getFunctionsGL() const
 
 void DisplayWGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
 }
 
 void DisplayWGL::generateCaps(egl::Caps *outCaps) const

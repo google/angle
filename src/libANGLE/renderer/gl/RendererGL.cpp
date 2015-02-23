@@ -172,7 +172,7 @@ std::string RendererGL::getVendorString() const
 
 std::string RendererGL::getRendererDescription() const
 {
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
     return std::string();
 }
 
