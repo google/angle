@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c8df2a7e_82fe9a30",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1114374
+      },
+      "writtenOn": "2015-02-23T10:09:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48ab3a9e_1e4a2de8",
+      "range": {
+        "startLine": 86,
+        "startChar": 7,
+        "endLine": 86,
+        "endChar": 24
+      },
+      "revId": "a30c27bd892fe9a6d1b2c6deb28c4fc3624dd700",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8b14e0e_bb5ea7e0",
         "filename": "src/compiler/translator/CodeGen.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-20T17:35:05Z",
       "side": 1,
       "message": "return an error here if called with an HLSL enum and the define is disabled",
+      "range": {
+        "startLine": 26,
+        "startChar": 7,
+        "endLine": 26,
+        "endChar": 24
+      },
+      "revId": "a30c27bd892fe9a6d1b2c6deb28c4fc3624dd700",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8df2a7e_0223aa4e",
+        "filename": "src/compiler/translator/CodeGen.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1114374
+      },
+      "writtenOn": "2015-02-23T10:09:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8b14e0e_bb5ea7e0",
       "range": {
         "startLine": 26,
         "startChar": 7,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "0816a200_34c2702c",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1114374
+      },
+      "writtenOn": "2015-02-23T10:09:50Z",
+      "side": 1,
+      "message": "That would expose the class name TranslatorHLSL, a class that will not exist. I guess it can be forward declared and then never defined, but it could be the cause of strange error messages.",
+      "parentUuid": "e8b14e0e_dbdf33de",
+      "range": {
+        "startLine": 46,
+        "startChar": 7,
+        "endLine": 46,
+        "endChar": 24
+      },
+      "revId": "a30c27bd892fe9a6d1b2c6deb28c4fc3624dd700",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8b14e0e_3bd057d2",
         "filename": "src/compiler/translator/ShaderLang.cpp",
         "patchSetId": 3
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "0816a200_b4968033",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1114374
+      },
+      "writtenOn": "2015-02-23T10:09:50Z",
+      "side": 1,
+      "message": "I\u0027ve changed the code so that these functions still exist but the body of the function uses the TranslatorHLSL class so it had to be conditional so not quite as short as \"if (!translator) return false;\"",
+      "parentUuid": "e8b14e0e_3bd057d2",
+      "range": {
+        "startLine": 338,
+        "startChar": 4,
+        "endLine": 338,
+        "endChar": 10
+      },
+      "revId": "a30c27bd892fe9a6d1b2c6deb28c4fc3624dd700",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48ab3a9e_9e8bddb7",
         "filename": "src/compiler/translator/StructureHLSL.h",
         "patchSetId": 3
@@ -105,6 +201,30 @@
       "writtenOn": "2015-02-20T17:35:05Z",
       "side": 1,
       "message": "rather than putting enables in these headers, we should not include them using #ifdefs in places where they get included from GLSL code (if any)",
+      "range": {
+        "startLine": 13,
+        "startChar": 7,
+        "endLine": 13,
+        "endChar": 24
+      },
+      "revId": "a30c27bd892fe9a6d1b2c6deb28c4fc3624dd700",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6869de73_c7ff1e33",
+        "filename": "src/compiler/translator/StructureHLSL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1114374
+      },
+      "writtenOn": "2015-02-23T10:09:50Z",
+      "side": 1,
+      "message": "Done.\n\nIt makes the patch smaller, but it will make mistakes be linker errors (at best) rather than compiler errors so a\nbit easier to make mistakes.",
+      "parentUuid": "48ab3a9e_9e8bddb7",
       "range": {
         "startLine": 13,
         "startChar": 7,
