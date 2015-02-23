@@ -22,7 +22,12 @@ debug.txt
 *.rej
 .gclient_entries
 /third_party
-tests/third_party
+/tests/third_party/googlemock
+/tests/third_party/googletest
+/tests/third_party/libpng
+/tests/third_party/zlib
+/tests/third_party/deqp
+/tests/third_party/gles_conformance_tests
 out
 lib/*
 Makefile
