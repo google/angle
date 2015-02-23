@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e8df8e54_ebc7b1cd",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-02-23T09:19:43Z",
+      "side": 1,
+      "message": "Ok, will do.",
+      "parentUuid": "c8df2a7e_02d56abe",
+      "revId": "47b228e216f22a8306dfc346d1b38b38e526b51a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0816a200_b40040e8",
         "filename": "tests/compiler_tests/TypeTracking_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-23T08:49:44Z",
       "side": 1,
       "message": "I think we need to put the int and float versions of the functions to separate tests. That way the test makes sure that the right type is assigned to the function node. Also you should remove sign from the abs test and vice versa.",
+      "revId": "47b228e216f22a8306dfc346d1b38b38e526b51a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48025a8e_4950059c",
+        "filename": "tests/compiler_tests/TypeTracking_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-02-23T09:19:43Z",
+      "side": 1,
+      "message": "Ok, will write separate tests for float and int.\n\nRegarding \"float fval2 \u003d sign(abs(fval1))\",\nI thought I will check both IN and OUT values of abs that way for type and precision. Result of abs is passed to sign and then I check \"Sign (mediump float)\" to check its type. Do you think it is not required?",
+      "parentUuid": "0816a200_b40040e8",
       "revId": "47b228e216f22a8306dfc346d1b38b38e526b51a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
