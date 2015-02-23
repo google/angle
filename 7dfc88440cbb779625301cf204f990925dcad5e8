@@ -22,6 +22,30 @@
       "revId": "7dfc88440cbb779625301cf204f990925dcad5e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68639ec4_570e2c5d",
+        "filename": "BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1114374
+      },
+      "writtenOn": "2015-02-23T17:53:18Z",
+      "side": 1,
+      "message": "Good catch! And below angle_enable should be angle_enable_hlsl. Still worked fine in Linux though.",
+      "parentUuid": "a880367a_24a89c9d",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 17
+      },
+      "revId": "7dfc88440cbb779625301cf204f990925dcad5e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
