@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "08c4e2d0_0450f69a",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-23T15:58:20Z",
+      "side": 1,
+      "message": "Oh, turns out this function actually isn\u0027t needed at all - it\u0027s defined in IntermTyped, which is not inherited here. \"override\" turned out useful. :)",
+      "parentUuid": "688abe9e_bf6af7cf",
+      "range": {
+        "startLine": 512,
+        "startChar": 4,
+        "endLine": 512,
+        "endChar": 11
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8b14e0e_7b6a5f50",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 3
