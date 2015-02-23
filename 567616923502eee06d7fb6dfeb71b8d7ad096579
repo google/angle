@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "8885328c_c0043ec4",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T16:37:39Z",
+      "side": 1,
+      "message": "this is fine, but currently we use 0 to represent non-array sizes, 1+ to represent arraySizes.",
+      "range": {
+        "startLine": 166,
+        "startChar": 29,
+        "endLine": 166,
+        "endChar": 38
+      },
+      "revId": "567616923502eee06d7fb6dfeb71b8d7ad096579",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8b14e0e_1b159bb9",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.h",
         "patchSetId": 5
