@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e81cee53_e3377208",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-02-23T21:14:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "882c527c_e8959326",
+      "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c832cad2_8d00a5e8",
         "filename": "src/compiler/translator/SymbolTable.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-23T21:00:10Z",
       "side": 1,
       "message": "nit: missing space",
+      "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e81cee53_232a6a9e",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-02-23T21:14:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c832cad2_8d00a5e8",
       "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "08206281_a43d82ec",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-02-23T21:14:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "882c527c_286deb94",
+      "range": {
+        "startLine": 167,
+        "startChar": 7,
+        "endLine": 167,
+        "endChar": 14
+      },
+      "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "882c527c_487a1f50",
         "filename": "src/compiler/translator/SymbolTable.cpp",
         "patchSetId": 3
@@ -70,6 +130,24 @@
       "writtenOn": "2015-02-23T21:00:10Z",
       "side": 1,
       "message": "nit: missing space",
+      "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08206281_e4377a08",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-02-23T21:14:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "882c527c_487a1f50",
       "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -93,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "2823668f_a5a1feb7",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-02-23T21:14:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "882c527c_6877e366",
+      "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2823668f_0504923d",
         "filename": "src/compiler/translator/SymbolTable.cpp",
         "patchSetId": 3
@@ -104,6 +200,24 @@
       "writtenOn": "2015-02-23T21:00:10Z",
       "side": 1,
       "message": "nit: missing space (and a few more places, going to stop marking)",
+      "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e81cee53_432766d5",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-02-23T21:14:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2823668f_0504923d",
       "revId": "cb9737a91adafc7ebe5e5b27831f00ef83b8e419",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
