@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08722291_b42dc03a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2629,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T18:36:21Z",
+      "side": 1,
+      "message": "You could potentially abstract these three calls in to a helper method in ValidateSwitch (EG a static method)",
+      "range": {
+        "startLine": 2627,
+        "startChar": 8,
+        "endLine": 2629,
+        "endChar": 36
+      },
+      "revId": "b74370ee150b43ba3331707c7c1c246e34e0a822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a880367a_04863880",
+        "filename": "src/compiler/translator/ValidateSwitch.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T18:36:21Z",
+      "side": 1,
+      "message": "nit: pointer alignment",
+      "range": {
+        "startLine": 64,
+        "startChar": 14,
+        "endLine": 64,
+        "endChar": 15
+      },
+      "revId": "b74370ee150b43ba3331707c7c1c246e34e0a822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a86916a4_fcd00558",
+        "filename": "src/compiler/translator/ValidateSwitch.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T18:36:21Z",
+      "side": 1,
+      "message": "nit: overrides here, and fill in parameter names (at least for used parameters)",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 19,
+        "endChar": 11
+      },
+      "revId": "b74370ee150b43ba3331707c7c1c246e34e0a822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a86916a4_1ca8599d",
+        "filename": "src/compiler/translator/ValidateSwitch.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T18:36:21Z",
+      "side": 1,
+      "message": "you can use std::set for these.",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 56
+      },
+      "revId": "b74370ee150b43ba3331707c7c1c246e34e0a822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
