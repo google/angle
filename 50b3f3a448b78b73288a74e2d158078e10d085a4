@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "288c46b9_ddd42bc5",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T16:44:10Z",
+      "side": 1,
+      "message": "you can probably make this code work with \"GetOperatorString\" in Operator.cpp. This would allow you to remove the string parameter.",
+      "range": {
+        "startLine": 37,
+        "startChar": 68,
+        "endLine": 37,
+        "endChar": 77
+      },
+      "revId": "50b3f3a448b78b73288a74e2d158078e10d085a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8885328c_e038626c",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T16:44:10Z",
+      "side": 1,
+      "message": "use a different name here, instead of overloading functions which already take a large number of parameters. Also, default parameter values are not allowed by ANGLE style guide, so in new code, we should not use them (though I can\u0027t ask you to correct legacy code)",
+      "range": {
+        "startLine": 373,
+        "startChar": 9,
+        "endLine": 373,
+        "endChar": 22
+      },
+      "revId": "50b3f3a448b78b73288a74e2d158078e10d085a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
