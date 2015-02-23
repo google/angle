@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8885328c_40fcaec2",
+        "filename": "src/angle.gyp",
+        "patchSetId": 6
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T14:21:09Z",
+      "side": 1,
+      "message": "we should use the same pattern here -- angle_enable_d3d9 \u003d\u003d 1 or d3d11 \u003d\u003d 1 should set angle_enable_hlsl to 1, and we should add the define in the translator targets. also please add a comment here.",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 21
+      },
+      "revId": "35102278d4417957625bf1fa38209e3478ac1bb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a880367a_21a88e9d",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 6
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T14:21:09Z",
+      "side": 1,
+      "message": "use angle_enable_hlsl here, and add the define",
+      "range": {
+        "startLine": 250,
+        "startChar": 18,
+        "endLine": 250,
+        "endChar": 63
+      },
+      "revId": "35102278d4417957625bf1fa38209e3478ac1bb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "289e06d1_b028362b",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 6
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T14:21:09Z",
+      "side": 1,
+      "message": "this change seems unrelated. why did you add it here?",
+      "range": {
+        "startLine": 295,
+        "startChar": 49,
+        "endLine": 295,
+        "endChar": 61
+      },
+      "revId": "35102278d4417957625bf1fa38209e3478ac1bb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
