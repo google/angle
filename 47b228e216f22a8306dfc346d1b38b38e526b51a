@@ -69,6 +69,24 @@
       "revId": "47b228e216f22a8306dfc346d1b38b38e526b51a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0816a200_b4ade083",
+        "filename": "tests/compiler_tests/TypeTracking_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-23T09:34:39Z",
+      "side": 1,
+      "message": "Remember that the type of a node corresponds to its return value, not any of its parameters. So in this test you\u0027re effectively checking the type of the return value of abs(), and the return value of sign(). Checking the return value of sign() is pretty much irrelevant for this test. Checking the type of the parameter of abs() might be somewhat useful in case this test shows a failure, but that would probably be covered better by a separate test.",
+      "parentUuid": "48025a8e_4950059c",
+      "revId": "47b228e216f22a8306dfc346d1b38b38e526b51a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
