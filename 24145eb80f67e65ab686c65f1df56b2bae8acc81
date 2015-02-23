@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8df2a7e_22950edc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-23T10:46:19Z",
+      "side": 1,
+      "message": "Maybe add a mention to the commit message that functions like mod(float1, float1) don\u0027t end up getting added twice, since the two insertion attempts have the same key for the map.",
+      "revId": "24145eb80f67e65ab686c65f1df56b2bae8acc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0816a200_74a5088c",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-23T10:46:19Z",
+      "side": 1,
+      "message": "Nit: indent the case statements.",
+      "revId": "24145eb80f67e65ab686c65f1df56b2bae8acc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6869de73_a7278a57",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-23T10:46:19Z",
+      "side": 1,
+      "message": "Same as above.",
+      "revId": "24145eb80f67e65ab686c65f1df56b2bae8acc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0816a200_9469c487",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-23T10:46:19Z",
+      "side": 1,
+      "message": "How about TypeFromGenType(), GenTypeToType() or something similar as the function name here? Now the function name sounds like it would return a genType, though it does the exact opposite of that.",
+      "range": {
+        "startLine": 242,
+        "startChar": 29,
+        "endLine": 242,
+        "endChar": 36
+      },
+      "revId": "24145eb80f67e65ab686c65f1df56b2bae8acc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8df2a7e_42981214",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-23T10:46:19Z",
+      "side": 1,
+      "message": "Same goes for VecType as GenType.",
+      "range": {
+        "startLine": 250,
+        "startChar": 29,
+        "endLine": 250,
+        "endChar": 36
+      },
+      "revId": "24145eb80f67e65ab686c65f1df56b2bae8acc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
