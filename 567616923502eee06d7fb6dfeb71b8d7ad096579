@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "c832cad2_8aa32b47",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T20:26:41Z",
+      "side": 1,
+      "message": "For attributes, they are always 1 it seems, so I think it\u0027s fine as-is, with a comment. I\u0027m also fine with hard-coding to 1. For our other code: it\u0027s probably best to split at some point to isArray and arraySize or elementCount/some better name. Mo wanted to do this at one point, we just have to make sure we don\u0027t cause regressions or problematic ShaderVars.h conflicts.",
+      "parentUuid": "a83756c2_e9ff5567",
+      "range": {
+        "startLine": 166,
+        "startChar": 29,
+        "endLine": 166,
+        "endChar": 38
+      },
+      "revId": "567616923502eee06d7fb6dfeb71b8d7ad096579",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8b14e0e_1b159bb9",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.h",
         "patchSetId": 5
