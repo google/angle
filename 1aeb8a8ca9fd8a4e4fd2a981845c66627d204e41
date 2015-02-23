@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "88a1b2bc_e305acf6",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T15:27:11Z",
+      "side": 1,
+      "message": "nit: on newline and one brace per line",
+      "range": {
+        "startLine": 505,
+        "startChar": 40,
+        "endLine": 505,
+        "endChar": 42
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48ab3a9e_9e087da4",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T15:27:11Z",
+      "side": 1,
+      "message": "nit: include param name",
+      "range": {
+        "startLine": 507,
+        "startChar": 43,
+        "endLine": 507,
+        "endChar": 44
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88a1b2bc_0301b0ea",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T15:27:11Z",
+      "side": 1,
+      "message": "nit: override instead of virtual for this new code",
+      "range": {
+        "startLine": 512,
+        "startChar": 4,
+        "endLine": 512,
+        "endChar": 11
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8b14e0e_7b6a5f50",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T15:27:11Z",
+      "side": 1,
+      "message": "nits also apply here",
+      "range": {
+        "startLine": 524,
+        "startChar": 6,
+        "endLine": 524,
+        "endChar": 17
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8b14e0e_fba30f46",
+        "filename": "src/compiler/translator/IntermTraverse.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T15:27:11Z",
+      "side": 1,
+      "message": "nit: newline",
+      "range": {
+        "startLine": 211,
+        "startChar": 32,
+        "endLine": 211,
+        "endChar": 33
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "289e06d1_b054b645",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 1528,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T15:27:11Z",
+      "side": 1,
+      "message": "update this comment to match the spec:\n\n\"// Grammar Note: labeled statements for SWITCH only; \u0027goto\u0027 is not supported\"",
+      "range": {
+        "startLine": 1528,
+        "startChar": 0,
+        "endLine": 1528,
+        "endChar": 65
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8885328c_20f5ea88",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 1609,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-23T15:27:11Z",
+      "side": 1,
+      "message": "your definition here is different from the spec grammar. I think the practical difference is your code allows empty-bodied switch statements:\n\n  switch (5) {}\n\nwhile the spec\u0027s does not? but I\u0027m not sure. will have to check to see if there are any tests in dEQP for that.",
+      "range": {
+        "startLine": 1609,
+        "startChar": 47,
+        "endLine": 1609,
+        "endChar": 65
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
