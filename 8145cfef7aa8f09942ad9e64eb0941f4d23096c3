@@ -22,6 +22,30 @@
       "revId": "8145cfef7aa8f09942ad9e64eb0941f4d23096c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8885328c_a0ad7a83",
+        "filename": "src/libANGLE/renderer/gl/ShaderGL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-23T15:28:42Z",
+      "side": 1,
+      "message": "This helps decouple the Renderer and objects.  Between the functions and the state manager, none of the GL objects should need a Renderer pointer.",
+      "parentUuid": "48ab3a9e_e10480c3",
+      "range": {
+        "startLine": 22,
+        "startChar": 32,
+        "endLine": 22,
+        "endChar": 43
+      },
+      "revId": "8145cfef7aa8f09942ad9e64eb0941f4d23096c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
