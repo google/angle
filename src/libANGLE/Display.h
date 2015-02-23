@@ -69,7 +69,8 @@ class Display final
     bool isValidSurface(egl::Surface *surface) const;
     bool hasExistingWindowSurface(EGLNativeWindowType window) const;
     bool isValidNativeWindow(EGLNativeWindowType window) const;
-    bool isValidNativeDisplay(EGLNativeDisplayType display) const;
+
+    static bool isValidNativeDisplay(EGLNativeDisplayType display);
 
     bool isDeviceLost() const;
     bool testDeviceLost();
@@ -89,9 +90,9 @@ class Display final
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);
 
-    Display(rx::DisplayImpl *impl, EGLNativeDisplayType displayId);
+    Display(EGLNativeDisplayType displayId);
 
-    void setAttributes(const AttributeMap &attribMap);
+    void setAttributes(rx::DisplayImpl *impl, const AttributeMap &attribMap);
 
     Error restoreLostDevice();
 
