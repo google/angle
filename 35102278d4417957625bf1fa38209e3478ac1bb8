@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "885e12fc_f8e9f103",
+        "filename": "src/angle.gyp",
+        "patchSetId": 6
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1114374
+      },
+      "writtenOn": "2015-02-23T17:38:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8885328c_40fcaec2",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 21
+      },
+      "revId": "35102278d4417957625bf1fa38209e3478ac1bb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a880367a_21a88e9d",
         "filename": "src/compiler.gypi",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-23T14:21:09Z",
       "side": 1,
       "message": "use angle_enable_hlsl here, and add the define",
+      "range": {
+        "startLine": 250,
+        "startChar": 18,
+        "endLine": 250,
+        "endChar": 63
+      },
+      "revId": "35102278d4417957625bf1fa38209e3478ac1bb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e895cebd_dbbd13e3",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 6
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1114374
+      },
+      "writtenOn": "2015-02-23T17:38:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a880367a_21a88e9d",
       "range": {
         "startLine": 250,
         "startChar": 18,
@@ -107,6 +155,30 @@
       "side": 1,
       "message": "Aha, yes, you can remove this new dep then.",
       "parentUuid": "e8c06ec1_03c3ce0f",
+      "range": {
+        "startLine": 295,
+        "startChar": 49,
+        "endLine": 295,
+        "endChar": 61
+      },
+      "revId": "35102278d4417957625bf1fa38209e3478ac1bb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68639ec4_57e0ec1c",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 6
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1114374
+      },
+      "writtenOn": "2015-02-23T17:38:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a880367a_41ecb290",
       "range": {
         "startLine": 295,
         "startChar": 49,
