@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "c52635f8_0add1be6",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-24T17:44:42Z",
+      "side": 1,
+      "message": "OK sounds good.",
+      "parentUuid": "8520bddf_a82dfbba",
+      "range": {
+        "startLine": 37,
+        "startChar": 68,
+        "endLine": 37,
+        "endChar": 77
+      },
+      "revId": "50b3f3a448b78b73288a74e2d158078e10d085a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8885328c_e038626c",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 2
@@ -132,6 +156,30 @@
       "side": 1,
       "message": "I agree that using a different function name would be nice here.",
       "parentUuid": "0505adfd_dc944da7",
+      "range": {
+        "startLine": 373,
+        "startChar": 9,
+        "endLine": 373,
+        "endChar": 22
+      },
+      "revId": "50b3f3a448b78b73288a74e2d158078e10d085a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85d51d02_a0789aa7",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-24T17:44:42Z",
+      "side": 1,
+      "message": "We could update the ANGLE style guide:\n\nhttps://code.google.com/p/angleproject/wiki/CodingStandard\n\nI\u0027ll bring up amending it at the meeting, that\u0027s fine with me. I still think we should rename the method, even just to \u0027insertBuiltInOp\u0027 or something slightly different.",
+      "parentUuid": "652589ee_e72722d5",
       "range": {
         "startLine": 373,
         "startChar": 9,
