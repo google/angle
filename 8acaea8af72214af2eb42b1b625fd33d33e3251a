@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "054dadae_1cb275e1",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2619,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-24T13:15:04Z",
+      "side": 1,
+      "message": "I agree that the location in the error should be the location of the init statement, but I think fixing that is better to do by querying the location from init rather than passing extra location parameters. I\u0027ll fix it this way.",
+      "parentUuid": "8885328c_e0adc230",
+      "range": {
+        "startLine": 2619,
+        "startChar": 14,
+        "endLine": 2619,
+        "endChar": 17
+      },
+      "revId": "8acaea8af72214af2eb42b1b625fd33d33e3251a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8885328c_40958eda",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-23T17:24:03Z",
       "side": 1,
       "message": "ditto here, you could theoretically have\n\n case /* why would you add a comment here?\n       *\n       *\n       *\n       *\n       */\n    whatever:",
+      "range": {
+        "startLine": 2653,
+        "startChar": 14,
+        "endLine": 2653,
+        "endChar": 17
+      },
+      "revId": "8acaea8af72214af2eb42b1b625fd33d33e3251a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05668d36_f4823831",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2653,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-24T13:15:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8885328c_40958eda",
       "range": {
         "startLine": 2653,
         "startChar": 14,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e54979a5_fb598f45",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2657,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-24T13:15:04Z",
+      "side": 1,
+      "message": "Ok, I updated the ANGLE style guide to also document this, it conflicted with the Google style guide.",
+      "parentUuid": "a880367a_0122aa18",
+      "range": {
+        "startLine": 2657,
+        "startChar": 26,
+        "endLine": 2657,
+        "endChar": 30
+      },
+      "revId": "8acaea8af72214af2eb42b1b625fd33d33e3251a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "288c46b9_5d173beb",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 5
@@ -82,6 +154,30 @@
       "writtenOn": "2015-02-23T17:24:03Z",
       "side": 1,
       "message": "is it an error to put this after RIGHT_PAREN? I\u0027m not a bison expert, but seems plausible that it could be.",
+      "range": {
+        "startLine": 1609,
+        "startChar": 35,
+        "endLine": 1609,
+        "endChar": 70
+      },
+      "revId": "8acaea8af72214af2eb42b1b625fd33d33e3251a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85f19d52_c017bee7",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 5
+      },
+      "lineNbr": 1609,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-24T13:15:04Z",
+      "side": 1,
+      "message": "I don\u0027t think that it makes any difference in terms of functionality. We could move it if you think it makes things clearer.",
+      "parentUuid": "288c46b9_5d173beb",
       "range": {
         "startLine": 1609,
         "startChar": 35,
