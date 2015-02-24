@@ -22,6 +22,30 @@
       "revId": "8af94f491c0622b97123215c364239eb15234cae",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25c5515d_15e8b403",
+        "filename": "util/testfixturetypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-24T17:48:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5cb9564_626f76e4",
+      "range": {
+        "startLine": 50,
+        "startChar": 51,
+        "endLine": 50,
+        "endChar": 89
+      },
+      "revId": "8af94f491c0622b97123215c364239eb15234cae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
