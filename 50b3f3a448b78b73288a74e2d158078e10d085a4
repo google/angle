@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "8520bddf_a82dfbba",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-24T16:39:57Z",
+      "side": 1,
+      "message": "This will also require splitting EOpLessThanVec out of EOpLessThan etc. Doing this as a follow-up makes sense.",
+      "parentUuid": "0505adfd_bcef41b7",
+      "range": {
+        "startLine": 37,
+        "startChar": 68,
+        "endLine": 37,
+        "endChar": 77
+      },
+      "revId": "50b3f3a448b78b73288a74e2d158078e10d085a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8885328c_e038626c",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 2
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "The Google C++ style guide says default parameters are allowed when simulating variable length argument lists. The alternative would have been lots of nullptrs in Initialize.cpp, or overloaded functions which take fewer parameters and set the defaults for the next one, both of which just make things less readable.",
       "parentUuid": "8885328c_e038626c",
+      "range": {
+        "startLine": 373,
+        "startChar": 9,
+        "endLine": 373,
+        "endChar": 22
+      },
+      "revId": "50b3f3a448b78b73288a74e2d158078e10d085a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "652589ee_e72722d5",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-24T16:39:57Z",
+      "side": 1,
+      "message": "I agree that using a different function name would be nice here.",
+      "parentUuid": "0505adfd_dc944da7",
       "range": {
         "startLine": 373,
         "startChar": 9,
