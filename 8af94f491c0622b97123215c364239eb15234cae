@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5cb9564_626f76e4",
+        "filename": "util/testfixturetypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-24T16:48:41Z",
+      "side": 1,
+      "message": "nit: alignment for these two (above could be moved left or the EGL_DONT_CARE could be moved right)",
+      "range": {
+        "startLine": 50,
+        "startChar": 51,
+        "endLine": 50,
+        "endChar": 89
+      },
+      "revId": "8af94f491c0622b97123215c364239eb15234cae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
