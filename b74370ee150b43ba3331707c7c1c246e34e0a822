@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a5022140_912adc9e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2629,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-24T13:26:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08722291_b42dc03a",
+      "range": {
+        "startLine": 2627,
+        "startChar": 8,
+        "endLine": 2629,
+        "endChar": 36
+      },
+      "revId": "b74370ee150b43ba3331707c7c1c246e34e0a822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a880367a_04863880",
         "filename": "src/compiler/translator/ValidateSwitch.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-23T18:36:21Z",
       "side": 1,
       "message": "nit: pointer alignment",
+      "range": {
+        "startLine": 64,
+        "startChar": 14,
+        "endLine": 64,
+        "endChar": 15
+      },
+      "revId": "b74370ee150b43ba3331707c7c1c246e34e0a822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8507dd51_1018a4a4",
+        "filename": "src/compiler/translator/ValidateSwitch.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-24T13:26:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a880367a_04863880",
       "range": {
         "startLine": 64,
         "startChar": 14,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "a5022140_f127e8d4",
+        "filename": "src/compiler/translator/ValidateSwitch.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-24T13:26:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a86916a4_fcd00558",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 19,
+        "endChar": 11
+      },
+      "revId": "b74370ee150b43ba3331707c7c1c246e34e0a822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a86916a4_1ca8599d",
         "filename": "src/compiler/translator/ValidateSwitch.h",
         "patchSetId": 5
@@ -82,6 +154,30 @@
       "writtenOn": "2015-02-23T18:36:21Z",
       "side": 1,
       "message": "you can use std::set for these.",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 56
+      },
+      "revId": "b74370ee150b43ba3331707c7c1c246e34e0a822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05668d36_b45f202b",
+        "filename": "src/compiler/translator/ValidateSwitch.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-24T13:26:59Z",
+      "side": 1,
+      "message": "True, I\u0027ll change this.",
+      "parentUuid": "a86916a4_1ca8599d",
       "range": {
         "startLine": 41,
         "startChar": 0,
