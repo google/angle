@@ -8,7 +8,11 @@
 
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 
+#include "libANGLE/Data.h"
+#include "libANGLE/VertexArray.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
+#include "libANGLE/renderer/gl/ProgramGL.h"
+#include "libANGLE/renderer/gl/VertexArrayGL.h"
 
 namespace rx
 {
@@ -47,6 +51,17 @@ void StateManagerGL::bindBuffer(GLenum type, GLuint buffer)
         mBuffers[type] = buffer;
         mFunctions->bindBuffer(type, buffer);
     }
+}
+
+void StateManagerGL::setDrawState(const gl::State &state)
+{
+    const gl::VertexArray *vao = state.getVertexArray();
+    const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
+    bindVertexArray(vaoGL->getVertexArrayID());
+
+    const gl::Program *program = state.getProgram();
+    const ProgramGL *programGL = GetImplAs<ProgramGL>(program);
+    useProgram(programGL->getProgramID());
 }
 
 }

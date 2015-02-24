@@ -14,6 +14,11 @@
 
 #include <map>
 
+namespace gl
+{
+class State;
+}
+
 namespace rx
 {
 
@@ -27,6 +32,8 @@ class StateManagerGL
     void useProgram(GLuint program);
     void bindVertexArray(GLuint vao);
     void bindBuffer(GLenum type, GLuint buffer);
+
+    void setDrawState(const gl::State &state);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(StateManagerGL);
