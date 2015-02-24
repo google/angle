@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "45c88575_d653a4d2",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-24T18:03:19Z",
+      "side": 1,
+      "message": "Indeed. It would be best if we could make a clang-format style file for ANGLE, and I was working on it at one point, though I ran out of time.\nI don\u0027t know actually what our codified rule is here, but generally I follow \"either on one line entirely, of it it uses multiple lines, follow the general style rule of braces on newlines\". it\u0027s fine if you want to use {} as we use that in many other places, it\u0027s just not Chromium-approved.",
+      "parentUuid": "08c4e2d0_845a26c6",
+      "range": {
+        "startLine": 505,
+        "startChar": 40,
+        "endLine": 505,
+        "endChar": 42
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48ab3a9e_9e087da4",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 3
@@ -155,6 +179,30 @@
       "side": 1,
       "message": "Oh, turns out this function actually isn\u0027t needed at all - it\u0027s defined in IntermTyped, which is not inherited here. \"override\" turned out useful. :)",
       "parentUuid": "688abe9e_bf6af7cf",
+      "range": {
+        "startLine": 512,
+        "startChar": 4,
+        "endLine": 512,
+        "endChar": 11
+      },
+      "revId": "1aeb8a8ca9fd8a4e4fd2a981845c66627d204e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45c88575_36b698b6",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-24T18:03:19Z",
+      "side": 1,
+      "message": "Great! I do like it when that turns up something. :)",
+      "parentUuid": "08c4e2d0_0450f69a",
       "range": {
         "startLine": 512,
         "startChar": 4,
