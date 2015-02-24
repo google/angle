@@ -42,69 +42,6 @@
     'targets':
     [
         {
-            'target_name': 'angle_internal_gtest',
-            'type': 'static_library',
-            'includes': [ '../build/common_defines.gypi', ],
-            'include_dirs':
-            [
-                'third_party/googletest',
-                'third_party/googletest/include',
-            ],
-            'sources':
-            [
-                'third_party/googletest/src/gtest-all.cc',
-            ],
-            'defines':
-            [
-                '_VARIADIC_MAX=10',
-            ],
-            'all_dependent_settings':
-            {
-                'defines':
-                [
-                    '_VARIADIC_MAX=10',
-                ],
-                'include_dirs':
-                [
-                    'third_party/googletest',
-                    'third_party/googletest/include',
-                ],
-            },
-        },
-
-        {
-            'target_name': 'angle_internal_gmock',
-            'type': 'static_library',
-            'includes': [ '../build/common_defines.gypi', ],
-            'include_dirs':
-            [
-                'third_party/googlemock',
-                'third_party/googlemock/include',
-                'third_party/googletest/include',
-            ],
-            'sources':
-            [
-                'third_party/googlemock/src/gmock-all.cc',
-            ],
-            'defines':
-            [
-                '_VARIADIC_MAX=10',
-            ],
-            'all_dependent_settings':
-            {
-                'defines':
-                [
-                    '_VARIADIC_MAX=10',
-                ],
-                'include_dirs':
-                [
-                    'third_party/googlemock',
-                    'third_party/googlemock/include',
-                    'third_party/googletest/include',
-                ],
-            },
-        },
-        {
             'target_name': 'angle_test_support',
             'type': 'none',
             'conditions':
@@ -138,11 +75,77 @@
     [
         ['angle_standalone==1',
         {
-            # These same target names exist on the Chromium side,
-            # which is forbidden, so we make them conditional on
-            # ANGLE's standalone build.
             'targets':
             [
+                # Hide these targets from Chromium, because it can't
+                # find our standalone copy of the gtest/gmock sources.
+                {
+                    'target_name': 'angle_internal_gtest',
+                    'type': 'static_library',
+                    'includes': [ '../build/common_defines.gypi', ],
+                    'include_dirs':
+                    [
+                        'third_party/googletest',
+                        'third_party/googletest/include',
+                    ],
+                    'sources':
+                    [
+                        'third_party/googletest/src/gtest-all.cc',
+                    ],
+                    'defines':
+                    [
+                        '_VARIADIC_MAX=10',
+                    ],
+                    'all_dependent_settings':
+                    {
+                        'defines':
+                        [
+                            '_VARIADIC_MAX=10',
+                        ],
+                        'include_dirs':
+                        [
+                            'third_party/googletest',
+                            'third_party/googletest/include',
+                        ],
+                    },
+                },
+
+                {
+                    'target_name': 'angle_internal_gmock',
+                    'type': 'static_library',
+                    'includes': [ '../build/common_defines.gypi', ],
+                    'include_dirs':
+                    [
+                        'third_party/googlemock',
+                        'third_party/googlemock/include',
+                        'third_party/googletest/include',
+                    ],
+                    'sources':
+                    [
+                        'third_party/googlemock/src/gmock-all.cc',
+                    ],
+                    'defines':
+                    [
+                        '_VARIADIC_MAX=10',
+                    ],
+                    'all_dependent_settings':
+                    {
+                        'defines':
+                        [
+                            '_VARIADIC_MAX=10',
+                        ],
+                        'include_dirs':
+                        [
+                            'third_party/googlemock',
+                            'third_party/googlemock/include',
+                            'third_party/googletest/include',
+                        ],
+                    },
+                },
+
+                # These same target names exist on the Chromium side,
+                # which is forbidden, so we make them conditional on
+                # ANGLE's standalone build.
                 {
                     'target_name': 'angle_unittests',
                     'type': 'executable',
