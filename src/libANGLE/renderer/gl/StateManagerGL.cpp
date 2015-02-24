@@ -15,7 +15,8 @@ namespace rx
 
 StateManagerGL::StateManagerGL(const FunctionsGL *functions)
     : mFunctions(functions),
-      mProgram(0)
+      mProgram(0),
+      mBuffers()
 {
     ASSERT(mFunctions);
 }
@@ -26,6 +27,15 @@ void StateManagerGL::useProgram(GLuint program)
     {
         mProgram = program;
         mFunctions->useProgram(mProgram);
+    }
+}
+
+void StateManagerGL::bindBuffer(GLenum type, GLuint buffer)
+{
+    if (mBuffers[type] == 0)
+    {
+        mBuffers[type] = buffer;
+        mFunctions->bindBuffer(type, buffer);
     }
 }
 

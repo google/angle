@@ -12,6 +12,8 @@
 #include "common/debug.h"
 #include "libANGLE/renderer/gl/functionsgl_typedefs.h"
 
+#include <map>
+
 namespace rx
 {
 
@@ -23,6 +25,7 @@ class StateManagerGL
     StateManagerGL(const FunctionsGL *functions);
 
     void useProgram(GLuint program);
+    void bindBuffer(GLenum type, GLuint buffer);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(StateManagerGL);
@@ -30,6 +33,7 @@ class StateManagerGL
     const FunctionsGL *mFunctions;
 
     GLuint mProgram;
+    std::map<GLenum, GLuint> mBuffers;
 };
 
 }

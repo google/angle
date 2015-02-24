@@ -107,7 +107,7 @@ RenderbufferImpl *RendererGL::createRenderbuffer()
 
 BufferImpl *RendererGL::createBuffer()
 {
-    return new BufferGL();
+    return new BufferGL(mFunctions, mStateManager);
 }
 
 VertexArrayImpl *RendererGL::createVertexArray()

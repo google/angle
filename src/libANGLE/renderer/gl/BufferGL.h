@@ -14,10 +14,13 @@
 namespace rx
 {
 
+class FunctionsGL;
+class StateManagerGL;
+
 class BufferGL : public BufferImpl
 {
   public:
-    BufferGL();
+    BufferGL(const FunctionsGL *functions, StateManagerGL *stateManager);
     ~BufferGL() override;
 
     gl::Error setData(const void* data, size_t size, GLenum usage) override;
@@ -31,8 +34,15 @@ class BufferGL : public BufferImpl
     // for validation, for certain indexed draw calls.
     gl::Error getData(const uint8_t **outData) override;
 
+    GLuint getBufferID() const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(BufferGL);
+
+    const FunctionsGL *mFunctions;
+    StateManagerGL *mStateManager;
+
+    GLuint mBufferID;
 };
 
 }

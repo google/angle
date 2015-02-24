@@ -142,3 +142,49 @@ TYPED_TEST(SimpleOperationTest, LinkProgramWithAttributes)
 
     EXPECT_GL_NO_ERROR();
 }
+
+TYPED_TEST(SimpleOperationTest, BufferDataWithData)
+{
+    GLuint buffer;
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+
+    std::vector<uint8_t> data(1024);
+    glBufferData(GL_ARRAY_BUFFER, data.size(), &data[0], GL_STATIC_DRAW);
+
+    glDeleteBuffers(1, &buffer);
+
+    EXPECT_GL_NO_ERROR();
+}
+
+TYPED_TEST(SimpleOperationTest, BufferDataWithNoData)
+{
+    GLuint buffer;
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, 1024, nullptr, GL_STATIC_DRAW);
+    glDeleteBuffers(1, &buffer);
+
+    EXPECT_GL_NO_ERROR();
+}
+
+TYPED_TEST(SimpleOperationTest, BufferSubData)
+{
+    GLuint buffer;
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+
+    const size_t bufferSize = 1024;
+    glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_STATIC_DRAW);
+
+    const size_t subDataCount = 16;
+    std::vector<uint8_t> data(bufferSize / subDataCount);
+    for (size_t i = 0; i < subDataCount; i++)
+    {
+        glBufferSubData(GL_ARRAY_BUFFER, data.size() * i, data.size(), &data[0]);
+    }
+
+    glDeleteBuffers(1, &buffer);
+
+    EXPECT_GL_NO_ERROR();
+}
