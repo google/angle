@@ -16,6 +16,7 @@ namespace rx
 StateManagerGL::StateManagerGL(const FunctionsGL *functions)
     : mFunctions(functions),
       mProgram(0),
+      mVAO(0),
       mBuffers()
 {
     ASSERT(mFunctions);
@@ -27,6 +28,15 @@ void StateManagerGL::useProgram(GLuint program)
     {
         mProgram = program;
         mFunctions->useProgram(mProgram);
+    }
+}
+
+void StateManagerGL::bindVertexArray(GLuint vao)
+{
+    if (mVAO != vao)
+    {
+        mVAO = vao;
+        mFunctions->bindVertexArray(vao);
     }
 }
 

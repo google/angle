@@ -49,6 +49,9 @@ class VertexArray
     GLuint getElementArrayBufferId() const { return mElementArrayBuffer.id(); }
     size_t getMaxAttribs() const { return mVertexAttributes.size(); }
 
+    rx::VertexArrayImpl *getImplementation() { return mVertexArray; }
+    const rx::VertexArrayImpl *getImplementation() const { return mVertexArray; }
+
   private:
     GLuint mId;
 

@@ -14,10 +14,13 @@
 namespace rx
 {
 
+class FunctionsGL;
+class StateManagerGL;
+
 class VertexArrayGL : public VertexArrayImpl
 {
   public:
-    VertexArrayGL();
+    VertexArrayGL(const FunctionsGL *functions, StateManagerGL *stateManager);
     ~VertexArrayGL() override;
 
     void setElementArrayBuffer(const gl::Buffer *buffer) override;
@@ -25,8 +28,18 @@ class VertexArrayGL : public VertexArrayImpl
     void setAttributeDivisor(size_t idx, GLuint divisor) override;
     void enableAttribute(size_t idx, bool enabledState) override;
 
+    GLuint getVertexArrayID() const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexArrayGL);
+
+    const FunctionsGL *mFunctions;
+    StateManagerGL *mStateManager;
+
+    GLuint mVertexArrayID;
+
+    GLuint mAppliedElementArrayBuffer;
+    std::vector<gl::VertexAttribute> mAppliedAttributes;
 };
 
 }

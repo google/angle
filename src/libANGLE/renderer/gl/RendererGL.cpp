@@ -112,7 +112,7 @@ BufferImpl *RendererGL::createBuffer()
 
 VertexArrayImpl *RendererGL::createVertexArray()
 {
-    return new VertexArrayGL();
+    return new VertexArrayGL(mFunctions, mStateManager);
 }
 
 QueryImpl *RendererGL::createQuery(GLenum type)

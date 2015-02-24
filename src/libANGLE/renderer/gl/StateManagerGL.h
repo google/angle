@@ -25,6 +25,7 @@ class StateManagerGL
     StateManagerGL(const FunctionsGL *functions);
 
     void useProgram(GLuint program);
+    void bindVertexArray(GLuint vao);
     void bindBuffer(GLenum type, GLuint buffer);
 
   private:
@@ -33,6 +34,7 @@ class StateManagerGL
     const FunctionsGL *mFunctions;
 
     GLuint mProgram;
+    GLuint mVAO;
     std::map<GLenum, GLuint> mBuffers;
 };
 
