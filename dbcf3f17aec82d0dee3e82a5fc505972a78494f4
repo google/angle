@@ -22,6 +22,30 @@
       "revId": "dbcf3f17aec82d0dee3e82a5fc505972a78494f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25c5515d_75c64873",
+        "filename": "tests/angle_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-24T17:53:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08206281_c4e43e2f",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 13
+      },
+      "revId": "dbcf3f17aec82d0dee3e82a5fc505972a78494f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
