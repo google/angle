@@ -1,0 +1,441 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c26c6bf3_7af8b900",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "The D3D9 and 11 extensions need to be added here.",
+      "range": {
+        "startLine": 502,
+        "startChar": 4,
+        "endLine": 502,
+        "endChar": 126
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "027a03aa_d4d3dc5d",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "I\u0027m not sure it makes sense to have this in both structs, the EGL extensions are usually defined as a display or client extension.",
+      "range": {
+        "startLine": 348,
+        "startChar": 0,
+        "endLine": 349,
+        "endChar": 20
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c26c6bf3_5a85b577",
+        "filename": "src/libANGLE/Device.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "Probably don\u0027t need this.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 6
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "42807bc4_16c07c55",
+        "filename": "src/libANGLE/Device.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "nit: swap include order.",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 30
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e276cfc4_f374f0b3",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "In general, I feel it is nicer to just have a getter for each query attribute so that the implementations don\u0027t all have to switch on them.  In this case we could just have a getDevice method (on the DisplayImpl too) and do the switch/validation of the attributes at the entry points.",
+      "range": {
+        "startLine": 89,
+        "startChar": 4,
+        "endLine": 89,
+        "endChar": 61
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c26c6bf3_9d810731",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "This was done because the same display impl can change between D3D9 and 11, right?  If that was the case, this can be removed.  We now re-create the DisplayImpl because the previous style wasn\u0027t able to handle creating a DisplayGL on the same window.",
+      "range": {
+        "startLine": 79,
+        "startChar": 5,
+        "endLine": 79,
+        "endChar": 32
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02cf6348_6cc57b97",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "I don\u0027t think these includes are needed.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 6
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c26c6bf3_bd896b3e",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "nit: colon on the next line.",
+      "range": {
+        "startLine": 36,
+        "startChar": 71,
+        "endLine": 36,
+        "endChar": 72
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e276cfc4_d3cd346d",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "nit:indentation",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 32
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82db5305_503b6cf6",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "I think we can validate all this at the entry points and replace the default case with an UNREACHABLE.  In general, we should validate everything before even calling the methods on the objects, the errors they return are reserved for implementation dependent errors and hardware failures.",
+      "range": {
+        "startLine": 48,
+        "startChar": 7,
+        "endLine": 57,
+        "endChar": 9
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e276cfc4_739a2057",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "nit: capitalization.",
+      "range": {
+        "startLine": 13,
+        "startChar": 32,
+        "endLine": 13,
+        "endChar": 43
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2d1cbe3_52085427",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "It might also be reasonable to have a Device11 and Device9 instead of one to handle both with conditional includes.  RendererD3D would have an abstract getDevice method that Renderer9 and 11 implement.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 2
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2d1cbe3_b2d420f5",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "Need to return the error if CreateRendererD3D failed since the Renderer will be null.",
+      "range": {
+        "startLine": 237,
+        "startChar": 4,
+        "endLine": 238,
+        "endChar": 69
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82db5305_30cfc8b7",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "Jamie is adding enums for the D3D renderer types in these patches: \nhttps://chromium-review.googlesource.com/#/c/248660\nhttps://chromium-review.googlesource.com/#/c/248632\n\nThey may be useful here once they land.",
+      "range": {
+        "startLine": 327,
+        "startChar": 4,
+        "endLine": 328,
+        "endChar": 52
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c26c6bf3_9dd7c7f9",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "nit:capitalization",
+      "range": {
+        "startLine": 13,
+        "startChar": 19,
+        "endLine": 13,
+        "endChar": 25
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e276cfc4_d30bf49e",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "Could create a WGL device and return it.",
+      "range": {
+        "startLine": 373,
+        "startChar": 4,
+        "endLine": 374,
+        "endChar": 41
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82db5305_b0b09804",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "nit:indentation",
+      "range": {
+        "startLine": 254,
+        "startChar": 8,
+        "endLine": 254,
+        "endChar": 34
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82db5305_1099648f",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "nit:indentation",
+      "range": {
+        "startLine": 266,
+        "startChar": 8,
+        "endLine": 266,
+        "endChar": 31
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82db5305_f08f0042",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:21:33Z",
+      "side": 1,
+      "message": "nit:indentation",
+      "range": {
+        "startLine": 279,
+        "startChar": 4,
+        "endLine": 287,
+        "endChar": 12
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
