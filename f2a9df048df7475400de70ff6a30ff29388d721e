@@ -93,6 +93,46 @@
       "revId": "f2a9df048df7475400de70ff6a30ff29388d721e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2bf778b_0999498f",
+        "filename": "extensions/EGL_ANGLE_device_base.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:34:27Z",
+      "side": 1,
+      "message": "We should probably make the device lifetime explicit in the extension since that is a difference from EGL_device_base.\n\nHow about \"The returned EGLDeviceANGLE is only valid until \u003cdpy\u003e is terminated.\"",
+      "range": {
+        "startLine": 125,
+        "startChar": 4,
+        "endLine": 129,
+        "endChar": 36
+      },
+      "revId": "f2a9df048df7475400de70ff6a30ff29388d721e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02cf6348_cc1eef06",
+        "filename": "extensions/EGL_ANGLE_device_base.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-25T23:34:27Z",
+      "side": 1,
+      "message": "nit: need an end quote.",
+      "revId": "f2a9df048df7475400de70ff6a30ff29388d721e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
