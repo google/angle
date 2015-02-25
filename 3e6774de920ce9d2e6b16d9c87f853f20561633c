@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6292df13_7f52ef27",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-25T22:08:14Z",
+      "side": 1,
+      "message": "This seems odd -- it looks like it\u0027s doing what bindBuffer should be doing. Is this right? Same for all of the other calls to setBuffer.",
+      "range": {
+        "startLine": 45,
+        "startChar": 19,
+        "endLine": 45,
+        "endChar": 28
+      },
+      "revId": "3e6774de920ce9d2e6b16d9c87f853f20561633c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
