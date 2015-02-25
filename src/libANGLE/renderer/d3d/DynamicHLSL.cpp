@@ -9,7 +9,7 @@
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
 
 #include "common/utilities.h"
-#include "compiler/translator/blocklayout.h"
+#include "compiler/translator/blocklayoutHLSL.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/Program.h"

@@ -83,6 +83,8 @@ typedef enum {
 typedef enum {
   SH_ESSL_OUTPUT   = 0x8B45,
   SH_GLSL_OUTPUT   = 0x8B46,
+
+  // HLSL output only supported in some configurations.
   SH_HLSL_OUTPUT   = 0x8B47,
   SH_HLSL9_OUTPUT  = 0x8B47,
   SH_HLSL11_OUTPUT = 0x8B48
@@ -294,7 +296,8 @@ COMPILER_EXPORT const std::string &ShGetBuiltInResourcesString(const ShHandle ha
 // spec: Specifies the language spec the compiler must conform to -
 //       SH_GLES2_SPEC or SH_WEBGL_SPEC.
 // output: Specifies the output code type - SH_ESSL_OUTPUT, SH_GLSL_OUTPUT,
-//         SH_HLSL9_OUTPUT or SH_HLSL11_OUTPUT.
+//         SH_HLSL9_OUTPUT or SH_HLSL11_OUTPUT. Note: HLSL output is only
+//         supported in some configurations.
 // resources: Specifies the built-in resources.
 COMPILER_EXPORT ShHandle ShConstructCompiler(
     sh::GLenum type,

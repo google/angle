@@ -25,7 +25,9 @@
 
 class TCompiler;
 class TDependencyGraph;
+#ifdef ANGLE_ENABLE_HLSL
 class TranslatorHLSL;
+#endif // ANGLE_ENABLE_HLSL
 
 //
 // Helper function to identify specs that are based on the WebGL spec,
@@ -41,7 +43,9 @@ public:
     TShHandleBase();
     virtual ~TShHandleBase();
     virtual TCompiler* getAsCompiler() { return 0; }
+#ifdef ANGLE_ENABLE_HLSL
     virtual TranslatorHLSL* getAsTranslatorHLSL() { return 0; }
+#endif // ANGLE_ENABLE_HLSL
 
 protected:
     // Memory allocator. Allocates and tracks memory required by the compiler.

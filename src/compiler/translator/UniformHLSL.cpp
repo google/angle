@@ -12,7 +12,7 @@
 #include "common/utilities.h"
 #include "compiler/translator/StructureHLSL.h"
 #include "compiler/translator/UtilsHLSL.h"
-#include "compiler/translator/blocklayout.h"
+#include "compiler/translator/blocklayoutHLSL.h"
 #include "compiler/translator/util.h"
 
 namespace sh

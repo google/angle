@@ -5,7 +5,7 @@
 {
     'variables':
     {
-        # This file list is shared with the GN build.
+        # These file lists are shared with the GN build.
         'angle_translator_lib_sources':
         [
             '../include/EGL/egl.h',
@@ -26,8 +26,6 @@
             'compiler/translator/BuiltInFunctionEmulator.h',
             'compiler/translator/BuiltInFunctionEmulatorGLSL.cpp',
             'compiler/translator/BuiltInFunctionEmulatorGLSL.h',
-            'compiler/translator/BuiltInFunctionEmulatorHLSL.cpp',
-            'compiler/translator/BuiltInFunctionEmulatorHLSL.h',
             'compiler/translator/CodeGen.cpp',
             'compiler/translator/Common.h',
             'compiler/translator/Compiler.cpp',
@@ -35,8 +33,6 @@
             'compiler/translator/ConstantUnion.h',
             'compiler/translator/DetectCallDepth.cpp',
             'compiler/translator/DetectCallDepth.h',
-            'compiler/translator/DetectDiscontinuity.cpp',
-            'compiler/translator/DetectDiscontinuity.h',
             'compiler/translator/Diagnostics.cpp',
             'compiler/translator/Diagnostics.h',
             'compiler/translator/DirectiveHandler.cpp',
@@ -60,11 +56,11 @@
             'compiler/translator/InitializeParseContext.h',
             'compiler/translator/InitializeVariables.cpp',
             'compiler/translator/InitializeVariables.h',
+            'compiler/translator/IntermNode.h',
+            'compiler/translator/IntermNode.cpp',
             'compiler/translator/IntermTraverse.cpp',
             'compiler/translator/Intermediate.h',
             'compiler/translator/Intermediate.cpp',
-            'compiler/translator/IntermNode.h',
-            'compiler/translator/IntermNode.cpp',
             'compiler/translator/LoopInfo.cpp',
             'compiler/translator/LoopInfo.h',
             'compiler/translator/MMap.h',
@@ -77,8 +73,6 @@
             'compiler/translator/OutputGLSL.h',
             'compiler/translator/OutputGLSLBase.cpp',
             'compiler/translator/OutputGLSLBase.h',
-            'compiler/translator/OutputHLSL.cpp',
-            'compiler/translator/OutputHLSL.h',
             'compiler/translator/ParseContext.cpp',
             'compiler/translator/ParseContext.h',
             'compiler/translator/PoolAlloc.cpp',
@@ -89,32 +83,20 @@
             'compiler/translator/RegenerateStructNames.cpp',
             'compiler/translator/RegenerateStructNames.h',
             'compiler/translator/RenameFunction.h',
-            'compiler/translator/RewriteElseBlocks.cpp',
-            'compiler/translator/RewriteElseBlocks.h',
             'compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp',
             'compiler/translator/ScalarizeVecAndMatConstructorArgs.h',
             'compiler/translator/SearchSymbol.cpp',
             'compiler/translator/SearchSymbol.h',
-            'compiler/translator/StructureHLSL.cpp',
-            'compiler/translator/StructureHLSL.h',
             'compiler/translator/SymbolTable.cpp',
             'compiler/translator/SymbolTable.h',
             'compiler/translator/TranslatorESSL.cpp',
             'compiler/translator/TranslatorESSL.h',
             'compiler/translator/TranslatorGLSL.cpp',
             'compiler/translator/TranslatorGLSL.h',
-            'compiler/translator/TranslatorHLSL.cpp',
-            'compiler/translator/TranslatorHLSL.h',
             'compiler/translator/Types.cpp',
             'compiler/translator/Types.h',
-            'compiler/translator/UnfoldShortCircuit.cpp',
-            'compiler/translator/UnfoldShortCircuit.h',
             'compiler/translator/UnfoldShortCircuitAST.cpp',
             'compiler/translator/UnfoldShortCircuitAST.h',
-            'compiler/translator/UniformHLSL.cpp',
-            'compiler/translator/UniformHLSL.h',
-            'compiler/translator/UtilsHLSL.cpp',
-            'compiler/translator/UtilsHLSL.h',
             'compiler/translator/ValidateLimitations.cpp',
             'compiler/translator/ValidateLimitations.h',
             'compiler/translator/ValidateOutputs.cpp',
@@ -154,6 +136,29 @@
             'compiler/translator/util.h',
             'third_party/compiler/ArrayBoundsClamper.cpp',
             'third_party/compiler/ArrayBoundsClamper.h',
+        ],
+        'angle_translator_lib_hlsl_sources':
+        [
+            'compiler/translator/blocklayoutHLSL.cpp',
+            'compiler/translator/blocklayoutHLSL.h',
+            'compiler/translator/BuiltInFunctionEmulatorHLSL.cpp',
+            'compiler/translator/BuiltInFunctionEmulatorHLSL.h',
+            'compiler/translator/DetectDiscontinuity.cpp',
+            'compiler/translator/DetectDiscontinuity.h',
+            'compiler/translator/OutputHLSL.cpp',
+            'compiler/translator/OutputHLSL.h',
+            'compiler/translator/RewriteElseBlocks.cpp',
+            'compiler/translator/RewriteElseBlocks.h',
+            'compiler/translator/StructureHLSL.cpp',
+            'compiler/translator/StructureHLSL.h',
+            'compiler/translator/TranslatorHLSL.cpp',
+            'compiler/translator/TranslatorHLSL.h',
+            'compiler/translator/UnfoldShortCircuit.cpp',
+            'compiler/translator/UnfoldShortCircuit.h',
+            'compiler/translator/UniformHLSL.cpp',
+            'compiler/translator/UniformHLSL.h',
+            'compiler/translator/UtilsHLSL.cpp',
+            'compiler/translator/UtilsHLSL.h',
         ],
         'angle_preprocessor_sources':
         [
@@ -243,6 +248,24 @@
                 ['angle_build_winphone==1',
                 {
                     'msvs_enable_winphone' : '1',
+                }],
+                ['angle_enable_hlsl==1',
+                {
+                    'defines':
+                    [
+                        'ANGLE_ENABLE_HLSL',
+                    ],
+                    'direct_dependent_settings':
+                    {
+                        'defines':
+                        [
+                            'ANGLE_ENABLE_HLSL',
+                        ],
+                    },
+                    'sources':
+                    [
+                        '<@(angle_translator_lib_hlsl_sources)',
+                    ],
                 }],
             ],
         },

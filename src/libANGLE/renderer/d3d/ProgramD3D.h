@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_PROGRAMD3D_H_
 #define LIBANGLE_RENDERER_D3D_PROGRAMD3D_H_
 
+#include "compiler/translator/blocklayoutHLSL.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/Workarounds.h"

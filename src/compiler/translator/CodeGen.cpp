@@ -6,7 +6,9 @@
 
 #include "compiler/translator/TranslatorESSL.h"
 #include "compiler/translator/TranslatorGLSL.h"
+#ifdef ANGLE_ENABLE_HLSL
 #include "compiler/translator/TranslatorHLSL.h"
+#endif // ANGLE_ENABLE_HLSL
 
 //
 // This function must be provided to create the actual
@@ -23,8 +25,15 @@ TCompiler* ConstructCompiler(
         return new TranslatorGLSL(type, spec);
     case SH_HLSL9_OUTPUT:
     case SH_HLSL11_OUTPUT:
+#ifdef ANGLE_ENABLE_HLSL
         return new TranslatorHLSL(type, spec, output);
+#else
+        // This compiler is not supported in this
+        // configuration. Return NULL per the ShConstructCompiler API.
+        return NULL;
+#endif // ANGLE_ENABLE_HLSL
     default:
+        // Unknown format. Return NULL per the ShConstructCompiler API.
         return NULL;
     }
 }
