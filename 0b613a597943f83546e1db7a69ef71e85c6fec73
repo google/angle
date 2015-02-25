@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "65f4a9d1_cf987d60",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-25T08:53:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05e92dcf_9ccea568",
+      "range": {
+        "startLine": 14,
+        "startChar": 10,
+        "endLine": 14,
+        "endChar": 18
+      },
+      "revId": "0b613a597943f83546e1db7a69ef71e85c6fec73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45dfa523_1e09ad2c",
         "filename": "src/compiler/translator/ValidateSwitch.cpp",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "65f4a9d1_ef934141",
+        "filename": "src/compiler/translator/ValidateSwitch.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-25T08:53:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45dfa523_1e09ad2c",
+      "range": {
+        "startLine": 15,
+        "startChar": 4,
+        "endLine": 15,
+        "endChar": 17
+      },
+      "revId": "0b613a597943f83546e1db7a69ef71e85c6fec73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45c88575_361858a5",
         "filename": "src/compiler/translator/ValidateSwitch.cpp",
         "patchSetId": 7
@@ -59,6 +107,24 @@
       "writtenOn": "2015-02-24T17:47:19Z",
       "side": 1,
       "message": "why this condition? Won\u0027t it always be true here?  Then an ASSERT makes more sense.",
+      "revId": "0b613a597943f83546e1db7a69ef71e85c6fec73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5c5c17a_39b50ff4",
+        "filename": "src/compiler/translator/ValidateSwitch.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-25T08:53:18Z",
+      "side": 1,
+      "message": "It\u0027s not true for the statementList aggregate node where the traversal is started.",
+      "parentUuid": "45c88575_361858a5",
       "revId": "0b613a597943f83546e1db7a69ef71e85c6fec73",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
