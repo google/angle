@@ -402,6 +402,8 @@
             'libANGLE/renderer/gl/VertexArrayGL.h',
             'libANGLE/renderer/gl/functionsgl_enums.h',
             'libANGLE/renderer/gl/functionsgl_typedefs.h',
+            'libANGLE/renderer/gl/renderergl_utils.cpp',
+            'libANGLE/renderer/gl/renderergl_utils.h',
         ],
         'libangle_gl_wgl_sources':
         [
