@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "02c20357_f447b8e0",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T15:56:04Z",
+      "side": 1,
+      "message": "I\u0027ll probably use one extension, EGL_ANGLE_device_d3d.",
+      "parentUuid": "c26c6bf3_7af8b900",
+      "range": {
+        "startLine": 502,
+        "startChar": 4,
+        "endLine": 502,
+        "endChar": 126
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "027a03aa_d4d3dc5d",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 2
@@ -87,6 +111,29 @@
         "startChar": 0,
         "endLine": 14,
         "endChar": 30
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02c20357_b49620e5",
+        "filename": "src/libANGLE/Device.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T15:56:04Z",
+      "side": 1,
+      "message": "there\u0027s no need for a device implementation object here, just use inheritance, like in rx::Renderer. Impl objects would be more useful if we were doing work before and after the impl call, in queryAttribute.",
+      "range": {
+        "startLine": 18,
+        "startChar": 6,
+        "endLine": 18,
+        "endChar": 16
       },
       "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -278,6 +325,53 @@
     },
     {
       "key": {
+        "uuid": "62b3bffa_772ad022",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T15:56:04Z",
+      "side": 1,
+      "message": "I committed my changes referenced so that you\u0027ll have access to the RendererType query.",
+      "parentUuid": "c2d1cbe3_52085427",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 2
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62b3bffa_f71500e1",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T15:56:04Z",
+      "side": 1,
+      "message": "nit: should be on its own line",
+      "range": {
+        "startLine": 122,
+        "startChar": 26,
+        "endLine": 122,
+        "endChar": 33
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2d1cbe3_b2d420f5",
         "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
         "patchSetId": 2
@@ -340,6 +434,29 @@
         "startChar": 19,
         "endLine": 13,
         "endChar": 25
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02c20357_d4e0fc48",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T15:56:04Z",
+      "side": 1,
+      "message": "seems to be duplicated with the below line",
+      "range": {
+        "startLine": 52,
+        "startChar": 14,
+        "endLine": 52,
+        "endChar": 20
       },
       "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -433,6 +550,46 @@
         "endLine": 287,
         "endChar": 12
       },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82a353b2_d028fca7",
+        "filename": "tests/angle_tests/QueryDisplayAttribTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T15:56:04Z",
+      "side": 1,
+      "message": "nit: indentation",
+      "range": {
+        "startLine": 13,
+        "startChar": 4,
+        "endLine": 13,
+        "endChar": 6
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82a353b2_306948df",
+        "filename": "util/com_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T15:56:04Z",
+      "side": 1,
+      "message": "nit: need a one-liner description of the contents. also add this file to util.gyp.",
       "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
