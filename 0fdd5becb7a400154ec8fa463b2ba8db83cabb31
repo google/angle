@@ -141,6 +141,30 @@
     },
     {
       "key": {
+        "uuid": "228aa72f_8da901a6",
+        "filename": "src/libANGLE/Device.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-26T16:32:57Z",
+      "side": 1,
+      "message": "This is a case where having the egl::Device and rx::DeviceImpl is nice for consistency but doesn\u0027t have a strong need for seperation because no separate state is tracked at the egl level.",
+      "parentUuid": "02c20357_b49620e5",
+      "range": {
+        "startLine": 18,
+        "startChar": 6,
+        "endLine": 18,
+        "endChar": 16
+      },
+      "revId": "0fdd5becb7a400154ec8fa463b2ba8db83cabb31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e276cfc4_f374f0b3",
         "filename": "src/libANGLE/Display.h",
         "patchSetId": 2
