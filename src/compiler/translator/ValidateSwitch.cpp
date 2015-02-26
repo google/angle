@@ -131,9 +131,8 @@ bool ValidateSwitch::visitCase(Visit, TIntermCase *node)
                 mCasesSigned.insert(iConst);
             }
         }
-        else
+        else if (conditionType == EbtUInt)
         {
-            ASSERT(conditionType == EbtUInt);
             unsigned int uConst = condition->getUConst(0);
             if (mCasesUnsigned.find(uConst) != mCasesUnsigned.end())
             {
@@ -144,8 +143,9 @@ bool ValidateSwitch::visitCase(Visit, TIntermCase *node)
             {
                 mCasesUnsigned.insert(uConst);
             }
-
         }
+        // Other types are possible only in error cases, where the error has already been generated
+        // when parsing the case statement.
     }
     // Don't traverse the condition of the case statement
     return false;
