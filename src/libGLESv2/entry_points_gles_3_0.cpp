@@ -3138,8 +3138,8 @@ void GL_APIENTRY GetProgramBinary(GLuint program, GLsizei bufSize, GLsizei* leng
             return;
         }
 
-        // glGetProgramBinary
-        UNIMPLEMENTED();
+        // TODO: Pipe through to the OES extension for now, needs proper validation
+        return GetProgramBinaryOES(program, bufSize, length, binaryFormat, binary);
     }
 }
 
@@ -3157,8 +3157,8 @@ void GL_APIENTRY ProgramBinary(GLuint program, GLenum binaryFormat, const GLvoid
             return;
         }
 
-        // glProgramBinary
-        UNIMPLEMENTED();
+        // TODO: Pipe through to the OES extension for now, needs proper validation
+        return ProgramBinaryOES(program, binaryFormat, binary, length);
     }
 }
 
