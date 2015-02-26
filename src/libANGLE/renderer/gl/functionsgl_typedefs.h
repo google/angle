@@ -11,6 +11,7 @@
 
 #include "common/platform.h"
 
+#include <KHR/khrplatform.h>
 #include <stdint.h>
 
 #ifndef INTERNAL_GL_APIENTRY
@@ -21,35 +22,32 @@
 #   endif
 #endif
 
+typedef void             GLvoid;
+typedef char             GLchar;
+typedef unsigned int     GLenum;
+typedef unsigned char    GLboolean;
+typedef unsigned int     GLbitfield;
+typedef khronos_int8_t   GLbyte;
+typedef short            GLshort;
+typedef int              GLint;
+typedef int              GLsizei;
+typedef khronos_uint8_t  GLubyte;
+typedef unsigned short   GLushort;
+typedef unsigned int     GLuint;
+typedef khronos_float_t  GLfloat;
+typedef khronos_float_t  GLclampf;
+typedef double           GLdouble;
+typedef double           GLclampd;
+typedef khronos_int32_t  GLfixed;
+typedef khronos_intptr_t GLintptr;
+typedef khronos_ssize_t  GLsizeiptr;
+typedef unsigned short   GLhalf;
+typedef khronos_int64_t  GLint64;
+typedef khronos_uint64_t GLuint64;
+typedef struct __GLsync *GLsync;
+
 namespace rx
 {
-
-typedef unsigned int GLenum;
-typedef unsigned char GLboolean;
-typedef unsigned int GLbitfield;
-typedef void GLvoid;
-typedef signed char GLbyte;
-typedef short GLshort;
-typedef int GLint;
-typedef unsigned char GLubyte;
-typedef unsigned short GLushort;
-typedef unsigned int GLuint;
-typedef int GLsizei;
-typedef float GLfloat;
-typedef float GLclampf;
-typedef double GLdouble;
-typedef double GLclampd;
-typedef char GLchar;
-
-typedef unsigned short GLhalf;
-typedef GLint GLfixed;
-typedef ptrdiff_t GLintptr;
-typedef ptrdiff_t GLsizeiptr;
-typedef int64_t GLint64;
-typedef uint64_t GLuint64;
-typedef int64_t GLint64EXT;
-typedef uint64_t GLuint64EXT;
-typedef struct __GLsync *GLsync;
 typedef void (INTERNAL_GL_APIENTRY *GLDEBUGPROC)(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
 typedef void (INTERNAL_GL_APIENTRY *GLDEBUGPROCARB)(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
 typedef void (INTERNAL_GL_APIENTRY *GLDEBUGPROCAMD)(GLuint id, GLenum category, GLenum severity, GLsizei length, const GLchar *message, void *userParam);
