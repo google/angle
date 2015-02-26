@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2b937da_7902c7ef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-26T14:06:46Z",
+      "side": 1,
+      "message": "Are you sure that it absolutely never returns true, even in a subset of cases? This seems really odd.",
+      "range": {
+        "startLine": 9,
+        "startChar": 62,
+        "endLine": 9,
+        "endChar": 67
+      },
+      "revId": "87dd581dd109870f62a9b2c857ffba2c1346eba2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "42c87b75_d60f2459",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-26T14:06:46Z",
+      "side": 1,
+      "message": "This is unnecessary, the other masking commands to get the exponent and mantissa also filter out the sign bit.",
+      "range": {
+        "startLine": 391,
+        "startChar": 9,
+        "endLine": 392,
+        "endChar": 42
+      },
+      "revId": "87dd581dd109870f62a9b2c857ffba2c1346eba2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "42c87b75_5635d4ff",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-26T14:06:46Z",
+      "side": 1,
+      "message": "Code formatting nit: remember spaces around operators! Could also consider just writing this out as a hexadecimal number.",
+      "range": {
+        "startLine": 394,
+        "startChar": 24,
+        "endLine": 394,
+        "endChar": 40
+      },
+      "revId": "87dd581dd109870f62a9b2c857ffba2c1346eba2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a22bf7c1_29210d19",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-26T14:06:46Z",
+      "side": 1,
+      "message": "I think that this kind of implementation fails if isnan(float) and isnan(vec2) are used in the same shader - the webgl_isnan helper function would be defined twice.\n\nIt would be better to have each webgl_isnan_emu implementation to be a single function in the final generated code, though I think it\u0027s okay if you use a C++ macro to reduce code duplication. You should also try to use the component-wise operators and built-ins to process the whole vector at once to get decent performance.",
+      "revId": "87dd581dd109870f62a9b2c857ffba2c1346eba2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
