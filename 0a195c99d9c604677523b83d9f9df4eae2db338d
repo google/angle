@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02976355_ccb30f10",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T16:35:39Z",
+      "side": 1,
+      "message": "Could also resize this according to the Caps, would require dereferencing Renderer in the FramebufferImpl constructor/possibly adding FramebufferImpl.cpp.",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 5
+      },
+      "revId": "0a195c99d9c604677523b83d9f9df4eae2db338d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
