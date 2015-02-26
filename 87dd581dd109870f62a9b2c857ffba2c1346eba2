@@ -175,6 +175,24 @@
       "revId": "87dd581dd109870f62a9b2c857ffba2c1346eba2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "42c87b75_16319ce6",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-26T14:52:30Z",
+      "side": 1,
+      "message": "To clarify using component-wise operators, you can do things like this:\n\nuint4 a, mask;\nuint4 masked \u003d a \u0026 mask; // the \u0026 operation is done for each component individually, so this masks all 4 components simultaneously.\n\nI think pretty much all operators are component-wise in HLSL. In GLSL some of the component-wise operations are available as corresponding functions, like equal();",
+      "parentUuid": "e2108f97_460274ef",
+      "revId": "87dd581dd109870f62a9b2c857ffba2c1346eba2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
