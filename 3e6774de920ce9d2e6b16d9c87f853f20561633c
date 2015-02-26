@@ -46,6 +46,53 @@
       "revId": "3e6774de920ce9d2e6b16d9c87f853f20561633c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62b3bffa_9744c442",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T14:59:22Z",
+      "side": 1,
+      "message": "maybe using the default bindBuffer/useProgram is clearer than trying to consolidate on the abstract \"set\" ops.",
+      "parentUuid": "c26c6bf3_ba15f1e1",
+      "range": {
+        "startLine": 45,
+        "startChar": 19,
+        "endLine": 45,
+        "endChar": 28
+      },
+      "revId": "3e6774de920ce9d2e6b16d9c87f853f20561633c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "229467fe_1de3b328",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T14:59:22Z",
+      "side": 1,
+      "message": "I think Ken\u0027s confusion is the name? we might want to use bindBuffer/useProgram because they\u0027re familiar, instead of abstracting them.",
+      "range": {
+        "startLine": 33,
+        "startChar": 21,
+        "endLine": 33,
+        "endChar": 30
+      },
+      "revId": "3e6774de920ce9d2e6b16d9c87f853f20561633c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
