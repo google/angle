@@ -104,23 +104,27 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
         RendererD3D *renderer = rendererCreationFunctions[i](display);
         result = renderer->initialize();
 
-        if (renderer->getRendererClass() == RENDERER_D3D11)
-        {
-            ASSERT(result.getID() >= 0 && result.getID() < NUM_D3D11_INIT_ERRORS);
+#       if defined(ANGLE_ENABLE_D3D11)
+            if (renderer->getRendererClass() == RENDERER_D3D11)
+            {
+                ASSERT(result.getID() >= 0 && result.getID() < NUM_D3D11_INIT_ERRORS);
 
-            angle::Platform *platform = angle::Platform::current();
-            platform->histogramEnumeration("GPU.ANGLE.D3D11InitializeResult",
-                                           result.getID(), NUM_D3D11_INIT_ERRORS);
-        }
-        else
-        {
-            ASSERT(renderer->getRendererClass() == RENDERER_D3D9);
-            ASSERT(result.getID() >= 0 && result.getID() < NUM_D3D9_INIT_ERRORS);
+                angle::Platform *platform = angle::Platform::current();
+                platform->histogramEnumeration("GPU.ANGLE.D3D11InitializeResult",
+                                               result.getID(), NUM_D3D11_INIT_ERRORS);
+            }
+#       endif
 
-            angle::Platform *platform = angle::Platform::current();
-            platform->histogramEnumeration("GPU.ANGLE.D3D9InitializeResult",
-                                           result.getID(), NUM_D3D9_INIT_ERRORS);
-        }
+#       if defined(ANGLE_ENABLE_D3D9)
+            if (renderer->getRendererClass() == RENDERER_D3D9)
+            {
+                ASSERT(result.getID() >= 0 && result.getID() < NUM_D3D9_INIT_ERRORS);
+
+                angle::Platform *platform = angle::Platform::current();
+                platform->histogramEnumeration("GPU.ANGLE.D3D9InitializeResult",
+                                               result.getID(), NUM_D3D9_INIT_ERRORS);
+            }
+#       endif
 
         if (!result.isError())
         {
