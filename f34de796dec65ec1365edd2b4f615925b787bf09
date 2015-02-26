@@ -1,0 +1,175 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a213f7da_e92a1524",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T20:33:54Z",
+      "side": 1,
+      "message": "I think we\u0027ll only have one extension here, deviceD3D, covering both 9 and 11.",
+      "range": {
+        "startLine": 352,
+        "startChar": 9,
+        "endLine": 352,
+        "endChar": 18
+      },
+      "revId": "f34de796dec65ec1365edd2b4f615925b787bf09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c20e2bb5_8aba6bb6",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T20:33:54Z",
+      "side": 1,
+      "message": "nit: formatting",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 23
+      },
+      "revId": "f34de796dec65ec1365edd2b4f615925b787bf09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a213f7da_c94191d5",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T20:33:54Z",
+      "side": 1,
+      "message": "re-nit: capitalization.",
+      "range": {
+        "startLine": 13,
+        "startChar": 19,
+        "endLine": 13,
+        "endChar": 25
+      },
+      "revId": "f34de796dec65ec1365edd2b4f615925b787bf09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c20e2bb5_ca82a3e8",
+        "filename": "src/libANGLE/renderer/gl/wgl/DeviceWGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T20:33:54Z",
+      "side": 1,
+      "message": "TODO/UNIMPLEMENTED here.",
+      "revId": "f34de796dec65ec1365edd2b4f615925b787bf09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2dfaf54_6bed018f",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T20:33:54Z",
+      "side": 1,
+      "message": "re-nit",
+      "revId": "f34de796dec65ec1365edd2b4f615925b787bf09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2dfaf54_0bcb1d27",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T20:33:54Z",
+      "side": 1,
+      "message": "nit: case indentation",
+      "revId": "f34de796dec65ec1365edd2b4f615925b787bf09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2dfaf54_cbdd15e6",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T20:33:54Z",
+      "side": 1,
+      "message": "re-nit: indentation",
+      "revId": "f34de796dec65ec1365edd2b4f615925b787bf09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a213f7da_e9f7b529",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T20:33:54Z",
+      "side": 1,
+      "message": "re-nit",
+      "revId": "f34de796dec65ec1365edd2b4f615925b787bf09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c20e2bb5_6ac4d718",
+        "filename": "tests/angle_tests/QueryDisplayAttribTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T20:33:54Z",
+      "side": 1,
+      "message": "re-nit",
+      "revId": "f34de796dec65ec1365edd2b4f615925b787bf09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
