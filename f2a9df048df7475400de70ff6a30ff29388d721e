@@ -133,6 +133,48 @@
       "revId": "f2a9df048df7475400de70ff6a30ff29388d721e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c299cb84_12b60c08",
+        "filename": "extensions/EGL_ANGLE_device_base.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T15:12:40Z",
+      "side": 1,
+      "message": "I actually think it\u0027s correct without an end quote, because it\u0027s carried to the second paragraph.\n\nhttp://baxtercommunications.nl/quotation-marks-multi-paragraph-rule/#.VO81TfnF-rI\n\nThe original extension uses this formatting in places, maybe Shannon can confirm.",
+      "parentUuid": "02cf6348_cc1eef06",
+      "revId": "f2a9df048df7475400de70ff6a30ff29388d721e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62b3bffa_17da7426",
+        "filename": "extensions/EGL_ANGLE_device_base.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-26T15:12:40Z",
+      "side": 1,
+      "message": "Right, forgot about that. Will update.",
+      "parentUuid": "a2bf778b_0999498f",
+      "range": {
+        "startLine": 125,
+        "startChar": 4,
+        "endLine": 129,
+        "endChar": 36
+      },
+      "revId": "f2a9df048df7475400de70ff6a30ff29388d721e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
