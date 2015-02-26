@@ -22,7 +22,7 @@ class StateManagerGL
   public:
     StateManagerGL(const FunctionsGL *functions);
 
-    void setProgram(GLuint program);
+    void useProgram(GLuint program);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(StateManagerGL);

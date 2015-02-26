@@ -20,7 +20,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions)
     ASSERT(mFunctions);
 }
 
-void StateManagerGL::setProgram(GLuint program)
+void StateManagerGL::useProgram(GLuint program)
 {
     if (mProgram != program)
     {
