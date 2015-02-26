@@ -243,11 +243,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     if (mFunctionsWGL->createContextAttribsARB)
     {
         int flags = 0;
-        // TODO: also allow debug contexts through a user flag
-#if !defined(NDEBUG)
-        flags |= WGL_CONTEXT_DEBUG_BIT_ARB;
-#endif
-
+        // TODO: allow debug contexts
         // TODO: handle robustness
 
         int mask = 0;
