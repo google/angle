@@ -69,6 +69,29 @@
       "revId": "0a195c99d9c604677523b83d9f9df4eae2db338d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2f96fff_de8c011b",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-27T02:11:31Z",
+      "side": 1,
+      "message": "I don\u0027t have a strong opinion on who owns the data, but wonder whether it\u0027s worth making this struct into a proper class, making an API, and hiding the representation. I note from I0953e321bae3afe7cde7b73c55af62546665c890 that that\u0027s the direction this struct is going.",
+      "range": {
+        "startLine": 63,
+        "startChar": 4,
+        "endLine": 63,
+        "endChar": 6
+      },
+      "revId": "0a195c99d9c604677523b83d9f9df4eae2db338d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
