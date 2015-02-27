@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "62073fcc_3768b857",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-27T02:32:48Z",
+      "side": 1,
+      "message": "This probably should wait until a follow-on CL, but I wonder whether the values for some of these should be set to the minimums specified in these tables. Or, better, we should query the GL for them per the above TODO.",
+      "range": {
+        "startLine": 64,
+        "startChar": 10,
+        "endLine": 64,
+        "endChar": 32
+      },
+      "revId": "3976a0f925c6469187c8448684855450c31e5591",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "820273b9_bb3af3f0",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-27T02:32:48Z",
+      "side": 1,
+      "message": "I found it a little surprising that some of the new caps introduced in ES3, like this one, are being initialized to values lower than the minimums in the tables.",
+      "range": {
+        "startLine": 65,
+        "startChar": 10,
+        "endLine": 65,
+        "endChar": 35
+      },
+      "revId": "3976a0f925c6469187c8448684855450c31e5591",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "820273b9_18e4c55a",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-27T02:32:48Z",
+      "side": 1,
+      "message": "This naming\u0027s a little weird. I wonder whether we could find another. If you fully qualify the name at the usage point (rx::gl::GenerateCaps) does that resolve the ambiguity with the top-level gl namespace?",
+      "range": {
+        "startLine": 24,
+        "startChar": 10,
+        "endLine": 24,
+        "endChar": 15
+      },
+      "revId": "3976a0f925c6469187c8448684855450c31e5591",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
