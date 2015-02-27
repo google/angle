@@ -16,6 +16,24 @@
       "revId": "5fbc696a98ec3d45446cc900ff01998260c1e93b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02168300_f7e3dadd",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-02-27T12:19:07Z",
+      "side": 1,
+      "message": "Which lines are you referring to? Note the difference between gl_FragData and gl_LastFragData, and the different extension strings.",
+      "parentUuid": "425ebbd0_6642ee36",
+      "revId": "5fbc696a98ec3d45446cc900ff01998260c1e93b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
