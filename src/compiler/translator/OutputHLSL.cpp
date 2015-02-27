@@ -17,6 +17,7 @@
 #include "compiler/translator/FlagStd140Structs.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/NodeSearch.h"
+#include "compiler/translator/RemoveSwitchFallThrough.h"
 #include "compiler/translator/RewriteElseBlocks.h"
 #include "compiler/translator/SearchSymbol.h"
 #include "compiler/translator/StructureHLSL.h"
@@ -2276,6 +2277,7 @@ bool OutputHLSL::visitSwitch(Visit visit, TIntermSwitch *node)
 {
     if (node->getStatementList())
     {
+        node->setStatementList(RemoveSwitchFallThrough::removeFallThrough(node->getStatementList()));
         outputTriplet(visit, "switch (", ") ", "");
         // The curly braces get written when visiting the statementList aggregate
     }

@@ -513,6 +513,7 @@ class TIntermSwitch : public TIntermNode
     TIntermSwitch *getAsSwitchNode() override { return this; }
 
     TIntermAggregate *getStatementList() { return mStatementList; }
+    void setStatementList(TIntermAggregate *statementList) { mStatementList = statementList; }
 
   protected:
     TIntermTyped *mInit;

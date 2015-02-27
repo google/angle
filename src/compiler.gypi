@@ -149,6 +149,8 @@
             'compiler/translator/DetectDiscontinuity.h',
             'compiler/translator/OutputHLSL.cpp',
             'compiler/translator/OutputHLSL.h',
+            'compiler/translator/RemoveSwitchFallThrough.cpp',
+            'compiler/translator/RemoveSwitchFallThrough.h',
             'compiler/translator/RewriteElseBlocks.cpp',
             'compiler/translator/RewriteElseBlocks.h',
             'compiler/translator/StructureHLSL.cpp',
