@@ -46,6 +46,30 @@
       "revId": "ae0b65cb16bb86a91831a42e840819b1c437e892",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62d57f78_87998663",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-27T18:18:39Z",
+      "side": 1,
+      "message": "I share your concern.\n\nThe primary reason this method would be called is in response to the user calling glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf). This means the VAO is already bound in the GL context.\n\nMaybe the contract in the implementation should be that it always binds whatever state is needed for the current call and never unbinds it, and the state manager should swallow redundant calls and not send them to the driver.\n\nLet\u0027s discuss more. Not necessary to make any changes in this CL.",
+      "parentUuid": "428f9bad_1e1ccd64",
+      "range": {
+        "startLine": 65,
+        "startChar": 23,
+        "endLine": 65,
+        "endChar": 38
+      },
+      "revId": "ae0b65cb16bb86a91831a42e840819b1c437e892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
