@@ -22,6 +22,30 @@
       "revId": "6c55d9f3c7f01e176b247a037fe846abaa1341c6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "228c67b9_bded9f14",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-27T17:39:33Z",
+      "side": 1,
+      "message": "Our GL layer uses the gl::VertexArray objects even if VAOs aren\u0027t available but we could choose to implement them differently in the renderer layer if we know VAOs aren\u0027t available to the user (they actually exist as an extension all the way back to ES 1).  Desktop GL 3.3 deprecates using the default VAO so we\u0027ll always need to implement them with real VAOs there.\n\nWe\u0027ll eventually have to handle both cases (using real VAOs and emulating them) if we want to support Desktop GL \u003c 3.",
+      "parentUuid": "c5ad55fe_7201b8ad",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 19
+      },
+      "revId": "6c55d9f3c7f01e176b247a037fe846abaa1341c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
