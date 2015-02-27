@@ -34,6 +34,24 @@
       "revId": "5fbc696a98ec3d45446cc900ff01998260c1e93b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "42a15b0b_0ea64b9c",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-27T12:44:27Z",
+      "side": 1,
+      "message": "Line 494 and line 534 both seem to insert gl_FragData, with the difference that on line 494 the type is not an array and [gl_MaxDrawBuffers] is included in the string. Why is this?",
+      "parentUuid": "02168300_f7e3dadd",
+      "revId": "5fbc696a98ec3d45446cc900ff01998260c1e93b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
