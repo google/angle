@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5ad55fe_7201b8ad",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-27T00:18:40Z",
+      "side": 1,
+      "message": "Sorry for my ignorance here, but are we going to create a default VAO behind the scenes when implementing ES2, which doesn\u0027t require a VAO to be bound?",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 19
+      },
+      "revId": "6c55d9f3c7f01e176b247a037fe846abaa1341c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
