@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "228c67b9_5d101b79",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-27T17:44:38Z",
+      "side": 1,
+      "message": "Starting with the texture patches, I\u0027ve started filling in the relevant limits.  I\u0027ll do a pass over the rest soon and grab the limits from the driver.",
+      "parentUuid": "62073fcc_3768b857",
+      "range": {
+        "startLine": 64,
+        "startChar": 10,
+        "endLine": 64,
+        "endChar": 32
+      },
+      "revId": "3976a0f925c6469187c8448684855450c31e5591",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "820273b9_bb3af3f0",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 3
@@ -59,6 +83,30 @@
       "writtenOn": "2015-02-27T02:32:48Z",
       "side": 1,
       "message": "This naming\u0027s a little weird. I wonder whether we could find another. If you fully qualify the name at the usage point (rx::gl::GenerateCaps) does that resolve the ambiguity with the top-level gl namespace?",
+      "range": {
+        "startLine": 24,
+        "startChar": 10,
+        "endLine": 24,
+        "endChar": 15
+      },
+      "revId": "3976a0f925c6469187c8448684855450c31e5591",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "628adf9e_bf0cb73b",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-27T17:44:38Z",
+      "side": 1,
+      "message": "I chose the name to be a bit consistant with our renderer11/9_utils files which use gl_d3d and d3d_gl namespaces but this one does indeed look confusing... Maybe desktopgl_gl?  I think the rx::gl namespace would be correctly resolved but I\u0027m worried it would be ambiguous when reading the code.",
+      "parentUuid": "820273b9_18e4c55a",
       "range": {
         "startLine": 24,
         "startChar": 10,
