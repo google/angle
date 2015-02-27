@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "425ebbd0_6642ee36",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-27T09:03:53Z",
+      "side": 1,
+      "message": "I don\u0027t think I quite understand what\u0027s happening here? It looks like gl_FragData and gl_LastFragData are being inserted twice in two different ways, once in the above block and once in here.",
+      "revId": "5fbc696a98ec3d45446cc900ff01998260c1e93b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
