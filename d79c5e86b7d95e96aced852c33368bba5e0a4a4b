@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "425ebbd0_063f7aad",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-02-27T09:12:08Z",
+      "side": 1,
+      "message": "DirectX/HLSL doesn\u0027t natively implement mediump or lowp, all calculations are done in 32-bit floats. So this part of the comment is unnecessary.",
+      "revId": "d79c5e86b7d95e96aced852c33368bba5e0a4a4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
