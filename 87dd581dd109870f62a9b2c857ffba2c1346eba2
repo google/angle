@@ -193,6 +193,24 @@
       "revId": "87dd581dd109870f62a9b2c857ffba2c1346eba2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22738725_48029f88",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-02-27T05:58:11Z",
+      "side": 1,
+      "message": "Thanks for the clarification olli, I have uploaded updated patch set.",
+      "parentUuid": "42c87b75_16319ce6",
+      "revId": "87dd581dd109870f62a9b2c857ffba2c1346eba2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
