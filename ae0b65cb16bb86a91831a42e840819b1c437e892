@@ -22,6 +22,30 @@
       "revId": "ae0b65cb16bb86a91831a42e840819b1c437e892",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "428f9bad_1e1ccd64",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-27T17:34:35Z",
+      "side": 1,
+      "message": "The thing I\u0027m most worried about is leaving the vertex array bound and then binding an element array buffer somewhere else in the code causing the vertex array to be updated.\n\nIt could also be possible to defer the updates to the VAO until draw time because we already need to bind it for the draw call.  Given that we may need to do special processing to handle client data at that time, it might work out pretty well.",
+      "parentUuid": "02fda3e8_3cfd31be",
+      "range": {
+        "startLine": 65,
+        "startChar": 23,
+        "endLine": 65,
+        "endChar": 38
+      },
+      "revId": "ae0b65cb16bb86a91831a42e840819b1c437e892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
