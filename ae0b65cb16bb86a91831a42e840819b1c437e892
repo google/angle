@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02fda3e8_3cfd31be",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-27T00:15:01Z",
+      "side": 1,
+      "message": "I think these repeated state transitions are likely to impose significant overhead. Do you see a path forward where they might be eliminated?\n\nSpecifically, is it really necessary to always unbind the VAO at the end of all of these routines? Could this be left up to the calling code higher up?",
+      "range": {
+        "startLine": 65,
+        "startChar": 23,
+        "endLine": 65,
+        "endChar": 38
+      },
+      "revId": "ae0b65cb16bb86a91831a42e840819b1c437e892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
