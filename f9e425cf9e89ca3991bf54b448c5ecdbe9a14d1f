@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "921f2654_b57d209d",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-28T00:27:20Z",
+      "side": 1,
+      "message": "nit: do we use this indentation pattern for ifdef elsewhere in the file? seems like it should be the same justification as the if in the #if defined()",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 4
+      },
+      "revId": "f9e425cf9e89ca3991bf54b448c5ecdbe9a14d1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
