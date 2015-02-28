@@ -22,6 +22,30 @@
       "revId": "f9e425cf9e89ca3991bf54b448c5ecdbe9a14d1f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d20d1e2d_f783a000",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-02-28T00:32:44Z",
+      "side": 1,
+      "message": "On lines 62 and 71, the if statements are indented compared to the the \"#if defined()\"s directly above them.",
+      "parentUuid": "921f2654_b57d209d",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 4
+      },
+      "revId": "f9e425cf9e89ca3991bf54b448c5ecdbe9a14d1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
