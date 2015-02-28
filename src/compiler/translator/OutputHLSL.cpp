@@ -1680,6 +1680,12 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
       case EOpAbs:              outputTriplet(visit, "abs(", "", ")");       break;
       case EOpSign:             outputTriplet(visit, "sign(", "", ")");      break;
       case EOpFloor:            outputTriplet(visit, "floor(", "", ")");     break;
+      case EOpTrunc:            outputTriplet(visit, "trunc(", "", ")");     break;
+      case EOpRound:            outputTriplet(visit, "round(", "", ")");     break;
+      case EOpRoundEven:
+        ASSERT(node->getUseEmulatedFunction());
+        writeEmulatedFunctionTriplet(visit, "roundEven(");
+        break;
       case EOpCeil:             outputTriplet(visit, "ceil(", "", ")");      break;
       case EOpFract:            outputTriplet(visit, "frac(", "", ")");      break;
       case EOpIsNan:            outputTriplet(visit, "isnan(", "", ")");     break;

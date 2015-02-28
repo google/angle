@@ -69,6 +69,9 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpSign, genType, "sign", genType);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpSign, genIType, "sign", genIType);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpFloor, genType, "floor", genType);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpTrunc, genType, "trunc", genType);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpRound, genType, "round", genType);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpRoundEven, genType, "roundEven", genType);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpCeil, genType, "ceil", genType);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpFract, genType, "fract", genType);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMod, genType, "mod", genType, float1);

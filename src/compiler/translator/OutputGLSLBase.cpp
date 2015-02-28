@@ -549,6 +549,15 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
       case EOpFloor:
         preString = "floor(";
         break;
+      case EOpTrunc:
+        preString = "trunc(";
+        break;
+      case EOpRound:
+        preString = "round(";
+        break;
+      case EOpRoundEven:
+        preString = "roundEven(";
+        break;
       case EOpCeil:
         preString = "ceil(";
         break;

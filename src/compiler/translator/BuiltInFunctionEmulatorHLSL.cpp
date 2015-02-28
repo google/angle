@@ -194,6 +194,35 @@ BuiltInFunctionEmulatorHLSL::BuiltInFunctionEmulatorHLSL()
         "    return 0.5 * log((1.0 + x) / (1.0 - x));\n"
         "}\n");
 
+    AddEmulatedFunction(EOpRoundEven, float1,
+        "float webgl_roundEven_emu(in float x) {\n"
+        "    return (frac(x) == 0.5 && trunc(x) % 2.0 == 0.0) ? trunc(x) : round(x);\n"
+        "}\n");
+    AddEmulatedFunction(EOpRoundEven, float2,
+        "float2 webgl_roundEven_emu(in float2 x) {\n"
+        "    float2 v;\n"
+        "    v[0] = (frac(x[0]) == 0.5 && trunc(x[0]) % 2.0 == 0.0) ? trunc(x[0]) : round(x[0]);\n"
+        "    v[1] = (frac(x[1]) == 0.5 && trunc(x[1]) % 2.0 == 0.0) ? trunc(x[1]) : round(x[1]);\n"
+        "    return v;\n"
+        "}\n");
+    AddEmulatedFunction(EOpRoundEven, float3,
+        "float3 webgl_roundEven_emu(in float3 x) {\n"
+        "    float3 v;\n"
+        "    v[0] = (frac(x[0]) == 0.5 && trunc(x[0]) % 2.0 == 0.0) ? trunc(x[0]) : round(x[0]);\n"
+        "    v[1] = (frac(x[1]) == 0.5 && trunc(x[1]) % 2.0 == 0.0) ? trunc(x[1]) : round(x[1]);\n"
+        "    v[2] = (frac(x[2]) == 0.5 && trunc(x[2]) % 2.0 == 0.0) ? trunc(x[2]) : round(x[2]);\n"
+        "    return v;\n"
+        "}\n");
+    AddEmulatedFunction(EOpRoundEven, float4,
+        "float4 webgl_roundEven_emu(in float4 x) {\n"
+        "    float4 v;\n"
+        "    v[0] = (frac(x[0]) == 0.5 && trunc(x[0]) % 2.0 == 0.0) ? trunc(x[0]) : round(x[0]);\n"
+        "    v[1] = (frac(x[1]) == 0.5 && trunc(x[1]) % 2.0 == 0.0) ? trunc(x[1]) : round(x[1]);\n"
+        "    v[2] = (frac(x[2]) == 0.5 && trunc(x[2]) % 2.0 == 0.0) ? trunc(x[2]) : round(x[2]);\n"
+        "    v[3] = (frac(x[3]) == 0.5 && trunc(x[3]) % 2.0 == 0.0) ? trunc(x[3]) : round(x[3]);\n"
+        "    return v;\n"
+        "}\n");
+
     AddEmulatedFunction(EOpPackSnorm2x16, float2,
         "int webgl_toSnorm(in float x) {\n"
         "    return int(round(clamp(x, -1.0, 1.0) * 32767.0));\n"

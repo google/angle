@@ -91,6 +91,9 @@ const char *GetOperatorString(TOperator op)
       case EOpAbs: return "abs";
       case EOpSign: return "sign";
       case EOpFloor: return "floor";
+      case EOpTrunc: return "trunc";
+      case EOpRound: return "round";
+      case EOpRoundEven: return "roundEven";
       case EOpCeil: return "ceil";
       case EOpFract: return "fract";
       case EOpMod: return "mod";
