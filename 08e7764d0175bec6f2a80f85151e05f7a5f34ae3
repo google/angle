@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f2db0204_304348fd",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 668,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-02T15:11:00Z",
+      "side": 1,
+      "message": "I didn\u0027t know this was valid!",
+      "range": {
+        "startLine": 668,
+        "startChar": 34,
+        "endLine": 668,
+        "endChar": 35
+      },
+      "revId": "08e7764d0175bec6f2a80f85151e05f7a5f34ae3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
