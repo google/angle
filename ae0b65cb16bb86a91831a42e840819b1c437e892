@@ -94,6 +94,30 @@
       "revId": "ae0b65cb16bb86a91831a42e840819b1c437e892",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2b7deb3_87b0c6c2",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-02T16:57:48Z",
+      "side": 1,
+      "message": "Two things:\n- The mVertexArrayID that\u0027s held by VertexArrayGL will never be zero, it\u0027s always gen\u0027d in the constructor.\n- The StateManagerGL class won\u0027t do redundant bind calls, it tracks the currently bound objects.\n\nWe arn\u0027t able to directly mirror all GL calls (binding, state setting, etc) because as soon as we need to do any emulation or special behaviour, we need to do all sorts of unbinding and rebinding of state behind the scenes to preseve the guarentee.  It also lets us optimize a bit by only applying state when it\u0027s needed and not making redundant calls.\n\nThis class isn\u0027t doing a great job of optimizing yet.  When I get to implementing the client data vertex attributes, I\u0027m going to move the application of vertex attributes to the draw call so we only have to make sure the currently used VAO is up to date for the current draw call and it only needs to be bound once.",
+      "parentUuid": "f2b4e2b1_884f778d",
+      "range": {
+        "startLine": 65,
+        "startChar": 23,
+        "endLine": 65,
+        "endChar": 38
+      },
+      "revId": "ae0b65cb16bb86a91831a42e840819b1c437e892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
