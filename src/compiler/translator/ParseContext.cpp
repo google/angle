@@ -2793,6 +2793,136 @@ TIntermBranch *TParseContext::addBranch(TOperator op, TIntermTyped *returnValue,
     return intermediate.addBranch(op, returnValue, loc);
 }
 
+TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermNode *node,
+    const TSourceLoc &loc, bool *fatalError)
+{
+    *fatalError = false;
+    TOperator op = fnCall->getBuiltInOp();
+    TIntermTyped *callNode = nullptr;
+
+    if (op != EOpNull)
+    {
+        //
+        // Then this should be a constructor.
+        // Don't go through the symbol table for constructors.
+        // Their parameters will be verified algorithmically.
+        //
+        TType type(EbtVoid, EbpUndefined);  // use this to get the type back
+        if (!constructorErrorCheck(loc, node, *fnCall, op, &type))
+        {
+            //
+            // It's a constructor, of type 'type'.
+            //
+            callNode = addConstructor(node, &type, op, fnCall, loc);
+        }
+        else
+        {
+            recover();
+            callNode = intermediate.setAggregateOperator(nullptr, op, loc);
+        }
+        callNode->setType(type);
+    }
+    else
+    {
+        //
+        // Not a constructor.  Find it in the symbol table.
+        //
+        const TFunction* fnCandidate;
+        bool builtIn;
+        fnCandidate = findFunction(loc, fnCall, shaderVersion, &builtIn);
+        if (fnCandidate)
+        {
+            //
+            // A declared function.
+            //
+            if (builtIn && !fnCandidate->getExtension().empty() &&
+                extensionErrorCheck(loc, fnCandidate->getExtension()))
+            {
+                recover();
+            }
+            op = fnCandidate->getBuiltInOp();
+            if (builtIn && op != EOpNull)
+            {
+                //
+                // A function call mapped to a built-in operation.
+                //
+                if (fnCandidate->getParamCount() == 1)
+                {
+                    //
+                    // Treat it like a built-in unary operator.
+                    //
+                    callNode = intermediate.addUnaryMath(op, node, loc);
+                    if (callNode == nullptr)
+                    {
+                        std::stringstream extraInfoStream;
+                        extraInfoStream << "built in unary operator function.  Type: "
+                            << static_cast<TIntermTyped*>(node)->getCompleteString();
+                        std::string extraInfo = extraInfoStream.str();
+                        error(node->getLine(), " wrong operand type", "Internal Error", extraInfo.c_str());
+                        *fatalError = true;
+                        return nullptr;
+                    }
+                    const TType& returnType = fnCandidate->getReturnType();
+                    if (returnType.getBasicType() == EbtBool)
+                    {
+                        // Bool types should not have precision, so we'll override any precision
+                        // that might have been set by addUnaryMath.
+                        callNode->setType(returnType);
+                    }
+                    else
+                    {
+                        // addUnaryMath has set the precision of the node based on the operand.
+                        callNode->setTypePreservePrecision(returnType);
+                    }
+                }
+                else
+                {
+                    TIntermAggregate *aggregate = intermediate.setAggregateOperator(node, op, loc);
+                    aggregate->setType(fnCandidate->getReturnType());
+                    aggregate->setPrecisionFromChildren();
+                    callNode = aggregate;
+
+                    // Some built-in functions have out parameters too.
+                    functionCallLValueErrorCheck(fnCandidate, aggregate);
+                }
+            }
+            else
+            {
+                // This is a real function call
+
+                TIntermAggregate *aggregate = intermediate.setAggregateOperator(node, EOpFunctionCall, loc);
+                aggregate->setType(fnCandidate->getReturnType());
+
+                // this is how we know whether the given function is a builtIn function or a user defined function
+                // if builtIn == false, it's a userDefined -> could be an overloaded builtIn function also
+                // if builtIn == true, it's definitely a builtIn function with EOpNull
+                if (!builtIn)
+                    aggregate->setUserDefined();
+                aggregate->setName(fnCandidate->getMangledName());
+
+                // This needs to happen after the name is set
+                if (builtIn)
+                    aggregate->setBuiltInFunctionPrecision();
+
+                callNode = aggregate;
+
+                functionCallLValueErrorCheck(fnCandidate, aggregate);
+            }
+        }
+        else
+        {
+            // error message was put out by findFunction()
+            // Put on a dummy node for error recovery
+            ConstantUnion *unionArray = new ConstantUnion[1];
+            unionArray->setFConst(0.0f);
+            callNode = intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpUndefined, EvqConst), loc);
+            recover();
+        }
+    }
+    delete fnCall;
+    return callNode;
+}
+
 
 //
 // Parse an array of strings using yyparse.

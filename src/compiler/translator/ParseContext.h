@@ -179,6 +179,9 @@ struct TParseContext {
 
     TIntermBranch *addBranch(TOperator op, const TSourceLoc &loc);
     TIntermBranch *addBranch(TOperator op, TIntermTyped *returnValue, const TSourceLoc &loc);
+
+    TIntermTyped *addFunctionCallOrMethod(TFunction *fnCall, TIntermNode *node,
+        const TSourceLoc &loc, bool *fatalError);
 };
 
 int PaParseStrings(size_t count, const char* const string[], const int length[],

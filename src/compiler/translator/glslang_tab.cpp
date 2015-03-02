@@ -690,32 +690,32 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint16 yyrline[] =
 {
        0,   209,   209,   210,   213,   237,   240,   245,   250,   255,
-     260,   266,   269,   272,   275,   278,   281,   287,   295,   406,
-     409,   417,   420,   426,   430,   437,   443,   452,   460,   463,
-     473,   476,   479,   482,   492,   493,   494,   495,   503,   504,
-     507,   510,   517,   518,   521,   527,   528,   532,   539,   540,
-     543,   546,   549,   555,   556,   559,   565,   566,   573,   574,
-     581,   582,   589,   590,   596,   597,   603,   604,   610,   611,
-     628,   629,   642,   643,   644,   645,   649,   650,   651,   655,
-     659,   663,   667,   674,   677,   688,   696,   704,   731,   737,
-     748,   752,   756,   760,   767,   823,   826,   833,   841,   862,
-     883,   893,   921,   926,   936,   941,   951,   954,   957,   960,
-     966,   973,   976,   980,   984,   988,   995,   999,  1003,  1010,
-    1014,  1018,  1025,  1034,  1040,  1043,  1049,  1055,  1062,  1071,
-    1080,  1088,  1091,  1098,  1102,  1109,  1112,  1116,  1120,  1129,
-    1138,  1146,  1156,  1168,  1171,  1174,  1180,  1187,  1190,  1196,
-    1199,  1202,  1208,  1211,  1226,  1230,  1234,  1238,  1242,  1246,
-    1251,  1256,  1261,  1266,  1271,  1276,  1281,  1286,  1291,  1296,
-    1301,  1306,  1311,  1316,  1321,  1326,  1331,  1336,  1341,  1346,
-    1351,  1355,  1359,  1363,  1367,  1371,  1375,  1379,  1383,  1387,
-    1391,  1395,  1399,  1403,  1407,  1411,  1419,  1427,  1431,  1444,
-    1444,  1447,  1447,  1453,  1456,  1472,  1475,  1484,  1488,  1494,
-    1501,  1516,  1520,  1524,  1525,  1531,  1532,  1533,  1534,  1535,
-    1536,  1537,  1541,  1542,  1542,  1542,  1552,  1553,  1557,  1557,
-    1558,  1558,  1563,  1566,  1576,  1579,  1585,  1586,  1590,  1598,
-    1602,  1609,  1609,  1616,  1619,  1626,  1631,  1648,  1648,  1653,
-    1653,  1660,  1660,  1668,  1671,  1677,  1680,  1686,  1690,  1697,
-    1700,  1703,  1706,  1709,  1718,  1722,  1729,  1732,  1738,  1738
+     260,   266,   269,   272,   275,   278,   281,   287,   295,   306,
+     309,   317,   320,   326,   330,   337,   343,   352,   360,   363,
+     373,   376,   379,   382,   392,   393,   394,   395,   403,   404,
+     407,   410,   417,   418,   421,   427,   428,   432,   439,   440,
+     443,   446,   449,   455,   456,   459,   465,   466,   473,   474,
+     481,   482,   489,   490,   496,   497,   503,   504,   510,   511,
+     528,   529,   542,   543,   544,   545,   549,   550,   551,   555,
+     559,   563,   567,   574,   577,   588,   596,   604,   631,   637,
+     648,   652,   656,   660,   667,   723,   726,   733,   741,   762,
+     783,   793,   821,   826,   836,   841,   851,   854,   857,   860,
+     866,   873,   876,   880,   884,   888,   895,   899,   903,   910,
+     914,   918,   925,   934,   940,   943,   949,   955,   962,   971,
+     980,   988,   991,   998,  1002,  1009,  1012,  1016,  1020,  1029,
+    1038,  1046,  1056,  1068,  1071,  1074,  1080,  1087,  1090,  1096,
+    1099,  1102,  1108,  1111,  1126,  1130,  1134,  1138,  1142,  1146,
+    1151,  1156,  1161,  1166,  1171,  1176,  1181,  1186,  1191,  1196,
+    1201,  1206,  1211,  1216,  1221,  1226,  1231,  1236,  1241,  1246,
+    1251,  1255,  1259,  1263,  1267,  1271,  1275,  1279,  1283,  1287,
+    1291,  1295,  1299,  1303,  1307,  1311,  1319,  1327,  1331,  1344,
+    1344,  1347,  1347,  1353,  1356,  1372,  1375,  1384,  1388,  1394,
+    1401,  1416,  1420,  1424,  1425,  1431,  1432,  1433,  1434,  1435,
+    1436,  1437,  1441,  1442,  1442,  1442,  1452,  1453,  1457,  1457,
+    1458,  1458,  1463,  1466,  1476,  1479,  1485,  1486,  1490,  1498,
+    1502,  1509,  1509,  1516,  1519,  1526,  1531,  1548,  1548,  1553,
+    1553,  1560,  1560,  1568,  1571,  1577,  1580,  1586,  1590,  1597,
+    1600,  1603,  1606,  1609,  1618,  1622,  1629,  1632,  1638,  1638
 };
 #endif
 
@@ -2442,112 +2442,12 @@ yyreduce:
   case 18:
 
     {
-        TFunction* fnCall = (yyvsp[0].interm).function;
-        TOperator op = fnCall->getBuiltInOp();
-
-        if (op != EOpNull)
+        bool fatalError = false;
+        (yyval.interm.intermTypedNode) = context->addFunctionCallOrMethod((yyvsp[0].interm).function, (yyvsp[0].interm).intermNode, (yylsp[0]), &fatalError);
+        if (fatalError)
         {
-            //
-            // Then this should be a constructor.
-            // Don't go through the symbol table for constructors.
-            // Their parameters will be verified algorithmically.
-            //
-            TType type(EbtVoid, EbpUndefined);  // use this to get the type back
-            if (context->constructorErrorCheck((yylsp[0]), (yyvsp[0].interm).intermNode, *fnCall, op, &type)) {
-                (yyval.interm.intermTypedNode) = 0;
-            } else {
-                //
-                // It's a constructor, of type 'type'.
-                //
-                (yyval.interm.intermTypedNode) = context->addConstructor((yyvsp[0].interm).intermNode, &type, op, fnCall, (yylsp[0]));
-            }
-
-            if ((yyval.interm.intermTypedNode) == 0) {
-                context->recover();
-                (yyval.interm.intermTypedNode) = context->intermediate.setAggregateOperator(0, op, (yylsp[0]));
-            }
-            (yyval.interm.intermTypedNode)->setType(type);
-        } else {
-            //
-            // Not a constructor.  Find it in the symbol table.
-            //
-            const TFunction* fnCandidate;
-            bool builtIn;
-            fnCandidate = context->findFunction((yylsp[0]), fnCall, context->shaderVersion, &builtIn);
-            if (fnCandidate) {
-                //
-                // A declared function.
-                //
-                if (builtIn && !fnCandidate->getExtension().empty() &&
-                    context->extensionErrorCheck((yylsp[0]), fnCandidate->getExtension())) {
-                    context->recover();
-                }
-                op = fnCandidate->getBuiltInOp();
-                if (builtIn && op != EOpNull) {
-                    //
-                    // A function call mapped to a built-in operation.
-                    //
-                    if (fnCandidate->getParamCount() == 1) {
-                        //
-                        // Treat it like a built-in unary operator.
-                        //
-                        (yyval.interm.intermTypedNode) = context->intermediate.addUnaryMath(op, (yyvsp[0].interm).intermNode, (yylsp[0]));
-                        if ((yyval.interm.intermTypedNode) == 0)  {
-                            std::stringstream extraInfoStream;
-                            extraInfoStream << "built in unary operator function.  Type: " << static_cast<TIntermTyped*>((yyvsp[0].interm).intermNode)->getCompleteString();
-                            std::string extraInfo = extraInfoStream.str();
-                            context->error((yyvsp[0].interm).intermNode->getLine(), " wrong operand type", "Internal Error", extraInfo.c_str());
-                            YYERROR;
-                        }
-                        const TType& returnType = fnCandidate->getReturnType();
-                        if (returnType.getBasicType() == EbtBool) {
-                            // Bool types should not have precision, so we'll override any precision
-                            // that might have been set by addUnaryMath.
-                            (yyval.interm.intermTypedNode)->setType(returnType);
-                        } else {
-                            // addUnaryMath has set the precision of the node based on the operand.
-                            (yyval.interm.intermTypedNode)->setTypePreservePrecision(returnType);
-                        }
-                    } else {
-                        TIntermAggregate *aggregate = context->intermediate.setAggregateOperator((yyvsp[0].interm).intermAggregate, op, (yylsp[0]));
-                        aggregate->setType(fnCandidate->getReturnType());
-                        aggregate->setPrecisionFromChildren();
-                        (yyval.interm.intermTypedNode) = aggregate;
-
-                        // Some built-in functions have out parameters too.
-                        context->functionCallLValueErrorCheck(fnCandidate, aggregate);
-                    }
-                } else {
-                    // This is a real function call
-
-                    TIntermAggregate *aggregate = context->intermediate.setAggregateOperator((yyvsp[0].interm).intermAggregate, EOpFunctionCall, (yylsp[0]));
-                    aggregate->setType(fnCandidate->getReturnType());
-
-                    // this is how we know whether the given function is a builtIn function or a user defined function
-                    // if builtIn == false, it's a userDefined -> could be an overloaded builtIn function also
-                    // if builtIn == true, it's definitely a builtIn function with EOpNull
-                    if (!builtIn)
-                        aggregate->setUserDefined();
-                    aggregate->setName(fnCandidate->getMangledName());
-
-                    // This needs to happen after the name is set
-                    if (builtIn)
-                        aggregate->setBuiltInFunctionPrecision();
-
-                    (yyval.interm.intermTypedNode) = aggregate;
-
-                    context->functionCallLValueErrorCheck(fnCandidate, aggregate);
-                }
-            } else {
-                // error message was put out by PaFindFunction()
-                // Put on a dummy node for error recovery
-                ConstantUnion *unionArray = new ConstantUnion[1];
-                unionArray->setFConst(0.0f);
-                (yyval.interm.intermTypedNode) = context->intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpUndefined, EvqConst), (yylsp[0]));
-                context->recover();
-            }
+            YYERROR;
         }
-        delete fnCall;
     }
 
     break;
