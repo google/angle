@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "923e46eb_9d99637e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-02T18:54:16Z",
+      "side": 1,
+      "message": "Done, set all caps to their ES3 minimums (except texture formats).",
+      "parentUuid": "f2db0204_b05c18cb",
+      "range": {
+        "startLine": 65,
+        "startChar": 10,
+        "endLine": 65,
+        "endChar": 35
+      },
+      "revId": "3976a0f925c6469187c8448684855450c31e5591",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "820273b9_18e4c55a",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.h",
         "patchSetId": 3
@@ -179,6 +203,30 @@
       "side": 1,
       "message": "gl_nativegl or gl_sysgl? It might be useful to have them distinct, because otherwise the reverse is impossible.",
       "parentUuid": "42787b6f_763c10b7",
+      "range": {
+        "startLine": 24,
+        "startChar": 10,
+        "endLine": 24,
+        "endChar": 15
+      },
+      "revId": "3976a0f925c6469187c8448684855450c31e5591",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "923e46eb_bd9c1f6e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-02T18:54:16Z",
+      "side": 1,
+      "message": "Done, I like nativegl.",
+      "parentUuid": "d2699ee5_97248435",
       "range": {
         "startLine": 24,
         "startChar": 10,
