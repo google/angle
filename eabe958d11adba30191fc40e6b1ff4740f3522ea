@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f2db0204_30c828ef",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-02T15:41:34Z",
+      "side": 1,
+      "message": "we\u0027ll still need device_base here, along with device_d3d",
+      "revId": "eabe958d11adba30191fc40e6b1ff4740f3522ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2b4e2b1_6895633a",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-02T15:41:34Z",
+      "side": 1,
+      "message": "re-int: formatting",
+      "range": {
+        "startLine": 37,
+        "startChar": 3,
+        "endLine": 38,
+        "endChar": 23
+      },
+      "revId": "eabe958d11adba30191fc40e6b1ff4740f3522ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2db0204_908d54af",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-02T15:41:34Z",
+      "side": 1,
+      "message": "nit: can add if (!display-\u003egetExtensions().deviceBase) check",
+      "revId": "eabe958d11adba30191fc40e6b1ff4740f3522ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2b4e2b1_c8832f01",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-02T15:41:34Z",
+      "side": 1,
+      "message": "can remove this check, duplicate of above",
+      "range": {
+        "startLine": 308,
+        "startChar": 7,
+        "endLine": 312,
+        "endChar": 9
+      },
+      "revId": "eabe958d11adba30191fc40e6b1ff4740f3522ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2b7deb3_278f9a2a",
+        "filename": "tests/angle_tests/QueryDisplayAttribTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-02T15:41:34Z",
+      "side": 1,
+      "message": "should include the base check still here",
+      "revId": "eabe958d11adba30191fc40e6b1ff4740f3522ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
