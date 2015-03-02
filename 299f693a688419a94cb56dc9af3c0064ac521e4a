@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "62581f1b_2f65e97f",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-02T10:53:33Z",
+      "side": 1,
+      "message": "Looks like a mistake slipped in - this function seems like it\u0027s pasted from atanh and it causes dEQP test failures too. Please be more careful when looking at the test results, the constant_expressions tests are allowed to fail for now but this patch fails in operator.common_functions.roundEven tests too. By opening the TestResults.qpa file in Candy it\u0027s easy to see what failed.",
+      "revId": "299f693a688419a94cb56dc9af3c0064ac521e4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62581f1b_ef3be161",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-02T10:53:33Z",
+      "side": 1,
+      "message": "This implementation looks a bit inefficient, since all the components are computed separately and % is used. I think this is still fine for an initial implementation, but you can try to make it more optimized if you can.",
+      "revId": "299f693a688419a94cb56dc9af3c0064ac521e4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32d2fae7_b24c2099",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-02T10:53:33Z",
+      "side": 1,
+      "message": "These should be ESSL3_BUILTINS, not COMMON_BUILTINS.",
+      "revId": "299f693a688419a94cb56dc9af3c0064ac521e4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
