@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32591a74_1a76fd0b",
+        "filename": "src/compiler/translator/RemoveSwitchFallThrough.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-02T19:40:44Z",
+      "side": 1,
+      "message": "nit: aligned brackets are preferred.",
+      "range": {
+        "startLine": 95,
+        "startChar": 68,
+        "endLine": 95,
+        "endChar": 70
+      },
+      "revId": "83c8de1a2977f17a3bbdeea5e3a45aa535d223d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
