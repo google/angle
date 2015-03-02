@@ -70,6 +70,30 @@
       "revId": "ae0b65cb16bb86a91831a42e840819b1c437e892",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2b4e2b1_884f778d",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-02T15:22:03Z",
+      "side": 1,
+      "message": "If zero is already bound, wouldn\u0027t it also call:\n\n bindVertexArray(0)\n bindBuffer\n bindVertexArray(0)\n\nI was sort of expecting that we\u0027d translate a user\u0027s BindBuffer calls to a glBindBuffer on the driver, but I guess this isn\u0027t the case.",
+      "parentUuid": "62d57f78_87998663",
+      "range": {
+        "startLine": 65,
+        "startChar": 23,
+        "endLine": 65,
+        "endChar": 38
+      },
+      "revId": "ae0b65cb16bb86a91831a42e840819b1c437e892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
