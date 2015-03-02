@@ -10,6 +10,10 @@
 #ifndef LIBANGLE_RENDERER_GL_RENDERERGLUTILS_H_
 #define LIBANGLE_RENDERER_GL_RENDERERGLUTILS_H_
 
+#include "libANGLE/renderer/gl/functionsgl_typedefs.h"
+
+#include <vector>
+
 namespace gl
 {
 struct Caps;
@@ -20,6 +24,14 @@ struct Extensions;
 namespace rx
 {
 class FunctionsGL;
+
+namespace nativegl
+{
+
+void GetGLVersion(PFNGLGETSTRINGPROC getStringFunction, GLuint *outMajorVersion, GLuint *outMinorVersion, bool *outIsES);
+std::vector<std::string> GetGLExtensions(PFNGLGETSTRINGPROC getStringFunction);
+
+}
 
 namespace nativegl_gl
 {

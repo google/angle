@@ -12,6 +12,7 @@
 #include "libANGLE/Config.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/renderer/gl/renderergl_utils.h"
 #include "libANGLE/renderer/gl/wgl/FunctionsWGL.h"
 #include "libANGLE/renderer/gl/wgl/WindowSurfaceWGL.h"
 #include "libANGLE/renderer/gl/wgl/wgl_utils.h"
@@ -184,14 +185,11 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to get glGetString pointer.");
     }
 
-    const char *dummyGLVersionString = reinterpret_cast<const char*>(getString(GL_VERSION));
-    if (!dummyGLVersionString)
-    {
-        return egl::Error(EGL_NOT_INITIALIZED, "Failed to get OpenGL version string.");
-    }
-
-    GLuint maxGLVersionMajor = dummyGLVersionString[0] - '0';
-    GLuint maxGLVersionMinor = dummyGLVersionString[2] - '0';
+    GLuint maxGLVersionMajor = 0;
+    GLuint maxGLVersionMinor = 0;
+    bool isES = false;
+    nativegl::GetGLVersion(getString, &maxGLVersionMajor, &maxGLVersionMinor, &isES);
+    ASSERT(!isES);
 
     // Reinitialize the wgl functions to grab the extensions
     mFunctionsWGL->intialize(mOpenGLModule, dummyDeviceContext);
@@ -300,9 +298,8 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to make the intermediate WGL context current.");
     }
 
-    const char *versionString = reinterpret_cast<const char*>(getString(GL_VERSION));
-    mGLVersionMajor = versionString[0] - '0';
-    mGLVersionMinor = versionString[2] - '0';
+    nativegl::GetGLVersion(getString, &mGLVersionMajor, &mGLVersionMinor, &isES);
+    ASSERT(!isES);
 
     mFunctionsGL = new FunctionsGLWindows(mOpenGLModule, mFunctionsWGL->getProcAddress);
     mFunctionsGL->initialize(mGLVersionMajor, mGLVersionMinor);
