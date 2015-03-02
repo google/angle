@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d2699ee5_d793dcd2",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1781,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-02T15:13:07Z",
+      "side": 1,
+      "message": "nit: I think a short comment here would help de-mystify this to the reader",
+      "range": {
+        "startLine": 1781,
+        "startChar": 28,
+        "endLine": 1781,
+        "endChar": 41
+      },
+      "revId": "156358d6c048dfecdc9da814510aba694a28fbf6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
