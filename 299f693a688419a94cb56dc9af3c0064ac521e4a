@@ -68,6 +68,24 @@
       "revId": "299f693a688419a94cb56dc9af3c0064ac521e4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "52920e67_6e1ccf9e",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-03T05:36:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32d2fae7_b24c2099",
+      "revId": "299f693a688419a94cb56dc9af3c0064ac521e4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
