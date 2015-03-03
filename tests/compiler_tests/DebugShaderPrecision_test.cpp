@@ -27,7 +27,8 @@ class DebugShaderPrecisionTest : public testing::Test
 
         mTranslatorESSL = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_GLES2_SPEC);
         ASSERT_TRUE(mTranslatorESSL->Init(resources));
-        mTranslatorGLSL = new TranslatorGLSL(GL_FRAGMENT_SHADER, SH_GLES2_SPEC);
+        mTranslatorGLSL = new TranslatorGLSL(
+            GL_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_GLSL_COMPATIBILITY_OUTPUT);
         ASSERT_TRUE(mTranslatorGLSL->Init(resources));
     }
 
@@ -92,7 +93,8 @@ class NoDebugShaderPrecisionTest : public testing::Test
         ShBuiltInResources resources;
         ShInitBuiltInResources(&resources);
 
-        mTranslator = new TranslatorGLSL(GL_FRAGMENT_SHADER, SH_GLES2_SPEC);
+        mTranslator = new TranslatorGLSL(
+            GL_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_GLSL_COMPATIBILITY_OUTPUT);
         ASSERT_TRUE(mTranslator->Init(resources));
     }
 

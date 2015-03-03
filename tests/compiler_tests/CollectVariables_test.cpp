@@ -29,7 +29,8 @@ class CollectVariablesTest : public testing::Test
         ShInitBuiltInResources(&resources);
         resources.MaxDrawBuffers = 8;
 
-        mTranslator = new TranslatorGLSL(mShaderType, SH_GLES3_SPEC);
+        mTranslator = new TranslatorGLSL(
+            mShaderType, SH_GLES3_SPEC, SH_GLSL_COMPATIBILITY_OUTPUT);
         ASSERT_TRUE(mTranslator->Init(resources));
     }
 
