@@ -16,6 +16,24 @@
       "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72ce32a5_148b349a",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-03T17:22:22Z",
+      "side": 1,
+      "message": "Given that clang-cl is getting more compatible, I think we can decide between turning it on for all Windows/WinRT with \u003cfuture\u003e or with a hand-rolled threads lib on top of Win32 threads. Nico do you know of any runtime problems could come about from using \u003cfuture\u003e?",
+      "parentUuid": "129df66f_11fc4cf4",
+      "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
