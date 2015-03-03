@@ -124,6 +124,24 @@
       "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9242c6dc_00cae84a",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-03T20:42:50Z",
+      "side": 1,
+      "message": "I\u0027m fine with disabling 4530 as long as we document why. In particular, can we disable it when including \u003cfuture\u003e?\n\nI\u0027m good with moving forward using \u003cfuture\u003e since it will be the most cross-platform solution.",
+      "parentUuid": "121256d8_a9b2ddfc",
+      "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
