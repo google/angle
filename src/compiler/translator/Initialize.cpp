@@ -352,9 +352,9 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
 
     if (type == GL_FRAGMENT_SHADER)
     {
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpDFdx, "GL_OES_standard_derivatives", genType, "dFdx", genType);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpDFdy, "GL_OES_standard_derivatives", genType, "dFdy", genType);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpFwidth, "GL_OES_standard_derivatives", genType, "fwidth", genType);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpDFdx, genType, "dFdx", genType);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpDFdy, genType, "dFdy", genType);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpFwidth, genType, "fwidth", genType);
     }
 
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureOffset", gsampler2D, float2, int2);
