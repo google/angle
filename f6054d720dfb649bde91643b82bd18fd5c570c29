@@ -34,6 +34,24 @@
       "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92cf269e_f579d885",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-03-03T17:54:53Z",
+      "side": 1,
+      "message": "See the bug I linked to: we\u0027re not sure how well it\u0027s going to work on XP.\n\nWe definitely don\u0027t want to:\n* turn on _HAS_EXCEPTIONS\u003d1 while /EH turns handlers off (those settings should match)\n* turn handlers on (because code size and whatnot, again see that bug)\n\nSo if you want to use the async stuff, you\u0027ll have to re-suppress the cl warning about try blocks.",
+      "parentUuid": "72ce32a5_148b349a",
+      "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
