@@ -52,6 +52,24 @@
       "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7270f218_045256bc",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-03-03T18:01:18Z",
+      "side": 1,
+      "message": "Note that WinRT doesn\u0027t support Win32 threads.\n\nIf we are confident that \u003cfuture\u003e works correctly on Clang at runtime, then I am happy to re-enable this change across all platforms.\n\nThis code will not be executed on Windows XP. I don\u0027t see it bringing in any new dependencies to ANGLE either.\n\nHow about we move forward with this, then?\n- Use \u003cfuture\u003e\n- Set _HAS_EXCEPTIONS\u003d0\n- Disable warning C4530\n\nThanks,\nAustin",
+      "parentUuid": "92cf269e_f579d885",
+      "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
