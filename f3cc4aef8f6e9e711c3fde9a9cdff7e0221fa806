@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72c2b258_faa321a9",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-03-03T12:32:58Z",
+      "side": 1,
+      "message": "There is a typo here and *.min* dEQP tests started failing because of this, it should be:\nsymbolTable.insertBuiltIn(ESSL3_BUILTINS, genUType, \"min\", genUType, genUType);",
+      "range": {
+        "startLine": 80,
+        "startChar": 63,
+        "endLine": 80,
+        "endChar": 71
+      },
+      "revId": "f3cc4aef8f6e9e711c3fde9a9cdff7e0221fa806",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
