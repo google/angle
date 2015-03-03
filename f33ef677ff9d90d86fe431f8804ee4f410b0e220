@@ -1,0 +1,176 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72ce32a5_1418d424",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-03T17:18:08Z",
+      "side": 1,
+      "message": "nit: clip first line description to 65 chars, then split description into a second paragraph clipped to 72 chars. also can you open an issue on the angle tracker and cc me?",
+      "range": {
+        "startLine": 7,
+        "startChar": 27,
+        "endLine": 7,
+        "endChar": 53
+      },
+      "revId": "f33ef677ff9d90d86fe431f8804ee4f410b0e220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12e976fa_51b674d0",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-03T17:18:08Z",
+      "side": 1,
+      "message": "these two should be in an #ifndef block corresponding to EGL_ANGLE_device_d3d. I\u0027ll need to check with Shannon for final values for the enums.",
+      "range": {
+        "startLine": 472,
+        "startChar": 0,
+        "endLine": 473,
+        "endChar": 48
+      },
+      "revId": "f33ef677ff9d90d86fe431f8804ee4f410b0e220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12e976fa_f1eb28aa",
+        "filename": "src/libANGLE/Device.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-03T17:18:08Z",
+      "side": 1,
+      "message": "nit: don\u0027t need extra space here",
+      "revId": "f33ef677ff9d90d86fe431f8804ee4f410b0e220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12e976fa_91ea9ca3",
+        "filename": "src/libANGLE/Device.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-03T17:18:08Z",
+      "side": 1,
+      "message": "nit: same",
+      "revId": "f33ef677ff9d90d86fe431f8804ee4f410b0e220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2ef82fd_f0be80fc",
+        "filename": "src/libANGLE/Device.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-03T17:18:08Z",
+      "side": 1,
+      "message": "nit: indentation",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 7
+      },
+      "revId": "f33ef677ff9d90d86fe431f8804ee4f410b0e220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2ef82fd_d0ea5cf6",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-03T17:18:08Z",
+      "side": 1,
+      "message": "I think you can snip all this and include RendererD3D.h",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 6
+      },
+      "revId": "f33ef677ff9d90d86fe431f8804ee4f410b0e220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72ce32a5_b4748052",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-03T17:18:08Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 37,
+        "startChar": 22,
+        "endLine": 37,
+        "endChar": 23
+      },
+      "revId": "f33ef677ff9d90d86fe431f8804ee4f410b0e220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72ce32a5_7466e89f",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-03T17:18:08Z",
+      "side": 1,
+      "message": "can remove this",
+      "range": {
+        "startLine": 314,
+        "startChar": 7,
+        "endLine": 318,
+        "endChar": 9
+      },
+      "revId": "f33ef677ff9d90d86fe431f8804ee4f410b0e220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
