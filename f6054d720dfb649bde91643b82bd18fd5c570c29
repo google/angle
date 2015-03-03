@@ -106,6 +106,24 @@
       "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "121256d8_a9b2ddfc",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-03-03T20:07:08Z",
+      "side": 1,
+      "message": "Yeah, sorry, I misread your reply. _HAS_EXCEPTIONS\u003d0 is correct. I meant \"you don\u0027t need #define _HAS_EXCEPTIONS 1 locally if you include \u003ceh.h\u003e\" but that doesn\u0027t have anything to do with what you wrote, now that I look at it again :-P\n\nUp to Jamie how he feels about disabling 4530.",
+      "parentUuid": "121256d8_49d00147",
+      "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
