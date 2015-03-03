@@ -160,6 +160,24 @@
       "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f23dc24d_80b4b637",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-03T20:56:06Z",
+      "side": 1,
+      "message": "Austin, yes, we\u0027ll need the #ifdefs and I like the pragma. Also, can you can leave _HAS_EXCEPTIONS as 0 and include \u003ceh.h\u003e?",
+      "parentUuid": "7251d2a7_dc5aad5d",
+      "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
