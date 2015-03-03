@@ -142,6 +142,24 @@
       "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7251d2a7_dc5aad5d",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-03-03T20:48:05Z",
+      "side": 1,
+      "message": "Great! \n\nShall I disable the warning via a #pragma before including \u003cfuture\u003e? I just briefly tested that now and it compiles.\n\nAlso, would you like me to leave in the #ifdefs (ANGLE_MULTITHREADED_D3D_SHADER_COMPILE) so we can easily disable multithreaded compilation in the future?",
+      "parentUuid": "9242c6dc_00cae84a",
+      "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
