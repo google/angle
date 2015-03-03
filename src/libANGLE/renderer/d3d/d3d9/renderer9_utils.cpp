@@ -483,6 +483,9 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
     extensions->mapBuffer = false;
     extensions->mapBufferRange = false;
 
+    // textureRG is emulated and not performant.
+    extensions->textureRG = false;
+
     D3DADAPTER_IDENTIFIER9 adapterId = { 0 };
     if (SUCCEEDED(d3d9->GetAdapterIdentifier(adapter, 0, &adapterId)))
     {
