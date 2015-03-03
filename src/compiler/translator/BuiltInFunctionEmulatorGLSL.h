@@ -16,8 +16,6 @@ class BuiltInFunctionEmulatorGLSL : public BuiltInFunctionEmulator
 {
   public:
     BuiltInFunctionEmulatorGLSL(sh::GLenum shaderType);
-
-    void OutputEmulatedFunctionDefinition(TInfoSinkBase& out, bool withPrecision) const;
 };
 
 #endif  // COMPILER_TRANSLATOR_BUILTINFUNCTIONEMULATORGLSL_H_

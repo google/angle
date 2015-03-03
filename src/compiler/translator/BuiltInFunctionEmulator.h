@@ -26,14 +26,14 @@ class BuiltInFunctionEmulator
     // "name(" becomes "webgl_name_emu(".
     static TString GetEmulatedFunctionName(const TString& name);
 
-  protected:
-    BuiltInFunctionEmulator();
-
     bool IsOutputEmpty() const;
 
     // Output function emulation definition. This should be before any other
     // shader source.
     void OutputEmulatedFunctions(TInfoSinkBase& out) const;
+
+  protected:
+    BuiltInFunctionEmulator();
 
     // Add functions that need to be emulated.
     void AddEmulatedFunction(TOperator op, const TType& param, const char* emulatedFunctionDefinition);

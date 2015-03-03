@@ -83,8 +83,13 @@ void TranslatorGLSL::translate(TIntermNode *root, int) {
     }
 
     // Write emulated built-in functions if needed.
-    getBuiltInFunctionEmulator().OutputEmulatedFunctionDefinition(
-        sink, false);
+    if (!getBuiltInFunctionEmulator().IsOutputEmpty())
+    {
+        sink << "// BEGIN: Generated code for built-in function emulation\n\n";
+        sink << "#define webgl_emu_precision\n\n";
+        getBuiltInFunctionEmulator().OutputEmulatedFunctions(sink);
+        sink << "// END: Generated code for built-in function emulation\n\n";
+    }
 
     // Write array bounds clamping emulation if needed.
     getArrayBoundsClamper().OutputClampingFunctionDefinition(sink);

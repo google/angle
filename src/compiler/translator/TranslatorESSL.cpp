@@ -34,8 +34,25 @@ void TranslatorESSL::translate(TIntermNode *root, int) {
     }
 
     // Write emulated built-in functions if needed.
-    getBuiltInFunctionEmulator().OutputEmulatedFunctionDefinition(
-        sink, getShaderType() == GL_FRAGMENT_SHADER);
+    if (!getBuiltInFunctionEmulator().IsOutputEmpty())
+    {
+        sink << "// BEGIN: Generated code for built-in function emulation\n\n";
+        if (getShaderType() == GL_FRAGMENT_SHADER)
+        {
+            sink << "#if defined(GL_FRAGMENT_PRECISION_HIGH)\n"
+                 << "#define webgl_emu_precision highp\n"
+                 << "#else\n"
+                 << "#define webgl_emu_precision mediump\n"
+                 << "#endif\n\n";
+        }
+        else
+        {
+            sink << "#define webgl_emu_precision highp\n";
+        }
+
+        getBuiltInFunctionEmulator().OutputEmulatedFunctions(sink);
+        sink << "// END: Generated code for built-in function emulation\n\n";
+    }
 
     // Write array bounds clamping emulation if needed.
     getArrayBoundsClamper().OutputClampingFunctionDefinition(sink);

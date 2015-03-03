@@ -408,9 +408,3 @@ BuiltInFunctionEmulatorHLSL::BuiltInFunctionEmulatorHLSL()
         "    return cof / determinant(transpose(m));\n"
         "}\n");
 }
-
-void BuiltInFunctionEmulatorHLSL::OutputEmulatedFunctionDefinition(
-    TInfoSinkBase& out) const
-{
-    OutputEmulatedFunctions(out);
-}

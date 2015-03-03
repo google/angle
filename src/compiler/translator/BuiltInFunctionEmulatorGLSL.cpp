@@ -37,23 +37,3 @@ BuiltInFunctionEmulatorGLSL::BuiltInFunctionEmulatorGLSL(sh::GLenum shaderType)
     AddEmulatedFunction(EOpReflect, float1, float1, "#define webgl_reflect_emu(I, N) ((I) - 2.0 * (N) * (I) * (N))");
 #endif
 }
-
-void BuiltInFunctionEmulatorGLSL::OutputEmulatedFunctionDefinition(
-    TInfoSinkBase& out, bool withPrecision) const
-{
-    if (IsOutputEmpty())
-        return;
-
-    out << "// BEGIN: Generated code for built-in function emulation\n\n";
-    if (withPrecision) {
-        out << "#if defined(GL_FRAGMENT_PRECISION_HIGH)\n"
-            << "#define webgl_emu_precision highp\n"
-            << "#else\n"
-            << "#define webgl_emu_precision mediump\n"
-            << "#endif\n\n";
-    } else {
-        out << "#define webgl_emu_precision\n\n";
-    }
-    OutputEmulatedFunctions(out);
-    out << "// END: Generated code for built-in function emulation\n\n";
-}
