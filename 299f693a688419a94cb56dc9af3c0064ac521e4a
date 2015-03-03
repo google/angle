@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "52920e67_cef303ed",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-03T05:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62581f1b_2f65e97f",
+      "revId": "299f693a688419a94cb56dc9af3c0064ac521e4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "62581f1b_ef3be161",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
         "patchSetId": 2
