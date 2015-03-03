@@ -58,8 +58,6 @@ class FunctionsGLWindows : public FunctionsGL
 DisplayWGL::DisplayWGL()
     : DisplayGL(),
       mOpenGLModule(nullptr),
-      mGLVersionMajor(0),
-      mGLVersionMinor(0),
       mFunctionsWGL(nullptr),
       mFunctionsGL(nullptr),
       mWindowClass(0),
@@ -186,12 +184,6 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to get glGetString pointer.");
     }
 
-    GLuint maxGLVersionMajor = 0;
-    GLuint maxGLVersionMinor = 0;
-    bool isES = false;
-    nativegl::GetGLVersion(getString, &maxGLVersionMajor, &maxGLVersionMinor, &isES);
-    ASSERT(!isES);
-
     // Reinitialize the wgl functions to grab the extensions
     mFunctionsWGL->intialize(mOpenGLModule, dummyDeviceContext);
 
@@ -283,9 +275,6 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     if (!mWGLContext)
     {
         // Don't have control over GL versions
-        mGLVersionMajor = maxGLVersionMajor;
-        mGLVersionMinor = maxGLVersionMinor;
-
         mWGLContext = mFunctionsWGL->createContext(mDeviceContext);
     }
 
@@ -299,11 +288,8 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to make the intermediate WGL context current.");
     }
 
-    nativegl::GetGLVersion(getString, &mGLVersionMajor, &mGLVersionMinor, &isES);
-    ASSERT(!isES);
-
     mFunctionsGL = new FunctionsGLWindows(mOpenGLModule, mFunctionsWGL->getProcAddress);
-    mFunctionsGL->initialize(mGLVersionMajor, mGLVersionMinor);
+    mFunctionsGL->initialize();
 
     return DisplayGL::initialize(display);
 }

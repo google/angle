@@ -33,6 +33,7 @@ struct TextureCaps
     // Support for being used as a framebuffer attachment or renderbuffer format
     bool renderable;
 
+    // Set of supported sample counts, only guaranteed to be valid in ES3.
     SupportedSampleSet sampleCounts;
 
     // Get the maximum number of samples supported

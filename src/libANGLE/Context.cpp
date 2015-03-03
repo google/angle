@@ -1548,7 +1548,6 @@ void Context::initCaps(GLuint clientVersion)
 
     mCaps.maxFragmentInputComponents = std::min<GLuint>(mCaps.maxFragmentInputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
 
-    GLuint maxSamples = 0;
     mCaps.compressedTextureFormats.clear();
 
     const TextureCapsMap &rendererFormats = mRenderer->getRendererTextureCaps();
@@ -1569,7 +1568,6 @@ void Context::initCaps(GLuint clientVersion)
         {
             formatCaps.sampleCounts.clear();
         }
-        maxSamples = std::max(maxSamples, formatCaps.getMaxSamples());
 
         if (formatCaps.texturable && formatInfo.compressed)
         {
@@ -1578,8 +1576,6 @@ void Context::initCaps(GLuint clientVersion)
 
         mTextureCaps.insert(format, formatCaps);
     }
-
-    mCaps.maxSamples = maxSamples;
 }
 
 Data Context::getData() const

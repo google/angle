@@ -41,6 +41,17 @@ gl::Error RenderbufferD3D::setStorageMultisample(size_t samples, GLenum internal
         creationFormat = GL_DEPTH24_STENCIL8_OES;
     }
 
+    // ANGLE_framebuffer_multisample states GL_OUT_OF_MEMORY is generated on a failure to create
+    // the specified storage.
+    // Because ES 3.0 already knows the exact number of supported samples, it would already have been
+    // validated and generated GL_INVALID_VALUE.
+    const gl::TextureCaps &formatCaps = mRenderer->getRendererTextureCaps().get(creationFormat);
+    if (samples > formatCaps.getMaxSamples())
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "Renderbuffer format does not support %u samples, %u is the maximum.",
+                         samples, formatCaps.getMaxSamples());
+    }
+
     RenderTargetD3D *newRT = NULL;
     gl::Error error = mRenderer->createRenderTarget(width, height, creationFormat, samples, &newRT);
     if (error.isError())

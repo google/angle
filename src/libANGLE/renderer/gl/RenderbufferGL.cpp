@@ -9,17 +9,20 @@
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
 
 #include "common/debug.h"
+#include "libANGLE/Caps.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/renderer/gl/renderergl_utils.h"
 
 namespace rx
 {
 
-RenderbufferGL::RenderbufferGL(const FunctionsGL *functions, StateManagerGL *stateManager)
+RenderbufferGL::RenderbufferGL(const FunctionsGL *functions, StateManagerGL *stateManager, const gl::TextureCapsMap &textureCaps)
     : RenderbufferImpl(),
       mFunctions(functions),
       mStateManager(stateManager),
+      mTextureCaps(textureCaps),
       mRenderbufferID(0)
 {
     mFunctions->genRenderbuffers(1, &mRenderbufferID);
@@ -45,6 +48,25 @@ gl::Error RenderbufferGL::setStorageMultisample(size_t samples, GLenum internalf
 {
     mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mRenderbufferID);
     mFunctions->renderbufferStorageMultisample(GL_RENDERBUFFER, samples, internalformat, width, height);
+
+    const gl::TextureCaps &formatCaps = mTextureCaps.get(internalformat);
+    if (samples > formatCaps.getMaxSamples())
+    {
+        // Before version 4.2, it is unknown if the specific internal format can support the requested number
+        // of samples.  It is expected that GL_OUT_OF_MEMORY is returned if the renderbuffer cannot be created.
+        GLenum error = GL_NO_ERROR;
+        do
+        {
+            GLenum error = mFunctions->getError();
+            if (error == GL_OUT_OF_MEMORY)
+            {
+                return gl::Error(GL_OUT_OF_MEMORY);
+            }
+
+            ASSERT(error == GL_NO_ERROR);
+        } while (error != GL_NO_ERROR);
+    }
+
     return gl::Error(GL_NO_ERROR);
 }
 

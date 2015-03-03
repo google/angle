@@ -55,8 +55,6 @@ class DisplayWGL : public DisplayGL
     void generateCaps(egl::Caps *outCaps) const override;
 
     HMODULE mOpenGLModule;
-    GLuint mGLVersionMajor;
-    GLuint mGLVersionMinor;
 
     FunctionsWGL *mFunctionsWGL;
     FunctionsGL *mFunctionsGL;

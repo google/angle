@@ -21,62 +21,35 @@
 namespace rx
 {
 
-namespace nativegl
-{
-
-void GetGLVersion(PFNGLGETSTRINGPROC getStringFunction, GLuint *outMajorVersion, GLuint *outMinorVersion,
-                  bool *outIsES)
-{
-    const std::string version = reinterpret_cast<const char*>(getStringFunction(GL_VERSION));
-    if (version.find("OpenGL ES") == std::string::npos)
-    {
-        // ES spec states that the GL_VERSION string will be in the following format:
-        // "OpenGL ES N.M vendor-specific information"
-        *outIsES = false;
-        *outMajorVersion = version[0] - '0';
-        *outMinorVersion = version[2] - '0';
-    }
-    else
-    {
-        // OpenGL spec states the GL_VERSION string will be in the following format:
-        // <version number><space><vendor-specific information>
-        // The version number is either of the form major number.minor number or major
-        // number.minor number.release number, where the numbers all have one or more
-        // digits
-        *outIsES = true;
-        *outMajorVersion = version[10] - '0';
-        *outMinorVersion = version[12] - '0';
-    }
-}
-
-std::vector<std::string> GetGLExtensions(PFNGLGETSTRINGPROC getStringFunction)
-{
-    std::vector<std::string> result;
-
-    std::istringstream stream(reinterpret_cast<const char*>(getStringFunction(GL_EXTENSIONS)));
-    std::string extension;
-    while (std::getline(stream, extension, ' '))
-    {
-        result.push_back(extension);
-    }
-
-    return result;
-}
-
-}
-
 namespace nativegl_gl
 {
 
-static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions, GLenum internalFormat, GLuint majorVersion, GLuint minorVersion,
-                                                 const std::vector<std::string> &extensions)
+static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions, GLenum internalFormat)
 {
     gl::TextureCaps textureCaps;
 
     const nativegl::InternalFormat &formatInfo = nativegl::GetInternalFormatInfo(internalFormat);
-    textureCaps.texturable = formatInfo.textureSupport(majorVersion, minorVersion, extensions);
-    textureCaps.renderable = formatInfo.renderSupport(majorVersion, minorVersion, extensions);
-    textureCaps.filterable = formatInfo.filterSupport(majorVersion, minorVersion, extensions);
+    textureCaps.texturable = formatInfo.textureSupport(functions->majorVersion, functions->minorVersion, functions->extensions);
+    textureCaps.renderable = formatInfo.renderSupport(functions->majorVersion, functions->minorVersion, functions->extensions);
+    textureCaps.filterable = formatInfo.filterSupport(functions->majorVersion, functions->minorVersion, functions->extensions);
+
+    // glGetInternalformativ is not available until version 4.2 but may be available through the 3.0
+    // extension GL_ARB_internalformat_query
+    if (textureCaps.renderable && functions->getInternalformativ)
+    {
+        GLint numSamples = 0;
+        functions->getInternalformativ(GL_RENDERBUFFER, internalFormat, GL_NUM_SAMPLE_COUNTS, 1, &numSamples);
+
+        if (numSamples > 0)
+        {
+            std::vector<GLint> samples(numSamples);
+            functions->getInternalformativ(GL_RENDERBUFFER, internalFormat, GL_SAMPLES, samples.size(), &samples[0]);
+            for (size_t sampleIndex = 0; sampleIndex < samples.size(); sampleIndex++)
+            {
+                textureCaps.sampleCounts.insert(samples[sampleIndex]);
+            }
+        }
+    }
 
     return textureCaps;
 }
@@ -91,22 +64,12 @@ static GLint QuerySingleGLInt(const FunctionsGL *functions, GLenum name)
 void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap,
                   gl::Extensions *extensions)
 {
-    GLuint majorVersion = 0;
-    GLuint minorVersion = 0;
-    bool isES = false;
-    nativegl::GetGLVersion(functions->getString, &majorVersion, &minorVersion, &isES);
-
-    std::vector<std::string> nativeExtensions = nativegl::GetGLExtensions(functions->getString);
-
     // Texture format support checks
-    GLuint maxSamples = 0;
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
     for (GLenum internalFormat : allFormats)
     {
-        gl::TextureCaps textureCaps = GenerateTextureFormatCaps(functions, internalFormat, majorVersion, minorVersion, nativeExtensions);
+        gl::TextureCaps textureCaps = GenerateTextureFormatCaps(functions, internalFormat);
         textureCapsMap->insert(internalFormat, textureCaps);
-
-        maxSamples = std::max(maxSamples, textureCaps.getMaxSamples());
 
         if (gl::GetInternalFormatInfo(internalFormat).compressed)
         {
@@ -184,13 +147,14 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     caps->maxTransformFeedbackSeparateComponents = 4;
 
     // Table 6.35, Framebuffer Dependent Values
-    caps->maxSamples = 4;
+    caps->maxSamples = QuerySingleGLInt(functions, GL_MAX_SAMPLES);
 
     // Extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
     extensions->textureNPOT = true;
     extensions->textureStorage = true;
     extensions->fboRenderMipmap = true;
+    extensions->framebufferMultisample = caps->maxSamples > 0;
 }
 
 }

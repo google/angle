@@ -25,14 +25,6 @@ namespace rx
 {
 class FunctionsGL;
 
-namespace nativegl
-{
-
-void GetGLVersion(PFNGLGETSTRINGPROC getStringFunction, GLuint *outMajorVersion, GLuint *outMinorVersion, bool *outIsES);
-std::vector<std::string> GetGLExtensions(PFNGLGETSTRINGPROC getStringFunction);
-
-}
-
 namespace nativegl_gl
 {
 

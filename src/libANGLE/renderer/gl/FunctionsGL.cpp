@@ -7,9 +7,66 @@
 // FunctionsGL.cpp: Implements the FuntionsGL class to contain loaded GL functions
 
 #include "libANGLE/renderer/gl/FunctionsGL.h"
+#include "libANGLE/renderer/gl/renderergl_utils.h"
 
 namespace rx
 {
+
+static void GetGLVersion(PFNGLGETSTRINGPROC getStringFunction, GLuint *outMajorVersion, GLuint *outMinorVersion,
+                         bool *outIsES)
+{
+    const std::string version = reinterpret_cast<const char*>(getStringFunction(GL_VERSION));
+    if (version.find("OpenGL ES") == std::string::npos)
+    {
+        // ES spec states that the GL_VERSION string will be in the following format:
+        // "OpenGL ES N.M vendor-specific information"
+        *outIsES = false;
+        *outMajorVersion = version[0] - '0';
+        *outMinorVersion = version[2] - '0';
+    }
+    else
+    {
+        // OpenGL spec states the GL_VERSION string will be in the following format:
+        // <version number><space><vendor-specific information>
+        // The version number is either of the form major number.minor number or major
+        // number.minor number.release number, where the numbers all have one or more
+        // digits
+        *outIsES = true;
+        *outMajorVersion = version[10] - '0';
+        *outMinorVersion = version[12] - '0';
+    }
+}
+
+static std::vector<std::string> GetNonIndexedExtensions(PFNGLGETSTRINGPROC getStringFunction)
+{
+    std::vector<std::string> result;
+
+    std::istringstream stream(reinterpret_cast<const char*>(getStringFunction(GL_EXTENSIONS)));
+    std::string extension;
+    while (std::getline(stream, extension, ' '))
+    {
+        result.push_back(extension);
+    }
+
+    return result;
+}
+
+static std::vector<std::string> GetIndexedExtensions(PFNGLGETINTEGERVPROC getIntegerFunction, PFNGLGETSTRINGIPROC getStringIFunction)
+{
+    std::vector<std::string> result;
+
+    GLint numExtensions;
+    getIntegerFunction(GL_NUM_EXTENSIONS, &numExtensions);
+
+    result.reserve(numExtensions);
+
+    for (GLint i = 0; i < numExtensions; i++)
+    {
+        result.push_back(reinterpret_cast<const char*>(getStringIFunction(GL_EXTENSIONS, i)));
+    }
+
+    return result;
+}
 
 template <typename T>
 static void AssignGLEntryPoint(void *function, T *outFunction)
@@ -17,8 +74,22 @@ static void AssignGLEntryPoint(void *function, T *outFunction)
     *outFunction = reinterpret_cast<T>(function);
 }
 
+template <typename T>
+static void AssignGLExtensionEntryPoint(const std::vector<std::string> &extensions, const std::string &extension, void *function, T *outFunction)
+{
+    if (std::find(extensions.begin(), extensions.end(), extension) != extensions.end())
+    {
+        *outFunction = reinterpret_cast<T>(function);
+    }
+}
+
 FunctionsGL::FunctionsGL()
-    : blendFunc(nullptr),
+    : majorVersion(0),
+      minorVersion(0),
+      openGLES(false),
+      extensions(),
+
+      blendFunc(nullptr),
       clear(nullptr),
       clearColor(nullptr),
       clearDepth(nullptr),
@@ -694,8 +765,24 @@ FunctionsGL::~FunctionsGL()
 {
 }
 
-void FunctionsGL::initialize(GLuint majorVersion, GLuint minorVersion)
+void FunctionsGL::initialize()
 {
+    // Grab the version number
+    AssignGLEntryPoint(loadProcAddress("glGetString"), &getString);
+    GetGLVersion(getString, &majorVersion, &minorVersion, &openGLES);
+
+    // Grab the GL extensions
+    if (majorVersion > 3 || majorVersion == 3 && minorVersion >= 0)
+    {
+        AssignGLEntryPoint(loadProcAddress("glGetIntegerv"), &getIntegerv);
+        AssignGLEntryPoint(loadProcAddress("glGetStringi"), &getStringi);
+        extensions = GetIndexedExtensions(getIntegerv, getStringi);
+    }
+    else
+    {
+        extensions = GetNonIndexedExtensions(getString);
+    }
+
     // 1.0
     if (majorVersion > 1 || majorVersion == 1 && minorVersion >= 0)
     {
@@ -1024,6 +1111,9 @@ void FunctionsGL::initialize(GLuint majorVersion, GLuint minorVersion)
         AssignGLEntryPoint(loadProcAddress("glVertexAttribI4uiv"), &vertexAttribI4uiv);
         AssignGLEntryPoint(loadProcAddress("glVertexAttribI4usv"), &vertexAttribI4usv);
         AssignGLEntryPoint(loadProcAddress("glVertexAttribIPointer"), &vertexAttribIPointer);
+
+        // Extensions
+        AssignGLExtensionEntryPoint(extensions, "GL_ARB_internalformat_query", loadProcAddress("glGetInternalformativ"), &getInternalformativ);
     }
 
     // 3.1

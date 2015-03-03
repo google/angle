@@ -22,8 +22,17 @@ class FunctionsGL
     FunctionsGL();
     virtual ~FunctionsGL();
 
-    void initialize(GLuint majorVersion, GLuint minorVersion);
+    void initialize();
 
+    // Version information
+    GLuint majorVersion;
+    GLuint minorVersion;
+    bool openGLES;
+
+    // Extensions
+    std::vector<std::string> extensions;
+
+    // Entry Points
     // 1.0
     PFNGLBLENDFUNCPROC blendFunc;
     PFNGLCLEARPROC clear;
