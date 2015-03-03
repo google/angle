@@ -14,7 +14,7 @@
 // This should not be included by driver code.
 //
 
-#include "compiler/translator/BuiltInFunctionEmulatorGLSL.h"
+#include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/ExtensionBehavior.h"
 #include "compiler/translator/HashNames.h"
 #include "compiler/translator/InfoSink.h"
@@ -114,6 +114,8 @@ class TCompiler : public TShHandleBase
     bool validateLimitations(TIntermNode* root);
     // Collect info for all attribs, uniforms, varyings.
     void collectVariables(TIntermNode* root);
+    // Add emulated functions to the built-in function emulator.
+    virtual void initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu, int compileOptions) {};
     // Translate to object code.
     virtual void translate(TIntermNode *root, int compileOptions) = 0;
     // Returns true if, after applying the packing rules in the GLSL 1.017 spec
@@ -146,7 +148,7 @@ class TCompiler : public TShHandleBase
 
     const ArrayBoundsClamper& getArrayBoundsClamper() const;
     ShArrayIndexClampingStrategy getArrayIndexClampingStrategy() const;
-    const BuiltInFunctionEmulatorGLSL& getBuiltInFunctionEmulator() const;
+    const BuiltInFunctionEmulator& getBuiltInFunctionEmulator() const;
 
     std::vector<sh::Attribute> attributes;
     std::vector<sh::Attribute> outputVariables;
@@ -179,7 +181,7 @@ class TCompiler : public TShHandleBase
 
     ArrayBoundsClamper arrayBoundsClamper;
     ShArrayIndexClampingStrategy clampingStrategy;
-    BuiltInFunctionEmulatorGLSL builtInFunctionEmulator;
+    BuiltInFunctionEmulator builtInFunctionEmulator;
 
     // Results of compilation.
     int shaderVersion;

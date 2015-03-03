@@ -16,7 +16,7 @@
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/ParseContext.h"
 
-class BuiltInFunctionEmulatorHLSL;
+class BuiltInFunctionEmulator;
 
 namespace sh
 {
@@ -47,7 +47,7 @@ class OutputHLSL : public TIntermTraverser
     TInfoSinkBase &getInfoSink() { ASSERT(!mInfoSinkStack.empty()); return *mInfoSinkStack.top(); }
 
   protected:
-    void header(const BuiltInFunctionEmulatorHLSL *builtInFunctionEmulator);
+    void header(const BuiltInFunctionEmulator *builtInFunctionEmulator);
 
     // Visit AST nodes and output their code to the body stream
     void visitSymbol(TIntermSymbol*);

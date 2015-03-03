@@ -125,7 +125,7 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
       maxCallStackDepth(0),
       fragmentPrecisionHigh(false),
       clampingStrategy(SH_CLAMP_WITH_CLAMP_INTRINSIC),
-      builtInFunctionEmulator(type),
+      builtInFunctionEmulator(),
       mSourcePath(NULL)
 {
 }
@@ -265,8 +265,11 @@ TIntermNode *TCompiler::compileTreeImpl(const char* const shaderStrings[],
         }
 
         // Built-in function emulation needs to happen after validateLimitations pass.
-        if (success && (compileOptions & SH_EMULATE_BUILT_IN_FUNCTIONS))
+        if (success)
+        {
+            initBuiltInFunctionEmulator(&builtInFunctionEmulator, compileOptions);
             builtInFunctionEmulator.MarkBuiltInFunctionsForEmulation(root);
+        }
 
         // Clamping uniform array bounds needs to happen after validateLimitations pass.
         if (success && (compileOptions & SH_CLAMP_INDIRECT_ARRAY_BOUNDS))
@@ -649,7 +652,7 @@ ShArrayIndexClampingStrategy TCompiler::getArrayIndexClampingStrategy() const
     return clampingStrategy;
 }
 
-const BuiltInFunctionEmulatorGLSL& TCompiler::getBuiltInFunctionEmulator() const
+const BuiltInFunctionEmulator& TCompiler::getBuiltInFunctionEmulator() const
 {
     return builtInFunctionEmulator;
 }

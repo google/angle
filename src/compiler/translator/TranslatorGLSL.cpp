@@ -7,6 +7,7 @@
 #include "compiler/translator/TranslatorGLSL.h"
 
 #include "angle_gl.h"
+#include "compiler/translator/BuiltInFunctionEmulatorGLSL.h"
 #include "compiler/translator/EmulatePrecision.h"
 #include "compiler/translator/OutputGLSL.h"
 #include "compiler/translator/VersionGLSL.h"
@@ -59,6 +60,12 @@ TranslatorGLSL::TranslatorGLSL(sh::GLenum type,
                                ShShaderSpec spec,
                                ShShaderOutput output)
     : TCompiler(type, spec, output) {
+}
+
+void TranslatorGLSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu, int compileOptions)
+{
+    if (compileOptions & SH_EMULATE_BUILT_IN_FUNCTIONS)
+        InitBuiltInFunctionEmulatorForGLSL(emu, getShaderType());
 }
 
 void TranslatorGLSL::translate(TIntermNode *root, int) {

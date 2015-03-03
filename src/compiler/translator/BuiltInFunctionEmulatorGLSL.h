@@ -7,15 +7,13 @@
 #ifndef COMPILER_TRANSLATOR_BUILTINFUNCTIONEMULATORGLSL_H_
 #define COMPILER_TRANSLATOR_BUILTINFUNCTIONEMULATORGLSL_H_
 
-#include "compiler/translator/BuiltInFunctionEmulator.h"
+#include "GLSLANG/ShaderLang.h"
+
+class BuiltInFunctionEmulator;
 
 //
-// This class is only a workaround for OpenGL driver bugs, and isn't needed in general.
+// This is only a workaround for OpenGL driver bugs, and isn't needed in general.
 //
-class BuiltInFunctionEmulatorGLSL : public BuiltInFunctionEmulator
-{
-  public:
-    BuiltInFunctionEmulatorGLSL(sh::GLenum shaderType);
-};
+void InitBuiltInFunctionEmulatorForGLSL(BuiltInFunctionEmulator *emu, sh::GLenum shaderType);
 
 #endif  // COMPILER_TRANSLATOR_BUILTINFUNCTIONEMULATORGLSL_H_

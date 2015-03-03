@@ -7,15 +7,10 @@
 #ifndef COMPILER_TRANSLATOR_BUILTINFUNCTIONEMULATORHLSL_H_
 #define COMPILER_TRANSLATOR_BUILTINFUNCTIONEMULATORHLSL_H_
 
-#include "compiler/translator/BuiltInFunctionEmulator.h"
+#include "GLSLANG/ShaderLang.h"
 
-//
-// This class is needed to emulate GLSL functions that don't exist in HLSL.
-//
-class BuiltInFunctionEmulatorHLSL : public BuiltInFunctionEmulator
-{
-  public:
-    BuiltInFunctionEmulatorHLSL();
-};
+class BuiltInFunctionEmulator;
+
+void InitBuiltInFunctionEmulatorForHLSL(BuiltInFunctionEmulator *emu);
 
 #endif  // COMPILER_TRANSLATOR_BUILTINFUNCTIONEMULATORHLSL_H_
