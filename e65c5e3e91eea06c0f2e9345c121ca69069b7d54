@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72147288_ca5b0709",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-03-03T19:13:53Z",
+      "side": 1,
+      "message": "Rather \"This is to not break the build\".",
+      "range": {
+        "startLine": 85,
+        "startChar": 46,
+        "endLine": 85,
+        "endChar": 49
+      },
+      "revId": "e65c5e3e91eea06c0f2e9345c121ca69069b7d54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32c11a6d_ba27d133",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-03-03T19:13:53Z",
+      "side": 1,
+      "message": "I might suggest \"GLSL_COMPATIBILITY_OUTPUT\".",
+      "range": {
+        "startLine": 86,
+        "startChar": 2,
+        "endLine": 86,
+        "endChar": 23
+      },
+      "revId": "e65c5e3e91eea06c0f2e9345c121ca69069b7d54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
