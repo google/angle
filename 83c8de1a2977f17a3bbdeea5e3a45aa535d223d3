@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b2c50a26_f15142eb",
+        "filename": "src/compiler/translator/RemoveSwitchFallThrough.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-03T08:43:27Z",
+      "side": 1,
+      "message": "It\u0027s rejected in validation. Added a comment about this in patch set 3.",
+      "parentUuid": "52612e1e_792e1fc3",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 17
+      },
+      "revId": "83c8de1a2977f17a3bbdeea5e3a45aa535d223d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "32591a74_1a76fd0b",
         "filename": "src/compiler/translator/RemoveSwitchFallThrough.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "b2c50a26_915ebefa",
+        "filename": "src/compiler/translator/RemoveSwitchFallThrough.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-03T08:43:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32591a74_1a76fd0b",
+      "range": {
+        "startLine": 95,
+        "startChar": 68,
+        "endLine": 95,
+        "endChar": 70
+      },
+      "revId": "83c8de1a2977f17a3bbdeea5e3a45aa535d223d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "724d52ae_1cf1d59a",
         "filename": "src/compiler/translator/RemoveSwitchFallThrough.h",
         "patchSetId": 2
@@ -59,6 +107,24 @@
       "writtenOn": "2015-03-02T21:05:39Z",
       "side": 1,
       "message": "None of these overloaded functions need to be exposed except for the static functions above. They should be protected or private.",
+      "revId": "83c8de1a2977f17a3bbdeea5e3a45aa535d223d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2a43ecd_3f0ba753",
+        "filename": "src/compiler/translator/RemoveSwitchFallThrough.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-03T08:43:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "724d52ae_1cf1d59a",
       "revId": "83c8de1a2977f17a3bbdeea5e3a45aa535d223d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
