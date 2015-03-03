@@ -70,6 +70,24 @@
       "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92cf269e_b56a409c",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-03-03T18:08:45Z",
+      "side": 1,
+      "message": "If you include \u003ceh.h\u003e before \u003cfuture\u003e you don\u0027t need _HAS_EXCEPTIONS\u003d0",
+      "parentUuid": "7270f218_045256bc",
+      "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
