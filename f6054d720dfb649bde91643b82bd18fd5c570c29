@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "129df66f_11fc4cf4",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-03-03T02:41:04Z",
+      "side": 1,
+      "message": "Having a different setting for something so fundamental seems like a bad idea to me, but again I\u0027m not an ANGLE reviewer. I\u0027d encourage you to not use \u003cfuture\u003e.\n\nHaving said that, clang-cl can now parse the \u003cfuture\u003e header as far as I can tell. If you want to go ahead with this patch as-is, you could include \u003ceh.h\u003e before including \u003cfuture\u003e, and then it\u0027ll compile fine with -D_HAS_EXCEPTIONS\u003d0 too. You\u0027ll still get a warning from cl about this being a bad idea.\n\n(Also see notes on https://code.google.com/p/chromium/issues/detail?id\u003d459797)",
+      "revId": "f6054d720dfb649bde91643b82bd18fd5c570c29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
