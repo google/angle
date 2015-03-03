@@ -6,13 +6,59 @@
 
 #include "compiler/translator/TranslatorGLSL.h"
 
+#include "angle_gl.h"
 #include "compiler/translator/EmulatePrecision.h"
 #include "compiler/translator/OutputGLSL.h"
 #include "compiler/translator/VersionGLSL.h"
 
+namespace
+{
 
-TranslatorGLSL::TranslatorGLSL(sh::GLenum type, ShShaderSpec spec)
-    : TCompiler(type, spec, SH_GLSL_OUTPUT) {
+// To search for what output variables are used in a fragment shader.
+// We handle gl_FragColor and gl_FragData at the moment.
+class TFragmentOutSearcher : public TIntermTraverser
+{
+  public:
+    TFragmentOutSearcher()
+        : mUsesGlFragColor(false),
+          mUsesGlFragData(false)
+    {
+    }
+
+    bool usesGlFragColor() const
+    {
+        return mUsesGlFragColor;
+    }
+
+    bool usesGlFragData() const
+    {
+        return mUsesGlFragData;
+    }
+
+  protected:
+    virtual void visitSymbol(TIntermSymbol *node) override
+    {
+        if (node->getSymbol() == "gl_FragColor")
+        {
+            mUsesGlFragColor = true;
+        }
+        else if (node->getSymbol() == "gl_FragData")
+        {
+            mUsesGlFragData = true;
+        }
+    }
+
+  private:
+    bool mUsesGlFragColor;
+    bool mUsesGlFragData;
+};
+
+}  // namespace anonymous
+
+TranslatorGLSL::TranslatorGLSL(sh::GLenum type,
+                               ShShaderSpec spec,
+                               ShShaderOutput output)
+    : TCompiler(type, spec, output) {
 }
 
 void TranslatorGLSL::translate(TIntermNode *root, int) {
@@ -33,7 +79,7 @@ void TranslatorGLSL::translate(TIntermNode *root, int) {
         EmulatePrecision emulatePrecision;
         root->traverse(&emulatePrecision);
         emulatePrecision.updateTree();
-        emulatePrecision.writeEmulationHelpers(sink, SH_GLSL_OUTPUT);
+        emulatePrecision.writeEmulationHelpers(sink, getOutputType());
     }
 
     // Write emulated built-in functions if needed.
@@ -43,14 +89,38 @@ void TranslatorGLSL::translate(TIntermNode *root, int) {
     // Write array bounds clamping emulation if needed.
     getArrayBoundsClamper().OutputClampingFunctionDefinition(sink);
 
+    // Declare gl_FragColor and glFragData as webgl_FragColor and webgl_FragData
+    // if it's core profile shaders and they are used.
+    if (getShaderType() == GL_FRAGMENT_SHADER &&
+        getOutputType() == SH_GLSL_CORE_OUTPUT)
+    {
+        TFragmentOutSearcher searcher;
+        root->traverse(&searcher);
+        ASSERT(!(searcher.usesGlFragData() && searcher.usesGlFragColor()));
+        if (searcher.usesGlFragColor())
+        {
+            sink << "out vec4 webgl_FragColor;\n";
+        }
+        if (searcher.usesGlFragData())
+        {
+            sink << "out vec4 webgl_FragData[gl_MaxDrawBuffers];\n";
+        }
+    }
+
     // Write translated shader.
-    TOutputGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(), getNameMap(), getSymbolTable(), getShaderVersion());
+    TOutputGLSL outputGLSL(sink,
+                           getArrayIndexClampingStrategy(),
+                           getHashFunction(),
+                           getNameMap(),
+                           getSymbolTable(),
+                           getShaderVersion(),
+                           getOutputType());
     root->traverse(&outputGLSL);
 }
 
 void TranslatorGLSL::writeVersion(TIntermNode *root)
 {
-    TVersionGLSL versionGLSL(getShaderType(), getPragma());
+    TVersionGLSL versionGLSL(getShaderType(), getPragma(), getOutputType());
     root->traverse(&versionGLSL);
     int version = versionGLSL.getVersion();
     // We need to write version directive only if it is greater than 110.

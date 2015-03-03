@@ -11,7 +11,8 @@
 #include "angle_gl.h"
 
 TranslatorESSL::TranslatorESSL(sh::GLenum type, ShShaderSpec spec)
-    : TCompiler(type, spec, SH_ESSL_OUTPUT) {
+    : TCompiler(type, spec, SH_ESSL_OUTPUT)
+{
 }
 
 void TranslatorESSL::translate(TIntermNode *root, int) {
@@ -40,7 +41,13 @@ void TranslatorESSL::translate(TIntermNode *root, int) {
     getArrayBoundsClamper().OutputClampingFunctionDefinition(sink);
 
     // Write translated shader.
-    TOutputESSL outputESSL(sink, getArrayIndexClampingStrategy(), getHashFunction(), getNameMap(), getSymbolTable(), getShaderVersion(), precisionEmulation);
+    TOutputESSL outputESSL(sink,
+                           getArrayIndexClampingStrategy(),
+                           getHashFunction(),
+                           getNameMap(),
+                           getSymbolTable(),
+                           getShaderVersion(),
+                           precisionEmulation);
     root->traverse(&outputESSL);
 }
 

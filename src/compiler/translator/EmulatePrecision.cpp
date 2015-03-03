@@ -510,7 +510,9 @@ bool EmulatePrecision::visitUnary(Visit visit, TIntermUnary *node)
 void EmulatePrecision::writeEmulationHelpers(TInfoSinkBase& sink, ShShaderOutput outputLanguage)
 {
     // Other languages not yet supported
-    ASSERT(outputLanguage == SH_GLSL_OUTPUT || outputLanguage == SH_ESSL_OUTPUT);
+    ASSERT(outputLanguage == SH_GLSL_COMPATIBILITY_OUTPUT ||
+           outputLanguage == SH_GLSL_CORE_OUTPUT ||
+           outputLanguage == SH_ESSL_OUTPUT);
     writeCommonPrecisionEmulationHelpers(sink, outputLanguage);
 
     EmulationSet::const_iterator it;

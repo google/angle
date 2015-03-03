@@ -21,7 +21,13 @@ class TOutputGLSLBase : public TIntermTraverser
                     ShHashFunction64 hashFunction,
                     NameMap &nameMap,
                     TSymbolTable& symbolTable,
-                    int shaderVersion);
+                    int shaderVersion,
+                    ShShaderOutput output);
+
+    ShShaderOutput getShaderOutput() const
+    {
+        return mOutput;
+    }
 
   protected:
     TInfoSinkBase &objSink() { return mObjSink; }
@@ -80,6 +86,8 @@ class TOutputGLSLBase : public TIntermTraverser
     TSymbolTable &mSymbolTable;
 
     const int mShaderVersion;
+
+    ShShaderOutput mOutput;
 };
 
 #endif  // COMPILER_TRANSLATOR_OUTPUTGLSLBASE_H_

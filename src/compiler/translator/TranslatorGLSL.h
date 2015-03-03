@@ -12,7 +12,7 @@
 class TranslatorGLSL : public TCompiler
 {
   public:
-    TranslatorGLSL(sh::GLenum type, ShShaderSpec spec);
+    TranslatorGLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output);
 
   protected:
     virtual void translate(TIntermNode *root, int compileOptions);

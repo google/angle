@@ -19,12 +19,13 @@ TCompiler* ConstructCompiler(
     sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
 {
     switch (output) {
-    case SH_ESSL_OUTPUT:
+      case SH_ESSL_OUTPUT:
         return new TranslatorESSL(type, spec);
-    case SH_GLSL_OUTPUT:
-        return new TranslatorGLSL(type, spec);
-    case SH_HLSL9_OUTPUT:
-    case SH_HLSL11_OUTPUT:
+      case SH_GLSL_CORE_OUTPUT:
+      case SH_GLSL_COMPATIBILITY_OUTPUT:
+        return new TranslatorGLSL(type, spec, output);
+      case SH_HLSL9_OUTPUT:
+      case SH_HLSL11_OUTPUT:
 #ifdef ANGLE_ENABLE_HLSL
         return new TranslatorHLSL(type, spec, output);
 #else
@@ -32,7 +33,7 @@ TCompiler* ConstructCompiler(
         // configuration. Return NULL per the ShConstructCompiler API.
         return NULL;
 #endif // ANGLE_ENABLE_HLSL
-    default:
+      default:
         // Unknown format. Return NULL per the ShConstructCompiler API.
         return NULL;
     }

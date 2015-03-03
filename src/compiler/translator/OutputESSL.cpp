@@ -6,14 +6,20 @@
 
 #include "compiler/translator/OutputESSL.h"
 
-TOutputESSL::TOutputESSL(TInfoSinkBase& objSink,
+TOutputESSL::TOutputESSL(TInfoSinkBase &objSink,
                          ShArrayIndexClampingStrategy clampingStrategy,
                          ShHashFunction64 hashFunction,
-                         NameMap& nameMap,
-                         TSymbolTable& symbolTable,
+                         NameMap &nameMap,
+                         TSymbolTable &symbolTable,
                          int shaderVersion,
                          bool forceHighp)
-    : TOutputGLSLBase(objSink, clampingStrategy, hashFunction, nameMap, symbolTable, shaderVersion),
+    : TOutputGLSLBase(objSink,
+                      clampingStrategy,
+                      hashFunction,
+                      nameMap,
+                      symbolTable,
+                      shaderVersion,
+                      SH_ESSL_OUTPUT),
       mForceHighp(forceHighp)
 {
 }

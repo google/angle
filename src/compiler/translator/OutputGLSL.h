@@ -11,15 +11,16 @@
 
 class TOutputGLSL : public TOutputGLSLBase
 {
-public:
+  public:
     TOutputGLSL(TInfoSinkBase& objSink,
                 ShArrayIndexClampingStrategy clampingStrategy,
                 ShHashFunction64 hashFunction,
                 NameMap& nameMap,
                 TSymbolTable& symbolTable,
-                int shaderVersion);
+                int shaderVersion,
+                ShShaderOutput output);
 
-protected:
+  protected:
     virtual bool writeVariablePrecision(TPrecision);
     virtual void visitSymbol(TIntermSymbol* node);
     virtual TString translateTextureFunction(TString& name);

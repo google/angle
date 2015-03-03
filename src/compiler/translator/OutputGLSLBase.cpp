@@ -46,6 +46,7 @@ bool isSingleStatement(TIntermNode *node)
     }
     return true;
 }
+
 }  // namespace
 
 TOutputGLSLBase::TOutputGLSLBase(TInfoSinkBase &objSink,
@@ -53,7 +54,8 @@ TOutputGLSLBase::TOutputGLSLBase(TInfoSinkBase &objSink,
                                  ShHashFunction64 hashFunction,
                                  NameMap &nameMap,
                                  TSymbolTable &symbolTable,
-                                 int shaderVersion)
+                                 int shaderVersion,
+                                 ShShaderOutput output)
     : TIntermTraverser(true, true, true),
       mObjSink(objSink),
       mDeclaringVariables(false),
@@ -61,7 +63,8 @@ TOutputGLSLBase::TOutputGLSLBase(TInfoSinkBase &objSink,
       mHashFunction(hashFunction),
       mNameMap(nameMap),
       mSymbolTable(symbolTable),
-      mShaderVersion(shaderVersion)
+      mShaderVersion(shaderVersion),
+      mOutput(output)
 {
 }
 
@@ -91,7 +94,34 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
     TQualifier qualifier = type.getQualifier();
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
     {
-        out << type.getQualifierString() << " ";
+        if (mOutput == SH_GLSL_CORE_OUTPUT)
+        {
+            switch (qualifier)
+            {
+              case EvqAttribute:
+                out << "in" << " ";
+                break;
+              case EvqVaryingIn:
+                out << "in" << " ";
+                break;
+              case EvqVaryingOut:
+                out << "out" << " ";
+                break;
+              case EvqInvariantVaryingIn:
+                out << "invariant in" << " ";
+                break;
+              case EvqInvariantVaryingOut:
+                out << "invariant out" << " ";
+                break;
+              default:
+                out << type.getQualifierString() << " ";
+                break;
+            }
+        }
+        else
+        {
+            out << type.getQualifierString() << " ";
+        }
     }
     // Declare the struct if we have not done so already.
     if (type.getBasicType() == EbtStruct && !structDeclared(type.getStruct()))

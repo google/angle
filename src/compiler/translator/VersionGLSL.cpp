@@ -8,6 +8,7 @@
 
 static const int GLSL_VERSION_110 = 110;
 static const int GLSL_VERSION_120 = 120;
+static const int GLSL_VERSION_150 = 150;
 
 // We need to scan for the following:
 // 1. "invariant" keyword: This can occur in both - vertex and fragment shaders
@@ -26,12 +27,22 @@ static const int GLSL_VERSION_120 = 120;
 //    GLSL 1.2 relaxed the restriction on arrays, section 5.8: "Variables that
 //    are built-in types, entire structures or arrays... are all l-values."
 //
-TVersionGLSL::TVersionGLSL(sh::GLenum type, const TPragma &pragma)
+TVersionGLSL::TVersionGLSL(sh::GLenum type,
+                           const TPragma &pragma,
+                           ShShaderOutput output)
 {
-    if (pragma.stdgl.invariantAll)
-        mVersion = GLSL_VERSION_120;
+    if (output == SH_GLSL_CORE_OUTPUT)
+    {
+        mVersion = GLSL_VERSION_150;
+    }
     else
-        mVersion = GLSL_VERSION_110;
+    {
+      ASSERT(output == SH_GLSL_COMPATIBILITY_OUTPUT);
+      if (pragma.stdgl.invariantAll)
+          mVersion = GLSL_VERSION_120;
+      else
+          mVersion = GLSL_VERSION_110;
+    }
 }
 
 void TVersionGLSL::visitSymbol(TIntermSymbol *node)
