@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "72ab92f0_0c53f73c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-03-04T13:19:36Z",
+      "side": 1,
+      "message": "Ok, will do.",
+      "parentUuid": "52a68e28_8bc98d58",
+      "range": {
+        "startLine": 7,
+        "startChar": 21,
+        "endLine": 7,
+        "endChar": 24
+      },
+      "revId": "4ae40a77a702bfc318f89ce77aa07abe0b9407b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12b17657_3111f004",
         "filename": "src/libANGLE/renderer/Workarounds.h",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2015-03-04T13:08:44Z",
       "side": 1,
       "message": "I\u0027d prefer if you would not combine the IEEE strictness flag to the same bitfield with the optimization level, it hurts the maintainability of the code. The best alternative would probably be to encapsulate the boolean flag for the strictness and the optimization level to a D3DCompilerWorkarounds struct similar to the Workarounds struct below, and then pass this around rather than just passing a single integer.",
+      "revId": "4ae40a77a702bfc318f89ce77aa07abe0b9407b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2b7824a_70ed3090",
+        "filename": "src/libANGLE/renderer/Workarounds.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-03-04T13:19:36Z",
+      "side": 1,
+      "message": "I thought all the workarounds mentioned earlier are just resulting into the compiler flags and so I felt it is infact better to have them combined. And that way it is easier to pass the information as well rather than having multiple vars/structures passed around. \n\nWhat exact problems you see with this?",
+      "parentUuid": "12b17657_3111f004",
       "revId": "4ae40a77a702bfc318f89ce77aa07abe0b9407b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
