@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "327cba56_82187a27",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-04T21:40:53Z",
+      "side": 1,
+      "message": "angleproject",
+      "range": {
+        "startLine": 12,
+        "startChar": 4,
+        "endLine": 12,
+        "endChar": 9
+      },
+      "revId": "aecc446be381e1eaf4043ff2d088b010fc7ac6ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9273a693_5522acd1",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-04T21:40:53Z",
+      "side": 1,
+      "message": "I feel like we\u0027re missing documentation on why we #ifdef this as apply-only, and still have a SH option for turning this emulation on an off.",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 22
+      },
+      "revId": "aecc446be381e1eaf4043ff2d088b010fc7ac6ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "92ee4635_668564d2",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.h",
         "patchSetId": 4
@@ -13,6 +59,30 @@
       "writtenOn": "2015-03-04T17:11:39Z",
       "side": 1,
       "message": "We can get rid of this .h file and just add this function as a static member of BuiltInFunctionEmulator class.",
+      "range": {
+        "startLine": 17,
+        "startChar": 5,
+        "endLine": 17,
+        "endChar": 39
+      },
+      "revId": "aecc446be381e1eaf4043ff2d088b010fc7ac6ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "324afa42_d216c47d",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-04T21:40:53Z",
+      "side": 1,
+      "message": "Mo, we sometimes don\u0027t compile HLSL sources conditionally, having a separate header for HLSL might keep things cleaner with fewer ifdefs? Same for GLSL, although we don\u0027t conditionally compile that at the moment, possibly ever.",
+      "parentUuid": "92ee4635_668564d2",
       "range": {
         "startLine": 17,
         "startChar": 5,
