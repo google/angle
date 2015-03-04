@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52a68e28_8bc98d58",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-04T13:08:44Z",
+      "side": 1,
+      "message": "Typo",
+      "range": {
+        "startLine": 7,
+        "startChar": 21,
+        "endLine": 7,
+        "endChar": 24
+      },
+      "revId": "4ae40a77a702bfc318f89ce77aa07abe0b9407b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12b17657_3111f004",
+        "filename": "src/libANGLE/renderer/Workarounds.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-04T13:08:44Z",
+      "side": 1,
+      "message": "I\u0027d prefer if you would not combine the IEEE strictness flag to the same bitfield with the optimization level, it hurts the maintainability of the code. The best alternative would probably be to encapsulate the boolean flag for the strictness and the optimization level to a D3DCompilerWorkarounds struct similar to the Workarounds struct below, and then pass this around rather than just passing a single integer.",
+      "revId": "4ae40a77a702bfc318f89ce77aa07abe0b9407b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
