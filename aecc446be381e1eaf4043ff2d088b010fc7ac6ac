@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "92ee4635_668564d2",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-03-04T17:11:39Z",
+      "side": 1,
+      "message": "We can get rid of this .h file and just add this function as a static member of BuiltInFunctionEmulator class.",
+      "range": {
+        "startLine": 17,
+        "startChar": 5,
+        "endLine": 17,
+        "endChar": 39
+      },
+      "revId": "aecc446be381e1eaf4043ff2d088b010fc7ac6ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2f34a1a_81885cee",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-03-04T17:11:39Z",
+      "side": 1,
+      "message": "Same here, we can get rid of this .h file and just add this function as a static member of BuiltInFunctionEmulator class.",
+      "range": {
+        "startLine": 14,
+        "startChar": 5,
+        "endLine": 14,
+        "endChar": 39
+      },
+      "revId": "aecc446be381e1eaf4043ff2d088b010fc7ac6ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
