@@ -99,6 +99,24 @@
       "revId": "4ae40a77a702bfc318f89ce77aa07abe0b9407b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "327cba56_22116e04",
+        "filename": "src/libANGLE/renderer/Workarounds.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-04T21:33:09Z",
+      "side": 1,
+      "message": "The D3DWorkaroundType enum isn\u0027t a very good mechanism, because it isn\u0027t very extensible, as Olli\u0027s saying. We\u0027ve moved towards using the Workarounds struct in ANGLE -- I think Olli\u0027s idea to use a CompilerWorkarounds or TranslatorWorkarounds or even just sh::Workarounds is a great idea and you might want to move forward with that if it helps.",
+      "parentUuid": "929c86d9_0de01198",
+      "revId": "4ae40a77a702bfc318f89ce77aa07abe0b9407b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
