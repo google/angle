@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "f25ea2fc_d8deed8e",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-03-04T21:54:07Z",
+      "side": 1,
+      "message": "This should be dealt with in a separate CL.  I agree we should not have #ifdef __APPLE__ here, so let\u0027s move it to the GPU driver bug workarounds.",
+      "parentUuid": "9273a693_5522acd1",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 22
+      },
+      "revId": "aecc446be381e1eaf4043ff2d088b010fc7ac6ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "92ee4635_668564d2",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.h",
         "patchSetId": 4
@@ -83,6 +107,30 @@
       "side": 1,
       "message": "Mo, we sometimes don\u0027t compile HLSL sources conditionally, having a separate header for HLSL might keep things cleaner with fewer ifdefs? Same for GLSL, although we don\u0027t conditionally compile that at the moment, possibly ever.",
       "parentUuid": "92ee4635_668564d2",
+      "range": {
+        "startLine": 17,
+        "startChar": 5,
+        "endLine": 17,
+        "endChar": 39
+      },
+      "revId": "aecc446be381e1eaf4043ff2d088b010fc7ac6ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "526daeb2_b3c95858",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-03-04T21:54:07Z",
+      "side": 1,
+      "message": "You don\u0027t have to.  For example, declared InitBuiltInFunctionEmulatorForGLSL everywhere but no implementation on HLSL platforms is OK as it\u0027s never called so no link errors.",
+      "parentUuid": "324afa42_d216c47d",
       "range": {
         "startLine": 17,
         "startChar": 5,
