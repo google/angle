@@ -16,11 +16,28 @@
 namespace rx
 {
 
-enum D3DWorkaroundType
+struct D3DCompilerWorkarounds
 {
-    ANGLE_D3D_WORKAROUND_NONE,
-    ANGLE_D3D_WORKAROUND_SKIP_OPTIMIZATION,
-    ANGLE_D3D_WORKAROUND_MAX_OPTIMIZATION
+    D3DCompilerWorkarounds()
+        : skipOptimization(false),
+          useMaxOptimization(false),
+          enableIEEEStrictness(false)
+    {}
+
+    void reset()
+    {
+        skipOptimization = false;
+        useMaxOptimization = false;
+        enableIEEEStrictness = false;
+    }
+
+    bool skipOptimization;
+    bool useMaxOptimization;
+
+    // IEEE strictness needs to be enabled for NANs to work.
+    bool enableIEEEStrictness;
+
+    DISALLOW_COPY_AND_ASSIGN(D3DCompilerWorkarounds)
 };
 
 struct Workarounds

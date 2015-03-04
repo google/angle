@@ -2711,7 +2711,7 @@ gl::Error Renderer9::loadExecutable(const void *function, size_t length, ShaderT
 
 gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, ShaderType type,
                                          const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
-                                         bool separatedOutputBuffers, D3DWorkaroundType workaround,
+                                         bool separatedOutputBuffers, const D3DCompilerWorkarounds &workarounds,
                                          ShaderExecutableD3D **outExectuable)
 {
     // Transform feedback is not supported in ES2 or D3D9
@@ -2736,15 +2736,14 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog, const std::string
 
     UINT flags = ANGLE_COMPILE_OPTIMIZATION_LEVEL;
 
-    if (workaround == ANGLE_D3D_WORKAROUND_SKIP_OPTIMIZATION)
+    if (workarounds.skipOptimization)
     {
         flags = D3DCOMPILE_SKIP_OPTIMIZATION;
     }
-    else if (workaround == ANGLE_D3D_WORKAROUND_MAX_OPTIMIZATION)
+    else if (workarounds.useMaxOptimization)
     {
         flags = D3DCOMPILE_OPTIMIZATION_LEVEL3;
     }
-    else ASSERT(workaround == ANGLE_D3D_WORKAROUND_NONE);
 
     if (gl::perfActive())
     {

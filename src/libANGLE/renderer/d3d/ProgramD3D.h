@@ -205,10 +205,10 @@ class ProgramD3D : public ProgramImpl
     ShaderExecutableD3D *mGeometryExecutable;
 
     std::string mVertexHLSL;
-    D3DWorkaroundType mVertexWorkarounds;
+    D3DCompilerWorkarounds mVertexWorkarounds;
 
     std::string mPixelHLSL;
-    D3DWorkaroundType mPixelWorkarounds;
+    D3DCompilerWorkarounds mPixelWorkarounds;
     bool mUsesFragDepth;
     std::vector<PixelShaderOutputVariable> mPixelShaderKey;
 

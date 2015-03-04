@@ -178,8 +178,6 @@ ProgramD3D::ProgramD3D(RendererD3D *renderer)
       mRenderer(renderer),
       mDynamicHLSL(NULL),
       mGeometryExecutable(NULL),
-      mVertexWorkarounds(ANGLE_D3D_WORKAROUND_NONE),
-      mPixelWorkarounds(ANGLE_D3D_WORKAROUND_NONE),
       mUsesPointSize(false),
       mVertexUniformStorage(NULL),
       mFragmentUniformStorage(NULL),
@@ -543,9 +541,9 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     }
 
     stream->readString(&mVertexHLSL);
-    stream->readInt(&mVertexWorkarounds);
+    stream->readBytes(reinterpret_cast<unsigned char*>(&mVertexWorkarounds), sizeof(D3DCompilerWorkarounds));
     stream->readString(&mPixelHLSL);
-    stream->readInt(&mPixelWorkarounds);
+    stream->readBytes(reinterpret_cast<unsigned char*>(&mPixelWorkarounds), sizeof(D3DCompilerWorkarounds));
     stream->readBool(&mUsesFragDepth);
     stream->readBool(&mUsesPointSize);
 
@@ -766,9 +764,9 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
     }
 
     stream->writeString(mVertexHLSL);
-    stream->writeInt(mVertexWorkarounds);
+    stream->writeBytes(reinterpret_cast<unsigned char*>(&mVertexWorkarounds), sizeof(D3DCompilerWorkarounds));
     stream->writeString(mPixelHLSL);
-    stream->writeInt(mPixelWorkarounds);
+    stream->writeBytes(reinterpret_cast<unsigned char*>(&mPixelWorkarounds), sizeof(D3DCompilerWorkarounds));
     stream->writeInt(mUsesFragDepth);
     stream->writeInt(mUsesPointSize);
 
@@ -987,7 +985,7 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::Shade
 
         error = mRenderer->compileToExecutable(infoLog, geometryHLSL, SHADER_GEOMETRY, mTransformFeedbackLinkedVaryings,
                                                (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS),
-                                               ANGLE_D3D_WORKAROUND_NONE, &mGeometryExecutable);
+                                               D3DCompilerWorkarounds(), &mGeometryExecutable);
         if (error.isError())
         {
             return LinkResult(false, error);
@@ -1035,10 +1033,10 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
     mTransformFeedbackBufferMode = transformFeedbackBufferMode;
 
     mPixelHLSL = fragmentShaderD3D->getTranslatedSource();
-    mPixelWorkarounds = fragmentShaderD3D->getD3DWorkarounds();
+    fragmentShaderD3D->generateWorkarounds(&mPixelWorkarounds);
 
     mVertexHLSL = vertexShaderD3D->getTranslatedSource();
-    mVertexWorkarounds = vertexShaderD3D->getD3DWorkarounds();
+    vertexShaderD3D->generateWorkarounds(&mVertexWorkarounds);
     mShaderVersion = vertexShaderD3D->getShaderVersion();
 
     // Map the varyings to the register file
@@ -1941,11 +1939,11 @@ void ProgramD3D::reset()
     mTransformFeedbackBufferMode = GL_NONE;
 
     mVertexHLSL.clear();
-    mVertexWorkarounds = ANGLE_D3D_WORKAROUND_NONE;
+    mVertexWorkarounds.reset();
     mShaderVersion = 100;
 
     mPixelHLSL.clear();
-    mPixelWorkarounds = ANGLE_D3D_WORKAROUND_NONE;
+    mPixelWorkarounds.reset();
     mUsesFragDepth = false;
     mPixelShaderKey.clear();
     mUsesPointSize = false;
