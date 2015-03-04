@@ -165,7 +165,7 @@ class TextureTest : public ANGLETest
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, sourceUnsizedFormat, GL_FLOAT, imageData);
 
-        if (sourceImageChannels < 4 && !extensionEnabled("GL_EXT_texture_rg"))
+        if (sourceImageChannels < 3 && !extensionEnabled("GL_EXT_texture_rg"))
         {
             // This is not supported
             ASSERT_GL_ERROR(GL_INVALID_OPERATION);
