@@ -2815,7 +2815,8 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
             //
             callNode = addConstructor(node, &type, op, fnCall, loc);
         }
-        else
+
+        if (callNode == nullptr)
         {
             recover();
             callNode = intermediate.setAggregateOperator(nullptr, op, loc);
