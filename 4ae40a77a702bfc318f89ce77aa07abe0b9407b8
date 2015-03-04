@@ -81,6 +81,24 @@
       "revId": "4ae40a77a702bfc318f89ce77aa07abe0b9407b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "929c86d9_0de01198",
+        "filename": "src/libANGLE/renderer/Workarounds.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-04T13:44:16Z",
+      "side": 1,
+      "message": "Using a bitfield here just ends up making the code unnecessarily complex. And with complex code it is easier to end up with subtle bugs, for example this code that\u0027s found in this patch set:\n\nASSERT(workaround \u0026 ANGLE_D3D_WORKAROUND_NONE)\n\nThe code looks like it might be correct at first glance, but it\u0027s actually a meaningless assert since it is always true. If a struct with nicely typed members would be used instead, this kind of mistakes would be harder to make.",
+      "parentUuid": "f2b7824a_70ed3090",
+      "revId": "4ae40a77a702bfc318f89ce77aa07abe0b9407b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
