@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "929c86d9_56d0ea74",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-05T17:42:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "327cba56_82187a27",
+      "range": {
+        "startLine": 12,
+        "startChar": 4,
+        "endLine": 12,
+        "endChar": 9
+      },
+      "revId": "aecc446be381e1eaf4043ff2d088b010fc7ac6ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9273a693_5522acd1",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 4
@@ -60,6 +84,30 @@
       "side": 1,
       "message": "This should be dealt with in a separate CL.  I agree we should not have #ifdef __APPLE__ here, so let\u0027s move it to the GPU driver bug workarounds.",
       "parentUuid": "9273a693_5522acd1",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 22
+      },
+      "revId": "aecc446be381e1eaf4043ff2d088b010fc7ac6ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "773384f5_cfb481ca",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-05T17:42:25Z",
+      "side": 1,
+      "message": "Yes, this ifdef struck me as weird too. It looks like Chromium already uses this workaround only on Mac OS:\n\nhttps://code.google.com/p/chromium/codesearch#chromium/src/gpu/config/gpu_driver_bug_list_json.cc\u0026q\u003dneeds_glsl_built_in_function_emulation\u0026sq\u003dpackage:chromium\u0026type\u003dcs\u0026l\u003d139\n\nI can deal with it in a separate CL.",
+      "parentUuid": "f25ea2fc_d8deed8e",
       "range": {
         "startLine": 14,
         "startChar": 0,
