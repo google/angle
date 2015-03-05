@@ -32,7 +32,12 @@ struct Workarounds
           useInstancedPointSpriteEmulation(false)
     {}
 
+    // On some systems, having extra rendertargets than necessary slows down the shader.
+    // We can fix this by optimizing those out of the shader. At the same time, we can
+    // work around a bug on some nVidia drivers that they ignore "null" render targets
+    // in D3D11, by compacting the active color attachments list to omit null entries.
     bool mrtPerfWorkaround;
+
     bool setDataFasterThanImageUpload;
 
     // Some renderers can't disable mipmaps on a mipmapped texture (i.e. solely sample from level zero, and ignore the other levels).

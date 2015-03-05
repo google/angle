@@ -79,15 +79,12 @@ class FramebufferD3D : public FramebufferImpl
                    GLbitfield mask, GLenum filter, const gl::Framebuffer *sourceFramebuffer) override;
 
     GLenum checkStatus() const override;
-    const gl::FramebufferAttachment *getReadAttachment() const;
+
+    const gl::AttachmentList &getColorAttachmentsForRender(const Workarounds &workarounds) const override;
 
   protected:
-    std::vector<const gl::FramebufferAttachment*> mColorBuffers;
-    const gl::FramebufferAttachment *mDepthbuffer;
-    const gl::FramebufferAttachment *mStencilbuffer;
-
-    std::vector<GLenum> mDrawBuffers;
-    GLenum mReadBuffer;
+    // Cache variable
+    mutable gl::AttachmentList mColorAttachmentsForRender;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(FramebufferD3D);

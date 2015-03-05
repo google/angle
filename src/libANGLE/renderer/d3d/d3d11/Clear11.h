@@ -11,14 +11,10 @@
 
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/Framebuffer.h"
 
 #include <map>
 #include <vector>
-
-namespace gl
-{
-class FramebufferAttachment;
-}
 
 namespace rx
 {
@@ -32,9 +28,7 @@ class Clear11
     ~Clear11();
 
     // Clears the framebuffer with the supplied clear parameters, assumes that the framebuffer is currently applied.
-    gl::Error clearFramebuffer(const gl::ClearParameters &clearParams, const std::vector<const gl::FramebufferAttachment*> &colorAttachments,
-                               const std::vector<GLenum> &drawBufferStates, const gl::FramebufferAttachment *depthAttachment,
-                               const gl::FramebufferAttachment *stencilAttachment);
+    gl::Error clearFramebuffer(const gl::ClearParameters &clearParams, const gl::Framebuffer::Data &fboData);
 
   private:
     Renderer11 *mRenderer;

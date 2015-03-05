@@ -1110,7 +1110,7 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
     ID3D11RenderTargetView* framebufferRTVs[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS] = {NULL};
     bool missingColorRenderTarget = true;
 
-    const gl::ColorbufferInfo &colorbuffers = framebuffer->getColorbuffersForRender(getWorkarounds());
+    const gl::AttachmentList &colorbuffers = framebuffer->getColorAttachmentsForRender(getWorkarounds());
 
     for (size_t colorAttachment = 0; colorAttachment < colorbuffers.size(); ++colorAttachment)
     {

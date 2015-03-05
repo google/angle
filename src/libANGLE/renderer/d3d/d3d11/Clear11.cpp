@@ -7,15 +7,15 @@
 // Clear11.cpp: Framebuffer clear utility class.
 
 #include "libANGLE/renderer/d3d/d3d11/Clear11.h"
+
+#include <algorithm>
+
+#include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
-#include "libANGLE/formatutils.h"
-#include "libANGLE/Framebuffer.h"
-#include "libANGLE/FramebufferAttachment.h"
-
-#include <algorithm>
 
 // Precompiled shaders
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11vs.h"
@@ -173,10 +173,13 @@ Clear11::~Clear11()
     SafeRelease(mRasterizerState);
 }
 
-gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, const std::vector<const gl::FramebufferAttachment*> &colorAttachments,
-                                    const std::vector<GLenum> &drawBufferStates, const gl::FramebufferAttachment *depthAttachment,
-                                    const gl::FramebufferAttachment *stencilAttachment)
+gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, const gl::Framebuffer::Data &fboData)
 {
+    const auto &colorAttachments = fboData.mColorAttachments;
+    const auto &drawBufferStates = fboData.mDrawBufferStates;
+    const auto *depthAttachment = fboData.mDepthAttachment;
+    const auto *stencilAttachment = fboData.mStencilAttachment;
+
     ASSERT(colorAttachments.size() == drawBufferStates.size());
 
     // Iterate over the color buffers which require clearing and determine if they can be
