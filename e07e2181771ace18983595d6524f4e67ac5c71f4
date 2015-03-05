@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "579cc029_dbff93ab",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-05T20:04:37Z",
+      "side": 1,
+      "message": "just noticed i forgot disallow_copy_and_assign, will have to add those",
+      "revId": "e07e2181771ace18983595d6524f4e67ac5c71f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
