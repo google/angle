@@ -8,13 +8,13 @@
 // state objects.
 
 #include "libANGLE/renderer/d3d/d3d11/RenderStateCache.h"
-#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "libANGLE/Framebuffer.h"
-#include "libANGLE/FramebufferAttachment.h"
 
 #include "common/debug.h"
-
+#include "libANGLE/Framebuffer.h"
+#include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/renderer/d3d/FramebufferD3D.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "third_party/murmurhash/MurmurHash3.h"
 
 namespace rx
@@ -92,7 +92,8 @@ gl::Error RenderStateCache::getBlendState(const gl::Framebuffer *framebuffer, co
 
     bool mrt = false;
 
-    const gl::AttachmentList &colorbuffers = framebuffer->getColorAttachmentsForRender(mRenderer->getWorkarounds());
+    const FramebufferD3D *framebufferD3D = GetImplAs<FramebufferD3D>(framebuffer);
+    const gl::AttachmentList &colorbuffers = framebufferD3D->getColorAttachmentsForRender(mRenderer->getWorkarounds());
 
     BlendStateKey key = { 0 };
     key.blendState = blendState;

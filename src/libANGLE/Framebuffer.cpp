@@ -544,11 +544,6 @@ bool Framebuffer::hasValidDepthStencil() const
             mData.mDepthAttachment->id() == mData.mStencilAttachment->id());
 }
 
-AttachmentList Framebuffer::getColorAttachmentsForRender(const rx::Workarounds &workarounds) const
-{
-    return mImpl->getColorAttachmentsForRender(workarounds);
-}
-
 void Framebuffer::setTextureAttachment(GLenum attachment, Texture *texture, const ImageIndex &imageIndex)
 {
     setAttachment(attachment, new TextureAttachment(attachment, texture, imageIndex));

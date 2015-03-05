@@ -59,8 +59,6 @@ class FramebufferImpl
 
     const gl::Framebuffer::Data &getData() const { return mData; }
 
-    virtual const gl::AttachmentList &getColorAttachmentsForRender(const Workarounds &) const { return mData.mColorAttachments; }
-
   protected:
     const gl::Framebuffer::Data &mData;
 
