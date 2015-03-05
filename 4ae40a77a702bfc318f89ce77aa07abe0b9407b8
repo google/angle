@@ -117,6 +117,24 @@
       "revId": "4ae40a77a702bfc318f89ce77aa07abe0b9407b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2a18a0e_8e8ebb7c",
+        "filename": "src/libANGLE/renderer/Workarounds.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-03-05T03:25:13Z",
+      "side": 1,
+      "message": "Ok, Thanks for your detailed response Olli and Jamie, I will incorporate review comments in next patch set.",
+      "parentUuid": "327cba56_22116e04",
+      "revId": "4ae40a77a702bfc318f89ce77aa07abe0b9407b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
