@@ -11,7 +11,6 @@
 
 void InitBuiltInFunctionEmulatorForGLSL(BuiltInFunctionEmulator *emu, sh::GLenum shaderType)
 {
-#if defined(__APPLE__)
     // we use macros here instead of function definitions to work around more GLSL
     // compiler bugs, in particular on NVIDIA hardware on Mac OSX. Macros are
     // problematic because if the argument has side-effects they will be repeatedly
@@ -35,5 +34,4 @@ void InitBuiltInFunctionEmulatorForGLSL(BuiltInFunctionEmulator *emu, sh::GLenum
     emu->addEmulatedFunction(EOpLength, float1, "#define webgl_length_emu(x) ((x) >= 0.0 ? (x) : -(x))");
     emu->addEmulatedFunction(EOpNormalize, float1, "#define webgl_normalize_emu(x) ((x) == 0.0 ? 0.0 : ((x) > 0.0 ? 1.0 : -1.0))");
     emu->addEmulatedFunction(EOpReflect, float1, float1, "#define webgl_reflect_emu(I, N) ((I) - 2.0 * (N) * (I) * (N))");
-#endif
 }
