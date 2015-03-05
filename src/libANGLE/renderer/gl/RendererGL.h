@@ -38,7 +38,7 @@ class RendererGL : public Renderer
 
     // Framebuffer creation
     DefaultAttachmentImpl *createDefaultAttachment(GLenum type, egl::Surface *surface) override;
-    FramebufferImpl *createFramebuffer() override;
+    FramebufferImpl *createFramebuffer(const gl::Framebuffer::Data &data) override;
 
     // Texture creation
     TextureImpl *createTexture(GLenum target) override;

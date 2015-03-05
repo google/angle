@@ -12,6 +12,7 @@
 
 #include "libANGLE/Caps.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/Framebuffer.h"
 #include "libANGLE/Uniform.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/Workarounds.h"
@@ -31,7 +32,6 @@ class Surface;
 namespace gl
 {
 class Buffer;
-class Framebuffer;
 struct Data;
 }
 
@@ -76,7 +76,7 @@ class Renderer
 
     // Framebuffer creation
     virtual DefaultAttachmentImpl *createDefaultAttachment(GLenum type, egl::Surface *surface) = 0;
-    virtual FramebufferImpl *createFramebuffer() = 0;
+    virtual FramebufferImpl *createFramebuffer(const gl::Framebuffer::Data &data) = 0;
 
     // Texture creation
     virtual TextureImpl *createTexture(GLenum target) = 0;

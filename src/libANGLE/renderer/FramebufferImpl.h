@@ -12,6 +12,7 @@
 #include "angle_gl.h"
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/Framebuffer.h"
 
 namespace gl
 {
@@ -27,8 +28,8 @@ namespace rx
 class FramebufferImpl
 {
   public:
-    FramebufferImpl() {}
-    virtual ~FramebufferImpl() {};
+    FramebufferImpl(const gl::Framebuffer::Data &data) : mData(data) { }
+    virtual ~FramebufferImpl() { }
 
     virtual void setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment) = 0;
     virtual void setDepthttachment(const gl::FramebufferAttachment *attachment) = 0;
@@ -55,6 +56,11 @@ class FramebufferImpl
                            GLbitfield mask, GLenum filter, const gl::Framebuffer *sourceFramebuffer) = 0;
 
     virtual GLenum checkStatus() const = 0;
+
+    const gl::Framebuffer::Data &getData() const { return mData; }
+
+  protected:
+    const gl::Framebuffer::Data &mData;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(FramebufferImpl);

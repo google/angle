@@ -13,8 +13,8 @@
 namespace rx
 {
 
-FramebufferGL::FramebufferGL()
-    : FramebufferImpl()
+FramebufferGL::FramebufferGL(const gl::Framebuffer::Data &data)
+    : FramebufferImpl(data)
 {}
 
 FramebufferGL::~FramebufferGL()

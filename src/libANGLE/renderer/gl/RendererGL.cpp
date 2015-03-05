@@ -100,9 +100,9 @@ DefaultAttachmentImpl *RendererGL::createDefaultAttachment(GLenum type, egl::Sur
     return new DefaultAttachmentGL();
 }
 
-FramebufferImpl *RendererGL::createFramebuffer()
+FramebufferImpl *RendererGL::createFramebuffer(const gl::Framebuffer::Data &data)
 {
-    return new FramebufferGL();
+    return new FramebufferGL(data);
 }
 
 TextureImpl *RendererGL::createTexture(GLenum target)

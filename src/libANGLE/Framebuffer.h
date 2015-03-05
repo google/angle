@@ -20,23 +20,29 @@
 
 namespace rx
 {
-class RenderbufferImpl;
-struct Workarounds;
 class DefaultAttachmentImpl;
 class FramebufferImpl;
+class RenderbufferImpl;
+class Renderer;
+struct Workarounds;
+}
+
+namespace egl
+{
+class Surface;
 }
 
 namespace gl
 {
 class FramebufferAttachment;
-class Texture;
 class Renderbuffer;
-struct ImageIndex;
-struct Caps;
-struct Extensions;
-class TextureCapsMap;
-struct Data;
 class State;
+class Texture;
+class TextureCapsMap;
+struct Caps;
+struct Data;
+struct Extensions;
+struct ImageIndex;
 struct Rectangle;
 
 typedef std::vector<FramebufferAttachment *> ColorbufferInfo;
@@ -44,7 +50,25 @@ typedef std::vector<FramebufferAttachment *> ColorbufferInfo;
 class Framebuffer
 {
   public:
-    Framebuffer(rx::FramebufferImpl *impl, GLuint id);
+
+    class Data final
+    {
+      public:
+        Data(const Caps &caps);
+        ~Data();
+
+        std::vector<FramebufferAttachment *> mColorAttachments;
+        FramebufferAttachment *mDepthAttachment;
+        FramebufferAttachment *mStencilAttachment;
+
+        std::vector<GLenum> mDrawBufferStates;
+        GLenum mReadBufferState;
+
+      private:
+        DISALLOW_COPY_AND_ASSIGN(Data);
+    };
+
+    Framebuffer(const Caps &caps, rx::Renderer *renderer, GLuint id);
     virtual ~Framebuffer();
 
     const rx::FramebufferImpl *getImplementation() const { return mImpl; }
@@ -108,16 +132,11 @@ class Framebuffer
 
   protected:
     void setAttachment(GLenum attachment, FramebufferAttachment *attachmentObj);
+    void detachResourceById(GLenum resourceType, GLuint resourceId);
 
+    Data mData;
     rx::FramebufferImpl *mImpl;
     GLuint mId;
-
-    FramebufferAttachment *mColorbuffers[IMPLEMENTATION_MAX_DRAW_BUFFERS];
-    GLenum mDrawBufferStates[IMPLEMENTATION_MAX_DRAW_BUFFERS];
-    GLenum mReadBufferState;
-
-    FramebufferAttachment *mDepthbuffer;
-    FramebufferAttachment *mStencilbuffer;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Framebuffer);
@@ -126,8 +145,7 @@ class Framebuffer
 class DefaultFramebuffer : public Framebuffer
 {
   public:
-    DefaultFramebuffer(rx::FramebufferImpl *impl, rx::DefaultAttachmentImpl *colorAttachment,
-                       rx::DefaultAttachmentImpl *depthAttachment, rx::DefaultAttachmentImpl *stencilAttachment);
+    DefaultFramebuffer(const gl::Caps &caps, rx::Renderer *renderer, egl::Surface *surface);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(DefaultFramebuffer);

@@ -2626,9 +2626,9 @@ DefaultAttachmentImpl *Renderer11::createDefaultAttachment(GLenum type, egl::Sur
     }
 }
 
-FramebufferImpl *Renderer11::createFramebuffer()
+FramebufferImpl *Renderer11::createFramebuffer(const gl::Framebuffer::Data &data)
 {
-    return new Framebuffer11(this);
+    return new Framebuffer11(data, this);
 }
 
 CompilerImpl *Renderer11::createCompiler(const gl::Data &data)

@@ -61,8 +61,9 @@ RenderTargetD3D *DefaultAttachmentD3D::getRenderTarget() const
 }
 
 
-FramebufferD3D::FramebufferD3D(RendererD3D *renderer)
-    : mRenderer(renderer),
+FramebufferD3D::FramebufferD3D(const gl::Framebuffer::Data &data, RendererD3D *renderer)
+    : FramebufferImpl(data),
+      mRenderer(renderer),
       mColorBuffers(renderer->getRendererCaps().maxColorAttachments),
       mDepthbuffer(nullptr),
       mStencilbuffer(nullptr),

@@ -17,7 +17,7 @@ namespace rx
 class FramebufferGL : public FramebufferImpl
 {
   public:
-    FramebufferGL();
+    FramebufferGL(const gl::Framebuffer::Data &data);
     ~FramebufferGL() override;
 
     void setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment) override;

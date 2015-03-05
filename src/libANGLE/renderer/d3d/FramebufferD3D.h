@@ -51,7 +51,7 @@ class DefaultAttachmentD3D : public DefaultAttachmentImpl
 class FramebufferD3D : public FramebufferImpl
 {
   public:
-    FramebufferD3D(RendererD3D *renderer);
+    FramebufferD3D(const gl::Framebuffer::Data &data, RendererD3D *renderer);
     virtual ~FramebufferD3D();
 
     void setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment) override;
