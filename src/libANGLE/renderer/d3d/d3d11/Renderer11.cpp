@@ -147,7 +147,8 @@ ID3D11Resource *GetViewResource(ID3D11View *view)
 
 Renderer11::Renderer11(egl::Display *display)
     : RendererD3D(display),
-      mStateCache(this)
+      mStateCache(this),
+      mDebug(nullptr)
 {
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
@@ -450,6 +451,10 @@ egl::Error Renderer11::initialize()
         infoQueue->AddStorageFilterEntries(&filter);
         SafeRelease(infoQueue);
     }
+#endif
+
+#if !defined(NDEBUG)
+    mDebug = d3d11::DynamicCastComObject<ID3D11Debug>(mDevice);
 #endif
 
     initializeDevice();
@@ -2097,6 +2102,7 @@ void Renderer11::release()
     }
 
     SafeRelease(mDevice);
+    SafeRelease(mDebug);
 
     if (mD3d11Module)
     {

@@ -384,6 +384,7 @@ class Renderer11 : public RendererD3D
     DXGI_ADAPTER_DESC mAdapterDescription;
     char mDescription[128];
     DXGIFactory *mDxgiFactory;
+    ID3D11Debug *mDebug;
 };
 
 }
