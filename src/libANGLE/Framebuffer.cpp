@@ -578,7 +578,7 @@ void Framebuffer::setAttachment(GLenum attachment, FramebufferAttachment *attach
     {
         SafeDelete(mData.mDepthAttachment);
         mData.mDepthAttachment = attachmentObj;
-        mImpl->setDepthttachment(attachmentObj);
+        mImpl->setDepthAttachment(attachmentObj);
     }
     else if (attachment == GL_STENCIL_ATTACHMENT || attachment == GL_STENCIL)
     {
@@ -595,7 +595,7 @@ void Framebuffer::setAttachment(GLenum attachment, FramebufferAttachment *attach
         if (attachmentObj && attachmentObj->getDepthSize() > 0 && attachmentObj->getStencilSize() > 0)
         {
             mData.mDepthAttachment = attachmentObj;
-            mImpl->setDepthttachment(attachmentObj);
+            mImpl->setDepthAttachment(attachmentObj);
 
             // Make a new attachment object to ensure we do not double-delete
             // See angle issue 686

@@ -55,7 +55,7 @@ class FramebufferD3D : public FramebufferImpl
     virtual ~FramebufferD3D();
 
     void setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment) override;
-    void setDepthttachment(const gl::FramebufferAttachment *attachment) override;
+    void setDepthAttachment(const gl::FramebufferAttachment *attachment) override;
     void setStencilAttachment(const gl::FramebufferAttachment *attachment) override;
     void setDepthStencilAttachment(const gl::FramebufferAttachment *attachment) override;
 

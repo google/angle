@@ -32,7 +32,7 @@ class FramebufferImpl
     virtual ~FramebufferImpl() { }
 
     virtual void setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment) = 0;
-    virtual void setDepthttachment(const gl::FramebufferAttachment *attachment) = 0;
+    virtual void setDepthAttachment(const gl::FramebufferAttachment *attachment) = 0;
     virtual void setStencilAttachment(const gl::FramebufferAttachment *attachment) = 0;
     virtual void setDepthStencilAttachment(const gl::FramebufferAttachment *attachment) = 0;
 

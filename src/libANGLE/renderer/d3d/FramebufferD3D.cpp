@@ -78,7 +78,7 @@ void FramebufferD3D::setColorAttachment(size_t, const gl::FramebufferAttachment 
     mInvalidateColorAttachmentCache = true;
 }
 
-void FramebufferD3D::setDepthttachment(const gl::FramebufferAttachment *)
+void FramebufferD3D::setDepthAttachment(const gl::FramebufferAttachment *)
 {
 }
 

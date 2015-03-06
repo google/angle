@@ -21,7 +21,7 @@ class FramebufferGL : public FramebufferImpl
     ~FramebufferGL() override;
 
     void setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment) override;
-    void setDepthttachment(const gl::FramebufferAttachment *attachment) override;
+    void setDepthAttachment(const gl::FramebufferAttachment *attachment) override;
     void setStencilAttachment(const gl::FramebufferAttachment *attachment) override;
     void setDepthStencilAttachment(const gl::FramebufferAttachment *attachment) override;
 

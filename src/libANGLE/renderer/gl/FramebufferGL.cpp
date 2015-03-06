@@ -25,7 +25,7 @@ void FramebufferGL::setColorAttachment(size_t index, const gl::FramebufferAttach
     //UNIMPLEMENTED();
 }
 
-void FramebufferGL::setDepthttachment(const gl::FramebufferAttachment *attachment)
+void FramebufferGL::setDepthAttachment(const gl::FramebufferAttachment *attachment)
 {
     //UNIMPLEMENTED();
 }
