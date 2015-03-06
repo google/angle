@@ -1454,13 +1454,13 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         }
         else if (visit == InVisit)
         {
-            out << " = mul(";
+            out << " = transpose(mul(transpose(";
             node->getLeft()->traverse(this);
-            out << ", ";
+            out << "), transpose(";
         }
         else
         {
-            out << "))";
+            out << "))))";
         }
         break;
       case EOpDivAssign:               outputTriplet(visit, "(", " /= ", ")");          break;
