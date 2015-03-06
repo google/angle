@@ -1220,7 +1220,7 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
             mForceSetRasterState = true;
         }
 
-        for (unsigned int rtIndex = 0; rtIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; rtIndex++)
+        for (size_t rtIndex = 0; rtIndex < ArraySize(framebufferRTVs); rtIndex++)
         {
             mAppliedRTVs[rtIndex] = reinterpret_cast<uintptr_t>(framebufferRTVs[rtIndex]);
         }
@@ -1924,7 +1924,7 @@ gl::Error Renderer11::applyUniforms(const ProgramImpl &program, const std::vecto
 
 void Renderer11::markAllStateDirty()
 {
-    for (unsigned int rtIndex = 0; rtIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; rtIndex++)
+    for (size_t rtIndex = 0; rtIndex < ArraySize(mAppliedRTVs); rtIndex++)
     {
         mAppliedRTVs[rtIndex] = DirtyPointer;
     }
@@ -2449,7 +2449,7 @@ void Renderer11::setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView
     mDeviceContext->OMSetRenderTargets(getRendererCaps().maxDrawBuffers, rtvArray, NULL);
 
     // Do not preserve the serial for this one-time-use render target
-    for (unsigned int rtIndex = 0; rtIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; rtIndex++)
+    for (size_t rtIndex = 0; rtIndex < ArraySize(mAppliedRTVs); rtIndex++)
     {
         mAppliedRTVs[rtIndex] = DirtyPointer;
     }

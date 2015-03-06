@@ -524,7 +524,7 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
             GLenum readInternalFormat = readColorBuffer->getInternalFormat();
             const InternalFormat &readFormatInfo = GetInternalFormatInfo(readInternalFormat);
 
-            for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; i++)
+            for (GLuint i = 0; i < context->getCaps().maxColorAttachments; i++)
             {
                 if (drawFramebuffer->isEnabledColorAttachment(i))
                 {
@@ -580,7 +580,7 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
                     return false;
                 }
 
-                for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
+                for (GLuint colorAttachment = 0; colorAttachment < context->getCaps().maxColorAttachments; ++colorAttachment)
                 {
                     if (drawFramebuffer->isEnabledColorAttachment(colorAttachment))
                     {
@@ -1123,11 +1123,13 @@ bool ValidateStateQuery(gl::Context *context, GLenum pname, GLenum *nativeType, 
         return false;
     }
 
+    const Caps &caps = context->getCaps();
+
     if (pname >= GL_DRAW_BUFFER0 && pname <= GL_DRAW_BUFFER15)
     {
         unsigned int colorAttachment = (pname - GL_DRAW_BUFFER0);
 
-        if (colorAttachment >= context->getCaps().maxDrawBuffers)
+        if (colorAttachment >= caps.maxDrawBuffers)
         {
             context->recordError(Error(GL_INVALID_OPERATION));
             return false;
@@ -1140,7 +1142,7 @@ bool ValidateStateQuery(gl::Context *context, GLenum pname, GLenum *nativeType, 
       case GL_TEXTURE_BINDING_CUBE_MAP:
       case GL_TEXTURE_BINDING_3D:
       case GL_TEXTURE_BINDING_2D_ARRAY:
-        if (context->getState().getActiveSampler() >= context->getCaps().maxCombinedTextureImageUnits)
+        if (context->getState().getActiveSampler() >= caps.maxCombinedTextureImageUnits)
         {
             context->recordError(Error(GL_INVALID_OPERATION));
             return false;
