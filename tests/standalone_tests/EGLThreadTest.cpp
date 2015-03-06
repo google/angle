@@ -9,6 +9,7 @@ typedef EGLAPI EGLDisplay EGLAPIENTRY EGLGetDisplay(EGLNativeDisplayType display
 typedef EGLAPI EGLBoolean EGLAPIENTRY EGLInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor);
 typedef EGLAPI EGLContext EGLAPIENTRY EGLGetCurrentContext(void);
 typedef EGLAPI EGLSurface EGLAPIENTRY EGLGetCurrentSurface(EGLint readdraw);
+typedef EGLAPI EGLBoolean EGLAPIENTRY EGLTerminate(EGLDisplay dpy);
 
 class EGLThreadTest : public testing::Test
 {
@@ -78,4 +79,7 @@ TEST_F(EGLThreadTest, thread_init_crash)
     // crash, because the TLS value is NULL on main thread
     mGetCurrentSurface(EGL_DRAW);
     mGetCurrentContext();
+
+    auto terminate = (EGLTerminate *)GetProcAddress(mEGL, "eglTerminate");
+    terminate(mDisplay);
 }
