@@ -22,6 +22,30 @@
       "revId": "024c61a53938106bc44a001e9bf9bfb64b91ee1d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d73c30f4_1fd383d9",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-06T01:36:39Z",
+      "side": 1,
+      "message": "Fixed in a follow-up.",
+      "parentUuid": "82efd3fe_d0b49caf",
+      "range": {
+        "startLine": 83,
+        "startChar": 21,
+        "endLine": 83,
+        "endChar": 38
+      },
+      "revId": "024c61a53938106bc44a001e9bf9bfb64b91ee1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
