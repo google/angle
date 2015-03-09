@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "577a0034_2b7cb99b",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-09T15:13:24Z",
+      "side": 1,
+      "message": "Unfortunately we still need to pass an Impl into the constructor otherwise we cannot mock a FramebufferImpl without mocking the renderer as well.",
+      "range": {
+        "startLine": 71,
+        "startChar": 16,
+        "endLine": 71,
+        "endChar": 67
+      },
+      "revId": "5178b6c54d7f9160074068afef37fe69f8efc403",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
