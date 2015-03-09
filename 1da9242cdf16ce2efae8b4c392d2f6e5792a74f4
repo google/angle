@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17e968fa_b418ee72",
+        "filename": "src/libANGLE/renderer/Workarounds.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-03-09T06:17:58Z",
+      "side": 1,
+      "message": "Note: I was going to upload updated patch set as I  observed \"private:\" qualifier is missing here. But when I looked at DISALLOW_COPY_AND_ASSIGN definition in angleutils.h, it is updated to use c++11 operator deletion feature and looks like it is no more required to add private qualifier just for DISALLOW_COPY_AND_ASSIGN. let me know if I need to correct anything here.",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 28
+      },
+      "revId": "1da9242cdf16ce2efae8b4c392d2f6e5792a74f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
