@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "77ab84f0_0c6bf7ee",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-09T18:43:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d70510c4_5a075144",
+      "range": {
+        "startLine": 30,
+        "startChar": 8,
+        "endLine": 30,
+        "endChar": 34
+      },
+      "revId": "e07e2181771ace18983595d6524f4e67ac5c71f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "579cc029_dbff93ab",
         "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
         "patchSetId": 2
@@ -60,6 +84,24 @@
       "writtenOn": "2015-03-05T20:04:37Z",
       "side": 1,
       "message": "just noticed i forgot disallow_copy_and_assign, will have to add those",
+      "revId": "e07e2181771ace18983595d6524f4e67ac5c71f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77ab84f0_ec630b18",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-09T18:43:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "579cc029_dbff93ab",
       "revId": "e07e2181771ace18983595d6524f4e67ac5c71f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -101,6 +143,30 @@
       "side": 1,
       "message": "This was unintentional; I\u0027ll add a case that ensures we aren\u0027t doing any work when annotations are not active. I was looking at the debug.h #ifdef cases, but it seems though if ANGLE_ENABLE_DEBUG_TRACE is nonzero, we will capture annotations even if annotations are not enabled.",
       "parentUuid": "d70510c4_574e0c90",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 152,
+        "endChar": 34
+      },
+      "revId": "e07e2181771ace18983595d6524f4e67ac5c71f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a68028_2b6e99fe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-09T18:43:08Z",
+      "side": 1,
+      "message": "Done, DebugAnnotationsActive will always return false if the define is not present.",
+      "parentUuid": "971718fb_35c8b0cd",
       "range": {
         "startLine": 152,
         "startChar": 0,
