@@ -38,6 +38,7 @@ struct TParseContext {
             currentFunctionType(NULL),
             mFunctionReturnsValue(false),
             checksPrecisionErrors(checksPrecErrors),
+            fragmentPrecisionHigh(false),
             defaultMatrixPacking(EmpColumnMajor),
             defaultBlockStorage(EbsShared),
             diagnostics(is),
