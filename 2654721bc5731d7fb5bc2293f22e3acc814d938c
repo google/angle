@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d740b0d5_fffaff8e",
+        "filename": "src/libANGLE/renderer/Workarounds.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-03-09T05:46:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d75b503d_e79be272",
+      "revId": "2654721bc5731d7fb5bc2293f22e3acc814d938c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "176248ee_ce980576",
         "filename": "src/libANGLE/renderer/Workarounds.h",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "17e968fa_34519e33",
+        "filename": "src/libANGLE/renderer/Workarounds.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-03-09T05:46:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "176248ee_ce980576",
+      "revId": "2654721bc5731d7fb5bc2293f22e3acc814d938c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d75b503d_877b06a5",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 2
@@ -47,6 +83,30 @@
       "writtenOn": "2015-03-05T17:24:51Z",
       "side": 1,
       "message": "suggestion: make a method generateWorkarounds(pointer) which avoids using the copy constructor.",
+      "range": {
+        "startLine": 1034,
+        "startChar": 3,
+        "endLine": 1034,
+        "endChar": 71
+      },
+      "revId": "2654721bc5731d7fb5bc2293f22e3acc814d938c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d740b0d5_bf047714",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1034,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-03-09T05:46:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d75b503d_877b06a5",
       "range": {
         "startLine": 1034,
         "startChar": 3,
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "370f4cb3_2a613f85",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-03-09T05:46:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d75b503d_87a2e6a6",
+      "range": {
+        "startLine": 144,
+        "startChar": 71,
+        "endLine": 144,
+        "endChar": 93
+      },
+      "revId": "2654721bc5731d7fb5bc2293f22e3acc814d938c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d75b503d_47962e4a",
         "filename": "src/libANGLE/renderer/d3d/ShaderD3D.cpp",
         "patchSetId": 2
@@ -93,6 +177,30 @@
       "writtenOn": "2015-03-05T17:24:51Z",
       "side": 1,
       "message": "nit: else if on separate line",
+      "range": {
+        "startLine": 278,
+        "startChar": 3,
+        "endLine": 278,
+        "endChar": 34
+      },
+      "revId": "2654721bc5731d7fb5bc2293f22e3acc814d938c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17e968fa_b4b10efd",
+        "filename": "src/libANGLE/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-03-09T05:46:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d75b503d_47962e4a",
       "range": {
         "startLine": 278,
         "startChar": 3,
@@ -128,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "d740b0d5_7f07cf16",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2738,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-03-09T05:46:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d75b503d_278b3a1e",
+      "range": {
+        "startLine": 2738,
+        "startChar": 71,
+        "endLine": 2738,
+        "endChar": 93
+      },
+      "revId": "2654721bc5731d7fb5bc2293f22e3acc814d938c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7220f282_19f07713",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
         "patchSetId": 2
@@ -151,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "370f4cb3_0a5e7bc1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-03-09T05:46:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7220f282_19f07713",
+      "range": {
+        "startLine": 166,
+        "startChar": 71,
+        "endLine": 166,
+        "endChar": 93
+      },
+      "revId": "2654721bc5731d7fb5bc2293f22e3acc814d938c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d75b503d_07903648",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
         "patchSetId": 2
@@ -162,6 +318,30 @@
       "writtenOn": "2015-03-05T17:24:51Z",
       "side": 1,
       "message": "const \u0026",
+      "range": {
+        "startLine": 175,
+        "startChar": 71,
+        "endLine": 175,
+        "endChar": 93
+      },
+      "revId": "2654721bc5731d7fb5bc2293f22e3acc814d938c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d740b0d5_1f148341",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-03-09T05:46:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d75b503d_07903648",
       "range": {
         "startLine": 175,
         "startChar": 71,
