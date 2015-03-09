@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "577a0034_2bad9966",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-09T15:37:41Z",
+      "side": 1,
+      "message": "I think this can move to FramebufferD3D only since that is the only place it\u0027s referenced.",
+      "range": {
+        "startLine": 131,
+        "startChar": 4,
+        "endLine": 134,
+        "endChar": 90
+      },
+      "revId": "02d8b79e5d4743066b5d2536d57069742f00f6a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "577a0034_8b74cd8b",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-09T15:37:41Z",
+      "side": 1,
+      "message": "You could use the set*Attachment functions to call an updateColorAttachmentsForRender method to regenerate the list.  This would move the cost of rebuilding the list from the draw call to the glFramebufferAttachment* calls and remove the need for the vector to be mutable.",
+      "range": {
+        "startLine": 311,
+        "startChar": 0,
+        "endLine": 330,
+        "endChar": 38
+      },
+      "revId": "02d8b79e5d4743066b5d2536d57069742f00f6a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
