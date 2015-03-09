@@ -28,6 +28,8 @@ class VertexArrayGL : public VertexArrayImpl
     void setAttributeDivisor(size_t idx, GLuint divisor) override;
     void enableAttribute(size_t idx, bool enabledState) override;
 
+    void syncState() const;
+
     GLuint getVertexArrayID() const;
 
   private:
@@ -38,8 +40,11 @@ class VertexArrayGL : public VertexArrayImpl
 
     GLuint mVertexArrayID;
 
-    GLuint mAppliedElementArrayBuffer;
-    std::vector<gl::VertexAttribute> mAppliedAttributes;
+    BindingPointer<const gl::Buffer> mElementArrayBuffer;
+    std::vector<gl::VertexAttribute> mAttributes;
+
+    mutable GLuint mAppliedElementArrayBuffer;
+    mutable std::vector<gl::VertexAttribute> mAppliedAttributes;
 };
 
 }

@@ -103,6 +103,7 @@ void StateManagerGL::setDrawState(const gl::Data &data)
 
     const gl::VertexArray *vao = state.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
+    vaoGL->syncState();
     bindVertexArray(vaoGL->getVertexArrayID());
 
     const gl::Program *program = state.getProgram();

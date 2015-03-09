@@ -9,6 +9,7 @@
 #include "libANGLE/renderer/gl/VertexArrayGL.h"
 
 #include "common/debug.h"
+#include "libANGLE/Buffer.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
@@ -22,6 +23,8 @@ VertexArrayGL::VertexArrayGL(const FunctionsGL *functions, StateManagerGL *state
       mFunctions(functions),
       mStateManager(stateManager),
       mVertexArrayID(0),
+      mElementArrayBuffer(),
+      mAttributes(),
       mAppliedElementArrayBuffer(0),
       mAppliedAttributes()
 {
@@ -32,6 +35,7 @@ VertexArrayGL::VertexArrayGL(const FunctionsGL *functions, StateManagerGL *state
     // Set the cached vertex attribute array size
     GLint maxVertexAttribs;
     mFunctions->getIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVertexAttribs);
+    mAttributes.resize(maxVertexAttribs);
     mAppliedAttributes.resize(maxVertexAttribs);
 }
 
@@ -43,6 +47,7 @@ VertexArrayGL::~VertexArrayGL()
         mVertexArrayID = 0;
     }
 
+    mElementArrayBuffer.set(nullptr);
     for (size_t idx = 0; idx < mAppliedAttributes.size(); idx++)
     {
         mAppliedAttributes[idx].buffer.set(NULL);
@@ -51,98 +56,83 @@ VertexArrayGL::~VertexArrayGL()
 
 void VertexArrayGL::setElementArrayBuffer(const gl::Buffer *buffer)
 {
+    mElementArrayBuffer.set(buffer);
+}
+
+void VertexArrayGL::setAttribute(size_t idx, const gl::VertexAttribute &attr)
+{
+    mAttributes[idx] = attr;
+}
+
+void VertexArrayGL::setAttributeDivisor(size_t idx, GLuint divisor)
+{
+    mAttributes[idx].divisor = divisor;
+}
+
+void VertexArrayGL::enableAttribute(size_t idx, bool enabledState)
+{
+    mAttributes[idx].enabled = enabledState;
+}
+
+void VertexArrayGL::syncState() const
+{
+    mStateManager->bindVertexArray(mVertexArrayID);
+
     GLuint elementArrayBufferID = 0;
-    if (buffer != nullptr)
+    if (mElementArrayBuffer.get() != nullptr)
     {
-        const BufferGL *bufferGL = GetImplAs<BufferGL>(buffer);
+        const BufferGL *bufferGL = GetImplAs<BufferGL>(mElementArrayBuffer.get());
         elementArrayBufferID = bufferGL->getBufferID();
     }
 
     if (elementArrayBufferID != mAppliedElementArrayBuffer)
     {
-        mStateManager->bindVertexArray(mVertexArrayID);
         mStateManager->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementArrayBufferID);
-        mStateManager->bindVertexArray(0);
-
         mAppliedElementArrayBuffer = elementArrayBufferID;
     }
-}
 
-void VertexArrayGL::setAttribute(size_t idx, const gl::VertexAttribute &attr)
-{
-    if (mAppliedAttributes[idx].type != attr.type ||
-        mAppliedAttributes[idx].size != attr.size ||
-        mAppliedAttributes[idx].normalized != attr.normalized ||
-        mAppliedAttributes[idx].pureInteger != attr.pureInteger ||
-        mAppliedAttributes[idx].stride != attr.stride ||
-        mAppliedAttributes[idx].pointer != attr.pointer ||
-        mAppliedAttributes[idx].buffer.get() != attr.buffer.get())
+    for (size_t idx = 0; idx < mAttributes.size(); idx++)
     {
-        mStateManager->bindVertexArray(mVertexArrayID);
-
-        const gl::Buffer *arrayBuffer = attr.buffer.get();
-        if (arrayBuffer != nullptr)
+        if (mAppliedAttributes[idx] != mAttributes[idx])
         {
-            const BufferGL *arrayBufferGL = GetImplAs<BufferGL>(arrayBuffer);
-            mStateManager->bindBuffer(GL_ARRAY_BUFFER, arrayBufferGL->getBufferID());
+            if (mAttributes[idx].enabled)
+            {
+                mFunctions->enableVertexAttribArray(idx);
+            }
+            else
+            {
+                mFunctions->disableVertexAttribArray(idx);
+            }
+
+            const gl::Buffer *arrayBuffer = mAttributes[idx].buffer.get();
+            if (arrayBuffer != nullptr)
+            {
+                const BufferGL *arrayBufferGL = GetImplAs<BufferGL>(arrayBuffer);
+                mStateManager->bindBuffer(GL_ARRAY_BUFFER, arrayBufferGL->getBufferID());
+            }
+            else
+            {
+                // This will take some extra work, core OpenGL doesn't support binding raw data pointers
+                // to VAOs
+                UNIMPLEMENTED();
+            }
+
+            if (mAttributes[idx].pureInteger)
+            {
+                mFunctions->vertexAttribIPointer(idx, mAttributes[idx].size, mAttributes[idx].type,
+                                                 mAttributes[idx].stride, mAttributes[idx].pointer);
+            }
+            else
+            {
+                mFunctions->vertexAttribPointer(idx, mAttributes[idx].size, mAttributes[idx].type,
+                                                mAttributes[idx].normalized, mAttributes[idx].stride,
+                                                mAttributes[idx].pointer);
+            }
+
+            mFunctions->vertexAttribDivisor(idx, mAttributes[idx].divisor);
+
+            mAppliedAttributes[idx] = mAttributes[idx];
         }
-        else
-        {
-            // This will take some extra work, core OpenGL doesn't support binding raw data pointers
-            // to VAOs
-            UNIMPLEMENTED();
-        }
-
-        if (attr.pureInteger)
-        {
-            mFunctions->vertexAttribIPointer(idx, attr.size, attr.type, attr.stride, attr.pointer);
-        }
-        else
-        {
-            mFunctions->vertexAttribPointer(idx, attr.size, attr.type, attr.normalized, attr.stride, attr.pointer);
-        }
-        mAppliedAttributes[idx].type = attr.type;
-        mAppliedAttributes[idx].size = attr.size;
-        mAppliedAttributes[idx].normalized = attr.normalized;
-        mAppliedAttributes[idx].pureInteger = attr.pureInteger;
-        mAppliedAttributes[idx].stride = attr.stride;
-        mAppliedAttributes[idx].pointer = attr.pointer;
-        mAppliedAttributes[idx].buffer.set(attr.buffer.get());
-
-        mStateManager->bindVertexArray(0);
-    }
-}
-
-void VertexArrayGL::setAttributeDivisor(size_t idx, GLuint divisor)
-{
-    if (mAppliedAttributes[idx].divisor != divisor)
-    {
-        mStateManager->bindVertexArray(mVertexArrayID);
-
-        mFunctions->vertexAttribDivisor(idx, divisor);
-        mAppliedAttributes[idx].divisor = divisor;
-
-        mStateManager->bindVertexArray(0);
-    }
-}
-
-void VertexArrayGL::enableAttribute(size_t idx, bool enabledState)
-{
-    if (mAppliedAttributes[idx].enabled != enabledState)
-    {
-        mStateManager->bindVertexArray(mVertexArrayID);
-
-        if (enabledState)
-        {
-            mFunctions->enableVertexAttribArray(idx);
-        }
-        else
-        {
-            mFunctions->disableVertexAttribArray(idx);
-        }
-        mAppliedAttributes[idx].enabled = enabledState;
-
-        mStateManager->bindVertexArray(0);
     }
 }
 

@@ -36,6 +36,9 @@ struct VertexAttribute
     VertexAttribute();
 };
 
+bool operator==(const VertexAttribute &a, const VertexAttribute &b);
+bool operator!=(const VertexAttribute &a, const VertexAttribute &b);
+
 template <typename T>
 T QuerySingleVertexAttributeParameter(const VertexAttribute& attrib, GLenum pname)
 {
