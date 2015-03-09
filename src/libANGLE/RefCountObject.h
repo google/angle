@@ -28,64 +28,79 @@ class RefCountObject
     virtual void release() const;
 
     GLuint id() const { return mId; }
-    
+
   private:
     GLuint mId;
 
     mutable std::size_t mRefCount;
 };
 
-class RefCountObjectBindingPointer
+template <class ObjectType>
+class BindingPointer
 {
-  protected:
-    RefCountObjectBindingPointer() : mObject(NULL) { }
-    ~RefCountObjectBindingPointer() { ASSERT(mObject == NULL); } // Objects have to be released before the resource manager is destroyed, so they must be explicitly cleaned up.
+public:
+    BindingPointer()
+        : mObject(nullptr)
+    {
+    }
 
-    void set(RefCountObject *newObject);
-    RefCountObject *get() const { return mObject; }
+    BindingPointer(const BindingPointer<ObjectType> &other)
+        : mObject(nullptr)
+    {
+        set(other.mObject);
+    }
 
-  public:
-    GLuint id() const { return (mObject != NULL) ? mObject->id() : 0; }
-    bool operator!() const { return (get() == NULL); }
+    void operator=(const BindingPointer<ObjectType> &other)
+    {
+        set(other.mObject);
+    }
+
+    virtual ~BindingPointer()
+    {
+        // Objects have to be released before the resource manager is destroyed, so they must be explicitly cleaned up.
+        ASSERT(mObject == nullptr);
+    }
+
+    virtual void set(ObjectType *newObject)
+    {
+        // addRef first in case newObject == mObject and this is the last reference to it.
+        if (newObject != nullptr) reinterpret_cast<const RefCountObject*>(newObject)->addRef();
+        if (mObject != nullptr) reinterpret_cast<const RefCountObject*>(mObject)->release();
+        mObject = newObject;
+    }
+
+    ObjectType *get() const { return mObject; }
+    ObjectType *operator->() const { return mObject; }
+
+    GLuint id() const { return (mObject != nullptr) ? mObject->id() : 0; }
+    bool operator!() const { return (mObject == nullptr); }
 
   private:
-    RefCountObject *mObject;
+    ObjectType *mObject;
 };
 
 template <class ObjectType>
-class BindingPointer : public RefCountObjectBindingPointer
-{
-  public:
-    void set(ObjectType *newObject) { RefCountObjectBindingPointer::set(newObject); }
-    ObjectType *get() const { return static_cast<ObjectType*>(RefCountObjectBindingPointer::get()); }
-    ObjectType *operator->() const { return get(); }
-};
-
-template <class ObjectType>
-class OffsetBindingPointer : public RefCountObjectBindingPointer
+class OffsetBindingPointer : public BindingPointer<ObjectType>
 {
   public:
     OffsetBindingPointer() : mOffset(0), mSize(0) { }
 
-    void set(ObjectType *newObject)
+    void set(ObjectType *newObject) override
     {
-        RefCountObjectBindingPointer::set(newObject);
+        BindingPointer<ObjectType>::set(newObject);
         mOffset = 0;
         mSize = 0;
     }
 
     void set(ObjectType *newObject, GLintptr offset, GLsizeiptr size)
     {
-        RefCountObjectBindingPointer::set(newObject);
+        BindingPointer<ObjectType>::set(newObject);
         mOffset = offset;
         mSize = size;
     }
 
     GLintptr getOffset() const { return mOffset; }
     GLsizeiptr getSize() const { return mSize; }
-
-    ObjectType *get() const { return static_cast<ObjectType*>(RefCountObjectBindingPointer::get()); }
-    ObjectType *operator->() const { return get(); }
 
   private:
     GLintptr mOffset;
