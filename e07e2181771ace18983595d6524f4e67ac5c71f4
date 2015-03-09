@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d70510c4_5a075144",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-09T18:17:23Z",
+      "side": 1,
+      "message": "Good catch, this is a standing bug.",
+      "parentUuid": "170c08ed_f918f773",
+      "range": {
+        "startLine": 30,
+        "startChar": 8,
+        "endLine": 30,
+        "endChar": 34
+      },
+      "revId": "e07e2181771ace18983595d6524f4e67ac5c71f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "579cc029_dbff93ab",
         "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
         "patchSetId": 2
@@ -65,6 +89,30 @@
     },
     {
       "key": {
+        "uuid": "971718fb_35c8b0cd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-09T18:17:23Z",
+      "side": 1,
+      "message": "This was unintentional; I\u0027ll add a case that ensures we aren\u0027t doing any work when annotations are not active. I was looking at the debug.h #ifdef cases, but it seems though if ANGLE_ENABLE_DEBUG_TRACE is nonzero, we will capture annotations even if annotations are not enabled.",
+      "parentUuid": "d70510c4_574e0c90",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 152,
+        "endChar": 34
+      },
+      "revId": "e07e2181771ace18983595d6524f4e67ac5c71f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d70510c4_17f814ca",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -76,6 +124,30 @@
       "writtenOn": "2015-03-09T17:37:48Z",
       "side": 1,
       "message": "Unfortunately this means that we won\u0027t capture any of the API calls made before eglInitialize(). Are we okay with this?",
+      "range": {
+        "startLine": 153,
+        "startChar": 4,
+        "endLine": 153,
+        "endChar": 48
+      },
+      "revId": "e07e2181771ace18983595d6524f4e67ac5c71f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57112008_9320bc57",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-09T18:17:23Z",
+      "side": 1,
+      "message": "It wouldn\u0027t be too bad to fix this if we care enough about it:\n\nWe could refactor the logging code into re-usable chunks and include an implementation of the actual logging mechanism inside libANGLE, where we could initialize it at first use, defaulting to D3D11 or D3D9 as we see fit.\n\nI don\u0027t think it\u0027s super critical as we don\u0027t do any real gpu work and the log would be available as a trace file, so we could do this as a follow up if necessary.",
+      "parentUuid": "d70510c4_17f814ca",
       "range": {
         "startLine": 153,
         "startChar": 4,
