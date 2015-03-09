@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "170c08ed_f918f773",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-03-09T17:37:48Z",
+      "side": 1,
+      "message": "Watch out for WinRT, where Load/FreeLibrary is forbidden. This should be behind an #ifdef.",
+      "range": {
+        "startLine": 30,
+        "startChar": 8,
+        "endLine": 30,
+        "endChar": 34
+      },
+      "revId": "e07e2181771ace18983595d6524f4e67ac5c71f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "579cc029_dbff93ab",
         "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
         "patchSetId": 2
@@ -13,6 +36,52 @@
       "writtenOn": "2015-03-05T20:04:37Z",
       "side": 1,
       "message": "just noticed i forgot disallow_copy_and_assign, will have to add those",
+      "revId": "e07e2181771ace18983595d6524f4e67ac5c71f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d70510c4_574e0c90",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-03-09T17:37:48Z",
+      "side": 1,
+      "message": "It might be worth wrapping this in #if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS), or even #ifdef(_DEBUG). Is there any reason to have this enabled for release builds?",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 152,
+        "endChar": 34
+      },
+      "revId": "e07e2181771ace18983595d6524f4e67ac5c71f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d70510c4_17f814ca",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-03-09T17:37:48Z",
+      "side": 1,
+      "message": "Unfortunately this means that we won\u0027t capture any of the API calls made before eglInitialize(). Are we okay with this?",
+      "range": {
+        "startLine": 153,
+        "startChar": 4,
+        "endLine": 153,
+        "endChar": 48
+      },
       "revId": "e07e2181771ace18983595d6524f4e67ac5c71f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
