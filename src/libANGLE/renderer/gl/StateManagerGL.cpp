@@ -56,7 +56,7 @@ void StateManagerGL::bindVertexArray(GLuint vao)
 
 void StateManagerGL::bindBuffer(GLenum type, GLuint buffer)
 {
-    if (mBuffers[type] == 0)
+    if (mBuffers[type] != buffer)
     {
         mBuffers[type] = buffer;
         mFunctions->bindBuffer(type, buffer);
@@ -96,15 +96,41 @@ void StateManagerGL::setPixelUnpackState(GLint alignment, GLint rowLength)
     }
 }
 
-void StateManagerGL::setDrawState(const gl::Data &data)
+gl::Error StateManagerGL::setDrawArraysState(const gl::Data &data, GLint first, GLsizei count)
 {
     const gl::State &state = *data.state;
-    const gl::Caps &caps = *data.caps;
 
     const gl::VertexArray *vao = state.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
-    vaoGL->syncState();
+    vaoGL->syncDrawArraysState(first, count);
     bindVertexArray(vaoGL->getVertexArrayID());
+
+    return setGenericDrawState(data);
+}
+
+gl::Error StateManagerGL::setDrawElementsState(const gl::Data &data, GLsizei count, GLenum type, const GLvoid *indices,
+                                               const GLvoid **outIndices)
+{
+    const gl::State &state = *data.state;
+
+    const gl::VertexArray *vao = state.getVertexArray();
+    const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
+
+    gl::Error error = vaoGL->syncDrawElementsState(count, type, indices, outIndices);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    bindVertexArray(vaoGL->getVertexArrayID());
+
+    return setGenericDrawState(data);
+}
+
+gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
+{
+    const gl::State &state = *data.state;
+    const gl::Caps &caps = *data.caps;
 
     const gl::Program *program = state.getProgram();
     const ProgramGL *programGL = GetImplAs<ProgramGL>(program);
@@ -154,6 +180,8 @@ void StateManagerGL::setDrawState(const gl::Data &data)
             }
         }
     }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 }

@@ -10,6 +10,7 @@
 #define LIBANGLE_RENDERER_GL_STATEMANAGERGL_H_
 
 #include "common/debug.h"
+#include "libANGLE/Error.h"
 #include "libANGLE/renderer/gl/functionsgl_typedefs.h"
 
 #include <map>
@@ -37,10 +38,14 @@ class StateManagerGL
     void bindTexture(GLenum type, GLuint texture);
     void setPixelUnpackState(GLint alignment, GLint rowLength);
 
-    void setDrawState(const gl::Data &data);
+    gl::Error setDrawArraysState(const gl::Data &data, GLint first, GLsizei count);
+    gl::Error setDrawElementsState(const gl::Data &data, GLsizei count, GLenum type, const GLvoid *indices,
+                                   const GLvoid **outIndices);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(StateManagerGL);
+
+    gl::Error setGenericDrawState(const gl::Data &data);
 
     const FunctionsGL *mFunctions;
 
