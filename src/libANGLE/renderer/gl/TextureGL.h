@@ -9,15 +9,19 @@
 #ifndef LIBANGLE_RENDERER_GL_TEXTUREGL_H_
 #define LIBANGLE_RENDERER_GL_TEXTUREGL_H_
 
+#include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/TextureImpl.h"
 
 namespace rx
 {
 
+class FunctionsGL;
+class StateManagerGL;
+
 class TextureGL : public TextureImpl
 {
   public:
-    TextureGL();
+    TextureGL(GLenum type, const FunctionsGL *functions, StateManagerGL *stateManager);
     ~TextureGL() override;
 
     void setUsage(GLenum usage) override;
@@ -44,8 +48,19 @@ class TextureGL : public TextureImpl
     void bindTexImage(egl::Surface *surface) override;
     void releaseTexImage() override;
 
+    void syncSamplerState(const gl::SamplerState &samplerState) const;
+    GLuint getTextureID() const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureGL);
+
+    GLenum mTextureType;
+
+    const FunctionsGL *mFunctions;
+    StateManagerGL *mStateManager;
+
+    mutable gl::SamplerState mAppliedSamplerState;
+    GLuint mTextureID;
 };
 
 }

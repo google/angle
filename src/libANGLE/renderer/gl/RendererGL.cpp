@@ -36,7 +36,7 @@ RendererGL::RendererGL(const FunctionsGL *functions)
       mStateManager(nullptr)
 {
     ASSERT(mFunctions);
-    mStateManager = new StateManagerGL(mFunctions);
+    mStateManager = new StateManagerGL(mFunctions, getRendererCaps());
 }
 
 RendererGL::~RendererGL()
@@ -59,7 +59,7 @@ gl::Error RendererGL::finish()
 gl::Error RendererGL::drawArrays(const gl::Data &data, GLenum mode,
                                  GLint first, GLsizei count, GLsizei instances)
 {
-    mStateManager->setDrawState(*data.state);
+    mStateManager->setDrawState(data);
     mFunctions->drawArrays(mode, first, count);
 
     return gl::Error(GL_NO_ERROR);
@@ -74,7 +74,7 @@ gl::Error RendererGL::drawElements(const gl::Data &data, GLenum mode, GLsizei co
         UNIMPLEMENTED();
     }
 
-    mStateManager->setDrawState(*data.state);
+    mStateManager->setDrawState(data);
     mFunctions->drawElements(mode, count, type, indices);
 
     return gl::Error(GL_NO_ERROR);
@@ -107,7 +107,7 @@ FramebufferImpl *RendererGL::createFramebuffer(const gl::Framebuffer::Data &data
 
 TextureImpl *RendererGL::createTexture(GLenum target)
 {
-    return new TextureGL();
+    return new TextureGL(target, mFunctions, mStateManager);
 }
 
 RenderbufferImpl *RendererGL::createRenderbuffer()

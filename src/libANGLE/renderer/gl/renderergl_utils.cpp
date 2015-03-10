@@ -18,6 +18,13 @@ namespace rx
 namespace nativegl_gl
 {
 
+static GLint QuerySingleGLInt(const FunctionsGL *functions, GLenum name)
+{
+    GLint result;
+    functions->getIntegerv(name, &result);
+    return result;
+}
+
 void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap,
                   gl::Extensions *extensions)
 {
@@ -25,10 +32,10 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
 
     // Table 6.28, implementation dependent values
     caps->maxElementIndex = static_cast<GLint64>(std::numeric_limits<unsigned int>::max());
-    caps->max3DTextureSize = 256;
-    caps->max2DTextureSize = 2048;
-    caps->maxCubeMapTextureSize = 2048;
-    caps->maxArrayTextureLayers = 256;
+    caps->max3DTextureSize = QuerySingleGLInt(functions, GL_MAX_3D_TEXTURE_SIZE);
+    caps->max2DTextureSize = QuerySingleGLInt(functions, GL_MAX_TEXTURE_SIZE);
+    caps->maxCubeMapTextureSize = QuerySingleGLInt(functions, GL_MAX_CUBE_MAP_TEXTURE_SIZE);
+    caps->maxArrayTextureLayers = QuerySingleGLInt(functions, GL_MAX_ARRAY_TEXTURE_LAYERS);
     caps->maxLODBias = 2.0f;
     caps->maxRenderbufferSize = 2048;
     caps->maxDrawBuffers = 4;
@@ -63,14 +70,14 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     caps->maxVertexUniformVectors = 256;
     caps->maxVertexUniformBlocks = 12;
     caps->maxVertexOutputComponents = 64;
-    caps->maxVertexTextureImageUnits = 16;
+    caps->maxVertexTextureImageUnits = QuerySingleGLInt(functions, GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
 
     // Table 6.32, implementation dependent fragment shader limits
     caps->maxFragmentUniformComponents = 896;
     caps->maxFragmentUniformVectors = 224;
     caps->maxFragmentUniformBlocks = 12;
     caps->maxFragmentInputComponents = 60;
-    caps->maxTextureImageUnits = 16;
+    caps->maxTextureImageUnits = QuerySingleGLInt(functions, GL_MAX_TEXTURE_IMAGE_UNITS);
     caps->minProgramTexelOffset = -8;
     caps->maxProgramTexelOffset = 7;
 
@@ -83,7 +90,7 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     caps->maxCombinedFragmentUniformComponents = (caps->maxFragmentUniformBlocks * (caps->maxUniformBlockSize / 4)) + caps->maxFragmentUniformComponents;
     caps->maxVaryingComponents = 60;
     caps->maxVaryingVectors = 15;
-    caps->maxCombinedTextureImageUnits = 32;
+    caps->maxCombinedTextureImageUnits = caps->maxVertexTextureImageUnits + caps->maxTextureImageUnits;
 
     // Table 6.34, implementation dependent transform feedback limits
     caps->maxTransformFeedbackInterleavedComponents = 64;
