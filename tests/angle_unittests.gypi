@@ -47,6 +47,7 @@
     },
     'dependencies':
     [
+        '<(angle_path)/src/angle.gyp:libANGLE',
         '<(angle_path)/src/angle.gyp:preprocessor',
         '<(angle_path)/src/angle.gyp:translator_static',
         '<(angle_path)/tests/tests.gyp:angle_test_support',
@@ -56,6 +57,10 @@
         '../include',
         '../src',
         '../src/compiler/preprocessor',
+    ],
+    'includes':
+    [
+        'angle_implementation_unit_tests/angle_implementation_unit_tests.gypi',
     ],
     'sources':
     [

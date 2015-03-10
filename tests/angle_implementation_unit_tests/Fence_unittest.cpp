@@ -145,7 +145,7 @@ TEST_F(FenceSyncTest, SetAndGetStatusBehavior)
         .WillOnce(Return(gl::Error(GL_NO_ERROR)))
         .RetiresOnSaturation();
     mFence->set(GL_SYNC_GPU_COMMANDS_COMPLETE);
-    EXPECT_EQ(GL_SYNC_GPU_COMMANDS_COMPLETE, mFence->getCondition());
+    EXPECT_EQ(static_cast<GLenum>(GL_SYNC_GPU_COMMANDS_COMPLETE), mFence->getCondition());
     // Fake the behavior of testing the fence before and after it's passed.
     EXPECT_CALL(*mImpl, getStatus(_))
         .WillOnce(DoAll(SetArgumentPointee<0>(GL_UNSIGNALED),

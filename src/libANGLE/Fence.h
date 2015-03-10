@@ -24,7 +24,7 @@ class FenceSyncImpl;
 namespace gl
 {
 
-class FenceNV
+class FenceNV final
 {
   public:
     explicit FenceNV(rx::FenceNVImpl *impl);
@@ -36,7 +36,7 @@ class FenceNV
     Error finishFence();
 
     GLboolean getStatus() const { return mStatus; }
-    GLuint getCondition() const { return mCondition; }
+    GLenum getCondition() const { return mCondition; }
 
   private:
     DISALLOW_COPY_AND_ASSIGN(FenceNV);
@@ -49,7 +49,7 @@ class FenceNV
     GLenum mCondition;
 };
 
-class FenceSync : public RefCountObject
+class FenceSync final : public RefCountObject
 {
   public:
     explicit FenceSync(rx::FenceSyncImpl *impl, GLuint id);
@@ -60,7 +60,7 @@ class FenceSync : public RefCountObject
     Error serverWait(GLbitfield flags, GLuint64 timeout);
     Error getStatus(GLint *outResult) const;
 
-    GLuint getCondition() const { return mCondition; }
+    GLenum getCondition() const { return mCondition; }
 
   private:
     DISALLOW_COPY_AND_ASSIGN(FenceSync);

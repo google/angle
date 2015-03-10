@@ -262,7 +262,7 @@ void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
 
           case GL_FENCE_CONDITION_NV:
             {
-                *params = fenceObject->getCondition();
+                *params = static_cast<GLint>(fenceObject->getCondition());
                 break;
             }
 

@@ -139,7 +139,16 @@ namespace gl
 #endif
 
 // A macro functioning as a compile-time assert to validate constant conditions
-#if (defined(_MSC_VER) && _MSC_VER >= 1600) || (defined(__GNUC__) && (__GNUC__ > 4 || __GNUC_MINOR__ >= 3))
+
+#if (defined(_MSC_VER) && _MSC_VER >= 1600)
+#define ANGLE_HAS_STATIC_ASSERT
+#elif (defined(__GNUC__) && (__GNUC__ > 4 || __GNUC_MINOR__ >= 3))
+#define ANGLE_HAS_STATIC_ASSERT
+#elif defined(__clang__) && __has_feature(cxx_static_assert)
+#define ANGLE_HAS_STATIC_ASSERT
+#endif
+
+#if defined(ANGLE_HAS_STATIC_ASSERT)
 #define META_ASSERT_MSG(condition, msg) static_assert(condition, msg)
 #else
 #define META_ASSERT_CONCAT(a, b) a ## b

@@ -56,7 +56,6 @@
     },
     'dependencies':
     [
-        '<(angle_path)/src/angle.gyp:libANGLE',
         '<(angle_path)/src/angle.gyp:libEGL',
         '<(angle_path)/src/angle.gyp:libGLESv2',
         '<(angle_path)/tests/tests.gyp:angle_test_support',
@@ -66,11 +65,6 @@
     [
         '../include',
         'angle_tests',
-    ],
-    'includes':
-    [
-        # TODO(kbr): move these to angle_unittests.gypi.
-        'angle_implementation_unit_tests/angle_implementation_unit_tests.gypi',
     ],
     'sources':
     [

@@ -108,7 +108,7 @@ TEST(ConfigSetTest, IDs)
 
     // Check that there are no gaps and the IDs are in the range [1, N].
     EXPECT_EQ(*std::min_element(ids.begin(), ids.end()), 1);
-    EXPECT_EQ(*std::max_element(ids.begin(), ids.end()), set.size());
+    EXPECT_EQ(*std::max_element(ids.begin(), ids.end()), static_cast<EGLint>(set.size()));
 }
 
 TEST(ConfigSetTest, Filtering_BitSizes)
