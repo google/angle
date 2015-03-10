@@ -358,7 +358,10 @@ function_call_header
 // Grammar Note:  Constructors look like functions, but are recognized as types.
 
 function_identifier
-    : type_specifier_nonarray {
+    : type_specifier_no_prec {
+        if ($1.array) {
+            ES3_ONLY("[]", @1, "array constructor");
+        }
         $$ = context->addConstructorFunc($1);
     }
     | IDENTIFIER {
@@ -929,9 +932,10 @@ fully_specified_type
         $$ = $1;
 
         if ($1.array) {
-            context->error(@1, "not supported", "first-class array");
-            context->recover();
-            $1.setArray(false);
+            ES3_ONLY("[]", @1, "first-class-array");
+            if (context->shaderVersion != 300) {
+                $1.setArray(false);
+            }
         }
     }
     | type_qualifier type_specifier  {
