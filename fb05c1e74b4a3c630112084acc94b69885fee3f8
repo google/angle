@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fca3d9b0_106364cd",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 1
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-03-10T17:20:42Z",
+      "side": 1,
+      "message": "I am wondering if you should use IDENTIFIER here instead of identifier.  The only difference is identifier could also be TYPE_NAME, which I think is handled by function?",
+      "revId": "fb05c1e74b4a3c630112084acc94b69885fee3f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
