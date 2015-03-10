@@ -10,126 +10,273 @@
 
 #include "common/debug.h"
 #include "libANGLE/State.h"
+#include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/angletypes.h"
+#include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/gl/FunctionsGL.h"
+#include "libANGLE/renderer/gl/RenderBufferGL.h"
+#include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/renderer/gl/TextureGL.h"
 
 namespace rx
 {
 
-FramebufferGL::FramebufferGL(const gl::Framebuffer::Data &data)
-    : FramebufferImpl(data)
-{}
+FramebufferGL::FramebufferGL(const gl::Framebuffer::Data &data, const FunctionsGL *functions, StateManagerGL *stateManager, bool isDefault)
+    : FramebufferImpl(data),
+      mFunctions(functions),
+      mStateManager(stateManager),
+      mFramebufferID(0)
+{
+    if (!isDefault)
+    {
+        mFunctions->genFramebuffers(1, &mFramebufferID);
+    }
+}
 
 FramebufferGL::~FramebufferGL()
-{}
+{
+    if (mFramebufferID != 0)
+    {
+        mFunctions->deleteFramebuffers(1, &mFramebufferID);
+        mFramebufferID = 0;
+    }
+}
+
+static void BindFramebufferAttachment(const FunctionsGL *functions, GLenum attachmentPoint,
+                                      const gl::FramebufferAttachment *attachment)
+{
+    if (attachment)
+    {
+        if (attachment->type() == GL_TEXTURE)
+        {
+            const gl::Texture *texture = GetAs<gl::TextureAttachment>(attachment)->getTexture();
+            const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
+
+            if (texture->getTarget() == GL_TEXTURE_2D)
+            {
+                functions->framebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint, GL_TEXTURE_2D,
+                                                textureGL->getTextureID(), attachment->mipLevel());
+            }
+            else if (texture->getTarget() == GL_TEXTURE_CUBE_MAP)
+            {
+                functions->framebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint, attachment->cubeMapFace(),
+                                                textureGL->getTextureID(), attachment->mipLevel());
+            }
+            else if (texture->getTarget() == GL_TEXTURE_2D_ARRAY || texture->getTarget() == GL_TEXTURE_3D)
+            {
+                functions->framebufferTextureLayer(GL_FRAMEBUFFER, attachmentPoint, textureGL->getTextureID(),
+                                                   attachment->mipLevel(), attachment->layer());
+            }
+            else
+            {
+                UNREACHABLE();
+            }
+        }
+        else if (attachment->type() == GL_RENDERBUFFER)
+        {
+            // TODO: support RenderbufferGL
+            UNIMPLEMENTED();
+
+            //const gl::Renderbuffer *renderbuffer = GetAs<gl::RenderbufferAttachment>(attachment)->getRenderbuffer();
+            //const RenderbufferGL *renderbufferGL = GetImplAs<RenderbufferGL>(renderbuffer);
+
+            //functions->framebufferRenderbuffer(GL_FRAMEBUFFER, attachmentPoint, GL_RENDERBUFFER,
+            //                                   renderbufferGL->getRenderbufferID());
+        }
+        else
+        {
+            UNREACHABLE();
+        }
+    }
+    else
+    {
+        // Unbind this attachment
+        functions->framebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint, GL_TEXTURE_2D, 0, 0);
+    }
+}
 
 void FramebufferGL::setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment)
 {
-    //UNIMPLEMENTED();
+    if (mFramebufferID != 0)
+    {
+        mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+        BindFramebufferAttachment(mFunctions, GL_COLOR_ATTACHMENT0 + index, attachment);
+    }
 }
 
 void FramebufferGL::setDepthAttachment(const gl::FramebufferAttachment *attachment)
 {
-    //UNIMPLEMENTED();
+    if (mFramebufferID != 0)
+    {
+        mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+        BindFramebufferAttachment(mFunctions, GL_DEPTH_ATTACHMENT, attachment);
+    }
 }
 
 void FramebufferGL::setStencilAttachment(const gl::FramebufferAttachment *attachment)
 {
-    //UNIMPLEMENTED();
+    if (mFramebufferID != 0)
+    {
+        mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+        BindFramebufferAttachment(mFunctions, GL_STENCIL_ATTACHMENT, attachment);
+    }
 }
 
 void FramebufferGL::setDepthStencilAttachment(const gl::FramebufferAttachment *attachment)
 {
-    //UNIMPLEMENTED();
+    if (mFramebufferID != 0)
+    {
+        mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+        BindFramebufferAttachment(mFunctions, GL_DEPTH_STENCIL_ATTACHMENT, attachment);
+    }
 }
 
 void FramebufferGL::setDrawBuffers(size_t count, const GLenum *buffers)
 {
-    //UNIMPLEMENTED();
+    if (mFramebufferID != 0)
+    {
+        mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+        mFunctions->drawBuffers(count, buffers);
+    }
 }
 
 void FramebufferGL::setReadBuffer(GLenum buffer)
 {
-    //UNIMPLEMENTED();
+    if (mFramebufferID != 0)
+    {
+        mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+        mFunctions->readBuffer(buffer);
+    }
 }
 
 gl::Error FramebufferGL::invalidate(size_t count, const GLenum *attachments)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+    mFunctions->invalidateFramebuffer(GL_FRAMEBUFFER, count, attachments);
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error FramebufferGL::invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+    mFunctions->invalidateSubFramebuffer(GL_FRAMEBUFFER, count, attachments, area.x, area.y, area.width, area.height);
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error FramebufferGL::clear(const gl::State &state, GLbitfield mask)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    mStateManager->setClearState(state, mask);
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+    mFunctions->clear(mask);
+
+    return gl::Error(GL_NO_ERROR);
+}
+
+static GLbitfield GetClearBufferMask(GLenum buffer)
+{
+    switch (buffer)
+    {
+      case GL_COLOR:          return GL_COLOR_BUFFER_BIT;
+      case GL_DEPTH:          return GL_DEPTH_BUFFER_BIT;
+      case GL_STENCIL:        return GL_STENCIL_BUFFER_BIT;
+      case GL_DEPTH_STENCIL:  return GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+      default: UNREACHABLE(); return 0;
+    }
 }
 
 gl::Error FramebufferGL::clearBufferfv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLfloat *values)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    mStateManager->setClearState(state, GetClearBufferMask(buffer));
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+    mFunctions->clearBufferfv(buffer, drawbuffer, values);
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error FramebufferGL::clearBufferuiv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLuint *values)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    mStateManager->setClearState(state, GetClearBufferMask(buffer));
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+    mFunctions->clearBufferuiv(buffer, drawbuffer, values);
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error FramebufferGL::clearBufferiv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLint *values)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    mStateManager->setClearState(state, GetClearBufferMask(buffer));
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+    mFunctions->clearBufferiv(buffer, drawbuffer, values);
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error FramebufferGL::clearBufferfi(const gl::State &state, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    mStateManager->setClearState(state, GetClearBufferMask(buffer));
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+    mFunctions->clearBufferfi(buffer, drawbuffer, depth, stencil);
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 GLenum FramebufferGL::getImplementationColorReadFormat() const
 {
-    UNIMPLEMENTED();
-    return GLenum();
+    const gl::FramebufferAttachment *readAttachment = getData().getReadAttachment();
+    GLenum internalFormat = readAttachment->getInternalFormat();
+    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
+    return internalFormatInfo.format;
 }
 
 GLenum FramebufferGL::getImplementationColorReadType() const
 {
-    UNIMPLEMENTED();
-    return GLenum();
+    const gl::FramebufferAttachment *readAttachment = getData().getReadAttachment();
+    GLenum internalFormat = readAttachment->getInternalFormat();
+    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
+    return internalFormatInfo.type;
 }
 
 gl::Error FramebufferGL::readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const
 {
     const gl::PixelPackState &packState = state.getPackState();
 
+    // TODO: set pack state
     if (packState.rowLength != 0 || packState.skipRows != 0 || packState.skipPixels != 0)
     {
         UNIMPLEMENTED();
         return gl::Error(GL_INVALID_OPERATION, "invalid pixel store parameters in readPixels");
     }
 
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, mFramebufferID);
+    mFunctions->readPixels(area.x, area.y, area.width, area.height, format, type, pixels);
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error FramebufferGL::blit(const gl::State &state, const gl::Rectangle &sourceArea, const gl::Rectangle &destArea,
                               GLbitfield mask, GLenum filter, const gl::Framebuffer *sourceFramebuffer)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(sourceFramebuffer);
+
+    mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, sourceFramebufferGL->getFramebufferID());
+    mStateManager->bindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebufferID);
+
+    mFunctions->blitFramebuffer(sourceArea.x, sourceArea.y, sourceArea.x + sourceArea.width, sourceArea.y + sourceArea.height,
+                                destArea.x, destArea.y, destArea.x + destArea.width, destArea.y + destArea.height,
+                                mask, filter);
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 GLenum FramebufferGL::checkStatus() const
 {
-    UNIMPLEMENTED();
-    return GLenum();
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+    return mFunctions->checkFramebufferStatus(GL_FRAMEBUFFER);
+}
+
+GLuint FramebufferGL::getFramebufferID() const
+{
+    return mFramebufferID;
 }
 
 }

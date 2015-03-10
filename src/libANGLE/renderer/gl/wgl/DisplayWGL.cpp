@@ -392,8 +392,8 @@ egl::ConfigSet DisplayWGL::generateConfigs() const
     DescribePixelFormat(mDeviceContext, mPixelFormat, sizeof(pixelFormatDescriptor), &pixelFormatDescriptor);
 
     egl::Config config;
-    config.renderTargetFormat = GL_NONE; // TODO
-    config.depthStencilFormat = GL_NONE; // TODO
+    config.renderTargetFormat = GL_RGBA8; // TODO: use the bit counts to determine the format
+    config.depthStencilFormat = GL_DEPTH24_STENCIL8; // TODO: use the bit counts to determine the format
     config.bufferSize = pixelFormatDescriptor.cColorBits;
     config.redSize = pixelFormatDescriptor.cRedBits;
     config.greenSize = pixelFormatDescriptor.cGreenBits;

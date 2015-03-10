@@ -2656,6 +2656,11 @@ DefaultAttachmentImpl *Renderer9::createDefaultAttachment(GLenum type, egl::Surf
     }
 }
 
+FramebufferImpl *Renderer9::createDefaultFramebuffer(const gl::Framebuffer::Data &data)
+{
+    return createFramebuffer(data);
+}
+
 FramebufferImpl *Renderer9::createFramebuffer(const gl::Framebuffer::Data &data)
 {
     return new Framebuffer9(data, this);

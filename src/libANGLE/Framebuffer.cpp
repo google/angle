@@ -82,9 +82,17 @@ FramebufferAttachment *Framebuffer::Data::getDepthOrStencilAttachment() const
 
 Framebuffer::Framebuffer(const Caps &caps, rx::ImplFactory *factory, GLuint id)
     : mData(caps),
-      mImpl(factory->createFramebuffer(mData)),
+      mImpl(nullptr),
       mId(id)
 {
+    if (mId == 0)
+    {
+        mImpl = factory->createDefaultFramebuffer(mData);
+    }
+    else
+    {
+        mImpl = factory->createFramebuffer(mData);
+    }
     ASSERT(mImpl != nullptr);
 }
 

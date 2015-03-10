@@ -40,8 +40,8 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     caps->maxArrayTextureLayers = QuerySingleGLInt(functions, GL_MAX_ARRAY_TEXTURE_LAYERS);
     caps->maxLODBias = 2.0f;
     caps->maxRenderbufferSize = 2048;
-    caps->maxDrawBuffers = 4;
-    caps->maxColorAttachments = 4;
+    caps->maxDrawBuffers = QuerySingleGLInt(functions, GL_MAX_DRAW_BUFFERS);
+    caps->maxColorAttachments = QuerySingleGLInt(functions, GL_MAX_COLOR_ATTACHMENTS);
     caps->maxViewportWidth = caps->max2DTextureSize;
     caps->maxViewportHeight = caps->maxViewportWidth;
     caps->minAliasedPointSize = 1.0f;

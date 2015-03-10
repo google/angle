@@ -10,6 +10,7 @@
 
 #include "common/debug.h"
 #include "libANGLE/Data.h"
+#include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
 #include "libANGLE/renderer/gl/CompilerGL.h"
 #include "libANGLE/renderer/gl/DefaultAttachmentGL.h"
@@ -22,6 +23,7 @@
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
 #include "libANGLE/renderer/gl/ShaderGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/renderer/gl/SurfaceGL.h"
 #include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/TransformFeedbackGL.h"
 #include "libANGLE/renderer/gl/VertexArrayGL.h"
@@ -108,12 +110,17 @@ ProgramImpl *RendererGL::createProgram()
 
 DefaultAttachmentImpl *RendererGL::createDefaultAttachment(GLenum type, egl::Surface *surface)
 {
-    return new DefaultAttachmentGL();
+    return new DefaultAttachmentGL(type, GetImplAs<SurfaceGL>(surface));
+}
+
+FramebufferImpl *RendererGL::createDefaultFramebuffer(const gl::Framebuffer::Data &data)
+{
+    return new FramebufferGL(data, mFunctions, mStateManager, true);
 }
 
 FramebufferImpl *RendererGL::createFramebuffer(const gl::Framebuffer::Data &data)
 {
-    return new FramebufferGL(data);
+    return new FramebufferGL(data, mFunctions, mStateManager, false);
 }
 
 TextureImpl *RendererGL::createTexture(GLenum target)

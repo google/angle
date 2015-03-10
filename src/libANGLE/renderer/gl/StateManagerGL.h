@@ -11,6 +11,7 @@
 
 #include "common/debug.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/gl/functionsgl_typedefs.h"
 
 #include <map>
@@ -19,6 +20,7 @@ namespace gl
 {
 struct Caps;
 struct Data;
+class State;
 }
 
 namespace rx
@@ -37,6 +39,9 @@ class StateManagerGL
     void activeTexture(size_t unit);
     void bindTexture(GLenum type, GLuint texture);
     void setPixelUnpackState(GLint alignment, GLint rowLength);
+    void bindFramebuffer(GLenum type, GLuint framebuffer);
+
+    void setClearState(const gl::State &state, GLbitfield mask);
 
     gl::Error setDrawArraysState(const gl::Data &data, GLint first, GLsizei count);
     gl::Error setDrawElementsState(const gl::Data &data, GLsizei count, GLenum type, const GLvoid *indices,
@@ -46,6 +51,15 @@ class StateManagerGL
     DISALLOW_COPY_AND_ASSIGN(StateManagerGL);
 
     gl::Error setGenericDrawState(const gl::Data &data);
+
+    void setScissor(const gl::Rectangle &scissor);
+    void setViewport(const gl::Rectangle &viewport);
+    void setClearColor(const gl::ColorF &clearColor);
+    void setColorMask(bool red, bool green, bool blue, bool alpha);
+    void setClearDepth(float clearDepth);
+    void setDepthMask(bool mask);
+    void setClearStencil(GLint clearStencil);
+    void setStencilMask(GLuint mask);
 
     const FunctionsGL *mFunctions;
 
@@ -58,6 +72,23 @@ class StateManagerGL
 
     GLint mUnpackAlignment;
     GLint mUnpackRowLength;
+
+    std::map<GLenum, GLuint> mFramebuffers;
+
+    gl::Rectangle mScissor;
+    gl::Rectangle mViewport;
+
+    gl::ColorF mClearColor;
+    bool mColorMaskRed;
+    bool mColorMaskGreen;
+    bool mColorMaskBlue;
+    bool mColorMaskAlpha;
+
+    float mClearDepth;
+    bool mDepthMask;
+
+    GLint mClearStencil;
+    GLuint mStencilMask;
 };
 
 }

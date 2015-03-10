@@ -2647,6 +2647,11 @@ DefaultAttachmentImpl *Renderer11::createDefaultAttachment(GLenum type, egl::Sur
     }
 }
 
+FramebufferImpl *Renderer11::createDefaultFramebuffer(const gl::Framebuffer::Data &data)
+{
+    return createFramebuffer(data);
+}
+
 FramebufferImpl *Renderer11::createFramebuffer(const gl::Framebuffer::Data &data)
 {
     return new Framebuffer11(data, this);

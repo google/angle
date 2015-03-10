@@ -40,6 +40,21 @@ struct Color
     Color(T r, T g, T b, T a) : red(r), green(g), blue(b), alpha(a) { }
 };
 
+template <typename T>
+bool operator==(const Color<T> &a, const Color<T> &b)
+{
+    return a.red == b.red &&
+           a.green == b.green &&
+           a.blue == b.blue &&
+           a.alpha == b.alpha;
+}
+
+template <typename T>
+bool operator!=(const Color<T> &a, const Color<T> &b)
+{
+    return !(a == b);
+}
+
 typedef Color<float> ColorF;
 typedef Color<int> ColorI;
 typedef Color<unsigned int> ColorUI;
@@ -54,6 +69,9 @@ struct Rectangle
     Rectangle() : x(0), y(0), width(0), height(0) { }
     Rectangle(int x_in, int y_in, int width_in, int height_in) : x(x_in), y(y_in), width(width_in), height(height_in) { }
 };
+
+bool operator==(const Rectangle &a, const Rectangle &b);
+bool operator!=(const Rectangle &a, const Rectangle &b);
 
 bool ClipRectangle(const Rectangle &source, const Rectangle &clip, Rectangle *intersection);
 

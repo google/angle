@@ -9,39 +9,44 @@
 #include "libANGLE/renderer/gl/DefaultAttachmentGL.h"
 
 #include "common/debug.h"
+#include "libANGLE/Config.h"
+#include "libANGLE/renderer/gl/SurfaceGL.h"
 
 namespace rx
 {
 
-DefaultAttachmentGL::DefaultAttachmentGL()
-    : DefaultAttachmentImpl()
-{}
+DefaultAttachmentGL::DefaultAttachmentGL(GLenum type, SurfaceGL *surface)
+    : DefaultAttachmentImpl(),
+      mType(type),
+      mSurface(surface)
+{
+    ASSERT(mSurface != nullptr);
+}
 
 DefaultAttachmentGL::~DefaultAttachmentGL()
-{}
+{
+}
 
 GLsizei DefaultAttachmentGL::getWidth() const
 {
-    UNIMPLEMENTED();
-    return GLsizei();
+    return mSurface->getWidth();
 }
 
 GLsizei DefaultAttachmentGL::getHeight() const
 {
-    UNIMPLEMENTED();
-    return GLsizei();
+    return mSurface->getHeight();
 }
 
 GLenum DefaultAttachmentGL::getInternalFormat() const
 {
-    UNIMPLEMENTED();
-    return GLenum();
+    const egl::Config *config = mSurface->getConfig();
+    return (mType == GL_COLOR ? config->renderTargetFormat : config->depthStencilFormat);
 }
 
 GLsizei DefaultAttachmentGL::getSamples() const
 {
-    UNIMPLEMENTED();
-    return GLsizei();
+    const egl::Config *config = mSurface->getConfig();
+    return config->samples;
 }
 
 }

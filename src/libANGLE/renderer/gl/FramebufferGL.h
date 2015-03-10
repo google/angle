@@ -14,10 +14,13 @@
 namespace rx
 {
 
+class FunctionsGL;
+class StateManagerGL;
+
 class FramebufferGL : public FramebufferImpl
 {
   public:
-    FramebufferGL(const gl::Framebuffer::Data &data);
+    FramebufferGL(const gl::Framebuffer::Data &data, const FunctionsGL *functions, StateManagerGL *stateManager, bool isDefault);
     ~FramebufferGL() override;
 
     void setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment) override;
@@ -46,8 +49,15 @@ class FramebufferGL : public FramebufferImpl
 
     GLenum checkStatus() const override;
 
+    GLuint getFramebufferID() const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(FramebufferGL);
+
+    const FunctionsGL *mFunctions;
+    StateManagerGL *mStateManager;
+
+    GLuint mFramebufferID;
 };
 
 }

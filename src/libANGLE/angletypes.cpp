@@ -15,6 +15,19 @@
 namespace gl
 {
 
+bool operator==(const Rectangle &a, const Rectangle &b)
+{
+    return a.x == b.x &&
+           a.y == b.y &&
+           a.width == b.width &&
+           a.height == b.height;
+}
+
+bool operator!=(const Rectangle &a, const Rectangle &b)
+{
+    return !(a == b);
+}
+
 SamplerState::SamplerState()
     : minFilter(GL_NEAREST_MIPMAP_LINEAR),
       magFilter(GL_LINEAR),

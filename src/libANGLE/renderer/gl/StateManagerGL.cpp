@@ -9,7 +9,9 @@
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 
 #include "libANGLE/Data.h"
+#include "libANGLE/Framebuffer.h"
 #include "libANGLE/VertexArray.h"
+#include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/ProgramGL.h"
 #include "libANGLE/renderer/gl/TextureGL.h"
@@ -26,7 +28,19 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mTextureUnitIndex(0),
       mTextures(),
       mUnpackAlignment(4),
-      mUnpackRowLength(0)
+      mUnpackRowLength(0),
+      mFramebuffers(),
+      mScissor(0, 0, 0, 0),
+      mViewport(0, 0, 0, 0),
+      mClearColor(0.0f, 0.0f, 0.0f, 0.0f),
+      mColorMaskRed(true),
+      mColorMaskGreen(true),
+      mColorMaskBlue(true),
+      mColorMaskAlpha(true),
+      mClearDepth(1.0f),
+      mDepthMask(true),
+      mClearStencil(0),
+      mStencilMask(static_cast<GLuint>(-1))
 {
     ASSERT(mFunctions);
 
@@ -34,6 +48,9 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
     mTextures[GL_TEXTURE_CUBE_MAP].resize(rendererCaps.maxCombinedTextureImageUnits);
     mTextures[GL_TEXTURE_2D_ARRAY].resize(rendererCaps.maxCombinedTextureImageUnits);
     mTextures[GL_TEXTURE_3D].resize(rendererCaps.maxCombinedTextureImageUnits);
+
+    mFramebuffers[GL_READ_FRAMEBUFFER] = 0;
+    mFramebuffers[GL_DRAW_FRAMEBUFFER] = 0;
 }
 
 void StateManagerGL::useProgram(GLuint program)
@@ -93,6 +110,42 @@ void StateManagerGL::setPixelUnpackState(GLint alignment, GLint rowLength)
     {
         mUnpackRowLength = rowLength;
         mFunctions->pixelStorei(GL_UNPACK_ROW_LENGTH, mUnpackRowLength);
+    }
+}
+
+void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
+{
+    if (mFramebuffers[type] != framebuffer)
+    {
+        mFramebuffers[type] = framebuffer;
+        mFunctions->bindFramebuffer(type, framebuffer);
+    }
+}
+
+void StateManagerGL::setClearState(const gl::State &state, GLbitfield mask)
+{
+    // Only apply the state required to do a clear
+    setScissor(state.getScissor());
+    setViewport(state.getViewport());
+
+    if ((mask & GL_COLOR_BUFFER_BIT) != 0)
+    {
+        setClearColor(state.getColorClearValue());
+
+        const gl::BlendState &blendState = state.getBlendState();
+        setColorMask(blendState.colorMaskRed, blendState.colorMaskGreen, blendState.colorMaskBlue, blendState.colorMaskAlpha);
+    }
+
+    if ((mask & GL_DEPTH_BUFFER_BIT) != 0)
+    {
+        setClearDepth(state.getDepthClearValue());
+        setDepthMask(state.getDepthStencilState().depthMask);
+    }
+
+    if ((mask & GL_STENCIL_BUFFER_BIT) != 0)
+    {
+        setClearStencil(state.getStencilClearValue());
+        setStencilMask(state.getDepthStencilState().stencilMask);
     }
 }
 
@@ -181,7 +234,96 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
         }
     }
 
+    const gl::Framebuffer *framebuffer = state.getDrawFramebuffer();
+    const FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
+    bindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferGL->getFramebufferID());
+
+    setScissor(state.getScissor());
+    setViewport(state.getViewport());
+
+    const gl::BlendState &blendState = state.getBlendState();
+    setColorMask(blendState.colorMaskRed, blendState.colorMaskGreen, blendState.colorMaskBlue, blendState.colorMaskAlpha);
+
+    const gl::DepthStencilState &depthStencilState = state.getDepthStencilState();
+    setDepthMask(depthStencilState.depthMask);
+    setStencilMask(depthStencilState.stencilMask);
+
     return gl::Error(GL_NO_ERROR);
+}
+
+void StateManagerGL::setScissor(const gl::Rectangle &scissor)
+{
+    if (scissor != mScissor)
+    {
+        mScissor = scissor;
+        mFunctions->scissor(mScissor.x, mScissor.y, mScissor.width, mScissor.height);
+    }
+}
+
+void StateManagerGL::setViewport(const gl::Rectangle &viewport)
+{
+    if (viewport != mViewport)
+    {
+        mViewport = viewport;
+        mFunctions->viewport(mViewport.x, mViewport.y, mViewport.width, mViewport.height);
+    }
+}
+
+void StateManagerGL::setClearColor(const gl::ColorF &clearColor)
+{
+    if (mClearColor != clearColor)
+    {
+        mClearColor = clearColor;
+        mFunctions->clearColor(mClearColor.red, mClearColor.green, mClearColor.blue, mClearColor.alpha);
+    }
+}
+
+void StateManagerGL::setColorMask(bool red, bool green, bool blue, bool alpha)
+{
+    if (mColorMaskRed != red || mColorMaskGreen != green || mColorMaskBlue != blue || mColorMaskAlpha != alpha)
+    {
+        mColorMaskRed = red;
+        mColorMaskGreen = green;
+        mColorMaskBlue = blue;
+        mColorMaskAlpha = alpha;
+        mFunctions->colorMask(mColorMaskRed, mColorMaskGreen, mColorMaskBlue, mColorMaskAlpha);
+    }
+}
+
+void StateManagerGL::setClearDepth(float clearDepth)
+{
+    if (mClearDepth != clearDepth)
+    {
+        mClearDepth = clearDepth;
+        mFunctions->clearDepth(mClearDepth);
+    }
+}
+
+void StateManagerGL::setDepthMask(bool mask)
+{
+    if (mDepthMask != mask)
+    {
+        mDepthMask = mask;
+        mFunctions->depthMask(mDepthMask);
+    }
+}
+
+void StateManagerGL::setClearStencil(GLint clearStencil)
+{
+    if (mClearStencil != clearStencil)
+    {
+        mClearStencil = clearStencil;
+        mFunctions->clearStencil(mClearStencil);
+    }
+}
+
+void StateManagerGL::setStencilMask(GLuint mask)
+{
+    if (mStencilMask != mask)
+    {
+        mStencilMask = mask;
+        mFunctions->stencilMask(mStencilMask);
+    }
 }
 
 }

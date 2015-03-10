@@ -14,10 +14,12 @@
 namespace rx
 {
 
+class SurfaceGL;
+
 class DefaultAttachmentGL : public DefaultAttachmentImpl
 {
   public:
-    DefaultAttachmentGL();
+    DefaultAttachmentGL(GLenum type, SurfaceGL *surface);
     ~DefaultAttachmentGL() override;
 
     GLsizei getWidth() const override;
@@ -27,6 +29,9 @@ class DefaultAttachmentGL : public DefaultAttachmentImpl
 
   private:
     DISALLOW_COPY_AND_ASSIGN(DefaultAttachmentGL);
+
+    GLenum mType;
+    SurfaceGL *mSurface;
 };
 
 }

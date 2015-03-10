@@ -162,6 +162,7 @@ class Renderer9 : public RendererD3D
 
     // Framebuffer creation
     DefaultAttachmentImpl *createDefaultAttachment(GLenum type, egl::Surface *surface) override;
+    FramebufferImpl *createDefaultFramebuffer(const gl::Framebuffer::Data &data) override;
     FramebufferImpl *createFramebuffer(const gl::Framebuffer::Data &data) override;
 
     // Shader creation
