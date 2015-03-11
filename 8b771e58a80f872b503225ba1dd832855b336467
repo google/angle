@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "814d16b1_dc1e4ddf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-11T19:32:43Z",
+      "side": 1,
+      "message": "can you add a comment here explaining how trim operates independently from the API/Renderer?",
+      "revId": "8b771e58a80f872b503225ba1dd832855b336467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41595e72_faf229e8",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-11T19:32:43Z",
+      "side": 1,
+      "message": "you should report an error if the attrib is not EGL_FALSE or EGL_TRUE",
+      "range": {
+        "startLine": 203,
+        "startChar": 36,
+        "endLine": 203,
+        "endChar": 45
+      },
+      "revId": "8b771e58a80f872b503225ba1dd832855b336467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41595e72_ba01d136",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-11T19:32:43Z",
+      "side": 1,
+      "message": "you should add a check here if auto trim is specified and the platform type is not d3d11",
+      "revId": "8b771e58a80f872b503225ba1dd832855b336467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
