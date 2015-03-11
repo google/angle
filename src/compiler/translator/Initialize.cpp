@@ -479,7 +479,7 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
                       TSymbolTable &symbolTable)
 {
     //
-    // First, insert some special built-in variables that are not in
+    // Insert some special built-in variables that are not in
     // the built-in header files.
     //
     switch (type)
@@ -500,27 +500,34 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
         {
             symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_FragColor"),
                 TType(EbtFloat, EbpMedium, EvqFragColor, 4)));
-            symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_FragData[gl_MaxDrawBuffers]"),
-                TType(EbtFloat, EbpMedium, EvqFragData, 4)));
+            TType fragData(EbtFloat, EbpMedium, EvqFragData, 4, 1, true);
+            fragData.setArraySize(resources.MaxDrawBuffers);
+            symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_FragData"), fragData));
+
             if (resources.EXT_frag_depth)
             {
                 symbolTable.insert(ESSL1_BUILTINS, "GL_EXT_frag_depth", new TVariable(NewPoolTString("gl_FragDepthEXT"),
                     TType(EbtFloat, resources.FragmentPrecisionHigh ? EbpHigh : EbpMedium, EvqFragDepth, 1)));
             }
-            if (resources.EXT_shader_framebuffer_fetch)
+
+            if (resources.EXT_shader_framebuffer_fetch || resources.NV_shader_framebuffer_fetch)
             {
-                symbolTable.insert(ESSL1_BUILTINS, "GL_EXT_shader_framebuffer_fetch",
-                    new TVariable(NewPoolTString("gl_LastFragData[gl_MaxDrawBuffers]"),
-                    TType(EbtFloat, EbpMedium, EvqLastFragData, 4)));
-            }
-            else if (resources.NV_shader_framebuffer_fetch)
-            {
-                symbolTable.insert(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch",
-                    new TVariable(NewPoolTString("gl_LastFragColor"),
-                    TType(EbtFloat, EbpMedium, EvqLastFragColor, 4)));
-                symbolTable.insert(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch",
-                    new TVariable(NewPoolTString("gl_LastFragData[gl_MaxDrawBuffers]"),
-                    TType(EbtFloat, EbpMedium, EvqLastFragData, 4)));
+                TType lastFragData(EbtFloat, EbpMedium, EvqLastFragData, 4, 1, true);
+                lastFragData.setArraySize(resources.MaxDrawBuffers);
+
+                if (resources.EXT_shader_framebuffer_fetch)
+                {
+                    symbolTable.insert(ESSL1_BUILTINS, "GL_EXT_shader_framebuffer_fetch",
+                        new TVariable(NewPoolTString("gl_LastFragData"), lastFragData));
+                }
+                else if (resources.NV_shader_framebuffer_fetch)
+                {
+                    symbolTable.insert(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch",
+                        new TVariable(NewPoolTString("gl_LastFragColor"),
+                        TType(EbtFloat, EbpMedium, EvqLastFragColor, 4)));
+                    symbolTable.insert(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch",
+                        new TVariable(NewPoolTString("gl_LastFragData"), lastFragData));
+                }
             }
             else if (resources.ARM_shader_framebuffer_fetch)
             {
@@ -550,38 +557,6 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
 
       default:
         assert(false && "Language not supported");
-    }
-
-    // Finally add resource-specific variables.
-    switch (type)
-    {
-      case GL_FRAGMENT_SHADER:
-        if (spec != SH_CSS_SHADERS_SPEC)
-        {
-            TType fragData(EbtFloat, EbpMedium, EvqFragData, 4, 1, true);
-            fragData.setArraySize(resources.MaxDrawBuffers);
-            symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_FragData"), fragData));
-
-            if (resources.EXT_shader_framebuffer_fetch || resources.NV_shader_framebuffer_fetch)
-            {
-                TType lastFragData(EbtFloat, EbpMedium, EvqLastFragData, 4, 1, true);
-                lastFragData.setArraySize(resources.MaxDrawBuffers);
-
-                if (resources.EXT_shader_framebuffer_fetch)
-                {
-                    symbolTable.insert(ESSL1_BUILTINS, "GL_EXT_shader_framebuffer_fetch",
-                        new TVariable(NewPoolTString("gl_LastFragData"), lastFragData));
-                }
-                else if (resources.NV_shader_framebuffer_fetch)
-                {
-                    symbolTable.insert(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch",
-                        new TVariable(NewPoolTString("gl_LastFragData"), lastFragData));
-                }
-            }
-        }
-        break;
-      default:
-        break;
     }
 }
 
