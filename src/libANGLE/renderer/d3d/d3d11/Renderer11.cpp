@@ -480,8 +480,17 @@ void Renderer11::initializeDevice()
     ASSERT(!mClear);
     mClear = new Clear11(this);
 
-    ASSERT(!mTrim);
-    mTrim = new Trim11(this);
+    const auto &attributes = mDisplay->getAttributeMap();
+    // If automatic trim is enabled, DXGIDevice3::Trim( ) is called for the application
+    // automatically when an application is suspended by the OS. This feature is currently
+    // only supported for Windows Store applications.
+    EGLint enableAutoTrim = attributes.get(EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE, EGL_FALSE);
+
+    if (enableAutoTrim == EGL_TRUE)
+    {
+        ASSERT(!mTrim);
+        mTrim = new Trim11(this);
+    }
 
     ASSERT(!mPixelTransfer);
     mPixelTransfer = new PixelTransfer11(this);
