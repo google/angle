@@ -85,6 +85,30 @@
       "revId": "de0291e96c0ed424931f135574c101e7593e24e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21cf0a74_01a5cab1",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-11T21:14:49Z",
+      "side": 1,
+      "message": "These errors are pretty unspecified.  I updated them to BAD_ATTRIBUTE, I think that makes more sense.",
+      "parentUuid": "41307e12_62883671",
+      "range": {
+        "startLine": 209,
+        "startChar": 1,
+        "endLine": 210,
+        "endChar": 42
+      },
+      "revId": "de0291e96c0ed424931f135574c101e7593e24e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
