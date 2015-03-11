@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c1f1cea3_ee809ff8",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-11T20:39:03Z",
+      "side": 1,
+      "message": "Should this at least set the pointer to null?",
+      "range": {
+        "startLine": 114,
+        "startChar": 4,
+        "endLine": 114,
+        "endChar": 36
+      },
+      "revId": "367d0a1eb0075c0de947f0bf451d1878c4d9a1b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01084662_d0357ca9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-11T20:39:03Z",
+      "side": 1,
+      "message": "nit: pointer alignment.",
+      "range": {
+        "startLine": 66,
+        "startChar": 23,
+        "endLine": 66,
+        "endChar": 24
+      },
+      "revId": "367d0a1eb0075c0de947f0bf451d1878c4d9a1b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1f1cea3_0e952b12",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-11T20:39:03Z",
+      "side": 1,
+      "message": "nit: pointer alignment.",
+      "range": {
+        "startLine": 89,
+        "startChar": 8,
+        "endLine": 90,
+        "endChar": 44
+      },
+      "revId": "367d0a1eb0075c0de947f0bf451d1878c4d9a1b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1f1cea3_aee217cb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-11T20:39:03Z",
+      "side": 1,
+      "message": "nit: extra space",
+      "range": {
+        "startLine": 95,
+        "startChar": 13,
+        "endLine": 95,
+        "endChar": 14
+      },
+      "revId": "367d0a1eb0075c0de947f0bf451d1878c4d9a1b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1f1cea3_6e9aef41",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-11T20:39:03Z",
+      "side": 1,
+      "message": "Can use the com dynamic cast helper we have.",
+      "range": {
+        "startLine": 98,
+        "startChar": 13,
+        "endLine": 98,
+        "endChar": 122
+      },
+      "revId": "367d0a1eb0075c0de947f0bf451d1878c4d9a1b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01084662_90a01475",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-11T20:39:03Z",
+      "side": 1,
+      "message": "This should probably be private.",
+      "range": {
+        "startLine": 27,
+        "startChar": 2,
+        "endLine": 27,
+        "endChar": 11
+      },
+      "revId": "367d0a1eb0075c0de947f0bf451d1878c4d9a1b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "212aaabf_c972f1df",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 685,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-11T20:39:03Z",
+      "side": 1,
+      "message": "I think this can be removed now. You\u0027ll have to try compiling with angle_enable_d3d9 to false to verify.",
+      "range": {
+        "startLine": 676,
+        "startChar": 27,
+        "endLine": 685,
+        "endChar": 30
+      },
+      "revId": "367d0a1eb0075c0de947f0bf451d1878c4d9a1b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
