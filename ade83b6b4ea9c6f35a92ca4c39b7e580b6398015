@@ -69,6 +69,30 @@
       "revId": "ade83b6b4ea9c6f35a92ca4c39b7e580b6398015",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1438e7f_9e615d8a",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-11T19:11:21Z",
+      "side": 1,
+      "message": "I\u0027d suggest that when GL implements them we should take them out, no? :)",
+      "parentUuid": "c1438e7f_5ef4f557",
+      "range": {
+        "startLine": 184,
+        "startChar": 4,
+        "endLine": 188,
+        "endChar": 5
+      },
+      "revId": "ade83b6b4ea9c6f35a92ca4c39b7e580b6398015",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
