@@ -16,6 +16,24 @@
       "revId": "fb05c1e74b4a3c630112084acc94b69885fee3f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5cb06509_9e34f90f",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 1
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-11T07:56:39Z",
+      "side": 1,
+      "message": "Even user-defined struct types fall under TYPE_NAME (see glslang.l line 406), and it shouldn\u0027t be possible to disable parsing a method name by defining a struct with that name. So identifier is more correct than IDENTIFIER.",
+      "parentUuid": "fca3d9b0_106364cd",
+      "revId": "fb05c1e74b4a3c630112084acc94b69885fee3f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
