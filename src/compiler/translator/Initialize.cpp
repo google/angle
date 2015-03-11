@@ -479,80 +479,109 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
                       TSymbolTable &symbolTable)
 {
     //
-    // First, insert some special built-in variables that are not in 
+    // First, insert some special built-in variables that are not in
     // the built-in header files.
     //
-    switch(type) {
-    case GL_FRAGMENT_SHADER:
-        symbolTable.insert(COMMON_BUILTINS, new TVariable(NewPoolTString("gl_FragCoord"), TType(EbtFloat, EbpMedium, EvqFragCoord,   4)));
-        symbolTable.insert(COMMON_BUILTINS, new TVariable(NewPoolTString("gl_FrontFacing"), TType(EbtBool,  EbpUndefined, EvqFrontFacing, 1)));
-        symbolTable.insert(COMMON_BUILTINS, new TVariable(NewPoolTString("gl_PointCoord"), TType(EbtFloat, EbpMedium, EvqPointCoord,  2)));
+    switch (type)
+    {
+      case GL_FRAGMENT_SHADER:
+        symbolTable.insert(COMMON_BUILTINS, new TVariable(NewPoolTString("gl_FragCoord"),
+            TType(EbtFloat, EbpMedium, EvqFragCoord, 4)));
+        symbolTable.insert(COMMON_BUILTINS, new TVariable(NewPoolTString("gl_FrontFacing"),
+            TType(EbtBool,  EbpUndefined, EvqFrontFacing, 1)));
+        symbolTable.insert(COMMON_BUILTINS, new TVariable(NewPoolTString("gl_PointCoord"),
+            TType(EbtFloat, EbpMedium, EvqPointCoord, 2)));
 
         //
         // In CSS Shaders, gl_FragColor, gl_FragData, and gl_MaxDrawBuffers are not available.
         // Instead, css_MixColor and css_ColorMatrix are available.
         //
-        if (spec != SH_CSS_SHADERS_SPEC) {
-            symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_FragColor"), TType(EbtFloat, EbpMedium, EvqFragColor,   4)));
-            symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_FragData[gl_MaxDrawBuffers]"), TType(EbtFloat, EbpMedium, EvqFragData,    4)));
-            if (resources.EXT_frag_depth) {
-                symbolTable.insert(ESSL1_BUILTINS, "GL_EXT_frag_depth", new TVariable(NewPoolTString("gl_FragDepthEXT"), TType(EbtFloat, resources.FragmentPrecisionHigh ? EbpHigh : EbpMedium, EvqFragDepth, 1)));
+        if (spec != SH_CSS_SHADERS_SPEC)
+        {
+            symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_FragColor"),
+                TType(EbtFloat, EbpMedium, EvqFragColor, 4)));
+            symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_FragData[gl_MaxDrawBuffers]"),
+                TType(EbtFloat, EbpMedium, EvqFragData, 4)));
+            if (resources.EXT_frag_depth)
+            {
+                symbolTable.insert(ESSL1_BUILTINS, "GL_EXT_frag_depth", new TVariable(NewPoolTString("gl_FragDepthEXT"),
+                    TType(EbtFloat, resources.FragmentPrecisionHigh ? EbpHigh : EbpMedium, EvqFragDepth, 1)));
             }
             if (resources.EXT_shader_framebuffer_fetch)
             {
-                symbolTable.insert(ESSL1_BUILTINS, "GL_EXT_shader_framebuffer_fetch", new TVariable(NewPoolTString("gl_LastFragData[gl_MaxDrawBuffers]"), TType(EbtFloat, EbpMedium, EvqLastFragData,   4)));
+                symbolTable.insert(ESSL1_BUILTINS, "GL_EXT_shader_framebuffer_fetch",
+                    new TVariable(NewPoolTString("gl_LastFragData[gl_MaxDrawBuffers]"),
+                    TType(EbtFloat, EbpMedium, EvqLastFragData, 4)));
             }
             else if (resources.NV_shader_framebuffer_fetch)
             {
-                symbolTable.insert(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch", new TVariable(NewPoolTString("gl_LastFragColor"), TType(EbtFloat, EbpMedium, EvqLastFragColor,   4)));
-                symbolTable.insert(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch", new TVariable(NewPoolTString("gl_LastFragData[gl_MaxDrawBuffers]"), TType(EbtFloat, EbpMedium, EvqLastFragData,   4)));
+                symbolTable.insert(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch",
+                    new TVariable(NewPoolTString("gl_LastFragColor"),
+                    TType(EbtFloat, EbpMedium, EvqLastFragColor, 4)));
+                symbolTable.insert(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch",
+                    new TVariable(NewPoolTString("gl_LastFragData[gl_MaxDrawBuffers]"),
+                    TType(EbtFloat, EbpMedium, EvqLastFragData, 4)));
             }
             else if (resources.ARM_shader_framebuffer_fetch)
             {
-                symbolTable.insert(ESSL1_BUILTINS, "GL_ARM_shader_framebuffer_fetch", new TVariable(NewPoolTString("gl_LastFragColorARM"), TType(EbtFloat, EbpMedium, EvqLastFragColor,   4)));
+                symbolTable.insert(ESSL1_BUILTINS, "GL_ARM_shader_framebuffer_fetch",
+                    new TVariable(NewPoolTString("gl_LastFragColorARM"),
+                    TType(EbtFloat, EbpMedium, EvqLastFragColor, 4)));
             }
-        } else {
-            symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("css_MixColor"), TType(EbtFloat, EbpMedium, EvqGlobal,      4)));
-            symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("css_ColorMatrix"), TType(EbtFloat, EbpMedium, EvqGlobal,      4, 4)));
+        }
+        else
+        {
+            symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("css_MixColor"),
+                TType(EbtFloat, EbpMedium, EvqGlobal, 4)));
+            symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("css_ColorMatrix"),
+                TType(EbtFloat, EbpMedium, EvqGlobal, 4, 4)));
         }
 
         break;
 
-    case GL_VERTEX_SHADER:
-        symbolTable.insert(COMMON_BUILTINS, new TVariable(NewPoolTString("gl_Position"), TType(EbtFloat, EbpHigh, EvqPosition,    4)));
-        symbolTable.insert(COMMON_BUILTINS, new TVariable(NewPoolTString("gl_PointSize"), TType(EbtFloat, EbpMedium, EvqPointSize,   1)));
-        symbolTable.insert(ESSL3_BUILTINS, new TVariable(NewPoolTString("gl_InstanceID"), TType(EbtInt, EbpHigh, EvqInstanceID,   1)));
+      case GL_VERTEX_SHADER:
+        symbolTable.insert(COMMON_BUILTINS, new TVariable(NewPoolTString("gl_Position"),
+            TType(EbtFloat, EbpHigh, EvqPosition, 4)));
+        symbolTable.insert(COMMON_BUILTINS, new TVariable(NewPoolTString("gl_PointSize"),
+            TType(EbtFloat, EbpMedium, EvqPointSize, 1)));
+        symbolTable.insert(ESSL3_BUILTINS, new TVariable(NewPoolTString("gl_InstanceID"),
+            TType(EbtInt, EbpHigh, EvqInstanceID, 1)));
         break;
 
-    default: assert(false && "Language not supported");
+      default:
+        assert(false && "Language not supported");
     }
 
     // Finally add resource-specific variables.
-    switch(type) {
-    case GL_FRAGMENT_SHADER:
-        if (spec != SH_CSS_SHADERS_SPEC) {
-            // Set up gl_FragData.  The array size.
+    switch (type)
+    {
+      case GL_FRAGMENT_SHADER:
+        if (spec != SH_CSS_SHADERS_SPEC)
+        {
             TType fragData(EbtFloat, EbpMedium, EvqFragData, 4, 1, true);
             fragData.setArraySize(resources.MaxDrawBuffers);
             symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_FragData"), fragData));
 
-            if (resources.EXT_shader_framebuffer_fetch || resources.NV_shader_framebuffer_fetch) {
-                // Set up gl_LastFragData.  The array size.
+            if (resources.EXT_shader_framebuffer_fetch || resources.NV_shader_framebuffer_fetch)
+            {
                 TType lastFragData(EbtFloat, EbpMedium, EvqLastFragData, 4, 1, true);
                 lastFragData.setArraySize(resources.MaxDrawBuffers);
 
                 if (resources.EXT_shader_framebuffer_fetch)
                 {
-                    symbolTable.insert(ESSL1_BUILTINS, "GL_EXT_shader_framebuffer_fetch", new TVariable(NewPoolTString("gl_LastFragData"), lastFragData));
+                    symbolTable.insert(ESSL1_BUILTINS, "GL_EXT_shader_framebuffer_fetch",
+                        new TVariable(NewPoolTString("gl_LastFragData"), lastFragData));
                 }
                 else if (resources.NV_shader_framebuffer_fetch)
                 {
-                    symbolTable.insert(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch", new TVariable(NewPoolTString("gl_LastFragData"), lastFragData));
+                    symbolTable.insert(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch",
+                        new TVariable(NewPoolTString("gl_LastFragData"), lastFragData));
                 }
             }
         }
         break;
-    default: break;
+      default:
+        break;
     }
 }
 
