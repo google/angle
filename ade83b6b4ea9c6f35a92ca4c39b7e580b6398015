@@ -22,6 +22,53 @@
       "revId": "ade83b6b4ea9c6f35a92ca4c39b7e580b6398015",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1438e7f_bedff9d5",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1164,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-11T19:07:38Z",
+      "side": 1,
+      "message": "There are a few cases where we do this now, especially in the state class.  We concluded that it\u0027s probably safe to overload the function since it\u0027s a fairly common C++ idiom to have const and non-const member functions that return const and non-const references.",
+      "parentUuid": "57f840fa_db4373fb",
+      "range": {
+        "startLine": 1164,
+        "startChar": 25,
+        "endLine": 1164,
+        "endChar": 39
+      },
+      "revId": "ade83b6b4ea9c6f35a92ca4c39b7e580b6398015",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1438e7f_5ef4f557",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-11T19:07:38Z",
+      "side": 1,
+      "message": "These UNIMPLEMENTEDs should probably move to the TextureD3D code since the GL renderer will probably implement them before D3D.",
+      "range": {
+        "startLine": 184,
+        "startChar": 4,
+        "endLine": 188,
+        "endChar": 5
+      },
+      "revId": "ade83b6b4ea9c6f35a92ca4c39b7e580b6398015",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
