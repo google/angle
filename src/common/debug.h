@@ -9,8 +9,9 @@
 #ifndef COMMON_DEBUG_H_
 #define COMMON_DEBUG_H_
 
-#include <stdio.h>
 #include <assert.h>
+#include <stdio.h>
+#include <string>
 
 #include "common/angleutils.h"
 
@@ -20,58 +21,77 @@
 
 namespace gl
 {
-    enum MessageType
-    {
-        MESSAGE_TRACE,
-        MESSAGE_FIXME,
-        MESSAGE_ERR,
-        MESSAGE_EVENT,
-    };
 
-    // Outputs text to the debugging log, or the debugging window
-    void trace(bool traceInDebugOnly, MessageType messageType, const char *format, ...);
+enum MessageType
+{
+    MESSAGE_TRACE,
+    MESSAGE_FIXME,
+    MESSAGE_ERR,
+    MESSAGE_EVENT,
+};
 
-    // Returns whether D3DPERF is active.
-    bool perfActive();
+// Outputs text to the debugging log, or the debugging window
+void trace(bool traceInDebugOnly, MessageType messageType, const char *format, ...);
 
-    // Pairs a D3D begin event with an end event.
-    class ScopedPerfEventHelper
-    {
-      public:
-        ScopedPerfEventHelper(const char* format, ...);
-        ~ScopedPerfEventHelper();
+// Pairs a D3D begin event with an end event.
+class ScopedPerfEventHelper
+{
+  public:
+    ScopedPerfEventHelper(const char* format, ...);
+    ~ScopedPerfEventHelper();
 
-      private:
-        DISALLOW_COPY_AND_ASSIGN(ScopedPerfEventHelper);
-    };
+  private:
+    DISALLOW_COPY_AND_ASSIGN(ScopedPerfEventHelper);
+};
 
-    void InitializeDebugAnnotations();
-    void UninitializeDebugAnnotations();
+// Wraps the D3D9/D3D11 debug annotation functions.
+class DebugAnnotator
+{
+  public:
+    DebugAnnotator() { };
+    virtual ~DebugAnnotator() { };
+    virtual void beginEvent(const std::wstring &eventName) = 0;
+    virtual void endEvent() = 0;
+    virtual void setMarker(const std::wstring &markerName) = 0;
+    virtual bool getStatus() = 0;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(DebugAnnotator);
+};
+
+void InitializeDebugAnnotations(DebugAnnotator *debugAnnotator);
+void UninitializeDebugAnnotations();
+bool DebugAnnotationsActive();
+
 }
 
-// A macro to output a trace of a function call and its arguments to the debugging log
 #if defined(ANGLE_ENABLE_DEBUG_TRACE) || defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
+#define ANGLE_TRACE_ENABLED
+#endif
+
+// A macro to output a trace of a function call and its arguments to the debugging log
+#if defined(ANGLE_TRACE_ENABLED)
 #define TRACE(message, ...) gl::trace(true, gl::MESSAGE_TRACE, "trace: %s(%d): " message "\n", __FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else
 #define TRACE(message, ...) (void(0))
 #endif
 
 // A macro to output a function call and its arguments to the debugging log, to denote an item in need of fixing.
-#if defined(ANGLE_ENABLE_DEBUG_TRACE) || defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
+#if defined(ANGLE_TRACE_ENABLED)
 #define FIXME(message, ...) gl::trace(false, gl::MESSAGE_FIXME, "fixme: %s(%d): " message "\n", __FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else
 #define FIXME(message, ...) (void(0))
 #endif
 
 // A macro to output a function call and its arguments to the debugging log, in case of error.
-#if defined(ANGLE_ENABLE_DEBUG_TRACE) || defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
+#if defined(ANGLE_TRACE_ENABLED)
 #define ERR(message, ...) gl::trace(false, gl::MESSAGE_ERR, "err: %s(%d): " message "\n", __FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else
 #define ERR(message, ...) (void(0))
 #endif
 
 // A macro to log a performance event around a scope.
-#if defined(ANGLE_ENABLE_DEBUG_TRACE) || defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
+#if defined(ANGLE_TRACE_ENABLED)
 #if defined(_MSC_VER)
 #define EVENT(message, ...) gl::ScopedPerfEventHelper scopedPerfEventHelper ## __LINE__("%s" message "\n", __FUNCTION__, __VA_ARGS__);
 #else
@@ -79,6 +99,10 @@ namespace gl
 #endif // _MSC_VER
 #else
 #define EVENT(message, ...) (void(0))
+#endif
+
+#if defined(ANGLE_TRACE_ENABLED)
+#undef ANGLE_TRACE_ENABLED
 #endif
 
 // A macro asserting a condition and outputting failures to the debug log

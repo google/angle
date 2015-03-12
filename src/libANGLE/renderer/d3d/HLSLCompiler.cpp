@@ -184,7 +184,7 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
     ASSERT(mD3DCompileFunc);
 
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
-    if (gl::perfActive())
+    if (gl::DebugAnnotationsActive())
     {
         std::string sourcePath = getTempPath();
         std::string sourceText = FormatString("#line 2 \"%s\"\n\n%s", sourcePath.c_str(), hlsl.c_str());

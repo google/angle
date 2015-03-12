@@ -167,7 +167,7 @@ void ShaderD3D::compileToHLSL(ShHandle compiler, const std::string &source)
     std::string sourcePath;
 
 #if !defined (ANGLE_ENABLE_WINDOWS_STORE)
-    if (gl::perfActive())
+    if (gl::DebugAnnotationsActive())
     {
         sourcePath = getTempPath();
         writeFile(sourcePath.c_str(), source.c_str(), source.length());

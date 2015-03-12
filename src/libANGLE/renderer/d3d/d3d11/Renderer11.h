@@ -10,16 +10,15 @@
 #define LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_H_
 
 #include "common/angleutils.h"
-#include "libANGLE/angletypes.h"
 #include "common/mathutil.h"
-
-#include "libANGLE/renderer/d3d/d3d11/RenderStateCache.h"
-#include "libANGLE/renderer/d3d/d3d11/InputLayoutCache.h"
+#include "libANGLE/AttributeMap.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/d3d/HLSLCompiler.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
-
-#include "libANGLE/AttributeMap.h"
+#include "libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h"
+#include "libANGLE/renderer/d3d/d3d11/InputLayoutCache.h"
+#include "libANGLE/renderer/d3d/d3d11/RenderStateCache.h"
 
 namespace gl
 {
@@ -385,6 +384,8 @@ class Renderer11 : public RendererD3D
     char mDescription[128];
     DXGIFactory *mDxgiFactory;
     ID3D11Debug *mDebug;
+
+    DebugAnnotator11 mAnnotator;
 };
 
 }

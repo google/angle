@@ -11,11 +11,12 @@
 
 #include "common/angleutils.h"
 #include "common/mathutil.h"
-#include "libANGLE/renderer/d3d/d3d9/ShaderCache.h"
-#include "libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.h"
 #include "libANGLE/renderer/d3d/HLSLCompiler.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
+#include "libANGLE/renderer/d3d/d3d9/DebugAnnotator9.h"
+#include "libANGLE/renderer/d3d/d3d9/ShaderCache.h"
+#include "libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.h"
 
 namespace gl
 {
@@ -367,6 +368,7 @@ class Renderer9 : public RendererD3D
     } mNullColorbufferCache[NUM_NULL_COLORBUFFER_CACHE_ENTRIES];
     UINT mMaxNullColorbufferLRU;
 
+    DebugAnnotator9 mAnnotator;
 };
 
 }

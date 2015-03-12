@@ -212,6 +212,8 @@
             'libANGLE/renderer/d3d/d3d9/Blit9.h',
             'libANGLE/renderer/d3d/d3d9/Buffer9.cpp',
             'libANGLE/renderer/d3d/d3d9/Buffer9.h',
+            'libANGLE/renderer/d3d/d3d9/DebugAnnotator9.cpp',
+            'libANGLE/renderer/d3d/d3d9/DebugAnnotator9.h',
             'libANGLE/renderer/d3d/d3d9/Fence9.cpp',
             'libANGLE/renderer/d3d/d3d9/Fence9.h',
             'libANGLE/renderer/d3d/d3d9/formatutils9.cpp',
@@ -259,6 +261,8 @@
             'libANGLE/renderer/d3d/d3d11/Clear11.h',
             'libANGLE/renderer/d3d/d3d11/copyvertex.h',
             'libANGLE/renderer/d3d/d3d11/copyvertex.inl',
+            'libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp',
+            'libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h',
             'libANGLE/renderer/d3d/d3d11/Fence11.cpp',
             'libANGLE/renderer/d3d/d3d11/Fence11.h',
             'libANGLE/renderer/d3d/d3d11/formatutils11.cpp',
@@ -670,16 +674,6 @@
                                 'ANGLE_ENABLE_DEBUG_ANNOTATIONS',
                                 'ANGLE_GENERATE_SHADER_DEBUG_INFO'
                             ],
-                            'msvs_settings':
-                            {
-                                'VCLinkerTool':
-                                {
-                                    'AdditionalDependencies':
-                                    [
-                                        'd3d9.lib',
-                                    ]
-                                }
-                            },
                         },
                     },
                 }],
