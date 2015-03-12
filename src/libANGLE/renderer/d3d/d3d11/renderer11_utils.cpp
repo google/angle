@@ -568,7 +568,7 @@ static size_t GetMaximumViewportSize(D3D_FEATURE_LEVEL featureLevel)
       case D3D_FEATURE_LEVEL_10_1:
       case D3D_FEATURE_LEVEL_10_0: return D3D10_VIEWPORT_BOUNDS_MAX;
 
-        // No constants for D3D9 viewport size limits, use the maximum texture sizes
+      // No constants for D3D11 Feature Level 9 viewport size limits, use the maximum texture sizes
       case D3D_FEATURE_LEVEL_9_3:  return D3D_FL9_3_REQ_TEXTURE2D_U_OR_V_DIMENSION;
       case D3D_FEATURE_LEVEL_9_2:
       case D3D_FEATURE_LEVEL_9_1:  return D3D_FL9_1_REQ_TEXTURE2D_U_OR_V_DIMENSION;
@@ -676,7 +676,7 @@ static size_t GetMaximumVertexUniformBlocks(D3D_FEATURE_LEVEL featureLevel)
       case D3D_FEATURE_LEVEL_10_1:
       case D3D_FEATURE_LEVEL_10_0: return D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - GetReservedVertexUniformBuffers();
 
-      // Uniform blocks not supported in D3D9 feature levels
+      // Uniform blocks not supported on D3D11 Feature Level 9
       case D3D_FEATURE_LEVEL_9_3:
       case D3D_FEATURE_LEVEL_9_2:
       case D3D_FEATURE_LEVEL_9_1:  return 0;
@@ -685,10 +685,33 @@ static size_t GetMaximumVertexUniformBlocks(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
-static size_t GetReservedVertexOutputVectors()
+static size_t GetReservedVertexOutputVectors(D3D_FEATURE_LEVEL featureLevel)
 {
-    // We potentially reserve varyings for gl_Position, dx_Position, gl_FragCoord and gl_PointSize
-    return 4;
+    // According to The OpenGL ES Shading Language specifications 
+    // (Language Version 1.00 section 10.16, Language Version 3.10 section 12.21)
+    // built-in special variables (e.g. gl_FragCoord, or gl_PointCoord)
+    // which are statically used in the shader should be included in the variable packing algorithm.
+    // Therefore, we should not reserve output vectors for them.
+
+    switch (featureLevel)
+    {
+      // We must reserve one output vector for dx_Position.
+      // We also reserve one for gl_Position, which we unconditionally output on Feature Levels 10_0+,
+      // even if it's unused in the shader (e.g. for transform feedback). TODO: This could be improved.
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return 2;
+
+      // Just reserve dx_Position on Feature Level 9, since we don't ever need to output gl_Position.
+      case D3D_FEATURE_LEVEL_9_3:
+      case D3D_FEATURE_LEVEL_9_2:
+      case D3D_FEATURE_LEVEL_9_1:  return 1;
+
+      default: UNREACHABLE();      return 0;
+    }
+
+    return 1;
 }
 
 static size_t GetMaximumVertexOutputVectors(D3D_FEATURE_LEVEL featureLevel)
@@ -698,15 +721,15 @@ static size_t GetMaximumVertexOutputVectors(D3D_FEATURE_LEVEL featureLevel)
     switch (featureLevel)
     {
       case D3D_FEATURE_LEVEL_11_1:
-      case D3D_FEATURE_LEVEL_11_0: return D3D11_VS_OUTPUT_REGISTER_COUNT - GetReservedVertexOutputVectors();
+      case D3D_FEATURE_LEVEL_11_0: return D3D11_VS_OUTPUT_REGISTER_COUNT - GetReservedVertexOutputVectors(featureLevel);
 
-      case D3D_FEATURE_LEVEL_10_1: return D3D10_1_VS_OUTPUT_REGISTER_COUNT - GetReservedVertexOutputVectors();
-      case D3D_FEATURE_LEVEL_10_0: return D3D10_VS_OUTPUT_REGISTER_COUNT - GetReservedVertexOutputVectors();
+      case D3D_FEATURE_LEVEL_10_1: return D3D10_1_VS_OUTPUT_REGISTER_COUNT - GetReservedVertexOutputVectors(featureLevel);
+      case D3D_FEATURE_LEVEL_10_0: return D3D10_VS_OUTPUT_REGISTER_COUNT - GetReservedVertexOutputVectors(featureLevel);
 
-      // Use D3D9 SM3 and SM2 limits
-      case D3D_FEATURE_LEVEL_9_3:  return 10 - GetReservedVertexOutputVectors();
+      // Use Shader Model 2.X limits
+      case D3D_FEATURE_LEVEL_9_3:
       case D3D_FEATURE_LEVEL_9_2:
-      case D3D_FEATURE_LEVEL_9_1:  return 8 - GetReservedVertexOutputVectors();
+      case D3D_FEATURE_LEVEL_9_1:  return 8 - GetReservedVertexOutputVectors(featureLevel);
 
       default: UNREACHABLE();      return 0;
     }
@@ -722,7 +745,7 @@ static size_t GetMaximumVertexTextureUnits(D3D_FEATURE_LEVEL featureLevel)
       case D3D_FEATURE_LEVEL_10_1:
       case D3D_FEATURE_LEVEL_10_0: return D3D10_COMMONSHADER_SAMPLER_SLOT_COUNT;
 
-      // Vertex textures not supported in D3D9 feature levels according to
+      // Vertex textures not supported on D3D11 Feature Level 9 according to
       // http://msdn.microsoft.com/en-us/library/windows/desktop/ff476149.aspx
       // ID3D11DeviceContext::VSSetSamplers and ID3D11DeviceContext::VSSetShaderResources
       case D3D_FEATURE_LEVEL_9_3:
@@ -769,7 +792,7 @@ static size_t GetMaximumPixelUniformBlocks(D3D_FEATURE_LEVEL featureLevel)
       case D3D_FEATURE_LEVEL_10_1:
       case D3D_FEATURE_LEVEL_10_0: return D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - GetReservedPixelUniformBuffers();
 
-      // Uniform blocks not supported in D3D9 feature levels
+      // Uniform blocks not supported on D3D11 Feature Level 9
       case D3D_FEATURE_LEVEL_9_3:
       case D3D_FEATURE_LEVEL_9_2:
       case D3D_FEATURE_LEVEL_9_1:  return 0;
@@ -783,15 +806,15 @@ static size_t GetMaximumPixelInputVectors(D3D_FEATURE_LEVEL featureLevel)
     switch (featureLevel)
     {
       case D3D_FEATURE_LEVEL_11_1:
-      case D3D_FEATURE_LEVEL_11_0: return D3D11_PS_INPUT_REGISTER_COUNT - GetReservedVertexOutputVectors();
+      case D3D_FEATURE_LEVEL_11_0: return D3D11_PS_INPUT_REGISTER_COUNT - GetReservedVertexOutputVectors(featureLevel);
 
       case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0: return D3D10_PS_INPUT_REGISTER_COUNT - GetReservedVertexOutputVectors();
+      case D3D_FEATURE_LEVEL_10_0: return D3D10_PS_INPUT_REGISTER_COUNT - GetReservedVertexOutputVectors(featureLevel);
 
-      // Use D3D9 SM3 and SM2 limits
-      case D3D_FEATURE_LEVEL_9_3:  return 10 - GetReservedVertexOutputVectors();
+      // Use Shader Model 2.X limits
+      case D3D_FEATURE_LEVEL_9_3:  return 8 - GetReservedVertexOutputVectors(featureLevel);
       case D3D_FEATURE_LEVEL_9_2:
-      case D3D_FEATURE_LEVEL_9_1:  return 8 - GetReservedVertexOutputVectors();
+      case D3D_FEATURE_LEVEL_9_1:  return 8 - GetReservedVertexOutputVectors(featureLevel);
 
       default: UNREACHABLE();      return 0;
     }

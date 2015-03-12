@@ -106,7 +106,9 @@ protected:
         }
     }
 
-    void GenerateGLSLWithVaryings(GLint floatCount, GLint floatArrayCount, GLint vec2Count, GLint vec2ArrayCount, GLint vec3Count, GLint vec3ArrayCount, std::string* fragmentShader, std::string* vertexShader)
+    void GenerateGLSLWithVaryings(GLint floatCount, GLint floatArrayCount, GLint vec2Count, GLint vec2ArrayCount, GLint vec3Count, GLint vec3ArrayCount,
+                                  GLint vec4Count, GLint vec4ArrayCount, bool useFragCoord, bool usePointCoord, bool usePointSize,
+                                  std::string* fragmentShader, std::string* vertexShader)
     {
         // Generate a string declaring the varyings, to share between the fragment shader and the vertex shader.
         std::string varyingDeclaration;
@@ -146,6 +148,18 @@ protected:
         for (GLint i = 0; i < vec3ArrayCount; i++)
         {
             varyingDeclaration += GenerateVectorVaryingDeclaration(3, 2, varyingCount);
+            varyingCount += 1;
+        }
+
+        for (GLint i = 0; i < vec4Count; i++)
+        {
+            varyingDeclaration += GenerateVectorVaryingDeclaration(4, 1, varyingCount);
+            varyingCount += 1;
+        }
+
+        for (GLint i = 0; i < vec4ArrayCount; i++)
+        {
+            varyingDeclaration += GenerateVectorVaryingDeclaration(4, 2, varyingCount);
             varyingCount += 1;
         }
 
@@ -190,6 +204,23 @@ protected:
         {
             vertexShader->append(GenerateVectorVaryingSettingCode(3, 2, currentVSVarying));
             currentVSVarying += 1;
+        }
+
+        for (GLint i = 0; i < vec4Count; i++)
+        {
+            vertexShader->append(GenerateVectorVaryingSettingCode(4, 1, currentVSVarying));
+            currentVSVarying += 1;
+        }
+
+        for (GLint i = 0; i < vec4ArrayCount; i++)
+        {
+            vertexShader->append(GenerateVectorVaryingSettingCode(4, 2, currentVSVarying));
+            currentVSVarying += 1;
+        }
+
+        if (usePointSize)
+        {
+            vertexShader->append("gl_PointSize = 1.0;\n");
         }
 
         vertexShader->append("}\n");
@@ -252,10 +283,64 @@ protected:
         }
 
         fragmentShader->append("vec3(0.0, 0.0, 0.0), 0.0);\n");
-        fragmentShader->append("\tgl_FragColor = retColor;\n}");
+
+        // Make use of the vec4 varyings
+        fragmentShader->append("\tretColor += ");
+
+        for (GLint i = 0; i < vec4Count; i++)
+        {
+            fragmentShader->append(GenerateVectorVaryingUseCode(1, currentFSVarying));
+            currentFSVarying += 1;
+        }
+
+        for (GLint i = 0; i < vec4ArrayCount; i++)
+        {
+            fragmentShader->append(GenerateVectorVaryingUseCode(2, currentFSVarying));
+            currentFSVarying += 1;
+        }
+
+        fragmentShader->append("vec4(0.0, 0.0, 0.0, 0.0);\n");
+
+        // Set gl_FragColor, and use special variables if requested
+        fragmentShader->append("\tgl_FragColor = retColor");
+        
+        if (useFragCoord)
+        {
+            fragmentShader->append(" + gl_FragCoord");
+        }
+
+        if (usePointCoord)
+        {
+            fragmentShader->append(" + vec4(gl_PointCoord, 0.0, 0.0)");
+        }
+
+        fragmentShader->append(";\n}");
+    }
+
+    void VaryingTestBase(GLint floatCount, GLint floatArrayCount, GLint vec2Count, GLint vec2ArrayCount, GLint vec3Count, GLint vec3ArrayCount,
+                         GLint vec4Count, GLint vec4ArrayCount, bool useFragCoord, bool usePointCoord, bool usePointSize, bool expectSuccess)
+    {
+        std::string fragmentShaderSource;
+        std::string vertexShaderSource;
+
+        GenerateGLSLWithVaryings(floatCount, floatArrayCount, vec2Count, vec2ArrayCount, vec3Count, vec3ArrayCount,
+                                 vec4Count, vec4ArrayCount, useFragCoord, usePointCoord, usePointSize,
+                                 &fragmentShaderSource, &vertexShaderSource);
+
+        GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+
+        if (expectSuccess)
+        {
+            EXPECT_NE(0u, program);
+        }
+        else
+        {
+            EXPECT_EQ(0u, program);
+        }
     }
 
     std::string mSimpleVSSource;
+    T fixtureType;
 };
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
@@ -465,6 +550,17 @@ TYPED_TEST(GLSLTest, InvariantVaryingOut)
 
 TYPED_TEST(GLSLTest, FrontFacingAndVarying)
 {
+    EGLPlatformParameters platform = fixtureType.GetPlatform();
+
+    // Disable this test on D3D11 feature level 9_3, since gl_FrontFacing isn't supported.
+    if (platform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    {
+        if (platform.majorVersion == 9 && platform.minorVersion == 3)
+        {
+            return;
+        }
+    }
+
     const std::string vertexShaderSource = SHADER_SOURCE
     (
         attribute vec4 a_position;
@@ -580,18 +676,58 @@ TYPED_TEST(GLSLTest, InvariantAll)
     EXPECT_NE(0u, program);
 }
 
+TYPED_TEST(GLSLTest, MaxVaryingVec4)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings, 0, false, false, false, true);
+}
+
+TYPED_TEST(GLSLTest, MaxMinusTwoVaryingVec4PlusTwoSpecialVariables)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    // Generate shader code that uses gl_FragCoord and gl_PointCoord, two special fragment shader variables.
+    VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings - 2, 0, true, true, false, true);
+}
+
+TYPED_TEST(GLSLTest, MaxMinusTwoVaryingVec4PlusThreeSpecialVariables)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    // Generate shader code that uses gl_FragCoord, gl_PointCoord and gl_PointSize.
+    VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings - 2, 0, true, true, true, true);
+}
+
+TYPED_TEST(GLSLTest, MaxVaryingVec4PlusFragCoord)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    // Generate shader code that uses gl_FragCoord, a special fragment shader variables.
+    // This test should fail, since we are really using (maxVaryings + 1) varyings.
+    VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings, 0, true, false, false, false);
+}
+
+TYPED_TEST(GLSLTest, MaxVaryingVec4PlusPointCoord)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    // Generate shader code that uses gl_FragCoord, a special fragment shader variables.
+    // This test should fail, since we are really using (maxVaryings + 1) varyings.
+    VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings, 0, false, true, false, false);
+}
+
 TYPED_TEST(GLSLTest, MaxVaryingVec3)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    std::string fragmentShaderSource;
-    std::string vertexShaderSource;
-
-    GenerateGLSLWithVaryings(0, 0, 0, 0, maxVaryings, 0, &fragmentShaderSource, &vertexShaderSource);
-
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
-    EXPECT_NE(0u, program);
+    VaryingTestBase(0, 0, 0, 0, maxVaryings, 0, 0, 0, false, false, false, true);
 }
 
 TYPED_TEST(GLSLTest, MaxVaryingVec3Array)
@@ -599,13 +735,7 @@ TYPED_TEST(GLSLTest, MaxVaryingVec3Array)
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    std::string fragmentShaderSource;
-    std::string vertexShaderSource;
-
-    GenerateGLSLWithVaryings(0, 0, 0, 0, 0, maxVaryings / 2, &fragmentShaderSource, &vertexShaderSource);
-
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
-    EXPECT_NE(0u, program);
+    VaryingTestBase(0, 0, 0, 0, 0, maxVaryings / 2, 0, 0, false, false, false, true);
 }
 
 // Disabled because of a failure in D3D9
@@ -614,13 +744,7 @@ TYPED_TEST(GLSLTest, DISABLED_MaxVaryingVec3AndOneFloat)
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    std::string fragmentShaderSource;
-    std::string vertexShaderSource;
-
-    GenerateGLSLWithVaryings(1, 0, 0, 0, maxVaryings, 0, &fragmentShaderSource, &vertexShaderSource);
-
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
-    EXPECT_NE(0u, program);
+    VaryingTestBase(1, 0, 0, 0, maxVaryings, 0, 0, 0, false, false, false, true);
 }
 
 // Disabled because of a failure in D3D9
@@ -629,13 +753,7 @@ TYPED_TEST(GLSLTest, DISABLED_MaxVaryingVec3ArrayAndOneFloatArray)
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    std::string fragmentShaderSource;
-    std::string vertexShaderSource;
-
-    GenerateGLSLWithVaryings(0, 1, 0, 0, 0, maxVaryings / 2, &fragmentShaderSource, &vertexShaderSource);
-
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
-    EXPECT_NE(0u, program);
+    VaryingTestBase(0, 1, 0, 0, 0, maxVaryings / 2, 0, 0, false, false, false, true);
 }
 
 // Disabled because of a failure in D3D9
@@ -644,13 +762,7 @@ TYPED_TEST(GLSLTest, DISABLED_TwiceMaxVaryingVec2)
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    std::string fragmentShaderSource;
-    std::string vertexShaderSource;
-
-    GenerateGLSLWithVaryings(0, 0, 2 * maxVaryings, 0, 0, 0, &fragmentShaderSource, &vertexShaderSource);
-
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
-    EXPECT_NE(0u, program);
+    VaryingTestBase(0, 0, 2 * maxVaryings, 0, 0, 0, 0, 0, false, false, false, true);
 }
 
 // Disabled because of a failure in D3D9
@@ -659,13 +771,7 @@ TYPED_TEST(GLSLTest, DISABLED_MaxVaryingVec2Arrays)
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    std::string fragmentShaderSource;
-    std::string vertexShaderSource;
-
-    GenerateGLSLWithVaryings(0, 0, 0, maxVaryings, 0, 0, &fragmentShaderSource, &vertexShaderSource);
-
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
-    EXPECT_NE(0u, program);
+    VaryingTestBase(0, 0, 0, maxVaryings, 0, 0, 0, 0, false, false, false, true);
 }
 
 TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec3)
@@ -673,13 +779,7 @@ TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec3)
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    std::string fragmentShaderSource;
-    std::string vertexShaderSource;
-
-    GenerateGLSLWithVaryings(0, 0, 0, 0, maxVaryings + 1, 0, &fragmentShaderSource, &vertexShaderSource);
-
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
-    EXPECT_EQ(0u, program);
+    VaryingTestBase(0, 0, 0, 0, maxVaryings + 1, 0, 0, 0, false, false, false, false);
 }
 
 TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec3Array)
@@ -687,13 +787,7 @@ TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec3Array)
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    std::string fragmentShaderSource;
-    std::string vertexShaderSource;
-
-    GenerateGLSLWithVaryings(0, 0, 0, 0, 0, maxVaryings / 2 + 1, &fragmentShaderSource, &vertexShaderSource);
-
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
-    EXPECT_EQ(0u, program);
+    VaryingTestBase(0, 0, 0, 0, 0, maxVaryings / 2 + 1, 0, 0, false, false, false, false);
 }
 
 TYPED_TEST(GLSLTest, MaxVaryingVec3AndOneVec2)
@@ -701,13 +795,7 @@ TYPED_TEST(GLSLTest, MaxVaryingVec3AndOneVec2)
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    std::string fragmentShaderSource;
-    std::string vertexShaderSource;
-
-    GenerateGLSLWithVaryings(0, 0, 1, 0, maxVaryings, 0, &fragmentShaderSource, &vertexShaderSource);
-
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
-    EXPECT_EQ(0u, program);
+    VaryingTestBase(0, 0, 1, 0, maxVaryings, 0, 0, 0, false, false, false, false);
 }
 
 TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec2)
@@ -715,13 +803,7 @@ TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec2)
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    std::string fragmentShaderSource;
-    std::string vertexShaderSource;
-
-    GenerateGLSLWithVaryings(0, 0, 2 * maxVaryings + 1, 0, 0, 0, &fragmentShaderSource, &vertexShaderSource);
-
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
-    EXPECT_EQ(0u, program);
+    VaryingTestBase(0, 0, 2 * maxVaryings + 1, 0, 0, 0, 0, 0, false, false, false, false);
 }
 
 TYPED_TEST(GLSLTest, MaxVaryingVec3ArrayAndMaxPlusOneFloatArray)
@@ -729,13 +811,7 @@ TYPED_TEST(GLSLTest, MaxVaryingVec3ArrayAndMaxPlusOneFloatArray)
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    std::string fragmentShaderSource;
-    std::string vertexShaderSource;
-
-    GenerateGLSLWithVaryings(0, maxVaryings / 2 + 1, 0, 0, 0, maxVaryings / 2, &fragmentShaderSource, &vertexShaderSource);
-
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
-    EXPECT_EQ(0u, program);
+    VaryingTestBase(0, maxVaryings / 2 + 1, 0, 0, 0, 0, 0, maxVaryings / 2, false, false, false, false);
 }
 
 // Verify shader source with a fixed length that is less than the null-terminated length will compile.
