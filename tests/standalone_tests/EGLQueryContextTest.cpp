@@ -124,9 +124,13 @@ TEST_F(EGLQueryContextTestES2, BadDisplay)
 TEST_F(EGLQueryContextTestES2, NotInitialized)
 {
     EGLint val;
-    eglTerminate(mDisplay);
+    TearDown();
     EXPECT_TRUE(eglQueryContext(mDisplay, mContext, EGL_CONTEXT_CLIENT_TYPE, &val) == EGL_FALSE);
     EXPECT_TRUE(eglGetError() == EGL_NOT_INITIALIZED);
+
+    mDisplay = EGL_NO_DISPLAY;
+    mSurface = EGL_NO_SURFACE;
+    mContext = EGL_NO_CONTEXT;
 }
 
 TEST_F(EGLQueryContextTestES2, BadContext)
