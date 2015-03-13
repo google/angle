@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c178ee71_d00884ad",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 694,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-13T01:58:38Z",
+      "side": 1,
+      "message": "quick question austin -- how does the varying packing algorithm relate to the caps represented by MAX_VARYING_VECTORS?",
+      "range": {
+        "startLine": 690,
+        "startChar": 0,
+        "endLine": 694,
+        "endChar": 64
+      },
+      "revId": "8b9258e4cccf59a3f1c84b947c7bb0244d0f7331",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
