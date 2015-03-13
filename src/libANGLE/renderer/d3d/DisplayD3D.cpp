@@ -109,7 +109,7 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
             {
                 ASSERT(result.getID() >= 0 && result.getID() < NUM_D3D11_INIT_ERRORS);
 
-                angle::Platform *platform = angle::Platform::current();
+                angle::Platform *platform = ANGLEPlatformCurrent();
                 platform->histogramEnumeration("GPU.ANGLE.D3D11InitializeResult",
                                                result.getID(), NUM_D3D11_INIT_ERRORS);
             }
@@ -120,7 +120,7 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
             {
                 ASSERT(result.getID() >= 0 && result.getID() < NUM_D3D9_INIT_ERRORS);
 
-                angle::Platform *platform = angle::Platform::current();
+                angle::Platform *platform = ANGLEPlatformCurrent();
                 platform->histogramEnumeration("GPU.ANGLE.D3D9InitializeResult",
                                                result.getID(), NUM_D3D9_INIT_ERRORS);
             }

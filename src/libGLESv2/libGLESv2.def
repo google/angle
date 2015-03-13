@@ -286,3 +286,8 @@ EXPORTS
 
     ; Setting up TRACE macro callbacks
     SetTraceFunctionPointers        @284
+
+    ; ANGLE Platform Implementation
+    ANGLEPlatformCurrent            @290
+    ANGLEPlatformInitialize         @291
+    ANGLEPlatformShutdown           @292

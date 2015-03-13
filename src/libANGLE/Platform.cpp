@@ -9,33 +9,27 @@
 #include <platform/Platform.h>
 
 #include "common/debug.h"
-#include "platform/Platform.h"
-
-namespace angle
-{
 
 namespace
 {
-Platform *currentPlatform = nullptr;
+angle::Platform *currentPlatform = nullptr;
 }
 
 // static
-ANGLE_EXPORT Platform *Platform::current()
+ANGLE_EXPORT angle::Platform *ANGLEPlatformCurrent()
 {
     return currentPlatform;
 }
 
 // static
-ANGLE_EXPORT void Platform::initialize(Platform *platformImpl)
+ANGLE_EXPORT void ANGLEPlatformInitialize(angle::Platform *platformImpl)
 {
     ASSERT(platformImpl != nullptr);
     currentPlatform = platformImpl;
 }
 
 // static
-ANGLE_EXPORT void Platform::shutdown()
+ANGLE_EXPORT void ANGLEPlatformShutdown()
 {
     currentPlatform = nullptr;
-}
-
 }

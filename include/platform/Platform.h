@@ -20,10 +20,6 @@ class Platform
 {
   public:
 
-    ANGLE_EXPORT static void initialize(Platform*);
-    ANGLE_EXPORT static void shutdown();
-    ANGLE_EXPORT static Platform *current();
-
     // Tracing --------
 
     typedef uint64_t TraceEventHandle;
@@ -103,5 +99,14 @@ class Platform
 };
 
 }
+
+typedef void(*ANGLEPlatformInitializeFunc)(angle::Platform*);
+ANGLE_EXPORT void ANGLEPlatformInitialize(angle::Platform*);
+
+typedef void (*ANGLEPlatformShutdownFunc)();
+ANGLE_EXPORT void ANGLEPlatformShutdown();
+
+typedef angle::Platform *(*ANGLEPlatformCurrentFunc)();
+ANGLE_EXPORT angle::Platform *ANGLEPlatformCurrent();
 
 #endif // ANGLE_PLATFORM_H
