@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c178ee71_a04c9399",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-13T15:34:43Z",
+      "side": 1,
+      "message": "I see that the underscores are supposed to represent the namespace separators but we might as well use nice names.\n\nANGLEInitializePlatform, ANGLEShutdownPlatform and ANGLEGetCurrentPlatform?",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 55
+      },
+      "revId": "9c4a4fb95393914cb4aa88463eb2a1e37611e6ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_20408361",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-13T15:34:43Z",
+      "side": 1,
+      "message": "This is comparing the function pointer.",
+      "range": {
+        "startLine": 58,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 30
+      },
+      "revId": "9c4a4fb95393914cb4aa88463eb2a1e37611e6ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
