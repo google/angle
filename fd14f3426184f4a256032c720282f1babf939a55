@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66191872_537a64ed",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-13T21:52:03Z",
+      "side": 1,
+      "message": "is this legal to use in ANGLE code?",
+      "range": {
+        "startLine": 22,
+        "startChar": 17,
+        "endLine": 22,
+        "endChar": 18
+      },
+      "revId": "fd14f3426184f4a256032c720282f1babf939a55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_c428bc83",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-13T21:52:03Z",
+      "side": 1,
+      "message": "whitespace issue",
+      "revId": "fd14f3426184f4a256032c720282f1babf939a55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66191872_d3b79436",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-13T21:52:03Z",
+      "side": 1,
+      "message": "whitespace issue",
+      "range": {
+        "startLine": 543,
+        "startChar": 0,
+        "endLine": 543,
+        "endChar": 1
+      },
+      "revId": "fd14f3426184f4a256032c720282f1babf939a55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
