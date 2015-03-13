@@ -143,16 +143,10 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType, int shaderVersion,
 
     if (mOutputType == SH_HLSL9_OUTPUT)
     {
-        if (mShaderType == GL_FRAGMENT_SHADER)
-        {
-            // Reserve registers for dx_DepthRange, dx_ViewCoords and dx_DepthFront
-            mUniformHLSL->reserveUniformRegisters(3);
-        }
-        else
-        {
-            // Reserve registers for dx_DepthRange, dx_ViewAdjust and dx_ViewCoords
-            mUniformHLSL->reserveUniformRegisters(3);
-        }
+        // Fragment shaders need dx_DepthRange, dx_ViewCoords and dx_DepthFront.
+        // Vertex shaders need a slightly different set: dx_DepthRange, dx_ViewCoords and dx_ViewAdjust.
+        // In both cases total 3 uniform registers need to be reserved.
+        mUniformHLSL->reserveUniformRegisters(3);
     }
 
     // Reserve registers for the default uniform block and driver constants
