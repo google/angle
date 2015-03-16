@@ -34,6 +34,7 @@
             '<(angle_path)/src/tests/gl_tests/MaxTextureSizeTest.cpp',
             '<(angle_path)/src/tests/gl_tests/MipmapTest.cpp',
             '<(angle_path)/src/tests/gl_tests/media/pixel.inl',
+            '<(angle_path)/src/tests/gl_tests/PackUnpackTest.cpp',
             '<(angle_path)/src/tests/gl_tests/PbufferTest.cpp',
             '<(angle_path)/src/tests/gl_tests/PBOExtensionTest.cpp',
             '<(angle_path)/src/tests/gl_tests/PointSpritesTest.cpp',

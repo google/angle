@@ -21,7 +21,7 @@ static size_t activeCompilerHandles = 0;
 CompilerGL::CompilerGL(const gl::Data &data)
     : CompilerImpl(),
       mSpec(data.clientVersion > 2 ? SH_GLES3_SPEC : SH_GLES2_SPEC),
-      mOutputType(SH_GLSL_OUTPUT),
+      mOutputType(data.clientVersion > 2 ? SH_GLSL_410_CORE_OUTPUT : SH_GLSL_OUTPUT),
       mResources(),
       mFragmentCompiler(nullptr),
       mVertexCompiler(nullptr)
