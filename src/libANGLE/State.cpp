@@ -1107,6 +1107,11 @@ const PixelUnpackState &State::getUnpackState() const
     return mUnpack;
 }
 
+PixelUnpackState &State::getUnpackState()
+{
+    return mUnpack;
+}
+
 void State::getBooleanv(GLenum pname, GLboolean *params)
 {
     switch (pname)

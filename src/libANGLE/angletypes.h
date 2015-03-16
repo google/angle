@@ -188,15 +188,27 @@ struct PixelUnpackState
     BindingPointer<Buffer> pixelBuffer;
     GLint alignment;
     GLint rowLength;
+    GLint skipRows;
+    GLint skipPixels;
+    GLint imageHeight;
+    GLint skipImages;
 
     PixelUnpackState()
         : alignment(4),
-          rowLength(0)
+          rowLength(0),
+          skipRows(0),
+          skipPixels(0),
+          imageHeight(0),
+          skipImages(0)
     {}
 
     PixelUnpackState(GLint alignmentIn, GLint rowLengthIn)
         : alignment(alignmentIn),
-          rowLength(rowLengthIn)
+          rowLength(rowLengthIn),
+          skipRows(0),
+          skipPixels(0),
+          imageHeight(0),
+          skipImages(0)
     {}
 };
 

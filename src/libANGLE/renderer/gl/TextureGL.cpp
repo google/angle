@@ -9,6 +9,7 @@
 #include "libANGLE/renderer/gl/TextureGL.h"
 
 #include "common/debug.h"
+#include "libANGLE/State.h"
 
 namespace rx
 {
@@ -28,6 +29,12 @@ void TextureGL::setUsage(GLenum usage)
 gl::Error TextureGL::setImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size, GLenum format, GLenum type,
                               const gl::PixelUnpackState &unpack, const uint8_t *pixels)
 {
+    if (unpack.skipRows != 0 || unpack.skipPixels != 0 || unpack.imageHeight != 0 || unpack.skipImages != 0)
+    {
+        UNIMPLEMENTED();
+        return gl::Error(GL_INVALID_OPERATION, "unimplemented pixel store state");
+    }
+
     UNIMPLEMENTED();
     return gl::Error(GL_INVALID_OPERATION);
 }
@@ -35,6 +42,12 @@ gl::Error TextureGL::setImage(GLenum target, size_t level, GLenum internalFormat
 gl::Error TextureGL::setSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format, GLenum type,
                                  const gl::PixelUnpackState &unpack, const uint8_t *pixels)
 {
+    if (unpack.skipRows != 0 || unpack.skipPixels != 0 || unpack.imageHeight != 0 || unpack.skipImages != 0)
+    {
+        UNIMPLEMENTED();
+        return gl::Error(GL_INVALID_OPERATION, "unimplemented pixel store state");
+    }
+
     UNIMPLEMENTED();
     return gl::Error(GL_INVALID_OPERATION);
 }
@@ -42,6 +55,12 @@ gl::Error TextureGL::setSubImage(GLenum target, size_t level, const gl::Box &are
 gl::Error TextureGL::setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
                                         const gl::PixelUnpackState &unpack, const uint8_t *pixels)
 {
+    if (unpack.skipRows != 0 || unpack.skipPixels != 0 || unpack.imageHeight != 0 || unpack.skipImages != 0)
+    {
+        UNIMPLEMENTED();
+        return gl::Error(GL_INVALID_OPERATION, "unimplemented pixel store state");
+    }
+
     UNIMPLEMENTED();
     return gl::Error(GL_INVALID_OPERATION);
 }
@@ -49,6 +68,12 @@ gl::Error TextureGL::setCompressedImage(GLenum target, size_t level, GLenum inte
 gl::Error TextureGL::setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
                                            const gl::PixelUnpackState &unpack, const uint8_t *pixels)
 {
+    if (unpack.skipRows != 0 || unpack.skipPixels != 0 || unpack.imageHeight != 0 || unpack.skipImages != 0)
+    {
+        UNIMPLEMENTED();
+        return gl::Error(GL_INVALID_OPERATION, "unimplemented pixel store state");
+    }
+
     UNIMPLEMENTED();
     return gl::Error(GL_INVALID_OPERATION);
 }

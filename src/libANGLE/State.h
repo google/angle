@@ -244,6 +244,7 @@ class State
     void setUnpackRowLength(GLint rowLength);
     GLint getUnpackRowLength() const;
     const PixelUnpackState &getUnpackState() const;
+    PixelUnpackState &getUnpackState();
 
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params);

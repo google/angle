@@ -3172,6 +3172,14 @@ void GL_APIENTRY PixelStorei(GLenum pname, GLint param)
             }
         }
 
+        if (param < 0)
+        {
+            context->recordError(Error(GL_INVALID_VALUE, "Cannot use negative values in PixelStorei"));
+            return;
+        }
+
+        State &state = context->getState();
+
         switch (pname)
         {
           case GL_UNPACK_ALIGNMENT:
@@ -3181,7 +3189,7 @@ void GL_APIENTRY PixelStorei(GLenum pname, GLint param)
                 return;
             }
 
-            context->getState().setUnpackAlignment(param);
+            state.setUnpackAlignment(param);
             break;
 
           case GL_PACK_ALIGNMENT:
@@ -3191,22 +3199,38 @@ void GL_APIENTRY PixelStorei(GLenum pname, GLint param)
                 return;
             }
 
-            context->getState().setPackAlignment(param);
+            state.setPackAlignment(param);
             break;
 
           case GL_PACK_REVERSE_ROW_ORDER_ANGLE:
-            context->getState().setPackReverseRowOrder(param != 0);
+            state.setPackReverseRowOrder(param != 0);
             break;
 
           case GL_UNPACK_ROW_LENGTH:
             ASSERT(context->getClientVersion() >= 3);
-            context->getState().setUnpackRowLength(param);
+            state.setUnpackRowLength(param);
             break;
 
           case GL_UNPACK_IMAGE_HEIGHT:
+            ASSERT(context->getClientVersion() >= 3);
+            state.getUnpackState().imageHeight = param;
+            break;
+
           case GL_UNPACK_SKIP_IMAGES:
+            ASSERT(context->getClientVersion() >= 3);
+            state.getUnpackState().skipImages = param;
+            break;
+
           case GL_UNPACK_SKIP_ROWS:
+            ASSERT(context->getClientVersion() >= 3);
+            state.getUnpackState().skipRows = param;
+            break;
+
           case GL_UNPACK_SKIP_PIXELS:
+            ASSERT(context->getClientVersion() >= 3);
+            state.getUnpackState().skipPixels = param;
+            break;
+
           case GL_PACK_ROW_LENGTH:
           case GL_PACK_SKIP_ROWS:
           case GL_PACK_SKIP_PIXELS:

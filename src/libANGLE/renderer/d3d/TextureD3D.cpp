@@ -160,6 +160,12 @@ gl::Error TextureD3D::setImage(const gl::ImageIndex &index, GLenum type,
                                const gl::PixelUnpackState &unpack, const uint8_t *pixels,
                                ptrdiff_t layerOffset)
 {
+    if (unpack.skipRows != 0 || unpack.skipPixels != 0 || unpack.imageHeight != 0 || unpack.skipImages != 0)
+    {
+        UNIMPLEMENTED();
+        return gl::Error(GL_INVALID_OPERATION, "unimplemented pixel store state");
+    }
+
     ImageD3D *image = getImage(index);
     ASSERT(image);
 
@@ -243,6 +249,12 @@ gl::Error TextureD3D::subImage(const gl::ImageIndex &index, const gl::Box &area,
 gl::Error TextureD3D::setCompressedImage(const gl::ImageIndex &index, const gl::PixelUnpackState &unpack,
                                          const uint8_t *pixels, ptrdiff_t layerOffset)
 {
+    if (unpack.skipRows != 0 || unpack.skipPixels != 0 || unpack.imageHeight != 0 || unpack.skipImages != 0)
+    {
+        UNIMPLEMENTED();
+        return gl::Error(GL_INVALID_OPERATION, "unimplemented pixel store state");
+    }
+
     // We no longer need the "GLenum format" parameter to TexImage to determine what data format "pixels" contains.
     // From our image internal format we know how many channels to expect, and "type" gives the format of pixel's components.
     const uint8_t *pixelData = NULL;
@@ -274,6 +286,12 @@ gl::Error TextureD3D::subImageCompressed(const gl::ImageIndex &index, const gl::
                                          const gl::PixelUnpackState &unpack, const uint8_t *pixels,
                                          ptrdiff_t layerOffset)
 {
+    if (unpack.skipRows != 0 || unpack.skipPixels != 0 || unpack.imageHeight != 0 || unpack.skipImages != 0)
+    {
+        UNIMPLEMENTED();
+        return gl::Error(GL_INVALID_OPERATION, "unimplemented pixel store state");
+    }
+
     const uint8_t *pixelData = NULL;
     gl::Error error = GetUnpackPointer(unpack, pixels, layerOffset, &pixelData);
     if (error.isError())
@@ -683,6 +701,12 @@ gl::Error TextureD3D_2D::setSubImage(GLenum target, size_t level, const gl::Box 
                                      const gl::PixelUnpackState &unpack, const uint8_t *pixels)
 {
     ASSERT(target == GL_TEXTURE_2D && area.depth == 1 && area.z == 0);
+
+    if (unpack.skipRows != 0 || unpack.skipPixels != 0 || unpack.imageHeight != 0 || unpack.skipImages != 0)
+    {
+        UNIMPLEMENTED();
+        return gl::Error(GL_INVALID_OPERATION, "unimplemented pixel store state");
+    }
 
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
     if (isFastUnpackable(unpack, getInternalFormat(level)) && isLevelComplete(level))
