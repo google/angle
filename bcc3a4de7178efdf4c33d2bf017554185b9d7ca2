@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c62484a6_990dbf3a",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-16T13:57:05Z",
+      "side": 1,
+      "message": "I think this needs a clearer comment if the code is combined like this. I\u0027d put in something like:\n\n// Fragment shaders need dx_DepthRange, dx_ViewCoords and dx_DepthFront.\n// Vertex shaders need a slightly different set: dx_DepthRange, dx_ViewCoords and dx_ViewAdjust.\n// In both cases 3 uniform registers total need to be reserved.",
+      "revId": "bcc3a4de7178efdf4c33d2bf017554185b9d7ca2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
