@@ -1082,6 +1082,11 @@ const PixelPackState &State::getPackState() const
     return mPack;
 }
 
+PixelPackState &State::getPackState()
+{
+    return mPack;
+}
+
 void State::setUnpackAlignment(GLint alignment)
 {
     mUnpack.alignment = alignment;

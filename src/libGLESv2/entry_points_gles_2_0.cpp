@@ -3232,10 +3232,18 @@ void GL_APIENTRY PixelStorei(GLenum pname, GLint param)
             break;
 
           case GL_PACK_ROW_LENGTH:
+            ASSERT(context->getClientVersion() >= 3);
+            state.getPackState().rowLength = param;
+            break;
+
           case GL_PACK_SKIP_ROWS:
+            ASSERT(context->getClientVersion() >= 3);
+            state.getPackState().skipRows = param;
+            break;
+
           case GL_PACK_SKIP_PIXELS:
             ASSERT(context->getClientVersion() >= 3);
-            UNIMPLEMENTED();
+            state.getPackState().skipPixels = param;
             break;
 
           default:

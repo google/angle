@@ -217,15 +217,24 @@ struct PixelPackState
     BindingPointer<Buffer> pixelBuffer;
     GLint alignment;
     bool reverseRowOrder;
+    GLint rowLength;
+    GLint skipRows;
+    GLint skipPixels;
 
     PixelPackState()
         : alignment(4),
-          reverseRowOrder(false)
+          reverseRowOrder(false),
+          rowLength(0),
+          skipRows(0),
+          skipPixels(0)
     {}
 
     explicit PixelPackState(GLint alignmentIn, bool reverseRowOrderIn)
         : alignment(alignmentIn),
-          reverseRowOrder(reverseRowOrderIn)
+          reverseRowOrder(reverseRowOrderIn),
+          rowLength(0),
+          skipRows(0),
+          skipPixels(0)
     {}
 };
 

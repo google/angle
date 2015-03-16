@@ -237,6 +237,7 @@ class State
     void setPackReverseRowOrder(bool reverseRowOrder);
     bool getPackReverseRowOrder() const;
     const PixelPackState &getPackState() const;
+    PixelPackState &getPackState();
 
     // Pixel unpack state manipulation
     void setUnpackAlignment(GLint alignment);

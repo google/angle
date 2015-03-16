@@ -299,11 +299,19 @@ GLenum FramebufferD3D::getImplementationColorReadType() const
 
 gl::Error FramebufferD3D::readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const
 {
+    const gl::PixelPackState &packState = state.getPackState();
+
+    if (packState.rowLength != 0 || packState.skipRows != 0 || packState.skipPixels != 0)
+    {
+        UNIMPLEMENTED();
+        return gl::Error(GL_INVALID_OPERATION, "invalid pixel store parameters in readPixels");
+    }
+
     GLenum sizedInternalFormat = gl::GetSizedInternalFormat(format, type);
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(sizedInternalFormat);
-    GLuint outputPitch = sizedFormatInfo.computeRowPitch(type, area.width, state.getPackAlignment(), 0);
+    GLuint outputPitch = sizedFormatInfo.computeRowPitch(type, area.width, packState.alignment, 0);
 
-    return readPixels(area, format, type, outputPitch, state.getPackState(), reinterpret_cast<uint8_t*>(pixels));
+    return readPixels(area, format, type, outputPitch, packState, reinterpret_cast<uint8_t*>(pixels));
 }
 
 gl::Error FramebufferD3D::blit(const gl::State &state, const gl::Rectangle &sourceArea, const gl::Rectangle &destArea,
