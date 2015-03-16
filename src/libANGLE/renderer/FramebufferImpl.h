@@ -28,7 +28,7 @@ namespace rx
 class FramebufferImpl
 {
   public:
-    FramebufferImpl(const gl::Framebuffer::Data &data) : mData(data) { }
+    explicit FramebufferImpl(const gl::Framebuffer::Data &data) : mData(data) { }
     virtual ~FramebufferImpl() { }
 
     virtual void setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment) = 0;

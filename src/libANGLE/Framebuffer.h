@@ -53,7 +53,7 @@ class Framebuffer
     class Data final
     {
       public:
-        Data(const Caps &caps);
+        explicit Data(const Caps &caps);
         ~Data();
 
         FramebufferAttachment *getReadAttachment() const;

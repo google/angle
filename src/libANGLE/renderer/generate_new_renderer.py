@@ -152,23 +152,9 @@ def get_constructor_args(constructor):
     args = ', '.join(re.findall(r'[^\w]?(\w+)(?:\,|$)', params))
     return params, args
 
-for impl_class in impl_classes:
-
-    base_impl = impl_class
-
-    # special case for Renderer
-    if impl_class != 'Renderer':
-        base_impl += 'Impl'
-
-    typed_impl = impl_class + renderer_suffix
-
+def parse_impl_header(base_impl):
     impl_h_file_path = base_impl + '.h'
-    h_file_path = os.path.join(renderer_name, typed_impl + '.h')
-    cpp_file_path = os.path.join(renderer_name, typed_impl + '.cpp')
-
     impl_h_file = open(impl_h_file_path, 'r')
-    h_file = open(h_file_path, 'w')
-    cpp_file = open(cpp_file_path, 'w')
 
     # extract impl stubs
     copy = False
@@ -179,8 +165,9 @@ for impl_class in impl_classes:
     for line in impl_h_file:
         clean_line = line.strip()
 
-        if re.search(r'[^~]' + base_impl + r'\(', clean_line):
-            constructor = clean_line
+        match = re.search(r'^(?:explicit )?(' + base_impl + r'\([^\)]*\))', clean_line);
+        if match:
+            constructor = match.group(1)
 
         # begin capture when reading the destructor.
         # begin capture also in the private scope (a few special cases)
@@ -201,6 +188,36 @@ for impl_class in impl_classes:
             impl_stubs += line
         elif copy_private:
             private_impl_stubs += line
+
+    impl_h_file.close()
+
+    return impl_stubs, private_impl_stubs, constructor
+
+for impl_class in impl_classes:
+
+    base_impl = impl_class
+
+    # special case for Renderer
+    if impl_class != 'Renderer':
+        base_impl += 'Impl'
+
+    typed_impl = impl_class + renderer_suffix
+
+    h_file_path = os.path.join(renderer_name, typed_impl + '.h')
+    cpp_file_path = os.path.join(renderer_name, typed_impl + '.cpp')
+
+    h_file = open(h_file_path, 'w')
+    cpp_file = open(cpp_file_path, 'w')
+
+    # extract impl stubs
+    impl_stubs, private_impl_stubs, constructor = parse_impl_header(base_impl)
+
+    # more special case for Renderer
+    # TODO(jmadill): general case for base classes
+    if impl_class == 'Renderer':
+        base_impl_stubs, base_private_impl_stubs, base_constructor = parse_impl_header('ImplFactory')
+        impl_stubs += base_impl_stubs
+        private_impl_stubs += base_private_impl_stubs
 
     impl_method_declarations = ''
     impl_method_definitions = ''
@@ -238,6 +255,5 @@ for impl_class in impl_classes:
     h_file.write(string.Template(h_file_template).substitute(substitutions))
     cpp_file.write(string.Template(cpp_file_template).substitute(substitutions))
 
-    impl_h_file.close()
     h_file.close()
     cpp_file.close()

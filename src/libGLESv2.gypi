@@ -120,6 +120,7 @@
             'libANGLE/renderer/FenceNVImpl.h',
             'libANGLE/renderer/FenceSyncImpl.h',
             'libANGLE/renderer/FramebufferImpl.h',
+            'libANGLE/renderer/ImplFactory.h',
             'libANGLE/renderer/IndexRangeCache.cpp',
             'libANGLE/renderer/IndexRangeCache.h',
             'libANGLE/renderer/ProgramImpl.cpp',
