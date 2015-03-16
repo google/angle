@@ -1,0 +1,124 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c62484a6_560814ad",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-16T11:58:21Z",
+      "side": 1,
+      "message": "The new workarounds should be in a separate function. The old workarounds are only for Mac driver bugs, and should not be used on all platforms which have GL 4.1. The function where the old workarounds are added could also be renamed from InitBuiltInFunctionEmulatorForGLSL to something like InitBuiltInFunctionEmulatorWithMacGLSLWorkarounds to make this clearer.",
+      "revId": "dc8d7c5704e53971e890a5d89787023f8e4a7ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c62484a6_b6ce48dc",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-16T11:58:21Z",
+      "side": 1,
+      "message": "I don\u0027t think that relying on implicit conversions here is good - it\u0027s a lot harder to verify that the code is correct.",
+      "revId": "dc8d7c5704e53971e890a5d89787023f8e4a7ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "861e0c58_74f8a8fc",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-16T11:58:21Z",
+      "side": 1,
+      "message": "I\u0027d get rid of the implicit conversions here as well.",
+      "revId": "dc8d7c5704e53971e890a5d89787023f8e4a7ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a61f9053_755c2885",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-16T11:58:21Z",
+      "side": 1,
+      "message": "You could prefix this function name with \"webgl_\" for now. It\u0027s not ideal, since ANGLE is used for other things besides WebGL, but right now that\u0027s the convention.",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 60,
+        "endChar": 16
+      },
+      "revId": "dc8d7c5704e53971e890a5d89787023f8e4a7ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "861e0c58_748e6885",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-16T11:58:21Z",
+      "side": 1,
+      "message": "Should be 16, I think. Also, I\u0027d use uint for sign, exponent and mantissa.",
+      "range": {
+        "startLine": 80,
+        "startChar": 34,
+        "endLine": 80,
+        "endChar": 36
+      },
+      "revId": "dc8d7c5704e53971e890a5d89787023f8e4a7ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "861e0c58_b4c400ad",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-16T11:58:21Z",
+      "side": 1,
+      "message": "This doesn\u0027t make sense combined with the if (sign) in the end. This seems to already try to apply the sign bit, though it does it in a slightly incorrect way. Maybe fix the position of the sign bit and return the result of (u)intBitsToFloat from here? Then we wouldn\u0027t have to worry about what -NaN does for example.",
+      "range": {
+        "startLine": 85,
+        "startChar": 38,
+        "endLine": 85,
+        "endChar": 81
+      },
+      "revId": "dc8d7c5704e53971e890a5d89787023f8e4a7ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
