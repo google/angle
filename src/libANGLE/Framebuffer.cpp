@@ -14,7 +14,7 @@
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
-#include "libANGLE/renderer/Renderer.h"
+#include "libANGLE/renderer/ImplFactory.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
 #include "libANGLE/renderer/Workarounds.h"
 
@@ -80,9 +80,9 @@ FramebufferAttachment *Framebuffer::Data::getDepthOrStencilAttachment() const
     return (mDepthAttachment != nullptr ? mDepthAttachment : mStencilAttachment);
 }
 
-Framebuffer::Framebuffer(const Caps &caps, rx::Renderer *renderer, GLuint id)
+Framebuffer::Framebuffer(const Caps &caps, rx::ImplFactory *factory, GLuint id)
     : mData(caps),
-      mImpl(renderer->createFramebuffer(mData)),
+      mImpl(factory->createFramebuffer(mData)),
       mId(id)
 {
     ASSERT(mImpl != nullptr);
@@ -622,12 +622,12 @@ void Framebuffer::setAttachment(GLenum attachment, FramebufferAttachment *attach
     }
 }
 
-DefaultFramebuffer::DefaultFramebuffer(const Caps &caps, rx::Renderer *renderer, egl::Surface *surface)
-    : Framebuffer(caps, renderer, 0)
+DefaultFramebuffer::DefaultFramebuffer(const Caps &caps, rx::ImplFactory *factory, egl::Surface *surface)
+    : Framebuffer(caps, factory, 0)
 {
-    rx::DefaultAttachmentImpl *colorAttachment = renderer->createDefaultAttachment(GL_BACK, surface);
-    rx::DefaultAttachmentImpl *depthAttachment = renderer->createDefaultAttachment(GL_DEPTH, surface);
-    rx::DefaultAttachmentImpl *stencilAttachment = renderer->createDefaultAttachment(GL_STENCIL, surface);
+    rx::DefaultAttachmentImpl *colorAttachment = factory->createDefaultAttachment(GL_BACK, surface);
+    rx::DefaultAttachmentImpl *depthAttachment = factory->createDefaultAttachment(GL_DEPTH, surface);
+    rx::DefaultAttachmentImpl *stencilAttachment = factory->createDefaultAttachment(GL_STENCIL, surface);
 
     ASSERT(colorAttachment);
     setAttachment(GL_BACK, new DefaultAttachment(GL_BACK, colorAttachment));

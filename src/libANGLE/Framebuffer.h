@@ -20,9 +20,9 @@
 namespace rx
 {
 class DefaultAttachmentImpl;
+class ImplFactory;
 class FramebufferImpl;
 class RenderbufferImpl;
-class Renderer;
 struct Workarounds;
 }
 
@@ -71,7 +71,7 @@ class Framebuffer
         DISALLOW_COPY_AND_ASSIGN(Data);
     };
 
-    Framebuffer(const Caps &caps, rx::Renderer *renderer, GLuint id);
+    Framebuffer(const Caps &caps, rx::ImplFactory *factory, GLuint id);
     virtual ~Framebuffer();
 
     const rx::FramebufferImpl *getImplementation() const { return mImpl; }
@@ -143,7 +143,7 @@ class Framebuffer
 class DefaultFramebuffer : public Framebuffer
 {
   public:
-    DefaultFramebuffer(const gl::Caps &caps, rx::Renderer *renderer, egl::Surface *surface);
+    DefaultFramebuffer(const gl::Caps &caps, rx::ImplFactory *factory, egl::Surface *surface);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(DefaultFramebuffer);
