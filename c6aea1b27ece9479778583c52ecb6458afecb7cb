@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c61ac4b3_2d610e35",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-03-16T23:47:22Z",
+      "side": 1,
+      "message": "What are your thoughts on how this can be optimized going forward? It\u0027s essential to minimize the amount of validation and state syncing done during each draw call. I am pretty sure that the virtual GL context implementation in Chrome\u0027s command buffer had hot spots in the switching of both texture and vertex attribute states. Perhaps just iterating from 0 to the highest texture unit that has anything bound to it would already be an improvement. It would be better if we could iterate down just those texture units absolutely requiring processing.\n\nIt seems to me that if ANGLE\u0027s GL backend is using a 1:1 mapping between ANGLE\u0027s contexts and real GL contexts, it would be more efficient to immediately send down things like sampler and texture state, so that the underlying GL driver already has the right state for each draw call when it\u0027s performed.",
+      "range": {
+        "startLine": 113,
+        "startChar": 14,
+        "endLine": 113,
+        "endChar": 29
+      },
+      "revId": "c6aea1b27ece9479778583c52ecb6458afecb7cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c61ac4b3_6de02647",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-03-16T23:47:22Z",
+      "side": 1,
+      "message": "Is this block missing \"mAppliedSamplerState \u003d samplerState;\"?",
+      "range": {
+        "startLine": 284,
+        "startChar": 4,
+        "endLine": 284,
+        "endChar": 5
+      },
+      "revId": "c6aea1b27ece9479778583c52ecb6458afecb7cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
