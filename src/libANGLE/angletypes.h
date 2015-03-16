@@ -183,29 +183,6 @@ struct SamplerState
     bool operator!=(const SamplerState &other) const;
 };
 
-struct ClearParameters
-{
-    bool clearColor[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS];
-    ColorF colorFClearValue;
-    ColorI colorIClearValue;
-    ColorUI colorUIClearValue;
-    GLenum colorClearType;
-    bool colorMaskRed;
-    bool colorMaskGreen;
-    bool colorMaskBlue;
-    bool colorMaskAlpha;
-
-    bool clearDepth;
-    float depthClearValue;
-
-    bool clearStencil;
-    GLint stencilClearValue;
-    GLuint stencilWriteMask;
-
-    bool scissorEnabled;
-    Rectangle scissor;
-};
-
 struct PixelUnpackState
 {
     BindingPointer<Buffer> pixelBuffer;

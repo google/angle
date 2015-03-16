@@ -32,7 +32,7 @@ Framebuffer9::~Framebuffer9()
 {
 }
 
-gl::Error Framebuffer9::clear(const gl::State &state, const gl::ClearParameters &clearParams)
+gl::Error Framebuffer9::clear(const gl::State &state, const ClearParameters &clearParams)
 {
     const gl::FramebufferAttachment *colorAttachment = mData.mColorAttachments[0];
     const gl::FramebufferAttachment *depthStencilAttachment = mData.getDepthOrStencilAttachment();

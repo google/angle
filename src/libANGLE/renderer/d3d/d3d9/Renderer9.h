@@ -29,12 +29,13 @@ class AttributeMap;
 
 namespace rx
 {
-class VertexDataManager;
+class Blit9;
 class IndexDataManager;
 class StreamingIndexBufferInterface;
 class StaticIndexBufferInterface;
+class VertexDataManager;
+struct ClearParameters;
 struct TranslatedAttribute;
-class Blit9;
 
 enum D3D9InitError
 {
@@ -116,7 +117,8 @@ class Renderer9 : public RendererD3D
     virtual gl::Error drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
                                    gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances);
 
-    gl::Error clear(const gl::ClearParameters &clearParams, const gl::FramebufferAttachment *colorBuffer,
+    gl::Error clear(const ClearParameters &clearParams,
+                    const gl::FramebufferAttachment *colorBuffer,
                     const gl::FramebufferAttachment *depthStencilBuffer);
 
     virtual void markAllStateDirty();

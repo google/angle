@@ -35,7 +35,7 @@ void State::initialize(const Caps& caps, GLuint clientVersion)
     mMaxDrawBuffers = caps.maxDrawBuffers;
     mMaxCombinedTextureImageUnits = caps.maxCombinedTextureImageUnits;
 
-    setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    setColorClearValue(0.0f, 0.0f, 0.0f, 0.0f);
 
     mDepthClearValue = 1.0f;
     mStencilClearValue = 0;
@@ -212,7 +212,7 @@ const DepthStencilState &State::getDepthStencilState() const
     return mDepthStencil;
 }
 
-void State::setClearColor(float red, float green, float blue, float alpha)
+void State::setColorClearValue(float red, float green, float blue, float alpha)
 {
     mColorClearValue.red = red;
     mColorClearValue.green = green;
@@ -220,68 +220,14 @@ void State::setClearColor(float red, float green, float blue, float alpha)
     mColorClearValue.alpha = alpha;
 }
 
-void State::setClearDepth(float depth)
+void State::setDepthClearValue(float depth)
 {
     mDepthClearValue = depth;
 }
 
-void State::setClearStencil(int stencil)
+void State::setStencilClearValue(int stencil)
 {
     mStencilClearValue = stencil;
-}
-
-ClearParameters State::getClearParameters(GLbitfield mask) const
-{
-    ClearParameters clearParams;
-    memset(&clearParams, 0, sizeof(ClearParameters));
-    for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
-    {
-        clearParams.clearColor[i] = false;
-    }
-    clearParams.colorFClearValue = mColorClearValue;
-    clearParams.colorClearType = GL_FLOAT;
-    clearParams.colorMaskRed = mBlend.colorMaskRed;
-    clearParams.colorMaskGreen = mBlend.colorMaskGreen;
-    clearParams.colorMaskBlue = mBlend.colorMaskBlue;
-    clearParams.colorMaskAlpha = mBlend.colorMaskAlpha;
-    clearParams.clearDepth = false;
-    clearParams.depthClearValue = mDepthClearValue;
-    clearParams.clearStencil = false;
-    clearParams.stencilClearValue = mStencilClearValue;
-    clearParams.stencilWriteMask = mDepthStencil.stencilWritemask;
-    clearParams.scissorEnabled = mScissorTest;
-    clearParams.scissor = mScissor;
-
-    const Framebuffer *framebufferObject = getDrawFramebuffer();
-    if (mask & GL_COLOR_BUFFER_BIT)
-    {
-        if (framebufferObject->hasEnabledColorAttachment())
-        {
-            for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
-            {
-                clearParams.clearColor[i] = true;
-            }
-        }
-    }
-
-    if (mask & GL_DEPTH_BUFFER_BIT)
-    {
-        if (mDepthStencil.depthMask && framebufferObject->getDepthbuffer() != NULL)
-        {
-            clearParams.clearDepth = true;
-        }
-    }
-
-    if (mask & GL_STENCIL_BUFFER_BIT)
-    {
-        if (framebufferObject->getStencilbuffer() != NULL &&
-            framebufferObject->getStencilbuffer()->getStencilSize() > 0)
-        {
-            clearParams.clearStencil = true;
-        }
-    }
-
-    return clearParams;
 }
 
 void State::setColorMask(bool red, bool green, bool blue, bool alpha)

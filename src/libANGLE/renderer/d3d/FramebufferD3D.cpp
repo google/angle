@@ -18,6 +18,68 @@
 namespace rx
 {
 
+namespace
+{
+
+ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
+{
+    ClearParameters clearParams;
+    memset(&clearParams, 0, sizeof(ClearParameters));
+
+    const auto &blendState = state.getBlendState();
+
+    for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
+    {
+        clearParams.clearColor[i] = false;
+    }
+    clearParams.colorFClearValue = state.getColorClearValue();
+    clearParams.colorClearType = GL_FLOAT;
+    clearParams.colorMaskRed = blendState.colorMaskRed;
+    clearParams.colorMaskGreen = blendState.colorMaskGreen;
+    clearParams.colorMaskBlue = blendState.colorMaskBlue;
+    clearParams.colorMaskAlpha = blendState.colorMaskAlpha;
+    clearParams.clearDepth = false;
+    clearParams.depthClearValue =  state.getDepthClearValue();
+    clearParams.clearStencil = false;
+    clearParams.stencilClearValue = state.getStencilClearValue();
+    clearParams.stencilWriteMask = state.getDepthStencilState().stencilWritemask;
+    clearParams.scissorEnabled = state.isScissorTestEnabled();
+    clearParams.scissor = state.getScissor();
+
+    const gl::Framebuffer *framebufferObject = state.getDrawFramebuffer();
+    if (mask & GL_COLOR_BUFFER_BIT)
+    {
+        if (framebufferObject->hasEnabledColorAttachment())
+        {
+            for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
+            {
+                clearParams.clearColor[i] = true;
+            }
+        }
+    }
+
+    if (mask & GL_DEPTH_BUFFER_BIT)
+    {
+        if (state.getDepthStencilState().depthMask && framebufferObject->getDepthbuffer() != NULL)
+        {
+            clearParams.clearDepth = true;
+        }
+    }
+
+    if (mask & GL_STENCIL_BUFFER_BIT)
+    {
+        if (framebufferObject->getStencilbuffer() != NULL &&
+            framebufferObject->getStencilbuffer()->getStencilSize() > 0)
+        {
+            clearParams.clearStencil = true;
+        }
+    }
+
+    return clearParams;
+}
+
+}
+
 DefaultAttachmentD3D::DefaultAttachmentD3D(RenderTargetD3D *renderTarget)
     : mRenderTarget(renderTarget)
 {
@@ -113,14 +175,14 @@ gl::Error FramebufferD3D::invalidateSub(size_t, const GLenum *, const gl::Rectan
 
 gl::Error FramebufferD3D::clear(const gl::State &state, GLbitfield mask)
 {
-    gl::ClearParameters clearParams = state.getClearParameters(mask);
+    ClearParameters clearParams = GetClearParameters(state, mask);
     return clear(state, clearParams);
 }
 
 gl::Error FramebufferD3D::clearBufferfv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLfloat *values)
 {
     // glClearBufferfv can be called to clear the color buffer or depth buffer
-    gl::ClearParameters clearParams = state.getClearParameters(0);
+    ClearParameters clearParams = GetClearParameters(state, 0);
 
     if (buffer == GL_COLOR)
     {
@@ -144,7 +206,7 @@ gl::Error FramebufferD3D::clearBufferfv(const gl::State &state, GLenum buffer, G
 gl::Error FramebufferD3D::clearBufferuiv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLuint *values)
 {
     // glClearBufferuiv can only be called to clear a color buffer
-    gl::ClearParameters clearParams = state.getClearParameters(0);
+    ClearParameters clearParams = GetClearParameters(state, 0);
     for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
     {
         clearParams.clearColor[i] = (drawbuffer == static_cast<int>(i));
@@ -158,7 +220,7 @@ gl::Error FramebufferD3D::clearBufferuiv(const gl::State &state, GLenum buffer, 
 gl::Error FramebufferD3D::clearBufferiv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLint *values)
 {
     // glClearBufferiv can be called to clear the color buffer or stencil buffer
-    gl::ClearParameters clearParams = state.getClearParameters(0);
+    ClearParameters clearParams = GetClearParameters(state, 0);
 
     if (buffer == GL_COLOR)
     {
@@ -182,7 +244,7 @@ gl::Error FramebufferD3D::clearBufferiv(const gl::State &state, GLenum buffer, G
 gl::Error FramebufferD3D::clearBufferfi(const gl::State &state, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil)
 {
     // glClearBufferfi can only be called to clear a depth stencil buffer
-    gl::ClearParameters clearParams = state.getClearParameters(0);
+    ClearParameters clearParams = GetClearParameters(state, 0);
     clearParams.clearDepth = true;
     clearParams.depthClearValue = depth;
     clearParams.clearStencil = true;

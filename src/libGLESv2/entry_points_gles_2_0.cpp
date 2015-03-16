@@ -645,7 +645,7 @@ void GL_APIENTRY ClearColor(GLclampf red, GLclampf green, GLclampf blue, GLclamp
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->getState().setClearColor(red, green, blue, alpha);
+        context->getState().setColorClearValue(red, green, blue, alpha);
     }
 }
 
@@ -656,7 +656,7 @@ void GL_APIENTRY ClearDepthf(GLclampf depth)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->getState().setClearDepth(depth);
+        context->getState().setDepthClearValue(depth);
     }
 }
 
@@ -667,7 +667,7 @@ void GL_APIENTRY ClearStencil(GLint s)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->getState().setClearStencil(s);
+        context->getState().setStencilClearValue(s);
     }
 }
 

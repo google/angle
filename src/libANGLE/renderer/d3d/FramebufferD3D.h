@@ -9,15 +9,15 @@
 #ifndef LIBANGLE_RENDERER_D3D_FRAMBUFFERD3D_H_
 #define LIBANGLE_RENDERER_D3D_FRAMBUFFERD3D_H_
 
-#include "libANGLE/renderer/DefaultAttachmentImpl.h"
-#include "libANGLE/renderer/FramebufferImpl.h"
-
 #include <vector>
 #include <cstdint>
 
+#include "libANGLE/angletypes.h"
+#include "libANGLE/renderer/DefaultAttachmentImpl.h"
+#include "libANGLE/renderer/FramebufferImpl.h"
+
 namespace gl
 {
-struct ClearParameters;
 class FramebufferAttachment;
 struct PixelPackState;
 }
@@ -26,6 +26,29 @@ namespace rx
 {
 class RenderTargetD3D;
 class RendererD3D;
+
+struct ClearParameters
+{
+    bool clearColor[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS];
+    gl::ColorF colorFClearValue;
+    gl::ColorI colorIClearValue;
+    gl::ColorUI colorUIClearValue;
+    GLenum colorClearType;
+    bool colorMaskRed;
+    bool colorMaskGreen;
+    bool colorMaskBlue;
+    bool colorMaskAlpha;
+
+    bool clearDepth;
+    float depthClearValue;
+
+    bool clearStencil;
+    GLint stencilClearValue;
+    GLuint stencilWriteMask;
+
+    bool scissorEnabled;
+    gl::Rectangle scissor;
+};
 
 class DefaultAttachmentD3D : public DefaultAttachmentImpl
 {
@@ -92,7 +115,7 @@ class FramebufferD3D : public FramebufferImpl
 
     RendererD3D *const mRenderer;
 
-    virtual gl::Error clear(const gl::State &state, const gl::ClearParameters &clearParams) = 0;
+    virtual gl::Error clear(const gl::State &state, const ClearParameters &clearParams) = 0;
 
     virtual gl::Error readPixels(const gl::Rectangle &area, GLenum format, GLenum type, size_t outputPitch,
                                  const gl::PixelPackState &pack, uint8_t *pixels) const = 0;

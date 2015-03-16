@@ -44,10 +44,13 @@ class State
     const DepthStencilState &getDepthStencilState() const;
 
     // Clear behavior setters & state parameter block generation function
-    void setClearColor(float red, float green, float blue, float alpha);
-    void setClearDepth(float depth);
-    void setClearStencil(int stencil);
-    ClearParameters getClearParameters(GLbitfield mask) const;
+    void setColorClearValue(float red, float green, float blue, float alpha);
+    void setDepthClearValue(float depth);
+    void setStencilClearValue(int stencil);
+
+    const ColorF &getColorClearValue() const { return mColorClearValue; }
+    float getDepthClearValue() const { return mDepthClearValue; }
+    int getStencilClearValue() const { return mStencilClearValue; }
 
     // Write mask manipulation
     void setColorMask(bool red, bool green, bool blue, bool alpha);

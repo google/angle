@@ -12,6 +12,7 @@
 
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
@@ -173,7 +174,7 @@ Clear11::~Clear11()
     SafeRelease(mRasterizerState);
 }
 
-gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, const gl::Framebuffer::Data &fboData)
+gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams, const gl::Framebuffer::Data &fboData)
 {
     const auto &colorAttachments = fboData.mColorAttachments;
     const auto &drawBufferStates = fboData.mDrawBufferStates;
@@ -561,7 +562,7 @@ ID3D11BlendState *Clear11::getBlendState(const std::vector<MaskedRenderTarget>& 
     }
 }
 
-ID3D11DepthStencilState *Clear11::getDepthStencilState(const gl::ClearParameters &clearParams)
+ID3D11DepthStencilState *Clear11::getDepthStencilState(const ClearParameters &clearParams)
 {
     ClearDepthStencilInfo dsKey = { 0 };
     dsKey.clearDepth = clearParams.clearDepth;
