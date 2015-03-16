@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "86144c89_6ac5b38b",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-16T20:26:54Z",
+      "side": 1,
+      "message": "Multiple calls to bindTexture wont rebind the texture so we\u0027re safe there.  I want to avoid a situation where syncSamplerState determines it doesn\u0027t need to sync anything and doesn\u0027t bind the texture at all.",
+      "parentUuid": "e60a685c_af2339d1",
+      "range": {
+        "startLine": 141,
+        "startChar": 20,
+        "endLine": 141,
+        "endChar": 31
+      },
+      "revId": "e8418ebea48fb49053c9bf2bc7bdba942171fe8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e60a685c_ef81c1fc",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 9
@@ -36,6 +60,24 @@
       "writtenOn": "2015-03-16T17:56:54Z",
       "side": 1,
       "message": "Is it a problem that we don\u0027t restore the previous binding state, or is this intentional? (Here and below)",
+      "revId": "e8418ebea48fb49053c9bf2bc7bdba942171fe8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86144c89_aaf5ebd1",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-16T20:26:54Z",
+      "side": 1,
+      "message": "It\u0027s not a problem, the bound Desktop GL objects don\u0027t match to the bound ES objects.  We just make sure to bind what\u0027s needed before the draw call.",
+      "parentUuid": "e60a685c_ef81c1fc",
       "revId": "e8418ebea48fb49053c9bf2bc7bdba942171fe8d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
