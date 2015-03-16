@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "660f5879_6ce14a12",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-03-16T22:44:47Z",
+      "side": 1,
+      "message": "This looks wrong. Are we at a point where we could catch this bug with a test?",
+      "range": {
+        "startLine": 64,
+        "startChar": 4,
+        "endLine": 64,
+        "endChar": 15
+      },
+      "revId": "94ce2c1960aefd9e8946b8f3275a3d0320ada874",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
