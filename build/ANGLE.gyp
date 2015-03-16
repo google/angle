@@ -6,7 +6,7 @@
     'targets':
     [
         {
-            'target_name': 'All',
+            'target_name': 'all',
             'type': 'none',
             'dependencies':
             [
@@ -21,7 +21,7 @@
                     'dependencies':
                     [
                         '../samples/samples.gyp:*',
-                        '../tests/tests.gyp:*',
+                        '../src/tests/tests.gyp:*',
                     ],
                 }],
             ],
