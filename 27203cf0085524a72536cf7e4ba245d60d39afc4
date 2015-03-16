@@ -1,0 +1,256 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6923012_3d6eaffd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T18:32:39Z",
+      "side": 1,
+      "message": "can you tag this with BUG\u003d395048 in a second line as well?\nthis will update the Chromium issue to show your progress when you commit.",
+      "revId": "27203cf0085524a72536cf7e4ba245d60d39afc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6923012_dd722be0",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 6
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T18:32:39Z",
+      "side": 1,
+      "message": "nit: alphabetical ordering",
+      "range": {
+        "startLine": 34,
+        "startChar": 33,
+        "endLine": 34,
+        "endChar": 40
+      },
+      "revId": "27203cf0085524a72536cf7e4ba245d60d39afc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e690a80b_df721be0",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T18:32:39Z",
+      "side": 1,
+      "message": "nit: static_cast (style guide says to use c++ style casts)",
+      "range": {
+        "startLine": 180,
+        "startChar": 19,
+        "endLine": 180,
+        "endChar": 24
+      },
+      "revId": "27203cf0085524a72536cf7e4ba245d60d39afc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86a1ac60_5c093d61",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T18:32:39Z",
+      "side": 1,
+      "message": "nit: size_t?",
+      "range": {
+        "startLine": 184,
+        "startChar": 0,
+        "endLine": 184,
+        "endChar": 3
+      },
+      "revId": "27203cf0085524a72536cf7e4ba245d60d39afc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86a1ac60_9cefc5fd",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T18:32:39Z",
+      "side": 1,
+      "message": "nit: can you add a short (one or two sentence) description of this file? See the comments at the top of source files in libANGLE.",
+      "revId": "27203cf0085524a72536cf7e4ba245d60d39afc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e690a80b_1f6963f4",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T18:32:39Z",
+      "side": 1,
+      "message": "nit: for include order, see the chromium guide here:\n\nhttp://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Names_and_Order_of_Includes",
+      "range": {
+        "startLine": 10,
+        "startChar": 10,
+        "endLine": 10,
+        "endChar": 16
+      },
+      "revId": "27203cf0085524a72536cf7e4ba245d60d39afc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e690a80b_5f5feb51",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T18:32:39Z",
+      "side": 1,
+      "message": "for this, and a few other places in the CL, check the style guide. we use two-space indentation for class scope labels (public/private/etc) and for case labels.",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 6
+      },
+      "revId": "27203cf0085524a72536cf7e4ba245d60d39afc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86a1ac60_dcf54dd1",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T18:32:39Z",
+      "side": 1,
+      "message": "also in the CL (won\u0027t repeat) you should put all braces one newlines. also goes for functions and if/else blocks",
+      "range": {
+        "startLine": 36,
+        "startChar": 18,
+        "endLine": 36,
+        "endChar": 19
+      },
+      "revId": "27203cf0085524a72536cf7e4ba245d60d39afc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86a1ac60_fcf289e6",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T18:32:39Z",
+      "side": 1,
+      "message": "also regarding style, * and \u0026 should be right-justified, eg:\n\n  TIntermAggregate *node;",
+      "revId": "27203cf0085524a72536cf7e4ba245d60d39afc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86a1ac60_7c0e796c",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T18:32:39Z",
+      "side": 1,
+      "message": "nit: I don\u0027t know if we have a style pointer for this, but usually we use all caps with short (but not abbreviated) names, eg:\n\n  CREATERESULT_SUCCESS\n  CREATERESULT_RECURSION\n\nCREATEDAG might also make sense. Also we\u0027ve been using initialize more than create for init functions.",
+      "range": {
+        "startLine": 43,
+        "startChar": 8,
+        "endLine": 43,
+        "endChar": 17
+      },
+      "revId": "27203cf0085524a72536cf7e4ba245d60d39afc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6923012_fd6fe7f4",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T18:32:39Z",
+      "side": 1,
+      "message": "structs should use mRecords, etc, to denote member variable status. we aren\u0027t super rigorous about fixing old code style but new code should conform to the guide.",
+      "range": {
+        "startLine": 58,
+        "startChar": 24,
+        "endLine": 58,
+        "endChar": 31
+      },
+      "revId": "27203cf0085524a72536cf7e4ba245d60d39afc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6923012_bd795fc3",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T18:32:39Z",
+      "side": 1,
+      "message": "nit: 4 space indentation, and space between : and used",
+      "revId": "27203cf0085524a72536cf7e4ba245d60d39afc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
