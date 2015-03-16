@@ -19,7 +19,7 @@
 
 namespace rx
 {
-class Renderer;
+class ImplFactory;
 }
 
 namespace gl
@@ -36,7 +36,7 @@ struct Data;
 class ResourceManager
 {
   public:
-    explicit ResourceManager(rx::Renderer *renderer);
+    explicit ResourceManager(rx::ImplFactory *factory);
     ~ResourceManager();
 
     void addRef();
@@ -78,7 +78,7 @@ class ResourceManager
   private:
     DISALLOW_COPY_AND_ASSIGN(ResourceManager);
 
-    rx::Renderer *mRenderer;
+    rx::ImplFactory *mFactory;
     std::size_t mRefCount;
 
     typedef std::map<GLuint, Buffer*> BufferMap;

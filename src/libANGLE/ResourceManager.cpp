@@ -20,8 +20,8 @@
 
 namespace gl
 {
-ResourceManager::ResourceManager(rx::Renderer *renderer)
-    : mRenderer(renderer),
+ResourceManager::ResourceManager(rx::ImplFactory *factory)
+    : mFactory(factory),
       mRefCount(1)
 {
 }
@@ -94,7 +94,7 @@ GLuint ResourceManager::createShader(const gl::Data &data, GLenum type)
 
     if (type == GL_VERTEX_SHADER || type == GL_FRAGMENT_SHADER)
     {
-        mShaderMap[handle] = new Shader(this, mRenderer->createShader(type), type, handle);
+        mShaderMap[handle] = new Shader(this, mFactory->createShader(type), type, handle);
     }
     else UNREACHABLE();
 
@@ -106,7 +106,7 @@ GLuint ResourceManager::createProgram()
 {
     GLuint handle = mProgramShaderHandleAllocator.allocate();
 
-    mProgramMap[handle] = new Program(mRenderer->createProgram(), this, handle);
+    mProgramMap[handle] = new Program(mFactory->createProgram(), this, handle);
 
     return handle;
 }
@@ -146,7 +146,7 @@ GLuint ResourceManager::createFenceSync()
 {
     GLuint handle = mFenceSyncHandleAllocator.allocate();
 
-    FenceSync *fenceSync = new FenceSync(mRenderer->createFenceSync(), handle);
+    FenceSync *fenceSync = new FenceSync(mFactory->createFenceSync(), handle);
     fenceSync->addRef();
     mFenceSyncMap[handle] = fenceSync;
 
@@ -360,7 +360,7 @@ void ResourceManager::checkBufferAllocation(unsigned int buffer)
 {
     if (buffer != 0 && !getBuffer(buffer))
     {
-        Buffer *bufferObject = new Buffer(mRenderer->createBuffer(), buffer);
+        Buffer *bufferObject = new Buffer(mFactory->createBuffer(), buffer);
         mBufferMap[buffer] = bufferObject;
         bufferObject->addRef();
     }
@@ -370,7 +370,7 @@ void ResourceManager::checkTextureAllocation(GLuint texture, GLenum type)
 {
     if (!getTexture(texture) && texture != 0)
     {
-        Texture *textureObject = new Texture(mRenderer->createTexture(type), texture, type);
+        Texture *textureObject = new Texture(mFactory->createTexture(type), texture, type);
         mTextureMap[texture] = textureObject;
         textureObject->addRef();
     }
@@ -380,7 +380,7 @@ void ResourceManager::checkRenderbufferAllocation(GLuint renderbuffer)
 {
     if (renderbuffer != 0 && !getRenderbuffer(renderbuffer))
     {
-        Renderbuffer *renderbufferObject = new Renderbuffer(mRenderer->createRenderbuffer(), renderbuffer);
+        Renderbuffer *renderbufferObject = new Renderbuffer(mFactory->createRenderbuffer(), renderbuffer);
         mRenderbufferMap[renderbuffer] = renderbufferObject;
         renderbufferObject->addRef();
     }
