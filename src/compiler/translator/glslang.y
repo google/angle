@@ -883,11 +883,11 @@ init_declarator_list
     }
     | init_declarator_list COMMA identifier {
         $$ = $1;
-        $$.intermAggregate = context->parseDeclarator($$.type, $1.intermAggregate, $3.symbol, @3, *$3.string);
+        $$.intermAggregate = context->parseDeclarator($$.type, $1.intermAggregate, @3, *$3.string);
     }
     | init_declarator_list COMMA identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         $$ = $1;
-        $$.intermAggregate = context->parseArrayDeclarator($$.type, @3, *$3.string, @4, $1.intermNode, $5);
+        $$.intermAggregate = context->parseArrayDeclarator($$.type, $1.intermAggregate, @3, *$3.string, @4, $5);
     }
     | init_declarator_list COMMA identifier EQUAL initializer {
         $$ = $1;
@@ -1534,11 +1534,11 @@ condition
             context->recover();
     }
     | fully_specified_type identifier EQUAL initializer {
-        TIntermNode* intermNode;
+        TIntermNode *intermNode;
         if (context->boolErrorCheck(@2, $1))
             context->recover();
 
-        if (!context->executeInitializer(@2, *$2.string, $1, $4, intermNode))
+        if (!context->executeInitializer(@2, *$2.string, $1, $4, &intermNode))
             $$ = $4;
         else {
             context->recover();

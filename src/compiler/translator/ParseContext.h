@@ -124,19 +124,32 @@ struct TParseContext {
     bool areAllChildConst(TIntermAggregate* aggrNode);
     const TFunction* findFunction(const TSourceLoc& line, TFunction* pfnCall, int inputShaderVersion, bool *builtIn = 0);
     bool executeInitializer(const TSourceLoc &line, const TString &identifier, TPublicType &pType,
-                            TIntermTyped *initializer, TIntermNode *&intermNode);
+                            TIntermTyped *initializer, TIntermNode **intermNode);
 
     TPublicType addFullySpecifiedType(TQualifier qualifier, const TPublicType& typeSpecifier);
     TPublicType addFullySpecifiedType(TQualifier qualifier, TLayoutQualifier layoutQualifier, const TPublicType& typeSpecifier);
+
     TIntermAggregate *parseSingleDeclaration(TPublicType &publicType,
                                              const TSourceLoc &identifierOrTypeLocation, const TString &identifier);
-    TIntermAggregate* parseSingleArrayDeclaration(TPublicType &publicType, const TSourceLoc& identifierLocation, const TString &identifier, const TSourceLoc& indexLocation, TIntermTyped *indexExpression);
-    TIntermAggregate* parseSingleInitDeclaration(TPublicType &publicType, const TSourceLoc& identifierLocation, const TString &identifier, const TSourceLoc& initLocation, TIntermTyped *initializer);
-    TIntermAggregate* parseInvariantDeclaration(const TSourceLoc &invariantLoc, const TSourceLoc &identifierLoc, const TString *identifier, const TSymbol *symbol);
+    TIntermAggregate *parseSingleArrayDeclaration(TPublicType &publicType,
+                                                  const TSourceLoc &identifierLocation, const TString &identifier,
+                                                  const TSourceLoc &indexLocation, TIntermTyped *indexExpression);
+    TIntermAggregate *parseSingleInitDeclaration(TPublicType &publicType,
+                                                 const TSourceLoc &identifierLocation, const TString &identifier,
+                                                 const TSourceLoc &initLocation, TIntermTyped *initializer);
 
-    TIntermAggregate* parseDeclarator(TPublicType &publicType, TIntermAggregate *aggregateDeclaration, TSymbol *identifierSymbol, const TSourceLoc& identifierLocation, const TString &identifier);
-    TIntermAggregate* parseArrayDeclarator(TPublicType &publicType, const TSourceLoc& identifierLocation, const TString &identifier, const TSourceLoc& arrayLocation, TIntermNode *declaratorList, TIntermTyped *indexExpression);
-    TIntermAggregate* parseInitDeclarator(TPublicType &publicType, TIntermAggregate *declaratorList, const TSourceLoc& identifierLocation, const TString &identifier, const TSourceLoc& initLocation, TIntermTyped *initializer);
+    TIntermAggregate *parseInvariantDeclaration(const TSourceLoc &invariantLoc, const TSourceLoc &identifierLoc,
+                                                const TString *identifier, const TSymbol *symbol);
+
+    TIntermAggregate *parseDeclarator(TPublicType &publicType, TIntermAggregate *aggregateDeclaration,
+                                      const TSourceLoc &identifierLocation, const TString &identifier);
+    TIntermAggregate *parseArrayDeclarator(TPublicType &publicType, TIntermAggregate *aggregateDeclaration,
+                                           const TSourceLoc &identifierLocation, const TString &identifier,
+                                           const TSourceLoc &arrayLocation, TIntermTyped *indexExpression);
+    TIntermAggregate *parseInitDeclarator(TPublicType &publicType, TIntermAggregate *aggregateDeclaration,
+                                          const TSourceLoc &identifierLocation, const TString &identifier,
+                                          const TSourceLoc &initLocation, TIntermTyped *initializer);
+
     void parseGlobalLayoutQualifier(const TPublicType &typeQualifier);
     TFunction *addConstructorFunc(TPublicType publicType);
     TIntermTyped* addConstructor(TIntermNode*, TType*, TOperator, TFunction*, const TSourceLoc&);
