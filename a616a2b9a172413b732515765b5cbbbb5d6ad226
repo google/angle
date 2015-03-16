@@ -1,0 +1,279 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "660f5879_e98c11cf",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T20:35:07Z",
+      "side": 1,
+      "message": "The Chromium C++11 style guide doesn\u0027t mention in-class init that I saw, so it is disallowed by default. (Unless otherwise noted, no C++11 library features are allowed.)\n\nhttps://chromium-cpp.appspot.com/",
+      "range": {
+        "startLine": 27,
+        "startChar": 27,
+        "endLine": 27,
+        "endChar": 34
+      },
+      "revId": "a616a2b9a172413b732515765b5cbbbb5d6ad226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c61ac4b3_1a99ed7b",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T20:35:07Z",
+      "side": 1,
+      "message": "nit: remove virtual and append override for these overriding methods",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 11
+      },
+      "revId": "a616a2b9a172413b732515765b5cbbbb5d6ad226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86144c89_caa787b2",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T20:35:07Z",
+      "side": 1,
+      "message": "nit: newline",
+      "revId": "a616a2b9a172413b732515765b5cbbbb5d6ad226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "660f5879_49f7250a",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T20:35:07Z",
+      "side": 1,
+      "message": "nit: suggest using a temporary here",
+      "range": {
+        "startLine": 53,
+        "startChar": 44,
+        "endLine": 53,
+        "endChar": 102
+      },
+      "revId": "a616a2b9a172413b732515765b5cbbbb5d6ad226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86144c89_ea81a3fc",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T20:35:07Z",
+      "side": 1,
+      "message": "nit: replace uses of NULL with nullptr",
+      "range": {
+        "startLine": 66,
+        "startChar": 39,
+        "endLine": 66,
+        "endChar": 43
+      },
+      "revId": "a616a2b9a172413b732515765b5cbbbb5d6ad226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86144c89_6afdb382",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T20:35:07Z",
+      "side": 1,
+      "message": "nit: one variable per line if constructor is not a single line",
+      "revId": "a616a2b9a172413b732515765b5cbbbb5d6ad226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "660f5879_695021b6",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T20:35:07Z",
+      "side": 1,
+      "message": "nit: pointer alignment",
+      "revId": "a616a2b9a172413b732515765b5cbbbb5d6ad226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c61ac4b3_5abc05ce",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T20:35:07Z",
+      "side": 1,
+      "message": "re-nit: class labels indent",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 6
+      },
+      "revId": "a616a2b9a172413b732515765b5cbbbb5d6ad226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c61ac4b3_1a356d0b",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T20:35:07Z",
+      "side": 1,
+      "message": "nit: pointer alignment",
+      "revId": "a616a2b9a172413b732515765b5cbbbb5d6ad226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "660f5879_89ad9d18",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T20:35:07Z",
+      "side": 1,
+      "message": "not a suggestion, but a question - is it not possible to link functions at parse time with ids, like we do with variables? it seems like we can do better than string comparisons.",
+      "range": {
+        "startLine": 64,
+        "startChar": 13,
+        "endLine": 64,
+        "endChar": 24
+      },
+      "revId": "a616a2b9a172413b732515765b5cbbbb5d6ad226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86144c89_0ae7df2a",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T20:35:07Z",
+      "side": 1,
+      "message": "use DISALLOW_COPY_AND_ASSIGN(CallDAG).",
+      "range": {
+        "startLine": 68,
+        "startChar": 3,
+        "endLine": 69,
+        "endChar": 35
+      },
+      "revId": "a616a2b9a172413b732515765b5cbbbb5d6ad226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "660f5879_092fed0b",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T20:35:07Z",
+      "side": 1,
+      "message": "nit: suggest initCallDAG",
+      "range": {
+        "startLine": 236,
+        "startChar": 22,
+        "endLine": 236,
+        "endChar": 29
+      },
+      "revId": "a616a2b9a172413b732515765b5cbbbb5d6ad226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86144c89_ea53633c",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T20:35:07Z",
+      "side": 1,
+      "message": "nit: I suggest mCallDAG",
+      "range": {
+        "startLine": 183,
+        "startChar": 12,
+        "endLine": 183,
+        "endChar": 16
+      },
+      "revId": "a616a2b9a172413b732515765b5cbbbb5d6ad226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
