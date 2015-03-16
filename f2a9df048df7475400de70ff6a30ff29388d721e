@@ -193,6 +193,24 @@
       "revId": "f2a9df048df7475400de70ff6a30ff29388d721e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "660f5879_e3ff122e",
+        "filename": "extensions/EGL_ANGLE_device_base.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T19:13:30Z",
+      "side": 1,
+      "message": "OK, removed all quotes around spec text.",
+      "parentUuid": "8166f634_f4c35831",
+      "revId": "f2a9df048df7475400de70ff6a30ff29388d721e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
