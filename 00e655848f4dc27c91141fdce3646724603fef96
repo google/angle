@@ -22,6 +22,30 @@
       "revId": "00e655848f4dc27c91141fdce3646724603fef96",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86a8cc5c_046936f4",
+        "filename": "src/libANGLE/renderer/ImplFactory.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-16T14:47:34Z",
+      "side": 1,
+      "message": "Another contributor pointed out with with the \u003ddelete syntax, we no longer need to use private. I couldn\u0027t come up with a reason why we needed to so I\u0027m following the same pattern.",
+      "parentUuid": "c178ee71_e0d04bcc",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 42
+      },
+      "revId": "00e655848f4dc27c91141fdce3646724603fef96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
