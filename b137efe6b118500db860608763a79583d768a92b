@@ -1,0 +1,267 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "660f5879_767e3130",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-17T02:07:57Z",
+      "side": 1,
+      "message": "nit: remove space",
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66bd98c9_13bb6c0a",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-17T02:07:57Z",
+      "side": 1,
+      "message": "see below comment",
+      "range": {
+        "startLine": 51,
+        "startChar": 23,
+        "endLine": 51,
+        "endChar": 30
+      },
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86144c89_2183d9da",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-17T02:07:57Z",
+      "side": 1,
+      "message": "just checked and emplace is c++11 only so it\u0027ll explode on osx and android. (c++11 stl disallowed in Chromium code). I suggest using operator[], or insert. I think [] is pretty similar to emplace.",
+      "range": {
+        "startLine": 62,
+        "startChar": 59,
+        "endLine": 62,
+        "endChar": 66
+      },
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "660f5879_d6b0c571",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-17T02:07:57Z",
+      "side": 1,
+      "message": "nit: pointer alignment",
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "660f5879_56a4d52d",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-17T02:07:57Z",
+      "side": 1,
+      "message": "is there a test for recursive functions?",
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66bd98c9_93ce9cae",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-17T02:07:57Z",
+      "side": 1,
+      "message": "put the public stuff before the private.",
+      "range": {
+        "startLine": 145,
+        "startChar": 2,
+        "endLine": 145,
+        "endChar": 8
+      },
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66bd98c9_93f5bcd2",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-17T02:07:57Z",
+      "side": 1,
+      "message": "nit: static_cast",
+      "range": {
+        "startLine": 162,
+        "startChar": 33,
+        "endLine": 162,
+        "endChar": 36
+      },
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66bd98c9_f3d5103a",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-17T02:07:57Z",
+      "side": 1,
+      "message": "nit: pointer alignment",
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86144c89_6174b17d",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-17T02:07:57Z",
+      "side": 1,
+      "message": "I think you can use an insert call here to push them all back at once?",
+      "range": {
+        "startLine": 183,
+        "startChar": 31,
+        "endLine": 183,
+        "endChar": 40
+      },
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "660f5879_565695b5",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-17T02:07:57Z",
+      "side": 1,
+      "message": "nit: emplace",
+      "range": {
+        "startLine": 186,
+        "startChar": 24,
+        "endLine": 186,
+        "endChar": 31
+      },
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "660f5879_d669e56b",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-17T02:07:57Z",
+      "side": 1,
+      "message": "would you like to use my Optional class here? I\u0027ll upload a CL to make it available tomorrow. (based on the Optional template class in angle_perf_test_main.cpp)",
+      "range": {
+        "startLine": 201,
+        "startChar": 0,
+        "endLine": 201,
+        "endChar": 3
+      },
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86144c89_216ab99a",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-17T02:07:57Z",
+      "side": 1,
+      "message": "nit: pointer alignment",
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c61ac4b3_c6f5b7d1",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-17T02:07:57Z",
+      "side": 1,
+      "message": "nit: might not be strictly necessary, but probably should finish the macro with a ;",
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
