@@ -22,6 +22,30 @@
       "revId": "94ce2c1960aefd9e8946b8f3275a3d0320ada874",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "469a5479_1b6f077d",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-17T14:51:43Z",
+      "side": 1,
+      "message": "Ugh, didn\u0027t notice this because it is fixed in the next patch.  Will be testable as soon as the Framebuffer stuff lands.",
+      "parentUuid": "660f5879_6ce14a12",
+      "range": {
+        "startLine": 64,
+        "startChar": 4,
+        "endLine": 64,
+        "endChar": 15
+      },
+      "revId": "94ce2c1960aefd9e8946b8f3275a3d0320ada874",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
