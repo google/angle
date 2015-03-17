@@ -48,8 +48,8 @@ InputLayoutCache::InputLayoutCache() : mInputLayoutMap(kMaxInputLayouts, hashInp
     for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
         mCurrentBuffers[i] = NULL;
-        mCurrentVertexStrides[i] = -1;
-        mCurrentVertexOffsets[i] = -1;
+        mCurrentVertexStrides[i] = static_cast<UINT>(-1);
+        mCurrentVertexOffsets[i] = static_cast<UINT>(-1);
     }
     mPointSpriteVertexBuffer = NULL;
     mPointSpriteIndexBuffer = NULL;
@@ -86,8 +86,8 @@ void InputLayoutCache::markDirty()
     for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
         mCurrentBuffers[i] = NULL;
-        mCurrentVertexStrides[i] = -1;
-        mCurrentVertexOffsets[i] = -1;
+        mCurrentVertexStrides[i] = static_cast<UINT>(-1);
+        mCurrentVertexOffsets[i] = static_cast<UINT>(-1);
     }
 }
 

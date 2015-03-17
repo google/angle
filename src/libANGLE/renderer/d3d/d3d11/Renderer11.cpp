@@ -74,7 +74,7 @@ enum
 };
 
 // dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
-static const uintptr_t DirtyPointer = -1;
+static const uintptr_t DirtyPointer = static_cast<uintptr_t>(-1);
 
 static bool ImageIndexConflictsWithSRV(const gl::ImageIndex *index, D3D11_SHADER_RESOURCE_VIEW_DESC desc)
 {
@@ -181,7 +181,7 @@ Renderer11::Renderer11(egl::Display *display)
     mAppliedGeometryShader = NULL;
     mAppliedPixelShader = NULL;
 
-    mAppliedNumXFBBindings = -1;
+    mAppliedNumXFBBindings = static_cast<size_t>(-1);
 
     const auto &attributes = mDisplay->getAttributeMap();
 
@@ -1979,7 +1979,7 @@ void Renderer11::markAllStateDirty()
     mAppliedGeometryShader = DirtyPointer;
     mAppliedPixelShader = DirtyPointer;
 
-    mAppliedNumXFBBindings = -1;
+    mAppliedNumXFBBindings = static_cast<size_t>(-1);
 
     for (size_t i = 0; i < gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
     {
@@ -1994,8 +1994,8 @@ void Renderer11::markAllStateDirty()
 
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS; i++)
     {
-        mCurrentConstantBufferVS[i] = -1;
-        mCurrentConstantBufferPS[i] = -1;
+        mCurrentConstantBufferVS[i] = static_cast<unsigned int>(-1);
+        mCurrentConstantBufferPS[i] = static_cast<unsigned int>(-1);
     }
 
     mCurrentVertexConstantBuffer = NULL;

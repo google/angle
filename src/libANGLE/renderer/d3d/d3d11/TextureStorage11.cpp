@@ -2177,7 +2177,7 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
             rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE3D;
             rtvDesc.Texture3D.MipSlice = mTopLevel + mipLevel;
             rtvDesc.Texture3D.FirstWSlice = 0;
-            rtvDesc.Texture3D.WSize = -1;
+            rtvDesc.Texture3D.WSize = static_cast<UINT>(-1);
 
             ID3D11RenderTargetView *rtv;
             HRESULT result = device->CreateRenderTargetView(texture, &rtvDesc, &rtv);
@@ -2301,7 +2301,7 @@ gl::Error TextureStorage11_3D::getSwizzleRenderTarget(int mipLevel, ID3D11Render
         rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE3D;
         rtvDesc.Texture3D.MipSlice = mTopLevel + mipLevel;
         rtvDesc.Texture3D.FirstWSlice = 0;
-        rtvDesc.Texture3D.WSize = -1;
+        rtvDesc.Texture3D.WSize = static_cast<UINT>(-1);
 
         HRESULT result = device->CreateRenderTargetView(mSwizzleTexture, &rtvDesc, &mSwizzleRenderTargets[mipLevel]);
 

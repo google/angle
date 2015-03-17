@@ -611,7 +611,7 @@ GLuint Program::getAttributeLocation(const std::string &name)
         }
     }
 
-    return -1;
+    return static_cast<GLuint>(-1);
 }
 
 int Program::getSemanticIndex(int attributeIndex)

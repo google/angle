@@ -354,7 +354,7 @@ inline float float11ToFloat32(unsigned short fp11)
         }
         else // The value is zero
         {
-            exponent = -112;
+            exponent = static_cast<unsigned short>(-112);
         }
 
         return bitCast<float>(((exponent + 112) << 23) | (mantissa << 17));
@@ -393,7 +393,7 @@ inline float float10ToFloat32(unsigned short fp11)
         }
         else // The value is zero
         {
-            exponent = -112;
+            exponent = static_cast<unsigned short>(-112);
         }
 
         return bitCast<float>(((exponent + 112) << 23) | (mantissa << 18));

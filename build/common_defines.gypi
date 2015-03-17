@@ -17,7 +17,6 @@
 
         # Conversion warnings.  These fire all over the place in ANGLE.
         4244, # Conversion from 'type1' to 'type2', possible loss of data
-        4245, # Conversion from 'type1' to 'type2', signed/unsigned mismatch
         4267, # Conversion from 'size_t' to 'type', possible loss of data
 
         4702, # Unreachable code. Useful, but fires on system header xtree.

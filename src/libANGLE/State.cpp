@@ -75,11 +75,11 @@ void State::initialize(const Caps& caps, GLuint clientVersion)
     mDepthStencil.depthMask = true;
     mDepthStencil.stencilTest = false;
     mDepthStencil.stencilFunc = GL_ALWAYS;
-    mDepthStencil.stencilMask = -1;
-    mDepthStencil.stencilWritemask = -1;
+    mDepthStencil.stencilMask = static_cast<GLuint>(-1);
+    mDepthStencil.stencilWritemask = static_cast<GLuint>(-1);
     mDepthStencil.stencilBackFunc = GL_ALWAYS;
-    mDepthStencil.stencilBackMask = -1;
-    mDepthStencil.stencilBackWritemask = -1;
+    mDepthStencil.stencilBackMask = static_cast<GLuint>(-1);
+    mDepthStencil.stencilBackWritemask = static_cast<GLuint>(-1);
     mDepthStencil.stencilFail = GL_KEEP;
     mDepthStencil.stencilPassDepthFail = GL_KEEP;
     mDepthStencil.stencilPassDepthPass = GL_KEEP;
