@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66bd98c9_bccb659d",
+        "filename": "src/compiler/translator/glslang_tab.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2902,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-03-17T16:48:11Z",
+      "side": 1,
+      "message": "It seems you moved the error handling inside the addAssign?",
+      "range": {
+        "startLine": 2902,
+        "startChar": 21,
+        "endLine": 2902,
+        "endChar": 32
+      },
+      "revId": "abb463fb93a252a4913d376bf7eee9b892c206c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
