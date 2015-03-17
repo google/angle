@@ -44,7 +44,7 @@ static bool UseTexImage3D(GLenum textureType)
     return textureType == GL_TEXTURE_2D_ARRAY || textureType == GL_TEXTURE_3D;
 }
 
-static bool CompatableTextureTarget(GLenum textureType, GLenum textureTarget)
+static bool CompatibleTextureTarget(GLenum textureType, GLenum textureTarget)
 {
     if (textureType != GL_TEXTURE_CUBE_MAP)
     {
@@ -88,7 +88,8 @@ void TextureGL::setUsage(GLenum usage)
 gl::Error TextureGL::setImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size, GLenum format, GLenum type,
                               const gl::PixelUnpackState &unpack, const uint8_t *pixels)
 {
-    ASSERT(CompatableTextureTarget(mTextureType, target));
+    (void)&CompatibleTextureTarget; // Reference this function to avoid warnings.
+    ASSERT(CompatibleTextureTarget(mTextureType, target));
 
     SetUnpackStateForTexImage(mStateManager, unpack);
 
@@ -113,7 +114,7 @@ gl::Error TextureGL::setImage(GLenum target, size_t level, GLenum internalFormat
 gl::Error TextureGL::setSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format, GLenum type,
                                  const gl::PixelUnpackState &unpack, const uint8_t *pixels)
 {
-    ASSERT(CompatableTextureTarget(mTextureType, target));
+    ASSERT(CompatibleTextureTarget(mTextureType, target));
 
     SetUnpackStateForTexImage(mStateManager, unpack);
 
@@ -139,7 +140,7 @@ gl::Error TextureGL::setSubImage(GLenum target, size_t level, const gl::Box &are
 gl::Error TextureGL::setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
                                         const gl::PixelUnpackState &unpack, const uint8_t *pixels)
 {
-    ASSERT(CompatableTextureTarget(mTextureType, target));
+    ASSERT(CompatibleTextureTarget(mTextureType, target));
 
     SetUnpackStateForTexImage(mStateManager, unpack);
 
@@ -170,7 +171,7 @@ gl::Error TextureGL::setCompressedImage(GLenum target, size_t level, GLenum inte
 gl::Error TextureGL::setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
                                            const gl::PixelUnpackState &unpack, const uint8_t *pixels)
 {
-    ASSERT(CompatableTextureTarget(mTextureType, target));
+    ASSERT(CompatibleTextureTarget(mTextureType, target));
 
     SetUnpackStateForTexImage(mStateManager, unpack);
 
