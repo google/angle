@@ -3,6 +3,10 @@
 # found in the LICENSE file.
 
 {
+    'includes':
+    [
+        'deqp.gypi',
+    ],
     'variables':
     {
         'angle_build_conformance_tests%': '0',
