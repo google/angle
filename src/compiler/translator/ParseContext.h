@@ -177,6 +177,8 @@ struct TParseContext {
         const TSourceLoc &);
     TIntermTyped *addBinaryMathBooleanResult(TOperator op, TIntermTyped *left, TIntermTyped *right,
         const TSourceLoc &);
+    TIntermTyped *addAssign(TOperator op, TIntermTyped *left, TIntermTyped *right,
+        const TSourceLoc &loc);
 
     TIntermBranch *addBranch(TOperator op, const TSourceLoc &loc);
     TIntermBranch *addBranch(TOperator op, TIntermTyped *returnValue, const TSourceLoc &loc);
@@ -186,6 +188,12 @@ struct TParseContext {
 
   private:
     TIntermTyped *addBinaryMathInternal(TOperator op, TIntermTyped *left, TIntermTyped *right,
+        const TSourceLoc &loc);
+    TIntermTyped *createAssign(TOperator op, TIntermTyped *left, TIntermTyped *right,
+        const TSourceLoc &loc);
+
+    // Return true if array-related checks pass
+    bool binaryOpArrayCheck(TOperator op, TIntermTyped *left, TIntermTyped *right,
         const TSourceLoc &loc);
 };
 

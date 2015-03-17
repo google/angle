@@ -536,12 +536,7 @@ assignment_expression
     | unary_expression assignment_operator assignment_expression {
         if (context->lValueErrorCheck(@2, "assign", $1))
             context->recover();
-        $$ = context->intermediate.addAssign($2.op, $1, $3, @2);
-        if ($$ == 0) {
-            context->assignError(@2, "assign", $1->getCompleteString(), $3->getCompleteString());
-            context->recover();
-            $$ = $1;
-        }
+        $$ = context->addAssign($2.op, $1, $3, @2);
     }
     ;
 
