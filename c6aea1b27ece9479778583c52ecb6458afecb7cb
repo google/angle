@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "66bd98c9_56887274",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-17T14:22:22Z",
+      "side": 1,
+      "message": "The first thing I\u0027m going to do is have the program track which textures are referenced.  Since it knows which uniforms are samplers (and their sampler type) and it knows which texture units have been applied to those uniforms, we will be able to only sync those textures.\n\nWith this architecture, we wouldn\u0027t have more GL API calls than the application does per draw call unless the user is switching contexts many times per frame.  I am a little worried about the CPU overhead of the state diff-ing and it will be good to do some testing once we have enough functionality to run some WebGL stuff.  Using multiple GL contexts will be difficult with the current architecture so I want to see how this style plays out first.",
+      "parentUuid": "c61ac4b3_2d610e35",
+      "range": {
+        "startLine": 113,
+        "startChar": 14,
+        "endLine": 113,
+        "endChar": 29
+      },
+      "revId": "c6aea1b27ece9479778583c52ecb6458afecb7cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c61ac4b3_6de02647",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2015-03-16T23:47:22Z",
       "side": 1,
       "message": "Is this block missing \"mAppliedSamplerState \u003d samplerState;\"?",
+      "range": {
+        "startLine": 284,
+        "startChar": 4,
+        "endLine": 284,
+        "endChar": 5
+      },
+      "revId": "c6aea1b27ece9479778583c52ecb6458afecb7cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "469a5479_9b06971d",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-17T14:22:22Z",
+      "side": 1,
+      "message": "The SyncSamplerStateMember sets the members of mAppliedSamplerState.  I could move that assignment out for readability though.",
+      "parentUuid": "c61ac4b3_6de02647",
       "range": {
         "startLine": 284,
         "startChar": 4,
