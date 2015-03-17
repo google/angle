@@ -28,7 +28,7 @@ def generateProjects(generation_dir, build_winphone):
     gyp_cmd += ' -D angle_enable_d3d9=0'
     gyp_cmd += ' -D angle_enable_gl=0'
     gyp_cmd += ' -D angle_standalone=1'
-    gyp_cmd += ' ' + os.path.join(script_dir, 'all.gyp')
+    gyp_cmd += ' ' + os.path.join(script_dir, 'angle.gyp')
 
     print 'Generating projects to ' + generation_dir + ' from gyp files...'
     print gyp_cmd
