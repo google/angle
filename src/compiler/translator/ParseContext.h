@@ -183,6 +183,10 @@ struct TParseContext {
 
     TIntermTyped *addFunctionCallOrMethod(TFunction *fnCall, TIntermNode *node,
         const TSourceLoc &loc, bool *fatalError);
+
+  private:
+    TIntermTyped *addBinaryMathInternal(TOperator op, TIntermTyped *left, TIntermTyped *right,
+        const TSourceLoc &loc);
 };
 
 int PaParseStrings(size_t count, const char* const string[], const int length[],

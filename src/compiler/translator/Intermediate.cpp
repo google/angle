@@ -45,60 +45,6 @@ TIntermSymbol *TIntermediate::addSymbol(
 TIntermTyped *TIntermediate::addBinaryMath(
     TOperator op, TIntermTyped *left, TIntermTyped *right, const TSourceLoc &line)
 {
-    switch (op)
-    {
-      case EOpEqual:
-      case EOpNotEqual:
-        if (left->isArray())
-            return NULL;
-        break;
-      case EOpLessThan:
-      case EOpGreaterThan:
-      case EOpLessThanEqual:
-      case EOpGreaterThanEqual:
-        if (left->isMatrix() || left->isArray() || left->isVector() ||
-            left->getBasicType() == EbtStruct)
-        {
-            return NULL;
-        }
-        break;
-      case EOpLogicalOr:
-      case EOpLogicalXor:
-      case EOpLogicalAnd:
-        if (left->getBasicType() != EbtBool ||
-            left->isMatrix() || left->isArray() || left->isVector())
-        {
-            return NULL;
-        }
-        break;
-      case EOpAdd:
-      case EOpSub:
-      case EOpDiv:
-      case EOpMul:
-        if (left->getBasicType() == EbtStruct || left->getBasicType() == EbtBool)
-        {
-            return NULL;
-        }
-        break;
-      case EOpIMod:
-        // Note that this is only for the % operator, not for mod()
-        if (left->getBasicType() == EbtStruct || left->getBasicType() == EbtBool || left->getBasicType() == EbtFloat)
-        {
-            return NULL;
-        }
-        break;
-      // Note that for bitwise ops, type checking is done in promote() to
-      // share code between ops and compound assignment
-      default:
-        break;
-    }
-
-    // This check is duplicated between here and node->promote() as an optimization.
-    if (left->getBasicType() != right->getBasicType() && op != EOpBitShiftLeft && op != EOpBitShiftRight)
-    {
-        return NULL;
-    }
-
     //
     // Need a new node holding things together then.  Make
     // one and promote it to the right type.

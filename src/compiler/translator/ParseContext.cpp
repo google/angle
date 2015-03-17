@@ -2716,10 +2716,70 @@ TIntermTyped *TParseContext::addUnaryMathLValue(TOperator op, TIntermTyped *chil
     return addUnaryMath(op, child, loc);
 }
 
+TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op, TIntermTyped *left, TIntermTyped *right,
+    const TSourceLoc &loc)
+{
+    switch (op)
+    {
+      case EOpEqual:
+      case EOpNotEqual:
+        if (left->isArray())
+            return nullptr;
+        break;
+      case EOpLessThan:
+      case EOpGreaterThan:
+      case EOpLessThanEqual:
+      case EOpGreaterThanEqual:
+        if (left->isMatrix() || left->isArray() || left->isVector() ||
+            left->getBasicType() == EbtStruct)
+        {
+            return nullptr;
+        }
+        break;
+      case EOpLogicalOr:
+      case EOpLogicalXor:
+      case EOpLogicalAnd:
+        if (left->getBasicType() != EbtBool ||
+            left->isMatrix() || left->isArray() || left->isVector())
+        {
+            return nullptr;
+        }
+        break;
+      case EOpAdd:
+      case EOpSub:
+      case EOpDiv:
+      case EOpMul:
+        if (left->getBasicType() == EbtStruct || left->getBasicType() == EbtBool)
+        {
+            return nullptr;
+        }
+        break;
+      case EOpIMod:
+        // Note that this is only for the % operator, not for mod()
+        if (left->getBasicType() == EbtStruct || left->getBasicType() == EbtBool || left->getBasicType() == EbtFloat)
+        {
+            return nullptr;
+        }
+        break;
+      // Note that for bitwise ops, type checking is done in promote() to
+      // share code between ops and compound assignment
+      default:
+        break;
+    }
+
+    // This check is duplicated between here and node->promote() as an optimization.
+    if (left->getBasicType() != right->getBasicType() && op != EOpBitShiftLeft && op != EOpBitShiftRight)
+    {
+        return nullptr;
+    }
+
+    return intermediate.addBinaryMath(op, left, right, loc);
+}
+
 TIntermTyped *TParseContext::addBinaryMath(TOperator op, TIntermTyped *left, TIntermTyped *right,
     const TSourceLoc &loc)
 {
-    TIntermTyped *node = intermediate.addBinaryMath(op, left, right, loc);
+    TIntermTyped *node = addBinaryMathInternal(op, left, right, loc);
     if (node == 0)
     {
         binaryOpError(loc, GetOperatorString(op), left->getCompleteString(), right->getCompleteString());
@@ -2732,7 +2792,7 @@ TIntermTyped *TParseContext::addBinaryMath(TOperator op, TIntermTyped *left, TIn
 TIntermTyped *TParseContext::addBinaryMathBooleanResult(TOperator op, TIntermTyped *left, TIntermTyped *right,
     const TSourceLoc &loc)
 {
-    TIntermTyped *node = intermediate.addBinaryMath(op, left, right, loc);
+    TIntermTyped *node = addBinaryMathInternal(op, left, right, loc);
     if (node == 0)
     {
         binaryOpError(loc, GetOperatorString(op), left->getCompleteString(), right->getCompleteString());
