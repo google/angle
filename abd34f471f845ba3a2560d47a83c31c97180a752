@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "66bd98c9_b9f297e5",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-17T15:11:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66bd98c9_96a12aec",
+      "range": {
+        "startLine": 150,
+        "startChar": 25,
+        "endLine": 150,
+        "endChar": 50
+      },
+      "revId": "abd34f471f845ba3a2560d47a83c31c97180a752",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c61ac4b3_8dc5a28e",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 2
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "Yes, good idea.",
       "parentUuid": "c61ac4b3_8dc5a28e",
+      "range": {
+        "startLine": 291,
+        "startChar": 15,
+        "endLine": 291,
+        "endChar": 26
+      },
+      "revId": "abd34f471f845ba3a2560d47a83c31c97180a752",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66bd98c9_f9ec0f0a",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-17T15:11:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86144c89_3f45b005",
       "range": {
         "startLine": 291,
         "startChar": 15,
