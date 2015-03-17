@@ -133,7 +133,8 @@ Context::~Context()
 
     while (!mFramebufferMap.empty())
     {
-        deleteFramebuffer(mFramebufferMap.begin()->first);
+        // Delete the framebuffer in reverse order to destroy the framebuffer zero last.
+        deleteFramebuffer(mFramebufferMap.rbegin()->first);
     }
 
     while (!mFenceNVMap.empty())
@@ -1346,12 +1347,12 @@ void Context::detachFramebuffer(GLuint framebuffer)
     // If a framebuffer that is currently bound to the target FRAMEBUFFER is deleted, it is as though
     // BindFramebuffer had been executed with the target of FRAMEBUFFER and framebuffer of zero.
 
-    if (mState.removeReadFramebufferBinding(framebuffer))
+    if (mState.removeReadFramebufferBinding(framebuffer) && framebuffer != 0)
     {
         bindReadFramebuffer(0);
     }
 
-    if (mState.removeDrawFramebufferBinding(framebuffer))
+    if (mState.removeDrawFramebufferBinding(framebuffer) && framebuffer != 0)
     {
         bindDrawFramebuffer(0);
     }
