@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e6bd08e7_da34c110",
+        "filename": "src/common/Optional.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-18T17:49:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6d48430_b9b6bbec",
+      "revId": "d3adf5268007547e45466b221ec81c16f55a529d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "06bbfcf2_7b249bd9",
         "filename": "src/common/Optional.h",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "06bbfcf2_dbf727a2",
+        "filename": "src/common/Optional.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-18T17:49:23Z",
+      "side": 1,
+      "message": "I\u0027m honestly not sure. I left it in for completeness\u0027 sake.",
+      "parentUuid": "06bbfcf2_7b249bd9",
+      "revId": "d3adf5268007547e45466b221ec81c16f55a529d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c6d48430_59b207d9",
         "filename": "src/tests/perf_tests/angle_perf_test_main.cpp",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2015-03-18T17:41:43Z",
       "side": 1,
       "message": "Add explicit operator bool so this becomes if (!testName)?",
+      "revId": "d3adf5268007547e45466b221ec81c16f55a529d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06bbfcf2_bb8d9336",
+        "filename": "src/tests/perf_tests/angle_perf_test_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-18T17:49:23Z",
+      "side": 1,
+      "message": "I didn\u0027t know about explicit conversion operators, thanks for the tip.\nUnfortunately they are not supported in VS2013 so are banned in Chromium. A good suggestion to revisit when/if that becomes standard.\nhttps://chromium-cpp.appspot.com/",
+      "parentUuid": "c6d48430_59b207d9",
       "revId": "d3adf5268007547e45466b221ec81c16f55a529d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
