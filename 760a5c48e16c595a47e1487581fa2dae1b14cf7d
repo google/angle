@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c6d48430_3982ab01",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2744,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-18T17:38:33Z",
+      "side": 1,
+      "message": "you could ASSERT these are not arrays here, but not essential.",
+      "revId": "760a5c48e16c595a47e1487581fa2dae1b14cf7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06bbfcf2_1b047f41",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2754,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-18T17:38:33Z",
+      "side": 1,
+      "message": "same",
+      "revId": "760a5c48e16c595a47e1487581fa2dae1b14cf7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
