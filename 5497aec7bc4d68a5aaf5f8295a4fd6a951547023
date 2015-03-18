@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6d4f037_f0d0be81",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-03-18T22:42:02Z",
+      "side": 1,
+      "message": "Here and below: should we use mapBufferRange instead? mapBuffer isn\u0027t available on ES3, so this will prevent this code from running correctly on true ES3 implementations.",
+      "range": {
+        "startLine": 166,
+        "startChar": 96,
+        "endLine": 166,
+        "endChar": 105
+      },
+      "revId": "5497aec7bc4d68a5aaf5f8295a4fd6a951547023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66de785c_cbecf5bf",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-03-18T22:42:02Z",
+      "side": 1,
+      "message": "If this is switched to mapBufferRange per above, then we should also use MAP_INVALIDATE_RANGE_BIT or MAP_INVALIDATE_BUFFER_BIT.",
+      "range": {
+        "startLine": 318,
+        "startChar": 37,
+        "endLine": 318,
+        "endChar": 53
+      },
+      "revId": "5497aec7bc4d68a5aaf5f8295a4fd6a951547023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
