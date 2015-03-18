@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "06bbfcf2_18e36549",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-03-18T17:30:33Z",
+      "side": 1,
+      "message": "This is going to yield a non-zero streamedVertexCount even for empty ranges. Is that correct?",
+      "range": {
+        "startLine": 226,
+        "startChar": 17,
+        "endLine": 226,
+        "endChar": 36
+      },
+      "revId": "9f9c0f567229df1fcab88a6cd0cbf943631c6f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6bd08e7_57676c95",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-03-18T17:30:33Z",
+      "side": 1,
+      "message": "It looks to me like this is always going to be hit; see above.",
+      "range": {
+        "startLine": 290,
+        "startChar": 8,
+        "endLine": 290,
+        "endChar": 25
+      },
+      "revId": "9f9c0f567229df1fcab88a6cd0cbf943631c6f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6bd08e7_f7bc4052",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-03-18T17:30:33Z",
+      "side": 1,
+      "message": "It looks to me like this assert is going to be hit. Was it not?",
+      "range": {
+        "startLine": 292,
+        "startChar": 15,
+        "endLine": 292,
+        "endChar": 38
+      },
+      "revId": "9f9c0f567229df1fcab88a6cd0cbf943631c6f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6d48430_b687e863",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-03-18T17:30:33Z",
+      "side": 1,
+      "message": "Is there any way to signal an error to the outside if we reach the limit of unmapRetryAttempts? For example marking the context as lost? If not, could you add a TODO about adding this sort of error checking?",
+      "range": {
+        "startLine": 316,
+        "startChar": 43,
+        "endLine": 316,
+        "endChar": 61
+      },
+      "revId": "9f9c0f567229df1fcab88a6cd0cbf943631c6f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
