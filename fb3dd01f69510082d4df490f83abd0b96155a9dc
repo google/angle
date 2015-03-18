@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c6d9e470_0efd6b35",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-18T21:54:38Z",
+      "side": 1,
+      "message": "This should probably be target_cpu.",
+      "range": {
+        "startLine": 44,
+        "startChar": 47,
+        "endLine": 44,
+        "endChar": 58
+      },
+      "revId": "fb3dd01f69510082d4df490f83abd0b96155a9dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
