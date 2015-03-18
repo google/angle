@@ -1393,7 +1393,16 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 
     switch (node->getOp())
     {
-      case EOpAssign:                  outputTriplet(visit, "(", " = ", ")");           break;
+      case EOpAssign:
+        if (node->getLeft()->isArray())
+        {
+            UNIMPLEMENTED();
+        }
+        else
+        {
+            outputTriplet(visit, "(", " = ", ")");
+        }
+        break;
       case EOpInitialize:
         if (visit == PreVisit)
         {
@@ -1565,7 +1574,11 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpBitwiseOr:         outputTriplet(visit, "(", " | ", ")"); break;
       case EOpEqual:
       case EOpNotEqual:
-        if (node->getLeft()->isScalar())
+        if (node->getLeft()->isArray())
+        {
+            UNIMPLEMENTED();
+        }
+        else if (node->getLeft()->isScalar())
         {
             if (node->getOp() == EOpEqual)
             {

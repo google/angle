@@ -2721,8 +2721,34 @@ bool TParseContext::binaryOpArrayCheck(TOperator op, TIntermTyped *left, TInterm
 {
     if (left->isArray() || right->isArray())
     {
-        error(loc, "Invalid operation for arrays", GetOperatorString(op));
-        return false;
+        if (shaderVersion < 300)
+        {
+            error(loc, "Invalid operation for arrays", GetOperatorString(op));
+            return false;
+        }
+
+        if (left->isArray() != right->isArray())
+        {
+            error(loc, "array / non-array mismatch", GetOperatorString(op));
+            return false;
+        }
+
+        switch (op)
+        {
+          case EOpEqual:
+          case EOpNotEqual:
+          case EOpAssign:
+          case EOpInitialize:
+            break;
+          default:
+            error(loc, "Invalid operation for arrays", GetOperatorString(op));
+            return false;
+        }
+        if (left->getArraySize() != right->getArraySize())
+        {
+            error(loc, "array size mismatch", GetOperatorString(op));
+            return false;
+        }
     }
     return true;
 }
