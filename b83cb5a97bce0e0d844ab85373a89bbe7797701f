@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "067dbcec_7d8d5b83",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-18T16:31:40Z",
+      "side": 1,
+      "message": "corentin: I think you should be able to use the unique ID of the function after this patch, if I understand this correctly.",
+      "revId": "b83cb5a97bce0e0d844ab85373a89bbe7797701f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e67fc8e4_73c58b8b",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-18T16:31:40Z",
+      "side": 1,
+      "message": "nit: add a space here",
+      "revId": "b83cb5a97bce0e0d844ab85373a89bbe7797701f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e67fc8e4_f0d89174",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 1
@@ -49,6 +83,23 @@
       "side": 1,
       "message": "This is with gtest, no ANGLE. It is for testing the return value and aborting the test if failed. It\u0027s fine as is, since it will be compiled in Debug and Release.",
       "parentUuid": "e67fc8e4_f0d89174",
+      "revId": "b83cb5a97bce0e0d844ab85373a89bbe7797701f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4683341d_f9032339",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-18T16:31:40Z",
+      "side": 1,
+      "message": "nit: can you add a one-line explanation before each test",
       "revId": "b83cb5a97bce0e0d844ab85373a89bbe7797701f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
