@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c6d48430_b9b6bbec",
+        "filename": "src/common/Optional.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-18T17:41:43Z",
+      "side": 1,
+      "message": "(mValid \u003d\u003d other.mValid) \u0026\u0026 (!mValid || mValue \u003d\u003d other.mValue)",
+      "revId": "d3adf5268007547e45466b221ec81c16f55a529d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06bbfcf2_7b249bd9",
+        "filename": "src/common/Optional.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-18T17:41:43Z",
+      "side": 1,
+      "message": "Isn\u0027t this generated automatically? See http://en.cppreference.com/w/cpp/utility/rel_ops/operator_cmp\nOr maybe it is only generated for non-member operator \u003d\u003d",
+      "revId": "d3adf5268007547e45466b221ec81c16f55a529d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6d48430_59b207d9",
+        "filename": "src/tests/perf_tests/angle_perf_test_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-18T17:41:43Z",
+      "side": 1,
+      "message": "Add explicit operator bool so this becomes if (!testName)?",
+      "revId": "d3adf5268007547e45466b221ec81c16f55a529d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
