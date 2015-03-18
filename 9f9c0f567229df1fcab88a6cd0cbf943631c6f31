@@ -25,6 +25,53 @@
     },
     {
       "key": {
+        "uuid": "06bbfcf2_bec6a1e6",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-18T19:14:21Z",
+      "side": 1,
+      "message": "The value of index range and this are only valid if attributesNeedStreaming is true.  It shouldn\u0027t be referenced anywhere so I\u0027ve moved it\u0027s definition closer to it\u0027s usages.",
+      "parentUuid": "06bbfcf2_18e36549",
+      "range": {
+        "startLine": 226,
+        "startChar": 17,
+        "endLine": 226,
+        "endChar": 36
+      },
+      "revId": "9f9c0f567229df1fcab88a6cd0cbf943631c6f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06bbfcf2_5eae6513",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-18T19:14:21Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 261,
+        "startChar": 12,
+        "endLine": 261,
+        "endChar": 29
+      },
+      "revId": "9f9c0f567229df1fcab88a6cd0cbf943631c6f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e6bd08e7_57676c95",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 4
@@ -36,6 +83,30 @@
       "writtenOn": "2015-03-18T17:30:33Z",
       "side": 1,
       "message": "It looks to me like this is always going to be hit; see above.",
+      "range": {
+        "startLine": 290,
+        "startChar": 8,
+        "endLine": 290,
+        "endChar": 25
+      },
+      "revId": "9f9c0f567229df1fcab88a6cd0cbf943631c6f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6bd08e7_46b57cac",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-18T19:14:21Z",
+      "side": 1,
+      "message": "streamingDataSize is only incremented for attributes that are enabled but have null buffers bound (see the ref above) with an assertion that attributesNeedStreaming is true.",
+      "parentUuid": "e6bd08e7_57676c95",
       "range": {
         "startLine": 290,
         "startChar": 8,
@@ -71,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "c6d48430_ca399388",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-18T19:14:21Z",
+      "side": 1,
+      "message": "No, this is only set to true at the beginning of this function when an enabled attribute is found to have a null buffer.  streamingDataSize only then becomes greater than zero if there are attributes that need streaming.",
+      "parentUuid": "e6bd08e7_f7bc4052",
+      "range": {
+        "startLine": 292,
+        "startChar": 15,
+        "endLine": 292,
+        "endChar": 38
+      },
+      "revId": "9f9c0f567229df1fcab88a6cd0cbf943631c6f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c6d48430_b687e863",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 4
@@ -82,6 +177,30 @@
       "writtenOn": "2015-03-18T17:30:33Z",
       "side": 1,
       "message": "Is there any way to signal an error to the outside if we reach the limit of unmapRetryAttempts? For example marking the context as lost? If not, could you add a TODO about adding this sort of error checking?",
+      "range": {
+        "startLine": 316,
+        "startChar": 43,
+        "endLine": 316,
+        "endChar": 61
+      },
+      "revId": "9f9c0f567229df1fcab88a6cd0cbf943631c6f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6d48430_2a8927f4",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-18T19:14:21Z",
+      "side": 1,
+      "message": "Done, the function now returns an error.",
+      "parentUuid": "c6d48430_b687e863",
       "range": {
         "startLine": 316,
         "startChar": 43,
