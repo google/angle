@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e67fc8e4_f0d89174",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-18T14:55:51Z",
+      "side": 1,
+      "message": "nit: calling a function in an assert can be a bad idea, even if with ANGLE\u0027s ASSERT it works.",
+      "revId": "b83cb5a97bce0e0d844ab85373a89bbe7797701f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
