@@ -16,6 +16,24 @@
       "revId": "b83cb5a97bce0e0d844ab85373a89bbe7797701f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06a21cbf_e0f6c25e",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-18T15:11:29Z",
+      "side": 1,
+      "message": "This is in some of the other tests as well. Should I fix this separately for all of them?",
+      "parentUuid": "e67fc8e4_f0d89174",
+      "revId": "b83cb5a97bce0e0d844ab85373a89bbe7797701f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
