@@ -338,6 +338,15 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
         }
     }
 
+    if (!mArrayEqualityFunctions.empty())
+    {
+        out << "\n// Array equality functions\n\n";
+        for (const auto &eqFunction : mArrayEqualityFunctions)
+        {
+            out << eqFunction.functionDefinition << "\n";
+        }
+    }
+
     if (mUsesDiscardRewriting)
     {
         out << "#define ANGLE_USES_DISCARD_REWRITING\n";
@@ -1380,6 +1389,45 @@ void OutputHLSL::visitRaw(TIntermRaw *node)
     getInfoSink() << node->getRawText();
 }
 
+void OutputHLSL::outputEqual(Visit visit, const TType &type, TOperator op, TInfoSinkBase &out)
+{
+    if (type.isScalar() && !type.isArray())
+    {
+        if (op == EOpEqual)
+        {
+            outputTriplet(visit, "(", " == ", ")", out);
+        }
+        else
+        {
+            outputTriplet(visit, "(", " != ", ")", out);
+        }
+    }
+    else
+    {
+        if (visit == PreVisit && op == EOpNotEqual)
+        {
+            out << "!";
+        }
+
+        if (type.isArray())
+        {
+            const TString &functionName = addArrayEqualityFunction(type);
+            outputTriplet(visit, (functionName + "(").c_str(), ", ", ")", out);
+        }
+        else if (type.getBasicType() == EbtStruct)
+        {
+            const TStructure &structure = *type.getStruct();
+            const TString &functionName = addStructEqualityFunction(structure);
+            outputTriplet(visit, (functionName + "(").c_str(), ", ", ")", out);
+        }
+        else
+        {
+            ASSERT(type.isMatrix() || type.isVector());
+            outputTriplet(visit, "all(", " == ", ")", out);
+        }
+    }
+}
+
 bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 {
     TInfoSinkBase &out = getInfoSink();
@@ -1574,40 +1622,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpBitwiseOr:         outputTriplet(visit, "(", " | ", ")"); break;
       case EOpEqual:
       case EOpNotEqual:
-        if (node->getLeft()->isArray())
-        {
-            UNIMPLEMENTED();
-        }
-        else if (node->getLeft()->isScalar())
-        {
-            if (node->getOp() == EOpEqual)
-            {
-                outputTriplet(visit, "(", " == ", ")");
-            }
-            else
-            {
-                outputTriplet(visit, "(", " != ", ")");
-            }
-        }
-        else
-        {
-            if (visit == PreVisit && node->getOp() == EOpNotEqual)
-            {
-                out << "!";
-            }
-
-            if (node->getLeft()->getBasicType() == EbtStruct)
-            {
-                const TStructure &structure = *node->getLeft()->getType().getStruct();
-                const TString &functionName = addStructEqualityFunction(structure);
-                outputTriplet(visit, (functionName + "(").c_str(), ", ", ")");
-            }
-            else
-            {
-                ASSERT(node->getLeft()->isMatrix() || node->getLeft()->isVector());
-                outputTriplet(visit, "all(", " == ", ")");
-            }
-        }
+        outputEqual(visit, node->getLeft()->getType(), node->getOp(), out);
         break;
       case EOpLessThan:          outputTriplet(visit, "(", " < ", ")");   break;
       case EOpGreaterThan:       outputTriplet(visit, "(", " > ", ")");   break;
@@ -2723,10 +2738,8 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
     return false;   // Not handled as an excessive loop
 }
 
-void OutputHLSL::outputTriplet(Visit visit, const char *preString, const char *inString, const char *postString)
+void OutputHLSL::outputTriplet(Visit visit, const char *preString, const char *inString, const char *postString, TInfoSinkBase &out)
 {
-    TInfoSinkBase &out = getInfoSink();
-
     if (visit == PreVisit)
     {
         out << preString;
@@ -2739,6 +2752,11 @@ void OutputHLSL::outputTriplet(Visit visit, const char *preString, const char *i
     {
         out << postString;
     }
+}
+
+void OutputHLSL::outputTriplet(Visit visit, const char *preString, const char *inString, const char *postString)
+{
+    outputTriplet(visit, preString, inString, postString, getInfoSink());
 }
 
 void OutputHLSL::outputLineDirective(int line)
@@ -2969,12 +2987,19 @@ TString OutputHLSL::addStructEqualityFunction(const TStructure &structure)
         const TString &fieldNameA = "a." + Decorate(field->name());
         const TString &fieldNameB = "b." + Decorate(field->name());
 
+        // TODO (oetuaho): Use outputEqual() here instead
+
         if (i > 0)
         {
             func += " && ";
         }
 
-        if (fieldType->getBasicType() == EbtStruct)
+        if (fieldType->isArray())
+        {
+            // TODO (oetuaho): This requires sorting array and struct equality functions together.
+            UNIMPLEMENTED();
+        }
+        else if (fieldType->getBasicType() == EbtStruct)
         {
             const TStructure &fieldStruct = *fieldType->getStruct();
             const TString &functionName = addStructEqualityFunction(fieldStruct);
@@ -2994,6 +3019,56 @@ TString OutputHLSL::addStructEqualityFunction(const TStructure &structure)
     func = func + ";\n" + "}\n";
 
     mStructEqualityFunctions.push_back(function);
+
+    return function.functionName;
+}
+
+TString OutputHLSL::addArrayEqualityFunction(const TType& type)
+{
+    for (const auto &eqFunction : mArrayEqualityFunctions)
+    {
+        if (eqFunction.type == type)
+        {
+            return eqFunction.functionName;
+        }
+    }
+
+    const TString &typeName = TypeString(type);
+
+    ArrayEqualityFunction function;
+    function.type = type;
+
+    TInfoSinkBase fnNameOut;
+    fnNameOut << "angle_eq_" << type.getArraySize() << "_" << typeName;
+    function.functionName = fnNameOut.c_str();
+
+    TType nonArrayType = type;
+    nonArrayType.clearArrayness();
+
+    TInfoSinkBase fnOut;
+
+    fnOut << "bool " << function.functionName << "("
+          << typeName << "[" << type.getArraySize() << "] a, "
+          << typeName << "[" << type.getArraySize() << "] b)\n"
+          << "{\n"
+             "    for (int i = 0; i < " << type.getArraySize() << "; ++i)\n"
+             "    {\n"
+             "        if (";
+
+    outputEqual(PreVisit, nonArrayType, EOpNotEqual, fnOut);
+    fnOut << "a[i]";
+    outputEqual(InVisit, nonArrayType, EOpNotEqual, fnOut);
+    fnOut << "b[i]";
+    outputEqual(PostVisit, nonArrayType, EOpNotEqual, fnOut);
+
+    fnOut << ") { return false; }\n"
+             "    }\n"
+             "    return true;\n"
+             "}\n";
+
+    function.functionDefinition = fnOut.c_str();
+
+    mArrayEqualityFunctions.push_back(function);
 
     return function.functionName;
 }

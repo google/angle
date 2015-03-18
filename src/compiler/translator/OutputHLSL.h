@@ -67,6 +67,7 @@ class OutputHLSL : public TIntermTraverser
     bool handleExcessiveLoop(TIntermLoop *node);
 
     // Emit one of three strings depending on traverse phase. Called with literal strings so using const char* instead of TString.
+    void outputTriplet(Visit visit, const char *preString, const char *inString, const char *postString, TInfoSinkBase &out);
     void outputTriplet(Visit visit, const char *preString, const char *inString, const char *postString);
     void outputLineDirective(int line);
     TString argumentString(const TIntermSymbol *symbol);
@@ -75,6 +76,8 @@ class OutputHLSL : public TIntermTraverser
     // Emit constructor. Called with literal names so using const char* instead of TString.
     void outputConstructor(Visit visit, const TType &type, const char *name, const TIntermSequence *parameters);
     const ConstantUnion *writeConstantUnion(const TType &type, const ConstantUnion *constUnion);
+
+    void outputEqual(Visit visit, const TType &type, TOperator op, TInfoSinkBase &out);
 
     void writeEmulatedFunctionTriplet(Visit visit, const char *preStr);
     void makeFlaggedStructMaps(const std::vector<TIntermTyped *> &flaggedStructs);
@@ -85,6 +88,7 @@ class OutputHLSL : public TIntermTraverser
 
     // Returns the function name
     TString addStructEqualityFunction(const TStructure &structure);
+    TString addArrayEqualityFunction(const TType &type);
 
     sh::GLenum mShaderType;
     int mShaderVersion;
@@ -103,6 +107,7 @@ class OutputHLSL : public TIntermTraverser
 
     // A stack is useful when we want to traverse in the header, or in helper functions, but not always
     // write to the body. Instead use an InfoSink stack to keep our current state intact.
+    // TODO (jmadill): Just passing an InfoSink in function parameters would be simpler.
     std::stack<TInfoSinkBase *> mInfoSinkStack;
 
     ReferencedSymbols mReferencedUniforms;
@@ -191,6 +196,15 @@ class OutputHLSL : public TIntermTraverser
     };
 
     std::vector<StructEqualityFunction> mStructEqualityFunctions;
+
+    struct ArrayEqualityFunction
+    {
+        TType type;
+        TString functionName;
+        TString functionDefinition;
+    };
+
+    std::vector<ArrayEqualityFunction> mArrayEqualityFunctions;
 };
 
 }
