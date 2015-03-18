@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e67fc8e4_30a7890c",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-03-18T16:25:35Z",
+      "side": 1,
+      "message": "nit: I think it\u0027s clearer if you ASSERT(mRight-\u003eisArray() \u003d\u003d mLeft-\u003eisArray()) in the beginning of this function.",
+      "range": {
+        "startLine": 673,
+        "startChar": 23,
+        "endLine": 673,
+        "endChar": 29
+      },
+      "revId": "02b5ad274d6c26eca939954c84b746d182ba51cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
