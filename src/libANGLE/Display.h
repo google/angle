@@ -54,6 +54,8 @@ class Display final
     Error createPbufferSurface(const Config *configuration, const AttributeMap &attribs, Surface **outSurface);
     Error createPbufferFromClientBuffer(const Config *configuration, EGLClientBuffer shareHandle, const AttributeMap &attribs,
                                         Surface **outSurface);
+    Error createPixmapSurface(const Config *configuration, NativePixmapType nativePixmap, const AttributeMap &attribs,
+                              Surface **outSurface);
 
     Error createContext(const Config *configuration, gl::Context *shareContext, const AttributeMap &attribs,
                         gl::Context **outContext);

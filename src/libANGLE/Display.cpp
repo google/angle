@@ -407,6 +407,36 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration, EGLCli
     return Error(EGL_SUCCESS);
 }
 
+Error Display::createPixmapSurface(const Config *configuration, NativePixmapType nativePixmap, const AttributeMap &attribs,
+                                   Surface **outSurface)
+{
+    ASSERT(isInitialized());
+
+    if (mImplementation->testDeviceLost())
+    {
+        Error error = restoreLostDevice();
+        if (error.isError())
+        {
+            return error;
+        }
+    }
+
+    rx::SurfaceImpl *surfaceImpl = nullptr;
+    Error error = mImplementation->createPixmapSurface(configuration, nativePixmap, attribs, &surfaceImpl);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    ASSERT(surfaceImpl != nullptr);
+    Surface *surface = new Surface(surfaceImpl, EGL_PIXMAP_BIT, configuration, attribs);
+    mImplementation->getSurfaceSet().insert(surface);
+
+    ASSERT(outSurface != nullptr);
+    *outSurface = surface;
+    return Error(EGL_SUCCESS);
+}
+
 Error Display::createContext(const Config *configuration, gl::Context *shareContext, const AttributeMap &attribs,
                              gl::Context **outContext)
 {

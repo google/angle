@@ -33,6 +33,8 @@ class DisplayWGL : public DisplayGL
                                     SurfaceImpl **outSurface) override;
     egl::Error createPbufferFromClientBuffer(const egl::Config *configuration, EGLClientBuffer shareHandle,
                                              const egl::AttributeMap &attribs, SurfaceImpl **outSurface) override;
+    egl::Error createPixmapSurface(const egl::Config *configuration, NativePixmapType nativePixmap,
+                                   const egl::AttributeMap &attribs, SurfaceImpl **outSurface) override;
 
     egl::Error makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context) override;
 

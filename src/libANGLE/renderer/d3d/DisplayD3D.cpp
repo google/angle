@@ -221,6 +221,16 @@ egl::Error DisplayD3D::createPbufferFromClientBuffer(const egl::Config *configur
     return egl::Error(EGL_SUCCESS);
 }
 
+egl::Error DisplayD3D::createPixmapSurface(const egl::Config *configuration, NativePixmapType nativePixmap,
+                                           const egl::AttributeMap &attribs, SurfaceImpl **outSurface)
+{
+    ASSERT(mRenderer != nullptr);
+
+    UNIMPLEMENTED();
+    *outSurface = nullptr;
+    return egl::Error(EGL_BAD_DISPLAY);
+}
+
 egl::Error DisplayD3D::createContext(const egl::Config *config, const gl::Context *shareContext, const egl::AttributeMap &attribs,
                                      gl::Context **outContext)
 {

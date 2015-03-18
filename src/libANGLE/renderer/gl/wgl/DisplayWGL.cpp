@@ -364,6 +364,13 @@ egl::Error DisplayWGL::createPbufferFromClientBuffer(const egl::Config *configur
     return egl::Error(EGL_BAD_DISPLAY);
 }
 
+egl::Error DisplayWGL::createPixmapSurface(const egl::Config *configuration, NativePixmapType nativePixmap,
+                                           const egl::AttributeMap &attribs, SurfaceImpl **outSurface)
+{
+    UNIMPLEMENTED();
+    return egl::Error(EGL_BAD_DISPLAY);
+}
+
 egl::Error DisplayWGL::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context)
 {
     if (!drawSurface)
