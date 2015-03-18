@@ -17,7 +17,7 @@
 #include "libANGLE/formatutils.h"
 
 // For use with ArrayString, see angleutils.h
-META_ASSERT(GL_INVALID_INDEX == UINT_MAX);
+static_assert(GL_INVALID_INDEX == UINT_MAX, "GL_INVALID_INDEX must be equal to the max unsigned int.");
 
 using namespace gl;
 

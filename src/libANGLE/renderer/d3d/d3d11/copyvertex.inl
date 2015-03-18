@@ -127,7 +127,8 @@ inline void Copy32FixedTo32FVertexData(const uint8_t *input, size_t stride, size
         }
 
         // 4-component output formats would need special padding in the alpha channel.
-        META_ASSERT(!(inputComponentCount < 4 && outputComponentCount == 4));
+        static_assert(!(inputComponentCount < 4 && outputComponentCount == 4),
+                      "An inputComponentCount less than 4 and an outputComponentCount equal to 4 is not supported.");
 
         for (size_t j = inputComponentCount; j < outputComponentCount; j++)
         {
@@ -167,7 +168,8 @@ inline void CopyTo32FVertexData(const uint8_t *input, size_t stride, size_t coun
         }
 
         // This would require special padding.
-        META_ASSERT(!(inputComponentCount < 4 && outputComponentCount == 4));
+        static_assert(!(inputComponentCount < 4 && outputComponentCount == 4),
+                      "An inputComponentCount less than 4 and an outputComponentCount equal to 4 is not supported.");
 
         for (size_t j = inputComponentCount; j < outputComponentCount; j++)
         {

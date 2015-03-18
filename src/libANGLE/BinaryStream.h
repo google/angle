@@ -22,7 +22,7 @@ void StaticAssertIsFundamental()
 {
     // c++11 STL is not available on OSX or Android
 #if !defined(ANGLE_PLATFORM_APPLE) && !defined(ANGLE_PLATFORM_ANDROID)
-    META_ASSERT(std::is_fundamental<T>::value);
+    static_assert(std::is_fundamental<T>::value, "T must be a fundamental type.");
 #else
     union { T dummy; } dummy;
     static_cast<void>(dummy);

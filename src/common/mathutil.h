@@ -403,7 +403,7 @@ inline float float10ToFloat32(unsigned short fp11)
 template <typename T>
 inline float normalizedToFloat(T input)
 {
-    META_ASSERT(std::numeric_limits<T>::is_integer);
+    static_assert(std::numeric_limits<T>::is_integer, "T must be an integer.");
 
     const float inverseMax = 1.0f / std::numeric_limits<T>::max();
     return input * inverseMax;
@@ -412,8 +412,8 @@ inline float normalizedToFloat(T input)
 template <unsigned int inputBitCount, typename T>
 inline float normalizedToFloat(T input)
 {
-    META_ASSERT(std::numeric_limits<T>::is_integer);
-    META_ASSERT(inputBitCount < (sizeof(T) * 8));
+    static_assert(std::numeric_limits<T>::is_integer, "T must be an integer.");
+    static_assert(inputBitCount < (sizeof(T) * 8), "T must have more bits than inputBitCount.");
 
     const float inverseMax = 1.0f / ((1 << inputBitCount) - 1);
     return input * inverseMax;
@@ -428,14 +428,15 @@ inline T floatToNormalized(float input)
 template <unsigned int outputBitCount, typename T>
 inline T floatToNormalized(float input)
 {
-    META_ASSERT(outputBitCount < (sizeof(T) * 8));
+    static_assert(outputBitCount < (sizeof(T) * 8), "T must have more bits than outputBitCount.");
     return ((1 << outputBitCount) - 1) * input + 0.5f;
 }
 
 template <unsigned int inputBitCount, unsigned int inputBitStart, typename T>
 inline T getShiftedData(T input)
 {
-    META_ASSERT(inputBitCount + inputBitStart <= (sizeof(T) * 8));
+    static_assert(inputBitCount + inputBitStart <= (sizeof(T) * 8),
+                  "T must have at least as many bits as inputBitCount + inputBitStart.");
     const T mask = (1 << inputBitCount) - 1;
     return (input >> inputBitStart) & mask;
 }
@@ -443,7 +444,8 @@ inline T getShiftedData(T input)
 template <unsigned int inputBitCount, unsigned int inputBitStart, typename T>
 inline T shiftData(T input)
 {
-    META_ASSERT(inputBitCount + inputBitStart <= (sizeof(T) * 8));
+    static_assert(inputBitCount + inputBitStart <= (sizeof(T) * 8),
+                  "T must have at least as many bits as inputBitCount + inputBitStart.");
     const T mask = (1 << inputBitCount) - 1;
     return (input & mask) << inputBitStart;
 }
@@ -547,14 +549,14 @@ inline unsigned int UnsignedCeilDivide(unsigned int value, unsigned int divisor)
 template <class T>
 inline bool IsUnsignedAdditionSafe(T lhs, T rhs)
 {
-    META_ASSERT(!std::numeric_limits<T>::is_signed);
+    static_assert(!std::numeric_limits<T>::is_signed, "T must be unsigned.");
     return (rhs <= std::numeric_limits<T>::max() - lhs);
 }
 
 template <class T>
 inline bool IsUnsignedMultiplicationSafe(T lhs, T rhs)
 {
-    META_ASSERT(!std::numeric_limits<T>::is_signed);
+    static_assert(!std::numeric_limits<T>::is_signed, "T must be unsigned.");
     return (lhs == T(0) || rhs == T(0) || (rhs <= std::numeric_limits<T>::max() / lhs));
 }
 

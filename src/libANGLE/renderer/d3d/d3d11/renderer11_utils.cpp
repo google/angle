@@ -581,8 +581,8 @@ static size_t GetMaximumDrawIndexedIndexCount(D3D_FEATURE_LEVEL featureLevel)
 {
     // D3D11 allows up to 2^32 elements, but we report max signed int for convenience since that's what's
     // returned from glGetInteger
-    META_ASSERT(D3D11_REQ_DRAWINDEXED_INDEX_COUNT_2_TO_EXP == 32);
-    META_ASSERT(D3D10_REQ_DRAWINDEXED_INDEX_COUNT_2_TO_EXP == 32);
+    static_assert(D3D11_REQ_DRAWINDEXED_INDEX_COUNT_2_TO_EXP == 32, "Unexpected D3D11 constant value.");
+    static_assert(D3D10_REQ_DRAWINDEXED_INDEX_COUNT_2_TO_EXP == 32, "Unexpected D3D11 constant value.");
 
     switch (featureLevel)
     {
@@ -603,8 +603,8 @@ static size_t GetMaximumDrawVertexCount(D3D_FEATURE_LEVEL featureLevel)
 {
     // D3D11 allows up to 2^32 elements, but we report max signed int for convenience since that's what's
     // returned from glGetInteger
-    META_ASSERT(D3D11_REQ_DRAW_VERTEX_COUNT_2_TO_EXP == 32);
-    META_ASSERT(D3D10_REQ_DRAW_VERTEX_COUNT_2_TO_EXP == 32);
+    static_assert(D3D11_REQ_DRAW_VERTEX_COUNT_2_TO_EXP == 32, "Unexpected D3D11 constant value.");
+    static_assert(D3D10_REQ_DRAW_VERTEX_COUNT_2_TO_EXP == 32, "Unexpected D3D11 constant value.");
 
     switch (featureLevel)
     {
@@ -693,7 +693,7 @@ static size_t GetReservedVertexOutputVectors()
 
 static size_t GetMaximumVertexOutputVectors(D3D_FEATURE_LEVEL featureLevel)
 {
-    META_ASSERT(gl::IMPLEMENTATION_MAX_VARYING_VECTORS == D3D11_VS_OUTPUT_REGISTER_COUNT);
+    static_assert(gl::IMPLEMENTATION_MAX_VARYING_VECTORS == D3D11_VS_OUTPUT_REGISTER_COUNT, "Unexpected D3D11 constant value.");
 
     switch (featureLevel)
     {

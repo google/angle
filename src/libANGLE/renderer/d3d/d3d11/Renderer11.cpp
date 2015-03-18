@@ -928,8 +928,8 @@ gl::Error Renderer11::setDepthStencilState(const gl::DepthStencilState &depthSte
 
         // Max D3D11 stencil reference value is 0xFF, corresponding to the max 8 bits in a stencil buffer
         // GL specifies we should clamp the ref value to the nearest bit depth when doing stencil ops
-        META_ASSERT(D3D11_DEFAULT_STENCIL_READ_MASK == 0xFF);
-        META_ASSERT(D3D11_DEFAULT_STENCIL_WRITE_MASK == 0xFF);
+        static_assert(D3D11_DEFAULT_STENCIL_READ_MASK == 0xFF, "Unexpected value of D3D11_DEFAULT_STENCIL_READ_MASK");
+        static_assert(D3D11_DEFAULT_STENCIL_WRITE_MASK == 0xFF, "Unexpected value of D3D11_DEFAULT_STENCIL_WRITE_MASK");
         UINT dxStencilRef = std::min<UINT>(stencilRef, 0xFFu);
 
         mDeviceContext->OMSetDepthStencilState(dxDepthStencilState, dxStencilRef);
@@ -2170,7 +2170,7 @@ GUID Renderer11::getAdapterIdentifier() const
 {
     // Use the adapter LUID as our adapter ID
     // This number is local to a machine is only guaranteed to be unique between restarts
-    META_ASSERT(sizeof(LUID) <= sizeof(GUID));
+    static_assert(sizeof(LUID) <= sizeof(GUID), "Size of GUID must be at least as large as LUID.");
     GUID adapterId = {0};
     memcpy(&adapterId, &mAdapterDescription.AdapterLuid, sizeof(LUID));
     return adapterId;
@@ -3143,9 +3143,10 @@ gl::Error Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsP
             ColorWriteFunction colorWriteFunction = GetColorWriteFunction(params.format, params.type);
 
             uint8_t temp[16]; // Maximum size of any Color<T> type used.
-            META_ASSERT(sizeof(temp) >= sizeof(gl::ColorF)  &&
-                        sizeof(temp) >= sizeof(gl::ColorUI) &&
-                        sizeof(temp) >= sizeof(gl::ColorI));
+            static_assert(sizeof(temp) >= sizeof(gl::ColorF)  &&
+                          sizeof(temp) >= sizeof(gl::ColorUI) &&
+                          sizeof(temp) >= sizeof(gl::ColorI),
+                          "Unexpected size of gl::Color struct.");
 
             for (int y = 0; y < params.area.height; y++)
             {

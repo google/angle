@@ -162,23 +162,4 @@ bool DebugAnnotationsActive();
 #define HAS_DYNAMIC_TYPE(type, obj) true
 #endif
 
-// A macro functioning as a compile-time assert to validate constant conditions
-
-#if (defined(_MSC_VER) && _MSC_VER >= 1600)
-#define ANGLE_HAS_STATIC_ASSERT
-#elif (defined(__GNUC__) && (__GNUC__ > 4 || __GNUC_MINOR__ >= 3))
-#define ANGLE_HAS_STATIC_ASSERT
-#elif defined(__clang__) && __has_feature(cxx_static_assert)
-#define ANGLE_HAS_STATIC_ASSERT
-#endif
-
-#if defined(ANGLE_HAS_STATIC_ASSERT)
-#define META_ASSERT_MSG(condition, msg) static_assert(condition, msg)
-#else
-#define META_ASSERT_CONCAT(a, b) a ## b
-#define META_ASSERT_CONCAT2(a, b) META_ASSERT_CONCAT(a, b)
-#define META_ASSERT_MSG(condition, msg) typedef int META_ASSERT_CONCAT2(COMPILE_TIME_ASSERT_, __LINE__)[static_cast<bool>(condition)?1:-1]
-#endif
-#define META_ASSERT(condition) META_ASSERT_MSG(condition, "compile time assertion failed.")
-
 #endif   // COMMON_DEBUG_H_

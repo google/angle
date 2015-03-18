@@ -92,7 +92,8 @@ bool ValidTexture2DDestinationTarget(const Context *context, GLenum target)
 
 bool ValidFramebufferTarget(GLenum target)
 {
-    META_ASSERT(GL_DRAW_FRAMEBUFFER_ANGLE == GL_DRAW_FRAMEBUFFER && GL_READ_FRAMEBUFFER_ANGLE == GL_READ_FRAMEBUFFER);
+    static_assert(GL_DRAW_FRAMEBUFFER_ANGLE == GL_DRAW_FRAMEBUFFER && GL_READ_FRAMEBUFFER_ANGLE == GL_READ_FRAMEBUFFER,
+                  "ANGLE framebuffer enums must equal the ES3 framebuffer enums.");
 
     switch (target)
     {
@@ -209,8 +210,8 @@ bool ValidCompressedImageSize(const Context *context, GLenum internalFormat, GLs
 
 bool ValidQueryType(const Context *context, GLenum queryType)
 {
-    META_ASSERT(GL_ANY_SAMPLES_PASSED == GL_ANY_SAMPLES_PASSED_EXT);
-    META_ASSERT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE == GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT);
+    static_assert(GL_ANY_SAMPLES_PASSED == GL_ANY_SAMPLES_PASSED_EXT, "GL extension enums not equal.");
+    static_assert(GL_ANY_SAMPLES_PASSED_CONSERVATIVE == GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT, "GL extension enums not equal.");
 
     switch (queryType)
     {
@@ -679,7 +680,8 @@ bool ValidateGetVertexAttribParameters(Context *context, GLenum pname)
       case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
         // Don't verify ES3 context because GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE uses
         // the same constant.
-        META_ASSERT(GL_VERTEX_ATTRIB_ARRAY_DIVISOR == GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE);
+        static_assert(GL_VERTEX_ATTRIB_ARRAY_DIVISOR == GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE,
+                      "ANGLE extension enums not equal to GL enums.");
         return true;
 
       case GL_VERTEX_ATTRIB_ARRAY_INTEGER:
