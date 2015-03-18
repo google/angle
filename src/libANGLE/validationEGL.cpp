@@ -278,7 +278,7 @@ Error ValidateCreateWindowSurface(Display *display, Config *config, EGLNativeWin
         }
     }
 
-    if (display->hasExistingWindowSurface(window))
+    if (Display::hasExistingWindowSurface(window))
     {
         return Error(EGL_BAD_ALLOC);
     }

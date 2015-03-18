@@ -54,8 +54,6 @@ class SurfaceD3D : public SurfaceImpl
     // Returns true if swapchain changed due to resize or interval update
     bool checkForOutOfDateSwapChain();
 
-    EGLNativeWindowType getWindowHandle() const override;
-
   private:
     DISALLOW_COPY_AND_ASSIGN(SurfaceD3D);
 

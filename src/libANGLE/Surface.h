@@ -49,8 +49,6 @@ class Surface final
     Error bindTexImage(gl::Texture *texture, EGLint buffer);
     Error releaseTexImage(EGLint buffer);
 
-    EGLNativeWindowType getWindowHandle() const;
-
     EGLint isPostSubBufferSupported() const;
 
     void setSwapInterval(EGLint interval);

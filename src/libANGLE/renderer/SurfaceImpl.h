@@ -37,9 +37,6 @@ class SurfaceImpl
     virtual egl::Error releaseTexImage(EGLint buffer) = 0;
     virtual void setSwapInterval(EGLint interval) = 0;
 
-    //TODO(jmadill): Possibly should be redesigned
-    virtual EGLNativeWindowType getWindowHandle() const = 0;
-
     // width and height can change with client window resizing
     virtual EGLint getWidth() const = 0;
     virtual EGLint getHeight() const = 0;

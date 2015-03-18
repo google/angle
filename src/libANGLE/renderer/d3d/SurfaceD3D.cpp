@@ -222,11 +222,6 @@ egl::Error SurfaceD3D::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     return egl::Error(EGL_SUCCESS);
 }
 
-EGLNativeWindowType SurfaceD3D::getWindowHandle() const
-{
-    return mNativeWindow.getNativeWindow();
-}
-
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
 #define kSurfaceProperty _TEXT("Egl::SurfaceOwner")
 #define kParentWndProc _TEXT("Egl::SurfaceParentWndProc")

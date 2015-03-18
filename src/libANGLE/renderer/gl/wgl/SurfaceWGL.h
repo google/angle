@@ -42,8 +42,6 @@ class SurfaceWGL : public SurfaceGL
     EGLint getWidth() const override;
     EGLint getHeight() const override;
 
-    EGLNativeWindowType getWindowHandle() const override;
-
   private:
     DISALLOW_COPY_AND_ASSIGN(SurfaceWGL);
 

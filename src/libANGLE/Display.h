@@ -67,10 +67,10 @@ class Display final
     bool isValidConfig(const Config *config) const;
     bool isValidContext(gl::Context *context) const;
     bool isValidSurface(egl::Surface *surface) const;
-    bool hasExistingWindowSurface(EGLNativeWindowType window) const;
     bool isValidNativeWindow(EGLNativeWindowType window) const;
 
     static bool isValidNativeDisplay(EGLNativeDisplayType display);
+    static bool hasExistingWindowSurface(EGLNativeWindowType window);
 
     bool isDeviceLost() const;
     bool testDeviceLost();

@@ -179,9 +179,4 @@ EGLint SurfaceWGL::getHeight() const
     return rect.bottom - rect.top;
 }
 
-EGLNativeWindowType SurfaceWGL::getWindowHandle() const
-{
-    return mChildWindow;
-}
-
 }

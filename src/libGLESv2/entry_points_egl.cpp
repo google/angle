@@ -751,7 +751,7 @@ EGLBoolean EGLAPIENTRY BindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint b
         return EGL_FALSE;
     }
 
-    if (surface == EGL_NO_SURFACE || eglSurface->getWindowHandle())
+    if (surface == EGL_NO_SURFACE || eglSurface->getType() == EGL_WINDOW_BIT)
     {
         SetGlobalError(Error(EGL_BAD_SURFACE));
         return EGL_FALSE;
@@ -829,7 +829,7 @@ EGLBoolean EGLAPIENTRY ReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLin
         return EGL_FALSE;
     }
 
-    if (surface == EGL_NO_SURFACE || eglSurface->getWindowHandle())
+    if (surface == EGL_NO_SURFACE || eglSurface->getType() == EGL_WINDOW_BIT)
     {
         SetGlobalError(Error(EGL_BAD_SURFACE));
         return EGL_FALSE;
