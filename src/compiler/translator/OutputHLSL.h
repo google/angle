@@ -13,6 +13,7 @@
 #include <stack>
 
 #include "angle_gl.h"
+#include "compiler/translator/ASTMetadataHLSL.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/ParseContext.h"
 
@@ -169,6 +170,7 @@ class OutputHLSL : public TIntermTraverser
 
     int mUniqueIndex;   // For creating unique names
 
+    std::vector<ASTMetadataHLSL> mASTAnalyses;
     bool mContainsLoopDiscontinuity;
     bool mContainsAnyLoop;
     bool mOutputLod0Function;
