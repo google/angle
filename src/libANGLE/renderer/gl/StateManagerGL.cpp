@@ -30,6 +30,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mUnpackAlignment(4),
       mUnpackRowLength(0),
       mFramebuffers(),
+      mRenderbuffer(0),
       mScissor(0, 0, 0, 0),
       mViewport(0, 0, 0, 0),
       mClearColor(0.0f, 0.0f, 0.0f, 0.0f),
@@ -119,6 +120,16 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
     {
         mFramebuffers[type] = framebuffer;
         mFunctions->bindFramebuffer(type, framebuffer);
+    }
+}
+
+void StateManagerGL::bindRenderbuffer(GLenum type, GLuint renderbuffer)
+{
+    ASSERT(type == GL_RENDERBUFFER);
+    if (mRenderbuffer != renderbuffer)
+    {
+        mRenderbuffer = renderbuffer;
+        mFunctions->bindRenderbuffer(type, mRenderbuffer);
     }
 }
 

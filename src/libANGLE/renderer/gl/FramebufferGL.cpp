@@ -74,14 +74,11 @@ static void BindFramebufferAttachment(const FunctionsGL *functions, GLenum attac
         }
         else if (attachment->type() == GL_RENDERBUFFER)
         {
-            // TODO: support RenderbufferGL
-            UNIMPLEMENTED();
+            const gl::Renderbuffer *renderbuffer = GetAs<gl::RenderbufferAttachment>(attachment)->getRenderbuffer();
+            const RenderbufferGL *renderbufferGL = GetImplAs<RenderbufferGL>(renderbuffer);
 
-            //const gl::Renderbuffer *renderbuffer = GetAs<gl::RenderbufferAttachment>(attachment)->getRenderbuffer();
-            //const RenderbufferGL *renderbufferGL = GetImplAs<RenderbufferGL>(renderbuffer);
-
-            //functions->framebufferRenderbuffer(GL_FRAMEBUFFER, attachmentPoint, GL_RENDERBUFFER,
-            //                                   renderbufferGL->getRenderbufferID());
+            functions->framebufferRenderbuffer(GL_FRAMEBUFFER, attachmentPoint, GL_RENDERBUFFER,
+                                               renderbufferGL->getRenderbufferID());
         }
         else
         {

@@ -42,6 +42,7 @@ class Renderbuffer : public RefCountObject
     Error setStorageMultisample(size_t samples, GLenum internalformat, size_t width, size_t height);
 
     rx::RenderbufferImpl *getImplementation();
+    const rx::RenderbufferImpl *getImplementation() const;
 
     GLsizei getWidth() const;
     GLsizei getHeight() const;

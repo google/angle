@@ -130,7 +130,7 @@ TextureImpl *RendererGL::createTexture(GLenum target)
 
 RenderbufferImpl *RendererGL::createRenderbuffer()
 {
-    return new RenderbufferGL();
+    return new RenderbufferGL(mFunctions, mStateManager);
 }
 
 BufferImpl *RendererGL::createBuffer()
