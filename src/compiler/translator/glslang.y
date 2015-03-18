@@ -710,7 +710,7 @@ function_prototype
         {
             // Insert the unmangled name to detect potential future redefinition as a variable.
             TFunction *function = new TFunction(NewPoolTString($1->getName().c_str()), $1->getReturnType());
-            context->symbolTable.getOuterLevel()->insert(function);
+            context->symbolTable.getOuterLevel()->insertUnmangled(function);
         }
 
         //

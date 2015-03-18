@@ -3168,7 +3168,7 @@ yyreduce:
         {
             // Insert the unmangled name to detect potential future redefinition as a variable.
             TFunction *function = new TFunction(NewPoolTString((yyvsp[-1].interm.function)->getName().c_str()), (yyvsp[-1].interm.function)->getReturnType());
-            context->symbolTable.getOuterLevel()->insert(function);
+            context->symbolTable.getOuterLevel()->insertUnmangled(function);
         }
 
         //

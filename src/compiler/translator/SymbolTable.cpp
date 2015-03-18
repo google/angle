@@ -48,6 +48,16 @@ bool TSymbolTableLevel::insert(TSymbol *symbol)
     return result.second;
 }
 
+bool TSymbolTableLevel::insertUnmangled(TFunction *function)
+{
+    function->setUniqueId(TSymbolTable::nextUniqueId());
+
+    // returning true means symbol was added to the table
+    tInsertResult result = level.insert(tLevelPair(function->getName(), function));
+
+    return result.second;
+}
+
 TSymbol *TSymbolTableLevel::find(const TString &name) const
 {
     tLevel::const_iterator it = level.find(name);
