@@ -17,6 +17,7 @@
 #pragma warning(disable: 4189)
 #pragma warning(disable: 4505)
 #pragma warning(disable: 4701)
+#pragma warning(disable: 4702)
 #endif
 
 

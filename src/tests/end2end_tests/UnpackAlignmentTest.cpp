@@ -81,7 +81,7 @@ protected:
                   case GL_LUMINANCE_ALPHA: compCount = 2; break;
                   case GL_LUMINANCE:       compCount = 1; break;
                   case GL_ALPHA:           compCount = 1; break;
-                  FAIL() << "unknown pixel format.";
+                  default:                 FAIL() << "unknown pixel format.";
                 }
                 *size = sizeof(GLubyte) * compCount;
             }

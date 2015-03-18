@@ -19,7 +19,9 @@
         4244, # Conversion from 'type1' to 'type2', possible loss of data
         4267, # Conversion from 'size_t' to 'type', possible loss of data
 
-        4702, # Unreachable code. Useful, but fires on system header xtree.
+        # TODO: 4702 doesn't fire on xtree in VS2015 (CTP6). We can remove C4702 after moving to VS2015.
+        4702, # Unreachable code. Should only fire on system header xtree.
+        
         4718, # Recursive call has no side effects. Fires on xtree too.
     ],
     'msvs_system_include_dirs':

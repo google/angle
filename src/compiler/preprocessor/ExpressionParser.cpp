@@ -86,7 +86,7 @@
 #pragma GCC diagnostic ignored "-Wuninitialized"
 #endif
 #elif defined(_MSC_VER)
-#pragma warning(disable: 4065 4701)
+#pragma warning(disable: 4065 4701 4702)
 #endif
 
 #include "ExpressionParser.h"

@@ -32,6 +32,7 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
 #pragma warning(disable: 4189)
 #pragma warning(disable: 4505)
 #pragma warning(disable: 4701)
+#pragma warning(disable: 4702)
 #endif
 
 #include "angle_gl.h"
