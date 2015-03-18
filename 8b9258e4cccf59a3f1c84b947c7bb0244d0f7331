@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "067dbcec_3db203fc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-18T15:06:33Z",
+      "side": 1,
+      "message": "can you make an issue for this on the tracker and associate it with BUG\u003dangleproject:###?",
+      "revId": "8b9258e4cccf59a3f1c84b947c7bb0244d0f7331",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4683341d_7e74797d",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-18T15:06:33Z",
+      "side": 1,
+      "message": "We were getting D3D11 debug runtime warnings about mismatched signatures between stages when running certain WebGL demos and the WebGL CTS. This would happen when we skipped some varyings in the shader interface struct. Can you confirm there are no new Debug runtime warnings with the WebGL CTS by testing with the debugger attached? (use --gpu-startup-dialog to attach the debugger with Canary)",
+      "range": {
+        "startLine": 663,
+        "startChar": 4,
+        "endLine": 663,
+        "endChar": 32
+      },
+      "revId": "8b9258e4cccf59a3f1c84b947c7bb0244d0f7331",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c178ee71_d00884ad",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 2
@@ -37,6 +77,30 @@
       "side": 1,
       "message": "The varying packing algorithm packs the varyings into 8 or 16 (i.e. the minimum accepted value for GL_MAX_VARYING_VECTORS on client versions 2 or 3) four-component registers.\n\nThe spec isn\u0027t crystal-clear in this area, but my interpretation here matches the interpretation made by every other implementation I could test. A shader that uses gl_FragCoord/gl_PointCoord plus GL_MAX_VARYING_VECTOR custom varyings fails to compile in:\n- WebGL in Chrome via D3D11 ANGLE\n- WebGL in Chrome on a Nexus 5\n- OpenGL ES on a Nexus 5\n- WebGL in Internet Explorer\n\nBefore my change, this shader would compile in ANGLE.",
       "parentUuid": "c178ee71_d00884ad",
+      "range": {
+        "startLine": 690,
+        "startChar": 0,
+        "endLine": 694,
+        "endChar": 64
+      },
+      "revId": "8b9258e4cccf59a3f1c84b947c7bb0244d0f7331",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4683341d_3e6a019b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 694,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-18T15:06:33Z",
+      "side": 1,
+      "message": "Hey Austin, I checked with the Khronos mailing lists and confirmed that a statically used gl_PointCoord does take up space in the maximum varying vectors, so we don\u0027t need to reserve a slot. The packing algorithm also considers FragCoord a vec4 and PointCoord a vec2. So that might affect some edge-cases with a user vec2 and PointCoord.\nI\u0027m not sure but there may not be dEQP or WebGL tests covering these corner cases, I\u0027ll bring it up with someone and see if we have coverage outside ANGLE.",
+      "parentUuid": "c643a47f_7e8e1133",
       "range": {
         "startLine": 690,
         "startChar": 0,
