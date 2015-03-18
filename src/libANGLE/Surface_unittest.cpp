@@ -6,6 +6,8 @@
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "libANGLE/AttributeMap.h"
+#include "libANGLE/Config.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/SurfaceImpl.h"
 
@@ -38,7 +40,7 @@ class SurfaceTest : public testing::Test
     {
         mImpl = new MockSurfaceImpl;
         EXPECT_CALL(*mImpl, destroy());
-        mSurface = new egl::Surface(mImpl);
+        mSurface = new egl::Surface(mImpl, EGL_WINDOW_BIT, &mConfig, egl::AttributeMap());
     }
 
     virtual void TearDown()
@@ -48,6 +50,7 @@ class SurfaceTest : public testing::Test
 
     MockSurfaceImpl *mImpl;
     egl::Surface *mSurface;
+    egl::Config mConfig;
 };
 
 TEST_F(SurfaceTest, DestructionDeletesImpl)
@@ -55,7 +58,7 @@ TEST_F(SurfaceTest, DestructionDeletesImpl)
     MockSurfaceImpl *impl = new MockSurfaceImpl;
     EXPECT_CALL(*impl, destroy()).Times(1).RetiresOnSaturation();
 
-    egl::Surface *surface = new egl::Surface(impl);
+    egl::Surface *surface = new egl::Surface(impl, EGL_WINDOW_BIT, &mConfig, egl::AttributeMap());
     delete surface;
 
     // Only needed because the mock is leaked if bugs are present,

@@ -327,7 +327,7 @@ Error Display::createWindowSurface(const Config *configuration, EGLNativeWindowT
     }
 
     ASSERT(surfaceImpl != nullptr);
-    Surface *surface = new Surface(surfaceImpl);
+    Surface *surface = new Surface(surfaceImpl, EGL_WINDOW_BIT, configuration, attribs);
     mImplementation->getSurfaceSet().insert(surface);
 
     ASSERT(outSurface != nullptr);
@@ -356,7 +356,7 @@ Error Display::createPbufferSurface(const Config *configuration, const Attribute
     }
 
     ASSERT(surfaceImpl != nullptr);
-    Surface *surface = new Surface(surfaceImpl);
+    Surface *surface = new Surface(surfaceImpl, EGL_PBUFFER_BIT, configuration, attribs);
     mImplementation->getSurfaceSet().insert(surface);
 
     ASSERT(outSurface != nullptr);
@@ -386,7 +386,7 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration, EGLCli
     }
 
     ASSERT(surfaceImpl != nullptr);
-    Surface *surface = new Surface(surfaceImpl);
+    Surface *surface = new Surface(surfaceImpl, EGL_PBUFFER_BIT, configuration, attribs);
     mImplementation->getSurfaceSet().insert(surface);
 
     ASSERT(outSurface != nullptr);

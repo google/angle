@@ -369,7 +369,7 @@ EGLBoolean EGLAPIENTRY QuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint a
         UNIMPLEMENTED();   // FIXME
         break;
       case EGL_CONFIG_ID:
-        *value = eglSurface->getConfigID();
+        *value = eglSurface->getConfig()->configID;
         break;
       case EGL_HEIGHT:
         *value = eglSurface->getHeight();
