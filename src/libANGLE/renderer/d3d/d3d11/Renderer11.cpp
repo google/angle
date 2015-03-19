@@ -244,6 +244,8 @@ Renderer11::Renderer11(egl::Display *display)
 Renderer11::~Renderer11()
 {
     release();
+
+    gl::UninitializeDebugAnnotations();
 }
 
 Renderer11 *Renderer11::makeRenderer11(Renderer *renderer)

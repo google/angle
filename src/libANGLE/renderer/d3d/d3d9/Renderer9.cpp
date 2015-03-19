@@ -147,6 +147,8 @@ Renderer9::~Renderer9()
     }
 
     release();
+
+    gl::UninitializeDebugAnnotations();
 }
 
 void Renderer9::release()
