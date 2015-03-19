@@ -3,23 +3,74 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-
-#include "TexSubImage.h"
+// TexSubImageBenchmark:
+//   Performace test for ANGLE texture updates.
+//
 
 #include <sstream>
 #include <cassert>
 
+#include "ANGLEPerfTest.h"
 #include "shader_utils.h"
+
+namespace
+{
+
+struct TexSubImageParams : public PerfTestParams
+{
+    std::string suffix() const override;
+
+    // Static parameters
+    int imageWidth;
+    int imageHeight;
+    int subImageWidth;
+    int subImageHeight;
+    unsigned int iterations;
+};
+
+class TexSubImageBenchmark : public ANGLEPerfTest,
+                             public ::testing::WithParamInterface<TexSubImageParams>
+{
+  public:
+    TexSubImageBenchmark();
+
+    bool initializeBenchmark() override;
+    void destroyBenchmark() override;
+    void beginDrawBenchmark() override;
+    void drawBenchmark() override;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TexSubImageBenchmark);
+    GLuint createTexture();
+
+    // Handle to a program object
+    GLuint mProgram;
+
+    // Attribute locations
+    GLint mPositionLoc;
+    GLint mTexCoordLoc;
+
+    // Sampler location
+    GLint mSamplerLoc;
+
+    // Texture handle
+    GLuint mTexture;
+
+    // Buffer handle
+    GLuint mVertexBuffer;
+    GLuint mIndexBuffer;
+
+    GLubyte *mPixels;
+};
 
 std::string TexSubImageParams::suffix() const
 {
     // TODO(jmadill)
-    return BenchmarkParams::suffix();
+    return PerfTestParams::suffix();
 }
 
-TexSubImageBenchmark::TexSubImageBenchmark(const TexSubImageParams &params)
-    : SimpleBenchmark("TexSubImage", 512, 512, 2, params),
-      mParams(params),
+TexSubImageBenchmark::TexSubImageBenchmark()
+    : ANGLEPerfTest("TexSubImage", GetParam()),
       mProgram(0),
       mPositionLoc(-1),
       mTexCoordLoc(-1),
@@ -29,12 +80,15 @@ TexSubImageBenchmark::TexSubImageBenchmark(const TexSubImageParams &params)
       mIndexBuffer(0),
       mPixels(NULL)
 {
-    assert(mParams.iterations > 0);
-    mDrawIterations = mParams.iterations;
 }
 
 GLuint TexSubImageBenchmark::createTexture()
 {
+    const auto &params = GetParam();
+
+    assert(params.iterations > 0);
+    mDrawIterations = params.iterations;
+
     // Use tightly packed data
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -45,7 +99,7 @@ GLuint TexSubImageBenchmark::createTexture()
     // Bind the texture object
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, mParams.imageWidth, mParams.imageHeight);
+    glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, params.imageWidth, params.imageHeight);
 
     // Set the filtering mode
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -56,6 +110,8 @@ GLuint TexSubImageBenchmark::createTexture()
 
 bool TexSubImageBenchmark::initializeBenchmark()
 {
+    const auto &params = GetParam();
+
     const std::string vs = SHADER_SOURCE
     (
         attribute vec4 a_position;
@@ -119,14 +175,14 @@ bool TexSubImageBenchmark::initializeBenchmark()
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-    mPixels = new GLubyte[mParams.subImageWidth * mParams.subImageHeight * 4];
+    mPixels = new GLubyte[params.subImageWidth * params.subImageHeight * 4];
 
     // Fill the pixels structure with random data:
-    for (int y = 0; y < mParams.subImageHeight; ++y)
+    for (int y = 0; y < params.subImageHeight; ++y)
     {
-        for (int x = 0; x < mParams.subImageWidth; ++x)
+        for (int x = 0; x < params.subImageWidth; ++x)
         {
-            int offset = (x + (y * mParams.subImageWidth)) * 4;
+            int offset = (x + (y * params.subImageWidth)) * 4;
             mPixels[offset + 0] = rand() % 255; // Red
             mPixels[offset + 1] = rand() % 255; // Green
             mPixels[offset + 2] = rand() % 255; // Blue
@@ -139,12 +195,14 @@ bool TexSubImageBenchmark::initializeBenchmark()
 
 void TexSubImageBenchmark::destroyBenchmark()
 {
+    const auto &params = GetParam();
+
     // print static parameters
-    printResult("image_width", static_cast<size_t>(mParams.imageWidth), "pix", false);
-    printResult("image_height", static_cast<size_t>(mParams.imageHeight), "pix", false);
-    printResult("subimage_width", static_cast<size_t>(mParams.subImageWidth), "pix", false);
-    printResult("subimage_height", static_cast<size_t>(mParams.subImageHeight), "pix", false);
-    printResult("iterations", static_cast<size_t>(mParams.iterations), "updates", false);
+    printResult("image_width", static_cast<size_t>(params.imageWidth), "pix", false);
+    printResult("image_height", static_cast<size_t>(params.imageHeight), "pix", false);
+    printResult("subimage_width", static_cast<size_t>(params.subImageWidth), "pix", false);
+    printResult("subimage_height", static_cast<size_t>(params.subImageHeight), "pix", false);
+    printResult("iterations", static_cast<size_t>(params.iterations), "updates", false);
 
     glDeleteProgram(mProgram);
     glDeleteBuffers(1, &mVertexBuffer);
@@ -186,11 +244,60 @@ void TexSubImageBenchmark::beginDrawBenchmark()
 
 void TexSubImageBenchmark::drawBenchmark()
 {
+    const auto &params = GetParam();
+
     glTexSubImage2D(GL_TEXTURE_2D, 0,
-                    rand() % (mParams.imageWidth - mParams.subImageWidth),
-                    rand() % (mParams.imageHeight - mParams.subImageHeight),
-                    mParams.subImageWidth, mParams.subImageHeight,
+                    rand() % (params.imageWidth - params.subImageWidth),
+                    rand() % (params.imageHeight - params.subImageHeight),
+                    params.subImageWidth, params.subImageHeight,
                     GL_RGBA, GL_UNSIGNED_BYTE, mPixels);
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 }
+
+TexSubImageParams D3D11Params()
+{
+    TexSubImageParams params;
+
+    params.glesMajorVersion = 2;
+    params.widowWidth = 512;
+    params.windowHeight = 512;
+    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
+
+    params.imageWidth = 1024;
+    params.imageHeight = 1024;
+    params.subImageWidth = 64;
+    params.subImageHeight = 64;
+    params.iterations = 10;
+
+    return params;
+}
+
+TexSubImageParams D3D9Params()
+{
+    TexSubImageParams params;
+
+    params.glesMajorVersion = 2;
+    params.widowWidth = 512;
+    params.windowHeight = 512;
+    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
+
+    params.imageWidth = 1024;
+    params.imageHeight = 1024;
+    params.subImageWidth = 64;
+    params.subImageHeight = 64;
+    params.iterations = 10;
+
+    return params;
+}
+
+} // namespace
+
+TEST_P(TexSubImageBenchmark, TextureUpdates)
+{
+    run();
+}
+
+INSTANTIATE_TEST_CASE_P(TextureUpdates,
+                        TexSubImageBenchmark,
+                        ::testing::Values(D3D11Params(), D3D9Params()));

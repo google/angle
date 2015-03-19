@@ -195,49 +195,26 @@
                                 'angle_end2end_tests_main.cpp',
                             ],
                         },
+
+                        {
+                            'target_name': 'angle_perftests',
+                            'type': 'executable',
+                            'includes':
+                            [
+                                '../../build/common_defines.gypi',
+                                'angle_perftests.gypi',
+                            ],
+                            'sources':
+                            [
+                                'angle_perftests_main.cpp',
+                            ],
+                        },
                     ],
                 }],
             ],
         }],
         ['OS=="win"',
         {
-            'targets':
-            [
-                {
-                    'target_name': 'angle_perf_tests',
-                    'type': 'executable',
-                    'includes': [ '../../build/common_defines.gypi', ],
-                    'dependencies':
-                    [
-                        '<(angle_path)/src/angle.gyp:angle_common',
-                        '<(angle_path)/src/angle.gyp:libGLESv2',
-                        '<(angle_path)/src/angle.gyp:libEGL',
-                        '<(angle_path)/util/util.gyp:angle_util',
-                        'angle_test_support',
-                    ],
-                    'include_dirs':
-                    [
-                        '<(angle_path)/include',
-                        '<(rapidjson_include_dir)',
-                    ],
-                    'sources':
-                    [
-                        'perf_tests/BufferSubData.cpp',
-                        'perf_tests/BufferSubData.h',
-                        'perf_tests/PointSprites.cpp',
-                        'perf_tests/PointSprites.h',
-                        'perf_tests/SimpleBenchmark.cpp',
-                        'perf_tests/SimpleBenchmark.h',
-                        'perf_tests/TexSubImage.cpp',
-                        'perf_tests/TexSubImage.h',
-                        'perf_tests/angle_perf_test_main.cpp',
-                        'perf_tests/third_party/perf/perf_test.cc',
-                        'perf_tests/third_party/perf/perf_test.h',
-                        '<@(rapidjson_headers)',
-                    ],
-                },
-
-            ],
             'conditions':
             [
                 ['angle_build_conformance_tests',

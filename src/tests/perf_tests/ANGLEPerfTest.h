@@ -3,39 +3,43 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
+// ANGLEPerfTests:
+//   Base class for google test performance tests
+//
 
-#ifndef SAMPLE_UTIL_SIMPLE_BENCHMARK_H
-#define SAMPLE_UTIL_SIMPLE_BENCHMARK_H
+#ifndef PERF_TESTS_ANGLE_PERF_TEST_H_
+#define PERF_TESTS_ANGLE_PERF_TEST_H_
 
+#include <gtest/gtest.h>
 #include <memory>
 #include <vector>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <string>
 
-#include "shared_utils.h"
-
-#include "OSWindow.h"
 #include "EGLWindow.h"
+#include "OSWindow.h"
 #include "Timer.h"
+#include "shared_utils.h"
 
 class Event;
 
-// Base class
-struct BenchmarkParams
+struct PerfTestParams
 {
     EGLint requestedRenderer;
+    EGLint glesMajorVersion;
+    EGLint widowWidth;
+    EGLint windowHeight;
 
     virtual std::string suffix() const;
 };
 
-class SimpleBenchmark
+class ANGLEPerfTest : public testing::Test
 {
   public:
-    SimpleBenchmark(const std::string &name, size_t width, size_t height,
-                    EGLint glesMajorVersion, const BenchmarkParams &params);
+    ANGLEPerfTest(const std::string &name, const PerfTestParams &testParams);
 
-    virtual ~SimpleBenchmark() { };
+    virtual ~ANGLEPerfTest() { };
 
     virtual bool initializeBenchmark() { return true; }
     virtual void destroyBenchmark() { }
@@ -46,7 +50,6 @@ class SimpleBenchmark
     virtual void drawBenchmark() = 0;
     virtual void endDrawBenchmark() { }
 
-    int run();
     bool popEvent(Event *event);
 
     OSWindow *getWindow();
@@ -54,16 +57,18 @@ class SimpleBenchmark
   protected:
     void printResult(const std::string &trace, double value, const std::string &units, bool important) const;
     void printResult(const std::string &trace, size_t value, const std::string &units, bool important) const;
+    void run();
 
+    const PerfTestParams &mTestParams;
     unsigned int mDrawIterations;
     double mRunTimeSeconds;
     int mNumFrames;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(SimpleBenchmark);
+    DISALLOW_COPY_AND_ASSIGN(ANGLEPerfTest);
 
-    bool initialize();
-    void destroy();
+    void SetUp() override;
+    void TearDown() override;
 
     void step(float dt, double totalTime);
     void draw();
@@ -77,19 +82,4 @@ class SimpleBenchmark
     std::unique_ptr<Timer> mTimer;
 };
 
-template <typename BenchmarkT, typename ParamsT>
-inline int RunBenchmarks(const std::vector<ParamsT> &benchmarks)
-{
-    int result;
-
-    for (size_t benchIndex = 0; benchIndex < benchmarks.size(); benchIndex++)
-    {
-        BenchmarkT benchmark(benchmarks[benchIndex]);
-        result = benchmark.run();
-        if (result != 0) { return result; }
-    }
-
-    return 0;
-}
-
-#endif // SAMPLE_UTIL_SIMPLE_BENCHMARK_H
+#endif // PERF_TESTS_ANGLE_PERF_TEST_H_

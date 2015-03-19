@@ -4,14 +4,14 @@
 // found in the LICENSE file.
 //
 
-#include "SimpleBenchmark.h"
+#include "ANGLEPerfTest.h"
 
 #include "third_party/perf/perf_test.h"
 
 #include <iostream>
 #include <cassert>
 
-std::string BenchmarkParams::suffix() const
+std::string PerfTestParams::suffix() const
 {
     switch (requestedRenderer)
     {
@@ -21,36 +21,58 @@ std::string BenchmarkParams::suffix() const
     }
 }
 
-SimpleBenchmark::SimpleBenchmark(const std::string &name, size_t width, size_t height,
-                                 EGLint glesMajorVersion, const BenchmarkParams &params)
-    : mNumFrames(0),
+ANGLEPerfTest::ANGLEPerfTest(const std::string &name, const PerfTestParams &testParams)
+    : mTestParams(testParams),
+      mNumFrames(0),
       mName(name),
       mRunning(false),
+      mSuffix(testParams.suffix()),
       mDrawIterations(10),
-      mRunTimeSeconds(5.0),
-      mSuffix(params.suffix())
+      mRunTimeSeconds(5.0)
+{
+}
+
+void ANGLEPerfTest::SetUp()
 {
     mOSWindow.reset(CreateOSWindow());
-    mEGLWindow.reset(new EGLWindow(width, height, glesMajorVersion, EGLPlatformParameters(params.requestedRenderer)));
+    mEGLWindow.reset(new EGLWindow(mTestParams.widowWidth,
+                                   mTestParams.windowHeight,
+                                   mTestParams.glesMajorVersion,
+                                   EGLPlatformParameters(mTestParams.requestedRenderer)));
     mTimer.reset(CreateTimer());
+
+    if (!mOSWindow->initialize(mName, mEGLWindow->getWidth(), mEGLWindow->getHeight()))
+    {
+        FAIL() << "Failed initializing OSWindow";
+        return;
+    }
+
+    if (!mEGLWindow->initializeGL(mOSWindow.get()))
+    {
+        FAIL() << "Failed initializing EGLWindow";
+        return;
+    }
+
+    if (!initializeBenchmark())
+    {
+        FAIL() << "Failed initializing base perf test";
+        return;
+    }
+
+    mRunning = true;
 }
 
-bool SimpleBenchmark::initialize()
-{
-    return initializeBenchmark();
-}
-
-void SimpleBenchmark::printResult(const std::string &trace, double value, const std::string &units, bool important) const
+void ANGLEPerfTest::printResult(const std::string &trace, double value, const std::string &units, bool important) const
 {
     perf_test::PrintResult(mName, mSuffix, trace, value, units, important);
 }
 
-void SimpleBenchmark::printResult(const std::string &trace, size_t value, const std::string &units, bool important) const
+void ANGLEPerfTest::printResult(const std::string &trace, size_t value, const std::string &units, bool important) const
 {
     perf_test::PrintResult(mName, mSuffix, trace, value, units, important);
 }
 
-void SimpleBenchmark::destroy()
+void ANGLEPerfTest::TearDown()
 {
     double totalTime = mTimer->getElapsedTime();
     double averageTime = 1000.0 * totalTime / static_cast<double>(mNumFrames);
@@ -60,14 +82,17 @@ void SimpleBenchmark::destroy()
     printResult("average_time", averageTime, "ms", true);
 
     destroyBenchmark();
+
+    mEGLWindow->destroyGL();
+    mOSWindow->destroy();
 }
 
-void SimpleBenchmark::step(float dt, double totalTime)
+void ANGLEPerfTest::step(float dt, double totalTime)
 {
     stepBenchmark(dt, totalTime);
 }
 
-void SimpleBenchmark::draw()
+void ANGLEPerfTest::draw()
 {
     if (mTimer->getElapsedTime() > mRunTimeSeconds) {
         mRunning = false;
@@ -86,27 +111,8 @@ void SimpleBenchmark::draw()
     endDrawBenchmark();
 }
 
-int SimpleBenchmark::run()
+void ANGLEPerfTest::run()
 {
-    if (!mOSWindow->initialize(mName, mEGLWindow->getWidth(), mEGLWindow->getHeight()))
-    {
-        return -1;
-    }
-
-    if (!mEGLWindow->initializeGL(mOSWindow.get()))
-    {
-        return -1;
-    }
-
-    mRunning = true;
-    int result = 0;
-
-    if (!initialize())
-    {
-        mRunning = false;
-        result = -1;
-    }
-
     mTimer->start();
     double prevTime = 0.0;
 
@@ -140,20 +146,14 @@ int SimpleBenchmark::run()
 
         prevTime = elapsedTime;
     }
-
-    destroy();
-    mEGLWindow->destroyGL();
-    mOSWindow->destroy();
-
-    return result;
 }
 
-bool SimpleBenchmark::popEvent(Event *event)
+bool ANGLEPerfTest::popEvent(Event *event)
 {
     return mOSWindow->popEvent(event);
 }
 
-OSWindow *SimpleBenchmark::getWindow()
+OSWindow *ANGLEPerfTest::getWindow()
 {
     return mOSWindow.get();
 }
