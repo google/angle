@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "666bd831_c6be84a3",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-19T09:44:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e67fc8e4_73c58b8b",
+      "revId": "b83cb5a97bce0e0d844ab85373a89bbe7797701f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e67fc8e4_f0d89174",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 1
@@ -118,6 +136,24 @@
       "writtenOn": "2015-03-18T16:31:40Z",
       "side": 1,
       "message": "nit: can you add a one-line explanation before each test",
+      "revId": "b83cb5a97bce0e0d844ab85373a89bbe7797701f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06a21cbf_e3924ca7",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-19T09:44:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4683341d_f9032339",
       "revId": "b83cb5a97bce0e0d844ab85373a89bbe7797701f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
