@@ -98,5 +98,13 @@
                 },
             },
         }],
+        ['OS=="win"',
+        {
+            # TODO(cwallez): make this angle_enable_hlsl instead (requires gyp file refactoring)
+            'sources':
+            [
+                '<(angle_path)/src/tests/compiler_tests/UnrollFlatten_test.cpp',
+            ],
+        }],
     ],
 }
