@@ -495,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "a64230dc_c3bbaad5",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-19T18:07:38Z",
+      "side": 1,
+      "message": "x86 and ARM are byte-addressable IIRC so all pointers are valid pointers. However most types are aligned on at least 4 bytes, so the 2 LSB of a pointer can be used. (a static_assert can help make sure the bits are available). But if value is always a pointer then it is easier as nullptr is never valid.\nHow strongly do you feel about using Optional instead of a negative number to return an error?",
+      "parentUuid": "86fc4cc6_ad22e556",
+      "range": {
+        "startLine": 201,
+        "startChar": 0,
+        "endLine": 201,
+        "endChar": 3
+      },
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86144c89_216ab99a",
         "filename": "src/compiler/translator/CallDAG.cpp",
         "patchSetId": 8
