@@ -46,6 +46,30 @@
       "revId": "02b5ad274d6c26eca939954c84b746d182ba51cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06a21cbf_06e2de1a",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-19T15:12:13Z",
+      "side": 1,
+      "message": "Agreed, this is a good idea.",
+      "parentUuid": "c6d48430_190ecf34",
+      "range": {
+        "startLine": 673,
+        "startChar": 23,
+        "endLine": 673,
+        "endChar": 29
+      },
+      "revId": "02b5ad274d6c26eca939954c84b746d182ba51cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
