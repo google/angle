@@ -471,6 +471,30 @@
     },
     {
       "key": {
+        "uuid": "86fc4cc6_ad22e556",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-19T14:55:49Z",
+      "side": 1,
+      "message": "I suppose you could achieve the same benefits you propose by always using pointer types instead of value types for \"value\", and using a bit packed struct. Is the LSB really unused in pointer types?\nI\u0027m not too worried about the storage overhead here. I was more thinking of code cleanliness purposes. I think it would give you the logic you\u0027re trying to express with a special return value.",
+      "parentUuid": "06a4dcb8_90baf41f",
+      "range": {
+        "startLine": 201,
+        "startChar": 0,
+        "endLine": 201,
+        "endChar": 3
+      },
+      "revId": "b137efe6b118500db860608763a79583d768a92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86144c89_216ab99a",
         "filename": "src/compiler/translator/CallDAG.cpp",
         "patchSetId": 8
