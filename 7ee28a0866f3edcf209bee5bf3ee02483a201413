@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2620002d_1c07b949",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2787,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-03-19T20:30:43Z",
+      "side": 1,
+      "message": "nit: should include 3.0 in the comment as well.",
+      "range": {
+        "startLine": 2787,
+        "startChar": 17,
+        "endLine": 2787,
+        "endChar": 19
+      },
+      "revId": "7ee28a0866f3edcf209bee5bf3ee02483a201413",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
