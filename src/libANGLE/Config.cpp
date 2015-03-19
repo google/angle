@@ -108,6 +108,11 @@ class ConfigSorter
 {
   public:
     explicit ConfigSorter(const AttributeMap &attributeMap)
+        : mWantRed(false),
+          mWantGreen(false),
+          mWantBlue(false),
+          mWantAlpha(false),
+          mWantLuminance(false)
     {
         scanForWantedComponents(attributeMap);
     }
