@@ -10,7 +10,9 @@
 
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
+#include "libANGLE/renderer/gl/SurfaceGL.h"
 
 #include <EGL/eglext.h>
 
@@ -47,6 +49,17 @@ egl::Error DisplayGL::createContext(const egl::Config *config, const gl::Context
 
     *outContext = new gl::Context(config, clientVersion, shareContext, mRenderer, notifyResets, robustAccess);
     return egl::Error(EGL_SUCCESS);
+}
+
+egl::Error DisplayGL::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context)
+{
+    if (!drawSurface)
+    {
+        return egl::Error(EGL_SUCCESS);
+    }
+
+    SurfaceGL *glDrawSurface = GetImplAs<SurfaceGL>(drawSurface);
+    return glDrawSurface->makeCurrent();
 }
 
 }

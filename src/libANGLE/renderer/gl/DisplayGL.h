@@ -29,6 +29,8 @@ class DisplayGL : public DisplayImpl
     egl::Error createContext(const egl::Config *config, const gl::Context *shareContext, const egl::AttributeMap &attribs,
                              gl::Context **outContext) override;
 
+    egl::Error makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context) override;
+
   private:
     virtual const FunctionsGL *getFunctionsGL() const = 0;
 

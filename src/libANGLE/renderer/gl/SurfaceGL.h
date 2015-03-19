@@ -19,6 +19,8 @@ class SurfaceGL : public SurfaceImpl
   public:
     SurfaceGL();
     ~SurfaceGL() override;
+
+    virtual egl::Error makeCurrent() = 0;
 };
 
 }

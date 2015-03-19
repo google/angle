@@ -4,9 +4,9 @@
 // found in the LICENSE file.
 //
 
-// SurfaceWGL.cpp: WGL implementation of egl::Surface
+// WindowSurfaceWGL.cpp: WGL implementation of egl::Surface for windows
 
-#include "libANGLE/renderer/gl/wgl/SurfaceWGL.h"
+#include "libANGLE/renderer/gl/wgl/WindowSurfaceWGL.h"
 
 #include "common/debug.h"
 #include "libANGLE/renderer/gl/wgl/FunctionsWGL.h"
@@ -15,7 +15,7 @@
 namespace rx
 {
 
-SurfaceWGL::SurfaceWGL(EGLNativeWindowType window, ATOM windowClass, int pixelFormat, HGLRC wglContext, const FunctionsWGL *functions)
+WindowSurfaceWGL::WindowSurfaceWGL(EGLNativeWindowType window, ATOM windowClass, int pixelFormat, HGLRC wglContext, const FunctionsWGL *functions)
     : SurfaceGL(),
       mWindowClass(windowClass),
       mPixelFormat(pixelFormat),
@@ -27,7 +27,7 @@ SurfaceWGL::SurfaceWGL(EGLNativeWindowType window, ATOM windowClass, int pixelFo
 {
 }
 
-SurfaceWGL::~SurfaceWGL()
+WindowSurfaceWGL::~WindowSurfaceWGL()
 {
     mWindowClass = 0;
     mPixelFormat = 0;
@@ -41,13 +41,7 @@ SurfaceWGL::~SurfaceWGL()
     mChildWindow = nullptr;
 }
 
-SurfaceWGL *SurfaceWGL::makeSurfaceWGL(SurfaceImpl *impl)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(SurfaceWGL*, impl));
-    return static_cast<SurfaceWGL*>(impl);
-}
-
-egl::Error SurfaceWGL::initialize()
+egl::Error WindowSurfaceWGL::initialize()
 {
     // Create a child window of the supplied window to draw to.
     RECT rect;
@@ -89,7 +83,7 @@ egl::Error SurfaceWGL::initialize()
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error SurfaceWGL::makeCurrent()
+egl::Error WindowSurfaceWGL::makeCurrent()
 {
     if (!mFunctionsWGL->makeCurrent(mChildDeviceContext, mShareWGLContext))
     {
@@ -100,7 +94,7 @@ egl::Error SurfaceWGL::makeCurrent()
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error SurfaceWGL::swap()
+egl::Error WindowSurfaceWGL::swap()
 {
     // Resize the child window to the interior of the parent window.
     RECT rect;
@@ -125,31 +119,31 @@ egl::Error SurfaceWGL::swap()
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error SurfaceWGL::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
+egl::Error WindowSurfaceWGL::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error SurfaceWGL::querySurfacePointerANGLE(EGLint attribute, void **value)
+egl::Error WindowSurfaceWGL::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error SurfaceWGL::bindTexImage(EGLint buffer)
+egl::Error WindowSurfaceWGL::bindTexImage(EGLint buffer)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error SurfaceWGL::releaseTexImage(EGLint buffer)
+egl::Error WindowSurfaceWGL::releaseTexImage(EGLint buffer)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-void SurfaceWGL::setSwapInterval(EGLint interval)
+void WindowSurfaceWGL::setSwapInterval(EGLint interval)
 {
     if (mFunctionsWGL->swapIntervalEXT)
     {
@@ -157,7 +151,7 @@ void SurfaceWGL::setSwapInterval(EGLint interval)
     }
 }
 
-EGLint SurfaceWGL::getWidth() const
+EGLint WindowSurfaceWGL::getWidth() const
 {
     RECT rect;
     if (!GetClientRect(mParentWindow, &rect))
@@ -167,7 +161,7 @@ EGLint SurfaceWGL::getWidth() const
     return rect.right - rect.left;
 }
 
-EGLint SurfaceWGL::getHeight() const
+EGLint WindowSurfaceWGL::getHeight() const
 {
     RECT rect;
     if (!GetClientRect(mParentWindow, &rect))
@@ -177,7 +171,7 @@ EGLint SurfaceWGL::getHeight() const
     return rect.bottom - rect.top;
 }
 
-EGLint SurfaceWGL::isPostSubBufferSupported() const
+EGLint WindowSurfaceWGL::isPostSubBufferSupported() const
 {
     // PostSubBuffer extension not exposed on WGL.
     UNIMPLEMENTED();

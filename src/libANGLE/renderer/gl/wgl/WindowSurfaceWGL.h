@@ -4,10 +4,10 @@
 // found in the LICENSE file.
 //
 
-// SurfaceWGL.h: WGL implementation of egl::Surface
+// WindowSurfaceWGL.h: WGL implementation of egl::Surface for windows
 
-#ifndef LIBANGLE_RENDERER_GL_WGL_SURFACEWGL_H_
-#define LIBANGLE_RENDERER_GL_WGL_SURFACEWGL_H_
+#ifndef LIBANGLE_RENDERER_GL_WGL_WINDOWSURFACEWGL_H_
+#define LIBANGLE_RENDERER_GL_WGL_WINDOWSURFACEWGL_H_
 
 #include "libANGLE/renderer/gl/SurfaceGL.h"
 
@@ -18,16 +18,14 @@ namespace rx
 
 class FunctionsWGL;
 
-class SurfaceWGL : public SurfaceGL
+class WindowSurfaceWGL : public SurfaceGL
 {
   public:
-    SurfaceWGL(EGLNativeWindowType window, ATOM windowClass, int pixelFormat, HGLRC wglContext, const FunctionsWGL *functions);
-    ~SurfaceWGL() override;
-
-    static SurfaceWGL *makeSurfaceWGL(SurfaceImpl *impl);
+    WindowSurfaceWGL(EGLNativeWindowType window, ATOM windowClass, int pixelFormat, HGLRC wglContext, const FunctionsWGL *functions);
+    ~WindowSurfaceWGL() override;
 
     egl::Error initialize();
-    egl::Error makeCurrent();
+    egl::Error makeCurrent() override;
 
     egl::Error swap() override;
     egl::Error postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height) override;
@@ -56,4 +54,4 @@ class SurfaceWGL : public SurfaceGL
 
 }
 
-#endif // LIBANGLE_RENDERER_GL_WGL_SURFACEWGL_H_
+#endif // LIBANGLE_RENDERER_GL_WGL_WINDOWSURFACEWGL_H_

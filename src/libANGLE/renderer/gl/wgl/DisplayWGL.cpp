@@ -13,7 +13,7 @@
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/wgl/FunctionsWGL.h"
-#include "libANGLE/renderer/gl/wgl/SurfaceWGL.h"
+#include "libANGLE/renderer/gl/wgl/WindowSurfaceWGL.h"
 #include "libANGLE/renderer/gl/wgl/wgl_utils.h"
 
 #include <EGL/eglext.h>
@@ -337,7 +337,7 @@ void DisplayWGL::terminate()
 egl::Error DisplayWGL::createWindowSurface(const egl::Config *configuration, EGLNativeWindowType window,
                                            const egl::AttributeMap &attribs, SurfaceImpl **outSurface)
 {
-    SurfaceWGL *surface = new SurfaceWGL(window, mWindowClass, mPixelFormat, mWGLContext, mFunctionsWGL);
+    WindowSurfaceWGL *surface = new WindowSurfaceWGL(window, mWindowClass, mPixelFormat, mWGLContext, mFunctionsWGL);
     egl::Error error = surface->initialize();
     if (error.isError())
     {
@@ -368,17 +368,6 @@ egl::Error DisplayWGL::createPixmapSurface(const egl::Config *configuration, Nat
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_BAD_DISPLAY);
-}
-
-egl::Error DisplayWGL::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context)
-{
-    if (!drawSurface)
-    {
-        return egl::Error(EGL_SUCCESS);
-    }
-
-    SurfaceWGL *wglDrawSurface = SurfaceWGL::makeSurfaceWGL(drawSurface->getImplementation());
-    return wglDrawSurface->makeCurrent();
 }
 
 egl::ConfigSet DisplayWGL::generateConfigs() const
