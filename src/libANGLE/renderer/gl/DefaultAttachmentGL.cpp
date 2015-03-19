@@ -10,12 +10,12 @@
 
 #include "common/debug.h"
 #include "libANGLE/Config.h"
-#include "libANGLE/renderer/gl/SurfaceGL.h"
+#include "libANGLE/Surface.h"
 
 namespace rx
 {
 
-DefaultAttachmentGL::DefaultAttachmentGL(GLenum type, SurfaceGL *surface)
+DefaultAttachmentGL::DefaultAttachmentGL(GLenum type, egl::Surface *surface)
     : DefaultAttachmentImpl(),
       mType(type),
       mSurface(surface)

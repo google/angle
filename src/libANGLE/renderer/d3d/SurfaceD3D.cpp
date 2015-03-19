@@ -21,24 +21,25 @@ namespace rx
 {
 
 SurfaceD3D *SurfaceD3D::createOffscreen(RendererD3D *renderer, egl::Display *display, const egl::Config *config, EGLClientBuffer shareHandle,
-                                        EGLint width, EGLint height, EGLenum textureFormat, EGLenum textureType)
+                                        EGLint width, EGLint height)
 {
-    return new SurfaceD3D(renderer, display, config, width, height, EGL_TRUE, EGL_FALSE,
-                          textureFormat, textureType, shareHandle, NULL);
+    return new SurfaceD3D(renderer, display, config, width, height, EGL_TRUE, shareHandle, NULL);
 }
 
 SurfaceD3D *SurfaceD3D::createFromWindow(RendererD3D *renderer, egl::Display *display, const egl::Config *config, EGLNativeWindowType window,
-                                         EGLint fixedSize, EGLint width, EGLint height, EGLint postSubBufferSupported)
+                                         EGLint fixedSize, EGLint width, EGLint height)
 {
-    return new SurfaceD3D(renderer, display, config, width, height, fixedSize, postSubBufferSupported,
-                          EGL_NO_TEXTURE, EGL_NO_TEXTURE, static_cast<EGLClientBuffer>(0), window);
+    return new SurfaceD3D(renderer, display, config, width, height, fixedSize, static_cast<EGLClientBuffer>(0), window);
 }
 
-SurfaceD3D::SurfaceD3D(RendererD3D *renderer, egl::Display *display, const egl::Config *config, EGLint width, EGLint height,
-                       EGLint fixedSize, EGLint postSubBufferSupported, EGLenum textureFormat,
-                       EGLenum textureType, EGLClientBuffer shareHandle, EGLNativeWindowType window)
-    : SurfaceImpl(display, config, fixedSize, postSubBufferSupported, textureFormat, textureType),
+SurfaceD3D::SurfaceD3D(RendererD3D *renderer, egl::Display *display, const egl::Config *config, EGLint width, EGLint height, EGLint fixedSize,
+                       EGLClientBuffer shareHandle, EGLNativeWindowType window)
+    : SurfaceImpl(),
       mRenderer(renderer),
+      mDisplay(display),
+      mFixedSize(fixedSize == EGL_TRUE),
+      mRenderTargetFormat(config->renderTargetFormat),
+      mDepthStencilFormat(config->depthStencilFormat),
       mSwapChain(NULL),
       mSwapIntervalDirty(true),
       mWindowSubclassed(false),
@@ -118,9 +119,7 @@ egl::Error SurfaceD3D::resetSwapChain()
         height = mHeight;
     }
 
-    mSwapChain = mRenderer->createSwapChain(mNativeWindow, mShareHandle,
-                                            mConfig->renderTargetFormat,
-                                            mConfig->depthStencilFormat);
+    mSwapChain = mRenderer->createSwapChain(mNativeWindow, mShareHandle, mRenderTargetFormat, mDepthStencilFormat);
     if (!mSwapChain)
     {
         return egl::Error(EGL_BAD_ALLOC);
@@ -365,9 +364,6 @@ void SurfaceD3D::setSwapInterval(EGLint interval)
     }
 
     mSwapInterval = interval;
-    mSwapInterval = std::max(mSwapInterval, mConfig->minSwapInterval);
-    mSwapInterval = std::min(mSwapInterval, mConfig->maxSwapInterval);
-
     mSwapIntervalDirty = true;
 }
 
@@ -379,6 +375,12 @@ EGLint SurfaceD3D::getWidth() const
 EGLint SurfaceD3D::getHeight() const
 {
     return mHeight;
+}
+
+EGLint SurfaceD3D::isPostSubBufferSupported() const
+{
+    // post sub buffer is always possible on D3D surfaces
+    return EGL_TRUE;
 }
 
 egl::Error SurfaceD3D::querySurfacePointerANGLE(EGLint attribute, void **value)

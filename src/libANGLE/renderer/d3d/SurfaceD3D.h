@@ -26,11 +26,9 @@ class SurfaceD3D : public SurfaceImpl
 {
   public:
     static SurfaceD3D *createFromWindow(RendererD3D *renderer, egl::Display *display, const egl::Config *config,
-                                        EGLNativeWindowType window, EGLint fixedSize,
-                                        EGLint width, EGLint height, EGLint postSubBufferSupported);
+                                        EGLNativeWindowType window, EGLint fixedSize, EGLint width, EGLint height);
     static SurfaceD3D *createOffscreen(RendererD3D *renderer, egl::Display *display, const egl::Config *config,
-                                       EGLClientBuffer shareHandle, EGLint width, EGLint height,
-                                       EGLenum textureFormat, EGLenum textureTarget);
+                                       EGLClientBuffer shareHandle, EGLint width, EGLint height);
     ~SurfaceD3D() override;
     void releaseSwapChain();
 
@@ -46,6 +44,8 @@ class SurfaceD3D : public SurfaceImpl
     EGLint getWidth() const override;
     EGLint getHeight() const override;
 
+    EGLint isPostSubBufferSupported() const override;
+
     // D3D implementations (some virtual to hack across DLL boundaries)
     virtual SwapChainD3D *getSwapChain() const;
 
@@ -56,8 +56,8 @@ class SurfaceD3D : public SurfaceImpl
 
   private:
     SurfaceD3D(RendererD3D *renderer, egl::Display *display, const egl::Config *config, EGLint width, EGLint height,
-               EGLint fixedSize, EGLint postSubBufferSupported, EGLenum textureFormat,
-               EGLenum textureType, EGLClientBuffer shareHandle, EGLNativeWindowType window);
+               EGLint fixedSize, EGLClientBuffer shareHandle, EGLNativeWindowType window);
+
     egl::Error swapRect(EGLint x, EGLint y, EGLint width, EGLint height);
     egl::Error resetSwapChain(int backbufferWidth, int backbufferHeight);
     egl::Error resizeSwapChain(int backbufferWidth, int backbufferHeight);
@@ -66,6 +66,12 @@ class SurfaceD3D : public SurfaceImpl
     void unsubclassWindow();
 
     RendererD3D *mRenderer;
+    egl::Display *mDisplay;
+
+    bool mFixedSize;
+
+    GLenum mRenderTargetFormat;
+    GLenum mDepthStencilFormat;
 
     SwapChainD3D *mSwapChain;
     bool mSwapIntervalDirty;

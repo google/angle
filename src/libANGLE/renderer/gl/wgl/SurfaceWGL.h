@@ -21,10 +21,7 @@ class FunctionsWGL;
 class SurfaceWGL : public SurfaceGL
 {
   public:
-    SurfaceWGL(egl::Display *display, const egl::Config *config, EGLint fixedSize, EGLint postSubBufferSupported,
-               EGLenum textureFormat, EGLenum textureType, EGLNativeWindowType window, ATOM windowClass, int pixelFormat,
-               HGLRC wglContext, const FunctionsWGL *functions);
-
+    SurfaceWGL(EGLNativeWindowType window, ATOM windowClass, int pixelFormat, HGLRC wglContext, const FunctionsWGL *functions);
     ~SurfaceWGL() override;
 
     static SurfaceWGL *makeSurfaceWGL(SurfaceImpl *impl);
@@ -41,6 +38,8 @@ class SurfaceWGL : public SurfaceGL
 
     EGLint getWidth() const override;
     EGLint getHeight() const override;
+
+    EGLint isPostSubBufferSupported() const override;
 
   private:
     ATOM mWindowClass;

@@ -17,9 +17,7 @@ namespace rx
 class SurfaceGL : public SurfaceImpl
 {
   public:
-    SurfaceGL(egl::Display *display, const egl::Config *config,
-              EGLint fixedSize, EGLint postSubBufferSupported, EGLenum textureFormat,
-              EGLenum textureType);
+    SurfaceGL();
     ~SurfaceGL() override;
 };
 

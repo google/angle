@@ -11,15 +11,18 @@
 
 #include "libANGLE/renderer/DefaultAttachmentImpl.h"
 
+namespace egl
+{
+class Surface;
+}
+
 namespace rx
 {
-
-class SurfaceGL;
 
 class DefaultAttachmentGL : public DefaultAttachmentImpl
 {
   public:
-    DefaultAttachmentGL(GLenum type, SurfaceGL *surface);
+    DefaultAttachmentGL(GLenum type, egl::Surface *surface);
     ~DefaultAttachmentGL() override;
 
     GLsizei getWidth() const override;
@@ -29,7 +32,7 @@ class DefaultAttachmentGL : public DefaultAttachmentImpl
 
   private:
     GLenum mType;
-    SurfaceGL *mSurface;
+    egl::Surface *mSurface;
 };
 
 }

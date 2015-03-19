@@ -151,7 +151,6 @@ egl::Error DisplayD3D::createWindowSurface(const egl::Config *configuration, EGL
 {
     ASSERT(mRenderer != nullptr);
 
-    EGLint postSubBufferSupported = attribs.get(EGL_POST_SUB_BUFFER_SUPPORTED_NV, EGL_FALSE);
     EGLint width = attribs.get(EGL_WIDTH, 0);
     EGLint height = attribs.get(EGL_HEIGHT, 0);
     EGLint fixedSize = attribs.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE);
@@ -163,7 +162,7 @@ egl::Error DisplayD3D::createWindowSurface(const egl::Config *configuration, EGL
     }
 
     SurfaceD3D *surface = SurfaceD3D::createFromWindow(mRenderer, mDisplay, configuration, window, fixedSize,
-                                                       width, height, postSubBufferSupported);
+                                                       width, height);
     egl::Error error = surface->initialize();
     if (error.isError())
     {
@@ -182,11 +181,8 @@ egl::Error DisplayD3D::createPbufferSurface(const egl::Config *configuration, co
 
     EGLint width = attribs.get(EGL_WIDTH, 0);
     EGLint height = attribs.get(EGL_HEIGHT, 0);
-    EGLenum textureFormat = attribs.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
-    EGLenum textureTarget = attribs.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
-    
-    SurfaceD3D *surface = SurfaceD3D::createOffscreen(mRenderer, mDisplay, configuration, NULL,
-                                                      width, height, textureFormat, textureTarget);
+
+    SurfaceD3D *surface = SurfaceD3D::createOffscreen(mRenderer, mDisplay, configuration, NULL, width, height);
     egl::Error error = surface->initialize();
     if (error.isError())
     {
@@ -205,11 +201,9 @@ egl::Error DisplayD3D::createPbufferFromClientBuffer(const egl::Config *configur
 
     EGLint width = attribs.get(EGL_WIDTH, 0);
     EGLint height = attribs.get(EGL_HEIGHT, 0);
-    EGLenum textureFormat = attribs.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
-    EGLenum textureTarget = attribs.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
 
     SurfaceD3D *surface = SurfaceD3D::createOffscreen(mRenderer, mDisplay, configuration, shareHandle,
-                                                      width, height, textureFormat, textureTarget);
+                                                      width, height);
     egl::Error error = surface->initialize();
     if (error.isError())
     {

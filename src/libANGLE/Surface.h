@@ -63,7 +63,6 @@ class Surface final : angle::NonCopyable
     EGLenum getSwapBehavior() const;
     EGLenum getTextureFormat() const;
     EGLenum getTextureTarget() const;
-    EGLenum getFormat() const;
 
     gl::Texture *getBoundTexture() const { return mTexture; }
 
@@ -75,6 +74,15 @@ class Surface final : angle::NonCopyable
     EGLint mType;
 
     const egl::Config *mConfig;
+
+    bool mPostSubBufferRequested;
+
+    bool mFixedSize;
+    size_t mFixedWidth;
+    size_t mFixedHeight;
+
+    EGLenum mTextureFormat;
+    EGLenum mTextureTarget;
 
     EGLint mPixelAspectRatio;      // Display aspect ratio
     EGLenum mRenderBuffer;         // Render buffer

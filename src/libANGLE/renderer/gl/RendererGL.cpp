@@ -110,7 +110,7 @@ ProgramImpl *RendererGL::createProgram()
 
 DefaultAttachmentImpl *RendererGL::createDefaultAttachment(GLenum type, egl::Surface *surface)
 {
-    return new DefaultAttachmentGL(type, GetImplAs<SurfaceGL>(surface));
+    return new DefaultAttachmentGL(type, surface);
 }
 
 FramebufferImpl *RendererGL::createDefaultFramebuffer(const gl::Framebuffer::Data &data)

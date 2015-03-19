@@ -15,10 +15,8 @@
 namespace rx
 {
 
-SurfaceWGL::SurfaceWGL(egl::Display *display, const egl::Config *config, EGLint fixedSize, EGLint postSubBufferSupported,
-                       EGLenum textureFormat, EGLenum textureType, EGLNativeWindowType window, ATOM windowClass, int pixelFormat,
-                       HGLRC wglContext, const FunctionsWGL *functions)
-    : SurfaceGL(display, config, fixedSize, postSubBufferSupported, textureFormat, textureType),
+SurfaceWGL::SurfaceWGL(EGLNativeWindowType window, ATOM windowClass, int pixelFormat, HGLRC wglContext, const FunctionsWGL *functions)
+    : SurfaceGL(),
       mWindowClass(windowClass),
       mPixelFormat(pixelFormat),
       mShareWGLContext(wglContext),
@@ -177,6 +175,13 @@ EGLint SurfaceWGL::getHeight() const
         return 0;
     }
     return rect.bottom - rect.top;
+}
+
+EGLint SurfaceWGL::isPostSubBufferSupported() const
+{
+    // PostSubBuffer extension not exposed on WGL.
+    UNIMPLEMENTED();
+    return EGL_FALSE;
 }
 
 }

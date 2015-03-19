@@ -11,6 +11,7 @@
 #include "common/mathutil.h"
 #include "common/utilities.h"
 #include "libANGLE/Buffer.h"
+#include "libANGLE/Config.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"
@@ -894,7 +895,7 @@ gl::Error TextureD3D_2D::setStorage(GLenum target, size_t levels, GLenum interna
 
 void TextureD3D_2D::bindTexImage(egl::Surface *surface)
 {
-    GLenum internalformat = surface->getFormat();
+    GLenum internalformat = surface->getConfig()->renderTargetFormat;
 
     gl::Extents size(surface->getWidth(), surface->getHeight(), 1);
     mImageArray[0]->redefine(GL_TEXTURE_2D, internalformat, size, true);

@@ -873,7 +873,10 @@ EGLBoolean EGLAPIENTRY SwapInterval(EGLDisplay dpy, EGLint interval)
         return EGL_FALSE;
     }
 
-    draw_surface->setSwapInterval(interval);
+    const egl::Config *surfaceConfig = draw_surface->getConfig();
+    EGLint clampedInterval = std::min(std::max(interval, surfaceConfig->minSwapInterval), surfaceConfig->maxSwapInterval);
+
+    draw_surface->setSwapInterval(clampedInterval);
 
     SetGlobalError(Error(EGL_SUCCESS));
     return EGL_TRUE;

@@ -11,10 +11,8 @@
 namespace rx
 {
 
-SurfaceGL::SurfaceGL(egl::Display *display, const egl::Config *config,
-                     EGLint fixedSize, EGLint postSubBufferSupported, EGLenum textureFormat,
-                     EGLenum textureType)
-    : SurfaceImpl(display, config, fixedSize, postSubBufferSupported, textureFormat, textureType)
+SurfaceGL::SurfaceGL()
+    : SurfaceImpl()
 {
 }
 
