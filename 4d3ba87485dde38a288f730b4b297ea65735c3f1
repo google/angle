@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66de785c_c5685ef3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-19T14:39:19Z",
+      "side": 1,
+      "message": "nit: using \u0027angleproject:950\u0027 will now make this CL get picked up on the issue tracker",
+      "range": {
+        "startLine": 9,
+        "startChar": 4,
+        "endLine": 9,
+        "endChar": 9
+      },
+      "revId": "4d3ba87485dde38a288f730b4b297ea65735c3f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
