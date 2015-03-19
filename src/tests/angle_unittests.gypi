@@ -35,6 +35,7 @@
             '<(angle_path)/src/tests/compiler_tests/ShaderExtension_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ShaderVariable_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/TypeTracking_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/UnrollFlatten_test.cpp',
             '<(angle_path)/src/tests/preprocessor_tests/char_test.cpp',
             '<(angle_path)/src/tests/preprocessor_tests/comment_test.cpp',
             '<(angle_path)/src/tests/preprocessor_tests/define_test.cpp',
