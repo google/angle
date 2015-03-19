@@ -2716,7 +2716,7 @@ TIntermTyped *TParseContext::addUnaryMathLValue(TOperator op, TIntermTyped *chil
     return addUnaryMath(op, child, loc);
 }
 
-bool TParseContext::binaryOpArrayCheck(TOperator op, TIntermTyped *left, TIntermTyped *right,
+bool TParseContext::binaryOpCommonCheck(TOperator op, TIntermTyped *left, TIntermTyped *right,
     const TSourceLoc &loc)
 {
     if (left->isArray() || right->isArray())
@@ -2750,13 +2750,74 @@ bool TParseContext::binaryOpArrayCheck(TOperator op, TIntermTyped *left, TInterm
             return false;
         }
     }
+
+    // Check ops which require integer / ivec parameters
+    bool isBitShift = false;
+    switch (op)
+    {
+      case EOpBitShiftLeft:
+      case EOpBitShiftRight:
+      case EOpBitShiftLeftAssign:
+      case EOpBitShiftRightAssign:
+        // Unsigned can be bit-shifted by signed and vice versa, but we need to
+        // check that the basic type is an integer type.
+        isBitShift = true;
+        if (!IsInteger(left->getBasicType()) || !IsInteger(right->getBasicType()))
+        {
+            return false;
+        }
+        break;
+      case EOpBitwiseAnd:
+      case EOpBitwiseXor:
+      case EOpBitwiseOr:
+      case EOpBitwiseAndAssign:
+      case EOpBitwiseXorAssign:
+      case EOpBitwiseOrAssign:
+        // It is enough to check the type of only one operand, since later it
+        // is checked that the operand types match.
+        if (!IsInteger(left->getBasicType()))
+        {
+            return false;
+        }
+        break;
+      default:
+        break;
+    }
+
+    // GLSL ES 1.00 and 3.00 do not support implicit type casting.
+    // So the basic type should usually match.
+    if (!isBitShift && left->getBasicType() != right->getBasicType())
+    {
+        return false;
+    }
+
+    // Check that type sizes match exactly on ops that require that:
+    switch(op)
+    {
+      case EOpAssign:
+      case EOpInitialize:
+      case EOpEqual:
+      case EOpNotEqual:
+      case EOpLessThan:
+      case EOpGreaterThan:
+      case EOpLessThanEqual:
+      case EOpGreaterThanEqual:
+        if ((left->getNominalSize() != right->getNominalSize()) ||
+            (left->getSecondarySize() != right->getSecondarySize()))
+        {
+            return false;
+        }
+      default:
+        break;
+    }
+
     return true;
 }
 
 TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op, TIntermTyped *left, TIntermTyped *right,
     const TSourceLoc &loc)
 {
-    if (!binaryOpArrayCheck(op, left, right, loc))
+    if (!binaryOpCommonCheck(op, left, right, loc))
         return nullptr;
 
     switch (op)
@@ -2809,12 +2870,6 @@ TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op, TIntermTyped *l
         break;
     }
 
-    // This check is duplicated between here and node->promote() as an optimization.
-    if (left->getBasicType() != right->getBasicType() && op != EOpBitShiftLeft && op != EOpBitShiftRight)
-    {
-        return nullptr;
-    }
-
     return intermediate.addBinaryMath(op, left, right, loc);
 }
 
@@ -2849,7 +2904,7 @@ TIntermTyped *TParseContext::addBinaryMathBooleanResult(TOperator op, TIntermTyp
 TIntermTyped *TParseContext::createAssign(TOperator op, TIntermTyped *left, TIntermTyped *right,
     const TSourceLoc &loc)
 {
-    if (binaryOpArrayCheck(op, left, right, loc))
+    if (binaryOpCommonCheck(op, left, right, loc))
     {
         return intermediate.addAssign(op, left, right, loc);
     }

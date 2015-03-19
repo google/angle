@@ -192,8 +192,8 @@ struct TParseContext {
     TIntermTyped *createAssign(TOperator op, TIntermTyped *left, TIntermTyped *right,
         const TSourceLoc &loc);
 
-    // Return true if array-related checks pass
-    bool binaryOpArrayCheck(TOperator op, TIntermTyped *left, TIntermTyped *right,
+    // Return true if the checks pass
+    bool binaryOpCommonCheck(TOperator op, TIntermTyped *left, TIntermTyped *right,
         const TSourceLoc &loc);
 };
 
