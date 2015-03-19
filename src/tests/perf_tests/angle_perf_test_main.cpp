@@ -4,51 +4,18 @@
 // found in the LICENSE file.
 //
 
-#include "SimpleBenchmark.h"
-#include "BufferSubData.h"
-#include "TexSubImage.h"
-#include "PointSprites.h"
-
 #include <iostream>
 #include <rapidjson/document.h>
 #include <rapidjson/filestream.h>
 
+#include "BufferSubData.h"
+#include "PointSprites.h"
+#include "SimpleBenchmark.h"
+#include "TexSubImage.h"
+#include "common/Optional.h"
+
 namespace
 {
-
-template <class T>
-struct Optional
-{
-    Optional()
-        : valid(false),
-          value(T())
-    {}
-
-    explicit Optional(T valueIn)
-        : valid(true),
-          value(valueIn)
-    {}
-
-    Optional(const Optional &other)
-        : valid(other.valid),
-          value(other.value)
-    {}
-
-    Optional &operator=(const Optional &other)
-    {
-        this.valid = other.valid;
-        this.value = otehr.value;
-        return *this;
-    }
-
-    static Optional None()
-    {
-        return Optional();
-    }
-
-    bool valid;
-    T value;
-};
 
 Optional<std::string> GetStringMember(const rapidjson::Document &document, const char *name)
 {
@@ -170,50 +137,50 @@ bool ParseBenchmarkParams(const rapidjson::Document &document, BufferSubDataPara
     auto iterations = GetUintMember(document, "iterations");
     auto updateRate = GetUintMember(document, "update_rate");
 
-    if (!type.valid || !components.valid || !normalized.valid || !updateSize.valid ||
-        !bufferSize.valid || !iterations.valid || !updateRate.valid)
+    if (!type.valid() || !components.valid() || !normalized.valid() || !updateSize.valid() ||
+        !bufferSize.valid() || !iterations.valid() || !updateRate.valid())
     {
         return false;
     }
 
-    GLenum vertexType = ParseAttribType(type.value);
+    GLenum vertexType = ParseAttribType(type.value());
     if (vertexType == GL_NONE)
     {
-        std::cerr << "Invalid attribute type: " << type.value << std::endl;
+        std::cerr << "Invalid attribute type: " << type.value() << std::endl;
         return false;
     }
 
-    if (components.value < 1 || components.value > 4)
+    if (components.value() < 1 || components.value() > 4)
     {
-        std::cerr << "Invalid component count: " << components.value << std::endl;
+        std::cerr << "Invalid component count: " << components.value() << std::endl;
         return false;
     }
 
-    if (normalized.value && vertexType == GL_FLOAT)
+    if (normalized.value() && vertexType == GL_FLOAT)
     {
         std::cerr << "Normalized float is not a valid vertex type." << std::endl;
         return false;
     }
 
-    if (bufferSize.value == 0)
+    if (bufferSize.value() == 0)
     {
         std::cerr << "Zero buffer size is not valid." << std::endl;
         return false;
     }
 
-    if (iterations.value == 0)
+    if (iterations.value() == 0)
     {
         std::cerr << "Zero iterations not valid." << std::endl;
         return false;
     }
 
     params->vertexType = vertexType;
-    params->vertexComponentCount = components.value;
-    params->vertexNormalized = normalized.value;
-    params->updateSize = updateSize.value;
-    params->bufferSize = bufferSize.value;
-    params->iterations = iterations.value;
-    params->updateRate = updateRate.value;
+    params->vertexComponentCount = components.value();
+    params->vertexNormalized = normalized.value();
+    params->updateSize = updateSize.value();
+    params->bufferSize = bufferSize.value();
+    params->iterations = iterations.value();
+    params->updateRate = updateRate.value();
 
     return true;
 }
@@ -298,26 +265,26 @@ int main(int argc, char **argv)
 
     auto testName = GetStringMember(document, "test");
 
-    if (!testName.valid)
+    if (!testName.valid())
     {
         return 1;
     }
 
-    if (testName.value == "BufferSubData")
+    if (testName.value() == "BufferSubData")
     {
         return ParseAndRunBenchmark<BufferSubDataBenchmark>(rendererType, document);
     }
-    else if (testName.value == "TexSubImage")
+    else if (testName.value() == "TexSubImage")
     {
         return ParseAndRunBenchmark<TexSubImageBenchmark>(rendererType, document);
     }
-    else if (testName.value == "PointSprites")
+    else if (testName.value() == "PointSprites")
     {
         return ParseAndRunBenchmark<PointSpritesBenchmark>(rendererType, document);
     }
     else
     {
-        std::cerr << "Unknown test: " << testName.value << std::endl;
+        std::cerr << "Unknown test: " << testName.value() << std::endl;
         return 1;
     }
 }

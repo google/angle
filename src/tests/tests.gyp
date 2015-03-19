@@ -209,6 +209,7 @@
                     'includes': [ '../../build/common_defines.gypi', ],
                     'dependencies':
                     [
+                        '<(angle_path)/src/angle.gyp:angle_common',
                         '<(angle_path)/src/angle.gyp:libGLESv2',
                         '<(angle_path)/src/angle.gyp:libEGL',
                         '<(angle_path)/util/util.gyp:angle_util',

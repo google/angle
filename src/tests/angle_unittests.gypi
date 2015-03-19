@@ -15,6 +15,7 @@
         # This file list will be shared with the GN build.
         'angle_unittests_sources':
         [
+            '<(angle_path)/src/common/Optional_unittest.cpp',
             '<(angle_path)/src/libANGLE/Config_unittest.cpp',
             '<(angle_path)/src/libANGLE/Fence_unittest.cpp',
             '<(angle_path)/src/libANGLE/ImageIndexIterator_unittest.cpp',

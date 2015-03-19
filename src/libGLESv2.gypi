@@ -10,6 +10,7 @@
         [
             'common/MemoryBuffer.cpp',
             'common/MemoryBuffer.h',
+            'common/Optional.h',
             'common/angleutils.cpp',
             'common/angleutils.h',
             'common/debug.cpp',
@@ -491,8 +492,8 @@
             {
                 'include_dirs':
                 [
-                    '.',
-                    '../include',
+                    '<(angle_path)/src',
+                    '<(angle_path)/include',
                 ],
                 'defines':
                 [

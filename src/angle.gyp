@@ -50,6 +50,14 @@
                 '.',
                 '../include',
             ],
+            'direct_dependent_settings':
+            {
+                'include_dirs':
+                [
+                    '<(angle_path)/src',
+                    '<(angle_path)/include',
+                ],
+            },
             'conditions':
             [
                 ['angle_build_winrt==1',
