@@ -121,3 +121,40 @@ TEST_F(MalformedShaderTest, RedeclaringFunctionWithDifferentQualifiers)
       FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 };
+
+// Assignment and equality are undefined for structures containing arrays (ESSL 1.00 section 5.7)
+TEST_F(MalformedShaderTest, CompareStructsContainingArrays)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "struct s { float a[3]; };\n"
+        "void main() {\n"
+        "   s a;\n"
+        "   s b;\n"
+        "   bool c = (a == b);\n"
+        "   gl_FragColor = vec4(c ? 1.0 : 0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Assignment and equality are undefined for structures containing arrays (ESSL 1.00 section 5.7)
+TEST_F(MalformedShaderTest, AssignStructsContainingArrays)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "struct s { float a[3]; };\n"
+        "void main() {\n"
+        "   s a;\n"
+        "   s b;\n"
+        "   b.a[0] = 0.0;\n"
+        "   a = b;\n"
+        "   gl_FragColor = vec4(a.a[0]);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

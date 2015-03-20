@@ -2791,13 +2791,20 @@ bool TParseContext::binaryOpCommonCheck(TOperator op, TIntermTyped *left, TInter
         return false;
     }
 
-    // Check that type sizes match exactly on ops that require that:
+    // Check that type sizes match exactly on ops that require that.
+    // Also check restrictions for structs that contain arrays.
     switch(op)
     {
       case EOpAssign:
       case EOpInitialize:
       case EOpEqual:
       case EOpNotEqual:
+        // ESSL 1.00 sections 5.7, 5.8, 5.9
+        if (shaderVersion < 300 && left->getType().isStructureContainingArrays())
+        {
+            error(loc, "undefined operation for structs containing arrays", GetOperatorString(op));
+            return false;
+        }
       case EOpLessThan:
       case EOpGreaterThan:
       case EOpLessThanEqual:
