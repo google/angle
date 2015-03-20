@@ -1,0 +1,153 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66259842_9c23c924",
+        "filename": "src/libANGLE/renderer/FramebufferImpl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-20T01:43:29Z",
+      "side": 1,
+      "message": "No need to change the type of this.  We try to use size_t instead of GLsizei where possible because it is invalid to have negative a GLsizei.",
+      "range": {
+        "startLine": 42,
+        "startChar": 33,
+        "endLine": 42,
+        "endChar": 40
+      },
+      "revId": "02112553a390c7d366c63eff610f1da3ef6a3fb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66259842_5c3e913e",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-20T01:43:29Z",
+      "side": 1,
+      "message": "This can just be removed instead of redefining the pure method.  I would also recommend doing the same for invalidateSub and just put the no-ops in the D3D9 and D3D11 framebuffers for consistency.",
+      "range": {
+        "startLine": 88,
+        "startChar": 4,
+        "endLine": 88,
+        "endChar": 79
+      },
+      "revId": "02112553a390c7d366c63eff610f1da3ef6a3fb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66259842_3ce39549",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-20T01:43:29Z",
+      "side": 1,
+      "message": "Might as well cover the other attachment targets (DEPTH_STENCIL and COLOR_ATTACHMENT[1-N]), it\u0027s useful for ES3 too.",
+      "range": {
+        "startLine": 191,
+        "startChar": 14,
+        "endLine": 194,
+        "endChar": 24
+      },
+      "revId": "02112553a390c7d366c63eff610f1da3ef6a3fb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66259842_27d94277",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-20T01:43:29Z",
+      "side": 1,
+      "message": "We should probably support all the ES2 and 3 attachments and targets. Issue 1 from the extension spec mentions that they intend to support MRT and others when they are available.  Refactoring ValidateInvalidateFramebufferParameters from validationES3.h to handle this ES2 + extension should work.",
+      "revId": "02112553a390c7d366c63eff610f1da3ef6a3fb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "068cdc85_0ad68f7b",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 901,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-20T01:43:29Z",
+      "side": 1,
+      "message": "nit: indentation looks off (below too)",
+      "range": {
+        "startLine": 893,
+        "startChar": 4,
+        "endLine": 901,
+        "endChar": 5
+      },
+      "revId": "02112553a390c7d366c63eff610f1da3ef6a3fb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "068cdc85_e5e1fc16",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-20T01:43:29Z",
+      "side": 1,
+      "message": "Need to check that the extension is enabled.",
+      "revId": "02112553a390c7d366c63eff610f1da3ef6a3fb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46825452_2cbfefa0",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 712,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-20T01:43:29Z",
+      "side": 1,
+      "message": "I think we should leave it up to the FramebufferImpl to decide what to do in this case, some may still do useful things.  D3D11 could still invalidate the views and it skips the expensive completeness check.",
+      "range": {
+        "startLine": 711,
+        "startChar": 12,
+        "endLine": 712,
+        "endChar": 116
+      },
+      "revId": "02112553a390c7d366c63eff610f1da3ef6a3fb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
