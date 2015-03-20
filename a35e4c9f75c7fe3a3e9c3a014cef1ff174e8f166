@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "068cdc85_c1870563",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-20T17:37:25Z",
+      "side": 1,
+      "message": "nit: indentation",
+      "revId": "a35e4c9f75c7fe3a3e9c3a014cef1ff174e8f166",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46825452_f22f7db9",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-20T17:37:25Z",
+      "side": 1,
+      "message": "nit: not sure why the other tests in this file end in a semicolon, but it isn\u0027t necessary so we shouldn\u0027t add them to new tests.",
+      "revId": "a35e4c9f75c7fe3a3e9c3a014cef1ff174e8f166",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "068cdc85_018e6d83",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-20T17:37:25Z",
+      "side": 1,
+      "message": "nit: indentation",
+      "revId": "a35e4c9f75c7fe3a3e9c3a014cef1ff174e8f166",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
