@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "466b346a_6ac2b7b3",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-20T13:37:41Z",
+      "side": 1,
+      "message": "This line still seems to be relying on implicit conversion between integers and unsigned integers. The version without implicit conversion would be:\n\nint xi \u003d (int(x) \u0026 0x7fff) - (int(x) \u0026 0x8000);",
+      "revId": "d94c794eb5dd3cf6533046af57057c0bd1a3fb5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "266e407b_0964698e",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 3
