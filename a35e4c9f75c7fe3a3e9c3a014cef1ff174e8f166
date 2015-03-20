@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "66259842_283a6f98",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-03-20T17:53:39Z",
+      "side": 1,
+      "message": "Olli, can you also check these tests into WebGL conformance test suite, if they haven\u0027t been done already?",
+      "range": {
+        "startLine": 135,
+        "startChar": 12,
+        "endLine": 135,
+        "endChar": 24
+      },
+      "revId": "a35e4c9f75c7fe3a3e9c3a014cef1ff174e8f166",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "068cdc85_c1870563",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 1
