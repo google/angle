@@ -1132,9 +1132,15 @@ bool ValidateES3RenderbufferStorageParameters(gl::Context *context, GLenum targe
     return true;
 }
 
-bool ValidateInvalidateFramebufferParameters(Context *context, GLenum target, GLsizei numAttachments,
-                                             const GLenum* attachments)
+bool ValidateInvalidateFramebuffer(Context *context, GLenum target, GLsizei numAttachments,
+                                   const GLenum *attachments)
 {
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Operation only supported on ES 3.0 and above"));
+        return false;
+    }
+
     bool defaultFramebuffer = false;
 
     switch (target)
@@ -1147,56 +1153,11 @@ bool ValidateInvalidateFramebufferParameters(Context *context, GLenum target, GL
         defaultFramebuffer = context->getState().getReadFramebuffer()->id() == 0;
         break;
       default:
-          context->recordError(Error(GL_INVALID_ENUM));
-          return false;
+        context->recordError(Error(GL_INVALID_ENUM, "Invalid framebuffer target"));
+        return false;
     }
 
-    for (int i = 0; i < numAttachments; ++i)
-    {
-        if (attachments[i] >= GL_COLOR_ATTACHMENT0 && attachments[i] <= GL_COLOR_ATTACHMENT15)
-        {
-            if (defaultFramebuffer)
-            {
-                context->recordError(Error(GL_INVALID_ENUM));
-                return false;
-            }
-
-            if (attachments[i] >= GL_COLOR_ATTACHMENT0 + context->getCaps().maxColorAttachments)
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return false;
-            }
-        }
-        else
-        {
-            switch (attachments[i])
-            {
-              case GL_DEPTH_ATTACHMENT:
-              case GL_STENCIL_ATTACHMENT:
-              case GL_DEPTH_STENCIL_ATTACHMENT:
-                if (defaultFramebuffer)
-                {
-                    context->recordError(Error(GL_INVALID_ENUM));
-                    return false;
-                }
-                break;
-              case GL_COLOR:
-              case GL_DEPTH:
-              case GL_STENCIL:
-                if (!defaultFramebuffer)
-                {
-                    context->recordError(Error(GL_INVALID_ENUM));
-                    return false;
-                }
-                break;
-              default:
-                context->recordError(Error(GL_INVALID_ENUM));
-                return false;
-            }
-        }
-    }
-
-    return true;
+    return ValidateDiscardFramebufferBase(context, target, numAttachments, attachments, defaultFramebuffer);
 }
 
 bool ValidateClearBuffer(Context *context)

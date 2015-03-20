@@ -209,6 +209,9 @@ struct Extensions
     // GL_ANGLE_translated_shader_source
     bool translatedShaderSource;
 
+    // GL_EXT_discard_framebuffer
+    bool discardFramebuffer;
+
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float

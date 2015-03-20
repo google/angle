@@ -29,6 +29,9 @@ bool ValidateES2TexStorageParameters(Context *context, GLenum target, GLsizei le
 
 bool ValidES2ReadFormatType(Context *context, GLenum format, GLenum type);
 
+bool ValidateDiscardFramebufferEXT(Context *context, GLenum target, GLsizei numAttachments,
+                                   const GLenum *attachments);
+
 }
 
 #endif // LIBANGLE_VALIDATION_ES2_H_

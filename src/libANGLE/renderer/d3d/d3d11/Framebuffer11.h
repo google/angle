@@ -21,6 +21,10 @@ class Framebuffer11 : public FramebufferD3D
     Framebuffer11(const gl::Framebuffer::Data &data, Renderer11 *renderer);
     virtual ~Framebuffer11();
 
+    gl::Error discard(size_t count, const GLenum *attachments) override;
+    gl::Error invalidate(size_t count, const GLenum *attachments) override;
+    gl::Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area) override;
+
     // Invalidate the cached swizzles of all bound texture attachments.
     gl::Error invalidateSwizzles() const;
 
@@ -34,6 +38,7 @@ class Framebuffer11 : public FramebufferD3D
                    bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter,
                    const gl::Framebuffer *sourceFramebuffer) override;
 
+    gl::Error invalidateBase(size_t count, const GLenum *attachments, bool useEXTBehavior) const;
 
     GLenum getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const override;
 
