@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "46825452_32e98581",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-20T18:03:03Z",
+      "side": 1,
+      "message": "this function is 250 lines. Is there any way to split it up into a few sub-methods? eg, syncElementArrayState and syncAttribState",
+      "range": {
+        "startLine": 127,
+        "startChar": 25,
+        "endLine": 127,
+        "endChar": 38
+      },
+      "revId": "5497aec7bc4d68a5aaf5f8295a4fd6a951547023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66259842_48256ba1",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-20T18:03:03Z",
+      "side": 1,
+      "message": "nit: technically offsets are ptrdiff_t, better to use that",
+      "range": {
+        "startLine": 152,
+        "startChar": 67,
+        "endLine": 152,
+        "endChar": 73
+      },
+      "revId": "5497aec7bc4d68a5aaf5f8295a4fd6a951547023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "068cdc85_5c7a1ab8",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-20T18:03:03Z",
+      "side": 1,
+      "message": "nit: pointer alignment",
+      "range": {
+        "startLine": 155,
+        "startChar": 37,
+        "endLine": 155,
+        "endChar": 38
+      },
+      "revId": "5497aec7bc4d68a5aaf5f8295a4fd6a951547023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6d4f037_f0d0be81",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 5
@@ -49,6 +118,46 @@
     },
     {
       "key": {
+        "uuid": "068cdc85_9ca88257",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-20T18:03:03Z",
+      "side": 1,
+      "message": "nit: pointer alignment",
+      "revId": "5497aec7bc4d68a5aaf5f8295a4fd6a951547023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66259842_88806392",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-20T18:03:03Z",
+      "side": 1,
+      "message": "is this testable? I\u0027m a bit cautious of adding speculative code (eg 5 might not be the right number, you may need to sleep, or it may always be unrecoverable).",
+      "range": {
+        "startLine": 312,
+        "startChar": 2,
+        "endLine": 315,
+        "endChar": 38
+      },
+      "revId": "5497aec7bc4d68a5aaf5f8295a4fd6a951547023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66de785c_cbecf5bf",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 5
@@ -60,6 +169,30 @@
       "writtenOn": "2015-03-18T22:42:02Z",
       "side": 1,
       "message": "If this is switched to mapBufferRange per above, then we should also use MAP_INVALIDATE_RANGE_BIT or MAP_INVALIDATE_BUFFER_BIT.",
+      "range": {
+        "startLine": 318,
+        "startChar": 37,
+        "endLine": 318,
+        "endChar": 53
+      },
+      "revId": "5497aec7bc4d68a5aaf5f8295a4fd6a951547023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46825452_12d001ce",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-20T18:03:03Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "66de785c_cbecf5bf",
       "range": {
         "startLine": 318,
         "startChar": 37,
