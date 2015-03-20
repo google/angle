@@ -34,11 +34,16 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name, const PerfTestParams &test
 
 void ANGLEPerfTest::SetUp()
 {
+    EGLPlatformParameters platformParams(mTestParams.requestedRenderer,
+                                         EGL_DONT_CARE,
+                                         EGL_DONT_CARE,
+                                         mTestParams.deviceType);
+
     mOSWindow.reset(CreateOSWindow());
     mEGLWindow.reset(new EGLWindow(mTestParams.widowWidth,
                                    mTestParams.windowHeight,
                                    mTestParams.glesMajorVersion,
-                                   EGLPlatformParameters(mTestParams.requestedRenderer)));
+                                   platformParams));
     mTimer.reset(CreateTimer());
 
     if (!mOSWindow->initialize(mName, mEGLWindow->getWidth(), mEGLWindow->getHeight()))

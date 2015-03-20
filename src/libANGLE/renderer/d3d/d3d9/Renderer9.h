@@ -228,6 +228,8 @@ class Renderer9 : public RendererD3D
 
     RendererClass getRendererClass() const override { return RENDERER_D3D9; }
 
+    D3DDEVTYPE getD3D9DeviceType() const { return mDeviceType; }
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer9);
 

@@ -332,13 +332,14 @@ void BufferSubDataBenchmark::drawBenchmark()
     }
 }
 
-BufferSubDataParams D3D11Params()
+BufferSubDataParams BufferUpdateD3D11Params()
 {
     BufferSubDataParams params;
     params.glesMajorVersion = 2;
     params.widowWidth = 1280;
     params.windowHeight = 720;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
+    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
     params.vertexType = GL_FLOAT;
     params.vertexComponentCount = 4;
     params.vertexNormalized = GL_FALSE;
@@ -349,13 +350,14 @@ BufferSubDataParams D3D11Params()
     return params;
 }
 
-BufferSubDataParams D3D9Params()
+BufferSubDataParams BufferUpdateD3D9Params()
 {
     BufferSubDataParams params;
     params.glesMajorVersion = 2;
     params.widowWidth = 1280;
     params.windowHeight = 720;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
+    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
     params.vertexType = GL_FLOAT;
     params.vertexComponentCount = 4;
     params.vertexNormalized = GL_FALSE;
@@ -366,13 +368,53 @@ BufferSubDataParams D3D9Params()
     return params;
 }
 
+BufferSubDataParams DrawCallD3D11Params()
+{
+    BufferSubDataParams params;
+    params.glesMajorVersion = 2;
+    params.widowWidth = 1280;
+    params.windowHeight = 720;
+    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
+    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE;
+    params.vertexType = GL_FLOAT;
+    params.vertexComponentCount = 4;
+    params.vertexNormalized = GL_FALSE;
+    params.updateSize = 0;
+    params.bufferSize = 100000;
+    params.iterations = 50;
+    params.updateRate = 1;
+    return params;
+}
+
+BufferSubDataParams DrawCallD3D9Params()
+{
+    BufferSubDataParams params;
+    params.glesMajorVersion = 2;
+    params.widowWidth = 1280;
+    params.windowHeight = 720;
+    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
+    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE;
+    params.vertexType = GL_FLOAT;
+    params.vertexComponentCount = 4;
+    params.vertexNormalized = GL_FALSE;
+    params.updateSize = 0;
+    params.bufferSize = 100000;
+    params.iterations = 50;
+    params.updateRate = 1;
+    return params;
+}
+
 } // namespace
 
-TEST_P(BufferSubDataBenchmark, BufferUpdates)
+TEST_P(BufferSubDataBenchmark, Run)
 {
     run();
 }
 
 INSTANTIATE_TEST_CASE_P(BufferUpdates,
                         BufferSubDataBenchmark,
-                        ::testing::Values(D3D11Params(), D3D9Params()));
+                        ::testing::Values(BufferUpdateD3D11Params(), BufferUpdateD3D9Params()));
+
+INSTANTIATE_TEST_CASE_P(DrawCallPerf,
+                        BufferSubDataBenchmark,
+                        ::testing::Values(DrawCallD3D11Params(), DrawCallD3D9Params()));

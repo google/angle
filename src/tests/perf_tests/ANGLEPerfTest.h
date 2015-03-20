@@ -27,6 +27,7 @@ class Event;
 struct PerfTestParams
 {
     EGLint requestedRenderer;
+    EGLint deviceType;
     EGLint glesMajorVersion;
     EGLint widowWidth;
     EGLint windowHeight;

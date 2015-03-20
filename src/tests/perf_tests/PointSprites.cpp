@@ -206,6 +206,7 @@ PointSpritesParams D3D11Params()
     params.widowWidth = 1280;
     params.windowHeight = 720;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
+    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
 
     params.iterations = 10;
     params.count = 10;
@@ -223,6 +224,7 @@ PointSpritesParams D3D9Params()
     params.widowWidth = 1280;
     params.windowHeight = 720;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
+    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
 
     params.iterations = 10;
     params.count = 10;
@@ -234,7 +236,7 @@ PointSpritesParams D3D9Params()
 
 } // namespace
 
-TEST_P(PointSpritesBenchmark, Render)
+TEST_P(PointSpritesBenchmark, Run)
 {
     run();
 }

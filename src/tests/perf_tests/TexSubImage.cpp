@@ -263,6 +263,7 @@ TexSubImageParams D3D11Params()
     params.widowWidth = 512;
     params.windowHeight = 512;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
+    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
 
     params.imageWidth = 1024;
     params.imageHeight = 1024;
@@ -281,6 +282,7 @@ TexSubImageParams D3D9Params()
     params.widowWidth = 512;
     params.windowHeight = 512;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
+    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
 
     params.imageWidth = 1024;
     params.imageHeight = 1024;
@@ -293,7 +295,7 @@ TexSubImageParams D3D9Params()
 
 } // namespace
 
-TEST_P(TexSubImageBenchmark, TextureUpdates)
+TEST_P(TexSubImageBenchmark, Run)
 {
     run();
 }
