@@ -88,6 +88,24 @@
     },
     {
       "key": {
+        "uuid": "068cdc85_2bf7d25c",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-20T15:53:13Z",
+      "side": 1,
+      "message": "+1, making a helper function ValidateDiscardFramebufferBase, with two functions ValidateDiscardFramebuffer and ValidateDiscardFramebufferEXT would be a good cleanup.",
+      "parentUuid": "66259842_27d94277",
+      "revId": "02112553a390c7d366c63eff610f1da3ef6a3fb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "068cdc85_0ad68f7b",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 1
