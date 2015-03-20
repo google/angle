@@ -16,7 +16,7 @@
 namespace rx
 {
 
-static const GLenum SourceBufferOperationTarget = GL_ELEMENT_ARRAY_BUFFER;
+static const GLenum SourceBufferOperationTarget = GL_COPY_READ_BUFFER;
 static const GLenum DestBufferOperationTarget = GL_ARRAY_BUFFER;
 
 BufferGL::BufferGL(const FunctionsGL *functions, StateManagerGL *stateManager)
@@ -61,7 +61,7 @@ gl::Error BufferGL::copySubData(BufferImpl* source, GLintptr sourceOffset, GLint
     mStateManager->bindBuffer(DestBufferOperationTarget, mBufferID);
     mStateManager->bindBuffer(SourceBufferOperationTarget, sourceGL->getBufferID());
 
-    mFunctions->copyBufferSubData(SourceBufferOperationTarget, GL_ARRAY_BUFFER, sourceOffset, destOffset, size);
+    mFunctions->copyBufferSubData(SourceBufferOperationTarget, DestBufferOperationTarget, sourceOffset, destOffset, size);
 
     return gl::Error(GL_NO_ERROR);
 }
