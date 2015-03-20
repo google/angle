@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "068cdc85_3cc5d6a7",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3042,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-03-20T18:12:13Z",
+      "side": 1,
+      "message": "This needs to be a reserved name, something starts with webgl_ or _webgl_, otherwise a user shader may use exactly this function name.\n\nLooking further, the addStructEqualityFunction also has this issue. Can you fix that also in this CL?",
+      "range": {
+        "startLine": 3042,
+        "startChar": 18,
+        "endLine": 3042,
+        "endChar": 27
+      },
+      "revId": "c02c101202122a53a2a154c2597a00575a3a7a3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46825452_b2557557",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-03-20T18:12:13Z",
+      "side": 1,
+      "message": "nit: it would be nice if the order of arguments will align with outputTriplet(), that |out| is in the end.",
+      "revId": "c02c101202122a53a2a154c2597a00575a3a7a3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
