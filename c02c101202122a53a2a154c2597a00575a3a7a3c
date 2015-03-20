@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "46825452_8d505265",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3042,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-20T18:43:33Z",
+      "side": 1,
+      "message": "Mo, in the HLSL translator, we prefix *all* user IDs with underscore, so anything not prefixed by underscore is invisible to the user. Should be fine as is.",
+      "parentUuid": "068cdc85_3cc5d6a7",
+      "range": {
+        "startLine": 3042,
+        "startChar": 18,
+        "endLine": 3042,
+        "endChar": 27
+      },
+      "revId": "c02c101202122a53a2a154c2597a00575a3a7a3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "46825452_b2557557",
         "filename": "src/compiler/translator/OutputHLSL.h",
         "patchSetId": 2
