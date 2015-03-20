@@ -14,26 +14,21 @@
 
 #include "angle_gl.h"
 
-#include <stack>
+#include <vector>
 
 namespace gl
 {
 
-class HandleAllocator final
+class HandleAllocator
 {
   public:
-    // Maximum handle = MAX_UINT-1
     HandleAllocator();
-    // Specify maximum handle value
-    HandleAllocator(GLuint maximumHandleValue);
-
-    ~HandleAllocator();
+    virtual ~HandleAllocator();
 
     void setBaseHandle(GLuint value);
 
     GLuint allocate();
     void release(GLuint handle);
-    void reserve(GLuint handle);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(HandleAllocator);
@@ -42,22 +37,6 @@ class HandleAllocator final
     GLuint mNextValue;
     typedef std::vector<GLuint> HandleList;
     HandleList mFreeValues;
-
-    struct HandleRange
-    {
-        HandleRange(GLuint beginIn, GLuint endIn) : begin(beginIn), end(endIn) {}
-
-        GLuint begin;
-        GLuint end;
-    };
-
-    struct HandleRangeComparator;
-
-    // The freelist consists of never-allocated handles, stored
-    // as ranges, and handles that were previously allocated and
-    // released, stored in a stack.
-    std::vector<HandleRange> mUnallocatedList;
-    std::vector<GLuint> mReleasedList;
 };
 
 }
