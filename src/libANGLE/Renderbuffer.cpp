@@ -27,7 +27,6 @@ Renderbuffer::Renderbuffer(rx::RenderbufferImpl *impl, GLuint id)
     mInternalFormat(GL_RGBA4),
     mSamples(0)
 {
-    ASSERT(mRenderbuffer);
 }
 
 Renderbuffer::~Renderbuffer()

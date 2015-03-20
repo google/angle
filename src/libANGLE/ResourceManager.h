@@ -68,15 +68,17 @@ class ResourceManager
 
     void setRenderbuffer(GLuint handle, Renderbuffer *renderbuffer);
 
-    void checkBufferAllocation(unsigned int buffer);
-    void checkTextureAllocation(GLuint texture, GLenum type);
-    void checkRenderbufferAllocation(GLuint renderbuffer);
+    void checkBufferAllocation(GLuint handle);
+    void checkTextureAllocation(GLuint handle, GLenum type);
+    void checkRenderbufferAllocation(GLuint handle);
     void checkSamplerAllocation(GLuint sampler);
 
     bool isSampler(GLuint sampler);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ResourceManager);
+
+    void createTextureInternal(GLuint handle);
 
     rx::ImplFactory *mFactory;
     std::size_t mRefCount;
