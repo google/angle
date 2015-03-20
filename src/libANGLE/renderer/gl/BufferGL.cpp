@@ -90,11 +90,6 @@ gl::Error BufferGL::unmap()
     return gl::Error(GL_NO_ERROR);
 }
 
-void BufferGL::markTransformFeedbackUsage()
-{
-    UNIMPLEMENTED();
-}
-
 gl::Error BufferGL::getData(const uint8_t **outData)
 {
     UNIMPLEMENTED();

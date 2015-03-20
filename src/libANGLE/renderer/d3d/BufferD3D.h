@@ -31,6 +31,7 @@ class BufferD3D : public BufferImpl
     virtual size_t getSize() const = 0;
     virtual bool supportsDirectBinding() const = 0;
     virtual RendererD3D *getRenderer() = 0;
+    virtual void markTransformFeedbackUsage() = 0;
 
     StaticVertexBufferInterface *getStaticVertexBuffer() { return mStaticVertexBuffer; }
     StaticIndexBufferInterface *getStaticIndexBuffer() { return mStaticIndexBuffer; }

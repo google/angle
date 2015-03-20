@@ -118,11 +118,4 @@ Error Buffer::unmap()
     return error;
 }
 
-void Buffer::markTransformFeedbackUsage()
-{
-    // TODO: Only used by the DX11 backend. Refactor to a more appropriate place.
-    mBuffer->markTransformFeedbackUsage();
-    mIndexRangeCache.clear();
-}
-
 }

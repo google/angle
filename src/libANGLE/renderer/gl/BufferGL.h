@@ -28,7 +28,6 @@ class BufferGL : public BufferImpl
     gl::Error copySubData(BufferImpl* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size) override;
     gl::Error map(size_t offset, size_t length, GLbitfield access, GLvoid **mapPtr) override;
     gl::Error unmap() override;
-    void markTransformFeedbackUsage() override;
 
     // This method may not have a corresponding GL-backed function. It is necessary
     // for validation, for certain indexed draw calls.

@@ -17,6 +17,7 @@
 #include "libANGLE/State.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/DisplayD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 
@@ -533,7 +534,8 @@ void RendererD3D::markTransformFeedbackUsage(const gl::Data &data)
         gl::Buffer *buffer = data.state->getIndexedTransformFeedbackBuffer(i);
         if (buffer)
         {
-            buffer->markTransformFeedbackUsage();
+            BufferD3D *bufferD3D = GetImplAs<BufferD3D>(buffer);
+            bufferD3D->markTransformFeedbackUsage();
         }
     }
 }

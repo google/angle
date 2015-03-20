@@ -48,8 +48,6 @@ class Buffer : public RefCountObject
 
     rx::BufferImpl *getImplementation() const { return mBuffer; }
 
-    void markTransformFeedbackUsage();
-
     rx::IndexRangeCache *getIndexRangeCache() { return &mIndexRangeCache; }
     const rx::IndexRangeCache *getIndexRangeCache() const { return &mIndexRangeCache; }
 
