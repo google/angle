@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "46825452_bcc46e90",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-20T14:57:55Z",
+      "side": 1,
+      "message": "For ES2 and ES3 targets, we can just use the real client data. Agreed that mapBufferRange would probably be better to use when it\u0027s available, I\u0027ll look into it.",
+      "parentUuid": "a6d4f037_f0d0be81",
+      "range": {
+        "startLine": 166,
+        "startChar": 96,
+        "endLine": 166,
+        "endChar": 105
+      },
+      "revId": "5497aec7bc4d68a5aaf5f8295a4fd6a951547023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66de785c_cbecf5bf",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 5
