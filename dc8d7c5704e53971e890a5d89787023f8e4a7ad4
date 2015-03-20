@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "068cdc85_ad551a57",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-20T10:24:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c62484a6_560814ad",
+      "revId": "dc8d7c5704e53971e890a5d89787023f8e4a7ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c62484a6_b6ce48dc",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-16T11:58:21Z",
       "side": 1,
       "message": "I don\u0027t think that relying on implicit conversions here is good - it\u0027s a lot harder to verify that the code is correct.",
+      "revId": "dc8d7c5704e53971e890a5d89787023f8e4a7ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46825452_598f94a8",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-20T10:24:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c62484a6_b6ce48dc",
       "revId": "dc8d7c5704e53971e890a5d89787023f8e4a7ad4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "068cdc85_cd5ade86",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-20T10:24:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "861e0c58_74f8a8fc",
+      "revId": "dc8d7c5704e53971e890a5d89787023f8e4a7ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a61f9053_755c2885",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 1
@@ -64,6 +118,30 @@
       "writtenOn": "2015-03-16T11:58:21Z",
       "side": 1,
       "message": "You could prefix this function name with \"webgl_\" for now. It\u0027s not ideal, since ANGLE is used for other things besides WebGL, but right now that\u0027s the convention.",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 60,
+        "endChar": 16
+      },
+      "revId": "dc8d7c5704e53971e890a5d89787023f8e4a7ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "068cdc85_6d509264",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-20T10:24:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a61f9053_755c2885",
       "range": {
         "startLine": 60,
         "startChar": 8,
@@ -99,6 +177,30 @@
     },
     {
       "key": {
+        "uuid": "46825452_f902088e",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-20T10:24:13Z",
+      "side": 1,
+      "message": "exponent could be negative later. But I set the other two to uint.",
+      "parentUuid": "861e0c58_748e6885",
+      "range": {
+        "startLine": 80,
+        "startChar": 34,
+        "endLine": 80,
+        "endChar": 36
+      },
+      "revId": "dc8d7c5704e53971e890a5d89787023f8e4a7ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "861e0c58_b4c400ad",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 1
@@ -110,6 +212,30 @@
       "writtenOn": "2015-03-16T11:58:21Z",
       "side": 1,
       "message": "This doesn\u0027t make sense combined with the if (sign) in the end. This seems to already try to apply the sign bit, though it does it in a slightly incorrect way. Maybe fix the position of the sign bit and return the result of (u)intBitsToFloat from here? Then we wouldn\u0027t have to worry about what -NaN does for example.",
+      "range": {
+        "startLine": 85,
+        "startChar": 38,
+        "endLine": 85,
+        "endChar": 81
+      },
+      "revId": "dc8d7c5704e53971e890a5d89787023f8e4a7ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66259842_a2222057",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-20T10:24:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "861e0c58_b4c400ad",
       "range": {
         "startLine": 85,
         "startChar": 38,
