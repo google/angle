@@ -52,7 +52,7 @@ static bool CompatibleTextureTarget(GLenum textureType, GLenum textureTarget)
     }
     else
     {
-        return gl::IsCubeMapTextureTarget(textureType);
+        return gl::IsCubeMapTextureTarget(textureTarget);
     }
 }
 
@@ -88,7 +88,7 @@ void TextureGL::setUsage(GLenum usage)
 gl::Error TextureGL::setImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size, GLenum format, GLenum type,
                               const gl::PixelUnpackState &unpack, const uint8_t *pixels)
 {
-    (void)&CompatibleTextureTarget; // Reference this function to avoid warnings.
+    UNUSED_ASSERTION_VARIABLE(&CompatibleTextureTarget); // Reference this function to avoid warnings.
     ASSERT(CompatibleTextureTarget(mTextureType, target));
 
     SetUnpackStateForTexImage(mStateManager, unpack);
