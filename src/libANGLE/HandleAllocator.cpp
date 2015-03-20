@@ -9,13 +9,29 @@
 
 #include "libANGLE/HandleAllocator.h"
 
+#include <algorithm>
+
 #include "common/debug.h"
 
 namespace gl
 {
 
+struct HandleAllocator::HandleRangeComparator
+{
+    bool operator()(const HandleRange &range, GLuint handle) const
+    {
+        return (handle < range.begin);
+    }
+};
+
 HandleAllocator::HandleAllocator() : mBaseValue(1), mNextValue(1)
 {
+    mUnallocatedList.push_back(HandleRange(1, std::numeric_limits<GLuint>::max() - 1));
+}
+
+HandleAllocator::HandleAllocator(GLuint maximumHandleValue) : mBaseValue(1), mNextValue(1)
+{
+    mUnallocatedList.push_back(HandleRange(1, maximumHandleValue));
 }
 
 HandleAllocator::~HandleAllocator()
@@ -31,32 +47,86 @@ void HandleAllocator::setBaseHandle(GLuint value)
 
 GLuint HandleAllocator::allocate()
 {
-    if (mFreeValues.size())
+    ASSERT(!mUnallocatedList.empty() || !mReleasedList.empty());
+
+    // Allocate from released list, constant time.
+    if (!mReleasedList.empty())
     {
-        GLuint handle = mFreeValues.back();
-        mFreeValues.pop_back();
-        return handle;
+        GLuint reusedHandle = mReleasedList.back();
+        mReleasedList.pop_back();
+        return reusedHandle;
     }
-    return mNextValue++;
+
+    // Allocate from unallocated list, constant time.
+    auto listIt = mUnallocatedList.begin();
+
+    GLuint freeListHandle = listIt->begin;
+    ASSERT(freeListHandle > 0);
+
+    listIt->begin++;
+    if (listIt->begin == listIt->end)
+    {
+        mUnallocatedList.erase(listIt);
+    }
+
+    return freeListHandle;
 }
 
 void HandleAllocator::release(GLuint handle)
 {
-    if (handle == mNextValue - 1)
+    // Add to released list, constant time.
+    mReleasedList.push_back(handle);
+}
+
+void HandleAllocator::reserve(GLuint handle)
+{
+    // Clear from released list -- might be a slow operation.
+    if (!mReleasedList.empty())
     {
-        // Don't drop below base value
-        if(mNextValue > mBaseValue)
+        auto releasedIt = std::find(mReleasedList.begin(), mReleasedList.end(), handle);
+        if (releasedIt != mReleasedList.end())
         {
-            mNextValue--;
+            mReleasedList.erase(releasedIt);
+            return;
         }
     }
-    else
+
+    // Not in released list, reserve in the unallocated list.
+    auto boundIt = std::lower_bound(mUnallocatedList.begin(), mUnallocatedList.end(), handle, HandleRangeComparator());
+
+    ASSERT(boundIt != mUnallocatedList.end());
+
+    GLuint begin = boundIt->begin;
+    GLuint end = boundIt->end;
+
+    if (handle == begin || handle == end)
     {
-        // Only free handles that we own - don't drop below the base value
-        if (handle >= mBaseValue)
+        if (begin + 1 == end)
         {
-            mFreeValues.push_back(handle);
+            mUnallocatedList.erase(boundIt);
         }
+        else if (handle == begin)
+        {
+            boundIt->begin++;
+        }
+        else
+        {
+            ASSERT(handle == end);
+            boundIt->end--;
+        }
+        return;
+    }
+
+    // need to split the range
+    auto placementIt = mUnallocatedList.erase(boundIt);
+
+    if (begin != handle)
+    {
+        placementIt = mUnallocatedList.insert(placementIt, HandleRange(begin, handle));
+    }
+    if (handle + 1 != end)
+    {
+        mUnallocatedList.insert(placementIt, HandleRange(handle + 1, end));
     }
 }
 
