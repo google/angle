@@ -90,13 +90,19 @@ gl::Error Buffer9::copySubData(BufferImpl* source, GLintptr sourceOffset, GLintp
 }
 
 // We do not support buffer mapping in D3D9
-gl::Error Buffer9::map(size_t offset, size_t length, GLbitfield access, GLvoid **mapPtr)
+gl::Error Buffer9::map(GLenum access, GLvoid **mapPtr)
 {
     UNREACHABLE();
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error Buffer9::unmap()
+gl::Error Buffer9::mapRange(size_t offset, size_t length, GLbitfield access, GLvoid **mapPtr)
+{
+    UNREACHABLE();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
+gl::Error Buffer9::unmap(GLboolean *result)
 {
     UNREACHABLE();
     return gl::Error(GL_INVALID_OPERATION);

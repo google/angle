@@ -1784,7 +1784,11 @@ void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint* params
           case GL_BUFFER_ACCESS_FLAGS:
             *params = buffer->getAccessFlags();
             break;
+          case GL_BUFFER_ACCESS_OES:
+            *params = buffer->getAccess();
+            break;
           case GL_BUFFER_MAPPED:
+            static_assert(GL_BUFFER_MAPPED == GL_BUFFER_MAPPED_OES, "GL enums should be equal.");
             *params = static_cast<GLint>(buffer->isMapped());
             break;
           case GL_BUFFER_MAP_OFFSET:

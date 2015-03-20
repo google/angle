@@ -129,19 +129,27 @@ bool ValidBufferTarget(const Context *context, GLenum target)
 
 bool ValidBufferParameter(const Context *context, GLenum pname)
 {
+    const Extensions &extensions = context->getExtensions();
+
     switch (pname)
     {
       case GL_BUFFER_USAGE:
       case GL_BUFFER_SIZE:
         return true;
 
+      case GL_BUFFER_ACCESS_OES:
+        return extensions.mapBuffer;
+
+      case GL_BUFFER_MAPPED:
+        static_assert(GL_BUFFER_MAPPED == GL_BUFFER_MAPPED_OES, "GL enums should be equal.");
+        return (context->getClientVersion() >= 3) || extensions.mapBuffer || extensions.mapBufferRange;
+
       // GL_BUFFER_MAP_POINTER is a special case, and may only be
       // queried with GetBufferPointerv
       case GL_BUFFER_ACCESS_FLAGS:
-      case GL_BUFFER_MAPPED:
       case GL_BUFFER_MAP_OFFSET:
       case GL_BUFFER_MAP_LENGTH:
-        return (context->getClientVersion() >= 3);
+        return (context->getClientVersion() >= 3) || extensions.mapBufferRange;
 
       default:
         return false;

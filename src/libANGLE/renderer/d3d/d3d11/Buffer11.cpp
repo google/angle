@@ -356,7 +356,15 @@ gl::Error Buffer11::copySubData(BufferImpl* source, GLintptr sourceOffset, GLint
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Buffer11::map(size_t offset, size_t length, GLbitfield access, GLvoid **mapPtr)
+gl::Error Buffer11::map(GLenum access, GLvoid **mapPtr)
+{
+    // GL_OES_mapbuffer uses an enum instead of a bitfield for it's access, convert to a bitfield
+    // and call mapRange.
+    ASSERT(access == GL_WRITE_ONLY_OES);
+    return mapRange(0, mSize, GL_MAP_WRITE_BIT, mapPtr);
+}
+
+gl::Error Buffer11::mapRange(size_t offset, size_t length, GLbitfield access, GLvoid **mapPtr)
 {
     ASSERT(!mMappedStorage);
 
@@ -396,11 +404,15 @@ gl::Error Buffer11::map(size_t offset, size_t length, GLbitfield access, GLvoid 
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Buffer11::unmap()
+gl::Error Buffer11::unmap(GLboolean *result)
 {
     ASSERT(mMappedStorage);
     mMappedStorage->unmap();
     mMappedStorage = NULL;
+
+    // TODO: detect if we had corruption. if so, return false.
+    *result = GL_TRUE;
+
     return gl::Error(GL_NO_ERROR);
 }
 

@@ -21,6 +21,7 @@ Buffer::Buffer(rx::BufferImpl *impl, GLuint id)
       mUsage(GL_DYNAMIC_DRAW),
       mSize(0),
       mAccessFlags(0),
+      mAccess(GL_WRITE_ONLY_OES),
       mMapped(GL_FALSE),
       mMapPointer(NULL),
       mMapOffset(0),
@@ -74,12 +75,36 @@ Error Buffer::copyBufferSubData(Buffer* source, GLintptr sourceOffset, GLintptr 
     return error;
 }
 
+Error Buffer::map(GLenum access)
+{
+    ASSERT(!mMapped);
+
+    Error error = mBuffer->map(access, &mMapPointer);
+    if (error.isError())
+    {
+        mMapPointer = NULL;
+        return error;
+    }
+
+    ASSERT(access == GL_WRITE_ONLY_OES);
+
+    mMapped = GL_TRUE;
+    mMapOffset = 0;
+    mMapLength = mSize;
+    mAccess = access;
+    mAccessFlags = GL_MAP_WRITE_BIT;
+
+    mIndexRangeCache.invalidateRange(0, mMapLength);
+
+    return error;
+}
+
 Error Buffer::mapRange(GLintptr offset, GLsizeiptr length, GLbitfield access)
 {
     ASSERT(!mMapped);
     ASSERT(offset + length <= mSize);
 
-    Error error = mBuffer->map(offset, length, access, &mMapPointer);
+    Error error = mBuffer->mapRange(offset, length, access, &mMapPointer);
     if (error.isError())
     {
         mMapPointer = NULL;
@@ -89,7 +114,13 @@ Error Buffer::mapRange(GLintptr offset, GLsizeiptr length, GLbitfield access)
     mMapped = GL_TRUE;
     mMapOffset = static_cast<GLint64>(offset);
     mMapLength = static_cast<GLint64>(length);
-    mAccessFlags = static_cast<GLint>(access);
+    mAccess = GL_WRITE_ONLY_OES;
+    mAccessFlags = access;
+
+    // The OES_mapbuffer extension states that GL_WRITE_ONLY_OES is the only valid
+    // value for GL_BUFFER_ACCESS_OES because it was written against ES2.  Since there is
+    // no update for ES3 and the GL_READ_ONLY and GL_READ_WRITE enums don't exist for ES,
+    // we cannot properly set GL_BUFFER_ACCESS_OES when glMapBufferRange is called.
 
     if ((access & GL_MAP_WRITE_BIT) > 0)
     {
@@ -99,13 +130,14 @@ Error Buffer::mapRange(GLintptr offset, GLsizeiptr length, GLbitfield access)
     return error;
 }
 
-Error Buffer::unmap()
+Error Buffer::unmap(GLboolean *result)
 {
     ASSERT(mMapped);
 
-    Error error = mBuffer->unmap();
+    Error error = mBuffer->unmap(result);
     if (error.isError())
     {
+        *result = GL_FALSE;
         return error;
     }
 
@@ -113,6 +145,7 @@ Error Buffer::unmap()
     mMapPointer = NULL;
     mMapOffset = 0;
     mMapLength = 0;
+    mAccess = GL_WRITE_ONLY_OES;
     mAccessFlags = 0;
 
     return error;

@@ -863,7 +863,7 @@ void *GL_APIENTRY MapBufferOES(GLenum target, GLenum access)
             return NULL;
         }
 
-        Error error = buffer->mapRange(0, buffer->getSize(), GL_MAP_WRITE_BIT);
+        Error error = buffer->map(access);
         if (error.isError())
         {
             context->recordError(error);
@@ -897,16 +897,15 @@ GLboolean GL_APIENTRY UnmapBufferOES(GLenum target)
             return GL_FALSE;
         }
 
-        // TODO: detect if we had corruption. if so, throw an error and return false.
-
-        Error error = buffer->unmap();
+        GLboolean result;
+        Error error = buffer->unmap(&result);
         if (error.isError())
         {
             context->recordError(error);
             return GL_FALSE;
         }
 
-        return GL_TRUE;
+        return result;
     }
 
     return GL_FALSE;
