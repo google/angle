@@ -186,25 +186,31 @@ class OutputHLSL : public TIntermTraverser
     // these static globals after we initialize our other globals.
     std::vector<std::pair<TIntermSymbol*, TIntermTyped*>> mDeferredGlobalInitializers;
 
-    // A list of structure equality comparison functions. It's important to preserve the order at
-    // which we add the functions, since nested structures call each other recursively.
-    struct StructEqualityFunction
+    struct EqualityFunction
+    {
+        TString functionName;
+        TString functionDefinition;
+
+        virtual ~EqualityFunction() {}
+    };
+
+    // A list of all equality comparison functions. It's important to preserve the order at
+    // which we add the functions, since nested structures call each other recursively, and
+    // structure equality functions may need to call array equality functions and vice versa.
+    // The ownership of the pointers is maintained by the type-specific arrays.
+    std::vector<EqualityFunction*> mEqualityFunctions;
+
+    struct StructEqualityFunction : public EqualityFunction
     {
         const TStructure *structure;
-        TString functionName;
-        TString functionDefinition;
     };
+    std::vector<StructEqualityFunction*> mStructEqualityFunctions;
 
-    std::vector<StructEqualityFunction> mStructEqualityFunctions;
-
-    struct ArrayEqualityFunction
+    struct ArrayEqualityFunction : public EqualityFunction
     {
         TType type;
-        TString functionName;
-        TString functionDefinition;
     };
-
-    std::vector<ArrayEqualityFunction> mArrayEqualityFunctions;
+    std::vector<ArrayEqualityFunction*> mArrayEqualityFunctions;
 };
 
 }

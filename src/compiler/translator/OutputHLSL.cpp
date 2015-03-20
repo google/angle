@@ -158,6 +158,14 @@ OutputHLSL::~OutputHLSL()
     SafeDelete(mUnfoldShortCircuit);
     SafeDelete(mStructureHLSL);
     SafeDelete(mUniformHLSL);
+    for (auto &eqFunction : mStructEqualityFunctions)
+    {
+        SafeDelete(eqFunction);
+    }
+    for (auto &eqFunction : mArrayEqualityFunctions)
+    {
+        SafeDelete(eqFunction);
+    }
 }
 
 void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
@@ -329,21 +337,12 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
     out << mUniformHLSL->uniformsHeader(mOutputType, mReferencedUniforms);
     out << mUniformHLSL->interfaceBlocksHeader(mReferencedInterfaceBlocks);
 
-    if (!mStructEqualityFunctions.empty())
+    if (!mEqualityFunctions.empty())
     {
-        out << "\n// Structure equality functions\n\n";
-        for (const auto &eqFunction : mStructEqualityFunctions)
+        out << "\n// Equality functions\n\n";
+        for (const auto &eqFunction : mEqualityFunctions)
         {
-            out << eqFunction.functionDefinition << "\n";
-        }
-    }
-
-    if (!mArrayEqualityFunctions.empty())
-    {
-        out << "\n// Array equality functions\n\n";
-        for (const auto &eqFunction : mArrayEqualityFunctions)
-        {
-            out << eqFunction.functionDefinition << "\n";
+            out << eqFunction->functionDefinition << "\n";
         }
     }
 
@@ -2961,23 +2960,23 @@ TString OutputHLSL::addStructEqualityFunction(const TStructure &structure)
 
     for (const auto &eqFunction : mStructEqualityFunctions)
     {
-        if (eqFunction.structure == &structure)
+        if (eqFunction->structure == &structure)
         {
-            return eqFunction.functionName;
+            return eqFunction->functionName;
         }
     }
 
     const TString &structNameString = StructNameString(structure);
 
-    StructEqualityFunction function;
-    function.structure = &structure;
-    function.functionName = "angle_eq_" + structNameString;
+    StructEqualityFunction *function = new StructEqualityFunction();
+    function->structure = &structure;
+    function->functionName = "angle_eq_" + structNameString;
 
-    TString &func = function.functionDefinition;
+    TInfoSinkBase fnOut;
 
-    func = "bool " + function.functionName + "(" + structNameString + " a, " + structNameString + " b)\n" +
-           "{\n"
-           "    return ";
+    fnOut << "bool " << function->functionName << "(" << structNameString << " a, " << structNameString + " b)\n"
+          << "{\n"
+             "    return ";
 
     for (size_t i = 0; i < fields.size(); i++)
     {
@@ -2987,67 +2986,55 @@ TString OutputHLSL::addStructEqualityFunction(const TStructure &structure)
         const TString &fieldNameA = "a." + Decorate(field->name());
         const TString &fieldNameB = "b." + Decorate(field->name());
 
-        // TODO (oetuaho): Use outputEqual() here instead
-
         if (i > 0)
         {
-            func += " && ";
+            fnOut << " && ";
         }
 
-        if (fieldType->isArray())
-        {
-            // TODO (oetuaho): This requires sorting array and struct equality functions together.
-            UNIMPLEMENTED();
-        }
-        else if (fieldType->getBasicType() == EbtStruct)
-        {
-            const TStructure &fieldStruct = *fieldType->getStruct();
-            const TString &functionName = addStructEqualityFunction(fieldStruct);
-            func += functionName + "(" + fieldNameA + ", " + fieldNameB + ")";
-        }
-        else if (fieldType->isScalar())
-        {
-            func += "(" + fieldNameA + " == " + fieldNameB + ")";
-        }
-        else
-        {
-            ASSERT(fieldType->isMatrix() || fieldType->isVector());
-            func += "all(" + fieldNameA + " == " + fieldNameB + ")";
-        }
+        fnOut << "(";
+        outputEqual(PreVisit, *fieldType, EOpEqual, fnOut);
+        fnOut << fieldNameA;
+        outputEqual(InVisit, *fieldType, EOpEqual, fnOut);
+        fnOut << fieldNameB;
+        outputEqual(PostVisit, *fieldType, EOpEqual, fnOut);
+        fnOut << ")";
     }
 
-    func = func + ";\n" + "}\n";
+    fnOut << ";\n" << "}\n";
+
+    function->functionDefinition = fnOut.c_str();
 
     mStructEqualityFunctions.push_back(function);
+    mEqualityFunctions.push_back(function);
 
-    return function.functionName;
+    return function->functionName;
 }
 
 TString OutputHLSL::addArrayEqualityFunction(const TType& type)
 {
     for (const auto &eqFunction : mArrayEqualityFunctions)
     {
-        if (eqFunction.type == type)
+        if (eqFunction->type == type)
         {
-            return eqFunction.functionName;
+            return eqFunction->functionName;
         }
     }
 
     const TString &typeName = TypeString(type);
 
-    ArrayEqualityFunction function;
-    function.type = type;
+    ArrayEqualityFunction *function = new ArrayEqualityFunction();
+    function->type = type;
 
     TInfoSinkBase fnNameOut;
     fnNameOut << "angle_eq_" << type.getArraySize() << "_" << typeName;
-    function.functionName = fnNameOut.c_str();
+    function->functionName = fnNameOut.c_str();
 
     TType nonArrayType = type;
     nonArrayType.clearArrayness();
 
     TInfoSinkBase fnOut;
 
-    fnOut << "bool " << function.functionName << "("
+    fnOut << "bool " << function->functionName << "("
           << typeName << "[" << type.getArraySize() << "] a, "
           << typeName << "[" << type.getArraySize() << "] b)\n"
           << "{\n"
@@ -3066,11 +3053,12 @@ TString OutputHLSL::addArrayEqualityFunction(const TType& type)
              "    return true;\n"
              "}\n";
 
-    function.functionDefinition = fnOut.c_str();
+    function->functionDefinition = fnOut.c_str();
 
     mArrayEqualityFunctions.push_back(function);
+    mEqualityFunctions.push_back(function);
 
-    return function.functionName;
+    return function->functionName;
 }
 
 }
