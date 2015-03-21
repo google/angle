@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c6a1e40d_97340e10",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-21T02:12:45Z",
+      "side": 1,
+      "message": "see the new draft, the extension is now EGL_EXT_display_device, and the entry points are EXT extension points.",
+      "range": {
+        "startLine": 501,
+        "startChar": 27,
+        "endLine": 501,
+        "endChar": 48
+      },
+      "revId": "e0465e573535e5b894b57c26bd0410e8c7213698",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
