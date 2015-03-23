@@ -76,7 +76,7 @@ TEST_F(TypeTrackingTest, FunctionPrototypeMangling)
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("Function Prototype: fun(f1;"));
     ASSERT_TRUE(foundInIntermediateTree("Function Definition: fun(f1;"));
-};
+}
 
 TEST_F(TypeTrackingTest, BuiltInFunctionResultPrecision)
 {
@@ -90,7 +90,7 @@ TEST_F(TypeTrackingTest, BuiltInFunctionResultPrecision)
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("sine (mediump float)"));
-};
+}
 
 TEST_F(TypeTrackingTest, BinaryMathResultPrecision)
 {
@@ -104,7 +104,7 @@ TEST_F(TypeTrackingTest, BinaryMathResultPrecision)
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("multiply (mediump float)"));
-};
+}
 
 TEST_F(TypeTrackingTest, BuiltInVecFunctionResultTypeAndPrecision)
 {
@@ -122,7 +122,7 @@ TEST_F(TypeTrackingTest, BuiltInVecFunctionResultTypeAndPrecision)
     ASSERT_TRUE(foundInIntermediateTree("length (mediump float)"));
     ASSERT_TRUE(foundInIntermediateTree("dot-product (mediump float)"));
     ASSERT_TRUE(foundInIntermediateTree("distance (mediump float)"));
-};
+}
 
 TEST_F(TypeTrackingTest, BuiltInFunctionChoosesHigherPrecision)
 {
@@ -139,7 +139,7 @@ TEST_F(TypeTrackingTest, BuiltInFunctionChoosesHigherPrecision)
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("dot-product (mediump float)"));
     ASSERT_TRUE(foundInIntermediateTree("distance (mediump float)"));
-};
+}
 
 TEST_F(TypeTrackingTest, BuiltInBoolFunctionResultType)
 {
@@ -156,7 +156,7 @@ TEST_F(TypeTrackingTest, BuiltInBoolFunctionResultType)
     ASSERT_TRUE(foundInIntermediateTree("any (bool)"));
     ASSERT_TRUE(foundInIntermediateTree("all (bool)"));
     ASSERT_TRUE(foundInIntermediateTree("Negate conditional (4-component vector of bool)"));
-};
+}
 
 TEST_F(TypeTrackingTest, BuiltInVecToBoolFunctionResultType)
 {
@@ -175,7 +175,7 @@ TEST_F(TypeTrackingTest, BuiltInVecToBoolFunctionResultType)
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("Less Than (2-component vector of bool)"));
     ASSERT_TRUE(foundInIntermediateTree("Greater Than (2-component vector of bool)"));
-};
+}
 
 TEST_F(TypeTrackingTest, Texture2DResultTypeAndPrecision)
 {
@@ -192,7 +192,7 @@ TEST_F(TypeTrackingTest, Texture2DResultTypeAndPrecision)
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("texture2D(s21;vf2; (lowp 4-component vector of float)"));
-};
+}
 
 TEST_F(TypeTrackingTest, TextureCubeResultTypeAndPrecision)
 {
@@ -209,7 +209,7 @@ TEST_F(TypeTrackingTest, TextureCubeResultTypeAndPrecision)
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("textureCube(sC1;vf3; (lowp 4-component vector of float)"));
-};
+}
 
 TEST_F(TypeTrackingTest, TextureSizeResultTypeAndPrecision)
 {
@@ -230,7 +230,7 @@ TEST_F(TypeTrackingTest, TextureSizeResultTypeAndPrecision)
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("textureSize(s21;i1; (highp 2-component vector of int)"));
-};
+}
 
 TEST_F(TypeTrackingTest, BuiltInConstructorResultTypeAndPrecision)
 {
@@ -247,7 +247,7 @@ TEST_F(TypeTrackingTest, BuiltInConstructorResultTypeAndPrecision)
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("Construct vec4 (mediump 4-component vector of float)"));
-};
+}
 
 TEST_F(TypeTrackingTest, StructConstructorResultNoPrecision)
 {
@@ -263,7 +263,7 @@ TEST_F(TypeTrackingTest, StructConstructorResultNoPrecision)
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("Construct structure (structure)"));
-};
+}
 
 TEST_F(TypeTrackingTest, PackResultTypeAndPrecision)
 {
@@ -289,7 +289,7 @@ TEST_F(TypeTrackingTest, PackResultTypeAndPrecision)
     ASSERT_TRUE(foundInIntermediateTree("pack Snorm 2x16 (highp uint)"));
     ASSERT_TRUE(foundInIntermediateTree("pack Unorm 2x16 (highp uint)"));
     ASSERT_TRUE(foundInIntermediateTree("pack half 2x16 (highp uint)"));
-};
+}
 
 TEST_F(TypeTrackingTest, UnpackNormResultTypeAndPrecision)
 {
@@ -313,7 +313,7 @@ TEST_F(TypeTrackingTest, UnpackNormResultTypeAndPrecision)
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("unpack Snorm 2x16 (highp 2-component vector of float)"));
     ASSERT_TRUE(foundInIntermediateTree("unpack Unorm 2x16 (highp 2-component vector of float)"));
-};
+}
 
 TEST_F(TypeTrackingTest, UnpackHalfResultTypeAndPrecision)
 {
@@ -335,7 +335,7 @@ TEST_F(TypeTrackingTest, UnpackHalfResultTypeAndPrecision)
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("unpack half 2x16 (mediump 2-component vector of float)"));
-};
+}
 
 TEST_F(TypeTrackingTest, BuiltInAbsSignFunctionFloatResultTypeAndPrecision)
 {
@@ -351,7 +351,7 @@ TEST_F(TypeTrackingTest, BuiltInAbsSignFunctionFloatResultTypeAndPrecision)
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("Absolute value (mediump float)"));
     ASSERT_TRUE(foundInIntermediateTree("Sign (mediump float)"));
-};
+}
 
 TEST_F(TypeTrackingTest, BuiltInAbsSignFunctionIntResultTypeAndPrecision)
 {
@@ -370,4 +370,4 @@ TEST_F(TypeTrackingTest, BuiltInAbsSignFunctionIntResultTypeAndPrecision)
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("Absolute value (mediump int)"));
     ASSERT_TRUE(foundInIntermediateTree("Sign (mediump int)"));
-};
+}

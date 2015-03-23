@@ -122,7 +122,7 @@ TEST_F(ShaderExtensionTest, FragDepthExtResetsInternalStates)
     TestShaderExtension(FragDepthExtShdr, 2, true);
     TestShaderExtension(&FragDepthExtShdr[1], 1, false);
     TestShaderExtension(FragDepthExtShdr, 2, true);
-};
+}
 
 TEST_F(ShaderExtensionTest, StandDerivExtRequiresExt)
 {
@@ -158,7 +158,7 @@ TEST_F(ShaderExtensionTest, StandDerivExtResetsInternalStates)
     TestShaderExtension(&StandDerivExtShdr[1], 1, false);
     TestShaderExtension(StandDerivExtShdr, 2, true);
     TestShaderExtension(&StandDerivExtShdr[1], 1, false);
-};
+}
 
 TEST_F(ShaderExtensionTest, TextureLODExtRequiresExt)
 {
@@ -194,4 +194,4 @@ TEST_F(ShaderExtensionTest, TextureLODExtResetsInternalStates)
     TestShaderExtension(TextureLODShdr, 2, true);
     TestShaderExtension(&TextureLODShdr[1], 1, false);
     TestShaderExtension(TextureLODShdr, 2, true);
-};
+}

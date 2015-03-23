@@ -162,7 +162,7 @@ TEST_F(DebugShaderPrecisionTest, RoundingFunctionsDefined)
     ASSERT_TRUE(foundInGLSLCode("mat2 angle_frl(in mat2"));
     ASSERT_TRUE(foundInGLSLCode("mat3 angle_frl(in mat3"));
     ASSERT_TRUE(foundInGLSLCode("mat4 angle_frl(in mat4"));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, PragmaDisablesEmulation)
 {
@@ -184,7 +184,7 @@ TEST_F(DebugShaderPrecisionTest, PragmaDisablesEmulation)
         "}\n";
     compile(shaderStringPragmaOn);
     ASSERT_TRUE(foundInCode("angle_frm"));
-};
+}
 
 // Emulation can't be toggled on for only a part of a shader.
 // Only the last pragma in the shader has an effect.
@@ -200,7 +200,7 @@ TEST_F(DebugShaderPrecisionTest, MultiplePragmas)
         "#pragma webgl_debug_shader_precision(on)\n";
     compile(shaderString);
     ASSERT_TRUE(foundInCode("angle_frm"));
-};
+}
 
 TEST_F(NoDebugShaderPrecisionTest, HelpersWrittenOnlyWithExtension)
 {
@@ -212,7 +212,7 @@ TEST_F(NoDebugShaderPrecisionTest, HelpersWrittenOnlyWithExtension)
         "}\n";
     ASSERT_TRUE(compile(shaderString));
     ASSERT_FALSE(foundInCode("angle_frm"));
-};
+}
 
 TEST_F(NoDebugShaderPrecisionTest, PragmaHasEffectsOnlyWithExtension)
 {
@@ -225,7 +225,7 @@ TEST_F(NoDebugShaderPrecisionTest, PragmaHasEffectsOnlyWithExtension)
         "}\n";
     ASSERT_TRUE(compile(shaderString));
     ASSERT_FALSE(foundInCode("angle_frm"));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, DeclarationsAndConstants)
 {
@@ -246,7 +246,7 @@ TEST_F(DebugShaderPrecisionTest, DeclarationsAndConstants)
     ASSERT_TRUE(notFoundInCode("angle_frm(vv"));
     ASSERT_TRUE(notFoundInCode("angle_frm(gg"));
     ASSERT_TRUE(notFoundInCode("angle_frm(aa"));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, InitializerRounding)
 {
@@ -260,7 +260,7 @@ TEST_F(DebugShaderPrecisionTest, InitializerRounding)
     compile(shaderString);
     // An expression that's part of initialization should have rounding
     ASSERT_TRUE(foundInCode("angle_frm(u)"));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, CompoundAddFunction)
 {
@@ -284,7 +284,7 @@ TEST_F(DebugShaderPrecisionTest, CompoundAddFunction)
     ));
     ASSERT_TRUE(foundInCode("angle_compound_add_frm(v, angle_frm(u2));"));
     ASSERT_TRUE(notFoundInCode("+="));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, CompoundSubFunction)
 {
@@ -308,7 +308,7 @@ TEST_F(DebugShaderPrecisionTest, CompoundSubFunction)
     ));
     ASSERT_TRUE(foundInCode("angle_compound_sub_frm(v, angle_frm(u2));"));
     ASSERT_TRUE(notFoundInCode("-="));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, CompoundDivFunction)
 {
@@ -332,7 +332,7 @@ TEST_F(DebugShaderPrecisionTest, CompoundDivFunction)
     ));
     ASSERT_TRUE(foundInCode("angle_compound_div_frm(v, angle_frm(u2));"));
     ASSERT_TRUE(notFoundInCode("/="));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, CompoundMulFunction)
 {
@@ -356,7 +356,7 @@ TEST_F(DebugShaderPrecisionTest, CompoundMulFunction)
     ));
     ASSERT_TRUE(foundInCode("angle_compound_mul_frm(v, angle_frm(u2));"));
     ASSERT_TRUE(notFoundInCode("*="));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, CompoundAddVectorPlusScalarFunction)
 {
@@ -380,7 +380,7 @@ TEST_F(DebugShaderPrecisionTest, CompoundAddVectorPlusScalarFunction)
     ));
     ASSERT_TRUE(foundInCode("angle_compound_add_frm(v, angle_frm(u2));"));
     ASSERT_TRUE(notFoundInCode("+="));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, CompoundMatrixTimesMatrixFunction)
 {
@@ -404,7 +404,7 @@ TEST_F(DebugShaderPrecisionTest, CompoundMatrixTimesMatrixFunction)
     ));
     ASSERT_TRUE(foundInCode("angle_compound_mul_frm(m, angle_frm(u2));"));
     ASSERT_TRUE(notFoundInCode("*="));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, CompoundMatrixTimesScalarFunction)
 {
@@ -428,7 +428,7 @@ TEST_F(DebugShaderPrecisionTest, CompoundMatrixTimesScalarFunction)
     ));
     ASSERT_TRUE(foundInCode("angle_compound_mul_frm(m, angle_frm(u2));"));
     ASSERT_TRUE(notFoundInCode("*="));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, CompoundVectorTimesMatrixFunction)
 {
@@ -451,7 +451,7 @@ TEST_F(DebugShaderPrecisionTest, CompoundVectorTimesMatrixFunction)
     ));
     ASSERT_TRUE(foundInCode("angle_compound_mul_frm(v, angle_frm(u2));"));
     ASSERT_TRUE(notFoundInCode("*="));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, CompoundVectorTimesScalarFunction)
 {
@@ -475,7 +475,7 @@ TEST_F(DebugShaderPrecisionTest, CompoundVectorTimesScalarFunction)
     ));
     ASSERT_TRUE(foundInCode("angle_compound_mul_frm(v, angle_frm(u2));"));
     ASSERT_TRUE(notFoundInCode("*="));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, BinaryMathRounding)
 {
@@ -501,7 +501,7 @@ TEST_F(DebugShaderPrecisionTest, BinaryMathRounding)
     ASSERT_TRUE(foundInCode("v3 = angle_frm((angle_frm(u3) * angle_frm(u4)))"));
     ASSERT_TRUE(foundInCode("v4 = angle_frm((angle_frm(u4) / angle_frm(u5)))"));
     ASSERT_TRUE(foundInCode("v6 = angle_frm((v5 = angle_frm(u5)))"));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, BuiltInMathFunctionRounding)
 {
@@ -615,7 +615,7 @@ TEST_F(DebugShaderPrecisionTest, BuiltInMathFunctionRounding)
     ASSERT_TRUE(foundInCode("f3 = angle_frm(dot(angle_frm(u1), angle_frm(u2)))"));
     ASSERT_TRUE(foundInCode("vf31 = angle_frm(cross(angle_frm(uf31), angle_frm(uf32)))"));
     ASSERT_TRUE(foundInCode("m1 = angle_frm(matrixCompMult(angle_frm(um1), angle_frm(um2)))"));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, BuiltInRelationalFunctionRounding)
 {
@@ -639,7 +639,7 @@ TEST_F(DebugShaderPrecisionTest, BuiltInRelationalFunctionRounding)
     ASSERT_TRUE(foundInCode("bv4 = greaterThanEqual(angle_frm(u1), angle_frm(u2))"));
     ASSERT_TRUE(foundInCode("bv5 = equal(angle_frm(u1), angle_frm(u2))"));
     ASSERT_TRUE(foundInCode("bv6 = notEqual(angle_frm(u1), angle_frm(u2))"));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, ConstructorRounding)
 {
@@ -660,7 +660,7 @@ TEST_F(DebugShaderPrecisionTest, ConstructorRounding)
     // Note: this is suboptimal for the case taking four floats, but optimizing would be tricky.
     ASSERT_TRUE(foundInCode("v1 = angle_frm(vec4(angle_frm(u1), angle_frm(u2), angle_frm(u3), angle_frm(u4)))"));
     ASSERT_TRUE(foundInCode("v2 = angle_frm(vec4(uiv))"));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, StructConstructorNoRounding)
 {
@@ -675,7 +675,7 @@ TEST_F(DebugShaderPrecisionTest, StructConstructorNoRounding)
     compile(shaderString);
     ASSERT_TRUE(foundInCode("s = S(angle_frm(u))"));
     ASSERT_TRUE(notFoundInCode("angle_frm(S"));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, SwizzleRounding)
 {
@@ -688,7 +688,7 @@ TEST_F(DebugShaderPrecisionTest, SwizzleRounding)
         "}\n";
     compile(shaderString);
     ASSERT_TRUE(foundInCode("v = angle_frm(u).xyxy"));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, BuiltInTexFunctionRounding)
 {
@@ -703,7 +703,7 @@ TEST_F(DebugShaderPrecisionTest, BuiltInTexFunctionRounding)
         "}\n";
     compile(shaderString);
     ASSERT_TRUE(foundInCode("v = angle_frl(texture2D(s, angle_frm(u)))"));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, FunctionCallParameterQualifiersFromDefinition)
 {
@@ -741,7 +741,7 @@ TEST_F(DebugShaderPrecisionTest, FunctionCallParameterQualifiersFromDefinition)
     ASSERT_TRUE(foundInCode("compound_add(v, angle_frm(u3))"));
     // Test out parameter
     ASSERT_TRUE(foundInCode("add_to_last(angle_frm(u4), angle_frm(u5), v2)"));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, FunctionCallParameterQualifiersFromPrototype)
 {
@@ -778,7 +778,7 @@ TEST_F(DebugShaderPrecisionTest, FunctionCallParameterQualifiersFromPrototype)
     ASSERT_TRUE(foundInCode("compound_add(v, angle_frm(u3))"));
     // Test out parameter
     ASSERT_TRUE(foundInCode("add_to_last(angle_frm(u4), angle_frm(u5), v2)"));
-};
+}
 
 TEST_F(DebugShaderPrecisionTest, NestedFunctionCalls)
 {
@@ -802,4 +802,4 @@ TEST_F(DebugShaderPrecisionTest, NestedFunctionCalls)
     compile(shaderString);
     // Test nested calls
     ASSERT_TRUE(foundInCode("v2 = add(compound_add(v, angle_frm(u2)), angle_frm(fract(angle_frm(u3))))"));
-};
+}

@@ -57,4 +57,4 @@ TEST_F(NVDrawBuffersTest, NVDrawBuffers)
     EXPECT_NE(std::string::npos, nv_draw_buffers_ind);
     size_t ext_draw_buffers_ind = objCode.find("GL_EXT_draw_buffers");
     EXPECT_EQ(std::string::npos, ext_draw_buffers_ind);
-};
+}

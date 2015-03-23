@@ -107,7 +107,7 @@ TEST_F(ConstantFoldingTest, FoldIntegerAdd)
     ASSERT_FALSE(constantFoundInAST(1124));
     ASSERT_FALSE(constantFoundInAST(5));
     ASSERT_TRUE(constantFoundInAST(1129));
-};
+}
 
 TEST_F(ConstantFoldingTest, FoldIntegerSub)
 {
@@ -123,7 +123,7 @@ TEST_F(ConstantFoldingTest, FoldIntegerSub)
     ASSERT_FALSE(constantFoundInAST(1124));
     ASSERT_FALSE(constantFoundInAST(5));
     ASSERT_TRUE(constantFoundInAST(1119));
-};
+}
 
 TEST_F(ConstantFoldingTest, FoldIntegerMul)
 {
@@ -139,7 +139,7 @@ TEST_F(ConstantFoldingTest, FoldIntegerMul)
     ASSERT_FALSE(constantFoundInAST(1124));
     ASSERT_FALSE(constantFoundInAST(5));
     ASSERT_TRUE(constantFoundInAST(5620));
-};
+}
 
 TEST_F(ConstantFoldingTest, FoldIntegerDiv)
 {
@@ -156,7 +156,7 @@ TEST_F(ConstantFoldingTest, FoldIntegerDiv)
     ASSERT_FALSE(constantFoundInAST(5));
     // Rounding mode of division is undefined in the spec but ANGLE can be expected to round down.
     ASSERT_TRUE(constantFoundInAST(224));
-};
+}
 
 TEST_F(ConstantFoldingTest, FoldIntegerModulus)
 {
@@ -172,4 +172,4 @@ TEST_F(ConstantFoldingTest, FoldIntegerModulus)
     ASSERT_FALSE(constantFoundInAST(1124));
     ASSERT_FALSE(constantFoundInAST(5));
     ASSERT_TRUE(constantFoundInAST(4));
-};
+}

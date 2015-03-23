@@ -64,9 +64,9 @@ TEST_F(MalformedShaderTest, FunctionParameterMismatch)
         "}\n";
     if (compile(shaderString))
     {
-      FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
-};
+}
 
 // Functions can't be redeclared as variables in the same scope (ESSL 1.00 section 4.2.7)
 TEST_F(MalformedShaderTest, RedeclaringFunctionAsVariable)
@@ -82,9 +82,9 @@ TEST_F(MalformedShaderTest, RedeclaringFunctionAsVariable)
         "}\n";
     if (compile(shaderString))
     {
-      FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
-};
+}
 
 // Functions can't be redeclared as structs in the same scope (ESSL 1.00 section 4.2.7)
 TEST_F(MalformedShaderTest, RedeclaringFunctionAsStruct)
@@ -100,9 +100,9 @@ TEST_F(MalformedShaderTest, RedeclaringFunctionAsStruct)
         "}\n";
     if (compile(shaderString))
     {
-      FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
-};
+}
 
 // Functions can't be redeclared with different qualifiers (ESSL 1.00 section 6.1.0)
 TEST_F(MalformedShaderTest, RedeclaringFunctionWithDifferentQualifiers)
@@ -118,9 +118,9 @@ TEST_F(MalformedShaderTest, RedeclaringFunctionWithDifferentQualifiers)
         "}\n";
     if (compile(shaderString))
     {
-      FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
-};
+}
 
 // Assignment and equality are undefined for structures containing arrays (ESSL 1.00 section 5.7)
 TEST_F(MalformedShaderTest, CompareStructsContainingArrays)
