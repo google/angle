@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "a69cf0d8_4f884423",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-23T15:50:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66259842_48256ba1",
+      "range": {
+        "startLine": 152,
+        "startChar": 67,
+        "endLine": 152,
+        "endChar": 73
+      },
+      "revId": "5497aec7bc4d68a5aaf5f8295a4fd6a951547023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "068cdc85_5c7a1ab8",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 5
@@ -59,6 +83,30 @@
       "writtenOn": "2015-03-20T18:03:03Z",
       "side": 1,
       "message": "nit: pointer alignment",
+      "range": {
+        "startLine": 155,
+        "startChar": 37,
+        "endLine": 155,
+        "endChar": 38
+      },
+      "revId": "5497aec7bc4d68a5aaf5f8295a4fd6a951547023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_aabf169e",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-23T15:50:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "068cdc85_5c7a1ab8",
       "range": {
         "startLine": 155,
         "startChar": 37,
@@ -135,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "86160cff_aefc6bf0",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-23T15:50:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "068cdc85_9ca88257",
+      "revId": "5497aec7bc4d68a5aaf5f8295a4fd6a951547023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66259842_88806392",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 5
@@ -146,6 +212,30 @@
       "writtenOn": "2015-03-20T18:03:03Z",
       "side": 1,
       "message": "is this testable? I\u0027m a bit cautious of adding speculative code (eg 5 might not be the right number, you may need to sleep, or it may always be unrecoverable).",
+      "range": {
+        "startLine": 312,
+        "startChar": 2,
+        "endLine": 315,
+        "endChar": 38
+      },
+      "revId": "5497aec7bc4d68a5aaf5f8295a4fd6a951547023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_0ae74ad8",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-23T15:50:22Z",
+      "side": 1,
+      "message": "It would be difficult to test.  The docs say that the data needs to be re-written if unmap returns false so I followed that.",
+      "parentUuid": "66259842_88806392",
       "range": {
         "startLine": 312,
         "startChar": 2,
