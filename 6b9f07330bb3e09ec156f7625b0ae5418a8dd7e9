@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c6a1e40d_ee83f44d",
+        "filename": "src/compiler/translator/AnalysesHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T18:28:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a69cf0d8_4003f3c5",
+      "range": {
+        "startLine": 275,
+        "startChar": 0,
+        "endLine": 275,
+        "endChar": 6
+      },
+      "revId": "6b9f07330bb3e09ec156f7625b0ae5418a8dd7e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c6a1e40d_4bab1a54",
         "filename": "src/compiler/translator/AnalysesHLSL.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-03-23T17:20:39Z",
       "side": 1,
       "message": "nit: indent",
+      "range": {
+        "startLine": 332,
+        "startChar": 0,
+        "endLine": 332,
+        "endChar": 7
+      },
+      "revId": "6b9f07330bb3e09ec156f7625b0ae5418a8dd7e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_3b7ff9dc",
+        "filename": "src/compiler/translator/AnalysesHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T18:28:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6a1e40d_4bab1a54",
       "range": {
         "startLine": 332,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "86160cff_1e6f8aaa",
+        "filename": "src/compiler/translator/AnalysesHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T18:28:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a69cf0d8_20ece78b",
+      "range": {
+        "startLine": 335,
+        "startChar": 4,
+        "endLine": 335,
+        "endChar": 7
+      },
+      "revId": "6b9f07330bb3e09ec156f7625b0ae5418a8dd7e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a69cf0d8_a0e9f782",
         "filename": "src/compiler/translator/AnalysesHLSL.cpp",
         "patchSetId": 4
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "a69cf0d8_9b70ad06",
+        "filename": "src/compiler/translator/AnalysesHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T18:28:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a69cf0d8_a0e9f782",
+      "range": {
+        "startLine": 397,
+        "startChar": 9,
+        "endLine": 397,
+        "endChar": 12
+      },
+      "revId": "6b9f07330bb3e09ec156f7625b0ae5418a8dd7e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c6a1e40d_4bdcba10",
         "filename": "src/compiler/translator/AnalysesHLSL.h",
         "patchSetId": 4
@@ -105,6 +201,30 @@
       "writtenOn": "2015-03-23T17:20:39Z",
       "side": 1,
       "message": "nit: all functions before data",
+      "range": {
+        "startLine": 38,
+        "startChar": 2,
+        "endLine": 40,
+        "endChar": 58
+      },
+      "revId": "6b9f07330bb3e09ec156f7625b0ae5418a8dd7e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_4e504864",
+        "filename": "src/compiler/translator/AnalysesHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T18:28:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6a1e40d_4bdcba10",
       "range": {
         "startLine": 38,
         "startChar": 2,
