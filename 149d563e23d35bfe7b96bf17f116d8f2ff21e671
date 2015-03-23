@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a69cf0d8_e055bfa8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:44:55Z",
+      "side": 1,
+      "message": "nit:\n if (!deviceContext1)\n {\n   // comment\n   return gl::Error(GL_NO_ERROR);\n }",
+      "range": {
+        "startLine": 139,
+        "startChar": 8,
+        "endLine": 139,
+        "endChar": 22
+      },
+      "revId": "149d563e23d35bfe7b96bf17f116d8f2ff21e671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_e0bc9f52",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:44:55Z",
+      "side": 1,
+      "message": "nit: attach the || to the prior line",
+      "range": {
+        "startLine": 148,
+        "startChar": 16,
+        "endLine": 148,
+        "endChar": 18
+      },
+      "revId": "149d563e23d35bfe7b96bf17f116d8f2ff21e671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_8b218222",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:44:55Z",
+      "side": 1,
+      "message": "nit: use GL_COLOR in these cases, since it applies to GLES 3.0 core spec",
+      "range": {
+        "startLine": 148,
+        "startChar": 38,
+        "endLine": 148,
+        "endChar": 50
+      },
+      "revId": "149d563e23d35bfe7b96bf17f116d8f2ff21e671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_cbf1ca69",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:44:55Z",
+      "side": 1,
+      "message": "nit: s/NULL/nullptr",
+      "range": {
+        "startLine": 150,
+        "startChar": 47,
+        "endLine": 150,
+        "endChar": 51
+      },
+      "revId": "149d563e23d35bfe7b96bf17f116d8f2ff21e671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86160cff_1bb79ceb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:44:55Z",
+      "side": 1,
+      "message": "nit: put this switch up above, with the default handling the color case with an ASSERT",
+      "range": {
+        "startLine": 182,
+        "startChar": 12,
+        "endLine": 182,
+        "endChar": 35
+      },
+      "revId": "149d563e23d35bfe7b96bf17f116d8f2ff21e671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_4b0ddae9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:44:55Z",
+      "side": 1,
+      "message": "spaces nit (as you said)",
+      "range": {
+        "startLine": 208,
+        "startChar": 103,
+        "endLine": 208,
+        "endChar": 104
+      },
+      "revId": "149d563e23d35bfe7b96bf17f116d8f2ff21e671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86160cff_7b8970f3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:44:55Z",
+      "side": 1,
+      "message": "Not. Should this have UNIMPLEMENTED()?",
+      "range": {
+        "startLine": 271,
+        "startChar": 7,
+        "endLine": 271,
+        "endChar": 9
+      },
+      "revId": "149d563e23d35bfe7b96bf17f116d8f2ff21e671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_9bd6eeec",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1854,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:44:55Z",
+      "side": 1,
+      "message": "nit: GLsizei for consistency",
+      "range": {
+        "startLine": 1854,
+        "startChar": 9,
+        "endLine": 1854,
+        "endChar": 12
+      },
+      "revId": "149d563e23d35bfe7b96bf17f116d8f2ff21e671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86160cff_7b37b0ad",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:44:55Z",
+      "side": 1,
+      "message": "nit: just \u0027ValidateDiscardFramebufferEXT\u0027",
+      "range": {
+        "startLine": 882,
+        "startChar": 5,
+        "endLine": 882,
+        "endChar": 44
+      },
+      "revId": "149d563e23d35bfe7b96bf17f116d8f2ff21e671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_8bc502aa",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 885,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:44:55Z",
+      "side": 1,
+      "message": "is numAttachments really allowed to be negative for the core ES3? we should check this, seems like it should have the same validation check.",
+      "range": {
+        "startLine": 885,
+        "startChar": 8,
+        "endLine": 885,
+        "endChar": 22
+      },
+      "revId": "149d563e23d35bfe7b96bf17f116d8f2ff21e671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86160cff_1bd5dcbd",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3196,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:44:55Z",
+      "side": 1,
+      "message": "nit: move this to \u0027ValidateInvalidateFramebuffer\u0027",
+      "range": {
+        "startLine": 3192,
+        "startChar": 0,
+        "endLine": 3196,
+        "endChar": 9
+      },
+      "revId": "149d563e23d35bfe7b96bf17f116d8f2ff21e671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
