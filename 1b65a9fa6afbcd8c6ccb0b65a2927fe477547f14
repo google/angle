@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "c6a1e40d_6b89b6f3",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T17:59:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86160cff_691ecde7",
+      "range": {
+        "startLine": 50,
+        "startChar": 48,
+        "endLine": 50,
+        "endChar": 49
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_c044030b",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T17:59:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a69cf0d8_851e8de4",
+      "range": {
+        "startLine": 50,
+        "startChar": 77,
+        "endLine": 50,
+        "endChar": 78
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c6a1e40d_0bdc7261",
         "filename": "src/compiler/translator/CallDAG.cpp",
         "patchSetId": 15
@@ -59,6 +107,30 @@
       "writtenOn": "2015-03-23T17:10:04Z",
       "side": 1,
       "message": "nit: all data below all functions",
+      "range": {
+        "startLine": 104,
+        "startChar": 11,
+        "endLine": 104,
+        "endChar": 24
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_40801391",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T17:59:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6a1e40d_0bdc7261",
       "range": {
         "startLine": 104,
         "startChar": 11,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "86160cff_fb2e20bb",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T17:59:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a69cf0d8_c5d53570",
+      "range": {
+        "startLine": 219,
+        "startChar": 0,
+        "endLine": 219,
+        "endChar": 2
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86160cff_c902818e",
         "filename": "src/compiler/translator/CallDAG.cpp",
         "patchSetId": 15
@@ -105,6 +201,30 @@
       "writtenOn": "2015-03-23T17:10:04Z",
       "side": 1,
       "message": "nit: make a temporary and ASSERT index is valid.",
+      "range": {
+        "startLine": 257,
+        "startChar": 20,
+        "endLine": 257,
+        "endChar": 28
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_80b83b57",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T17:59:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86160cff_c902818e",
       "range": {
         "startLine": 257,
         "startChar": 20,
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "c6a1e40d_0b50f2b4",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T17:59:47Z",
+      "side": 1,
+      "message": "Fixed the nit, waiting to discuss that Optional usage.",
+      "parentUuid": "a69cf0d8_c5c1b5d2",
+      "range": {
+        "startLine": 58,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 16
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86160cff_a9a8e502",
         "filename": "src/compiler/translator/CallDAG.h",
         "patchSetId": 15
@@ -151,6 +295,30 @@
       "writtenOn": "2015-03-23T17:10:04Z",
       "side": 1,
       "message": "nit: should probably not overload this to keep things clear. what about findRecord?",
+      "range": {
+        "startLine": 61,
+        "startChar": 18,
+        "endLine": 61,
+        "endChar": 27
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_a0cf37d8",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T17:59:47Z",
+      "side": 1,
+      "message": "The thing is that findRecord sounds like it could fail, but here we don\u0027t fail (or we hit an assert because the if is invalid).\nChanged to getRecordFromIndex()",
+      "parentUuid": "86160cff_a9a8e502",
       "range": {
         "startLine": 61,
         "startChar": 18,
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "c6a1e40d_8eb510b0",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T17:59:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a69cf0d8_459f85ac",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 40
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a69cf0d8_058d7d83",
         "filename": "src/compiler/translator/Compiler.h",
         "patchSetId": 15
@@ -197,6 +389,30 @@
       "writtenOn": "2015-03-23T17:10:04Z",
       "side": 1,
       "message": "can any of these be private?",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 44
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_6eb264c7",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T17:59:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a69cf0d8_058d7d83",
       "range": {
         "startLine": 112,
         "startChar": 0,
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "86160cff_fbb58031",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T17:59:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a69cf0d8_a5cf49d8",
+      "range": {
+        "startLine": 174,
+        "startChar": 11,
+        "endLine": 174,
+        "endChar": 31
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c6a1e40d_8b07c247",
         "filename": "src/compiler/translator/Compiler.h",
         "patchSetId": 15
@@ -243,6 +483,30 @@
       "writtenOn": "2015-03-23T17:10:04Z",
       "side": 1,
       "message": "nit: functionMetaData",
+      "range": {
+        "startLine": 184,
+        "startChar": 38,
+        "endLine": 184,
+        "endChar": 54
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86160cff_5bbbd425",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-23T17:59:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6a1e40d_8b07c247",
       "range": {
         "startLine": 184,
         "startChar": 38,
