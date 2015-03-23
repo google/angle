@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66111809_b919577f",
+        "filename": "src/libANGLE/RefCountObject.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-03-23T19:56:16Z",
+      "side": 1,
+      "message": "I just want a \"NonOwningOffsetBindingPointer\" class which holds the tuple (buffer, offset, size) and which I can copy around without worrying about reference counting. This might be a bit overkill and I probably should use a smaller structure somewhere else.",
+      "revId": "bb4617f24064b7e2bb795c5929e131785ffac0a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
