@@ -16,7 +16,7 @@
 namespace
 {
 
-struct BufferSubDataParams : public PerfTestParams
+struct BufferSubDataParams final : public PerfTestParams
 {
     std::string suffix() const override;
 

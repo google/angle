@@ -16,7 +16,7 @@
 namespace
 {
 
-struct TexSubImageParams : public PerfTestParams
+struct TexSubImageParams final : public PerfTestParams
 {
     std::string suffix() const override;
 

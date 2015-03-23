@@ -18,7 +18,7 @@
 namespace
 {
 
-struct PointSpritesParams : public PerfTestParams
+struct PointSpritesParams final : public PerfTestParams
 {
     std::string suffix() const override;
 
