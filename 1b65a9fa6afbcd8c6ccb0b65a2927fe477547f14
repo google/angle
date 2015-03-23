@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a69cf0d8_851e8de4",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:10:04Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 50,
+        "startChar": 77,
+        "endLine": 50,
+        "endChar": 78
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86160cff_691ecde7",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:10:04Z",
+      "side": 1,
+      "message": "nit: for parameters, non-const types should be * according to the style guide. (we sometimes skip this for return values but for parameters AFAIK we\u0027ve been consistent).",
+      "range": {
+        "startLine": 50,
+        "startChar": 48,
+        "endLine": 50,
+        "endChar": 49
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_0bdc7261",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:10:04Z",
+      "side": 1,
+      "message": "nit: all data below all functions",
+      "range": {
+        "startLine": 104,
+        "startChar": 11,
+        "endLine": 104,
+        "endChar": 24
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_c5d53570",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:10:04Z",
+      "side": 1,
+      "message": "nit: DISALLOW_COPY_AND_ASSIGN",
+      "range": {
+        "startLine": 219,
+        "startChar": 0,
+        "endLine": 219,
+        "endChar": 2
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86160cff_c902818e",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:10:04Z",
+      "side": 1,
+      "message": "nit: make a temporary and ASSERT index is valid.",
+      "range": {
+        "startLine": 257,
+        "startChar": 20,
+        "endLine": 257,
+        "endChar": 28
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_c5c1b5d2",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:10:04Z",
+      "side": 1,
+      "message": "nit: findIndex. also, getRecord takes a size_t and this returns an int, that seems inconsistent. if you still don\u0027t want optional, make a const static size_t InvalidRecord \u003d static_cast\u003csize_t\u003e(-1);. I\u0027d recommend using optional.",
+      "range": {
+        "startLine": 58,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 16
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86160cff_a9a8e502",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:10:04Z",
+      "side": 1,
+      "message": "nit: should probably not overload this to keep things clear. what about findRecord?",
+      "range": {
+        "startLine": 61,
+        "startChar": 18,
+        "endLine": 61,
+        "endChar": 27
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_459f85ac",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:10:04Z",
+      "side": 1,
+      "message": "can this be private?",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 40
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_058d7d83",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:10:04Z",
+      "side": 1,
+      "message": "can any of these be private?",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 44
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_a5cf49d8",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:10:04Z",
+      "side": 1,
+      "message": "nit: FunctionMetaData.",
+      "range": {
+        "startLine": 174,
+        "startChar": 11,
+        "endLine": 174,
+        "endChar": 31
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_8b07c247",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:10:04Z",
+      "side": 1,
+      "message": "nit: functionMetaData",
+      "range": {
+        "startLine": 184,
+        "startChar": 38,
+        "endLine": 184,
+        "endChar": 54
+      },
+      "revId": "1b65a9fa6afbcd8c6ccb0b65a2927fe477547f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
