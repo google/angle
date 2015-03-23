@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c6a1e40d_2e0a1cd3",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T18:09:10Z",
+      "side": 1,
+      "message": "nit: InvalidIndex",
+      "range": {
+        "startLine": 57,
+        "startChar": 15,
+        "endLine": 57,
+        "endChar": 17
+      },
+      "revId": "8de9fac11c1a5ffafbcccbf390ef6f45df009160",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86160cff_7e04be42",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T18:09:10Z",
+      "side": 1,
+      "message": "nit: below functions (before private)",
+      "range": {
+        "startLine": 59,
+        "startChar": 24,
+        "endLine": 59,
+        "endChar": 36
+      },
+      "revId": "8de9fac11c1a5ffafbcccbf390ef6f45df009160",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86160cff_5e5aa256",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T18:09:10Z",
+      "side": 1,
+      "message": "nit: size_t?",
+      "range": {
+        "startLine": 166,
+        "startChar": 33,
+        "endLine": 166,
+        "endChar": 36
+      },
+      "revId": "8de9fac11c1a5ffafbcccbf390ef6f45df009160",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
