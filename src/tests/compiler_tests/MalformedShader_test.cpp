@@ -158,3 +158,42 @@ TEST_F(MalformedShaderTest, AssignStructsContainingArrays)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Assignment and equality are undefined for structures containing samplers (ESSL 1.00 sections 5.7 and 5.9)
+TEST_F(MalformedShaderTest, CompareStructsContainingSamplers)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "struct s { sampler2D foo; };\n"
+        "uniform s a;\n"
+        "uniform s b;\n"
+        "void main() {\n"
+        "   bool c = (a == b);\n"
+        "   gl_FragColor = vec4(c ? 1.0 : 0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Samplers are not allowed as l-values (ESSL 3.00 section 4.1.7), our interpretation is that this
+// extends to structs containing samplers. ESSL 1.00 spec is clearer about this.
+TEST_F(MalformedShaderTest, AssignStructsContainingSamplers)
+{
+    const std::string &shaderString =
+        "#version 300 es;\n"
+        "precision mediump float;\n"
+        "struct s { sampler2D foo; };\n"
+        "uniform s a;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   s b;\n"
+        "   b = a;\n"
+        "   my_FragColor = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

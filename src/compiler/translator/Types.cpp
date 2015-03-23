@@ -200,6 +200,17 @@ bool TStructure::containsArrays() const
     return false;
 }
 
+bool TStructure::containsSamplers() const
+{
+    for (size_t i = 0; i < mFields->size(); ++i)
+    {
+        const TType *fieldType = (*mFields)[i]->type();
+        if (IsSampler(fieldType->getBasicType()) || fieldType->isStructureContainingSamplers())
+            return true;
+    }
+    return false;
+}
+
 TString TFieldListCollection::buildMangledName() const
 {
     TString mangledName(mangledNamePrefix());

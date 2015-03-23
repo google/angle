@@ -2792,7 +2792,7 @@ bool TParseContext::binaryOpCommonCheck(TOperator op, TIntermTyped *left, TInter
     }
 
     // Check that type sizes match exactly on ops that require that.
-    // Also check restrictions for structs that contain arrays.
+    // Also check restrictions for structs that contain arrays or samplers.
     switch(op)
     {
       case EOpAssign:
@@ -2803,6 +2803,15 @@ bool TParseContext::binaryOpCommonCheck(TOperator op, TIntermTyped *left, TInter
         if (shaderVersion < 300 && left->getType().isStructureContainingArrays())
         {
             error(loc, "undefined operation for structs containing arrays", GetOperatorString(op));
+            return false;
+        }
+        // Samplers as l-values are disallowed also in ESSL 3.00, see section 4.1.7,
+        // we interpret the spec so that this extends to structs containing samplers,
+        // similarly to ESSL 1.00 spec.
+        if ((shaderVersion < 300 || op == EOpAssign || op == EOpInitialize) &&
+            left->getType().isStructureContainingSamplers())
+        {
+            error(loc, "undefined operation for structs containing samplers", GetOperatorString(op));
             return false;
         }
       case EOpLessThan:
