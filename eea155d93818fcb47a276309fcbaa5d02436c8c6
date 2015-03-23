@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86160cff_dbbc0453",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:54:29Z",
+      "side": 1,
+      "message": "nit: should use ANGLE style for new code (newline)",
+      "range": {
+        "startLine": 161,
+        "startChar": 72,
+        "endLine": 161,
+        "endChar": 73
+      },
+      "revId": "eea155d93818fcb47a276309fcbaa5d02436c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_ce5ef854",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:54:29Z",
+      "side": 1,
+      "message": "nit: auto \u0026 just to keep it simple",
+      "range": {
+        "startLine": 161,
+        "startChar": 9,
+        "endLine": 161,
+        "endChar": 33
+      },
+      "revId": "eea155d93818fcb47a276309fcbaa5d02436c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_ee2e54bb",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:54:29Z",
+      "side": 1,
+      "message": "nit: SafeDelete",
+      "range": {
+        "startLine": 162,
+        "startChar": 8,
+        "endLine": 162,
+        "endChar": 14
+      },
+      "revId": "eea155d93818fcb47a276309fcbaa5d02436c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86160cff_7b61707e",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:54:29Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 164,
+        "startChar": 70,
+        "endLine": 164,
+        "endChar": 71
+      },
+      "revId": "eea155d93818fcb47a276309fcbaa5d02436c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_3b9ffaad",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:54:29Z",
+      "side": 1,
+      "message": "suggest just iterating over the two lists here",
+      "range": {
+        "startLine": 338,
+        "startChar": 4,
+        "endLine": 338,
+        "endChar": 36
+      },
+      "revId": "eea155d93818fcb47a276309fcbaa5d02436c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_4e7328e5",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:54:29Z",
+      "side": 1,
+      "message": "seems odd to use three lists, one of which duplicates the others. I\u0027d suggest just using the two main lists, iterating over each in turn when needed, and using value types.",
+      "range": {
+        "startLine": 197,
+        "startChar": 5,
+        "endLine": 197,
+        "endChar": 54
+      },
+      "revId": "eea155d93818fcb47a276309fcbaa5d02436c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
