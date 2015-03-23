@@ -1,0 +1,251 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86160cff_c9744102",
+        "filename": "src/compiler/translator/AnalysesHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:18:38Z",
+      "side": 1,
+      "message": "put as much as possible in an anonymous namespace {} block",
+      "range": {
+        "startLine": 14,
+        "startChar": 38,
+        "endLine": 14,
+        "endChar": 46
+      },
+      "revId": "0873e41a3be9486c5d988d987accdb407243066c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86160cff_a97905fa",
+        "filename": "src/compiler/translator/AnalysesHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:18:38Z",
+      "side": 1,
+      "message": "also applies here",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 44
+      },
+      "revId": "0873e41a3be9486c5d988d987accdb407243066c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_eb012608",
+        "filename": "src/compiler/translator/AnalysesHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:18:38Z",
+      "side": 1,
+      "message": "nit: use *",
+      "range": {
+        "startLine": 23,
+        "startChar": 26,
+        "endLine": 23,
+        "endChar": 27
+      },
+      "revId": "0873e41a3be9486c5d988d987accdb407243066c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_6b0ed635",
+        "filename": "src/compiler/translator/AnalysesHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:18:38Z",
+      "side": 1,
+      "message": "*",
+      "range": {
+        "startLine": 131,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 32
+      },
+      "revId": "0873e41a3be9486c5d988d987accdb407243066c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_40d9331f",
+        "filename": "src/compiler/translator/AnalysesHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:18:38Z",
+      "side": 1,
+      "message": "newline",
+      "range": {
+        "startLine": 151,
+        "startChar": 92,
+        "endLine": 151,
+        "endChar": 93
+      },
+      "revId": "0873e41a3be9486c5d988d987accdb407243066c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_60ab8f54",
+        "filename": "src/compiler/translator/AnalysesHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:18:38Z",
+      "side": 1,
+      "message": "This comment block is great, very helpful.\n\nnit: could clarify you\u0027re walking the DAG here to the child functions",
+      "range": {
+        "startLine": 162,
+        "startChar": 46,
+        "endLine": 162,
+        "endChar": 50
+      },
+      "revId": "0873e41a3be9486c5d988d987accdb407243066c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_0093ab5a",
+        "filename": "src/compiler/translator/AnalysesHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:18:38Z",
+      "side": 1,
+      "message": "present progressive tense seems awkward, and the plural of analysis suggests multiple things are going on sequentially. I\u0027d suggest HLSLShaderMetaData.",
+      "range": {
+        "startLine": 20,
+        "startChar": 7,
+        "endLine": 20,
+        "endChar": 23
+      },
+      "revId": "0873e41a3be9486c5d988d987accdb407243066c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_2014e740",
+        "filename": "src/compiler/translator/AnalysesHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:18:38Z",
+      "side": 1,
+      "message": "we should probably converge on always using m prefix unless it\u0027s really a POD struct. (since this has member functions, they could benefit from the m prefix)",
+      "range": {
+        "startLine": 31,
+        "startChar": 9,
+        "endLine": 31,
+        "endChar": 21
+      },
+      "revId": "0873e41a3be9486c5d988d987accdb407243066c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_cb938a5b",
+        "filename": "src/compiler/translator/AnalysesHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:18:38Z",
+      "side": 1,
+      "message": "nit: start with caps for static/global functions",
+      "range": {
+        "startLine": 41,
+        "startChar": 30,
+        "endLine": 41,
+        "endChar": 48
+      },
+      "revId": "0873e41a3be9486c5d988d987accdb407243066c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_c069a3a7",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:18:38Z",
+      "side": 1,
+      "message": "nit: no need for a whitespace change, remove this stray \\n",
+      "revId": "0873e41a3be9486c5d988d987accdb407243066c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a69cf0d8_e0649fcf",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T17:18:38Z",
+      "side": 1,
+      "message": "mShaderMetaData or mHLSLShaderMetaData",
+      "range": {
+        "startLine": 166,
+        "startChar": 34,
+        "endLine": 166,
+        "endChar": 46
+      },
+      "revId": "0873e41a3be9486c5d988d987accdb407243066c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
