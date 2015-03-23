@@ -1,7 +1,7 @@
 #include "ANGLETest.h"
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(UniformBufferTest, ES3_D3D11_FL11_1, ES3_D3D11_FL11_1_REFERENCE);
+ANGLE_TYPED_TEST_CASE(UniformBufferTest, ES3_D3D11, ES3_D3D11_FL11_1, ES3_D3D11_FL11_1_REFERENCE);
 
 template<typename T>
 class UniformBufferTest : public ANGLETest
@@ -226,5 +226,82 @@ TYPED_TEST(UniformBufferTest, UniformBufferManyUpdates)
         drawQuad(mProgram, "position", 0.5f);
         EXPECT_GL_NO_ERROR();
         EXPECT_PIXEL_EQ(px, py, i + 10, i + 20, i + 30, i + 40);
+    }
+}
+
+// Use a large number of buffer ranges (compared to the actual size of the UBO)
+TYPED_TEST(UniformBufferTest, ManyUniformBufferRange)
+{
+    int px = getWindowWidth() / 2;
+    int py = getWindowHeight() / 2;
+
+    // Query the uniform buffer alignment requirement
+    GLint alignment;
+    glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &alignment);
+
+    GLint64 maxUniformBlockSize;
+    glGetInteger64v(GL_MAX_UNIFORM_BLOCK_SIZE, &maxUniformBlockSize);
+    if (alignment >= maxUniformBlockSize)
+    {
+        // ANGLE doesn't implement UBO offsets for this platform.
+        // Ignore the test case.
+        return;
+    }
+
+    ASSERT_GL_NO_ERROR();
+
+    // Let's create a buffer which contains eight vec4.
+    GLuint vec4Size = 4 * sizeof(float);
+    GLuint stride = 0;
+    do
+    {
+        stride += alignment;
+    }
+    while (stride < vec4Size);
+
+    std::vector<char> v(8 * stride);
+
+    for (size_t i = 0; i < 8; ++i)
+    {
+        float *data = reinterpret_cast<float*>(v.data() + i * stride);
+
+        data[0] = (i + 10.f) / 255.f;
+        data[1] = (i + 20.f) / 255.f;
+        data[2] = (i + 30.f) / 255.f;
+        data[3] = (i + 40.f) / 255.f;
+    }
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, v.size(), v.data(), GL_STATIC_DRAW);
+
+    glUniformBlockBinding(mProgram, mUniformBufferIndex, 0);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Bind each possible offset
+    for (size_t i = 0; i < 8; ++i)
+    {
+        glBindBufferRange(GL_UNIFORM_BUFFER, 0, mUniformBuffer, i * stride, stride);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_EQ(px, py, 10 + i, 20 + i, 30 + i, 40 + i);
+    }
+
+    // Try to bind larger range
+    for (size_t i = 0; i < 7; ++i)
+    {
+        glBindBufferRange(GL_UNIFORM_BUFFER, 0, mUniformBuffer, i * stride, 2 * stride);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_EQ(px, py, 10 + i, 20 + i, 30 + i, 40 + i);
+    }
+
+    // Try to bind even larger range
+    for (size_t i = 0; i < 5; ++i)
+    {
+        glBindBufferRange(GL_UNIFORM_BUFFER, 0, mUniformBuffer, i * stride, 4 * stride);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_EQ(px, py, 10 + i, 20 + i, 30 + i, 40 + i);
     }
 }

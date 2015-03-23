@@ -1052,24 +1052,11 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, gl::
     caps->maxUniformBufferBindings = caps->maxVertexUniformBlocks + caps->maxFragmentUniformBlocks;
     caps->maxUniformBlockSize = GetMaximumConstantBufferSize(featureLevel);
 
-    // Setting a large alignment forces uniform buffers to bind with zero offset
-    caps->uniformBufferOffsetAlignment = static_cast<GLuint>(std::numeric_limits<GLint>::max());
-    ID3D11DeviceContext1 *deviceContext1 = d3d11::DynamicCastComObject<ID3D11DeviceContext1>(deviceContext);
-
-    if (deviceContext1)
-    {
-        D3D11_FEATURE_DATA_D3D11_OPTIONS d3d11Options;
-        device->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS, &d3d11Options, sizeof(D3D11_FEATURE_DATA_D3D11_OPTIONS));
-
-        if (d3d11Options.ConstantBufferOffsetting)
-        {
-            // With DirectX 11.1, constant buffer offset and size must be a multiple of 16 constants of 16 bytes each.
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/hh404649%28v=vs.85%29.aspx
-            caps->uniformBufferOffsetAlignment = 256;
-        }
-
-        SafeRelease(deviceContext1);
-    }
+    // With DirectX 11.1, constant buffer offset and size must be a multiple of 16 constants of 16 bytes each.
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/hh404649%28v=vs.85%29.aspx
+    // With DirectX 11.0, we emulate UBO offsets using copies of ranges of the UBO however
+    // we still keep the same alignment as 11.1 for consistency.
+    caps->uniformBufferOffsetAlignment = 256;
 
     caps->maxCombinedUniformBlocks = caps->maxVertexUniformBlocks + caps->maxFragmentUniformBlocks;
     caps->maxCombinedVertexUniformComponents = (static_cast<GLint64>(caps->maxVertexUniformBlocks) * static_cast<GLint64>(caps->maxUniformBlockSize / 4)) +

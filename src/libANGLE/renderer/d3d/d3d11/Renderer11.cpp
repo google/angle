@@ -832,7 +832,16 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
         if (uniformBuffer)
         {
             Buffer11 *bufferStorage = GetImplAs<Buffer11>(uniformBuffer);
-            ID3D11Buffer *constantBuffer = bufferStorage->getBuffer(BUFFER_USAGE_UNIFORM);
+            ID3D11Buffer *constantBuffer;
+
+            if (mSupportsConstantBufferOffsets)
+            {
+                constantBuffer = bufferStorage->getBuffer(BUFFER_USAGE_UNIFORM);
+            }
+            else
+            {
+                constantBuffer = bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize);
+            }
 
             if (!constantBuffer)
             {
@@ -852,7 +861,6 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
                 }
                 else
                 {
-                    ASSERT(uniformBufferOffset == 0);
                     mDeviceContext->VSSetConstantBuffers(getReservedVertexUniformBuffers() + uniformBufferIndex,
                                                          1, &constantBuffer);
                 }
@@ -880,7 +888,16 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
         if (uniformBuffer)
         {
             Buffer11 *bufferStorage = GetImplAs<Buffer11>(uniformBuffer);
-            ID3D11Buffer *constantBuffer = bufferStorage->getBuffer(BUFFER_USAGE_UNIFORM);
+            ID3D11Buffer *constantBuffer;
+
+            if (mSupportsConstantBufferOffsets)
+            {
+                constantBuffer = bufferStorage->getBuffer(BUFFER_USAGE_UNIFORM);
+            }
+            else
+            {
+                constantBuffer = bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize);
+            }
 
             if (!constantBuffer)
             {
@@ -900,7 +917,6 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
                 }
                 else
                 {
-                    ASSERT(uniformBufferOffset == 0);
                     mDeviceContext->PSSetConstantBuffers(getReservedFragmentUniformBuffers() + uniformBufferIndex,
                                                          1, &constantBuffer);
                 }
