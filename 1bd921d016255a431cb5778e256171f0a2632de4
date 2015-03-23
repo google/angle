@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86160cff_bef776a2",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3041,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T18:20:35Z",
+      "side": 1,
+      "message": "I added the mInfoSinkStack to accommodate infoSink nesting. I think I like your design better though, so I\u0027d say let\u0027s try and converge on using an infoSink parameter instead of the stack. Can you add a TODO(jmadill) in the header near mInfoSinkStack?",
+      "range": {
+        "startLine": 3041,
+        "startChar": 3,
+        "endLine": 3041,
+        "endChar": 28
+      },
+      "revId": "1bd921d016255a431cb5778e256171f0a2632de4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86160cff_1ee2eac8",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3051,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-23T18:20:35Z",
+      "side": 1,
+      "message": "nit: can you align these vertically with sets of \"\u003c\u003c\" or quotes, like:\n\n  fnOut \u003c\u003c \"blah\" \u003c\u003c thing\n        \u003c\u003c \"T\\n\"\n           \"continued\"",
+      "revId": "1bd921d016255a431cb5778e256171f0a2632de4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
