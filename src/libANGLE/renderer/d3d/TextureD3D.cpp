@@ -1324,7 +1324,9 @@ gl::Error TextureD3D_Cube::copyImage(GLenum target, size_t level, const gl::Rect
     gl::ImageIndex index = gl::ImageIndex::MakeCube(target, level);
     gl::Offset destOffset(0, 0, 0);
 
-    if (!canCreateRenderTargetForImage(index))
+    // If the zero max LOD workaround is active, then we can't sample from individual layers of the framebuffer in shaders,
+    // so we should use the non-rendering copy path.
+    if (!canCreateRenderTargetForImage(index) || mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
         gl::Error error = mImageArray[faceIndex][level]->copy(destOffset, sourceArea, source);
         if (error.isError())
@@ -1366,7 +1368,9 @@ gl::Error TextureD3D_Cube::copySubImage(GLenum target, size_t level, const gl::O
 
     gl::ImageIndex index = gl::ImageIndex::MakeCube(target, level);
 
-    if (!canCreateRenderTargetForImage(index))
+    // If the zero max LOD workaround is active, then we can't sample from individual layers of the framebuffer in shaders,
+    // so we should use the non-rendering copy path.
+    if (!canCreateRenderTargetForImage(index) || mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
         gl::Error error = mImageArray[faceIndex][level]->copy(destOffset, sourceArea, source);
         if (error.isError())
