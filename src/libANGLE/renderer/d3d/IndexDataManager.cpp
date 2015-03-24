@@ -130,6 +130,10 @@ gl::Error IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buf
             streamOffset = (offset / typeInfo.bytes) * gl::GetTypeInfo(destinationIndexType).bytes;
             staticBuffer->getIndexRangeCache()->addRange(type, offset, count, translated->indexRange, streamOffset);
         }
+        if (!buffer->getIndexRangeCache()->findRange(type, offset, count, nullptr, nullptr))
+        {
+            buffer->getIndexRangeCache()->addRange(type, offset, count, translated->indexRange, offset);
+        }
     }
 
     // Avoid D3D11's primitive restart index value
