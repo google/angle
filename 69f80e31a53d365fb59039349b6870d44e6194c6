@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3f6a249_2c309b18",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T20:04:53Z",
+      "side": 1,
+      "message": "nit: nullptr. it\u0027s fine to leave the surrounding code as is, though i wouldn\u0027t be mad if you cleaned it up.",
+      "range": {
+        "startLine": 133,
+        "startChar": 74,
+        "endLine": 133,
+        "endChar": 78
+      },
+      "revId": "69f80e31a53d365fb59039349b6870d44e6194c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
