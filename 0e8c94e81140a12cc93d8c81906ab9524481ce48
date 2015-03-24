@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8620cc83_a444a209",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T16:46:16Z",
+      "side": 1,
+      "message": "can you comment here explaining what this is and why we need it?",
+      "range": {
+        "startLine": 83,
+        "startChar": 25,
+        "endLine": 83,
+        "endChar": 42
+      },
+      "revId": "0e8c94e81140a12cc93d8c81906ab9524481ce48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
