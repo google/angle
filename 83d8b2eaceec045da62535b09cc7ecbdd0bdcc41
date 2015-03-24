@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3fb9632_e7a6508a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T20:03:13Z",
+      "side": 1,
+      "message": "nit: static is redundant inside the namespace {} block",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 146,
+        "endChar": 6
+      },
+      "revId": "83d8b2eaceec045da62535b09cc7ecbdd0bdcc41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3fb9632_877f8c64",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T20:03:13Z",
+      "side": 1,
+      "message": "nit: static_cast",
+      "range": {
+        "startLine": 156,
+        "startChar": 41,
+        "endLine": 156,
+        "endChar": 53
+      },
+      "revId": "83d8b2eaceec045da62535b09cc7ecbdd0bdcc41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3f6a249_ecf873c0",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2067,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T20:03:13Z",
+      "side": 1,
+      "message": "good catch, this seems like a pretty glaring error",
+      "range": {
+        "startLine": 2067,
+        "startChar": 27,
+        "endLine": 2067,
+        "endChar": 65
+      },
+      "revId": "83d8b2eaceec045da62535b09cc7ecbdd0bdcc41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
