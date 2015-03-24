@@ -22,6 +22,352 @@
       "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "666d98b3_68e98780",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "Should be okay without, the getIndexedUniformBuffer method itself does the same ASSERT",
+      "parentUuid": "263640c8_09eca939",
+      "range": {
+        "startLine": 1180,
+        "startChar": 36,
+        "endLine": 1180,
+        "endChar": 90
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "666d98b3_28df8fde",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "I\u0027d suggest that instead of doing this check here, you do it in generateCaps, then check the caps offset value to determine if offsets are supported.",
+      "range": {
+        "startLine": 507,
+        "startChar": 0,
+        "endLine": 512,
+        "endChar": 5
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86728c8f_4e03f7c5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 804,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "we don\u0027t use inline for local functions",
+      "range": {
+        "startLine": 804,
+        "startChar": 0,
+        "endLine": 804,
+        "endChar": 6
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86728c8f_6e00b3b8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 804,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "place this method at the top of the file in an anonymous namespace {} block, and capitalize \"Calculate\"",
+      "range": {
+        "startLine": 804,
+        "startChar": 12,
+        "endLine": 804,
+        "endChar": 41
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "666d98b3_88042344",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 807,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "nit: remove space",
+      "range": {
+        "startLine": 807,
+        "startChar": 10,
+        "endLine": 807,
+        "endChar": 11
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6731093_a993a55b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "nit: remove this newline",
+      "range": {
+        "startLine": 810,
+        "startChar": 0,
+        "endLine": 810,
+        "endChar": 0
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86728c8f_8ee6efad",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 815,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "can you use rx::roundUp in here somewhere?",
+      "range": {
+        "startLine": 813,
+        "startChar": 0,
+        "endLine": 815,
+        "endChar": 49
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6731093_0993b95a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 826,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "can you pass in the gl::Data here and use Caps to access caps.maxVertexUniformBlocks",
+      "range": {
+        "startLine": 826,
+        "startChar": 67,
+        "endLine": 826,
+        "endChar": 119
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6731093_a9f2c5b2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 863,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "can you ASSERT in here the offset is zero? We should still be rejecting these at the validation level if we don\u0027t support nonzero offsets",
+      "range": {
+        "startLine": 861,
+        "startChar": 17,
+        "endLine": 863,
+        "endChar": 25
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6731093_29887522",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 873,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "use caps.maxFragmentUniformBlocks",
+      "range": {
+        "startLine": 873,
+        "startChar": 67,
+        "endLine": 873,
+        "endChar": 121
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "666d98b3_28406f11",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 910,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "same as above",
+      "range": {
+        "startLine": 908,
+        "startChar": 17,
+        "endLine": 910,
+        "endChar": 27
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6731093_4904d114",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2082,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "I don\u0027t think 0 is correct. This could trigger a bug when the previous offset is not zero, then we mark state dirty, then try to set the offset to zero. It should be -1, or preferably, use the Optional header in angle_utils to keep a valid bit.",
+      "range": {
+        "startLine": 2082,
+        "startChar": 8,
+        "endLine": 2082,
+        "endChar": 38
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6731093_6928ad7d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "I\u0027d suggest trying out the Optional class for these",
+      "range": {
+        "startLine": 358,
+        "startChar": 4,
+        "endLine": 358,
+        "endChar": 12
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6731093_c91e2164",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1057,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "you need to query the device here to determine if it supports the 11.1 features. The method signature seems awkward, maybe Geoff can suggest how to amend it to avoid repeated work. At the very least you should be able to use DynamicCastComObject to get an 11.1 pointer.",
+      "range": {
+        "startLine": 1057,
+        "startChar": 41,
+        "endLine": 1057,
+        "endChar": 44
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "666d98b3_88e6e3ad",
+        "filename": "src/tests/end2end_tests/UniformBufferTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T15:48:54Z",
+      "side": 1,
+      "message": "can you add the hardware platform here as well? does it work?",
+      "range": {
+        "startLine": 4,
+        "startChar": 41,
+        "endLine": 4,
+        "endChar": 67
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
