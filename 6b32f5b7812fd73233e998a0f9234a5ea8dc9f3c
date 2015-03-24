@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "23eb9264_a1d4be3e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T16:55:26Z",
+      "side": 1,
+      "message": "Good point. I agree. As an aside, we kind of lack a RendererCaps structure that\u0027s distinct from gl::Caps to express caps that aren\u0027t a part of the GL spec.",
+      "parentUuid": "a63870b1_d0eb2274",
+      "range": {
+        "startLine": 507,
+        "startChar": 0,
+        "endLine": 512,
+        "endChar": 5
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86728c8f_4e03f7c5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 8
@@ -590,6 +614,30 @@
     },
     {
       "key": {
+        "uuid": "23eb9264_01f7eada",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2082,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T16:55:26Z",
+      "side": 1,
+      "message": "This is true, good point. I\u0027d like the code to use Optional at some point, you can adapt it if you want or leave it. I\u0027m good with the code you have here now with a comment.",
+      "parentUuid": "c63d64a0_71cc32e4",
+      "range": {
+        "startLine": 2082,
+        "startChar": 8,
+        "endLine": 2082,
+        "endChar": 38
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6731093_6928ad7d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
         "patchSetId": 8
@@ -671,6 +719,30 @@
       "side": 1,
       "message": "What do you mean by hardware platform?",
       "parentUuid": "666d98b3_88e6e3ad",
+      "range": {
+        "startLine": 4,
+        "startChar": 41,
+        "endLine": 4,
+        "endChar": 67
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23eb9264_a1edde04",
+        "filename": "src/tests/end2end_tests/UniformBufferTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T16:55:26Z",
+      "side": 1,
+      "message": "The hardware device... ES3_D3D11_FL11_1 (without _REFERENCE, you\u0027ll need to add one)",
+      "parentUuid": "263640c8_6c7ff38e",
       "range": {
         "startLine": 4,
         "startChar": 41,
