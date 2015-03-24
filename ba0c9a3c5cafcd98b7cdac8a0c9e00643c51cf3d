@@ -1,0 +1,205 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23eb9264_618476e2",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:13:38Z",
+      "side": 1,
+      "message": "replace with: Analysis",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 27
+      },
+      "revId": "ba0c9a3c5cafcd98b7cdac8a0c9e00643c51cf3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23eb9264_21a54e80",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:13:38Z",
+      "side": 1,
+      "message": "nit: on newline",
+      "range": {
+        "startLine": 14,
+        "startChar": 10,
+        "endLine": 14,
+        "endChar": 11
+      },
+      "revId": "ba0c9a3c5cafcd98b7cdac8a0c9e00643c51cf3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23eb9264_01aa4a4e",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:13:38Z",
+      "side": 1,
+      "message": "awkward name, try MetadataList",
+      "range": {
+        "startLine": 16,
+        "startChar": 37,
+        "endLine": 16,
+        "endChar": 46
+      },
+      "revId": "ba0c9a3c5cafcd98b7cdac8a0c9e00643c51cf3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3f6a249_dd856b0b",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:13:38Z",
+      "side": 1,
+      "message": "unclear what \"Pull\" refers to in this case. Is that a commonly used term for this operation? If not, suggest FindGradientControlFlow or GradientInControlFlowSearch, etc",
+      "range": {
+        "startLine": 22,
+        "startChar": 6,
+        "endLine": 22,
+        "endChar": 18
+      },
+      "revId": "ba0c9a3c5cafcd98b7cdac8a0c9e00643c51cf3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3f6a249_1d6d13ff",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:13:38Z",
+      "side": 1,
+      "message": "metadataList",
+      "range": {
+        "startLine": 25,
+        "startChar": 28,
+        "endLine": 25,
+        "endChar": 36
+      },
+      "revId": "ba0c9a3c5cafcd98b7cdac8a0c9e00643c51cf3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3fb9632_9ea6bdb7",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:13:38Z",
+      "side": 1,
+      "message": "metadataList",
+      "range": {
+        "startLine": 156,
+        "startChar": 33,
+        "endLine": 156,
+        "endChar": 41
+      },
+      "revId": "ba0c9a3c5cafcd98b7cdac8a0c9e00643c51cf3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3f6a249_dd21ebca",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:13:38Z",
+      "side": 1,
+      "message": "nit: remove this space",
+      "revId": "ba0c9a3c5cafcd98b7cdac8a0c9e00643c51cf3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3f6a249_fd24a7dc",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:13:38Z",
+      "side": 1,
+      "message": "AnalyzeASTHLSL or CreateASTMetadataHLSL",
+      "range": {
+        "startLine": 42,
+        "startChar": 29,
+        "endLine": 42,
+        "endChar": 47
+      },
+      "revId": "ba0c9a3c5cafcd98b7cdac8a0c9e00643c51cf3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3fb9632_1e018d07",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:13:38Z",
+      "side": 1,
+      "message": "still needs an update. does this compile?",
+      "range": {
+        "startLine": 166,
+        "startChar": 4,
+        "endLine": 166,
+        "endChar": 47
+      },
+      "revId": "ba0c9a3c5cafcd98b7cdac8a0c9e00643c51cf3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
