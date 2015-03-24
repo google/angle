@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "263640c8_09eca939",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1180,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-03-24T14:36:30Z",
+      "side": 1,
+      "message": "Do I need to check or assert here that the binding is not out-of-bound?",
+      "range": {
+        "startLine": 1180,
+        "startChar": 36,
+        "endLine": 1180,
+        "endChar": 90
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
