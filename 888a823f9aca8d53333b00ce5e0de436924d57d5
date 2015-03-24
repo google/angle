@@ -1,0 +1,228 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "263640c8_2957ad2c",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-24T10:15:55Z",
+      "side": 1,
+      "message": "Add a space after // and \".\" in the end of the sentence (that\u0027s what I meant with the formatting comment).",
+      "range": {
+        "startLine": 181,
+        "startChar": 2,
+        "endLine": 181,
+        "endChar": 4
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a63870b1_6d7a95b8",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-24T10:15:55Z",
+      "side": 1,
+      "message": "The syntax for conversions in GLSL is int(x), not (int)x.",
+      "range": {
+        "startLine": 56,
+        "startChar": 23,
+        "endLine": 56,
+        "endChar": 29
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c63d64a0_eebbdfd4",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-24T10:15:55Z",
+      "side": 1,
+      "message": "Add \"u\" suffix to literals when working with uints.",
+      "range": {
+        "startLine": 71,
+        "startChar": 39,
+        "endLine": 71,
+        "endChar": 45
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c63d64a0_2e9ec768",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-24T10:15:55Z",
+      "side": 1,
+      "message": "\"u\" suffix here as well.",
+      "range": {
+        "startLine": 73,
+        "startChar": 35,
+        "endLine": 73,
+        "endChar": 45
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c63d64a0_aeb1d7f8",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-24T10:15:55Z",
+      "side": 1,
+      "message": "Please add the comment I asked you to add earlier. Something like this:\n\n// NaN bits that are masked out by 0x3ff get discarded. This can turn some NaNs to infinity, but this is allowed by the spec.",
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c63d64a0_ceb623ee",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-24T10:15:55Z",
+      "side": 1,
+      "message": "if (mantissa !\u003d 0) is actually unnecessary, might as well remove it.",
+      "range": {
+        "startLine": 74,
+        "startChar": 85,
+        "endLine": 74,
+        "endChar": 103
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c63d64a0_ce3f03da",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-24T10:15:55Z",
+      "side": 1,
+      "message": "\"u\" suffix here as well.",
+      "range": {
+        "startLine": 87,
+        "startChar": 32,
+        "endLine": 87,
+        "endChar": 38
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a63870b1_0da111a2",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-24T10:15:55Z",
+      "side": 1,
+      "message": "\"u\" suffix here as well.",
+      "range": {
+        "startLine": 89,
+        "startChar": 35,
+        "endLine": 89,
+        "endChar": 41
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c63d64a0_ee44bf78",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-24T10:15:55Z",
+      "side": 1,
+      "message": "uintBitsToFloat, not intBitsToFloat. Also u suffix in the constant.",
+      "range": {
+        "startLine": 92,
+        "startChar": 51,
+        "endLine": 92,
+        "endChar": 65
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c63d64a0_4eab1382",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-24T10:15:55Z",
+      "side": 1,
+      "message": "and \"u\" suffix here.",
+      "range": {
+        "startLine": 105,
+        "startChar": 26,
+        "endLine": 105,
+        "endChar": 32
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
