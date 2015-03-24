@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6215087_c54fda13",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-03-24T16:53:14Z",
+      "side": 1,
+      "message": "Allman-style braces, plz.",
+      "range": {
+        "startLine": 148,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 5
+      },
+      "revId": "76186e04384c9954b70d783080e8e8515bf6be47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6215087_85a32226",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-03-24T16:53:14Z",
+      "side": 1,
+      "message": "Could you add comments in the places where division is being avoided, to make the intention clear and make sure we don\u0027t later forget and end up adding more division ops back in?",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 18
+      },
+      "revId": "76186e04384c9954b70d783080e8e8515bf6be47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
