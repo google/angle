@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "c63d64a0_aee6372b",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-24T11:24:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6a1e40d_ce5ef854",
+      "range": {
+        "startLine": 161,
+        "startChar": 9,
+        "endLine": 161,
+        "endChar": 33
+      },
+      "revId": "eea155d93818fcb47a276309fcbaa5d02436c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c6a1e40d_ee2e54bb",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 3
@@ -59,6 +83,30 @@
       "writtenOn": "2015-03-23T17:54:29Z",
       "side": 1,
       "message": "nit: SafeDelete",
+      "range": {
+        "startLine": 162,
+        "startChar": 8,
+        "endLine": 162,
+        "endChar": 14
+      },
+      "revId": "eea155d93818fcb47a276309fcbaa5d02436c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "263640c8_a9e63d2b",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-24T11:24:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6a1e40d_ee2e54bb",
       "range": {
         "startLine": 162,
         "startChar": 8,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "a63870b1_ade63d2b",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-24T11:24:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86160cff_7b61707e",
+      "range": {
+        "startLine": 164,
+        "startChar": 70,
+        "endLine": 164,
+        "endChar": 71
+      },
+      "revId": "eea155d93818fcb47a276309fcbaa5d02436c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a69cf0d8_3b9ffaad",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 3
@@ -105,6 +177,30 @@
       "writtenOn": "2015-03-23T17:54:29Z",
       "side": 1,
       "message": "suggest just iterating over the two lists here",
+      "range": {
+        "startLine": 338,
+        "startChar": 4,
+        "endLine": 338,
+        "endChar": 36
+      },
+      "revId": "eea155d93818fcb47a276309fcbaa5d02436c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "263640c8_29cc0db5",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-24T11:24:26Z",
+      "side": 1,
+      "message": "The two lists need to be interleaved to output the functions in the correct order of dependency. That\u0027s the reason behind having the combined list of pointers. Now, there are alternatives of course:\n\n1. The objects could be annotated with a number that determined the order instead, but that would lead to more complex code when iterating over the lists.\n\n2. The equality function classes could be combined into one. The downside would be slightly muddled semantics and that it would be harder to understand the code that reuses the functions.\n\nThe upside with both of these options would be no need for dynamic memory management. Do you think that one of these options or something else would be preferable?",
+      "parentUuid": "a69cf0d8_3b9ffaad",
       "range": {
         "startLine": 338,
         "startChar": 4,
