@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3fb9632_7ee9b1ac",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:23:37Z",
+      "side": 1,
+      "message": "nit: either wrap the code here in {} or a static local helper function - to isolate the scoped variables.",
+      "range": {
+        "startLine": 165,
+        "startChar": 10,
+        "endLine": 165,
+        "endChar": 18
+      },
+      "revId": "d3aae661076932b7b0839c8e461ecc9bbcb3f354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23eb9264_61cfd62e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:23:37Z",
+      "side": 1,
+      "message": "nit: remove space",
+      "range": {
+        "startLine": 167,
+        "startChar": 18,
+        "endLine": 167,
+        "endChar": 19
+      },
+      "revId": "d3aae661076932b7b0839c8e461ecc9bbcb3f354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3fb9632_ded9e51f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:23:37Z",
+      "side": 1,
+      "message": "thanks. one small suggestion: change this to TODO(aukinros): \u003csmall comment\u003e to indicate although this code is correct, you plan on implementing the code. if you don\u0027t plan on implementing it you can remove the comment.",
+      "range": {
+        "startLine": 272,
+        "startChar": 3,
+        "endLine": 272,
+        "endChar": 26
+      },
+      "revId": "d3aae661076932b7b0839c8e461ecc9bbcb3f354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23eb9264_611d961e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1867,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:23:37Z",
+      "side": 1,
+      "message": "remove \"A \"",
+      "range": {
+        "startLine": 1867,
+        "startChar": 44,
+        "endLine": 1867,
+        "endChar": 128
+      },
+      "revId": "d3aae661076932b7b0839c8e461ecc9bbcb3f354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3fb9632_1e4ced4d",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 899,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:23:37Z",
+      "side": 1,
+      "message": "\"framebuffer\"",
+      "range": {
+        "startLine": 899,
+        "startChar": 60,
+        "endLine": 899,
+        "endChar": 61
+      },
+      "revId": "d3aae661076932b7b0839c8e461ecc9bbcb3f354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3fb9632_9e5ebdfc",
+        "filename": "src/libANGLE/validationES2.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:23:37Z",
+      "side": 1,
+      "message": "nit: pointer alignment",
+      "range": {
+        "startLine": 33,
+        "startChar": 47,
+        "endLine": 33,
+        "endChar": 48
+      },
+      "revId": "d3aae661076932b7b0839c8e461ecc9bbcb3f354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23eb9264_6146b614",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1156,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:23:37Z",
+      "side": 1,
+      "message": "\"framebuffer\"",
+      "range": {
+        "startLine": 1156,
+        "startChar": 60,
+        "endLine": 1156,
+        "endChar": 61
+      },
+      "revId": "d3aae661076932b7b0839c8e461ecc9bbcb3f354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
