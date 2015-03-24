@@ -223,11 +223,72 @@ gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFor
     if (UseTexImage2D(mTextureType))
     {
         ASSERT(size.depth == 1);
-        mFunctions->texStorage2D(target, levels, internalFormat, size.width, size.height);
+        if (mFunctions->texStorage2D)
+        {
+            mFunctions->texStorage2D(target, levels, internalFormat, size.width, size.height);
+        }
+        else
+        {
+            // Make sure no pixel unpack buffer is bound
+            mStateManager->bindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+            const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
+
+            // Internal format must be sized
+            ASSERT(internalFormatInfo.pixelBytes != 0);
+
+            for (size_t level = 0; level < levels; level++)
+            {
+                gl::Extents levelSize(std::max(size.width >> level, 1),
+                                      std::max(size.height >> level, 1),
+                                      1);
+
+                if (mTextureType == GL_TEXTURE_2D)
+                {
+                    mFunctions->texImage2D(target, level, internalFormat, levelSize.width, levelSize.height,
+                                           0, internalFormatInfo.format, internalFormatInfo.type, nullptr);
+                }
+                else if (mTextureType == GL_TEXTURE_CUBE_MAP)
+                {
+                    for (GLenum face = gl::FirstCubeMapTextureTarget; face <= gl::LastCubeMapTextureTarget; face++)
+                    {
+                        mFunctions->texImage2D(face, level, internalFormat, levelSize.width, levelSize.height,
+                                               0, internalFormatInfo.format, internalFormatInfo.type, nullptr);
+                    }
+                }
+                else
+                {
+                    UNREACHABLE();
+                }
+            }
+        }
     }
     else if (UseTexImage3D(mTextureType))
     {
-        mFunctions->texStorage3D(target, levels, internalFormat, size.width, size.height, size.depth);
+        if (mFunctions->texStorage3D)
+        {
+            mFunctions->texStorage3D(target, levels, internalFormat, size.width, size.height, size.depth);
+        }
+        else
+        {
+            // Make sure no pixel unpack buffer is bound
+            mStateManager->bindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+            const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
+
+            // Internal format must be sized
+            ASSERT(internalFormatInfo.pixelBytes != 0);
+
+            for (size_t i = 0; i < levels; i++)
+            {
+                gl::Extents levelSize(std::max(size.width >> i, 1),
+                                      std::max(size.height >> i, 1),
+                                      mTextureType == GL_TEXTURE_3D ? std::max(size.depth >> i, 1) : size.depth);
+
+                mFunctions->texImage3D(target, i, internalFormat, levelSize.width, levelSize.height, levelSize.depth,
+                                       0, internalFormatInfo.format, internalFormatInfo.type, nullptr);
+            }
+        }
     }
     else
     {
