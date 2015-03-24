@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6694b8c1_64c540a7",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:06:12Z",
+      "side": 1,
+      "message": "we\u0027ll have to add a section for EGL_EXT_display_device",
+      "range": {
+        "startLine": 467,
+        "startChar": 0,
+        "endLine": 471,
+        "endChar": 33
+      },
+      "revId": "915c496eac4947e7c3d45ff54ad0a3cffc0ed356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6694b8c1_04b63c3d",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:06:12Z",
+      "side": 1,
+      "message": "might as well just make these return EGLAttrib",
+      "range": {
+        "startLine": 165,
+        "startChar": 12,
+        "endLine": 165,
+        "endChar": 16
+      },
+      "revId": "915c496eac4947e7c3d45ff54ad0a3cffc0ed356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4665f4c2_033f146b",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:06:12Z",
+      "side": 1,
+      "message": "this is undefined, with a suggested behaviour of returning an error. we should converge on a policy of returning EGL_BAD_ACCESS or another EGL error.",
+      "range": {
+        "startLine": 328,
+        "startChar": 29,
+        "endLine": 328,
+        "endChar": 40
+      },
+      "revId": "915c496eac4947e7c3d45ff54ad0a3cffc0ed356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4665f4c2_2334188b",
+        "filename": "src/tests/end2end_tests/QueryDisplayAttribTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T17:06:12Z",
+      "side": 1,
+      "message": "nit: pointer alignments (a few instances in this file)",
+      "range": {
+        "startLine": 58,
+        "startChar": 20,
+        "endLine": 58,
+        "endChar": 21
+      },
+      "revId": "915c496eac4947e7c3d45ff54ad0a3cffc0ed356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
