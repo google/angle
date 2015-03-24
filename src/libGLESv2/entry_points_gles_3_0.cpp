@@ -2082,7 +2082,7 @@ void GL_APIENTRY GetActiveUniformsiv(GLuint program, GLsizei uniformCount, const
             return;
         }
 
-        if (uniformCount > 0)
+        if (uniformCount > programObject->getActiveUniformCount())
         {
             context->recordError(Error(GL_INVALID_VALUE));
             return;
