@@ -34,9 +34,25 @@ Renderbuffer::~Renderbuffer()
     SafeDelete(mRenderbuffer);
 }
 
-Error Renderbuffer::setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples)
+Error Renderbuffer::setStorage(GLenum internalformat, size_t width, size_t height)
 {
-    Error error = mRenderbuffer->setStorage(width, height, internalformat, samples);
+    Error error = mRenderbuffer->setStorage(internalformat, width, height);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    mWidth = width;
+    mHeight = height;
+    mInternalFormat = internalformat;
+    mSamples = 0;
+
+    return Error(GL_NO_ERROR);
+}
+
+Error Renderbuffer::setStorageMultisample(size_t samples, GLenum internalformat, size_t width, size_t height)
+{
+    Error error = mRenderbuffer->setStorageMultisample(samples, internalformat, width, height);
     if (error.isError())
     {
         return error;

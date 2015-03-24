@@ -30,7 +30,12 @@ RenderbufferD3D *RenderbufferD3D::makeRenderbufferD3D(RenderbufferImpl *renderbu
     return static_cast<RenderbufferD3D*>(renderbuffer);
 }
 
-gl::Error RenderbufferD3D::setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples)
+gl::Error RenderbufferD3D::setStorage(GLenum internalformat, size_t width, size_t height)
+{
+    return setStorageMultisample(0, internalformat, width, height);
+}
+
+gl::Error RenderbufferD3D::setStorageMultisample(size_t samples, GLenum internalformat, size_t width, size_t height)
 {
     // If the renderbuffer parameters are queried, the calling function
     // will expect one of the valid renderbuffer formats for use in

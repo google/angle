@@ -20,7 +20,13 @@ RenderbufferGL::RenderbufferGL()
 RenderbufferGL::~RenderbufferGL()
 {}
 
-gl::Error RenderbufferGL::setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples)
+gl::Error RenderbufferGL::setStorage(GLenum internalformat, size_t width, size_t height)
+{
+    UNIMPLEMENTED();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
+gl::Error RenderbufferGL::setStorageMultisample(size_t samples, GLenum internalformat, size_t width, size_t height)
 {
     UNIMPLEMENTED();
     return gl::Error(GL_INVALID_OPERATION);

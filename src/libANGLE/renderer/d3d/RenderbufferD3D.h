@@ -28,7 +28,8 @@ class RenderbufferD3D : public RenderbufferImpl
 
     static RenderbufferD3D *makeRenderbufferD3D(RenderbufferImpl *renderbuffer);
 
-    virtual gl::Error setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples) override;
+    virtual gl::Error setStorage(GLenum internalformat, size_t width, size_t height) override;
+    virtual gl::Error setStorageMultisample(size_t samples, GLenum internalformat, size_t width, size_t height) override;
 
     RenderTargetD3D *getRenderTarget();
     unsigned int getRenderTargetSerial() const;

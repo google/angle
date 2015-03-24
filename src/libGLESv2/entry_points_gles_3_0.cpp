@@ -706,7 +706,7 @@ void GL_APIENTRY RenderbufferStorageMultisample(GLenum target, GLsizei samples, 
         }
 
         Renderbuffer *renderbuffer = context->getState().getCurrentRenderbuffer();
-        renderbuffer->setStorage(width, height, internalformat, samples);
+        renderbuffer->setStorageMultisample(samples, internalformat, width, height);
     }
 }
 

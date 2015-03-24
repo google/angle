@@ -3332,7 +3332,7 @@ void GL_APIENTRY RenderbufferStorage(GLenum target, GLenum internalformat, GLsiz
         }
 
         Renderbuffer *renderbuffer = context->getState().getCurrentRenderbuffer();
-        Error error = renderbuffer->setStorage(width, height, internalformat, 0);
+        Error error = renderbuffer->setStorage(internalformat, width, height);
         if (error.isError())
         {
             context->recordError(error);

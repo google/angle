@@ -24,7 +24,8 @@ class RenderbufferImpl
     RenderbufferImpl();
     virtual ~RenderbufferImpl() = 0;
 
-    virtual gl::Error setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples) = 0;
+    virtual gl::Error setStorage(GLenum internalformat, size_t width, size_t height) = 0;
+    virtual gl::Error setStorageMultisample(size_t samples, GLenum internalformat, size_t width, size_t height) = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderbufferImpl);

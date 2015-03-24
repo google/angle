@@ -1273,7 +1273,7 @@ gl::Error Renderer9::getNullColorbuffer(const gl::FramebufferAttachment *depthbu
     }
 
     gl::Renderbuffer *nullRenderbuffer = new gl::Renderbuffer(createRenderbuffer(), 0);
-    gl::Error error = nullRenderbuffer->setStorage(width, height, GL_NONE, 0);
+    gl::Error error = nullRenderbuffer->setStorage(GL_NONE, width, height);
     if (error.isError())
     {
         SafeDelete(nullRenderbuffer);

@@ -38,7 +38,8 @@ class Renderbuffer : public RefCountObject
     Renderbuffer(rx::RenderbufferImpl *impl, GLuint id);
     virtual ~Renderbuffer();
 
-    Error setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples);
+    Error setStorage(GLenum internalformat, size_t width, size_t height);
+    Error setStorageMultisample(size_t samples, GLenum internalformat, size_t width, size_t height);
 
     rx::RenderbufferImpl *getImplementation();
 
