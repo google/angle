@@ -25,6 +25,7 @@ struct Type
     Type();
 
     GLuint bytes;
+    GLuint bytesShift; // Bit shift by this value to effectively divide/multiply by "bytes" in a more optimal way
     bool specialInterpretation;
 };
 const Type &GetTypeInfo(GLenum type);

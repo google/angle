@@ -132,6 +132,7 @@ FormatMap BuildFormatMap()
 
 Type::Type()
     : bytes(0),
+      bytesShift(0),
       specialInterpretation(false)
 {
 }
@@ -140,6 +141,13 @@ static Type GenTypeInfo(GLuint bytes, bool specialInterpretation)
 {
     Type info;
     info.bytes = bytes;
+    GLuint i = 0;
+    while ((1u << i) < bytes)
+    {
+        ++i;
+    }
+    info.bytesShift = i;
+    ASSERT((1u << info.bytesShift) == bytes);
     info.specialInterpretation = specialInterpretation;
     return info;
 }
