@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3fb9632_c71fd4e1",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2978,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T20:25:36Z",
+      "side": 1,
+      "message": "nit: alignment",
+      "range": {
+        "startLine": 2978,
+        "startChar": 2,
+        "endLine": 2978,
+        "endChar": 7
+      },
+      "revId": "a63bc906d0b9f9e90864480b336547df93bdf046",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3f6a249_0c35df88",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-24T20:25:36Z",
+      "side": 1,
+      "message": "nit: on newline",
+      "range": {
+        "startLine": 189,
+        "startChar": 28,
+        "endLine": 189,
+        "endChar": 29
+      },
+      "revId": "a63bc906d0b9f9e90864480b336547df93bdf046",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
