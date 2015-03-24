@@ -1001,9 +1001,9 @@ Error Program::applyUniforms()
     return mProgram->applyUniforms();
 }
 
-Error Program::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers, const Caps &caps)
+Error Program::applyUniformBuffers(const gl::Data &data)
 {
-    return mProgram->applyUniformBuffers(boundBuffers, caps);
+    return mProgram->applyUniformBuffers(data, mUniformBlockBindings);
 }
 
 void Program::flagForDeletion()
@@ -1140,6 +1140,11 @@ GLint Program::getActiveUniformBlockMaxLength()
 GLuint Program::getUniformBlockIndex(const std::string &name)
 {
     return mProgram->getUniformBlockIndex(name);
+}
+
+const UniformBlock *Program::getUniformBlockByIndex(GLuint index) const
+{
+    return mProgram->getUniformBlockByIndex(index);
 }
 
 void Program::bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding)

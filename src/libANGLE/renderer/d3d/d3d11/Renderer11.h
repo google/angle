@@ -87,7 +87,9 @@ class Renderer11 : public RendererD3D
     virtual gl::Error setSamplerState(gl::SamplerType type, int index, gl::Texture *texture, const gl::SamplerState &sampler);
     virtual gl::Error setTexture(gl::SamplerType type, int index, gl::Texture *texture);
 
-    virtual gl::Error setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], const gl::Buffer *fragmentUniformBuffers[]);
+    gl::Error setUniformBuffers(const gl::Data &data,
+                                const GLint vertexUniformBuffers[],
+                                const GLint fragmentUniformBuffers[]) override;
 
     virtual gl::Error setRasterizerState(const gl::RasterizerState &rasterState);
     gl::Error setBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
@@ -344,12 +346,16 @@ class Renderer11 : public RendererD3D
     ID3D11Buffer *mDriverConstantBufferVS;
     ID3D11Buffer *mCurrentVertexConstantBuffer;
     unsigned int mCurrentConstantBufferVS[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
+    GLintptr mCurrentConstantBufferVSOffset[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
+    GLsizeiptr mCurrentConstantBufferVSSize[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
 
     dx_PixelConstants mPixelConstants;
     dx_PixelConstants mAppliedPixelConstants;
     ID3D11Buffer *mDriverConstantBufferPS;
     ID3D11Buffer *mCurrentPixelConstantBuffer;
-    unsigned int mCurrentConstantBufferPS[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
+    unsigned int mCurrentConstantBufferPS[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
+    GLintptr mCurrentConstantBufferPSOffset[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
+    GLsizeiptr mCurrentConstantBufferPSSize[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
 
     ID3D11Buffer *mCurrentGeometryConstantBuffer;
 
@@ -373,6 +379,9 @@ class Renderer11 : public RendererD3D
 
     // Sync query
     ID3D11Query *mSyncQuery;
+
+    // Constant buffer offset support
+    bool mSupportsConstantBufferOffsets;
 
     ID3D11Device *mDevice;
     D3D_FEATURE_LEVEL mFeatureLevel;
