@@ -638,6 +638,30 @@
     },
     {
       "key": {
+        "uuid": "e3f41a43_ffcdbfb2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2082,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-03-24T17:03:15Z",
+      "side": 1,
+      "message": "I can use Optional for mCurrentConstantBufferVS",
+      "parentUuid": "23eb9264_01f7eada",
+      "range": {
+        "startLine": 2082,
+        "startChar": 8,
+        "endLine": 2082,
+        "endChar": 38
+      },
+      "revId": "6b32f5b7812fd73233e998a0f9234a5ea8dc9f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6731093_6928ad7d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
         "patchSetId": 8
