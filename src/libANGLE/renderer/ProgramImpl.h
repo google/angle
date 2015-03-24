@@ -94,7 +94,7 @@ class ProgramImpl
                                     const gl::Caps &caps) = 0;
 
     virtual gl::Error applyUniforms() = 0;
-    virtual gl::Error applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers, const gl::Caps &caps) = 0;
+    virtual gl::Error applyUniformBuffers(const gl::Data &data) = 0;
     virtual bool assignUniformBlockRegister(gl::InfoLog &infoLog, gl::UniformBlock *uniformBlock, GLenum shader,
                                             unsigned int registerIndex, const gl::Caps &caps) = 0;
 

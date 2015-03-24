@@ -185,7 +185,7 @@ class Program
     void getUniformuiv(GLint location, GLuint *params);
 
     Error applyUniforms();
-    Error applyUniformBuffers(const std::vector<Buffer*> boundBuffers, const Caps &caps);
+    Error applyUniformBuffers(const gl::Data &data);
 
     void getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const;
     void getActiveUniformBlockiv(GLuint uniformBlockIndex, GLenum pname, GLint *params) const;

@@ -1117,12 +1117,20 @@ gl::Error ProgramD3D::applyUniforms()
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error ProgramD3D::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers, const gl::Caps &caps)
+gl::Error ProgramD3D::applyUniformBuffers(const gl::Data &data)
 {
-    ASSERT(boundBuffers.size() == mUniformBlocks.size());
+    GLint vertexUniformBuffers[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
+    GLint fragmentUniformBuffers[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
 
-    const gl::Buffer *vertexUniformBuffers[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS] = {NULL};
-    const gl::Buffer *fragmentUniformBuffers[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS] = {NULL};
+    for (unsigned int registerIndex = 0; registerIndex < gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS; ++registerIndex)
+    {
+        vertexUniformBuffers[registerIndex] = -1;
+    }
+
+    for (unsigned int registerIndex = 0; registerIndex < gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS; ++registerIndex)
+    {
+        fragmentUniformBuffers[registerIndex] = -1;
+    }
 
     const unsigned int reservedBuffersInVS = mRenderer->getReservedVertexUniformBuffers();
     const unsigned int reservedBuffersInFS = mRenderer->getReservedFragmentUniformBuffers();
@@ -1130,9 +1138,15 @@ gl::Error ProgramD3D::applyUniformBuffers(const std::vector<gl::Buffer*> boundBu
     for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < mUniformBlocks.size(); uniformBlockIndex++)
     {
         gl::UniformBlock *uniformBlock = mUniformBlocks[uniformBlockIndex];
-        gl::Buffer *uniformBuffer = boundBuffers[uniformBlockIndex];
+        gl::Buffer *uniformBuffer = data.state->getIndexedUniformBuffer(uniformBlockIndex);
 
         ASSERT(uniformBlock && uniformBuffer);
+
+        if (uniformBuffer->id() == 0)
+        {
+            // undefined behaviour
+            return gl::Error(GL_INVALID_OPERATION, "It is undefined behaviour to have a used but unbound uniform buffer.");
+        }
 
         if (uniformBuffer->getSize() < uniformBlock->dataSize)
         {
@@ -1149,21 +1163,21 @@ gl::Error ProgramD3D::applyUniformBuffers(const std::vector<gl::Buffer*> boundBu
         if (uniformBlock->isReferencedByVertexShader())
         {
             unsigned int registerIndex = uniformBlock->vsRegisterIndex - reservedBuffersInVS;
-            ASSERT(vertexUniformBuffers[registerIndex] == NULL);
-            ASSERT(registerIndex < caps.maxVertexUniformBlocks);
-            vertexUniformBuffers[registerIndex] = uniformBuffer;
+            ASSERT(vertexUniformBuffers[registerIndex] == -1);
+            ASSERT(registerIndex < data.caps->maxVertexUniformBlocks);
+            vertexUniformBuffers[registerIndex] = uniformBlockIndex;
         }
 
         if (uniformBlock->isReferencedByFragmentShader())
         {
             unsigned int registerIndex = uniformBlock->psRegisterIndex - reservedBuffersInFS;
-            ASSERT(fragmentUniformBuffers[registerIndex] == NULL);
-            ASSERT(registerIndex < caps.maxFragmentUniformBlocks);
-            fragmentUniformBuffers[registerIndex] = uniformBuffer;
+            ASSERT(fragmentUniformBuffers[registerIndex] == -1);
+            ASSERT(registerIndex < data.caps->maxFragmentUniformBlocks);
+            fragmentUniformBuffers[registerIndex] = uniformBlockIndex;
         }
     }
 
-    return mRenderer->setUniformBuffers(vertexUniformBuffers, fragmentUniformBuffers);
+    return mRenderer->setUniformBuffers(data, vertexUniformBuffers, fragmentUniformBuffers);
 }
 
 bool ProgramD3D::assignUniformBlockRegister(gl::InfoLog &infoLog, gl::UniformBlock *uniformBlock, GLenum shader,

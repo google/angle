@@ -90,7 +90,9 @@ class RendererD3D : public Renderer
     virtual gl::Error setSamplerState(gl::SamplerType type, int index, gl::Texture *texture, const gl::SamplerState &sampler) = 0;
     virtual gl::Error setTexture(gl::SamplerType type, int index, gl::Texture *texture) = 0;
 
-    virtual gl::Error setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], const gl::Buffer *fragmentUniformBuffers[]) = 0;
+    virtual gl::Error setUniformBuffers(const gl::Data &data,
+                                        const GLint vertexUniformBuffers[],
+                                        const GLint fragmentUniformBuffers[]) = 0;
 
     virtual gl::Error setRasterizerState(const gl::RasterizerState &rasterState) = 0;
     virtual gl::Error setBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
@@ -200,7 +202,6 @@ class RendererD3D : public Renderer
     gl::Error applyTextures(const gl::Data &data, gl::SamplerType shaderType,
                             const FramebufferTextureSerialArray &framebufferSerials, size_t framebufferSerialCount);
     gl::Error applyTextures(const gl::Data &data);
-    gl::Error applyUniformBuffers(const gl::Data &data);
 
     bool skipDraw(const gl::Data &data, GLenum drawMode);
     void markTransformFeedbackUsage(const gl::Data &data);

@@ -940,6 +940,20 @@ Buffer *State::getIndexedUniformBuffer(GLuint index) const
     return mUniformBuffers[index].get();
 }
 
+GLintptr State::getIndexedUniformBufferOffset(GLuint index) const
+{
+    ASSERT(static_cast<size_t>(index) < mUniformBuffers.size());
+
+    return mUniformBuffers[index].getOffset();
+}
+
+GLsizeiptr State::getIndexedUniformBufferSize(GLuint index) const
+{
+    ASSERT(static_cast<size_t>(index) < mUniformBuffers.size());
+
+    return mUniformBuffers[index].getSize();
+}
+
 void State::setGenericTransformFeedbackBufferBinding(Buffer *buffer)
 {
     mGenericTransformFeedbackBuffer.set(buffer);

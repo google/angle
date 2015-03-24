@@ -79,7 +79,7 @@ class ProgramGL : public ProgramImpl
                             const gl::Caps &caps) override;
 
     gl::Error applyUniforms() override;
-    gl::Error applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers, const gl::Caps &caps) override;
+    gl::Error applyUniformBuffers(const gl::Data &data) override;
     bool assignUniformBlockRegister(gl::InfoLog &infoLog, gl::UniformBlock *uniformBlock, GLenum shader,
                                     unsigned int registerIndex, const gl::Caps &caps) override;
 

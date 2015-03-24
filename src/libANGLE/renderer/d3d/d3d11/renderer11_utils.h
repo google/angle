@@ -51,7 +51,7 @@ namespace d3d11_gl
 {
 
 GLint GetMaximumClientVersion(D3D_FEATURE_LEVEL featureLevel);
-void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions);
+void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions);
 
 }
 
