@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8647ec3d_ec7dab32",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T19:23:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "263640c8_2957ad2c",
+      "range": {
+        "startLine": 181,
+        "startChar": 2,
+        "endLine": 181,
+        "endChar": 4
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a63870b1_6d7a95b8",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-03-24T10:15:55Z",
       "side": 1,
       "message": "The syntax for conversions in GLSL is int(x), not (int)x.",
+      "range": {
+        "startLine": 56,
+        "startChar": 23,
+        "endLine": 56,
+        "endChar": 29
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "463334d7_2daed912",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T19:23:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a63870b1_6d7a95b8",
       "range": {
         "startLine": 56,
         "startChar": 23,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "463334d7_4dbb0d54",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T19:23:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c63d64a0_eebbdfd4",
+      "range": {
+        "startLine": 71,
+        "startChar": 39,
+        "endLine": 71,
+        "endChar": 45
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c63d64a0_2e9ec768",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2015-03-24T10:15:55Z",
       "side": 1,
       "message": "\"u\" suffix here as well.",
+      "range": {
+        "startLine": 73,
+        "startChar": 35,
+        "endLine": 73,
+        "endChar": 45
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8647ec3d_4c8ddfc7",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T19:23:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c63d64a0_2e9ec768",
       "range": {
         "startLine": 73,
         "startChar": 35,
@@ -134,6 +230,48 @@
     },
     {
       "key": {
+        "uuid": "6642f831_cb4ff513",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T19:23:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c63d64a0_aeb1d7f8",
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "463334d7_0d83d59f",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T19:23:18Z",
+      "side": 1,
+      "message": "Why it\u0027s unnecessary?",
+      "parentUuid": "c63d64a0_ceb623ee",
+      "range": {
+        "startLine": 74,
+        "startChar": 85,
+        "endLine": 74,
+        "endChar": 103
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c63d64a0_ce3f03da",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 4
@@ -145,6 +283,30 @@
       "writtenOn": "2015-03-24T10:15:55Z",
       "side": 1,
       "message": "\"u\" suffix here as well.",
+      "range": {
+        "startLine": 87,
+        "startChar": 32,
+        "endLine": 87,
+        "endChar": 38
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "463334d7_6db8d156",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T19:23:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c63d64a0_ce3f03da",
       "range": {
         "startLine": 87,
         "startChar": 32,
@@ -180,6 +342,30 @@
     },
     {
       "key": {
+        "uuid": "463334d7_8da34526",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T19:23:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a63870b1_0da111a2",
+      "range": {
+        "startLine": 89,
+        "startChar": 35,
+        "endLine": 89,
+        "endChar": 41
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c63d64a0_ee44bf78",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 4
@@ -203,6 +389,30 @@
     },
     {
       "key": {
+        "uuid": "8647ec3d_cc78ef45",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T19:23:18Z",
+      "side": 1,
+      "message": "There is no \"Tf uintBitsToFloat(Tu value)\" in OpenGL 4.1, or OpenGL 4.2, this function appears in OpenGL 4.3 first. In OpenGL 4.1 and 4.2, there is only function \"Tf intBitsToFloat(Tiu value) \". Guess we need to stick to the version 4.1, otherwise, it\u0027s even meaningless to emulate those 4 functions. Because those 4 pack_unpack functions are missing from 4.1, but in 4.2 already. (Gee, I wish the users have better graphics cards!)",
+      "parentUuid": "c63d64a0_ee44bf78",
+      "range": {
+        "startLine": 92,
+        "startChar": 51,
+        "endLine": 92,
+        "endChar": 65
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c63d64a0_4eab1382",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 4
@@ -214,6 +424,30 @@
       "writtenOn": "2015-03-24T10:15:55Z",
       "side": 1,
       "message": "and \"u\" suffix here.",
+      "range": {
+        "startLine": 105,
+        "startChar": 26,
+        "endLine": 105,
+        "endChar": 32
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "463334d7_ada80903",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T19:23:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c63d64a0_4eab1382",
       "range": {
         "startLine": 105,
         "startChar": 26,
