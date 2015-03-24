@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "267f204e_ea683bf3",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T04:03:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "266e407b_a9a2fd1d",
+      "revId": "d94c794eb5dd3cf6533046af57057c0bd1a3fb5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "466b346a_6ac2b7b3",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-20T13:37:41Z",
       "side": 1,
       "message": "This line still seems to be relying on implicit conversion between integers and unsigned integers. The version without implicit conversion would be:\n\nint xi \u003d (int(x) \u0026 0x7fff) - (int(x) \u0026 0x8000);",
+      "revId": "d94c794eb5dd3cf6533046af57057c0bd1a3fb5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "267f204e_0a6e3ffc",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T04:03:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "466b346a_6ac2b7b3",
       "revId": "d94c794eb5dd3cf6533046af57057c0bd1a3fb5a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "06869c96_e0f14217",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T04:03:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "266e407b_0964698e",
+      "revId": "d94c794eb5dd3cf6533046af57057c0bd1a3fb5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "266e407b_69ae4514",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2015-03-20T13:29:32Z",
       "side": 1,
       "message": "I think that NaN\u0027s where the non-zero mantissa bits are outside the bits selected by F16_MANTISSA_BITS get turned into infinity here. That\u0027s acceptable, the spec says that \"Operations and built-in functions that operate on a NaN are not required to return a NaN as the result\", but I\u0027d add a comment about this.",
+      "revId": "d94c794eb5dd3cf6533046af57057c0bd1a3fb5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06869c96_00f7060a",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T04:03:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "266e407b_69ae4514",
       "revId": "d94c794eb5dd3cf6533046af57057c0bd1a3fb5a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -93,6 +165,30 @@
     },
     {
       "key": {
+        "uuid": "467c1457_82995ac8",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T04:03:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "667af834_0ef0ebdc",
+      "range": {
+        "startLine": 99,
+        "startChar": 44,
+        "endLine": 99,
+        "endChar": 113
+      },
+      "revId": "d94c794eb5dd3cf6533046af57057c0bd1a3fb5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "266e407b_899db9e8",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.h",
         "patchSetId": 3
@@ -104,6 +200,24 @@
       "writtenOn": "2015-03-20T13:29:32Z",
       "side": 1,
       "message": "Be consistent with the formatting of comments.",
+      "revId": "d94c794eb5dd3cf6533046af57057c0bd1a3fb5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "267f204e_2a7303e6",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-24T04:03:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "266e407b_899db9e8",
       "revId": "d94c794eb5dd3cf6533046af57057c0bd1a3fb5a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
