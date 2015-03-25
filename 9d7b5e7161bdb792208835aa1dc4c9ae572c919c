@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2362b2ee_38123590",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-25T14:44:06Z",
+      "side": 1,
+      "message": "Do we want to have these kind of things in our code? I find they tend to get forgotten. I\u0027d rather see a bug logged and assigned.",
+      "range": {
+        "startLine": 110,
+        "startChar": 7,
+        "endLine": 110,
+        "endChar": 21
+      },
+      "revId": "9d7b5e7161bdb792208835aa1dc4c9ae572c919c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
