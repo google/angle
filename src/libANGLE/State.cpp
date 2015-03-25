@@ -1055,11 +1055,6 @@ void State::setVertexAttribState(unsigned int attribNum, Buffer *boundBuffer, GL
     getVertexArray()->setAttributeState(attribNum, boundBuffer, size, type, normalized, pureInteger, stride, pointer);
 }
 
-const VertexAttribute &State::getVertexAttribState(unsigned int attribNum) const
-{
-    return getVertexArray()->getVertexAttribute(attribNum);
-}
-
 const VertexAttribCurrentValueData &State::getVertexAttribCurrentValue(unsigned int attribNum) const
 {
     ASSERT(static_cast<size_t>(attribNum) < mVertexAttribCurrentValues.size());
@@ -1451,9 +1446,10 @@ bool State::hasMappedBuffer(GLenum target) const
 {
     if (target == GL_ARRAY_BUFFER)
     {
+        const VertexArray *vao = getVertexArray();
         for (size_t attribIndex = 0; attribIndex < mVertexAttribCurrentValues.size(); attribIndex++)
         {
-            const gl::VertexAttribute &vertexAttrib = getVertexAttribState(static_cast<unsigned int>(attribIndex));
+            const gl::VertexAttribute &vertexAttrib = vao->getVertexAttribute(attribIndex);
             gl::Buffer *boundBuffer = vertexAttrib.buffer.get();
             if (vertexAttrib.enabled && boundBuffer && boundBuffer->isMapped())
             {
