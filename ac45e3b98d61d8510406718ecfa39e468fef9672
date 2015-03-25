@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3fb9632_54d929f7",
+        "filename": "src/tests/end2end_tests/UniformBufferTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-25T14:26:09Z",
+      "side": 1,
+      "message": "micro-nit: \u003e\u003d (since x % x would equal 0)",
+      "range": {
+        "startLine": 84,
+        "startChar": 18,
+        "endLine": 84,
+        "endChar": 19
+      },
+      "revId": "ac45e3b98d61d8510406718ecfa39e468fef9672",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
