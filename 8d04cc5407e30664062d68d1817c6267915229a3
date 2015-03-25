@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c352b622_09f28d6a",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-25T17:09:39Z",
+      "side": 1,
+      "message": "nit: indentation, should be...\n\n   switch(type)\n   {\n     case XXX:\n       {\n           static const...\n       }",
+      "range": {
+        "startLine": 510,
+        "startChar": 0,
+        "endLine": 560,
+        "endChar": 7
+      },
+      "revId": "8d04cc5407e30664062d68d1817c6267915229a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
