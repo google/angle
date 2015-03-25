@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "c3fb9632_3407bdd5",
+        "filename": "src/libANGLE/renderer/FramebufferImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-25T14:40:30Z",
+      "side": 1,
+      "message": "Sorry, but I didn\u0027t realize that there is slightly different behaviour between the extension and ES3 funtion...   I\u0027m trying to set up our impl objects to have a nearly 1:1 mapping to the GL calls and with the subtly different behaviour, that wouldn\u0027t be possible here.  Could you add a new method please? Sorry!",
+      "range": {
+        "startLine": 42,
+        "startChar": 72,
+        "endLine": 42,
+        "endChar": 93
+      },
+      "revId": "c9b2b89a3806d00b8cc8295452ed3d27ff0e515c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c3fb9632_14a72188",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
         "patchSetId": 4
@@ -18,6 +41,29 @@
         "startChar": 15,
         "endLine": 169,
         "endChar": 20
+      },
+      "revId": "c9b2b89a3806d00b8cc8295452ed3d27ff0e515c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2362b2ee_d8caf998",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-25T14:40:30Z",
+      "side": 1,
+      "message": "nit: whitespace, here and below",
+      "range": {
+        "startLine": 170,
+        "startChar": 0,
+        "endLine": 170,
+        "endChar": 7
       },
       "revId": "c9b2b89a3806d00b8cc8295452ed3d27ff0e515c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
