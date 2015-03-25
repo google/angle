@@ -59,8 +59,28 @@ void GL_APIENTRY DrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsize
             return;
         }
 
-        // glDrawRangeElements
-        UNIMPLEMENTED();
+        rx::RangeUI indexRange;
+        if (!ValidateDrawElements(context, mode, count, type, indices, 0, &indexRange))
+        {
+            return;
+        }
+        if (indexRange.end > end || indexRange.start < start)
+        {
+            // GL spec says that behavior in this case is undefined - generating an error is fine.
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return;
+        }
+
+        // As long as index validation is done, it doesn't matter whether the context receives a drawElements or
+        // a drawRangeElements call - the GL back-end is free to choose to call drawRangeElements based on the
+        // validated index range. If index validation is removed, adding drawRangeElements to the context interface
+        // should be reconsidered.
+        Error error = context->drawElements(mode, count, type, indices, 0, indexRange);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 
