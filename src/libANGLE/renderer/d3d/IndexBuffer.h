@@ -100,11 +100,6 @@ class StaticIndexBufferInterface : public IndexBufferInterface
     ~StaticIndexBufferInterface();
 
     virtual gl::Error reserveBufferSpace(unsigned int size, GLenum indexType);
-
-    IndexRangeCache *getIndexRangeCache();
-
-  private:
-    IndexRangeCache mIndexRangeCache;
 };
 
 }

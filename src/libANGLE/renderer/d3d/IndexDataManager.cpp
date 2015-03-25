@@ -117,26 +117,13 @@ gl::Error IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buf
     if (directStorage)
     {
         streamOffset = offset;
-
-        if (!buffer->getIndexRangeCache()->findRange(type, offset, count, NULL, NULL))
-        {
-            buffer->getIndexRangeCache()->addRange(type, offset, count, translated->indexRange, offset);
-        }
     }
     else if (staticBuffer && staticBuffer->getBufferSize() != 0 && staticBuffer->getIndexType() == type && alignedOffset)
     {
         indexBuffer = staticBuffer;
 
-        if (!staticBuffer->getIndexRangeCache()->findRange(type, offset, count, NULL, &streamOffset))
-        {
-            // Using bit-shift here is faster than using division.
-            streamOffset = (offset >> typeInfo.bytesShift) << gl::GetTypeInfo(destinationIndexType).bytesShift;
-            staticBuffer->getIndexRangeCache()->addRange(type, offset, count, translated->indexRange, streamOffset);
-        }
-        if (!buffer->getIndexRangeCache()->findRange(type, offset, count, nullptr, nullptr))
-        {
-            buffer->getIndexRangeCache()->addRange(type, offset, count, translated->indexRange, offset);
-        }
+        // Using bit-shift here is faster than using division.
+        streamOffset = (offset >> typeInfo.bytesShift) << gl::GetTypeInfo(destinationIndexType).bytesShift;
     }
 
     // Avoid D3D11's primitive restart index value
@@ -219,7 +206,6 @@ gl::Error IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buf
         {
             // Using bit-shift here is faster than using division.
             streamOffset = (offset >> typeInfo.bytesShift) << destTypeInfo.bytesShift;
-            staticBuffer->getIndexRangeCache()->addRange(type, offset, count, translated->indexRange, streamOffset);
         }
     }
 

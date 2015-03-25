@@ -1557,7 +1557,7 @@ bool ValidateDrawElements(Context *context, GLenum mode, GLsizei count, GLenum t
     }
 
     const gl::VertexArray *vao = state.getVertexArray();
-    const gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
+    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
     if (!indices && !elementArrayBuffer)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
@@ -1612,6 +1612,7 @@ bool ValidateDrawElements(Context *context, GLenum mode, GLsizei count, GLenum t
 
             const uint8_t *offsetPointer = dataPointer + offset;
             *indexRangeOut = rx::IndexRangeCache::ComputeRange(type, offsetPointer, count);
+            elementArrayBuffer->getIndexRangeCache()->addRange(type, offset, count, *indexRangeOut, offset);
         }
     }
     else

@@ -191,9 +191,4 @@ gl::Error StaticIndexBufferInterface::reserveBufferSpace(unsigned int size, GLen
     }
 }
 
-IndexRangeCache *StaticIndexBufferInterface::getIndexRangeCache()
-{
-    return &mIndexRangeCache;
-}
-
 }
