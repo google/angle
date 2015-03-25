@@ -23,10 +23,8 @@ namespace rx
 class IndexRangeCache
 {
   public:
-    void addRange(GLenum type, unsigned int offset, GLsizei count, const RangeUI &range,
-                  unsigned int streamOffset);
-    bool findRange(GLenum type, unsigned int offset, GLsizei count, RangeUI *rangeOut,
-                   unsigned int *outStreamOffset) const;
+    void addRange(GLenum type, unsigned int offset, GLsizei count, const RangeUI &range);
+    bool findRange(GLenum type, unsigned int offset, GLsizei count, RangeUI *rangeOut) const;
 
     void invalidateRange(unsigned int offset, unsigned int size);
     void clear();
@@ -46,16 +44,7 @@ class IndexRangeCache
         bool operator<(const IndexRange& rhs) const;
     };
 
-    struct IndexBounds
-    {
-        RangeUI range;
-        unsigned int streamOffset;
-
-        IndexBounds();
-        IndexBounds(const RangeUI &range, unsigned int offset);
-    };
-
-    typedef std::map<IndexRange, IndexBounds> IndexRangeMap;
+    typedef std::map<IndexRange, RangeUI> IndexRangeMap;
     IndexRangeMap mIndexRangeCache;
 };
 

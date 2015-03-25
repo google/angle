@@ -46,10 +46,9 @@ RangeUI IndexRangeCache::ComputeRange(GLenum type, const GLvoid *indices, GLsize
     }
 }
 
-void IndexRangeCache::addRange(GLenum type, unsigned int offset, GLsizei count, const RangeUI &range,
-                               unsigned int streamOffset)
+void IndexRangeCache::addRange(GLenum type, unsigned int offset, GLsizei count, const RangeUI &range)
 {
-    mIndexRangeCache[IndexRange(type, offset, count)] = IndexBounds(range, streamOffset);
+    mIndexRangeCache[IndexRange(type, offset, count)] = range;
 }
 
 void IndexRangeCache::invalidateRange(unsigned int offset, unsigned int size)
@@ -60,8 +59,8 @@ void IndexRangeCache::invalidateRange(unsigned int offset, unsigned int size)
     IndexRangeMap::iterator i = mIndexRangeCache.begin();
     while (i != mIndexRangeCache.end())
     {
-        unsigned int rangeStart = i->second.streamOffset;
-        unsigned int rangeEnd = i->second.streamOffset + (gl::GetTypeInfo(i->first.type).bytes * i->first.count);
+        unsigned int rangeStart = i->first.offset;
+        unsigned int rangeEnd = i->first.offset + (gl::GetTypeInfo(i->first.type).bytes * i->first.count);
 
         if (invalidateEnd < rangeStart || invalidateStart > rangeEnd)
         {
@@ -75,19 +74,17 @@ void IndexRangeCache::invalidateRange(unsigned int offset, unsigned int size)
 }
 
 bool IndexRangeCache::findRange(GLenum type, unsigned int offset, GLsizei count,
-                                RangeUI *outRange, unsigned int *outStreamOffset) const
+                                RangeUI *outRange) const
 {
     IndexRangeMap::const_iterator i = mIndexRangeCache.find(IndexRange(type, offset, count));
     if (i != mIndexRangeCache.end())
     {
-        if (outRange)        *outRange = i->second.range;
-        if (outStreamOffset) *outStreamOffset = i->second.streamOffset;
+        if (outRange)        *outRange = i->second;
         return true;
     }
     else
     {
         if (outRange)        *outRange = RangeUI(0, 0);
-        if (outStreamOffset) *outStreamOffset = 0;
         return false;
     }
 }
@@ -112,17 +109,6 @@ bool IndexRangeCache::IndexRange::operator<(const IndexRange& rhs) const
     if (type != rhs.type) return type < rhs.type;
     if (offset != rhs.offset) return offset < rhs.offset;
     return count < rhs.count;
-}
-
-IndexRangeCache::IndexBounds::IndexBounds()
-    : range(0, 0),
-      streamOffset(0)
-{
-}
-
-IndexRangeCache::IndexBounds::IndexBounds(const RangeUI &rangeIn, unsigned int offset)
-    : range(rangeIn), streamOffset(offset)
-{
 }
 
 }

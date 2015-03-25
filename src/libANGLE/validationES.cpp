@@ -1599,7 +1599,7 @@ bool ValidateDrawElements(Context *context, GLenum mode, GLsizei count, GLenum t
     if (elementArrayBuffer)
     {
         uintptr_t offset = reinterpret_cast<uintptr_t>(indices);
-        if (!elementArrayBuffer->getIndexRangeCache()->findRange(type, offset, count, indexRangeOut, NULL))
+        if (!elementArrayBuffer->getIndexRangeCache()->findRange(type, offset, count, indexRangeOut))
         {
             rx::BufferImpl *bufferImpl = elementArrayBuffer->getImplementation();
             const uint8_t *dataPointer = NULL;
@@ -1612,7 +1612,7 @@ bool ValidateDrawElements(Context *context, GLenum mode, GLsizei count, GLenum t
 
             const uint8_t *offsetPointer = dataPointer + offset;
             *indexRangeOut = rx::IndexRangeCache::ComputeRange(type, offsetPointer, count);
-            elementArrayBuffer->getIndexRangeCache()->addRange(type, offset, count, *indexRangeOut, offset);
+            elementArrayBuffer->getIndexRangeCache()->addRange(type, offset, count, *indexRangeOut);
         }
     }
     else
