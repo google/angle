@@ -272,6 +272,30 @@
     },
     {
       "key": {
+        "uuid": "23147232_d931f39c",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-25T08:56:50Z",
+      "side": 1,
+      "message": "if mantissa is 0, f16 |\u003d (mantissa \u0026 0x3ff) doesn\u0027t do anything. So there\u0027s no reason why the if would be needed.",
+      "parentUuid": "463334d7_0d83d59f",
+      "range": {
+        "startLine": 74,
+        "startChar": 85,
+        "endLine": 74,
+        "endChar": 103
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c63d64a0_ce3f03da",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 4
@@ -401,6 +425,30 @@
       "side": 1,
       "message": "There is no \"Tf uintBitsToFloat(Tu value)\" in OpenGL 4.1, or OpenGL 4.2, this function appears in OpenGL 4.3 first. In OpenGL 4.1 and 4.2, there is only function \"Tf intBitsToFloat(Tiu value) \". Guess we need to stick to the version 4.1, otherwise, it\u0027s even meaningless to emulate those 4 functions. Because those 4 pack_unpack functions are missing from 4.1, but in 4.2 already. (Gee, I wish the users have better graphics cards!)",
       "parentUuid": "c63d64a0_ee44bf78",
+      "range": {
+        "startLine": 92,
+        "startChar": 51,
+        "endLine": 92,
+        "endChar": 65
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43116641_ba64f191",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-25T08:56:50Z",
+      "side": 1,
+      "message": "Ah, I guess you\u0027ve been looking at the quick reference card of OpenGL 4.1. I think that is missing this function by mistake. The function is listed on page 108 of the spec.",
+      "parentUuid": "8647ec3d_cc78ef45",
       "range": {
         "startLine": 92,
         "startChar": 51,
