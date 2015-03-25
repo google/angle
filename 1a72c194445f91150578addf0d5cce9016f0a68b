@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "435fa627_deac251b",
+        "filename": "src/tests/end2end_tests/UniformBufferTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-25T14:10:52Z",
+      "side": 1,
+      "message": "nit: use alignment \u003e\u003d MAX_UNIFORM_BLOCK_SIZE (queried from GetInteger64v)",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 31
+      },
+      "revId": "1a72c194445f91150578addf0d5cce9016f0a68b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
