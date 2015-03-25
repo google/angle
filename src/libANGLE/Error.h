@@ -17,17 +17,21 @@
 namespace gl
 {
 
-class Error
+class Error final
 {
   public:
-    explicit Error(GLenum errorCode);
+    explicit inline Error(GLenum errorCode);
     Error(GLenum errorCode, const char *msg, ...);
-    Error(const Error &other);
-    ~Error();
-    Error &operator=(const Error &other);
+    inline Error(const Error &other);
+    inline Error(Error &&other);
 
-    GLenum getCode() const { return mCode; }
-    bool isError() const { return (mCode != GL_NO_ERROR); }
+    inline ~Error();
+
+    inline Error &operator=(const Error &other);
+    inline Error &operator=(Error &&other);
+
+    inline GLenum getCode() const;
+    inline bool isError() const;
 
     const std::string &getMessage() const;
 
@@ -43,19 +47,23 @@ class Error
 namespace egl
 {
 
-class Error
+class Error final
 {
   public:
-    explicit Error(EGLint errorCode);
+    explicit inline Error(EGLint errorCode);
     Error(EGLint errorCode, const char *msg, ...);
     Error(EGLint errorCode, EGLint id, const char *msg, ...);
-    Error(const Error &other);
-    ~Error();
-    Error &operator=(const Error &other);
+    inline Error(const Error &other);
+    inline Error(Error &&other);
 
-    EGLint getCode() const { return mCode; }
-    EGLint getID() const { return mID; }
-    bool isError() const { return (mCode != EGL_SUCCESS); }
+    inline ~Error();
+
+    inline Error &operator=(const Error &other);
+    inline Error &operator=(Error &&other);
+
+    inline EGLint getCode() const;
+    inline EGLint getID() const;
+    inline bool isError() const;
 
     const std::string &getMessage() const;
 
@@ -68,5 +76,7 @@ class Error
 };
 
 }
+
+#include "Error.inl"
 
 #endif // LIBANGLE_ERROR_H_

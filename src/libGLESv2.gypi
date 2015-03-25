@@ -66,6 +66,7 @@
             'libANGLE/Display.h',
             'libANGLE/Error.cpp',
             'libANGLE/Error.h',
+            'libANGLE/Error.inl',
             'libANGLE/Fence.cpp',
             'libANGLE/Fence.h',
             'libANGLE/Float16ToFloat32.cpp',
