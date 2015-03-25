@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "435fa627_10406cf2",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-03-25T02:25:08Z",
+      "side": 1,
+      "message": "This will be set back appropriately when necessary, yes? Here and below.",
+      "range": {
+        "startLine": 233,
+        "startChar": 12,
+        "endLine": 233,
+        "endChar": 25
+      },
+      "revId": "12a794f1ad7571bb53146399966cd7a615456899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
