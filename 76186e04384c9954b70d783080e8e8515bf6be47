@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "2362b2ee_1e5cf97f",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-25T17:36:20Z",
+      "side": 1,
+      "message": "Could you add a comment about what this means?",
+      "range": {
+        "startLine": 28,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 22
+      },
+      "revId": "76186e04384c9954b70d783080e8e8515bf6be47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6215087_85a32226",
         "filename": "src/libANGLE/renderer/d3d/IndexDataManager.cpp",
         "patchSetId": 1
