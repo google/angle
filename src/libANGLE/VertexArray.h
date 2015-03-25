@@ -37,13 +37,14 @@ class VertexArray
     GLuint id() const;
 
     const VertexAttribute& getVertexAttribute(size_t attributeIndex) const;
+    const std::vector<VertexAttribute> &getVertexAttributes() const;
+
     void detachBuffer(GLuint bufferName);
     void setVertexAttribDivisor(GLuint index, GLuint divisor);
     void enableAttribute(unsigned int attributeIndex, bool enabledState);
     void setAttributeState(unsigned int attributeIndex, gl::Buffer *boundBuffer, GLint size, GLenum type,
                            bool normalized, bool pureInteger, GLsizei stride, const void *pointer);
 
-    const VertexAttribute* getVertexAttributes() const { return &mVertexAttributes[0]; }
     Buffer *getElementArrayBuffer() const { return mElementArrayBuffer.get(); }
     void setElementArrayBuffer(Buffer *buffer);
     GLuint getElementArrayBufferId() const { return mElementArrayBuffer.id(); }

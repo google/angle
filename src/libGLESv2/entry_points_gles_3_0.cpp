@@ -1379,8 +1379,6 @@ void GL_APIENTRY GetVertexAttribIiv(GLuint index, GLenum pname, GLint* params)
             return;
         }
 
-        const VertexAttribute &attribState = context->getState().getVertexAttribState(index);
-
         if (!ValidateGetVertexAttribParameters(context, pname))
         {
             return;
@@ -1396,6 +1394,7 @@ void GL_APIENTRY GetVertexAttribIiv(GLuint index, GLenum pname, GLint* params)
         }
         else
         {
+            const VertexAttribute &attribState = context->getState().getVertexArray()->getVertexAttribute(index);
             *params = QuerySingleVertexAttributeParameter<GLint>(attribState, pname);
         }
     }
@@ -1421,8 +1420,6 @@ void GL_APIENTRY GetVertexAttribIuiv(GLuint index, GLenum pname, GLuint* params)
             return;
         }
 
-        const VertexAttribute &attribState = context->getState().getVertexAttribState(index);
-
         if (!ValidateGetVertexAttribParameters(context, pname))
         {
             return;
@@ -1438,6 +1435,7 @@ void GL_APIENTRY GetVertexAttribIuiv(GLuint index, GLenum pname, GLuint* params)
         }
         else
         {
+            const VertexAttribute &attribState = context->getState().getVertexArray()->getVertexAttribute(index);
             *params = QuerySingleVertexAttributeParameter<GLuint>(attribState, pname);
         }
     }

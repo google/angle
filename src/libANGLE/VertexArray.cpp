@@ -59,6 +59,11 @@ const VertexAttribute& VertexArray::getVertexAttribute(size_t attributeIndex) co
     return mVertexAttributes[attributeIndex];
 }
 
+const std::vector<VertexAttribute> &VertexArray::getVertexAttributes() const
+{
+    return mVertexAttributes;
+}
+
 void VertexArray::setVertexAttribDivisor(GLuint index, GLuint divisor)
 {
     ASSERT(index < getMaxAttribs());
