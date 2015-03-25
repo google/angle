@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "435fa627_fe6a495d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-25T14:32:34Z",
+      "side": 1,
+      "message": "nit:whitespace",
+      "revId": "6ed7663fa65e2327d9b9810e36dbc78232df300d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "435fa627_be64d191",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-25T14:32:34Z",
+      "side": 1,
+      "message": "nit: you could compress this into a switch on the gl index type and set the dxgi format and byte size together.",
+      "range": {
+        "startLine": 117,
+        "startChar": 4,
+        "endLine": 122,
+        "endChar": 5
+      },
+      "revId": "6ed7663fa65e2327d9b9810e36dbc78232df300d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3fb9632_f4b395c9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-25T14:32:34Z",
+      "side": 1,
+      "message": "nit: alignment",
+      "range": {
+        "startLine": 128,
+        "startChar": 8,
+        "endLine": 128,
+        "endChar": 9
+      },
+      "revId": "6ed7663fa65e2327d9b9810e36dbc78232df300d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "435fa627_3ec6a1ea",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-25T14:32:34Z",
+      "side": 1,
+      "message": "nit: alignment",
+      "range": {
+        "startLine": 133,
+        "startChar": 17,
+        "endLine": 133,
+        "endChar": 18
+      },
+      "revId": "6ed7663fa65e2327d9b9810e36dbc78232df300d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2362b2ee_3d0c67bf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-25T14:32:34Z",
+      "side": 1,
+      "message": "nit: alignment",
+      "range": {
+        "startLine": 135,
+        "startChar": 21,
+        "endLine": 135,
+        "endChar": 22
+      },
+      "revId": "6ed7663fa65e2327d9b9810e36dbc78232df300d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2362b2ee_dd12ebdb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-25T14:32:34Z",
+      "side": 1,
+      "message": "This map function uses D3D11_MAP_WRITE_NO_OVERWRITE.  You may have an easier time just using the supplied index data directly because it would mean either reading from a Buffer11 or a client data pointer instead of IndexBuffer11 which cannot be mapped for reading right now.",
+      "range": {
+        "startLine": 144,
+        "startChar": 8,
+        "endLine": 144,
+        "endChar": 74
+      },
+      "revId": "6ed7663fa65e2327d9b9810e36dbc78232df300d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3fb9632_34933d2b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-25T14:32:34Z",
+      "side": 1,
+      "message": "I think this will copy way more than neccessary.  For IndexBuffer11 we reserve a large buffer and the users\u0027s buffer may also be much larger than the size of the draw call.  Instead, you could use the count argument to the draw call.",
+      "range": {
+        "startLine": 152,
+        "startChar": 4,
+        "endLine": 152,
+        "endChar": 96
+      },
+      "revId": "6ed7663fa65e2327d9b9810e36dbc78232df300d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
