@@ -136,50 +136,17 @@ Type::Type()
 {
 }
 
-// Map of sizes of input types
-typedef std::pair<GLenum, Type> TypeInfoPair;
-typedef std::map<GLenum, Type> TypeInfoMap;
-
-static inline void InsertTypeInfo(TypeInfoMap *map, GLenum type, GLuint bytes, bool specialInterpretation)
+static Type GenTypeInfo(GLuint bytes, bool specialInterpretation)
 {
     Type info;
     info.bytes = bytes;
     info.specialInterpretation = specialInterpretation;
-
-    map->insert(std::make_pair(type, info));
+    return info;
 }
 
 bool operator<(const Type& a, const Type& b)
 {
     return memcmp(&a, &b, sizeof(Type)) < 0;
-}
-
-static TypeInfoMap BuildTypeInfoMap()
-{
-    TypeInfoMap map;
-
-    InsertTypeInfo(&map, GL_UNSIGNED_BYTE,                  1, false);
-    InsertTypeInfo(&map, GL_BYTE,                           1, false);
-    InsertTypeInfo(&map, GL_UNSIGNED_SHORT,                 2, false);
-    InsertTypeInfo(&map, GL_SHORT,                          2, false);
-    InsertTypeInfo(&map, GL_UNSIGNED_INT,                   4, false);
-    InsertTypeInfo(&map, GL_INT,                            4, false);
-    InsertTypeInfo(&map, GL_HALF_FLOAT,                     2, false);
-    InsertTypeInfo(&map, GL_HALF_FLOAT_OES,                 2, false);
-    InsertTypeInfo(&map, GL_FLOAT,                          4, false);
-    InsertTypeInfo(&map, GL_UNSIGNED_SHORT_5_6_5,           2, true );
-    InsertTypeInfo(&map, GL_UNSIGNED_SHORT_4_4_4_4,         2, true );
-    InsertTypeInfo(&map, GL_UNSIGNED_SHORT_5_5_5_1,         2, true );
-    InsertTypeInfo(&map, GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT, 2, true );
-    InsertTypeInfo(&map, GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT, 2, true );
-    InsertTypeInfo(&map, GL_UNSIGNED_INT_2_10_10_10_REV,    4, true );
-    InsertTypeInfo(&map, GL_UNSIGNED_INT_24_8,              4, true );
-    InsertTypeInfo(&map, GL_UNSIGNED_INT_10F_11F_11F_REV,   4, true );
-    InsertTypeInfo(&map, GL_UNSIGNED_INT_5_9_9_9_REV,       4, true );
-    InsertTypeInfo(&map, GL_UNSIGNED_INT_24_8_OES,          4, true );
-    InsertTypeInfo(&map, GL_FLOAT_32_UNSIGNED_INT_24_8_REV, 8, true );
-
-    return map;
 }
 
 // Information about internal formats
@@ -532,16 +499,57 @@ static FormatSet BuildAllSizedInternalFormatSet()
 
 const Type &GetTypeInfo(GLenum type)
 {
-    static const TypeInfoMap infoMap = BuildTypeInfoMap();
-    TypeInfoMap::const_iterator iter = infoMap.find(type);
-    if (iter != infoMap.end())
+    switch (type)
     {
-        return iter->second;
-    }
-    else
-    {
-        static const Type defaultInfo;
-        return defaultInfo;
+      case GL_UNSIGNED_BYTE:
+      case GL_BYTE:
+        {
+            static const Type info = GenTypeInfo(1, false);
+            return info;
+        }
+      case GL_UNSIGNED_SHORT:
+      case GL_SHORT:
+      case GL_HALF_FLOAT:
+      case GL_HALF_FLOAT_OES:
+        {
+            static const Type info = GenTypeInfo(2, false);
+            return info;
+        }
+      case GL_UNSIGNED_INT:
+      case GL_INT:
+      case GL_FLOAT:
+        {
+            static const Type info = GenTypeInfo(4, false);
+            return info;
+        }
+      case GL_UNSIGNED_SHORT_5_6_5:
+      case GL_UNSIGNED_SHORT_4_4_4_4:
+      case GL_UNSIGNED_SHORT_5_5_5_1:
+      case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:
+      case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
+        {
+            static const Type info = GenTypeInfo(2, true);
+            return info;
+        }
+      case GL_UNSIGNED_INT_2_10_10_10_REV:
+      case GL_UNSIGNED_INT_24_8:
+      case GL_UNSIGNED_INT_10F_11F_11F_REV:
+      case GL_UNSIGNED_INT_5_9_9_9_REV:
+        {
+            ASSERT(GL_UNSIGNED_INT_24_8_OES == GL_UNSIGNED_INT_24_8);
+            static const Type info = GenTypeInfo(4, true);
+            return info;
+        }
+      case GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
+        {
+            static const Type info = GenTypeInfo(8, true);
+            return info;
+        }
+      default:
+        {
+            static const Type defaultInfo;
+            return defaultInfo;
+        }
     }
 }
 
