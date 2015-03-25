@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2362b2ee_7d8f7f7f",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-25T14:31:28Z",
+      "side": 1,
+      "message": "Do we still want to return INITDAG_SUCCESS if this doesn\u0027t hold in a release build?",
+      "range": {
+        "startLine": 46,
+        "startChar": 8,
+        "endLine": 46,
+        "endChar": 61
+      },
+      "revId": "0de9246a55ff85216b63440d01e336bddd79c7c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3fb9632_f46155b9",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-25T14:31:28Z",
+      "side": 1,
+      "message": "nit: Grammar doesn\u0027t seem right here.",
+      "range": {
+        "startLine": 19,
+        "startChar": 3,
+        "endLine": 20,
+        "endChar": 63
+      },
+      "revId": "0de9246a55ff85216b63440d01e336bddd79c7c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3fb9632_7447852e",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-25T14:31:28Z",
+      "side": 1,
+      "message": "\".\"",
+      "range": {
+        "startLine": 24,
+        "startChar": 70,
+        "endLine": 24,
+        "endChar": 74
+      },
+      "revId": "0de9246a55ff85216b63440d01e336bddd79c7c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2362b2ee_dde9cb29",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-25T14:31:28Z",
+      "side": 1,
+      "message": "\"records\"",
+      "range": {
+        "startLine": 24,
+        "startChar": 34,
+        "endLine": 24,
+        "endChar": 40
+      },
+      "revId": "0de9246a55ff85216b63440d01e336bddd79c7c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "435fa627_5eaa75fa",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-25T14:31:28Z",
+      "side": 1,
+      "message": "\"Records\"",
+      "range": {
+        "startLine": 25,
+        "startChar": 3,
+        "endLine": 25,
+        "endChar": 10
+      },
+      "revId": "0de9246a55ff85216b63440d01e336bddd79c7c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "435fa627_3e9fc1e0",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-25T14:31:28Z",
+      "side": 1,
+      "message": "\", \"",
+      "range": {
+        "startLine": 29,
+        "startChar": 14,
+        "endLine": 29,
+        "endChar": 15
+      },
+      "revId": "0de9246a55ff85216b63440d01e336bddd79c7c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "435fa627_fe9809f5",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-25T14:31:28Z",
+      "side": 1,
+      "message": "\"becomes\"",
+      "range": {
+        "startLine": 31,
+        "startChar": 24,
+        "endLine": 31,
+        "endChar": 30
+      },
+      "revId": "0de9246a55ff85216b63440d01e336bddd79c7c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "435fa627_be9291d1",
+        "filename": "src/compiler/translator/CallDAG.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-25T14:31:28Z",
+      "side": 1,
+      "message": "Doesn\u0027t return a boolean.",
+      "range": {
+        "startLine": 53,
+        "startChar": 7,
+        "endLine": 53,
+        "endChar": 20
+      },
+      "revId": "0de9246a55ff85216b63440d01e336bddd79c7c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "435fa627_3e258129",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-25T14:31:28Z",
+      "side": 1,
+      "message": "If this is only used for function aggregates, let\u0027s call it mFunctionId.",
+      "range": {
+        "startLine": 453,
+        "startChar": 8,
+        "endLine": 453,
+        "endChar": 17
+      },
+      "revId": "0de9246a55ff85216b63440d01e336bddd79c7c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
