@@ -22,6 +22,30 @@
       "revId": "9d7b5e7161bdb792208835aa1dc4c9ae572c919c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43116641_5d794ff5",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-25T15:29:07Z",
+      "side": 1,
+      "message": "Filed https://code.google.com/p/angleproject/issues/detail?id\u003d958",
+      "parentUuid": "2362b2ee_38123590",
+      "range": {
+        "startLine": 110,
+        "startChar": 7,
+        "endLine": 110,
+        "endChar": 21
+      },
+      "revId": "9d7b5e7161bdb792208835aa1dc4c9ae572c919c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
