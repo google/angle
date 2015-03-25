@@ -184,6 +184,7 @@ ProgramD3D::ProgramD3D(RendererD3D *renderer)
       mUsedVertexSamplerRange(0),
       mUsedPixelSamplerRange(0),
       mDirtySamplerMapping(true),
+      mTextureUnitTypesCache(renderer->getRendererCaps().maxCombinedTextureImageUnits),
       mShaderVersion(100),
       mSerial(issueSerial())
 {
@@ -340,7 +341,7 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
     // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
     updateSamplerMapping();
 
-    std::vector<GLenum> textureUnitTypes(caps.maxCombinedTextureImageUnits, GL_NONE);
+    std::fill(mTextureUnitTypesCache.begin(), mTextureUnitTypesCache.end(), GL_NONE);
 
     for (unsigned int i = 0; i < mUsedPixelSamplerRange; ++i)
     {
@@ -348,19 +349,19 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
         {
             unsigned int unit = mSamplersPS[i].logicalTextureUnit;
 
-            if (unit >= textureUnitTypes.size())
+            if (unit >= caps.maxCombinedTextureImageUnits)
             {
                 if (infoLog)
                 {
-                    infoLog->append("Sampler uniform (%d) exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, textureUnitTypes.size());
+                    infoLog->append("Sampler uniform (%d) exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, caps.maxCombinedTextureImageUnits);
                 }
 
                 return false;
             }
 
-            if (textureUnitTypes[unit] != GL_NONE)
+            if (mTextureUnitTypesCache[unit] != GL_NONE)
             {
-                if (mSamplersPS[i].textureType != textureUnitTypes[unit])
+                if (mSamplersPS[i].textureType != mTextureUnitTypesCache[unit])
                 {
                     if (infoLog)
                     {
@@ -372,7 +373,7 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
             }
             else
             {
-                textureUnitTypes[unit] = mSamplersPS[i].textureType;
+                mTextureUnitTypesCache[unit] = mSamplersPS[i].textureType;
             }
         }
     }
@@ -383,19 +384,19 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
         {
             unsigned int unit = mSamplersVS[i].logicalTextureUnit;
 
-            if (unit >= textureUnitTypes.size())
+            if (unit >= caps.maxCombinedTextureImageUnits)
             {
                 if (infoLog)
                 {
-                    infoLog->append("Sampler uniform (%d) exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, textureUnitTypes.size());
+                    infoLog->append("Sampler uniform (%d) exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, caps.maxCombinedTextureImageUnits);
                 }
 
                 return false;
             }
 
-            if (textureUnitTypes[unit] != GL_NONE)
+            if (mTextureUnitTypesCache[unit] != GL_NONE)
             {
-                if (mSamplersVS[i].textureType != textureUnitTypes[unit])
+                if (mSamplersVS[i].textureType != mTextureUnitTypesCache[unit])
                 {
                     if (infoLog)
                     {
@@ -407,7 +408,7 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
             }
             else
             {
-                textureUnitTypes[unit] = mSamplersVS[i].textureType;
+                mTextureUnitTypesCache[unit] = mSamplersVS[i].textureType;
             }
         }
     }
@@ -838,7 +839,7 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
 
 gl::Error ProgramD3D::getPixelExecutableForFramebuffer(const gl::Framebuffer *fbo, ShaderExecutableD3D **outExecutable)
 {
-    std::vector<GLenum> outputs;
+    mPixelShaderOutputFormatCache.clear();
 
     const FramebufferD3D *fboD3D = GetImplAs<FramebufferD3D>(fbo);
     const gl::AttachmentList &colorbuffers = fboD3D->getColorAttachmentsForRender(mRenderer->getWorkarounds());
@@ -849,15 +850,15 @@ gl::Error ProgramD3D::getPixelExecutableForFramebuffer(const gl::Framebuffer *fb
 
         if (colorbuffer)
         {
-            outputs.push_back(colorbuffer->getBinding() == GL_BACK ? GL_COLOR_ATTACHMENT0 : colorbuffer->getBinding());
+            mPixelShaderOutputFormatCache.push_back(colorbuffer->getBinding() == GL_BACK ? GL_COLOR_ATTACHMENT0 : colorbuffer->getBinding());
         }
         else
         {
-            outputs.push_back(GL_NONE);
+            mPixelShaderOutputFormatCache.push_back(GL_NONE);
         }
     }
 
-    return getPixelExecutableForOutputLayout(outputs, outExecutable, nullptr);
+    return getPixelExecutableForOutputLayout(mPixelShaderOutputFormatCache, outExecutable, nullptr);
 }
 
 gl::Error ProgramD3D::getPixelExecutableForOutputLayout(const std::vector<GLenum> &outputSignature,
