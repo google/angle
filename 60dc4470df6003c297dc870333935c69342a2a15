@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "834c3e8c_21943941",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1851,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-26T15:26:31Z",
+      "side": 1,
+      "message": "one last request: can you validate numAttachments \u003e\u003d 0 in this method, to apply to all entry points (the omission is a bug)",
+      "range": {
+        "startLine": 1851,
+        "startChar": 77,
+        "endLine": 1851,
+        "endChar": 91
+      },
+      "revId": "60dc4470df6003c297dc870333935c69342a2a15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
