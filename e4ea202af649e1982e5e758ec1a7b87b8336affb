@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a37b02ac_b89975c6",
+        "filename": "src/common/angleutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1001348
+      },
+      "writtenOn": "2015-03-26T21:17:30Z",
+      "side": 1,
+      "message": "I guess we could skip this :-)",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 10
+      },
+      "revId": "e4ea202af649e1982e5e758ec1a7b87b8336affb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
