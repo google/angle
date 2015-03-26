@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a37b02ac_d5675c4e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 748,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-26T20:23:54Z",
+      "side": 1,
+      "message": "const-ref instead of pointer?",
+      "range": {
+        "startLine": 748,
+        "startChar": 102,
+        "endLine": 748,
+        "endChar": 103
+      },
+      "revId": "f28a0517b88f8dc8b34802e1a6286bff6fe36562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a37b02ac_f564d84b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-26T20:23:54Z",
+      "side": 1,
+      "message": "Doesn\u0027t look like this is used.",
+      "range": {
+        "startLine": 749,
+        "startChar": 114,
+        "endLine": 749,
+        "endChar": 136
+      },
+      "revId": "f28a0517b88f8dc8b34802e1a6286bff6fe36562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63758ab8_b388b8b7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 864,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-26T20:23:54Z",
+      "side": 1,
+      "message": "indentation",
+      "revId": "f28a0517b88f8dc8b34802e1a6286bff6fe36562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63758ab8_5357e4b1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 871,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-26T20:23:54Z",
+      "side": 1,
+      "message": "indentation",
+      "revId": "f28a0517b88f8dc8b34802e1a6286bff6fe36562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
