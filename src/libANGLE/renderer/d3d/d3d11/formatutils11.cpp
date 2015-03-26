@@ -549,7 +549,28 @@ static inline void InsertLoadFunction(D3D11LoadFunctionMap *map, GLenum internal
     (*map)[internalFormat].push_back(TypeLoadFunctionPair(type, loadFunc));
 }
 
-D3D11LoadFunctionMap BuildD3D11LoadFunctionMap()
+D3D11LoadFunctionMap BuildD3D11_FL9_3_LoadFunctionMap()
+{
+    D3D11LoadFunctionMap map;
+
+    // From GL_EXT_texture_storage. Also used by GL_ALPHA8
+    // On feature level 9_3, A8_UNORM doesn't support mipmaps, so we must use RGBA8 instead
+    InsertLoadFunction(&map, GL_ALPHA8_EXT, GL_UNSIGNED_BYTE, LoadA8ToRGBA8);
+    
+    return map;
+}
+
+D3D11LoadFunctionMap BuildD3D11_FL10_0Plus_LoadFunctionMap()
+{
+    D3D11LoadFunctionMap map;
+
+    // From GL_EXT_texture_storage. Also used by GL_ALPHA8
+    InsertLoadFunction(&map, GL_ALPHA8_EXT, GL_UNSIGNED_BYTE, LoadToNative<GLubyte, 1>);
+
+    return map;
+}
+
+D3D11LoadFunctionMap BuildBaseD3D11LoadFunctionMap()
 {
     D3D11LoadFunctionMap map;
 
@@ -654,7 +675,7 @@ D3D11LoadFunctionMap BuildD3D11LoadFunctionMap()
     InsertLoadFunction(&map, GL_ALPHA,              GL_HALF_FLOAT_OES,                 LoadA16FToRGBA16F                    );
 
     // From GL_EXT_texture_storage
-    InsertLoadFunction(&map, GL_ALPHA8_EXT,             GL_UNSIGNED_BYTE,              LoadToNative<GLubyte, 1>             );
+    // GL_ALPHA8_EXT GL_UNSIGNED_BYTE is in the feature-level-specific load function maps, due to differences between 9_3 and 10_0+
     InsertLoadFunction(&map, GL_LUMINANCE8_EXT,         GL_UNSIGNED_BYTE,              LoadL8ToRGBA8                        );
     InsertLoadFunction(&map, GL_LUMINANCE8_ALPHA8_EXT,  GL_UNSIGNED_BYTE,              LoadLA8ToRGBA8                       );
     InsertLoadFunction(&map, GL_ALPHA32F_EXT,           GL_FLOAT,                      LoadA32FToRGBA32F                    );
@@ -724,8 +745,8 @@ TextureFormat::TextureFormat()
 {
 }
 
-static inline void InsertD3D11FormatInfo(D3D11ES3FormatMap *map, GLenum internalFormat, DXGI_FORMAT texFormat,
-                                         DXGI_FORMAT srvFormat, DXGI_FORMAT rtvFormat, DXGI_FORMAT dsvFormat)
+static inline void InsertD3D11FormatInfoBase(D3D11ES3FormatMap *formatMap, const D3D11LoadFunctionMap &flLoadFunctions, GLenum internalFormat, DXGI_FORMAT texFormat,
+                                             DXGI_FORMAT srvFormat, DXGI_FORMAT rtvFormat, DXGI_FORMAT dsvFormat)
 {
     TextureFormat info;
     info.texFormat = texFormat;
@@ -809,8 +830,8 @@ static inline void InsertD3D11FormatInfo(D3D11ES3FormatMap *map, GLenum internal
     InternalFormatInitializerMap::const_iterator initializerIter = initializerMap.find(internalFormat);
     info.dataInitializerFunction = (initializerIter != initializerMap.end()) ? initializerIter->second : NULL;
 
-    // Gather all the load functions for this internal format
-    static const D3D11LoadFunctionMap loadFunctions = BuildD3D11LoadFunctionMap();
+    // Gather all the load functions for this internal format from the base list
+    static const D3D11LoadFunctionMap loadFunctions = BuildBaseD3D11LoadFunctionMap();
     D3D11LoadFunctionMap::const_iterator loadFunctionIter = loadFunctions.find(internalFormat);
     if (loadFunctionIter != loadFunctions.end())
     {
@@ -823,25 +844,55 @@ static inline void InsertD3D11FormatInfo(D3D11ES3FormatMap *map, GLenum internal
         }
     }
 
-    map->insert(std::make_pair(internalFormat, info));
+    // Gather load functions for this internal format from the feature-level-specific list
+    D3D11LoadFunctionMap::const_iterator flLoadFunctionIter = flLoadFunctions.find(internalFormat);
+    if (flLoadFunctionIter != flLoadFunctions.end())
+    {
+        const std::vector<TypeLoadFunctionPair> &flLoadFunctionVector = flLoadFunctionIter->second;
+        for (size_t i = 0; i < flLoadFunctionVector.size(); i++)
+        {
+            GLenum type = flLoadFunctionVector[i].first;
+            LoadImageFunction function = flLoadFunctionVector[i].second;
+            info.loadFunctions.insert(std::make_pair(type, function));
+        }
+    }
+
+    formatMap->insert(std::make_pair(internalFormat, info));
+}
+
+static inline void InsertD3D11_FL9_3_FormatInfo(D3D11ES3FormatMap *map, GLenum internalFormat, DXGI_FORMAT texFormat,
+                                                DXGI_FORMAT srvFormat, DXGI_FORMAT rtvFormat, DXGI_FORMAT dsvFormat)
+{
+    static const D3D11LoadFunctionMap flLoadFunctions = BuildD3D11_FL9_3_LoadFunctionMap();
+    InsertD3D11FormatInfoBase(map, flLoadFunctions, internalFormat, texFormat, srvFormat, rtvFormat, dsvFormat);
+}
+
+static inline void InsertD3D11FormatInfo(D3D11ES3FormatMap *map, GLenum internalFormat, DXGI_FORMAT texFormat,
+                                         DXGI_FORMAT srvFormat, DXGI_FORMAT rtvFormat, DXGI_FORMAT dsvFormat)
+{
+    static const D3D11LoadFunctionMap flLoadFunctions = BuildD3D11_FL10_0Plus_LoadFunctionMap();
+    InsertD3D11FormatInfoBase(map, flLoadFunctions, internalFormat, texFormat, srvFormat, rtvFormat, dsvFormat);
 }
 
 static D3D11ES3FormatMap BuildD3D11_FL9_3FormatOverrideMap()
 {
     // D3D11 Feature Level 9_3 doesn't support as many texture formats as Feature Level 10_0+.
     // In particular, it doesn't support:
+    //      - mipmaps on DXGI_FORMAT_A8_NORM
     //      - *_TYPELESS formats
     //      - DXGI_FORMAT_D32_FLOAT_S8X24_UINT or DXGI_FORMAT_D32_FLOAT
 
     D3D11ES3FormatMap map;
 
-    //                         | GL internal format   | D3D11 texture format            | D3D11 SRV format     | D3D11 RTV format      | D3D11 DSV format
-    InsertD3D11FormatInfo(&map, GL_DEPTH_COMPONENT16,  DXGI_FORMAT_D16_UNORM,            DXGI_FORMAT_UNKNOWN,   DXGI_FORMAT_UNKNOWN,    DXGI_FORMAT_D16_UNORM);
-    InsertD3D11FormatInfo(&map, GL_DEPTH_COMPONENT24,  DXGI_FORMAT_D24_UNORM_S8_UINT,    DXGI_FORMAT_UNKNOWN,   DXGI_FORMAT_UNKNOWN,    DXGI_FORMAT_D24_UNORM_S8_UINT);
-    InsertD3D11FormatInfo(&map, GL_DEPTH_COMPONENT32F, DXGI_FORMAT_UNKNOWN,              DXGI_FORMAT_UNKNOWN,   DXGI_FORMAT_UNKNOWN,    DXGI_FORMAT_UNKNOWN);
-    InsertD3D11FormatInfo(&map, GL_DEPTH24_STENCIL8,   DXGI_FORMAT_D24_UNORM_S8_UINT,    DXGI_FORMAT_UNKNOWN,   DXGI_FORMAT_UNKNOWN,    DXGI_FORMAT_D24_UNORM_S8_UINT);
-    InsertD3D11FormatInfo(&map, GL_DEPTH32F_STENCIL8,  DXGI_FORMAT_UNKNOWN,              DXGI_FORMAT_UNKNOWN,   DXGI_FORMAT_UNKNOWN,    DXGI_FORMAT_UNKNOWN);
-    InsertD3D11FormatInfo(&map, GL_STENCIL_INDEX8,     DXGI_FORMAT_D24_UNORM_S8_UINT,    DXGI_FORMAT_UNKNOWN,   DXGI_FORMAT_UNKNOWN,    DXGI_FORMAT_D24_UNORM_S8_UINT);
+    //                                | GL internal format   | D3D11 texture format            | D3D11 SRV format           | D3D11 RTV format            | D3D11 DSV format
+    InsertD3D11_FL9_3_FormatInfo(&map, GL_ALPHA,              DXGI_FORMAT_R8G8B8A8_UNORM,       DXGI_FORMAT_R8G8B8A8_UNORM,  DXGI_FORMAT_R8G8B8A8_UNORM,   DXGI_FORMAT_UNKNOWN);
+    InsertD3D11_FL9_3_FormatInfo(&map, GL_ALPHA8_EXT,         DXGI_FORMAT_R8G8B8A8_UNORM,       DXGI_FORMAT_R8G8B8A8_UNORM,  DXGI_FORMAT_R8G8B8A8_UNORM,   DXGI_FORMAT_UNKNOWN);
+    InsertD3D11_FL9_3_FormatInfo(&map, GL_DEPTH_COMPONENT16,  DXGI_FORMAT_D16_UNORM,            DXGI_FORMAT_UNKNOWN,         DXGI_FORMAT_UNKNOWN,          DXGI_FORMAT_D16_UNORM);
+    InsertD3D11_FL9_3_FormatInfo(&map, GL_DEPTH_COMPONENT24,  DXGI_FORMAT_D24_UNORM_S8_UINT,    DXGI_FORMAT_UNKNOWN,         DXGI_FORMAT_UNKNOWN,          DXGI_FORMAT_D24_UNORM_S8_UINT);
+    InsertD3D11_FL9_3_FormatInfo(&map, GL_DEPTH_COMPONENT32F, DXGI_FORMAT_UNKNOWN,              DXGI_FORMAT_UNKNOWN,         DXGI_FORMAT_UNKNOWN,          DXGI_FORMAT_UNKNOWN);
+    InsertD3D11_FL9_3_FormatInfo(&map, GL_DEPTH24_STENCIL8,   DXGI_FORMAT_D24_UNORM_S8_UINT,    DXGI_FORMAT_UNKNOWN,         DXGI_FORMAT_UNKNOWN,          DXGI_FORMAT_D24_UNORM_S8_UINT);
+    InsertD3D11_FL9_3_FormatInfo(&map, GL_DEPTH32F_STENCIL8,  DXGI_FORMAT_UNKNOWN,              DXGI_FORMAT_UNKNOWN,         DXGI_FORMAT_UNKNOWN,          DXGI_FORMAT_UNKNOWN);
+    InsertD3D11_FL9_3_FormatInfo(&map, GL_STENCIL_INDEX8,     DXGI_FORMAT_D24_UNORM_S8_UINT,    DXGI_FORMAT_UNKNOWN,         DXGI_FORMAT_UNKNOWN,          DXGI_FORMAT_D24_UNORM_S8_UINT);
 
     return map;
 }

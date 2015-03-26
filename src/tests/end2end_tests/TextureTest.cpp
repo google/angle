@@ -1,7 +1,7 @@
 #include "ANGLETest.h"
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(TextureTest, ES2_D3D9, ES2_D3D11);
+ANGLE_TYPED_TEST_CASE(TextureTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3);
 
 template<typename T>
 class TextureTest : public ANGLETest
@@ -520,4 +520,87 @@ TYPED_TEST(TextureTest, CopySubImageFloat_RGBA_RGBA)
     }
 
     testFloatCopySubImage(4, 4);
+}
+
+// Port of https://www.khronos.org/registry/webgl/conformance-suites/1.0.3/conformance/textures/texture-npot.html
+// Run against GL_ALPHA/UNSIGNED_BYTE format, to ensure that D3D11 Feature Level 9_3 correctly handles GL_ALPHA
+TYPED_TEST(TextureTest, TextureNPOT_GL_ALPHA_UBYTE)
+{
+    const int npotTexSize = 5;
+    const int potTexSize = 4; // Should be less than npotTexSize
+    GLuint tex2D;
+
+    if (extensionEnabled("GL_OES_texture_npot"))
+    {
+        // This test isn't applicable if texture_npot is enabled
+        return;
+    }
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+    glActiveTexture(GL_TEXTURE0);
+    glGenTextures(1, &tex2D);
+    glBindTexture(GL_TEXTURE_2D, tex2D);
+
+    std::vector<GLubyte> pixels(1 * npotTexSize * npotTexSize);
+    for (size_t pixelId = 0; pixelId < npotTexSize * npotTexSize; ++pixelId)
+    {
+        pixels[pixelId] = 64;
+    }
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Check that an NPOT texture not on level 0 generates INVALID_VALUE
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_ALPHA, npotTexSize, npotTexSize, 0, GL_ALPHA, GL_UNSIGNED_BYTE, pixels.data());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Check that an NPOT texture on level 0 succeeds
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, npotTexSize, npotTexSize, 0, GL_ALPHA, GL_UNSIGNED_BYTE, pixels.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Check that generateMipmap fails on NPOT
+    glGenerateMipmap(GL_TEXTURE_2D);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Check that nothing is drawn if filtering is not correct for NPOT
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(m2DProgram, "position", 1.0f);
+    EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 0, 255);
+
+    // NPOT texture with TEXTURE_MIN_FILTER not NEAREST or LINEAR should draw with 0,0,0,255
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(m2DProgram, "position", 1.0f);
+    EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 0, 255);
+
+    // NPOT texture with TEXTURE_MIN_FILTER set to LINEAR should draw
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(m2DProgram, "position", 1.0f);
+    EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 0, 64);
+
+    // Check that glTexImage2D for POT texture succeeds
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, potTexSize, potTexSize, 0, GL_ALPHA, GL_UNSIGNED_BYTE, pixels.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Check that generateMipmap for an POT texture succeeds
+    glGenerateMipmap(GL_TEXTURE_2D);
+    EXPECT_GL_NO_ERROR();
+
+    // POT texture with TEXTURE_MIN_FILTER set to LINEAR_MIPMAP_LINEAR should draw
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(m2DProgram, "position", 1.0f);
+    EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 0, 64);
+    EXPECT_GL_NO_ERROR();
 }
