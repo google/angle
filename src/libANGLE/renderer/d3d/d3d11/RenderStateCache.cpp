@@ -9,6 +9,8 @@
 
 #include "libANGLE/renderer/d3d/d3d11/RenderStateCache.h"
 
+#include <float.h>
+
 #include "common/debug.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"

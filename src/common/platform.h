@@ -45,6 +45,7 @@
 #   endif
 
 #   include <windows.h>
+#   include <intrin.h>
 
 #   if defined(WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
 #       define ANGLE_ENABLE_WINDOWS_STORE 1

@@ -10,7 +10,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D9_RENDERTARGET9_H_
 #define LIBANGLE_RENDERER_D3D_D3D9_RENDERTARGET9_H_
 
-#include "libANGLE/renderer/D3D/RenderTargetD3D.h"
+#include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 
 namespace rx
 {

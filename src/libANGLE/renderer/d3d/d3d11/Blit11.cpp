@@ -7,6 +7,9 @@
 // Blit11.cpp: Texture copy utility class.
 
 #include "libANGLE/renderer/d3d/d3d11/Blit11.h"
+
+#include <float.h>
+
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
