@@ -29,8 +29,7 @@ size_t FormatStringIntoVector(const char *fmt, va_list vararg, std::vector<char>
 
 std::string FormatString(const char *fmt, va_list vararg)
 {
-    // Note: this needs to be thread-safe, since the D3D11 renderer uses some multithreading
-    std::vector<char> buffer(512);
+    static std::vector<char> buffer(512);
 
     size_t len = FormatStringIntoVector(fmt, vararg, buffer);
     return std::string(&buffer[0], len);
