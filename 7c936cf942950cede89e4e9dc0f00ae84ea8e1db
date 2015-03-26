@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2339d2d0_cb9c69b8",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-26T14:45:01Z",
+      "side": 1,
+      "message": "Do we still need this? If we do, it would be worth making them both const and setting them in the constructor so they can\u0027t get \"out of sync\".",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 17
+      },
+      "revId": "7c936cf942950cede89e4e9dc0f00ae84ea8e1db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2339d2d0_ab9925c6",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-26T14:45:01Z",
+      "side": 1,
+      "message": "Perhaps rename to bitShift, or sizeBitShift? Conflating bytes and bits could be confusing.",
+      "range": {
+        "startLine": 28,
+        "startChar": 11,
+        "endLine": 28,
+        "endChar": 21
+      },
+      "revId": "7c936cf942950cede89e4e9dc0f00ae84ea8e1db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
