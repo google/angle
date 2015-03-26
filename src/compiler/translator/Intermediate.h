@@ -35,7 +35,7 @@ class TIntermediate
     TIntermTyped *addIndex(
         TOperator op, TIntermTyped *base, TIntermTyped *index, const TSourceLoc &);
     TIntermTyped *addUnaryMath(
-        TOperator op, TIntermTyped *child, const TSourceLoc &line);
+        TOperator op, TIntermTyped *child, const TSourceLoc &line, const TType *funcReturnType);
     TIntermAggregate *growAggregate(
         TIntermNode *left, TIntermNode *right, const TSourceLoc &);
     TIntermAggregate *makeAggregate(TIntermNode *node, const TSourceLoc &);

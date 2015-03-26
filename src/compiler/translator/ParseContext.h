@@ -191,7 +191,10 @@ struct TParseContext {
         const TSourceLoc &loc);
     TIntermTyped *createAssign(TOperator op, TIntermTyped *left, TIntermTyped *right,
         const TSourceLoc &loc);
-    TIntermTyped *createUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc);
+    // The funcReturnType parameter is expected to be non-null when the operation is a built-in function.
+    // It is expected to be null for other unary operators.
+    TIntermTyped *createUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc,
+        const TType *funcReturnType);
 
     // Return true if the checks pass
     bool binaryOpCommonCheck(TOperator op, TIntermTyped *left, TIntermTyped *right,

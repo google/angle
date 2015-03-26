@@ -328,15 +328,10 @@ bool TIntermOperator::isConstructor() const
 // Make sure the type of a unary operator is appropriate for its
 // combination of operation and operand type.
 //
-void TIntermUnary::promote()
+void TIntermUnary::promote(const TType *funcReturnType)
 {
     switch (mOp)
     {
-      // Some built-ins get the type of their return value assigned elsewhere.
-      case EOpAny:
-      case EOpAll:
-      case EOpVectorLogicalNot:
-        break;
       case EOpFloatBitsToInt:
       case EOpFloatBitsToUint:
       case EOpIntBitsToFloat:
@@ -353,6 +348,20 @@ void TIntermUnary::promote()
         break;
       default:
         setType(mOperand->getType());
+    }
+
+    if (funcReturnType != nullptr)
+    {
+        if (funcReturnType->getBasicType() == EbtBool)
+        {
+            // Bool types should not have precision.
+            setType(*funcReturnType);
+        }
+        else
+        {
+            // Precision of the node has been set based on the operand.
+            setTypePreservePrecision(*funcReturnType);
+        }
     }
 
     mType.setQualifier(EvqTemporary);

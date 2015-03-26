@@ -2697,7 +2697,8 @@ TIntermCase *TParseContext::addDefault(const TSourceLoc &loc)
     return node;
 }
 
-TIntermTyped *TParseContext::createUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc)
+TIntermTyped *TParseContext::createUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc,
+    const TType *funcReturnType)
 {
     if (child == nullptr)
     {
@@ -2740,12 +2741,12 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op, TIntermTyped *child, 
         break;
     }
 
-    return intermediate.addUnaryMath(op, child, loc);
+    return intermediate.addUnaryMath(op, child, loc, funcReturnType);
 }
 
 TIntermTyped *TParseContext::addUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc)
 {
-    TIntermTyped *node = createUnaryMath(op, child, loc);
+    TIntermTyped *node = createUnaryMath(op, child, loc, nullptr);
     if (node == nullptr)
     {
         unaryOpError(loc, GetOperatorString(op), child->getCompleteString());
@@ -3094,7 +3095,7 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
                     //
                     // Treat it like a built-in unary operator.
                     //
-                    callNode = createUnaryMath(op, node->getAsTyped(), loc);
+                    callNode = createUnaryMath(op, node->getAsTyped(), loc, &fnCandidate->getReturnType());
                     if (callNode == nullptr)
                     {
                         std::stringstream extraInfoStream;
@@ -3104,18 +3105,6 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
                         error(node->getLine(), " wrong operand type", "Internal Error", extraInfo.c_str());
                         *fatalError = true;
                         return nullptr;
-                    }
-                    const TType& returnType = fnCandidate->getReturnType();
-                    if (returnType.getBasicType() == EbtBool)
-                    {
-                        // Bool types should not have precision, so we'll override any precision
-                        // that might have been set by createUnaryMath.
-                        callNode->setType(returnType);
-                    }
-                    else
-                    {
-                        // createUnaryMath has set the precision of the node based on the operand.
-                        callNode->setTypePreservePrecision(returnType);
                     }
                 }
                 else

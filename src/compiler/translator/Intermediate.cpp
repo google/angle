@@ -127,7 +127,7 @@ TIntermTyped *TIntermediate::addIndex(
 // Returns the added node.
 //
 TIntermTyped *TIntermediate::addUnaryMath(
-    TOperator op, TIntermTyped *child, const TSourceLoc &line)
+    TOperator op, TIntermTyped *child, const TSourceLoc &line, const TType *funcReturnType)
 {
     TIntermConstantUnion *childTempConstant = 0;
     if (child->getAsConstantUnion())
@@ -139,7 +139,7 @@ TIntermTyped *TIntermediate::addUnaryMath(
     TIntermUnary *node = new TIntermUnary(op);
     node->setLine(line);
     node->setOperand(child);
-    node->promote();
+    node->promote(funcReturnType);
 
     if (childTempConstant)
     {
