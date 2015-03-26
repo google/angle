@@ -22,6 +22,30 @@
       "revId": "6e2a52b8a89b3b8d6d074ea386771025ae7770cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "438406cc_02f90ac2",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-26T13:28:52Z",
+      "side": 0,
+      "message": "That\u0027 probably right, the operands are both unsigned too. Maybe we can trust the compiler in this case, though I personally tend to prefer to take any guesswork out of it. I removed this part of the change in patch set #3.",
+      "parentUuid": "c352b622_0f116dd9",
+      "range": {
+        "startLine": 91,
+        "startChar": 60,
+        "endLine": 91,
+        "endChar": 75
+      },
+      "revId": "6e2a52b8a89b3b8d6d074ea386771025ae7770cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
