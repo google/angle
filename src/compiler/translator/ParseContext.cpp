@@ -2730,10 +2730,12 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op, TIntermTyped *child, 
       case EOpNegative:
       case EOpPositive:
         if (child->getBasicType() == EbtStruct ||
+            child->getBasicType() == EbtBool ||
             child->isArray())
         {
             return nullptr;
         }
+      // Operators for built-ins are already type checked against their prototype.
       default:
         break;
     }

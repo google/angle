@@ -139,29 +139,7 @@ TIntermTyped *TIntermediate::addUnaryMath(
     TIntermUnary *node = new TIntermUnary(op);
     node->setLine(line);
     node->setOperand(child);
-
-    if (!node->promote(mInfoSink))
-        return 0;
-
-    switch (op)
-    {
-      case EOpFloatBitsToInt:
-      case EOpFloatBitsToUint:
-      case EOpIntBitsToFloat:
-      case EOpUintBitsToFloat:
-      case EOpPackSnorm2x16:
-      case EOpPackUnorm2x16:
-      case EOpPackHalf2x16:
-      case EOpUnpackSnorm2x16:
-      case EOpUnpackUnorm2x16:
-        node->getTypePointer()->setPrecision(EbpHigh);
-        break;
-      case EOpUnpackHalf2x16:
-        node->getTypePointer()->setPrecision(EbpMedium);
-        break;
-      default:
-        break;
-    }
+    node->promote();
 
     if (childTempConstant)
     {

@@ -328,55 +328,34 @@ bool TIntermOperator::isConstructor() const
 // Make sure the type of a unary operator is appropriate for its
 // combination of operation and operand type.
 //
-// Returns false in nothing makes sense.
-//
-bool TIntermUnary::promote(TInfoSink &)
+void TIntermUnary::promote()
 {
     switch (mOp)
     {
-      case EOpLogicalNot:
-        if (mOperand->getBasicType() != EbtBool)
-            return false;
-        break;
-      // bit-wise not is already checked
-      case EOpBitwiseNot:
-        break;
-
-      case EOpNegative:
-      case EOpPositive:
-      case EOpPostIncrement:
-      case EOpPostDecrement:
-      case EOpPreIncrement:
-      case EOpPreDecrement:
-        if (mOperand->getBasicType() == EbtBool)
-            return false;
-        break;
-
-      // Operators for built-ins are already type checked against their prototype
-      // and some of them get the type of their return value assigned elsewhere.
+      // Some built-ins get the type of their return value assigned elsewhere.
       case EOpAny:
       case EOpAll:
       case EOpVectorLogicalNot:
+        break;
+      case EOpFloatBitsToInt:
+      case EOpFloatBitsToUint:
       case EOpIntBitsToFloat:
       case EOpUintBitsToFloat:
+      case EOpPackSnorm2x16:
+      case EOpPackUnorm2x16:
+      case EOpPackHalf2x16:
       case EOpUnpackSnorm2x16:
       case EOpUnpackUnorm2x16:
-      case EOpUnpackHalf2x16:
-        return true;
-
-      case EOpAbs:
-      case EOpSign:
+        mType.setPrecision(EbpHigh);
         break;
-
+      case EOpUnpackHalf2x16:
+        mType.setPrecision(EbpMedium);
+        break;
       default:
-        if (mOperand->getBasicType() != EbtFloat)
-            return false;
+        setType(mOperand->getType());
     }
 
-    setType(mOperand->getType());
     mType.setQualifier(EvqTemporary);
-
-    return true;
 }
 
 //

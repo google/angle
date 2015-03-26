@@ -383,7 +383,7 @@ class TIntermUnary : public TIntermOperator
 
     void setOperand(TIntermTyped *operand) { mOperand = operand; }
     TIntermTyped *getOperand() { return mOperand; }
-    bool promote(TInfoSink &);
+    void promote();
 
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
