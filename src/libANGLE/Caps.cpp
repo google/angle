@@ -133,7 +133,6 @@ Extensions::Extensions()
       fragDepth(false),
       textureUsage(false),
       translatedShaderSource(false),
-      discardFramebuffer(false),
       colorBufferFloat(false)
 {
 }
@@ -183,7 +182,6 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_EXT_frag_depth",                 fragDepth,                &extensionStrings);
     InsertExtensionString("GL_ANGLE_texture_usage",            textureUsage,             &extensionStrings);
     InsertExtensionString("GL_ANGLE_translated_shader_source", translatedShaderSource,   &extensionStrings);
-    InsertExtensionString("GL_EXT_discard_framebuffer",        discardFramebuffer,       &extensionStrings);
     InsertExtensionString("GL_EXT_color_buffer_float",         colorBufferFloat,         &extensionStrings);
 
     return extensionStrings;

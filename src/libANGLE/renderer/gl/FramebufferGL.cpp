@@ -51,12 +51,6 @@ void FramebufferGL::setReadBuffer(GLenum buffer)
     //UNIMPLEMENTED();
 }
 
-gl::Error FramebufferGL::discard(size_t count, const GLenum *attachments)
-{
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
-}
-
 gl::Error FramebufferGL::invalidate(size_t count, const GLenum *attachments)
 {
     UNIMPLEMENTED();

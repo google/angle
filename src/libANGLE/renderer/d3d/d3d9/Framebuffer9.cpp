@@ -32,24 +32,6 @@ Framebuffer9::~Framebuffer9()
 {
 }
 
-gl::Error Framebuffer9::discard(size_t, const GLenum *)
-{
-    // No-op in D3D9
-    return gl::Error(GL_NO_ERROR);
-}
-
-gl::Error Framebuffer9::invalidate(size_t, const GLenum *)
-{
-    // No-op in D3D9
-    return gl::Error(GL_NO_ERROR);
-}
-
-gl::Error Framebuffer9::invalidateSub(size_t, const GLenum *, const gl::Rectangle &)
-{
-    // No-op in D3D9
-    return gl::Error(GL_NO_ERROR);
-}
-
 gl::Error Framebuffer9::clear(const gl::State &state, const ClearParameters &clearParams)
 {
     const gl::FramebufferAttachment *colorAttachment = mData.mColorAttachments[0];
