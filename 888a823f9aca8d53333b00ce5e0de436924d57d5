@@ -296,6 +296,30 @@
     },
     {
       "key": {
+        "uuid": "831efe57_541dac1d",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-26T01:07:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23147232_d931f39c",
+      "range": {
+        "startLine": 74,
+        "startChar": 85,
+        "endLine": 74,
+        "endChar": 103
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c63d64a0_ce3f03da",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 4
@@ -449,6 +473,30 @@
       "side": 1,
       "message": "Ah, I guess you\u0027ve been looking at the quick reference card of OpenGL 4.1. I think that is missing this function by mistake. The function is listed on page 108 of the spec.",
       "parentUuid": "8647ec3d_cc78ef45",
+      "range": {
+        "startLine": 92,
+        "startChar": 51,
+        "endLine": 92,
+        "endChar": 65
+      },
+      "revId": "888a823f9aca8d53333b00ce5e0de436924d57d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e30dfa2c_f7c3a0b5",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-03-26T01:07:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43116641_ba64f191",
       "range": {
         "startLine": 92,
         "startChar": 51,
