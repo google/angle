@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "038e8eef_83368017",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-26T15:38:07Z",
+      "side": 1,
+      "message": "I realize that, but it can be useful to think about what would happen if that invariant no longer holds. Someone might/will make changes to this code many years from now, which could break it in a subtle way. We should make a best effort at keeping things robust or at least failing elegantly when that happens. It\u0027s attention to things like this that keep the fallout from bugs minor.\n\nSo is returning INITDAG_SUCCESS the most reasonable thing to do when the check were to fail?",
+      "parentUuid": "4336c6df_988fdda7",
+      "range": {
+        "startLine": 46,
+        "startChar": 8,
+        "endLine": 46,
+        "endChar": 61
+      },
+      "revId": "0de9246a55ff85216b63440d01e336bddd79c7c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c3fb9632_f46155b9",
         "filename": "src/compiler/translator/CallDAG.h",
         "patchSetId": 17
