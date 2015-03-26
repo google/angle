@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c352b622_a164a5cf",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-26T15:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23eb9264_410cd2bf",
+      "range": {
+        "startLine": 132,
+        "startChar": 4,
+        "endLine": 132,
+        "endChar": 39
+      },
+      "revId": "cc65ef54eed9fc325a61a706be412ccd2772cf05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a3f6a249_20f2e46a",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2015-03-24T17:47:31Z",
       "side": 1,
       "message": "nit: |\u003d applies to bitwise or, not ||. What you want is ||\u003d but C++ doesn\u0027t have it, so use \u003d mInside... || \u003cnew\u003e",
+      "range": {
+        "startLine": 2359,
+        "startChar": 29,
+        "endLine": 2359,
+        "endChar": 31
+      },
+      "revId": "cc65ef54eed9fc325a61a706be412ccd2772cf05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2362b2ee_e3085b5f",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2359,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-26T15:10:45Z",
+      "side": 1,
+      "message": "In C++ booleans are either 1 or 0 and bitwise operator apply to them too. Plus it would make the line extra long.",
+      "parentUuid": "a3f6a249_20f2e46a",
       "range": {
         "startLine": 2359,
         "startChar": 29,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "834c3e8c_614c71a1",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2374,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-26T15:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3f6a249_000c88ec",
+      "range": {
+        "startLine": 2374,
+        "startChar": 14,
+        "endLine": 2374,
+        "endChar": 15
+      },
+      "revId": "cc65ef54eed9fc325a61a706be412ccd2772cf05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23eb9264_a16efe25",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 5
@@ -82,6 +154,30 @@
       "writtenOn": "2015-03-24T17:47:31Z",
       "side": 1,
       "message": "nit: pointer alignment",
+      "range": {
+        "startLine": 2690,
+        "startChar": 26,
+        "endLine": 2690,
+        "endChar": 27
+      },
+      "revId": "cc65ef54eed9fc325a61a706be412ccd2772cf05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "834c3e8c_41417567",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2690,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-03-26T15:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23eb9264_a16efe25",
       "range": {
         "startLine": 2690,
         "startChar": 26,
