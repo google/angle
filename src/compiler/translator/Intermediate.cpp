@@ -189,6 +189,10 @@ TIntermTyped *TIntermediate::addUnaryMath(
 
     switch (op)
     {
+      case EOpFloatBitsToInt:
+      case EOpFloatBitsToUint:
+      case EOpIntBitsToFloat:
+      case EOpUintBitsToFloat:
       case EOpPackSnorm2x16:
       case EOpPackUnorm2x16:
       case EOpPackHalf2x16:

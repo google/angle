@@ -371,3 +371,44 @@ TEST_F(TypeTrackingTest, BuiltInAbsSignFunctionIntResultTypeAndPrecision)
     ASSERT_TRUE(foundInIntermediateTree("Absolute value (mediump int)"));
     ASSERT_TRUE(foundInIntermediateTree("Sign (mediump int)"));
 }
+
+TEST_F(TypeTrackingTest, BuiltInFloatBitsToIntResultTypeAndPrecision)
+{
+    // ESSL 3.00 section 8.3: floatBitsTo(U)int returns a highp value.
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "precision mediump int;\n"
+        "uniform float f;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   int i = floatBitsToInt(f);\n"
+        "   uint u = floatBitsToUint(f);\n"
+        "   my_FragColor = vec4(0.0, 0.0, 0.0, 1.0); \n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("float bits to int (highp int)"));
+    ASSERT_TRUE(foundInIntermediateTree("float bits to uint (highp uint)"));
+}
+
+TEST_F(TypeTrackingTest, BuiltInIntBitsToFloatResultTypeAndPrecision)
+{
+    // ESSL 3.00 section 8.3: (u)intBitsToFloat returns a highp value.
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "precision mediump int;\n"
+        "uniform int i;\n"
+        "uniform uint u;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   float f1 = intBitsToFloat(i);\n"
+        "   float f2 = uintBitsToFloat(u);\n"
+        "   my_FragColor = vec4(f1, f2, 0.0, 1.0); \n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("int bits to float (highp float)"));
+    ASSERT_TRUE(foundInIntermediateTree("uint bits to float (highp float)"));
+}
