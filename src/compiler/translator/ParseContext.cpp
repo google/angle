@@ -2697,10 +2697,54 @@ TIntermCase *TParseContext::addDefault(const TSourceLoc &loc)
     return node;
 }
 
+TIntermTyped *TParseContext::createUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc)
+{
+    if (child == nullptr)
+    {
+        return nullptr;
+    }
+
+    switch (op)
+    {
+      case EOpLogicalNot:
+        if (child->getBasicType() != EbtBool ||
+            child->isMatrix() ||
+            child->isArray() ||
+            child->isVector())
+        {
+            return nullptr;
+        }
+        break;
+      case EOpBitwiseNot:
+        if ((child->getBasicType() != EbtInt && child->getBasicType() != EbtUInt) ||
+            child->isMatrix() ||
+            child->isArray())
+        {
+            return nullptr;
+        }
+        break;
+      case EOpPostIncrement:
+      case EOpPreIncrement:
+      case EOpPostDecrement:
+      case EOpPreDecrement:
+      case EOpNegative:
+      case EOpPositive:
+        if (child->getBasicType() == EbtStruct ||
+            child->isArray())
+        {
+            return nullptr;
+        }
+      default:
+        break;
+    }
+
+    return intermediate.addUnaryMath(op, child, loc);
+}
+
 TIntermTyped *TParseContext::addUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc)
 {
-    TIntermTyped *node = intermediate.addUnaryMath(op, child, loc);
-    if (node == 0)
+    TIntermTyped *node = createUnaryMath(op, child, loc);
+    if (node == nullptr)
     {
         unaryOpError(loc, GetOperatorString(op), child->getCompleteString());
         recover();
@@ -3048,7 +3092,7 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
                     //
                     // Treat it like a built-in unary operator.
                     //
-                    callNode = intermediate.addUnaryMath(op, node, loc);
+                    callNode = createUnaryMath(op, node->getAsTyped(), loc);
                     if (callNode == nullptr)
                     {
                         std::stringstream extraInfoStream;
@@ -3063,12 +3107,12 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
                     if (returnType.getBasicType() == EbtBool)
                     {
                         // Bool types should not have precision, so we'll override any precision
-                        // that might have been set by addUnaryMath.
+                        // that might have been set by createUnaryMath.
                         callNode->setType(returnType);
                     }
                     else
                     {
-                        // addUnaryMath has set the precision of the node based on the operand.
+                        // createUnaryMath has set the precision of the node based on the operand.
                         callNode->setTypePreservePrecision(returnType);
                     }
                 }

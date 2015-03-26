@@ -127,52 +127,8 @@ TIntermTyped *TIntermediate::addIndex(
 // Returns the added node.
 //
 TIntermTyped *TIntermediate::addUnaryMath(
-    TOperator op, TIntermNode *childNode, const TSourceLoc &line)
+    TOperator op, TIntermTyped *child, const TSourceLoc &line)
 {
-    TIntermUnary *node;
-    TIntermTyped *child = childNode->getAsTyped();
-
-    if (child == NULL)
-    {
-        mInfoSink.info.message(EPrefixInternalError, line,
-                               "Bad type in AddUnaryMath");
-        return NULL;
-    }
-
-    switch (op)
-    {
-      case EOpLogicalNot:
-        if (child->getBasicType() != EbtBool ||
-            child->isMatrix() ||
-            child->isArray() ||
-            child->isVector())
-        {
-            return NULL;
-        }
-        break;
-      case EOpBitwiseNot:
-        if ((child->getBasicType() != EbtInt && child->getBasicType() != EbtUInt) ||
-            child->isMatrix() ||
-            child->isArray())
-        {
-            return NULL;
-        }
-        break;
-      case EOpPostIncrement:
-      case EOpPreIncrement:
-      case EOpPostDecrement:
-      case EOpPreDecrement:
-      case EOpNegative:
-      case EOpPositive:
-        if (child->getBasicType() == EbtStruct ||
-            child->isArray())
-        {
-            return NULL;
-        }
-      default:
-        break;
-    }
-
     TIntermConstantUnion *childTempConstant = 0;
     if (child->getAsConstantUnion())
         childTempConstant = child->getAsConstantUnion();
@@ -180,7 +136,7 @@ TIntermTyped *TIntermediate::addUnaryMath(
     //
     // Make a new node for the operator.
     //
-    node = new TIntermUnary(op);
+    TIntermUnary *node = new TIntermUnary(op);
     node->setLine(line);
     node->setOperand(child);
 

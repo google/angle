@@ -191,6 +191,7 @@ struct TParseContext {
         const TSourceLoc &loc);
     TIntermTyped *createAssign(TOperator op, TIntermTyped *left, TIntermTyped *right,
         const TSourceLoc &loc);
+    TIntermTyped *createUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc);
 
     // Return true if the checks pass
     bool binaryOpCommonCheck(TOperator op, TIntermTyped *left, TIntermTyped *right,
