@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "e30dfa2c_9d1b639d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-03-26T20:36:51Z",
+      "side": 1,
+      "message": "Good catch!",
+      "parentUuid": "a37b02ac_f564d84b",
+      "range": {
+        "startLine": 749,
+        "startChar": 114,
+        "endLine": 749,
+        "endChar": 136
+      },
+      "revId": "f28a0517b88f8dc8b34802e1a6286bff6fe36562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63758ab8_b388b8b7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
         "patchSetId": 2
@@ -65,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "e30dfa2c_1d6d13ff",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 864,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-03-26T20:36:51Z",
+      "side": 1,
+      "message": "Argh, sorry about these. I fixed them 5mins before I submitted the review, but they reverted back again...",
+      "parentUuid": "63758ab8_b388b8b7",
+      "revId": "f28a0517b88f8dc8b34802e1a6286bff6fe36562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63758ab8_5357e4b1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
         "patchSetId": 2
@@ -76,6 +118,24 @@
       "writtenOn": "2015-03-26T20:23:54Z",
       "side": 1,
       "message": "indentation",
+      "revId": "f28a0517b88f8dc8b34802e1a6286bff6fe36562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "831efe57_57300e6b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 871,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-03-26T20:36:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63758ab8_5357e4b1",
       "revId": "f28a0517b88f8dc8b34802e1a6286bff6fe36562",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
