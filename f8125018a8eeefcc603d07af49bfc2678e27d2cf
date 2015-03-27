@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63a3ca80_66fef0e9",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-27T14:06:17Z",
+      "side": 1,
+      "message": "this is true -- however, on the GL back-end, there might be a driver difference in the implementation of glDrawRangeElements vs glDrawElements. OTOH we might always want to call DrawRangeElements when we have an index range. I think the right approach might be to add a new impl method for drawRangeElements to simplify the GL back-end. Geoff any thoughts?",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 34
+      },
+      "revId": "f8125018a8eeefcc603d07af49bfc2678e27d2cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
