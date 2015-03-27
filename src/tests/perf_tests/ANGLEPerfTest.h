@@ -20,19 +20,17 @@
 #include "EGLWindow.h"
 #include "OSWindow.h"
 #include "Timer.h"
-#include "shared_utils.h"
+#include "common/angleutils.h"
 
 class Event;
 
-class ANGLEPerfTest : public testing::Test
+class ANGLEPerfTest : public testing::Test, angle::NonCopyable
 {
   public:
     ANGLEPerfTest(const std::string &name, const std::string &suffix);
     virtual ~ANGLEPerfTest() { };
 
     virtual void step(float dt, double totalTime) = 0;
-
-    DISALLOW_COPY_AND_ASSIGN(ANGLEPerfTest);
 
   protected:
     void run();
@@ -84,8 +82,6 @@ class ANGLERenderTest : public ANGLEPerfTest
     double mRunTimeSeconds;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(ANGLERenderTest);
-
     void SetUp() override;
     void TearDown() override;
 

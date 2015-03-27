@@ -40,7 +40,6 @@ class TexSubImageBenchmark : public ANGLERenderTest,
     void drawBenchmark() override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TexSubImageBenchmark);
     GLuint createTexture();
 
     // Handle to a program object

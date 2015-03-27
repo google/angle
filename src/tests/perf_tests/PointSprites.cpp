@@ -42,8 +42,6 @@ class PointSpritesBenchmark : public ANGLERenderTest,
     void drawBenchmark() override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(PointSpritesBenchmark);
-
     GLuint mProgram;
     GLuint mBuffer;
 };

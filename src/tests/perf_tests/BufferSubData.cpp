@@ -43,8 +43,6 @@ class BufferSubDataBenchmark : public ANGLERenderTest,
     void drawBenchmark() override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(BufferSubDataBenchmark);
-
     GLuint mProgram;
     GLuint mBuffer;
     uint8_t *mUpdateData;

@@ -21,7 +21,7 @@
 #include <cstdint>
 #include <memory>
 
-#include "shared_utils.h"
+#include "common/angleutils.h"
 
 class OSWindow;
 
@@ -43,7 +43,7 @@ struct EGLPlatformParameters
     EGLPlatformParameters(EGLint renderer, EGLint majorVersion, EGLint minorVersion, EGLint deviceType);
 };
 
-class EGLWindow
+class EGLWindow : angle::NonCopyable
 {
   public:
     EGLWindow(size_t width, size_t height, EGLint glesMajorVersion, const EGLPlatformParameters &platform);
@@ -85,8 +85,6 @@ class EGLWindow
     void destroyGL();
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(EGLWindow);
-
     EGLConfig mConfig;
     EGLDisplay mDisplay;
     EGLSurface mSurface;
