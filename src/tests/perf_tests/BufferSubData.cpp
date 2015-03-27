@@ -16,7 +16,7 @@
 namespace
 {
 
-struct BufferSubDataParams final : public PerfTestParams
+struct BufferSubDataParams final : public RenderTestParams
 {
     std::string suffix() const override;
 
@@ -31,7 +31,7 @@ struct BufferSubDataParams final : public PerfTestParams
     unsigned int iterations;
 };
 
-class BufferSubDataBenchmark : public ANGLEPerfTest,
+class BufferSubDataBenchmark : public ANGLERenderTest,
                                public ::testing::WithParamInterface<BufferSubDataParams>
 {
   public:
@@ -165,7 +165,7 @@ std::string BufferSubDataParams::suffix() const
 {
     std::stringstream strstr;
 
-    strstr << PerfTestParams::suffix();
+    strstr << RenderTestParams::suffix();
 
     if (vertexNormalized)
     {
@@ -191,7 +191,7 @@ std::string BufferSubDataParams::suffix() const
 }
 
 BufferSubDataBenchmark::BufferSubDataBenchmark()
-    : ANGLEPerfTest("BufferSubData", GetParam()),
+    : ANGLERenderTest("BufferSubData", GetParam()),
       mProgram(0),
       mBuffer(0),
       mUpdateData(NULL),

@@ -18,7 +18,7 @@
 namespace
 {
 
-struct PointSpritesParams final : public PerfTestParams
+struct PointSpritesParams final : public RenderTestParams
 {
     std::string suffix() const override;
 
@@ -30,7 +30,7 @@ struct PointSpritesParams final : public PerfTestParams
     unsigned int iterations;
 };
 
-class PointSpritesBenchmark : public ANGLEPerfTest,
+class PointSpritesBenchmark : public ANGLERenderTest,
                               public ::testing::WithParamInterface<PointSpritesParams>
 {
   public:
@@ -52,7 +52,7 @@ std::string PointSpritesParams::suffix() const
 {
     std::stringstream strstr;
 
-    strstr << PerfTestParams::suffix()
+    strstr << RenderTestParams::suffix()
            << "_" << count << "_" << size << "px"
            << "_" << numVaryings << "vars";
 
@@ -60,7 +60,7 @@ std::string PointSpritesParams::suffix() const
 }
 
 PointSpritesBenchmark::PointSpritesBenchmark()
-    : ANGLEPerfTest("PointSprites", GetParam())
+    : ANGLERenderTest("PointSprites", GetParam())
 {
 }
 

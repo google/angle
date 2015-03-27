@@ -16,7 +16,7 @@
 namespace
 {
 
-struct TexSubImageParams final : public PerfTestParams
+struct TexSubImageParams final : public RenderTestParams
 {
     std::string suffix() const override;
 
@@ -28,7 +28,7 @@ struct TexSubImageParams final : public PerfTestParams
     unsigned int iterations;
 };
 
-class TexSubImageBenchmark : public ANGLEPerfTest,
+class TexSubImageBenchmark : public ANGLERenderTest,
                              public ::testing::WithParamInterface<TexSubImageParams>
 {
   public:
@@ -66,11 +66,11 @@ class TexSubImageBenchmark : public ANGLEPerfTest,
 std::string TexSubImageParams::suffix() const
 {
     // TODO(jmadill)
-    return PerfTestParams::suffix();
+    return RenderTestParams::suffix();
 }
 
 TexSubImageBenchmark::TexSubImageBenchmark()
-    : ANGLEPerfTest("TexSubImage", GetParam()),
+    : ANGLERenderTest("TexSubImage", GetParam()),
       mProgram(0),
       mPositionLoc(-1),
       mTexCoordLoc(-1),

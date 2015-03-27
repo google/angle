@@ -24,23 +24,46 @@
 
 class Event;
 
-struct PerfTestParams
+class ANGLEPerfTest : public testing::Test
 {
+  public:
+    ANGLEPerfTest(const std::string &name, const std::string &suffix);
+    virtual ~ANGLEPerfTest() { };
+
+    virtual void step(float dt, double totalTime) = 0;
+
+    DISALLOW_COPY_AND_ASSIGN(ANGLEPerfTest);
+
+  protected:
+    void run();
+    void printResult(const std::string &trace, double value, const std::string &units, bool important) const;
+    void printResult(const std::string &trace, size_t value, const std::string &units, bool important) const;
+    void SetUp() override;
+    void TearDown() override;
+
+    std::string mName;
+    std::string mSuffix;
+
+    bool mRunning;
+    std::unique_ptr<Timer> mTimer;
+    int mNumFrames;
+};
+
+struct RenderTestParams
+{
+    virtual std::string suffix() const;
+
     EGLint requestedRenderer;
     EGLint deviceType;
     EGLint glesMajorVersion;
     EGLint widowWidth;
     EGLint windowHeight;
-
-    virtual std::string suffix() const;
 };
 
-class ANGLEPerfTest : public testing::Test
+class ANGLERenderTest : public ANGLEPerfTest
 {
   public:
-    ANGLEPerfTest(const std::string &name, const PerfTestParams &testParams);
-
-    virtual ~ANGLEPerfTest() { };
+    ANGLERenderTest(const std::string &name, const RenderTestParams &testParams);
 
     virtual bool initializeBenchmark() { return true; }
     virtual void destroyBenchmark() { }
@@ -56,31 +79,21 @@ class ANGLEPerfTest : public testing::Test
     OSWindow *getWindow();
 
   protected:
-    void printResult(const std::string &trace, double value, const std::string &units, bool important) const;
-    void printResult(const std::string &trace, size_t value, const std::string &units, bool important) const;
-    void run();
-
-    const PerfTestParams &mTestParams;
+    const RenderTestParams &mTestParams;
     unsigned int mDrawIterations;
     double mRunTimeSeconds;
-    int mNumFrames;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(ANGLEPerfTest);
+    DISALLOW_COPY_AND_ASSIGN(ANGLERenderTest);
 
     void SetUp() override;
     void TearDown() override;
 
-    void step(float dt, double totalTime);
+    void step(float dt, double totalTime) override;
     void draw();
-
-    std::string mName;
-    bool mRunning;
-    std::string mSuffix;
 
     std::unique_ptr<EGLWindow> mEGLWindow;
     std::unique_ptr<OSWindow> mOSWindow;
-    std::unique_ptr<Timer> mTimer;
 };
 
 #endif // PERF_TESTS_ANGLE_PERF_TEST_H_
