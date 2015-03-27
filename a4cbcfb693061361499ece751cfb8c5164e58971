@@ -46,6 +46,30 @@
       "revId": "a4cbcfb693061361499ece751cfb8c5164e58971",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43d246e8_4ee1bd95",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-27T17:58:25Z",
+      "side": 1,
+      "message": "Oh okay, what about marking them with \u003ddelete like with DISALLOW_COPY_AND_ASSIGN?",
+      "parentUuid": "43d246e8_eec2f135",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 37
+      },
+      "revId": "a4cbcfb693061361499ece751cfb8c5164e58971",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
