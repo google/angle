@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43d246e8_eb32e69e",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-27T14:14:42Z",
+      "side": 1,
+      "message": "nit: put this in the header",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 50
+      },
+      "revId": "442314932c23b4d2ce13e43cac89d8c478d01c76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63a3ca80_a6e38847",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-27T14:14:42Z",
+      "side": 1,
+      "message": "MetadataList",
+      "range": {
+        "startLine": 157,
+        "startChar": 4,
+        "endLine": 157,
+        "endChar": 32
+      },
+      "revId": "442314932c23b4d2ce13e43cac89d8c478d01c76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63758ab8_32e339cf",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-27T14:14:42Z",
+      "side": 1,
+      "message": "nit: remove this space.",
+      "revId": "442314932c23b4d2ce13e43cac89d8c478d01c76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43d246e8_cb37e28f",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-27T14:14:42Z",
+      "side": 1,
+      "message": "MetadataList mMetadataList",
+      "range": {
+        "startLine": 171,
+        "startChar": 33,
+        "endLine": 171,
+        "endChar": 45
+      },
+      "revId": "442314932c23b4d2ce13e43cac89d8c478d01c76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
