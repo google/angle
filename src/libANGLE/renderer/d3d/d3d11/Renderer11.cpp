@@ -1425,22 +1425,23 @@ void Renderer11::applyTransformFeedbackBuffers(const gl::State &state)
 
     if (state.isTransformFeedbackActiveUnpaused())
     {
-        numXFBBindings = state.getTransformFeedbackBufferIndexRange();
+        const gl::TransformFeedback *transformFeedback = state.getCurrentTransformFeedback();
+        numXFBBindings = transformFeedback->getIndexedBufferCount();
         ASSERT(numXFBBindings <= gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS);
 
         for (size_t i = 0; i < numXFBBindings; i++)
         {
-            gl::Buffer *curXFBBuffer = state.getIndexedTransformFeedbackBuffer(i);
-            GLintptr curXFBOffset = state.getIndexedTransformFeedbackBufferOffset(i);
+            const OffsetBindingPointer<gl::Buffer> &binding = transformFeedback->getIndexedBuffer(i);
+
             ID3D11Buffer *d3dBuffer = NULL;
-            if (curXFBBuffer)
+            if (binding.get() != nullptr)
             {
-                Buffer11 *storage = GetImplAs<Buffer11>(curXFBBuffer);
+                Buffer11 *storage = GetImplAs<Buffer11>(binding.get());
                 d3dBuffer = storage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
             }
 
             // TODO: mAppliedTFBuffers and friends should also be kept in a vector.
-            if (d3dBuffer != mAppliedTFBuffers[i] || curXFBOffset != mAppliedTFOffsets[i])
+            if (d3dBuffer != mAppliedTFBuffers[i] || binding.getOffset() != mAppliedTFOffsets[i])
             {
                 requiresUpdate = true;
             }
@@ -1449,18 +1450,17 @@ void Renderer11::applyTransformFeedbackBuffers(const gl::State &state)
 
     if (requiresUpdate || numXFBBindings != mAppliedNumXFBBindings)
     {
+        const gl::TransformFeedback *transformFeedback = state.getCurrentTransformFeedback();
         for (size_t i = 0; i < numXFBBindings; ++i)
         {
-            gl::Buffer *curXFBBuffer = state.getIndexedTransformFeedbackBuffer(i);
-            GLintptr curXFBOffset = state.getIndexedTransformFeedbackBufferOffset(i);
-
-            if (curXFBBuffer)
+            const OffsetBindingPointer<gl::Buffer> &binding = transformFeedback->getIndexedBuffer(i);
+            if (binding.get() != nullptr)
             {
-                Buffer11 *storage = GetImplAs<Buffer11>(curXFBBuffer);
+                Buffer11 *storage = GetImplAs<Buffer11>(binding.get());
                 ID3D11Buffer *d3dBuffer = storage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
 
-                mCurrentD3DOffsets[i] = (mAppliedTFBuffers[i] != d3dBuffer || mAppliedTFOffsets[i] != curXFBOffset) ?
-                                        static_cast<UINT>(curXFBOffset) : -1;
+                mCurrentD3DOffsets[i] = (mAppliedTFBuffers[i] != d3dBuffer || mAppliedTFOffsets[i] != binding.getOffset()) ?
+                                        static_cast<UINT>(binding.getOffset()) : -1;
                 mAppliedTFBuffers[i] = d3dBuffer;
             }
             else
@@ -1468,7 +1468,7 @@ void Renderer11::applyTransformFeedbackBuffers(const gl::State &state)
                 mAppliedTFBuffers[i] = NULL;
                 mCurrentD3DOffsets[i] = 0;
             }
-            mAppliedTFOffsets[i] = curXFBOffset;
+            mAppliedTFOffsets[i] = binding.getOffset();
         }
 
         mAppliedNumXFBBindings = numXFBBindings;

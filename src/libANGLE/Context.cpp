@@ -100,12 +100,6 @@ Context::Context(const egl::Config *config, int clientVersion, const Context *sh
         bindIndexedUniformBuffer(0, i, 0, -1);
     }
 
-    bindGenericTransformFeedbackBuffer(0);
-    for (unsigned int i = 0; i < mCaps.maxTransformFeedbackSeparateAttributes; i++)
-    {
-        bindIndexedTransformFeedbackBuffer(0, i, 0, -1);
-    }
-
     bindCopyReadBuffer(0);
     bindCopyWriteBuffer(0);
     bindPixelPackBuffer(0);
@@ -115,7 +109,7 @@ Context::Context(const egl::Config *config, int clientVersion, const Context *sh
     // In the initial state, a default transform feedback object is bound and treated as
     // a transform feedback object with a name of zero. That object is bound any time
     // BindTransformFeedback is called with id of zero
-    mTransformFeedbackZero.set(new TransformFeedback(mRenderer->createTransformFeedback(), 0));
+    mTransformFeedbackZero.set(new TransformFeedback(mRenderer->createTransformFeedback(), 0, mCaps));
     bindTransformFeedback(0);
 
     mHasBeenCurrent = false;
@@ -264,7 +258,7 @@ GLuint Context::createSampler()
 GLuint Context::createTransformFeedback()
 {
     GLuint handle = mTransformFeedbackAllocator.allocate();
-    TransformFeedback *transformFeedback = new TransformFeedback(mRenderer->createTransformFeedback(), handle);
+    TransformFeedback *transformFeedback = new TransformFeedback(mRenderer->createTransformFeedback(), handle, mCaps);
     transformFeedback->addRef();
     mTransformFeedbackMap[handle] = transformFeedback;
     return handle;
@@ -588,14 +582,14 @@ void Context::bindGenericTransformFeedbackBuffer(GLuint buffer)
 {
     mResourceManager->checkBufferAllocation(buffer);
 
-    mState.setGenericTransformFeedbackBufferBinding(getBuffer(buffer));
+    mState.getCurrentTransformFeedback()->bindGenericBuffer(getBuffer(buffer));
 }
 
 void Context::bindIndexedTransformFeedbackBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size)
 {
     mResourceManager->checkBufferAllocation(buffer);
 
-    mState.setIndexedTransformFeedbackBufferBinding(index, getBuffer(buffer), offset, size);
+    mState.getCurrentTransformFeedback()->bindIndexedBuffer(index, getBuffer(buffer), offset, size);
 }
 
 void Context::bindCopyReadBuffer(GLuint buffer)
@@ -1125,6 +1119,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT:
       case GL_UNIFORM_BUFFER_BINDING:
       case GL_TRANSFORM_FEEDBACK_BINDING:
+      case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
       case GL_COPY_READ_BUFFER_BINDING:
       case GL_COPY_WRITE_BUFFER_BINDING:
       case GL_TEXTURE_BINDING_3D:

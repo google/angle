@@ -24,6 +24,8 @@
             '<(angle_path)/src/libANGLE/ResourceManager_unittest.cpp',
             '<(angle_path)/src/libANGLE/Surface_unittest.cpp',
             '<(angle_path)/src/libANGLE/TransformFeedback_unittest.cpp',
+            '<(angle_path)/src/libANGLE/renderer/BufferImpl_mock.h',
+            '<(angle_path)/src/libANGLE/renderer/TransformFeedbackImpl_mock.h',
             '<(angle_path)/src/tests/angle_unittests_utils.h',
             '<(angle_path)/src/tests/compiler_tests/API_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/CollectVariables_test.cpp',

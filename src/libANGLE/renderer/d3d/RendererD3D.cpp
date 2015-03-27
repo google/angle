@@ -496,12 +496,13 @@ bool RendererD3D::skipDraw(const gl::Data &data, GLenum drawMode)
 
 void RendererD3D::markTransformFeedbackUsage(const gl::Data &data)
 {
-    for (size_t i = 0; i < data.caps->maxTransformFeedbackSeparateAttributes; i++)
+    const gl::TransformFeedback *transformFeedback = data.state->getCurrentTransformFeedback();
+    for (size_t i = 0; i < transformFeedback->getIndexedBufferCount(); i++)
     {
-        gl::Buffer *buffer = data.state->getIndexedTransformFeedbackBuffer(i);
-        if (buffer)
+        const OffsetBindingPointer<gl::Buffer> &binding = transformFeedback->getIndexedBuffer(i);
+        if (binding.get() != nullptr)
         {
-            BufferD3D *bufferD3D = GetImplAs<BufferD3D>(buffer);
+            BufferD3D *bufferD3D = GetImplAs<BufferD3D>(binding.get());
             bufferD3D->markTransformFeedbackUsage();
         }
     }

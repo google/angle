@@ -40,4 +40,14 @@ void TransformFeedbackGL::resume()
     UNIMPLEMENTED();
 }
 
+void TransformFeedbackGL::bindGenericBuffer(const BindingPointer<gl::Buffer> &binding)
+{
+    UNIMPLEMENTED();
+}
+
+void TransformFeedbackGL::bindIndexedBuffer(size_t index, const OffsetBindingPointer<gl::Buffer> &binding)
+{
+    UNIMPLEMENTED();
+}
+
 }

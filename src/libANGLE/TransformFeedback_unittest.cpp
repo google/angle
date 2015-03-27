@@ -6,32 +6,29 @@
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "libANGLE/Caps.h"
 #include "libANGLE/TransformFeedback.h"
-#include "libANGLE/renderer/TransformFeedbackImpl.h"
+#include "libANGLE/renderer/BufferImpl_mock.h"
+#include "libANGLE/renderer/TransformFeedbackImpl_mock.h"
 
-namespace {
+using ::testing::_;
+using ::testing::Return;
+using ::testing::SetArgumentPointee;
 
-class MockTransformFeedbackImpl : public rx::TransformFeedbackImpl
+namespace
 {
-  public:
-    virtual ~MockTransformFeedbackImpl() { destroy(); }
-
-    MOCK_METHOD1(begin, void(GLenum primitiveMode));
-    MOCK_METHOD0(end, void());
-    MOCK_METHOD0(pause, void());
-    MOCK_METHOD0(resume, void());
-
-    MOCK_METHOD0(destroy, void());
-};
 
 class TransformFeedbackTest : public testing::Test
 {
   protected:
     virtual void SetUp()
     {
-        mImpl = new MockTransformFeedbackImpl;
-        EXPECT_CALL(*mImpl, destroy());
-        mFeedback = new gl::TransformFeedback(mImpl, 1);
+        // Set a reasonable number of tf attributes
+        mCaps.maxTransformFeedbackSeparateAttributes = 8;
+
+        mImpl = new rx::MockTransformFeedbackImpl;
+        EXPECT_CALL(*mImpl, destructor());
+        mFeedback = new gl::TransformFeedback(mImpl, 1, mCaps);
         mFeedback->addRef();
     }
 
@@ -40,16 +37,17 @@ class TransformFeedbackTest : public testing::Test
         mFeedback->release();
     }
 
-    MockTransformFeedbackImpl* mImpl;
+    rx::MockTransformFeedbackImpl* mImpl;
     gl::TransformFeedback* mFeedback;
+    gl::Caps mCaps;
 };
 
 TEST_F(TransformFeedbackTest, DestructionDeletesImpl)
 {
-    MockTransformFeedbackImpl* impl = new MockTransformFeedbackImpl;
-    EXPECT_CALL(*impl, destroy()).Times(1).RetiresOnSaturation();
+    rx::MockTransformFeedbackImpl* impl = new rx::MockTransformFeedbackImpl;
+    EXPECT_CALL(*impl, destructor()).Times(1).RetiresOnSaturation();
 
-    gl::TransformFeedback* feedback = new gl::TransformFeedback(impl, 1);
+    gl::TransformFeedback* feedback = new gl::TransformFeedback(impl, 1, mCaps);
     feedback->addRef();
     feedback->release();
 
@@ -89,6 +87,43 @@ TEST_F(TransformFeedbackTest, SideEffectsOfPauseAndResume)
     EXPECT_FALSE(mFeedback->isPaused());
     EXPECT_CALL(*mImpl, end());
     mFeedback->end();
+}
+
+TEST_F(TransformFeedbackTest, BufferBinding)
+{
+    rx::MockBufferImpl *bufferImpl = new rx::MockBufferImpl;
+    gl::Buffer *buffer = new gl::Buffer(bufferImpl, 1);
+    EXPECT_CALL(*bufferImpl, destructor()).Times(1).RetiresOnSaturation();
+
+    static const size_t bindIndex = 0;
+
+    rx::MockTransformFeedbackImpl *feedbackImpl = new rx::MockTransformFeedbackImpl;
+    gl::TransformFeedback *feedback = new gl::TransformFeedback(feedbackImpl, 1, mCaps);
+
+    EXPECT_EQ(feedback->getIndexedBufferCount(), mCaps.maxTransformFeedbackSeparateAttributes);
+
+    EXPECT_CALL(*feedbackImpl, bindGenericBuffer(_));
+    feedback->bindGenericBuffer(buffer);
+    EXPECT_EQ(feedback->getGenericBuffer().get(), buffer);
+
+    EXPECT_CALL(*feedbackImpl, bindIndexedBuffer(_, _));
+    feedback->bindIndexedBuffer(bindIndex, buffer, 0, 1);
+    for (size_t i = 0; i < feedback->getIndexedBufferCount(); i++)
+    {
+        if (i == bindIndex)
+        {
+            EXPECT_EQ(feedback->getIndexedBuffer(i).get(), buffer);
+        }
+        else
+        {
+            EXPECT_EQ(feedback->getIndexedBuffer(i).get(), nullptr);
+        }
+    }
+
+    feedback->addRef();
+    feedback->release();
+
+    testing::Mock::VerifyAndClear(bufferImpl);
 }
 
 } // namespace

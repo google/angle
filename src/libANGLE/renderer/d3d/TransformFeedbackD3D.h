@@ -21,10 +21,13 @@ class TransformFeedbackD3D : public TransformFeedbackImpl
     TransformFeedbackD3D();
     virtual ~TransformFeedbackD3D();
 
-    virtual void begin(GLenum primitiveMode);
-    virtual void end();
-    virtual void pause();
-    virtual void resume();
+    void begin(GLenum primitiveMode) override;
+    void end() override;
+    void pause() override;
+    void resume() override;
+
+    void bindGenericBuffer(const BindingPointer<gl::Buffer> &binding) override;
+    void bindIndexedBuffer(size_t index, const OffsetBindingPointer<gl::Buffer> &binding) override;
 };
 
 }

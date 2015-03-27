@@ -120,7 +120,6 @@ void State::initialize(const Caps& caps, GLuint clientVersion)
     }
 
     mUniformBuffers.resize(caps.maxCombinedUniformBlocks);
-    mTransformFeedbackBuffers.resize(caps.maxTransformFeedbackSeparateAttributes);
 
     mSamplerTextures[GL_TEXTURE_2D].resize(caps.maxCombinedTextureImageUnits);
     mSamplerTextures[GL_TEXTURE_CUBE_MAP].resize(caps.maxCombinedTextureImageUnits);
@@ -177,13 +176,7 @@ void State::reset()
     }
 
     mGenericUniformBuffer.set(NULL);
-    mGenericTransformFeedbackBuffer.set(NULL);
     for (BufferVector::iterator bufItr = mUniformBuffers.begin(); bufItr != mUniformBuffers.end(); ++bufItr)
-    {
-        bufItr->set(NULL);
-    }
-
-    for (BufferVector::iterator bufItr = mTransformFeedbackBuffers.begin(); bufItr != mTransformFeedbackBuffers.end(); ++bufItr)
     {
         bufItr->set(NULL);
     }
@@ -956,42 +949,6 @@ GLsizeiptr State::getIndexedUniformBufferSize(GLuint index) const
     return mUniformBuffers[index].getSize();
 }
 
-void State::setGenericTransformFeedbackBufferBinding(Buffer *buffer)
-{
-    mGenericTransformFeedbackBuffer.set(buffer);
-}
-
-void State::setIndexedTransformFeedbackBufferBinding(GLuint index, Buffer *buffer, GLintptr offset, GLsizeiptr size)
-{
-    mTransformFeedbackBuffers[index].set(buffer, offset, size);
-}
-
-GLuint State::getIndexedTransformFeedbackBufferId(GLuint index) const
-{
-    ASSERT(static_cast<size_t>(index) < mTransformFeedbackBuffers.size());
-
-    return mTransformFeedbackBuffers[index].id();
-}
-
-Buffer *State::getIndexedTransformFeedbackBuffer(GLuint index) const
-{
-    ASSERT(static_cast<size_t>(index) < mTransformFeedbackBuffers.size());
-
-    return mTransformFeedbackBuffers[index].get();
-}
-
-GLuint State::getIndexedTransformFeedbackBufferOffset(GLuint index) const
-{
-    ASSERT(static_cast<size_t>(index) < mTransformFeedbackBuffers.size());
-
-    return static_cast<unsigned int>(mTransformFeedbackBuffers[index].getOffset());
-}
-
-size_t State::getTransformFeedbackBufferIndexRange() const
-{
-    return mTransformFeedbackBuffers.size();
-}
-
 void State::setCopyReadBufferBinding(Buffer *buffer)
 {
     mCopyReadBuffer.set(buffer);
@@ -1022,7 +979,7 @@ Buffer *State::getTargetBuffer(GLenum target) const
       case GL_ELEMENT_ARRAY_BUFFER:      return getVertexArray()->getElementArrayBuffer();
       case GL_PIXEL_PACK_BUFFER:         return mPack.pixelBuffer.get();
       case GL_PIXEL_UNPACK_BUFFER:       return mUnpack.pixelBuffer.get();
-      case GL_TRANSFORM_FEEDBACK_BUFFER: return mGenericTransformFeedbackBuffer.get();
+      case GL_TRANSFORM_FEEDBACK_BUFFER: return mTransformFeedback->getGenericBuffer().get();
       case GL_UNIFORM_BUFFER:            return mGenericUniformBuffer.get();
       default: UNREACHABLE();            return NULL;
     }
@@ -1366,7 +1323,7 @@ void State::getIntegerv(const gl::Data &data, GLenum pname, GLint *params)
         *params = mGenericUniformBuffer.id();
         break;
       case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
-        *params = mGenericTransformFeedbackBuffer.id();
+        *params = mTransformFeedback->getGenericBuffer().id();
         break;
       case GL_COPY_READ_BUFFER_BINDING:
         *params = mCopyReadBuffer.id();
@@ -1391,9 +1348,9 @@ bool State::getIndexedIntegerv(GLenum target, GLuint index, GLint *data)
     switch (target)
     {
       case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
-        if (static_cast<size_t>(index) < mTransformFeedbackBuffers.size())
+        if (static_cast<size_t>(index) < mTransformFeedback->getIndexedBufferCount())
         {
-            *data = mTransformFeedbackBuffers[index].id();
+            *data = mTransformFeedback->getIndexedBuffer(index).id();
         }
         break;
       case GL_UNIFORM_BUFFER_BINDING:
@@ -1414,15 +1371,15 @@ bool State::getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data)
     switch (target)
     {
       case GL_TRANSFORM_FEEDBACK_BUFFER_START:
-        if (static_cast<size_t>(index) < mTransformFeedbackBuffers.size())
+        if (static_cast<size_t>(index) < mTransformFeedback->getIndexedBufferCount())
         {
-            *data = mTransformFeedbackBuffers[index].getOffset();
+            *data = mTransformFeedback->getIndexedBuffer(index).getOffset();
         }
         break;
       case GL_TRANSFORM_FEEDBACK_BUFFER_SIZE:
-        if (static_cast<size_t>(index) < mTransformFeedbackBuffers.size())
+        if (static_cast<size_t>(index) < mTransformFeedback->getIndexedBufferCount())
         {
-            *data = mTransformFeedbackBuffers[index].getSize();
+            *data = mTransformFeedback->getIndexedBuffer(index).getSize();
         }
         break;
       case GL_UNIFORM_BUFFER_START:

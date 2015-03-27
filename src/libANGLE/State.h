@@ -203,14 +203,6 @@ class State : angle::NonCopyable
     GLintptr getIndexedUniformBufferOffset(GLuint index) const;
     GLsizeiptr getIndexedUniformBufferSize(GLuint index) const;
 
-    // GL_TRANSFORM_FEEDBACK_BUFFER - Both indexed and generic targets
-    void setGenericTransformFeedbackBufferBinding(Buffer *buffer);
-    void setIndexedTransformFeedbackBufferBinding(GLuint index, Buffer *buffer, GLintptr offset, GLsizeiptr size);
-    GLuint getIndexedTransformFeedbackBufferId(GLuint index) const;
-    Buffer *getIndexedTransformFeedbackBuffer(GLuint index) const;
-    GLuint getIndexedTransformFeedbackBufferOffset(GLuint index) const;
-    size_t getTransformFeedbackBufferIndexRange() const;
-
     // GL_COPY_[READ/WRITE]_BUFFER
     void setCopyReadBufferBinding(Buffer *buffer);
     void setCopyWriteBufferBinding(Buffer *buffer);
@@ -317,8 +309,6 @@ class State : angle::NonCopyable
     BufferVector mUniformBuffers;
 
     BindingPointer<TransformFeedback> mTransformFeedback;
-    BindingPointer<Buffer> mGenericTransformFeedbackBuffer;
-    BufferVector mTransformFeedbackBuffers;
 
     BindingPointer<Buffer> mCopyReadBuffer;
     BindingPointer<Buffer> mCopyWriteBuffer;

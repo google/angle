@@ -194,3 +194,61 @@ TYPED_TEST(TransformFeedbackTest, RecordAndDraw)
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 255,   0,   0, 255);
     EXPECT_GL_NO_ERROR();
 }
+
+// Test that buffer binding happens only on the current transform feedback object
+TYPED_TEST(TransformFeedbackTest, BufferBinding)
+{
+    // Reset any state
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, 0);
+
+    // Generate a new transform feedback and buffer
+    GLuint transformFeedbackObject = 0;
+    glGenTransformFeedbacks(1, &transformFeedbackObject);
+
+    GLuint scratchBuffer = 0;
+    glGenBuffers(1, &scratchBuffer);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Bind TF 0 and a buffer
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Check that the buffer ID matches the one that was just bound
+    GLint currentBufferBinding = 0;
+    glGetIntegerv(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING, &currentBufferBinding);
+    EXPECT_EQ(currentBufferBinding, mTransformFeedbackBuffer);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Check that the buffer ID for the newly bound transform feedback is zero
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedbackObject);
+
+    glGetIntegerv(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING, &currentBufferBinding);
+    EXPECT_EQ(currentBufferBinding, 0);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Bind a buffer to this TF
+    glBindBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, scratchBuffer, 0, 32);
+
+    glGetIntegeri_v(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING, 0, &currentBufferBinding);
+    EXPECT_EQ(scratchBuffer, currentBufferBinding);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Rebind the original TF and check it's bindings
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
+
+    glGetIntegeri_v(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING, 0, &currentBufferBinding);
+    EXPECT_EQ(0, currentBufferBinding);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Clean up
+    glDeleteTransformFeedbacks(1, &transformFeedbackObject);
+    glDeleteBuffers(1, &scratchBuffer);
+}
