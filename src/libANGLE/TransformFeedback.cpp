@@ -12,60 +12,70 @@ namespace gl
 
 TransformFeedback::TransformFeedback(rx::TransformFeedbackImpl* impl, GLuint id)
     : RefCountObject(id),
-      mTransformFeedback(impl),
-      mStarted(GL_FALSE),
+      mImplementation(impl),
+      mActive(false),
       mPrimitiveMode(GL_NONE),
-      mPaused(GL_FALSE)
+      mPaused(false)
 {
     ASSERT(impl != NULL);
 }
 
 TransformFeedback::~TransformFeedback()
 {
-    SafeDelete(mTransformFeedback);
+    SafeDelete(mImplementation);
 }
 
-void TransformFeedback::start(GLenum primitiveMode)
+void TransformFeedback::begin(GLenum primitiveMode)
 {
-    mStarted = GL_TRUE;
+    mActive = true;
     mPrimitiveMode = primitiveMode;
-    mPaused = GL_FALSE;
-    mTransformFeedback->begin(primitiveMode);
+    mPaused = false;
+    mImplementation->begin(primitiveMode);
 }
 
-void TransformFeedback::stop()
+void TransformFeedback::end()
 {
-    mStarted = GL_FALSE;
+    mActive = false;
     mPrimitiveMode = GL_NONE;
-    mPaused = GL_FALSE;
-    mTransformFeedback->end();
-}
-
-GLboolean TransformFeedback::isStarted() const
-{
-    return mStarted;
-}
-
-GLenum TransformFeedback::getDrawMode() const
-{
-    return mPrimitiveMode;
+    mPaused = false;
+    mImplementation->end();
 }
 
 void TransformFeedback::pause()
 {
-    mPaused = GL_TRUE;
-    mTransformFeedback->pause();
+    mPaused = true;
+    mImplementation->pause();
 }
 
 void TransformFeedback::resume()
 {
-    mPaused = GL_FALSE;
-    mTransformFeedback->resume();
+    mPaused = false;
+    mImplementation->resume();
 }
 
-GLboolean TransformFeedback::isPaused() const
+bool TransformFeedback::isActive() const
+{
+    return mActive;
+}
+
+bool TransformFeedback::isPaused() const
 {
     return mPaused;
+}
+
+GLenum TransformFeedback::getPrimitiveMode() const
+{
+    return mPrimitiveMode;
+}
+
+rx::TransformFeedbackImpl *TransformFeedback::getImplementation()
+{
+    return mImplementation;
+}
+
+const rx::TransformFeedbackImpl *TransformFeedback::getImplementation() const
+{
+    return mImplementation;
 }
 
 }

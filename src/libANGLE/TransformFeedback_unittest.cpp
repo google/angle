@@ -63,32 +63,32 @@ TEST_F(TransformFeedbackTest, SideEffectsOfStartAndStop)
 {
     testing::InSequence seq;
 
-    EXPECT_EQ(GL_FALSE, mFeedback->isStarted());
+    EXPECT_FALSE(mFeedback->isActive());
     EXPECT_CALL(*mImpl, begin(GL_TRIANGLES));
-    mFeedback->start(GL_TRIANGLES);
-    EXPECT_EQ(GL_TRUE, mFeedback->isStarted());
-    EXPECT_EQ(static_cast<GLenum>(GL_TRIANGLES), mFeedback->getDrawMode());
+    mFeedback->begin(GL_TRIANGLES);
+    EXPECT_TRUE(mFeedback->isActive());
+    EXPECT_EQ(static_cast<GLenum>(GL_TRIANGLES), mFeedback->getPrimitiveMode());
     EXPECT_CALL(*mImpl, end());
-    mFeedback->stop();
-    EXPECT_EQ(GL_FALSE, mFeedback->isStarted());
+    mFeedback->end();
+    EXPECT_FALSE(mFeedback->isActive());
 }
 
 TEST_F(TransformFeedbackTest, SideEffectsOfPauseAndResume)
 {
     testing::InSequence seq;
 
-    EXPECT_FALSE(mFeedback->isStarted());
+    EXPECT_FALSE(mFeedback->isActive());
     EXPECT_CALL(*mImpl, begin(GL_TRIANGLES));
-    mFeedback->start(GL_TRIANGLES);
-    EXPECT_EQ(GL_FALSE, mFeedback->isPaused());
+    mFeedback->begin(GL_TRIANGLES);
+    EXPECT_FALSE(mFeedback->isPaused());
     EXPECT_CALL(*mImpl, pause());
     mFeedback->pause();
-    EXPECT_EQ(GL_TRUE, mFeedback->isPaused());
+    EXPECT_TRUE(mFeedback->isPaused());
     EXPECT_CALL(*mImpl, resume());
     mFeedback->resume();
-    EXPECT_EQ(GL_FALSE, mFeedback->isPaused());
+    EXPECT_FALSE(mFeedback->isPaused());
     EXPECT_CALL(*mImpl, end());
-    mFeedback->stop();
+    mFeedback->end();
 }
 
 } // namespace

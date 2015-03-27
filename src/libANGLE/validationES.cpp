@@ -1488,8 +1488,8 @@ bool ValidateDrawArrays(Context *context, GLenum mode, GLint first, GLsizei coun
 
     const State &state = context->getState();
     gl::TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
-    if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused() &&
-        curTransformFeedback->getDrawMode() != mode)
+    if (curTransformFeedback && curTransformFeedback->isActive() && !curTransformFeedback->isPaused() &&
+        curTransformFeedback->getPrimitiveMode() != mode)
     {
         // It is an invalid operation to call DrawArrays or DrawArraysInstanced with a draw mode
         // that does not match the current transform feedback object's draw mode (if transform feedback
@@ -1579,7 +1579,7 @@ bool ValidateDrawElements(Context *context, GLenum mode, GLsizei count, GLenum t
     const State &state = context->getState();
 
     gl::TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
-    if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused())
+    if (curTransformFeedback && curTransformFeedback->isActive() && !curTransformFeedback->isPaused())
     {
         // It is an invalid operation to call DrawElements, DrawRangeElements or DrawElementsInstanced
         // while transform feedback is active, (3.0.2, section 2.14, pg 86)

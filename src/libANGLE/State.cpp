@@ -851,7 +851,7 @@ TransformFeedback *State::getCurrentTransformFeedback() const
 bool State::isTransformFeedbackActiveUnpaused() const
 {
     gl::TransformFeedback *curTransformFeedback = getCurrentTransformFeedback();
-    return curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused();
+    return curTransformFeedback && curTransformFeedback->isActive() && !curTransformFeedback->isPaused();
 }
 
 void State::detachTransformFeedback(GLuint transformFeedback)
@@ -1149,8 +1149,8 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
       case GL_DEPTH_TEST:                *params = mDepthStencil.depthTest;       break;
       case GL_BLEND:                     *params = mBlend.blend;                  break;
       case GL_DITHER:                    *params = mBlend.dither;                 break;
-      case GL_TRANSFORM_FEEDBACK_ACTIVE: *params = getCurrentTransformFeedback()->isStarted(); break;
-      case GL_TRANSFORM_FEEDBACK_PAUSED: *params = getCurrentTransformFeedback()->isPaused();  break;
+      case GL_TRANSFORM_FEEDBACK_ACTIVE: *params = getCurrentTransformFeedback()->isActive() ? GL_TRUE : GL_FALSE; break;
+      case GL_TRANSFORM_FEEDBACK_PAUSED: *params = getCurrentTransformFeedback()->isPaused() ? GL_TRUE : GL_FALSE; break;
       default:
         UNREACHABLE();
         break;
