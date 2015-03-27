@@ -22,6 +22,30 @@
       "revId": "a4cbcfb693061361499ece751cfb8c5164e58971",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43d246e8_eec2f135",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-27T17:52:29Z",
+      "side": 1,
+      "message": "I didn\u0027t look, we shouldn\u0027t remove them though since it would break the class if the generated ones were used.",
+      "parentUuid": "43d246e8_28d551e2",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 37
+      },
+      "revId": "a4cbcfb693061361499ece751cfb8c5164e58971",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
