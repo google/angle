@@ -20,7 +20,8 @@ BufferD3D::BufferD3D(BufferFactoryD3D *factory)
     : BufferImpl(),
       mFactory(factory),
       mStaticVertexBuffer(nullptr),
-      mStaticIndexBuffer(nullptr)
+      mStaticIndexBuffer(nullptr),
+      mUnmodifiedDataUse(0)
 {
     updateSerial();
 }
