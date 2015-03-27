@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63758ab8_c61fa7e1",
+        "filename": "extensions/EGL_EXT_device_query.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-27T19:46:52Z",
+      "side": 1,
+      "message": "added missing function in this section",
+      "range": {
+        "startLine": 70,
+        "startChar": 1,
+        "endLine": 71,
+        "endChar": 53
+      },
+      "revId": "6f7329d70b703550b7eb822b19987fd3e7f89124",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
