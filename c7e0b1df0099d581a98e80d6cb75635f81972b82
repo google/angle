@@ -22,6 +22,30 @@
       "revId": "c7e0b1df0099d581a98e80d6cb75635f81972b82",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63a3ca80_4931851f",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-27T15:18:39Z",
+      "side": 1,
+      "message": "Thanks for noticing, I pushed the logic down to Buffer11.",
+      "parentUuid": "2362b2ee_d8b0b9d1",
+      "range": {
+        "startLine": 866,
+        "startChar": 34,
+        "endLine": 866,
+        "endChar": 40
+      },
+      "revId": "c7e0b1df0099d581a98e80d6cb75635f81972b82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
