@@ -11,11 +11,10 @@
 #define PERF_TESTS_ANGLE_PERF_TEST_H_
 
 #include <gtest/gtest.h>
-#include <memory>
+#include <string>
 #include <vector>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
-#include <string>
 
 #include "EGLWindow.h"
 #include "OSWindow.h"
@@ -28,7 +27,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
 {
   public:
     ANGLEPerfTest(const std::string &name, const std::string &suffix);
-    virtual ~ANGLEPerfTest() { };
+    virtual ~ANGLEPerfTest();
 
     virtual void step(float dt, double totalTime) = 0;
 
@@ -43,7 +42,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     std::string mSuffix;
 
     bool mRunning;
-    std::unique_ptr<Timer> mTimer;
+    Timer *mTimer;
     int mNumFrames;
 };
 
@@ -62,6 +61,7 @@ class ANGLERenderTest : public ANGLEPerfTest
 {
   public:
     ANGLERenderTest(const std::string &name, const RenderTestParams &testParams);
+    ~ANGLERenderTest();
 
     virtual bool initializeBenchmark() { return true; }
     virtual void destroyBenchmark() { }
@@ -88,8 +88,8 @@ class ANGLERenderTest : public ANGLEPerfTest
     void step(float dt, double totalTime) override;
     void draw();
 
-    std::unique_ptr<EGLWindow> mEGLWindow;
-    std::unique_ptr<OSWindow> mOSWindow;
+    EGLWindow *mEGLWindow;
+    OSWindow *mOSWindow;
 };
 
 #endif // PERF_TESTS_ANGLE_PERF_TEST_H_

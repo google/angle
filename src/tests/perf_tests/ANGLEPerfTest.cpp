@@ -15,9 +15,15 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name, const std::string &suffix)
     : mName(name),
       mSuffix(suffix),
       mRunning(false),
+      mTimer(nullptr),
       mNumFrames(0)
 {
-    mTimer.reset(CreateTimer());
+    mTimer = CreateTimer();
+}
+
+ANGLEPerfTest::~ANGLEPerfTest()
+{
+    SafeDelete(mTimer);
 }
 
 void ANGLEPerfTest::run()
@@ -81,8 +87,16 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams
     : ANGLEPerfTest(name, testParams.suffix()),
       mTestParams(testParams),
       mDrawIterations(10),
-      mRunTimeSeconds(5.0)
+      mRunTimeSeconds(5.0),
+      mEGLWindow(nullptr),
+      mOSWindow(nullptr)
 {
+}
+
+ANGLERenderTest::~ANGLERenderTest()
+{
+    SafeDelete(mOSWindow);
+    SafeDelete(mEGLWindow);
 }
 
 void ANGLERenderTest::SetUp()
@@ -92,11 +106,11 @@ void ANGLERenderTest::SetUp()
                                          EGL_DONT_CARE,
                                          mTestParams.deviceType);
 
-    mOSWindow.reset(CreateOSWindow());
-    mEGLWindow.reset(new EGLWindow(mTestParams.widowWidth,
-                                   mTestParams.windowHeight,
-                                   mTestParams.glesMajorVersion,
-                                   platformParams));
+    mOSWindow = CreateOSWindow();
+    mEGLWindow = new EGLWindow(mTestParams.widowWidth,
+                               mTestParams.windowHeight,
+                               mTestParams.glesMajorVersion,
+                               platformParams);
     mEGLWindow->setSwapInterval(0);
 
     if (!mOSWindow->initialize(mName, mEGLWindow->getWidth(), mEGLWindow->getHeight()))
@@ -105,7 +119,7 @@ void ANGLERenderTest::SetUp()
         return;
     }
 
-    if (!mEGLWindow->initializeGL(mOSWindow.get()))
+    if (!mEGLWindow->initializeGL(mOSWindow))
     {
         FAIL() << "Failed initializing EGLWindow";
         return;
@@ -180,5 +194,5 @@ bool ANGLERenderTest::popEvent(Event *event)
 
 OSWindow *ANGLERenderTest::getWindow()
 {
-    return mOSWindow.get();
+    return mOSWindow;
 }
