@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43d246e8_8b8a3aae",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-27T14:23:20Z",
+      "side": 1,
+      "message": "\"also discontinuous\"",
+      "range": {
+        "startLine": 202,
+        "startChar": 74,
+        "endLine": 202,
+        "endChar": 77
+      },
+      "revId": "d7e205f16f4b37bb4e414bae138d0090a1dd7f1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63758ab8_72969127",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-27T14:23:20Z",
+      "side": 1,
+      "message": "nit: space before \u003e",
+      "range": {
+        "startLine": 203,
+        "startChar": 70,
+        "endLine": 203,
+        "endChar": 71
+      },
+      "revId": "d7e205f16f4b37bb4e414bae138d0090a1dd7f1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43d246e8_2b530ec3",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-27T14:23:20Z",
+      "side": 1,
+      "message": "nit: on newline",
+      "range": {
+        "startLine": 254,
+        "startChar": 84,
+        "endLine": 254,
+        "endChar": 85
+      },
+      "revId": "d7e205f16f4b37bb4e414bae138d0090a1dd7f1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63a3ca80_468f347f",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-27T14:23:20Z",
+      "side": 1,
+      "message": "nit: remove space",
+      "range": {
+        "startLine": 299,
+        "startChar": 26,
+        "endLine": 299,
+        "endChar": 27
+      },
+      "revId": "d7e205f16f4b37bb4e414bae138d0090a1dd7f1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43d246e8_6bc276d7",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-27T14:23:20Z",
+      "side": 1,
+      "message": "nit: remove space",
+      "range": {
+        "startLine": 303,
+        "startChar": 26,
+        "endLine": 303,
+        "endChar": 27
+      },
+      "revId": "d7e205f16f4b37bb4e414bae138d0090a1dd7f1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
