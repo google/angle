@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63a3ca80_c99815f6",
+        "filename": "src/libANGLE/Buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-27T16:46:20Z",
+      "side": 1,
+      "message": "careful here. This will return a GLenum value for GL_BUFFER_ACCESS_FLAGS, when the OES spec specifies queries for GL_BUFFER_ACCESS_OES (0x88BB), which it seems we don\u0027t currently support. I\u0027d suggest you either fix the support for the queries, or open an issue to fix it and use the bits value (or zero) here. (I checked with the desktop spec, and it uses the equivalent bits value)",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 91,
+        "endChar": 46
+      },
+      "revId": "6977a305879bdd114942939a5dd2f25301b6a204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
