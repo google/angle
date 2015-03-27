@@ -21,7 +21,7 @@
 #include <cstdint>
 #include <memory>
 
-#include "shared_utils.h"
+#include "common/angleutils.h"
 
 class OSWindow;
 

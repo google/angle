@@ -20,7 +20,7 @@
 #include "EGLWindow.h"
 #include "OSWindow.h"
 #include "Timer.h"
-#include "shared_utils.h"
+#include "common/angleutils.h"
 
 class Event;
 
