@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63caea3a_d440b214",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-30T14:58:52Z",
+      "side": 1,
+      "message": "It doesn\u0027t seem like this #include is actually needed here - all that\u0027s being handled is pointers.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 46
+      },
+      "revId": "941ccad542617767f97518a922be6120d56b1555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63caea3a_b43726ae",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-30T14:58:52Z",
+      "side": 1,
+      "message": "Including Renderer.h seems to have changed to including RendererD3D.h here without any clear reason why.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 46
+      },
+      "revId": "941ccad542617767f97518a922be6120d56b1555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
