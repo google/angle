@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03dccefb_b771670c",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2374,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-30T17:35:18Z",
+      "side": 1,
+      "message": "nit: align with mInside",
+      "range": {
+        "startLine": 2374,
+        "startChar": 0,
+        "endLine": 2374,
+        "endChar": 12
+      },
+      "revId": "70a92bf4001255ddefa04b4015dc17ddfaefc52c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
