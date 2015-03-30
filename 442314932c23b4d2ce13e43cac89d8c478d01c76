@@ -131,6 +131,24 @@
     },
     {
       "key": {
+        "uuid": "8366fe34_57468e81",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-30T14:20:49Z",
+      "side": 1,
+      "message": "No, that sounds fine.",
+      "parentUuid": "8366fe34_976e66f8",
+      "revId": "442314932c23b4d2ce13e43cac89d8c478d01c76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43d246e8_cb37e28f",
         "filename": "src/compiler/translator/OutputHLSL.h",
         "patchSetId": 7
