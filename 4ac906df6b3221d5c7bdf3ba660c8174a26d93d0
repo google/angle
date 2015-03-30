@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83cfde46_357d7231",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-30T15:18:54Z",
+      "side": 1,
+      "message": "This function has a lot in common with ANGLERenderTest::run(). Wouldn\u0027t it be better to have the shared logic only in one place? Or does a couple of additional virtual function calls inside the loop skew the results of some benchmarks too much?",
+      "revId": "4ac906df6b3221d5c7bdf3ba660c8174a26d93d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
