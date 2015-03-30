@@ -14,7 +14,6 @@
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/VertexAttribute.h"
-#include "libANGLE/VertexArray.h"
 #include "libANGLE/State.h"
 
 namespace
@@ -86,13 +85,13 @@ VertexDataManager::~VertexDataManager()
     }
 }
 
-void VertexDataManager::hintUnmapAllResources(const std::vector<gl::VertexAttribute> &vertexAttributes)
+void VertexDataManager::hintUnmapAllResources(const gl::State &state)
 {
     mStreamingBuffer->getVertexBuffer()->hintUnmapResource();
 
-    for (int i = 0; i < vertexAttributes.size(); i++)
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        const gl::VertexAttribute &attrib = vertexAttributes[i];
+        const gl::VertexAttribute &attrib = state.getVertexAttribState(i);
         if (attrib.enabled)
         {
             gl::Buffer *buffer = attrib.buffer.get();
@@ -123,25 +122,25 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
         return gl::Error(GL_OUT_OF_MEMORY, "Internal streaming vertex buffer is unexpectedly NULL.");
     }
 
-    const gl::VertexArray *vertexArray = state.getVertexArray();
-    const std::vector<gl::VertexAttribute> &vertexAttributes = vertexArray->getVertexAttributes();
-
     // Invalidate static buffers that don't contain matching attributes
     for (int attributeIndex = 0; attributeIndex < gl::MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
         translated[attributeIndex].active = (state.getProgram()->getSemanticIndex(attributeIndex) != -1);
-        if (translated[attributeIndex].active && vertexAttributes[attributeIndex].enabled)
+        const gl::VertexAttribute &curAttrib = state.getVertexAttribState(attributeIndex);
+
+        if (translated[attributeIndex].active && curAttrib.enabled)
         {
-            invalidateMatchingStaticData(vertexAttributes[attributeIndex], state.getVertexAttribCurrentValue(attributeIndex));
+            invalidateMatchingStaticData(curAttrib, state.getVertexAttribCurrentValue(attributeIndex));
         }
     }
 
     // Reserve the required space in the buffers
     for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        if (translated[i].active && vertexAttributes[i].enabled)
+        const gl::VertexAttribute &curAttrib = state.getVertexAttribState(i);
+        if (translated[i].active && curAttrib.enabled)
         {
-            gl::Error error = reserveSpaceForAttrib(vertexAttributes[i], state.getVertexAttribCurrentValue(i), count, instances);
+            gl::Error error = reserveSpaceForAttrib(curAttrib, state.getVertexAttribCurrentValue(i), count, instances);
             if (error.isError())
             {
                 return error;
@@ -152,7 +151,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
     // Perform the vertex data translations
     for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        const gl::VertexAttribute &curAttrib = vertexAttributes[i];
+        const gl::VertexAttribute &curAttrib = state.getVertexAttribState(i);
         if (translated[i].active)
         {
             if (curAttrib.enabled)
@@ -162,7 +161,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
 
                 if (error.isError())
                 {
-                    hintUnmapAllResources(vertexAttributes);
+                    hintUnmapAllResources(state);
                     return error;
                 }
             }
@@ -178,7 +177,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
                                                     mCurrentValueBuffer[i]);
                 if (error.isError())
                 {
-                    hintUnmapAllResources(vertexAttributes);
+                    hintUnmapAllResources(state);
                     return error;
                 }
             }
@@ -186,11 +185,11 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
     }
 
     // Hint to unmap all the resources
-    hintUnmapAllResources(vertexAttributes);
+    hintUnmapAllResources(state);
 
     for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        const gl::VertexAttribute &curAttrib = vertexAttributes[i];
+        const gl::VertexAttribute &curAttrib = state.getVertexAttribState(i);
         if (translated[i].active && curAttrib.enabled)
         {
             gl::Buffer *buffer = curAttrib.buffer.get();

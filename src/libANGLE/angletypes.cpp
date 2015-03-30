@@ -190,8 +190,8 @@ void VertexFormat::GetInputLayout(VertexFormat *inputLayout,
                                   Program *program,
                                   const State &state)
 {
-    const std::vector<VertexAttribute> &vertexAttributes = state.getVertexArray()->getVertexAttributes();
-    for (unsigned int attributeIndex = 0; attributeIndex < vertexAttributes.size(); attributeIndex++)
+    const VertexAttribute *vertexAttributes = state.getVertexArray()->getVertexAttributes();
+    for (unsigned int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
         int semanticIndex = program->getSemanticIndex(attributeIndex);
 
