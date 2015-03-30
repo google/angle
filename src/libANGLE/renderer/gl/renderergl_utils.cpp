@@ -68,7 +68,7 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
 
     // Table 6.31, implementation dependent vertex shader limits
     caps->maxVertexAttributes = 16;
-    caps->maxVertexUniformVectors = 1024;
+    caps->maxVertexUniformComponents = 1024;
     caps->maxVertexUniformVectors = 256;
     caps->maxVertexUniformBlocks = 12;
     caps->maxVertexOutputComponents = 64;
