@@ -7,6 +7,7 @@
 #include "compiler/translator/TranslatorHLSL.h"
 
 #include "compiler/translator/OutputHLSL.h"
+#include "compiler/translator/SimplifyArrayAssignment.h"
 
 TranslatorHLSL::TranslatorHLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
     : TCompiler(type, spec, output)
@@ -17,6 +18,9 @@ void TranslatorHLSL::translate(TIntermNode *root, int compileOptions)
 {
     const ShBuiltInResources &resources = getResources();
     int numRenderTargets = resources.EXT_draw_buffers ? resources.MaxDrawBuffers : 1;
+
+    SimplifyArrayAssignment simplify;
+    root->traverse(&simplify);
 
     sh::OutputHLSL outputHLSL(getShaderType(), getShaderVersion(), getExtensionBehavior(),
         getSourcePath(), getOutputType(), numRenderTargets, getUniforms(), compileOptions);
