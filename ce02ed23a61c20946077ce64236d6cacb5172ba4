@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8366fe34_37f31273",
+        "filename": "util/testfixturetypes.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-30T15:30:00Z",
+      "side": 1,
+      "message": "nit: might as well add the WARP version too.",
+      "revId": "ce02ed23a61c20946077ce64236d6cacb5172ba4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
