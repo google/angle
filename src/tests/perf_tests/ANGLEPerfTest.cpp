@@ -62,7 +62,7 @@ void ANGLEPerfTest::TearDown()
     double totalTime = mTimer->getElapsedTime();
     double averageTime = 1000.0 * totalTime / static_cast<double>(mNumFrames);
 
-    printResult("total_time", totalTime, "s", true);
+    printResult("total_time", totalTime, "s", false);
     printResult("frames", static_cast<size_t>(mNumFrames), "frames", true);
     printResult("average_time", averageTime, "ms", true);
 }
@@ -97,6 +97,7 @@ void ANGLERenderTest::SetUp()
                                    mTestParams.windowHeight,
                                    mTestParams.glesMajorVersion,
                                    platformParams));
+    mEGLWindow->setSwapInterval(0);
 
     if (!mOSWindow->initialize(mName, mEGLWindow->getWidth(), mEGLWindow->getHeight()))
     {
