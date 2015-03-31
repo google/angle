@@ -14,7 +14,7 @@
 #include "angle_gl.h"
 #include <algorithm>
 
-#include "common/angleutils.h"
+#include "shared_utils.h"
 #include "shader_utils.h"
 
 #include "testfixturetypes.h"

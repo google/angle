@@ -15,18 +15,13 @@
                     'includes': [ '../build/common_defines.gypi', ],
                     'dependencies':
                     [
-                        '<(angle_path)/src/angle.gyp:angle_common',
-                        '<(angle_path)/src/angle.gyp:libEGL',
-                        '<(angle_path)/src/angle.gyp:libGLESv2',
-                    ],
-                    'export_dependent_settings':
-                    [
-                        '<(angle_path)/src/angle.gyp:angle_common',
+                        '../src/angle.gyp:libEGL',
+                        '../src/angle.gyp:libGLESv2',
                     ],
                     'include_dirs':
                     [
-                        '<(angle_path)/include',
-                        '<(angle_path)/util',
+                        '../include',
+                        '.',
                     ],
                     'sources':
                     [
@@ -37,6 +32,7 @@
                         'random_utils.h',
                         'shader_utils.cpp',
                         'shader_utils.h',
+                        'shared_utils.h',
                         'testfixturetypes.h',
                         'EGLWindow.cpp',
                         'EGLWindow.h',
@@ -55,8 +51,7 @@
                     {
                         'include_dirs':
                         [
-                            '<(angle_path)/include',
-                            '<(angle_path)/util',
+                            '.',
                         ],
                     },
                 },

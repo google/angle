@@ -52,17 +52,13 @@
                     'includes': [ '../build/common_defines.gypi', ],
                     'dependencies':
                     [
-                        '<(angle_path)/src/angle.gyp:libEGL',
-                        '<(angle_path)/src/angle.gyp:libGLESv2',
-                        '<(angle_path)/util/util.gyp:angle_util',
-                    ],
-                    'export_dependent_settings':
-                    [
-                        '<(angle_path)/util/util.gyp:angle_util',
+                        '../src/angle.gyp:libEGL',
+                        '../src/angle.gyp:libGLESv2',
+                        '../util/util.gyp:angle_util',
                     ],
                     'include_dirs':
                     [
-                        '<(angle_path)/include',
+                        '../include',
                         'angle/sample_util',
                     ],
                     'sources':
@@ -75,7 +71,9 @@
                         'msvs_disabled_warnings': [ 4201 ],
                         'include_dirs':
                         [
+                            '../include',
                             'angle/sample_util',
+                            '../util',
                         ],
                     },
                 },
