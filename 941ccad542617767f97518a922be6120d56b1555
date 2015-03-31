@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a315c284_4e7f2265",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-31T14:01:54Z",
+      "side": 1,
+      "message": "Done. Was a relic of an intermediate step.",
+      "parentUuid": "63caea3a_d440b214",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 46
+      },
+      "revId": "941ccad542617767f97518a922be6120d56b1555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63caea3a_b43726ae",
         "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-03-30T14:58:52Z",
       "side": 1,
       "message": "Including Renderer.h seems to have changed to including RendererD3D.h here without any clear reason why.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 46
+      },
+      "revId": "941ccad542617767f97518a922be6120d56b1555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a315c284_8e791a80",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-31T14:01:54Z",
+      "side": 1,
+      "message": "It was to capture the inheritance between RendererD3D and BufferFactoryD3D. I changed VDM to take BufferFactoryD3D and removed the include.",
+      "parentUuid": "63caea3a_b43726ae",
       "range": {
         "startLine": 17,
         "startChar": 0,
