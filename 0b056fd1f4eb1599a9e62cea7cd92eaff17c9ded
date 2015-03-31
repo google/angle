@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a315c284_6e83fe50",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3094,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-31T15:28:26Z",
+      "side": 1,
+      "message": "can you an an assert to validate nonArrayType is not an array?",
+      "revId": "0b056fd1f4eb1599a9e62cea7cd92eaff17c9ded",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
