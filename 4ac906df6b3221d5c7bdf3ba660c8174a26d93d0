@@ -16,6 +16,24 @@
       "revId": "4ac906df6b3221d5c7bdf3ba660c8174a26d93d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83143e89_190737a0",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-03-31T14:02:03Z",
+      "side": 1,
+      "message": "Yeah, I agree it could be a lot smarter. I merged it with the step() method.",
+      "parentUuid": "83cfde46_357d7231",
+      "revId": "4ac906df6b3221d5c7bdf3ba660c8174a26d93d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
