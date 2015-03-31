@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a3ece2ce_13b1d4f7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-31T15:50:17Z",
+      "side": 1,
+      "message": "Yep, only array assignment, I\u0027ll clarify the commit message.",
+      "parentUuid": "83143e89_cb15c6c6",
+      "range": {
+        "startLine": 10,
+        "startChar": 9,
+        "endLine": 10,
+        "endChar": 19
+      },
+      "revId": "81e69e7f9e6282a4ae6f2ad5f3c86ea66d1214d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "630f4a79_98020109",
         "filename": "src/compiler/translator/SimplifyArrayAssignment.h",
         "patchSetId": 2
