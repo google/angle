@@ -16,6 +16,24 @@
       "revId": "0b056fd1f4eb1599a9e62cea7cd92eaff17c9ded",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3ece2ce_b35a8052",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3094,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-31T15:46:38Z",
+      "side": 1,
+      "message": "Actually, I don\u0027t think it\u0027s needed in this function... another relic from copy-pasting code around. I\u0027ll fix this.",
+      "parentUuid": "a315c284_6e83fe50",
+      "revId": "0b056fd1f4eb1599a9e62cea7cd92eaff17c9ded",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
