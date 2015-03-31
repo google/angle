@@ -496,7 +496,7 @@ void Renderer11::initializeDevice()
 
     ASSERT(!mVertexDataManager && !mIndexDataManager);
     mVertexDataManager = new VertexDataManager(this);
-    mIndexDataManager = new IndexDataManager(this);
+    mIndexDataManager = new IndexDataManager(this, getRendererClass());
 
     ASSERT(!mBlit);
     mBlit = new Blit11(this);

@@ -13,7 +13,7 @@ namespace rx
 {
 
 Buffer9::Buffer9(Renderer9 *renderer)
-    : BufferD3D(),
+    : BufferD3D(renderer),
       mRenderer(renderer),
       mSize(0)
 {}
@@ -111,11 +111,6 @@ gl::Error Buffer9::unmap()
 void Buffer9::markTransformFeedbackUsage()
 {
     UNREACHABLE();
-}
-
-RendererD3D *Buffer9::getRenderer()
-{
-    return mRenderer;
 }
 
 }

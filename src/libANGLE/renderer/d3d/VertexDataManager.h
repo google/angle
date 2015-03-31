@@ -24,9 +24,9 @@ struct VertexAttribCurrentValueData;
 namespace rx
 {
 class BufferD3D;
+class BufferFactoryD3D;
 class StreamingVertexBufferInterface;
 class VertexBuffer;
-class RendererD3D;
 
 struct TranslatedAttribute
 {
@@ -49,7 +49,7 @@ struct TranslatedAttribute
 class VertexDataManager
 {
   public:
-    VertexDataManager(RendererD3D *renderer);
+    VertexDataManager(BufferFactoryD3D *factory);
     virtual ~VertexDataManager();
 
     gl::Error prepareVertexData(const gl::State &state, GLint start, GLsizei count,
@@ -82,7 +82,7 @@ class VertexDataManager
 
     void hintUnmapAllResources(const std::vector<gl::VertexAttribute> &vertexAttributes);
 
-    RendererD3D *const mRenderer;
+    BufferFactoryD3D *const mFactory;
 
     StreamingVertexBufferInterface *mStreamingBuffer;
 

@@ -16,7 +16,7 @@
 
 namespace rx
 {
-class RendererD3D;
+class BufferFactoryD3D;
 
 class IndexBuffer
 {
@@ -50,7 +50,7 @@ class IndexBuffer
 class IndexBufferInterface
 {
   public:
-    IndexBufferInterface(RendererD3D *renderer, bool dynamic);
+    IndexBufferInterface(BufferFactoryD3D *factory, bool dynamic);
     virtual ~IndexBufferInterface();
 
     virtual gl::Error reserveBufferSpace(unsigned int size, GLenum indexType) = 0;
@@ -76,9 +76,7 @@ class IndexBufferInterface
   private:
     DISALLOW_COPY_AND_ASSIGN(IndexBufferInterface);
 
-    RendererD3D *const mRenderer;
-
-    IndexBuffer* mIndexBuffer;
+    IndexBuffer *mIndexBuffer;
 
     unsigned int mWritePosition;
     bool mDynamic;
@@ -87,19 +85,23 @@ class IndexBufferInterface
 class StreamingIndexBufferInterface : public IndexBufferInterface
 {
   public:
-    StreamingIndexBufferInterface(RendererD3D *renderer);
+    explicit StreamingIndexBufferInterface(BufferFactoryD3D *factory);
     ~StreamingIndexBufferInterface();
 
-    virtual gl::Error reserveBufferSpace(unsigned int size, GLenum indexType);
+    gl::Error reserveBufferSpace(unsigned int size, GLenum indexType) override;
+
+    DISALLOW_COPY_AND_ASSIGN(StreamingIndexBufferInterface);
 };
 
 class StaticIndexBufferInterface : public IndexBufferInterface
 {
   public:
-    explicit StaticIndexBufferInterface(RendererD3D *renderer);
+    explicit StaticIndexBufferInterface(BufferFactoryD3D *factory);
     ~StaticIndexBufferInterface();
 
-    virtual gl::Error reserveBufferSpace(unsigned int size, GLenum indexType);
+    gl::Error reserveBufferSpace(unsigned int size, GLenum indexType) override;
+
+    DISALLOW_COPY_AND_ASSIGN(StaticIndexBufferInterface);
 };
 
 }

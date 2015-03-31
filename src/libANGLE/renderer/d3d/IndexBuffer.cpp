@@ -35,9 +35,9 @@ void IndexBuffer::updateSerial()
 }
 
 
-IndexBufferInterface::IndexBufferInterface(RendererD3D *renderer, bool dynamic) : mRenderer(renderer)
+IndexBufferInterface::IndexBufferInterface(BufferFactoryD3D *factory, bool dynamic)
 {
-    mIndexBuffer = renderer->createIndexBuffer();
+    mIndexBuffer = factory->createIndexBuffer();
 
     mDynamic = dynamic;
     mWritePosition = 0;
@@ -66,7 +66,7 @@ unsigned int IndexBufferInterface::getSerial() const
     return mIndexBuffer->getSerial();
 }
 
-gl::Error IndexBufferInterface::mapBuffer(unsigned int size, void** outMappedMemory, unsigned int *streamOffset)
+gl::Error IndexBufferInterface::mapBuffer(unsigned int size, void **outMappedMemory, unsigned int *streamOffset)
 {
     // Protect against integer overflow
     if (mWritePosition + size < mWritePosition)
@@ -130,7 +130,8 @@ gl::Error IndexBufferInterface::setBufferSize(unsigned int bufferSize, GLenum in
     }
 }
 
-StreamingIndexBufferInterface::StreamingIndexBufferInterface(RendererD3D *renderer) : IndexBufferInterface(renderer, true)
+StreamingIndexBufferInterface::StreamingIndexBufferInterface(BufferFactoryD3D *factory)
+    : IndexBufferInterface(factory, true)
 {
 }
 
@@ -165,7 +166,8 @@ gl::Error StreamingIndexBufferInterface::reserveBufferSpace(unsigned int size, G
 }
 
 
-StaticIndexBufferInterface::StaticIndexBufferInterface(RendererD3D *renderer) : IndexBufferInterface(renderer, false)
+StaticIndexBufferInterface::StaticIndexBufferInterface(BufferFactoryD3D *factory)
+    : IndexBufferInterface(factory, false)
 {
 }
 

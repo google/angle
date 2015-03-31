@@ -54,7 +54,24 @@ enum RendererClass
     RENDERER_D3D9,
 };
 
-class RendererD3D : public Renderer
+// Useful for unit testing
+class BufferFactoryD3D
+{
+  public:
+    BufferFactoryD3D() {}
+    virtual ~BufferFactoryD3D() {}
+
+    virtual VertexBuffer *createVertexBuffer() = 0;
+    virtual IndexBuffer *createIndexBuffer() = 0;
+
+    // TODO(jmadill): add VertexFormatCaps
+    virtual VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const = 0;
+    virtual GLenum getVertexComponentType(const gl::VertexFormat &vertexFormat) const = 0;
+
+    DISALLOW_COPY_AND_ASSIGN(BufferFactoryD3D);
+};
+
+class RendererD3D : public Renderer, public BufferFactoryD3D
 {
   public:
     explicit RendererD3D(egl::Display *display);
@@ -160,12 +177,6 @@ class RendererD3D : public Renderer
     virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const = 0;
     virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea) = 0;
-
-    virtual VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const = 0;
-    virtual GLenum getVertexComponentType(const gl::VertexFormat &vertexFormat) const = 0;
-
-    virtual VertexBuffer *createVertexBuffer() = 0;
-    virtual IndexBuffer *createIndexBuffer() = 0;
 
     // Device lost
     void notifyDeviceLost() override;

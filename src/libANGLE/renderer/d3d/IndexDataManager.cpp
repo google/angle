@@ -10,7 +10,6 @@
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexBuffer.h"
-#include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/formatutils.h"
 
@@ -56,10 +55,11 @@ static void ConvertIndices(GLenum sourceType, GLenum destinationType, const void
     else UNREACHABLE();
 }
 
-IndexDataManager::IndexDataManager(RendererD3D *renderer)
-    : mRenderer(renderer),
-      mStreamingBufferShort(NULL),
-      mStreamingBufferInt(NULL)
+IndexDataManager::IndexDataManager(BufferFactoryD3D *factory, RendererClass rendererClass)
+    : mFactory(factory),
+      mRendererClass(rendererClass),
+      mStreamingBufferShort(nullptr),
+      mStreamingBufferInt(nullptr)
 {
 }
 
@@ -128,7 +128,7 @@ gl::Error IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buf
 
     // Avoid D3D11's primitive restart index value
     // see http://msdn.microsoft.com/en-us/library/windows/desktop/bb205124(v=vs.85).aspx
-    if (translated->indexRange.end == 0xFFFF && type == GL_UNSIGNED_SHORT && mRenderer->getMajorShaderModel() > 3)
+    if (translated->indexRange.end == 0xFFFF && type == GL_UNSIGNED_SHORT && mRendererClass == RENDERER_D3D11)
     {
         destinationIndexType = GL_UNSIGNED_INT;
         directStorage = false;
@@ -232,7 +232,7 @@ gl::Error IndexDataManager::getStreamingIndexBuffer(GLenum destinationIndexType,
     {
         if (!mStreamingBufferInt)
         {
-            mStreamingBufferInt = new StreamingIndexBufferInterface(mRenderer);
+            mStreamingBufferInt = new StreamingIndexBufferInterface(mFactory);
             gl::Error error = mStreamingBufferInt->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT);
             if (error.isError())
             {
@@ -250,7 +250,7 @@ gl::Error IndexDataManager::getStreamingIndexBuffer(GLenum destinationIndexType,
 
         if (!mStreamingBufferShort)
         {
-            mStreamingBufferShort = new StreamingIndexBufferInterface(mRenderer);
+            mStreamingBufferShort = new StreamingIndexBufferInterface(mFactory);
             gl::Error error = mStreamingBufferShort->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_SHORT);
             if (error.isError())
             {

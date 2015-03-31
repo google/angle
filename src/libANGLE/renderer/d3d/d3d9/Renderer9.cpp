@@ -378,7 +378,7 @@ void Renderer9::initializeDevice()
 
     ASSERT(!mVertexDataManager && !mIndexDataManager);
     mVertexDataManager = new VertexDataManager(this);
-    mIndexDataManager = new IndexDataManager(this);
+    mIndexDataManager = new IndexDataManager(this, getRendererClass());
 }
 
 D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()

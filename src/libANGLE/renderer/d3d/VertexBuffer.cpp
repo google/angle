@@ -38,13 +38,14 @@ unsigned int VertexBuffer::getSerial() const
     return mSerial;
 }
 
-VertexBufferInterface::VertexBufferInterface(RendererD3D *renderer, bool dynamic) : mRenderer(renderer)
+VertexBufferInterface::VertexBufferInterface(BufferFactoryD3D *factory, bool dynamic)
+    : mFactory(factory)
 {
     mDynamic = dynamic;
     mWritePosition = 0;
     mReservedSpace = 0;
 
-    mVertexBuffer = renderer->createVertexBuffer();
+    mVertexBuffer = factory->createVertexBuffer();
 }
 
 VertexBufferInterface::~VertexBufferInterface()
@@ -188,7 +189,8 @@ bool VertexBufferInterface::directStoragePossible(const gl::VertexAttribute &att
         getVertexBuffer()->getSpaceRequired(attrib, 1, 0, &outputElementSize);
         alignment = std::min<size_t>(outputElementSize, 4);
 
-        requiresConversion = (mRenderer->getVertexConversionType(vertexFormat) & VERTEX_CONVERT_CPU) != 0;
+        // TODO(jmadill): add VertexFormatCaps
+        requiresConversion = (mFactory->getVertexConversionType(vertexFormat) & VERTEX_CONVERT_CPU) != 0;
     }
 
     bool isAligned = (static_cast<size_t>(ComputeVertexAttributeStride(attrib)) % alignment == 0) &&
@@ -197,7 +199,8 @@ bool VertexBufferInterface::directStoragePossible(const gl::VertexAttribute &att
     return !requiresConversion && isAligned;
 }
 
-StreamingVertexBufferInterface::StreamingVertexBufferInterface(RendererD3D *renderer, std::size_t initialSize) : VertexBufferInterface(renderer, true)
+StreamingVertexBufferInterface::StreamingVertexBufferInterface(BufferFactoryD3D *factory, std::size_t initialSize)
+    : VertexBufferInterface(factory, true)
 {
     setBufferSize(initialSize);
 }
@@ -231,7 +234,8 @@ gl::Error StreamingVertexBufferInterface::reserveSpace(unsigned int size)
     return gl::Error(GL_NO_ERROR);
 }
 
-StaticVertexBufferInterface::StaticVertexBufferInterface(RendererD3D *renderer) : VertexBufferInterface(renderer, false)
+StaticVertexBufferInterface::StaticVertexBufferInterface(BufferFactoryD3D *factory)
+    : VertexBufferInterface(factory, false)
 {
 }
 

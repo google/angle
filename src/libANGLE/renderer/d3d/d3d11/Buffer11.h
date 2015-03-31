@@ -60,7 +60,6 @@ class Buffer11 : public BufferD3D
     // BufferD3D implementation
     virtual size_t getSize() const { return mSize; }
     virtual bool supportsDirectBinding() const;
-    RendererD3D *getRenderer() override;
 
     // BufferImpl implementation
     virtual gl::Error setData(const void* data, size_t size, GLenum usage);

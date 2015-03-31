@@ -7,18 +7,20 @@
 // BufferD3D.cpp Defines common functionality between the Buffer9 and Buffer11 classes.
 
 #include "libANGLE/renderer/d3d/BufferD3D.h"
-#include "libANGLE/renderer/d3d/VertexBuffer.h"
+
 #include "libANGLE/renderer/d3d/IndexBuffer.h"
+#include "libANGLE/renderer/d3d/VertexBuffer.h"
 
 namespace rx
 {
 
 unsigned int BufferD3D::mNextSerial = 1;
 
-BufferD3D::BufferD3D()
+BufferD3D::BufferD3D(BufferFactoryD3D *factory)
     : BufferImpl(),
-      mStaticVertexBuffer(NULL),
-      mStaticIndexBuffer(NULL)
+      mFactory(factory),
+      mStaticVertexBuffer(nullptr),
+      mStaticIndexBuffer(nullptr)
 {
     updateSerial();
 }
@@ -38,11 +40,11 @@ void BufferD3D::initializeStaticData()
 {
     if (!mStaticVertexBuffer)
     {
-        mStaticVertexBuffer = new StaticVertexBufferInterface(getRenderer());
+        mStaticVertexBuffer = new StaticVertexBufferInterface(mFactory);
     }
     if (!mStaticIndexBuffer)
     {
-        mStaticIndexBuffer = new StaticIndexBufferInterface(getRenderer());
+        mStaticIndexBuffer = new StaticIndexBufferInterface(mFactory);
     }
 }
 

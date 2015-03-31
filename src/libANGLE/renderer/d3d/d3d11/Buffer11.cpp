@@ -192,7 +192,7 @@ class Buffer11::SystemMemoryStorage : public Buffer11::BufferStorage
 };
 
 Buffer11::Buffer11(Renderer11 *renderer)
-    : BufferD3D(),
+    : BufferD3D(renderer),
       mRenderer(renderer),
       mSize(0),
       mMappedStorage(NULL),
@@ -446,11 +446,6 @@ void Buffer11::markBufferUsage()
         mBufferStorages.erase(systemMemoryStorageIt);
         mHasSystemMemoryStorage = false;
     }
-}
-
-RendererD3D* Buffer11::getRenderer()
-{
-    return mRenderer;
 }
 
 ID3D11Buffer *Buffer11::getBuffer(BufferUsage usage)
