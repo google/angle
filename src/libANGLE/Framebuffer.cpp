@@ -8,17 +8,19 @@
 // objects and related functionality. [OpenGL ES 2.0.24] section 4.4 page 105.
 
 #include "libANGLE/Framebuffer.h"
-#include "libANGLE/formatutils.h"
-#include "libANGLE/Texture.h"
+
+#include "common/utilities.h"
+#include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/Renderbuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/Renderbuffer.h"
+#include "libANGLE/Surface.h"
+#include "libANGLE/Texture.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
 #include "libANGLE/renderer/ImplFactory.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
 #include "libANGLE/renderer/Workarounds.h"
-
-#include "common/utilities.h"
 
 namespace gl
 {
@@ -633,20 +635,17 @@ void Framebuffer::setAttachment(GLenum attachment, FramebufferAttachment *attach
 DefaultFramebuffer::DefaultFramebuffer(const Caps &caps, rx::ImplFactory *factory, egl::Surface *surface)
     : Framebuffer(caps, factory, 0)
 {
-    rx::DefaultAttachmentImpl *colorAttachment = factory->createDefaultAttachment(GL_BACK, surface);
-    rx::DefaultAttachmentImpl *depthAttachment = factory->createDefaultAttachment(GL_DEPTH, surface);
-    rx::DefaultAttachmentImpl *stencilAttachment = factory->createDefaultAttachment(GL_STENCIL, surface);
+    const egl::Config *config = surface->getConfig();
 
-    ASSERT(colorAttachment);
-    setAttachment(GL_BACK, new DefaultAttachment(GL_BACK, colorAttachment));
+    setAttachment(GL_BACK, new DefaultAttachment(GL_BACK, surface));
 
-    if (depthAttachment)
+    if (config->depthSize > 0)
     {
-        setAttachment(GL_DEPTH, new DefaultAttachment(GL_DEPTH, depthAttachment));
+        setAttachment(GL_DEPTH, new DefaultAttachment(GL_DEPTH, surface));
     }
-    if (stencilAttachment)
+    if (config->stencilSize > 0)
     {
-        setAttachment(GL_STENCIL, new DefaultAttachment(GL_STENCIL, stencilAttachment));
+        setAttachment(GL_STENCIL, new DefaultAttachment(GL_STENCIL, surface));
     }
 
     GLenum drawBufferState = GL_BACK;

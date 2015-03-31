@@ -18,7 +18,9 @@ namespace rx
 SwapChain9::SwapChain9(Renderer9 *renderer, NativeWindow nativeWindow, HANDLE shareHandle,
                        GLenum backBufferFormat, GLenum depthBufferFormat)
     : mRenderer(renderer),
-      SwapChainD3D(nativeWindow, shareHandle, backBufferFormat, depthBufferFormat)
+      SwapChainD3D(nativeWindow, shareHandle, backBufferFormat, depthBufferFormat),
+      mColorRenderTarget(this, false),
+      mDepthStencilRenderTarget(this, true)
 {
     mSwapChain = NULL;
     mBackBuffer = NULL;

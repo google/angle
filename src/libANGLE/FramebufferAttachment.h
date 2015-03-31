@@ -129,7 +129,7 @@ class RenderbufferAttachment : public FramebufferAttachment
 class DefaultAttachment : public FramebufferAttachment
 {
   public:
-    DefaultAttachment(GLenum binding, rx::DefaultAttachmentImpl *impl);
+    DefaultAttachment(GLenum binding, egl::Surface *surface);
 
     virtual ~DefaultAttachment();
 
@@ -148,10 +148,10 @@ class DefaultAttachment : public FramebufferAttachment
     virtual const ImageIndex *getTextureImageIndex() const;
     virtual Renderbuffer *getRenderbuffer() const;
 
-    rx::DefaultAttachmentImpl *getImplementation() const;
+    const egl::Surface *getSurface() const { return mSurface.get(); }
 
   private:
-    rx::DefaultAttachmentImpl *mImpl;
+    BindingPointer<egl::Surface> mSurface;
 };
 
 }

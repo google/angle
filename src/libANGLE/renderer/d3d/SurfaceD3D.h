@@ -46,8 +46,8 @@ class SurfaceD3D : public SurfaceImpl
 
     EGLint isPostSubBufferSupported() const override;
 
-    // D3D implementations (some virtual to hack across DLL boundaries)
-    virtual SwapChainD3D *getSwapChain() const;
+    // D3D implementations
+    SwapChainD3D *getSwapChain() const;
 
     egl::Error resetSwapChain();
 

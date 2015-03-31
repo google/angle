@@ -7,13 +7,17 @@
 // FramebufferD3D.cpp: Implements the DefaultAttachmentD3D and FramebufferD3D classes.
 
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
-#include "libANGLE/renderer/d3d/TextureD3D.h"
-#include "libANGLE/renderer/d3d/RendererD3D.h"
-#include "libANGLE/renderer/d3d/RenderTargetD3D.h"
-#include "libANGLE/renderer/d3d/RenderbufferD3D.h"
+
 #include "libANGLE/formatutils.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/Surface.h"
+#include "libANGLE/renderer/d3d/RendererD3D.h"
+#include "libANGLE/renderer/d3d/RenderbufferD3D.h"
+#include "libANGLE/renderer/d3d/RenderTargetD3D.h"
+#include "libANGLE/renderer/d3d/SurfaceD3D.h"
+#include "libANGLE/renderer/d3d/SwapChainD3D.h"
+#include "libANGLE/renderer/d3d/TextureD3D.h"
 
 namespace rx
 {
@@ -433,10 +437,19 @@ gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment,
     else if (attachment->type() == GL_FRAMEBUFFER_DEFAULT)
     {
         const gl::DefaultAttachment *defaultAttachment = static_cast<const gl::DefaultAttachment *>(attachment);
-        DefaultAttachmentD3D *defaultAttachmentD3D = DefaultAttachmentD3D::makeDefaultAttachmentD3D(defaultAttachment->getImplementation());
-        ASSERT(defaultAttachmentD3D);
+        const egl::Surface *surface = defaultAttachment->getSurface();
+        ASSERT(surface);
+        const SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
+        ASSERT(surfaceD3D);
 
-        *outRT = defaultAttachmentD3D->getRenderTarget();
+        if (defaultAttachment->getBinding() == GL_BACK)
+        {
+            *outRT = surfaceD3D->getSwapChain()->getColorRenderTarget();
+        }
+        else
+        {
+            *outRT = surfaceD3D->getSwapChain()->getDepthStencilRenderTarget();
+        }
         return gl::Error(GL_NO_ERROR);
     }
     else
@@ -468,9 +481,19 @@ unsigned int GetAttachmentSerial(const gl::FramebufferAttachment *attachment)
     else if (attachment->type() == GL_FRAMEBUFFER_DEFAULT)
     {
         const gl::DefaultAttachment *defaultAttachment = static_cast<const gl::DefaultAttachment *>(attachment);
-        DefaultAttachmentD3D *defaultAttachmentD3D = DefaultAttachmentD3D::makeDefaultAttachmentD3D(defaultAttachment->getImplementation());
-        ASSERT(defaultAttachmentD3D);
-        return defaultAttachmentD3D->getRenderTarget()->getSerial();
+        const egl::Surface *surface = defaultAttachment->getSurface();
+        ASSERT(surface);
+        const SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
+        ASSERT(surfaceD3D);
+
+        if (defaultAttachment->getBinding() == GL_BACK)
+        {
+            return surfaceD3D->getSwapChain()->getColorRenderTarget()->getSerial();
+        }
+        else
+        {
+            return surfaceD3D->getSwapChain()->getDepthStencilRenderTarget()->getSerial();
+        }
     }
     else
     {

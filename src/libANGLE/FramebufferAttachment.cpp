@@ -10,7 +10,9 @@
 #include "libANGLE/FramebufferAttachment.h"
 
 #include "common/utilities.h"
+#include "libANGLE/Config.h"
 #include "libANGLE/Renderbuffer.h"
+#include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/DefaultAttachmentImpl.h"
@@ -222,36 +224,37 @@ Renderbuffer *RenderbufferAttachment::getRenderbuffer() const
 }
 
 
-DefaultAttachment::DefaultAttachment(GLenum binding, rx::DefaultAttachmentImpl *impl)
-    : FramebufferAttachment(binding),
-      mImpl(impl)
+DefaultAttachment::DefaultAttachment(GLenum binding, egl::Surface *surface)
+    : FramebufferAttachment(binding)
 {
-    ASSERT(mImpl);
+    mSurface.set(surface);
 }
 
 DefaultAttachment::~DefaultAttachment()
 {
-    SafeDelete(mImpl);
+    mSurface.set(nullptr);
 }
 
 GLsizei DefaultAttachment::getWidth() const
 {
-    return mImpl->getWidth();
+    return mSurface->getWidth();
 }
 
 GLsizei DefaultAttachment::getHeight() const
 {
-    return mImpl->getHeight();
+    return mSurface->getHeight();
 }
 
 GLenum DefaultAttachment::getInternalFormat() const
 {
-    return mImpl->getInternalFormat();
+    const egl::Config *config = mSurface->getConfig();
+    return (getBinding() == GL_BACK ? config->renderTargetFormat : config->depthStencilFormat);
 }
 
 GLsizei DefaultAttachment::getSamples() const
 {
-    return mImpl->getSamples();
+    const egl::Config *config = mSurface->getConfig();
+    return config->samples;
 }
 
 GLuint DefaultAttachment::id() const
@@ -295,11 +298,6 @@ Renderbuffer *DefaultAttachment::getRenderbuffer() const
 {
     UNREACHABLE();
     return NULL;
-}
-
-rx::DefaultAttachmentImpl *DefaultAttachment::getImplementation() const
-{
-    return mImpl;
 }
 
 }

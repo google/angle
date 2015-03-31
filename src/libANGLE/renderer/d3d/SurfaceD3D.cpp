@@ -40,7 +40,7 @@ SurfaceD3D::SurfaceD3D(RendererD3D *renderer, egl::Display *display, const egl::
       mFixedSize(fixedSize == EGL_TRUE),
       mRenderTargetFormat(config->renderTargetFormat),
       mDepthStencilFormat(config->depthStencilFormat),
-      mSwapChain(NULL),
+      mSwapChain(nullptr),
       mSwapIntervalDirty(true),
       mWindowSubclassed(false),
       mNativeWindow(window),
