@@ -265,6 +265,11 @@ TYPED_TEST(SwizzleTest, D24_2D)
 
 TYPED_TEST(SwizzleTest, CompressedDXT_2D)
 {
+    if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
+    {
+        return;
+    }
+
     init2DCompressedTexture(GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_0_width, pixel_0_height, pixel_0_size, pixel_0_data);
     runTest2D();
 }
