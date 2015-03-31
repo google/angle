@@ -3035,8 +3035,8 @@ TString OutputHLSL::addArrayEqualityFunction(const TType& type)
     TInfoSinkBase fnOut;
 
     fnOut << "bool " << function->functionName << "("
-          << typeName << "[" << type.getArraySize() << "] a, "
-          << typeName << "[" << type.getArraySize() << "] b)\n"
+          << typeName << " a[" << type.getArraySize() << "], "
+          << typeName << " b[" << type.getArraySize() << "])\n"
           << "{\n"
              "    for (int i = 0; i < " << type.getArraySize() << "; ++i)\n"
              "    {\n"
