@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a315c284_940812da",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-03-31T01:58:43Z",
+      "side": 1,
+      "message": "Seems asymmetric that Display.cpp inserts the surface but DisplayImpl removes it. Suggest adding DisplayImpl::addSurface and findSurface, and removing DisplayImpl::getSurfaceSet.",
+      "range": {
+        "startLine": 431,
+        "startChar": 21,
+        "endLine": 431,
+        "endChar": 34
+      },
+      "revId": "ea2b98a76fe6674322a80bf04bde49d47cf77c8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
