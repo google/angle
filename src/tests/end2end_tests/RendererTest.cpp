@@ -6,8 +6,8 @@
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 
-ANGLE_TYPED_TEST_CASE(RendererTest, ES2_D3D9,           ES2_D3D11,        ES2_D3D11_WARP,        ES2_D3D11_REFERENCE,        ES3_D3D11,        ES3_D3D11_WARP,        ES3_D3D11_REFERENCE,
-                                    ES2_D3D9_REFERENCE, ES2_D3D11_FL11_0, ES2_D3D11_FL11_0_WARP, ES2_D3D11_FL11_0_REFERENCE, ES3_D3D11_FL11_0, ES3_D3D11_FL11_0_WARP, ES3_D3D11_FL11_0_REFERENCE,
+ANGLE_TYPED_TEST_CASE(RendererTest, ES2_D3D9,           ES2_D3D11,        ES2_D3D11_WARP,        ES2_D3D11_REFERENCE,        ES3_D3D11,        ES3_D3D11_WARP,        ES3_D3D11_REFERENCE,        ES2_OPENGL,
+                                    ES2_D3D9_REFERENCE, ES2_D3D11_FL11_0, ES2_D3D11_FL11_0_WARP, ES2_D3D11_FL11_0_REFERENCE, ES3_D3D11_FL11_0, ES3_D3D11_FL11_0_WARP, ES3_D3D11_FL11_0_REFERENCE, ES3_OPENGL,
                                                         ES2_D3D11_FL10_1, ES2_D3D11_FL10_1_WARP, ES2_D3D11_FL10_1_REFERENCE, ES3_D3D11_FL10_1, ES3_D3D11_FL10_1_WARP, ES3_D3D11_FL10_1_REFERENCE,
                                                         ES2_D3D11_FL10_0, ES2_D3D11_FL10_0_WARP, ES2_D3D11_FL10_0_REFERENCE, ES3_D3D11_FL10_0, ES3_D3D11_FL10_0_WARP, ES3_D3D11_FL10_0_REFERENCE,
                                                         ES2_D3D11_FL9_3,  ES2_D3D11_FL9_3_WARP,  ES2_D3D11_FL9_3_REFERENCE);
