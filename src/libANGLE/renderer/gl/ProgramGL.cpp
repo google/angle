@@ -336,7 +336,7 @@ void ProgramGL::updateSamplerMapping()
 
 bool ProgramGL::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
 {
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
     return true;
 }
 
