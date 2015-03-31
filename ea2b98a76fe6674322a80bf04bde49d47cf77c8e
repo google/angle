@@ -22,6 +22,30 @@
       "revId": "ea2b98a76fe6674322a80bf04bde49d47cf77c8e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a315c284_4eca821f",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-03-31T14:40:18Z",
+      "side": 1,
+      "message": "Agreed, will look into this.",
+      "parentUuid": "a315c284_940812da",
+      "range": {
+        "startLine": 431,
+        "startChar": 21,
+        "endLine": 431,
+        "endChar": 34
+      },
+      "revId": "ea2b98a76fe6674322a80bf04bde49d47cf77c8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
