@@ -14,6 +14,7 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
+#include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 
@@ -203,15 +204,49 @@ gl::Error TextureGL::setCompressedSubImage(GLenum target, size_t level, const gl
 gl::Error TextureGL::copyImage(GLenum target, size_t level, const gl::Rectangle &sourceArea, GLenum internalFormat,
                                const gl::Framebuffer *source)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(source);
+
+    mStateManager->bindTexture(mTextureType, mTextureID);
+    mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, sourceFramebufferGL->getFramebufferID());
+
+    if (UseTexImage2D(mTextureType))
+    {
+        mFunctions->copyTexImage2D(target, level, internalFormat, sourceArea.x, sourceArea.y,
+                                   sourceArea.width, sourceArea.height, 0);
+    }
+    else
+    {
+        UNREACHABLE();
+    }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error TextureGL::copySubImage(GLenum target, size_t level, const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
                                   const gl::Framebuffer *source)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(source);
+
+    mStateManager->bindTexture(mTextureType, mTextureID);
+    mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, sourceFramebufferGL->getFramebufferID());
+
+    if (UseTexImage2D(mTextureType))
+    {
+        ASSERT(destOffset.z == 0);
+        mFunctions->copyTexSubImage2D(target, level, destOffset.x, destOffset.y,
+                                      sourceArea.x, sourceArea.y, sourceArea.width, sourceArea.height);
+    }
+    else if (UseTexImage3D(mTextureType))
+    {
+        mFunctions->copyTexSubImage3D(target, level, destOffset.x, destOffset.y, destOffset.z,
+                                      sourceArea.x, sourceArea.y, sourceArea.width, sourceArea.height);
+    }
+    else
+    {
+        UNREACHABLE();
+    }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size)

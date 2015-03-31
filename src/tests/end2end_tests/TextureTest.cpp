@@ -1,7 +1,7 @@
 #include "ANGLETest.h"
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(TextureTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3);
+ANGLE_TYPED_TEST_CASE(TextureTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3, ES2_OPENGL);
 
 template<typename T>
 class TextureTest : public ANGLETest
@@ -106,6 +106,21 @@ class TextureTest : public ANGLETest
     // Tests CopyTexSubImage with floating point textures of various formats.
     void testFloatCopySubImage(int sourceImageChannels, int destImageChannels)
     {
+        if (getClientVersion() < 3)
+        {
+            if (!extensionEnabled("GL_OES_texture_float"))
+            {
+                std::cout << "Test skipped due to missing GL_OES_texture_float." << std::endl;
+                return;
+            }
+
+            if ((sourceImageChannels < 3 || destImageChannels < 3) && !extensionEnabled("GL_EXT_texture_rg"))
+            {
+                std::cout << "Test skipped due to missing GL_EXT_texture_rg." << std::endl;
+                return;
+            }
+        }
+
         GLfloat sourceImageData[4][16] =
         {
             { // R
@@ -388,8 +403,12 @@ TYPED_TEST(TextureTest, TexStorage)
     drawQuad(m2DProgram, "position", 0.5f);
     glDeleteTextures(1, &tex2D);
     EXPECT_GL_NO_ERROR();
-    EXPECT_PIXEL_EQ(3*width/4, 3*height/4, 0, 0, 0, 255);
     EXPECT_PIXEL_EQ(width / 4, height / 4, 255, 0, 0, 255);
+
+    // Validate that the region of the texture without data has an alpha of 1.0
+    GLubyte pixel[4];
+    glReadPixels(3 * width / 4, 3 * height / 4, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
+    EXPECT_EQ(pixel[3], 255);
 }
 
 // Test that glTexSubImage2D combined with a PBO works properly when glTexStorage2DEXT has initialized the image with a default color.
@@ -444,32 +463,27 @@ TYPED_TEST(TextureTest, TexStorageWithPBO)
 }
 
 // See description on testFloatCopySubImage
-// TODO(jmadill): Fix sampling from unused channels on D3D9
-TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_R_R)
+TYPED_TEST(TextureTest, CopySubImageFloat_R_R)
 {
     testFloatCopySubImage(1, 1);
 }
 
-// TODO(jmadill): Fix sampling from unused channels on D3D9
-TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_RG_R)
+TYPED_TEST(TextureTest, CopySubImageFloat_RG_R)
 {
     testFloatCopySubImage(2, 1);
 }
 
-// TODO(jmadill): Fix sampling from unused channels on D3D9
-TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_RG_RG)
+TYPED_TEST(TextureTest, CopySubImageFloat_RG_RG)
 {
     testFloatCopySubImage(2, 2);
 }
 
-// TODO(jmadill): Fix sampling from unused channels on D3D9
-TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_RGB_R)
+TYPED_TEST(TextureTest, CopySubImageFloat_RGB_R)
 {
     testFloatCopySubImage(3, 1);
 }
 
-// TODO(jmadill): Fix sampling from unused channels on D3D9
-TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_RGB_RG)
+TYPED_TEST(TextureTest, CopySubImageFloat_RGB_RG)
 {
     testFloatCopySubImage(3, 2);
 }
@@ -486,14 +500,12 @@ TYPED_TEST(TextureTest, CopySubImageFloat_RGB_RGB)
     testFloatCopySubImage(3, 3);
 }
 
-// TODO(jmadill): Fix sampling from unused channels on D3D9
-TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_RGBA_R)
+TYPED_TEST(TextureTest, CopySubImageFloat_RGBA_R)
 {
     testFloatCopySubImage(4, 1);
 }
 
-// TODO(jmadill): Fix sampling from unused channels on D3D9
-TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_RGBA_RG)
+TYPED_TEST(TextureTest, CopySubImageFloat_RGBA_RG)
 {
     testFloatCopySubImage(4, 2);
 }
