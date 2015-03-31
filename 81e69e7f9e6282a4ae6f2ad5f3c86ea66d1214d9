@@ -22,6 +22,30 @@
       "revId": "81e69e7f9e6282a4ae6f2ad5f3c86ea66d1214d9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83fb5e85_92213ccc",
+        "filename": "src/compiler/translator/SimplifyArrayAssignment.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-03-31T15:29:24Z",
+      "side": 1,
+      "message": "Whoops, seems to be leftovers from copy-pasted code. I\u0027ll clean this up.",
+      "parentUuid": "630f4a79_98020109",
+      "range": {
+        "startLine": 19,
+        "startChar": 61,
+        "endLine": 19,
+        "endChar": 71
+      },
+      "revId": "81e69e7f9e6282a4ae6f2ad5f3c86ea66d1214d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
