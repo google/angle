@@ -49,7 +49,7 @@ struct PixelShaderOutputVariable
     size_t outputIndex;
 };
 
-class DynamicHLSL
+class DynamicHLSL : angle::NonCopyable
 {
   public:
     explicit DynamicHLSL(RendererD3D *const renderer);
@@ -74,8 +74,6 @@ class DynamicHLSL
     void getInputLayoutSignature(const gl::VertexFormat inputLayout[], GLenum signature[]) const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(DynamicHLSL);
-
     RendererD3D *const mRenderer;
 
     struct SemanticInfo;

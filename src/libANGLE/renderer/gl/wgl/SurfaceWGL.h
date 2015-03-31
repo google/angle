@@ -43,8 +43,6 @@ class SurfaceWGL : public SurfaceGL
     EGLint getHeight() const override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(SurfaceWGL);
-
     ATOM mWindowClass;
     int mPixelFormat;
 

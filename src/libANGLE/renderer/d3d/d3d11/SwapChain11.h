@@ -43,8 +43,6 @@ class SwapChain11 : public SwapChainD3D
     static SwapChain11 *makeSwapChain11(SwapChainD3D *swapChain);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(SwapChain11);
-
     void release();
     void initPassThroughResources();
     void releaseOffscreenTexture();

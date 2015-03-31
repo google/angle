@@ -23,9 +23,6 @@ class FenceNVGL : public FenceNVImpl
     gl::Error set() override;
     gl::Error test(bool flushCommandBuffer, GLboolean *outFinished) override;
     gl::Error finishFence(GLboolean *outFinished) override;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(FenceNVGL);
 };
 
 }

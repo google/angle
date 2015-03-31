@@ -35,7 +35,6 @@ class RenderTarget11 : public RenderTargetD3D
     virtual DXGI_FORMAT getDXGIFormat() const = 0;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(RenderTarget11);
     D3D_FEATURE_LEVEL mFeatureLevel;
 };
 
@@ -65,8 +64,6 @@ class TextureRenderTarget11 : public RenderTarget11
     DXGI_FORMAT getDXGIFormat() const override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureRenderTarget11);
-
     GLsizei mWidth;
     GLsizei mHeight;
     GLsizei mDepth;
@@ -103,8 +100,6 @@ class SurfaceRenderTarget11 : public RenderTarget11
     DXGI_FORMAT getDXGIFormat() const override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(SurfaceRenderTarget11);
-
     SwapChain11 *mSwapChain;
     Renderer11 *mRenderer;
     bool mDepth;

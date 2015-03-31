@@ -53,8 +53,6 @@ class ShaderD3D : public ShaderImpl
     virtual bool compile(gl::Compiler *compiler, const std::string &source);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(ShaderD3D);
-
     void compileToHLSL(ShHandle compiler, const std::string &source);
     void parseVaryings(ShHandle compiler);
 

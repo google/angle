@@ -19,7 +19,7 @@ namespace rx
 {
 class Renderer11;
 
-class Blit11
+class Blit11 : angle::NonCopyable
 {
   public:
     explicit Blit11(Renderer11 *renderer);
@@ -114,8 +114,6 @@ class Blit11
     ID3D11GeometryShader *mQuad3DGS;
 
     ID3D11Buffer *mSwizzleCB;
-
-    DISALLOW_COPY_AND_ASSIGN(Blit11);
 };
 
 }

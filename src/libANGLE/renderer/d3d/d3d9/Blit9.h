@@ -25,7 +25,7 @@ namespace rx
 class Renderer9;
 class TextureStorage;
 
-class Blit9
+class Blit9 : angle::NonCopyable
 {
   public:
     explicit Blit9(Renderer9 *renderer);
@@ -90,9 +90,8 @@ class Blit9
     IDirect3DStateBlock9 *mSavedStateBlock;
     IDirect3DSurface9 *mSavedRenderTarget;
     IDirect3DSurface9 *mSavedDepthStencil;
-
-    DISALLOW_COPY_AND_ASSIGN(Blit9);
 };
+
 }
 
 #endif   // LIBANGLE_RENDERER_D3D_D3D9_BLIT9_H_

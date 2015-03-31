@@ -22,7 +22,7 @@ class Renderer11;
 class RenderTarget11;
 struct ClearParameters;
 
-class Clear11
+class Clear11 : angle::NonCopyable
 {
   public:
     explicit Clear11(Renderer11 *renderer);
@@ -32,8 +32,6 @@ class Clear11
     gl::Error clearFramebuffer(const ClearParameters &clearParams, const gl::Framebuffer::Data &fboData);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Clear11);
-
     struct MaskedRenderTarget
     {
         bool colorMask[4];

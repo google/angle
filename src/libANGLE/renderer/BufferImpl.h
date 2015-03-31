@@ -17,7 +17,7 @@
 namespace rx
 {
 
-class BufferImpl
+class BufferImpl : angle::NonCopyable
 {
   public:
     virtual ~BufferImpl() { }

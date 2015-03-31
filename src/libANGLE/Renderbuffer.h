@@ -56,8 +56,6 @@ class Renderbuffer : public RefCountObject
     GLuint getStencilSize() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Renderbuffer);
-
     rx::RenderbufferImpl *mRenderbuffer;
 
     GLsizei mWidth;

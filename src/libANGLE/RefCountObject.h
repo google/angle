@@ -18,7 +18,7 @@
 
 #include <cstddef>
 
-class RefCountObject
+class RefCountObject : angle::NonCopyable
 {
   public:
     explicit RefCountObject(GLuint id);

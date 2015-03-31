@@ -38,8 +38,6 @@ class IndexBuffer11 : public IndexBuffer
     ID3D11Buffer *getBuffer() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(IndexBuffer11);
-
     Renderer11 *const mRenderer;
 
     ID3D11Buffer *mBuffer;

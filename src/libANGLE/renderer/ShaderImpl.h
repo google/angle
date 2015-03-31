@@ -17,7 +17,7 @@
 namespace rx
 {
 
-class ShaderImpl
+class ShaderImpl : angle::NonCopyable
 {
   public:
     ShaderImpl() { }
@@ -42,8 +42,6 @@ class ShaderImpl
     std::vector<sh::Attribute> &getActiveOutputVariables() { return mActiveOutputVariables; }
 
   protected:
-    DISALLOW_COPY_AND_ASSIGN(ShaderImpl);
-
     std::string mInfoLog;
     std::string mTranslatedSource;
 

@@ -14,7 +14,7 @@
 
 class TDiagnostics;
 
-class TDirectiveHandler : public pp::DirectiveHandler
+class TDirectiveHandler : public pp::DirectiveHandler, angle::NonCopyable
 {
   public:
     TDirectiveHandler(TExtensionBehavior& extBehavior,
@@ -42,8 +42,6 @@ class TDirectiveHandler : public pp::DirectiveHandler
                                int version);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TDirectiveHandler);
-
     TPragma mPragma;
     TExtensionBehavior& mExtensionBehavior;
     TDiagnostics& mDiagnostics;

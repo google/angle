@@ -26,7 +26,7 @@
 namespace rx
 {
 
-class SwapChainD3D
+class SwapChainD3D : angle::NonCopyable
 {
   public:
     SwapChainD3D(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
@@ -52,9 +52,6 @@ class SwapChainD3D
     const GLenum mDepthBufferFormat;
 
     HANDLE mShareHandle;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(SwapChainD3D);
 };
 
 }

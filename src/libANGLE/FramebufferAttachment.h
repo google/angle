@@ -32,7 +32,7 @@ class Renderbuffer;
 // Note: Our old naming scheme used the term "Renderbuffer" for both GL renderbuffers and for
 // framebuffer attachments, which confused their usage.
 
-class FramebufferAttachment
+class FramebufferAttachment : angle::NonCopyable
 {
   public:
     explicit FramebufferAttachment(GLenum binding);
@@ -70,8 +70,6 @@ class FramebufferAttachment
     virtual Renderbuffer *getRenderbuffer() const = 0;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(FramebufferAttachment);
-
     GLenum mBinding;
 };
 
@@ -98,8 +96,6 @@ class TextureAttachment : public FramebufferAttachment
     virtual Renderbuffer *getRenderbuffer() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureAttachment);
-
     BindingPointer<Texture> mTexture;
     ImageIndex mIndex;
 };
@@ -127,8 +123,6 @@ class RenderbufferAttachment : public FramebufferAttachment
     virtual Renderbuffer *getRenderbuffer() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(RenderbufferAttachment);
-
     BindingPointer<Renderbuffer> mRenderbuffer;
 };
 
@@ -157,8 +151,6 @@ class DefaultAttachment : public FramebufferAttachment
     rx::DefaultAttachmentImpl *getImplementation() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(DefaultAttachment);
-
     rx::DefaultAttachmentImpl *mImpl;
 };
 

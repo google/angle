@@ -27,8 +27,6 @@ class FenceNV11 : public FenceNVImpl
     gl::Error finishFence(GLboolean *outFinished);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(FenceNV11);
-
     template<class T> friend gl::Error FenceSetHelper(T *fence);
     template<class T> friend gl::Error FenceTestHelper(T *fence, bool flushCommandBuffer, GLboolean *outFinished);
 
@@ -48,8 +46,6 @@ class FenceSync11 : public FenceSyncImpl
     gl::Error getStatus(GLint *outResult);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(FenceSync11);
-
     template<class T> friend gl::Error FenceSetHelper(T *fence);
     template<class T> friend gl::Error FenceTestHelper(T *fence, bool flushCommandBuffer, GLboolean *outFinished);
 

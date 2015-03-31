@@ -32,7 +32,7 @@ void StaticAssertIsFundamental()
 namespace gl
 {
 
-class BinaryInputStream
+class BinaryInputStream : angle::NonCopyable
 {
   public:
     BinaryInputStream(const void *data, size_t length)
@@ -134,7 +134,6 @@ class BinaryInputStream
     }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(BinaryInputStream);
     bool mError;
     size_t mOffset;
     const uint8_t *mData;
@@ -165,7 +164,7 @@ class BinaryInputStream
 
 };
 
-class BinaryOutputStream
+class BinaryOutputStream : angle::NonCopyable
 {
   public:
     BinaryOutputStream()
@@ -203,7 +202,6 @@ class BinaryOutputStream
     }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(BinaryOutputStream);
     std::vector<char> mData;
 
     template <typename T>

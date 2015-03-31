@@ -49,8 +49,6 @@ class NullFactory : public ImplFactory
 
     // Transform Feedback creation
     TransformFeedbackImpl *createTransformFeedback() override { return nullptr; }
-
-    DISALLOW_COPY_AND_ASSIGN(NullFactory);
 };
 
 }

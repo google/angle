@@ -23,9 +23,6 @@ class UnfoldShortCircuitAST : public TIntermTraverser
     UnfoldShortCircuitAST() { }
 
     virtual bool visitBinary(Visit visit, TIntermBinary *);
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(UnfoldShortCircuitAST);
 };
 
 #endif  // COMPILER_TRANSLATOR_UNFOLDSHORTCIRCUITAST_H_

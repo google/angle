@@ -28,7 +28,7 @@ struct LinkResult
     LinkResult(bool linkSuccess, const gl::Error &error);
 };
 
-class ProgramImpl
+class ProgramImpl : angle::NonCopyable
 {
   public:
     typedef int SemanticIndexArray[gl::MAX_VERTEX_ATTRIBS];
@@ -123,8 +123,6 @@ class ProgramImpl
     virtual void reset();
 
   protected:
-    DISALLOW_COPY_AND_ASSIGN(ProgramImpl);
-
     std::vector<gl::LinkedUniform*> mUniforms;
     std::vector<gl::VariableLocation> mUniformIndex;
     std::vector<gl::UniformBlock*> mUniformBlocks;

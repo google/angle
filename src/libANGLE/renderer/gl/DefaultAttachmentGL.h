@@ -28,8 +28,6 @@ class DefaultAttachmentGL : public DefaultAttachmentImpl
     GLsizei getSamples() const override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(DefaultAttachmentGL);
-
     GLenum mType;
     SurfaceGL *mSurface;
 };

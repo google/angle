@@ -17,7 +17,7 @@ struct TPublicType;
 class TType;
 class TSymbol;
 
-class TField
+class TField : angle::NonCopyable
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
@@ -49,7 +49,6 @@ class TField
     }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TField);
     TType *mType;
     TString *mName;
     TSourceLoc mLine;
@@ -62,7 +61,7 @@ inline TFieldList *NewPoolTFieldList()
     return new(memory) TFieldList;
 }
 
-class TFieldListCollection
+class TFieldListCollection : angle::NonCopyable
 {
   public:
     const TString &name() const
@@ -151,8 +150,6 @@ class TStructure : public TFieldListCollection
     }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TStructure);
-
     // TODO(zmo): Find a way to get rid of the const_cast in function
     // setName().  At the moment keep this function private so only
     // friend class RegenerateStructNames may call it.
@@ -214,7 +211,6 @@ class TInterfaceBlock : public TFieldListCollection
     }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TInterfaceBlock);
     virtual TString mangledNamePrefix() const
     {
         return "iblock-";

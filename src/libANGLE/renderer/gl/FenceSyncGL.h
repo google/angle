@@ -24,9 +24,6 @@ class FenceSyncGL : public FenceSyncImpl
     gl::Error clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult) override;
     gl::Error serverWait(GLbitfield flags, GLuint64 timeout) override;
     gl::Error getStatus(GLint *outResult) override;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(FenceSyncGL);
 };
 
 }

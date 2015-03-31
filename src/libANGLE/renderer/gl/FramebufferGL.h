@@ -52,8 +52,6 @@ class FramebufferGL : public FramebufferImpl
     GLuint getFramebufferID() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(FramebufferGL);
-
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
 

@@ -25,7 +25,7 @@ namespace rx
 {
 class Renderer11;
 
-class RenderStateCache
+class RenderStateCache : angle::NonCopyable
 {
   public:
     RenderStateCache(Renderer11 *renderer);
@@ -40,8 +40,6 @@ class RenderStateCache
     gl::Error getSamplerState(const gl::SamplerState &samplerState, ID3D11SamplerState **outSamplerState);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(RenderStateCache);
-
     Renderer11 *mRenderer;
     unsigned long long mCounter;
 

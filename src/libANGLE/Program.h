@@ -60,7 +60,7 @@ class AttributeBindings
     std::set<std::string> mAttributeBinding[MAX_VERTEX_ATTRIBS];
 };
 
-class InfoLog
+class InfoLog : angle::NonCopyable
 {
   public:
     InfoLog();
@@ -73,7 +73,6 @@ class InfoLog
     void append(const char *info, ...);
     void reset();
   private:
-    DISALLOW_COPY_AND_ASSIGN(InfoLog);
     char *mInfoLog;
 };
 
@@ -106,7 +105,7 @@ struct LinkedVarying
     unsigned int semanticIndexCount;
 };
 
-class Program
+class Program : angle::NonCopyable
 {
   public:
     Program(rx::ProgramImpl *impl, ResourceManager *manager, GLuint handle);
@@ -219,8 +218,6 @@ class Program
     void updateSamplerMapping();
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Program);
-
     void unlink(bool destroy = false);
     void resetUniformBlockBindings();
 

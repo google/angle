@@ -28,7 +28,7 @@ namespace rx
 {
 struct TranslatedAttribute;
 
-class InputLayoutCache
+class InputLayoutCache : angle::NonCopyable
 {
   public:
     InputLayoutCache();
@@ -42,8 +42,6 @@ class InputLayoutCache
                                  GLenum mode, gl::Program *program);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(InputLayoutCache);
-
     struct InputLayoutElement
     {
         D3D11_INPUT_ELEMENT_DESC desc;

@@ -27,8 +27,6 @@ class FenceNV9 : public FenceNVImpl
     gl::Error finishFence(GLboolean *outFinished);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(FenceNV9);
-
     Renderer9 *mRenderer;
     IDirect3DQuery9 *mQuery;
 };

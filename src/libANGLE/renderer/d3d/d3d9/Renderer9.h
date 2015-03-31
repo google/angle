@@ -234,8 +234,6 @@ class Renderer9 : public RendererD3D
     D3DDEVTYPE getD3D9DeviceType() const { return mDeviceType; }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Renderer9);
-
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const override;
     Workarounds generateWorkarounds() const override;
 

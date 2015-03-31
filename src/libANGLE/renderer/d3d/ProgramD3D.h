@@ -128,8 +128,6 @@ class ProgramD3D : public ProgramImpl
                                 int sortedSemanticIndices[gl::MAX_VERTEX_ATTRIBS]) const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(ProgramD3D);
-
     class VertexExecutable
     {
       public:

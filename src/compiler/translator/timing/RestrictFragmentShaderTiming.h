@@ -25,8 +25,6 @@ class RestrictFragmentShaderTiming : TDependencyGraphTraverser
     void visitLogicalOp(TGraphLogicalOp *logicalOp) override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(RestrictFragmentShaderTiming);
-
     void beginError(const TIntermNode *node);
     void validateUserDefinedFunctionCallUsage(const TDependencyGraph &graph);
     bool isSamplingOp(const TIntermAggregate *intermFunctionCall) const;

@@ -33,8 +33,6 @@ class VertexArray9 : public VertexArrayImpl
     virtual void enableAttribute(size_t idx, bool enabledState) { }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(VertexArray9);
-
     Renderer9 *mRenderer;
 };
 

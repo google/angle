@@ -15,7 +15,8 @@
 
 namespace rx
 {
-class RenderTargetD3D
+
+class RenderTargetD3D : angle::NonCopyable
 {
   public:
     RenderTargetD3D();
@@ -32,8 +33,6 @@ class RenderTargetD3D
     static unsigned int issueSerials(unsigned int count);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(RenderTargetD3D);
-
     const unsigned int mSerial;
     static unsigned int mCurrentSerial;
 };

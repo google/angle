@@ -27,8 +27,6 @@ class Query11 : public QueryImpl
     virtual gl::Error isResultAvailable(GLuint *available);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Query11);
-
     gl::Error testQuery();
 
     GLuint mResult;

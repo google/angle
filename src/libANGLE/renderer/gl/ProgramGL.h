@@ -88,8 +88,6 @@ class ProgramGL : public ProgramImpl
     GLuint getProgramID() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(ProgramGL);
-
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
 

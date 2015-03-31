@@ -28,7 +28,7 @@ class TextureImpl;
 class TransformFeedbackImpl;
 class VertexArrayImpl;
 
-class ImplFactory
+class ImplFactory : angle::NonCopyable
 {
   public:
     ImplFactory() {}
@@ -63,8 +63,6 @@ class ImplFactory
 
     // Transform Feedback creation
     virtual TransformFeedbackImpl *createTransformFeedback() = 0;
-
-    DISALLOW_COPY_AND_ASSIGN(ImplFactory);
 };
 
 }

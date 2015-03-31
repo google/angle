@@ -73,7 +73,7 @@ D3D11_MAP GetD3DMapTypeFromBits(GLbitfield access)
 // - index buffers
 // - pixel unpack buffers
 // - uniform buffers
-class Buffer11::BufferStorage
+class Buffer11::BufferStorage : angle::NonCopyable
 {
   public:
     virtual ~BufferStorage() {}
@@ -95,8 +95,6 @@ class Buffer11::BufferStorage
     gl::Error setData(const uint8_t *data, size_t offset, size_t size);
 
   protected:
-    DISALLOW_COPY_AND_ASSIGN(BufferStorage);
-
     BufferStorage(Renderer11 *renderer, BufferUsage usage);
 
     Renderer11 *mRenderer;
@@ -125,8 +123,6 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
     void unmap() override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(NativeStorage);
-
     static void fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Renderer11 *renderer, BufferUsage usage, unsigned int bufferSize);
 
     ID3D11Buffer *mNativeStorage;
@@ -152,8 +148,6 @@ class Buffer11::PackStorage : public Buffer11::BufferStorage
     gl::Error packPixels(ID3D11Texture2D *srcTexure, UINT srcSubresource, const PackPixelsParams &params);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(PackStorage);
-
     gl::Error flushQueuedPackCommand();
 
     ID3D11Texture2D *mStagingTexture;
@@ -186,8 +180,6 @@ class Buffer11::SystemMemoryStorage : public Buffer11::BufferStorage
     MemoryBuffer *getSystemCopy() { return &mSystemCopy; }
 
   protected:
-    DISALLOW_COPY_AND_ASSIGN(SystemMemoryStorage);
-
     MemoryBuffer mSystemCopy;
 };
 

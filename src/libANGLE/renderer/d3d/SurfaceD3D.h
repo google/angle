@@ -55,8 +55,6 @@ class SurfaceD3D : public SurfaceImpl
     bool checkForOutOfDateSwapChain();
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(SurfaceD3D);
-
     SurfaceD3D(RendererD3D *renderer, egl::Display *display, const egl::Config *config, EGLint width, EGLint height,
                EGLint fixedSize, EGLint postSubBufferSupported, EGLenum textureFormat,
                EGLenum textureType, EGLClientBuffer shareHandle, EGLNativeWindowType window);

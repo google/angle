@@ -18,7 +18,7 @@
 namespace rx
 {
 
-class QueryImpl
+class QueryImpl : angle::NonCopyable
 {
   public:
     explicit QueryImpl(GLenum type) { mType = type; }
@@ -32,8 +32,6 @@ class QueryImpl
     GLenum getType() const { return mType;  }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(QueryImpl);
-
     GLenum mType;
 };
 

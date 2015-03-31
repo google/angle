@@ -30,8 +30,6 @@ class DebugAnnotator11 : public gl::DebugAnnotator
     bool mInitialized;
     HMODULE mD3d11Module;
     ID3DUserDefinedAnnotation *mUserDefinedAnnotation;
-
-    DISALLOW_COPY_AND_ASSIGN(DebugAnnotator11);
 };
 
 }

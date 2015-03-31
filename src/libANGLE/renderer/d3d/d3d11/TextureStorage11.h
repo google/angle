@@ -121,8 +121,6 @@ class TextureStorage11 : public TextureStorage
     SwizzleCacheValue mSwizzleCache[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorage11);
-
     const UINT mBindFlags;
 
     struct SRVKey
@@ -170,8 +168,6 @@ class TextureStorage11_2D : public TextureStorage11
     gl::Error ensureTextureExists(int mipLevels);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorage11_2D);
-
     virtual gl::Error createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture,
                                 ID3D11ShaderResourceView **outSRV) const;
 
@@ -228,8 +224,6 @@ class TextureStorage11_Cube : public TextureStorage11
     gl::Error ensureTextureExists(int mipLevels);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorage11_Cube);
-
     virtual gl::Error createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture,
                                 ID3D11ShaderResourceView **outSRV) const;
 
@@ -273,8 +267,6 @@ class TextureStorage11_3D : public TextureStorage11
     virtual gl::Error getSwizzleRenderTarget(int mipLevel, ID3D11RenderTargetView **outRTV);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorage11_3D);
-
     virtual gl::Error createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture,
                                 ID3D11ShaderResourceView **outSRV) const;
 
@@ -313,8 +305,6 @@ class TextureStorage11_2DArray : public TextureStorage11
     virtual gl::Error getSwizzleRenderTarget(int mipLevel, ID3D11RenderTargetView **outRTV);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorage11_2DArray);
-
     virtual gl::Error createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture,
                                 ID3D11ShaderResourceView **outSRV) const;
 

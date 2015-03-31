@@ -21,7 +21,7 @@ struct Config;
 namespace rx
 {
 
-class SurfaceImpl
+class SurfaceImpl : angle::NonCopyable
 {
   public:
     SurfaceImpl(egl::Display *display, const egl::Config *config,
@@ -74,9 +74,6 @@ class SurfaceImpl
     EGLenum mTextureTarget;        // Type of texture: 2D or no texture
 //  EGLenum vgAlphaFormat;         // Alpha format for OpenVG
 //  EGLenum vgColorSpace;          // Color space for OpenVG
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(SurfaceImpl);
 };
 
 }

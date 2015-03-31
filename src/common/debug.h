@@ -34,18 +34,15 @@ enum MessageType
 void trace(bool traceInDebugOnly, MessageType messageType, const char *format, ...);
 
 // Pairs a D3D begin event with an end event.
-class ScopedPerfEventHelper
+class ScopedPerfEventHelper : angle::NonCopyable
 {
   public:
     ScopedPerfEventHelper(const char* format, ...);
     ~ScopedPerfEventHelper();
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(ScopedPerfEventHelper);
 };
 
 // Wraps the D3D9/D3D11 debug annotation functions.
-class DebugAnnotator
+class DebugAnnotator : angle::NonCopyable
 {
   public:
     DebugAnnotator() { };
@@ -54,9 +51,6 @@ class DebugAnnotator
     virtual void endEvent() = 0;
     virtual void setMarker(const std::wstring &markerName) = 0;
     virtual bool getStatus() = 0;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(DebugAnnotator);
 };
 
 void InitializeDebugAnnotations(DebugAnnotator *debugAnnotator);

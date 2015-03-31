@@ -50,7 +50,7 @@ class Framebuffer
 {
   public:
 
-    class Data final
+    class Data final : angle::NonCopyable
     {
       public:
         explicit Data(const Caps &caps);
@@ -66,9 +66,6 @@ class Framebuffer
 
         std::vector<GLenum> mDrawBufferStates;
         GLenum mReadBufferState;
-
-      private:
-        DISALLOW_COPY_AND_ASSIGN(Data);
     };
 
     Framebuffer(const Caps &caps, rx::ImplFactory *factory, GLuint id);
@@ -135,18 +132,12 @@ class Framebuffer
     Data mData;
     rx::FramebufferImpl *mImpl;
     GLuint mId;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(Framebuffer);
 };
 
 class DefaultFramebuffer : public Framebuffer
 {
   public:
     DefaultFramebuffer(const gl::Caps &caps, rx::ImplFactory *factory, egl::Surface *surface);
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(DefaultFramebuffer);
 };
 
 }

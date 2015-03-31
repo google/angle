@@ -21,9 +21,6 @@ class SurfaceGL : public SurfaceImpl
               EGLint fixedSize, EGLint postSubBufferSupported, EGLenum textureFormat,
               EGLenum textureType);
     ~SurfaceGL() override;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(SurfaceGL);
 };
 
 }

@@ -30,7 +30,7 @@ class SwapChainD3D;
 class RenderTargetD3D;
 class ImageD3D;
 
-class TextureStorage
+class TextureStorage : angle::NonCopyable
 {
   public:
     TextureStorage();
@@ -58,8 +58,6 @@ class TextureStorage
     void initializeSerials(unsigned int rtSerialsToReserve, unsigned int rtSerialsLayerStride);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorage);
-
     unsigned int mFirstRenderTargetSerial;
     unsigned int mRenderTargetSerialsLayerStride;
 };

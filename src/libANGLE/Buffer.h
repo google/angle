@@ -52,8 +52,6 @@ class Buffer : public RefCountObject
     const rx::IndexRangeCache *getIndexRangeCache() const { return &mIndexRangeCache; }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Buffer);
-
     rx::BufferImpl *mBuffer;
 
     GLenum mUsage;

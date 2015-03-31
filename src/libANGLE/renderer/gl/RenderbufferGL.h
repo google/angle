@@ -29,8 +29,6 @@ class RenderbufferGL : public RenderbufferImpl
     GLuint getRenderbufferID() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(RenderbufferGL);
-
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
 

@@ -24,7 +24,7 @@ class FenceSyncImpl;
 namespace gl
 {
 
-class FenceNV final
+class FenceNV final : angle::NonCopyable
 {
   public:
     explicit FenceNV(rx::FenceNVImpl *impl);
@@ -39,8 +39,6 @@ class FenceNV final
     GLenum getCondition() const { return mCondition; }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(FenceNV);
-
     rx::FenceNVImpl *mFence;
 
     bool mIsSet;
@@ -63,8 +61,6 @@ class FenceSync final : public RefCountObject
     GLenum getCondition() const { return mCondition; }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(FenceSync);
-
     rx::FenceSyncImpl *mFence;
 
     GLenum mCondition;

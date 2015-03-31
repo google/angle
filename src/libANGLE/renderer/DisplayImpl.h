@@ -36,7 +36,7 @@ namespace rx
 class SurfaceImpl;
 struct ConfigDesc;
 
-class DisplayImpl
+class DisplayImpl : angle::NonCopyable
 {
   public:
     DisplayImpl();
@@ -84,8 +84,6 @@ class DisplayImpl
     SurfaceSet mSurfaceSet;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(DisplayImpl);
-
     virtual void generateExtensions(egl::DisplayExtensions *outExtensions) const = 0;
     virtual void generateCaps(egl::Caps *outCaps) const = 0;
 

@@ -37,7 +37,7 @@ bool IsVarying(TQualifier qualifier);
 InterpolationType GetInterpolationType(TQualifier qualifier);
 TString ArrayString(const TType &type);
 
-class GetVariableTraverser
+class GetVariableTraverser : angle::NonCopyable
 {
   public:
     GetVariableTraverser(const TSymbolTable &symbolTable);
@@ -57,8 +57,6 @@ class GetVariableTraverser
         const TType &type, const TString &name, VarT *variable) {}
 
     const TSymbolTable &mSymbolTable;
-
-    DISALLOW_COPY_AND_ASSIGN(GetVariableTraverser);
 };
 
 }

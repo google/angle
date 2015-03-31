@@ -21,7 +21,7 @@
 namespace rx
 {
 template <typename ShaderObject>
-class ShaderCache
+class ShaderCache : angle::NonCopyable
 {
   public:
     ShaderCache() : mDevice(NULL)
@@ -82,8 +82,6 @@ class ShaderCache
     }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(ShaderCache);
-
     const static size_t kMaxMapSize = 100;
 
     HRESULT createShader(const DWORD *function, IDirect3DVertexShader9 **shader)

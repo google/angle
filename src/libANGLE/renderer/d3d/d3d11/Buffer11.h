@@ -71,8 +71,6 @@ class Buffer11 : public BufferD3D
     virtual void markTransformFeedbackUsage();
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Buffer11);
-
     class BufferStorage;
     class NativeStorage;
     class PackStorage;

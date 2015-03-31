@@ -186,7 +186,7 @@ private:
 //
 // When using this, just fill in the methods for nodes you want visited.
 //
-class TDependencyGraphTraverser {
+class TDependencyGraphTraverser : angle::NonCopyable {
 public:
     TDependencyGraphTraverser() : mDepth(0) {}
 

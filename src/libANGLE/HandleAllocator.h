@@ -19,7 +19,7 @@
 namespace gl
 {
 
-class HandleAllocator final
+class HandleAllocator final : angle::NonCopyable
 {
   public:
     // Maximum handle = MAX_UINT-1
@@ -36,8 +36,6 @@ class HandleAllocator final
     void reserve(GLuint handle);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(HandleAllocator);
-
     GLuint mBaseValue;
     GLuint mNextValue;
     typedef std::vector<GLuint> HandleList;

@@ -19,13 +19,21 @@
 #include <sstream>
 #include <vector>
 
-// A macro to disallow the copy constructor and operator= functions
-// This must be used in the private: declarations for a class
-#define DISALLOW_COPY_AND_ASSIGN(TypeName)    \
-    TypeName(const TypeName&) = delete;       \
-    TypeName(TypeName&&) = delete;            \
-    void operator=(const TypeName&) = delete; \
-    void operator=(TypeName&&) = delete;
+// A helper class to disallow copy and assignment operators
+namespace angle
+{
+
+class NonCopyable
+{
+  public:
+    NonCopyable() = default;
+    ~NonCopyable() = default;
+  protected:
+    NonCopyable(const NonCopyable&) = delete;
+    void operator=(const NonCopyable&) = delete;
+};
+
+}
 
 template <typename T, size_t N>
 inline size_t ArraySize(T(&)[N])

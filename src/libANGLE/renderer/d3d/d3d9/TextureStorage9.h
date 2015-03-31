@@ -57,8 +57,6 @@ class TextureStorage9 : public TextureStorage
     TextureStorage9(Renderer9 *renderer, DWORD usage);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorage9);
-
     const DWORD mD3DUsage;
     const D3DPOOL mD3DPool;
 };
@@ -79,8 +77,6 @@ class TextureStorage9_2D : public TextureStorage9
     virtual gl::Error copyToStorage(TextureStorage *destStorage);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorage9_2D);
-
     IDirect3DTexture9 *mTexture;
     RenderTarget9 *mRenderTarget;
 };
@@ -100,8 +96,6 @@ class TextureStorage9_Cube : public TextureStorage9
     virtual gl::Error copyToStorage(TextureStorage *destStorage);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorage9_Cube);
-
     static const size_t CUBE_FACE_COUNT = 6;
 
     IDirect3DCubeTexture9 *mTexture;

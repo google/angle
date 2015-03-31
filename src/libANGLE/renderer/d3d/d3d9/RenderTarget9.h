@@ -28,9 +28,6 @@ class RenderTarget9 : public RenderTargetD3D
     virtual IDirect3DSurface9 *getSurface() = 0;
 
     virtual D3DFORMAT getD3DFormat() const = 0;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(RenderTarget9);
 };
 
 class TextureRenderTarget9 : public RenderTarget9
@@ -51,8 +48,6 @@ class TextureRenderTarget9 : public RenderTarget9
     D3DFORMAT getD3DFormat() const override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureRenderTarget9);
-
     GLsizei mWidth;
     GLsizei mHeight;
     GLsizei mDepth;
@@ -80,8 +75,6 @@ class SurfaceRenderTarget9 : public RenderTarget9
     D3DFORMAT getD3DFormat() const override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(SurfaceRenderTarget9);
-
     SwapChain9 *mSwapChain;
     bool mDepth;
 };

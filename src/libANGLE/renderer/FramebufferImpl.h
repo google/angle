@@ -25,7 +25,7 @@ struct Rectangle;
 namespace rx
 {
 
-class FramebufferImpl
+class FramebufferImpl : angle::NonCopyable
 {
   public:
     explicit FramebufferImpl(const gl::Framebuffer::Data &data) : mData(data) { }
@@ -61,9 +61,6 @@ class FramebufferImpl
 
   protected:
     const gl::Framebuffer::Data &mData;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(FramebufferImpl);
 };
 
 }

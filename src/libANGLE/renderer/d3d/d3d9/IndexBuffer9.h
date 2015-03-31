@@ -38,8 +38,6 @@ class IndexBuffer9 : public IndexBuffer
     IDirect3DIndexBuffer9 *getBuffer() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(IndexBuffer9);
-
     Renderer9 *const mRenderer;
 
     IDirect3DIndexBuffer9 *mIndexBuffer;

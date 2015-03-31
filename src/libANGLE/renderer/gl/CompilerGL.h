@@ -32,8 +32,6 @@ class CompilerGL : public CompilerImpl
     ShHandle getCompilerHandle(GLenum type);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(CompilerGL);
-
     ShShaderSpec mSpec;
     ShShaderOutput mOutputType;
     ShBuiltInResources mResources;

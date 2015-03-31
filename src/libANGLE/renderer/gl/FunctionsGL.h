@@ -714,8 +714,6 @@ class FunctionsGL
 
   private:
     virtual void *loadProcAddress(const std::string &function) = 0;
-
-    DISALLOW_COPY_AND_ASSIGN(FunctionsGL);
 };
 
 }

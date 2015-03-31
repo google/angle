@@ -18,7 +18,7 @@
 namespace rx
 {
 
-class FenceNVImpl
+class FenceNVImpl : angle::NonCopyable
 {
   public:
     FenceNVImpl() { };
@@ -27,9 +27,6 @@ class FenceNVImpl
     virtual gl::Error set() = 0;
     virtual gl::Error test(bool flushCommandBuffer, GLboolean *outFinished) = 0;
     virtual gl::Error finishFence(GLboolean *outFinished) = 0;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(FenceNVImpl);
 };
 
 }

@@ -42,8 +42,6 @@ class VertexBuffer11 : public VertexBuffer
     ID3D11Buffer *getBuffer() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(VertexBuffer11);
-
     gl::Error mapResource();
 
     Renderer11 *const mRenderer;

@@ -32,7 +32,7 @@ class AttributeMap;
 class Display;
 struct Config;
 
-class Surface final
+class Surface final : angle::NonCopyable
 {
   public:
     Surface(rx::SurfaceImpl *impl, EGLint surfaceType, const egl::Config *config, const AttributeMap &attributes);
@@ -70,8 +70,6 @@ class Surface final
     EGLint isFixedSize() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Surface);
-
     rx::SurfaceImpl *mImplementation;
 
     EGLint mType;

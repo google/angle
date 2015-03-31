@@ -37,7 +37,7 @@ struct SamplerState;
 namespace rx
 {
 
-class TextureImpl
+class TextureImpl : angle::NonCopyable
 {
   public:
     virtual ~TextureImpl() {};

@@ -28,7 +28,7 @@ namespace rx
 {
 class BufferFactoryD3D;
 
-class VertexBuffer
+class VertexBuffer : angle::NonCopyable
 {
   public:
     VertexBuffer();
@@ -54,13 +54,11 @@ class VertexBuffer
     void updateSerial();
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(VertexBuffer);
-
     unsigned int mSerial;
     static unsigned int mNextSerial;
 };
 
-class VertexBufferInterface
+class VertexBufferInterface : angle::NonCopyable
 {
   public:
     VertexBufferInterface(BufferFactoryD3D *factory, bool dynamic);
@@ -91,8 +89,6 @@ class VertexBufferInterface
     gl::Error setBufferSize(unsigned int size);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(VertexBufferInterface);
-
     BufferFactoryD3D *const mFactory;
 
     VertexBuffer* mVertexBuffer;
@@ -110,8 +106,6 @@ class StreamingVertexBufferInterface : public VertexBufferInterface
 
   protected:
     gl::Error reserveSpace(unsigned int size);
-
-    DISALLOW_COPY_AND_ASSIGN(StreamingVertexBufferInterface);
 };
 
 class StaticVertexBufferInterface : public VertexBufferInterface
@@ -142,8 +136,6 @@ class StaticVertexBufferInterface : public VertexBufferInterface
     };
 
     std::vector<VertexElement> mCache;
-
-    DISALLOW_COPY_AND_ASSIGN(StaticVertexBufferInterface);
 };
 
 }

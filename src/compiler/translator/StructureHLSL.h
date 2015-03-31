@@ -44,7 +44,7 @@ class Std140PaddingHelper
     const std::map<TString, int> *mStructElementIndexes;
 };
 
-class StructureHLSL
+class StructureHLSL : angle::NonCopyable
 {
   public:
     StructureHLSL();
@@ -58,8 +58,6 @@ class StructureHLSL
     Std140PaddingHelper getPaddingHelper();
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(StructureHLSL);
-
     unsigned mUniquePaddingCounter;
 
     std::map<TString, int> mStd140StructElementIndexes;

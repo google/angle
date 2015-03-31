@@ -12,7 +12,7 @@
 namespace rx
 {
 
-class FunctionsWGL
+class FunctionsWGL : angle::NonCopyable
 {
   public:
     FunctionsWGL();
@@ -48,9 +48,6 @@ class FunctionsWGL
     PFNWGLGETEXTENSIONSSTRINGEXTPROC getExtensionStringEXT;
     PFNWGLGETEXTENSIONSSTRINGARBPROC getExtensionStringARB;
     PFNWGLSWAPINTERVALEXTPROC swapIntervalEXT;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(FunctionsWGL);
 };
 
 }

@@ -32,7 +32,7 @@ class TextureStorage;
 class RendererD3D;
 class RenderTargetD3D;
 
-class ImageD3D
+class ImageD3D : angle::NonCopyable
 {
   public:
     ImageD3D();
@@ -76,8 +76,6 @@ class ImageD3D
     bool mDirty;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(ImageD3D);
-
     virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTargetD3D *source) = 0;
 };
 

@@ -26,7 +26,7 @@ struct CompileConfig
     CompileConfig(UINT flags, const std::string &name);
 };
 
-class HLSLCompiler
+class HLSLCompiler : angle::NonCopyable
 {
   public:
     HLSLCompiler();
@@ -44,8 +44,6 @@ class HLSLCompiler
     std::string disassembleBinary(ID3DBlob* shaderBinary) const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(HLSLCompiler);
-
     HMODULE mD3DCompilerModule;
     pD3DCompile mD3DCompileFunc;
     pD3DDisassemble mD3DDisassembleFunc;

@@ -38,7 +38,7 @@
 #include "compiler/translator/IntermNode.h"
 
 // Symbol base class. (Can build functions or variables out of these...)
-class TSymbol
+class TSymbol : angle::NonCopyable
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
@@ -86,8 +86,6 @@ class TSymbol
     }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TSymbol);
-
     int uniqueId; // For real comparing during code generation
     const TString *name;
     TString extension;
@@ -158,8 +156,6 @@ class TVariable : public TSymbol
     }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TVariable);
-
     TType type;
     bool userType;
     // we are assuming that Pool Allocator will free the memory
@@ -249,8 +245,6 @@ class TFunction : public TSymbol
     }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TFunction);
-
     typedef TVector<TParameter> TParamList;
     TParamList parameters;
     TType returnType;
@@ -307,7 +301,7 @@ const int ESSL3_BUILTINS = 2;
 const int LAST_BUILTIN_LEVEL = ESSL3_BUILTINS;
 const int GLOBAL_LEVEL = 3;
 
-class TSymbolTable
+class TSymbolTable : angle::NonCopyable
 {
   public:
     TSymbolTable()

@@ -16,7 +16,7 @@
 namespace rx
 {
 
-class VertexArrayImpl
+class VertexArrayImpl : angle::NonCopyable
 {
   public:
     virtual ~VertexArrayImpl() { }

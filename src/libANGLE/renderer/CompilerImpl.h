@@ -16,16 +16,13 @@
 namespace rx
 {
 
-class CompilerImpl
+class CompilerImpl : angle::NonCopyable
 {
   public:
     CompilerImpl() {}
     virtual ~CompilerImpl() {}
 
     virtual gl::Error release() = 0;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(CompilerImpl);
 };
 
 }

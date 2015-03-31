@@ -18,7 +18,7 @@ namespace rx
 {
 class BufferFactoryD3D;
 
-class IndexBuffer
+class IndexBuffer : angle::NonCopyable
 {
   public:
     IndexBuffer();
@@ -41,13 +41,11 @@ class IndexBuffer
     void updateSerial();
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(IndexBuffer);
-
     unsigned int mSerial;
     static unsigned int mNextSerial;
 };
 
-class IndexBufferInterface
+class IndexBufferInterface : angle::NonCopyable
 {
   public:
     IndexBufferInterface(BufferFactoryD3D *factory, bool dynamic);
@@ -74,8 +72,6 @@ class IndexBufferInterface
     gl::Error setBufferSize(unsigned int bufferSize, GLenum indexType);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(IndexBufferInterface);
-
     IndexBuffer *mIndexBuffer;
 
     unsigned int mWritePosition;
@@ -89,8 +85,6 @@ class StreamingIndexBufferInterface : public IndexBufferInterface
     ~StreamingIndexBufferInterface();
 
     gl::Error reserveBufferSpace(unsigned int size, GLenum indexType) override;
-
-    DISALLOW_COPY_AND_ASSIGN(StreamingIndexBufferInterface);
 };
 
 class StaticIndexBufferInterface : public IndexBufferInterface
@@ -100,8 +94,6 @@ class StaticIndexBufferInterface : public IndexBufferInterface
     ~StaticIndexBufferInterface();
 
     gl::Error reserveBufferSpace(unsigned int size, GLenum indexType) override;
-
-    DISALLOW_COPY_AND_ASSIGN(StaticIndexBufferInterface);
 };
 
 }

@@ -335,8 +335,6 @@ class NameHashingTraverser : public GetVariableTraverser
     {}
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(NameHashingTraverser);
-
     virtual void visitVariable(ShaderVariable *variable)
     {
         TString stringName = TString(variable->name.c_str());

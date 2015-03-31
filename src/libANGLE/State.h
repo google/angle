@@ -29,7 +29,7 @@ struct Data;
 
 typedef std::map< GLenum, BindingPointer<Texture> > TextureMap;
 
-class State
+class State : angle::NonCopyable
 {
   public:
     State();
@@ -258,8 +258,6 @@ class State
     bool hasMappedBuffer(GLenum target) const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(State);
-
     // Cached values from Context's caps
     GLuint mMaxDrawBuffers;
     GLuint mMaxCombinedTextureImageUnits;

@@ -72,8 +72,6 @@ class RendererGL : public Renderer
     std::string getRendererDescription() const override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(RendererGL);
-
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureCaps, gl::Extensions *outExtensions) const override;
     Workarounds generateWorkarounds() const override;
 

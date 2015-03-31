@@ -23,7 +23,7 @@ namespace rx
 {
 class Renderer11;
 
-class Trim11
+class Trim11 : angle::NonCopyable
 {
   public:
     explicit Trim11(Renderer11 *renderer);
@@ -36,8 +36,6 @@ class Trim11
     void trim();
     bool registerForRendererTrimRequest();
     void unregisterForRendererTrimRequest();
-
-    DISALLOW_COPY_AND_ASSIGN(Trim11);
 };
 
 }

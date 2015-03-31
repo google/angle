@@ -48,8 +48,6 @@ class DisplayD3D : public DisplayImpl
     std::string getVendorString() const override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(DisplayD3D);
-
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 

@@ -33,7 +33,7 @@ class Sampler;
 class FenceSync;
 struct Data;
 
-class ResourceManager
+class ResourceManager : angle::NonCopyable
 {
   public:
     explicit ResourceManager(rx::ImplFactory *factory);
@@ -76,8 +76,6 @@ class ResourceManager
     bool isSampler(GLuint sampler);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(ResourceManager);
-
     void createTextureInternal(GLuint handle);
 
     rx::ImplFactory *mFactory;

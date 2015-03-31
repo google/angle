@@ -49,8 +49,6 @@ class BufferD3D : public BufferImpl
     StaticVertexBufferInterface *mStaticVertexBuffer;
     StaticIndexBufferInterface *mStaticIndexBuffer;
     unsigned int mUnmodifiedDataUse;
-
-    DISALLOW_COPY_AND_ASSIGN(BufferD3D);
 };
 
 }

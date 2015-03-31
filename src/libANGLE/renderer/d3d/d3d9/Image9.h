@@ -52,8 +52,6 @@ class Image9 : public ImageD3D
                            const gl::ImageIndex &sourceIndex, TextureStorage *source);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Image9);
-
     gl::Error getSurface(IDirect3DSurface9 **outSurface);
 
     gl::Error createSurface();

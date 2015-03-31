@@ -15,7 +15,7 @@
 namespace rx
 {
 
-class TransformFeedbackImpl
+class TransformFeedbackImpl : angle::NonCopyable
 {
   public:
     virtual ~TransformFeedbackImpl() { }

@@ -36,8 +36,6 @@ class BufferGL : public BufferImpl
     GLuint getBufferID() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(BufferGL);
-
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
 

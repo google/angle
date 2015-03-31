@@ -28,7 +28,7 @@ namespace rx
 
 class FunctionsGL;
 
-class StateManagerGL
+class StateManagerGL : angle::NonCopyable
 {
   public:
     StateManagerGL(const FunctionsGL *functions, const gl::Caps &rendererCaps);
@@ -49,8 +49,6 @@ class StateManagerGL
                                    const GLvoid **outIndices);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(StateManagerGL);
-
     gl::Error setGenericDrawState(const gl::Data &data);
 
     void setScissor(const gl::Rectangle &scissor);

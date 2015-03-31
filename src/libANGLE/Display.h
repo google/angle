@@ -33,7 +33,7 @@ namespace egl
 {
 class Surface;
 
-class Display final
+class Display final : angle::NonCopyable
 {
   public:
     ~Display();
@@ -90,8 +90,6 @@ class Display final
     rx::DisplayImpl *getImplementation() { return mImplementation; }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Display);
-
     Display(EGLNativeDisplayType displayId);
 
     void setAttributes(rx::DisplayImpl *impl, const AttributeMap &attribMap);

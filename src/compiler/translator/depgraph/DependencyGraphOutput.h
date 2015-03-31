@@ -23,8 +23,6 @@ class TDependencyGraphOutput : public TDependencyGraphTraverser
 
     void outputAllSpanningTrees(TDependencyGraph& graph);
   private:
-    DISALLOW_COPY_AND_ASSIGN(TDependencyGraphOutput);
-
     void outputIndentation();
 
     TInfoSinkBase& mSink;

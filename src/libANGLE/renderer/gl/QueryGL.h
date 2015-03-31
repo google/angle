@@ -24,9 +24,6 @@ class QueryGL : public QueryImpl
     gl::Error end() override;
     gl::Error getResult(GLuint *params) override;
     gl::Error isResultAvailable(GLuint *available) override;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(QueryGL);
 };
 
 }

@@ -237,8 +237,6 @@ class Renderer11 : public RendererD3D
     RendererClass getRendererClass() const override { return RENDERER_D3D11; }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Renderer11);
-
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const override;
     Workarounds generateWorkarounds() const override;
 

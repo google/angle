@@ -39,8 +39,6 @@ class Buffer9 : public BufferD3D
     virtual void markTransformFeedbackUsage();
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Buffer9);
-
     Renderer9 *mRenderer;
     MemoryBuffer mMemory;
     size_t mSize;

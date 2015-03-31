@@ -55,7 +55,7 @@ class VertexArray;
 class Sampler;
 class TransformFeedback;
 
-class Context
+class Context final : angle::NonCopyable
 {
   public:
     Context(const egl::Config *config, int clientVersion, const Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess);
@@ -202,8 +202,6 @@ class Context
     Data getData() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Context);
-
     void detachBuffer(GLuint buffer);
     void detachTexture(GLuint texture);
     void detachFramebuffer(GLuint framebuffer);

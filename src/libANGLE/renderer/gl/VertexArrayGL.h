@@ -34,8 +34,6 @@ class VertexArrayGL : public VertexArrayImpl
     GLuint getVertexArrayID() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(VertexArrayGL);
-
     gl::Error syncDrawState(GLint first, GLsizei count, GLenum type, const GLvoid *indices, const GLvoid **outIndices) const;
 
     // Check if any vertex attributes need to be streamed

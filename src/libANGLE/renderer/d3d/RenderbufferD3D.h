@@ -35,8 +35,6 @@ class RenderbufferD3D : public RenderbufferImpl
     unsigned int getRenderTargetSerial() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(RenderbufferD3D);
-
     RendererD3D *mRenderer;
     RenderTargetD3D *mRenderTarget;
 };

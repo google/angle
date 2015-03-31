@@ -18,7 +18,7 @@
 namespace rx
 {
 
-class ShaderExecutableD3D
+class ShaderExecutableD3D : angle::NonCopyable
 {
   public:
     ShaderExecutableD3D(const void *function, size_t length);
@@ -33,13 +33,11 @@ class ShaderExecutableD3D
     void appendDebugInfo(const std::string &info);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(ShaderExecutableD3D);
-
     std::vector<uint8_t> mFunctionBuffer;
     std::string mDebugInfo;
 };
 
-class UniformStorageD3D
+class UniformStorageD3D : angle::NonCopyable
 {
   public:
     UniformStorageD3D(size_t initialSize);

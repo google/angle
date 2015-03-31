@@ -30,8 +30,6 @@ class DisplayGL : public DisplayImpl
                              gl::Context **outContext) override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(DisplayGL);
-
     virtual const FunctionsGL *getFunctionsGL() const = 0;
 
     RendererGL *mRenderer;

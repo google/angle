@@ -48,7 +48,7 @@ struct TranslatedIndexData
     unsigned int serial;
 };
 
-class IndexDataManager
+class IndexDataManager : angle::NonCopyable
 {
   public:
     explicit IndexDataManager(BufferFactoryD3D *factory, RendererClass rendererClass);
@@ -57,9 +57,7 @@ class IndexDataManager
     gl::Error prepareIndexData(GLenum type, GLsizei count, gl::Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated);
 
   private:
-     gl::Error getStreamingIndexBuffer(GLenum destinationIndexType, IndexBufferInterface **outBuffer);
-
-    DISALLOW_COPY_AND_ASSIGN(IndexDataManager);
+    gl::Error getStreamingIndexBuffer(GLenum destinationIndexType, IndexBufferInterface **outBuffer);
 
     BufferFactoryD3D *const mFactory;
     RendererClass mRendererClass;

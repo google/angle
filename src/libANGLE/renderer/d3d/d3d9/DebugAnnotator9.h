@@ -22,8 +22,6 @@ class DebugAnnotator9 : public gl::DebugAnnotator
     void endEvent() override;
     void setMarker(const std::wstring &markerName) override;
     bool getStatus() override;
-
-    DISALLOW_COPY_AND_ASSIGN(DebugAnnotator9);
 };
 
 }

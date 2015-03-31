@@ -91,8 +91,6 @@ class Texture final : public RefCountObject
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Texture);
-
     static unsigned int issueTextureSerial();
 
     rx::TextureImpl *mTexture;

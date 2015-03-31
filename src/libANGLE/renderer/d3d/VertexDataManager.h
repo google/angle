@@ -46,7 +46,7 @@ struct TranslatedAttribute
     unsigned int divisor;
 };
 
-class VertexDataManager
+class VertexDataManager : angle::NonCopyable
 {
   public:
     VertexDataManager(BufferFactoryD3D *factory);
@@ -56,8 +56,6 @@ class VertexDataManager
                                 TranslatedAttribute *outAttribs, GLsizei instances);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(VertexDataManager);
-
     gl::Error reserveSpaceForAttrib(const gl::VertexAttribute &attrib,
                                     const gl::VertexAttribCurrentValueData &currentValue,
                                     GLsizei count,

@@ -560,7 +560,7 @@ enum Visit
 // When using this, just fill in the methods for nodes you want visited.
 // Return false from a pre-visit to skip visiting that node's subtree.
 //
-class TIntermTraverser
+class TIntermTraverser : angle::NonCopyable
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
@@ -648,9 +648,6 @@ class TIntermTraverser
     // During traversing, save all the changes that need to happen into
     // mReplacements, then do them by calling updateTree().
     std::vector<NodeUpdateEntry> mReplacements;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(TIntermTraverser);
 };
 
 //
@@ -676,9 +673,6 @@ class TMaxDepthTraverser : public TIntermTraverser
     bool depthCheck() const { return mMaxDepth < mDepthLimit; }
 
     int mDepthLimit;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(TMaxDepthTraverser);
 };
 
 #endif  // COMPILER_TRANSLATOR_INTERMNODE_H_

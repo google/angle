@@ -37,8 +37,6 @@ class VertexBuffer9 : public VertexBuffer
     IDirect3DVertexBuffer9 *getBuffer() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(VertexBuffer9);
-
     Renderer9 *mRenderer;
 
     IDirect3DVertexBuffer9 *mVertexBuffer;

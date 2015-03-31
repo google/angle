@@ -75,8 +75,6 @@ class Renderer : public ImplFactory
     const Workarounds &getWorkarounds() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Renderer);
-
     virtual void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureCaps, gl::Extensions *outExtensions) const = 0;
     virtual Workarounds generateWorkarounds() const = 0;
 

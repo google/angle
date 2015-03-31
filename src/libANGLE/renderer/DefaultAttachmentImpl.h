@@ -15,7 +15,7 @@
 namespace rx
 {
 
-class DefaultAttachmentImpl
+class DefaultAttachmentImpl : angle::NonCopyable
 {
   public:
     DefaultAttachmentImpl() {}
@@ -25,9 +25,6 @@ class DefaultAttachmentImpl
     virtual GLsizei getHeight() const = 0;
     virtual GLenum getInternalFormat() const = 0;
     virtual GLsizei getSamples() const = 0;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(DefaultAttachmentImpl);
 };
 
 }

@@ -38,8 +38,6 @@ class TransformFeedback : public RefCountObject
     GLboolean isPaused() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TransformFeedback);
-
     rx::TransformFeedbackImpl* mTransformFeedback;
 
     GLboolean mStarted;

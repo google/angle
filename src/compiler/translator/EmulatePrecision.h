@@ -30,8 +30,6 @@ class EmulatePrecision : public TIntermTraverser
     void writeEmulationHelpers(TInfoSinkBase& sink, ShShaderOutput outputLanguage);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(EmulatePrecision);
-
     struct TypePair
     {
         TypePair(const char *l, const char *r)

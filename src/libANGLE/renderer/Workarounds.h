@@ -16,7 +16,7 @@
 namespace rx
 {
 
-struct D3DCompilerWorkarounds
+struct D3DCompilerWorkarounds : angle::NonCopyable
 {
     D3DCompilerWorkarounds()
         : skipOptimization(false),
@@ -36,8 +36,6 @@ struct D3DCompilerWorkarounds
 
     // IEEE strictness needs to be enabled for NANs to work.
     bool enableIEEEStrictness;
-
-    DISALLOW_COPY_AND_ASSIGN(D3DCompilerWorkarounds)
 };
 
 struct Workarounds

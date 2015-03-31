@@ -19,7 +19,7 @@ namespace gl
 {
 
 // Helper struct representing a single shader uniform
-struct LinkedUniform
+struct LinkedUniform : angle::NonCopyable
 {
     LinkedUniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize, const int blockIndex, const sh::BlockMemberInfo &blockInfo);
 
@@ -50,13 +50,10 @@ struct LinkedUniform
     // Register "elements" are used for uniform structs in ES3, to appropriately identify single uniforms
     // inside aggregate types, which are packed according C-like structure rules.
     unsigned int registerElement;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(LinkedUniform);
 };
 
 // Helper struct representing a single shader uniform block
-struct UniformBlock
+struct UniformBlock : angle::NonCopyable
 {
     // use GL_INVALID_INDEX for non-array elements
     UniformBlock(const std::string &name, unsigned int elementIndex, unsigned int dataSize);
@@ -73,9 +70,6 @@ struct UniformBlock
 
     unsigned int psRegisterIndex;
     unsigned int vsRegisterIndex;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(UniformBlock);
 };
 
 }

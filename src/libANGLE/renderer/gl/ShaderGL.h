@@ -28,8 +28,6 @@ class ShaderGL : public ShaderImpl
     GLuint getShaderID() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(ShaderGL);
-
     const FunctionsGL *mFunctions;
 
     GLenum mType;

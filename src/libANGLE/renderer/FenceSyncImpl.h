@@ -18,7 +18,7 @@
 namespace rx
 {
 
-class FenceSyncImpl
+class FenceSyncImpl : angle::NonCopyable
 {
   public:
     FenceSyncImpl() { };
@@ -28,9 +28,6 @@ class FenceSyncImpl
     virtual gl::Error clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult) = 0;
     virtual gl::Error serverWait(GLbitfield flags, GLuint64 timeout) = 0;
     virtual gl::Error getStatus(GLint *outResult) = 0;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(FenceSyncImpl);
 };
 
 }

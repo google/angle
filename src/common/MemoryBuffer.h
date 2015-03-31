@@ -15,7 +15,7 @@
 namespace rx
 {
 
-class MemoryBuffer
+class MemoryBuffer : angle::NonCopyable
 {
   public:
     MemoryBuffer();
@@ -29,8 +29,6 @@ class MemoryBuffer
     uint8_t *data();
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(MemoryBuffer);
-
     size_t mSize;
     uint8_t *mData;
 };

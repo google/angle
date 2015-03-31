@@ -59,8 +59,6 @@ class Image11 : public ImageD3D
     void unmap();
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Image11);
-
     gl::Error copyToStorageImpl(TextureStorage11 *storage11, const gl::ImageIndex &index, const gl::Box &region);
     gl::Error copy(const gl::Offset &destOffset, const gl::Box &sourceArea, ID3D11Resource *source, UINT sourceSubResource);
 

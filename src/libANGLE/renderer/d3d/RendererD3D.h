@@ -67,8 +67,6 @@ class BufferFactoryD3D
     // TODO(jmadill): add VertexFormatCaps
     virtual VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const = 0;
     virtual GLenum getVertexComponentType(const gl::VertexFormat &vertexFormat) const = 0;
-
-    DISALLOW_COPY_AND_ASSIGN(BufferFactoryD3D);
 };
 
 class RendererD3D : public Renderer, public BufferFactoryD3D
@@ -199,8 +197,6 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     bool mDeviceLost;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(RendererD3D);
-
     //FIXME(jmadill): std::array is currently prohibited by Chromium style guide
     typedef std::array<unsigned int, gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS> FramebufferTextureSerialArray;
 

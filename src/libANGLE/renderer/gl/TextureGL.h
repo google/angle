@@ -52,8 +52,6 @@ class TextureGL : public TextureImpl
     GLuint getTextureID() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureGL);
-
     GLenum mTextureType;
 
     const FunctionsGL *mFunctions;

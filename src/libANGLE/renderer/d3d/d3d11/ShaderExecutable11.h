@@ -34,8 +34,6 @@ class ShaderExecutable11 : public ShaderExecutableD3D
     ID3D11GeometryShader *getStreamOutShader() const;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(ShaderExecutable11);
-
     ID3D11PixelShader *mPixelExecutable;
     ID3D11VertexShader *mVertexExecutable;
     ID3D11GeometryShader *mGeometryExecutable;

@@ -49,8 +49,6 @@ class DisplayWGL : public DisplayGL
     std::string getVendorString() const override;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(DisplayWGL);
-
     const FunctionsGL *getFunctionsGL() const override;
 
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
