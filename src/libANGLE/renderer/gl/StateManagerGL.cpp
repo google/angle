@@ -224,11 +224,11 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
             if (texture != nullptr)
             {
                 const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
+                textureGL->syncSamplerState(texture->getSamplerState());
+
                 if (mTextures[textureType][textureUnitIndex] != textureGL->getTextureID())
                 {
                     activeTexture(textureUnitIndex);
-                    textureGL->syncSamplerState(texture->getSamplerState());
-
                     bindTexture(textureType, textureGL->getTextureID());
                 }
 
