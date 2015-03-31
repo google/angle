@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "83143e89_cb15c6c6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-03-31T15:30:41Z",
+      "side": 1,
+      "message": "Only array assignment, right? This makes it sound like all uses of the return value of an assignment would be rejected, which would be bad. :-)",
+      "range": {
+        "startLine": 10,
+        "startChar": 9,
+        "endLine": 10,
+        "endChar": 19
+      },
+      "revId": "81e69e7f9e6282a4ae6f2ad5f3c86ea66d1214d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "630f4a79_98020109",
         "filename": "src/compiler/translator/SimplifyArrayAssignment.h",
         "patchSetId": 2
