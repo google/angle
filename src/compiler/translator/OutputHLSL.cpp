@@ -345,6 +345,14 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
             out << eqFunction->functionDefinition << "\n";
         }
     }
+    if (!mArrayAssignmentFunctions.empty())
+    {
+        out << "\n// Assignment functions\n\n";
+        for (const auto &assignmentFunction : mArrayAssignmentFunctions)
+        {
+            out << assignmentFunction.functionDefinition << "\n";
+        }
+    }
 
     if (mUsesDiscardRewriting)
     {
@@ -1443,7 +1451,8 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpAssign:
         if (node->getLeft()->isArray())
         {
-            UNIMPLEMENTED();
+            const TString &functionName = addArrayAssignmentFunction(node->getType());
+            outputTriplet(visit, (functionName + "(").c_str(), ", ", ")");
         }
         else
         {
@@ -3022,7 +3031,7 @@ TString OutputHLSL::addArrayEqualityFunction(const TType& type)
 
     const TString &typeName = TypeString(type);
 
-    ArrayEqualityFunction *function = new ArrayEqualityFunction();
+    ArrayHelperFunction *function = new ArrayHelperFunction();
     function->type = type;
 
     TInfoSinkBase fnNameOut;
@@ -3059,6 +3068,44 @@ TString OutputHLSL::addArrayEqualityFunction(const TType& type)
     mEqualityFunctions.push_back(function);
 
     return function->functionName;
+}
+
+TString OutputHLSL::addArrayAssignmentFunction(const TType& type)
+{
+    for (const auto &assignFunction : mArrayAssignmentFunctions)
+    {
+        if (assignFunction.type == type)
+        {
+            return assignFunction.functionName;
+        }
+    }
+
+    const TString &typeName = TypeString(type);
+
+    ArrayHelperFunction function;
+    function.type = type;
+
+    TInfoSinkBase fnNameOut;
+    fnNameOut << "angle_assign_" << type.getArraySize() << "_" << typeName;
+    function.functionName = fnNameOut.c_str();
+
+    TInfoSinkBase fnOut;
+
+    fnOut << "void " << function.functionName << "(out "
+        << typeName << " a[" << type.getArraySize() << "], "
+        << typeName << " b[" << type.getArraySize() << "])\n"
+        << "{\n"
+           "    for (int i = 0; i < " << type.getArraySize() << "; ++i)\n"
+           "    {\n"
+           "        a[i] = b[i];\n"
+           "    }\n"
+           "}\n";
+
+    function.functionDefinition = fnOut.c_str();
+
+    mArrayAssignmentFunctions.push_back(function);
+
+    return function.functionName;
 }
 
 }

@@ -89,6 +89,7 @@ class OutputHLSL : public TIntermTraverser
     // Returns the function name
     TString addStructEqualityFunction(const TStructure &structure);
     TString addArrayEqualityFunction(const TType &type);
+    TString addArrayAssignmentFunction(const TType &type);
 
     sh::GLenum mShaderType;
     int mShaderVersion;
@@ -186,31 +187,33 @@ class OutputHLSL : public TIntermTraverser
     // these static globals after we initialize our other globals.
     std::vector<std::pair<TIntermSymbol*, TIntermTyped*>> mDeferredGlobalInitializers;
 
-    struct EqualityFunction
+    struct HelperFunction
     {
         TString functionName;
         TString functionDefinition;
 
-        virtual ~EqualityFunction() {}
+        virtual ~HelperFunction() {}
     };
 
     // A list of all equality comparison functions. It's important to preserve the order at
     // which we add the functions, since nested structures call each other recursively, and
     // structure equality functions may need to call array equality functions and vice versa.
     // The ownership of the pointers is maintained by the type-specific arrays.
-    std::vector<EqualityFunction*> mEqualityFunctions;
+    std::vector<HelperFunction*> mEqualityFunctions;
 
-    struct StructEqualityFunction : public EqualityFunction
+    struct StructEqualityFunction : public HelperFunction
     {
         const TStructure *structure;
     };
     std::vector<StructEqualityFunction*> mStructEqualityFunctions;
 
-    struct ArrayEqualityFunction : public EqualityFunction
+    struct ArrayHelperFunction : public HelperFunction
     {
         TType type;
     };
-    std::vector<ArrayEqualityFunction*> mArrayEqualityFunctions;
+    std::vector<ArrayHelperFunction*> mArrayEqualityFunctions;
+
+    std::vector<ArrayHelperFunction> mArrayAssignmentFunctions;
 };
 
 }
