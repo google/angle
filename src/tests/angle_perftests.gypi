@@ -28,6 +28,7 @@
         'perf_tests/ANGLEPerfTest.cpp',
         'perf_tests/ANGLEPerfTest.h',
         'perf_tests/BufferSubData.cpp',
+        'perf_tests/DrawCallPerf.cpp',
         'perf_tests/PointSprites.cpp',
         'perf_tests/TexSubImage.cpp',
         'perf_tests/third_party/perf/perf_test.cc',
