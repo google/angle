@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03af6e90_de0f352f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-01T19:08:10Z",
+      "side": 1,
+      "message": "I tried to limit the maximum size of the constant buffers so that it doesn’t grow more than two times the size of the original buffer.",
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23b8f2d3_5c25f127",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 812,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-01T19:08:10Z",
+      "side": 1,
+      "message": "Unless I am mistaken, this should best destOffset, not sourceOffset.",
+      "range": {
+        "startLine": 812,
+        "startChar": 26,
+        "endLine": 812,
+        "endChar": 36
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23b8f2d3_7c2ab5f8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 819,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-01T19:08:10Z",
+      "side": 1,
+      "message": "same issue here.",
+      "range": {
+        "startLine": 819,
+        "startChar": 15,
+        "endLine": 819,
+        "endChar": 27
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
