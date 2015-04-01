@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "439a4679_c703dcc4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-01T15:20:56Z",
+      "side": 1,
+      "message": "I think we could reduce the number of buffers in use by only finding a buffer with the same offset.  If the required size is less than or equal then we can just use that buffer and if it is larger then we can just increase the size of the storage.\n\nI\u0027m also a little worried about having the number of buffers we may generate.  It would be possible to write a program that keeps binding the same buffer with different offsets and we end up with hundreds of copies of the data.  Could we use an LRU with a maximum number of buffers or total additional storage size?",
+      "range": {
+        "startLine": 628,
+        "startChar": 4,
+        "endLine": 628,
+        "endChar": 93
+      },
+      "revId": "443b6f26a20cc06ae7c65e70c4ec4fb720a4f0ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
