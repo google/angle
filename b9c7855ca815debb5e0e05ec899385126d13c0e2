@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8370be19_f80cf93c",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-01T18:55:27Z",
+      "side": 1,
+      "message": "add a short comment here explaining what a \u0027ConstructIntoFunction\u0027 is (as this is an ANGLE concept you\u0027re introducing)",
+      "range": {
+        "startLine": 219,
+        "startChar": 37,
+        "endLine": 219,
+        "endChar": 65
+      },
+      "revId": "b9c7855ca815debb5e0e05ec899385126d13c0e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
