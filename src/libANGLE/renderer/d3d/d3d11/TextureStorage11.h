@@ -34,8 +34,6 @@ class TextureStorage11 : public TextureStorage
   public:
     virtual ~TextureStorage11();
 
-    static TextureStorage11 *makeTextureStorage11(TextureStorage *storage);
-
     static DWORD GetTextureBindFlags(GLenum internalFormat, D3D_FEATURE_LEVEL featureLevel, bool renderTarget);
 
     UINT getBindFlags() const;
@@ -146,8 +144,6 @@ class TextureStorage11_2D : public TextureStorage11
     TextureStorage11_2D(Renderer11 *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels, bool hintLevelZeroOnly = false);
     virtual ~TextureStorage11_2D();
 
-    static TextureStorage11_2D *makeTextureStorage11_2D(TextureStorage *storage);
-
     virtual gl::Error getResource(ID3D11Resource **outResource);
     virtual gl::Error getMippedResource(ID3D11Resource **outResource);
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
@@ -200,8 +196,6 @@ class TextureStorage11_Cube : public TextureStorage11
     TextureStorage11_Cube(Renderer11 *renderer, GLenum internalformat, bool renderTarget, int size, int levels, bool hintLevelZeroOnly);
     virtual ~TextureStorage11_Cube();
 
-    static TextureStorage11_Cube *makeTextureStorage11_Cube(TextureStorage *storage);
-
     virtual UINT getSubresourceIndex(const gl::ImageIndex &index) const;
 
     virtual gl::Error getResource(ID3D11Resource **outResource);
@@ -250,8 +244,6 @@ class TextureStorage11_3D : public TextureStorage11
                         GLsizei width, GLsizei height, GLsizei depth, int levels);
     virtual ~TextureStorage11_3D();
 
-    static TextureStorage11_3D *makeTextureStorage11_3D(TextureStorage *storage);
-
     virtual gl::Error getResource(ID3D11Resource **outResource);
 
     // Handles both layer and non-layer RTs
@@ -289,8 +281,6 @@ class TextureStorage11_2DArray : public TextureStorage11
     TextureStorage11_2DArray(Renderer11 *renderer, GLenum internalformat, bool renderTarget,
                              GLsizei width, GLsizei height, GLsizei depth, int levels);
     virtual ~TextureStorage11_2DArray();
-
-    static TextureStorage11_2DArray *makeTextureStorage11_2DArray(TextureStorage *storage);
 
     virtual gl::Error getResource(ID3D11Resource **outResource);
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);

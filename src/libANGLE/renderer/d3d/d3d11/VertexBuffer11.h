@@ -25,8 +25,6 @@ class VertexBuffer11 : public VertexBuffer
 
     virtual gl::Error initialize(unsigned int size, bool dynamicUsage);
 
-    static VertexBuffer11 *makeVertexBuffer11(VertexBuffer *vetexBuffer);
-
     virtual gl::Error storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
                                             GLint start, GLsizei count, GLsizei instances, unsigned int offset);
 

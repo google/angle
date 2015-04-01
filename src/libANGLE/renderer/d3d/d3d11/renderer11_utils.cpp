@@ -1207,7 +1207,7 @@ gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment,
     {
         return error;
     }
-    *outRT = RenderTarget11::makeRenderTarget11(renderTarget);
+    *outRT = GetAs<RenderTarget11>(renderTarget);
     return gl::Error(GL_NO_ERROR);
 }
 

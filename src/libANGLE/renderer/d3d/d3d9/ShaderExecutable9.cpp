@@ -34,12 +34,6 @@ ShaderExecutable9::~ShaderExecutable9()
     SafeRelease(mPixelExecutable);
 }
 
-ShaderExecutable9 *ShaderExecutable9::makeShaderExecutable9(ShaderExecutableD3D *executable)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(ShaderExecutable9*, executable));
-    return static_cast<ShaderExecutable9*>(executable);
-}
-
 IDirect3DVertexShader9 *ShaderExecutable9::getVertexShader() const
 {
     return mVertexExecutable;

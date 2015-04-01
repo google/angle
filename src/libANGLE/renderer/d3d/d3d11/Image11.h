@@ -31,8 +31,6 @@ class Image11 : public ImageD3D
     Image11(Renderer11 *renderer);
     virtual ~Image11();
 
-    static Image11 *makeImage11(ImageD3D *img);
-
     static gl::Error generateMipmap(Image11 *dest, Image11 *src);
 
     virtual bool isDirty() const;

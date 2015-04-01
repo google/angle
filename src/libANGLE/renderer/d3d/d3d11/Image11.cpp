@@ -43,12 +43,6 @@ Image11::~Image11()
     releaseStagingTexture();
 }
 
-Image11 *Image11::makeImage11(ImageD3D *img)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(Image11*, img));
-    return static_cast<Image11*>(img);
-}
-
 gl::Error Image11::generateMipmap(Image11 *dest, Image11 *src)
 {
     ASSERT(src->getDXGIFormat() == dest->getDXGIFormat());
@@ -104,7 +98,7 @@ bool Image11::isDirty() const
 
 gl::Error Image11::copyToStorage(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region)
 {
-    TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(storage);
+    TextureStorage11 *storage11 = GetAs<TextureStorage11>(storage);
 
     // If an app's behavior results in an Image11 copying its data to/from to a TextureStorage multiple times,
     // then we should just keep the staging texture around to prevent the copying from impacting perf.
@@ -314,7 +308,7 @@ gl::Error Image11::loadCompressedData(const gl::Box &area, const void *input)
 
 gl::Error Image11::copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTargetD3D *source)
 {
-    RenderTarget11 *sourceRenderTarget = RenderTarget11::makeRenderTarget11(source);
+    RenderTarget11 *sourceRenderTarget = GetAs<RenderTarget11>(source);
     ASSERT(sourceRenderTarget->getTexture());
 
     ID3D11Resource *resource = sourceRenderTarget->getTexture();
@@ -330,7 +324,7 @@ gl::Error Image11::copy(const gl::Offset &destOffset, const gl::Rectangle &sourc
 
 gl::Error Image11::copy(const gl::Offset &destOffset, const gl::Box &sourceArea, const gl::ImageIndex &sourceIndex, TextureStorage *source)
 {
-    TextureStorage11 *sourceStorage11 = TextureStorage11::makeTextureStorage11(source);
+    TextureStorage11 *sourceStorage11 = GetAs<TextureStorage11>(source);
 
     UINT subresourceIndex = sourceStorage11->getSubresourceIndex(sourceIndex);
     ID3D11Resource *resource = NULL;

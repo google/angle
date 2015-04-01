@@ -387,7 +387,7 @@ gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment,
     {
         gl::Renderbuffer *renderbuffer = attachment->getRenderbuffer();
         ASSERT(renderbuffer);
-        RenderbufferD3D *renderbufferD3D = RenderbufferD3D::makeRenderbufferD3D(renderbuffer->getImplementation());
+        RenderbufferD3D *renderbufferD3D = GetImplAs<RenderbufferD3D>(renderbuffer);
         *outRT = renderbufferD3D->getRenderTarget();
         return gl::Error(GL_NO_ERROR);
     }
@@ -431,7 +431,7 @@ unsigned int GetAttachmentSerial(const gl::FramebufferAttachment *attachment)
     {
         gl::Renderbuffer *renderbuffer = attachment->getRenderbuffer();
         ASSERT(renderbuffer);
-        RenderbufferD3D *renderbufferD3D = RenderbufferD3D::makeRenderbufferD3D(renderbuffer->getImplementation());
+        RenderbufferD3D *renderbufferD3D = GetImplAs<RenderbufferD3D>(renderbuffer);
         return renderbufferD3D->getRenderTargetSerial();
     }
     else if (attachment->type() == GL_FRAMEBUFFER_DEFAULT)

@@ -24,12 +24,6 @@ RenderbufferD3D::~RenderbufferD3D()
     SafeDelete(mRenderTarget);
 }
 
-RenderbufferD3D *RenderbufferD3D::makeRenderbufferD3D(RenderbufferImpl *renderbuffer)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(RenderbufferD3D*, renderbuffer));
-    return static_cast<RenderbufferD3D*>(renderbuffer);
-}
-
 gl::Error RenderbufferD3D::setStorage(GLenum internalformat, size_t width, size_t height)
 {
     return setStorageMultisample(0, internalformat, width, height);

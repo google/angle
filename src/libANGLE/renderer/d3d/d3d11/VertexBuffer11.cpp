@@ -61,12 +61,6 @@ gl::Error VertexBuffer11::initialize(unsigned int size, bool dynamicUsage)
     return gl::Error(GL_NO_ERROR);
 }
 
-VertexBuffer11 *VertexBuffer11::makeVertexBuffer11(VertexBuffer *vetexBuffer)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(VertexBuffer11*, vetexBuffer));
-    return static_cast<VertexBuffer11*>(vetexBuffer);
-}
-
 gl::Error VertexBuffer11::mapResource()
 {
     if (mMappedResourceData == NULL)

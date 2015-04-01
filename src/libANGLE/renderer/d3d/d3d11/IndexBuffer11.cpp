@@ -56,12 +56,6 @@ gl::Error IndexBuffer11::initialize(unsigned int bufferSize, GLenum indexType, b
     return gl::Error(GL_NO_ERROR);
 }
 
-IndexBuffer11 *IndexBuffer11::makeIndexBuffer11(IndexBuffer *indexBuffer)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(IndexBuffer11*, indexBuffer));
-    return static_cast<IndexBuffer11*>(indexBuffer);
-}
-
 gl::Error IndexBuffer11::mapBuffer(unsigned int offset, unsigned int size, void** outMappedMemory)
 {
     if (!mBuffer)

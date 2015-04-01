@@ -652,12 +652,6 @@ ID3D11Texture2D *SwapChain11::getDepthStencilTexture()
     return mDepthStencilTexture;
 }
 
-SwapChain11 *SwapChain11::makeSwapChain11(SwapChainD3D *swapChain)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(SwapChain11*, swapChain));
-    return static_cast<SwapChain11*>(swapChain);
-}
-
 void SwapChain11::recreate()
 {
     // possibly should use this method instead of reset

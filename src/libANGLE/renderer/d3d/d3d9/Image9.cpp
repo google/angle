@@ -94,12 +94,6 @@ gl::Error Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 
     return gl::Error(GL_NO_ERROR);
 }
 
-Image9 *Image9::makeImage9(ImageD3D *img)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(Image9*, img));
-    return static_cast<Image9*>(img);
-}
-
 gl::Error Image9::generateMipmap(Image9 *dest, Image9 *source)
 {
     IDirect3DSurface9 *sourceSurface = NULL;
@@ -336,7 +330,7 @@ gl::Error Image9::getSurface(IDirect3DSurface9 **outSurface)
 gl::Error Image9::setManagedSurface2D(TextureStorage *storage, int level)
 {
     IDirect3DSurface9 *surface = NULL;
-    TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage);
+    TextureStorage9_2D *storage9 = GetAs<TextureStorage9_2D>(storage);
     gl::Error error = storage9->getSurfaceLevel(level, false, &surface);
     if (error.isError())
     {
@@ -348,7 +342,7 @@ gl::Error Image9::setManagedSurface2D(TextureStorage *storage, int level)
 gl::Error Image9::setManagedSurfaceCube(TextureStorage *storage, int face, int level)
 {
     IDirect3DSurface9 *surface = NULL;
-    TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage);
+    TextureStorage9_Cube *storage9 = GetAs<TextureStorage9_Cube>(storage);
     gl::Error error = storage9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, false, &surface);
     if (error.isError())
     {
@@ -394,7 +388,7 @@ gl::Error Image9::copyToStorage(TextureStorage *storage, const gl::ImageIndex &i
 
     if (index.type == GL_TEXTURE_2D)
     {
-        TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage);
+        TextureStorage9_2D *storage9 = GetAs<TextureStorage9_2D>(storage);
         error = storage9->getSurfaceLevel(index.mipIndex, true, &destSurface);
         if (error.isError())
         {
@@ -404,7 +398,7 @@ gl::Error Image9::copyToStorage(TextureStorage *storage, const gl::ImageIndex &i
     else
     {
         ASSERT(gl::IsCubeMapTextureTarget(index.type));
-        TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage);
+        TextureStorage9_Cube *storage9 = GetAs<TextureStorage9_Cube>(storage);
         error = storage9->getCubeMapSurface(index.type, index.mipIndex, true, &destSurface);
         if (error.isError())
         {
@@ -557,7 +551,7 @@ gl::Error Image9::copy(const gl::Offset &destOffset, const gl::Rectangle &source
     // ES3.0 only behaviour to copy into a 3d texture
     ASSERT(destOffset.z == 0);
 
-    RenderTarget9 *renderTarget = RenderTarget9::makeRenderTarget9(source);
+    RenderTarget9 *renderTarget = GetAs<RenderTarget9>(source);
 
     IDirect3DSurface9 *surface = renderTarget->getSurface();
     ASSERT(surface);

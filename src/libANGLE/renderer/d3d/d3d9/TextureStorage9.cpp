@@ -27,7 +27,7 @@ TextureStorage9::TextureStorage9(Renderer9 *renderer, DWORD usage)
       mTextureHeight(0),
       mInternalFormat(GL_NONE),
       mTextureFormat(D3DFMT_UNKNOWN),
-      mRenderer(Renderer9::makeRenderer9(renderer)),
+      mRenderer(renderer),
       mD3DUsage(usage),
       mD3DPool(mRenderer->getTexturePool(usage))
 {
@@ -35,12 +35,6 @@ TextureStorage9::TextureStorage9(Renderer9 *renderer, DWORD usage)
 
 TextureStorage9::~TextureStorage9()
 {
-}
-
-TextureStorage9 *TextureStorage9::makeTextureStorage9(TextureStorage *storage)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(TextureStorage9*, storage));
-    return static_cast<TextureStorage9*>(storage);
 }
 
 DWORD TextureStorage9::GetTextureUsage(GLenum internalformat, bool renderTarget)
@@ -142,12 +136,6 @@ TextureStorage9_2D::~TextureStorage9_2D()
 {
     SafeRelease(mTexture);
     SafeDelete(mRenderTarget);
-}
-
-TextureStorage9_2D *TextureStorage9_2D::makeTextureStorage9_2D(TextureStorage *storage)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(TextureStorage9_2D*, storage));
-    return static_cast<TextureStorage9_2D*>(storage);
 }
 
 // Increments refcount on surface.
@@ -252,7 +240,7 @@ gl::Error TextureStorage9_2D::copyToStorage(TextureStorage *destStorage)
 {
     ASSERT(destStorage);
 
-    TextureStorage9_2D *dest9 = TextureStorage9_2D::makeTextureStorage9_2D(destStorage);
+    TextureStorage9_2D *dest9 = GetAs<TextureStorage9_2D>(destStorage);
 
     int levels = getLevelCount();
     for (int i = 0; i < levels; ++i)
@@ -317,12 +305,6 @@ TextureStorage9_Cube::~TextureStorage9_Cube()
     {
         SafeDelete(mRenderTarget[i]);
     }
-}
-
-TextureStorage9_Cube *TextureStorage9_Cube::makeTextureStorage9_Cube(TextureStorage *storage)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(TextureStorage9_Cube*, storage));
-    return static_cast<TextureStorage9_Cube*>(storage);
 }
 
 // Increments refcount on surface.
@@ -432,7 +414,7 @@ gl::Error TextureStorage9_Cube::copyToStorage(TextureStorage *destStorage)
 {
     ASSERT(destStorage);
 
-    TextureStorage9_Cube *dest9 = TextureStorage9_Cube::makeTextureStorage9_Cube(destStorage);
+    TextureStorage9_Cube *dest9 = GetAs<TextureStorage9_Cube>(destStorage);
 
     int levels = getLevelCount();
     for (int f = 0; f < CUBE_FACE_COUNT; f++)

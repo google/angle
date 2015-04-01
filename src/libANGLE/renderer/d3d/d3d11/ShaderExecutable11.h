@@ -26,8 +26,6 @@ class ShaderExecutable11 : public ShaderExecutableD3D
 
     virtual ~ShaderExecutable11();
 
-    static ShaderExecutable11 *makeShaderExecutable11(ShaderExecutableD3D *executable);
-
     ID3D11PixelShader *getPixelShader() const;
     ID3D11VertexShader *getVertexShader() const;
     ID3D11GeometryShader *getGeometryShader() const;
@@ -45,8 +43,6 @@ class UniformStorage11 : public UniformStorageD3D
   public:
     UniformStorage11(Renderer11 *renderer, size_t initialSize);
     virtual ~UniformStorage11();
-
-    static const UniformStorage11 *makeUniformStorage11(const UniformStorageD3D *uniformStorage);
 
     ID3D11Buffer *getConstantBuffer() const { return mConstantBuffer; }
 

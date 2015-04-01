@@ -61,7 +61,8 @@ bool TextureStorage11::SRVKey::operator<(const SRVKey &rhs) const
 }
 
 TextureStorage11::TextureStorage11(Renderer11 *renderer, UINT bindFlags)
-    : mBindFlags(bindFlags),
+    : mRenderer(renderer),
+      mBindFlags(bindFlags),
       mTopLevel(0),
       mMipLevels(0),
       mInternalFormat(GL_NONE),
@@ -73,11 +74,9 @@ TextureStorage11::TextureStorage11(Renderer11 *renderer, UINT bindFlags)
       mTextureHeight(0),
       mTextureDepth(0)
 {
-    mRenderer = Renderer11::makeRenderer11(renderer);
-
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
-        mLevelSRVs[i] = NULL;
+        mLevelSRVs[i] = nullptr;
     }
 }
 
@@ -93,12 +92,6 @@ TextureStorage11::~TextureStorage11()
         SafeRelease(i->second);
     }
     mSrvCache.clear();
-}
-
-TextureStorage11 *TextureStorage11::makeTextureStorage11(TextureStorage *storage)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(TextureStorage11*, storage));
-    return static_cast<TextureStorage11*>(storage);
 }
 
 DWORD TextureStorage11::GetTextureBindFlags(GLenum internalFormat, D3D_FEATURE_LEVEL featureLevel, bool renderTarget)
@@ -469,8 +462,8 @@ gl::Error TextureStorage11::generateMipmap(const gl::ImageIndex &sourceIndex, co
         return error;
     }
 
-    ID3D11ShaderResourceView *sourceSRV = RenderTarget11::makeRenderTarget11(source)->getShaderResourceView();
-    ID3D11RenderTargetView *destRTV = RenderTarget11::makeRenderTarget11(dest)->getRenderTargetView();
+    ID3D11ShaderResourceView *sourceSRV = GetAs<RenderTarget11>(source)->getShaderResourceView();
+    ID3D11RenderTargetView *destRTV = GetAs<RenderTarget11>(dest)->getRenderTargetView();
 
     gl::Box sourceArea(0, 0, 0, source->getWidth(), source->getHeight(), source->getDepth());
     gl::Extents sourceSize(source->getWidth(), source->getHeight(), source->getDepth());
@@ -503,7 +496,7 @@ gl::Error TextureStorage11::copyToStorage(TextureStorage *destStorage)
         return error;
     }
 
-    TextureStorage11 *dest11 = TextureStorage11::makeTextureStorage11(destStorage);
+    TextureStorage11 *dest11 = GetAs<TextureStorage11>(destStorage);
     ID3D11Resource *destResource = NULL;
     error = dest11->getResource(&destResource);
     if (error.isError())
@@ -726,17 +719,11 @@ TextureStorage11_2D::~TextureStorage11_2D()
     }
 }
 
-TextureStorage11_2D *TextureStorage11_2D::makeTextureStorage11_2D(TextureStorage *storage)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(TextureStorage11_2D*, storage));
-    return static_cast<TextureStorage11_2D*>(storage);
-}
-
 gl::Error TextureStorage11_2D::copyToStorage(TextureStorage *destStorage)
 {
     ASSERT(destStorage);
 
-    TextureStorage11_2D *dest11 = TextureStorage11_2D::makeTextureStorage11_2D(destStorage);
+    TextureStorage11_2D *dest11 = GetAs<TextureStorage11_2D>(destStorage);
 
     if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
@@ -1334,12 +1321,6 @@ TextureStorage11_Cube::~TextureStorage11_Cube()
     }
 }
 
-TextureStorage11_Cube *TextureStorage11_Cube::makeTextureStorage11_Cube(TextureStorage *storage)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(TextureStorage11_Cube*, storage));
-    return static_cast<TextureStorage11_Cube*>(storage);
-}
-
 UINT TextureStorage11_Cube::getSubresourceIndex(const gl::ImageIndex &index) const
 {
     if (mRenderer->getWorkarounds().zeroMaxLodWorkaround && mUseLevelZeroTexture && index.mipIndex == 0)
@@ -1363,7 +1344,7 @@ gl::Error TextureStorage11_Cube::copyToStorage(TextureStorage *destStorage)
 {
     ASSERT(destStorage);
 
-    TextureStorage11_Cube *dest11 = TextureStorage11_Cube::makeTextureStorage11_Cube(destStorage);
+    TextureStorage11_Cube *dest11 = GetAs<TextureStorage11_Cube>(destStorage);
 
     if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
@@ -1999,12 +1980,6 @@ TextureStorage11_3D::~TextureStorage11_3D()
     }
 }
 
-TextureStorage11_3D *TextureStorage11_3D::makeTextureStorage11_3D(TextureStorage *storage)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(TextureStorage11_3D*, storage));
-    return static_cast<TextureStorage11_3D*>(storage);
-}
-
 void TextureStorage11_3D::associateImage(Image11* image, const gl::ImageIndex &index)
 {
     GLint level = index.mipIndex;
@@ -2381,12 +2356,6 @@ TextureStorage11_2DArray::~TextureStorage11_2DArray()
         SafeDelete(i->second);
     }
     mRenderTargets.clear();
-}
-
-TextureStorage11_2DArray *TextureStorage11_2DArray::makeTextureStorage11_2DArray(TextureStorage *storage)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(TextureStorage11_2DArray*, storage));
-    return static_cast<TextureStorage11_2DArray*>(storage);
 }
 
 void TextureStorage11_2DArray::associateImage(Image11* image, const gl::ImageIndex &index)

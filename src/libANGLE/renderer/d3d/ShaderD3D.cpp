@@ -76,18 +76,6 @@ ShaderD3D::~ShaderD3D()
 {
 }
 
-ShaderD3D *ShaderD3D::makeShaderD3D(ShaderImpl *impl)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(ShaderD3D*, impl));
-    return static_cast<ShaderD3D*>(impl);
-}
-
-const ShaderD3D *ShaderD3D::makeShaderD3D(const ShaderImpl *impl)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(const ShaderD3D*, impl));
-    return static_cast<const ShaderD3D*>(impl);
-}
-
 std::string ShaderD3D::getDebugInfo() const
 {
     return mDebugInfo + std::string("\n// ") + GetShaderTypeString(mShaderType) + " SHADER END\n";
@@ -337,7 +325,7 @@ bool ShaderD3D::compile(gl::Compiler *compiler, const std::string &source)
 {
     uncompile();
 
-    CompilerD3D *compilerD3D = CompilerD3D::makeCompilerD3D(compiler->getImplementation());
+    CompilerD3D *compilerD3D = GetImplAs<CompilerD3D>(compiler);
     ShHandle compilerHandle = compilerD3D->getCompilerHandle(mShaderType);
 
     mCompilerOutputType = ShGetShaderOutputType(compilerHandle);

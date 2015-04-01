@@ -52,7 +52,7 @@ static gl::Error InvalidateAttachmentSwizzles(const gl::FramebufferAttachment *a
 
         if (texStorage)
         {
-            TextureStorage11 *texStorage11 = TextureStorage11::makeTextureStorage11(texStorage);
+            TextureStorage11 *texStorage11 = GetAs<TextureStorage11>(texStorage);
             ASSERT(texStorage11);
 
             texStorage11->invalidateSwizzleCacheLevel(attachment->mipLevel());
@@ -149,7 +149,7 @@ gl::Error Framebuffer11::readPixels(const gl::Rectangle &area, GLenum format, GL
     gl::Buffer *packBuffer = pack.pixelBuffer.get();
     if (packBuffer != NULL)
     {
-        Buffer11 *packBufferStorage = Buffer11::makeBuffer11(packBuffer->getImplementation());
+        Buffer11 *packBufferStorage = GetImplAs<Buffer11>(packBuffer);
         PackPixelsParams packParams(area, format, type, outputPitch, pack, reinterpret_cast<ptrdiff_t>(pixels));
 
         error = packBufferStorage->packPixels(colorBufferTexture, subresourceIndex, packParams);
@@ -261,7 +261,7 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
 
 GLenum Framebuffer11::getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const
 {
-    RenderTarget11 *renderTarget11 = RenderTarget11::makeRenderTarget11(renderTarget);
+    RenderTarget11 *renderTarget11 = GetAs<RenderTarget11>(renderTarget);
     const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(renderTarget11->getDXGIFormat());
     return dxgiFormatInfo.internalFormat;
 }

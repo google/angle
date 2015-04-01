@@ -39,8 +39,6 @@ class SwapChain9 : public SwapChainD3D
     EGLint getWidth() const { return mWidth; }
     EGLint getHeight() const { return mHeight; }
 
-    static SwapChain9 *makeSwapChain9(SwapChainD3D *swapChain);
-
   private:
     void release();
 

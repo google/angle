@@ -54,13 +54,6 @@ void RendererD3D::cleanup()
     mIncompleteTextures.clear();
 }
 
-// static
-RendererD3D *RendererD3D::makeRendererD3D(Renderer *renderer)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(RendererD3D*, renderer));
-    return static_cast<RendererD3D*>(renderer);
-}
-
 gl::Error RendererD3D::drawElements(const gl::Data &data,
                                     GLenum mode, GLsizei count, GLenum type,
                                     const GLvoid *indices, GLsizei instances,

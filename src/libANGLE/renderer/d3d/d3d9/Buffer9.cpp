@@ -23,12 +23,6 @@ Buffer9::~Buffer9()
     mSize = 0;
 }
 
-Buffer9 *Buffer9::makeBuffer9(BufferImpl *buffer)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(Buffer9*, buffer));
-    return static_cast<Buffer9*>(buffer);
-}
-
 gl::Error Buffer9::setData(const void* data, size_t size, GLenum usage)
 {
     if (size > mMemory.size())
@@ -85,7 +79,7 @@ gl::Error Buffer9::setSubData(const void* data, size_t size, size_t offset)
 gl::Error Buffer9::copySubData(BufferImpl* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size)
 {
     // Note: this method is currently unreachable
-    Buffer9* sourceBuffer = makeBuffer9(source);
+    Buffer9* sourceBuffer = GetAs<Buffer9>(source);
     ASSERT(sourceBuffer);
 
     memcpy(mMemory.data() + destOffset, sourceBuffer->mMemory.data() + sourceOffset, size);

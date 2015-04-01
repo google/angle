@@ -23,8 +23,6 @@ class RenderTarget9 : public RenderTargetD3D
     RenderTarget9() { }
     virtual ~RenderTarget9() { }
 
-    static RenderTarget9 *makeRenderTarget9(RenderTargetD3D *renderTarget);
-
     virtual IDirect3DSurface9 *getSurface() = 0;
 
     virtual D3DFORMAT getD3DFormat() const = 0;

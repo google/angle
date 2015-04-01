@@ -384,12 +384,6 @@ IDirect3DTexture9 *SwapChain9::getOffscreenTexture()
     return mOffscreenTexture;
 }
 
-SwapChain9 *SwapChain9::makeSwapChain9(SwapChainD3D *swapChain)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(SwapChain9*, swapChain));
-    return static_cast<SwapChain9*>(swapChain);
-}
-
 void SwapChain9::recreate()
 {
     if (!mSwapChain)

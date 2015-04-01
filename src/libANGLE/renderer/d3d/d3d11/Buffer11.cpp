@@ -200,12 +200,6 @@ Buffer11::~Buffer11()
     }
 }
 
-Buffer11 *Buffer11::makeBuffer11(BufferImpl *buffer)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(Buffer11*, buffer));
-    return static_cast<Buffer11*>(buffer);
-}
-
 gl::Error Buffer11::setData(const void *data, size_t size, GLenum usage)
 {
     gl::Error error = setSubData(data, size, 0);
@@ -311,7 +305,7 @@ gl::Error Buffer11::setSubData(const void *data, size_t size, size_t offset)
 
 gl::Error Buffer11::copySubData(BufferImpl* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size)
 {
-    Buffer11 *sourceBuffer = makeBuffer11(source);
+    Buffer11 *sourceBuffer = GetAs<Buffer11>(source);
     ASSERT(sourceBuffer != NULL);
 
     BufferStorage *copyDest = getLatestBufferStorage();

@@ -959,8 +959,8 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::VertexFormat i
 LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
                                                  int registers)
 {
-    ShaderD3D *vertexShaderD3D = ShaderD3D::makeShaderD3D(vertexShader->getImplementation());
-    ShaderD3D *fragmentShaderD3D = ShaderD3D::makeShaderD3D(fragmentShader->getImplementation());
+    ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(vertexShader);
+    ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(fragmentShader);
 
     gl::VertexFormat defaultInputLayout[gl::MAX_VERTEX_ATTRIBS];
     GetDefaultInputLayoutFromShader(vertexShader->getActiveAttributes(), defaultInputLayout);
@@ -1025,8 +1025,8 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
                             int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
                             std::map<int, gl::VariableLocation> *outputVariables)
 {
-    ShaderD3D *vertexShaderD3D = ShaderD3D::makeShaderD3D(vertexShader->getImplementation());
-    ShaderD3D *fragmentShaderD3D = ShaderD3D::makeShaderD3D(fragmentShader->getImplementation());
+    ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(vertexShader);
+    ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(fragmentShader);
 
     mSamplersPS.resize(data.caps->maxTextureImageUnits);
     mSamplersVS.resize(data.caps->maxVertexTextureImageUnits);
@@ -1326,8 +1326,8 @@ void ProgramD3D::getUniformuiv(GLint location, GLuint *params)
 bool ProgramD3D::linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShader, const gl::Shader &fragmentShader,
                               const gl::Caps &caps)
 {
-    const ShaderD3D *vertexShaderD3D = ShaderD3D::makeShaderD3D(vertexShader.getImplementation());
-    const ShaderD3D *fragmentShaderD3D = ShaderD3D::makeShaderD3D(fragmentShader.getImplementation());
+    const ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(&vertexShader);
+    const ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(&fragmentShader);
 
     const std::vector<sh::Uniform> &vertexUniforms = vertexShader.getUniforms();
     const std::vector<sh::Uniform> &fragmentUniforms = fragmentShader.getUniforms();
@@ -1764,7 +1764,7 @@ void ProgramD3D::defineUniformBlockMembers(const std::vector<VarT> &fields, cons
 bool ProgramD3D::defineUniformBlock(gl::InfoLog &infoLog, const gl::Shader &shader, const sh::InterfaceBlock &interfaceBlock,
                                     const gl::Caps &caps)
 {
-    const ShaderD3D* shaderD3D = ShaderD3D::makeShaderD3D(shader.getImplementation());
+    const ShaderD3D* shaderD3D = GetImplAs<ShaderD3D>(&shader);
 
     // create uniform block entries if they do not exist
     if (getUniformBlockIndex(interfaceBlock.name) == GL_INVALID_INDEX)

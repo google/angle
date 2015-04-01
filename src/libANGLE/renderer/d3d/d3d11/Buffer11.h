@@ -50,8 +50,6 @@ class Buffer11 : public BufferD3D
     Buffer11(Renderer11 *renderer);
     virtual ~Buffer11();
 
-    static Buffer11 *makeBuffer11(BufferImpl *buffer);
-
     ID3D11Buffer *getBuffer(BufferUsage usage);
     ID3D11ShaderResourceView *getSRV(DXGI_FORMAT srvFormat);
     bool isMapped() const { return mMappedStorage != NULL; }

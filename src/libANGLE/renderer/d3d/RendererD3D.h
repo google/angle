@@ -77,8 +77,6 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     virtual egl::Error initialize() = 0;
 
-    static RendererD3D *makeRendererD3D(Renderer *renderer);
-
     virtual egl::ConfigSet generateConfigs() const = 0;
 
     gl::Error drawArrays(const gl::Data &data,

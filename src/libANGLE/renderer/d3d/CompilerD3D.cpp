@@ -59,12 +59,6 @@ CompilerD3D::~CompilerD3D()
     release();
 }
 
-CompilerD3D *CompilerD3D::makeCompilerD3D(CompilerImpl *compiler)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(CompilerD3D*, compiler));
-    return static_cast<CompilerD3D*>(compiler);
-}
-
 gl::Error CompilerD3D::release()
 {
     if (mFragmentCompiler)

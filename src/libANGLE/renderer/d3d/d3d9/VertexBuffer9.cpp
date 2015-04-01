@@ -56,12 +56,6 @@ gl::Error VertexBuffer9::initialize(unsigned int size, bool dynamicUsage)
     return gl::Error(GL_NO_ERROR);
 }
 
-VertexBuffer9 *VertexBuffer9::makeVertexBuffer9(VertexBuffer *vertexBuffer)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(VertexBuffer9*, vertexBuffer));
-    return static_cast<VertexBuffer9*>(vertexBuffer);
-}
-
 gl::Error VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
                                                GLint start, GLsizei count, GLsizei instances, unsigned int offset)
 {

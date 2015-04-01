@@ -23,8 +23,6 @@ class RenderTarget11 : public RenderTargetD3D
     RenderTarget11() { }
     virtual ~RenderTarget11() { }
 
-    static RenderTarget11 *makeRenderTarget11(RenderTargetD3D *renderTarget);
-
     virtual ID3D11Resource *getTexture() const = 0;
     virtual ID3D11RenderTargetView *getRenderTargetView() const = 0;
     virtual ID3D11DepthStencilView *getDepthStencilView() const = 0;

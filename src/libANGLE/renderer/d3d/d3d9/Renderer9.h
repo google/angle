@@ -64,8 +64,6 @@ class Renderer9 : public RendererD3D
     explicit Renderer9(egl::Display *display);
     virtual ~Renderer9();
 
-    static Renderer9 *makeRenderer9(Renderer *renderer);
-
     egl::Error initialize() override;
     virtual bool resetDevice();
 

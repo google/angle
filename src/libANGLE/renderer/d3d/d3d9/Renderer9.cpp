@@ -173,12 +173,6 @@ void Renderer9::release()
     mD3d9Module = NULL;
 }
 
-Renderer9 *Renderer9::makeRenderer9(Renderer *renderer)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(Renderer9*, renderer));
-    return static_cast<Renderer9*>(renderer);
-}
-
 egl::Error Renderer9::initialize()
 {
     if (!mCompiler.initialize())
@@ -834,7 +828,7 @@ gl::Error Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *te
         // Texture should be complete and have a storage
         ASSERT(texStorage);
 
-        TextureStorage9 *storage9 = TextureStorage9::makeTextureStorage9(texStorage);
+        TextureStorage9 *storage9 = GetAs<TextureStorage9>(texStorage);
         error = storage9->getBaseTexture(&d3dTexture);
         if (error.isError())
         {
@@ -1442,7 +1436,7 @@ gl::Error Renderer9::applyIndexBuffer(const GLvoid *indices, gl::Buffer *element
 
     if (indexInfo->serial != mAppliedIBSerial)
     {
-        IndexBuffer9* indexBuffer = IndexBuffer9::makeIndexBuffer9(indexInfo->indexBuffer);
+        IndexBuffer9* indexBuffer = GetAs<IndexBuffer9>(indexInfo->indexBuffer);
 
         mDevice->SetIndices(indexBuffer->getBuffer());
         mAppliedIBSerial = indexInfo->serial;
@@ -1477,7 +1471,7 @@ gl::Error Renderer9::drawArrays(const gl::Data &data, GLenum mode, GLsizei count
 
         if (mAppliedIBSerial != countingIB->getSerial())
         {
-            IndexBuffer9 *indexBuffer = IndexBuffer9::makeIndexBuffer9(countingIB->getIndexBuffer());
+            IndexBuffer9 *indexBuffer = GetAs<IndexBuffer9>(countingIB->getIndexBuffer());
 
             mDevice->SetIndices(indexBuffer->getBuffer());
             mAppliedIBSerial = countingIB->getSerial();
@@ -1700,7 +1694,7 @@ gl::Error Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indi
 
     if (mAppliedIBSerial != mLineLoopIB->getSerial())
     {
-        IndexBuffer9 *indexBuffer = IndexBuffer9::makeIndexBuffer9(mLineLoopIB->getIndexBuffer());
+        IndexBuffer9 *indexBuffer = GetAs<IndexBuffer9>(mLineLoopIB->getIndexBuffer());
 
         mDevice->SetIndices(indexBuffer->getBuffer());
         mAppliedIBSerial = mLineLoopIB->getSerial();
@@ -1846,8 +1840,8 @@ gl::Error Renderer9::applyShaders(gl::Program *program, const gl::VertexFormat i
         return error;
     }
 
-    IDirect3DVertexShader9 *vertexShader = (vertexExe ? ShaderExecutable9::makeShaderExecutable9(vertexExe)->getVertexShader() : NULL);
-    IDirect3DPixelShader9 *pixelShader = (pixelExe ? ShaderExecutable9::makeShaderExecutable9(pixelExe)->getPixelShader() : NULL);
+    IDirect3DVertexShader9 *vertexShader = (vertexExe ? GetAs<ShaderExecutable9>(vertexExe)->getVertexShader() : nullptr);
+    IDirect3DPixelShader9 *pixelShader = (pixelExe ? GetAs<ShaderExecutable9>(pixelExe)->getPixelShader() : nullptr);
 
     if (vertexShader != mAppliedVertexShader)
     {
@@ -2011,7 +2005,7 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
             return error;
         }
 
-        RenderTarget9 *stencilRenderTarget9 = RenderTarget9::makeRenderTarget9(stencilRenderTarget);
+        RenderTarget9 *stencilRenderTarget9 = GetAs<RenderTarget9>(stencilRenderTarget);
         ASSERT(stencilRenderTarget9);
 
         const d3d9::D3DFormat &d3dFormatInfo = d3d9::GetD3DFormatInfo(stencilRenderTarget9->getD3DFormat());
@@ -2032,7 +2026,7 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
             return error;
         }
 
-        RenderTarget9 *colorRenderTarget9 = RenderTarget9::makeRenderTarget9(colorRenderTarget);
+        RenderTarget9 *colorRenderTarget9 = GetAs<RenderTarget9>(colorRenderTarget);
         ASSERT(colorRenderTarget9);
 
         const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(colorBuffer->getInternalFormat());
@@ -2841,14 +2835,14 @@ ImageD3D *Renderer9::createImage()
 
 gl::Error Renderer9::generateMipmap(ImageD3D *dest, ImageD3D *src)
 {
-    Image9 *src9 = Image9::makeImage9(src);
-    Image9 *dst9 = Image9::makeImage9(dest);
+    Image9 *src9 = GetAs<Image9>(src);
+    Image9 *dst9 = GetAs<Image9>(dest);
     return Image9::generateMipmap(dst9, src9);
 }
 
 TextureStorage *Renderer9::createTextureStorage2D(SwapChainD3D *swapChain)
 {
-    SwapChain9 *swapChain9 = SwapChain9::makeSwapChain9(swapChain);
+    SwapChain9 *swapChain9 = GetAs<SwapChain9>(swapChain);
     return new TextureStorage9_2D(this, swapChain9);
 }
 

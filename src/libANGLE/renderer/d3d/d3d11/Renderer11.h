@@ -71,8 +71,6 @@ class Renderer11 : public RendererD3D
     explicit Renderer11(egl::Display *display);
     virtual ~Renderer11();
 
-    static Renderer11 *makeRenderer11(Renderer *renderer);
-
     egl::Error initialize() override;
     virtual bool resetDevice();
 

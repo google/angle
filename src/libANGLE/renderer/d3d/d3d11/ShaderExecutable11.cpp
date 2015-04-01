@@ -48,12 +48,6 @@ ShaderExecutable11::~ShaderExecutable11()
     SafeRelease(mStreamOutExecutable);
 }
 
-ShaderExecutable11 *ShaderExecutable11::makeShaderExecutable11(ShaderExecutableD3D *executable)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(ShaderExecutable11*, executable));
-    return static_cast<ShaderExecutable11*>(executable);
-}
-
 ID3D11VertexShader *ShaderExecutable11::getVertexShader() const
 {
     return mVertexExecutable;
@@ -99,12 +93,6 @@ UniformStorage11::UniformStorage11(Renderer11 *renderer, size_t initialSize)
 UniformStorage11::~UniformStorage11()
 {
     SafeRelease(mConstantBuffer);
-}
-
-const UniformStorage11 *UniformStorage11::makeUniformStorage11(const UniformStorageD3D *uniformStorage)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(const UniformStorage11*, uniformStorage));
-    return static_cast<const UniformStorage11*>(uniformStorage);
 }
 
 }

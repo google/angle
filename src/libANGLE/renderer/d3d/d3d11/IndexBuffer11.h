@@ -23,8 +23,6 @@ class IndexBuffer11 : public IndexBuffer
 
     virtual gl::Error initialize(unsigned int bufferSize, GLenum indexType, bool dynamic);
 
-    static IndexBuffer11 *makeIndexBuffer11(IndexBuffer *indexBuffer);
-
     virtual gl::Error mapBuffer(unsigned int offset, unsigned int size, void** outMappedMemory);
     virtual gl::Error unmapBuffer();
 

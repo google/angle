@@ -205,11 +205,11 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
     const d3d11::TextureFormat &sourceFormatInfo = d3d11::GetTextureFormatInfo(sourceFormat, mRenderer->getFeatureLevel());
     DXGI_FORMAT srvFormat = sourceFormatInfo.srvFormat;
     ASSERT(srvFormat != DXGI_FORMAT_UNKNOWN);
-    Buffer11 *bufferStorage11 = Buffer11::makeBuffer11(sourceBuffer.getImplementation());
+    Buffer11 *bufferStorage11 = GetAs<Buffer11>(sourceBuffer.getImplementation());
     ID3D11ShaderResourceView *bufferSRV = bufferStorage11->getSRV(srvFormat);
     ASSERT(bufferSRV != NULL);
 
-    ID3D11RenderTargetView *textureRTV = RenderTarget11::makeRenderTarget11(destRenderTarget)->getRenderTargetView();
+    ID3D11RenderTargetView *textureRTV = GetAs<RenderTarget11>(destRenderTarget)->getRenderTargetView();
     ASSERT(textureRTV != NULL);
 
     CopyShaderParams shaderParams;

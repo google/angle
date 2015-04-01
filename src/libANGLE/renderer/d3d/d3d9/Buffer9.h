@@ -23,8 +23,6 @@ class Buffer9 : public BufferD3D
     Buffer9(Renderer9 *renderer);
     virtual ~Buffer9();
 
-    static Buffer9 *makeBuffer9(BufferImpl *buffer);
-
     // BufferD3D implementation
     virtual size_t getSize() const { return mSize; }
     virtual bool supportsDirectBinding() const { return false; }

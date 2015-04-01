@@ -135,7 +135,7 @@ gl::Error VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Tra
                 }
             }
 
-            VertexBuffer9 *vertexBuffer = VertexBuffer9::makeVertexBuffer9(attributes[i].vertexBuffer);
+            VertexBuffer9 *vertexBuffer = GetAs<VertexBuffer9>(attributes[i].vertexBuffer);
 
             if (mAppliedVBs[stream].serial != attributes[i].serial ||
                 mAppliedVBs[stream].stride != attributes[i].stride ||

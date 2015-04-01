@@ -28,8 +28,6 @@ class CompilerD3D : public CompilerImpl
     CompilerD3D(const gl::Data &data, ShShaderOutput outputType);
     virtual ~CompilerD3D();
 
-    static CompilerD3D *makeCompilerD3D(CompilerImpl *compiler);
-
     gl::Error release() override;
 
     ShHandle getCompilerHandle(GLenum type);
