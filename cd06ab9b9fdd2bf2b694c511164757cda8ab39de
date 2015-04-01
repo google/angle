@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "43b5e6d8_5d47af2d",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1150,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-01T16:02:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3c8f677_a0c973a8",
+      "range": {
+        "startLine": 1146,
+        "startChar": 0,
+        "endLine": 1150,
+        "endChar": 9
+      },
+      "revId": "cd06ab9b9fdd2bf2b694c511164757cda8ab39de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c3c8f677_7d570860",
         "filename": "src/tests/end2end_tests/UniformBufferTest.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-01T15:10:06Z",
       "side": 1,
       "message": "Could you add a note and a TODO here that we shouldn\u0027t be testing that undefined behaviour returns a specific error and move this into a unit test of the validation layer when they exist?",
+      "range": {
+        "startLine": 186,
+        "startChar": 0,
+        "endLine": 195,
+        "endChar": 1
+      },
+      "revId": "cd06ab9b9fdd2bf2b694c511164757cda8ab39de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23b8f2d3_dc6101ba",
+        "filename": "src/tests/end2end_tests/UniformBufferTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-01T16:02:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3c8f677_7d570860",
       "range": {
         "startLine": 186,
         "startChar": 0,
