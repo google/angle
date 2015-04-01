@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a371421d_d91f43e1",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-01T18:47:30Z",
+      "side": 1,
+      "message": "nit: pass the InfoSink to this function, to keep with the plan of not using the stack.",
+      "range": {
+        "startLine": 221,
+        "startChar": 22,
+        "endLine": 221,
+        "endChar": 45
+      },
+      "revId": "95bd332ab740ed03a738f8c70da1290108477022",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8370be19_38369119",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-01T18:47:30Z",
+      "side": 1,
+      "message": "(ignore this suggestion if follow-up patches change the logic)\nnit: consider phrasing this as \n\n if (visit \u003d\u003d PreVisit \u0026\u0026 type.isArray())\n   // snip\n else\n {\n    writeTriplet(visit, constructorBaseType, etc);\n }",
+      "range": {
+        "startLine": 224,
+        "startChar": 3,
+        "endLine": 225,
+        "endChar": 5
+      },
+      "revId": "95bd332ab740ed03a738f8c70da1290108477022",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e37fbae4_bb219fcb",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 923,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-01T18:47:30Z",
+      "side": 1,
+      "message": "nit: make this a temporary",
+      "range": {
+        "startLine": 923,
+        "startChar": 60,
+        "endLine": 923,
+        "endChar": 94
+      },
+      "revId": "95bd332ab740ed03a738f8c70da1290108477022",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e37fbae4_9b713bdf",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1661,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-01T18:47:30Z",
+      "side": 1,
+      "message": "nit: store this as a temporary",
+      "range": {
+        "startLine": 1661,
+        "startChar": 20,
+        "endLine": 1661,
+        "endChar": 55
+      },
+      "revId": "95bd332ab740ed03a738f8c70da1290108477022",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
