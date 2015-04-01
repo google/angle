@@ -184,7 +184,7 @@ class Program : angle::NonCopyable
     void getUniformuiv(GLint location, GLuint *params);
 
     Error applyUniforms();
-    Error applyUniformBuffers(const gl::Data &data);
+    Error applyUniformBuffers(const std::vector<Buffer*> boundBuffers, const Caps &caps);
 
     void getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const;
     void getActiveUniformBlockiv(GLuint uniformBlockIndex, GLenum pname, GLint *params) const;
@@ -195,8 +195,6 @@ class Program : angle::NonCopyable
 
     void bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding);
     GLuint getUniformBlockBinding(GLuint uniformBlockIndex) const;
-
-    const UniformBlock *getUniformBlockByIndex(GLuint index) const;
 
     void setTransformFeedbackVaryings(GLsizei count, const GLchar *const *varyings, GLenum bufferMode);
     void getTransformFeedbackVarying(GLuint index, GLsizei bufSize, GLsizei *length, GLsizei *size, GLenum *type, GLchar *name) const;
