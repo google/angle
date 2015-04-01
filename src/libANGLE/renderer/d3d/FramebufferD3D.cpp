@@ -173,8 +173,9 @@ gl::Error FramebufferD3D::invalidateSub(size_t, const GLenum *, const gl::Rectan
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error FramebufferD3D::clear(const gl::State &state, GLbitfield mask)
+gl::Error FramebufferD3D::clear(const gl::Data &data, GLbitfield mask)
 {
+    const gl::State &state = *data.state;
     ClearParameters clearParams = GetClearParameters(state, mask);
     return clear(state, clearParams);
 }

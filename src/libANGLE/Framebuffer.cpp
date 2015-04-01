@@ -479,9 +479,9 @@ Error Framebuffer::invalidateSub(size_t count, const GLenum *attachments, const 
     return mImpl->invalidateSub(count, attachments, area);
 }
 
-Error Framebuffer::clear(const State &state, GLbitfield mask)
+Error Framebuffer::clear(const gl::Data &data, GLbitfield mask)
 {
-    return mImpl->clear(state, mask);
+    return mImpl->clear(data, mask);
 }
 
 Error Framebuffer::clearBufferfv(const State &state, GLenum buffer, GLint drawbuffer, const GLfloat *values)

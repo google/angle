@@ -9,6 +9,7 @@
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 
 #include "common/debug.h"
+#include "libANGLE/Data.h"
 #include "libANGLE/State.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/angletypes.h"
@@ -160,9 +161,9 @@ gl::Error FramebufferGL::invalidateSub(size_t count, const GLenum *attachments, 
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error FramebufferGL::clear(const gl::State &state, GLbitfield mask)
+gl::Error FramebufferGL::clear(const gl::Data &data, GLbitfield mask)
 {
-    mStateManager->setClearState(state, mask);
+    mStateManager->setClearState(*data.state, mask);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clear(mask);
 

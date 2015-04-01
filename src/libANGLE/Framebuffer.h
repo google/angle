@@ -112,7 +112,7 @@ class Framebuffer
     Error invalidate(size_t count, const GLenum *attachments);
     Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area);
 
-    Error clear(const State &state, GLbitfield mask);
+    Error clear(const gl::Data &data, GLbitfield mask);
     Error clearBufferfv(const State &state, GLenum buffer, GLint drawbuffer, const GLfloat *values);
     Error clearBufferuiv(const State &state, GLenum buffer, GLint drawbuffer, const GLuint *values);
     Error clearBufferiv(const State &state, GLenum buffer, GLint drawbuffer, const GLint *values);
