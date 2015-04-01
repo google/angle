@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a371421d_6e94c342",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2015-04-01T18:05:50Z",
+      "side": 1,
+      "message": "Can the destructor be made private now with RefCountObject as a friend class to prevent accidental direct deletion?",
+      "revId": "d92d797cc81c8466660cccd0de2bc5e7a2d451e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
