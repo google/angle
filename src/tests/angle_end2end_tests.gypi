@@ -45,7 +45,6 @@
             '<(angle_path)/src/tests/end2end_tests/SwizzleTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/TextureTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/TransformFeedbackTest.cpp',
-            '<(angle_path)/src/tests/end2end_tests/UniformBufferTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/UniformTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/UnpackAlignmentTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/UnpackRowLength.cpp',

@@ -1001,9 +1001,9 @@ Error Program::applyUniforms()
     return mProgram->applyUniforms();
 }
 
-Error Program::applyUniformBuffers(const gl::Data &data)
+Error Program::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers, const Caps &caps)
 {
-    return mProgram->applyUniformBuffers(data);
+    return mProgram->applyUniformBuffers(boundBuffers, caps);
 }
 
 void Program::flagForDeletion()

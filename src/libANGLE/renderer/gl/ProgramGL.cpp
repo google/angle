@@ -367,7 +367,7 @@ gl::Error ProgramGL::applyUniforms()
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error ProgramGL::applyUniformBuffers(const gl::Data &data)
+gl::Error ProgramGL::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers, const gl::Caps &caps)
 {
     UNIMPLEMENTED();
     return gl::Error(GL_INVALID_OPERATION);

@@ -133,7 +133,7 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
         return error;
     }
 
-    error = program->applyUniformBuffers(data);
+    error = applyUniformBuffers(data);
     if (error.isError())
     {
         return error;
@@ -203,7 +203,7 @@ gl::Error RendererD3D::drawArrays(const gl::Data &data,
         return error;
     }
 
-    error = program->applyUniformBuffers(data);
+    error = applyUniformBuffers(data);
     if (error.isError())
     {
         return error;
@@ -472,6 +472,32 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data)
     }
 
     return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error RendererD3D::applyUniformBuffers(const gl::Data &data)
+{
+    gl::Program *program = data.state->getProgram();
+
+    std::vector<gl::Buffer*> boundBuffers;
+
+    for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < program->getActiveUniformBlockCount(); uniformBlockIndex++)
+    {
+        GLuint blockBinding = program->getUniformBlockBinding(uniformBlockIndex);
+
+        if (data.state->getIndexedUniformBuffer(blockBinding)->id() == 0)
+        {
+            // undefined behaviour
+            return gl::Error(GL_INVALID_OPERATION, "It is undefined behaviour to have a used but unbound uniform buffer.");
+        }
+        else
+        {
+            gl::Buffer *uniformBuffer = data.state->getIndexedUniformBuffer(blockBinding);
+            ASSERT(uniformBuffer);
+            boundBuffers.push_back(uniformBuffer);
+        }
+    }
+
+    return program->applyUniformBuffers(boundBuffers, *data.caps);
 }
 
 bool RendererD3D::skipDraw(const gl::Data &data, GLenum drawMode)
