@@ -48,14 +48,14 @@ RendererGL::~RendererGL()
 
 gl::Error RendererGL::flush()
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    mFunctions->flush();
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error RendererGL::finish()
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    mFunctions->finish();
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error RendererGL::drawArrays(const gl::Data &data, GLenum mode,
