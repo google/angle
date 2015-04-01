@@ -52,7 +52,7 @@ egl::Error WindowSurfaceWGL::initialize()
 
     mChildWindow = CreateWindowExA(WS_EX_NOPARENTNOTIFY,
                                    reinterpret_cast<const char*>(mWindowClass),
-                                   "",
+                                   "ANGLE Intermediate Surface Window",
                                    WS_CHILDWINDOW | WS_DISABLED | WS_VISIBLE,
                                    0,
                                    0,

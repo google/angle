@@ -131,7 +131,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
 
     HWND dummyWindow = CreateWindowExA(WS_EX_NOPARENTNOTIFY,
                                        reinterpret_cast<const char *>(mWindowClass),
-                                       "",
+                                       "ANGLE Dummy Window",
                                        WS_OVERLAPPEDWINDOW,
                                        CW_USEDEFAULT,
                                        CW_USEDEFAULT,
@@ -208,7 +208,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
 
     mWindow = CreateWindowExA(WS_EX_NOPARENTNOTIFY,
                               reinterpret_cast<const char *>(mWindowClass),
-                              "",
+                              "ANGLE Intermediate Window",
                               WS_OVERLAPPEDWINDOW,
                               CW_USEDEFAULT,
                               CW_USEDEFAULT,
