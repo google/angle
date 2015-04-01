@@ -70,10 +70,7 @@ class $TypedImpl : public $BaseImpl
   public:
     $TypedImpl($ConstructorParams);
     ~$TypedImpl() override;
-$ImplMethodDeclarations
-  private:
-    DISALLOW_COPY_AND_ASSIGN($TypedImpl);
-$PrivateImplMethodDeclarations};
+$ImplMethodDeclarations$PrivateImplMethodDeclarations};
 
 }
 
@@ -175,7 +172,7 @@ def parse_impl_header(base_impl):
         if '~' + base_impl in clean_line:
             copy = True
             copy_private = False
-        elif 'DISALLOW_COPY_AND_ASSIGN' in clean_line:
+        elif 'private:' in clean_line:
             copy = False
             copy_private = True
         elif ';' in clean_line and ' = 0' not in clean_line:
@@ -238,6 +235,9 @@ for impl_class in impl_classes:
             impl_method_definitions += generate_impl_definition(temp, typed_impl)
 
     constructor_params, base_constructor_args = get_constructor_args(constructor)
+
+    if private_impl_method_declarations:
+        private_impl_method_declarations = "\n  private:\n" + private_impl_method_declarations
 
     substitutions = {
         'BaseImpl': base_impl,
