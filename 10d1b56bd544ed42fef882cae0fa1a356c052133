@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e37fbae4_7c563db4",
+        "filename": "src/tests/perf_tests/DrawCallPerf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-01T21:17:26Z",
+      "side": 1,
+      "message": "Maybe add a variant that uses client data or DYNAMIC_DRAW buffers that are updated every draw call?",
+      "range": {
+        "startLine": 105,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 99
+      },
+      "revId": "10d1b56bd544ed42fef882cae0fa1a356c052133",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
