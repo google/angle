@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a371421d_341dbe1f",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-01T19:08:17Z",
+      "side": 1,
+      "message": "this seems potentially fragile - have you tested on multiple vendors? Do some report \"OpenGL 3.1\" or \"OpenGL Core Profile 3.0\" or anything? Just trying to be future-proof.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 45
+      },
+      "revId": "5c50c449e0217b689ec797a3f7c4f1af09172543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8370be19_58898d76",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-01T19:08:17Z",
+      "side": 1,
+      "message": "use range-for. I don\u0027t think you need the iterator.",
+      "range": {
+        "startLine": 95,
+        "startChar": 8,
+        "endLine": 95,
+        "endChar": 129
+      },
+      "revId": "5c50c449e0217b689ec797a3f7c4f1af09172543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
