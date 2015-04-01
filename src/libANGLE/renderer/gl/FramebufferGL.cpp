@@ -149,15 +149,25 @@ void FramebufferGL::setReadBuffer(GLenum buffer)
 
 gl::Error FramebufferGL::invalidate(size_t count, const GLenum *attachments)
 {
-    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-    mFunctions->invalidateFramebuffer(GL_FRAMEBUFFER, count, attachments);
+    // Since this function is just a hint and not available until OpenGL 4.3, only call it if it is available.
+    if (mFunctions->invalidateFramebuffer)
+    {
+        mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+        mFunctions->invalidateFramebuffer(GL_FRAMEBUFFER, count, attachments);
+    }
+
     return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error FramebufferGL::invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area)
 {
-    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-    mFunctions->invalidateSubFramebuffer(GL_FRAMEBUFFER, count, attachments, area.x, area.y, area.width, area.height);
+    // Since this function is just a hint and not available until OpenGL 4.3, only call it if it is available.
+    if (mFunctions->invalidateSubFramebuffer)
+    {
+        mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+        mFunctions->invalidateSubFramebuffer(GL_FRAMEBUFFER, count, attachments, area.x, area.y, area.width, area.height);
+    }
+
     return gl::Error(GL_NO_ERROR);
 }
 
