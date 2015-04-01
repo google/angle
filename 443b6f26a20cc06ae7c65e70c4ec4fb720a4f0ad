@@ -22,6 +22,30 @@
       "revId": "443b6f26a20cc06ae7c65e70c4ec4fb720a4f0ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23b8f2d3_bcda8de9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-01T16:11:43Z",
+      "side": 1,
+      "message": "You’re right. I shouldn’t need to store the size since this should be handled by the validation layer.\n\nI was assuming that an application wouldn\u0027t use many distinct ranges. I think that limiting the maximum number of buffers would be a bit arbitrary and unpredictable. I am worried about the risk of creating/destroying buffers at every frame because of an arbitrary limit. If we need a limit, I would prefer a limit on the storage size. Perhaps a limit set to once or twice the buffer size would be enough.",
+      "parentUuid": "439a4679_c703dcc4",
+      "range": {
+        "startLine": 628,
+        "startChar": 4,
+        "endLine": 628,
+        "endChar": 93
+      },
+      "revId": "443b6f26a20cc06ae7c65e70c4ec4fb720a4f0ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
