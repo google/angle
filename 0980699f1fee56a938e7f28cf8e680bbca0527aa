@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8370be19_73c90aa6",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1127429
+      },
+      "writtenOn": "2015-04-01T19:15:16Z",
+      "side": 1,
+      "message": "For portability and performance, the unicorn could be embedded into the code as ASCII art rather than loaded from an external file.",
+      "revId": "0980699f1fee56a938e7f28cf8e680bbca0527aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8370be19_d3d71e42",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1127429
+      },
+      "writtenOn": "2015-04-01T19:15:16Z",
+      "side": 1,
+      "message": "glDisable(GL_CULL_FACE), because some people deserve to see the backside of a unicorn.",
+      "revId": "0980699f1fee56a938e7f28cf8e680bbca0527aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
