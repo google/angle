@@ -20,7 +20,8 @@ namespace egl
 {
 
 Surface::Surface(rx::SurfaceImpl *impl, EGLint surfaceType, const egl::Config *config, const AttributeMap &attributes)
-    : mImplementation(impl),
+    : RefCountObject(0), // id unused
+      mImplementation(impl),
       mType(surfaceType),
       mConfig(config),
       mPostSubBufferRequested(false),
@@ -35,6 +36,8 @@ Surface::Surface(rx::SurfaceImpl *impl, EGLint surfaceType, const egl::Config *c
       mSwapBehavior(EGL_BUFFER_PRESERVED),
       mTexture(NULL)
 {
+    addRef();
+
     mPostSubBufferRequested = (attributes.get(EGL_POST_SUB_BUFFER_SUPPORTED_NV, EGL_FALSE) == EGL_TRUE);
 
     mFixedSize = (attributes.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE) == EGL_TRUE);

@@ -45,7 +45,7 @@ class SurfaceTest : public testing::Test
 
     virtual void TearDown()
     {
-        delete mSurface;
+        mSurface->release();
     }
 
     MockSurfaceImpl *mImpl;
@@ -59,7 +59,7 @@ TEST_F(SurfaceTest, DestructionDeletesImpl)
     EXPECT_CALL(*impl, destroy()).Times(1).RetiresOnSaturation();
 
     egl::Surface *surface = new egl::Surface(impl, EGL_WINDOW_BIT, &mConfig, egl::AttributeMap());
-    delete surface;
+    surface->release();
 
     // Only needed because the mock is leaked if bugs are present,
     // which logs an error, but does not cause the test to fail.

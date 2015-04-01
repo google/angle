@@ -30,7 +30,7 @@ DisplayImpl::~DisplayImpl()
 void DisplayImpl::destroySurface(egl::Surface *surface)
 {
     mSurfaceSet.erase(surface);
-    SafeDelete(surface);
+    surface->release();
 }
 
 const egl::DisplayExtensions &DisplayImpl::getExtensions() const

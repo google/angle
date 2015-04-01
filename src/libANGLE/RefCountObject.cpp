@@ -12,9 +12,9 @@
 #include "RefCountObject.h"
 
 RefCountObject::RefCountObject(GLuint id)
+    : mId(id),
+      mRefCount(0)
 {
-    mId = id;
-    mRefCount = 0;
 }
 
 RefCountObject::~RefCountObject()
