@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63bd8ac9_9fe856a8",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1155,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-01T13:51:01Z",
+      "side": 1,
+      "message": "Because this is undefined behaviour, we can, and probably should always return an error, no matter the Renderer. Thus both of these errors should go to the validation layer, in ValidateDrawBase.",
+      "range": {
+        "startLine": 1145,
+        "startChar": 1,
+        "endLine": 1155,
+        "endChar": 9
+      },
+      "revId": "aa705cbd77a6318d8b1554e1398562fd0ef99d7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
