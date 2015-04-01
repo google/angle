@@ -449,9 +449,7 @@ ID3D11Buffer *Buffer11::getBuffer(BufferUsage usage)
         return NULL;
     }
 
-    ASSERT(HAS_DYNAMIC_TYPE(NativeStorage*, bufferStorage));
-
-    return static_cast<NativeStorage*>(bufferStorage)->getNativeStorage();
+    return GetAs<NativeStorage>(bufferStorage)->getNativeStorage();
 }
 
 ID3D11ShaderResourceView *Buffer11::getSRV(DXGI_FORMAT srvFormat)
@@ -464,8 +462,7 @@ ID3D11ShaderResourceView *Buffer11::getSRV(DXGI_FORMAT srvFormat)
         return NULL;
     }
 
-    ASSERT(HAS_DYNAMIC_TYPE(NativeStorage*, storage));
-    ID3D11Buffer *buffer = static_cast<NativeStorage*>(storage)->getNativeStorage();
+    ID3D11Buffer *buffer = GetAs<NativeStorage>(storage)->getNativeStorage();
 
     auto bufferSRVIt = mBufferResourceViews.find(srvFormat);
 
@@ -628,8 +625,7 @@ Buffer11::NativeStorage *Buffer11::getStagingStorage()
         return NULL;
     }
 
-    ASSERT(HAS_DYNAMIC_TYPE(NativeStorage*, stagingStorage));
-    return static_cast<NativeStorage*>(stagingStorage);
+    return GetAs<NativeStorage>(stagingStorage);
 }
 
 Buffer11::PackStorage *Buffer11::getPackStorage()
@@ -642,8 +638,7 @@ Buffer11::PackStorage *Buffer11::getPackStorage()
         return NULL;
     }
 
-    ASSERT(HAS_DYNAMIC_TYPE(PackStorage*, packStorage));
-    return static_cast<PackStorage*>(packStorage);
+    return GetAs<PackStorage>(packStorage);
 }
 
 bool Buffer11::supportsDirectBinding() const
@@ -729,8 +724,6 @@ bool Buffer11::NativeStorage::copyFromStorage(BufferStorage *source, size_t sour
     }
     else
     {
-        ASSERT(HAS_DYNAMIC_TYPE(NativeStorage*, source));
-
         D3D11_BOX srcBox;
         srcBox.left = sourceOffset;
         srcBox.right = sourceOffset + size;
@@ -739,8 +732,7 @@ bool Buffer11::NativeStorage::copyFromStorage(BufferStorage *source, size_t sour
         srcBox.front = 0;
         srcBox.back = 1;
 
-        ASSERT(HAS_DYNAMIC_TYPE(NativeStorage*, source));
-        ID3D11Buffer *sourceBuffer = static_cast<NativeStorage*>(source)->getNativeStorage();
+        ID3D11Buffer *sourceBuffer = GetAs<NativeStorage>(source)->getNativeStorage();
 
         context->CopySubresourceRegion(mNativeStorage, 0, destOffset, 0, 0, sourceBuffer, 0, &srcBox);
     }

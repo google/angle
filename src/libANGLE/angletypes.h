@@ -289,20 +289,38 @@ enum VendorID : uint32_t
     VENDOR_ID_NVIDIA = 0x10DE,
 };
 
+// A macro that determines whether an object has a given runtime type.
+#if defined(__clang__)
+#if __has_feature(cxx_rtti)
+#define ANGLE_HAS_DYNAMIC_CAST 1
+#endif
+#elif !defined(NDEBUG) && (!defined(_MSC_VER) || defined(_CPPRTTI)) && (!defined(__GNUC__) || __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 3) || defined(__GXX_RTTI))
+#define ANGLE_HAS_DYNAMIC_CAST 1
+#endif
+
+#ifdef ANGLE_HAS_DYNAMIC_CAST
+#define ANGLE_HAS_DYNAMIC_TYPE(type, obj) (dynamic_cast<type >(obj) != nullptr)
+#undef ANGLE_HAS_DYNAMIC_CAST
+#else
+#define ANGLE_HAS_DYNAMIC_TYPE(type, obj) (obj != nullptr)
+#endif
+
 // Downcast a base implementation object (EG TextureImpl to TextureD3D)
 template <typename DestT, typename SrcT>
 inline DestT *GetAs(SrcT *src)
 {
-    ASSERT(HAS_DYNAMIC_TYPE(DestT*, src));
+    ASSERT(ANGLE_HAS_DYNAMIC_TYPE(DestT*, src));
     return static_cast<DestT*>(src);
 }
 
 template <typename DestT, typename SrcT>
 inline const DestT *GetAs(const SrcT *src)
 {
-    ASSERT(HAS_DYNAMIC_TYPE(const DestT*, src));
+    ASSERT(ANGLE_HAS_DYNAMIC_TYPE(const DestT*, src));
     return static_cast<const DestT*>(src);
 }
+
+#undef ANGLE_HAS_DYNAMIC_TYPE
 
 // Downcast a GL object to an Impl (EG gl::Texture to rx::TextureD3D)
 template <typename DestT, typename SrcT>
