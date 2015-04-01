@@ -90,6 +90,7 @@ class OutputHLSL : public TIntermTraverser
     TString addStructEqualityFunction(const TStructure &structure);
     TString addArrayEqualityFunction(const TType &type);
     TString addArrayAssignmentFunction(const TType &type);
+    TString addArrayConstructIntoFunction(const TType &type);
 
     sh::GLenum mShaderType;
     int mShaderVersion;
@@ -214,6 +215,11 @@ class OutputHLSL : public TIntermTraverser
     std::vector<ArrayHelperFunction*> mArrayEqualityFunctions;
 
     std::vector<ArrayHelperFunction> mArrayAssignmentFunctions;
+
+    // The construct-into functions are functions that fill an N-element array passed as an out parameter
+    // with the other N parameters of the function. This is used to work around that arrays can't be
+    // return values in HLSL.
+    std::vector<ArrayHelperFunction> mArrayConstructIntoFunctions;
 };
 
 }

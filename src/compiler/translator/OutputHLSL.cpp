@@ -353,6 +353,14 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
             out << assignmentFunction.functionDefinition << "\n";
         }
     }
+    if (!mArrayConstructIntoFunctions.empty())
+    {
+        out << "\n// Array constructor functions\n\n";
+        for (const auto &constructIntoFunction : mArrayConstructIntoFunctions)
+        {
+            out << constructIntoFunction.functionDefinition << "\n";
+        }
+    }
 
     if (mUsesDiscardRewriting)
     {
@@ -1451,8 +1459,26 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpAssign:
         if (node->getLeft()->isArray())
         {
-            const TString &functionName = addArrayAssignmentFunction(node->getType());
-            outputTriplet(visit, (functionName + "(").c_str(), ", ", ")");
+            TIntermAggregate *rightAgg = node->getRight()->getAsAggregate();
+            if (rightAgg != nullptr && rightAgg->isConstructor())
+            {
+                const TString &functionName = addArrayConstructIntoFunction(node->getType());
+                out << functionName << "(";
+                node->getLeft()->traverse(this);
+                TIntermSequence *seq = rightAgg->getSequence();
+                for (auto &arrayElement : *seq)
+                {
+                    out << ", ";
+                    arrayElement->traverse(this);
+                }
+                out << ")";
+                return false;
+            }
+            else
+            {
+                const TString &functionName = addArrayAssignmentFunction(node->getType());
+                outputTriplet(visit, (functionName + "(").c_str(), ", ", ")");
+            }
         }
         else
         {
@@ -3115,5 +3141,49 @@ TString OutputHLSL::addArrayAssignmentFunction(const TType& type)
 
     return function.functionName;
 }
+
+TString OutputHLSL::addArrayConstructIntoFunction(const TType& type)
+{
+    for (const auto &constructIntoFunction : mArrayConstructIntoFunctions)
+    {
+        if (constructIntoFunction.type == type)
+        {
+            return constructIntoFunction.functionName;
+        }
+    }
+
+    const TString &typeName = TypeString(type);
+
+    ArrayHelperFunction function;
+    function.type = type;
+
+    TInfoSinkBase fnNameOut;
+    fnNameOut << "angle_construct_into_" << type.getArraySize() << "_" << typeName;
+    function.functionName = fnNameOut.c_str();
+
+    TInfoSinkBase fnOut;
+
+    fnOut << "void " << function.functionName << "(out "
+          << typeName << " a[" << type.getArraySize() << "]";
+    for (int i = 0; i < type.getArraySize(); ++i)
+    {
+        fnOut << ", " << typeName << " b" << i;
+    }
+    fnOut << ")\n"
+             "{\n";
+
+    for (int i = 0; i < type.getArraySize(); ++i)
+    {
+        fnOut << "    a[" << i << "] = b" << i << ";\n";
+    }
+    fnOut << "}\n";
+
+    function.functionDefinition = fnOut.c_str();
+
+    mArrayConstructIntoFunctions.push_back(function);
+
+    return function.functionName;
+}
+
 
 }
