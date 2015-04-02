@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23c4727c_98076cd3",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T18:15:13Z",
+      "side": 1,
+      "message": "nit: alignment of \u003c\u003c\u0027s",
+      "range": {
+        "startLine": 3167,
+        "startChar": 0,
+        "endLine": 3167,
+        "endChar": 8
+      },
+      "revId": "ef11c315ef86f05e4722d010bb9c935baeca03e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
