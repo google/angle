@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3bdfae6_6f2607b2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T20:49:17Z",
+      "side": 1,
+      "message": "is renderer11 missing a set for colorBufferFloat? seems like all the other extensions are set explicitly.",
+      "range": {
+        "startLine": 1118,
+        "startChar": 16,
+        "endLine": 1118,
+        "endChar": 31
+      },
+      "revId": "9480cf92ad643cb211ad6c294706b0b8f4f79fb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
