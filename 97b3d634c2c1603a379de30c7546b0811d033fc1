@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3bdfae6_ec1c6f24",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1120,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T14:07:04Z",
+      "side": 1,
+      "message": "can you validate the floatness outside the body of the switch? I haven\u0027t looked at it in depth, but that seems like it would avoid the need for a #define.",
+      "range": {
+        "startLine": 1120,
+        "startChar": 8,
+        "endLine": 1120,
+        "endChar": 36
+      },
+      "revId": "97b3d634c2c1603a379de30c7546b0811d033fc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63de6a5c_9f162381",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1133,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T14:07:04Z",
+      "side": 1,
+      "message": "use a local static const double or float in a namespace {} block at the top of the file?",
+      "range": {
+        "startLine": 1133,
+        "startChar": 8,
+        "endLine": 1133,
+        "endChar": 37
+      },
+      "revId": "97b3d634c2c1603a379de30c7546b0811d033fc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_8c82939a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T14:07:04Z",
+      "side": 1,
+      "message": "can you make a helper function with a descriptive name to encapsulate this test? just would help the reader.",
+      "range": {
+        "startLine": 1167,
+        "startChar": 12,
+        "endLine": 1167,
+        "endChar": 102
+      },
+      "revId": "97b3d634c2c1603a379de30c7546b0811d033fc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63de6a5c_3f1f2f8c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2227,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T14:07:04Z",
+      "side": 1,
+      "message": "also use it here, and any other places.",
+      "range": {
+        "startLine": 2227,
+        "startChar": 12,
+        "endLine": 2227,
+        "endChar": 104
+      },
+      "revId": "97b3d634c2c1603a379de30c7546b0811d033fc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
