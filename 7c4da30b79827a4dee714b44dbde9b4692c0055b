@@ -22,6 +22,29 @@
       "revId": "7c4da30b79827a4dee714b44dbde9b4692c0055b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_597c36b1",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-02T17:25:51Z",
+      "side": 1,
+      "message": "In general I\u0027m not sure it\u0027s a good idea to keep moving the definitions of these methods into the header, unless they\u0027re on really hot code paths. Otherwise, no matter how trivial they are, slight modifications will mean rebuilding a lot more of the code making development harder.",
+      "range": {
+        "startLine": 53,
+        "startChar": 22,
+        "endLine": 53,
+        "endChar": 42
+      },
+      "revId": "7c4da30b79827a4dee714b44dbde9b4692c0055b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
