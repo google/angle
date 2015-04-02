@@ -22,8 +22,11 @@ namespace gl
 
 ////// FramebufferAttachment Implementation //////
 
-FramebufferAttachment::FramebufferAttachment(GLenum binding, RefCountObject *resource)
-    : mBinding(binding)
+FramebufferAttachment::FramebufferAttachment(GLenum binding,
+                                             const ImageIndex &textureIndex,
+                                             RefCountObject *resource)
+    : mBinding(binding),
+      mTextureIndex(textureIndex)
 {
     mResource.set(resource);
 }
@@ -78,11 +81,38 @@ GLuint FramebufferAttachment::id() const
     return mResource->id();
 }
 
+const ImageIndex *FramebufferAttachment::getTextureImageIndex() const
+{
+    ASSERT(type() == GL_TEXTURE);
+    return &mTextureIndex;
+}
+
+GLenum FramebufferAttachment::cubeMapFace() const
+{
+    ASSERT(type() == GL_TEXTURE);
+    return IsCubeMapTextureTarget(mTextureIndex.type) ? mTextureIndex.type : GL_NONE;
+}
+
+GLint FramebufferAttachment::mipLevel() const
+{
+    ASSERT(type() == GL_TEXTURE);
+    return mTextureIndex.mipIndex;
+}
+
+GLint FramebufferAttachment::layer() const
+{
+    ASSERT(type() == GL_TEXTURE);
+    if (mTextureIndex.type == GL_TEXTURE_2D_ARRAY || mTextureIndex.type == GL_TEXTURE_3D)
+    {
+        return mTextureIndex.layerIndex;
+    }
+    return 0;
+}
+
 ///// TextureAttachment Implementation ////////
 
 TextureAttachment::TextureAttachment(GLenum binding, Texture *texture, const ImageIndex &index)
-    : FramebufferAttachment(binding, texture),
-      mIndex(index)
+    : FramebufferAttachment(binding, index, texture)
 {
 }
 
@@ -97,42 +127,22 @@ GLsizei TextureAttachment::getSamples() const
 
 GLsizei TextureAttachment::getWidth() const
 {
-    return getTexture()->getWidth(mIndex.type, mIndex.mipIndex);
+    return getTexture()->getWidth(mTextureIndex.type, mTextureIndex.mipIndex);
 }
 
 GLsizei TextureAttachment::getHeight() const
 {
-    return getTexture()->getHeight(mIndex.type, mIndex.mipIndex);
+    return getTexture()->getHeight(mTextureIndex.type, mTextureIndex.mipIndex);
 }
 
 GLenum TextureAttachment::getInternalFormat() const
 {
-    return getTexture()->getInternalFormat(mIndex.type, mIndex.mipIndex);
+    return getTexture()->getInternalFormat(mTextureIndex.type, mTextureIndex.mipIndex);
 }
 
 GLenum TextureAttachment::type() const
 {
     return GL_TEXTURE;
-}
-
-GLint TextureAttachment::mipLevel() const
-{
-    return mIndex.mipIndex;
-}
-
-GLenum TextureAttachment::cubeMapFace() const
-{
-    return IsCubeMapTextureTarget(mIndex.type) ? mIndex.type : GL_NONE;
-}
-
-GLint TextureAttachment::layer() const
-{
-    return mIndex.layerIndex;
-}
-
-const ImageIndex *TextureAttachment::getTextureImageIndex() const
-{
-    return &mIndex;
 }
 
 Renderbuffer *TextureAttachment::getRenderbuffer() const
@@ -144,7 +154,7 @@ Renderbuffer *TextureAttachment::getRenderbuffer() const
 ////// RenderbufferAttachment Implementation //////
 
 RenderbufferAttachment::RenderbufferAttachment(GLenum binding, Renderbuffer *renderbuffer)
-    : FramebufferAttachment(binding, renderbuffer)
+    : FramebufferAttachment(binding, ImageIndex::MakeInvalid(), renderbuffer)
 {
     ASSERT(renderbuffer);
 }
@@ -178,35 +188,14 @@ GLenum RenderbufferAttachment::type() const
     return GL_RENDERBUFFER;
 }
 
-GLint RenderbufferAttachment::mipLevel() const
-{
-    return 0;
-}
-
-GLenum RenderbufferAttachment::cubeMapFace() const
-{
-    return GL_NONE;
-}
-
-GLint RenderbufferAttachment::layer() const
-{
-    return 0;
-}
-
 Texture *RenderbufferAttachment::getTexture() const
 {
     UNREACHABLE();
     return nullptr;
 }
 
-const ImageIndex *RenderbufferAttachment::getTextureImageIndex() const
-{
-    UNREACHABLE();
-    return nullptr;
-}
-
 DefaultAttachment::DefaultAttachment(GLenum binding, egl::Surface *surface)
-    : FramebufferAttachment(binding, surface)
+    : FramebufferAttachment(binding, ImageIndex::MakeInvalid(), surface)
 {
 }
 
@@ -241,28 +230,7 @@ GLenum DefaultAttachment::type() const
     return GL_FRAMEBUFFER_DEFAULT;
 }
 
-GLint DefaultAttachment::mipLevel() const
-{
-    return 0;
-}
-
-GLenum DefaultAttachment::cubeMapFace() const
-{
-    return GL_NONE;
-}
-
-GLint DefaultAttachment::layer() const
-{
-    return 0;
-}
-
 Texture *DefaultAttachment::getTexture() const
-{
-    UNREACHABLE();
-    return nullptr;
-}
-
-const ImageIndex *DefaultAttachment::getTextureImageIndex() const
 {
     UNREACHABLE();
     return nullptr;

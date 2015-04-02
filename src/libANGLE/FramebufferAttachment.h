@@ -29,7 +29,9 @@ class Renderbuffer;
 class FramebufferAttachment : angle::NonCopyable
 {
   public:
-    explicit FramebufferAttachment(GLenum binding, RefCountObject *resource);
+    FramebufferAttachment(GLenum binding,
+                          const ImageIndex &textureIndex,
+                          RefCountObject *resource);
     virtual ~FramebufferAttachment();
 
     // Helper methods
@@ -49,6 +51,12 @@ class FramebufferAttachment : angle::NonCopyable
 
     GLuint id() const;
 
+    // These methods are only legal to call on Texture attachments
+    const ImageIndex *getTextureImageIndex() const;
+    GLenum cubeMapFace() const;
+    GLint mipLevel() const;
+    GLint layer() const;
+
     // Child class interface
     virtual GLsizei getWidth() const = 0;
     virtual GLsizei getHeight() const = 0;
@@ -56,16 +64,13 @@ class FramebufferAttachment : angle::NonCopyable
     virtual GLsizei getSamples() const = 0;
 
     virtual GLenum type() const = 0;
-    virtual GLint mipLevel() const = 0;
-    virtual GLenum cubeMapFace() const = 0;
-    virtual GLint layer() const = 0;
 
     virtual Texture *getTexture() const = 0;
-    virtual const ImageIndex *getTextureImageIndex() const = 0;
     virtual Renderbuffer *getRenderbuffer() const = 0;
 
   protected:
     GLenum mBinding;
+    ImageIndex mTextureIndex;
     BindingPointer<RefCountObject> mResource;
 };
 
@@ -82,20 +87,13 @@ class TextureAttachment : public FramebufferAttachment
     virtual GLenum getInternalFormat() const;
 
     virtual GLenum type() const;
-    virtual GLint mipLevel() const;
-    virtual GLenum cubeMapFace() const;
-    virtual GLint layer() const;
 
-    virtual const ImageIndex *getTextureImageIndex() const;
     virtual Renderbuffer *getRenderbuffer() const;
 
     Texture *getTexture() const override
     {
         return rx::GetAs<Texture>(mResource.get());
     }
-
-  private:
-    ImageIndex mIndex;
 };
 
 class RenderbufferAttachment : public FramebufferAttachment
@@ -111,12 +109,8 @@ class RenderbufferAttachment : public FramebufferAttachment
     virtual GLsizei getSamples() const;
 
     virtual GLenum type() const;
-    virtual GLint mipLevel() const;
-    virtual GLenum cubeMapFace() const;
-    virtual GLint layer() const;
 
     virtual Texture *getTexture() const;
-    virtual const ImageIndex *getTextureImageIndex() const;
 
     Renderbuffer *getRenderbuffer() const override
     {
@@ -137,12 +131,8 @@ class DefaultAttachment : public FramebufferAttachment
     virtual GLsizei getSamples() const;
 
     virtual GLenum type() const;
-    virtual GLint mipLevel() const;
-    virtual GLenum cubeMapFace() const;
-    virtual GLint layer() const;
 
     virtual Texture *getTexture() const;
-    virtual const ImageIndex *getTextureImageIndex() const;
     virtual Renderbuffer *getRenderbuffer() const;
 
     const egl::Surface *getSurface() const
