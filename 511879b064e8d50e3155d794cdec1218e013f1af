@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3bdfae6_e340fd66",
+        "filename": "src/libANGLE/TransformFeedback.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-02T15:59:16Z",
+      "side": 1,
+      "message": "mActive and mPaused are only used by our own code for validation.  Real bool types seem like a better choice.",
+      "range": {
+        "startLine": 44,
+        "startChar": 3,
+        "endLine": 46,
+        "endChar": 17
+      },
+      "revId": "511879b064e8d50e3155d794cdec1218e013f1af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
