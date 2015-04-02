@@ -536,6 +536,7 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
     extensions->fragDepth = true;
     extensions->textureUsage = true;
     extensions->translatedShaderSource = true;
+    extensions->fboRenderMipmap = false;
     extensions->colorBufferFloat = false;
 }
 

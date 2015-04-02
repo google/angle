@@ -1735,8 +1735,8 @@ bool ValidateFramebufferTextureBase(Context *context, GLenum target, GLenum atta
 bool ValidateFramebufferTexture2D(Context *context, GLenum target, GLenum attachment,
                                   GLenum textarget, GLuint texture, GLint level)
 {
-    // Attachments are required to be bound to level 0 in ES2
-    if (context->getClientVersion() < 3 && level != 0)
+    // Attachments are required to be bound to level 0 without ES3 or the GL_OES_fbo_render_mipmap extension
+    if (context->getClientVersion() < 3 && !context->getExtensions().fboRenderMipmap && level != 0)
     {
         context->recordError(Error(GL_INVALID_VALUE));
         return false;

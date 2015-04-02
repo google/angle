@@ -26,6 +26,7 @@
             '<(angle_path)/src/tests/end2end_tests/DepthStencilFormatsTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/DrawBuffersTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/FramebufferFormatsTest.cpp',
+            '<(angle_path)/src/tests/end2end_tests/FramebufferRenderMipmapTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/GLSLTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/IncompleteTextureTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/IndexedPointsTest.cpp',
