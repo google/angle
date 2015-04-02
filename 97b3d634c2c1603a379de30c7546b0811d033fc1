@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "2312b2d8_ec1a2370",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-02T16:56:38Z",
+      "side": 1,
+      "message": "I think we should rather investigate first why the initializer doesn\u0027t always have the const qualifier when it should have it. It might be just a matter of adding a couple of lines to IntermUnary::promote to set the qualifier to EvqConst in case the parameter is const. That could maybe be put into a separate patch. Now that the refactoring has landed the code should be pretty straightforward to debug.",
+      "parentUuid": "e3bdfae6_8c82939a",
+      "range": {
+        "startLine": 1167,
+        "startChar": 12,
+        "endLine": 1167,
+        "endChar": 102
+      },
+      "revId": "97b3d634c2c1603a379de30c7546b0811d033fc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63de6a5c_3f1f2f8c",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 4
