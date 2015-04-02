@@ -204,6 +204,9 @@ const ConstantUnion *TOutputGLSLBase::writeConstantUnion(
               case EbtInt:
                 out << pConstUnion->getIConst();
                 break;
+              case EbtUInt:
+                out << pConstUnion->getUConst() << "u";
+                break;
               case EbtBool:
                 out << pConstUnion->getBConst();
                 break;
