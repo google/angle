@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "63de6a5c_3e4848b6",
+        "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-04-02T23:05:09Z",
+      "side": 1,
+      "message": "Good point, this is not implemented yet but it should be possible for Compiler to prune unused functions early, I can add that as a follow up CL after the CallDAG changed is merged.",
+      "parentUuid": "63de6a5c_1e08ec5c",
+      "revId": "0bec91b9263f1c1cee3e764312c5cb0cc1ad5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63de6a5c_e3fb4d8d",
         "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
         "patchSetId": 1
