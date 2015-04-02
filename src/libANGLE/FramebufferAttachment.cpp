@@ -15,7 +15,6 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/formatutils.h"
-#include "libANGLE/renderer/DefaultAttachmentImpl.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
 
 namespace gl

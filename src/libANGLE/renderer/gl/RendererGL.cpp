@@ -13,7 +13,6 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
 #include "libANGLE/renderer/gl/CompilerGL.h"
-#include "libANGLE/renderer/gl/DefaultAttachmentGL.h"
 #include "libANGLE/renderer/gl/FenceNVGL.h"
 #include "libANGLE/renderer/gl/FenceSyncGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
@@ -106,11 +105,6 @@ ShaderImpl *RendererGL::createShader(GLenum type)
 ProgramImpl *RendererGL::createProgram()
 {
     return new ProgramGL(mFunctions, mStateManager);
-}
-
-DefaultAttachmentImpl *RendererGL::createDefaultAttachment(GLenum type, egl::Surface *surface)
-{
-    return new DefaultAttachmentGL(type, surface);
 }
 
 FramebufferImpl *RendererGL::createDefaultFramebuffer(const gl::Framebuffer::Data &data)

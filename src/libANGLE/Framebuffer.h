@@ -19,7 +19,6 @@
 
 namespace rx
 {
-class DefaultAttachmentImpl;
 class ImplFactory;
 class FramebufferImpl;
 class RenderbufferImpl;

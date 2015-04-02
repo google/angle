@@ -84,48 +84,6 @@ ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
 
 }
 
-DefaultAttachmentD3D::DefaultAttachmentD3D(RenderTargetD3D *renderTarget)
-    : mRenderTarget(renderTarget)
-{
-    ASSERT(mRenderTarget);
-}
-
-DefaultAttachmentD3D::~DefaultAttachmentD3D()
-{
-    SafeDelete(mRenderTarget);
-}
-
-DefaultAttachmentD3D *DefaultAttachmentD3D::makeDefaultAttachmentD3D(DefaultAttachmentImpl* impl)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(DefaultAttachmentD3D*, impl));
-    return static_cast<DefaultAttachmentD3D*>(impl);
-}
-
-GLsizei DefaultAttachmentD3D::getWidth() const
-{
-    return mRenderTarget->getWidth();
-}
-
-GLsizei DefaultAttachmentD3D::getHeight() const
-{
-    return mRenderTarget->getHeight();
-}
-
-GLenum DefaultAttachmentD3D::getInternalFormat() const
-{
-    return mRenderTarget->getInternalFormat();
-}
-
-GLsizei DefaultAttachmentD3D::getSamples() const
-{
-    return mRenderTarget->getSamples();
-}
-
-RenderTargetD3D *DefaultAttachmentD3D::getRenderTarget() const
-{
-    return mRenderTarget;
-}
-
 FramebufferD3D::FramebufferD3D(const gl::Framebuffer::Data &data, RendererD3D *renderer)
     : FramebufferImpl(data),
       mRenderer(renderer),

@@ -13,7 +13,6 @@
 #include <cstdint>
 
 #include "libANGLE/angletypes.h"
-#include "libANGLE/renderer/DefaultAttachmentImpl.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
 
 namespace gl
@@ -48,25 +47,6 @@ struct ClearParameters
 
     bool scissorEnabled;
     gl::Rectangle scissor;
-};
-
-class DefaultAttachmentD3D : public DefaultAttachmentImpl
-{
-  public:
-    DefaultAttachmentD3D(RenderTargetD3D *renderTarget);
-    virtual ~DefaultAttachmentD3D();
-
-    static DefaultAttachmentD3D *makeDefaultAttachmentD3D(DefaultAttachmentImpl* impl);
-
-    virtual GLsizei getWidth() const override;
-    virtual GLsizei getHeight() const override;
-    virtual GLenum getInternalFormat() const override;
-    virtual GLsizei getSamples() const override;
-
-    RenderTargetD3D *getRenderTarget() const;
-
-  private:
-    RenderTargetD3D *mRenderTarget;
 };
 
 class FramebufferD3D : public FramebufferImpl

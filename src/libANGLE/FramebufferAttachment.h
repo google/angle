@@ -17,11 +17,6 @@
 
 #include "angle_gl.h"
 
-namespace rx
-{
-class DefaultAttachmentImpl;
-}
-
 namespace gl
 {
 class Renderbuffer;

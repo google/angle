@@ -33,7 +33,6 @@ if not os.path.isdir(renderer_name):
 impl_classes = [
     'Buffer',
     'Compiler',
-    'DefaultAttachment',
     'Display',
     'FenceNV',
     'FenceSync',

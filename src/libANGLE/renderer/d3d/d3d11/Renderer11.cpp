@@ -2695,42 +2695,6 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
     return gl::Error(GL_NO_ERROR);
 }
 
-DefaultAttachmentImpl *Renderer11::createDefaultAttachment(GLenum type, egl::Surface *surface)
-{
-    SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
-    SwapChain11 *swapChain = SwapChain11::makeSwapChain11(surfaceD3D->getSwapChain());
-
-    switch (type)
-    {
-      case GL_BACK:
-        return new DefaultAttachmentD3D(new SurfaceRenderTarget11(swapChain, this, false));
-
-      case GL_DEPTH:
-        if (gl::GetInternalFormatInfo(swapChain->GetDepthBufferInternalFormat()).depthBits > 0)
-        {
-            return new DefaultAttachmentD3D(new SurfaceRenderTarget11(swapChain, this, true));
-        }
-        else
-        {
-            return NULL;
-        }
-
-      case GL_STENCIL:
-        if (gl::GetInternalFormatInfo(swapChain->GetDepthBufferInternalFormat()).stencilBits > 0)
-        {
-            return new DefaultAttachmentD3D(new SurfaceRenderTarget11(swapChain, this, true));
-        }
-        else
-        {
-            return NULL;
-        }
-
-      default:
-        UNREACHABLE();
-        return NULL;
-    }
-}
-
 FramebufferImpl *Renderer11::createDefaultFramebuffer(const gl::Framebuffer::Data &data)
 {
     return createFramebuffer(data);

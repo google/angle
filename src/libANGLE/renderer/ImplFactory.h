@@ -16,7 +16,6 @@ namespace rx
 {
 class BufferImpl;
 class CompilerImpl;
-class DefaultAttachmentImpl;
 class FenceNVImpl;
 class FenceSyncImpl;
 class FramebufferImpl;
@@ -40,7 +39,6 @@ class ImplFactory : angle::NonCopyable
     virtual ProgramImpl *createProgram() = 0;
 
     // Framebuffer creation
-    virtual DefaultAttachmentImpl *createDefaultAttachment(GLenum type, egl::Surface *surface) = 0;
     virtual FramebufferImpl *createDefaultFramebuffer(const gl::Framebuffer::Data &data) = 0;
     virtual FramebufferImpl *createFramebuffer(const gl::Framebuffer::Data &data) = 0;
 
