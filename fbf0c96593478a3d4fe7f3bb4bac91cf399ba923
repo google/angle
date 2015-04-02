@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "63de6a5c_3f3baf9c",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-02T14:50:42Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 1
+      },
+      "revId": "fbf0c96593478a3d4fe7f3bb4bac91cf399ba923",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23c4727c_5c09d1db",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 3
@@ -13,6 +36,30 @@
       "writtenOn": "2015-04-02T00:11:41Z",
       "side": 1,
       "message": "It\u0027s a little weird that it\u0027s necessary to re-infer the kind of texture on this side of the renderer API.",
+      "range": {
+        "startLine": 239,
+        "startChar": 13,
+        "endLine": 239,
+        "endChar": 26
+      },
+      "revId": "fbf0c96593478a3d4fe7f3bb4bac91cf399ba923",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23c4727c_9368741f",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-02T14:50:42Z",
+      "side": 1,
+      "message": "We merged a few of the entry points for textures (texImage2D + texImage3D -\u003e setImage).  This check is really simple (see ref above) and just used to determine which gl call to forward to.",
+      "parentUuid": "23c4727c_5c09d1db",
       "range": {
         "startLine": 239,
         "startChar": 13,
@@ -48,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "e3bdfae6_60550322",
+        "filename": "src/tests/end2end_tests/TextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-02T14:50:42Z",
+      "side": 1,
+      "message": "I tried re-enabling them and everything seems to be working.  This is likely due to us no longer supporting texture_rg on D3D9.",
+      "parentUuid": "a3cf829d_f5731818",
+      "range": {
+        "startLine": 452,
+        "startChar": 24,
+        "endLine": 452,
+        "endChar": 54
+      },
+      "revId": "fbf0c96593478a3d4fe7f3bb4bac91cf399ba923",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23c4727c_3c2f3d36",
         "filename": "src/tests/end2end_tests/TextureTest.cpp",
         "patchSetId": 3
@@ -59,6 +130,30 @@
       "writtenOn": "2015-04-02T00:11:41Z",
       "side": 1,
       "message": "It would be good to factor these repeated tests into a helper function.",
+      "range": {
+        "startLine": 455,
+        "startChar": 9,
+        "endLine": 455,
+        "endChar": 25
+      },
+      "revId": "fbf0c96593478a3d4fe7f3bb4bac91cf399ba923",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_a05b1b58",
+        "filename": "src/tests/end2end_tests/TextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-02T14:50:42Z",
+      "side": 1,
+      "message": "Done, moved it into the testFloatCopySubImage function.",
+      "parentUuid": "23c4727c_3c2f3d36",
       "range": {
         "startLine": 455,
         "startChar": 9,
