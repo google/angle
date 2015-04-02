@@ -147,8 +147,6 @@
             'compiler/translator/blocklayoutHLSL.h',
             'compiler/translator/BuiltInFunctionEmulatorHLSL.cpp',
             'compiler/translator/BuiltInFunctionEmulatorHLSL.h',
-            'compiler/translator/DetectDiscontinuity.cpp',
-            'compiler/translator/DetectDiscontinuity.h',
             'compiler/translator/OutputHLSL.cpp',
             'compiler/translator/OutputHLSL.h',
             'compiler/translator/RemoveSwitchFallThrough.cpp',
