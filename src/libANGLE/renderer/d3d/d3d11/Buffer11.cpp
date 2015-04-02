@@ -434,9 +434,12 @@ void Buffer11::markBufferUsage()
         auto systemMemoryStorageIt = mBufferStorages.find(BUFFER_USAGE_SYSTEM_MEMORY);
         ASSERT(systemMemoryStorageIt != mBufferStorages.end());
 
-        SafeDelete(systemMemoryStorageIt->second);
-        mBufferStorages.erase(systemMemoryStorageIt);
-        mHasSystemMemoryStorage = false;
+        if (getLatestBufferStorage() != systemMemoryStorageIt->second)
+        {
+            SafeDelete(systemMemoryStorageIt->second);
+            mBufferStorages.erase(systemMemoryStorageIt);
+            mHasSystemMemoryStorage = false;
+        }
     }
 }
 

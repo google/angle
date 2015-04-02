@@ -194,3 +194,37 @@ TYPED_TEST(UniformBufferTest, UnboundUniformBuffer)
     drawQuad(mProgram, "position", 0.5f);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
+
+// Update a UBO many time and verify that ANGLE uses the latest version of the data.
+// https://code.google.com/p/angleproject/issues/detail?id=965
+TYPED_TEST(UniformBufferTest, UniformBufferManyUpdates)
+{
+    int px = getWindowWidth() / 2;
+    int py = getWindowHeight() / 2;
+
+    ASSERT_GL_NO_ERROR();
+
+    float data[4];
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(data), NULL, GL_DYNAMIC_DRAW);
+    glUniformBlockBinding(mProgram, mUniformBufferIndex, 0);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Repeteadly update the data and draw
+    for (size_t i = 0; i < 10; ++i)
+    {
+        data[0] = (i + 10.f) / 255.f;
+        data[1] = (i + 20.f) / 255.f;
+        data[2] = (i + 30.f) / 255.f;
+        data[3] = (i + 40.f) / 255.f;
+
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(data), data);
+
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_EQ(px, py, i + 10, i + 20, i + 30, i + 40);
+    }
+}
