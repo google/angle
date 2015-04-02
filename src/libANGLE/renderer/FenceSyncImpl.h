@@ -24,7 +24,7 @@ class FenceSyncImpl : angle::NonCopyable
     FenceSyncImpl() { };
     virtual ~FenceSyncImpl() { };
 
-    virtual gl::Error set() = 0;
+    virtual gl::Error set(GLenum condition, GLbitfield flags) = 0;
     virtual gl::Error clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult) = 0;
     virtual gl::Error serverWait(GLbitfield flags, GLuint64 timeout) = 0;
     virtual gl::Error getStatus(GLint *outResult) = 0;

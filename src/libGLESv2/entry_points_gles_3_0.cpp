@@ -2371,7 +2371,7 @@ GLsync GL_APIENTRY FenceSync_(GLenum condition, GLbitfield flags)
         GLsync fenceSync = context->createFenceSync();
 
         FenceSync *fenceSyncObject = context->getFenceSync(fenceSync);
-        Error error = fenceSyncObject->set(condition);
+        Error error = fenceSyncObject->set(condition, flags);
         if (error.isError())
         {
             context->deleteFenceSync(fenceSync);
@@ -2575,7 +2575,7 @@ void GL_APIENTRY GetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei* 
         {
           case GL_OBJECT_TYPE:     values[0] = static_cast<GLint>(GL_SYNC_FENCE);              break;
           case GL_SYNC_CONDITION:  values[0] = static_cast<GLint>(fenceSync->getCondition());  break;
-          case GL_SYNC_FLAGS:      values[0] = 0;                                              break;
+          case GL_SYNC_FLAGS:      values[0] = static_cast<GLint>(fenceSync->getFlags());      break;
 
           case GL_SYNC_STATUS:
             {

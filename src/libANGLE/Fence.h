@@ -53,17 +53,19 @@ class FenceSync final : public RefCountObject
     explicit FenceSync(rx::FenceSyncImpl *impl, GLuint id);
     virtual ~FenceSync();
 
-    Error set(GLenum condition);
+    Error set(GLenum condition, GLbitfield flags);
     Error clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult);
     Error serverWait(GLbitfield flags, GLuint64 timeout);
     Error getStatus(GLint *outResult) const;
 
     GLenum getCondition() const { return mCondition; }
+    GLbitfield getFlags() const { return mFlags; }
 
   private:
     rx::FenceSyncImpl *mFence;
 
     GLenum mCondition;
+    GLbitfield mFlags;
 };
 
 }

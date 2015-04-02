@@ -149,7 +149,7 @@ FenceNVImpl *RendererGL::createFenceNV()
 
 FenceSyncImpl *RendererGL::createFenceSync()
 {
-    return new FenceSyncGL();
+    return new FenceSyncGL(mFunctions);
 }
 
 TransformFeedbackImpl *RendererGL::createTransformFeedback()

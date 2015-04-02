@@ -96,7 +96,7 @@ class MockFenceSyncImpl : public rx::FenceSyncImpl
   public:
     virtual ~MockFenceSyncImpl() { destroy(); }
 
-    MOCK_METHOD0(set, gl::Error());
+    MOCK_METHOD2(set, gl::Error(GLenum, GLbitfield));
     MOCK_METHOD3(clientWait, gl::Error(GLbitfield, GLuint64, GLenum *));
     MOCK_METHOD2(serverWait, gl::Error(GLbitfield, GLuint64));
     MOCK_METHOD1(getStatus, gl::Error(GLint *));
@@ -141,10 +141,10 @@ TEST_F(FenceSyncTest, DestructionDeletesImpl)
 
 TEST_F(FenceSyncTest, SetAndGetStatusBehavior)
 {
-    EXPECT_CALL(*mImpl, set())
+    EXPECT_CALL(*mImpl, set(_, _))
         .WillOnce(Return(gl::Error(GL_NO_ERROR)))
         .RetiresOnSaturation();
-    mFence->set(GL_SYNC_GPU_COMMANDS_COMPLETE);
+    mFence->set(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
     EXPECT_EQ(static_cast<GLenum>(GL_SYNC_GPU_COMMANDS_COMPLETE), mFence->getCondition());
     // Fake the behavior of testing the fence before and after it's passed.
     EXPECT_CALL(*mImpl, getStatus(_))

@@ -13,17 +13,22 @@
 
 namespace rx
 {
+class FunctionsGL;
 
 class FenceSyncGL : public FenceSyncImpl
 {
   public:
-    FenceSyncGL();
+    explicit FenceSyncGL(const FunctionsGL *functions);
     ~FenceSyncGL() override;
 
-    gl::Error set() override;
+    gl::Error set(GLenum condition, GLbitfield flags) override;
     gl::Error clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult) override;
     gl::Error serverWait(GLbitfield flags, GLuint64 timeout) override;
     gl::Error getStatus(GLint *outResult) override;
+
+  private:
+    const FunctionsGL *mFunctions;
+    GLsync mSyncObject;
 };
 
 }

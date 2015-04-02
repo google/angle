@@ -77,7 +77,8 @@ Error FenceNV::finishFence()
 FenceSync::FenceSync(rx::FenceSyncImpl *impl, GLuint id)
     : RefCountObject(id),
       mFence(impl),
-      mCondition(GL_NONE)
+      mCondition(GL_NONE),
+      mFlags(0)
 {
 }
 
@@ -86,15 +87,16 @@ FenceSync::~FenceSync()
     SafeDelete(mFence);
 }
 
-Error FenceSync::set(GLenum condition)
+Error FenceSync::set(GLenum condition, GLbitfield flags)
 {
-    Error error = mFence->set();
+    Error error = mFence->set(condition, flags);
     if (error.isError())
     {
         return error;
     }
 
     mCondition = condition;
+    mFlags = flags;
     return Error(GL_NO_ERROR);
 }
 

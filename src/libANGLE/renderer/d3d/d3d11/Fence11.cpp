@@ -137,8 +137,9 @@ FenceSync11::~FenceSync11()
     SafeRelease(mQuery);
 }
 
-gl::Error FenceSync11::set()
+gl::Error FenceSync11::set(GLenum condition, GLbitfield flags)
 {
+    ASSERT(condition == GL_SYNC_GPU_COMMANDS_COMPLETE && flags == 0);
     return FenceSetHelper(this);
 }
 
