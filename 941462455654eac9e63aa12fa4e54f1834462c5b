@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3bdfae6_f8dc1b63",
+        "filename": "src/libANGLE/AttachableObject.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-02T22:01:09Z",
+      "side": 1,
+      "message": "Since you\u0027re using access control please make this a proper class.\n\nAlso, as an outsider to the code, the naming \"AttachableObject\" and \"AttachmentSubResource\" aren\u0027t very descriptive. What\u0027s the distinction? What is an AttachmentSubResource? I understsand that this change makes more of the code common, but the mResource/mSubResource split in FramebufferAttachment.h/cpp is confusing.",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 6
+      },
+      "revId": "941462455654eac9e63aa12fa4e54f1834462c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
