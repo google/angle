@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "83e35e1e_cc93efab",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-02T14:29:08Z",
+      "side": 1,
+      "message": "I think that this only works because of the Koenig lookup.\nI will prefix min_element with std:: to clarify.",
+      "parentUuid": "e3bdfae6_ac3f9768",
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23c4727c_339088c9",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 7
@@ -93,6 +111,30 @@
       "writtenOn": "2015-04-02T14:18:23Z",
       "side": 1,
       "message": "Should this be an error case?",
+      "range": {
+        "startLine": 683,
+        "startChar": 12,
+        "endLine": 683,
+        "endChar": 70
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83e35e1e_4ca01fe6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 683,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-02T14:29:08Z",
+      "side": 1,
+      "message": "This is pretty much a copy and paste of the behaviour of getBufferStorage(). I am not really familiar with this code.\nI actually don’t see why non-mappable buffers are a problem since the copy is usually done with CopySubresourceRegion.",
+      "parentUuid": "23c4727c_d30b8ca7",
       "range": {
         "startLine": 683,
         "startChar": 12,
