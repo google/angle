@@ -2,6 +2,98 @@
   "comments": [
     {
       "key": {
+        "uuid": "63de6a5c_743279a2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T18:40:47Z",
+      "side": 1,
+      "message": "use range-for syntax: for (auto \u0026name : container)",
+      "range": {
+        "startLine": 204,
+        "startChar": 8,
+        "endLine": 204,
+        "endChar": 114
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63de6a5c_f472e963",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T18:40:47Z",
+      "side": 1,
+      "message": "can skip this if you use GetAs below",
+      "range": {
+        "startLine": 488,
+        "startChar": 4,
+        "endLine": 488,
+        "endChar": 60
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_af6b0462",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T18:40:47Z",
+      "side": 1,
+      "message": "GetAs",
+      "range": {
+        "startLine": 490,
+        "startChar": 11,
+        "endLine": 490,
+        "endChar": 22
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23c4727c_7bf492d3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T18:40:47Z",
+      "side": 1,
+      "message": "use a pointer instead of a non-const ref here, we only allow non-const refs for returning properties or in range-for",
+      "range": {
+        "startLine": 634,
+        "startChar": 32,
+        "endLine": 634,
+        "endChar": 35
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "03af6e90_de0f352f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 7
@@ -100,6 +192,52 @@
     },
     {
       "key": {
+        "uuid": "63de6a5c_341d11e9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T18:40:47Z",
+      "side": 1,
+      "message": "nullptr",
+      "range": {
+        "startLine": 667,
+        "startChar": 19,
+        "endLine": 667,
+        "endChar": 23
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63de6a5c_7465d944",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T18:40:47Z",
+      "side": 1,
+      "message": "can you find a way to re-use this block of code, and the block of code in getBufferStorage, by using a local helper function?",
+      "range": {
+        "startLine": 675,
+        "startChar": 3,
+        "endLine": 681,
+        "endChar": 63
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23c4727c_d30b8ca7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 7
@@ -135,6 +273,30 @@
       "side": 1,
       "message": "This is pretty much a copy and paste of the behaviour of getBufferStorage(). I am not really familiar with this code.\nI actually don’t see why non-mappable buffers are a problem since the copy is usually done with CopySubresourceRegion.",
       "parentUuid": "23c4727c_d30b8ca7",
+      "range": {
+        "startLine": 683,
+        "startChar": 12,
+        "endLine": 683,
+        "endChar": 70
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_8a582e5c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 683,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T18:40:47Z",
+      "side": 1,
+      "message": "It\u0027s for copying from GPU buffers to system memory buffers, etc. Non-mappable (GPU) stuff has to go through the staging buffer, if it isn\u0027t already. Not an error though.",
+      "parentUuid": "83e35e1e_4ca01fe6",
       "range": {
         "startLine": 683,
         "startChar": 12,
@@ -210,6 +372,99 @@
         "startChar": 15,
         "endLine": 819,
         "endChar": 27
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_2f5db47f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 819,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T18:40:47Z",
+      "side": 1,
+      "message": "Oops. Is this verifiable with a unit/end2end test? Can go in a split prior patch if so.",
+      "parentUuid": "23b8f2d3_7c2ab5f8",
+      "range": {
+        "startLine": 819,
+        "startChar": 15,
+        "endLine": 819,
+        "endChar": 27
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63de6a5c_f41c2924",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T18:40:47Z",
+      "side": 1,
+      "message": "nit: right-aligned",
+      "range": {
+        "startLine": 89,
+        "startChar": 21,
+        "endLine": 89,
+        "endChar": 22
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23c4727c_f8aae8d0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T18:40:47Z",
+      "side": 1,
+      "message": "nit: place above data",
+      "range": {
+        "startLine": 92,
+        "startChar": 8,
+        "endLine": 92,
+        "endChar": 32
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23c4727c_d8af24df",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T18:40:47Z",
+      "side": 1,
+      "message": "can you comment here what the GLintptr represents?",
+      "range": {
+        "startLine": 95,
+        "startChar": 21,
+        "endLine": 95,
+        "endChar": 29
       },
       "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
