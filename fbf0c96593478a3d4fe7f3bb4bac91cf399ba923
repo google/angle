@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23c4727c_5c09d1db",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-02T00:11:41Z",
+      "side": 1,
+      "message": "It\u0027s a little weird that it\u0027s necessary to re-infer the kind of texture on this side of the renderer API.",
+      "range": {
+        "startLine": 239,
+        "startChar": 13,
+        "endLine": 239,
+        "endChar": 26
+      },
+      "revId": "fbf0c96593478a3d4fe7f3bb4bac91cf399ba923",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3cf829d_f5731818",
+        "filename": "src/tests/end2end_tests/TextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-02T00:11:41Z",
+      "side": 1,
+      "message": "Is the intent to re-enable these tests at some point in the near future? Do the new guards help in doing so?",
+      "range": {
+        "startLine": 452,
+        "startChar": 24,
+        "endLine": 452,
+        "endChar": 54
+      },
+      "revId": "fbf0c96593478a3d4fe7f3bb4bac91cf399ba923",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23c4727c_3c2f3d36",
+        "filename": "src/tests/end2end_tests/TextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-02T00:11:41Z",
+      "side": 1,
+      "message": "It would be good to factor these repeated tests into a helper function.",
+      "range": {
+        "startLine": 455,
+        "startChar": 9,
+        "endLine": 455,
+        "endChar": 25
+      },
+      "revId": "fbf0c96593478a3d4fe7f3bb4bac91cf399ba923",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
