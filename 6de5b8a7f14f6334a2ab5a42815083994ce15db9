@@ -19,6 +19,92 @@
     },
     {
       "key": {
+        "uuid": "e3bdfae6_ac3f9768",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-02T14:18:23Z",
+      "side": 1,
+      "message": "nit: needs std:: namespace. Is there a using namespace std somewhere?",
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23c4727c_339088c9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-02T14:18:23Z",
+      "side": 1,
+      "message": "We don\u0027t have a real style guide for lambdas but could you put this on the next line?\n   [](const ConstantBufferCache::value_type \u0026a, const ConstantBufferCache::value_type \u0026b)\n   {\n      return a.second.lruCount \u003c b.second.lruCount;\n   });",
+      "range": {
+        "startLine": 655,
+        "startChar": 103,
+        "endLine": 655,
+        "endChar": 152
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_0cbc434e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-02T14:18:23Z",
+      "side": 1,
+      "message": "Lets add an assert that mConstantBufferStorageAdditionalSize is greater than or equal to iter-\u003esecond.storage-\u003egetSize() to prevent possible underflows.",
+      "range": {
+        "startLine": 659,
+        "startChar": 12,
+        "endLine": 659,
+        "endChar": 84
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23c4727c_d30b8ca7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 683,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-02T14:18:23Z",
+      "side": 1,
+      "message": "Should this be an error case?",
+      "range": {
+        "startLine": 683,
+        "startChar": 12,
+        "endLine": 683,
+        "endChar": 70
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23b8f2d3_5c25f127",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 7
@@ -30,6 +116,30 @@
       "writtenOn": "2015-04-01T19:08:10Z",
       "side": 1,
       "message": "Unless I am mistaken, this should best destOffset, not sourceOffset.",
+      "range": {
+        "startLine": 812,
+        "startChar": 26,
+        "endLine": 812,
+        "endChar": 36
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63de6a5c_5f9d5b69",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 812,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-02T14:18:23Z",
+      "side": 1,
+      "message": "Yes, that looks correct.  Jamie may know better.",
+      "parentUuid": "23b8f2d3_5c25f127",
       "range": {
         "startLine": 812,
         "startChar": 26,
