@@ -22,6 +22,30 @@
       "revId": "10d1b56bd544ed42fef882cae0fa1a356c052133",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_daaa81d1",
+        "filename": "src/tests/perf_tests/DrawCallPerf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-02T00:16:10Z",
+      "side": 1,
+      "message": "+1 on testing DYNAMIC_DRAW buffers in the near future. https://github.com/KhronosGroup/WebGL/tree/master/sdk/demos/google/nvidia-vertex-buffer-object might be helpful as a reference. Client data performance is less important.",
+      "parentUuid": "e37fbae4_7c563db4",
+      "range": {
+        "startLine": 105,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 99
+      },
+      "revId": "10d1b56bd544ed42fef882cae0fa1a356c052133",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
