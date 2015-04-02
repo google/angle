@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23c4727c_c56cdd04",
+        "filename": "src/libANGLE/RefCountObject.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T17:41:02Z",
+      "side": 1,
+      "message": "We should avoid operator bool, because if you have two of them, they can join. eg, you could say \"texture \u003d\u003d renderbuffer\" and they\u0027d both be cast to bool, giving no error. I suggest you leave as is or use another solution, like \"bool valid() const\".\n(note the C++11 fix to this isn\u0027t supported yet)",
+      "range": {
+        "startLine": 76,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 58
+      },
+      "revId": "79d8b1471a92ba9612f537929fb397fff7c7922f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_19ca3e1f",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T17:41:02Z",
+      "side": 1,
+      "message": "ASSERT?",
+      "range": {
+        "startLine": 95,
+        "startChar": 4,
+        "endLine": 95,
+        "endChar": 10
+      },
+      "revId": "79d8b1471a92ba9612f537929fb397fff7c7922f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_79049acd",
+        "filename": "src/libANGLE/renderer/BufferImpl_mock.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T17:41:02Z",
+      "side": 1,
+      "message": "add #ifdef guards and a description of the file",
+      "revId": "79d8b1471a92ba9612f537929fb397fff7c7922f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63de6a5c_65b76a39",
+        "filename": "src/libANGLE/renderer/TransformFeedbackImpl_mock.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T17:41:02Z",
+      "side": 1,
+      "message": "ifdef guards and a file description here too",
+      "revId": "79d8b1471a92ba9612f537929fb397fff7c7922f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
