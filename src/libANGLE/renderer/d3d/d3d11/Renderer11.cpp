@@ -75,9 +75,6 @@ enum
     MAX_TEXTURE_IMAGE_UNITS_VTF_SM4 = 16
 };
 
-// dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
-static const uintptr_t DirtyPointer = static_cast<uintptr_t>(-1);
-
 static bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER_RESOURCE_VIEW_DESC desc)
 {
     unsigned mipLevel = index.mipIndex;

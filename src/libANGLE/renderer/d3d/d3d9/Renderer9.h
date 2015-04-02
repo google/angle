@@ -338,8 +338,8 @@ class Renderer9 : public RendererD3D
     std::vector<gl::SamplerState> mCurPixelSamplerStates;
 
     // Currently applied textures
-    std::vector<unsigned int> mCurVertexTextureSerials;
-    std::vector<unsigned int> mCurPixelTextureSerials;
+    std::vector<uintptr_t> mCurVertexTextures;
+    std::vector<uintptr_t> mCurPixelTextures;
 
     unsigned int mAppliedIBSerial;
     IDirect3DVertexShader9 *mAppliedVertexShader;

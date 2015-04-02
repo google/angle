@@ -45,12 +45,9 @@ static size_t GetImageDescIndex(GLenum target, size_t level)
     return IsCubeMapTextureTarget(target) ? ((level * 6) + CubeMapTextureTargetToLayerIndex(target)) : level;
 }
 
-unsigned int Texture::mCurrentTextureSerial = 1;
-
 Texture::Texture(rx::TextureImpl *impl, GLuint id, GLenum target)
     : FramebufferAttachmentObject(id),
       mTexture(impl),
-      mTextureSerial(issueTextureSerial()),
       mUsage(GL_NONE),
       mImmutableLevelCount(0),
       mTarget(target),
@@ -153,16 +150,6 @@ bool Texture::isCubeComplete() const
     }
 
     return true;
-}
-
-unsigned int Texture::getTextureSerial() const
-{
-    return mTextureSerial;
-}
-
-unsigned int Texture::issueTextureSerial()
-{
-    return mCurrentTextureSerial++;
 }
 
 bool Texture::isImmutable() const

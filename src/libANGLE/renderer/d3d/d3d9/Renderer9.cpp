@@ -360,8 +360,8 @@ void Renderer9::initializeDevice()
     mForceSetPixelSamplerStates.resize(rendererCaps.maxTextureImageUnits);
     mCurPixelSamplerStates.resize(rendererCaps.maxTextureImageUnits);
 
-    mCurVertexTextureSerials.resize(rendererCaps.maxVertexTextureImageUnits);
-    mCurPixelTextureSerials.resize(rendererCaps.maxTextureImageUnits);
+    mCurVertexTextures.resize(rendererCaps.maxVertexTextureImageUnits);
+    mCurPixelTextures.resize(rendererCaps.maxTextureImageUnits);
 
     markAllStateDirty();
 
@@ -821,10 +821,9 @@ gl::Error Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *te
     int d3dSamplerOffset = (type == gl::SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
     int d3dSampler = index + d3dSamplerOffset;
     IDirect3DBaseTexture9 *d3dTexture = NULL;
-    unsigned int serial = 0;
     bool forceSetTexture = false;
 
-    std::vector<unsigned int> &appliedSerials = (type == gl::SAMPLER_PIXEL) ? mCurPixelTextureSerials : mCurVertexTextureSerials;
+    std::vector<uintptr_t> &appliedTextures = (type == gl::SAMPLER_PIXEL) ? mCurPixelTextures : mCurVertexTextures;
 
     if (texture)
     {
@@ -851,17 +850,16 @@ gl::Error Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *te
         // in the texture class and we're unexpectedly missing the d3d texture
         ASSERT(d3dTexture != NULL);
 
-        serial = texture->getTextureSerial();
         forceSetTexture = textureImpl->hasDirtyImages();
         textureImpl->resetDirty();
     }
 
-    if (forceSetTexture || appliedSerials[index] != serial)
+    if (forceSetTexture || appliedTextures[index] != reinterpret_cast<uintptr_t>(d3dTexture))
     {
         mDevice->SetTexture(d3dSampler, d3dTexture);
     }
 
-    appliedSerials[index] = serial;
+    appliedTextures[index] = reinterpret_cast<uintptr_t>(d3dTexture);
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -2241,18 +2239,18 @@ void Renderer9::markAllStateDirty()
     mForceSetViewport = true;
     mForceSetBlendState = true;
 
-    ASSERT(mForceSetVertexSamplerStates.size() == mCurVertexTextureSerials.size());
+    ASSERT(mForceSetVertexSamplerStates.size() == mCurVertexTextures.size());
     for (unsigned int i = 0; i < mForceSetVertexSamplerStates.size(); i++)
     {
         mForceSetVertexSamplerStates[i] = true;
-        mCurVertexTextureSerials[i] = 0;
+        mCurVertexTextures[i] = DirtyPointer;
     }
 
-    ASSERT(mForceSetPixelSamplerStates.size() == mCurPixelTextureSerials.size());
+    ASSERT(mForceSetPixelSamplerStates.size() == mCurPixelTextures.size());
     for (unsigned int i = 0; i < mForceSetPixelSamplerStates.size(); i++)
     {
         mForceSetPixelSamplerStates[i] = true;
-        mCurPixelTextureSerials[i] = 0;
+        mCurPixelTextures[i] = DirtyPointer;
     }
 
     mAppliedIBSerial = 0;

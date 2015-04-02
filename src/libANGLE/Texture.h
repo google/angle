@@ -75,10 +75,6 @@ class Texture final : public FramebufferAttachmentObject
 
     virtual Error generateMipmaps();
 
-    // Texture serials provide a unique way of identifying a Texture that isn't a raw pointer.
-    // "id" is not good enough, as Textures can be deleted, then re-allocated with the same id.
-    unsigned int getTextureSerial() const;
-
     bool isImmutable() const;
     GLsizei immutableLevelCount();
 
@@ -88,8 +84,6 @@ class Texture final : public FramebufferAttachmentObject
     rx::TextureImpl *getImplementation() { return mTexture; }
     const rx::TextureImpl *getImplementation() const { return mTexture; }
 
-    static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
-
     // FramebufferAttachmentObject implementation
     GLsizei getAttachmentWidth(const FramebufferAttachment::Target &target) const override;
     GLsizei getAttachmentHeight(const FramebufferAttachment::Target &target) const override;
@@ -98,7 +92,6 @@ class Texture final : public FramebufferAttachmentObject
 
   private:
     rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override { return mTexture; }
-    static unsigned int issueTextureSerial();
 
     rx::TextureImpl *mTexture;
 
@@ -109,7 +102,6 @@ class Texture final : public FramebufferAttachmentObject
 
     GLenum mTarget;
 
-
     struct ImageDesc
     {
         Extents size;
@@ -118,9 +110,6 @@ class Texture final : public FramebufferAttachmentObject
         ImageDesc();
         ImageDesc(const Extents &size, GLenum internalFormat);
     };
-
-    const unsigned int mTextureSerial;
-    static unsigned int mCurrentTextureSerial;
 
     GLenum getBaseImageTarget() const;
     size_t getExpectedMipLevels() const;

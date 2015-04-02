@@ -193,12 +193,15 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     void cleanup();
 
+    // dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
+    static const uintptr_t DirtyPointer;
+
     egl::Display *mDisplay;
     bool mDeviceLost;
 
   private:
     //FIXME(jmadill): std::array is currently prohibited by Chromium style guide
-    typedef std::array<unsigned int, gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS> FramebufferTextureSerialArray;
+    typedef std::array<gl::Texture*, gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS> FramebufferTextureArray;
 
     gl::Error generateSwizzles(const gl::Data &data, gl::SamplerType type);
     gl::Error generateSwizzles(const gl::Data &data);
@@ -207,14 +210,13 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     gl::Error applyState(const gl::Data &data, GLenum drawMode);
     gl::Error applyShaders(const gl::Data &data);
     gl::Error applyTextures(const gl::Data &data, gl::SamplerType shaderType,
-                            const FramebufferTextureSerialArray &framebufferSerials, size_t framebufferSerialCount);
+                            const FramebufferTextureArray &framebufferTextures, size_t framebufferTextureCount);
     gl::Error applyTextures(const gl::Data &data);
 
     bool skipDraw(const gl::Data &data, GLenum drawMode);
     void markTransformFeedbackUsage(const gl::Data &data);
 
-    size_t getBoundFramebufferTextureSerials(const gl::Data &data,
-                                             FramebufferTextureSerialArray *outSerialArray);
+    size_t getBoundFramebufferTextures(const gl::Data &data, FramebufferTextureArray *outTextureArray);
     gl::Texture *getIncompleteTexture(GLenum type);
 
     gl::TextureMap mIncompleteTextures;

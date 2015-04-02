@@ -32,6 +32,8 @@ namespace
 const int ScratchMemoryBufferLifetime = 1000;
 }
 
+const uintptr_t RendererD3D::DirtyPointer = std::numeric_limits<uintptr_t>::max();
+
 RendererD3D::RendererD3D(egl::Display *display)
     : mDisplay(display),
       mDeviceLost(false),
@@ -372,7 +374,7 @@ gl::Error RendererD3D::applyShaders(const gl::Data &data)
 // looks up the corresponding OpenGL texture image unit and texture type,
 // and sets the texture and its addressing/filtering state (or NULL when inactive).
 gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shaderType,
-                                     const FramebufferTextureSerialArray &framebufferSerials, size_t framebufferSerialCount)
+                                     const FramebufferTextureArray &framebufferTextures, size_t framebufferTextureCount)
 {
     gl::Program *program = data.state->getProgram();
 
@@ -395,7 +397,7 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shade
 
             // TODO: std::binary_search may become unavailable using older versions of GCC
             if (texture->isSamplerComplete(sampler, data) &&
-                !std::binary_search(framebufferSerials.begin(), framebufferSerials.begin() + framebufferSerialCount, texture->getTextureSerial()))
+                !std::binary_search(framebufferTextures.begin(), framebufferTextures.begin() + framebufferTextureCount, texture))
             {
                 gl::Error error = setSamplerState(shaderType, samplerIndex, texture, sampler);
                 if (error.isError())
@@ -448,16 +450,16 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shade
 
 gl::Error RendererD3D::applyTextures(const gl::Data &data)
 {
-    FramebufferTextureSerialArray framebufferSerials;
-    size_t framebufferSerialCount = getBoundFramebufferTextureSerials(data, &framebufferSerials);
+    FramebufferTextureArray framebufferTextures;
+    size_t framebufferSerialCount = getBoundFramebufferTextures(data, &framebufferTextures);
 
-    gl::Error error = applyTextures(data, gl::SAMPLER_VERTEX, framebufferSerials, framebufferSerialCount);
+    gl::Error error = applyTextures(data, gl::SAMPLER_VERTEX, framebufferTextures, framebufferSerialCount);
     if (error.isError())
     {
         return error;
     }
 
-    error = applyTextures(data, gl::SAMPLER_PIXEL, framebufferSerials, framebufferSerialCount);
+    error = applyTextures(data, gl::SAMPLER_PIXEL, framebufferTextures, framebufferSerialCount);
     if (error.isError())
     {
         return error;
@@ -507,10 +509,9 @@ void RendererD3D::markTransformFeedbackUsage(const gl::Data &data)
     }
 }
 
-size_t RendererD3D::getBoundFramebufferTextureSerials(const gl::Data &data,
-                                                      FramebufferTextureSerialArray *outSerialArray)
+size_t RendererD3D::getBoundFramebufferTextures(const gl::Data &data, FramebufferTextureArray *outTextureArray)
 {
-    size_t serialCount = 0;
+    size_t textureCount = 0;
 
     const gl::Framebuffer *drawFramebuffer = data.state->getDrawFramebuffer();
     for (unsigned int i = 0; i < data.caps->maxColorAttachments; i++)
@@ -518,21 +519,19 @@ size_t RendererD3D::getBoundFramebufferTextureSerials(const gl::Data &data,
         const gl::FramebufferAttachment *attachment = drawFramebuffer->getColorbuffer(i);
         if (attachment && attachment->type() == GL_TEXTURE)
         {
-            gl::Texture *texture = attachment->getTexture();
-            (*outSerialArray)[serialCount++] = texture->getTextureSerial();
+            (*outTextureArray)[textureCount++] = attachment->getTexture();
         }
     }
 
     const gl::FramebufferAttachment *depthStencilAttachment = drawFramebuffer->getDepthOrStencilbuffer();
     if (depthStencilAttachment && depthStencilAttachment->type() == GL_TEXTURE)
     {
-        gl::Texture *depthStencilTexture = depthStencilAttachment->getTexture();
-        (*outSerialArray)[serialCount++] = depthStencilTexture->getTextureSerial();
+        (*outTextureArray)[textureCount++] = depthStencilAttachment->getTexture();
     }
 
-    std::sort(outSerialArray->begin(), outSerialArray->begin() + serialCount);
+    std::sort(outTextureArray->begin(), outTextureArray->begin() + textureCount);
 
-    return serialCount;
+    return textureCount;
 }
 
 gl::Texture *RendererD3D::getIncompleteTexture(GLenum type)
@@ -543,7 +542,7 @@ gl::Texture *RendererD3D::getIncompleteTexture(GLenum type)
         const gl::Extents colorSize(1, 1, 1);
         const gl::PixelUnpackState incompleteUnpackState(1, 0);
 
-        gl::Texture* t = new gl::Texture(createTexture(type), gl::Texture::INCOMPLETE_TEXTURE_ID, type);
+        gl::Texture* t = new gl::Texture(createTexture(type), std::numeric_limits<GLuint>::max(), type);
 
         if (type == GL_TEXTURE_CUBE_MAP)
         {
