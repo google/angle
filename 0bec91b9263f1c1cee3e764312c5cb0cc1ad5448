@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23c4727c_4a6451ce",
+        "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-04-02T21:50:05Z",
+      "side": 1,
+      "message": "Follow an error string change in CallDAG",
+      "revId": "0bec91b9263f1c1cee3e764312c5cb0cc1ad5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_dda38923",
+        "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-04-02T21:50:05Z",
+      "side": 1,
+      "message": "The big call stack is in unused functions so it shouldn\u0027t fail.",
+      "revId": "0bec91b9263f1c1cee3e764312c5cb0cc1ad5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63de6a5c_e3fb4d8d",
+        "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-04-02T21:50:05Z",
+      "side": 1,
+      "message": "The spec says:\nStatic and dynamic recursion is not allowed. Static recursion is present if the static function call graph of\nthe program contains cycles.\nSo it seems we were wrongly allowing unused recursive function. (and it makes the code in CallDAG simpler to assume this)",
+      "revId": "0bec91b9263f1c1cee3e764312c5cb0cc1ad5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
