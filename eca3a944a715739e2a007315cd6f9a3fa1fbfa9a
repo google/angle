@@ -22,6 +22,30 @@
       "revId": "eca3a944a715739e2a007315cd6f9a3fa1fbfa9a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23c4727c_4e290f7f",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T15:37:55Z",
+      "side": 1,
+      "message": "Addressed in a follow-up patch.",
+      "parentUuid": "e3bdfae6_0c7443ff",
+      "range": {
+        "startLine": 53,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 51
+      },
+      "revId": "eca3a944a715739e2a007315cd6f9a3fa1fbfa9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
