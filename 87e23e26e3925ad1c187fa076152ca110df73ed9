@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3bdfae6_f8241b2e",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-02T22:17:03Z",
+      "side": 1,
+      "message": "Is there a plan to use this? If not then perhaps it should be left out.",
+      "range": {
+        "startLine": 26,
+        "startChar": 19,
+        "endLine": 26,
+        "endChar": 30
+      },
+      "revId": "87e23e26e3925ad1c187fa076152ca110df73ed9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
