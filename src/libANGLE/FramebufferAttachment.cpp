@@ -76,15 +76,10 @@ GLenum FramebufferAttachment::getColorEncoding() const
     return GetInternalFormatInfo(getInternalFormat()).colorEncoding;
 }
 
-GLuint FramebufferAttachment::id() const
-{
-    return mResource->id();
-}
-
-const ImageIndex *FramebufferAttachment::getTextureImageIndex() const
+const ImageIndex &FramebufferAttachment::getTextureImageIndex() const
 {
     ASSERT(type() == GL_TEXTURE);
-    return &mTextureIndex;
+    return mTextureIndex;
 }
 
 GLenum FramebufferAttachment::cubeMapFace() const

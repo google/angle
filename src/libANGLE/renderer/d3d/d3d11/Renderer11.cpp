@@ -76,11 +76,11 @@ enum
 // dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
 static const uintptr_t DirtyPointer = static_cast<uintptr_t>(-1);
 
-static bool ImageIndexConflictsWithSRV(const gl::ImageIndex *index, D3D11_SHADER_RESOURCE_VIEW_DESC desc)
+static bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER_RESOURCE_VIEW_DESC desc)
 {
-    unsigned mipLevel = index->mipIndex;
-    unsigned layerIndex = index->layerIndex;
-    GLenum type = index->type;
+    unsigned mipLevel = index.mipIndex;
+    unsigned layerIndex = index.layerIndex;
+    GLenum type = index.type;
 
     switch (desc.ViewDimension)
     {
@@ -89,7 +89,7 @@ static bool ImageIndexConflictsWithSRV(const gl::ImageIndex *index, D3D11_SHADER
             unsigned maxSrvMip = desc.Texture2D.MipLevels + desc.Texture2D.MostDetailedMip;
             maxSrvMip = (desc.Texture2D.MipLevels == -1) ? INT_MAX : maxSrvMip;
 
-            unsigned mipMin = index->mipIndex;
+            unsigned mipMin = index.mipIndex;
             unsigned mipMax = (layerIndex == -1) ? INT_MAX : layerIndex;
 
             return type == GL_TEXTURE_2D && RangeUI(mipMin, mipMax).intersects(RangeUI(desc.Texture2D.MostDetailedMip, maxSrvMip));
@@ -1184,7 +1184,7 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSi
     return count >= minCount;
 }
 
-void Renderer11::unsetConflictingSRVs(gl::SamplerType samplerType, uintptr_t resource, const gl::ImageIndex *index)
+void Renderer11::unsetConflictingSRVs(gl::SamplerType samplerType, uintptr_t resource, const gl::ImageIndex &index)
 {
     auto &currentSRVs = (samplerType == gl::SAMPLER_VERTEX ? mCurVertexSRVs : mCurPixelSRVs);
 
@@ -1252,8 +1252,7 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
             if (colorbuffer->type() == GL_TEXTURE)
             {
                 uintptr_t rtResource = reinterpret_cast<uintptr_t>(GetViewResource(framebufferRTVs[colorAttachment]));
-                const gl::ImageIndex *index = colorbuffer->getTextureImageIndex();
-                ASSERT(index);
+                const gl::ImageIndex &index = colorbuffer->getTextureImageIndex();
                 // The index doesn't need to be corrected for the small compressed texture workaround
                 // because a rendertarget is never compressed.
                 unsetConflictingSRVs(gl::SAMPLER_VERTEX, rtResource, index);
@@ -1292,8 +1291,7 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
         if (depthStencil->type() == GL_TEXTURE)
         {
             uintptr_t depthStencilResource = reinterpret_cast<uintptr_t>(GetViewResource(framebufferDSV));
-            const gl::ImageIndex *index = depthStencil->getTextureImageIndex();
-            ASSERT(index);
+            const gl::ImageIndex &index = depthStencil->getTextureImageIndex();
             // The index doesn't need to be corrected for the small compressed texture workaround
             // because a rendertarget is never compressed.
             unsetConflictingSRVs(gl::SAMPLER_VERTEX, depthStencilResource, index);

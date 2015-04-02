@@ -48,11 +48,10 @@ class FramebufferAttachment : angle::NonCopyable
     bool isRenderbufferWithId(GLuint renderbufferId) const { return type() == GL_RENDERBUFFER && id() == renderbufferId; }
 
     GLenum getBinding() const { return mBinding; }
-
-    GLuint id() const;
+    GLuint id() const { return mResource.id(); }
 
     // These methods are only legal to call on Texture attachments
-    const ImageIndex *getTextureImageIndex() const;
+    const ImageIndex &getTextureImageIndex() const;
     GLenum cubeMapFace() const;
     GLint mipLevel() const;
     GLint layer() const;

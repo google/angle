@@ -243,7 +243,7 @@ class Renderer11 : public RendererD3D
     gl::Error drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances);
 
     ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
-    void unsetConflictingSRVs(gl::SamplerType shaderType, uintptr_t resource, const gl::ImageIndex *index);
+    void unsetConflictingSRVs(gl::SamplerType shaderType, uintptr_t resource, const gl::ImageIndex &index);
 
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;

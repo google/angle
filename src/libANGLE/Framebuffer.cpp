@@ -612,7 +612,7 @@ void Framebuffer::setAttachment(GLenum attachment, FramebufferAttachment *attach
             if (attachmentObj->type() == GL_TEXTURE)
             {
                 mData.mStencilAttachment = new TextureAttachment(GL_DEPTH_STENCIL_ATTACHMENT, attachmentObj->getTexture(),
-                                                                  *attachmentObj->getTextureImageIndex());
+                                                                 attachmentObj->getTextureImageIndex());
                 mImpl->setStencilAttachment(mData.mStencilAttachment);
             }
             else if (attachmentObj->type() == GL_RENDERBUFFER)

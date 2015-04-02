@@ -380,9 +380,8 @@ gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment,
         gl::Texture *texture = attachment->getTexture();
         ASSERT(texture);
         TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
-        const gl::ImageIndex *index = attachment->getTextureImageIndex();
-        ASSERT(index);
-        return textureD3D->getRenderTarget(*index, outRT);
+        const gl::ImageIndex &index = attachment->getTextureImageIndex();
+        return textureD3D->getRenderTarget(index, outRT);
     }
     else if (attachment->type() == GL_RENDERBUFFER)
     {
@@ -425,9 +424,8 @@ unsigned int GetAttachmentSerial(const gl::FramebufferAttachment *attachment)
         gl::Texture *texture = attachment->getTexture();
         ASSERT(texture);
         TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
-        const gl::ImageIndex *index = attachment->getTextureImageIndex();
-        ASSERT(index);
-        return textureD3D->getRenderTargetSerial(*index);
+        const gl::ImageIndex &index = attachment->getTextureImageIndex();
+        return textureD3D->getRenderTargetSerial(index);
     }
     else if (attachment->type() == GL_RENDERBUFFER)
     {
