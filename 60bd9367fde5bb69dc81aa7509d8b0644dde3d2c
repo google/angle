@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83e35e1e_2c839307",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1119,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-02T09:53:40Z",
+      "side": 1,
+      "message": "Using a macro here reduces code duplication a lot and is probably ok, but since macros have their problems we might want to weigh this against a solution using a function pointer for example. I\u0027d like to hear thoughts on this from other project members. Also please read what Google C++ style guide says about Preprocessor macros. One good suggestion there is to #undef the macro right after you\u0027re done using it.",
+      "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83e35e1e_ec946b46",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1123,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-02T09:53:40Z",
+      "side": 1,
+      "message": "Where are the built-in functions you are using here defined / which #include do they come from? We should try to make sure that they have consistent results regardless of platform.",
+      "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2312b2d8_29beeda2",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-02T09:53:40Z",
+      "side": 1,
+      "message": "Is handling the integer cases here really necessary? I don\u0027t think that there are variants of these functions that take an int or uint parameter. Same goes for radians/degrees.",
+      "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2312b2d8_a9c9bd59",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1135,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-02T09:53:40Z",
+      "side": 1,
+      "message": "nit: nullptr",
+      "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3d4e237_8d004105",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1238,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-02T09:53:40Z",
+      "side": 1,
+      "message": "nit: nullptr",
+      "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3d4e237_6d063521",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1258,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-02T09:53:40Z",
+      "side": 1,
+      "message": "nit: nullptr",
+      "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2312b2d8_09bb29b3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-02T09:53:40Z",
+      "side": 1,
+      "message": "We should probably fix the code so that unary function return values get the const qualifier set correctly instead.\n\nI have a couple of patches in review that could make fixing the qualifier issue easier, after these are merged it should be relatively easy to add the logic to IntermUnary::promote():\n\nhttps://chromium-review.googlesource.com/#/c/262415\nhttps://chromium-review.googlesource.com/#/c/262416",
+      "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
