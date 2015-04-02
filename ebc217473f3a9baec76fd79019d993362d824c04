@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63de6a5c_65a08ae6",
+        "filename": "src/tests/end2end_tests/TextureTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-02T17:36:46Z",
+      "side": 1,
+      "message": "If at all possible let\u0027s log something indicating that the test was skipped.",
+      "range": {
+        "startLine": 113,
+        "startChar": 16,
+        "endLine": 113,
+        "endChar": 22
+      },
+      "revId": "ebc217473f3a9baec76fd79019d993362d824c04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
