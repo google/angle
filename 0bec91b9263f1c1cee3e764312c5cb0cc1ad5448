@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "63de6a5c_1e08ec5c",
+        "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T22:22:47Z",
+      "side": 1,
+      "message": "Allowing ridiculously large call stacks to pass the parse seems dangerous -- when are they pruned from the intermediate tree? I\u0027, worried about allowing stack-based traversal of ridiculously large call graphs.",
+      "parentUuid": "e3bdfae6_dda38923",
+      "revId": "0bec91b9263f1c1cee3e764312c5cb0cc1ad5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63de6a5c_e3fb4d8d",
         "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
         "patchSetId": 1
@@ -47,6 +65,24 @@
       "writtenOn": "2015-04-02T21:50:05Z",
       "side": 1,
       "message": "The spec says:\nStatic and dynamic recursion is not allowed. Static recursion is present if the static function call graph of\nthe program contains cycles.\nSo it seems we were wrongly allowing unused recursive function. (and it makes the code in CallDAG simpler to assume this)",
+      "revId": "0bec91b9263f1c1cee3e764312c5cb0cc1ad5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63de6a5c_de11448c",
+        "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-02T22:22:47Z",
+      "side": 1,
+      "message": "Do you know who added this test? Adding Olli for another set of eyes.",
+      "parentUuid": "63de6a5c_e3fb4d8d",
       "revId": "0bec91b9263f1c1cee3e764312c5cb0cc1ad5448",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
