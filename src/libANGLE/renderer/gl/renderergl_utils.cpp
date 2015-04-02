@@ -187,6 +187,7 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     extensions->setTextureExtensionSupport(*textureCapsMap);
     extensions->textureNPOT = true;
     extensions->textureStorage = true;
+    extensions->fboRenderMipmap = true;
 }
 
 }
