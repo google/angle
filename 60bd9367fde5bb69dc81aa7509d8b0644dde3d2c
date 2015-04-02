@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "03f04edb_332f7236",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1119,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-02T10:17:25Z",
+      "side": 1,
+      "message": "Ok, I have added more reviewers, I will also recheck this.",
+      "parentUuid": "83e35e1e_2c839307",
+      "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83e35e1e_ec946b46",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-04-02T09:53:40Z",
       "side": 1,
       "message": "Where are the built-in functions you are using here defined / which #include do they come from? We should try to make sure that they have consistent results regardless of platform.",
+      "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03f04edb_132c6e3d",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1123,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-02T10:17:25Z",
+      "side": 1,
+      "message": "they are coming from \u003cmath.h\u003e let me know if you think I should explicitly include it.",
+      "parentUuid": "83e35e1e_ec946b46",
       "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "23e9d2fa_b79fd035",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-02T10:17:25Z",
+      "side": 1,
+      "message": "Thanks for catching this, I made a mistake here, int and uint cases are not required. I did not clearly read genType in spec.",
+      "parentUuid": "2312b2d8_29beeda2",
+      "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2312b2d8_a9c9bd59",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2015-04-02T09:53:40Z",
       "side": 1,
       "message": "nit: nullptr",
+      "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03f04edb_937cde35",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1135,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-02T10:17:25Z",
+      "side": 1,
+      "message": "I just copied it from existing switch cases in same function, let me know if I should then convert NULL to nullptr at least in this complete function.",
+      "parentUuid": "2312b2d8_a9c9bd59",
       "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -115,6 +187,24 @@
       "writtenOn": "2015-04-02T09:53:40Z",
       "side": 1,
       "message": "We should probably fix the code so that unary function return values get the const qualifier set correctly instead.\n\nI have a couple of patches in review that could make fixing the qualifier issue easier, after these are merged it should be relatively easy to add the logic to IntermUnary::promote():\n\nhttps://chromium-review.googlesource.com/#/c/262415\nhttps://chromium-review.googlesource.com/#/c/262416",
+      "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03f04edb_b35002b8",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-02T10:17:25Z",
+      "side": 1,
+      "message": "Ok, I will recheck this.",
+      "parentUuid": "2312b2d8_09bb29b3",
       "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
