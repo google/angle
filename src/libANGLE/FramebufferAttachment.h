@@ -10,11 +10,12 @@
 #ifndef LIBANGLE_FRAMEBUFFERATTACHMENT_H_
 #define LIBANGLE_FRAMEBUFFERATTACHMENT_H_
 
-#include "angle_gl.h"
-#include "common/angleutils.h"
 #include "libANGLE/Texture.h"
-#include "libANGLE/Renderbuffer.h"
-#include "libANGLE/Surface.h"
+#include "libANGLE/RefCountObject.h"
+
+#include "common/angleutils.h"
+
+#include "angle_gl.h"
 
 namespace gl
 {
@@ -29,7 +30,7 @@ class Renderbuffer;
 class FramebufferAttachment : angle::NonCopyable
 {
   public:
-    explicit FramebufferAttachment(GLenum binding, RefCountObject *resource);
+    explicit FramebufferAttachment(GLenum binding);
     virtual ~FramebufferAttachment();
 
     // Helper methods
@@ -47,14 +48,13 @@ class FramebufferAttachment : angle::NonCopyable
 
     GLenum getBinding() const { return mBinding; }
 
-    GLuint id() const;
-
     // Child class interface
     virtual GLsizei getWidth() const = 0;
     virtual GLsizei getHeight() const = 0;
     virtual GLenum getInternalFormat() const = 0;
     virtual GLsizei getSamples() const = 0;
 
+    virtual GLuint id() const = 0;
     virtual GLenum type() const = 0;
     virtual GLint mipLevel() const = 0;
     virtual GLenum cubeMapFace() const = 0;
@@ -64,9 +64,8 @@ class FramebufferAttachment : angle::NonCopyable
     virtual const ImageIndex *getTextureImageIndex() const = 0;
     virtual Renderbuffer *getRenderbuffer() const = 0;
 
-  protected:
+  private:
     GLenum mBinding;
-    BindingPointer<RefCountObject> mResource;
 };
 
 class TextureAttachment : public FramebufferAttachment
@@ -76,6 +75,7 @@ class TextureAttachment : public FramebufferAttachment
     virtual ~TextureAttachment();
 
     virtual GLsizei getSamples() const;
+    virtual GLuint id() const;
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
@@ -86,15 +86,12 @@ class TextureAttachment : public FramebufferAttachment
     virtual GLenum cubeMapFace() const;
     virtual GLint layer() const;
 
+    virtual Texture *getTexture() const;
     virtual const ImageIndex *getTextureImageIndex() const;
     virtual Renderbuffer *getRenderbuffer() const;
 
-    Texture *getTexture() const override
-    {
-        return rx::GetAs<Texture>(mResource.get());
-    }
-
   private:
+    BindingPointer<Texture> mTexture;
     ImageIndex mIndex;
 };
 
@@ -110,6 +107,7 @@ class RenderbufferAttachment : public FramebufferAttachment
     virtual GLenum getInternalFormat() const;
     virtual GLsizei getSamples() const;
 
+    virtual GLuint id() const;
     virtual GLenum type() const;
     virtual GLint mipLevel() const;
     virtual GLenum cubeMapFace() const;
@@ -117,11 +115,10 @@ class RenderbufferAttachment : public FramebufferAttachment
 
     virtual Texture *getTexture() const;
     virtual const ImageIndex *getTextureImageIndex() const;
+    virtual Renderbuffer *getRenderbuffer() const;
 
-    Renderbuffer *getRenderbuffer() const override
-    {
-        return rx::GetAs<Renderbuffer>(mResource.get());
-    }
+  private:
+    BindingPointer<Renderbuffer> mRenderbuffer;
 };
 
 class DefaultAttachment : public FramebufferAttachment
@@ -136,6 +133,7 @@ class DefaultAttachment : public FramebufferAttachment
     virtual GLenum getInternalFormat() const;
     virtual GLsizei getSamples() const;
 
+    virtual GLuint id() const;
     virtual GLenum type() const;
     virtual GLint mipLevel() const;
     virtual GLenum cubeMapFace() const;
@@ -145,10 +143,10 @@ class DefaultAttachment : public FramebufferAttachment
     virtual const ImageIndex *getTextureImageIndex() const;
     virtual Renderbuffer *getRenderbuffer() const;
 
-    const egl::Surface *getSurface() const
-    {
-        return rx::GetAs<egl::Surface>(mResource.get());
-    }
+    const egl::Surface *getSurface() const { return mSurface.get(); }
+
+  private:
+    BindingPointer<egl::Surface> mSurface;
 };
 
 }
