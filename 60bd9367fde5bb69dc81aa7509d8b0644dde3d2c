@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "a3d4e237_6daab550",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1123,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-02T10:52:39Z",
+      "side": 1,
+      "message": "I think an explicit include would be good, it seems like the include path is SymbolTable.h -\u003e InfoSink.h -\u003e \u003cmath.h\u003e which is very unintuitive.",
+      "parentUuid": "03f04edb_132c6e3d",
+      "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2312b2d8_29beeda2",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 3
@@ -136,6 +154,24 @@
       "side": 1,
       "message": "I just copied it from existing switch cases in same function, let me know if I should then convert NULL to nullptr at least in this complete function.",
       "parentUuid": "2312b2d8_a9c9bd59",
+      "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83e35e1e_2cd713ed",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1135,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-02T10:52:39Z",
+      "side": 1,
+      "message": "Just fix it in the newly added code, but feel free to make a separate commit fixing the existing ones if you want.",
+      "parentUuid": "03f04edb_937cde35",
       "revId": "60bd9367fde5bb69dc81aa7509d8b0644dde3d2c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
