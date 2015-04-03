@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "03f04edb_99a4ff84",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1120,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-03T10:57:55Z",
+      "side": 1,
+      "message": "Done. Actually, switch is not require now as I only have one case to handle.\n\nI have also removed #define and now have a new function that takes function pointer. Just having plain switch cases also looked OK but I could reduce some more code with function pointers.",
+      "parentUuid": "e3bdfae6_ec1c6f24",
+      "range": {
+        "startLine": 1120,
+        "startChar": 8,
+        "endLine": 1120,
+        "endChar": 36
+      },
+      "revId": "97b3d634c2c1603a379de30c7546b0811d033fc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63de6a5c_9f162381",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-02T14:07:04Z",
       "side": 1,
       "message": "use a local static const double or float in a namespace {} block at the top of the file?",
+      "range": {
+        "startLine": 1133,
+        "startChar": 8,
+        "endLine": 1133,
+        "endChar": 37
+      },
+      "revId": "97b3d634c2c1603a379de30c7546b0811d033fc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03f04edb_79aa7b50",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1133,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-03T10:57:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63de6a5c_9f162381",
       "range": {
         "startLine": 1133,
         "startChar": 8,
@@ -83,6 +131,30 @@
       "side": 1,
       "message": "I think we should rather investigate first why the initializer doesn\u0027t always have the const qualifier when it should have it. It might be just a matter of adding a couple of lines to IntermUnary::promote to set the qualifier to EvqConst in case the parameter is const. That could maybe be put into a separate patch. Now that the refactoring has landed the code should be pretty straightforward to debug.",
       "parentUuid": "e3bdfae6_8c82939a",
+      "range": {
+        "startLine": 1167,
+        "startChar": 12,
+        "endLine": 1167,
+        "endChar": 102
+      },
+      "revId": "97b3d634c2c1603a379de30c7546b0811d033fc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23e9d2fa_40721811",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-03T10:57:55Z",
+      "side": 1,
+      "message": "Olli, I no more need both the changes in ParseContext. With your merged patches, I see return value qualifier for built-ins with constant operand is correctly set to EvqConst.",
+      "parentUuid": "2312b2d8_ec1a2370",
       "range": {
         "startLine": 1167,
         "startChar": 12,
