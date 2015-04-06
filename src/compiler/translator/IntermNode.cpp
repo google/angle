@@ -1385,6 +1385,55 @@ TIntermTyped *TIntermConstantUnion::fold(
                     "Unary operation not folded into constant");
                 return nullptr;
 
+              case EOpExp:
+                if (!foldFloatTypeUnary(unionArray[i], &expf, infoSink, &tempConstArray[i]))
+                  return nullptr;
+                break;
+
+              case EOpLog:
+                // For log(x), results are undefined if x <= 0, we are choosing to set result to 0.
+                if (getType().getBasicType() == EbtFloat && unionArray[i].getFConst() <= 0.0f)
+                    tempConstArray[i].setFConst(0.0f);
+                else if (!foldFloatTypeUnary(unionArray[i], &logf, infoSink, &tempConstArray[i]))
+                    return nullptr;
+                break;
+
+              case EOpExp2:
+                if (!foldFloatTypeUnary(unionArray[i], &exp2f, infoSink, &tempConstArray[i]))
+                    return nullptr;
+                break;
+
+              case EOpLog2:
+                // For log2(x), results are undefined if x <= 0, we are choosing to set result to 0.
+                // And log2f is not available on some plarforms like old android, so just using log(x)/log(2) here.
+                if (getType().getBasicType() == EbtFloat && unionArray[i].getFConst() <= 0.0f)
+                    tempConstArray[i].setFConst(0.0f);
+                else if (!foldFloatTypeUnary(unionArray[i], &logf, infoSink, &tempConstArray[i]))
+                    return nullptr;
+                else
+                    tempConstArray[i].setFConst(tempConstArray[i].getFConst() / logf(2.0f));
+                break;
+
+              case EOpSqrt:
+                // For sqrt(x), results are undefined if x < 0, we are choosing to set result to 0.
+                if (getType().getBasicType() == EbtFloat && unionArray[i].getFConst() < 0.0f)
+                    tempConstArray[i].setFConst(0.0f);
+                else if (!foldFloatTypeUnary(unionArray[i], &sqrtf, infoSink, &tempConstArray[i]))
+                    return nullptr;
+                break;
+
+              case EOpInverseSqrt:
+                // There is no stdlib built-in function equavalent for GLES built-in inversesqrt(),
+                // so getting the square root first using builtin function sqrt() and then taking its inverse.
+                // Also, for inversesqrt(x), results are undefined if x <= 0, we are choosing to set result to 0.
+                if (getType().getBasicType() == EbtFloat && unionArray[i].getFConst() <= 0.0f)
+                    tempConstArray[i].setFConst(0.0f);
+                else if (!foldFloatTypeUnary(unionArray[i], &sqrtf, infoSink, &tempConstArray[i]))
+                    return nullptr;
+                else
+                    tempConstArray[i].setFConst(1.0f / tempConstArray[i].getFConst());
+                break;
+
               default:
                 return nullptr;
             }
