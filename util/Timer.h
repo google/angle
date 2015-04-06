@@ -10,6 +10,7 @@
 class Timer
 {
   public:
+    virtual ~Timer() {}
     virtual void start() = 0;
     virtual void stop() = 0;
     virtual double getElapsedTime() const = 0;
