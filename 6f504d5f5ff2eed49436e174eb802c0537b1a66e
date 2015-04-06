@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23e9d2fa_469d90b0",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1215,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-06T09:00:19Z",
+      "side": 1,
+      "message": "I thought of using generic function taking function pointers here to avoid code duplication. But let me know if you think it is making code unnecessary complex and we can just have if/else every where which duplicates code a bit but looks more simple code.",
+      "range": {
+        "startLine": 1215,
+        "startChar": 21,
+        "endLine": 1215,
+        "endChar": 39
+      },
+      "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
