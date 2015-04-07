@@ -807,7 +807,7 @@ parameter_declarator
         int size;
         if (context->arraySizeErrorCheck(@3, $4, size))
             context->recover();
-        $1.setArray(true, size);
+        $1.setArraySize(size);
 
         TType* type = new TType($1);
         TParameter param = { $2.string, type };
@@ -930,7 +930,7 @@ fully_specified_type
         if ($1.array) {
             ES3_ONLY("[]", @1, "first-class-array");
             if (context->shaderVersion != 300) {
-                $1.setArray(false);
+                $1.clearArrayness();
             }
         }
     }
@@ -1120,7 +1120,7 @@ type_specifier_no_prec
             int size;
             if (context->arraySizeErrorCheck(@2, $3, size))
                 context->recover();
-            $$.setArray(true, size);
+            $$.setArraySize(size);
         }
     }
     ;

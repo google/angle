@@ -3277,7 +3277,7 @@ yyreduce:
         int size;
         if (context->arraySizeErrorCheck((yylsp[-2]), (yyvsp[-1].interm.intermTypedNode), size))
             context->recover();
-        (yyvsp[-4].interm.type).setArray(true, size);
+        (yyvsp[-4].interm.type).setArraySize(size);
 
         TType* type = new TType((yyvsp[-4].interm.type));
         TParameter param = { (yyvsp[-3].lex).string, type };
@@ -3471,7 +3471,7 @@ yyreduce:
         if ((yyvsp[0].interm.type).array) {
             ES3_ONLY("[]", (yylsp[0]), "first-class-array");
             if (context->shaderVersion != 300) {
-                (yyvsp[0].interm.type).setArray(false);
+                (yyvsp[0].interm.type).clearArrayness();
             }
         }
     }
@@ -3786,7 +3786,7 @@ yyreduce:
             int size;
             if (context->arraySizeErrorCheck((yylsp[-2]), (yyvsp[-1].interm.intermTypedNode), size))
                 context->recover();
-            (yyval.interm.type).setArray(true, size);
+            (yyval.interm.type).setArraySize(size);
         }
     }
 

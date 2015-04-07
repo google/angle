@@ -553,10 +553,15 @@ struct TPublicType
         secondarySize = r;
     }
 
-    void setArray(bool a, int s = 0)
+    void setArraySize(int s)
     {
-        array = a;
+        array = true;
         arraySize = s;
+    }
+    void clearArrayness()
+    {
+        array = false;
+        arraySize = 0;
     }
 
     bool isStructureContainingArrays() const

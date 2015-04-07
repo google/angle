@@ -1238,7 +1238,7 @@ TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, TLayoutQu
     {
         error(typeSpecifier.line, "not supported", "first-class array");
         recover();
-        returnType.setArray(false);
+        returnType.clearArrayness();
     }
 
     if (shaderVersion < 300)
@@ -1347,7 +1347,7 @@ TIntermAggregate* TParseContext::parseSingleArrayDeclaration(TPublicType &public
     }
     else
     {
-        arrayType.setArray(true, size);
+        arrayType.setArraySize(size);
     }
 
     TIntermSymbol* symbol = intermediate.addSymbol(0, identifier, TType(arrayType), identifierLocation);
@@ -1468,7 +1468,7 @@ TIntermAggregate* TParseContext::parseArrayDeclarator(TPublicType &publicType, c
         if (arraySizeErrorCheck(arrayLocation, indexExpression, size))
             recover();
         TPublicType arrayType(publicType);
-        arrayType.setArray(true, size);
+        arrayType.setArraySize(size);
         TVariable* variable = NULL;
         if (arrayErrorCheck(arrayLocation, identifier, arrayType, variable))
             recover();
