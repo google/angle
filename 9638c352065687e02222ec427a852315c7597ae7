@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a32b0216_987d19e4",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 1
+      },
+      "lineNbr": 886,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-07T16:33:29Z",
+      "side": 0,
+      "message": "Funny, our implementation here doesn\u0027t seem to match the spec grammar at all. I\u0027m good with ripping this out.",
+      "range": {
+        "startLine": 886,
+        "startChar": 5,
+        "endLine": 886,
+        "endChar": 72
+      },
+      "revId": "9638c352065687e02222ec427a852315c7597ae7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
