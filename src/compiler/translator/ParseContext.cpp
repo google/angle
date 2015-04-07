@@ -1462,7 +1462,7 @@ TIntermAggregate* TParseContext::parseArrayDeclarator(TPublicType &publicType, c
     {
         recover();
     }
-    else if (indexExpression)
+    else
     {
         int size;
         if (arraySizeErrorCheck(arrayLocation, indexExpression, size))
@@ -1476,14 +1476,6 @@ TIntermAggregate* TParseContext::parseArrayDeclarator(TPublicType &publicType, c
         type.setArraySize(size);
 
         return intermediate.growAggregate(declaratorList, intermediate.addSymbol(variable ? variable->getUniqueId() : 0, identifier, type, identifierLocation), identifierLocation);
-    }
-    else
-    {
-        TPublicType arrayType(publicType);
-        arrayType.setArray(true);
-        TVariable* variable = NULL;
-        if (arrayErrorCheck(arrayLocation, identifier, arrayType, variable))
-            recover();
     }
 
     return NULL;

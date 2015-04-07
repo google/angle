@@ -197,3 +197,19 @@ TEST_F(MalformedShaderTest, AssignStructsContainingSamplers)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// This is a regression test for a particular bug that was in ANGLE.
+// It also verifies that ESSL3 functionality doesn't leak to ESSL1.
+TEST_F(MalformedShaderTest, ArrayWithNoSizeInInitializerList)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "void main() {\n"
+        "   float a[2], b[];\n"
+        "   gl_FragColor = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

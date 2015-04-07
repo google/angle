@@ -883,10 +883,6 @@ init_declarator_list
         $$ = $1;
         $$.intermAggregate = context->parseDeclarator($$.type, $1.intermAggregate, $3.symbol, @3, *$3.string);
     }
-    | init_declarator_list COMMA identifier LEFT_BRACKET RIGHT_BRACKET {
-        $$ = $1;
-        context->parseArrayDeclarator($$.type, @3, *$3.string, @4, NULL, NULL);
-    }
     | init_declarator_list COMMA identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         $$ = $1;
         $$.intermAggregate = context->parseArrayDeclarator($$.type, @3, *$3.string, @4, $1.intermNode, $5);
