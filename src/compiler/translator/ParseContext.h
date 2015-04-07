@@ -97,8 +97,8 @@ struct TParseContext {
     bool arraySizeErrorCheck(const TSourceLoc& line, TIntermTyped* expr, int& size);
     bool arrayQualifierErrorCheck(const TSourceLoc &line, const TPublicType &type);
     bool arrayTypeErrorCheck(const TSourceLoc& line, TPublicType type);
-    bool arrayErrorCheck(const TSourceLoc& line, const TString& identifier, const TPublicType &type, TVariable*& variable);
-    bool voidErrorCheck(const TSourceLoc&, const TString&, const TPublicType&);
+    bool arrayErrorCheck(const TSourceLoc &line, const TString &identifier, const TType &type, TVariable **variable);
+    bool voidErrorCheck(const TSourceLoc &line, const TString &identifier, const TBasicType &type);
     bool boolErrorCheck(const TSourceLoc&, const TIntermTyped*);
     bool boolErrorCheck(const TSourceLoc&, const TPublicType&);
     bool samplerErrorCheck(const TSourceLoc& line, const TPublicType& pType, const char* reason);

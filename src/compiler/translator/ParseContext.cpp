@@ -568,12 +568,13 @@ bool TParseContext::constructorErrorCheck(const TSourceLoc& line, TIntermNode* n
 //
 // returns true in case of an error
 //
-bool TParseContext::voidErrorCheck(const TSourceLoc& line, const TString& identifier, const TPublicType& pubType)
+bool TParseContext::voidErrorCheck(const TSourceLoc &line, const TString &identifier, const TBasicType &type)
 {
-    if (pubType.type == EbtVoid) {
+    if (type == EbtVoid)
+    {
         error(line, "illegal use of type 'void'", identifier.c_str());
         return true;
-    } 
+    }
 
     return false;
 }
@@ -784,25 +785,31 @@ bool TParseContext::arrayTypeErrorCheck(const TSourceLoc& line, TPublicType type
 // Do all the semantic checking for declaring an array,
 // and make the right changes to the symbol table.
 //
-// size == 0 means no specified size.
-//
 // Returns true if there was an error.
 //
-bool TParseContext::arrayErrorCheck(const TSourceLoc& line, const TString& identifier, const TPublicType &type, TVariable*& variable)
+bool TParseContext::arrayErrorCheck(const TSourceLoc &line, const TString &identifier, const TType &type,
+                                    TVariable **variable)
 {
-    bool builtIn = false; 
     bool sameScope = false;
-    TSymbol* symbol = symbolTable.find(identifier, 0, &builtIn, &sameScope);
-    if (symbol == 0 || !sameScope) {
+    TSymbol *symbol = symbolTable.find(identifier, 0, nullptr, &sameScope);
+    if (symbol == 0 || !sameScope)
+    {
         bool needsReservedErrorCheck = true;
 
         // gl_LastFragData may be redeclared with a new precision qualifier
-        if (identifier.compare(0, 15, "gl_LastFragData") == 0) {
-            if (type.arraySize == static_cast<const TVariable*>(symbolTable.findBuiltIn("gl_MaxDrawBuffers", shaderVersion))->getConstPointer()->getIConst()) {
-                if (TSymbol* builtInSymbol = symbolTable.findBuiltIn(identifier, shaderVersion)) {
+        if (identifier.compare(0, 15, "gl_LastFragData") == 0)
+        {
+            const TVariable *maxDrawBuffers =
+                static_cast<const TVariable *>(symbolTable.findBuiltIn("gl_MaxDrawBuffers", shaderVersion));
+            if (type.getArraySize() == maxDrawBuffers->getConstPointer()->getIConst())
+            {
+                if (TSymbol *builtInSymbol = symbolTable.findBuiltIn(identifier, shaderVersion))
+                {
                     needsReservedErrorCheck = extensionErrorCheck(line, builtInSymbol->getExtension());
                 }
-            } else {
+            }
+            else
+            {
                 error(line, "redeclaration of array with size != gl_MaxDrawBuffers", identifier.c_str());
                 return true;
             }
@@ -812,13 +819,11 @@ bool TParseContext::arrayErrorCheck(const TSourceLoc& line, const TString& ident
             if (reservedErrorCheck(line, identifier))
                 return true;
 
-        variable = new TVariable(&identifier, TType(type));
+        (*variable) = new TVariable(&identifier, type);
 
-        if (type.arraySize)
-            variable->getType().setArraySize(type.arraySize);
-
-        if (! symbolTable.declare(variable)) {
-            delete variable;
+        if (!symbolTable.declare(*variable))
+        {
+            delete (*variable);
             error(line, "INTERNAL ERROR inserting new symbol", identifier.c_str());
             return true;
         }
@@ -829,7 +834,7 @@ bool TParseContext::arrayErrorCheck(const TSourceLoc& line, const TString& ident
         return true;
     }
 
-    if (voidErrorCheck(line, identifier, type))
+    if (voidErrorCheck(line, identifier, type.getBasicType()))
         return true;
 
     return false;
@@ -884,7 +889,7 @@ bool TParseContext::nonInitErrorCheck(const TSourceLoc& line, const TString& ide
         return true;
     }
 
-    if (voidErrorCheck(line, identifier, type))
+    if (voidErrorCheck(line, identifier, type.type))
         return true;
 
     return false;
@@ -1113,7 +1118,7 @@ bool TParseContext::executeInitializer(const TSourceLoc& line, const TString& id
         if (reservedErrorCheck(line, identifier))
             return true;
 
-        if (voidErrorCheck(line, identifier, pType))
+        if (voidErrorCheck(line, identifier, pType.type))
             return true;
 
         //
@@ -1313,7 +1318,7 @@ TIntermAggregate* TParseContext::parseSingleArrayDeclaration(TPublicType &public
         recover();
     }
 
-    TPublicType arrayType = publicType;
+    TType arrayType(publicType);
 
     int size;
     if (arraySizeErrorCheck(identifierLocation, indexExpression, size))
@@ -1325,11 +1330,11 @@ TIntermAggregate* TParseContext::parseSingleArrayDeclaration(TPublicType &public
         arrayType.setArraySize(size);
     }
 
-    TIntermSymbol* symbol = intermediate.addSymbol(0, identifier, TType(arrayType), identifierLocation);
+    TIntermSymbol *symbol = intermediate.addSymbol(0, identifier, arrayType, identifierLocation);
     TIntermAggregate* aggregate = intermediate.makeAggregate(symbol, identifierLocation);
     TVariable* variable = 0;
 
-    if (arrayErrorCheck(identifierLocation, identifier, arrayType, variable))
+    if (arrayErrorCheck(identifierLocation, identifier, arrayType, &variable))
         recover();
 
     if (variable && symbol)
@@ -1442,18 +1447,21 @@ TIntermAggregate* TParseContext::parseArrayDeclarator(TPublicType &publicType, c
         int size;
         if (arraySizeErrorCheck(arrayLocation, indexExpression, size))
             recover();
-        TPublicType arrayType(publicType);
+        TType arrayType = TType(publicType);
         arrayType.setArraySize(size);
-        TVariable* variable = NULL;
-        if (arrayErrorCheck(arrayLocation, identifier, arrayType, variable))
+        TVariable *variable = nullptr;
+        if (arrayErrorCheck(arrayLocation, identifier, arrayType, &variable))
             recover();
-        TType type = TType(arrayType);
-        type.setArraySize(size);
 
-        return intermediate.growAggregate(declaratorList, intermediate.addSymbol(variable ? variable->getUniqueId() : 0, identifier, type, identifierLocation), identifierLocation);
+        TIntermSymbol *symbol = intermediate.addSymbol(0, identifier, arrayType, identifierLocation);
+        if (variable && symbol)
+        {
+            symbol->setId(variable->getUniqueId());
+        }
+        return intermediate.growAggregate(declaratorList, symbol, identifierLocation);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 TIntermAggregate* TParseContext::parseInitDeclarator(TPublicType &publicType, TIntermAggregate *declaratorList, const TSourceLoc& identifierLocation, const TString &identifier, const TSourceLoc& initLocation, TIntermTyped *initializer)
@@ -2513,7 +2521,8 @@ TPublicType TParseContext::joinInterpolationQualifiers(const TSourceLoc &interpo
 
 TFieldList *TParseContext::addStructDeclaratorList(const TPublicType& typeSpecifier, TFieldList *fieldList)
 {
-    if (voidErrorCheck(typeSpecifier.line, (*fieldList)[0]->name(), typeSpecifier)) {
+    if (voidErrorCheck(typeSpecifier.line, (*fieldList)[0]->name(), typeSpecifier.type))
+    {
         recover();
     }
 
