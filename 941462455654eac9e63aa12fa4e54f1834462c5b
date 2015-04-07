@@ -22,6 +22,30 @@
       "revId": "941462455654eac9e63aa12fa4e54f1834462c5b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63258a42_16655a8c",
+        "filename": "src/libANGLE/AttachableObject.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-07T16:44:44Z",
+      "side": 1,
+      "message": "Whoops, I forgot to update this to class when I made it use access control, thanks, will fix.\n\nI\u0027ll try another name. The SubResource terminology is a D3D concept, maybe why it seems unfamiliar. A SubResource indexes a part of a resource, such as a texture mip, or in this case, Depth vs Color from a Surface attachment. The AttachableResource is the whole resource.",
+      "parentUuid": "e3bdfae6_f8dc1b63",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 6
+      },
+      "revId": "941462455654eac9e63aa12fa4e54f1834462c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
