@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "63258a42_3390a8c9",
+        "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-07T15:17:23Z",
+      "side": 1,
+      "message": "Does the DAG structure allow us to validated unreferenced functions?",
+      "parentUuid": "637aea34_cb07354e",
+      "revId": "0bec91b9263f1c1cee3e764312c5cb0cc1ad5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63de6a5c_e3fb4d8d",
         "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
         "patchSetId": 1
@@ -137,6 +155,24 @@
       "side": 1,
       "message": "Log seems to say that the author was gman@chromium.org.\n\nIs it clear whether the definition of \"static function call graph\" contains functions that are not statically reachable from main()? It seems like it\u0027s an arbitrary decision, so I\u0027d be okay with both NULL and kHasRecursion here.",
       "parentUuid": "63de6a5c_de11448c",
+      "revId": "0bec91b9263f1c1cee3e764312c5cb0cc1ad5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a32b0216_18558922",
+        "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-07T15:17:23Z",
+      "side": 1,
+      "message": "Yeah I agree with this, and couldn\u0027t find a clarification with Khronos. I pinged Pyry and Shannon to see if they have any further input but I\u0027m fine with unused recursive functions being blocked.",
+      "parentUuid": "a3706250_8ddce162",
       "revId": "0bec91b9263f1c1cee3e764312c5cb0cc1ad5448",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
