@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3706250_ad93dd59",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-07T14:23:41Z",
+      "side": 1,
+      "message": "Maybe \"parameter\" would be better name here?",
+      "range": {
+        "startLine": 298,
+        "startChar": 74,
+        "endLine": 298,
+        "endChar": 84
+      },
+      "revId": "1b0627c551a8c238e9a4f4b27c9f739fa5d12d5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "837fde20_ecb00bf6",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-07T14:23:41Z",
+      "side": 1,
+      "message": "Also, would be better to use pointer than reference here (see Google C++ style guide about this).",
+      "range": {
+        "startLine": 298,
+        "startChar": 30,
+        "endLine": 298,
+        "endChar": 51
+      },
+      "revId": "1b0627c551a8c238e9a4f4b27c9f739fa5d12d5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
