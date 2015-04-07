@@ -4,6 +4,9 @@
 
 #include "common/event_tracer.h"
 
+#include "common/debug.h"
+#include "platform/Platform.h"
+
 namespace gl
 {
 
@@ -15,8 +18,18 @@ AddTraceEventFunc g_addTraceEvent;
 namespace gl
 {
 
-const unsigned char* TraceGetTraceCategoryEnabledFlag(const char* name)
+const unsigned char *TraceGetTraceCategoryEnabledFlag(const char *name)
 {
+    angle::Platform *platform = ANGLEPlatformCurrent();
+    ASSERT(platform);
+
+    // TODO(jmadill): only use platform once it's working
+    const unsigned char *categoryEnabledFlag = platform->getTraceCategoryEnabledFlag(name);
+    if (categoryEnabledFlag != nullptr)
+    {
+        return categoryEnabledFlag;
+    }
+
     if (g_getCategoryEnabledFlag)
     {
         return g_getCategoryEnabledFlag(name);
@@ -29,7 +42,29 @@ void TraceAddTraceEvent(char phase, const unsigned char* categoryGroupEnabled, c
                         int numArgs, const char** argNames, const unsigned char* argTypes,
                         const unsigned long long* argValues, unsigned char flags)
 {
-    if (g_addTraceEvent)
+    angle::Platform *platform = ANGLEPlatformCurrent();
+    ASSERT(platform);
+
+    // TODO(jmadill): only use platform once it's working
+    double timestamp = platform->monotonicallyIncreasingTime();
+
+    if (timestamp != 0)
+    {
+        angle::Platform::TraceEventHandle handle =
+            platform->addTraceEvent(phase,
+                                    categoryGroupEnabled,
+                                    name,
+                                    id,
+                                    timestamp,
+                                    numArgs,
+                                    argNames,
+                                    argTypes,
+                                    argValues,
+                                    flags);
+        ASSERT(handle != 0);
+        UNUSED_ASSERTION_VARIABLE(handle);
+    }
+    else if (g_addTraceEvent)
     {
         g_addTraceEvent(phase, categoryGroupEnabled, name, id, numArgs, argNames, argTypes, argValues, flags);
     }

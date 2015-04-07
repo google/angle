@@ -20,7 +20,23 @@ class Platform
 {
   public:
 
+    // System --------------------------------------------------------------
+
+    // Monotonically increasing time in seconds from an arbitrary fixed point in the past.
+    // This function is expected to return at least millisecond-precision values. For this reason,
+    // it is recommended that the fixed point be no further in the past than the epoch.
+    virtual double monotonicallyIncreasingTime() { return 0; }
+
     // Tracing --------
+
+    // Get a pointer to the enabled state of the given trace category. The
+    // embedder can dynamically change the enabled state as trace event
+    // recording is started and stopped by the application. Only long-lived
+    // literal strings should be given as the category name. The implementation
+    // expects the returned pointer to be held permanently in a local static. If
+    // the unsigned char is non-zero, tracing is enabled. If tracing is enabled,
+    // addTraceEvent is expected to be called by the trace event macros.
+    virtual const unsigned char *getTraceCategoryEnabledFlag(const char *categoryName) { return 0; }
 
     typedef uint64_t TraceEventHandle;
 
@@ -47,6 +63,7 @@ class Platform
     // - id optionally allows events of the same name to be distinguished from
     //   each other. For example, to trace the consutruction and destruction of
     //   objects, specify the pointer as the id parameter.
+    // - timestamp should be a time value returned from monotonicallyIncreasingTime.
     // - numArgs specifies the number of elements in argNames, argTypes, and
     //   argValues.
     // - argNames is the array of argument names. Use long-lived literal strings
@@ -84,15 +101,15 @@ class Platform
     }
 
     // Set the duration field of a COMPLETE trace event.
-    virtual void updateTraceEventDuration(const unsigned char* categoryEnabledFlag, const char* name, TraceEventHandle) { }
+    virtual void updateTraceEventDuration(const unsigned char *categoryEnabledFlag, const char *name, TraceEventHandle eventHandle) { }
 
     // Callbacks for reporting histogram data.
     // CustomCounts histogram has exponential bucket sizes, so that min=1, max=1000000, bucketCount=50 would do.
-    virtual void histogramCustomCounts(const char* name, int sample, int min, int max, int bucketCount) { }
+    virtual void histogramCustomCounts(const char *name, int sample, int min, int max, int bucketCount) { }
     // Enumeration histogram buckets are linear, boundaryValue should be larger than any possible sample value.
-    virtual void histogramEnumeration(const char* name, int sample, int boundaryValue) { }
+    virtual void histogramEnumeration(const char *name, int sample, int boundaryValue) { }
     // Unlike enumeration histograms, sparse histograms only allocate memory for non-empty buckets.
-    virtual void histogramSparse(const char* name, int sample) { }
+    virtual void histogramSparse(const char *name, int sample) { }
 
   protected:
     virtual ~Platform() { }
