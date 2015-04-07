@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a32b0216_0f9bf94c",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 579,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-04-07T19:35:18Z",
+      "side": 1,
+      "message": "The reason I do this is so that it can have access to the FunctionMetadata type which is private. (I think it makes sense to keep it private as long as possible as it is an implementation detail of TCompiler)",
+      "parentUuid": "832a7e12_c98d0184",
+      "range": {
+        "startLine": 579,
+        "startChar": 6,
+        "endLine": 579,
+        "endChar": 15
+      },
+      "revId": "a9e717178f704c1739317c059a4ee8440ab6e755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63258a42_a2d9c0ab",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-07T19:06:46Z",
       "side": 1,
       "message": "ASSERT",
+      "range": {
+        "startLine": 606,
+        "startChar": 12,
+        "endLine": 606,
+        "endChar": 18
+      },
+      "revId": "a9e717178f704c1739317c059a4ee8440ab6e755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63258a42_6d93992a",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-04-07T19:35:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63258a42_a2d9c0ab",
       "range": {
         "startLine": 606,
         "startChar": 12,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "832a7e12_1b1d7c1e",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-04-07T19:35:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a32b0216_64b09471",
+      "range": {
+        "startLine": 610,
+        "startChar": 8,
+        "endLine": 610,
+        "endChar": 14
+      },
+      "revId": "a9e717178f704c1739317c059a4ee8440ab6e755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a32b0216_a450ecb7",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2015-04-07T19:06:46Z",
       "side": 1,
       "message": "ASSERT",
+      "range": {
+        "startLine": 622,
+        "startChar": 4,
+        "endLine": 622,
+        "endChar": 10
+      },
+      "revId": "a9e717178f704c1739317c059a4ee8440ab6e755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "832a7e12_db26246c",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 622,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-04-07T19:35:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a32b0216_a450ecb7",
       "range": {
         "startLine": 622,
         "startChar": 4,
