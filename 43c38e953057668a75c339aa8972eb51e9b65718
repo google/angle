@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "236e327b_49f7c1d9",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1377,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-07T14:19:25Z",
+      "side": 1,
+      "message": "Done, corrected implementation in latest patch set.",
+      "parentUuid": "2337126d_e14026f9",
+      "revId": "43c38e953057668a75c339aa8972eb51e9b65718",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2337126d_01466a12",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-04-07T08:44:00Z",
       "side": 1,
       "message": "Does this work correctly for negative numbers? Might be easier to just define this as x - floor(x) as in the spec.",
+      "revId": "43c38e953057668a75c339aa8972eb51e9b65718",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "236e327b_69f405d4",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1396,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-07T14:19:25Z",
+      "side": 1,
+      "message": "Done, corrected implementation in latest patch set, using floor now.",
+      "parentUuid": "2337126d_01466a12",
       "revId": "43c38e953057668a75c339aa8972eb51e9b65718",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
