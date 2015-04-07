@@ -404,8 +404,6 @@
             'libANGLE/renderer/gl/TransformFeedbackGL.h',
             'libANGLE/renderer/gl/VertexArrayGL.cpp',
             'libANGLE/renderer/gl/VertexArrayGL.h',
-            'libANGLE/renderer/gl/formatutilsgl.cpp',
-            'libANGLE/renderer/gl/formatutilsgl.h',
             'libANGLE/renderer/gl/functionsgl_enums.h',
             'libANGLE/renderer/gl/functionsgl_typedefs.h',
             'libANGLE/renderer/gl/renderergl_utils.cpp',
