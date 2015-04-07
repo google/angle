@@ -69,6 +69,30 @@
       "revId": "2b0ddb7c1075109f7cb723f5d09cb22b6cc1dd94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "832a7e12_a978c57a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-07T18:47:36Z",
+      "side": 1,
+      "message": "OK- that makes sense. Can you comment the code with one or two lines that explain this situation? Thanks.",
+      "parentUuid": "837fde20_6c6f3bf6",
+      "range": {
+        "startLine": 647,
+        "startChar": 8,
+        "endLine": 647,
+        "endChar": 39
+      },
+      "revId": "2b0ddb7c1075109f7cb723f5d09cb22b6cc1dd94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
