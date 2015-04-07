@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "637aea34_cb07354e",
+        "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-07T13:35:04Z",
+      "side": 1,
+      "message": "I agree that changing this does carry some risk. I\u0027d prefer that pruning unused functions would be added before making this change.",
+      "parentUuid": "63de6a5c_3e4848b6",
+      "revId": "0bec91b9263f1c1cee3e764312c5cb0cc1ad5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63de6a5c_e3fb4d8d",
         "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
         "patchSetId": 1
@@ -101,6 +119,24 @@
       "side": 1,
       "message": "Do you know who added this test? Adding Olli for another set of eyes.",
       "parentUuid": "63de6a5c_e3fb4d8d",
+      "revId": "0bec91b9263f1c1cee3e764312c5cb0cc1ad5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3706250_8ddce162",
+        "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-07T13:35:04Z",
+      "side": 1,
+      "message": "Log seems to say that the author was gman@chromium.org.\n\nIs it clear whether the definition of \"static function call graph\" contains functions that are not statically reachable from main()? It seems like it\u0027s an arbitrary decision, so I\u0027d be okay with both NULL and kHasRecursion here.",
+      "parentUuid": "63de6a5c_de11448c",
       "revId": "0bec91b9263f1c1cee3e764312c5cb0cc1ad5448",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
