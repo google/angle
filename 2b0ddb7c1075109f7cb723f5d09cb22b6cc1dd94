@@ -45,6 +45,30 @@
       "revId": "2b0ddb7c1075109f7cb723f5d09cb22b6cc1dd94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "837fde20_6c6f3bf6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-07T14:05:33Z",
+      "side": 1,
+      "message": "preserveData is not a good idea because the buffer may not hold the latest revision and we may have to do a copy in updateBufferStorage() anyway. Furthermore the data in the range [oldSize,newSize-1] is undefined. For those reasons, using preserveData would involve a lot more logic.\n\nIt is just simpler and cost-free to reset the revision and let the updateBufferStorage() handle everything.",
+      "parentUuid": "63258a42_53b444c4",
+      "range": {
+        "startLine": 647,
+        "startChar": 8,
+        "endLine": 647,
+        "endChar": 39
+      },
+      "revId": "2b0ddb7c1075109f7cb723f5d09cb22b6cc1dd94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
