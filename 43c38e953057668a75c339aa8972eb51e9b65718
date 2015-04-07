@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2337126d_e14026f9",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1377,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-07T08:44:00Z",
+      "side": 1,
+      "message": "This is wrong. The function is meant to round to nearest even only in case the original number ends in 0.5. Also, what happens here if the float is too big to fit in the integer range?",
+      "revId": "43c38e953057668a75c339aa8972eb51e9b65718",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2337126d_01466a12",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1396,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-07T08:44:00Z",
+      "side": 1,
+      "message": "Does this work correctly for negative numbers? Might be easier to just define this as x - floor(x) as in the spec.",
+      "revId": "43c38e953057668a75c339aa8972eb51e9b65718",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
