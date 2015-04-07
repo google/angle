@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "832a7e12_c98d0184",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 579,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-07T19:06:46Z",
+      "side": 1,
+      "message": "I don\u0027t think this needs to be a member of TCompiler? You could make a static local helper class in a namespace {} block at the top of this file. (Unless I misread this.)",
+      "range": {
+        "startLine": 579,
+        "startChar": 6,
+        "endLine": 579,
+        "endChar": 15
+      },
+      "revId": "a9e717178f704c1739317c059a4ee8440ab6e755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63258a42_a2d9c0ab",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-07T19:06:46Z",
+      "side": 1,
+      "message": "ASSERT",
+      "range": {
+        "startLine": 606,
+        "startChar": 12,
+        "endLine": 606,
+        "endChar": 18
+      },
+      "revId": "a9e717178f704c1739317c059a4ee8440ab6e755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a32b0216_64b09471",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-07T19:06:46Z",
+      "side": 1,
+      "message": "ASSERT",
+      "range": {
+        "startLine": 610,
+        "startChar": 8,
+        "endLine": 610,
+        "endChar": 14
+      },
+      "revId": "a9e717178f704c1739317c059a4ee8440ab6e755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a32b0216_a450ecb7",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 622,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-07T19:06:46Z",
+      "side": 1,
+      "message": "ASSERT",
+      "range": {
+        "startLine": 622,
+        "startChar": 4,
+        "endLine": 622,
+        "endChar": 10
+      },
+      "revId": "a9e717178f704c1739317c059a4ee8440ab6e755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
