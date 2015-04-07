@@ -108,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "a32b0216_d8f151b2",
+        "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-04-07T15:23:42Z",
+      "side": 1,
+      "message": "I\u0027m not sure what you meant by validate but in both cases it is yes:\n * If validate means prune, we already have that information in Compiler though we are not using it.\n * If validate means error in this case, that\u0027s what was happening before it checked the depth for main only.",
+      "parentUuid": "63258a42_3390a8c9",
+      "revId": "0bec91b9263f1c1cee3e764312c5cb0cc1ad5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63de6a5c_e3fb4d8d",
         "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
         "patchSetId": 1
