@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "2337126d_a150deb7",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-07T09:05:40Z",
+      "side": 1,
+      "message": "I\u0027d say the code would be more readable if pi was defined as a constant here and the multipliers would be derived from that.",
+      "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23e9d2fa_469d90b0",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 8
@@ -19,6 +36,40 @@
         "endLine": 1215,
         "endChar": 39
       },
+      "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "634caa14_9b674b21",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-07T09:05:40Z",
+      "side": 1,
+      "message": "Shouldn\u0027t the typedef be inside the TIntermConstantUnion class?",
+      "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "634caa14_9b40ab66",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-07T09:05:40Z",
+      "side": 1,
+      "message": "Style nit: include the parameter names in function declarations. In this case the parameter name actually adds information too, but it is required by ANGLE style either way.\n\nAlso this could be a static function.",
       "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
