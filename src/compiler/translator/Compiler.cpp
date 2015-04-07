@@ -246,6 +246,9 @@ TIntermNode *TCompiler::compileTreeImpl(const char* const shaderStrings[],
             success = tagUsedFunctions();
         }
 
+        if (success && !(compileOptions & SH_DONT_PRUNE_UNUSED_FUNCTIONS))
+            success = pruneUnusedFunctions(root);
+
         if (success && shaderVersion == 300 && shaderType == GL_FRAGMENT_SHADER)
             success = validateOutputs(root);
 
@@ -570,6 +573,59 @@ void TCompiler::internalTagUsedFunction(size_t index)
     {
         internalTagUsedFunction(calleeIndex);
     }
+}
+
+// A predicate for the stl that returns if a top-level node is unused
+class TCompiler::UnusedPredicate
+{
+  public:
+    UnusedPredicate(const CallDAG *callDag, const std::vector<FunctionMetadata> *metadatas)
+        : mCallDag(callDag),
+          mMetadatas(metadatas)
+    {
+    }
+
+    bool operator ()(TIntermNode *node)
+    {
+        const TIntermAggregate *asAggregate = node->getAsAggregate();
+
+        if (asAggregate == nullptr)
+        {
+            return false;
+        }
+
+        if (!(asAggregate->getOp() == EOpFunction || asAggregate->getOp() == EOpPrototype))
+        {
+            return false;
+        }
+
+        size_t callDagIndex = mCallDag->findIndex(asAggregate);
+        if (callDagIndex == CallDAG::InvalidIndex)
+        {
+            // This happens only for unimplemented prototypes which are thus unused
+            ASSERT(asAggregate->getOp() == EOpPrototype);
+            return true;
+        }
+
+        ASSERT(callDagIndex < mMetadatas->size());
+        return !(*mMetadatas)[callDagIndex].used;
+    }
+
+  private:
+    const CallDAG *mCallDag;
+    const std::vector<FunctionMetadata> *mMetadatas;
+};
+
+bool TCompiler::pruneUnusedFunctions(TIntermNode *root)
+{
+    TIntermAggregate *rootNode = root->getAsAggregate();
+    ASSERT(rootNode != nullptr);
+
+    UnusedPredicate isUnused(&mCallDag, &functionMetadata);
+    TIntermSequence *sequence = rootNode->getSequence();
+    sequence->erase(std::remove_if(sequence->begin(), sequence->end(), isUnused), sequence->end());
+
+    return true;
 }
 
 bool TCompiler::validateOutputs(TIntermNode* root)
