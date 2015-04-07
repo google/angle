@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2337126d_c1cac2eb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-07T11:08:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63de6a5c_743279a2",
+      "range": {
+        "startLine": 204,
+        "startChar": 8,
+        "endLine": 204,
+        "endChar": 114
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63de6a5c_f472e963",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-02T18:40:47Z",
       "side": 1,
       "message": "can skip this if you use GetAs below",
+      "range": {
+        "startLine": 488,
+        "startChar": 4,
+        "endLine": 488,
+        "endChar": 60
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2337126d_81ad9a16",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-07T11:08:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63de6a5c_f472e963",
       "range": {
         "startLine": 488,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "634caa14_fbb0cff5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-07T11:08:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3bdfae6_af6b0462",
+      "range": {
+        "startLine": 490,
+        "startChar": 11,
+        "endLine": 490,
+        "endChar": 22
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23c4727c_7bf492d3",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 7
@@ -82,6 +154,30 @@
       "writtenOn": "2015-04-02T18:40:47Z",
       "side": 1,
       "message": "use a pointer instead of a non-const ref here, we only allow non-const refs for returning properties or in range-for",
+      "range": {
+        "startLine": 634,
+        "startChar": 32,
+        "endLine": 634,
+        "endChar": 35
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2337126d_21ba8e4f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-07T11:08:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23c4727c_7bf492d3",
       "range": {
         "startLine": 634,
         "startChar": 32,
@@ -146,6 +242,24 @@
     },
     {
       "key": {
+        "uuid": "2312b2d8_72584e14",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-07T11:08:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83e35e1e_cc93efab",
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23c4727c_339088c9",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 7
@@ -157,6 +271,30 @@
       "writtenOn": "2015-04-02T14:18:23Z",
       "side": 1,
       "message": "We don\u0027t have a real style guide for lambdas but could you put this on the next line?\n   [](const ConstantBufferCache::value_type \u0026a, const ConstantBufferCache::value_type \u0026b)\n   {\n      return a.second.lruCount \u003c b.second.lruCount;\n   });",
+      "range": {
+        "startLine": 655,
+        "startChar": 103,
+        "endLine": 655,
+        "endChar": 152
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2312b2d8_52554ada",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-07T11:08:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23c4727c_339088c9",
       "range": {
         "startLine": 655,
         "startChar": 103,
@@ -192,6 +330,30 @@
     },
     {
       "key": {
+        "uuid": "2312b2d8_d2513aed",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-07T11:08:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3bdfae6_0cbc434e",
+      "range": {
+        "startLine": 659,
+        "startChar": 12,
+        "endLine": 659,
+        "endChar": 84
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63de6a5c_341d11e9",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 7
@@ -215,6 +377,30 @@
     },
     {
       "key": {
+        "uuid": "2337126d_41b79266",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-07T11:08:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63de6a5c_341d11e9",
+      "range": {
+        "startLine": 667,
+        "startChar": 19,
+        "endLine": 667,
+        "endChar": 23
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63de6a5c_7465d944",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 7
@@ -226,6 +412,30 @@
       "writtenOn": "2015-04-02T18:40:47Z",
       "side": 1,
       "message": "can you find a way to re-use this block of code, and the block of code in getBufferStorage, by using a local helper function?",
+      "range": {
+        "startLine": 675,
+        "startChar": 3,
+        "endLine": 681,
+        "endChar": 63
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2312b2d8_f2f2fe6c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-07T11:08:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63de6a5c_7465d944",
       "range": {
         "startLine": 675,
         "startChar": 3,
@@ -403,6 +613,30 @@
     },
     {
       "key": {
+        "uuid": "634caa14_3ba717b6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 819,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-07T11:08:56Z",
+      "side": 1,
+      "message": "I tried to repro unsuccessfully with glCopyBufferSubData but in that case, the buffer is already of the right size and this code path is not used.",
+      "parentUuid": "e3bdfae6_2f5db47f",
+      "range": {
+        "startLine": 819,
+        "startChar": 15,
+        "endLine": 819,
+        "endChar": 27
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63de6a5c_f41c2924",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
         "patchSetId": 7
@@ -414,6 +648,30 @@
       "writtenOn": "2015-04-02T18:40:47Z",
       "side": 1,
       "message": "nit: right-aligned",
+      "range": {
+        "startLine": 89,
+        "startChar": 21,
+        "endLine": 89,
+        "endChar": 22
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2312b2d8_92f18268",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-07T11:08:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63de6a5c_f41c2924",
       "range": {
         "startLine": 89,
         "startChar": 21,
@@ -449,6 +707,30 @@
     },
     {
       "key": {
+        "uuid": "2337126d_21936ed9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-07T11:08:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23c4727c_f8aae8d0",
+      "range": {
+        "startLine": 92,
+        "startChar": 8,
+        "endLine": 92,
+        "endChar": 32
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23c4727c_d8af24df",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
         "patchSetId": 7
@@ -460,6 +742,30 @@
       "writtenOn": "2015-04-02T18:40:47Z",
       "side": 1,
       "message": "can you comment here what the GLintptr represents?",
+      "range": {
+        "startLine": 95,
+        "startChar": 21,
+        "endLine": 95,
+        "endChar": 29
+      },
+      "revId": "6de5b8a7f14f6334a2ab5a42815083994ce15db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2312b2d8_92de2290",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-07T11:08:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23c4727c_d8af24df",
       "range": {
         "startLine": 95,
         "startChar": 21,
