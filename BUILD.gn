@@ -261,7 +261,7 @@ static_library("libANGLE") {
   deps = [
     ":commit_id",
     ":includes",
-    ":translator",
+    ":translator_static",
     ":angle_common",
   ]
 
