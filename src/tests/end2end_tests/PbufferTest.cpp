@@ -1,13 +1,13 @@
 #include "ANGLETest.h"
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(BindTexImageTest, ES2_D3D9, ES2_D3D11);
+ANGLE_TYPED_TEST_CASE(PbufferTest, ES2_D3D9, ES2_D3D11);
 
 template<typename T>
-class BindTexImageTest : public ANGLETest
+class PbufferTest : public ANGLETest
 {
   protected:
-    BindTexImageTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    PbufferTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
     {
         setWindowWidth(512);
         setWindowHeight(512);
@@ -55,7 +55,6 @@ class BindTexImageTest : public ANGLETest
 
         mTextureUniformLocation = glGetUniformLocation(mTextureProgram, "tex");
 
-
         const EGLint pBufferAttributes[] =
         {
             EGL_WIDTH, mPbufferSize,
@@ -69,6 +68,7 @@ class BindTexImageTest : public ANGLETest
         mPbuffer = eglCreatePbufferSurface(window->getDisplay(), window->getConfig(), pBufferAttributes);
         ASSERT_NE(mPbuffer, EGL_NO_SURFACE);
 
+        ASSERT_EGL_SUCCESS();
         ASSERT_GL_NO_ERROR();
     }
 
@@ -89,9 +89,89 @@ class BindTexImageTest : public ANGLETest
     EGLSurface mPbuffer;
 };
 
+// Test clearing a Pbuffer and checking the color is correct
+TYPED_TEST(PbufferTest, Clearing)
+{
+    EGLWindow *window = getEGLWindow();
+
+    // Clear the window surface to blue and verify
+    eglMakeCurrent(window->getDisplay(), window->getSurface(), window->getSurface(), window->getContext());
+    ASSERT_EGL_SUCCESS();
+
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(window->getWidth() / 2, window->getHeight() / 2, 0, 0, 255, 255);
+
+    // Apply the Pbuffer and clear it to purple and verify
+    eglMakeCurrent(window->getDisplay(), mPbuffer, mPbuffer, window->getContext());
+    ASSERT_EGL_SUCCESS();
+
+    glViewport(0, 0, mPbufferSize, mPbufferSize);
+    glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(mPbufferSize / 2, mPbufferSize / 2, 255, 0, 255, 255);
+
+    // Rebind the window serfance and verify that it is still blue
+    eglMakeCurrent(window->getDisplay(), window->getSurface(), window->getSurface(), window->getContext());
+    ASSERT_EGL_SUCCESS();
+    EXPECT_PIXEL_EQ(window->getWidth() / 2, window->getHeight() / 2, 0, 0, 255, 255);
+}
+
+// Bind the Pbuffer to a texture and verify it renders correctly
+TYPED_TEST(PbufferTest, BindTexImage)
+{
+    EGLWindow *window = getEGLWindow();
+
+    // Apply the Pbuffer and clear it to purple
+    eglMakeCurrent(window->getDisplay(), mPbuffer, mPbuffer, window->getContext());
+    ASSERT_EGL_SUCCESS();
+
+    glViewport(0, 0, mPbufferSize, mPbufferSize);
+    glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_EQ(mPbufferSize / 2, mPbufferSize / 2, 255, 0, 255, 255);
+
+    // Apply the window surface
+    eglMakeCurrent(window->getDisplay(), window->getSurface(), window->getSurface(), window->getContext());
+
+    // Create a texture and bind the Pbuffer to it
+    GLuint texture = 0;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    EXPECT_GL_NO_ERROR();
+
+    eglBindTexImage(window->getDisplay(), mPbuffer, EGL_BACK_BUFFER);
+    glViewport(0, 0, window->getWidth(), window->getHeight());
+    ASSERT_EGL_SUCCESS();
+
+    // Draw a quad and verify that it is purple
+    glUseProgram(mTextureProgram);
+    glUniform1i(mTextureUniformLocation, 0);
+
+    drawQuad(mTextureProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    // Unbind the texture
+    eglReleaseTexImage(window->getDisplay(), mPbuffer, EGL_BACK_BUFFER);
+    ASSERT_EGL_SUCCESS();
+
+    // Verify that purple was drawn
+    EXPECT_PIXEL_EQ(window->getWidth() / 2, window->getHeight() / 2, 255, 0, 255, 255);
+
+    glDeleteTextures(1, &texture);
+}
+
 // Verify that when eglBind/ReleaseTexImage are called, the texture images are freed and their
 // size information is correctly updated.
-TYPED_TEST(BindTexImageTest, TextureSizeReset)
+TYPED_TEST(PbufferTest, TextureSizeReset)
 {
     GLuint texture = 0;
     glGenTextures(1, &texture);

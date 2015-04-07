@@ -25,6 +25,12 @@
 #define ASSERT_GL_ERROR(err) ASSERT_EQ((err), glGetError())
 #define ASSERT_GL_NO_ERROR() ASSERT_GL_ERROR(GL_NO_ERROR)
 
+#define EXPECT_EGL_ERROR(err) EXPECT_EQ((err), eglGetError())
+#define EXPECT_EGL_SUCCESS() EXPECT_EGL_ERROR(EGL_SUCCESS)
+
+#define ASSERT_EGL_ERROR(err) ASSERT_EQ((err), eglGetError())
+#define ASSERT_EGL_SUCCESS() ASSERT_EGL_ERROR(EGL_SUCCESS)
+
 #define EXPECT_PIXEL_EQ(x, y, r, g, b, a) \
 { \
     GLubyte pixel[4]; \

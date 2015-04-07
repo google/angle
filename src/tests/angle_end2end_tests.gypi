@@ -16,7 +16,6 @@
         [
             '<(angle_path)/src/tests/end2end_tests/ANGLETest.cpp',
             '<(angle_path)/src/tests/end2end_tests/ANGLETest.h',
-            '<(angle_path)/src/tests/end2end_tests/BindTexImageTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/BlendMinMaxTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/BlitFramebufferANGLETest.cpp',
             '<(angle_path)/src/tests/end2end_tests/BufferDataTest.cpp',
@@ -37,6 +36,7 @@
             '<(angle_path)/src/tests/end2end_tests/media/pixel.inl',
             '<(angle_path)/src/tests/end2end_tests/OcclusionQueriesTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/PBOExtensionTest.cpp',
+            '<(angle_path)/src/tests/end2end_tests/PbufferTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/PointSpritesTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/ProgramBinaryTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/ReadPixelsTest.cpp',
