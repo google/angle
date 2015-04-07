@@ -73,6 +73,24 @@
       "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2312b2d8_d2681aa3",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-07T09:07:17Z",
+      "side": 1,
+      "message": "No wait, I\u0027m taking back the comment about making this static. The function does reference getLine().",
+      "parentUuid": "634caa14_9b40ab66",
+      "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
