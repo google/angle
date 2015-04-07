@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "832a7e12_740928dc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-07T13:42:08Z",
+      "side": 1,
+      "message": "should prefix begin and end with std as well.",
+      "range": {
+        "startLine": 625,
+        "startChar": 41,
+        "endLine": 625,
+        "endChar": 46
+      },
+      "revId": "2b0ddb7c1075109f7cb723f5d09cb22b6cc1dd94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63258a42_53b444c4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-07T13:42:08Z",
+      "side": 1,
+      "message": "is this necessary? why not use preserveData? please comment if so.",
+      "range": {
+        "startLine": 647,
+        "startChar": 8,
+        "endLine": 647,
+        "endChar": 39
+      },
+      "revId": "2b0ddb7c1075109f7cb723f5d09cb22b6cc1dd94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
