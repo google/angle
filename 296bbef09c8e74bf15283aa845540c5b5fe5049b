@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63f82afb_47cb019e",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-08T19:11:39Z",
+      "side": 1,
+      "message": "while you\u0027re fixing the style, can you also update this to a **?",
+      "range": {
+        "startLine": 100,
+        "startChar": 105,
+        "endLine": 100,
+        "endChar": 115
+      },
+      "revId": "296bbef09c8e74bf15283aa845540c5b5fe5049b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
