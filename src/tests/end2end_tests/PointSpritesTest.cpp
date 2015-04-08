@@ -84,8 +84,8 @@ TYPED_TEST(PointSpritesTest, PointCoordAndPointSizeCompliance)
 
     maxPointSize = std::min(maxPointSize, 64.0f);
     GLfloat pointWidth = maxPointSize / windowWidth;
-    GLfloat step = floorf(maxPointSize / 4);
-    GLfloat pointStep = std::max<GLfloat>(1.0f, step);
+    GLint step = static_cast<GLint>(floorf(maxPointSize / 4));
+    GLint pointStep = std::max<GLint>(1, step);
 
     GLint pointSizeLoc = glGetUniformLocation(program, "uPointSize");
     ASSERT_GL_NO_ERROR();
@@ -102,10 +102,10 @@ TYPED_TEST(PointSpritesTest, PointCoordAndPointSizeCompliance)
     glBindBuffer(GL_ARRAY_BUFFER, vertexObject);
     ASSERT_GL_NO_ERROR();
 
-    GLfloat thePoints[] = { -0.5 + pixelOffset, -0.5 + pixelOffset,
-                             0.5 + pixelOffset, -0.5 + pixelOffset,
-                            -0.5 + pixelOffset,  0.5 + pixelOffset,
-                             0.5 + pixelOffset,  0.5 + pixelOffset };
+    GLfloat thePoints[] = { -0.5f + pixelOffset, -0.5f + pixelOffset,
+                             0.5f + pixelOffset, -0.5f + pixelOffset,
+                            -0.5f + pixelOffset,  0.5f + pixelOffset,
+                             0.5f + pixelOffset,  0.5f + pixelOffset };
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(thePoints), thePoints, GL_STATIC_DRAW);
     ASSERT_GL_NO_ERROR();
@@ -123,8 +123,8 @@ TYPED_TEST(PointSpritesTest, PointCoordAndPointSizeCompliance)
     std::string debugText;
     for (float py = 0; py < 2; ++py) {
         for (float px = 0; px < 2; ++px) {
-            float pointX = -0.5 + px + pixelOffset;
-            float pointY = -0.5 + py + pixelOffset;
+            float pointX = -0.5f + px + pixelOffset;
+            float pointY = -0.5f + py + pixelOffset;
             for (int yy = 0; yy < maxPointSize; yy += pointStep) {
                 for (int xx = 0; xx < maxPointSize; xx += pointStep) {
                     // formula for s and t from OpenGL ES 2.0 spec section 3.3
@@ -132,11 +132,11 @@ TYPED_TEST(PointSpritesTest, PointCoordAndPointSizeCompliance)
                     float yw = s2p(pointY);
                     float u = xx / maxPointSize * 2 - 1;
                     float v = yy / maxPointSize * 2 - 1;
-                    float xf = floorf(s2p(pointX + u * pointWidth));
-                    float yf = floorf(s2p(pointY + v * pointWidth));
-                    float s = 0.5 + (xf + 0.5 - xw) / maxPointSize;
-                    float t = 0.5 + (yf + 0.5 - yw) / maxPointSize;
-                    GLubyte color[4] = { floorf(s * 255), floorf((1 - t) * 255), 0, 255 };
+                    int xf = static_cast<int>(floorf(s2p(pointX + u * pointWidth)));
+                    int yf = static_cast<int>(floorf(s2p(pointY + v * pointWidth)));
+                    float s = 0.5f + (xf + 0.5f - xw) / maxPointSize;
+                    float t = 0.5f + (yf + 0.5f - yw) / maxPointSize;
+                    GLubyte color[4] = { static_cast<GLubyte>(floorf(s * 255)), static_cast<GLubyte>(floorf((1 - t) * 255)), 0, 255 };
                     EXPECT_PIXEL_NEAR(xf, yf, color[0], color[1], color[2], color[3], 4);
                 }
             }

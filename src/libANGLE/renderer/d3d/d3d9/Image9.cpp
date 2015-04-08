@@ -661,9 +661,9 @@ gl::Error Image9::copy(const gl::Offset &destOffset, const gl::Rectangle &source
                 for (int x = 0; x < width; x++)
                 {
                     unsigned short rgb = ((unsigned short*)sourcePixels)[x];
-                    unsigned char red = (rgb & 0xF800) >> 8;
-                    unsigned char green = (rgb & 0x07E0) >> 3;
-                    unsigned char blue = (rgb & 0x001F) << 3;
+                    unsigned char red = static_cast<unsigned char>((rgb & 0xF800) >> 8);
+                    unsigned char green = static_cast<unsigned char>((rgb & 0x07E0) >> 3);
+                    unsigned char blue = static_cast<unsigned char>((rgb & 0x001F) << 3);
                     destPixels[x + 0] = blue | (blue >> 5);
                     destPixels[x + 1] = green | (green >> 6);
                     destPixels[x + 2] = red | (red >> 5);
@@ -698,9 +698,9 @@ gl::Error Image9::copy(const gl::Offset &destOffset, const gl::Rectangle &source
                 for (int x = 0; x < width; x++)
                 {
                     unsigned short argb = ((unsigned short*)sourcePixels)[x];
-                    unsigned char red = (argb & 0x7C00) >> 7;
-                    unsigned char green = (argb & 0x03E0) >> 2;
-                    unsigned char blue = (argb & 0x001F) << 3;
+                    unsigned char red = static_cast<unsigned char>((argb & 0x7C00) >> 7);
+                    unsigned char green = static_cast<unsigned char>((argb & 0x03E0) >> 2);
+                    unsigned char blue = static_cast<unsigned char>((argb & 0x001F) << 3);
                     destPixels[x + 0] = blue | (blue >> 5);
                     destPixels[x + 1] = green | (green >> 5);
                     destPixels[x + 2] = red | (red >> 5);
@@ -716,9 +716,9 @@ gl::Error Image9::copy(const gl::Offset &destOffset, const gl::Rectangle &source
                 for (int x = 0; x < width; x++)
                 {
                     unsigned short argb = ((unsigned short*)sourcePixels)[x];
-                    unsigned char red = (argb & 0x7C00) >> 7;
-                    unsigned char green = (argb & 0x03E0) >> 2;
-                    unsigned char blue = (argb & 0x001F) << 3;
+                    unsigned char red = static_cast<unsigned char>((argb & 0x7C00) >> 7);
+                    unsigned char green = static_cast<unsigned char>((argb & 0x03E0) >> 2);
+                    unsigned char blue = static_cast<unsigned char>((argb & 0x001F) << 3);
                     unsigned char alpha = (signed short)argb >> 15;
                     destPixels[x + 0] = blue | (blue >> 5);
                     destPixels[x + 1] = green | (green >> 5);

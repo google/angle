@@ -1013,7 +1013,7 @@ struct R8S
 
     static void average(R8S *dst, const R8S *src1, const R8S *src2)
     {
-        dst->R = gl::average(src1->R, src2->R);
+        dst->R = static_cast<char>(gl::average(src1->R, src2->R));
     }
 };
 
@@ -1052,8 +1052,8 @@ struct R8G8S
 
     static void average(R8G8S *dst, const R8G8S *src1, const R8G8S *src2)
     {
-        dst->R = gl::average(src1->R, src2->R);
-        dst->G = gl::average(src1->G, src2->G);
+        dst->R = static_cast<char>(gl::average(src1->R, src2->R));
+        dst->G = static_cast<char>(gl::average(src1->G, src2->G));
     }
 };
 
@@ -1095,9 +1095,9 @@ struct R8G8B8S
 
     static void average(R8G8B8S *dst, const R8G8B8S *src1, const R8G8B8S *src2)
     {
-        dst->R = gl::average(src1->R, src2->R);
-        dst->G = gl::average(src1->G, src2->G);
-        dst->B = gl::average(src1->B, src2->B);
+        dst->R = static_cast<char>(gl::average(src1->R, src2->R));
+        dst->G = static_cast<char>(gl::average(src1->G, src2->G));
+        dst->B = static_cast<char>(gl::average(src1->B, src2->B));
     }
 };
 
@@ -1142,10 +1142,10 @@ struct R8G8B8A8S
 
     static void average(R8G8B8A8S *dst, const R8G8B8A8S *src1, const R8G8B8A8S *src2)
     {
-        dst->R = gl::average(src1->R, src2->R);
-        dst->G = gl::average(src1->G, src2->G);
-        dst->B = gl::average(src1->B, src2->B);
-        dst->A = gl::average(src1->A, src2->A);
+        dst->R = static_cast<char>(gl::average(src1->R, src2->R));
+        dst->G = static_cast<char>(gl::average(src1->G, src2->G));
+        dst->B = static_cast<char>(gl::average(src1->B, src2->B));
+        dst->A = static_cast<char>(gl::average(src1->A, src2->A));
     }
 };
 

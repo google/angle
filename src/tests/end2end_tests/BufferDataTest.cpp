@@ -362,7 +362,7 @@ TYPED_TEST(BufferDataTestES3, BufferResizing)
     uint8_t srcBytes[numBytes];
     for (size_t i = 0; i < numBytes; ++i)
     {
-        srcBytes[i] = i;
+        srcBytes[i] = static_cast<uint8_t>(i);
     }
 
     void *dest = glMapBufferRange(GL_ARRAY_BUFFER, 0, numBytes, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);

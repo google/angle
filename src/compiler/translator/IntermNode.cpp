@@ -448,13 +448,13 @@ bool TIntermBinary::promote(TInfoSink &infoSink)
             {
                 mOp = EOpVectorTimesMatrix;
                 setType(TType(basicType, higherPrecision, EvqTemporary,
-                              mRight->getCols(), 1));
+                              static_cast<unsigned char>(mRight->getCols()), 1));
             }
             else
             {
                 mOp = EOpMatrixTimesScalar;
                 setType(TType(basicType, higherPrecision, EvqTemporary,
-                              mRight->getCols(), mRight->getRows()));
+                              static_cast<unsigned char>(mRight->getCols()), static_cast<unsigned char>(mRight->getRows())));
             }
         }
         else if (mLeft->isMatrix() && !mRight->isMatrix())
@@ -463,7 +463,7 @@ bool TIntermBinary::promote(TInfoSink &infoSink)
             {
                 mOp = EOpMatrixTimesVector;
                 setType(TType(basicType, higherPrecision, EvqTemporary,
-                              mLeft->getRows(), 1));
+                              static_cast<unsigned char>(mLeft->getRows()), 1));
             }
             else
             {
@@ -474,7 +474,7 @@ bool TIntermBinary::promote(TInfoSink &infoSink)
         {
             mOp = EOpMatrixTimesMatrix;
             setType(TType(basicType, higherPrecision, EvqTemporary,
-                          mRight->getCols(), mLeft->getRows()));
+                          static_cast<unsigned char>(mRight->getCols()), static_cast<unsigned char>(mLeft->getRows())));
         }
         else if (!mLeft->isMatrix() && !mRight->isMatrix())
         {
@@ -486,7 +486,7 @@ bool TIntermBinary::promote(TInfoSink &infoSink)
             {
                 mOp = EOpVectorTimesScalar;
                 setType(TType(basicType, higherPrecision, EvqTemporary,
-                              nominalSize, 1));
+                              static_cast<unsigned char>(nominalSize), 1));
             }
         }
         else
@@ -529,7 +529,7 @@ bool TIntermBinary::promote(TInfoSink &infoSink)
         {
             mOp = EOpMatrixTimesMatrixAssign;
             setType(TType(basicType, higherPrecision, EvqTemporary,
-                          mRight->getCols(), mLeft->getRows()));
+                          static_cast<unsigned char>(mRight->getCols()), static_cast<unsigned char>(mLeft->getRows())));
         }
         else if (!mLeft->isMatrix() && !mRight->isMatrix())
         {
@@ -543,7 +543,7 @@ bool TIntermBinary::promote(TInfoSink &infoSink)
                     return false;
                 mOp = EOpVectorTimesScalarAssign;
                 setType(TType(basicType, higherPrecision, EvqTemporary,
-                              mLeft->getNominalSize(), 1));
+                              static_cast<unsigned char>(mLeft->getNominalSize()), 1));
             }
         }
         else
@@ -613,7 +613,7 @@ bool TIntermBinary::promote(TInfoSink &infoSink)
             const int secondarySize = std::max(
                 mLeft->getSecondarySize(), mRight->getSecondarySize());
             setType(TType(basicType, higherPrecision, EvqTemporary,
-                          nominalSize, secondarySize));
+                          static_cast<unsigned char>(nominalSize), static_cast<unsigned char>(secondarySize)));
             if (mLeft->isArray())
             {
                 ASSERT(mLeft->getArraySize() == mRight->getArraySize());
@@ -747,8 +747,8 @@ TIntermTyped *TIntermConstantUnion::fold(
                 }
 
                 // update return type for matrix product
-                returnType.setPrimarySize(resultCols);
-                returnType.setSecondarySize(resultRows);
+                returnType.setPrimarySize(static_cast<unsigned char>(resultCols));
+                returnType.setSecondarySize(static_cast<unsigned char>(resultRows));
             }
             break;
 
@@ -868,7 +868,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                 }
 
                 returnType = node->getType();
-                returnType.setPrimarySize(matrixRows);
+                returnType.setPrimarySize(static_cast<unsigned char>(matrixRows));
 
                 tempNode = new TIntermConstantUnion(tempConstArray, returnType);
                 tempNode->setLine(getLine());
@@ -903,7 +903,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                     }
                 }
 
-                returnType.setPrimarySize(matrixCols);
+                returnType.setPrimarySize(static_cast<unsigned char>(matrixCols));
             }
             break;
 

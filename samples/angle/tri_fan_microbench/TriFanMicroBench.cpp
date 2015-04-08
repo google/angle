@@ -200,7 +200,7 @@ class TriangleFanBenchSample : public SampleApplication
         }
         mFanTimer->stop();
 
-        mFanTotalTime += mFanTimer->getElapsedTime() * 1000; // convert from usec to msec when accumulating
+        mFanTotalTime += static_cast<unsigned int>(mFanTimer->getElapsedTime() * 1000); // convert from usec to msec when accumulating
 
         // Clear to eliminate driver-side gains from occlusion
         glClear(GL_COLOR_BUFFER_BIT);
@@ -215,7 +215,7 @@ class TriangleFanBenchSample : public SampleApplication
         }
         mTriTimer->stop();
 
-        mTriTotalTime += mTriTimer->getElapsedTime() * 1000; // convert from usec to msec when accumulating
+        mTriTotalTime += static_cast<unsigned int>(mTriTimer->getElapsedTime() * 1000); // convert from usec to msec when accumulating
 
         mFrameCount++;
     }

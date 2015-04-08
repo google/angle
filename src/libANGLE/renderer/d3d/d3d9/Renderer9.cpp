@@ -1657,7 +1657,7 @@ gl::Error Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indi
           case GL_NONE:   // Non-indexed draw
             for (int i = 0; i < count; i++)
             {
-                data[i] = i;
+                data[i] = static_cast<unsigned short>(i);
             }
             data[count] = 0;
             break;
@@ -1678,9 +1678,9 @@ gl::Error Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indi
           case GL_UNSIGNED_INT:
             for (int i = 0; i < count; i++)
             {
-                data[i] = static_cast<const GLuint*>(indices)[i];
+                data[i] = static_cast<unsigned short>(static_cast<const GLuint*>(indices)[i]);
             }
-            data[count] = static_cast<const GLuint*>(indices)[0];
+            data[count] = static_cast<unsigned short>(static_cast<const GLuint*>(indices)[0]);
             break;
           default: UNREACHABLE();
         }
@@ -1769,7 +1769,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
             unsigned short *data = reinterpret_cast<unsigned short*>(mappedMemory);
             for (size_t i = 0; i < count; i++)
             {
-                data[i] = i;
+                data[i] = static_cast<unsigned short>(i);
             }
 
             error = mCountingIB->unmapBuffer();

@@ -22,7 +22,7 @@ static std::string ReadFileToString(const std::string &source)
     std::string result;
 
     stream.seekg(0, std::ios::end);
-    result.reserve(stream.tellg());
+    result.reserve(static_cast<unsigned int>(stream.tellg()));
     stream.seekg(0, std::ios::beg);
 
     result.assign((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());

@@ -13,7 +13,7 @@ float RandomBetween(float min, float max)
     static bool randInitialized = false;
     if (!randInitialized)
     {
-        srand(time(NULL));
+        srand(static_cast<unsigned int>(time(NULL)));
         randInitialized = true;
     }
 

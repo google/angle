@@ -28,7 +28,7 @@ protected:
 
     static GLubyte getExpected(bool blendMin, float curColor, GLubyte prevColor)
     {
-        GLubyte curAsUbyte = (curColor * std::numeric_limits<GLubyte>::max()) + 0.5f;
+        GLubyte curAsUbyte = static_cast<GLubyte>((curColor * std::numeric_limits<GLubyte>::max()) + 0.5f);
         return blendMin ? std::min<GLubyte>(curAsUbyte, prevColor) : std::max<GLubyte>(curAsUbyte, prevColor);
     }
 

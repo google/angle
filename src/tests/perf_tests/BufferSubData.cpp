@@ -254,11 +254,11 @@ bool BufferSubDataBenchmark::initializeBenchmark()
     }
 
     std::vector<uint8_t> data;
-    GLsizei triDataSize = GetVertexData(params.vertexType,
-                                        params.vertexComponentCount,
-                                        params.vertexNormalized, &data);
+    GLsizei triDataSize = static_cast<GLsizei>(GetVertexData(params.vertexType,
+                                                             params.vertexComponentCount,
+                                                             params.vertexNormalized, &data));
 
-    mNumTris = params.updateSize / triDataSize;
+    mNumTris = static_cast<int>(params.updateSize / triDataSize);
     for (int i = 0, offset = 0; i < mNumTris; ++i)
     {
         memcpy(mUpdateData + offset, &data[0], triDataSize);
