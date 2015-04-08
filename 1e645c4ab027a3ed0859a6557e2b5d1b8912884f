@@ -16,6 +16,24 @@
       "revId": "1e645c4ab027a3ed0859a6557e2b5d1b8912884f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "237f124e_7616d600",
+        "filename": "src/libANGLE/Surface.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-08T22:55:10Z",
+      "side": 1,
+      "message": "The argument to releaseTexImage isn\u0027t supposed to be a texture ID.  It became an issue when it was being converted to a WGL enum.",
+      "parentUuid": "83c43ed3_73f1aae2",
+      "revId": "1e645c4ab027a3ed0859a6557e2b5d1b8912884f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
