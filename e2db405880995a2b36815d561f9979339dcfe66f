@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "237f124e_cde8ecac",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-08T23:42:40Z",
+      "side": 1,
+      "message": "Whatever name you end up for this is fine with me, but I\u0027d suggest FramebufferAttachmentResource, FBOAttachmentResource, FBOAttachmentObject, or something more obviously tied to framebuffer attachments.",
+      "range": {
+        "startLine": 145,
+        "startChar": 6,
+        "endLine": 145,
+        "endChar": 22
+      },
+      "revId": "e2db405880995a2b36815d561f9979339dcfe66f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
