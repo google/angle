@@ -101,6 +101,30 @@
     },
     {
       "key": {
+        "uuid": "a31782fa_38a0a59e",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1284,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-08T14:25:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "832a7e12_142f9435",
+      "range": {
+        "startLine": 1284,
+        "startChar": 60,
+        "endLine": 1284,
+        "endChar": 61
+      },
+      "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a32b0216_75ada813",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 8
@@ -124,6 +148,30 @@
     },
     {
       "key": {
+        "uuid": "8316fefe_37aa724f",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1285,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-08T14:25:51Z",
+      "side": 1,
+      "message": "Ok, I am keeping it as is then",
+      "parentUuid": "a32b0216_75ada813",
+      "range": {
+        "startLine": 1285,
+        "startChar": 88,
+        "endLine": 1285,
+        "endChar": 89
+      },
+      "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a32b0216_35b73068",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 8
@@ -135,6 +183,30 @@
       "writtenOn": "2015-04-08T13:37:19Z",
       "side": 1,
       "message": "another option for this method is to pass getType().getBasicType() as a fifth parameter and use a local template function, parameterized on the type of builtinFunc. I think I like this option slightly better because it keeps the header simpler, and doesn\u0027t require any static_cast.",
+      "range": {
+        "startLine": 1289,
+        "startChar": 7,
+        "endLine": 1289,
+        "endChar": 45
+      },
+      "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a31782fa_b8f155b3",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1289,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-08T14:25:51Z",
+      "side": 1,
+      "message": "Ok, in order to make it a local function, I will have to add two more parameters, one more for getLine().\nSo this small function will be taking 6 parameters which I think is making it very complex and I feel like not having a function itself may be a good idea then. I understand we will not need any changes to a header if we make it local.\n\nLet me know if you think it will still be good to have local function over private member function.\n\nRegarding static cast, I assume you are talking about static cast of function pointers. It is not actually required and compiler does it automatically as we are assigning it to the FloatTypeUnaryFunc. I have static casted it explicitly just to avoid any confusion and make it more readable.",
+      "parentUuid": "a32b0216_35b73068",
       "range": {
         "startLine": 1289,
         "startChar": 7,
