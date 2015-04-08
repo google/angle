@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83c43ed3_9351c6ee",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-08T23:16:51Z",
+      "side": 1,
+      "message": "I think this needs to be updated.",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 24
+      },
+      "revId": "02fedb654b760d3ef20b8147d7cf4a40af14d8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "237f124e_0add5a5d",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-08T23:16:51Z",
+      "side": 1,
+      "message": "Let\u0027s mark SH_GLSL_CORE_OUTPUT as deprecated.",
+      "range": {
+        "startLine": 88,
+        "startChar": 2,
+        "endLine": 88,
+        "endChar": 21
+      },
+      "revId": "02fedb654b760d3ef20b8147d7cf4a40af14d8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83c43ed3_7301aabc",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-08T23:16:51Z",
+      "side": 1,
+      "message": "Note: it seems clear we will also have to add SH_GLSL_130_CORE_OUTPUT based on experience from http://crbug.com/471960. I don\u0027t know if you\u0027d be willing to incorporate that into your patch, but I\u0027m particularly interested in seeing this CL land soon so it can be added.\n\nAlso, version 330 is the first version which can directly implement ESSL 3.0 since it introduced the \"location\" layout qualifier. I don\u0027t know whether it\u0027s worth exposing it as a target in this list.",
+      "range": {
+        "startLine": 89,
+        "startChar": 2,
+        "endLine": 89,
+        "endChar": 25
+      },
+      "revId": "02fedb654b760d3ef20b8147d7cf4a40af14d8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83c43ed3_f36d9ab0",
+        "filename": "src/compiler/translator/CodeGen.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-08T23:16:51Z",
+      "side": 1,
+      "message": "I think we should update all references to SH_GLSL_CORE_OUTPUT in ANGLE to SH_GLSL_CORE_150_OUTPUT.",
+      "range": {
+        "startLine": 24,
+        "startChar": 11,
+        "endLine": 24,
+        "endChar": 30
+      },
+      "revId": "02fedb654b760d3ef20b8147d7cf4a40af14d8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "237f124e_6a90a61c",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-08T23:16:51Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem to be defined in this patch?",
+      "range": {
+        "startLine": 70,
+        "startChar": 8,
+        "endLine": 70,
+        "endChar": 45
+      },
+      "revId": "02fedb654b760d3ef20b8147d7cf4a40af14d8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
