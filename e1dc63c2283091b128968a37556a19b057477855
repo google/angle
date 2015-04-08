@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "63f82afb_44bae421",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-08T15:25:13Z",
+      "side": 1,
+      "message": "OK, you can\u0027t use both at the same time, the extension clarifies.",
+      "parentUuid": "63f82afb_a4fda8ec",
+      "range": {
+        "startLine": 590,
+        "startChar": 0,
+        "endLine": 591,
+        "endChar": 13
+      },
+      "revId": "e1dc63c2283091b128968a37556a19b057477855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63f82afb_24035810",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 7
