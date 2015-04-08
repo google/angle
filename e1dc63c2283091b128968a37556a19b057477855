@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e3ec1a3e_8572260e",
+        "filename": "src/libANGLE/Renderbuffer.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-08T15:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3eea234_a635ac0d",
+      "range": {
+        "startLine": 55,
+        "startChar": 37,
+        "endLine": 55,
+        "endChar": 41
+      },
+      "revId": "e1dc63c2283091b128968a37556a19b057477855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63f82afb_64d440e6",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "63f82afb_a4fda8ec",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-08T15:24:14Z",
+      "side": 1,
+      "message": "Ah, thank you for pointing me to that extension, I couldn\u0027t find it.\nOf note, just checked and TexStorage2DMultisample becomes a thing in ES 3.1 so there is a precedent for sample counts in the Textures. I think if we want to support the Imagination extension (and indeed we might) it might make sense to have the FBO attachment store a kind of override sample count. I\u0027m not clear on the interactions between 3.1 and the imagination extension. (Just my thoughts on the subject)",
+      "parentUuid": "63f82afb_64d440e6",
+      "range": {
+        "startLine": 590,
+        "startChar": 0,
+        "endLine": 591,
+        "endChar": 13
+      },
+      "revId": "e1dc63c2283091b128968a37556a19b057477855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63f82afb_24035810",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 7
@@ -59,6 +107,30 @@
       "writtenOn": "2015-04-08T14:18:12Z",
       "side": 1,
       "message": "nit: gl:: not needed.",
+      "range": {
+        "startLine": 98,
+        "startChar": 37,
+        "endLine": 98,
+        "endChar": 41
+      },
+      "revId": "e1dc63c2283091b128968a37556a19b057477855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3eea234_26099cdd",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-08T15:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63f82afb_24035810",
       "range": {
         "startLine": 98,
         "startChar": 37,
