@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3eea234_237fce28",
+        "filename": "src/tests/tests.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-08T13:02:27Z",
+      "side": 1,
+      "message": "you can use the property \"msvs_disabled_warnings\" for this. (BTW, I assume there\u0027s a system include that triggers the warning in this target?)",
+      "range": {
+        "startLine": 167,
+        "startChar": 23,
+        "endLine": 173,
+        "endChar": 26
+      },
+      "revId": "6f98a061cce36afe99af57e07156585653abadf4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
