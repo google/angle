@@ -165,10 +165,6 @@ class TCompiler : public TShHandleBase
     bool tagUsedFunctions();
     void internalTagUsedFunction(size_t index);
 
-    // Removes unused function declarations and prototypes from the AST
-    class UnusedPredicate;
-    bool pruneUnusedFunctions(TIntermNode *root);
-
     TIntermNode *compileTreeImpl(const char* const shaderStrings[],
         size_t numStrings, int compileOptions);
 
