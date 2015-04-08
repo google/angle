@@ -34,6 +34,13 @@ bool IsWebGLBasedSpec(ShShaderSpec spec)
             spec == SH_WEBGL2_SPEC);
 }
 
+bool IsGLSL130OrNewer(ShShaderOutput output)
+{
+    return (output == SH_GLSL_130_OUTPUT ||
+            output == SH_GLSL_410_CORE_OUTPUT ||
+            output == SH_GLSL_420_CORE_OUTPUT);
+}
+
 size_t GetGlobalMaxTokenSize(ShShaderSpec spec)
 {
     // WebGL defines a max token legnth of 256, while ES2 leaves max token

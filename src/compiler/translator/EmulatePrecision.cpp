@@ -511,7 +511,7 @@ void EmulatePrecision::writeEmulationHelpers(TInfoSinkBase& sink, ShShaderOutput
 {
     // Other languages not yet supported
     ASSERT(outputLanguage == SH_GLSL_COMPATIBILITY_OUTPUT ||
-           outputLanguage == SH_GLSL_CORE_OUTPUT ||
+           IsGLSL130OrNewer(outputLanguage) ||
            outputLanguage == SH_ESSL_OUTPUT);
     writeCommonPrecisionEmulationHelpers(sink, outputLanguage);
 

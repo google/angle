@@ -95,7 +95,7 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
     TQualifier qualifier = type.getQualifier();
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
     {
-        if (mOutput == SH_GLSL_CORE_OUTPUT)
+        if (IsGLSL130OrNewer(mOutput))
         {
             switch (qualifier)
             {

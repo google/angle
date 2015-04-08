@@ -48,7 +48,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 134
+#define ANGLE_SH_VERSION 135
 
 typedef enum {
   SH_GLES2_SPEC = 0x8B40,
@@ -85,7 +85,13 @@ typedef enum {
   // SH_GLSL_OUTPUT is deprecated. This is to not break the build.
   SH_GLSL_OUTPUT               = 0x8B46,
   SH_GLSL_COMPATIBILITY_OUTPUT = 0x8B46,
+  // SH_GLSL_CORE_OUTPUT is deprecated.
   SH_GLSL_CORE_OUTPUT          = 0x8B47,
+  //Note: GL introduced core profiles in 1.5. However, for compatiblity with Chromium, we treat SH_GLSL_CORE_OUTPUT as GLSL_130_OUTPUT.
+  //TODO: Remove SH_GLSL_CORE_OUTPUT
+  SH_GLSL_130_OUTPUT           = 0x8B47,
+  SH_GLSL_410_CORE_OUTPUT      = 0x8B84,
+  SH_GLSL_420_CORE_OUTPUT      = 0x8B85,
 
   // HLSL output only supported in some configurations.
   SH_HLSL_OUTPUT   = 0x8B48,
@@ -112,7 +118,7 @@ typedef enum {
   // This is needed only as a workaround for certain OpenGL driver bugs.
   SH_EMULATE_BUILT_IN_FUNCTIONS = 0x0100,
 
-  // This is an experimental flag to enforce restrictions that aim to prevent 
+  // This is an experimental flag to enforce restrictions that aim to prevent
   // timing attacks.
   // It generates compilation errors for shaders that could expose sensitive
   // texture information via the timing channel.

@@ -8,7 +8,9 @@
 
 static const int GLSL_VERSION_110 = 110;
 static const int GLSL_VERSION_120 = 120;
-static const int GLSL_VERSION_150 = 150;
+static const int GLSL_VERSION_130 = 130;
+static const int GLSL_VERSION_410 = 410;
+static const int GLSL_VERSION_420 = 420;
 
 // We need to scan for the following:
 // 1. "invariant" keyword: This can occur in both - vertex and fragment shaders
@@ -31,9 +33,17 @@ TVersionGLSL::TVersionGLSL(sh::GLenum type,
                            const TPragma &pragma,
                            ShShaderOutput output)
 {
-    if (output == SH_GLSL_CORE_OUTPUT)
+    if (output == SH_GLSL_130_OUTPUT)
     {
-        mVersion = GLSL_VERSION_150;
+        mVersion = GLSL_VERSION_130;
+    }
+    else if (output == SH_GLSL_410_CORE_OUTPUT)
+    {
+        mVersion = GLSL_VERSION_410;
+    }
+    else if (output == SH_GLSL_420_CORE_OUTPUT)
+    {
+        mVersion = GLSL_VERSION_420;
     }
     else
     {

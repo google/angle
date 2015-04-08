@@ -103,8 +103,7 @@ void TranslatorGLSL::translate(TIntermNode *root, int) {
 
     // Declare gl_FragColor and glFragData as webgl_FragColor and webgl_FragData
     // if it's core profile shaders and they are used.
-    if (getShaderType() == GL_FRAGMENT_SHADER &&
-        getOutputType() == SH_GLSL_CORE_OUTPUT)
+    if (getShaderType() == GL_FRAGMENT_SHADER && IsGLSL130OrNewer(getOutputType()))
     {
         TFragmentOutSearcher searcher;
         root->traverse(&searcher);

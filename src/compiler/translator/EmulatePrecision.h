@@ -8,6 +8,7 @@
 #define COMPILER_TRANSLATOR_EMULATE_PRECISION_H_
 
 #include "common/angleutils.h"
+#include "compiler/translator/Compiler.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
 #include "GLSLANG/ShaderLang.h"
