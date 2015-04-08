@@ -469,8 +469,8 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams, const gl
         D3D11_VIEWPORT viewport;
         viewport.TopLeftX = 0;
         viewport.TopLeftY = 0;
-        viewport.Width = framebufferSize.width;
-        viewport.Height = framebufferSize.height;
+        viewport.Width = static_cast<FLOAT>(framebufferSize.width);
+        viewport.Height = static_cast<FLOAT>(framebufferSize.height);
         viewport.MinDepth = 0;
         viewport.MaxDepth = 1;
         deviceContext->RSSetViewports(1, &viewport);

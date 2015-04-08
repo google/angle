@@ -103,8 +103,8 @@ protected:
 
         for (size_t i = 0; i < mPointCount; i++)
         {
-            GLuint x = viewportSize[0] + (getIndexPositionX(i) * 0.5f + 0.5f) * (viewportSize[2] - viewportSize[0]);
-            GLuint y = viewportSize[1] + (getIndexPositionY(i) * 0.5f + 0.5f) * (viewportSize[3] - viewportSize[1]);
+            GLuint x = static_cast<GLuint>(viewportSize[0] + (getIndexPositionX(i) * 0.5f + 0.5f) * (viewportSize[2] - viewportSize[0]));
+            GLuint y = static_cast<GLuint>(viewportSize[1] + (getIndexPositionY(i) * 0.5f + 0.5f) * (viewportSize[3] - viewportSize[1]));
 
             if (i < firstIndex)
             {

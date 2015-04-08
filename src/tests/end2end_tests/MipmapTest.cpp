@@ -150,9 +150,9 @@ class MipmapTest : public ANGLETest
 
         for (int i = 0; i < width * height; i+=1)
         {
-            data[3 * i + 0] = r;
-            data[3 * i + 1] = g;
-            data[3 * i + 2] = b;
+            data[3 * i + 0] = static_cast<GLubyte>(r);
+            data[3 * i + 1] = static_cast<GLubyte>(g);
+            data[3 * i + 2] = static_cast<GLubyte>(b);
         }
 
         return data;
@@ -386,9 +386,9 @@ TYPED_TEST(MipmapTest, DISABLED_ThreeLevelsInitData)
 
     // Complete the texture by initializing the remaining levels.
     int n = 1;
-    while (getWindowWidth() / pow(2, n) >= 1)
+    while (getWindowWidth() / (1U << n) >= 1)
     {
-        glTexImage2D(GL_TEXTURE_2D, n, GL_RGB, getWindowWidth() / pow(2, n), getWindowWidth() / pow(2, n), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_2D, n, GL_RGB, getWindowWidth() / (1U << n), getWindowWidth() / (1U << n), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
         ASSERT_GL_NO_ERROR();
         n+=1;
     }

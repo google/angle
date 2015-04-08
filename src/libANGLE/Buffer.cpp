@@ -57,7 +57,7 @@ Error Buffer::bufferSubData(const void *data, GLsizeiptr size, GLintptr offset)
         return error;
     }
 
-    mIndexRangeCache.invalidateRange(offset, size);
+    mIndexRangeCache.invalidateRange(static_cast<unsigned int>(offset), static_cast<unsigned int>(size));
 
     return error;
 }
@@ -70,7 +70,7 @@ Error Buffer::copyBufferSubData(Buffer* source, GLintptr sourceOffset, GLintptr 
         return error;
     }
 
-    mIndexRangeCache.invalidateRange(destOffset, size);
+    mIndexRangeCache.invalidateRange(static_cast<unsigned int>(destOffset), static_cast<unsigned int>(size));
 
     return error;
 }
@@ -94,7 +94,7 @@ Error Buffer::map(GLenum access)
     mAccess = access;
     mAccessFlags = GL_MAP_WRITE_BIT;
 
-    mIndexRangeCache.invalidateRange(0, mMapLength);
+    mIndexRangeCache.invalidateRange(0, static_cast<unsigned int>(mMapLength));
 
     return error;
 }
@@ -124,7 +124,7 @@ Error Buffer::mapRange(GLintptr offset, GLsizeiptr length, GLbitfield access)
 
     if ((access & GL_MAP_WRITE_BIT) > 0)
     {
-        mIndexRangeCache.invalidateRange(offset, length);
+        mIndexRangeCache.invalidateRange(static_cast<unsigned int>(offset), static_cast<unsigned int>(length));
     }
 
     return error;

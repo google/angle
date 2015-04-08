@@ -13,7 +13,7 @@ namespace
 TIntermConstantUnion *constructFloatConstUnionNode(const TType &type)
 {
     TType myType = type;
-    unsigned char size = myType.getNominalSize();
+    unsigned char size = static_cast<unsigned char>(myType.getNominalSize());
     if (myType.isMatrix())
         size *= size;
     ConstantUnion *u = new ConstantUnion[size];

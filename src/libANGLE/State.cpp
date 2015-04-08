@@ -982,7 +982,7 @@ GLuint State::getIndexedTransformFeedbackBufferOffset(GLuint index) const
 {
     ASSERT(static_cast<size_t>(index) < mTransformFeedbackBuffers.size());
 
-    return mTransformFeedbackBuffers[index].getOffset();
+    return static_cast<unsigned int>(mTransformFeedbackBuffers[index].getOffset());
 }
 
 size_t State::getTransformFeedbackBufferIndexRange() const

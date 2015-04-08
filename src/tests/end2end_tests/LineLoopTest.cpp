@@ -69,7 +69,7 @@ protected:
         ANGLETest::TearDown();
     }
 
-    void runTest(GLenum indexType, GLubyte indexBuffer, const GLvoid *indexPtr)
+    void runTest(GLenum indexType, GLuint indexBuffer, const GLvoid *indexPtr)
     {
         static const GLfloat loopPositions[] =
         {

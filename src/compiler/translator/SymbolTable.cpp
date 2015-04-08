@@ -152,10 +152,10 @@ TType *SpecificType(TType *type, int size)
 
     switch(type->getBasicType())
     {
-      case EbtGenType:  return new TType(EbtFloat, size);
-      case EbtGenIType: return new TType(EbtInt, size);
-      case EbtGenUType: return new TType(EbtUInt, size);
-      case EbtGenBType: return new TType(EbtBool, size);
+      case EbtGenType:  return new TType(EbtFloat, static_cast<unsigned char>(size));
+      case EbtGenIType: return new TType(EbtInt, static_cast<unsigned char>(size));
+      case EbtGenUType: return new TType(EbtUInt, static_cast<unsigned char>(size));
+      case EbtGenBType: return new TType(EbtBool, static_cast<unsigned char>(size));
       default: return type;
     }
 }
@@ -173,10 +173,10 @@ TType *VectorType(TType *type, int size)
 
     switch(type->getBasicType())
     {
-      case EbtVec:  return new TType(EbtFloat, size);
-      case EbtIVec: return new TType(EbtInt, size);
-      case EbtUVec: return new TType(EbtUInt, size);
-      case EbtBVec: return new TType(EbtBool, size);
+      case EbtVec:  return new TType(EbtFloat, static_cast<unsigned char>(size));
+      case EbtIVec: return new TType(EbtInt, static_cast<unsigned char>(size));
+      case EbtUVec: return new TType(EbtUInt, static_cast<unsigned char>(size));
+      case EbtBVec: return new TType(EbtBool, static_cast<unsigned char>(size));
       default: return type;
     }
 }

@@ -39,7 +39,7 @@ Matrix4 Matrix4::identity()
 Matrix4 Matrix4::rotate(float angle, const Vector3 &p)
 {
     Vector3 u = Vector3::normalize(p);
-    float theta = angle * (M_PI / 180.0f);
+    float theta = static_cast<float>(angle * (M_PI / 180.0f));
     float cos_t = cosf(theta);
     float sin_t = sinf(theta);
 
@@ -75,7 +75,7 @@ Matrix4 Matrix4::frustum(float l, float r, float b, float t, float n, float f)
 
 Matrix4 Matrix4::perspective(float fovY, float aspectRatio, float nearZ, float farZ)
 {
-    const float frustumHeight = tanf(fovY / 360.0f * M_PI) * nearZ;
+    const float frustumHeight = tanf(static_cast<float>(fovY / 360.0f * M_PI)) * nearZ;
     const float frustumWidth = frustumHeight * aspectRatio;
     return frustum(-frustumWidth, frustumWidth, -frustumHeight, frustumHeight, nearZ, farZ);
 }

@@ -291,7 +291,7 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribute &attrib,
     if (directStorage)
     {
         outputElementSize = ComputeVertexAttributeStride(attrib);
-        streamOffset = attrib.offset + outputElementSize * firstVertexIndex;
+        streamOffset = static_cast<unsigned int>(attrib.offset + outputElementSize * firstVertexIndex);
     }
     else if (staticBuffer)
     {
