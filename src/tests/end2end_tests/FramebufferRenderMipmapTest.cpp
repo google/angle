@@ -116,6 +116,13 @@ TYPED_TEST(FramebufferRenderMipmapTest, Validation)
 // Render to various levels of a texture and check that they have the correct color data via ReadPixels
 TYPED_TEST(FramebufferRenderMipmapTest, RenderToMipmap)
 {
+    // TODO(geofflang): Figure out why this is broken on Intel OpenGL
+    if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    {
+        std::cout << "Test skipped on Intel OpenGL." << std::endl;
+        return;
+    }
+
     bool renderToMipmapSupported = extensionEnabled("GL_OES_fbo_render_mipmap") || getClientVersion() > 2;
     if (!renderToMipmapSupported)
     {
