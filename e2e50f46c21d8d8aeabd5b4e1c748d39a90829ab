@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3ec1a3e_ae68e7a1",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-08T18:01:36Z",
+      "side": 1,
+      "message": "\"navtive\" -\u003e \"native\"",
+      "range": {
+        "startLine": 196,
+        "startChar": 1,
+        "endLine": 197,
+        "endChar": 41
+      },
+      "revId": "e2e50f46c21d8d8aeabd5b4e1c748d39a90829ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
