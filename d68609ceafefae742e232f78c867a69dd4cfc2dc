@@ -37,6 +37,42 @@
     },
     {
       "key": {
+        "uuid": "23dab2a9_093e498b",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-08T22:50:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "634caa14_5b41c315",
+      "revId": "d68609ceafefae742e232f78c867a69dd4cfc2dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23dab2a9_693b859b",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-08T22:50:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a32b0216_159314d9",
+      "revId": "d68609ceafefae742e232f78c867a69dd4cfc2dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "832a7e12_d456fcb4",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 9
@@ -48,6 +84,30 @@
       "writtenOn": "2015-04-07T13:54:11Z",
       "side": 1,
       "message": "duplicated here for backwards compatiblity",
+      "range": {
+        "startLine": 93,
+        "startChar": 1,
+        "endLine": 94,
+        "endChar": 28
+      },
+      "revId": "d68609ceafefae742e232f78c867a69dd4cfc2dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3d33a94_e7fb228d",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-08T22:50:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "832a7e12_d456fcb4",
       "range": {
         "startLine": 93,
         "startChar": 1,
@@ -83,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "c3cab6dd_c95555a7",
+        "filename": "src/compiler/translator/OutputGLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-08T22:50:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63258a42_93e2dcc8",
+      "range": {
+        "startLine": 40,
+        "startChar": 41,
+        "endLine": 40,
+        "endChar": 126
+      },
+      "revId": "d68609ceafefae742e232f78c867a69dd4cfc2dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "832a7e12_1465548c",
         "filename": "src/compiler/translator/OutputGLSL.cpp",
         "patchSetId": 9
@@ -106,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "c3cab6dd_296b4964",
+        "filename": "src/compiler/translator/OutputGLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-08T22:50:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "832a7e12_1465548c",
+      "range": {
+        "startLine": 44,
+        "startChar": 43,
+        "endLine": 44,
+        "endChar": 63
+      },
+      "revId": "d68609ceafefae742e232f78c867a69dd4cfc2dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a32b0216_1520f41b",
         "filename": "src/compiler/translator/OutputGLSL.cpp",
         "patchSetId": 9
@@ -117,6 +225,30 @@
       "writtenOn": "2015-04-07T13:54:11Z",
       "side": 1,
       "message": "and here",
+      "range": {
+        "startLine": 81,
+        "startChar": 47,
+        "endLine": 81,
+        "endChar": 68
+      },
+      "revId": "d68609ceafefae742e232f78c867a69dd4cfc2dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3d33a94_c7009e06",
+        "filename": "src/compiler/translator/OutputGLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-08T22:50:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a32b0216_1520f41b",
       "range": {
         "startLine": 81,
         "startChar": 47,
@@ -175,6 +307,54 @@
     },
     {
       "key": {
+        "uuid": "e3d33a94_2706da1f",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-08T22:50:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2337126d_4148f2b6",
+      "range": {
+        "startLine": 97,
+        "startChar": 50,
+        "endLine": 97,
+        "endChar": 73
+      },
+      "revId": "d68609ceafefae742e232f78c867a69dd4cfc2dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3d33a94_0703d60f",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-08T22:50:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63258a42_53dd240a",
+      "range": {
+        "startLine": 97,
+        "startChar": 43,
+        "endLine": 97,
+        "endChar": 79
+      },
+      "revId": "d68609ceafefae742e232f78c867a69dd4cfc2dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "832a7e12_3462d085",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 9
@@ -186,6 +366,30 @@
       "writtenOn": "2015-04-07T13:54:11Z",
       "side": 1,
       "message": "and here",
+      "range": {
+        "startLine": 109,
+        "startChar": 19,
+        "endLine": 111,
+        "endChar": 42
+      },
+      "revId": "d68609ceafefae742e232f78c867a69dd4cfc2dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3cab6dd_09680d64",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-08T22:50:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "832a7e12_3462d085",
       "range": {
         "startLine": 109,
         "startChar": 19,
