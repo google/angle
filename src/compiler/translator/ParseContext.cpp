@@ -781,8 +781,8 @@ bool TParseContext::arrayTypeErrorCheck(const TSourceLoc& line, TPublicType type
 }
 
 //
-// Do all the semantic checking for declaring an array, with and 
-// without a size, and make the right changes to the symbol table.
+// Do all the semantic checking for declaring an array,
+// and make the right changes to the symbol table.
 //
 // size == 0 means no specified size.
 //
@@ -790,11 +790,6 @@ bool TParseContext::arrayTypeErrorCheck(const TSourceLoc& line, TPublicType type
 //
 bool TParseContext::arrayErrorCheck(const TSourceLoc& line, const TString& identifier, const TPublicType &type, TVariable*& variable)
 {
-    //
-    // Don't check for reserved word use until after we know it's not in the symbol table,
-    // because reserved arrays can be redeclared.
-    //
-
     bool builtIn = false; 
     bool sameScope = false;
     TSymbol* symbol = symbolTable.find(identifier, 0, &builtIn, &sameScope);
@@ -827,30 +822,12 @@ bool TParseContext::arrayErrorCheck(const TSourceLoc& line, const TString& ident
             error(line, "INTERNAL ERROR inserting new symbol", identifier.c_str());
             return true;
         }
-    } else {
-        if (! symbol->isVariable()) {
-            error(line, "variable expected", identifier.c_str());
-            return true;
-        }
-
-        variable = static_cast<TVariable*>(symbol);
-        if (! variable->getType().isArray()) {
-            error(line, "redeclaring non-array as array", identifier.c_str());
-            return true;
-        }
-        if (variable->getType().getArraySize() > 0) {
-            error(line, "redeclaration of array with size", identifier.c_str());
-            return true;
-        }
-        
-        if (! variable->getType().sameElementType(TType(type))) {
-            error(line, "redeclaration of array with a different type", identifier.c_str());
-            return true;
-        }
-
-        if (type.arraySize)
-            variable->getType().setArraySize(type.arraySize);
-    } 
+    }
+    else
+    {
+        error(line, "redeclaration of an array", identifier.c_str());
+        return true;
+    }
 
     if (voidErrorCheck(line, identifier, type))
         return true;
