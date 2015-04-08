@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "237f124e_0a22ba59",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-08T23:21:27Z",
+      "side": 1,
+      "message": "Will these emulated functions also be used on earlier versions of the OpenGL core profile? Or only exposed when running on 4.1 specifically?",
+      "range": {
+        "startLine": 39,
+        "startChar": 37,
+        "endLine": 39,
+        "endChar": 41
+      },
+      "revId": "52da258453a111a10dec4d69c22ace3a244a2879",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
