@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3eea234_a635ac0d",
+        "filename": "src/libANGLE/Renderbuffer.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-08T14:18:12Z",
+      "side": 1,
+      "message": "nit: unneeded gl::",
+      "range": {
+        "startLine": 55,
+        "startChar": 37,
+        "endLine": 55,
+        "endChar": 41
+      },
+      "revId": "e1dc63c2283091b128968a37556a19b057477855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63f82afb_64d440e6",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-08T14:18:12Z",
+      "side": 1,
+      "message": "This may be a weird case if we ever support EXT_multisampled_render_to_texture because the sample count is a property of the attachment.  Not an issue now though.",
+      "range": {
+        "startLine": 590,
+        "startChar": 0,
+        "endLine": 591,
+        "endChar": 13
+      },
+      "revId": "e1dc63c2283091b128968a37556a19b057477855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63f82afb_24035810",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-08T14:18:12Z",
+      "side": 1,
+      "message": "nit: gl:: not needed.",
+      "range": {
+        "startLine": 98,
+        "startChar": 37,
+        "endLine": 98,
+        "endChar": 41
+      },
+      "revId": "e1dc63c2283091b128968a37556a19b057477855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
