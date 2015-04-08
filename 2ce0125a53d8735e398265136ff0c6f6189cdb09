@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83ab5eef_4c269fb1",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 858,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-08T18:34:18Z",
+      "side": 1,
+      "message": "nit: brace on next line",
+      "range": {
+        "startLine": 858,
+        "startChar": 40,
+        "endLine": 858,
+        "endChar": 41
+      },
+      "revId": "2ce0125a53d8735e398265136ff0c6f6189cdb09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
