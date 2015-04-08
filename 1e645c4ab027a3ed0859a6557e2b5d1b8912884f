@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83c43ed3_73f1aae2",
+        "filename": "src/libANGLE/Surface.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2015-04-08T22:51:23Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand this change. It doesn\u0027t seem related to anything else in the patch.",
+      "revId": "1e645c4ab027a3ed0859a6557e2b5d1b8912884f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
