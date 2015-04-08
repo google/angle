@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "a32b0216_d5a4bc30",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-08T13:37:19Z",
+      "side": 1,
+      "message": "+1. also you can remove \"static\" since it\u0027s redundant.",
+      "parentUuid": "2337126d_a150deb7",
+      "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23e9d2fa_469d90b0",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 8
@@ -53,6 +71,75 @@
         "startChar": 21,
         "endLine": 1215,
         "endChar": 39
+      },
+      "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "832a7e12_142f9435",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1284,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-08T13:37:19Z",
+      "side": 1,
+      "message": "we don\u0027t use non-const references in new code, except for return values for property getter functions and for range-for loops - use a pointer type here",
+      "range": {
+        "startLine": 1284,
+        "startChar": 60,
+        "endLine": 1284,
+        "endChar": 61
+      },
+      "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a32b0216_75ada813",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1285,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-08T13:37:19Z",
+      "side": 1,
+      "message": "here too, but we already use InfoSink \u0026 throughout our code so you can leave this one",
+      "range": {
+        "startLine": 1285,
+        "startChar": 88,
+        "endLine": 1285,
+        "endChar": 89
+      },
+      "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a32b0216_35b73068",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1289,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-08T13:37:19Z",
+      "side": 1,
+      "message": "another option for this method is to pass getType().getBasicType() as a fifth parameter and use a local template function, parameterized on the type of builtinFunc. I think I like this option slightly better because it keeps the header simpler, and doesn\u0027t require any static_cast.",
+      "range": {
+        "startLine": 1289,
+        "startChar": 7,
+        "endLine": 1289,
+        "endChar": 45
       },
       "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
