@@ -170,9 +170,9 @@ class OutputHLSL : public TIntermTraverser
 
     int mUniqueIndex;   // For creating unique names
 
-    CallDAG mCallDag;
-    MetadataList mASTMetadataList;
-    ASTMetadataHLSL *mCurrentFunctionMetadata;
+    std::vector<ASTMetadataHLSL> mASTAnalyses;
+    bool mContainsLoopDiscontinuity;
+    bool mContainsAnyLoop;
     bool mOutputLod0Function;
     bool mInsideDiscontinuousLoop;
     int mNestedLoopDepth;
