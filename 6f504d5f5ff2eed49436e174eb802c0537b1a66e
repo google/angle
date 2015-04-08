@@ -219,6 +219,30 @@
     },
     {
       "key": {
+        "uuid": "a3eea234_866230bc",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1289,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-08T14:55:51Z",
+      "side": 1,
+      "message": "Ah, I didn\u0027t notice the getLine(). I agree at 6 parameters it\u0027s a bit excessive, and a strong indication it should stay local.\n\nOK, how about if you declare this method as a private member template function in the header. If you define it before the use in the cpp, this would still allow you to use a template parameter instead of FloatTypeUnaryFunc.\n\nMarking approved, but I think I prefer it with the template parameter. LGTM.",
+      "parentUuid": "a31782fa_b8f155b3",
+      "range": {
+        "startLine": 1289,
+        "startChar": 7,
+        "endLine": 1289,
+        "endChar": 45
+      },
+      "revId": "6f504d5f5ff2eed49436e174eb802c0537b1a66e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "634caa14_9b674b21",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 8
