@@ -188,14 +188,28 @@ VendorID RendererGL::getVendorId() const
 
 std::string RendererGL::getVendorString() const
 {
-    UNIMPLEMENTED();
-    return std::string();
+    return std::string(reinterpret_cast<const char*>(mFunctions->getString(GL_VENDOR)));
 }
 
 std::string RendererGL::getRendererDescription() const
 {
-    //UNIMPLEMENTED();
-    return std::string();
+    std::string nativeVendorString(reinterpret_cast<const char*>(mFunctions->getString(GL_VENDOR)));
+    std::string nativeRendererString(reinterpret_cast<const char*>(mFunctions->getString(GL_RENDERER)));
+
+    GLuint major;
+    GLuint minor;
+    bool isES;
+    nativegl::GetGLVersion(mFunctions->getString, &major, &minor, &isES);
+
+    std::ostringstream rendererString;
+    rendererString << nativeVendorString << " " << nativeRendererString << " OpenGL";
+    if (isES)
+    {
+        rendererString << " ES";
+    }
+    rendererString << " " << major << "." << minor;
+
+    return rendererString.str();
 }
 
 void RendererGL::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureCaps, gl::Extensions *outExtensions) const
