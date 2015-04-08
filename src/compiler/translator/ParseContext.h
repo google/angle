@@ -97,7 +97,6 @@ struct TParseContext {
     bool arraySizeErrorCheck(const TSourceLoc& line, TIntermTyped* expr, int& size);
     bool arrayQualifierErrorCheck(const TSourceLoc &line, const TPublicType &type);
     bool arrayTypeErrorCheck(const TSourceLoc& line, TPublicType type);
-    bool arrayErrorCheck(const TSourceLoc &line, const TString &identifier, const TType &type, TVariable **variable);
     bool voidErrorCheck(const TSourceLoc &line, const TString &identifier, const TBasicType &type);
     bool boolErrorCheck(const TSourceLoc&, const TIntermTyped*);
     bool boolErrorCheck(const TSourceLoc&, const TPublicType&);
@@ -106,7 +105,6 @@ struct TParseContext {
     bool locationDeclaratorListCheck(const TSourceLoc& line, const TPublicType &pType);
     bool parameterSamplerErrorCheck(const TSourceLoc& line, TQualifier qualifier, const TType& type);
     bool nonInitConstErrorCheck(const TSourceLoc &line, const TString &identifier, TPublicType *type);
-    bool nonInitErrorCheck(const TSourceLoc& line, const TString& identifier, const TPublicType& type, TVariable*& variable);
     bool paramErrorCheck(const TSourceLoc& line, TQualifier qualifier, TQualifier paramQualifier, TType* type);
     bool extensionErrorCheck(const TSourceLoc& line, const TString&);
     bool singleDeclarationErrorCheck(TPublicType &publicType, const TSourceLoc& identifierLocation, const TString &identifier);
@@ -123,8 +121,8 @@ struct TParseContext {
     bool containsSampler(TType& type);
     bool areAllChildConst(TIntermAggregate* aggrNode);
     const TFunction* findFunction(const TSourceLoc& line, TFunction* pfnCall, int inputShaderVersion, bool *builtIn = 0);
-    bool executeInitializer(const TSourceLoc& line, const TString& identifier, TPublicType& pType,
-                            TIntermTyped* initializer, TIntermNode*& intermNode, TVariable* variable = 0);
+    bool executeInitializer(const TSourceLoc &line, const TString &identifier, TPublicType &pType,
+                            TIntermTyped *initializer, TIntermNode *&intermNode);
 
     TPublicType addFullySpecifiedType(TQualifier qualifier, const TPublicType& typeSpecifier);
     TPublicType addFullySpecifiedType(TQualifier qualifier, TLayoutQualifier layoutQualifier, const TPublicType& typeSpecifier);
@@ -187,6 +185,8 @@ struct TParseContext {
         const TSourceLoc &loc, bool *fatalError);
 
   private:
+    bool declareVariable(const TSourceLoc &line, const TString &identifier, const TType &type, TVariable **variable);
+
     TIntermTyped *addBinaryMathInternal(TOperator op, TIntermTyped *left, TIntermTyped *right,
         const TSourceLoc &loc);
     TIntermTyped *createAssign(TOperator op, TIntermTyped *left, TIntermTyped *right,
