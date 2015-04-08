@@ -213,3 +213,67 @@ TEST_F(MalformedShaderTest, ArrayWithNoSizeInInitializerList)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Const variables need an initializer.
+TEST_F(MalformedShaderTest, ConstVarNotInitialized)
+{
+    const std::string &shaderString =
+        "#version 300 es;"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   const float a;"
+        "   my_FragColor = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Const variables need an initializer. In ESSL1 const structs containing
+// arrays are not allowed at all since it's impossible to initialize them.
+// Even though this test is for ESSL3 the only thing that's critical for
+// ESSL1 is the non-initialization check that's used for both language versions.
+// Whether ESSL1 compilation generates the most helpful error messages is a
+// secondary concern.
+TEST_F(MalformedShaderTest, ConstStructNotInitialized)
+{
+    const std::string &shaderString =
+        "#version 300 es;"
+        "precision mediump float;\n"
+        "struct S {\n"
+        "   float a[3];\n"
+        "};\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   const S b;"
+        "   my_FragColor = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Const variables need an initializer. In ESSL1 const arrays are not allowed
+// at all since it's impossible to initialize them.
+// Even though this test is for ESSL3 the only thing that's critical for
+// ESSL1 is the non-initialization check that's used for both language versions.
+// Whether ESSL1 compilation generates the most helpful error messages is a
+// secondary concern.
+TEST_F(MalformedShaderTest, ConstArrayNotInitialized)
+{
+    const std::string &shaderString =
+        "#version 300 es;"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   const float a[3];"
+        "   my_FragColor = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

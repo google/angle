@@ -750,9 +750,11 @@ bool TParseContext::arraySizeErrorCheck(const TSourceLoc& line, TIntermTyped* ex
 //
 // Returns true if there is an error.
 //
-bool TParseContext::arrayQualifierErrorCheck(const TSourceLoc& line, TPublicType type)
+bool TParseContext::arrayQualifierErrorCheck(const TSourceLoc &line, const TPublicType &type)
 {
-    if ((type.qualifier == EvqAttribute) || (type.qualifier == EvqVertexIn) || (type.qualifier == EvqConst)) {
+    if ((type.qualifier == EvqAttribute) || (type.qualifier == EvqVertexIn) ||
+        (type.qualifier == EvqConst && shaderVersion < 300))
+    {
         error(line, "cannot declare arrays of this qualifier", TType(type).getCompleteString().c_str());
         return true;
     }
@@ -861,18 +863,17 @@ bool TParseContext::arrayErrorCheck(const TSourceLoc& line, const TString& ident
 //
 // Returns true if there was an error.
 //
-bool TParseContext::nonInitConstErrorCheck(const TSourceLoc& line, const TString& identifier, TPublicType& type, bool array)
+bool TParseContext::nonInitConstErrorCheck(const TSourceLoc &line, const TString &identifier, TPublicType *type)
 {
-    if (type.qualifier == EvqConst)
+    ASSERT(type != nullptr);
+    if (type->qualifier == EvqConst)
     {
         // Make the qualifier make sense.
-        type.qualifier = EvqTemporary;
-        
-        if (array)
-        {
-            error(line, "arrays may not be declared constant since they cannot be initialized", identifier.c_str());
-        }
-        else if (type.isStructureContainingArrays())
+        type->qualifier = EvqTemporary;
+
+        // Generate informative error messages for ESSL1.
+        // In ESSL3 arrays and structures containing arrays can be constant.
+        if (shaderVersion < 300 && type->isStructureContainingArrays())
         {
             error(line, "structures containing arrays may not be declared constant since they cannot be initialized", identifier.c_str());
         }
@@ -883,7 +884,6 @@ bool TParseContext::nonInitConstErrorCheck(const TSourceLoc& line, const TString
 
         return true;
     }
-
     return false;
 }
 
@@ -1306,8 +1306,7 @@ TIntermAggregate* TParseContext::parseSingleDeclaration(TPublicType &publicType,
         if (singleDeclarationErrorCheck(publicType, identifierLocation, identifier))
             recover();
 
-        // this error check can mutate the type
-        if (nonInitConstErrorCheck(identifierLocation, identifier, publicType, false))
+        if (nonInitConstErrorCheck(identifierLocation, identifier, &publicType))
             recover();
 
         TVariable* variable = 0;
@@ -1329,8 +1328,7 @@ TIntermAggregate* TParseContext::parseSingleArrayDeclaration(TPublicType &public
     if (singleDeclarationErrorCheck(publicType, identifierLocation, identifier))
         recover();
 
-    // this error check can mutate the type
-    if (nonInitConstErrorCheck(identifierLocation, identifier, publicType, true))
+    if (nonInitConstErrorCheck(identifierLocation, identifier, &publicType))
         recover();
 
     if (arrayTypeErrorCheck(indexLocation, publicType) || arrayQualifierErrorCheck(indexLocation, publicType))
@@ -1435,7 +1433,7 @@ TIntermAggregate* TParseContext::parseDeclarator(TPublicType &publicType, TInter
     if (locationDeclaratorListCheck(identifierLocation, publicType))
         recover();
 
-    if (nonInitConstErrorCheck(identifierLocation, identifier, publicType, false))
+    if (nonInitConstErrorCheck(identifierLocation, identifier, &publicType))
         recover();
 
     TVariable* variable = 0;
@@ -1455,7 +1453,7 @@ TIntermAggregate* TParseContext::parseArrayDeclarator(TPublicType &publicType, c
     if (locationDeclaratorListCheck(identifierLocation, publicType))
         recover();
 
-    if (nonInitConstErrorCheck(identifierLocation, identifier, publicType, true))
+    if (nonInitConstErrorCheck(identifierLocation, identifier, &publicType))
         recover();
 
     if (arrayTypeErrorCheck(arrayLocation, publicType) || arrayQualifierErrorCheck(arrayLocation, publicType))

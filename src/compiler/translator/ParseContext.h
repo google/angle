@@ -95,7 +95,7 @@ struct TParseContext {
     bool globalErrorCheck(const TSourceLoc& line, bool global, const char* token);
     bool constructorErrorCheck(const TSourceLoc& line, TIntermNode*, TFunction&, TOperator, TType*);
     bool arraySizeErrorCheck(const TSourceLoc& line, TIntermTyped* expr, int& size);
-    bool arrayQualifierErrorCheck(const TSourceLoc& line, TPublicType type);
+    bool arrayQualifierErrorCheck(const TSourceLoc &line, const TPublicType &type);
     bool arrayTypeErrorCheck(const TSourceLoc& line, TPublicType type);
     bool arrayErrorCheck(const TSourceLoc& line, const TString& identifier, const TPublicType &type, TVariable*& variable);
     bool voidErrorCheck(const TSourceLoc&, const TString&, const TPublicType&);
@@ -105,7 +105,7 @@ struct TParseContext {
     bool structQualifierErrorCheck(const TSourceLoc& line, const TPublicType& pType);
     bool locationDeclaratorListCheck(const TSourceLoc& line, const TPublicType &pType);
     bool parameterSamplerErrorCheck(const TSourceLoc& line, TQualifier qualifier, const TType& type);
-    bool nonInitConstErrorCheck(const TSourceLoc& line, const TString& identifier, TPublicType& type, bool array);
+    bool nonInitConstErrorCheck(const TSourceLoc &line, const TString &identifier, TPublicType *type);
     bool nonInitErrorCheck(const TSourceLoc& line, const TString& identifier, const TPublicType& type, TVariable*& variable);
     bool paramErrorCheck(const TSourceLoc& line, TQualifier qualifier, TQualifier paramQualifier, TType* type);
     bool extensionErrorCheck(const TSourceLoc& line, const TString&);
