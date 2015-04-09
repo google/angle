@@ -80,6 +80,30 @@
       "revId": "1e645c4ab027a3ed0859a6557e2b5d1b8912884f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03868e96_1b476c2e",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-09T15:37:57Z",
+      "side": 1,
+      "message": "Thanks for suggesting that, I wrote some tests and found that there were some edge cases where BGRA formats became RGBA.  It didn\u0027t cause any problems AFAIK but I\u0027ve removed this function for now.  I\u0027ll revisit this issue later.",
+      "parentUuid": "83c43ed3_19cb379f",
+      "range": {
+        "startLine": 644,
+        "startChar": 7,
+        "endLine": 644,
+        "endChar": 39
+      },
+      "revId": "1e645c4ab027a3ed0859a6557e2b5d1b8912884f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
