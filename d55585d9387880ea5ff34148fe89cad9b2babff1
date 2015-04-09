@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "03868e96_40a3c3f3",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:15:52Z",
+      "side": 1,
+      "message": "130 is not a core profile GLSL. Should be SH_GLSL_130, since the compatibility/core concept was introduced with 150.",
+      "range": {
+        "startLine": 90,
+        "startChar": 2,
+        "endLine": 90,
+        "endChar": 25
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23dab2a9_c929d104",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 8
@@ -49,6 +72,53 @@
     },
     {
       "key": {
+        "uuid": "237f124e_8fda5312",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:15:52Z",
+      "side": 1,
+      "message": "Yes, let\u0027s add 130, and core 150, 330, and 410 and 420. The rest we can omit for now.",
+      "parentUuid": "03d12e8c_28822b9c",
+      "range": {
+        "startLine": 90,
+        "startChar": 2,
+        "endLine": 99,
+        "endChar": 40
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03868e96_20831f52",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:15:52Z",
+      "side": 1,
+      "message": "can you use IsCoreGLSLOutput here?",
+      "range": {
+        "startLine": 515,
+        "startChar": 11,
+        "endLine": 516,
+        "endChar": 55
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "03d12e8c_688c23cc",
         "filename": "src/compiler/translator/OutputGLSLBase.cpp",
         "patchSetId": 8
@@ -65,6 +135,122 @@
         "startChar": 12,
         "endLine": 1176,
         "endChar": 99
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03868e96_e07857f5",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1176,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:15:52Z",
+      "side": 1,
+      "message": "+1, also make this a non-class global helper function, with capital \"IsCoreGLSLOutput\"",
+      "parentUuid": "03d12e8c_688c23cc",
+      "range": {
+        "startLine": 1176,
+        "startChar": 12,
+        "endLine": 1176,
+        "endChar": 99
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "237f124e_cfb1bbc3",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:15:52Z",
+      "side": 1,
+      "message": "this patch should definitely go before the 4_1 emulation patch",
+      "range": {
+        "startLine": 69,
+        "startChar": 3,
+        "endLine": 70,
+        "endChar": 68
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83c43ed3_5ffc6cb3",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:15:52Z",
+      "side": 1,
+      "message": "this code needs to output core for core profile shaders.\n\n sink \u003c\u003c \"#version \" \u003c\u003c version;\n if (IsCore)\n {\n   sink \u003c\u003c \" core\";\n }\n sink \u003c\u003c \"\\n\";",
+      "range": {
+        "startLine": 144,
+        "startChar": 6,
+        "endLine": 144,
+        "endChar": 47
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83c43ed3_5ff74cd9",
+        "filename": "src/compiler/translator/VersionGLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:15:52Z",
+      "side": 1,
+      "message": "can you add the 130 and 330 defines here?",
+      "range": {
+        "startLine": 10,
+        "startChar": 17,
+        "endLine": 10,
+        "endChar": 33
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83c43ed3_df07bc4d",
+        "filename": "src/compiler/translator/VersionGLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:15:52Z",
+      "side": 1,
+      "message": "and here",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 5
       },
       "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
