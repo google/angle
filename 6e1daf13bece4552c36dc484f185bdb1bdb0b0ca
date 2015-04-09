@@ -34,6 +34,47 @@
       "revId": "6e1daf13bece4552c36dc484f185bdb1bdb0b0ca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03868e96_3130cf19",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T17:15:33Z",
+      "side": 1,
+      "message": "Yeah, sorry, if it looks too weird then it\u0027s not worth it. The functions do have the same signature so really a template isn\u0027t necessary (unless there is a difference in the types). Probably better with the old version.",
+      "parentUuid": "e3889aa6_e8c3e787",
+      "revId": "6e1daf13bece4552c36dc484f185bdb1bdb0b0ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03868e96_91f19be5",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T17:15:33Z",
+      "side": 1,
+      "message": "my conception was for T (or T*) builtinFunc.",
+      "range": {
+        "startLine": 297,
+        "startChar": 4,
+        "endLine": 298,
+        "endChar": 70
+      },
+      "revId": "6e1daf13bece4552c36dc484f185bdb1bdb0b0ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
