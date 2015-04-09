@@ -16,6 +16,24 @@
       "revId": "6e1daf13bece4552c36dc484f185bdb1bdb0b0ca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3889aa6_e8c3e787",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-09T12:25:53Z",
+      "side": 1,
+      "message": "Well, as far as I understand, template usage here is mainly for evaluating type of stdlib built-in function pointer that is passed into this function and not exactly for using foldUnary for other interm node basic types like EbtInt, EbtUint, EbtBool, etc.\n\nI haven\u0027t yet looked at remaining built-in constant folding cases if handling EbtInt and others here is required and if this function can be reused.",
+      "parentUuid": "63a66a29_8ef6bba6",
+      "revId": "6e1daf13bece4552c36dc484f185bdb1bdb0b0ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
