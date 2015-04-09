@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23dab2a9_c929d104",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-09T00:54:13Z",
+      "side": 1,
+      "message": "This is just an example and suggestion. Since we are not sure in future what we will do based on different versions of glsl and there are so many versions of them. I suggest we just create some parameters for future use. \n\nIf you guys think it will work, I\u0027ll modify other places accordingly.",
+      "range": {
+        "startLine": 90,
+        "startChar": 2,
+        "endLine": 99,
+        "endChar": 40
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
