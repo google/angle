@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "23dab2a9_09ada914",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-09T00:26:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83c43ed3_9351c6ee",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 24
+      },
+      "revId": "02fedb654b760d3ef20b8147d7cf4a40af14d8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "237f124e_0add5a5d",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-08T23:16:51Z",
       "side": 1,
       "message": "Let\u0027s mark SH_GLSL_CORE_OUTPUT as deprecated.",
+      "range": {
+        "startLine": 88,
+        "startChar": 2,
+        "endLine": 88,
+        "endChar": 21
+      },
+      "revId": "02fedb654b760d3ef20b8147d7cf4a40af14d8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3d33a94_876866a2",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-09T00:26:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "237f124e_0add5a5d",
       "range": {
         "startLine": 88,
         "startChar": 2,
@@ -82,6 +130,30 @@
       "writtenOn": "2015-04-08T23:16:51Z",
       "side": 1,
       "message": "I think we should update all references to SH_GLSL_CORE_OUTPUT in ANGLE to SH_GLSL_CORE_150_OUTPUT.",
+      "range": {
+        "startLine": 24,
+        "startChar": 11,
+        "endLine": 24,
+        "endChar": 30
+      },
+      "revId": "02fedb654b760d3ef20b8147d7cf4a40af14d8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3d33a94_e76de2b0",
+        "filename": "src/compiler/translator/CodeGen.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-09T00:26:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83c43ed3_f36d9ab0",
       "range": {
         "startLine": 24,
         "startChar": 11,
