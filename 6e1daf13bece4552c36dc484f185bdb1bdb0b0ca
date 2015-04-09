@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63a66a29_8ef6bba6",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-09T12:14:21Z",
+      "side": 1,
+      "message": "Wait, this is actually a bit weird now... the code doesn\u0027t really make sense with other template parameters than \u003cfloat\u003e. Maybe the previous version was better after all?\n\nThough I\u0027m not sure if this is exactly what Jamie meant with the template suggestion.",
+      "revId": "6e1daf13bece4552c36dc484f185bdb1bdb0b0ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
