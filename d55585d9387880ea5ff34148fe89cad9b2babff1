@@ -212,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "03868e96_0057fb5f",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:18:01Z",
+      "side": 1,
+      "message": "Just checked and \"core\" is the default setting if we don\u0027t pass a profile explicitly, so not mandatory, but still would be nice to have.",
+      "parentUuid": "83c43ed3_5ffc6cb3",
+      "range": {
+        "startLine": 144,
+        "startChar": 6,
+        "endLine": 144,
+        "endChar": 47
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83c43ed3_5ff74cd9",
         "filename": "src/compiler/translator/VersionGLSL.cpp",
         "patchSetId": 8
