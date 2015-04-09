@@ -22,6 +22,53 @@
       "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03d12e8c_28822b9c",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-09T06:57:04Z",
+      "side": 1,
+      "message": "I don\u0027t think we should add these ahead of time. There\u0027s likely only going to be a limited set of outputs that ANGLE will need to support.",
+      "parentUuid": "23dab2a9_c929d104",
+      "range": {
+        "startLine": 90,
+        "startChar": 2,
+        "endLine": 99,
+        "endChar": 40
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03d12e8c_688c23cc",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1176,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-09T06:57:04Z",
+      "side": 1,
+      "message": "This is still wrong. Should be output \u003d\u003d SH_GLSL_150_CORE_OUTPUT || output \u003d\u003d SH_GLSL_410_CORE_OUTPUT || output \u003d\u003d SH_GLSL_420_CORE_OUTPUT",
+      "range": {
+        "startLine": 1176,
+        "startChar": 12,
+        "endLine": 1176,
+        "endChar": 99
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
