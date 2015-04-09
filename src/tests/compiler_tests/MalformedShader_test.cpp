@@ -182,7 +182,7 @@ TEST_F(MalformedShaderTest, CompareStructsContainingSamplers)
 TEST_F(MalformedShaderTest, AssignStructsContainingSamplers)
 {
     const std::string &shaderString =
-        "#version 300 es;\n"
+        "#version 300 es\n"
         "precision mediump float;\n"
         "struct s { sampler2D foo; };\n"
         "uniform s a;\n"
@@ -218,11 +218,11 @@ TEST_F(MalformedShaderTest, ArrayWithNoSizeInInitializerList)
 TEST_F(MalformedShaderTest, ConstVarNotInitialized)
 {
     const std::string &shaderString =
-        "#version 300 es;"
+        "#version 300 es\n"
         "precision mediump float;\n"
         "out vec4 my_FragColor;\n"
         "void main() {\n"
-        "   const float a;"
+        "   const float a;\n"
         "   my_FragColor = vec4(1.0);\n"
         "}\n";
     if (compile(shaderString))
@@ -240,14 +240,14 @@ TEST_F(MalformedShaderTest, ConstVarNotInitialized)
 TEST_F(MalformedShaderTest, ConstStructNotInitialized)
 {
     const std::string &shaderString =
-        "#version 300 es;"
+        "#version 300 es\n"
         "precision mediump float;\n"
         "struct S {\n"
         "   float a[3];\n"
         "};\n"
         "out vec4 my_FragColor;\n"
         "void main() {\n"
-        "   const S b;"
+        "   const S b;\n"
         "   my_FragColor = vec4(1.0);\n"
         "}\n";
     if (compile(shaderString))
@@ -265,11 +265,11 @@ TEST_F(MalformedShaderTest, ConstStructNotInitialized)
 TEST_F(MalformedShaderTest, ConstArrayNotInitialized)
 {
     const std::string &shaderString =
-        "#version 300 es;"
+        "#version 300 es\n"
         "precision mediump float;\n"
         "out vec4 my_FragColor;\n"
         "void main() {\n"
-        "   const float a[3];"
+        "   const float a[3];\n"
         "   my_FragColor = vec4(1.0);\n"
         "}\n";
     if (compile(shaderString))
