@@ -24,9 +24,9 @@ class FenceNVImpl : angle::NonCopyable
     FenceNVImpl() { };
     virtual ~FenceNVImpl() { };
 
-    virtual gl::Error set() = 0;
-    virtual gl::Error test(bool flushCommandBuffer, GLboolean *outFinished) = 0;
-    virtual gl::Error finishFence(GLboolean *outFinished) = 0;
+    virtual gl::Error set(GLenum condition) = 0;
+    virtual gl::Error test(GLboolean *outFinished) = 0;
+    virtual gl::Error finish() = 0;
 };
 
 }

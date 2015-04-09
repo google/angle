@@ -159,6 +159,14 @@ FunctionsGL::FunctionsGL()
       texImage3D(nullptr),
       texSubImage3D(nullptr),
 
+      deleteFencesNV(nullptr),
+      genFencesNV(nullptr),
+      isFenceNV(nullptr),
+      testFenceNV(nullptr),
+      getFenceivNV(nullptr),
+      finishFenceNV(nullptr),
+      setFenceNV(nullptr),
+
       activeTexture(nullptr),
       compressedTexImage1D(nullptr),
       compressedTexImage2D(nullptr),
@@ -863,6 +871,15 @@ void FunctionsGL::initialize()
         AssignGLEntryPoint(loadProcAddress("glDrawRangeElements"), &drawRangeElements);
         AssignGLEntryPoint(loadProcAddress("glTexImage3D"), &texImage3D);
         AssignGLEntryPoint(loadProcAddress("glTexSubImage3D"), &texSubImage3D);
+
+        // Extensions
+        AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glDeleteFencesNV"), &deleteFencesNV);
+        AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glGenFencesNV"), &genFencesNV);
+        AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glIsFenceNV"), &isFenceNV);
+        AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glTestFenceNV"), &testFenceNV);
+        AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glGetFenceivNV"), &getFenceivNV);
+        AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glFinishFenceNV"), &finishFenceNV);
+        AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glSetFenceNV"), &setFenceNV);
     }
 
     // 1.3

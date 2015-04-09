@@ -13,16 +13,22 @@
 
 namespace rx
 {
+class FunctionsGL;
 
 class FenceNVGL : public FenceNVImpl
 {
   public:
-    FenceNVGL();
+    explicit FenceNVGL(const FunctionsGL *functions);
     ~FenceNVGL() override;
 
-    gl::Error set() override;
-    gl::Error test(bool flushCommandBuffer, GLboolean *outFinished) override;
-    gl::Error finishFence(GLboolean *outFinished) override;
+    gl::Error set(GLenum condition) override;
+    gl::Error test(GLboolean *outFinished) override;
+    gl::Error finish() override;
+
+  private:
+    GLuint mFence;
+
+    const FunctionsGL *mFunctions;
 };
 
 }

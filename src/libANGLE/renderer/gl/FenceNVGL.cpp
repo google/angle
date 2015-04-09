@@ -9,33 +9,43 @@
 #include "libANGLE/renderer/gl/FenceNVGL.h"
 
 #include "common/debug.h"
+#include "libANGLE/renderer/gl/FunctionsGL.h"
+
 
 namespace rx
 {
 
-FenceNVGL::FenceNVGL()
-    : FenceNVImpl()
-{}
+FenceNVGL::FenceNVGL(const FunctionsGL *functions)
+    : FenceNVImpl(),
+      mFunctions(functions)
+{
+    mFunctions->genFencesNV(1, &mFence);
+}
 
 FenceNVGL::~FenceNVGL()
-{}
-
-gl::Error FenceNVGL::set()
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    mFunctions->deleteFencesNV(1, &mFence);
+    mFence = 0;
 }
 
-gl::Error FenceNVGL::test(bool flushCommandBuffer, GLboolean *outFinished)
+gl::Error FenceNVGL::set(GLenum condition)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    ASSERT(condition == GL_ALL_COMPLETED_NV);
+    mFunctions->setFenceNV(mFence, condition);
+    return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error FenceNVGL::finishFence(GLboolean *outFinished)
+gl::Error FenceNVGL::test(GLboolean *outFinished)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    ASSERT(outFinished);
+    *outFinished = mFunctions->testFenceNV(mFence);
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error FenceNVGL::finish()
+{
+    mFunctions->finishFenceNV(mFence);
+    return gl::Error(GL_NO_ERROR);
 }
 
 }

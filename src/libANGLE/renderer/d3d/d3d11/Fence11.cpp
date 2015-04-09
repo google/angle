@@ -76,23 +76,22 @@ FenceNV11::~FenceNV11()
     SafeRelease(mQuery);
 }
 
-gl::Error FenceNV11::set()
+gl::Error FenceNV11::set(GLenum condition)
 {
     return FenceSetHelper(this);
 }
 
-gl::Error FenceNV11::test(bool flushCommandBuffer, GLboolean *outFinished)
+gl::Error FenceNV11::test(GLboolean *outFinished)
 {
-    return FenceTestHelper(this, flushCommandBuffer, outFinished);
+    return FenceTestHelper(this, true, outFinished);
 }
 
-gl::Error FenceNV11::finishFence(GLboolean *outFinished)
+gl::Error FenceNV11::finish()
 {
-    ASSERT(outFinished);
-
-    while (*outFinished != GL_TRUE)
+    GLboolean finished = GL_FALSE;
+    while (finished != GL_TRUE)
     {
-        gl::Error error = test(true, outFinished);
+        gl::Error error = FenceTestHelper(this, true, &finished);
         if (error.isError())
         {
             return error;

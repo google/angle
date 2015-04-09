@@ -20,13 +20,15 @@ class FenceNV9 : public FenceNVImpl
 {
   public:
     explicit FenceNV9(Renderer9 *renderer);
-    virtual ~FenceNV9();
+    ~FenceNV9() override;
 
-    gl::Error set();
-    gl::Error test(bool flushCommandBuffer, GLboolean *outFinished);
-    gl::Error finishFence(GLboolean *outFinished);
+    gl::Error set(GLenum condition) override;
+    gl::Error test(GLboolean *outFinished) override;
+    gl::Error finish() override;
 
   private:
+    gl::Error testHelper(bool flushCommandBuffer, GLboolean *outFinished);
+
     Renderer9 *mRenderer;
     IDirect3DQuery9 *mQuery;
 };

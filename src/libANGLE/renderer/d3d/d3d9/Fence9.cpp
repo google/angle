@@ -25,7 +25,7 @@ FenceNV9::~FenceNV9()
     SafeRelease(mQuery);
 }
 
-gl::Error FenceNV9::set()
+gl::Error FenceNV9::set(GLenum condition)
 {
     if (!mQuery)
     {
@@ -47,7 +47,29 @@ gl::Error FenceNV9::set()
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error FenceNV9::test(bool flushCommandBuffer, GLboolean *outFinished)
+gl::Error FenceNV9::test(GLboolean *outFinished)
+{
+    return testHelper(true, outFinished);
+}
+
+gl::Error FenceNV9::finish()
+{
+    GLboolean finished = GL_FALSE;
+    while (finished != GL_TRUE)
+    {
+        gl::Error error = testHelper(true, &finished);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        Sleep(0);
+    }
+
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error FenceNV9::testHelper(bool flushCommandBuffer, GLboolean *outFinished)
 {
     ASSERT(mQuery);
 
@@ -66,24 +88,6 @@ gl::Error FenceNV9::test(bool flushCommandBuffer, GLboolean *outFinished)
 
     ASSERT(result == S_OK || result == S_FALSE);
     *outFinished = ((result == S_OK) ? GL_TRUE : GL_FALSE);
-    return gl::Error(GL_NO_ERROR);
-}
-
-gl::Error FenceNV9::finishFence(GLboolean *outFinished)
-{
-    ASSERT(outFinished);
-
-    while (*outFinished != GL_TRUE)
-    {
-        gl::Error error = test(true, outFinished);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        Sleep(0);
-    }
-
     return gl::Error(GL_NO_ERROR);
 }
 

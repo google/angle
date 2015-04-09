@@ -144,7 +144,7 @@ QueryImpl *RendererGL::createQuery(GLenum type)
 
 FenceNVImpl *RendererGL::createFenceNV()
 {
-    return new FenceNVGL();
+    return new FenceNVGL(mFunctions);
 }
 
 FenceSyncImpl *RendererGL::createFenceSync()

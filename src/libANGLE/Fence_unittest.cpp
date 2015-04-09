@@ -25,9 +25,9 @@ class MockFenceNVImpl : public rx::FenceNVImpl
   public:
     virtual ~MockFenceNVImpl() { destroy(); }
 
-    MOCK_METHOD0(set, gl::Error());
-    MOCK_METHOD2(test, gl::Error(bool, GLboolean *));
-    MOCK_METHOD1(finishFence, gl::Error(GLboolean *));
+    MOCK_METHOD1(set, gl::Error(GLenum));
+    MOCK_METHOD1(test, gl::Error(GLboolean *));
+    MOCK_METHOD0(finish, gl::Error());
 
     MOCK_METHOD0(destroy, void());
 };
@@ -67,23 +67,23 @@ TEST_F(FenceNVTest, DestructionDeletesImpl)
 
 TEST_F(FenceNVTest, SetAndTestBehavior)
 {
-    EXPECT_CALL(*mImpl, set())
+    EXPECT_CALL(*mImpl, set(_))
         .WillOnce(Return(gl::Error(GL_NO_ERROR)))
         .RetiresOnSaturation();
-    EXPECT_EQ(GL_FALSE, mFence->isFence());
-    mFence->setFence(GL_ALL_COMPLETED_NV);
-    EXPECT_EQ(GL_TRUE, mFence->isFence());
+    EXPECT_FALSE(mFence->isSet());
+    mFence->set(GL_ALL_COMPLETED_NV);
+    EXPECT_TRUE(mFence->isSet());
     // Fake the behavior of testing the fence before and after it's passed.
-    EXPECT_CALL(*mImpl, test(_, _))
-        .WillOnce(DoAll(SetArgumentPointee<1>(GL_FALSE),
+    EXPECT_CALL(*mImpl, test(_))
+        .WillOnce(DoAll(SetArgumentPointee<0>(GL_FALSE),
                         Return(gl::Error(GL_NO_ERROR))))
-        .WillOnce(DoAll(SetArgumentPointee<1>(GL_TRUE),
+        .WillOnce(DoAll(SetArgumentPointee<0>(GL_TRUE),
                         Return(gl::Error(GL_NO_ERROR))))
         .RetiresOnSaturation();
     GLboolean out;
-    mFence->testFence(&out);
+    mFence->test(&out);
     EXPECT_EQ(GL_FALSE, out);
-    mFence->testFence(&out);
+    mFence->test(&out);
     EXPECT_EQ(GL_TRUE, out);
 }
 

@@ -168,13 +168,13 @@ void GL_APIENTRY FinishFenceNV(GLuint fence)
             return;
         }
 
-        if (fenceObject->isFence() != GL_TRUE)
+        if (fenceObject->isSet() != GL_TRUE)
         {
             context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
-        fenceObject->finishFence();
+        fenceObject->finish();
     }
 }
 
@@ -233,7 +233,7 @@ void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
             return;
         }
 
-        if (fenceObject->isFence() != GL_TRUE)
+        if (fenceObject->isSet() != GL_TRUE)
         {
             context->recordError(Error(GL_INVALID_OPERATION));
             return;
@@ -249,7 +249,7 @@ void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
                 GLboolean status = GL_TRUE;
                 if (fenceObject->getStatus() != GL_TRUE)
                 {
-                    Error error = fenceObject->testFence(&status);
+                    Error error = fenceObject->test(&status);
                     if (error.isError())
                     {
                         context->recordError(error);
@@ -448,7 +448,9 @@ GLboolean GL_APIENTRY IsFenceNV(GLuint fence)
             return GL_FALSE;
         }
 
-        return fenceObject->isFence();
+        // GL_NV_fence spec:
+        // A name returned by GenFencesNV, but not yet set via SetFenceNV, is not the name of an existing fence.
+        return fenceObject->isSet();
     }
 
     return GL_FALSE;
@@ -548,7 +550,7 @@ void GL_APIENTRY SetFenceNV(GLuint fence, GLenum condition)
             return;
         }
 
-        Error error = fenceObject->setFence(condition);
+        Error error = fenceObject->set(condition);
         if (error.isError())
         {
             context->recordError(error);
@@ -572,14 +574,14 @@ GLboolean GL_APIENTRY TestFenceNV(GLuint fence)
             return GL_TRUE;
         }
 
-        if (fenceObject->isFence() != GL_TRUE)
+        if (fenceObject->isSet() != GL_TRUE)
         {
             context->recordError(Error(GL_INVALID_OPERATION));
             return GL_TRUE;
         }
 
         GLboolean result;
-        Error error = fenceObject->testFence(&result);
+        Error error = fenceObject->test(&result);
         if (error.isError())
         {
             context->recordError(error);

@@ -125,6 +125,15 @@ typedef void (INTERNAL_GL_APIENTRY *PFNGLDRAWRANGEELEMENTSPROC)(GLenum, GLuint, 
 typedef void (INTERNAL_GL_APIENTRY *PFNGLTEXIMAGE3DPROC)(GLenum, GLint, GLint, GLsizei, GLsizei, GLsizei, GLint, GLenum, GLenum, const GLvoid *);
 typedef void (INTERNAL_GL_APIENTRY *PFNGLTEXSUBIMAGE3DPROC)(GLenum, GLint, GLint, GLint, GLint, GLsizei, GLsizei, GLsizei, GLenum, GLenum, const GLvoid *);
 
+// 1.2 Extensions
+typedef void (INTERNAL_GL_APIENTRY *PFNGLDELETEFENCESNVPROC)(GLsizei, const GLuint *);
+typedef void (INTERNAL_GL_APIENTRY *PFNGLGENFENCESNVPROC)(GLsizei, GLuint *);
+typedef GLboolean (INTERNAL_GL_APIENTRY *PFNGLISFENCENVPROC)(GLuint);
+typedef GLboolean (INTERNAL_GL_APIENTRY *PFNGLTESTFENCENVPROC)(GLuint);
+typedef void (INTERNAL_GL_APIENTRY *PFNGLGETFENCEIVNVPROC)(GLuint, GLenum, GLint *);
+typedef void (INTERNAL_GL_APIENTRY *PFNGLFINISHFENCENVPROC)(GLuint);
+typedef void (INTERNAL_GL_APIENTRY *PFNGLSETFENCENVPROC)(GLuint, GLenum);
+
 // 1.3
 typedef void (INTERNAL_GL_APIENTRY *PFNGLACTIVETEXTUREPROC)(GLenum);
 typedef void (INTERNAL_GL_APIENTRY *PFNGLCOMPRESSEDTEXIMAGE1DPROC)(GLenum, GLint, GLenum, GLsizei, GLint, GLsizei, const GLvoid *);
