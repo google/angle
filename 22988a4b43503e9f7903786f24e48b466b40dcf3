@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83c43ed3_f5ba97d0",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-09T17:25:08Z",
+      "side": 1,
+      "message": "Have a slight preference for FramebufferAttachmentObject because we don\u0027t often use acronyms in our class names but it\u0027s up to you.",
+      "range": {
+        "startLine": 25,
+        "startChar": 6,
+        "endLine": 25,
+        "endChar": 25
+      },
+      "revId": "22988a4b43503e9f7903786f24e48b466b40dcf3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
