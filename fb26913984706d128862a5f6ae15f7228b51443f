@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83c43ed3_d5567bb4",
+        "filename": "src/tests/end2end_tests/QueryDisplayAttribTest.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T17:44:08Z",
+      "side": 1,
+      "message": "nit: can omit virtual if you use override",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 11
+      },
+      "revId": "fb26913984706d128862a5f6ae15f7228b51443f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83c43ed3_b55bffda",
+        "filename": "src/tests/end2end_tests/QueryDisplayAttribTest.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T17:44:08Z",
+      "side": 1,
+      "message": "nit: same",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 11
+      },
+      "revId": "fb26913984706d128862a5f6ae15f7228b51443f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
