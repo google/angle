@@ -1411,11 +1411,4 @@ void GL_APIENTRY glFlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLs
     return gl::FlushMappedBufferRangeEXT(target, offset, length);
 }
 
-void GL_APIENTRY SetTraceFunctionPointers(GetCategoryEnabledFlagFunc getCategoryEnabledFlag,
-                                          AddTraceEventFunc addTraceEvent)
-{
-    gl::g_getCategoryEnabledFlag = getCategoryEnabledFlag;
-    gl::g_addTraceEvent = addTraceEvent;
-}
-
 }

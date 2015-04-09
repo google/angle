@@ -5,47 +5,32 @@
 #include "common/event_tracer.h"
 
 #include "common/debug.h"
-#include "platform/Platform.h"
 
-namespace gl
+namespace angle
 {
 
-GetCategoryEnabledFlagFunc g_getCategoryEnabledFlag;
-AddTraceEventFunc g_addTraceEvent;
-
-}  // namespace gl
-
-namespace gl
-{
-
-const unsigned char *TraceGetTraceCategoryEnabledFlag(const char *name)
+const unsigned char *GetTraceCategoryEnabledFlag(const char *name)
 {
     angle::Platform *platform = ANGLEPlatformCurrent();
     ASSERT(platform);
 
-    // TODO(jmadill): only use platform once it's working
     const unsigned char *categoryEnabledFlag = platform->getTraceCategoryEnabledFlag(name);
     if (categoryEnabledFlag != nullptr)
     {
         return categoryEnabledFlag;
     }
 
-    if (g_getCategoryEnabledFlag)
-    {
-        return g_getCategoryEnabledFlag(name);
-    }
     static unsigned char disabled = 0;
     return &disabled;
 }
 
-void TraceAddTraceEvent(char phase, const unsigned char* categoryGroupEnabled, const char* name, unsigned long long id,
-                        int numArgs, const char** argNames, const unsigned char* argTypes,
-                        const unsigned long long* argValues, unsigned char flags)
+Platform::TraceEventHandle AddTraceEvent(char phase, const unsigned char* categoryGroupEnabled, const char* name, unsigned long long id,
+                                         int numArgs, const char** argNames, const unsigned char* argTypes,
+                                         const unsigned long long* argValues, unsigned char flags)
 {
     angle::Platform *platform = ANGLEPlatformCurrent();
     ASSERT(platform);
 
-    // TODO(jmadill): only use platform once it's working
     double timestamp = platform->monotonicallyIncreasingTime();
 
     if (timestamp != 0)
@@ -62,12 +47,10 @@ void TraceAddTraceEvent(char phase, const unsigned char* categoryGroupEnabled, c
                                     argValues,
                                     flags);
         ASSERT(handle != 0);
-        UNUSED_ASSERTION_VARIABLE(handle);
+        return handle;
     }
-    else if (g_addTraceEvent)
-    {
-        g_addTraceEvent(phase, categoryGroupEnabled, name, id, numArgs, argNames, argTypes, argValues, flags);
-    }
+
+    return static_cast<Platform::TraceEventHandle>(0);
 }
 
-}  // namespace gl
+}  // namespace angle
