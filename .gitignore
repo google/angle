@@ -36,3 +36,6 @@ Makefile
 .gclient
 angle_internal
 TestResults.qpa
+*.psess
+*.vsp
+*.nvuser
