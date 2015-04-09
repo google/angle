@@ -277,3 +277,39 @@ TEST_F(MalformedShaderTest, ConstArrayNotInitialized)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Block layout qualifiers can't be used on non-block uniforms (ESSL 3.00 section 4.3.8.3)
+TEST_F(MalformedShaderTest, BlockLayoutQualifierOnRegularUniform)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "layout(packed) uniform mat2 x;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   my_FragColor = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Block layout qualifiers can't be used on non-block uniforms (ESSL 3.00 section 4.3.8.3)
+TEST_F(MalformedShaderTest, BlockLayoutQualifierOnUniformWithEmptyDecl)
+{
+    // Yes, the comma in the declaration below is not a typo.
+    // Empty declarations are allowed in GLSL.
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "layout(packed) uniform mat2, x;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   my_FragColor = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
