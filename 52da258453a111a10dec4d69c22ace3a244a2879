@@ -46,6 +46,30 @@
       "revId": "52da258453a111a10dec4d69c22ace3a244a2879",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63a66a29_4b8045f8",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-09T07:09:34Z",
+      "side": 1,
+      "message": "I thought that the goal was to have WebGL 2 running on OpenGL 4.1 and up. Has this target changed? Supporting ESSL3 on 3.30 might be doable, but I\u0027m not sure about the core features of the API.",
+      "parentUuid": "23dab2a9_891cf923",
+      "range": {
+        "startLine": 39,
+        "startChar": 37,
+        "endLine": 39,
+        "endChar": 41
+      },
+      "revId": "52da258453a111a10dec4d69c22ace3a244a2879",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
