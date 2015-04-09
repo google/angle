@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "237f124e_a365708e",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T17:49:51Z",
+      "side": 1,
+      "message": "is this a trap for NaN values? can you add a comment here that we\u0027re choosing not to support Nan? (assuming my reading is correct)",
+      "range": {
+        "startLine": 1307,
+        "startChar": 16,
+        "endLine": 1308,
+        "endChar": 53
+      },
+      "revId": "122a9375a6ec9eb286b3fa85a6fe46473706d700",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03868e96_2c17987f",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1320,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T17:49:51Z",
+      "side": 1,
+      "message": "ditto? and for the others.",
+      "range": {
+        "startLine": 1319,
+        "startChar": 15,
+        "endLine": 1320,
+        "endChar": 53
+      },
+      "revId": "122a9375a6ec9eb286b3fa85a6fe46473706d700",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
