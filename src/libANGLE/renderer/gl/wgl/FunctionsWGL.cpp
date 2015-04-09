@@ -68,7 +68,15 @@ FunctionsWGL::FunctionsWGL()
       getPixelFormatAttribivARB(nullptr),
       getExtensionStringEXT(nullptr),
       getExtensionStringARB(nullptr),
-      swapIntervalEXT(nullptr)
+      swapIntervalEXT(nullptr),
+      createPbufferARB(nullptr),
+      getPbufferDCARB(nullptr),
+      releasePbufferDCARB(nullptr),
+      destroyPbufferARB(nullptr),
+      queryPbufferARB(nullptr),
+      bindTexImageARB(nullptr),
+      releaseTexImageARB(nullptr),
+      setPbufferAttribARB(nullptr)
 {
 }
 
@@ -116,6 +124,18 @@ void FunctionsWGL::intialize(HMODULE glModule, HDC context)
     GetWGLExtensionProcAddress(glModule, getProcAddress, extensions, "WGL_ARB_create_context", "wglCreateContextAttribsARB", &createContextAttribsARB);
     GetWGLExtensionProcAddress(glModule, getProcAddress, extensions, "WGL_ARB_pixel_format", "wglGetPixelFormatAttribivARB", &getPixelFormatAttribivARB);
     GetWGLExtensionProcAddress(glModule, getProcAddress, extensions, "WGL_EXT_swap_control", "wglSwapIntervalEXT", &swapIntervalEXT);
+
+    // WGL_ARB_pbuffer
+    GetWGLExtensionProcAddress(glModule, getProcAddress, extensions, "WGL_ARB_pbuffer", "wglCreatePbufferARB", &createPbufferARB);
+    GetWGLExtensionProcAddress(glModule, getProcAddress, extensions, "WGL_ARB_pbuffer", "wglGetPbufferDCARB", &getPbufferDCARB);
+    GetWGLExtensionProcAddress(glModule, getProcAddress, extensions, "WGL_ARB_pbuffer", "wglReleasePbufferDCARB", &releasePbufferDCARB);
+    GetWGLExtensionProcAddress(glModule, getProcAddress, extensions, "WGL_ARB_pbuffer", "wglDestroyPbufferARB", &destroyPbufferARB);
+    GetWGLExtensionProcAddress(glModule, getProcAddress, extensions, "WGL_ARB_pbuffer", "wglQueryPbufferARB", &queryPbufferARB);
+
+    // WGL_ARB_render_texture
+    GetWGLExtensionProcAddress(glModule, getProcAddress, extensions, "WGL_ARB_render_texture", "wglBindTexImageARB", &bindTexImageARB);
+    GetWGLExtensionProcAddress(glModule, getProcAddress, extensions, "WGL_ARB_render_texture", "wglReleaseTexImageARB", &releaseTexImageARB);
+    GetWGLExtensionProcAddress(glModule, getProcAddress, extensions, "WGL_ARB_render_texture", "wglSetPbufferAttribARB", &setPbufferAttribARB);
 }
 
 }

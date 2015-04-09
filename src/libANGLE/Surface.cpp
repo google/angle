@@ -60,7 +60,7 @@ Surface::~Surface()
     {
         if (mImplementation)
         {
-            mImplementation->releaseTexImage(mTexture->id());
+            mImplementation->releaseTexImage(EGL_BACK_BUFFER);
         }
         mTexture->releaseTexImage();
         mTexture = NULL;
