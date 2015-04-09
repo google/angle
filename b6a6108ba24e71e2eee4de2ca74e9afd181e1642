@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83c43ed3_b5be5ff5",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1363,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T17:29:10Z",
+      "side": 1,
+      "message": "nit: case labels should be indented 2 spaces, body 4",
+      "range": {
+        "startLine": 1363,
+        "startChar": 16,
+        "endLine": 1363,
+        "endChar": 20
+      },
+      "revId": "b6a6108ba24e71e2eee4de2ca74e9afd181e1642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
