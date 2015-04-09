@@ -30,7 +30,6 @@ WHICH GENERATES THE GLSL ES LEXER (glslang_lex.cpp).
 #elif defined(_MSC_VER)
 #pragma warning(disable: 4065)
 #pragma warning(disable: 4189)
-#pragma warning(disable: 4244)
 #pragma warning(disable: 4505)
 #pragma warning(disable: 4701)
 #pragma warning(disable: 4702)

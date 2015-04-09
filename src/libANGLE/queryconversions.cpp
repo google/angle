@@ -40,7 +40,7 @@ QueryT CastStateValueToInt(GLenum pname, NativeT value)
         }
         else
         {
-            return gl::iround<QueryT>(static_cast<GLfloat>(value));
+            return gl::iround<QueryT>(value);
         }
     }
 
@@ -66,7 +66,7 @@ QueryT CastStateValue(GLenum pname, NativeT value)
       case GL_INT:              return CastStateValueToInt<QueryT, NativeT>(pname, value);
       case GL_INT_64_ANGLEX:    return CastStateValueToInt<QueryT, NativeT>(pname, value);
       case GL_FLOAT:            return static_cast<QueryT>(value);
-      case GL_BOOL:             return static_cast<QueryT>(value == static_cast<NativeT>(0) ? GL_FALSE : GL_TRUE);
+      case GL_BOOL:             return (value == static_cast<NativeT>(0) ? GL_FALSE : GL_TRUE);
       default: UNREACHABLE();   return 0;
     }
 }

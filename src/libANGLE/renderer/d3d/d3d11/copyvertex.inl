@@ -245,17 +245,17 @@ static inline void CopyPackedRGB(uint32_t data, uint8_t *output)
 
             if (data & rgbSignMask)
             {
-                *intOutput = static_cast<GLshort>(data | negativeMask);
+                *intOutput = data | negativeMask;
             }
             else
             {
-                *intOutput = static_cast<GLshort>(data);
+                *intOutput = data;
             }
         }
         else
         {
             GLushort *uintOutput = reinterpret_cast<GLushort*>(output);
-            *uintOutput = static_cast<GLushort>(data);
+            *uintOutput = data;
         }
     }
 }

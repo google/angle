@@ -358,7 +358,7 @@ static inline void SyncSamplerStateMember(const FunctionsGL *functions, const gl
     if (curState.*samplerMember != newState.*samplerMember)
     {
         curState.*samplerMember = newState.*samplerMember;
-        functions->texParameterf(textureType, name, static_cast<GLfloat>(curState.*samplerMember));
+        functions->texParameterf(textureType, name, curState.*samplerMember);
     }
 }
 

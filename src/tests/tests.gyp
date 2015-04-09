@@ -178,10 +178,6 @@
                             ],
                         },
                     },
-                    'msvs_disabled_warnings':
-                    [
-                        4244, # Conversion from 'type1' to 'type2', possible loss of data
-                    ],
                 },
             ],
             'conditions':

@@ -149,11 +149,11 @@ void CalculateConstantBufferParams(GLintptr offset, GLsizeiptr size, UINT *outFi
     ASSERT(offset % 256 == 0);
 
     // firstConstant and numConstants are expressed in constants of 16-bytes. Furthermore they must be a multiple of 16 constants.
-    *outFirstConstant = static_cast<UINT>(offset / 16);
+    *outFirstConstant = offset / 16;
 
     // The GL size is not required to be aligned to a 256 bytes boundary.
     // Round the size up to a 256 bytes boundary then express the results in constants of 16-bytes.
-    *outNumConstants = static_cast<UINT>(rx::roundUp(size, static_cast<GLsizeiptr>(256)) / 16);
+    *outNumConstants = rx::roundUp(size, static_cast<GLsizeiptr>(256)) / 16;
 
     // Since the size is rounded up, firstConstant + numConstants may be bigger than the actual size of the buffer.
     // This behaviour is explictly allowed according to the documentation on ID3D11DeviceContext1::PSSetConstantBuffers1
@@ -2761,8 +2761,8 @@ gl::Error Renderer11::loadExecutable(const void *function, size_t length, Shader
                         entry.SemanticName = varying.semanticName.c_str();
                         entry.SemanticIndex = varying.semanticIndex + j;
                         entry.StartComponent = 0;
-                        entry.ComponentCount = static_cast<BYTE>(gl::VariableColumnCount(transposedType));
-                        entry.OutputSlot = static_cast<BYTE>((separatedOutputBuffers ? i : 0));
+                        entry.ComponentCount = gl::VariableColumnCount(transposedType);
+                        entry.OutputSlot = (separatedOutputBuffers ? i : 0);
                         soDeclaration.push_back(entry);
                     }
                 }

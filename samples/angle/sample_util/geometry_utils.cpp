@@ -14,7 +14,7 @@ void CreateSphereGeometry(size_t sliceCount, float radius, SphereGeometry *resul
     size_t parellelCount = sliceCount / 2;
     size_t vertexCount = (parellelCount + 1) * (sliceCount + 1);
     size_t indexCount = parellelCount * sliceCount * 6;
-    float angleStep = static_cast<float>(2.0f * M_PI) / sliceCount;
+    float angleStep = (2.0f * M_PI) / sliceCount;
 
     result->positions.resize(vertexCount);
     result->normals.resize(vertexCount);
@@ -38,13 +38,13 @@ void CreateSphereGeometry(size_t sliceCount, float radius, SphereGeometry *resul
     {
         for (size_t j = 0; j < sliceCount; j++)
         {
-            result->indices.push_back(static_cast<unsigned short>( i      * (sliceCount + 1) +  j     ));
-            result->indices.push_back(static_cast<unsigned short>((i + 1) * (sliceCount + 1) +  j     ));
-            result->indices.push_back(static_cast<unsigned short>((i + 1) * (sliceCount + 1) + (j + 1)));
+            result->indices.push_back( i      * (sliceCount + 1) +  j     );
+            result->indices.push_back((i + 1) * (sliceCount + 1) +  j     );
+            result->indices.push_back((i + 1) * (sliceCount + 1) + (j + 1));
 
-            result->indices.push_back(static_cast<unsigned short>( i      * (sliceCount + 1) +  j     ));
-            result->indices.push_back(static_cast<unsigned short>((i + 1) * (sliceCount + 1) + (j + 1)));
-            result->indices.push_back(static_cast<unsigned short>( i      * (sliceCount + 1) + (j + 1)));
+            result->indices.push_back( i      * (sliceCount + 1) +  j     );
+            result->indices.push_back((i + 1) * (sliceCount + 1) + (j + 1));
+            result->indices.push_back( i      * (sliceCount + 1) + (j + 1));
         }
     }
 }

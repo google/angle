@@ -150,12 +150,12 @@ gl::Error VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Tra
             gl::VertexFormat vertexFormat(*attributes[i].attribute, GL_FLOAT);
             const d3d9::VertexFormat &d3d9VertexInfo = d3d9::GetVertexFormatInfo(caps.DeclTypes, vertexFormat);
 
-            element->Stream = static_cast<WORD>(stream);
+            element->Stream = stream;
             element->Offset = 0;
-            element->Type = static_cast<BYTE>(d3d9VertexInfo.nativeFormat);
+            element->Type = d3d9VertexInfo.nativeFormat;
             element->Method = D3DDECLMETHOD_DEFAULT;
             element->Usage = D3DDECLUSAGE_TEXCOORD;
-            element->UsageIndex = static_cast<BYTE>(program->getSemanticIndex(i));
+            element->UsageIndex = program->getSemanticIndex(i);
             element++;
         }
     }

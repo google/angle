@@ -337,7 +337,7 @@ gl::Error TextureD3D::fastUnpackPixels(const gl::PixelUnpackState &unpack, const
 
     uintptr_t offset = reinterpret_cast<uintptr_t>(pixels);
 
-    gl::Error error = mRenderer->fastCopyBufferToTexture(unpack, static_cast<unsigned int>(offset), destRenderTarget, sizedInternalFormat, type, destArea);
+    gl::Error error = mRenderer->fastCopyBufferToTexture(unpack, offset, destRenderTarget, sizedInternalFormat, type, destArea);
     if (error.isError())
     {
         return error;

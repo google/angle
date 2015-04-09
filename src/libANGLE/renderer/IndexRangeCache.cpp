@@ -100,7 +100,7 @@ IndexRangeCache::IndexRange::IndexRange()
 }
 
 IndexRangeCache::IndexRange::IndexRange(GLenum typ, intptr_t off, GLsizei c)
-    : type(typ), offset(static_cast<unsigned int>(off)), count(c)
+    : type(typ), offset(off), count(c)
 {
 }
 

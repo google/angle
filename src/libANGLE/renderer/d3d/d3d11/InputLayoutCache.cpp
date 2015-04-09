@@ -413,7 +413,7 @@ std::size_t InputLayoutCache::hashInputLayout(const InputLayoutKey &inputLayout)
     static const unsigned int seed = 0xDEADBEEF;
 
     std::size_t hash = 0;
-    MurmurHash3_x86_32(inputLayout.begin(), static_cast<int>(inputLayout.end() - inputLayout.begin()), seed, &hash);
+    MurmurHash3_x86_32(inputLayout.begin(), inputLayout.end() - inputLayout.begin(), seed, &hash);
     return hash;
 }
 

@@ -264,7 +264,7 @@ gl::Error VertexArrayGL::syncIndexData(GLsizei count, GLenum type, const GLvoid 
             // Find the index range in the buffer
             const IndexRangeCache *rangeCache = mElementArrayBuffer.get()->getIndexRangeCache();
 
-            if (!rangeCache->findRange(type, static_cast<unsigned int>(elementArrayBufferOffset), count, outIndexRange))
+            if (!rangeCache->findRange(type, elementArrayBufferOffset, count, outIndexRange))
             {
                 // Need to compute the index range.
                 mStateManager->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementArrayBufferID);
@@ -273,7 +273,7 @@ gl::Error VertexArrayGL::syncIndexData(GLsizei count, GLenum type, const GLvoid 
                 *outIndexRange = IndexRangeCache::ComputeRange(type, elementArrayBufferPointer + elementArrayBufferOffset, count);
 
                 // TODO: Store the range cache at the impl level since the gl::Buffer object is supposed to remain constant
-                const_cast<IndexRangeCache*>(rangeCache)->addRange(type, static_cast<unsigned int>(elementArrayBufferOffset), count, *outIndexRange);
+                const_cast<IndexRangeCache*>(rangeCache)->addRange(type, elementArrayBufferOffset, count, *outIndexRange);
 
                 if (!mFunctions->unmapBuffer(GL_ELEMENT_ARRAY_BUFFER))
                 {

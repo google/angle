@@ -479,8 +479,8 @@ gl::Error Blit11::swizzleTexture(ID3D11ShaderResourceView *source, ID3D11RenderT
     D3D11_VIEWPORT viewport;
     viewport.TopLeftX = 0;
     viewport.TopLeftY = 0;
-    viewport.Width = static_cast<FLOAT>(size.width);
-    viewport.Height = static_cast<FLOAT>(size.height);
+    viewport.Width = size.width;
+    viewport.Height = size.height;
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     deviceContext->RSSetViewports(1, &viewport);
@@ -596,8 +596,8 @@ gl::Error Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &s
     D3D11_VIEWPORT viewport;
     viewport.TopLeftX = 0;
     viewport.TopLeftY = 0;
-    viewport.Width = static_cast<FLOAT>(destSize.width);
-    viewport.Height = static_cast<FLOAT>(destSize.height);
+    viewport.Width = destSize.width;
+    viewport.Height = destSize.height;
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     deviceContext->RSSetViewports(1, &viewport);
@@ -710,8 +710,8 @@ gl::Error Blit11::copyDepth(ID3D11ShaderResourceView *source, const gl::Box &sou
     D3D11_VIEWPORT viewport;
     viewport.TopLeftX = 0;
     viewport.TopLeftY = 0;
-    viewport.Width = static_cast<FLOAT>(destSize.width);
-    viewport.Height = static_cast<FLOAT>(destSize.height);
+    viewport.Width = destSize.width;
+    viewport.Height = destSize.height;
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     deviceContext->RSSetViewports(1, &viewport);
@@ -826,7 +826,7 @@ gl::Error Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSu
         float yPerc = static_cast<float>(y - destArea.y) / (destArea.height - 1);
 
         // Interpolate using the original source rectangle to determine which row to sample from while clamping to the edges
-        unsigned int readRow = static_cast<unsigned int>(gl::clamp(sourceArea.y + floor(yPerc * (sourceArea.height - 1) + 0.5f), 0, sourceSize.height - 1));
+        unsigned int readRow = gl::clamp(sourceArea.y + floor(yPerc * (sourceArea.height - 1) + 0.5f), 0, sourceSize.height - 1);
         unsigned int writeRow = y;
 
         if (wholeRowCopy)
@@ -848,7 +848,7 @@ gl::Error Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSu
                 float xPerc = static_cast<float>(x - destArea.x) / (destArea.width - 1);
 
                 // Interpolate the original source rectangle to determine which column to sample from while clamping to the edges
-                unsigned int readColumn = static_cast<unsigned int>(gl::clamp(sourceArea.x + floor(xPerc * (sourceArea.width - 1) + 0.5f), 0, sourceSize.width - 1));
+                unsigned int readColumn = gl::clamp(sourceArea.x + floor(xPerc * (sourceArea.width - 1) + 0.5f), 0, sourceSize.width - 1);
                 unsigned int writeColumn = x;
 
                 void *sourcePixel = reinterpret_cast<char*>(sourceMapping.pData) +

@@ -221,8 +221,8 @@ class InstancingTest : public ANGLETest
         {
             unsigned int baseOffset = quadIndex * 3;
 
-            int quadx = static_cast<int>(((mInstances[baseOffset + 0]) * 0.5f + 0.5f) * getWindowWidth());
-            int quady = static_cast<int>(((mInstances[baseOffset + 1]) * 0.5f + 0.5f) * getWindowHeight());
+            float quadx = ((mInstances[baseOffset + 0]) * 0.5f + 0.5f) * getWindowWidth();
+            float quady = ((mInstances[baseOffset + 1]) * 0.5f + 0.5f) * getWindowHeight();
 
             EXPECT_PIXEL_EQ(quadx, quady, 255, 0, 0, 255);
         }

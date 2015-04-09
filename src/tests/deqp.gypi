@@ -604,7 +604,6 @@
                                     'AdditionalOptions':
                                     [
                                         '/wd4131', # old-style declarator
-                                        '/wd4244', # Conversion from 'type1' to 'type2', possible loss of data
                                         '/wd4324', # structure was padded
                                         '/wd4701', # potentially uninit used
                                         '/wd4996', # deprecated
@@ -663,7 +662,6 @@
                                         '/wd4028', # parameter differs from decl
                                         '/wd4101', # unreferenced local
                                         '/wd4189', # unreferenced but initted
-                                        '/wd4244', # Conversion from 'type1' to 'type2', possible loss of data
                                     ],
                                 },
                             },
