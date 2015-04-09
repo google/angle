@@ -1,0 +1,372 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03868e96_fb35680c",
+        "filename": "src/libANGLE/Device.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "include order, see:\n\nhttps://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Names_and_Order_of_Includes",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 28
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83c43ed3_1f8f942d",
+        "filename": "src/libANGLE/Device.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "nit: on a newline",
+      "range": {
+        "startLine": 33,
+        "startChar": 24,
+        "endLine": 33,
+        "endChar": 46
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03868e96_7bf958c2",
+        "filename": "src/libANGLE/Device.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "nit: no indent",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 4
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83c43ed3_5fa0ec9e",
+        "filename": "src/libANGLE/Device.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "nit: pointer align",
+      "range": {
+        "startLine": 27,
+        "startChar": 18,
+        "endLine": 27,
+        "endChar": 19
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83c43ed3_7fa7a8b4",
+        "filename": "src/libANGLE/Device.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "nit: pointer align",
+      "range": {
+        "startLine": 31,
+        "startChar": 11,
+        "endLine": 31,
+        "endChar": 12
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83c43ed3_9f838405",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "can directly use mDevice",
+      "range": {
+        "startLine": 676,
+        "startChar": 39,
+        "endLine": 676,
+        "endChar": 48
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "237f124e_8fadf316",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 647,
+        "startChar": 39,
+        "endLine": 647,
+        "endChar": 48
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03868e96_1b412c69",
+        "filename": "src/tests/end2end_tests/QueryDisplayAttribTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "s/NULL/nullptr",
+      "range": {
+        "startLine": 16,
+        "startChar": 33,
+        "endLine": 16,
+        "endChar": 37
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "237f124e_4fa4cb2b",
+        "filename": "src/tests/end2end_tests/QueryDisplayAttribTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "nit: override",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 11
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03868e96_1b684cef",
+        "filename": "src/tests/end2end_tests/QueryDisplayAttribTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "nit: use static_cast",
+      "range": {
+        "startLine": 24,
+        "startChar": 31,
+        "endLine": 24,
+        "endChar": 40
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03868e96_7b6f98f5",
+        "filename": "src/tests/end2end_tests/QueryDisplayAttribTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "here too",
+      "range": {
+        "startLine": 49,
+        "startChar": 26,
+        "endLine": 49,
+        "endChar": 33
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03868e96_9b7c5cb3",
+        "filename": "src/tests/end2end_tests/QueryDisplayAttribTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "nit: override",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 11
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83c43ed3_1ffcb484",
+        "filename": "src/tests/end2end_tests/QueryDisplayAttribTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "add a comment description for the test",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 36
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83c43ed3_ff00b805",
+        "filename": "src/tests/end2end_tests/QueryDisplayAttribTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 10
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83c43ed3_3f037010",
+        "filename": "util/com_utils.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "inline",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 7
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03868e96_fb4ba887",
+        "filename": "util/com_utils.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-09T14:48:29Z",
+      "side": 1,
+      "message": "nullptr",
+      "range": {
+        "startLine": 24,
+        "startChar": 15,
+        "endLine": 24,
+        "endChar": 19
+      },
+      "revId": "dc36ede08858a0a0b1797049646fad93026167d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
