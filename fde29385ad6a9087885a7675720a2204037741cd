@@ -16,6 +16,24 @@
       "revId": "fde29385ad6a9087885a7675720a2204037741cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e356daec_5109e7db",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 851,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-10T12:25:09Z",
+      "side": 1,
+      "message": "Hm, I never thought of that. Not sure if that\u0027s something that can happen.",
+      "parentUuid": "6394aac1_db0b53a7",
+      "revId": "fde29385ad6a9087885a7675720a2204037741cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
