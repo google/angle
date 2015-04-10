@@ -55,20 +55,37 @@ class PbufferTest : public ANGLETest
 
         mTextureUniformLocation = glGetUniformLocation(mTextureProgram, "tex");
 
+        EGLWindow *window = getEGLWindow();
+
+        EGLint surfaceType = 0;
+        eglGetConfigAttrib(window->getDisplay(), window->getConfig(), EGL_SURFACE_TYPE, &surfaceType);
+        mSupportsPbuffers = (surfaceType & EGL_PBUFFER_BIT) != 0;
+
+        EGLint bindToTextureRGBA = 0;
+        eglGetConfigAttrib(window->getDisplay(), window->getConfig(), EGL_BIND_TO_TEXTURE_RGBA, &bindToTextureRGBA);
+        mSupportsBindTexImage = (bindToTextureRGBA == EGL_TRUE);
+
         const EGLint pBufferAttributes[] =
         {
             EGL_WIDTH, mPbufferSize,
             EGL_HEIGHT, mPbufferSize,
-            EGL_TEXTURE_FORMAT, EGL_TEXTURE_RGBA,
-            EGL_TEXTURE_TARGET, EGL_TEXTURE_2D,
+            EGL_TEXTURE_FORMAT, mSupportsBindTexImage ? EGL_TEXTURE_RGBA : EGL_NO_TEXTURE,
+            EGL_TEXTURE_TARGET, mSupportsBindTexImage ? EGL_TEXTURE_2D : EGL_NO_TEXTURE,
             EGL_NONE, EGL_NONE,
         };
 
-        EGLWindow *window = getEGLWindow();
         mPbuffer = eglCreatePbufferSurface(window->getDisplay(), window->getConfig(), pBufferAttributes);
-        ASSERT_NE(mPbuffer, EGL_NO_SURFACE);
+        if (mSupportsPbuffers)
+        {
+            ASSERT_NE(mPbuffer, EGL_NO_SURFACE);
+            ASSERT_EGL_SUCCESS();
+        }
+        else
+        {
+            ASSERT_EQ(mPbuffer, EGL_NO_SURFACE);
+            ASSERT_EGL_ERROR(EGL_BAD_MATCH);
+        }
 
-        ASSERT_EGL_SUCCESS();
         ASSERT_GL_NO_ERROR();
     }
 
@@ -87,11 +104,19 @@ class PbufferTest : public ANGLETest
 
     const size_t mPbufferSize = 32;
     EGLSurface mPbuffer;
+    bool mSupportsPbuffers;
+    bool mSupportsBindTexImage;
 };
 
 // Test clearing a Pbuffer and checking the color is correct
 TYPED_TEST(PbufferTest, Clearing)
 {
+    if (!mSupportsPbuffers)
+    {
+        std::cout << "Test skipped because Pbuffers are not supported." << std::endl;
+        return;
+    }
+
     EGLWindow *window = getEGLWindow();
 
     // Clear the window surface to blue and verify
@@ -122,6 +147,18 @@ TYPED_TEST(PbufferTest, Clearing)
 // Bind the Pbuffer to a texture and verify it renders correctly
 TYPED_TEST(PbufferTest, BindTexImage)
 {
+    if (!mSupportsPbuffers)
+    {
+        std::cout << "Test skipped because Pbuffers are not supported." << std::endl;
+        return;
+    }
+
+    if (!mSupportsBindTexImage)
+    {
+        std::cout << "Test skipped because Pbuffer does not support binding to RGBA textures." << std::endl;
+        return;
+    }
+
     EGLWindow *window = getEGLWindow();
 
     // Apply the Pbuffer and clear it to purple
@@ -173,6 +210,18 @@ TYPED_TEST(PbufferTest, BindTexImage)
 // size information is correctly updated.
 TYPED_TEST(PbufferTest, TextureSizeReset)
 {
+    if (!mSupportsPbuffers)
+    {
+        std::cout << "Test skipped because Pbuffers are not supported." << std::endl;
+        return;
+    }
+
+    if (!mSupportsBindTexImage)
+    {
+        std::cout << "Test skipped because Pbuffer does not support binding to RGBA textures." << std::endl;
+        return;
+    }
+
     GLuint texture = 0;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
