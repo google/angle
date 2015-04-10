@@ -1,0 +1,176 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e356daec_023b8f7f",
+        "filename": "src/libANGLE/Device.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-10T18:07:22Z",
+      "side": 1,
+      "message": "This one doesn\u0027t need to be templated.",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 21
+      },
+      "revId": "2729669bd8394108441e8a066a8584ed1da73260",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e356daec_7d7cfab1",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-10T18:07:22Z",
+      "side": 1,
+      "message": "I\u0027d prefer that this function returned the impl instead of a full egl::Device (and not in a EGLAttrib pointer).  Something like:\n\n   virtual egl::Error getDevice(DeviceImpl **device) \u003d 0;\n\nAnd Display will hold the egl::Device object that is created at Display::initialize by doing something like:\n\n   if (device extension is available...)\n   {\n       rx::DeviceImpl *impl \u003d nullptr;\n       Error error \u003d mImplementation-\u003egetDevice(\u0026impl);\n       if (error.isError()) { return error; }\n       mDevice \u003d new Device(this, impl);\n   }\n   else\n   {\n       mDevice \u003d nullptr;\n   }\n\nThen egl::Display just has a\n\n   Device *getDevice() const;\n\nThis mirrors how we create a lot of the other objects, holding the egl/gl objects at the egl/gl layer and the rx layer only creates rx objects.",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 55
+      },
+      "revId": "2729669bd8394108441e8a066a8584ed1da73260",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "636d8ab3_41a0219f",
+        "filename": "src/libANGLE/renderer/Renderer.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-10T18:07:22Z",
+      "side": 1,
+      "message": "Since this is only used by RendererD3D right now, how about making an abstract RendererD3D::getDeviceType instead that returns the EGL enums?  The OpenGL renderer wouldn\u0027t need to implement it until we add a device type for that, if ever.\n\nHaving an enum at the Renderer level means that we need to update the base class every time we add an implementation which isn\u0027t ideal.",
+      "range": {
+        "startLine": 77,
+        "startChar": 4,
+        "endLine": 77,
+        "endChar": 55
+      },
+      "revId": "2729669bd8394108441e8a066a8584ed1da73260",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "234d525a_f3781af5",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-10T18:07:22Z",
+      "side": 1,
+      "message": "nit: pointer alignment",
+      "range": {
+        "startLine": 20,
+        "startChar": 35,
+        "endLine": 20,
+        "endChar": 37
+      },
+      "revId": "2729669bd8394108441e8a066a8584ed1da73260",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "636d8ab3_6158bd5b",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-10T18:07:22Z",
+      "side": 1,
+      "message": "nit:pointer alignment",
+      "revId": "2729669bd8394108441e8a066a8584ed1da73260",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "234d525a_cea52904",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-10T18:07:22Z",
+      "side": 1,
+      "message": "void* or IUnknown* would be preferred here.",
+      "range": {
+        "startLine": 174,
+        "startChar": 12,
+        "endLine": 174,
+        "endChar": 21
+      },
+      "revId": "2729669bd8394108441e8a066a8584ed1da73260",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "234d525a_ee358d0c",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-10T18:07:22Z",
+      "side": 1,
+      "message": "Since this doesn\u0027t return the DeviceWGL, I suggest either removing the DeviceGL and DeviceWGL classes or enabling the deviceQuery extension for WGL but have no device extensions for it.",
+      "range": {
+        "startLine": 372,
+        "startChar": 4,
+        "endLine": 372,
+        "endChar": 20
+      },
+      "revId": "2729669bd8394108441e8a066a8584ed1da73260",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "234d525a_9320ae1e",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-10T18:07:22Z",
+      "side": 1,
+      "message": "Device should probably be checked against EGL_NO_DEVICE_EXT before use (below too).",
+      "revId": "2729669bd8394108441e8a066a8584ed1da73260",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
