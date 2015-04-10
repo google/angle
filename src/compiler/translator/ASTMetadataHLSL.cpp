@@ -156,7 +156,7 @@ class PullComputeDiscontinuousLoops : public TIntermTraverser
     void traverse(TIntermAggregate *node)
     {
         node->traverse(this);
-        ASSERT(mLoops.empty());
+        ASSERT(mLoopsAndSwitches.empty());
         ASSERT(mIfs.empty());
     }
 
@@ -172,22 +172,22 @@ class PullComputeDiscontinuousLoops : public TIntermTraverser
         }
     }
 
-    bool visitLoop(Visit visit, TIntermLoop *loop)
+    bool visitLoop(Visit visit, TIntermLoop *loop) override
     {
         if (visit == PreVisit)
         {
-            mLoops.push_back(loop);
+            mLoopsAndSwitches.push_back(loop);
         }
         else if (visit == PostVisit)
         {
-            ASSERT(mLoops.back() == loop);
-            mLoops.pop_back();
+            ASSERT(mLoopsAndSwitches.back() == loop);
+            mLoopsAndSwitches.pop_back();
         }
 
         return true;
     }
 
-    bool visitSelection(Visit visit, TIntermSelection *node)
+    bool visitSelection(Visit visit, TIntermSelection *node) override
     {
         if (visit == PreVisit)
         {
@@ -207,7 +207,7 @@ class PullComputeDiscontinuousLoops : public TIntermTraverser
         return true;
     }
 
-    bool visitBranch(Visit visit, TIntermBranch *node)
+    bool visitBranch(Visit visit, TIntermBranch *node) override
     {
         if (visit == PreVisit)
         {
@@ -216,18 +216,42 @@ class PullComputeDiscontinuousLoops : public TIntermTraverser
               case EOpKill:
                 break;
               case EOpBreak:
+                {
+                    ASSERT(!mLoopsAndSwitches.empty());
+                    TIntermLoop *loop = mLoopsAndSwitches.back()->getAsLoopNode();
+                    if (loop != nullptr)
+                    {
+                        mMetadata->mDiscontinuousLoops.insert(loop);
+                        onDiscontinuousLoop();
+                    }
+                }
+                break;
               case EOpContinue:
-                ASSERT(!mLoops.empty());
-                mMetadata->mDiscontinuousLoops.insert(mLoops.back());
-                onDiscontinuousLoop();
+                {
+                    ASSERT(!mLoopsAndSwitches.empty());
+                    TIntermLoop *loop = nullptr;
+                    size_t i = mLoopsAndSwitches.size();
+                    while (loop == nullptr && i > 0)
+                    {
+                        --i;
+                        loop = mLoopsAndSwitches.at(i)->getAsLoopNode();
+                    }
+                    ASSERT(loop != nullptr);
+                    mMetadata->mDiscontinuousLoops.insert(loop);
+                    onDiscontinuousLoop();
+                }
                 break;
               case EOpReturn:
                 // A return jumps out of all the enclosing loops
-                if (!mLoops.empty())
+                if (!mLoopsAndSwitches.empty())
                 {
-                    for (TIntermLoop* loop : mLoops)
+                    for (TIntermNode* node : mLoopsAndSwitches)
                     {
-                        mMetadata->mDiscontinuousLoops.insert(loop);
+                        TIntermLoop *loop = node->getAsLoopNode();
+                        if (loop)
+                        {
+                            mMetadata->mDiscontinuousLoops.insert(loop);
+                        }
                     }
                     onDiscontinuousLoop();
                 }
@@ -259,13 +283,27 @@ class PullComputeDiscontinuousLoops : public TIntermTraverser
         return true;
     }
 
+    bool visitSwitch(Visit visit, TIntermSwitch *node) override
+    {
+        if (visit == PreVisit)
+        {
+            mLoopsAndSwitches.push_back(node);
+        }
+        else if (visit == PostVisit)
+        {
+            ASSERT(mLoopsAndSwitches.back() == node);
+            mLoopsAndSwitches.pop_back();
+        }
+        return true;
+    }
+
   private:
     MetadataList *mMetadataList;
     ASTMetadataHLSL *mMetadata;
     size_t mIndex;
     const CallDAG &mDag;
 
-    std::vector<TIntermLoop*> mLoops;
+    std::vector<TIntermNode*> mLoopsAndSwitches;
     std::vector<TIntermSelection*> mIfs;
 };
 
