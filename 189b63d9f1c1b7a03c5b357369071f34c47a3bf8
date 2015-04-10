@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e32fba6e_568d5afe",
+        "filename": "src/libANGLE/renderer/gl/RenderbufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-10T23:18:54Z",
+      "side": 1,
+      "message": "Swallowing the errors without transmitting them to the client will lead to hard-to-find errors later. This should look at each individual error coming back from the GL and record it in the context, to be returned to the client later during calls to glGetError.\n\nAt a minimum there needs to be a big TODO here, but I would suggest solving this correctly now.",
+      "range": {
+        "startLine": 47,
+        "startChar": 14,
+        "endLine": 47,
+        "endChar": 25
+      },
+      "revId": "189b63d9f1c1b7a03c5b357369071f34c47a3bf8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
