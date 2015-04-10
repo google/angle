@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "434a4643_922a7cf9",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-10T06:48:04Z",
+      "side": 1,
+      "message": "log(x) where x \u003c\u003d0 is undefined, stdlib does return some value other than NaNs for x\u003c\u003d0, but it is something we decide to not rely on as it could vary on various platforms. So we decided to set result to 0 for all undefined values.\n\nI will add a comment at all required places.",
+      "parentUuid": "237f124e_a365708e",
+      "range": {
+        "startLine": 1307,
+        "startChar": 16,
+        "endLine": 1308,
+        "endChar": 53
+      },
+      "revId": "122a9375a6ec9eb286b3fa85a6fe46473706d700",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "03868e96_2c17987f",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 6
