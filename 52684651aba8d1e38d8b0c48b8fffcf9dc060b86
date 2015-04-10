@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e356daec_f19e5be1",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-10T13:43:45Z",
+      "side": 1,
+      "message": "nit: on newline",
+      "range": {
+        "startLine": 222,
+        "startChar": 41,
+        "endLine": 222,
+        "endChar": 42
+      },
+      "revId": "52684651aba8d1e38d8b0c48b8fffcf9dc060b86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
