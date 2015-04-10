@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e356daec_c17984c2",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 675,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-10T18:40:13Z",
+      "side": 1,
+      "message": "also fixed a bug with these",
+      "range": {
+        "startLine": 675,
+        "startChar": 36,
+        "endLine": 675,
+        "endChar": 49
+      },
+      "revId": "05007a78e0971351251310eb899279e26423dda8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
