@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e356daec_b84038f8",
+        "filename": "src/libANGLE/renderer/gl/RenderbufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-10T01:27:47Z",
+      "side": 1,
+      "message": "There might have already been a pending error on the context from a previous operation. The way to do this in the general case is to pull all \"real\" errors from the GL context, cache them in ANGLE\u0027s state to be able to return them from clients\u0027 calls to glGetError, make the renderbufferStorageMultisample call, and call glGetError. See https://codereview.chromium.org/1066643003/ and related CLs for some of the difficulty we\u0027ve recently run into in this area.",
+      "range": {
+        "startLine": 51,
+        "startChar": 11,
+        "endLine": 51,
+        "endChar": 16
+      },
+      "revId": "277cf344e5d40e1603fc481816cc6caf205eb274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
