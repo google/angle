@@ -570,6 +570,30 @@
     },
     {
       "key": {
+        "uuid": "4365e6c2_fa1009d8",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-10T02:17:24Z",
+      "side": 1,
+      "message": "Um, Ken gave some opinions about glsl 1.3 which is not core. So I\u0027m not sure how I can change here.",
+      "parentUuid": "03868e96_0057fb5f",
+      "range": {
+        "startLine": 144,
+        "startChar": 6,
+        "endLine": 144,
+        "endChar": 47
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83c43ed3_5ff74cd9",
         "filename": "src/compiler/translator/VersionGLSL.cpp",
         "patchSetId": 8
