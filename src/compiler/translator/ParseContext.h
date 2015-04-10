@@ -138,6 +138,13 @@ struct TParseContext {
                                                  const TSourceLoc &identifierLocation, const TString &identifier,
                                                  const TSourceLoc &initLocation, TIntermTyped *initializer);
 
+    // Parse a declaration like "type a[n] = initializer"
+    // Note that this does not apply to declarations like "type[n] a = initializer"
+    TIntermAggregate *parseSingleArrayInitDeclaration(TPublicType &publicType,
+                                                      const TSourceLoc &identifierLocation, const TString &identifier,
+                                                      const TSourceLoc &indexLocation, TIntermTyped *indexExpression,
+                                                      const TSourceLoc &initLocation, TIntermTyped *initializer);
+
     TIntermAggregate *parseInvariantDeclaration(const TSourceLoc &invariantLoc, const TSourceLoc &identifierLoc,
                                                 const TString *identifier, const TSymbol *symbol);
 
@@ -149,6 +156,12 @@ struct TParseContext {
     TIntermAggregate *parseInitDeclarator(TPublicType &publicType, TIntermAggregate *aggregateDeclaration,
                                           const TSourceLoc &identifierLocation, const TString &identifier,
                                           const TSourceLoc &initLocation, TIntermTyped *initializer);
+
+    // Parse a declarator like "a[n] = initializer"
+    TIntermAggregate *parseArrayInitDeclarator(TPublicType &publicType, TIntermAggregate *aggregateDeclaration,
+                                               const TSourceLoc& identifierLocation, const TString &identifier,
+                                               const TSourceLoc& indexLocation, TIntermTyped *indexExpression,
+                                               const TSourceLoc &initLocation, TIntermTyped *initializer);
 
     void parseGlobalLayoutQualifier(const TPublicType &typeQualifier);
     TFunction *addConstructorFunc(TPublicType publicType);

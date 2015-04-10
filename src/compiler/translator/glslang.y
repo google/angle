@@ -889,6 +889,11 @@ init_declarator_list
         $$ = $1;
         $$.intermAggregate = context->parseArrayDeclarator($$.type, $1.intermAggregate, @3, *$3.string, @4, $5);
     }
+    | init_declarator_list COMMA identifier LEFT_BRACKET constant_expression RIGHT_BRACKET EQUAL initializer {
+        ES3_ONLY("=", @7, "first-class arrays (array initializer)");
+        $$ = $1;
+        $$.intermAggregate = context->parseArrayInitDeclarator($$.type, $1.intermAggregate, @3, *$3.string, @4, $5, @7, $8);
+    }
     | init_declarator_list COMMA identifier EQUAL initializer {
         $$ = $1;
         $$.intermAggregate = context->parseInitDeclarator($$.type, $1.intermAggregate, @3, *$3.string, @4, $5);
@@ -914,6 +919,11 @@ single_declaration
     | fully_specified_type identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         $$.type = $1;
         $$.intermAggregate = context->parseSingleArrayDeclaration($$.type, @2, *$2.string, @3, $4);
+    }
+    | fully_specified_type identifier LEFT_BRACKET constant_expression RIGHT_BRACKET EQUAL initializer {
+        ES3_ONLY("=", @6, "first-class arrays (array initializer)");
+        $$.type = $1;
+        $$.intermAggregate = context->parseSingleArrayInitDeclaration($$.type, @2, *$2.string, @3, $4, @6, $7);
     }
     | fully_specified_type identifier EQUAL initializer {
         $$.type = $1;

@@ -1333,6 +1333,48 @@ TIntermAggregate *TParseContext::parseSingleInitDeclaration(TPublicType &publicT
     }
 }
 
+TIntermAggregate *TParseContext::parseSingleArrayInitDeclaration(TPublicType &publicType,
+                                                                 const TSourceLoc &identifierLocation,
+                                                                 const TString &identifier,
+                                                                 const TSourceLoc &indexLocation,
+                                                                 TIntermTyped *indexExpression,
+                                                                 const TSourceLoc &initLocation,
+                                                                 TIntermTyped *initializer)
+{
+    mDeferredSingleDeclarationErrorCheck = false;
+
+    if (singleDeclarationErrorCheck(publicType, identifierLocation))
+        recover();
+
+    if (arrayTypeErrorCheck(indexLocation, publicType) || arrayQualifierErrorCheck(indexLocation, publicType))
+    {
+        recover();
+    }
+
+    TPublicType arrayType(publicType);
+
+    int size;
+    if (arraySizeErrorCheck(identifierLocation, indexExpression, size))
+    {
+        recover();
+    }
+    // Make the type an array even if size check failed.
+    // This ensures useless error messages regarding the variable's non-arrayness won't follow.
+    arrayType.setArraySize(size);
+
+    // initNode will correspond to the whole of "type b[n] = initializer".
+    TIntermNode *initNode = nullptr;
+    if (!executeInitializer(identifierLocation, identifier, arrayType, initializer, &initNode))
+    {
+        return initNode ? intermediate.makeAggregate(initNode, initLocation) : nullptr;
+    }
+    else
+    {
+        recover();
+        return nullptr;
+    }
+}
+
 TIntermAggregate *TParseContext::parseInvariantDeclaration(const TSourceLoc &invariantLoc,
                                                            const TSourceLoc &identifierLoc,
                                                            const TString *identifier,
@@ -1470,6 +1512,61 @@ TIntermAggregate *TParseContext::parseInitDeclarator(TPublicType &publicType, TI
         if (intermNode)
         {
             return intermediate.growAggregate(aggregateDeclaration, intermNode, initLocation);
+        }
+        else
+        {
+            return aggregateDeclaration;
+        }
+    }
+    else
+    {
+        recover();
+        return nullptr;
+    }
+}
+
+TIntermAggregate *TParseContext::parseArrayInitDeclarator(TPublicType &publicType,
+                                                          TIntermAggregate *aggregateDeclaration,
+                                                          const TSourceLoc& identifierLocation,
+                                                          const TString &identifier,
+                                                          const TSourceLoc& indexLocation,
+                                                          TIntermTyped *indexExpression,
+                                                          const TSourceLoc &initLocation, TIntermTyped *initializer)
+{
+    // If the declaration starting this declarator list was empty (example: int,), some checks were not performed.
+    if (mDeferredSingleDeclarationErrorCheck)
+    {
+        if (singleDeclarationErrorCheck(publicType, identifierLocation))
+            recover();
+        mDeferredSingleDeclarationErrorCheck = false;
+    }
+
+    if (locationDeclaratorListCheck(identifierLocation, publicType))
+        recover();
+
+    if (arrayTypeErrorCheck(indexLocation, publicType) || arrayQualifierErrorCheck(indexLocation, publicType))
+    {
+        recover();
+    }
+
+    TPublicType arrayType(publicType);
+
+    int size;
+    if (arraySizeErrorCheck(identifierLocation, indexExpression, size))
+    {
+        recover();
+    }
+    // Make the type an array even if size check failed.
+    // This ensures useless error messages regarding the variable's non-arrayness won't follow.
+    arrayType.setArraySize(size);
+
+    // initNode will correspond to the whole of "b[n] = initializer".
+    TIntermNode *initNode = nullptr;
+    if (!executeInitializer(identifierLocation, identifier, arrayType, initializer, &initNode))
+    {
+        if (initNode)
+        {
+            return intermediate.growAggregate(aggregateDeclaration, initNode, initLocation);
         }
         else
         {
