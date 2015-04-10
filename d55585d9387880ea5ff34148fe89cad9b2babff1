@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "636d8ab3_bc2a00f9",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-10T01:02:42Z",
+      "side": 1,
+      "message": "That\u0027s a good point.",
+      "parentUuid": "03868e96_40a3c3f3",
+      "range": {
+        "startLine": 90,
+        "startChar": 2,
+        "endLine": 90,
+        "endChar": 25
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23dab2a9_c929d104",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 8
@@ -96,6 +120,53 @@
     },
     {
       "key": {
+        "uuid": "e356daec_d84b3c88",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-10T01:02:42Z",
+      "side": 1,
+      "message": "Do you think we could just limit this to 130, core 410, and core 420?\n\n130 is needed only in order to upgrade the least common denominator from OpenGL 2.1 to OpenGL 3.0, and most Linux distributions still don\u0027t yet support OpenGL 3.2 by default. 130 supports the new-style texture lookup functions which is the major compatibility difference compared to the older GLSL versions.\n\nIf WebGL 2 support will require OpenGL 4.1 minimum, then I don\u0027t think ANGLE needs to target GLSL versions 150 and 330. Chrome\u0027s compositor isn\u0027t demanding any new features added in those OpenGL versions.",
+      "parentUuid": "237f124e_8fda5312",
+      "range": {
+        "startLine": 90,
+        "startChar": 2,
+        "endLine": 99,
+        "endChar": 40
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "234d525a_733b539b",
+        "filename": "src/compiler/translator/CodeGen.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-10T01:02:42Z",
+      "side": 1,
+      "message": "This will need to be kept synchronized with the final list in ShaderLang.h.",
+      "range": {
+        "startLine": 26,
+        "startChar": 11,
+        "endLine": 26,
+        "endChar": 34
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "03868e96_20831f52",
         "filename": "src/compiler/translator/EmulatePrecision.cpp",
         "patchSetId": 8
@@ -159,6 +230,29 @@
         "startChar": 12,
         "endLine": 1176,
         "endChar": 99
+      },
+      "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e356daec_980d3439",
+        "filename": "src/compiler/translator/OutputGLSLBase.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-10T01:02:42Z",
+      "side": 1,
+      "message": "Maybe this should be named something different since it should return true for version 130, which comes from an OpenGL version that didn\u0027t have a core profile. Whatever name you choose is fine.",
+      "range": {
+        "startLine": 32,
+        "startChar": 16,
+        "endLine": 32,
+        "endChar": 32
       },
       "revId": "d55585d9387880ea5ff34148fe89cad9b2babff1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
