@@ -656,7 +656,7 @@ TIntermTyped *TIntermConstantUnion::fold(
     ConstantUnion *unionArray = getUnionArrayPointer();
 
     if (!unionArray)
-        return nullptr;
+        return NULL;
 
     size_t objectSize = getType().getObjectSize();
 
@@ -668,7 +668,7 @@ TIntermTyped *TIntermConstantUnion::fold(
         TType returnType = getType();
 
         if (!rightUnionArray)
-            return nullptr;
+            return NULL;
 
         // for a case like float f = 1.2 + vec4(2,3,4,5);
         if (constantNode->getType().getObjectSize() == 1 && objectSize > 1)
@@ -725,7 +725,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                     infoSink.info.message(
                         EPrefixInternalError, getLine(),
                         "Constant Folding cannot be done for matrix multiply");
-                    return nullptr;
+                    return NULL;
                 }
 
                 const int leftCols = getCols();
@@ -839,7 +839,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                         infoSink.info.message(
                             EPrefixInternalError, getLine(),
                             "Constant folding cannot be done for \"/\"");
-                        return nullptr;
+                        return NULL;
                     }
                 }
             }
@@ -852,7 +852,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                     infoSink.info.message(
                         EPrefixInternalError, getLine(),
                         "Constant Folding cannot be done for matrix times vector");
-                    return nullptr;
+                    return NULL;
                 }
 
                 const int matrixCols = getCols();
@@ -888,7 +888,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                     infoSink.info.message(
                         EPrefixInternalError, getLine(),
                         "Constant Folding cannot be done for vector times matrix");
-                    return nullptr;
+                    return NULL;
                 }
 
                 const int matrixCols = constantNode->getType().getCols();
@@ -1097,7 +1097,7 @@ TIntermTyped *TIntermConstantUnion::fold(
             infoSink.info.message(
                 EPrefixInternalError, getLine(),
                 "Invalid operator for constant folding");
-            return nullptr;
+            return NULL;
         }
         tempNode = new TIntermConstantUnion(tempConstArray, returnType);
         tempNode->setLine(getLine());
@@ -1132,7 +1132,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                     infoSink.info.message(
                         EPrefixInternalError, getLine(),
                         "Unary operation not folded into constant");
-                    return nullptr;
+                    return NULL;
                 }
                 break;
 
@@ -1153,7 +1153,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                     infoSink.info.message(
                         EPrefixInternalError, getLine(),
                         "Unary operation not folded into constant");
-                    return nullptr;
+                    return NULL;
                 }
                 break;
 
@@ -1169,7 +1169,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                     infoSink.info.message(
                         EPrefixInternalError, getLine(),
                         "Unary operation not folded into constant");
-                    return nullptr;
+                    return NULL;
                 }
                 break;
 
@@ -1186,7 +1186,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                     infoSink.info.message(
                         EPrefixInternalError, getLine(),
                         "Unary operation not folded into constant");
-                    return nullptr;
+                    return NULL;
                 }
                 break;
 
@@ -1431,7 +1431,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                 return nullptr;
 
               default:
-                return nullptr;
+                return NULL;
             }
         }
         newNode = new TIntermConstantUnion(tempConstArray, getType());
