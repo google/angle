@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "636d8ab3_a11d75ea",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-10T18:39:15Z",
+      "side": 1,
+      "message": "Yes, I changed the logic here. We should really have been calling through to the gl layer for makeCurrent (null) so I added that. The new code is a bit awkward and I think I like having a specific method better than calling makeCurrent(nullptr) in a different way, while avoiding the display. (Was thinking releaseSurface)",
+      "parentUuid": "e356daec_07d481c1",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 25
+      },
+      "revId": "0f596128208bda9e7d7d41113acffcdb2096c7f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "636d8ab3_2b2a24f8",
         "filename": "util/win32/Win32Window.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-10T16:56:33Z",
       "side": 1,
       "message": "This feels a little backwards compared to the other events.  What about a OSWindow::generateTestEvent that calls PostMessage (in Win32Window), have this code call pushEvent and have the OSWindow::pushEvent check for the EVENT_TEST enum?",
+      "range": {
+        "startLine": 362,
+        "startChar": 12,
+        "endLine": 362,
+        "endChar": 39
+      },
+      "revId": "0f596128208bda9e7d7d41113acffcdb2096c7f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "636d8ab3_2525f028",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-10T18:39:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "636d8ab3_2b2a24f8",
       "range": {
         "startLine": 362,
         "startChar": 12,
