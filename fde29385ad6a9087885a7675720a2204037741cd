@@ -34,6 +34,24 @@
       "revId": "fde29385ad6a9087885a7675720a2204037741cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e356daec_bdbbc257",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 851,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-10T18:23:18Z",
+      "side": 1,
+      "message": "Hmm, this could be an issue. I\u0027m not sure how often the D3D drivers do this but there is no guarantee that they don\u0027t.  \n\nSince we already use this style of applied object tracking with uintptr_t, I\u0027d prefer to keep it for now. I\u0027ll rethink this and add a new method of tracking across all our D3D code in the future.",
+      "parentUuid": "e356daec_5109e7db",
+      "revId": "fde29385ad6a9087885a7675720a2204037741cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
