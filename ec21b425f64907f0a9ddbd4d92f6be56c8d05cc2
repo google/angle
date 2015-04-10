@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e356daec_d11cf724",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-10T12:23:51Z",
+      "side": 1,
+      "message": "+1 to Ken\u0027s suggestion to (for now) remove 150 330 (since they won\u0027t be used/tested paths), and make SH_GLSL_CORE_OUTPUT alias 130 I think? (Though that seems a bit of a naming inconsistency)",
+      "range": {
+        "startLine": 91,
+        "startChar": 1,
+        "endLine": 92,
+        "endChar": 40
+      },
+      "revId": "ec21b425f64907f0a9ddbd4d92f6be56c8d05cc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "636d8ab3_901fe589",
+        "filename": "src/compiler/translator/CodeGen.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-10T12:23:51Z",
+      "side": 1,
+      "message": "note to sync with shaderlang.h",
+      "range": {
+        "startLine": 24,
+        "startChar": 5,
+        "endLine": 28,
+        "endChar": 35
+      },
+      "revId": "ec21b425f64907f0a9ddbd4d92f6be56c8d05cc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e356daec_f121fb55",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-10T12:23:51Z",
+      "side": 1,
+      "message": "nit: brace on newline",
+      "range": {
+        "startLine": 36,
+        "startChar": 40,
+        "endLine": 36,
+        "endChar": 41
+      },
+      "revId": "ec21b425f64907f0a9ddbd4d92f6be56c8d05cc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "234d525a_df2a3dfa",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-10T12:23:51Z",
+      "side": 1,
+      "message": "This name is a bit unclear since it excludes compatiblity but includes every version 130+.. Maybe IsGLSL130OrNewer()? Not sure if others have suggestions.",
+      "range": {
+        "startLine": 36,
+        "startChar": 5,
+        "endLine": 36,
+        "endChar": 17
+      },
+      "revId": "ec21b425f64907f0a9ddbd4d92f6be56c8d05cc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "234d525a_1f25a528",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-10T12:23:51Z",
+      "side": 1,
+      "message": "re: prior comments, maybe just leave this as-is. The profile specifier is optional, unless we\u0027re using a #version directive and want a compatibility context.",
+      "range": {
+        "startLine": 141,
+        "startChar": 8,
+        "endLine": 142,
+        "endChar": 47
+      },
+      "revId": "ec21b425f64907f0a9ddbd4d92f6be56c8d05cc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
