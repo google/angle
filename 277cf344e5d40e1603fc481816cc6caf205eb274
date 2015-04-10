@@ -22,6 +22,30 @@
       "revId": "277cf344e5d40e1603fc481816cc6caf205eb274",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "636d8ab3_45d90cf8",
+        "filename": "src/libANGLE/renderer/gl/RenderbufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-10T18:31:37Z",
+      "side": 1,
+      "message": "Thanks.  Proper error handling is a big pending issue.  I\u0027d like to set up some macro or shim function that checks for errors after every call in debug builds for correctness checks and occasional error checks after calls that can allocate memory for OUT_OF_MEMORY errors.\n\nFor now, I\u0027ll clear all errors before the glRenderbufferStorageMultisample call.",
+      "parentUuid": "e356daec_b84038f8",
+      "range": {
+        "startLine": 51,
+        "startChar": 11,
+        "endLine": 51,
+        "endChar": 16
+      },
+      "revId": "277cf344e5d40e1603fc481816cc6caf205eb274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
