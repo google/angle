@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3617abc_f73f4067",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-10T09:48:47Z",
+      "side": 1,
+      "message": "You should just use float literals (with suffix f) here to avoid static_cast.",
+      "revId": "19145f7860546e4a6822d34f5a91200b4c0f261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
