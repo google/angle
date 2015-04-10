@@ -313,3 +313,37 @@ TEST_F(MalformedShaderTest, BlockLayoutQualifierOnUniformWithEmptyDecl)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Arrays of arrays are not allowed (ESSL 3.00 section 4.1.9)
+TEST_F(MalformedShaderTest, ArraysOfArrays1)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   float[5] a[3];\n"
+        "   my_FragColor = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Arrays of arrays are not allowed (ESSL 3.00 section 4.1.9)
+TEST_F(MalformedShaderTest, ArraysOfArrays2)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   float[2] a, b[3];\n"
+        "   my_FragColor = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
