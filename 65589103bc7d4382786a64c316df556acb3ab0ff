@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e32fba6e_7b2c073f",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-10T23:14:17Z",
+      "side": 1,
+      "message": "The duplicated code in all of these getters to have const versions -- but especially this one -- is unfortunate. Could you just cast away const and call the other version of these methods?",
+      "range": {
+        "startLine": 206,
+        "startChar": 40,
+        "endLine": 206,
+        "endChar": 42
+      },
+      "revId": "65589103bc7d4382786a64c316df556acb3ab0ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
