@@ -16,6 +16,24 @@
       "revId": "19145f7860546e4a6822d34f5a91200b4c0f261b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c33d56a0_f44bb035",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-10T10:33:08Z",
+      "side": 1,
+      "message": "Thanks for catching this, yes, using literals is better option here. I have also used \u0027f\u0027 in one more patch set that deals with constant folding of common built-ins.\n\nLatest patch sets are uploaded.",
+      "parentUuid": "e3617abc_f73f4067",
+      "revId": "19145f7860546e4a6822d34f5a91200b4c0f261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
