@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6394aac1_db0b53a7",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 851,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-10T09:35:57Z",
+      "side": 1,
+      "message": "I don\u0027t see anything preventing the code from running into a situation here where an IDirect3DBaseTexture9 gets created with the same pointer as a previously released IDirect3DBaseTexture9, and the code would fail to see that they are different?",
+      "revId": "fde29385ad6a9087885a7675720a2204037741cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
