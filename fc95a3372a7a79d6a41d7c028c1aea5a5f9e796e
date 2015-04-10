@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e356daec_b8cf58dd",
+        "filename": "src/tests/end2end_tests/FenceSyncTests.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-10T01:43:46Z",
+      "side": 1,
+      "message": "It would be nice to refactor this boilerplate.",
+      "range": {
+        "startLine": 19,
+        "startChar": 8,
+        "endLine": 19,
+        "endChar": 26
+      },
+      "revId": "fc95a3372a7a79d6a41d7c028c1aea5a5f9e796e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
