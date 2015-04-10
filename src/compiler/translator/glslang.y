@@ -773,7 +773,7 @@ function_header
             context->recover();
         }
         // make sure a sampler is not involved as well...
-        if (context->structQualifierErrorCheck(@2, $1))
+        if (context->samplerErrorCheck(@2, $1, "samplers can't be function return values"))
             context->recover();
 
         // Add the function as a prototype after parsing it (we do not support recursion)
@@ -1535,8 +1535,6 @@ condition
     }
     | fully_specified_type identifier EQUAL initializer {
         TIntermNode* intermNode;
-        if (context->structQualifierErrorCheck(@2, $1))
-            context->recover();
         if (context->boolErrorCheck(@2, $1))
             context->recover();
 
