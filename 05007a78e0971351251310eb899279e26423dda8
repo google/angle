@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "636d8ab3_458e6c80",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-10T18:45:23Z",
+      "side": 1,
+      "message": "Might need a non-null surface assertion here (or move this into the else below).",
+      "range": {
+        "startLine": 182,
+        "startChar": 8,
+        "endLine": 183,
+        "endChar": 81
+      },
+      "revId": "05007a78e0971351251310eb899279e26423dda8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e356daec_c17984c2",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 4
@@ -18,6 +41,29 @@
         "startChar": 36,
         "endLine": 675,
         "endChar": 49
+      },
+      "revId": "05007a78e0971351251310eb899279e26423dda8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e356daec_6189b825",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-10T18:45:23Z",
+      "side": 1,
+      "message": "is a null check on previousContext needed?",
+      "range": {
+        "startLine": 578,
+        "startChar": 8,
+        "endLine": 578,
+        "endChar": 23
       },
       "revId": "05007a78e0971351251310eb899279e26423dda8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
