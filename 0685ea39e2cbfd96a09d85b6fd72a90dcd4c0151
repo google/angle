@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c326369c_836f9122",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-11T01:09:47Z",
+      "side": 1,
+      "message": "It looks like this code is wrong if the same context is made current twice in a row, either to the same surface or different surfaces. What do you think? If there is a bug here, could you add a new test to cover it?",
+      "range": {
+        "startLine": 578,
+        "startChar": 8,
+        "endLine": 578,
+        "endChar": 23
+      },
+      "revId": "0685ea39e2cbfd96a09d85b6fd72a90dcd4c0151",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
