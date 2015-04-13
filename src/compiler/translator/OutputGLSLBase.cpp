@@ -777,7 +777,13 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpPrototype:
         // Function declaration.
         ASSERT(visit == PreVisit);
-        writeVariableType(node->getType());
+        {
+            const TType &type = node->getType();
+            writeVariableType(type);
+            if (type.isArray())
+                out << arrayBrackets(type);
+        }
+
         out << " " << hashFunctionName(node->getName());
 
         out << "(";
@@ -789,7 +795,13 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpFunction: {
         // Function definition.
         ASSERT(visit == PreVisit);
-        writeVariableType(node->getType());
+        {
+            const TType &type = node->getType();
+            writeVariableType(type);
+            if (type.isArray())
+                out << arrayBrackets(type);
+        }
+
         out << " " << hashFunctionName(node->getName());
 
         incrementDepth(node);
