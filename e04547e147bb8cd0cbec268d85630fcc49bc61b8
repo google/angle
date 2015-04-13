@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9033a6f4_e0674a4e",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-13T18:50:38Z",
+      "side": 1,
+      "message": "What happens if a non-null context comes in? Shouldn\u0027t that still cause the surface to be released from the previous context? It seems to me the test should be:\n\n  if (previousContext !\u003d nullptr \u0026\u0026 previousContext !\u003d context)\n\nAssuming that the calls above have already retained the surfaces, so if the same surfaces are made current to a new context, they\u0027re released properly.\n\nThis would mean that the ASSERT below would have to be removed.",
+      "range": {
+        "startLine": 592,
+        "startChar": 27,
+        "endLine": 592,
+        "endChar": 34
+      },
+      "revId": "e04547e147bb8cd0cbec268d85630fcc49bc61b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0242aae_c26450cc",
+        "filename": "src/tests/standalone_tests/EGLSurfaceTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-13T18:50:38Z",
+      "side": 1,
+      "message": "Are more tests needed? I think there might still be untested code paths in this situation:\n\n1. Make one context current, then another:\n1a. To the same surface\n1b. To different surfaces\n\nIn each case, make sure that the right surfaces are, or are not, deleted.",
+      "range": {
+        "startLine": 164,
+        "startChar": 20,
+        "endLine": 164,
+        "endChar": 27
+      },
+      "revId": "e04547e147bb8cd0cbec268d85630fcc49bc61b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
