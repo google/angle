@@ -693,32 +693,32 @@ static const yytype_uint16 yyrline[] =
 {
        0,   211,   211,   212,   215,   239,   242,   247,   252,   257,
      262,   268,   271,   274,   277,   280,   283,   289,   297,   308,
-     311,   319,   322,   328,   332,   339,   345,   354,   362,   368,
-     375,   385,   388,   391,   394,   404,   405,   406,   407,   415,
-     416,   419,   422,   429,   430,   433,   439,   440,   444,   451,
-     452,   455,   458,   461,   467,   468,   471,   477,   478,   485,
-     486,   493,   494,   501,   502,   508,   509,   515,   516,   522,
-     523,   529,   530,   538,   539,   540,   541,   545,   546,   547,
-     551,   555,   559,   563,   570,   573,   584,   592,   600,   628,
-     634,   645,   649,   653,   657,   664,   720,   723,   730,   738,
-     759,   780,   790,   818,   823,   833,   838,   848,   851,   854,
-     857,   863,   870,   873,   877,   881,   886,   891,   898,   902,
-     906,   910,   915,   920,   924,   931,   941,   947,   950,   956,
-     962,   969,   978,   987,   995,   998,  1005,  1009,  1016,  1019,
-    1023,  1027,  1036,  1045,  1053,  1063,  1075,  1078,  1081,  1087,
-    1094,  1097,  1103,  1106,  1109,  1115,  1118,  1123,  1138,  1142,
-    1146,  1150,  1154,  1158,  1163,  1168,  1173,  1178,  1183,  1188,
-    1193,  1198,  1203,  1208,  1213,  1218,  1223,  1228,  1233,  1238,
-    1243,  1248,  1253,  1258,  1263,  1267,  1271,  1275,  1279,  1283,
-    1287,  1291,  1295,  1299,  1303,  1307,  1311,  1315,  1319,  1323,
-    1331,  1339,  1343,  1356,  1356,  1359,  1359,  1365,  1368,  1384,
-    1387,  1396,  1400,  1406,  1413,  1428,  1432,  1436,  1437,  1443,
-    1444,  1445,  1446,  1447,  1448,  1449,  1453,  1454,  1454,  1454,
-    1464,  1465,  1469,  1469,  1470,  1470,  1475,  1478,  1488,  1491,
-    1497,  1498,  1502,  1510,  1514,  1521,  1521,  1528,  1531,  1538,
-    1543,  1558,  1558,  1563,  1563,  1570,  1570,  1578,  1581,  1587,
-    1590,  1596,  1600,  1607,  1610,  1613,  1616,  1619,  1628,  1632,
-    1639,  1642,  1648,  1648
+     312,   320,   323,   329,   333,   340,   346,   355,   363,   369,
+     376,   386,   389,   392,   395,   405,   406,   407,   408,   416,
+     417,   420,   423,   430,   431,   434,   440,   441,   445,   452,
+     453,   456,   459,   462,   468,   469,   472,   478,   479,   486,
+     487,   494,   495,   502,   503,   509,   510,   516,   517,   523,
+     524,   530,   531,   539,   540,   541,   542,   546,   547,   548,
+     552,   556,   560,   564,   571,   574,   585,   593,   601,   629,
+     635,   646,   650,   654,   658,   665,   721,   724,   731,   739,
+     760,   781,   791,   819,   824,   834,   839,   849,   852,   855,
+     858,   864,   871,   874,   878,   882,   887,   892,   899,   903,
+     907,   911,   916,   921,   925,   932,   942,   948,   951,   957,
+     963,   970,   979,   988,   996,   999,  1006,  1010,  1017,  1020,
+    1024,  1028,  1037,  1046,  1054,  1064,  1076,  1079,  1082,  1088,
+    1095,  1098,  1104,  1107,  1110,  1116,  1119,  1124,  1139,  1143,
+    1147,  1151,  1155,  1159,  1164,  1169,  1174,  1179,  1184,  1189,
+    1194,  1199,  1204,  1209,  1214,  1219,  1224,  1229,  1234,  1239,
+    1244,  1249,  1254,  1259,  1264,  1268,  1272,  1276,  1280,  1284,
+    1288,  1292,  1296,  1300,  1304,  1308,  1312,  1316,  1320,  1324,
+    1332,  1340,  1344,  1357,  1357,  1360,  1360,  1366,  1369,  1385,
+    1388,  1397,  1401,  1407,  1414,  1429,  1433,  1437,  1438,  1444,
+    1445,  1446,  1447,  1448,  1449,  1450,  1454,  1455,  1455,  1455,
+    1465,  1466,  1470,  1470,  1471,  1471,  1476,  1479,  1489,  1492,
+    1498,  1499,  1503,  1511,  1515,  1522,  1522,  1529,  1532,  1539,
+    1544,  1559,  1559,  1564,  1564,  1571,  1571,  1579,  1582,  1588,
+    1591,  1597,  1601,  1608,  1611,  1614,  1617,  1620,  1629,  1633,
+    1640,  1643,  1649,  1649
 };
 #endif
 
@@ -2495,7 +2495,7 @@ yyreduce:
 
     {
         bool fatalError = false;
-        (yyval.interm.intermTypedNode) = context->addFunctionCallOrMethod((yyvsp[0].interm).function, (yyvsp[0].interm).intermNode, (yylsp[0]), &fatalError);
+        (yyval.interm.intermTypedNode) = context->addFunctionCallOrMethod((yyvsp[0].interm).function, (yyvsp[0].interm).nodePair.node1, (yyvsp[0].interm).nodePair.node2, (yylsp[0]), &fatalError);
         if (fatalError)
         {
             YYERROR;
@@ -2508,6 +2508,7 @@ yyreduce:
 
     {
         (yyval.interm) = (yyvsp[0].interm);
+        (yyval.interm).nodePair.node2 = nullptr;
     }
 
     break;
@@ -2515,9 +2516,9 @@ yyreduce:
   case 20:
 
     {
-        context->error((yylsp[0]), "methods are not supported", "");
-        context->recover();
+        ES3_ONLY("", (yylsp[0]), "methods");
         (yyval.interm) = (yyvsp[0].interm);
+        (yyval.interm).nodePair.node2 = (yyvsp[-2].interm.intermTypedNode);
     }
 
     break;
@@ -2542,7 +2543,7 @@ yyreduce:
 
     {
         (yyval.interm).function = (yyvsp[-1].interm.function);
-        (yyval.interm).intermNode = 0;
+        (yyval.interm).nodePair.node1 = nullptr;
     }
 
     break;
@@ -2551,7 +2552,7 @@ yyreduce:
 
     {
         (yyval.interm).function = (yyvsp[0].interm.function);
-        (yyval.interm).intermNode = 0;
+        (yyval.interm).nodePair.node1 = nullptr;
     }
 
     break;
@@ -2562,7 +2563,7 @@ yyreduce:
         TParameter param = { 0, new TType((yyvsp[0].interm.intermTypedNode)->getType()) };
         (yyvsp[-1].interm.function)->addParameter(param);
         (yyval.interm).function = (yyvsp[-1].interm.function);
-        (yyval.interm).intermNode = (yyvsp[0].interm.intermTypedNode);
+        (yyval.interm).nodePair.node1 = (yyvsp[0].interm.intermTypedNode);
     }
 
     break;
@@ -2573,7 +2574,7 @@ yyreduce:
         TParameter param = { 0, new TType((yyvsp[0].interm.intermTypedNode)->getType()) };
         (yyvsp[-2].interm).function->addParameter(param);
         (yyval.interm).function = (yyvsp[-2].interm).function;
-        (yyval.interm).intermNode = context->intermediate.growAggregate((yyvsp[-2].interm).intermNode, (yyvsp[0].interm.intermTypedNode), (yylsp[-1]));
+        (yyval.interm).nodePair.node1 = context->intermediate.growAggregate((yyvsp[-2].interm).intermNode, (yyvsp[0].interm.intermTypedNode), (yylsp[-1]));
     }
 
     break;

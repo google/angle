@@ -296,7 +296,7 @@ integer_expression
 function_call
     : function_call_or_method {
         bool fatalError = false;
-        $$ = context->addFunctionCallOrMethod($1.function, $1.intermNode, @1, &fatalError);
+        $$ = context->addFunctionCallOrMethod($1.function, $1.nodePair.node1, $1.nodePair.node2, @1, &fatalError);
         if (fatalError)
         {
             YYERROR;
@@ -307,11 +307,12 @@ function_call
 function_call_or_method
     : function_call_generic {
         $$ = $1;
+        $$.nodePair.node2 = nullptr;
     }
     | postfix_expression DOT function_call_generic {
-        context->error(@3, "methods are not supported", "");
-        context->recover();
+        ES3_ONLY("", @3, "methods");
         $$ = $3;
+        $$.nodePair.node2 = $1;
     }
     ;
 
@@ -327,11 +328,11 @@ function_call_generic
 function_call_header_no_parameters
     : function_call_header VOID_TYPE {
         $$.function = $1;
-        $$.intermNode = 0;
+        $$.nodePair.node1 = nullptr;
     }
     | function_call_header {
         $$.function = $1;
-        $$.intermNode = 0;
+        $$.nodePair.node1 = nullptr;
     }
     ;
 
@@ -340,13 +341,13 @@ function_call_header_with_parameters
         TParameter param = { 0, new TType($2->getType()) };
         $1->addParameter(param);
         $$.function = $1;
-        $$.intermNode = $2;
+        $$.nodePair.node1 = $2;
     }
     | function_call_header_with_parameters COMMA assignment_expression {
         TParameter param = { 0, new TType($3->getType()) };
         $1.function->addParameter(param);
         $$.function = $1.function;
-        $$.intermNode = context->intermediate.growAggregate($1.intermNode, $3, @2);
+        $$.nodePair.node1 = context->intermediate.growAggregate($1.intermNode, $3, @2);
     }
     ;
 

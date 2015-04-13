@@ -3138,14 +3138,48 @@ TIntermBranch *TParseContext::addBranch(TOperator op, TIntermTyped *returnValue,
     return intermediate.addBranch(op, returnValue, loc);
 }
 
-TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermNode *node,
-    const TSourceLoc &loc, bool *fatalError)
+TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermNode *paramNode, TIntermNode *thisNode,
+                                                     const TSourceLoc &loc, bool *fatalError)
 {
     *fatalError = false;
     TOperator op = fnCall->getBuiltInOp();
     TIntermTyped *callNode = nullptr;
 
-    if (op != EOpNull)
+    if (thisNode != nullptr)
+    {
+        ConstantUnion *unionArray = new ConstantUnion[1];
+        unsigned int arraySize = 0;
+        TIntermTyped *typedThis = thisNode->getAsTyped();
+        if (fnCall->getName() != "length")
+        {
+            error(loc, "invalid method", fnCall->getName().c_str());
+            recover();
+        }
+        else if (paramNode != nullptr)
+        {
+            error(loc, "method takes no parameters", "length");
+            recover();
+        }
+        else if (typedThis == nullptr || !typedThis->isArray())
+        {
+            error(loc, "length can only be called on arrays", "length");
+            recover();
+        }
+        else
+        {
+            arraySize = static_cast<unsigned int>(typedThis->getArraySize());
+            if (typedThis->hasSideEffects())
+            {
+                // This code path can be hit with an expression like this:
+                // (a = b).length()
+                // where a and b are both arrays.
+                UNIMPLEMENTED();
+            }
+        }
+        unionArray->setUConst(arraySize);
+        callNode = intermediate.addConstantUnion(unionArray, TType(EbtUInt, EbpUndefined, EvqConst), loc);
+    }
+    else if (op != EOpNull)
     {
         //
         // Then this should be a constructor.
@@ -3153,12 +3187,12 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
         // Their parameters will be verified algorithmically.
         //
         TType type(EbtVoid, EbpUndefined);  // use this to get the type back
-        if (!constructorErrorCheck(loc, node, *fnCall, op, &type))
+        if (!constructorErrorCheck(loc, paramNode, *fnCall, op, &type))
         {
             //
             // It's a constructor, of type 'type'.
             //
-            callNode = addConstructor(node, &type, op, fnCall, loc);
+            callNode = addConstructor(paramNode, &type, op, fnCall, loc);
         }
 
         if (callNode == nullptr)
@@ -3197,21 +3231,21 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
                     //
                     // Treat it like a built-in unary operator.
                     //
-                    callNode = createUnaryMath(op, node->getAsTyped(), loc, &fnCandidate->getReturnType());
+                    callNode = createUnaryMath(op, paramNode->getAsTyped(), loc, &fnCandidate->getReturnType());
                     if (callNode == nullptr)
                     {
                         std::stringstream extraInfoStream;
                         extraInfoStream << "built in unary operator function.  Type: "
-                            << static_cast<TIntermTyped*>(node)->getCompleteString();
+                            << static_cast<TIntermTyped*>(paramNode)->getCompleteString();
                         std::string extraInfo = extraInfoStream.str();
-                        error(node->getLine(), " wrong operand type", "Internal Error", extraInfo.c_str());
+                        error(paramNode->getLine(), " wrong operand type", "Internal Error", extraInfo.c_str());
                         *fatalError = true;
                         return nullptr;
                     }
                 }
                 else
                 {
-                    TIntermAggregate *aggregate = intermediate.setAggregateOperator(node, op, loc);
+                    TIntermAggregate *aggregate = intermediate.setAggregateOperator(paramNode, op, loc);
                     aggregate->setType(fnCandidate->getReturnType());
                     aggregate->setPrecisionFromChildren();
                     callNode = aggregate;
@@ -3224,7 +3258,7 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
             {
                 // This is a real function call
 
-                TIntermAggregate *aggregate = intermediate.setAggregateOperator(node, EOpFunctionCall, loc);
+                TIntermAggregate *aggregate = intermediate.setAggregateOperator(paramNode, EOpFunctionCall, loc);
                 aggregate->setType(fnCandidate->getReturnType());
 
                 // this is how we know whether the given function is a builtIn function or a user defined function

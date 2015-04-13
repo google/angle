@@ -209,8 +209,8 @@ struct TParseContext {
     TIntermBranch *addBranch(TOperator op, const TSourceLoc &loc);
     TIntermBranch *addBranch(TOperator op, TIntermTyped *returnValue, const TSourceLoc &loc);
 
-    TIntermTyped *addFunctionCallOrMethod(TFunction *fnCall, TIntermNode *node,
-        const TSourceLoc &loc, bool *fatalError);
+    TIntermTyped *addFunctionCallOrMethod(TFunction *fnCall, TIntermNode *paramNode, TIntermNode *thisNode,
+                                          const TSourceLoc &loc, bool *fatalError);
 
     TIntermTyped *addTernarySelection(TIntermTyped *cond, TIntermTyped *trueBlock, TIntermTyped *falseBlock,
                                       const TSourceLoc &line);
