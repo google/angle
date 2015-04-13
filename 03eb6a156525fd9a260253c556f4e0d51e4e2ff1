@@ -45,6 +45,30 @@
       "revId": "03eb6a156525fd9a260253c556f4e0d51e4e2ff1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9033a6f4_155df67b",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-13T18:09:43Z",
+      "side": 1,
+      "message": "Yes, the valid check is redundant. I\u0027ll update to return everything as pointers - though it\u0027s still the same logical error to dereference null as to forget to check valid(), you have a good point that it\u0027ll minimize the diff.",
+      "parentUuid": "b0242aae_7cbf8544",
+      "range": {
+        "startLine": 533,
+        "startChar": 39,
+        "endLine": 533,
+        "endChar": 54
+      },
+      "revId": "03eb6a156525fd9a260253c556f4e0d51e4e2ff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
