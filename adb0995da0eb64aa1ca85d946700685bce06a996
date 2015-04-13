@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0299e86_e88ccf09",
+        "filename": "src/libANGLE/Device.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-13T19:23:10Z",
+      "side": 1,
+      "message": "We should probably skip this now or it\u0027ll end up deleting the Renderer\u0027s device.",
+      "range": {
+        "startLine": 41,
+        "startChar": 5,
+        "endLine": 41,
+        "endChar": 32
+      },
+      "revId": "adb0995da0eb64aa1ca85d946700685bce06a996",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
