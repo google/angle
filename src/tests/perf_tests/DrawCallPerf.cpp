@@ -53,6 +53,7 @@ DrawCallPerfBenchmark::DrawCallPerfBenchmark()
       mBuffer(0),
       mNumTris(0)
 {
+    mRunTimeSeconds = 10.0;
 }
 
 bool DrawCallPerfBenchmark::initializeBenchmark()
@@ -93,7 +94,6 @@ bool DrawCallPerfBenchmark::initializeBenchmark()
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-
     std::vector<float> floatData(6);
     floatData[0] = 1;
     floatData[1] = 2;
@@ -129,11 +129,6 @@ bool DrawCallPerfBenchmark::initializeBenchmark()
 
 void DrawCallPerfBenchmark::destroyBenchmark()
 {
-    const auto &params = GetParam();
-
-    // print static parameters
-    printResult("iterations", static_cast<size_t>(params.iterations), "updates", false);
-
     glDeleteProgram(mProgram);
     glDeleteBuffers(1, &mBuffer);
 }

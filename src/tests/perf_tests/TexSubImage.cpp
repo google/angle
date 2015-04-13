@@ -194,15 +194,6 @@ bool TexSubImageBenchmark::initializeBenchmark()
 
 void TexSubImageBenchmark::destroyBenchmark()
 {
-    const auto &params = GetParam();
-
-    // print static parameters
-    printResult("image_width", static_cast<size_t>(params.imageWidth), "pix", false);
-    printResult("image_height", static_cast<size_t>(params.imageHeight), "pix", false);
-    printResult("subimage_width", static_cast<size_t>(params.subImageWidth), "pix", false);
-    printResult("subimage_height", static_cast<size_t>(params.subImageHeight), "pix", false);
-    printResult("iterations", static_cast<size_t>(params.iterations), "updates", false);
-
     glDeleteProgram(mProgram);
     glDeleteBuffers(1, &mVertexBuffer);
     glDeleteBuffers(1, &mIndexBuffer);

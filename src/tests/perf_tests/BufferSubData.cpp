@@ -297,13 +297,6 @@ bool BufferSubDataBenchmark::initializeBenchmark()
 
 void BufferSubDataBenchmark::destroyBenchmark()
 {
-    const auto &params = GetParam();
-
-    // print static parameters
-    printResult("update_size", static_cast<size_t>(params.updateSize), "b", false);
-    printResult("buffer_size", static_cast<size_t>(params.bufferSize), "b", false);
-    printResult("iterations", static_cast<size_t>(params.iterations), "updates", false);
-
     glDeleteProgram(mProgram);
     glDeleteBuffers(1, &mBuffer);
     delete[] mUpdateData;
