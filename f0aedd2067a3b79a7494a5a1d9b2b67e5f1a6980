@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "b0242aae_d0542227",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-13T15:19:57Z",
+      "side": 1,
+      "message": "if you feel like it you could take this chance to rename this to mImpl or mImplementation",
+      "range": {
+        "startLine": 15,
+        "startChar": 6,
+        "endLine": 15,
+        "endChar": 24
+      },
+      "revId": "f0aedd2067a3b79a7494a5a1d9b2b67e5f1a6980",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "234d525a_5462c2be",
         "filename": "src/libANGLE/TransformFeedback.cpp",
         "patchSetId": 3
@@ -13,6 +36,30 @@
       "writtenOn": "2015-04-09T20:27:56Z",
       "side": 1,
       "message": "Nit:\nI think this should be something like:\nif(paused) { resume(); }\n... but it probably doesn\u0027t actually do anything different.",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 20
+      },
+      "revId": "f0aedd2067a3b79a7494a5a1d9b2b67e5f1a6980",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0299e86_cec363b6",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-13T15:19:57Z",
+      "side": 1,
+      "message": "I think it\u0027s probably more correct to call end() to pass through the specific API to the impl object/GL layer.",
+      "parentUuid": "234d525a_5462c2be",
       "range": {
         "startLine": 40,
         "startChar": 4,
