@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9033a6f4_13906b18",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-13T21:55:29Z",
+      "side": 1,
+      "message": "Note: (not for this patch) we may want to consider allowing ANGLE\u0027s assertions to be enabled in Release builds to catch more issues on the commit queue and waterfall. This would require switching away from the system-level assert macro and doing a different preprocessor check here. See https://code.google.com/p/chromium/codesearch#chromium/src/third_party/WebKit/Source/wtf/Assertions.h\u0026l\u003d49 for an example of how the dcheck_always_on\u003d1 GYP_DEFINE takes effect in Blink.",
+      "range": {
+        "startLine": 22,
+        "startChar": 7,
+        "endLine": 22,
+        "endChar": 13
+      },
+      "revId": "7beedddba0dc0a97abe6ee864fd4ee09bd5a2c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0299e86_18b76ac8",
+        "filename": "src/libANGLE/renderer/gl/RenderbufferGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-13T21:55:29Z",
+      "side": 1,
+      "message": "I think we should add a TODO here. As far as I can tell there is still the same problem as mentioned in an earlier CL where this out-of-memory check may end up swallowing GL errors that should have been passed on to the caller.",
+      "range": {
+        "startLine": 44,
+        "startChar": 32,
+        "endLine": 44,
+        "endChar": 58
+      },
+      "revId": "7beedddba0dc0a97abe6ee864fd4ee09bd5a2c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
