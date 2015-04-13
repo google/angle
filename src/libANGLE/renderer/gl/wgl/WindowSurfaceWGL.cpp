@@ -33,7 +33,6 @@ WindowSurfaceWGL::~WindowSurfaceWGL()
     mPixelFormat = 0;
     mShareWGLContext = nullptr;
 
-    mFunctionsWGL->makeCurrent(mChildDeviceContext, nullptr);
     ReleaseDC(mChildWindow, mChildDeviceContext);
     mChildDeviceContext = nullptr;
 
