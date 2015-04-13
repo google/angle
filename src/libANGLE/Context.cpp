@@ -819,7 +819,7 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS:       *params = mCaps.maxTransformFeedbackSeparateAttributes;    break;
       case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS:    *params = mCaps.maxTransformFeedbackSeparateComponents;    break;
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:           *params = mCaps.compressedTextureFormats.size();                break;
-      case GL_MAX_SAMPLES_ANGLE:                        *params = mExtensions.maxSamples;                               break;
+      case GL_MAX_SAMPLES_ANGLE:                        *params = mCaps.maxSamples;                                     break;
       case GL_MAX_VIEWPORT_DIMS:
         {
             params[0] = mCaps.maxViewportWidth;
@@ -1576,7 +1576,7 @@ void Context::initCaps(GLuint clientVersion)
         mTextureCaps.insert(format, formatCaps);
     }
 
-    mExtensions.maxSamples = maxSamples;
+    mCaps.maxSamples = maxSamples;
 }
 
 Data Context::getData() const

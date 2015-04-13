@@ -183,6 +183,9 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     caps->maxTransformFeedbackSeparateAttributes = 4;
     caps->maxTransformFeedbackSeparateComponents = 4;
 
+    // Table 6.35, Framebuffer Dependent Values
+    caps->maxSamples = 4;
+
     // Extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
     extensions->textureNPOT = true;

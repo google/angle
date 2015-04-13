@@ -177,7 +177,6 @@ struct Extensions
 
     // GL_ANGLE_framebuffer_multisample
     bool framebufferMultisample;
-    GLuint maxSamples;
 
     // GL_ANGLE_instanced_arrays
     bool instancedArrays;
@@ -305,6 +304,9 @@ struct Caps
     GLuint maxTransformFeedbackInterleavedComponents;
     GLuint maxTransformFeedbackSeparateAttributes;
     GLuint maxTransformFeedbackSeparateComponents;
+
+    // Table 6.35, Framebuffer Dependent Values
+    GLuint maxSamples;
 };
 
 }

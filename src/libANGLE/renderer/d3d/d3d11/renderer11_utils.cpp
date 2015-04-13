@@ -1072,6 +1072,9 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, gl::
     caps->maxTransformFeedbackSeparateAttributes = GetMaximumStreamOutputBuffers(featureLevel);
     caps->maxTransformFeedbackSeparateComponents = GetMaximumStreamOutputSeparateComponents(featureLevel);
 
+    // Multisample limits
+    caps->maxSamples = maxSamples;
+
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
     extensions->elementIndexUint = true;
@@ -1094,7 +1097,6 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, gl::
     extensions->blendMinMax = true;
     extensions->framebufferBlit = GetFramebufferBlitSupport(featureLevel);
     extensions->framebufferMultisample = GetFramebufferMultisampleSupport(featureLevel);
-    extensions->maxSamples = maxSamples;
     extensions->instancedArrays = GetInstancingSupport(featureLevel);
     extensions->packReverseRowOrder = true;
     extensions->standardDerivatives = GetDerivativeInstructionSupport(featureLevel);

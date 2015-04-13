@@ -351,9 +351,9 @@ bool ValidateRenderbufferStorageParametersANGLE(gl::Context *context, GLenum tar
     ASSERT(samples == 0 || context->getExtensions().framebufferMultisample);
 
     // ANGLE_framebuffer_multisample states that the value of samples must be less than or equal
-    // to MAX_SAMPLES_ANGLE (Context::getExtensions().maxSamples) otherwise GL_INVALID_VALUE is
+    // to MAX_SAMPLES_ANGLE (Context::getCaps().maxSamples) otherwise GL_INVALID_VALUE is
     // generated.
-    if (static_cast<GLuint>(samples) > context->getExtensions().maxSamples)
+    if (static_cast<GLuint>(samples) > context->getCaps().maxSamples)
     {
         context->recordError(Error(GL_INVALID_VALUE));
         return false;

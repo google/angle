@@ -448,7 +448,7 @@ Caps::Caps()
       maxTextureImageUnits(0),
       minProgramTexelOffset(0),
       maxProgramTexelOffset(0),
-
+      // Table 6.33
       maxUniformBufferBindings(0),
       maxUniformBlockSize(0),
       uniformBufferOffsetAlignment(0),
@@ -458,10 +458,12 @@ Caps::Caps()
       maxVaryingComponents(0),
       maxVaryingVectors(0),
       maxCombinedTextureImageUnits(0),
-
+      // Table 6.34
       maxTransformFeedbackInterleavedComponents(0),
       maxTransformFeedbackSeparateAttributes(0),
-      maxTransformFeedbackSeparateComponents(0)
+      maxTransformFeedbackSeparateComponents(0),
+      // Table 6.35
+      maxSamples(0)
 {
 }
 
