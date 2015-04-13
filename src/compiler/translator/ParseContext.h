@@ -106,7 +106,6 @@ struct TParseContext {
     bool samplerErrorCheck(const TSourceLoc& line, const TPublicType& pType, const char* reason);
     bool locationDeclaratorListCheck(const TSourceLoc& line, const TPublicType &pType);
     bool parameterSamplerErrorCheck(const TSourceLoc& line, TQualifier qualifier, const TType& type);
-    bool nonInitConstErrorCheck(const TSourceLoc &line, const TString &identifier, TPublicType *type);
     bool paramErrorCheck(const TSourceLoc& line, TQualifier qualifier, TQualifier paramQualifier, TType* type);
     bool extensionErrorCheck(const TSourceLoc& line, const TString&);
     bool singleDeclarationErrorCheck(TPublicType &publicType, const TSourceLoc &identifierLocation);
@@ -215,6 +214,8 @@ struct TParseContext {
 
   private:
     bool declareVariable(const TSourceLoc &line, const TString &identifier, const TType &type, TVariable **variable);
+
+    bool nonInitErrorCheck(const TSourceLoc &line, const TString &identifier, TPublicType *type);
 
     TIntermTyped *addBinaryMathInternal(TOperator op, TIntermTyped *left, TIntermTyped *right,
         const TSourceLoc &loc);

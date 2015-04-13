@@ -347,3 +347,20 @@ TEST_F(MalformedShaderTest, ArraysOfArrays2)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Implicitly sized arrays need to be initialized (ESSL 3.00 section 4.1.9)
+TEST_F(MalformedShaderTest, UninitializedImplicitArraySize)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   float[] a;\n"
+        "   my_FragColor = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

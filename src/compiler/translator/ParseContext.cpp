@@ -512,9 +512,17 @@ bool TParseContext::constructorErrorCheck(const TSourceLoc& line, TIntermNode* n
     if (constType)
         type->setQualifier(EvqConst);
 
-    if (type->isArray() && static_cast<size_t>(type->getArraySize()) != function.getParamCount()) {
-        error(line, "array constructor needs one argument per array element", "constructor");
-        return true;
+    if (type->isArray())
+    {
+        if (type->isUnsizedArray())
+        {
+            type->setArraySize(function.getParamCount());
+        }
+        else if (static_cast<size_t>(type->getArraySize()) != function.getParamCount())
+        {
+            error(line, "array constructor needs one argument per array element", "constructor");
+            return true;
+        }
     }
 
     if (arrayArg && op != EOpConstructStruct) {
@@ -763,7 +771,7 @@ bool TParseContext::arrayTypeErrorCheck(const TSourceLoc& line, TPublicType type
 //
 // Returns true if there was an error.
 //
-bool TParseContext::nonInitConstErrorCheck(const TSourceLoc &line, const TString &identifier, TPublicType *type)
+bool TParseContext::nonInitErrorCheck(const TSourceLoc &line, const TString &identifier, TPublicType *type)
 {
     ASSERT(type != nullptr);
     if (type->qualifier == EvqConst)
@@ -782,6 +790,11 @@ bool TParseContext::nonInitConstErrorCheck(const TSourceLoc &line, const TString
             error(line, "variables with qualifier 'const' must be initialized", identifier.c_str());
         }
 
+        return true;
+    }
+    if (type->isUnsizedArray())
+    {
+        error(line, "implicitly sized arrays need to be initialized", identifier.c_str());
         return true;
     }
     return false;
@@ -1083,6 +1096,10 @@ bool TParseContext::executeInitializer(const TSourceLoc &line, const TString &id
     TType type = TType(pType);
 
     TVariable *variable = nullptr;
+    if (type.isUnsizedArray())
+    {
+        type.setArraySize(initializer->getArraySize());
+    }
     if (!declareVariable(line, identifier, type, &variable))
     {
         return true;
@@ -1252,7 +1269,7 @@ TIntermAggregate *TParseContext::parseSingleDeclaration(TPublicType &publicType,
         if (singleDeclarationErrorCheck(publicType, identifierOrTypeLocation))
             recover();
 
-        if (nonInitConstErrorCheck(identifierOrTypeLocation, identifier, &publicType))
+        if (nonInitErrorCheck(identifierOrTypeLocation, identifier, &publicType))
             recover();
 
         TVariable *variable = nullptr;
@@ -1277,7 +1294,7 @@ TIntermAggregate *TParseContext::parseSingleArrayDeclaration(TPublicType &public
     if (singleDeclarationErrorCheck(publicType, identifierLocation))
         recover();
 
-    if (nonInitConstErrorCheck(identifierLocation, identifier, &publicType))
+    if (nonInitErrorCheck(identifierLocation, identifier, &publicType))
         recover();
 
     if (arrayTypeErrorCheck(indexLocation, publicType) || arrayQualifierErrorCheck(indexLocation, publicType))
@@ -1353,8 +1370,9 @@ TIntermAggregate *TParseContext::parseSingleArrayInitDeclaration(TPublicType &pu
 
     TPublicType arrayType(publicType);
 
-    int size;
-    if (arraySizeErrorCheck(identifierLocation, indexExpression, size))
+    int size = 0;
+    // If indexExpression is nullptr, then the array will eventually get its size implicitly from the initializer.
+    if (indexExpression != nullptr && arraySizeErrorCheck(identifierLocation, indexExpression, size))
     {
         recover();
     }
@@ -1428,7 +1446,7 @@ TIntermAggregate *TParseContext::parseDeclarator(TPublicType &publicType, TInter
     if (locationDeclaratorListCheck(identifierLocation, publicType))
         recover();
 
-    if (nonInitConstErrorCheck(identifierLocation, identifier, &publicType))
+    if (nonInitErrorCheck(identifierLocation, identifier, &publicType))
         recover();
 
     TVariable *variable = nullptr;
@@ -1457,7 +1475,7 @@ TIntermAggregate *TParseContext::parseArrayDeclarator(TPublicType &publicType, T
     if (locationDeclaratorListCheck(identifierLocation, publicType))
         recover();
 
-    if (nonInitConstErrorCheck(identifierLocation, identifier, &publicType))
+    if (nonInitErrorCheck(identifierLocation, identifier, &publicType))
         recover();
 
     if (arrayTypeErrorCheck(arrayLocation, publicType) || arrayQualifierErrorCheck(arrayLocation, publicType))
@@ -1551,8 +1569,9 @@ TIntermAggregate *TParseContext::parseArrayInitDeclarator(TPublicType &publicTyp
 
     TPublicType arrayType(publicType);
 
-    int size;
-    if (arraySizeErrorCheck(identifierLocation, indexExpression, size))
+    int size = 0;
+    // If indexExpression is nullptr, then the array will eventually get its size implicitly from the initializer.
+    if (indexExpression != nullptr && arraySizeErrorCheck(identifierLocation, indexExpression, size))
     {
         recover();
     }
@@ -2873,6 +2892,7 @@ bool TParseContext::binaryOpCommonCheck(TOperator op, TIntermTyped *left, TInter
             error(loc, "Invalid operation for arrays", GetOperatorString(op));
             return false;
         }
+        // At this point, size of implicitly sized arrays should be resolved.
         if (left->getArraySize() != right->getArraySize())
         {
             error(loc, "array size mismatch", GetOperatorString(op));

@@ -889,6 +889,11 @@ init_declarator_list
         $$ = $1;
         $$.intermAggregate = context->parseArrayDeclarator($$.type, $1.intermAggregate, @3, *$3.string, @4, $5);
     }
+    | init_declarator_list COMMA identifier LEFT_BRACKET RIGHT_BRACKET EQUAL initializer {
+        ES3_ONLY("[]", @3, "implicitly sized array");
+        $$ = $1;
+        $$.intermAggregate = context->parseArrayInitDeclarator($$.type, $1.intermAggregate, @3, *$3.string, @4, nullptr, @6, $7);
+    }
     | init_declarator_list COMMA identifier LEFT_BRACKET constant_expression RIGHT_BRACKET EQUAL initializer {
         ES3_ONLY("=", @7, "first-class arrays (array initializer)");
         $$ = $1;
@@ -909,16 +914,14 @@ single_declaration
         $$.type = $1;
         $$.intermAggregate = context->parseSingleDeclaration($$.type, @2, *$2.string);
     }
-    | fully_specified_type identifier LEFT_BRACKET RIGHT_BRACKET {
-        context->error(@2, "unsized array declarations not supported", $2.string->c_str());
-        context->recover();
-
-        $$.type = $1;
-        $$.intermAggregate = context->parseSingleDeclaration($$.type, @2, *$2.string);
-    }
     | fully_specified_type identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         $$.type = $1;
         $$.intermAggregate = context->parseSingleArrayDeclaration($$.type, @2, *$2.string, @3, $4);
+    }
+    | fully_specified_type identifier LEFT_BRACKET RIGHT_BRACKET EQUAL initializer {
+        ES3_ONLY("[]", @3, "implicitly sized array");
+        $$.type = $1;
+        $$.intermAggregate = context->parseSingleArrayInitDeclaration($$.type, @2, *$2.string, @3, nullptr, @5, $6);
     }
     | fully_specified_type identifier LEFT_BRACKET constant_expression RIGHT_BRACKET EQUAL initializer {
         ES3_ONLY("=", @6, "first-class arrays (array initializer)");
@@ -1122,6 +1125,11 @@ layout_qualifier_id
 type_specifier_no_prec
     : type_specifier_nonarray {
         $$ = $1;
+    }
+    | type_specifier_nonarray LEFT_BRACKET RIGHT_BRACKET {
+        ES3_ONLY("[]", @2, "implicitly sized array");
+        $$ = $1;
+        $$.setArraySize(0);
     }
     | type_specifier_nonarray LEFT_BRACKET constant_expression RIGHT_BRACKET {
         $$ = $1;

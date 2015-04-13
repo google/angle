@@ -340,7 +340,11 @@ class TType
     }
     bool isArray() const
     {
-        return array ? true : false;
+        return array;
+    }
+    bool isUnsizedArray() const
+    {
+        return array && arraySize == 0;
     }
     int getArraySize() const
     {
@@ -553,6 +557,10 @@ struct TPublicType
         secondarySize = r;
     }
 
+    bool isUnsizedArray() const
+    {
+        return array && arraySize == 0;
+    }
     void setArraySize(int s)
     {
         array = true;
