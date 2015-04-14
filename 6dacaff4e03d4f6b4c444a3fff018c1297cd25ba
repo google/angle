@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9033a6f4_8112be52",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-14T15:31:45Z",
+      "side": 1,
+      "message": "This failed compiling on clang because Device.h is not included here.",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 42
+      },
+      "revId": "6dacaff4e03d4f6b4c444a3fff018c1297cd25ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
