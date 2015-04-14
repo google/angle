@@ -13,6 +13,7 @@
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wswitch-enum"
 #elif defined(_MSC_VER)
+#pragma warning(disable: 4005)
 #pragma warning(disable: 4065)
 #pragma warning(disable: 4189)
 #pragma warning(disable: 4244)
