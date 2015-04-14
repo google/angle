@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "9033a6f4_2d5bfb10",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T18:50:34Z",
+      "side": 1,
+      "message": "is this going to trigger any size_t/unsigned int loss of data warning? couldn\u0027t hurt to make an explicit cast.",
+      "range": {
+        "startLine": 158,
+        "startChar": 88,
+        "endLine": 158,
+        "endChar": 104
+      },
+      "revId": "90e712d4fde2831a0199d9bd8febce573c4726b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9033a6f4_8d378f11",
         "filename": "src/tests/end2end_tests/UniformTest.cpp",
         "patchSetId": 3
@@ -13,6 +36,30 @@
       "writtenOn": "2015-04-14T18:36:28Z",
       "side": 1,
       "message": "How about some stronger checks like\n\nEXPECT_EQ(glGetUniformLocation(program, \"uPosition\"), glGetUniformLocation(program, \"uPosition[0]\"));\n\n? Also, perhaps that the locations of the four array elements are all unique?",
+      "range": {
+        "startLine": 106,
+        "startChar": 39,
+        "endLine": 106,
+        "endChar": 46
+      },
+      "revId": "90e712d4fde2831a0199d9bd8febce573c4726b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0242aae_2e01a8be",
+        "filename": "src/tests/end2end_tests/UniformTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T18:50:34Z",
+      "side": 1,
+      "message": "+1, particularly to uniqueness check, I imagine that could catch a few types of bug",
+      "parentUuid": "9033a6f4_8d378f11",
       "range": {
         "startLine": 106,
         "startChar": 39,
