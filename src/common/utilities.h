@@ -40,6 +40,10 @@ bool IsCubeMapTextureTarget(GLenum target);
 size_t CubeMapTextureTargetToLayerIndex(GLenum target);
 GLenum LayerIndexToCubeMapTextureTarget(size_t index);
 
+// Parse the base uniform name and array index.  Returns the base name of the uniform. outSubscript is
+// set to GL_INVALID_INDEX if the provided name is not an array or the array index is invalid.
+std::string ParseUniformName(const std::string &name, size_t *outSubscript);
+
 bool IsTriangleMode(GLenum drawMode);
 
 // [OpenGL ES 3.0.2] Section 2.3.1 page 14

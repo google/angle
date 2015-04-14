@@ -116,9 +116,9 @@ class ProgramImpl : angle::NonCopyable
     gl::LinkedUniform *getUniformByName(const std::string &name) const;
     gl::UniformBlock *getUniformBlockByIndex(GLuint blockIndex) const;
 
-    GLint getUniformLocation(std::string name);
-    GLuint getUniformIndex(std::string name);
-    GLuint getUniformBlockIndex(std::string name) const;
+    GLint getUniformLocation(const std::string &name) const;
+    GLuint getUniformIndex(const std::string &name) const;
+    GLuint getUniformBlockIndex(const std::string &name) const;
 
     virtual void reset();
 

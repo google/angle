@@ -13,27 +13,6 @@
 namespace rx
 {
 
-namespace
-{
-
-unsigned int ParseAndStripArrayIndex(std::string* name)
-{
-    unsigned int subscript = GL_INVALID_INDEX;
-
-    // Strip any trailing array operator and retrieve the subscript
-    size_t open = name->find_last_of('[');
-    size_t close = name->find_last_of(']');
-    if (open != std::string::npos && close == name->length() - 1)
-    {
-        subscript = atoi(name->substr(open + 1).c_str());
-        name->erase(open);
-    }
-
-    return subscript;
-}
-
-}
-
 LinkResult::LinkResult(bool linkSuccess, const gl::Error &error)
     : linkSuccess(linkSuccess),
       error(error)
@@ -71,14 +50,15 @@ gl::UniformBlock *ProgramImpl::getUniformBlockByIndex(GLuint blockIndex) const
     return mUniformBlocks[blockIndex];
 }
 
-GLint ProgramImpl::getUniformLocation(std::string name)
+GLint ProgramImpl::getUniformLocation(const std::string &name) const
 {
-    unsigned int subscript = ParseAndStripArrayIndex(&name);
+    size_t subscript = GL_INVALID_INDEX;
+    std::string baseName = gl::ParseUniformName(name, &subscript);
 
     unsigned int numUniforms = mUniformIndex.size();
     for (unsigned int location = 0; location < numUniforms; location++)
     {
-        if (mUniformIndex[location].name == name)
+        if (mUniformIndex[location].name == baseName)
         {
             const int index = mUniformIndex[location].index;
             const bool isArray = mUniforms[index]->isArray();
@@ -94,9 +74,10 @@ GLint ProgramImpl::getUniformLocation(std::string name)
     return -1;
 }
 
-GLuint ProgramImpl::getUniformIndex(std::string name)
+GLuint ProgramImpl::getUniformIndex(const std::string &name) const
 {
-    unsigned int subscript = ParseAndStripArrayIndex(&name);
+    size_t subscript = GL_INVALID_INDEX;
+    std::string baseName = gl::ParseUniformName(name, &subscript);
 
     // The app is not allowed to specify array indices other than 0 for arrays of basic types
     if (subscript != 0 && subscript != GL_INVALID_INDEX)
@@ -107,7 +88,7 @@ GLuint ProgramImpl::getUniformIndex(std::string name)
     unsigned int numUniforms = mUniforms.size();
     for (unsigned int index = 0; index < numUniforms; index++)
     {
-        if (mUniforms[index]->name == name)
+        if (mUniforms[index]->name == baseName)
         {
             if (mUniforms[index]->isArray() || subscript == GL_INVALID_INDEX)
             {
@@ -119,15 +100,16 @@ GLuint ProgramImpl::getUniformIndex(std::string name)
     return GL_INVALID_INDEX;
 }
 
-GLuint ProgramImpl::getUniformBlockIndex(std::string name) const
+GLuint ProgramImpl::getUniformBlockIndex(const std::string &name) const
 {
-    unsigned int subscript = ParseAndStripArrayIndex(&name);
+    size_t subscript = GL_INVALID_INDEX;
+    std::string baseName = gl::ParseUniformName(name, &subscript);
 
     unsigned int numUniformBlocks = mUniformBlocks.size();
     for (unsigned int blockIndex = 0; blockIndex < numUniformBlocks; blockIndex++)
     {
         const gl::UniformBlock &uniformBlock = *mUniformBlocks[blockIndex];
-        if (uniformBlock.name == name)
+        if (uniformBlock.name == baseName)
         {
             const bool arrayElementZero = (subscript == GL_INVALID_INDEX && uniformBlock.elementIndex == 0);
             if (subscript == uniformBlock.elementIndex || arrayElementZero)
