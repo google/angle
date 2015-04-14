@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d0299e86_e34e1f4d",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-14T19:27:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9033a6f4_0dca7f9c",
+      "range": {
+        "startLine": 467,
+        "startChar": 4,
+        "endLine": 470,
+        "endChar": 5
+      },
+      "revId": "a8406cce95d47950dbfc7c0b58ab931517e5e192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0242aae_9381e94b",
         "filename": "src/common/utilities.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-14T18:38:39Z",
       "side": 1,
       "message": "ASSERT?",
+      "range": {
+        "startLine": 480,
+        "startChar": 12,
+        "endLine": 480,
+        "endChar": 27
+      },
+      "revId": "a8406cce95d47950dbfc7c0b58ab931517e5e192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9033a6f4_2da09be6",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-14T19:27:55Z",
+      "side": 1,
+      "message": "Our validation layer doesn\u0027t check for this so I didn\u0027t want to assert on it.",
+      "parentUuid": "b0242aae_9381e94b",
       "range": {
         "startLine": 480,
         "startChar": 12,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d0299e86_a348173f",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-14T19:27:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0299e86_31b7d4c8",
+      "range": {
+        "startLine": 488,
+        "startChar": 4,
+        "endLine": 488,
+        "endChar": 8
+      },
+      "revId": "a8406cce95d47950dbfc7c0b58ab931517e5e192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0242aae_8e153c76",
         "filename": "src/libANGLE/renderer/ProgramImpl.cpp",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2015-04-14T18:38:39Z",
       "side": 1,
       "message": "nit: alignments",
+      "range": {
+        "startLine": 77,
+        "startChar": 53,
+        "endLine": 77,
+        "endChar": 54
+      },
+      "revId": "a8406cce95d47950dbfc7c0b58ab931517e5e192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9033a6f4_f8080f5c",
+        "filename": "src/libANGLE/renderer/ProgramImpl.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-14T19:27:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0242aae_8e153c76",
       "range": {
         "startLine": 77,
         "startChar": 53,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "b0242aae_8976568b",
+        "filename": "src/libANGLE/renderer/ProgramImpl.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-14T19:27:55Z",
+      "side": 1,
+      "message": "Looks fine, it\u0027s using return value optimization.",
+      "parentUuid": "9033a6f4_6d2c63c7",
+      "range": {
+        "startLine": 80,
+        "startChar": 3,
+        "endLine": 80,
+        "endChar": 24
+      },
+      "revId": "a8406cce95d47950dbfc7c0b58ab931517e5e192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0242aae_2ecac89c",
         "filename": "src/libANGLE/renderer/ProgramImpl.h",
         "patchSetId": 2
@@ -128,6 +248,30 @@
       "writtenOn": "2015-04-14T18:38:39Z",
       "side": 1,
       "message": "nit: alignments",
+      "range": {
+        "startLine": 119,
+        "startChar": 46,
+        "endLine": 119,
+        "endChar": 47
+      },
+      "revId": "a8406cce95d47950dbfc7c0b58ab931517e5e192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0299e86_03fb6b41",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-14T19:27:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0242aae_2ecac89c",
       "range": {
         "startLine": 119,
         "startChar": 46,
