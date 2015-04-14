@@ -50,7 +50,7 @@ static void BindFramebufferAttachment(const FunctionsGL *functions, GLenum attac
     {
         if (attachment->type() == GL_TEXTURE)
         {
-            const gl::Texture *texture = GetAs<gl::TextureAttachment>(attachment)->getTexture();
+            const gl::Texture *texture = attachment->getTexture();
             const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
 
             if (texture->getTarget() == GL_TEXTURE_2D)
@@ -75,7 +75,7 @@ static void BindFramebufferAttachment(const FunctionsGL *functions, GLenum attac
         }
         else if (attachment->type() == GL_RENDERBUFFER)
         {
-            const gl::Renderbuffer *renderbuffer = GetAs<gl::RenderbufferAttachment>(attachment)->getRenderbuffer();
+            const gl::Renderbuffer *renderbuffer = attachment->getRenderbuffer();
             const RenderbufferGL *renderbufferGL = GetImplAs<RenderbufferGL>(renderbuffer);
 
             functions->framebufferRenderbuffer(GL_FRAMEBUFFER, attachmentPoint, GL_RENDERBUFFER,

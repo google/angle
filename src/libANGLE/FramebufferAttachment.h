@@ -32,13 +32,14 @@ class Texture;
 // Note: Our old naming scheme used the term "Renderbuffer" for both GL renderbuffers and for
 // framebuffer attachments, which confused their usage.
 
-class FramebufferAttachment : angle::NonCopyable
+class FramebufferAttachment final : angle::NonCopyable
 {
   public:
-    FramebufferAttachment(GLenum binding,
+    FramebufferAttachment(GLenum type,
+                          GLenum binding,
                           const ImageIndex &textureIndex,
                           FramebufferAttachmentObject *resource);
-    virtual ~FramebufferAttachment();
+    ~FramebufferAttachment();
 
     // A framebuffer attachment points to one of three types of resources: Renderbuffers,
     // Textures and egl::Surface. The "Target" struct indicates which part of the
@@ -71,8 +72,8 @@ class FramebufferAttachment : angle::NonCopyable
     GLenum getComponentType() const;
     GLenum getColorEncoding() const;
 
-    bool isTextureWithId(GLuint textureId) const { return type() == GL_TEXTURE && id() == textureId; }
-    bool isRenderbufferWithId(GLuint renderbufferId) const { return type() == GL_RENDERBUFFER && id() == renderbufferId; }
+    bool isTextureWithId(GLuint textureId) const { return mType == GL_TEXTURE && id() == textureId; }
+    bool isRenderbufferWithId(GLuint renderbufferId) const { return mType == GL_RENDERBUFFER && id() == renderbufferId; }
 
     GLenum getBinding() const { return mTarget.binding(); }
     GLuint id() const { return mResource.id(); }
@@ -87,58 +88,16 @@ class FramebufferAttachment : angle::NonCopyable
     GLsizei getHeight() const;
     GLenum getInternalFormat() const;
     GLsizei getSamples() const;
+    GLenum type() const { return mType; }
 
-    // Child class interface
-    virtual GLenum type() const = 0;
+    Renderbuffer *getRenderbuffer() const;
+    Texture *getTexture() const;
+    const egl::Surface *getSurface() const;
 
-    virtual Texture *getTexture() const = 0;
-    virtual Renderbuffer *getRenderbuffer() const = 0;
-
-  protected:
+  private:
+    GLenum mType;
     Target mTarget;
     BindingPointer<FramebufferAttachmentObject> mResource;
-};
-
-class TextureAttachment : public FramebufferAttachment
-{
-  public:
-    TextureAttachment(GLenum binding, Texture *texture, const ImageIndex &index);
-    virtual ~TextureAttachment();
-
-    virtual GLenum type() const;
-
-    virtual Renderbuffer *getRenderbuffer() const;
-
-    Texture *getTexture() const override;
-};
-
-class RenderbufferAttachment : public FramebufferAttachment
-{
-  public:
-    RenderbufferAttachment(GLenum binding, Renderbuffer *renderbuffer);
-
-    virtual ~RenderbufferAttachment();
-
-    virtual GLenum type() const;
-
-    virtual Texture *getTexture() const;
-
-    Renderbuffer *getRenderbuffer() const override;
-};
-
-class DefaultAttachment : public FramebufferAttachment
-{
-  public:
-    DefaultAttachment(GLenum binding, egl::Surface *surface);
-
-    virtual ~DefaultAttachment();
-
-    virtual GLenum type() const;
-
-    virtual Texture *getTexture() const;
-    virtual Renderbuffer *getRenderbuffer() const;
-
-    const egl::Surface *getSurface() const;
 };
 
 // A base class for objects that FBO Attachments may point to.
@@ -152,6 +111,26 @@ class FramebufferAttachmentObject : public RefCountObject
     virtual GLenum getAttachmentInternalFormat(const FramebufferAttachment::Target &target) const = 0;
     virtual GLsizei getAttachmentSamples(const FramebufferAttachment::Target &target) const = 0;
 };
+
+inline GLsizei FramebufferAttachment::getWidth() const
+{
+    return mResource->getAttachmentWidth(mTarget);
+}
+
+inline GLsizei FramebufferAttachment::getHeight() const
+{
+    return mResource->getAttachmentHeight(mTarget);
+}
+
+inline GLenum FramebufferAttachment::getInternalFormat() const
+{
+    return mResource->getAttachmentInternalFormat(mTarget);
+}
+
+inline GLsizei FramebufferAttachment::getSamples() const
+{
+    return mResource->getAttachmentSamples(mTarget);
+}
 
 }
 

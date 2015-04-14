@@ -556,12 +556,12 @@ bool Framebuffer::hasValidDepthStencil() const
 
 void Framebuffer::setTextureAttachment(GLenum attachment, Texture *texture, const ImageIndex &imageIndex)
 {
-    setAttachment(attachment, new TextureAttachment(attachment, texture, imageIndex));
+    setAttachment(attachment, new FramebufferAttachment(GL_TEXTURE, attachment, imageIndex, texture));
 }
 
 void Framebuffer::setRenderbufferAttachment(GLenum attachment, Renderbuffer *renderbuffer)
 {
-    setAttachment(attachment, new RenderbufferAttachment(attachment, renderbuffer));
+    setAttachment(attachment, new FramebufferAttachment(GL_RENDERBUFFER, attachment, ImageIndex::MakeInvalid(), renderbuffer));
 }
 
 void Framebuffer::setNULLAttachment(GLenum attachment)
@@ -611,13 +611,18 @@ void Framebuffer::setAttachment(GLenum attachment, FramebufferAttachment *attach
             // See angle issue 686
             if (attachmentObj->type() == GL_TEXTURE)
             {
-                mData.mStencilAttachment = new TextureAttachment(GL_DEPTH_STENCIL_ATTACHMENT, attachmentObj->getTexture(),
-                                                                 attachmentObj->getTextureImageIndex());
+                mData.mStencilAttachment = new FramebufferAttachment(GL_TEXTURE,
+                                                                     GL_DEPTH_STENCIL_ATTACHMENT,
+                                                                     attachmentObj->getTextureImageIndex(),
+                                                                     attachmentObj->getTexture());
                 mImpl->setStencilAttachment(mData.mStencilAttachment);
             }
             else if (attachmentObj->type() == GL_RENDERBUFFER)
             {
-                mData.mStencilAttachment = new RenderbufferAttachment(GL_DEPTH_STENCIL_ATTACHMENT, attachmentObj->getRenderbuffer());
+                mData.mStencilAttachment = new FramebufferAttachment(GL_RENDERBUFFER,
+                                                                     GL_DEPTH_STENCIL_ATTACHMENT,
+                                                                     ImageIndex::MakeInvalid(),
+                                                                     attachmentObj->getRenderbuffer());
                 mImpl->setStencilAttachment(mData.mStencilAttachment);
             }
             else
@@ -637,15 +642,15 @@ DefaultFramebuffer::DefaultFramebuffer(const Caps &caps, rx::ImplFactory *factor
 {
     const egl::Config *config = surface->getConfig();
 
-    setAttachment(GL_BACK, new DefaultAttachment(GL_BACK, surface));
+    setAttachment(GL_BACK, new FramebufferAttachment(GL_FRAMEBUFFER_DEFAULT, GL_BACK, ImageIndex::MakeInvalid(), surface));
 
     if (config->depthSize > 0)
     {
-        setAttachment(GL_DEPTH, new DefaultAttachment(GL_DEPTH, surface));
+        setAttachment(GL_DEPTH, new FramebufferAttachment(GL_FRAMEBUFFER_DEFAULT, GL_DEPTH, ImageIndex::MakeInvalid(), surface));
     }
     if (config->stencilSize > 0)
     {
-        setAttachment(GL_STENCIL, new DefaultAttachment(GL_STENCIL, surface));
+        setAttachment(GL_STENCIL, new FramebufferAttachment(GL_FRAMEBUFFER_DEFAULT, GL_STENCIL, ImageIndex::MakeInvalid(), surface));
     }
 
     GLenum drawBufferState = GL_BACK;

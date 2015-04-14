@@ -393,13 +393,12 @@ gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment,
     }
     else if (attachment->type() == GL_FRAMEBUFFER_DEFAULT)
     {
-        const gl::DefaultAttachment *defaultAttachment = static_cast<const gl::DefaultAttachment *>(attachment);
-        const egl::Surface *surface = defaultAttachment->getSurface();
+        const egl::Surface *surface = attachment->getSurface();
         ASSERT(surface);
         const SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
         ASSERT(surfaceD3D);
 
-        if (defaultAttachment->getBinding() == GL_BACK)
+        if (attachment->getBinding() == GL_BACK)
         {
             *outRT = surfaceD3D->getSwapChain()->getColorRenderTarget();
         }
@@ -436,13 +435,12 @@ unsigned int GetAttachmentSerial(const gl::FramebufferAttachment *attachment)
     }
     else if (attachment->type() == GL_FRAMEBUFFER_DEFAULT)
     {
-        const gl::DefaultAttachment *defaultAttachment = static_cast<const gl::DefaultAttachment *>(attachment);
-        const egl::Surface *surface = defaultAttachment->getSurface();
+        const egl::Surface *surface = attachment->getSurface();
         ASSERT(surface);
         const SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
         ASSERT(surfaceD3D);
 
-        if (defaultAttachment->getBinding() == GL_BACK)
+        if (attachment->getBinding() == GL_BACK)
         {
             return surfaceD3D->getSwapChain()->getColorRenderTarget()->getSerial();
         }
