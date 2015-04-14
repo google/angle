@@ -7,16 +7,17 @@
 // SwapChain11.cpp: Implements a back-end specific class for the D3D11 swap chain.
 
 #include "libANGLE/renderer/d3d/d3d11/SwapChain11.h"
-#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
-#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
+
 #include "libANGLE/features.h"
+#include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+#include "third_party/trace_event/trace_event.h"
 
 // Precompiled shaders
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthrough2d11vs.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthroughrgba2d11ps.h"
-
 
 namespace rx
 {
@@ -89,6 +90,7 @@ void SwapChain11::releaseOffscreenTexture()
 
 EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHeight)
 {
+    TRACE_EVENT0("gpu.angle", "SwapChain11::resetOffscreenTexture");
     ID3D11Device *device = mRenderer->getDevice();
 
     ASSERT(device != NULL);
@@ -324,6 +326,7 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
 
 EGLint SwapChain11::resize(EGLint backbufferWidth, EGLint backbufferHeight)
 {
+    TRACE_EVENT0("gpu.angle", "SwapChain11::resize");
     ID3D11Device *device = mRenderer->getDevice();
 
     if (device == NULL)
@@ -383,6 +386,7 @@ EGLint SwapChain11::resize(EGLint backbufferWidth, EGLint backbufferHeight)
 
 EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swapInterval)
 {
+    TRACE_EVENT0("gpu.angle", "SwapChain11::reset");
     ID3D11Device *device = mRenderer->getDevice();
 
     if (device == NULL)
@@ -454,6 +458,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
 
 void SwapChain11::initPassThroughResources()
 {
+    TRACE_EVENT0("gpu.angle", "SwapChain11::initPassThroughResources");
     ID3D11Device *device = mRenderer->getDevice();
 
     ASSERT(device != NULL);

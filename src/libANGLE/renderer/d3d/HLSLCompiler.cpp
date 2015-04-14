@@ -119,7 +119,7 @@ HLSLCompiler::~HLSLCompiler()
 
 bool HLSLCompiler::initialize()
 {
-    TRACE_EVENT0("gpu", "initializeCompiler");
+    TRACE_EVENT0("gpu.angle", "HLSLCompiler::initialize");
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
 #if defined(ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES)
     // Find a D3DCompiler module that had already been loaded based on a predefined list of versions.

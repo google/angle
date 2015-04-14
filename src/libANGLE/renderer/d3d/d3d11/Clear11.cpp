@@ -17,6 +17,7 @@
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "third_party/trace_event/trace_event.h"
 
 // Precompiled shaders
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11vs.h"
@@ -87,6 +88,8 @@ Clear11::Clear11(Renderer11 *renderer)
     : mRenderer(renderer), mClearBlendStates(StructLessThan<ClearBlendInfo>), mClearDepthStencilStates(StructLessThan<ClearDepthStencilInfo>),
       mVertexBuffer(NULL), mRasterizerState(NULL), mSupportsClearView(false)
 {
+    TRACE_EVENT0("gpu.angle", "Clear11::Clear11");
+
     HRESULT result;
     ID3D11Device *device = renderer->getDevice();
 

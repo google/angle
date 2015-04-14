@@ -8,6 +8,9 @@
 
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 
+#include <sstream>
+#include <EGL/eglext.h>
+
 #include "common/utilities.h"
 #include "common/tls.h"
 #include "libANGLE/Buffer.h"
@@ -46,9 +49,7 @@
 #include "libANGLE/renderer/d3d/d3d11/VertexBuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
-
-#include <sstream>
-#include <EGL/eglext.h>
+#include "third_party/trace_event/trace_event.h"
 
 // Enable ANGLE_SKIP_DXGI_1_2_CHECK if there is not a possibility of using cross-process
 // HWNDs or the Windows 7 Platform Update (KB2670838) is expected to be installed.
@@ -281,40 +282,47 @@ egl::Error Renderer11::initialize()
     }
 
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
-    mDxgiModule = LoadLibrary(TEXT("dxgi.dll"));
-    mD3d11Module = LoadLibrary(TEXT("d3d11.dll"));
-
-    if (mD3d11Module == NULL || mDxgiModule == NULL)
+    PFN_D3D11_CREATE_DEVICE D3D11CreateDevice = nullptr;
     {
-        return egl::Error(EGL_NOT_INITIALIZED,
-                          D3D11_INIT_MISSING_DEP,
-                          "Could not load D3D11 or DXGI library.");
-    }
+        TRACE_EVENT0("gpu.angle", "Renderer11::initialize (Load DLLs)");
+        mDxgiModule = LoadLibrary(TEXT("dxgi.dll"));
+        mD3d11Module = LoadLibrary(TEXT("d3d11.dll"));
 
-    // create the D3D11 device
-    ASSERT(mDevice == NULL);
-    PFN_D3D11_CREATE_DEVICE D3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE)GetProcAddress(mD3d11Module, "D3D11CreateDevice");
+        if (mD3d11Module == nullptr || mDxgiModule == nullptr)
+        {
+            return egl::Error(EGL_NOT_INITIALIZED,
+                              D3D11_INIT_MISSING_DEP,
+                              "Could not load D3D11 or DXGI library.");
+        }
 
-    if (D3D11CreateDevice == NULL)
-    {
-        return egl::Error(EGL_NOT_INITIALIZED,
-                          D3D11_INIT_MISSING_DEP,
-                          "Could not retrieve D3D11CreateDevice address.");
+        // create the D3D11 device
+        ASSERT(mDevice == nullptr);
+        D3D11CreateDevice = reinterpret_cast<PFN_D3D11_CREATE_DEVICE>(GetProcAddress(mD3d11Module, "D3D11CreateDevice"));
+
+        if (D3D11CreateDevice == nullptr)
+        {
+            return egl::Error(EGL_NOT_INITIALIZED,
+                              D3D11_INIT_MISSING_DEP,
+                              "Could not retrieve D3D11CreateDevice address.");
+        }
     }
 #endif
 
     HRESULT result = S_OK;
 #ifdef _DEBUG
-    result = D3D11CreateDevice(NULL,
-                               mDriverType,
-                               NULL,
-                               D3D11_CREATE_DEVICE_DEBUG,
-                               mAvailableFeatureLevels.data(),
-                               mAvailableFeatureLevels.size(),
-                               D3D11_SDK_VERSION,
-                               &mDevice,
-                               &mFeatureLevel,
-                               &mDeviceContext);
+    {
+        TRACE_EVENT0("gpu.angle", "D3D11CreateDevice (Debug)");
+        result = D3D11CreateDevice(NULL,
+                                   mDriverType,
+                                   NULL,
+                                   D3D11_CREATE_DEVICE_DEBUG,
+                                   mAvailableFeatureLevels.data(),
+                                   mAvailableFeatureLevels.size(),
+                                   D3D11_SDK_VERSION,
+                                   &mDevice,
+                                   &mFeatureLevel,
+                                   &mDeviceContext);
+    }
 
     if (!mDevice || FAILED(result))
     {
@@ -324,6 +332,7 @@ egl::Error Renderer11::initialize()
     if (!mDevice || FAILED(result))
 #endif
     {
+        TRACE_EVENT0("gpu.angle", "D3D11CreateDevice");
         result = D3D11CreateDevice(NULL,
                                    mDriverType,
                                    NULL,
@@ -354,120 +363,129 @@ egl::Error Renderer11::initialize()
 
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
 #if !ANGLE_SKIP_DXGI_1_2_CHECK
-    // In order to create a swap chain for an HWND owned by another process, DXGI 1.2 is required.
-    // The easiest way to check is to query for a IDXGIDevice2.
-    bool requireDXGI1_2 = false;
-    HWND hwnd = WindowFromDC(mDisplay->getNativeDisplayId());
-    if (hwnd)
     {
-        DWORD currentProcessId = GetCurrentProcessId();
-        DWORD wndProcessId;
-        GetWindowThreadProcessId(hwnd, &wndProcessId);
-        requireDXGI1_2 = (currentProcessId != wndProcessId);
-    }
-    else
-    {
-        requireDXGI1_2 = true;
-    }
+        TRACE_EVENT0("gpu.angle", "Renderer11::initialize (DXGICheck)");
+        // In order to create a swap chain for an HWND owned by another process, DXGI 1.2 is required.
+        // The easiest way to check is to query for a IDXGIDevice2.
+        bool requireDXGI1_2 = false;
+        HWND hwnd = WindowFromDC(mDisplay->getNativeDisplayId());
+        if (hwnd)
+        {
+            DWORD currentProcessId = GetCurrentProcessId();
+            DWORD wndProcessId;
+            GetWindowThreadProcessId(hwnd, &wndProcessId);
+            requireDXGI1_2 = (currentProcessId != wndProcessId);
+        }
+        else
+        {
+            requireDXGI1_2 = true;
+        }
 
-    if (requireDXGI1_2)
+        if (requireDXGI1_2)
+        {
+            IDXGIDevice2 *dxgiDevice2 = NULL;
+            result = mDevice->QueryInterface(__uuidof(IDXGIDevice2), (void**)&dxgiDevice2);
+            if (FAILED(result))
+            {
+                return egl::Error(EGL_NOT_INITIALIZED,
+                                  D3D11_INIT_INCOMPATIBLE_DXGI,
+                                  "DXGI 1.2 required to present to HWNDs owned by another process.");
+            }
+            SafeRelease(dxgiDevice2);
+        }
+    }
+#endif
+#endif
+
     {
-        IDXGIDevice2 *dxgiDevice2 = NULL;
-        result = mDevice->QueryInterface(__uuidof(IDXGIDevice2), (void**)&dxgiDevice2);
+        TRACE_EVENT0("gpu.angle", "Renderer11::initialize (ComQueries)");
+        // Cast the DeviceContext to a DeviceContext1.
+        // This could fail on Windows 7 without the Platform Update.
+        // Don't error in this case- just don't use mDeviceContext1.
+        mDeviceContext1 = d3d11::DynamicCastComObject<ID3D11DeviceContext1>(mDeviceContext);
+
+        IDXGIDevice *dxgiDevice = NULL;
+        result = mDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
+
         if (FAILED(result))
         {
             return egl::Error(EGL_NOT_INITIALIZED,
-                              D3D11_INIT_INCOMPATIBLE_DXGI,
-                              "DXGI 1.2 required to present to HWNDs owned by another process.");
+                              D3D11_INIT_OTHER_ERROR,
+                              "Could not query DXGI device.");
         }
-        SafeRelease(dxgiDevice2);
-    }
-#endif
-#endif
 
-    // Cast the DeviceContext to a DeviceContext1.
-    // This could fail on Windows 7 without the Platform Update.
-    // Don't error in this case- just don't use mDeviceContext1.
-    mDeviceContext1 = d3d11::DynamicCastComObject<ID3D11DeviceContext1>(mDeviceContext);
+        result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&mDxgiAdapter);
 
-    IDXGIDevice *dxgiDevice = NULL;
-    result = mDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
+        if (FAILED(result))
+        {
+            return egl::Error(EGL_NOT_INITIALIZED,
+                              D3D11_INIT_OTHER_ERROR,
+                              "Could not retrieve DXGI adapter");
+        }
 
-    if (FAILED(result))
-    {
-        return egl::Error(EGL_NOT_INITIALIZED,
-                          D3D11_INIT_OTHER_ERROR,
-                          "Could not query DXGI device.");
-    }
+        SafeRelease(dxgiDevice);
 
-    result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&mDxgiAdapter);
+        IDXGIAdapter2 *dxgiAdapter2 = d3d11::DynamicCastComObject<IDXGIAdapter2>(mDxgiAdapter);
 
-    if (FAILED(result))
-    {
-        return egl::Error(EGL_NOT_INITIALIZED,
-                          D3D11_INIT_OTHER_ERROR,
-                          "Could not retrieve DXGI adapter");
-    }
+        // On D3D_FEATURE_LEVEL_9_*, IDXGIAdapter::GetDesc returns "Software Adapter" for the description string.
+        // If DXGI1.2 is available then IDXGIAdapter2::GetDesc2 can be used to get the actual hardware values.
+        if (mFeatureLevel <= D3D_FEATURE_LEVEL_9_3 && dxgiAdapter2 != NULL)
+        {
+            DXGI_ADAPTER_DESC2 adapterDesc2 = { 0 };
+            dxgiAdapter2->GetDesc2(&adapterDesc2);
 
-    SafeRelease(dxgiDevice);
+            // Copy the contents of the DXGI_ADAPTER_DESC2 into mAdapterDescription (a DXGI_ADAPTER_DESC).
+            memcpy(mAdapterDescription.Description, adapterDesc2.Description, sizeof(mAdapterDescription.Description));
+            mAdapterDescription.VendorId = adapterDesc2.VendorId;
+            mAdapterDescription.DeviceId = adapterDesc2.DeviceId;
+            mAdapterDescription.SubSysId = adapterDesc2.SubSysId;
+            mAdapterDescription.Revision = adapterDesc2.Revision;
+            mAdapterDescription.DedicatedVideoMemory = adapterDesc2.DedicatedVideoMemory;
+            mAdapterDescription.DedicatedSystemMemory = adapterDesc2.DedicatedSystemMemory;
+            mAdapterDescription.SharedSystemMemory = adapterDesc2.SharedSystemMemory;
+            mAdapterDescription.AdapterLuid = adapterDesc2.AdapterLuid;
+        }
+        else
+        {
+            mDxgiAdapter->GetDesc(&mAdapterDescription);
+        }
 
-    IDXGIAdapter2 *dxgiAdapter2 = d3d11::DynamicCastComObject<IDXGIAdapter2>(mDxgiAdapter);
+        SafeRelease(dxgiAdapter2);
 
-    // On D3D_FEATURE_LEVEL_9_*, IDXGIAdapter::GetDesc returns "Software Adapter" for the description string.
-    // If DXGI1.2 is available then IDXGIAdapter2::GetDesc2 can be used to get the actual hardware values.
-    if (mFeatureLevel <= D3D_FEATURE_LEVEL_9_3 && dxgiAdapter2 != NULL)
-    {
-        DXGI_ADAPTER_DESC2 adapterDesc2 = {0};
-        dxgiAdapter2->GetDesc2(&adapterDesc2);
+        memset(mDescription, 0, sizeof(mDescription));
+        wcstombs(mDescription, mAdapterDescription.Description, sizeof(mDescription) - 1);
 
-        // Copy the contents of the DXGI_ADAPTER_DESC2 into mAdapterDescription (a DXGI_ADAPTER_DESC).
-        memcpy(mAdapterDescription.Description, adapterDesc2.Description, sizeof(mAdapterDescription.Description));
-        mAdapterDescription.VendorId = adapterDesc2.VendorId;
-        mAdapterDescription.DeviceId = adapterDesc2.DeviceId;
-        mAdapterDescription.SubSysId = adapterDesc2.SubSysId;
-        mAdapterDescription.Revision = adapterDesc2.Revision;
-        mAdapterDescription.DedicatedVideoMemory = adapterDesc2.DedicatedVideoMemory;
-        mAdapterDescription.DedicatedSystemMemory = adapterDesc2.DedicatedSystemMemory;
-        mAdapterDescription.SharedSystemMemory = adapterDesc2.SharedSystemMemory;
-        mAdapterDescription.AdapterLuid = adapterDesc2.AdapterLuid;
-    }
-    else
-    {
-        mDxgiAdapter->GetDesc(&mAdapterDescription);
-    }
+        result = mDxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&mDxgiFactory);
 
-    SafeRelease(dxgiAdapter2);
-
-    memset(mDescription, 0, sizeof(mDescription));
-    wcstombs(mDescription, mAdapterDescription.Description, sizeof(mDescription) - 1);
-
-    result = mDxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&mDxgiFactory);
-
-    if (!mDxgiFactory || FAILED(result))
-    {
-        return egl::Error(EGL_NOT_INITIALIZED,
-                          D3D11_INIT_OTHER_ERROR,
-                          "Could not create DXGI factory.");
+        if (!mDxgiFactory || FAILED(result))
+        {
+            return egl::Error(EGL_NOT_INITIALIZED,
+                              D3D11_INIT_OTHER_ERROR,
+                              "Could not create DXGI factory.");
+        }
     }
 
     // Disable some spurious D3D11 debug warnings to prevent them from flooding the output log
 #if defined(ANGLE_SUPPRESS_D3D11_HAZARD_WARNINGS) && defined(_DEBUG)
-    ID3D11InfoQueue *infoQueue;
-    result = mDevice->QueryInterface(__uuidof(ID3D11InfoQueue),  (void **)&infoQueue);
-
-    if (SUCCEEDED(result))
     {
-        D3D11_MESSAGE_ID hideMessages[] =
+        TRACE_EVENT0("gpu.angle", "Renderer11::initialize (HideWarnings)");
+        ID3D11InfoQueue *infoQueue;
+        result = mDevice->QueryInterface(__uuidof(ID3D11InfoQueue), (void **)&infoQueue);
+
+        if (SUCCEEDED(result))
         {
-            D3D11_MESSAGE_ID_DEVICE_DRAW_RENDERTARGETVIEW_NOT_SET
-        };
+            D3D11_MESSAGE_ID hideMessages[] =
+            {
+                D3D11_MESSAGE_ID_DEVICE_DRAW_RENDERTARGETVIEW_NOT_SET
+            };
 
-        D3D11_INFO_QUEUE_FILTER filter = {0};
-        filter.DenyList.NumIDs = ArraySize(hideMessages);
-        filter.DenyList.pIDList = hideMessages;
+            D3D11_INFO_QUEUE_FILTER filter = { 0 };
+            filter.DenyList.NumIDs = ArraySize(hideMessages);
+            filter.DenyList.pIDList = hideMessages;
 
-        infoQueue->AddStorageFilterEntries(&filter);
-        SafeRelease(infoQueue);
+            infoQueue->AddStorageFilterEntries(&filter);
+            SafeRelease(infoQueue);
+        }
     }
 #endif
 
@@ -485,6 +503,8 @@ egl::Error Renderer11::initialize()
 // to reset the scene status and ensure the default states are reset.
 void Renderer11::initializeDevice()
 {
+    TRACE_EVENT0("gpu.angle", "Renderer11::initializeDevice");
+
     mStateCache.initialize(mDevice);
     mInputLayoutCache.initialize(mDevice, mDeviceContext);
 
@@ -2037,6 +2057,8 @@ gl::Error Renderer11::applyUniforms(const ProgramImpl &program, const std::vecto
 
 void Renderer11::markAllStateDirty()
 {
+    TRACE_EVENT0("gpu.angle", "Renderer11::markAllStateDirty");
+
     for (size_t rtIndex = 0; rtIndex < ArraySize(mAppliedRTVs); rtIndex++)
     {
         mAppliedRTVs[rtIndex] = DirtyPointer;

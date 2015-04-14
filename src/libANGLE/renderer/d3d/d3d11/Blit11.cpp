@@ -10,10 +10,11 @@
 
 #include <float.h>
 
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
-#include "libANGLE/formatutils.h"
+#include "third_party/trace_event/trace_event.h"
 
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthrough2d11vs.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthroughdepth2d11ps.h"
@@ -182,6 +183,8 @@ Blit11::Blit11(Renderer11 *renderer)
       mQuad3DIL(NULL), mQuad3DVS(NULL), mQuad3DGS(NULL),
       mSwizzleCB(NULL)
 {
+    TRACE_EVENT0("gpu.angle", "Blit11::Blit11");
+
     HRESULT result;
     ID3D11Device *device = mRenderer->getDevice();
 
@@ -972,6 +975,8 @@ void Blit11::addSwizzleShaderToMap(GLenum destType, D3D11_SRV_DIMENSION viewDime
 
 void Blit11::buildShaderMap()
 {
+    TRACE_EVENT0("gpu.angle", "Blit11::buildShaderMap");
+
     ID3D11Device *device = mRenderer->getDevice();
 
     // 2D shaders (OpenGL ES 2+)
