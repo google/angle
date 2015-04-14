@@ -46,6 +46,30 @@
       "revId": "6dacaff4e03d4f6b4c444a3fff018c1297cd25ba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0299e86_05fed631",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-14T15:41:34Z",
+      "side": 1,
+      "message": "You\u0027ll have to submit another patch, just download this one and remove the commit-id line so it generates a new one.\n\nI suggest re-uploading the broken patch first and then a fixed version so we can see the diff.",
+      "parentUuid": "506daeeb_fd6da300",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 42
+      },
+      "revId": "6dacaff4e03d4f6b4c444a3fff018c1297cd25ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
