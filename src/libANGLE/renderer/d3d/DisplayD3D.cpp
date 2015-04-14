@@ -16,6 +16,7 @@
 #include "libANGLE/renderer/d3d/SurfaceD3D.h"
 #include "libANGLE/renderer/d3d/SwapChainD3D.h"
 #include "platform/Platform.h"
+#include "libANGLE/renderer/d3d/deviced3d.h"
 
 #include <EGL/eglext.h>
 
@@ -142,7 +143,8 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
 }
 
 DisplayD3D::DisplayD3D()
-    : mRenderer(nullptr)
+    : mRenderer(nullptr),
+      mDevice(nullptr)
 {
 }
 
@@ -225,6 +227,13 @@ egl::Error DisplayD3D::createPixmapSurface(const egl::Config *configuration, Nat
     return egl::Error(EGL_BAD_DISPLAY);
 }
 
+egl::Error DisplayD3D::getDevice(DeviceImpl **device)
+{
+    *device = reinterpret_cast<DeviceImpl*>(mDevice);
+    ASSERT(*device != nullptr);
+    return egl::Error(EGL_SUCCESS);
+}
+
 egl::Error DisplayD3D::createContext(const egl::Config *config, const gl::Context *shareContext, const egl::AttributeMap &attribs,
                                      gl::Context **outContext)
 {
@@ -247,11 +256,20 @@ egl::Error DisplayD3D::initialize(egl::Display *display)
 {
     ASSERT(mRenderer == nullptr && display != nullptr);
     mDisplay = display;
-    return CreateRendererD3D(display, &mRenderer);
+    egl::Error error = CreateRendererD3D(display, &mRenderer);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    ASSERT(mDevice == nullptr);
+    mDevice = new DeviceD3D(mRenderer);
+    return error;
 }
 
 void DisplayD3D::terminate()
 {
+    SafeDelete(mDevice);
     SafeDelete(mRenderer);
 }
 
@@ -331,6 +349,8 @@ void DisplayD3D::generateExtensions(egl::DisplayExtensions *outExtensions) const
     }
 
     outExtensions->createContext = true;
+
+    outExtensions->deviceQuery = true;
 }
 
 std::string DisplayD3D::getVendorString() const

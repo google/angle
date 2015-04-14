@@ -10,6 +10,7 @@
 #define LIBANGLE_RENDERER_D3D_DISPLAYD3D_H_
 
 #include "libANGLE/renderer/DisplayImpl.h"
+#include "libANGLE/Device.h"
 
 namespace rx
 {
@@ -45,6 +46,8 @@ class DisplayD3D : public DisplayImpl
 
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
 
+    egl::Error getDevice(DeviceImpl **device) override;
+
     std::string getVendorString() const override;
 
   private:
@@ -54,6 +57,8 @@ class DisplayD3D : public DisplayImpl
     egl::Display *mDisplay;
 
     rx::RendererD3D *mRenderer;
+
+    DeviceImpl *mDevice;
 };
 
 }

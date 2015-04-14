@@ -464,6 +464,12 @@ EGLAPI EGLBoolean EGLAPIENTRY eglQuerySurfacePointerANGLE (EGLDisplay dpy, EGLSu
 #define EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE 0x320E
 #endif /* EGL_ANGLE_platform_angle_opengl */
 
+#ifndef EGL_ANGLE_device_d3d
+#define EGL_ANGLE_device_d3d 1
+#define EGL_D3D9_DEVICE_ANGLE             0x33A0
+#define EGL_D3D11_DEVICE_ANGLE            0x33A1
+#endif /* EGL_ANGLE_device_d3d */
+
 #ifndef EGL_ARM_pixmap_multisample_discard
 #define EGL_ARM_pixmap_multisample_discard 1
 #define EGL_DISCARD_SAMPLES_ARM           0x3286
@@ -503,6 +509,10 @@ EGLAPI EGLBoolean EGLAPIENTRY eglQueryDevicesEXT (EGLint max_devices, EGLDeviceE
 EGLAPI EGLBoolean EGLAPIENTRY eglQueryDisplayAttribEXT (EGLDisplay dpy, EGLint attribute, EGLAttrib *value);
 #endif
 #endif /* EGL_EXT_device_base */
+
+#ifndef EGL_EXT_device_query
+#define EGL_EXT_device_query 1
+#endif /* EGL_EXT_device_query */
 
 #ifndef EGL_EXT_image_dma_buf_import
 #define EGL_EXT_image_dma_buf_import 1

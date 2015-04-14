@@ -394,6 +394,12 @@ static int QueryWGLFormatAttrib(HDC dc, int format, int attribName, const Functi
     return result;
 }
 
+egl::Error DisplayWGL::getDevice(DeviceImpl **device)
+{
+    UNIMPLEMENTED();
+    return egl::Error(EGL_BAD_DISPLAY);
+}
+
 egl::ConfigSet DisplayWGL::generateConfigs() const
 {
     egl::ConfigSet configs;
