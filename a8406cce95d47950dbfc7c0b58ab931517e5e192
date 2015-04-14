@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "9033a6f4_d838b39d",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T19:35:01Z",
+      "side": 1,
+      "message": "Would then \"uniformName[-1]\" give the same result as \"uniformName\" ?",
+      "parentUuid": "9033a6f4_2da09be6",
+      "range": {
+        "startLine": 480,
+        "startChar": 12,
+        "endLine": 480,
+        "endChar": 27
+      },
+      "revId": "a8406cce95d47950dbfc7c0b58ab931517e5e192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0299e86_31b7d4c8",
         "filename": "src/common/utilities.cpp",
         "patchSetId": 2
@@ -225,6 +249,30 @@
       "side": 1,
       "message": "Looks fine, it\u0027s using return value optimization.",
       "parentUuid": "9033a6f4_6d2c63c7",
+      "range": {
+        "startLine": 80,
+        "startChar": 3,
+        "endLine": 80,
+        "endChar": 24
+      },
+      "revId": "a8406cce95d47950dbfc7c0b58ab931517e5e192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0242aae_8981b64b",
+        "filename": "src/libANGLE/renderer/ProgramImpl.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T19:35:01Z",
+      "side": 1,
+      "message": "Did you verify? Just curious.",
+      "parentUuid": "b0242aae_8976568b",
       "range": {
         "startLine": 80,
         "startChar": 3,
