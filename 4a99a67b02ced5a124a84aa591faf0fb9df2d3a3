@@ -22,6 +22,30 @@
       "revId": "4a99a67b02ced5a124a84aa591faf0fb9df2d3a3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0299e86_b9472a0f",
+        "filename": "src/tests/standalone_tests/EGLSurfaceTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T20:41:45Z",
+      "side": 1,
+      "message": "Yes, I can confirm it failed or crashed in this test before the fix.",
+      "parentUuid": "9033a6f4_f3e71055",
+      "range": {
+        "startLine": 196,
+        "startChar": 18,
+        "endLine": 196,
+        "endChar": 19
+      },
+      "revId": "4a99a67b02ced5a124a84aa591faf0fb9df2d3a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
