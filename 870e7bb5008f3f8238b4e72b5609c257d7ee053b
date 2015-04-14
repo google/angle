@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9033a6f4_4d8be772",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3172,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T19:10:44Z",
+      "side": 1,
+      "message": "wouldn\u0027t it make sense to just leave the length method in the parse tree? is this feature not available on some gl platforms?",
+      "range": {
+        "startLine": 3169,
+        "startChar": 9,
+        "endLine": 3172,
+        "endChar": 13
+      },
+      "revId": "870e7bb5008f3f8238b4e72b5609c257d7ee053b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
