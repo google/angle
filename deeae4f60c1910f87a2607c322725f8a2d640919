@@ -22,6 +22,30 @@
       "revId": "deeae4f60c1910f87a2607c322725f8a2d640919",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0299e86_45361e94",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2317,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T15:51:39Z",
+      "side": 1,
+      "message": "Whoops, had fixed that, but didn\u0027t refresh, sorry.",
+      "parentUuid": "d0299e86_45ff3ea8",
+      "range": {
+        "startLine": 2317,
+        "startChar": 46,
+        "endLine": 2317,
+        "endChar": 47
+      },
+      "revId": "deeae4f60c1910f87a2607c322725f8a2d640919",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
