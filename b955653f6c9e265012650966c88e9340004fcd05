@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "709c722a_9bc02b2b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 901,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-14T11:58:17Z",
+      "side": 1,
+      "message": "Yep, it seems like the style guide is fine with a couple of alternatives but this one was just a mistake. I\u0027ll fix these.",
+      "parentUuid": "234d525a_a54ba8b3",
+      "range": {
+        "startLine": 901,
+        "startChar": 4,
+        "endLine": 901,
+        "endChar": 12
+      },
+      "revId": "b955653f6c9e265012650966c88e9340004fcd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "636d8ab3_cbf2906d",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 3
@@ -59,6 +83,30 @@
       "writtenOn": "2015-04-13T16:51:36Z",
       "side": 1,
       "message": "this solution is a bit awkward but I can\u0027t think of an alternative. Can you rename this to something that indicates it\u0027s a one-time use stateful variable, something like \"deferredSingleDeclarationErrorCheck\", or something to that effect or shorter?",
+      "range": {
+        "startLine": 49,
+        "startChar": 12,
+        "endLine": 49,
+        "endChar": 31
+      },
+      "revId": "b955653f6c9e265012650966c88e9340004fcd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "709c722a_fbb36fd7",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-14T11:58:17Z",
+      "side": 1,
+      "message": "That\u0027s a more descriptive name, thanks! A bit long but I can\u0027t come up with a shorter alternative right now.",
+      "parentUuid": "e356daec_27e26519",
       "range": {
         "startLine": 49,
         "startChar": 12,
