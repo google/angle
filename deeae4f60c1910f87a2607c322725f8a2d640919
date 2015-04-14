@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0299e86_45ff3ea8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2317,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-14T14:50:02Z",
+      "side": 1,
+      "message": "Missing \"mDriverType \u003d\u003d\", this was probably always returning false.",
+      "range": {
+        "startLine": 2317,
+        "startChar": 46,
+        "endLine": 2317,
+        "endChar": 47
+      },
+      "revId": "deeae4f60c1910f87a2607c322725f8a2d640919",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
