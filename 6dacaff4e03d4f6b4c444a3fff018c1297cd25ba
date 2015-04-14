@@ -22,6 +22,30 @@
       "revId": "6dacaff4e03d4f6b4c444a3fff018c1297cd25ba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "506daeeb_fd6da300",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-04-14T15:35:00Z",
+      "side": 1,
+      "message": "Can you add it, or do I need to submit another patch?",
+      "parentUuid": "9033a6f4_8112be52",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 42
+      },
+      "revId": "6dacaff4e03d4f6b4c444a3fff018c1297cd25ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
