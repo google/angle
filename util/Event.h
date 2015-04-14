@@ -68,6 +68,7 @@ class Event
         EVENT_MOUSE_MOVED,           // The mouse cursor moved
         EVENT_MOUSE_ENTERED,         // The mouse cursor entered the area of the window
         EVENT_MOUSE_LEFT,            // The mouse cursor left the area of the window
+        EVENT_TEST,                  // Event for testing purposes
     };
 
     EventType Type;

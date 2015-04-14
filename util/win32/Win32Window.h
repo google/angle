@@ -17,19 +17,21 @@ class Win32Window : public OSWindow
     Win32Window();
     ~Win32Window();
 
-    bool initialize(const std::string &name, size_t width, size_t height);
-    void destroy();
+    bool initialize(const std::string &name, size_t width, size_t height) override;
+    void destroy() override;
 
-    EGLNativeWindowType getNativeWindow() const;
-    EGLNativeDisplayType getNativeDisplay() const;
+    EGLNativeWindowType getNativeWindow() const override;
+    EGLNativeDisplayType getNativeDisplay() const override;
 
-    void messageLoop();
+    void messageLoop() override;
 
-    virtual void pushEvent(Event event);
+    void pushEvent(Event event) override;
 
-    void setMousePosition(int x, int y);
-    bool resize(int width, int height);
-    void setVisible(bool isVisible);
+    void setMousePosition(int x, int y) override;
+    bool resize(int width, int height) override;
+    void setVisible(bool isVisible) override;
+
+    void signalTestEvent() override;
 
   private:
     std::string mParentClassName;

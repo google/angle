@@ -229,3 +229,10 @@ void EGLWindow::destroyGL()
         mDisplay = EGL_NO_DISPLAY;
     }
 }
+
+bool EGLWindow::isGLInitialized() const
+{
+    return mSurface != EGL_NO_SURFACE &&
+           mContext != EGL_NO_CONTEXT &&
+           mDisplay != EGL_NO_DISPLAY;
+}

@@ -37,6 +37,11 @@ class OSWindow
     virtual bool resize(int width, int height) = 0;
     virtual void setVisible(bool isVisible) = 0;
 
+    virtual void signalTestEvent() = 0;
+
+    // Pops events look for the test event
+    bool didTestEventFire();
+
   protected:
     int mWidth;
     int mHeight;

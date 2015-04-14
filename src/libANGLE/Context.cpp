@@ -174,6 +174,8 @@ Context::~Context()
 
 void Context::makeCurrent(egl::Surface *surface)
 {
+    ASSERT(surface != nullptr);
+
     if (!mHasBeenCurrent)
     {
         initRendererString();
@@ -187,10 +189,14 @@ void Context::makeCurrent(egl::Surface *surface)
 
     // TODO(jmadill): do not allocate new pointers here
     Framebuffer *framebufferZero = new DefaultFramebuffer(mCaps, mRenderer, surface);
-
     setFramebufferZero(framebufferZero);
-
     mRenderBuffer = surface->getRenderBuffer();
+}
+
+void Context::releaseSurface()
+{
+    setFramebufferZero(nullptr);
+    mRenderBuffer = EGL_NONE;
 }
 
 // NOTE: this function should not assume that this context is current!
@@ -666,17 +672,19 @@ void Context::setFramebufferZero(Framebuffer *buffer)
     // First, check to see if the old default framebuffer
     // was set for draw or read framebuffer, and change
     // the bindings to point to the new one before deleting it.
-    if (mState.getDrawFramebuffer()->id() == 0)
+    if (mState.getDrawFramebuffer() == nullptr ||
+        mState.getDrawFramebuffer()->id() == 0)
     {
         mState.setDrawFramebufferBinding(buffer);
     }
 
-    if (mState.getReadFramebuffer()->id() == 0)
+    if (mState.getReadFramebuffer() == nullptr ||
+        mState.getReadFramebuffer()->id() == 0)
     {
         mState.setReadFramebufferBinding(buffer);
     }
 
-    delete mFramebufferMap[0];
+    SafeDelete(mFramebufferMap[0]);
     mFramebufferMap[0] = buffer;
 }
 
@@ -884,7 +892,7 @@ bool Context::getIndexedIntegerv(GLenum target, GLuint index, GLint *data)
 {
     // Queries about context capabilities and maximums are answered by Context.
     // Queries about current GL state values are answered by State.
-    // Indexed integer queries all refer to current state, so this function is a 
+    // Indexed integer queries all refer to current state, so this function is a
     // mere passthrough.
     return mState.getIndexedIntegerv(target, index, data);
 }
@@ -893,7 +901,7 @@ bool Context::getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data)
 {
     // Queries about context capabilities and maximums are answered by Context.
     // Queries about current GL state values are answered by State.
-    // Indexed integer queries all refer to current state, so this function is a 
+    // Indexed integer queries all refer to current state, so this function is a
     // mere passthrough.
     return mState.getIndexedInteger64v(target, index, data);
 }
@@ -1321,7 +1329,7 @@ void Context::detachTexture(GLuint texture)
 
 void Context::detachBuffer(GLuint buffer)
 {
-    // Buffer detachment is handled by Context, because the buffer must also be 
+    // Buffer detachment is handled by Context, because the buffer must also be
     // attached from any VAOs in existence, and Context holds the VAO map.
 
     // [OpenGL ES 2.0.24] section 2.9 page 22:
@@ -1365,8 +1373,8 @@ void Context::detachRenderbuffer(GLuint renderbuffer)
 
 void Context::detachVertexArray(GLuint vertexArray)
 {
-    // Vertex array detachment is handled by Context, because 0 is a valid 
-    // VAO, and a pointer to it must be passed from Context to State at 
+    // Vertex array detachment is handled by Context, because 0 is a valid
+    // VAO, and a pointer to it must be passed from Context to State at
     // binding time.
 
     // [OpenGL ES 3.0.2] section 2.10 page 43:

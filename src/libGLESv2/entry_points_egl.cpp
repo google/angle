@@ -512,6 +512,20 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
         return EGL_FALSE;
     }
 
+    if (dpy == EGL_NO_DISPLAY)
+    {
+        SetGlobalError(Error(EGL_BAD_DISPLAY, "'dpy' not a valid EGLDisplay handle"));
+        return EGL_FALSE;
+    }
+
+    // EGL 1.5 spec: dpy can be uninitialized if all other parameters are null
+    if (dpy != EGL_NO_DISPLAY && !display->isInitialized() &&
+        (ctx != EGL_NO_CONTEXT || draw != EGL_NO_SURFACE || read != EGL_NO_SURFACE))
+    {
+        SetGlobalError(Error(EGL_NOT_INITIALIZED, "'dpy' not initialized"));
+        return EGL_FALSE;
+    }
+
     if (ctx != EGL_NO_CONTEXT)
     {
         Error error = ValidateContext(display, context);
@@ -564,14 +578,20 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
         UNIMPLEMENTED();   // FIXME
     }
 
+    gl::Context *previousContext = GetGlobalContext();
+
     SetGlobalDisplay(display);
     SetGlobalDrawSurface(drawSurface);
     SetGlobalReadSurface(readSurface);
     SetGlobalContext(context);
 
-    if (context != nullptr && display != nullptr && drawSurface != nullptr)
+    display->makeCurrent(drawSurface, readSurface, context);
+
+    // Release the surface from the previously-current context, to allow
+    // destroyed surfaces to delete themselves.
+    if (previousContext != nullptr && context != previousContext)
     {
-        display->makeCurrent(drawSurface, readSurface, context);
+        previousContext->releaseSurface();
     }
 
     SetGlobalError(Error(EGL_SUCCESS));

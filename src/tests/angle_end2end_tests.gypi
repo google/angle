@@ -54,8 +54,9 @@
             '<(angle_path)/src/tests/end2end_tests/UnpackRowLength.cpp',
             '<(angle_path)/src/tests/end2end_tests/VertexAttributeTest.cpp',
             '<(angle_path)/src/tests/end2end_tests/ViewportTest.cpp',
-            '<(angle_path)/src/tests/standalone_tests/EGLThreadTest.cpp',
             '<(angle_path)/src/tests/standalone_tests/EGLQueryContextTest.cpp',
+            '<(angle_path)/src/tests/standalone_tests/EGLSurfaceTest.cpp',
+            '<(angle_path)/src/tests/standalone_tests/EGLThreadTest.cpp',
         ],
     },
     'dependencies':

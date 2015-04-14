@@ -51,3 +51,17 @@ void OSWindow::pushEvent(Event event)
 
     mEvents.push_back(event);
 }
+
+bool OSWindow::didTestEventFire()
+{
+    Event topEvent;
+    while (popEvent(&topEvent))
+    {
+        if (topEvent.Type == Event::EVENT_TEST)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}

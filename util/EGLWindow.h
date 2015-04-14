@@ -83,6 +83,7 @@ class EGLWindow : angle::NonCopyable
 
     bool initializeGL(OSWindow *osWindow);
     void destroyGL();
+    bool isGLInitialized() const;
 
   private:
     EGLConfig mConfig;

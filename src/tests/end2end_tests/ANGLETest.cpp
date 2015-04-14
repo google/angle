@@ -3,15 +3,14 @@
 #include "OSWindow.h"
 
 ANGLETest::ANGLETest(EGLint glesMajorVersion, const EGLPlatformParameters &platform)
-    : mEGLWindow(NULL)
+    : mEGLWindow(nullptr)
 {
     mEGLWindow = new EGLWindow(1280, 720, glesMajorVersion, platform);
 }
 
 ANGLETest::~ANGLETest()
 {
-    delete mEGLWindow;
-    mEGLWindow = NULL;
+    SafeDelete(mEGLWindow);
 }
 
 void ANGLETest::SetUp()
@@ -50,7 +49,10 @@ void ANGLETest::TearDown()
 
 void ANGLETest::swapBuffers()
 {
-    mEGLWindow->swap();
+    if (mEGLWindow->isGLInitialized())
+    {
+        mEGLWindow->swap();
+    }
 }
 
 void ANGLETest::drawQuad(GLuint program, const std::string& positionAttribName, GLfloat quadDepth, GLfloat quadScale)

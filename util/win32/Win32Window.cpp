@@ -133,13 +133,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
       case WM_NCCREATE:
         {
-            LPCREATESTRUCT pCreateStruct = (LPCREATESTRUCT)lParam;
-            SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)pCreateStruct->lpCreateParams);
+            LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
+            SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
             return DefWindowProcA(hWnd, message, wParam, lParam);
         }
     }
 
-    OSWindow *window = (OSWindow*)(LONG_PTR)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+    Win32Window *window = reinterpret_cast<Win32Window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
     if (window)
     {
         switch (message)
@@ -357,6 +357,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 window->pushEvent(event);
                 break;
             }
+
+          case WM_USER:
+            {
+                Event testEvent;
+                testEvent.Type = Event::EVENT_TEST;
+                window->pushEvent(testEvent);
+                break;
+            }
         }
 
     }
@@ -562,4 +570,9 @@ void Win32Window::pushEvent(Event event)
         MoveWindow(mNativeWindow, 0, 0, mWidth, mHeight, FALSE);
         break;
     }
+}
+
+void Win32Window::signalTestEvent()
+{
+    PostMessage(mNativeWindow, WM_USER, 0, 0);
 }
