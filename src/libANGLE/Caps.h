@@ -347,20 +347,6 @@ struct DisplayExtensions
 
     // EGL_KHR_create_context
     bool createContext;
-
-    // EGL_EXT_device_query
-    bool deviceQuery;
-};
-
-struct DeviceExtensions
-{
-    DeviceExtensions();
-
-    // Generate a vector of supported extension strings
-    std::vector<std::string> getStrings() const;
-
-    // EGL_ANGLE_device_d3d
-    bool deviceD3D;
 };
 
 struct ClientExtensions

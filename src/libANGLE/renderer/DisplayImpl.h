@@ -35,7 +35,6 @@ namespace rx
 {
 class SurfaceImpl;
 struct ConfigDesc;
-class DeviceImpl;
 
 class DisplayImpl : angle::NonCopyable
 {
@@ -68,8 +67,6 @@ class DisplayImpl : angle::NonCopyable
     virtual bool isValidNativeWindow(EGLNativeWindowType window) const = 0;
 
     virtual std::string getVendorString() const = 0;
-
-    virtual egl::Error getDevice(DeviceImpl **device) = 0;
 
     const egl::Caps &getCaps() const;
 

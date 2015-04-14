@@ -39,9 +39,6 @@ EXPORTS
     eglGetPlatformDisplayEXT         @35
     eglQuerySurfacePointerANGLE      @36
     eglPostSubBufferNV               @37
-    eglQueryDisplayAttribEXT         @48
-    eglQueryDeviceAttribEXT          @49
-    eglQueryDeviceStringEXT          @50
 
     ; 1.5 entry points
     eglCreateSync                    @38

@@ -10,10 +10,8 @@
 #include "libGLESv2/global_state.h"
 
 #include "libANGLE/Display.h"
-#include "libANGLE/Device.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/validationEGL.h"
-#include "libANGLE/renderer/renderer.h"
 
 #include "common/debug.h"
 
@@ -268,115 +266,6 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
 
     EGLNativeDisplayType displayId = static_cast<EGLNativeDisplayType>(native_display);
     return Display::getDisplay(displayId, AttributeMap(attrib_list));
-}
-
-// EGL_EXT_device_query
-EGLBoolean EGLAPIENTRY QueryDeviceAttribEXT(EGLDeviceEXT device, EGLint attribute, EGLAttrib *value)
-{
-    EVENT("(EGLDeviceEXT device = 0x%0.8p, EGLint attribute = %d, EGLAttrib *value = 0x%0.8p)",
-          device, attribute, value);
-
-    Device *dev = static_cast<Device*>(device);
-    if (dev == EGL_NO_DEVICE_EXT)
-    {
-        SetGlobalError(Error(EGL_BAD_ACCESS));
-        return EGL_FALSE;
-    }
-
-    Display *display = dev->getDisplay();
-    Error error(EGL_SUCCESS);
-
-    if (!display->getExtensions().deviceQuery)
-    {
-        SetGlobalError(Error(EGL_BAD_ACCESS));
-        return EGL_FALSE;
-    }
-
-    // validate the attribute parameter
-    switch (attribute)
-    {
-      case EGL_D3D11_DEVICE_ANGLE:
-        if (!dev->getExtensions().deviceD3D || dev->getType() != EGL_D3D11_DEVICE_ANGLE)
-        {
-            SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
-            return EGL_FALSE;
-        }
-        error = dev->getDevice(value);
-        break;
-      case EGL_D3D9_DEVICE_ANGLE:
-        if (!dev->getExtensions().deviceD3D || dev->getType() != EGL_D3D9_DEVICE_ANGLE)
-        {
-            SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
-            return EGL_FALSE;
-        }
-        error = dev->getDevice(value);
-        break;
-      default:
-        SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
-        return EGL_FALSE;
-    }
-
-    SetGlobalError(error);
-    return (error.isError() ? EGL_FALSE : EGL_TRUE);
-}
-
-// EGL_EXT_device_query
-const char * EGLAPIENTRY QueryDeviceStringEXT(EGLDeviceEXT device, EGLint name)
-{
-    EVENT("(EGLDeviceEXT device = 0x%0.8p, EGLint name = %d)",
-          device, name);
-
-    Device *dev = static_cast<Device*>(device);
-    if (dev == EGL_NO_DEVICE_EXT)
-    {
-        SetGlobalError(Error(EGL_BAD_DEVICE_EXT));
-        return nullptr;
-    }
-
-    const char *result;
-    switch (name)
-    {
-      case EGL_EXTENSIONS:
-        result = dev->getExtensionString().c_str();
-        break;
-      default:
-        SetGlobalError(Error(EGL_BAD_DEVICE_EXT));
-        return nullptr;
-    }
-
-    SetGlobalError(Error(EGL_SUCCESS));
-    return result;
-}
-
-// EGL_EXT_device_query
-EGLBoolean EGLAPIENTRY QueryDisplayAttribEXT(EGLDisplay dpy, EGLint attribute, EGLAttrib *value)
-{
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLint attribute = %d, EGLAttrib *value = 0x%0.8p)",
-          dpy, attribute, value);
-
-    Display *display = static_cast<Display*>(dpy);
-    Error error(EGL_SUCCESS);
-
-    if (!display->getExtensions().deviceQuery)
-    {
-        SetGlobalError(Error(EGL_BAD_ACCESS));
-        return EGL_FALSE;
-    }
-
-    // validate the attribute parameter
-    switch (attribute)
-    {
-      case EGL_DEVICE_EXT:
-        *value = reinterpret_cast<EGLAttrib>(display->getDevice());
-        break;
-
-      default:
-        SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
-        return EGL_FALSE;
-    }
-
-    SetGlobalError(error);
-    return (error.isError() ? EGL_FALSE : EGL_TRUE);
 }
 
 }

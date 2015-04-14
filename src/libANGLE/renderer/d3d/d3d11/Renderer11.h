@@ -199,7 +199,6 @@ class Renderer11 : public RendererD3D
 
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }
-    void *getD3DDevice() override;
     ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };
     ID3D11DeviceContext1 *getDeviceContext1IfSupported() { return mDeviceContext1; };
     DXGIFactory *getDxgiFactory() { return mDxgiFactory; };

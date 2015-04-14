@@ -482,8 +482,7 @@ DisplayExtensions::DisplayExtensions()
       querySurfacePointer(false),
       windowFixedSize(false),
       postSubBuffer(false),
-      createContext(false),
-      deviceQuery(false)
+      createContext(false)
 {
 }
 
@@ -499,25 +498,10 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_ANGLE_window_fixed_size",                   windowFixedSize,                &extensionStrings);
     InsertExtensionString("EGL_NV_post_sub_buffer",                        postSubBuffer,                  &extensionStrings);
     InsertExtensionString("EGL_KHR_create_context",                        createContext,                  &extensionStrings);
-    InsertExtensionString("EGL_EXT_device_query",                          deviceQuery,                    &extensionStrings);
 
     return extensionStrings;
 }
 
-DeviceExtensions::DeviceExtensions()
-    : deviceD3D(false)
-{
-}
-
-std::vector<std::string> DeviceExtensions::getStrings() const
-{
-    std::vector<std::string> extensionStrings;
-
-    //                   | Extension name                                 | Supported flag                | Output vector   |
-    InsertExtensionString("EGL_ANGLE_device_d3d",                          deviceD3D,                      &extensionStrings);
-
-    return extensionStrings;
-}
 
 ClientExtensions::ClientExtensions()
     : clientExtensions(false),
