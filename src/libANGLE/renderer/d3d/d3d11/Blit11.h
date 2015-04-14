@@ -45,20 +45,67 @@ class Blit11 : angle::NonCopyable
                                const gl::Rectangle *scissor);
 
   private:
-    Renderer11 *mRenderer;
-
-    struct BlitParameters
+    enum BlitShaderType
     {
-        GLenum mDestinationFormat;
-        bool mSignedInteger;
-        bool m3DBlit;
+        BLITSHADER_INVALID,
+        BLITSHADER_2D_RGBAF,
+        BLITSHADER_2D_BGRAF,
+        BLITSHADER_2D_RGBF,
+        BLITSHADER_2D_RGF,
+        BLITSHADER_2D_RF,
+        BLITSHADER_2D_ALPHA,
+        BLITSHADER_2D_LUMA,
+        BLITSHADER_2D_LUMAALPHA,
+        BLITSHADER_2D_RGBAUI,
+        BLITSHADER_2D_RGBAI,
+        BLITSHADER_2D_RGBUI,
+        BLITSHADER_2D_RGBI,
+        BLITSHADER_2D_RGUI,
+        BLITSHADER_2D_RGI,
+        BLITSHADER_2D_RUI,
+        BLITSHADER_2D_RI,
+        BLITSHADER_3D_RGBAF,
+        BLITSHADER_3D_RGBAUI,
+        BLITSHADER_3D_RGBAI,
+        BLITSHADER_3D_BGRAF,
+        BLITSHADER_3D_RGBF,
+        BLITSHADER_3D_RGBUI,
+        BLITSHADER_3D_RGBI,
+        BLITSHADER_3D_RGF,
+        BLITSHADER_3D_RGUI,
+        BLITSHADER_3D_RGI,
+        BLITSHADER_3D_RF,
+        BLITSHADER_3D_RUI,
+        BLITSHADER_3D_RI,
+        BLITSHADER_3D_ALPHA,
+        BLITSHADER_3D_LUMA,
+        BLITSHADER_3D_LUMAALPHA,
     };
+
+    static BlitShaderType GetBlitShaderType(GLenum destinationFormat, bool isSigned, bool is3D);
+
+    enum SwizzleShaderType
+    {
+        SWIZZLESHADER_INVALID,
+        SWIZZLESHADER_2D_FLOAT,
+        SWIZZLESHADER_2D_UINT,
+        SWIZZLESHADER_2D_INT,
+        SWIZZLESHADER_CUBE_FLOAT,
+        SWIZZLESHADER_CUBE_UINT,
+        SWIZZLESHADER_CUBE_INT,
+        SWIZZLESHADER_3D_FLOAT,
+        SWIZZLESHADER_3D_UINT,
+        SWIZZLESHADER_3D_INT,
+        SWIZZLESHADER_ARRAY_FLOAT,
+        SWIZZLESHADER_ARRAY_UINT,
+        SWIZZLESHADER_ARRAY_INT,
+    };
+
+    static SwizzleShaderType GetSwizzleShaderType(GLenum type, D3D11_SRV_DIMENSION dimensionality);
 
     gl::Error copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
                                ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
                                const gl::Rectangle *scissor, bool stencilOnly);
-
-    static bool compareBlitParameters(const BlitParameters &a, const BlitParameters &b);
 
     typedef void (*WriteVertexFunction)(const gl::Box &sourceArea, const gl::Extents &sourceSize,
                                         const gl::Box &destArea, const gl::Extents &destSize,
@@ -74,29 +121,20 @@ class Blit11 : angle::NonCopyable
         ID3D11PixelShader *mPixelShader;
     };
 
-    typedef bool (*BlitParametersComparisonFunction)(const BlitParameters&, const BlitParameters &);
-    typedef std::map<BlitParameters, Shader, BlitParametersComparisonFunction> BlitShaderMap;
-    BlitShaderMap mBlitShaderMap;
+    void add2DBlitShaderToMap(BlitShaderType blitShaderType, ID3D11PixelShader *ps);
+    void add3DBlitShaderToMap(BlitShaderType blitShaderType, ID3D11PixelShader *ps);
 
-    void add2DBlitShaderToMap(GLenum destFormat, bool signedInteger, ID3D11PixelShader *ps);
-    void add3DBlitShaderToMap(GLenum destFormat, bool signedInteger, ID3D11PixelShader *ps);
+    gl::Error getBlitShader(GLenum destFormat, bool isSigned, bool is3D, const Shader **shaderOut);
+    gl::Error getSwizzleShader(GLenum type, D3D11_SRV_DIMENSION viewDimension, const Shader **shaderOut);
 
-    struct SwizzleParameters
-    {
-        GLenum mDestinationType;
-        D3D11_SRV_DIMENSION mViewDimension;
-    };
+    void addSwizzleShaderToMap(SwizzleShaderType swizzleShaderType, bool is2D, ID3D11PixelShader *ps);
 
-    static bool compareSwizzleParameters(const SwizzleParameters &a, const SwizzleParameters &b);
-
-    typedef bool (*SwizzleParametersComparisonFunction)(const SwizzleParameters&, const SwizzleParameters &);
-    typedef std::map<SwizzleParameters, Shader, SwizzleParametersComparisonFunction> SwizzleShaderMap;
-    SwizzleShaderMap mSwizzleShaderMap;
-
-    void addSwizzleShaderToMap(GLenum destType, D3D11_SRV_DIMENSION viewDimension, ID3D11PixelShader *ps);
-
-    void buildShaderMap();
     void clearShaderMap();
+
+    Renderer11 *mRenderer;
+
+    std::map<BlitShaderType, Shader> mBlitShaderMap;
+    std::map<SwizzleShaderType, Shader> mSwizzleShaderMap;
 
     ID3D11Buffer *mVertexBuffer;
     ID3D11SamplerState *mPointSampler;
