@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9033a6f4_a4ff08e2",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-14T17:08:58Z",
+      "side": 1,
+      "message": "nit: we probably don\u0027t even need to include renderer here.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 39
+      },
+      "revId": "db7d64633cde7afe688e2782bb7d9a2ae55b1ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
