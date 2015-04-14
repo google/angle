@@ -9,21 +9,25 @@
 #ifndef LIBANGLE_TEXTURE_H_
 #define LIBANGLE_TEXTURE_H_
 
-#include "common/debug.h"
-#include "libANGLE/RefCountObject.h"
-#include "libANGLE/angletypes.h"
-#include "libANGLE/Constants.h"
-#include "libANGLE/renderer/TextureImpl.h"
-#include "libANGLE/Caps.h"
-
-#include "angle_gl.h"
-
 #include <vector>
 #include <map>
+
+#include "angle_gl.h"
+#include "common/debug.h"
+#include "libANGLE/Caps.h"
+#include "libANGLE/Constants.h"
+#include "libANGLE/Error.h"
+#include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/angletypes.h"
 
 namespace egl
 {
 class Surface;
+}
+
+namespace rx
+{
+class TextureImpl;
 }
 
 namespace gl
@@ -33,7 +37,7 @@ struct Data;
 
 bool IsMipmapFiltered(const gl::SamplerState &samplerState);
 
-class Texture final : public RefCountObject
+class Texture final : public FramebufferAttachmentObject
 {
   public:
     Texture(rx::TextureImpl *impl, GLuint id, GLenum target);
@@ -89,6 +93,12 @@ class Texture final : public RefCountObject
     const rx::TextureImpl *getImplementation() const { return mTexture; }
 
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
+
+    // FramebufferAttachmentObject implementation
+    GLsizei getAttachmentWidth(const FramebufferAttachment::Target &target) const override;
+    GLsizei getAttachmentHeight(const FramebufferAttachment::Target &target) const override;
+    GLenum getAttachmentInternalFormat(const FramebufferAttachment::Target &target) const override;
+    GLsizei getAttachmentSamples(const FramebufferAttachment::Target &target) const override;
 
   private:
     static unsigned int issueTextureSerial();

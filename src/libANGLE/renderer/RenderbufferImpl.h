@@ -10,10 +10,8 @@
 #define LIBANGLE_RENDERER_RENDERBUFFERIMPL_H_
 
 #include "angle_gl.h"
-
-#include "libANGLE/Error.h"
-
 #include "common/angleutils.h"
+#include "libANGLE/Error.h"
 
 namespace rx
 {

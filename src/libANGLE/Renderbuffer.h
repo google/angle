@@ -12,11 +12,9 @@
 #define LIBANGLE_RENDERBUFFER_H_
 
 #include "angle_gl.h"
-
-#include "libANGLE/Error.h"
-#include "libANGLE/RefCountObject.h"
-
 #include "common/angleutils.h"
+#include "libANGLE/Error.h"
+#include "libANGLE/FramebufferAttachment.h"
 
 namespace rx
 {
@@ -25,14 +23,12 @@ class RenderbufferImpl;
 
 namespace gl
 {
-class FramebufferAttachment;
-
 // A GL renderbuffer object is usually used as a depth or stencil buffer attachment
 // for a framebuffer object. The renderbuffer itself is a distinct GL object, see
 // FramebufferAttachment and Framebuffer for how they are applied to an FBO via an
 // attachment point.
 
-class Renderbuffer : public RefCountObject
+class Renderbuffer : public FramebufferAttachmentObject
 {
   public:
     Renderbuffer(rx::RenderbufferImpl *impl, GLuint id);
@@ -54,6 +50,12 @@ class Renderbuffer : public RefCountObject
     GLuint getAlphaSize() const;
     GLuint getDepthSize() const;
     GLuint getStencilSize() const;
+
+    // FramebufferAttachmentObject Impl
+    GLsizei getAttachmentWidth(const FramebufferAttachment::Target &/*target*/) const override { return getWidth(); }
+    GLsizei getAttachmentHeight(const FramebufferAttachment::Target &/*target*/) const override { return getHeight(); }
+    GLenum getAttachmentInternalFormat(const FramebufferAttachment::Target &/*target*/) const override { return getInternalFormat(); }
+    GLsizei getAttachmentSamples(const FramebufferAttachment::Target &/*target*/) const override { return getSamples(); }
 
   private:
     rx::RenderbufferImpl *mRenderbuffer;

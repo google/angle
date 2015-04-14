@@ -20,13 +20,33 @@
 namespace gl
 {
 
+////// FramebufferAttachment::Target Implementation //////
+
+FramebufferAttachment::Target::Target(GLenum binding, const ImageIndex &imageIndex)
+    : mBinding(binding),
+      mTextureIndex(imageIndex)
+{
+}
+
+FramebufferAttachment::Target::Target(const Target &other)
+    : mBinding(other.mBinding),
+      mTextureIndex(other.mTextureIndex)
+{
+}
+
+FramebufferAttachment::Target &FramebufferAttachment::Target::operator=(const Target &other)
+{
+    this->mBinding = other.mBinding;
+    this->mTextureIndex = other.mTextureIndex;
+    return *this;
+}
+
 ////// FramebufferAttachment Implementation //////
 
 FramebufferAttachment::FramebufferAttachment(GLenum binding,
                                              const ImageIndex &textureIndex,
-                                             RefCountObject *resource)
-    : mBinding(binding),
-      mTextureIndex(textureIndex)
+                                             FramebufferAttachmentObject *resource)
+    : mTarget(binding, textureIndex)
 {
     mResource.set(resource);
 }
@@ -79,29 +99,54 @@ GLenum FramebufferAttachment::getColorEncoding() const
 const ImageIndex &FramebufferAttachment::getTextureImageIndex() const
 {
     ASSERT(type() == GL_TEXTURE);
-    return mTextureIndex;
+    return mTarget.textureIndex();
 }
 
 GLenum FramebufferAttachment::cubeMapFace() const
 {
     ASSERT(type() == GL_TEXTURE);
-    return IsCubeMapTextureTarget(mTextureIndex.type) ? mTextureIndex.type : GL_NONE;
+
+    const auto &index = mTarget.textureIndex();
+    return IsCubeMapTextureTarget(index.type) ? index.type : GL_NONE;
 }
 
 GLint FramebufferAttachment::mipLevel() const
 {
     ASSERT(type() == GL_TEXTURE);
-    return mTextureIndex.mipIndex;
+    return mTarget.textureIndex().mipIndex;
 }
 
 GLint FramebufferAttachment::layer() const
 {
     ASSERT(type() == GL_TEXTURE);
-    if (mTextureIndex.type == GL_TEXTURE_2D_ARRAY || mTextureIndex.type == GL_TEXTURE_3D)
+
+    const auto &index = mTarget.textureIndex();
+
+    if (index.type == GL_TEXTURE_2D_ARRAY || index.type == GL_TEXTURE_3D)
     {
-        return mTextureIndex.layerIndex;
+        return index.layerIndex;
     }
     return 0;
+}
+
+GLsizei FramebufferAttachment::getWidth() const
+{
+    return mResource->getAttachmentWidth(mTarget);
+}
+
+GLsizei FramebufferAttachment::getHeight() const
+{
+    return mResource->getAttachmentHeight(mTarget);
+}
+
+GLenum FramebufferAttachment::getInternalFormat() const
+{
+    return mResource->getAttachmentInternalFormat(mTarget);
+}
+
+GLsizei FramebufferAttachment::getSamples() const
+{
+    return mResource->getAttachmentSamples(mTarget);
 }
 
 ///// TextureAttachment Implementation ////////
@@ -115,26 +160,6 @@ TextureAttachment::~TextureAttachment()
 {
 }
 
-GLsizei TextureAttachment::getSamples() const
-{
-    return 0;
-}
-
-GLsizei TextureAttachment::getWidth() const
-{
-    return getTexture()->getWidth(mTextureIndex.type, mTextureIndex.mipIndex);
-}
-
-GLsizei TextureAttachment::getHeight() const
-{
-    return getTexture()->getHeight(mTextureIndex.type, mTextureIndex.mipIndex);
-}
-
-GLenum TextureAttachment::getInternalFormat() const
-{
-    return getTexture()->getInternalFormat(mTextureIndex.type, mTextureIndex.mipIndex);
-}
-
 GLenum TextureAttachment::type() const
 {
     return GL_TEXTURE;
@@ -144,6 +169,11 @@ Renderbuffer *TextureAttachment::getRenderbuffer() const
 {
     UNREACHABLE();
     return nullptr;
+}
+
+Texture *TextureAttachment::getTexture() const
+{
+    return rx::GetAs<Texture>(mResource.get());
 }
 
 ////// RenderbufferAttachment Implementation //////
@@ -158,26 +188,6 @@ RenderbufferAttachment::~RenderbufferAttachment()
 {
 }
 
-GLsizei RenderbufferAttachment::getWidth() const
-{
-    return getRenderbuffer()->getWidth();
-}
-
-GLsizei RenderbufferAttachment::getHeight() const
-{
-    return getRenderbuffer()->getHeight();
-}
-
-GLenum RenderbufferAttachment::getInternalFormat() const
-{
-    return getRenderbuffer()->getInternalFormat();
-}
-
-GLsizei RenderbufferAttachment::getSamples() const
-{
-    return getRenderbuffer()->getSamples();
-}
-
 GLenum RenderbufferAttachment::type() const
 {
     return GL_RENDERBUFFER;
@@ -189,6 +199,11 @@ Texture *RenderbufferAttachment::getTexture() const
     return nullptr;
 }
 
+Renderbuffer *RenderbufferAttachment::getRenderbuffer() const
+{
+    return rx::GetAs<Renderbuffer>(mResource.get());
+}
+
 DefaultAttachment::DefaultAttachment(GLenum binding, egl::Surface *surface)
     : FramebufferAttachment(binding, ImageIndex::MakeInvalid(), surface)
 {
@@ -196,28 +211,6 @@ DefaultAttachment::DefaultAttachment(GLenum binding, egl::Surface *surface)
 
 DefaultAttachment::~DefaultAttachment()
 {
-}
-
-GLsizei DefaultAttachment::getWidth() const
-{
-    return getSurface()->getWidth();
-}
-
-GLsizei DefaultAttachment::getHeight() const
-{
-    return getSurface()->getHeight();
-}
-
-GLenum DefaultAttachment::getInternalFormat() const
-{
-    const egl::Config *config = getSurface()->getConfig();
-    return (getBinding() == GL_BACK ? config->renderTargetFormat : config->depthStencilFormat);
-}
-
-GLsizei DefaultAttachment::getSamples() const
-{
-    const egl::Config *config = getSurface()->getConfig();
-    return config->samples;
 }
 
 GLenum DefaultAttachment::type() const
@@ -235,6 +228,11 @@ Renderbuffer *DefaultAttachment::getRenderbuffer() const
 {
     UNREACHABLE();
     return nullptr;
+}
+
+const egl::Surface *DefaultAttachment::getSurface() const
+{
+    return rx::GetAs<egl::Surface>(mResource.get());
 }
 
 }

@@ -9,14 +9,12 @@
 #ifndef LIBANGLE_RENDERER_TEXTUREIMPL_H_
 #define LIBANGLE_RENDERER_TEXTUREIMPL_H_
 
-#include "libANGLE/Error.h"
-#include "libANGLE/ImageIndex.h"
-
-#include "common/angleutils.h"
+#include <stdint.h>
 
 #include "angle_gl.h"
-
-#include <stdint.h>
+#include "common/angleutils.h"
+#include "libANGLE/Error.h"
+#include "libANGLE/ImageIndex.h"
 
 namespace egl
 {
@@ -40,7 +38,8 @@ namespace rx
 class TextureImpl : angle::NonCopyable
 {
   public:
-    virtual ~TextureImpl() {};
+    TextureImpl() {}
+    virtual ~TextureImpl() {}
 
     virtual void setUsage(GLenum usage) = 0;
 
