@@ -37,6 +37,7 @@ class TextureStorage9 : public TextureStorage
     virtual int getTopLevel() const;
     virtual bool isRenderTarget() const;
     virtual bool isManaged() const;
+    bool supportsNativeMipmapFunction() const override;
     virtual int getLevelCount() const;
 
     virtual gl::Error setData(const gl::ImageIndex &index, ImageD3D *image, const gl::Box *destBox, GLenum type,

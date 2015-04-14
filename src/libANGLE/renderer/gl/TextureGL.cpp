@@ -333,7 +333,7 @@ gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFor
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error TextureGL::generateMipmaps()
+gl::Error TextureGL::generateMipmaps(const gl::SamplerState &samplerState)
 {
     mStateManager->bindTexture(mTextureType, mTextureID);
     mFunctions->generateMipmap(mTextureType);

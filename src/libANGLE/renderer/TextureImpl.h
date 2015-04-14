@@ -60,7 +60,7 @@ class TextureImpl : angle::NonCopyable
 
     virtual gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) = 0;
 
-    virtual gl::Error generateMipmaps() = 0;
+    virtual gl::Error generateMipmaps(const gl::SamplerState &samplerState) = 0;
 
     virtual void bindTexImage(egl::Surface *surface) = 0;
     virtual void releaseTexImage() = 0;

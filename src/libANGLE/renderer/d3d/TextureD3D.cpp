@@ -376,7 +376,7 @@ ImageD3D *TextureD3D::getBaseLevelImage() const
     return getImage(getImageIndex(0, 0));
 }
 
-gl::Error TextureD3D::generateMipmaps()
+gl::Error TextureD3D::generateMipmaps(const gl::SamplerState &samplerState)
 {
     GLint mipCount = mipLevels();
 
@@ -404,6 +404,38 @@ gl::Error TextureD3D::generateMipmaps()
 
     // Set up proper mipmap chain in our Image array.
     initMipmapsImages();
+
+    if (mTexStorage && mTexStorage->supportsNativeMipmapFunction())
+    {
+        gl::Error error = updateStorage();
+        if (error.isError())
+        {
+            return error;
+        }
+
+        // Generate the mipmap chain using the ad-hoc DirectX function.
+        error = mRenderer->generateMipmapsUsingD3D(mTexStorage, samplerState);
+        if (error.isError())
+        {
+            return error;
+        }
+    }
+    else
+    {
+        // Generate the mipmap chain, one level at a time.
+        gl::Error error = generateMipmapsUsingImages();
+        if (error.isError())
+        {
+            return error;
+        }
+    }
+
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error TextureD3D::generateMipmapsUsingImages()
+{
+    GLint mipCount = mipLevels();
 
     // We know that all layers have the same dimension, for the texture to be complete
     GLint layerCount = static_cast<GLint>(getLayerCount(0));

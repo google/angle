@@ -60,9 +60,10 @@ bool TextureStorage11::SRVKey::operator<(const SRVKey &rhs) const
     return std::tie(baseLevel, mipLevels, swizzle) < std::tie(rhs.baseLevel, rhs.mipLevels, rhs.swizzle);
 }
 
-TextureStorage11::TextureStorage11(Renderer11 *renderer, UINT bindFlags)
+TextureStorage11::TextureStorage11(Renderer11 *renderer, UINT bindFlags, UINT miscFlags)
     : mRenderer(renderer),
       mBindFlags(bindFlags),
+      mMiscFlags(miscFlags),
       mTopLevel(0),
       mMipLevels(0),
       mInternalFormat(GL_NONE),
@@ -115,9 +116,32 @@ DWORD TextureStorage11::GetTextureBindFlags(GLenum internalFormat, D3D_FEATURE_L
     return bindFlags;
 }
 
+DWORD TextureStorage11::GetTextureMiscFlags(GLenum internalFormat, D3D_FEATURE_LEVEL featureLevel, bool renderTarget, int levels)
+{
+    UINT miscFlags = 0;
+
+    const d3d11::TextureFormat &formatInfo = d3d11::GetTextureFormatInfo(internalFormat, featureLevel);
+    if (renderTarget && levels > 1)
+    {
+        const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(formatInfo.srvFormat);
+
+        if (dxgiFormatInfo.nativeMipmapSupport(featureLevel))
+        {
+            miscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+        }
+    }
+
+    return miscFlags;
+}
+
 UINT TextureStorage11::getBindFlags() const
 {
     return mBindFlags;
+}
+
+UINT TextureStorage11::getMiscFlags() const
+{
+    return mMiscFlags;
 }
 
 int TextureStorage11::getTopLevel() const
@@ -133,6 +157,11 @@ bool TextureStorage11::isRenderTarget() const
 bool TextureStorage11::isManaged() const
 {
     return false;
+}
+
+bool TextureStorage11::supportsNativeMipmapFunction() const
+{
+    return (mMiscFlags & D3D11_RESOURCE_MISC_GENERATE_MIPS) != 0;
 }
 
 int TextureStorage11::getLevelCount() const
@@ -170,7 +199,7 @@ gl::Error TextureStorage11::getSRV(const gl::SamplerState &samplerState, ID3D11S
     bool mipmapping = gl::IsMipmapFiltered(samplerState);
     unsigned int mipLevels = mipmapping ? (samplerState.maxLevel - samplerState.baseLevel + 1) : 1;
 
-    // Make sure there's 'mipLevels' mipmap levels below the base level (offset by the top level,  which corresponds to GL level 0)
+    // Make sure there's 'mipLevels' mipmap levels below the base level (offset by the top level, which corresponds to GL level 0)
     mipLevels = std::min(mipLevels, mMipLevels - mTopLevel - samplerState.baseLevel);
 
     if (mRenderer->getFeatureLevel() <= D3D_FEATURE_LEVEL_9_3)
@@ -195,42 +224,41 @@ gl::Error TextureStorage11::getSRV(const gl::SamplerState &samplerState, ID3D11S
     }
 
     SRVKey key(samplerState.baseLevel, mipLevels, swizzleRequired);
-    SRVCache::const_iterator iter = mSrvCache.find(key);
+    auto iter = mSrvCache.find(key);
     if (iter != mSrvCache.end())
     {
         *outSRV = iter->second;
+        return gl::Error(GL_NO_ERROR);
     }
-    else
-    {
-        ID3D11Resource *texture = NULL;
-        if (swizzleRequired)
-        {
-            gl::Error error = getSwizzleTexture(&texture);
-            if (error.isError())
-            {
-                return error;
-            }
-        }
-        else
-        {
-            gl::Error error = getResource(&texture);
-            if (error.isError())
-            {
-                return error;
-            }
-        }
 
-        ID3D11ShaderResourceView *srv = NULL;
-        DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
-        gl::Error error = createSRV(samplerState.baseLevel, mipLevels, format, texture, &srv);
+    ID3D11Resource *texture = nullptr;
+    if (swizzleRequired)
+    {
+        gl::Error error = getSwizzleTexture(&texture);
         if (error.isError())
         {
             return error;
         }
-
-        mSrvCache.insert(std::make_pair(key, srv));
-        *outSRV = srv;
     }
+    else
+    {
+        gl::Error error = getResource(&texture);
+        if (error.isError())
+        {
+            return error;
+        }
+    }
+
+    ID3D11ShaderResourceView *srv = nullptr;
+    DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
+    gl::Error error = createSRV(samplerState.baseLevel, mipLevels, format, texture, &srv);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    mSrvCache.insert(std::make_pair(key, srv));
+    *outSRV = srv;
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -256,6 +284,56 @@ gl::Error TextureStorage11::getSRVLevel(int mipLevel, ID3D11ShaderResourceView *
     }
 
     *outSRV = mLevelSRVs[mipLevel];
+
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error TextureStorage11::getSRVLevels(GLint baseLevel, GLint maxLevel, ID3D11ShaderResourceView **outSRV)
+{
+    unsigned int mipLevels = maxLevel - baseLevel + 1;
+
+    // Make sure there's 'mipLevels' mipmap levels below the base level (offset by the top level, which corresponds to GL level 0)
+    mipLevels = std::min(mipLevels, mMipLevels - mTopLevel - baseLevel);
+
+    if (mRenderer->getFeatureLevel() <= D3D_FEATURE_LEVEL_9_3)
+    {
+        ASSERT(mipLevels == 1 || mipLevels == mMipLevels);
+    }
+
+    if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
+    {
+        // We must ensure that the level zero texture is in sync with mipped texture.
+        gl::Error error = useLevelZeroWorkaroundTexture(mipLevels == 1);
+        if (error.isError())
+        {
+            return error;
+        }
+    }
+
+    SRVKey key(baseLevel, mipLevels, false);
+    auto iter = mSrvCache.find(key);
+    if (iter != mSrvCache.end())
+    {
+        *outSRV = iter->second;
+        return gl::Error(GL_NO_ERROR);
+    }
+
+    ID3D11Resource *texture = nullptr;
+    gl::Error error = getResource(&texture);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    ID3D11ShaderResourceView *srv = nullptr;
+    error = createSRV(baseLevel, mipLevels, mShaderResourceFormat, texture, &srv);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    mSrvCache[key] = srv;
+    *outSRV = srv;
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -596,7 +674,7 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index, ImageD3D *image
 }
 
 TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, SwapChain11 *swapchain)
-    : TextureStorage11(renderer, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE),
+    : TextureStorage11(renderer, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE, 0),
       mTexture(swapchain->getOffscreenTexture()),
       mSwizzleTexture(NULL),
       mLevelZeroTexture(NULL),
@@ -644,7 +722,9 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, SwapChain11 *swap
 }
 
 TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels, bool hintLevelZeroOnly)
-    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getFeatureLevel(), renderTarget)),
+    : TextureStorage11(renderer,
+                       GetTextureBindFlags(internalformat, renderer->getFeatureLevel(), renderTarget),
+                       GetTextureMiscFlags(internalformat, renderer->getFeatureLevel(), renderTarget, levels)),
       mTexture(NULL),
       mSwizzleTexture(NULL),
       mLevelZeroTexture(NULL),
@@ -976,7 +1056,7 @@ gl::Error TextureStorage11_2D::ensureTextureExists(int mipLevels)
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.BindFlags = getBindFlags();
         desc.CPUAccessFlags = 0;
-        desc.MiscFlags = 0;
+        desc.MiscFlags = getMiscFlags();
 
         HRESULT result = device->CreateTexture2D(&desc, NULL, outputTexture);
 
@@ -1229,7 +1309,9 @@ gl::Error TextureStorage11_2D::getSwizzleRenderTarget(int mipLevel, ID3D11Render
 }
 
 TextureStorage11_Cube::TextureStorage11_Cube(Renderer11 *renderer, GLenum internalformat, bool renderTarget, int size, int levels, bool hintLevelZeroOnly)
-    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getFeatureLevel(), renderTarget))
+    : TextureStorage11(renderer,
+                       GetTextureBindFlags(internalformat, renderer->getFeatureLevel(), renderTarget),
+                       GetTextureMiscFlags(internalformat, renderer->getFeatureLevel(), renderTarget, levels))
 {
     mTexture = NULL;
     mSwizzleTexture = NULL;
@@ -1624,7 +1706,7 @@ gl::Error TextureStorage11_Cube::ensureTextureExists(int mipLevels)
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.BindFlags = getBindFlags();
         desc.CPUAccessFlags = 0;
-        desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+        desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE | getMiscFlags();
 
         HRESULT result = device->CreateTexture2D(&desc, NULL, outputTexture);
 
@@ -1913,7 +1995,9 @@ gl::Error TextureStorage11_Cube::getSwizzleRenderTarget(int mipLevel, ID3D11Rend
 
 TextureStorage11_3D::TextureStorage11_3D(Renderer11 *renderer, GLenum internalformat, bool renderTarget,
                                          GLsizei width, GLsizei height, GLsizei depth, int levels)
-    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getFeatureLevel(), renderTarget))
+    : TextureStorage11(renderer,
+                       GetTextureBindFlags(internalformat, renderer->getFeatureLevel(), renderTarget),
+                       GetTextureMiscFlags(internalformat, renderer->getFeatureLevel(), renderTarget, levels))
 {
     mTexture = NULL;
     mSwizzleTexture = NULL;
@@ -2076,7 +2160,7 @@ gl::Error TextureStorage11_3D::getResource(ID3D11Resource **outResource)
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.BindFlags = getBindFlags();
         desc.CPUAccessFlags = 0;
-        desc.MiscFlags = 0;
+        desc.MiscFlags = getMiscFlags();
 
         HRESULT result = device->CreateTexture3D(&desc, NULL, &mTexture);
 
@@ -2293,7 +2377,9 @@ gl::Error TextureStorage11_3D::getSwizzleRenderTarget(int mipLevel, ID3D11Render
 
 TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer11 *renderer, GLenum internalformat, bool renderTarget,
                                                    GLsizei width, GLsizei height, GLsizei depth, int levels)
-    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getFeatureLevel(), renderTarget))
+    : TextureStorage11(renderer,
+                       GetTextureBindFlags(internalformat, renderer->getFeatureLevel(), renderTarget),
+                       GetTextureMiscFlags(internalformat, renderer->getFeatureLevel(), renderTarget, levels))
 {
     mTexture = NULL;
     mSwizzleTexture = NULL;
@@ -2455,7 +2541,7 @@ gl::Error TextureStorage11_2DArray::getResource(ID3D11Resource **outResource)
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.BindFlags = getBindFlags();
         desc.CPUAccessFlags = 0;
-        desc.MiscFlags = 0;
+        desc.MiscFlags = getMiscFlags();
 
         HRESULT result = device->CreateTexture2D(&desc, NULL, &mTexture);
 

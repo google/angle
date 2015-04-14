@@ -66,6 +66,11 @@ bool TextureStorage9::isManaged() const
     return (mD3DPool == D3DPOOL_MANAGED);
 }
 
+bool TextureStorage9::supportsNativeMipmapFunction() const
+{
+    return false;
+}
+
 D3DPOOL TextureStorage9::getPool() const
 {
     return mD3DPool;

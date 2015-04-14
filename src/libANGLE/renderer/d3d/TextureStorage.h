@@ -39,6 +39,7 @@ class TextureStorage : angle::NonCopyable
     virtual int getTopLevel() const = 0;
     virtual bool isRenderTarget() const = 0;
     virtual bool isManaged() const = 0;
+    virtual bool supportsNativeMipmapFunction() const = 0;
     virtual int getLevelCount() const = 0;
 
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) = 0;

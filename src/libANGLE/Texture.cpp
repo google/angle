@@ -277,7 +277,7 @@ Error Texture::setStorage(GLenum target, size_t levels, GLenum internalFormat, c
 
 Error Texture::generateMipmaps()
 {
-    Error error = mTexture->generateMipmaps();
+    Error error = mTexture->generateMipmaps(getSamplerState());
     if (error.isError())
     {
         return error;

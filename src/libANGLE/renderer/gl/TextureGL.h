@@ -43,7 +43,7 @@ class TextureGL : public TextureImpl
 
     gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) override;
 
-    gl::Error generateMipmaps() override;
+    gl::Error generateMipmaps(const gl::SamplerState &samplerState) override;
 
     void bindTexImage(egl::Surface *surface) override;
     void releaseTexImage() override;

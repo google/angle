@@ -35,8 +35,10 @@ class TextureStorage11 : public TextureStorage
     virtual ~TextureStorage11();
 
     static DWORD GetTextureBindFlags(GLenum internalFormat, D3D_FEATURE_LEVEL featureLevel, bool renderTarget);
+    static DWORD GetTextureMiscFlags(GLenum internalFormat, D3D_FEATURE_LEVEL featureLevel, bool renderTarget, int levels);
 
     UINT getBindFlags() const;
+    UINT getMiscFlags() const;
 
     virtual gl::Error getResource(ID3D11Resource **outResource) = 0;
     virtual gl::Error getSRV(const gl::SamplerState &samplerState, ID3D11ShaderResourceView **outSRV);
@@ -47,6 +49,7 @@ class TextureStorage11 : public TextureStorage
     virtual int getTopLevel() const;
     virtual bool isRenderTarget() const;
     virtual bool isManaged() const;
+    bool supportsNativeMipmapFunction() const override;
     virtual int getLevelCount() const;
     virtual UINT getSubresourceIndex(const gl::ImageIndex &index) const;
 
@@ -69,8 +72,10 @@ class TextureStorage11 : public TextureStorage
     virtual gl::Error setData(const gl::ImageIndex &index, ImageD3D *image, const gl::Box *destBox, GLenum type,
                               const gl::PixelUnpackState &unpack, const uint8_t *pixelData);
 
+    gl::Error getSRVLevels(GLint baseLevel, GLint maxLevel, ID3D11ShaderResourceView **outSRV);
+
   protected:
-    TextureStorage11(Renderer11 *renderer, UINT bindFlags);
+    TextureStorage11(Renderer11 *renderer, UINT bindFlags, UINT miscFlags);
     int getLevelWidth(int mipLevel) const;
     int getLevelHeight(int mipLevel) const;
     int getLevelDepth(int mipLevel) const;
@@ -120,6 +125,7 @@ class TextureStorage11 : public TextureStorage
 
   private:
     const UINT mBindFlags;
+    const UINT mMiscFlags;
 
     struct SRVKey
     {
