@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9033a6f4_0dca7f9c",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T18:38:39Z",
+      "side": 1,
+      "message": "can plonk this down with \"return name\"",
+      "range": {
+        "startLine": 467,
+        "startChar": 4,
+        "endLine": 470,
+        "endChar": 5
+      },
+      "revId": "a8406cce95d47950dbfc7c0b58ab931517e5e192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0242aae_9381e94b",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T18:38:39Z",
+      "side": 1,
+      "message": "ASSERT?",
+      "range": {
+        "startLine": 480,
+        "startChar": 12,
+        "endLine": 480,
+        "endChar": 27
+      },
+      "revId": "a8406cce95d47950dbfc7c0b58ab931517e5e192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0299e86_31b7d4c8",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T18:38:39Z",
+      "side": 1,
+      "message": "suggest you negate the if clause and return name (/set invalid index) and flatten the else clause",
+      "range": {
+        "startLine": 488,
+        "startChar": 4,
+        "endLine": 488,
+        "endChar": 8
+      },
+      "revId": "a8406cce95d47950dbfc7c0b58ab931517e5e192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0242aae_8e153c76",
+        "filename": "src/libANGLE/renderer/ProgramImpl.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T18:38:39Z",
+      "side": 1,
+      "message": "nit: alignments",
+      "range": {
+        "startLine": 77,
+        "startChar": 53,
+        "endLine": 77,
+        "endChar": 54
+      },
+      "revId": "a8406cce95d47950dbfc7c0b58ab931517e5e192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9033a6f4_6d2c63c7",
+        "filename": "src/libANGLE/renderer/ProgramImpl.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T18:38:39Z",
+      "side": 1,
+      "message": "can you check if these trigger the copy constructor? (if yes, you can use const std::string \u0026baseName \u003d)",
+      "range": {
+        "startLine": 80,
+        "startChar": 3,
+        "endLine": 80,
+        "endChar": 24
+      },
+      "revId": "a8406cce95d47950dbfc7c0b58ab931517e5e192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0242aae_2ecac89c",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T18:38:39Z",
+      "side": 1,
+      "message": "nit: alignments",
+      "range": {
+        "startLine": 119,
+        "startChar": 46,
+        "endLine": 119,
+        "endChar": 47
+      },
+      "revId": "a8406cce95d47950dbfc7c0b58ab931517e5e192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
