@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d0299e86_63e5a022",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T13:42:58Z",
+      "side": 1,
+      "message": "Drat, yes, you\u0027re right. Will fix.",
+      "parentUuid": "9033a6f4_e0674a4e",
+      "range": {
+        "startLine": 592,
+        "startChar": 27,
+        "endLine": 592,
+        "endChar": 34
+      },
+      "revId": "e04547e147bb8cd0cbec268d85630fcc49bc61b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0242aae_c26450cc",
         "filename": "src/tests/standalone_tests/EGLSurfaceTest.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-13T18:50:38Z",
       "side": 1,
       "message": "Are more tests needed? I think there might still be untested code paths in this situation:\n\n1. Make one context current, then another:\n1a. To the same surface\n1b. To different surfaces\n\nIn each case, make sure that the right surfaces are, or are not, deleted.",
+      "range": {
+        "startLine": 164,
+        "startChar": 20,
+        "endLine": 164,
+        "endChar": 27
+      },
+      "revId": "e04547e147bb8cd0cbec268d85630fcc49bc61b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0299e86_e28740a8",
+        "filename": "src/tests/standalone_tests/EGLSurfaceTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-14T13:42:58Z",
+      "side": 1,
+      "message": "I added a new test to cover the fixed bug. Because of the awkwardness of mocking Display and Context, combined with the tested code being located in the entry points file (because of the GetGlobal functions) I couldn\u0027t quite wrap my head around how to verify surfaces are or are not deleted. The end2end tests here only either crash or have problematic message loops, but I could add a TODO with better unit testing if that would help.",
+      "parentUuid": "b0242aae_c26450cc",
       "range": {
         "startLine": 164,
         "startChar": 20,
