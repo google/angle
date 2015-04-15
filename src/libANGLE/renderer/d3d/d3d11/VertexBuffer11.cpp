@@ -7,11 +7,13 @@
 // VertexBuffer11.cpp: Defines the D3D11 VertexBuffer implementation.
 
 #include "libANGLE/renderer/d3d/d3d11/VertexBuffer11.h"
-#include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+
 #include "libANGLE/Buffer.h"
 #include "libANGLE/VertexAttribute.h"
+#include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
+#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 namespace rx
 {
@@ -52,6 +54,15 @@ gl::Error VertexBuffer11::initialize(unsigned int size, bool dynamicUsage)
         if (FAILED(result))
         {
             return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate internal vertex buffer of size, %lu.", size);
+        }
+
+        if (dynamicUsage)
+        {
+            d3d11::SetDebugName(mBuffer, "VertexBuffer11 (dynamic)");
+        }
+        else
+        {
+            d3d11::SetDebugName(mBuffer, "VertexBuffer11 (static)");
         }
     }
 

@@ -114,28 +114,34 @@ gl::Error IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buf
                          destinationIndexType == type;
     unsigned int streamOffset = 0;
 
+    // Avoid D3D11's primitive restart index value
+    // see http://msdn.microsoft.com/en-us/library/windows/desktop/bb205124(v=vs.85).aspx
+    bool primitiveRestartWorkaround = mRendererClass == RENDERER_D3D11 &&
+                                      translated->indexRange.end == 0xFFFF &&
+                                      type == GL_UNSIGNED_SHORT;
+
+    if (primitiveRestartWorkaround)
+    {
+        destinationIndexType = GL_UNSIGNED_INT;
+        directStorage = false;
+    }
+
+    const gl::Type &destTypeInfo = gl::GetTypeInfo(destinationIndexType);
+
     if (directStorage)
     {
         streamOffset = offset;
     }
-    else if (staticBuffer && staticBuffer->getBufferSize() != 0 && staticBuffer->getIndexType() == type && alignedOffset)
+    else if (staticBuffer &&
+             staticBuffer->getBufferSize() != 0 &&
+             alignedOffset &&
+             staticBuffer->getIndexType() == destinationIndexType)
     {
         indexBuffer = staticBuffer;
 
         // Using bit-shift here is faster than using division.
-        streamOffset = (offset >> typeInfo.bytesShift) << gl::GetTypeInfo(destinationIndexType).bytesShift;
+        streamOffset = (offset >> typeInfo.bytesShift) << destTypeInfo.bytesShift;
     }
-
-    // Avoid D3D11's primitive restart index value
-    // see http://msdn.microsoft.com/en-us/library/windows/desktop/bb205124(v=vs.85).aspx
-    if (translated->indexRange.end == 0xFFFF && type == GL_UNSIGNED_SHORT && mRendererClass == RENDERER_D3D11)
-    {
-        destinationIndexType = GL_UNSIGNED_INT;
-        directStorage = false;
-        indexBuffer = NULL;
-    }
-
-    const gl::Type &destTypeInfo = gl::GetTypeInfo(destinationIndexType);
 
     if (!directStorage && !indexBuffer)
     {
@@ -172,7 +178,7 @@ gl::Error IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buf
         }
 
         unsigned int bufferSizeRequired = convertCount << destTypeInfo.bytesShift;
-        error = indexBuffer->reserveBufferSpace(bufferSizeRequired, type);
+        error = indexBuffer->reserveBufferSpace(bufferSizeRequired, destinationIndexType);
         if (error.isError())
         {
             return error;

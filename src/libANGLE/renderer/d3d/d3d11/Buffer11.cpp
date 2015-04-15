@@ -10,6 +10,7 @@
 
 #include "common/MemoryBuffer.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 
 namespace rx
@@ -861,6 +862,8 @@ gl::Error Buffer11::NativeStorage::resize(size_t size, bool preserveData)
     {
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal buffer, result: 0x%X.", result);
     }
+
+    d3d11::SetDebugName(newBuffer, "Buffer11::NativeStorage");
 
     if (mNativeStorage && preserveData)
     {

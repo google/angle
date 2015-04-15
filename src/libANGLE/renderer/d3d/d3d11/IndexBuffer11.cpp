@@ -7,7 +7,9 @@
 // IndexBuffer11.cpp: Defines the D3D11 IndexBuffer implementation.
 
 #include "libANGLE/renderer/d3d/d3d11/IndexBuffer11.h"
+
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 namespace rx
 {
@@ -46,6 +48,15 @@ gl::Error IndexBuffer11::initialize(unsigned int bufferSize, GLenum indexType, b
         if (FAILED(result))
         {
             return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate internal index buffer of size, %lu.", bufferSize);
+        }
+
+        if (dynamic)
+        {
+            d3d11::SetDebugName(mBuffer, "IndexBuffer11 (dynamic)");
+        }
+        else
+        {
+            d3d11::SetDebugName(mBuffer, "IndexBuffer11 (static)");
         }
     }
 
