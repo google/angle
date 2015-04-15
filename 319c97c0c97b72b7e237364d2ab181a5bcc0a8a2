@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "90a1e660_650b3c5e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3008,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-15T14:12:25Z",
+      "side": 1,
+      "message": "I still need to honor baseLevel and maxLevel which are part of the sampling state.\n\nI need to compute the mipmaps in the range [baseLevel+1,q] where q \u003d min{p,maxLevel} and p \u003d baseLevel + floor(log2(maxsize)). That’s exactly the behaviour of getSRV().\nIn that respect, the current implementation of ANGLE is wrong — unless I am mistaken. See ES 3.0.4, section 3.8.10 (Mipmapping, p518; Manual Mipmap Generation, p159).\nI can create my own sampling state with the default parameters except for maxLevel and baseLevel (and ignore the swizzling).",
+      "parentUuid": "907ac6a8_77f52a50",
+      "range": {
+        "startLine": 3008,
+        "startChar": 3,
+        "endLine": 3008,
+        "endChar": 70
+      },
+      "revId": "319c97c0c97b72b7e237364d2ab181a5bcc0a8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b07b4aac_b82c1543",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 3
