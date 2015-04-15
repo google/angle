@@ -305,22 +305,17 @@ TIntermTyped *TIntermediate::addComma(
 // a true path, and a false path.  The two paths are specified
 // as separate parameters.
 //
-// Returns the selection node created, or 0 if one could not be.
+// Returns the selection node created, or one of trueBlock and falseBlock if the expression could be folded.
 //
-TIntermTyped *TIntermediate::addSelection(
-    TIntermTyped *cond, TIntermTyped *trueBlock, TIntermTyped *falseBlock,
-    const TSourceLoc &line)
+TIntermTyped *TIntermediate::addSelection(TIntermTyped *cond, TIntermTyped *trueBlock, TIntermTyped *falseBlock,
+                                          const TSourceLoc &line)
 {
-    if (!cond || !trueBlock || !falseBlock ||
-        trueBlock->getType() != falseBlock->getType())
-    {
-        return NULL;
-    }
-
-    //
-    // See if all the operands are constant, then fold it otherwise not.
-    //
-
+    // Right now it's safe to fold ternary operators only when all operands
+    // are constant. If only the condition is constant, it's theoretically
+    // possible to fold the ternary operator, but that requires making sure
+    // that the node returned from here won't be treated as a constant
+    // expression in case the node that gets eliminated was not a constant
+    // expression.
     if (cond->getAsConstantUnion() &&
         trueBlock->getAsConstantUnion() &&
         falseBlock->getAsConstantUnion())
@@ -334,8 +329,7 @@ TIntermTyped *TIntermediate::addSelection(
     //
     // Make a selection node.
     //
-    TIntermSelection *node = new TIntermSelection(
-        cond, trueBlock, falseBlock, trueBlock->getType());
+    TIntermSelection *node = new TIntermSelection(cond, trueBlock, falseBlock, trueBlock->getType());
     node->getTypePointer()->setQualifier(EvqTemporary);
     node->setLine(line);
 

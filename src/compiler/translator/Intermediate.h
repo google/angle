@@ -41,8 +41,8 @@ class TIntermediate
     TIntermAggregate *makeAggregate(TIntermNode *node, const TSourceLoc &);
     TIntermAggregate *setAggregateOperator(TIntermNode *, TOperator, const TSourceLoc &);
     TIntermNode *addSelection(TIntermTyped *cond, TIntermNodePair code, const TSourceLoc &);
-    TIntermTyped *addSelection(
-        TIntermTyped *cond, TIntermTyped *trueBlock, TIntermTyped *falseBlock, const TSourceLoc &);
+    TIntermTyped *addSelection(TIntermTyped *cond, TIntermTyped *trueBlock, TIntermTyped *falseBlock,
+                               const TSourceLoc &line);
     TIntermSwitch *addSwitch(
         TIntermTyped *init, TIntermAggregate *statementList, const TSourceLoc &line);
     TIntermCase *addCase(

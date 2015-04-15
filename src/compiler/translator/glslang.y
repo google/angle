@@ -521,18 +521,7 @@ logical_or_expression
 conditional_expression
     : logical_or_expression { $$ = $1; }
     | logical_or_expression QUESTION expression COLON assignment_expression {
-       if (context->boolErrorCheck(@2, $1))
-            context->recover();
-
-        $$ = context->intermediate.addSelection($1, $3, $5, @2);
-        if ($3->getType() != $5->getType())
-            $$ = 0;
-
-        if ($$ == 0) {
-            context->binaryOpError(@2, ":", $3->getCompleteString(), $5->getCompleteString());
-            context->recover();
-            $$ = $5;
-        }
+        $$ = context->addTernarySelection($1, $3, $5, @2);
     }
     ;
 

@@ -364,3 +364,22 @@ TEST_F(MalformedShaderTest, UninitializedImplicitArraySize)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// An operator can only form a constant expression if all the operands are constant expressions
+// - even operands of ternary operator that are never evaluated. (ESSL 3.00 section 4.3.3)
+TEST_F(MalformedShaderTest, TernaryOperatorNotConstantExpression)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "uniform bool u;\n"
+        "void main() {\n"
+        "   const bool a = true ? true : u;\n"
+        "   my_FragColor = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

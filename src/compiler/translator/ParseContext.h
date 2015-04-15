@@ -212,6 +212,9 @@ struct TParseContext {
     TIntermTyped *addFunctionCallOrMethod(TFunction *fnCall, TIntermNode *node,
         const TSourceLoc &loc, bool *fatalError);
 
+    TIntermTyped *addTernarySelection(TIntermTyped *cond, TIntermTyped *trueBlock, TIntermTyped *falseBlock,
+                                      const TSourceLoc &line);
+
   private:
     bool declareVariable(const TSourceLoc &line, const TString &identifier, const TType &type, TVariable **variable);
 

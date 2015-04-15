@@ -3258,6 +3258,20 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
     return callNode;
 }
 
+TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond, TIntermTyped *trueBlock, TIntermTyped *falseBlock,
+                                                 const TSourceLoc &loc)
+{
+    if (boolErrorCheck(loc, cond))
+        recover();
+
+    if (trueBlock->getType() != falseBlock->getType())
+    {
+        binaryOpError(loc, ":", trueBlock->getCompleteString(), falseBlock->getCompleteString());
+        recover();
+        return falseBlock;
+    }
+    return intermediate.addSelection(cond, trueBlock, falseBlock, loc);
+}
 
 //
 // Parse an array of strings using yyparse.
