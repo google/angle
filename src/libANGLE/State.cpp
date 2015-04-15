@@ -1406,9 +1406,10 @@ bool State::hasMappedBuffer(GLenum target) const
     if (target == GL_ARRAY_BUFFER)
     {
         const VertexArray *vao = getVertexArray();
-        for (size_t attribIndex = 0; attribIndex < mVertexAttribCurrentValues.size(); attribIndex++)
+        const auto &vertexAttribs = vao->getVertexAttributes();
+        for (size_t attribIndex = 0; attribIndex < vertexAttribs.size(); attribIndex++)
         {
-            const gl::VertexAttribute &vertexAttrib = vao->getVertexAttribute(attribIndex);
+            const gl::VertexAttribute &vertexAttrib = vertexAttribs[attribIndex];
             gl::Buffer *boundBuffer = vertexAttrib.buffer.get();
             if (vertexAttrib.enabled && boundBuffer && boundBuffer->isMapped())
             {
