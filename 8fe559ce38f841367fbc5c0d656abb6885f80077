@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "907ac6a8_2e12fb54",
+        "filename": "src/libANGLE/renderer/gl/RenderbufferGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-15T18:56:04Z",
+      "side": 1,
+      "message": "For now, I check for out of memory and assert that there are no other errors.  Since the proper fixes to FunctionsGL look like a good chunk of work, I\u0027ll update this (and other potential sources of GL_OUT_OF_MEMORY) afterwards.",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 63,
+        "endChar": 33
+      },
+      "revId": "8fe559ce38f841367fbc5c0d656abb6885f80077",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
