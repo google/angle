@@ -22,6 +22,30 @@
       "revId": "870e7bb5008f3f8238b4e72b5609c257d7ee053b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90a1e660_827c3ee7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3172,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-15T13:22:53Z",
+      "side": 1,
+      "message": "Supporting length() in output will need to be added as a follow-up. The only case where this is needed when the shader takes the length of an array assignment, like this:\n\nuint u \u003d (a \u003d b).length();\n\nThis is a fairly odd corner case, so I decided to start with this simpler implementation that only supports cases where length can be safely folded into a constant. I did now notice however that there\u0027s a bug that allows arrays in ternary operators - I\u0027ll add a fix for that to reduce the corner cases before this is merged.",
+      "parentUuid": "9033a6f4_4d8be772",
+      "range": {
+        "startLine": 3169,
+        "startChar": 9,
+        "endLine": 3172,
+        "endChar": 13
+      },
+      "revId": "870e7bb5008f3f8238b4e72b5609c257d7ee053b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
