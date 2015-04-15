@@ -117,6 +117,30 @@
       "revId": "f0aedd2067a3b79a7494a5a1d9b2b67e5f1a6980",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_aaacb79b",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-15T18:02:52Z",
+      "side": 1,
+      "message": "In this case, the implementation should be able to handle that and I don\u0027t want to force them to do extra calls if it\u0027s not needed.",
+      "parentUuid": "907ac6a8_ba2c0943",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 20
+      },
+      "revId": "f0aedd2067a3b79a7494a5a1d9b2b67e5f1a6980",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
