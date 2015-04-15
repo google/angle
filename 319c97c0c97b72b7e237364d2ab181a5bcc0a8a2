@@ -69,6 +69,30 @@
       "revId": "319c97c0c97b72b7e237364d2ab181a5bcc0a8a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90a1e660_65325c24",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-15T14:29:03Z",
+      "side": 1,
+      "message": "Is there a recommended way to handle the different feature level in the DXGIFormat?\n\nDo I have to override the formats to handle the variations between FL9.1, 9.2 and 9.3?",
+      "parentUuid": "b07b4aac_b82c1543",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 198,
+        "endChar": 1
+      },
+      "revId": "319c97c0c97b72b7e237364d2ab181a5bcc0a8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
