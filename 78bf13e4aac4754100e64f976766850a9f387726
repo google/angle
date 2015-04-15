@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b07b4aac_3e154874",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-15T18:55:58Z",
+      "side": 1,
+      "message": "Will do.",
+      "parentUuid": "b0242aae_29d4f439",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 14
+      },
+      "revId": "78bf13e4aac4754100e64f976766850a9f387726",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0299e86_980461d1",
         "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-15T01:26:42Z",
       "side": 1,
       "message": "A different code path is needed to fetch the OpenGL extensions on the core profile. See:\nhttps://code.google.com/p/chromium/codesearch#chromium/src/gpu/command_buffer/service/feature_info.cc\u0026q\u003dglGetStringi\u0026sq\u003dpackage:chromium\u0026type\u003dcs\u0026l\u003d292",
+      "range": {
+        "startLine": 710,
+        "startChar": 19,
+        "endLine": 710,
+        "endChar": 21
+      },
+      "revId": "78bf13e4aac4754100e64f976766850a9f387726",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b07b4aac_feccb0ba",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 710,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-15T18:55:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0299e86_980461d1",
       "range": {
         "startLine": 710,
         "startChar": 19,
