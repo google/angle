@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "907ac6a8_b75e62c3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3008,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-15T15:09:18Z",
+      "side": 1,
+      "message": "Thanks for pointing out the base level stuff.  It looks like we don\u0027t honor that yet for ES3.\n\nI still suggest adding a new function to TextureStorage11.  There is a TextureStorage11::getSRVLevel already and we could add a new one, TextureStorage11::getSRVLevels that takes a mipLevel and mipLevelCount.",
+      "parentUuid": "90a1e660_650b3c5e",
+      "range": {
+        "startLine": 3008,
+        "startChar": 3,
+        "endLine": 3008,
+        "endChar": 70
+      },
+      "revId": "319c97c0c97b72b7e237364d2ab181a5bcc0a8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b07b4aac_b82c1543",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 3
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "Is there a recommended way to handle the different feature level in the DXGIFormat?\n\nDo I have to override the formats to handle the variations between FL9.1, 9.2 and 9.3?",
       "parentUuid": "b07b4aac_b82c1543",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 198,
+        "endChar": 1
+      },
+      "revId": "319c97c0c97b72b7e237364d2ab181a5bcc0a8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907ac6a8_d73bde49",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-15T15:09:18Z",
+      "side": 1,
+      "message": "Yea, it would be something like this:\n\n        formatutils11.h:\n    typedef bool (*NativeMipmapGenerationSupportFunction)(D3D_FEATURE_LEVEL);\n\n    struct DXGIFormat\n    {\n    ...\n    NativeMipmapGenerationSupportFunction nativeMipmapSupport;\n    }\n\n\n    formatutils11.cpp:\n    static bool NeverSupported(D3D_FEATURE_LEVEL)\n    {\n        return false;\n    }\n\n    template \u003cD3D_FEATURE_LEVEL requiredFeatureLevel\u003e\n    static bool RequiresFeatureLevel(D3D_FEATURE_LEVEL featureLevel)\n    {\n        return featureLevel \u003e\u003d requiredFeatureLevel;\n    }\n\n    ...\n\n    void AddDXGIFormat(DXGIFormatInfoMap *map, DXGI_FORMAT dxgiFormat, GLuint pixelBits, GLuint blockWidth, GLuint blockHeight,\n                   GLenum componentType, MipGenerationFunction mipFunc, ColorReadFunction readFunc, NativeMipmapGenerationSupportFunction nativeMipmapSupport)\n\n    ...\n\n    static DXGIFormatInfoMap BuildDXGIFormatInfoMap()\n    {\n    ...\n    // Add a new column to the table\n    AddDXGIFormat(\u0026map, DXGI_FORMAT_R8G8B8A8_UNORM,           32,  1, 1, GL_UNSIGNED_NORMALIZED, GenerateMip\u003cR8G8B8A8\u003e,      ReadColor\u003cR8G8B8A8, GLfloat\u003e, RequireFeatureLevel\u003cD3D_FEATURE_LEVEL_9_1\u003e);\n    ...",
+      "parentUuid": "90a1e660_65325c24",
       "range": {
         "startLine": 119,
         "startChar": 0,
