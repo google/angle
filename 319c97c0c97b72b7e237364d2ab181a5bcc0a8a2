@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "907ac6a8_77f52a50",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3008,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-15T13:53:34Z",
+      "side": 1,
+      "message": "We should not be using the sampler state to grab an SRV for mipmapping.  The sampler state could tell the texture to get a swizzled SRV or one that points to the wrong mip level.\n\nA new method should be added to TextureStorage11 for this.  Maybe getFullMipSRV?.",
+      "range": {
+        "startLine": 3008,
+        "startChar": 3,
+        "endLine": 3008,
+        "endChar": 70
+      },
+      "revId": "319c97c0c97b72b7e237364d2ab181a5bcc0a8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b07b4aac_b82c1543",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-15T13:53:34Z",
+      "side": 1,
+      "message": "Instead of a new switch, please merge this into formatutils11.h as a member of DXGIFormat.  It could be a function that takes a feature level parameter and returns a bool.",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 198,
+        "endChar": 1
+      },
+      "revId": "319c97c0c97b72b7e237364d2ab181a5bcc0a8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
