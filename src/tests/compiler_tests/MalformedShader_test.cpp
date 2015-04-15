@@ -383,3 +383,42 @@ TEST_F(MalformedShaderTest, TernaryOperatorNotConstantExpression)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Ternary operator can't operate on arrays (ESSL 3.00 section 5.7)
+TEST_F(MalformedShaderTest, TernaryOperatorOnArrays)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   float[1] a = float[1](0.0);\n"
+        "   float[1] b = float[1](1.0);\n"
+        "   float[1] c = true ? a : b;\n"
+        "   my_FragColor = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Ternary operator can't operate on structs (ESSL 3.00 section 5.7)
+TEST_F(MalformedShaderTest, TernaryOperatorOnStructs)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "struct S { float foo; };\n"
+        "void main() {\n"
+        "   S a = S(0.0);\n"
+        "   S b = S(1.0);\n"
+        "   S c = true ? a : b;\n"
+        "   my_FragColor = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

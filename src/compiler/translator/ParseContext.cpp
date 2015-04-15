@@ -3270,6 +3270,15 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond, TIntermType
         recover();
         return falseBlock;
     }
+    // ESSL1 sections 5.2 and 5.7:
+    // ESSL3 section 5.7:
+    // Ternary operator is not among the operators allowed for structures/arrays.
+    if (trueBlock->isArray() || trueBlock->getBasicType() == EbtStruct)
+    {
+        error(loc, "ternary operator is not allowed for structures or arrays", ":");
+        recover();
+        return falseBlock;
+    }
     return intermediate.addSelection(cond, trueBlock, falseBlock, loc);
 }
 
