@@ -120,11 +120,7 @@ void ANGLERenderTest::SetUp()
         return;
     }
 
-    if (!initializeBenchmark())
-    {
-        FAIL() << "Failed initializing base perf test";
-        return;
-    }
+    initializeBenchmark();
 
     ANGLEPerfTest::SetUp();
 }

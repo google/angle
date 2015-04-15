@@ -7,7 +7,6 @@
 //   Performance test for ANGLE point sprites.
 //
 
-#include <cassert>
 #include <sstream>
 #include <iostream>
 
@@ -36,7 +35,7 @@ class PointSpritesBenchmark : public ANGLERenderTest,
   public:
     PointSpritesBenchmark();
 
-    bool initializeBenchmark() override;
+    void initializeBenchmark() override;
     void destroyBenchmark() override;
     void beginDrawBenchmark() override;
     void drawBenchmark() override;
@@ -62,12 +61,12 @@ PointSpritesBenchmark::PointSpritesBenchmark()
 {
 }
 
-bool PointSpritesBenchmark::initializeBenchmark()
+void PointSpritesBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
 
     mDrawIterations = params.iterations;
-    assert(params.iterations > 0);
+    ASSERT_TRUE(params.iterations > 0);
 
     std::stringstream vstrstr;
 
@@ -77,9 +76,8 @@ bool PointSpritesBenchmark::initializeBenchmark()
 
     if (params.numVaryings > static_cast<unsigned int>(maxVaryings))
     {
-        std::cerr << "Varying count (" << params.numVaryings << ")"
-                  << " exceeds maximum varyings: " << maxVaryings << std::endl;
-        return false;
+        FAIL() << "Varying count (" << params.numVaryings << ")"
+               << " exceeds maximum varyings: " << maxVaryings << std::endl;
     }
 
     vstrstr << "attribute vec2 vPosition;\n"
@@ -124,10 +122,7 @@ bool PointSpritesBenchmark::initializeBenchmark()
                "}\n";
 
     mProgram = CompileProgram(vstrstr.str(), fstrstr.str());
-    if (!mProgram)
-    {
-        return false;
-    }
+    ASSERT_TRUE(mProgram != 0);
 
     // Use the program object
     glUseProgram(mProgram);
@@ -145,10 +140,7 @@ bool PointSpritesBenchmark::initializeBenchmark()
     glBufferData(GL_ARRAY_BUFFER, vertexPositions.size() * sizeof(float), &vertexPositions[0], GL_STATIC_DRAW);
 
     int positionLocation = glGetAttribLocation(mProgram, "vPosition");
-    if (positionLocation == -1)
-    {
-        return false;
-    }
+    ASSERT_TRUE(positionLocation != -1);
 
     glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(positionLocation);
@@ -157,20 +149,11 @@ bool PointSpritesBenchmark::initializeBenchmark()
     glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());
 
     int pointSizeLocation = glGetUniformLocation(mProgram, "uPointSize");
-    if (pointSizeLocation == -1)
-    {
-        return false;
-    }
+    ASSERT_TRUE(pointSizeLocation != -1);
 
     glUniform1f(pointSizeLocation, params.size);
 
-    GLenum glErr = glGetError();
-    if (glErr != GL_NO_ERROR)
-    {
-        return false;
-    }
-
-    return true;
+    ASSERT_GL_NO_ERROR();
 }
 
 void PointSpritesBenchmark::destroyBenchmark()
@@ -194,6 +177,8 @@ void PointSpritesBenchmark::drawBenchmark()
         //TODO(jmadill): Indexed point rendering. ANGLE is bad at this.
         glDrawArrays(GL_POINTS, 0, params.count);
     }
+
+    ASSERT_GL_NO_ERROR();
 }
 
 PointSpritesParams D3D11Params()

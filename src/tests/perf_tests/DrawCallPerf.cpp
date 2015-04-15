@@ -7,7 +7,6 @@
 //   Performance tests for ANGLE draw call overhead.
 //
 
-#include <cassert>
 #include <sstream>
 
 #include "ANGLEPerfTest.h"
@@ -43,7 +42,7 @@ class DrawCallPerfBenchmark : public ANGLERenderTest,
   public:
     DrawCallPerfBenchmark();
 
-    bool initializeBenchmark() override;
+    void initializeBenchmark() override;
     void destroyBenchmark() override;
     void beginDrawBenchmark() override;
     void drawBenchmark() override;
@@ -63,11 +62,11 @@ DrawCallPerfBenchmark::DrawCallPerfBenchmark()
     mRunTimeSeconds = GetParam().runTimeSeconds;
 }
 
-bool DrawCallPerfBenchmark::initializeBenchmark()
+void DrawCallPerfBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
 
-    assert(params.iterations > 0);
+    ASSERT_TRUE(params.iterations > 0);
     mDrawIterations = params.iterations;
 
     const std::string vs = SHADER_SOURCE
@@ -91,10 +90,7 @@ bool DrawCallPerfBenchmark::initializeBenchmark()
     );
 
     mProgram = CompileProgram(vs, fs);
-    if (!mProgram)
-    {
-        return false;
-    }
+    ASSERT_TRUE(mProgram != 0);
 
     // Use the program object
     glUseProgram(mProgram);
@@ -136,13 +132,7 @@ bool DrawCallPerfBenchmark::initializeBenchmark()
     glUniform1f(glGetUniformLocation(mProgram, "uScale"), scale);
     glUniform1f(glGetUniformLocation(mProgram, "uOffset"), offset);
 
-    GLenum glErr = glGetError();
-    if (glErr != GL_NO_ERROR)
-    {
-        return false;
-    }
-
-    return true;
+    ASSERT_GL_NO_ERROR();
 }
 
 void DrawCallPerfBenchmark::destroyBenchmark()
@@ -165,6 +155,8 @@ void DrawCallPerfBenchmark::drawBenchmark()
     {
         glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(3 * mNumTris));
     }
+
+    ASSERT_GL_NO_ERROR();
 }
 
 DrawCallPerfParams DrawCallPerfD3D11Params()

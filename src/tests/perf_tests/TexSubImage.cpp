@@ -8,7 +8,6 @@
 //
 
 #include <sstream>
-#include <cassert>
 
 #include "ANGLEPerfTest.h"
 #include "shader_utils.h"
@@ -34,7 +33,7 @@ class TexSubImageBenchmark : public ANGLERenderTest,
   public:
     TexSubImageBenchmark();
 
-    bool initializeBenchmark() override;
+    void initializeBenchmark() override;
     void destroyBenchmark() override;
     void beginDrawBenchmark() override;
     void drawBenchmark() override;
@@ -107,7 +106,7 @@ GLuint TexSubImageBenchmark::createTexture()
     return texture;
 }
 
-bool TexSubImageBenchmark::initializeBenchmark()
+void TexSubImageBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
 
@@ -135,10 +134,7 @@ bool TexSubImageBenchmark::initializeBenchmark()
     );
 
     mProgram = CompileProgram(vs, fs);
-    if (!mProgram)
-    {
-        return false;
-    }
+    ASSERT_TRUE(mProgram != 0);
 
     // Get the attribute locations
     mPositionLoc = glGetAttribLocation(mProgram, "a_position");
@@ -189,7 +185,7 @@ bool TexSubImageBenchmark::initializeBenchmark()
         }
     }
 
-    return true;
+    ASSERT_GL_NO_ERROR();
 }
 
 void TexSubImageBenchmark::destroyBenchmark()
@@ -230,19 +226,26 @@ void TexSubImageBenchmark::beginDrawBenchmark()
 
     // Set the texture sampler to texture unit to 0
     glUniform1i(mSamplerLoc, 0);
+
+    ASSERT_GL_NO_ERROR();
 }
 
 void TexSubImageBenchmark::drawBenchmark()
 {
     const auto &params = GetParam();
 
-    glTexSubImage2D(GL_TEXTURE_2D, 0,
-                    rand() % (params.imageWidth - params.subImageWidth),
-                    rand() % (params.imageHeight - params.subImageHeight),
-                    params.subImageWidth, params.subImageHeight,
-                    GL_RGBA, GL_UNSIGNED_BYTE, mPixels);
+    for (unsigned int iteration = 0; iteration < params.iterations; ++iteration)
+    {
+        glTexSubImage2D(GL_TEXTURE_2D, 0,
+                        rand() % (params.imageWidth - params.subImageWidth),
+                        rand() % (params.imageHeight - params.subImageHeight),
+                        params.subImageWidth, params.subImageHeight,
+                        GL_RGBA, GL_UNSIGNED_BYTE, mPixels);
 
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+    }
+
+    ASSERT_GL_NO_ERROR();
 }
 
 TexSubImageParams D3D11Params()

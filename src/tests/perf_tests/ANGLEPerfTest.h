@@ -23,6 +23,10 @@
 
 class Event;
 
+#ifndef ASSERT_GL_NO_ERROR
+#define ASSERT_GL_NO_ERROR() ASSERT_TRUE(glGetError() == GL_NO_ERROR)
+#endif
+
 class ANGLEPerfTest : public testing::Test, angle::NonCopyable
 {
   public:
@@ -63,7 +67,7 @@ class ANGLERenderTest : public ANGLEPerfTest
     ANGLERenderTest(const std::string &name, const RenderTestParams &testParams);
     ~ANGLERenderTest();
 
-    virtual bool initializeBenchmark() { return true; }
+    virtual void initializeBenchmark() { }
     virtual void destroyBenchmark() { }
 
     virtual void stepBenchmark(float dt, double totalTime) { }

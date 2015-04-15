@@ -7,7 +7,6 @@
 //   Performance test for ANGLE buffer updates.
 //
 
-#include <cassert>
 #include <sstream>
 
 #include "ANGLEPerfTest.h"
@@ -37,7 +36,7 @@ class BufferSubDataBenchmark : public ANGLERenderTest,
   public:
     BufferSubDataBenchmark();
 
-    bool initializeBenchmark() override;
+    void initializeBenchmark() override;
     void destroyBenchmark() override;
     void beginDrawBenchmark() override;
     void drawBenchmark() override;
@@ -197,12 +196,12 @@ BufferSubDataBenchmark::BufferSubDataBenchmark()
 {
 }
 
-bool BufferSubDataBenchmark::initializeBenchmark()
+void BufferSubDataBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
 
-    assert(params.vertexComponentCount > 1);
-    assert(params.iterations > 0);
+    ASSERT_TRUE(params.vertexComponentCount > 1);
+    ASSERT_TRUE(params.iterations > 0);
     mDrawIterations = params.iterations;
 
     const std::string vs = SHADER_SOURCE
@@ -226,10 +225,7 @@ bool BufferSubDataBenchmark::initializeBenchmark()
     );
 
     mProgram = CompileProgram(vs, fs);
-    if (!mProgram)
-    {
-        return false;
-    }
+    ASSERT_TRUE(mProgram != 0);
 
     // Use the program object
     glUseProgram(mProgram);
@@ -286,20 +282,14 @@ bool BufferSubDataBenchmark::initializeBenchmark()
     glUniform1f(glGetUniformLocation(mProgram, "uScale"), scale);
     glUniform1f(glGetUniformLocation(mProgram, "uOffset"), offset);
 
-    GLenum glErr = glGetError();
-    if (glErr != GL_NO_ERROR)
-    {
-        return false;
-    }
-
-    return true;
+    ASSERT_GL_NO_ERROR();
 }
 
 void BufferSubDataBenchmark::destroyBenchmark()
 {
     glDeleteProgram(mProgram);
     glDeleteBuffers(1, &mBuffer);
-    delete[] mUpdateData;
+    SafeDeleteArray(mUpdateData);
 }
 
 void BufferSubDataBenchmark::beginDrawBenchmark()
@@ -321,6 +311,8 @@ void BufferSubDataBenchmark::drawBenchmark()
 
         glDrawArrays(GL_TRIANGLES, 0, 3 * mNumTris);
     }
+
+    ASSERT_GL_NO_ERROR();
 }
 
 BufferSubDataParams BufferUpdateD3D11Params()
