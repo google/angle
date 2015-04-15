@@ -614,6 +614,11 @@ GLuint Program::getAttributeLocation(const std::string &name)
     return static_cast<GLuint>(-1);
 }
 
+const int *Program::getSemanticIndexes() const
+{
+    return mProgram->getSemanticIndexes();
+}
+
 int Program::getSemanticIndex(int attributeIndex)
 {
     ASSERT(attributeIndex >= 0 && attributeIndex < MAX_VERTEX_ATTRIBS);

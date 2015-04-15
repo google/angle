@@ -1401,10 +1401,12 @@ static bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count, GLsiz
 
     // Buffer validations
     const VertexArray *vao = state.getVertexArray();
-    for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
+    const auto &vertexAttribs = vao->getVertexAttributes();
+    const int *semanticIndexes = program->getSemanticIndexes();
+    for (size_t attributeIndex = 0; attributeIndex < vertexAttribs.size(); ++attributeIndex)
     {
-        const VertexAttribute &attrib = vao->getVertexAttribute(attributeIndex);
-        bool attribActive = (program->getSemanticIndex(attributeIndex) != -1);
+        const VertexAttribute &attrib = vertexAttribs[attributeIndex];
+        bool attribActive = (semanticIndexes[attributeIndex] != -1);
         if (attribActive && attrib.enabled)
         {
             gl::Buffer *buffer = attrib.buffer.get();

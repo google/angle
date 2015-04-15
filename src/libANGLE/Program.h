@@ -135,6 +135,7 @@ class Program : angle::NonCopyable
 
     GLuint getAttributeLocation(const std::string &name);
     int getSemanticIndex(int attributeIndex);
+    const int *getSemanticIndexes() const;
 
     void getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
     GLint getActiveAttributeCount();
