@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30d59acf_dae3f49f",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-16T15:02:27Z",
+      "side": 1,
+      "message": "could it be sensible to assert that the params are not null? or is this bulletproof?",
+      "revId": "bf3eeb8ed6029138f8dd043e256ec0490c4488e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_e2772bca",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-16T15:02:27Z",
+      "side": 1,
+      "message": "which is the \u0027resulting node\u0027? the last sentence here is a bit awkwardly worded",
+      "range": {
+        "startLine": 316,
+        "startChar": 16,
+        "endLine": 316,
+        "endChar": 30
+      },
+      "revId": "bf3eeb8ed6029138f8dd043e256ec0490c4488e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
