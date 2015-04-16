@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "506daeeb_e9808195",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-16T22:06:20Z",
+      "side": 1,
+      "message": "I added a note about the confusion of current version.",
+      "parentUuid": "e356daec_d11cf724",
+      "range": {
+        "startLine": 91,
+        "startChar": 1,
+        "endLine": 92,
+        "endChar": 40
+      },
+      "revId": "ec21b425f64907f0a9ddbd4d92f6be56c8d05cc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "636d8ab3_901fe589",
         "filename": "src/compiler/translator/CodeGen.cpp",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-10T12:23:51Z",
       "side": 1,
       "message": "note to sync with shaderlang.h",
+      "range": {
+        "startLine": 24,
+        "startChar": 5,
+        "endLine": 28,
+        "endChar": 35
+      },
+      "revId": "ec21b425f64907f0a9ddbd4d92f6be56c8d05cc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10597645_6e121956",
+        "filename": "src/compiler/translator/CodeGen.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-16T22:06:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "636d8ab3_901fe589",
       "range": {
         "startLine": 24,
         "startChar": 5,
@@ -94,6 +142,54 @@
     },
     {
       "key": {
+        "uuid": "904c868c_730b2a5e",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-16T22:06:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e356daec_f121fb55",
+      "range": {
+        "startLine": 36,
+        "startChar": 40,
+        "endLine": 36,
+        "endChar": 41
+      },
+      "revId": "ec21b425f64907f0a9ddbd4d92f6be56c8d05cc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "904c868c_53102e84",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-16T22:06:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "234d525a_df2a3dfa",
+      "range": {
+        "startLine": 36,
+        "startChar": 5,
+        "endLine": 36,
+        "endChar": 17
+      },
+      "revId": "ec21b425f64907f0a9ddbd4d92f6be56c8d05cc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "234d525a_1f25a528",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 10
@@ -105,6 +201,30 @@
       "writtenOn": "2015-04-10T12:23:51Z",
       "side": 1,
       "message": "re: prior comments, maybe just leave this as-is. The profile specifier is optional, unless we\u0027re using a #version directive and want a compatibility context.",
+      "range": {
+        "startLine": 141,
+        "startChar": 8,
+        "endLine": 142,
+        "endChar": 47
+      },
+      "revId": "ec21b425f64907f0a9ddbd4d92f6be56c8d05cc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "904c868c_3315b274",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-16T22:06:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "234d525a_1f25a528",
       "range": {
         "startLine": 141,
         "startChar": 8,
