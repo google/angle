@@ -16,6 +16,29 @@
       "revId": "b04df4e34e5e52bc4aa503e8b2a9829a7a6e23ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907ac6a8_3b7ea92b",
+        "filename": "src/compiler/translator/TranslatorHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-16T19:52:26Z",
+      "side": 1,
+      "message": "can you also make these three lines a helper function of SeparateDeclarations",
+      "range": {
+        "startLine": 23,
+        "startChar": 3,
+        "endLine": 25,
+        "endChar": 30
+      },
+      "revId": "b04df4e34e5e52bc4aa503e8b2a9829a7a6e23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
