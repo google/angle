@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "10dc16fc_37d337da",
+        "filename": "src/compiler/translator/SeparateArrayInitialization.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-04-16T22:21:05Z",
+      "side": 1,
+      "message": "nit: It\u0027s better if this comment is together with ASSERT(sequence-\u003esize() \u003d\u003d 1).",
+      "revId": "0ad18089e4dd033a41684115a250ad233599c610",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10dc16fc_594e374f",
         "filename": "src/compiler/translator/SeparateArrayInitialization.h",
         "patchSetId": 3
@@ -19,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "907ac6a8_e653b5ef",
+        "filename": "src/compiler/translator/SeparateArrayInitialization.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-04-16T22:21:05Z",
+      "side": 1,
+      "message": "Again, it\u0027s below, but it would be good to conform to traditions.",
+      "parentUuid": "10dc16fc_594e374f",
+      "revId": "0ad18089e4dd033a41684115a250ad233599c610",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "907ac6a8_bb72b95f",
         "filename": "src/compiler/translator/TranslatorHLSL.cpp",
         "patchSetId": 3
@@ -30,6 +65,30 @@
       "writtenOn": "2015-04-16T19:52:54Z",
       "side": 1,
       "message": "can you make these three lines a helper function of SeparateArrayInitialization",
+      "range": {
+        "startLine": 28,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 30
+      },
+      "revId": "0ad18089e4dd033a41684115a250ad233599c610",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_d91f8188",
+        "filename": "src/compiler/translator/TranslatorHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-04-16T22:21:05Z",
+      "side": 1,
+      "message": "+1\n\nIt also may worth mentioning again that SeparateDeclarations should be before SeparateArrayInitialization.",
+      "parentUuid": "907ac6a8_bb72b95f",
       "range": {
         "startLine": 28,
         "startChar": 4,
