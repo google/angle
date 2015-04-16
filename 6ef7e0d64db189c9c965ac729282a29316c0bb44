@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10dc16fc_79621b15",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-16T19:42:27Z",
+      "side": 1,
+      "message": "It may be a little dangerous to just return here.  I see there is a\n\n   if (mTexStorage)\n   {\n       updateStorage();\n   }\n\nbelow that would be skipped.  Maybe there should be an else that covers most of the remainder of this function.",
+      "range": {
+        "startLine": 420,
+        "startChar": 8,
+        "endLine": 420,
+        "endChar": 75
+      },
+      "revId": "6ef7e0d64db189c9c965ac729282a29316c0bb44",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
