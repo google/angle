@@ -277,8 +277,8 @@ gl::Error RendererD3D::applyRenderTarget(const gl::Data &data, GLenum drawMode, 
         return error;
     }
 
-    float nearZ, farZ;
-    data.state->getDepthRange(&nearZ, &farZ);
+    float nearZ = data.state->getNearPlane();
+    float farZ = data.state->getFarPlane();
     setViewport(data.state->getViewport(), nearZ, farZ, drawMode,
                 data.state->getRasterizerState().frontFace, ignoreViewport);
 

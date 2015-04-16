@@ -51,9 +51,11 @@ class StateManagerGL : angle::NonCopyable
   private:
     gl::Error setGenericDrawState(const gl::Data &data);
 
+    void setScissorTestEnabled(bool enabled);
     void setScissor(const gl::Rectangle &scissor);
+
     void setViewport(const gl::Rectangle &viewport);
-    void setClearColor(const gl::ColorF &clearColor);
+    void setDepthRange(float near, float far);
 
     void setBlendEnabled(bool enabled);
     void setBlendColor(const gl::ColorF &blendColor);
@@ -84,6 +86,9 @@ class StateManagerGL : angle::NonCopyable
     void setRasterizerDiscardEnabled(bool enabled);
     void setLineWidth(float width);
 
+    void setPrimitiveRestartEnabled(bool enabled);
+
+    void setClearColor(const gl::ColorF &clearColor);
     void setClearDepth(float clearDepth);
     void setClearStencil(GLint clearStencil);
 
@@ -102,10 +107,12 @@ class StateManagerGL : angle::NonCopyable
     std::map<GLenum, GLuint> mFramebuffers;
     GLuint mRenderbuffer;
 
+    bool mScissorTestEnabled;
     gl::Rectangle mScissor;
-    gl::Rectangle mViewport;
 
-    gl::ColorF mClearColor;
+    gl::Rectangle mViewport;
+    float mNear;
+    float mFar;
 
     bool mBlendEnabled;
     gl::ColorF mBlendColor;
@@ -153,6 +160,9 @@ class StateManagerGL : angle::NonCopyable
     bool mRasterizerDiscardEnabled;
     float mLineWidth;
 
+    bool mPrimitiveRestartEnabled;
+
+    gl::ColorF mClearColor;
     float mClearDepth;
     GLint mClearStencil;
 };

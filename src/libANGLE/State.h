@@ -75,7 +75,8 @@ class State : angle::NonCopyable
     void setDepthTest(bool enabled);
     void setDepthFunc(GLenum depthFunc);
     void setDepthRange(float zNear, float zFar);
-    void getDepthRange(float *zNear, float *zFar) const;
+    float getNearPlane() const;
+    float getFarPlane() const;
 
     // Blend state manipulation
     bool isBlendEnabled() const;

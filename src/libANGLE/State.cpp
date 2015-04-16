@@ -287,10 +287,14 @@ void State::setDepthRange(float zNear, float zFar)
     mFarZ = zFar;
 }
 
-void State::getDepthRange(float *zNear, float *zFar) const
+float State::getNearPlane() const
 {
-    *zNear = mNearZ;
-    *zFar = mFarZ;
+    return mNearZ;
+}
+
+float State::getFarPlane() const
+{
+    return mFarZ;
 }
 
 bool State::isBlendEnabled() const

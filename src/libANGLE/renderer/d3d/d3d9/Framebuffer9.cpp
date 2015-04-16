@@ -43,8 +43,8 @@ gl::Error Framebuffer9::clear(const gl::State &state, const ClearParameters &cle
         return error;
     }
 
-    float nearZ, farZ;
-    state.getDepthRange(&nearZ, &farZ);
+    float nearZ = state.getNearPlane();
+    float farZ = state.getFarPlane();
     mRenderer->setViewport(state.getViewport(), nearZ, farZ, GL_TRIANGLES, state.getRasterizerState().frontFace, true);
 
     mRenderer->setScissorRectangle(state.getScissor(), state.isScissorTestEnabled());

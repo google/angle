@@ -31,9 +31,11 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mUnpackRowLength(0),
       mFramebuffers(),
       mRenderbuffer(0),
+      mScissorTestEnabled(false),
       mScissor(0, 0, 0, 0),
       mViewport(0, 0, 0, 0),
-      mClearColor(0.0f, 0.0f, 0.0f, 0.0f),
+      mNear(0.0f),
+      mFar(1.0f),
       mBlendEnabled(false),
       mBlendColor(0, 0, 0, 0),
       mSourceBlendRGB(GL_ONE),
@@ -75,6 +77,8 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mMultisampleEnabled(true),
       mRasterizerDiscardEnabled(false),
       mLineWidth(1.0f),
+      mPrimitiveRestartEnabled(false),
+      mClearColor(0.0f, 0.0f, 0.0f, 0.0f),
       mClearDepth(1.0f),
       mClearStencil(0)
 {
@@ -290,8 +294,14 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
     const FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
     bindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferGL->getFramebufferID());
 
-    setScissor(state.getScissor());
+    setScissorTestEnabled(state.isScissorTestEnabled());
+    if (state.isScissorTestEnabled())
+    {
+        setScissor(state.getScissor());
+    }
+
     setViewport(state.getViewport());
+    setDepthRange(state.getNearPlane(), state.getFarPlane());
 
     const gl::BlendState &blendState = state.getBlendState();
     setBlendEnabled(blendState.blend);
@@ -343,7 +353,25 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
     setRasterizerDiscardEnabled(rasterizerState.rasterizerDiscard);
     setLineWidth(state.getLineWidth());
 
+    setPrimitiveRestartEnabled(state.isPrimitiveRestartEnabled());
+
     return gl::Error(GL_NO_ERROR);
+}
+
+void StateManagerGL::setScissorTestEnabled(bool enabled)
+{
+    if (mScissorTestEnabled != enabled)
+    {
+        mScissorTestEnabled = enabled;
+        if (mScissorTestEnabled)
+        {
+            mFunctions->enable(GL_SCISSOR_TEST);
+        }
+        else
+        {
+            mFunctions->disable(GL_SCISSOR_TEST);
+        }
+    }
 }
 
 void StateManagerGL::setScissor(const gl::Rectangle &scissor)
@@ -364,12 +392,13 @@ void StateManagerGL::setViewport(const gl::Rectangle &viewport)
     }
 }
 
-void StateManagerGL::setClearColor(const gl::ColorF &clearColor)
+void StateManagerGL::setDepthRange(float near, float far)
 {
-    if (mClearColor != clearColor)
+    if (mNear != near || mFar != far)
     {
-        mClearColor = clearColor;
-        mFunctions->clearColor(mClearColor.red, mClearColor.green, mClearColor.blue, mClearColor.alpha);
+        mNear = near;
+        mFar = far;
+        mFunctions->depthRange(mNear, mFar);
     }
 }
 
@@ -691,12 +720,38 @@ void StateManagerGL::setLineWidth(float width)
     }
 }
 
+void StateManagerGL::setPrimitiveRestartEnabled(bool enabled)
+{
+    if (mPrimitiveRestartEnabled != enabled)
+    {
+        mPrimitiveRestartEnabled = enabled;
+
+        if (mPrimitiveRestartEnabled)
+        {
+            mFunctions->enable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
+        }
+        else
+        {
+            mFunctions->disable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
+        }
+    }
+}
+
 void StateManagerGL::setClearDepth(float clearDepth)
 {
     if (mClearDepth != clearDepth)
     {
         mClearDepth = clearDepth;
         mFunctions->clearDepth(mClearDepth);
+    }
+}
+
+void StateManagerGL::setClearColor(const gl::ColorF &clearColor)
+{
+    if (mClearColor != clearColor)
+    {
+        mClearColor = clearColor;
+        mFunctions->clearColor(mClearColor.red, mClearColor.green, mClearColor.blue, mClearColor.alpha);
     }
 }
 
