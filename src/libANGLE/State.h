@@ -127,6 +127,7 @@ class State : angle::NonCopyable
 
     // Line width state setter
     void setLineWidth(GLfloat width);
+    float getLineWidth() const;
 
     // Hint setters
     void setGenerateMipmapHint(GLenum hint);

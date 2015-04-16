@@ -527,6 +527,11 @@ void State::setLineWidth(GLfloat width)
     mLineWidth = width;
 }
 
+float State::getLineWidth() const
+{
+    return mLineWidth;
+}
+
 void State::setGenerateMipmapHint(GLenum hint)
 {
     mGenerateMipmapHint = hint;

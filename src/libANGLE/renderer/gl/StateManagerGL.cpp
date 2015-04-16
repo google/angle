@@ -66,6 +66,15 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mStencilBackStencilPassDepthFailOp(GL_KEEP),
       mStencilBackStencilPassDepthPassOp(GL_KEEP),
       mStencilBackWritemask(static_cast<GLuint>(-1)),
+      mCullFaceEnabled(false),
+      mCullFace(GL_BACK),
+      mFrontFace(GL_CCW),
+      mPolygonOffsetFillEnabled(false),
+      mPolygonOffsetFactor(0.0f),
+      mPolygonOffsetUnits(0.0f),
+      mMultisampleEnabled(true),
+      mRasterizerDiscardEnabled(false),
+      mLineWidth(1.0f),
       mClearDepth(1.0f),
       mClearStencil(0)
 {
@@ -162,28 +171,33 @@ void StateManagerGL::bindRenderbuffer(GLenum type, GLuint renderbuffer)
 void StateManagerGL::setClearState(const gl::State &state, GLbitfield mask)
 {
     // Only apply the state required to do a clear
-    setScissor(state.getScissor());
-    setViewport(state.getViewport());
-
-    if ((mask & GL_COLOR_BUFFER_BIT) != 0)
+    const gl::RasterizerState &rasterizerState = state.getRasterizerState();
+    setRasterizerDiscardEnabled(rasterizerState.rasterizerDiscard);
+    if (!rasterizerState.rasterizerDiscard)
     {
-        setClearColor(state.getColorClearValue());
+        setScissor(state.getScissor());
+        setViewport(state.getViewport());
 
-        const gl::BlendState &blendState = state.getBlendState();
-        setColorMask(blendState.colorMaskRed, blendState.colorMaskGreen, blendState.colorMaskBlue, blendState.colorMaskAlpha);
-    }
+        if ((mask & GL_COLOR_BUFFER_BIT) != 0)
+        {
+            setClearColor(state.getColorClearValue());
 
-    if ((mask & GL_DEPTH_BUFFER_BIT) != 0)
-    {
-        setClearDepth(state.getDepthClearValue());
-        setDepthMask(state.getDepthStencilState().depthMask);
-    }
+            const gl::BlendState &blendState = state.getBlendState();
+            setColorMask(blendState.colorMaskRed, blendState.colorMaskGreen, blendState.colorMaskBlue, blendState.colorMaskAlpha);
+        }
 
-    if ((mask & GL_STENCIL_BUFFER_BIT) != 0)
-    {
-        setClearStencil(state.getStencilClearValue());
-        setStencilFrontWritemask(state.getDepthStencilState().stencilWritemask);
-        setStencilBackWritemask(state.getDepthStencilState().stencilBackWritemask);
+        if ((mask & GL_DEPTH_BUFFER_BIT) != 0)
+        {
+            setClearDepth(state.getDepthClearValue());
+            setDepthMask(state.getDepthStencilState().depthMask);
+        }
+
+        if ((mask & GL_STENCIL_BUFFER_BIT) != 0)
+        {
+            setClearStencil(state.getStencilClearValue());
+            setStencilFrontWritemask(state.getDepthStencilState().stencilWritemask);
+            setStencilBackWritemask(state.getDepthStencilState().stencilBackWritemask);
+        }
     }
 }
 
@@ -310,6 +324,24 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
         setStencilFrontOps(depthStencilState.stencilFail, depthStencilState.stencilPassDepthFail, depthStencilState.stencilPassDepthPass);
         setStencilBackOps(depthStencilState.stencilBackFail, depthStencilState.stencilBackPassDepthFail, depthStencilState.stencilBackPassDepthPass);
     }
+
+    const gl::RasterizerState &rasterizerState = state.getRasterizerState();
+    setCullFaceEnabled(rasterizerState.cullFace);
+    if (rasterizerState.cullFace)
+    {
+        setCullFace(rasterizerState.cullMode);
+        setFrontFace(rasterizerState.frontFace);
+    }
+
+    setPolygonOffsetFillEnabled(rasterizerState.polygonOffsetFill);
+    if (rasterizerState.polygonOffsetFill)
+    {
+        setPolygonOffset(rasterizerState.polygonOffsetFactor, rasterizerState.polygonOffsetUnits);
+    }
+
+    setMultisampleEnabled(rasterizerState.multiSample);
+    setRasterizerDiscardEnabled(rasterizerState.rasterizerDiscard);
+    setLineWidth(state.getLineWidth());
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -555,6 +587,107 @@ void StateManagerGL::setStencilBackOps(GLenum sfail, GLenum dpfail, GLenum dppas
         mStencilBackStencilPassDepthFailOp = dpfail;
         mStencilBackStencilPassDepthPassOp = dppass;
         mFunctions->stencilOpSeparate(GL_BACK, mStencilBackStencilFailOp, mStencilBackStencilPassDepthFailOp, mStencilBackStencilPassDepthPassOp);
+    }
+}
+
+void StateManagerGL::setCullFaceEnabled(bool enabled)
+{
+    if (mCullFaceEnabled != enabled)
+    {
+        mCullFaceEnabled = enabled;
+        if (mCullFaceEnabled)
+        {
+            mFunctions->enable(GL_CULL_FACE);
+        }
+        else
+        {
+            mFunctions->disable(GL_CULL_FACE);
+        }
+    }
+}
+
+void StateManagerGL::setCullFace(GLenum cullFace)
+{
+    if (mCullFace != cullFace)
+    {
+        mCullFace = cullFace;
+        mFunctions->cullFace(mCullFace);
+    }
+}
+
+void StateManagerGL::setFrontFace(GLenum frontFace)
+{
+    if (mFrontFace != frontFace)
+    {
+        mFrontFace = frontFace;
+        mFunctions->frontFace(mFrontFace);
+    }
+}
+
+void StateManagerGL::setPolygonOffsetFillEnabled(bool enabled)
+{
+    if (mPolygonOffsetFillEnabled != enabled)
+    {
+        mPolygonOffsetFillEnabled = enabled;
+        if (mPolygonOffsetFillEnabled)
+        {
+            mFunctions->enable(GL_POLYGON_OFFSET_FILL);
+        }
+        else
+        {
+            mFunctions->disable(GL_POLYGON_OFFSET_FILL);
+        }
+    }
+}
+
+void StateManagerGL::setPolygonOffset(float factor, float units)
+{
+    if (mPolygonOffsetFactor != factor || mPolygonOffsetUnits != units)
+    {
+        mPolygonOffsetFactor = factor;
+        mPolygonOffsetUnits = units;
+        mFunctions->polygonOffset(mPolygonOffsetFactor, mPolygonOffsetUnits);
+    }
+}
+
+void StateManagerGL::setMultisampleEnabled(bool enabled)
+{
+    if (mMultisampleEnabled != enabled)
+    {
+        mMultisampleEnabled = enabled;
+        if (mMultisampleEnabled)
+        {
+            mFunctions->enable(GL_MULTISAMPLE);
+        }
+        else
+        {
+            mFunctions->disable(GL_MULTISAMPLE);
+        }
+    }
+}
+
+void StateManagerGL::setRasterizerDiscardEnabled(bool enabled)
+{
+    if (mRasterizerDiscardEnabled != enabled)
+    {
+        mRasterizerDiscardEnabled = enabled;
+        if (mRasterizerDiscardEnabled)
+        {
+            mFunctions->enable(GL_RASTERIZER_DISCARD);
+        }
+        else
+        {
+            mFunctions->disable(GL_RASTERIZER_DISCARD);
+        }
+    }
+}
+
+void StateManagerGL::setLineWidth(float width)
+{
+    if (mLineWidth != width)
+    {
+        mLineWidth = width;
+        mFunctions->lineWidth(mLineWidth);
     }
 }
 

@@ -75,6 +75,15 @@ class StateManagerGL : angle::NonCopyable
     void setStencilFrontOps(GLenum sfail, GLenum dpfail, GLenum dppass);
     void setStencilBackOps(GLenum sfail, GLenum dpfail, GLenum dppass);
 
+    void setCullFaceEnabled(bool enabled);
+    void setCullFace(GLenum cullFace);
+    void setFrontFace(GLenum frontFace);
+    void setPolygonOffsetFillEnabled(bool enabled);
+    void setPolygonOffset(float factor, float units);
+    void setMultisampleEnabled(bool enabled);
+    void setRasterizerDiscardEnabled(bool enabled);
+    void setLineWidth(float width);
+
     void setClearDepth(float clearDepth);
     void setClearStencil(GLint clearStencil);
 
@@ -133,6 +142,16 @@ class StateManagerGL : angle::NonCopyable
     GLenum mStencilBackStencilPassDepthFailOp;
     GLenum mStencilBackStencilPassDepthPassOp;
     GLuint mStencilBackWritemask;
+
+    bool mCullFaceEnabled;
+    GLenum mCullFace;
+    GLenum mFrontFace;
+    bool mPolygonOffsetFillEnabled;
+    GLfloat mPolygonOffsetFactor;
+    GLfloat mPolygonOffsetUnits;
+    bool mMultisampleEnabled;
+    bool mRasterizerDiscardEnabled;
+    float mLineWidth;
 
     float mClearDepth;
     GLint mClearStencil;
