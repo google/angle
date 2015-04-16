@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10597645_fd0ec136",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 715,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-16T05:30:58Z",
+      "side": 1,
+      "message": "Looks like the fetching of the extensions could be common between these arms now and just call nativegl::GetExtensions.",
+      "range": {
+        "startLine": 715,
+        "startChar": 8,
+        "endLine": 715,
+        "endChar": 18
+      },
+      "revId": "f3205d55e8616a852c8c6a0cb72e21acd2c22423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
