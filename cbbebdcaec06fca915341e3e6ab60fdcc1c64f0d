@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "709c722a_6a01c78a",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1250,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-16T16:10:50Z",
+      "side": 1,
+      "message": "Right, I\u0027ll fix these. I\u0027ll upload a separate patch fixing the same issues in preexisting code above.",
+      "parentUuid": "d080bec6_e24e4b96",
+      "range": {
+        "startLine": 1250,
+        "startChar": 42,
+        "endLine": 1250,
+        "endChar": 43
+      },
+      "revId": "cbbebdcaec06fca915341e3e6ab60fdcc1c64f0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "907ac6a8_6cc3118b",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 1
@@ -59,6 +83,30 @@
       "writtenOn": "2015-04-16T15:14:41Z",
       "side": 1,
       "message": "add UNUSED_ASSERTION_VARIABLE(replaced)",
+      "range": {
+        "startLine": 1252,
+        "startChar": 13,
+        "endLine": 1252,
+        "endChar": 21
+      },
+      "revId": "cbbebdcaec06fca915341e3e6ab60fdcc1c64f0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "709c722a_ca901bc9",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1252,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-16T16:10:50Z",
+      "side": 1,
+      "message": "I don\u0027t think that this works the same way with compilerdebug.h as it does with debug.h.",
+      "parentUuid": "907ac6a8_6cc3118b",
       "range": {
         "startLine": 1252,
         "startChar": 13,
