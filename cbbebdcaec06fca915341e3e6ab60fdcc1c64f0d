@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d080bec6_82af5795",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1250,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-16T15:14:41Z",
+      "side": 1,
+      "message": "nit: entry was a keyword in ancient K\u0026R c, can you use another name to be super-safe?",
+      "range": {
+        "startLine": 1250,
+        "startChar": 44,
+        "endLine": 1250,
+        "endChar": 49
+      },
+      "revId": "cbbebdcaec06fca915341e3e6ab60fdcc1c64f0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_e24e4b96",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1250,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-16T15:14:41Z",
+      "side": 1,
+      "message": "nit \u0026 alignment",
+      "range": {
+        "startLine": 1250,
+        "startChar": 42,
+        "endLine": 1250,
+        "endChar": 43
+      },
+      "revId": "cbbebdcaec06fca915341e3e6ab60fdcc1c64f0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907ac6a8_6cc3118b",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1252,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-16T15:14:41Z",
+      "side": 1,
+      "message": "add UNUSED_ASSERTION_VARIABLE(replaced)",
+      "range": {
+        "startLine": 1252,
+        "startChar": 13,
+        "endLine": 1252,
+        "endChar": 21
+      },
+      "revId": "cbbebdcaec06fca915341e3e6ab60fdcc1c64f0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
