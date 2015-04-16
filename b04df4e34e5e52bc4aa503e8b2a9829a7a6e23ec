@@ -60,6 +60,29 @@
     },
     {
       "key": {
+        "uuid": "907ac6a8_0126dbb2",
+        "filename": "src/compiler/translator/SeparateDeclarations.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-04-16T22:42:08Z",
+      "side": 1,
+      "message": "This can be private inheritance if you add a static function. Also, public members can all be private members.",
+      "range": {
+        "startLine": 21,
+        "startChar": 29,
+        "endLine": 21,
+        "endChar": 35
+      },
+      "revId": "b04df4e34e5e52bc4aa503e8b2a9829a7a6e23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "907ac6a8_3b7ea92b",
         "filename": "src/compiler/translator/TranslatorHLSL.cpp",
         "patchSetId": 3
