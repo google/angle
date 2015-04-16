@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "90a1e660_0b2369d4",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-16T15:46:07Z",
+      "side": 1,
+      "message": "Before this patch, the code already accessed all of the pointer parameters without null checks in some other places. I\u0027d leave the asserts out.",
+      "parentUuid": "30d59acf_dae3f49f",
+      "revId": "bf3eeb8ed6029138f8dd043e256ec0490c4488e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d080bec6_e2772bca",
         "filename": "src/compiler/translator/Intermediate.cpp",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2015-04-16T15:02:27Z",
       "side": 1,
       "message": "which is the \u0027resulting node\u0027? the last sentence here is a bit awkwardly worded",
+      "range": {
+        "startLine": 316,
+        "startChar": 16,
+        "endLine": 316,
+        "endChar": 30
+      },
+      "revId": "bf3eeb8ed6029138f8dd043e256ec0490c4488e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0926a12_8c7c6fe7",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-16T15:46:07Z",
+      "side": 1,
+      "message": "I\u0027ll try to make this clearer.",
+      "parentUuid": "d080bec6_e2772bca",
       "range": {
         "startLine": 316,
         "startChar": 16,
