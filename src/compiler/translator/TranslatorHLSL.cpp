@@ -7,6 +7,7 @@
 #include "compiler/translator/TranslatorHLSL.h"
 
 #include "compiler/translator/OutputHLSL.h"
+#include "compiler/translator/SeparateArrayInitialization.h"
 #include "compiler/translator/SeparateDeclarations.h"
 #include "compiler/translator/SimplifyArrayAssignment.h"
 
@@ -21,6 +22,9 @@ void TranslatorHLSL::translate(TIntermNode *root, int compileOptions)
     int numRenderTargets = resources.EXT_draw_buffers ? resources.MaxDrawBuffers : 1;
 
     SeparateArrayDeclarations(root);
+
+    // Note that SeparateDeclarations needs to be run before SeparateArrayInitialization.
+    SeparateArrayInitialization(root);
 
     SimplifyArrayAssignment simplify;
     root->traverse(&simplify);
