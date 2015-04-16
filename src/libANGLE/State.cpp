@@ -431,12 +431,14 @@ void State::setSampleCoverageParams(GLclampf value, bool invert)
     mSampleCoverageInvert = invert;
 }
 
-void State::getSampleCoverageParams(GLclampf *value, bool *invert) const
+GLclampf State::getSampleCoverageValue() const
 {
-    ASSERT(value != NULL && invert != NULL);
+    return mSampleCoverageValue;
+}
 
-    *value = mSampleCoverageValue;
-    *invert = mSampleCoverageInvert;
+bool State::getSampleCoverageInvert() const
+{
+    return mSampleCoverageInvert;
 }
 
 bool State::isScissorTestEnabled() const

@@ -108,7 +108,8 @@ class State : angle::NonCopyable
     bool isSampleCoverageEnabled() const;
     void setSampleCoverage(bool enabled);
     void setSampleCoverageParams(GLclampf value, bool invert);
-    void getSampleCoverageParams(GLclampf *value, bool *invert) const;
+    GLclampf getSampleCoverageValue() const;
+    bool getSampleCoverageInvert() const;
 
     // Scissor test state toggle & query
     bool isScissorTestEnabled() const;

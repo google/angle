@@ -306,9 +306,7 @@ gl::Error RendererD3D::applyState(const gl::Data &data, GLenum drawMode)
     unsigned int mask = 0;
     if (data.state->isSampleCoverageEnabled())
     {
-        GLclampf coverageValue;
-        bool coverageInvert = false;
-        data.state->getSampleCoverageParams(&coverageValue, &coverageInvert);
+        GLclampf coverageValue = data.state->getSampleCoverageValue();
         if (coverageValue != 0)
         {
             float threshold = 0.5f;
@@ -325,6 +323,7 @@ gl::Error RendererD3D::applyState(const gl::Data &data, GLenum drawMode)
             }
         }
 
+        bool coverageInvert = data.state->getSampleCoverageInvert();
         if (coverageInvert)
         {
             mask = ~mask;

@@ -54,7 +54,16 @@ class StateManagerGL : angle::NonCopyable
     void setScissor(const gl::Rectangle &scissor);
     void setViewport(const gl::Rectangle &viewport);
     void setClearColor(const gl::ColorF &clearColor);
+
+    void setBlendEnabled(bool enabled);
+    void setBlendColor(const gl::ColorF &blendColor);
+    void setBlendFuncs(GLenum sourceBlendRGB, GLenum destBlendRGB, GLenum sourceBlendAlpha, GLenum destBlendAlpha);
+    void setBlendEquations(GLenum blendEquationRGB, GLenum blendEquationAlpha);
     void setColorMask(bool red, bool green, bool blue, bool alpha);
+    void setSampleAlphaToCoverageEnabled(bool enabled);
+    void setSampleCoverageEnabled(bool enabled);
+    void setSampleCoverage(float value, bool invert);
+
     void setClearDepth(float clearDepth);
     void setDepthMask(bool mask);
     void setClearStencil(GLint clearStencil);
@@ -79,10 +88,23 @@ class StateManagerGL : angle::NonCopyable
     gl::Rectangle mViewport;
 
     gl::ColorF mClearColor;
+
+    bool mBlendEnabled;
+    gl::ColorF mBlendColor;
+    GLenum mSourceBlendRGB;
+    GLenum mDestBlendRGB;
+    GLenum mSourceBlendAlpha;
+    GLenum mDestBlendAlpha;
+    GLenum mBlendEquationRGB;
+    GLenum mBlendEquationAlpha;
     bool mColorMaskRed;
     bool mColorMaskGreen;
     bool mColorMaskBlue;
     bool mColorMaskAlpha;
+    bool mSampleAlphaToCoverageEnabled;
+    bool mSampleCoverageEnabled;
+    float mSampleCoverageValue;
+    bool mSampleCoverageInvert;
 
     float mClearDepth;
     bool mDepthMask;

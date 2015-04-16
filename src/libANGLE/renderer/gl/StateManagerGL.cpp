@@ -34,10 +34,22 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mScissor(0, 0, 0, 0),
       mViewport(0, 0, 0, 0),
       mClearColor(0.0f, 0.0f, 0.0f, 0.0f),
+      mBlendEnabled(false),
+      mBlendColor(0, 0, 0, 0),
+      mSourceBlendRGB(GL_ONE),
+      mDestBlendRGB(GL_ZERO),
+      mSourceBlendAlpha(GL_ONE),
+      mDestBlendAlpha(GL_ZERO),
+      mBlendEquationRGB(GL_FUNC_ADD),
+      mBlendEquationAlpha(GL_FUNC_ADD),
       mColorMaskRed(true),
       mColorMaskGreen(true),
       mColorMaskBlue(true),
       mColorMaskAlpha(true),
+      mSampleAlphaToCoverageEnabled(false),
+      mSampleCoverageEnabled(false),
+      mSampleCoverageValue(1.0f),
+      mSampleCoverageInvert(false),
       mClearDepth(1.0f),
       mDepthMask(true),
       mClearStencil(0),
@@ -253,7 +265,17 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
     setViewport(state.getViewport());
 
     const gl::BlendState &blendState = state.getBlendState();
-    setColorMask(blendState.colorMaskRed, blendState.colorMaskGreen, blendState.colorMaskBlue, blendState.colorMaskAlpha);
+    setBlendEnabled(blendState.blend);
+    if (blendState.blend)
+    {
+        setBlendColor(state.getBlendColor());
+        setBlendFuncs(blendState.sourceBlendRGB, blendState.destBlendRGB, blendState.sourceBlendAlpha, blendState.destBlendAlpha);
+        setBlendEquations(blendState.blendEquationRGB, blendState.blendEquationAlpha);
+        setColorMask(blendState.colorMaskRed, blendState.colorMaskGreen, blendState.colorMaskBlue, blendState.colorMaskAlpha);
+    }
+    setSampleAlphaToCoverageEnabled(blendState.sampleAlphaToCoverage);
+    setSampleCoverageEnabled(state.isSampleCoverageEnabled());
+    setSampleCoverage(state.getSampleCoverageValue(), state.getSampleCoverageInvert());
 
     const gl::DepthStencilState &depthStencilState = state.getDepthStencilState();
     setDepthMask(depthStencilState.depthMask);
@@ -289,6 +311,57 @@ void StateManagerGL::setClearColor(const gl::ColorF &clearColor)
     }
 }
 
+void StateManagerGL::setBlendEnabled(bool enabled)
+{
+    if (mBlendEnabled != enabled)
+    {
+        mBlendEnabled = enabled;
+        if (mBlendEnabled)
+        {
+            mFunctions->enable(GL_BLEND);
+        }
+        else
+        {
+            mFunctions->disable(GL_BLEND);
+        }
+    }
+}
+
+void StateManagerGL::setBlendColor(const gl::ColorF &blendColor)
+{
+    if (mBlendColor != blendColor)
+    {
+        mBlendColor = blendColor;
+        mFunctions->blendColor(mBlendColor.red, mBlendColor.green, mBlendColor.blue, mBlendColor.alpha);
+    }
+}
+
+void StateManagerGL::setBlendFuncs(GLenum sourceBlendRGB, GLenum destBlendRGB, GLenum sourceBlendAlpha,
+                                   GLenum destBlendAlpha)
+{
+    if (mSourceBlendRGB != sourceBlendRGB || mDestBlendRGB != destBlendRGB ||
+        mSourceBlendAlpha != sourceBlendAlpha || mDestBlendAlpha != destBlendAlpha)
+    {
+        mSourceBlendRGB = sourceBlendRGB;
+        mDestBlendRGB = destBlendRGB;
+        mSourceBlendAlpha = sourceBlendAlpha;
+        mDestBlendAlpha = destBlendAlpha;
+
+        mFunctions->blendFuncSeparate(mSourceBlendRGB, mDestBlendRGB, mSourceBlendAlpha, mDestBlendAlpha);
+    }
+}
+
+void StateManagerGL::setBlendEquations(GLenum blendEquationRGB, GLenum blendEquationAlpha)
+{
+    if (mBlendEquationRGB != blendEquationRGB || mBlendEquationAlpha != blendEquationAlpha)
+    {
+        mBlendEquationRGB = blendEquationRGB;
+        mBlendEquationAlpha = mDestBlendAlpha;
+
+        mFunctions->blendEquationSeparate(mBlendEquationRGB, mBlendEquationAlpha);
+    }
+}
+
 void StateManagerGL::setColorMask(bool red, bool green, bool blue, bool alpha)
 {
     if (mColorMaskRed != red || mColorMaskGreen != green || mColorMaskBlue != blue || mColorMaskAlpha != alpha)
@@ -298,6 +371,48 @@ void StateManagerGL::setColorMask(bool red, bool green, bool blue, bool alpha)
         mColorMaskBlue = blue;
         mColorMaskAlpha = alpha;
         mFunctions->colorMask(mColorMaskRed, mColorMaskGreen, mColorMaskBlue, mColorMaskAlpha);
+    }
+}
+
+void StateManagerGL::setSampleAlphaToCoverageEnabled(bool enabled)
+{
+    if (mSampleAlphaToCoverageEnabled != enabled)
+    {
+        mSampleAlphaToCoverageEnabled = enabled;
+        if (mSampleAlphaToCoverageEnabled)
+        {
+            mFunctions->enable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+        }
+        else
+        {
+            mFunctions->disable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+        }
+    }
+}
+
+void StateManagerGL::setSampleCoverageEnabled(bool enabled)
+{
+    if (mSampleCoverageEnabled != enabled)
+    {
+        mSampleCoverageEnabled = enabled;
+        if (mSampleCoverageEnabled)
+        {
+            mFunctions->enable(GL_SAMPLE_COVERAGE);
+        }
+        else
+        {
+            mFunctions->disable(GL_SAMPLE_COVERAGE);
+        }
+    }
+}
+
+void StateManagerGL::setSampleCoverage(float value, bool invert)
+{
+    if (mSampleCoverageValue != value || mSampleCoverageInvert != invert)
+    {
+        mSampleCoverageValue = value;
+        mSampleCoverageInvert = invert;
+        mFunctions->sampleCoverage(mSampleCoverageValue, mSampleCoverageInvert);
     }
 }
 
