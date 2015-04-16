@@ -153,6 +153,8 @@
             'compiler/translator/RemoveSwitchFallThrough.h',
             'compiler/translator/RewriteElseBlocks.cpp',
             'compiler/translator/RewriteElseBlocks.h',
+            'compiler/translator/SeparateDeclarations.cpp',
+            'compiler/translator/SeparateDeclarations.h',
             'compiler/translator/SimplifyArrayAssignment.cpp',
             'compiler/translator/SimplifyArrayAssignment.h',
             'compiler/translator/StructureHLSL.cpp',

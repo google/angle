@@ -422,7 +422,7 @@ class TIntermAggregate : public TIntermOperator
     virtual void traverse(TIntermTraverser *);
     virtual bool replaceChildNode(
         TIntermNode *original, TIntermNode *replacement);
-
+    bool replaceChildNodeWithMultiple(TIntermNode *original, TIntermSequence replacements);
     // Conservatively assume function calls and other aggregate operators have side-effects
     virtual bool hasSideEffects() const { return true; }
 
@@ -625,7 +625,7 @@ class TIntermTraverser : angle::NonCopyable
     const bool rightToLeft;
 
     // If traversers need to replace nodes, they can add the replacements in
-    // mReplacements during traversal and the user of the traverser should call
+    // mReplacements/mMultiReplacements during traversal and the user of the traverser should call
     // this function after traversal to perform them.
     void updateTree();
 
@@ -636,6 +636,7 @@ class TIntermTraverser : angle::NonCopyable
     // All the nodes from root to the current node's parent during traversing.
     TVector<TIntermNode *> mPath;
 
+    // To replace a single node with another on the parent node
     struct NodeUpdateEntry
     {
         NodeUpdateEntry(TIntermNode *_parent,
@@ -653,9 +654,26 @@ class TIntermTraverser : angle::NonCopyable
         bool originalBecomesChildOfReplacement;
     };
 
+    // To replace a single node with multiple nodes on the parent aggregate node
+    struct NodeReplaceWithMultipleEntry
+    {
+        NodeReplaceWithMultipleEntry(TIntermAggregate *_parent, TIntermNode *_original, TIntermSequence _replacements)
+            : parent(_parent),
+              original(_original),
+              replacements(_replacements)
+        {
+        }
+
+        TIntermAggregate *parent;
+        TIntermNode *original;
+        TIntermSequence replacements;
+    };
+
     // During traversing, save all the changes that need to happen into
-    // mReplacements, then do them by calling updateTree().
+    // mReplacements/mMultiReplacements, then do them by calling updateTree().
+    // Multi replacements are processed after single replacements.
     std::vector<NodeUpdateEntry> mReplacements;
+    std::vector<NodeReplaceWithMultipleEntry> mMultiReplacements;
 };
 
 //
