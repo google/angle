@@ -50,10 +50,24 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mSampleCoverageEnabled(false),
       mSampleCoverageValue(1.0f),
       mSampleCoverageInvert(false),
-      mClearDepth(1.0f),
+      mDepthTestEnabled(false),
+      mDepthFunc(GL_LESS),
       mDepthMask(true),
-      mClearStencil(0),
-      mStencilMask(static_cast<GLuint>(-1))
+      mStencilTestEnabled(false),
+      mStencilFrontFunc(GL_ALWAYS),
+      mStencilFrontValueMask(static_cast<GLuint>(-1)),
+      mStencilFrontStencilFailOp(GL_KEEP),
+      mStencilFrontStencilPassDepthFailOp(GL_KEEP),
+      mStencilFrontStencilPassDepthPassOp(GL_KEEP),
+      mStencilFrontWritemask(static_cast<GLuint>(-1)),
+      mStencilBackFunc(GL_ALWAYS),
+      mStencilBackValueMask(static_cast<GLuint>(-1)),
+      mStencilBackStencilFailOp(GL_KEEP),
+      mStencilBackStencilPassDepthFailOp(GL_KEEP),
+      mStencilBackStencilPassDepthPassOp(GL_KEEP),
+      mStencilBackWritemask(static_cast<GLuint>(-1)),
+      mClearDepth(1.0f),
+      mClearStencil(0)
 {
     ASSERT(mFunctions);
 
@@ -168,7 +182,8 @@ void StateManagerGL::setClearState(const gl::State &state, GLbitfield mask)
     if ((mask & GL_STENCIL_BUFFER_BIT) != 0)
     {
         setClearStencil(state.getStencilClearValue());
-        setStencilMask(state.getDepthStencilState().stencilMask);
+        setStencilFrontWritemask(state.getDepthStencilState().stencilWritemask);
+        setStencilBackWritemask(state.getDepthStencilState().stencilBackWritemask);
     }
 }
 
@@ -278,8 +293,23 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
     setSampleCoverage(state.getSampleCoverageValue(), state.getSampleCoverageInvert());
 
     const gl::DepthStencilState &depthStencilState = state.getDepthStencilState();
-    setDepthMask(depthStencilState.depthMask);
-    setStencilMask(depthStencilState.stencilMask);
+    setDepthTestEnabled(depthStencilState.depthTest);
+    if (depthStencilState.depthTest)
+    {
+        setDepthFunc(depthStencilState.depthFunc);
+        setDepthMask(depthStencilState.depthMask);
+    }
+
+    setStencilTestEnabled(depthStencilState.stencilTest);
+    if (depthStencilState.stencilTest)
+    {
+        setStencilFrontWritemask(state.getDepthStencilState().stencilWritemask);
+        setStencilBackWritemask(state.getDepthStencilState().stencilBackWritemask);
+        setStencilFrontFuncs(depthStencilState.stencilFunc, state.getStencilRef(), depthStencilState.stencilMask);
+        setStencilBackFuncs(depthStencilState.stencilBackFunc, state.getStencilBackRef(), depthStencilState.stencilBackMask);
+        setStencilFrontOps(depthStencilState.stencilFail, depthStencilState.stencilPassDepthFail, depthStencilState.stencilPassDepthPass);
+        setStencilBackOps(depthStencilState.stencilBackFail, depthStencilState.stencilBackPassDepthFail, depthStencilState.stencilBackPassDepthPass);
+    }
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -416,12 +446,28 @@ void StateManagerGL::setSampleCoverage(float value, bool invert)
     }
 }
 
-void StateManagerGL::setClearDepth(float clearDepth)
+void StateManagerGL::setDepthTestEnabled(bool enabled)
 {
-    if (mClearDepth != clearDepth)
+    if (mDepthTestEnabled != enabled)
     {
-        mClearDepth = clearDepth;
-        mFunctions->clearDepth(mClearDepth);
+        mDepthTestEnabled = enabled;
+        if (mDepthTestEnabled)
+        {
+            mFunctions->enable(GL_DEPTH_TEST);
+        }
+        else
+        {
+            mFunctions->disable(GL_DEPTH_TEST);
+        }
+    }
+}
+
+void StateManagerGL::setDepthFunc(GLenum depthFunc)
+{
+    if (mDepthFunc != depthFunc)
+    {
+        mDepthFunc = depthFunc;
+        mFunctions->depthFunc(mDepthFunc);
     }
 }
 
@@ -434,21 +480,99 @@ void StateManagerGL::setDepthMask(bool mask)
     }
 }
 
+void StateManagerGL::setStencilTestEnabled(bool enabled)
+{
+    if (mStencilTestEnabled != enabled)
+    {
+        mStencilTestEnabled = enabled;
+        if (mStencilTestEnabled)
+        {
+            mFunctions->enable(GL_STENCIL_TEST);
+        }
+        else
+        {
+            mFunctions->disable(GL_STENCIL_TEST);
+        }
+    }
+}
+
+void StateManagerGL::setStencilFrontWritemask(GLuint mask)
+{
+    if (mStencilFrontWritemask != mask)
+    {
+        mStencilFrontWritemask = mask;
+        mFunctions->stencilMaskSeparate(GL_FRONT, mStencilFrontWritemask);
+    }
+}
+
+void StateManagerGL::setStencilBackWritemask(GLuint mask)
+{
+    if (mStencilBackWritemask != mask)
+    {
+        mStencilBackWritemask = mask;
+        mFunctions->stencilMaskSeparate(GL_BACK, mStencilBackWritemask);
+    }
+}
+
+void StateManagerGL::setStencilFrontFuncs(GLenum func, GLint ref, GLuint mask)
+{
+    if (mStencilFrontFunc != func || mStencilFrontRef != ref || mStencilFrontValueMask != mask)
+    {
+        mStencilFrontFunc = func;
+        mStencilFrontRef = ref;
+        mStencilFrontValueMask = mask;
+        mFunctions->stencilFuncSeparate(GL_FRONT, mStencilFrontFunc, mStencilFrontRef, mStencilFrontValueMask);
+    }
+}
+
+void StateManagerGL::setStencilBackFuncs(GLenum func, GLint ref, GLuint mask)
+{
+    if (mStencilBackFunc != func || mStencilBackRef != ref || mStencilBackValueMask != mask)
+    {
+        mStencilBackFunc = func;
+        mStencilBackRef = ref;
+        mStencilBackValueMask = mask;
+        mFunctions->stencilFuncSeparate(GL_BACK, mStencilBackFunc, mStencilBackRef, mStencilBackValueMask);
+    }
+}
+
+void StateManagerGL::setStencilFrontOps(GLenum sfail, GLenum dpfail, GLenum dppass)
+{
+    if (mStencilFrontStencilFailOp != sfail || mStencilFrontStencilPassDepthFailOp != dpfail || mStencilFrontStencilPassDepthPassOp != dppass)
+    {
+        mStencilFrontStencilFailOp = sfail;
+        mStencilFrontStencilPassDepthFailOp = dpfail;
+        mStencilFrontStencilPassDepthPassOp = dppass;
+        mFunctions->stencilOpSeparate(GL_FRONT, mStencilFrontStencilFailOp, mStencilFrontStencilPassDepthFailOp, mStencilFrontStencilPassDepthPassOp);
+    }
+}
+
+void StateManagerGL::setStencilBackOps(GLenum sfail, GLenum dpfail, GLenum dppass)
+{
+    if (mStencilBackStencilFailOp != sfail || mStencilBackStencilPassDepthFailOp != dpfail || mStencilBackStencilPassDepthPassOp != dppass)
+    {
+        mStencilBackStencilFailOp = sfail;
+        mStencilBackStencilPassDepthFailOp = dpfail;
+        mStencilBackStencilPassDepthPassOp = dppass;
+        mFunctions->stencilOpSeparate(GL_BACK, mStencilBackStencilFailOp, mStencilBackStencilPassDepthFailOp, mStencilBackStencilPassDepthPassOp);
+    }
+}
+
+void StateManagerGL::setClearDepth(float clearDepth)
+{
+    if (mClearDepth != clearDepth)
+    {
+        mClearDepth = clearDepth;
+        mFunctions->clearDepth(mClearDepth);
+    }
+}
+
 void StateManagerGL::setClearStencil(GLint clearStencil)
 {
     if (mClearStencil != clearStencil)
     {
         mClearStencil = clearStencil;
         mFunctions->clearStencil(mClearStencil);
-    }
-}
-
-void StateManagerGL::setStencilMask(GLuint mask)
-{
-    if (mStencilMask != mask)
-    {
-        mStencilMask = mask;
-        mFunctions->stencilMask(mStencilMask);
     }
 }
 

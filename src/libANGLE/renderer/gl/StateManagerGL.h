@@ -64,10 +64,19 @@ class StateManagerGL : angle::NonCopyable
     void setSampleCoverageEnabled(bool enabled);
     void setSampleCoverage(float value, bool invert);
 
-    void setClearDepth(float clearDepth);
+    void setDepthTestEnabled(bool enabled);
+    void setDepthFunc(GLenum depthFunc);
     void setDepthMask(bool mask);
+    void setStencilTestEnabled(bool enabled);
+    void setStencilFrontWritemask(GLuint mask);
+    void setStencilBackWritemask(GLuint mask);
+    void setStencilFrontFuncs(GLenum func, GLint ref, GLuint mask);
+    void setStencilBackFuncs(GLenum func, GLint ref, GLuint mask);
+    void setStencilFrontOps(GLenum sfail, GLenum dpfail, GLenum dppass);
+    void setStencilBackOps(GLenum sfail, GLenum dpfail, GLenum dppass);
+
+    void setClearDepth(float clearDepth);
     void setClearStencil(GLint clearStencil);
-    void setStencilMask(GLuint mask);
 
     const FunctionsGL *mFunctions;
 
@@ -106,11 +115,27 @@ class StateManagerGL : angle::NonCopyable
     float mSampleCoverageValue;
     bool mSampleCoverageInvert;
 
-    float mClearDepth;
+    bool mDepthTestEnabled;
+    GLenum mDepthFunc;
     bool mDepthMask;
+    bool mStencilTestEnabled;
+    GLenum mStencilFrontFunc;
+    GLint mStencilFrontRef;
+    GLuint mStencilFrontValueMask;
+    GLenum mStencilFrontStencilFailOp;
+    GLenum mStencilFrontStencilPassDepthFailOp;
+    GLenum mStencilFrontStencilPassDepthPassOp;
+    GLuint mStencilFrontWritemask;
+    GLenum mStencilBackFunc;
+    GLint mStencilBackRef;
+    GLuint mStencilBackValueMask;
+    GLenum mStencilBackStencilFailOp;
+    GLenum mStencilBackStencilPassDepthFailOp;
+    GLenum mStencilBackStencilPassDepthPassOp;
+    GLuint mStencilBackWritemask;
 
+    float mClearDepth;
     GLint mClearStencil;
-    GLuint mStencilMask;
 };
 
 }
