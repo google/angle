@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10dc16fc_59c3973c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-16T19:47:42Z",
+      "side": 1,
+      "message": "Probably worth adding a helper function above for HRESULT-\u003eD3D11InitError.",
+      "range": {
+        "startLine": 355,
+        "startChar": 10,
+        "endLine": 382,
+        "endChar": 40
+      },
+      "revId": "d76c4d691d466c59e98ea44d888d37c736a7b5fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
