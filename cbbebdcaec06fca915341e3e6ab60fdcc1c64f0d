@@ -116,6 +116,30 @@
       "revId": "cbbebdcaec06fca915341e3e6ab60fdcc1c64f0d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907ac6a8_6cc9d1f9",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1252,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-16T16:32:41Z",
+      "side": 1,
+      "message": "you\u0027re right, the compiler has asserts always on it seems. we\u0027ll have to switch to a single debug.h at some point, lgtm as it is now here.",
+      "parentUuid": "709c722a_ca901bc9",
+      "range": {
+        "startLine": 1252,
+        "startChar": 13,
+        "endLine": 1252,
+        "endChar": 21
+      },
+      "revId": "cbbebdcaec06fca915341e3e6ab60fdcc1c64f0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
