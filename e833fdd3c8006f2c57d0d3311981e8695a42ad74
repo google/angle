@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10dc16fc_77fa1ff5",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-04-16T22:40:53Z",
+      "side": 1,
+      "message": "nit: \"{\" in a separate line",
+      "range": {
+        "startLine": 9,
+        "startChar": 10,
+        "endLine": 9,
+        "endChar": 11
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_b9ef25b4",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-04-16T22:40:53Z",
+      "side": 1,
+      "message": "should use a different name (start with \"webgl\" or \"_webgl\") for the rare case someone already used \"angle_return\" as one of the args.",
+      "range": {
+        "startLine": 24,
+        "startChar": 33,
+        "endLine": 24,
+        "endChar": 45
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_997ca970",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-04-16T22:40:53Z",
+      "side": 1,
+      "message": "and here, use a different name than \"angle_return\".",
+      "range": {
+        "startLine": 96,
+        "startChar": 61,
+        "endLine": 96,
+        "endChar": 73
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_99182978",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-04-16T22:40:53Z",
+      "side": 1,
+      "message": "Same as comments on other CLs, it\u0027s better to put class description in the same place as in all other .h files, that is, right under the copyright note.",
+      "range": {
+        "startLine": 12,
+        "startChar": 8,
+        "endLine": 12,
+        "endChar": 13
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10dc16fc_f7c60fc8",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-04-16T22:40:53Z",
+      "side": 1,
+      "message": "I think it\u0027s worth mentioning \"be handled separately\" where/by whom.\n\nIf to be implemented, then maybe a TODO.",
+      "range": {
+        "startLine": 13,
+        "startChar": 50,
+        "endLine": 13,
+        "endChar": 51
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907ac6a8_01525b38",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-04-16T22:40:53Z",
+      "side": 1,
+      "message": "Note this can be a private inheritance if you expose a static function to do all the dirty work.",
+      "range": {
+        "startLine": 15,
+        "startChar": 6,
+        "endLine": 15,
+        "endChar": 36
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_996d8987",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-04-16T22:40:53Z",
+      "side": 1,
+      "message": "This can be private also.",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 34
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10dc16fc_7a5d2656",
+        "filename": "src/compiler/translator/TranslatorHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-04-16T22:40:53Z",
+      "side": 1,
+      "message": "Same here, a static function call from ArrayReturnValueToOutParameter would be easier to read.",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 34
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
