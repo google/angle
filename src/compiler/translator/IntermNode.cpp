@@ -1211,23 +1211,23 @@ void TIntermTraverser::updateTree()
 {
     for (size_t ii = 0; ii < mReplacements.size(); ++ii)
     {
-        const NodeUpdateEntry& entry = mReplacements[ii];
-        ASSERT(entry.parent);
-        bool replaced = entry.parent->replaceChildNode(
-            entry.original, entry.replacement);
+        const NodeUpdateEntry &replacement = mReplacements[ii];
+        ASSERT(replacement.parent);
+        bool replaced = replacement.parent->replaceChildNode(
+            replacement.original, replacement.replacement);
         ASSERT(replaced);
 
-        if (!entry.originalBecomesChildOfReplacement)
+        if (!replacement.originalBecomesChildOfReplacement)
         {
             // In AST traversing, a parent is visited before its children.
-            // After we replace a node, if an immediate child is to
+            // After we replace a node, if its immediate child is to
             // be replaced, we need to make sure we don't update the replaced
             // node; instead, we update the replacement node.
             for (size_t jj = ii + 1; jj < mReplacements.size(); ++jj)
             {
-                NodeUpdateEntry& entry2 = mReplacements[jj];
-                if (entry2.parent == entry.original)
-                    entry2.parent = entry.replacement;
+                NodeUpdateEntry &replacement2 = mReplacements[jj];
+                if (replacement2.parent == replacement.original)
+                    replacement2.parent = replacement.replacement;
             }
         }
     }
