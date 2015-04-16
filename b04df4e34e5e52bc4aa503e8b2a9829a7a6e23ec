@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10dc16fc_3976d384",
+        "filename": "src/compiler/translator/SeparateDeclarations.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-16T19:50:38Z",
+      "side": 1,
+      "message": "can you also add a short description of the file at the top of the h and cpp. See any file in libANGLE to get a sense of what to write.",
+      "revId": "b04df4e34e5e52bc4aa503e8b2a9829a7a6e23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
