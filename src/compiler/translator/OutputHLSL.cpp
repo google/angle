@@ -1475,11 +1475,11 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 out << ")";
                 return false;
             }
-            else
-            {
-                const TString &functionName = addArrayAssignmentFunction(node->getType());
-                outputTriplet(visit, (functionName + "(").c_str(), ", ", ")");
-            }
+            // ArrayReturnValueToOutParameter should have eliminated expressions where a function call is assigned.
+            ASSERT(rightAgg == nullptr || rightAgg->getOp() != EOpFunctionCall);
+
+            const TString &functionName = addArrayAssignmentFunction(node->getType());
+            outputTriplet(visit, (functionName + "(").c_str(), ", ", ")");
         }
         else
         {
@@ -2077,6 +2077,10 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             bool lod0 = mInsideDiscontinuousLoop || mOutputLod0Function;
             if (node->isUserDefined())
             {
+                if (node->isArray())
+                {
+                    UNIMPLEMENTED();
+                }
                 size_t index = mCallDag.findIndex(node);
                 ASSERT(index != CallDAG::InvalidIndex);
                 lod0 &= mASTMetadataList[index].mNeedsLod0;
@@ -2842,7 +2846,7 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
     {
         name = "x" + str(mUniqueIndex++);
     }
-    else
+    else if (!symbol->isInternal())
     {
         name = Decorate(name);
     }

@@ -143,6 +143,8 @@
         ],
         'angle_translator_lib_hlsl_sources':
         [
+            'compiler/translator/ArrayReturnValueToOutParameter.cpp',
+            'compiler/translator/ArrayReturnValueToOutParameter.h',
             'compiler/translator/ASTMetadataHLSL.cpp',
             'compiler/translator/ASTMetadataHLSL.h',
             'compiler/translator/blocklayoutHLSL.cpp',

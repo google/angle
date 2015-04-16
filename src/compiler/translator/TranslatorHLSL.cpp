@@ -6,6 +6,7 @@
 
 #include "compiler/translator/TranslatorHLSL.h"
 
+#include "compiler/translator/ArrayReturnValueToOutParameter.h"
 #include "compiler/translator/OutputHLSL.h"
 #include "compiler/translator/SeparateArrayInitialization.h"
 #include "compiler/translator/SeparateDeclarations.h"
@@ -28,6 +29,10 @@ void TranslatorHLSL::translate(TIntermNode *root, int compileOptions)
 
     SimplifyArrayAssignment simplify;
     root->traverse(&simplify);
+
+    // HLSL doesn't support arrays as return values, we'll need to make functions that have an array
+    // as a return value to use an out parameter to transfer the array data instead.
+    ArrayReturnValueToOutParameter(root);
 
     sh::OutputHLSL outputHLSL(getShaderType(), getShaderVersion(), getExtensionBehavior(),
         getSourcePath(), getOutputType(), numRenderTargets, getUniforms(), compileOptions);
