@@ -161,6 +161,11 @@ void CalculateConstantBufferParams(GLintptr offset, GLsizeiptr size, UINT *outFi
     // https://msdn.microsoft.com/en-us/library/windows/desktop/hh404649%28v=vs.85%29.aspx
 }
 
+egl::Error GenerateD3D11CreateDeviceErr(HRESULT errorCode)
+{
+    return egl::Error(EGL_NOT_INITIALIZED, errorCode, "Could not create D3D11 device.");
+}
+
 }
 
 Renderer11::Renderer11(egl::Display *display)
@@ -344,20 +349,36 @@ egl::Error Renderer11::initialize()
                                    &mFeatureLevel,
                                    &mDeviceContext);
 
-        if (result == E_INVALIDARG)
-        {
-            // Cleanup done by destructor through glDestroyRenderer
-            return egl::Error(EGL_NOT_INITIALIZED,
-                              D3D11_INIT_CREATEDEVICE_INVALIDARG,
-                              "Could not create D3D11 device.");
-        }
+        // Cleanup done by destructor
 
-        if (!mDevice || FAILED(result))
+        // Most likely error codes, see
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476082%28v=vs.85%29.aspx
+        // And https://msdn.microsoft.com/en-us/library/windows/desktop/ff476174(v=vs.85).aspx
+        switch (result)
         {
-            // Cleanup done by destructor through glDestroyRenderer
-            return egl::Error(EGL_NOT_INITIALIZED,
-                              D3D11_INIT_CREATEDEVICE_ERROR,
-                              "Could not create D3D11 device.");
+          case E_INVALIDARG:
+            return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_INVALIDARG);
+          case E_FAIL:
+            return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_FAIL);
+          case E_NOTIMPL:
+            return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_NOTIMPL);
+          case E_OUTOFMEMORY:
+            return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_OUTOFMEMORY);
+          case DXGI_ERROR_INVALID_CALL:
+            return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_INVALIDCALL);
+          case DXGI_ERROR_SDK_COMPONENT_MISSING:
+            return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_COMPONENTMISSING);
+          case DXGI_ERROR_WAS_STILL_DRAWING:
+            return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_WASSTILLDRAWING);
+          case DXGI_ERROR_NOT_CURRENTLY_AVAILABLE:
+            return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_NOTAVAILABLE);
+          case DXGI_ERROR_DEVICE_HUNG:
+            return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_DEVICEHUNG);
+          default:
+            if (!mDevice || FAILED(result))
+            {
+                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_ERROR);
+            }
         }
     }
 
