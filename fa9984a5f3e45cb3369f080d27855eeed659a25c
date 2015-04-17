@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "904c868c_3ec9f9fa",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-17T21:08:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d080bec6_bad39089",
+      "range": {
+        "startLine": 90,
+        "startChar": 40,
+        "endLine": 90,
+        "endChar": 176
+      },
+      "revId": "fa9984a5f3e45cb3369f080d27855eeed659a25c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0c51e25_82498a95",
         "filename": "src/compiler/translator/EmulatePrecision.h",
         "patchSetId": 12
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "904c868c_1ece3d03",
+        "filename": "src/compiler/translator/EmulatePrecision.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-17T21:08:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0c51e25_82498a95",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 41
+      },
+      "revId": "fa9984a5f3e45cb3369f080d27855eeed659a25c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "907ac6a8_678798e2",
         "filename": "src/compiler/translator/VersionGLSL.cpp",
         "patchSetId": 12
@@ -59,6 +107,30 @@
       "writtenOn": "2015-04-17T17:28:49Z",
       "side": 1,
       "message": "nit: remove the unref\u0027ed versions",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 40
+      },
+      "revId": "fa9984a5f3e45cb3369f080d27855eeed659a25c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "904c868c_feb24175",
+        "filename": "src/compiler/translator/VersionGLSL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-17T21:08:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "907ac6a8_678798e2",
       "range": {
         "startLine": 11,
         "startChar": 0,
