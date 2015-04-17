@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "907ac6a8_3f0c443d",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-17T19:44:00Z",
+      "side": 1,
+      "message": "assert count \u003e 0",
+      "revId": "b522f7f4333baa14125134cc1aae7791cef23950",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_ba2cedc7",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-17T19:44:00Z",
+      "side": 1,
+      "message": "static_cast for these, or use GLsizei for the params",
+      "range": {
+        "startLine": 391,
+        "startChar": 28,
+        "endLine": 391,
+        "endChar": 39
+      },
+      "revId": "b522f7f4333baa14125134cc1aae7791cef23950",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
