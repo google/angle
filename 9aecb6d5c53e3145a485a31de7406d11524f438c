@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0c51e25_d1a8c65a",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-17T14:30:21Z",
+      "side": 1,
+      "message": "Since these are simple getters, it should be fine to just return the member.",
+      "range": {
+        "startLine": 93,
+        "startChar": 11,
+        "endLine": 93,
+        "endChar": 21
+      },
+      "revId": "9aecb6d5c53e3145a485a31de7406d11524f438c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_7f716a8a",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-17T14:30:21Z",
+      "side": 1,
+      "message": "Would this be equivalent to just getDepthStencilAttachment() !\u003d nullptr? It would be possible to just remove this method if that is true.",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 122,
+        "endChar": 64
+      },
+      "revId": "9aecb6d5c53e3145a485a31de7406d11524f438c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c51e25_5195b614",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-17T14:30:21Z",
+      "side": 1,
+      "message": "I think it\u0027s fine to have these as public methods.  They won\u0027t be usable to any class but Framebuffer because only Framebuffer has a non-const version of Data.  Would prefer that over having a friend class.",
+      "range": {
+        "startLine": 73,
+        "startChar": 8,
+        "endLine": 76,
+        "endChar": 59
+      },
+      "revId": "9aecb6d5c53e3145a485a31de7406d11524f438c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
