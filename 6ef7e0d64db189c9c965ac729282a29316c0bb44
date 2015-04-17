@@ -22,6 +22,30 @@
       "revId": "6ef7e0d64db189c9c965ac729282a29316c0bb44",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0926a12_f735c086",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-04-17T09:15:21Z",
+      "side": 1,
+      "message": "Yes, I update the storage before generating the native mipmaps. Updating the storage afterward is not really useful — but doesn’t harm either.\n\nI agree that there should be an else. I can move the remainder of the function in a separate function.",
+      "parentUuid": "10dc16fc_79621b15",
+      "range": {
+        "startLine": 420,
+        "startChar": 8,
+        "endLine": 420,
+        "endChar": 75
+      },
+      "revId": "6ef7e0d64db189c9c965ac729282a29316c0bb44",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
