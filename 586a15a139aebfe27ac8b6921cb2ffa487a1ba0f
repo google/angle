@@ -22,6 +22,30 @@
       "revId": "586a15a139aebfe27ac8b6921cb2ffa487a1ba0f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "506daeeb_8f9a2545",
+        "filename": "src/compiler/translator/VersionGLSL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-04-17T21:28:38Z",
+      "side": 1,
+      "message": "Oh, OK. It\u0027s just because they were there even before I modified the code. I can remove them.",
+      "parentUuid": "f0b782b3_a7bdcaa5",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 40
+      },
+      "revId": "586a15a139aebfe27ac8b6921cb2ffa487a1ba0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
