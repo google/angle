@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30875ad3_b635fe55",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-04-17T08:32:59Z",
+      "side": 1,
+      "message": "I have explicitly added this for int abs(int) version. fabsf is a part of math.h and abs is a part of stdlib as per standard",
+      "range": {
+        "startLine": 14,
+        "startChar": 17,
+        "endLine": 14,
+        "endChar": 18
+      },
+      "revId": "59c4480d103a1d9675b446df3384d45aed2a7564",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
