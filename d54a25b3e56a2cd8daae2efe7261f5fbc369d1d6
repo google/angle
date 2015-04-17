@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "907ac6a8_c14e9c1b",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-17T14:44:40Z",
+      "side": 1,
+      "message": "Potential for returning const refs?",
+      "range": {
+        "startLine": 56,
+        "startChar": 8,
+        "endLine": 62,
+        "endChar": 71
+      },
+      "revId": "d54a25b3e56a2cd8daae2efe7261f5fbc369d1d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
