@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0c51e25_f15702e0",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-17T14:42:53Z",
+      "side": 1,
+      "message": "Would it be feasible to just remove the DefaultFramebuffer class soon? Since they\u0027re only constructed from one place, we could just call the relevant setAttachment\u0027s there.",
+      "range": {
+        "startLine": 683,
+        "startChar": 0,
+        "endLine": 703,
+        "endChar": 1
+      },
+      "revId": "fdaf75b63616c68744c2bd6fdb1bdb4b2c861f2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907ac6a8_6188e8b9",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-17T14:42:53Z",
+      "side": 1,
+      "message": "I think valid is a bit of a strong name for this because it conveys that the index, size, format, etc are all ok.  Maybe \"isBound\"?",
+      "range": {
+        "startLine": 100,
+        "startChar": 4,
+        "endLine": 100,
+        "endChar": 51
+      },
+      "revId": "fdaf75b63616c68744c2bd6fdb1bdb4b2c861f2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
