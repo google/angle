@@ -22,6 +22,10 @@ class Platform
 
     // System --------------------------------------------------------------
 
+    // Wall clock time in seconds since the epoch.
+    // TODO(jmadill): investigate using an ANGLE internal time library
+    virtual double currentTime() { return 0; }
+
     // Monotonically increasing time in seconds from an arbitrary fixed point in the past.
     // This function is expected to return at least millisecond-precision values. For this reason,
     // it is recommended that the fixed point be no further in the past than the epoch.

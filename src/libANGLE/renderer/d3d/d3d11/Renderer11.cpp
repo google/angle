@@ -21,6 +21,7 @@
 #include "libANGLE/State.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/histogram_macros.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
@@ -337,6 +338,8 @@ egl::Error Renderer11::initialize()
     if (!mDevice || FAILED(result))
 #endif
     {
+        double createDeviceBegin = ANGLEPlatformCurrent()->currentTime();
+
         TRACE_EVENT0("gpu.angle", "D3D11CreateDevice");
         result = D3D11CreateDevice(NULL,
                                    mDriverType,
@@ -380,6 +383,10 @@ egl::Error Renderer11::initialize()
                 return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_ERROR);
             }
         }
+
+        double createDeviceSec = ANGLEPlatformCurrent()->currentTime() - createDeviceBegin;
+        int createDeviceMS = static_cast<int>(createDeviceSec * 1000);
+        ANGLE_HISTOGRAM_TIMES("GPU.ANGLE.D3D11CreateDeviceMS", createDeviceMS);
     }
 
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
