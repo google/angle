@@ -1275,8 +1275,8 @@ void State::getIntegerv(const gl::Data &data, GLenum pname, GLint *params)
         break;
       case GL_DEPTH_BITS:
         {
-            gl::Framebuffer *framebuffer = getDrawFramebuffer();
-            gl::FramebufferAttachment *depthbuffer = framebuffer->getDepthbuffer();
+            const gl::Framebuffer *framebuffer = getDrawFramebuffer();
+            const gl::FramebufferAttachment *depthbuffer = framebuffer->getDepthbuffer();
 
             if (depthbuffer)
             {
@@ -1290,8 +1290,8 @@ void State::getIntegerv(const gl::Data &data, GLenum pname, GLint *params)
         break;
       case GL_STENCIL_BITS:
         {
-            gl::Framebuffer *framebuffer = getDrawFramebuffer();
-            gl::FramebufferAttachment *stencilbuffer = framebuffer->getStencilbuffer();
+            const gl::Framebuffer *framebuffer = getDrawFramebuffer();
+            const gl::FramebufferAttachment *stencilbuffer = framebuffer->getStencilbuffer();
 
             if (stencilbuffer)
             {
