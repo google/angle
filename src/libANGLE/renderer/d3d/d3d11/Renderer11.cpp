@@ -354,7 +354,7 @@ egl::Error Renderer11::initialize()
         // Most likely error codes, see
         // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476082%28v=vs.85%29.aspx
         // And https://msdn.microsoft.com/en-us/library/windows/desktop/ff476174(v=vs.85).aspx
-        switch (result)
+        switch (HRESULT_CODE(result))
         {
           case E_INVALIDARG:
             return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_INVALIDARG);
