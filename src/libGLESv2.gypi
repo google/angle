@@ -114,6 +114,7 @@
             'libANGLE/features.h',
             'libANGLE/formatutils.cpp',
             'libANGLE/formatutils.h',
+            'libANGLE/histogram_macros.h',
             'libANGLE/queryconversions.cpp',
             'libANGLE/queryconversions.h',
             'libANGLE/renderer/BufferImpl.h',

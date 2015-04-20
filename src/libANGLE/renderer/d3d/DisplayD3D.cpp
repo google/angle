@@ -12,10 +12,10 @@
 #include "libANGLE/Config.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/histogram_macros.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/SurfaceD3D.h"
 #include "libANGLE/renderer/d3d/SwapChainD3D.h"
-#include "platform/Platform.h"
 #include "libANGLE/renderer/d3d/deviced3d.h"
 
 #include <EGL/eglext.h>
@@ -109,10 +109,9 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
             if (renderer->getRendererClass() == RENDERER_D3D11)
             {
                 ASSERT(result.getID() >= 0 && result.getID() < NUM_D3D11_INIT_ERRORS);
-
-                angle::Platform *platform = ANGLEPlatformCurrent();
-                platform->histogramEnumeration("GPU.ANGLE.D3D11InitializeResult",
-                                               result.getID(), NUM_D3D11_INIT_ERRORS);
+                ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.D3D11InitializeResult",
+                                            result.getID(),
+                                            NUM_D3D11_INIT_ERRORS);
             }
 #       endif
 
@@ -120,10 +119,9 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
             if (renderer->getRendererClass() == RENDERER_D3D9)
             {
                 ASSERT(result.getID() >= 0 && result.getID() < NUM_D3D9_INIT_ERRORS);
-
-                angle::Platform *platform = ANGLEPlatformCurrent();
-                platform->histogramEnumeration("GPU.ANGLE.D3D9InitializeResult",
-                                               result.getID(), NUM_D3D9_INIT_ERRORS);
+                ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.D3D9InitializeResult",
+                                            result.getID(),
+                                            NUM_D3D9_INIT_ERRORS);
             }
 #       endif
 
