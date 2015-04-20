@@ -65,7 +65,7 @@ void ANGLEPerfTest::SetUp()
 
 void ANGLEPerfTest::TearDown()
 {
-    printResult("score", static_cast<size_t>(mNumFrames), "frames", true);
+    printResult("score", static_cast<size_t>(mNumFrames), "score", true);
 }
 
 std::string RenderTestParams::suffix() const
