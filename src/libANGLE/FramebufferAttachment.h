@@ -32,13 +32,31 @@ class Texture;
 // Note: Our old naming scheme used the term "Renderbuffer" for both GL renderbuffers and for
 // framebuffer attachments, which confused their usage.
 
-class FramebufferAttachment final : angle::NonCopyable
+class FramebufferAttachment final
 {
   public:
+    FramebufferAttachment();
+
     FramebufferAttachment(GLenum type,
                           GLenum binding,
                           const ImageIndex &textureIndex,
                           FramebufferAttachmentObject *resource);
+
+    FramebufferAttachment(const FramebufferAttachment &other)
+       : mType(other.mType),
+         mTarget(other.mTarget)
+    {
+        mResource.set(other.mResource.get());
+    }
+
+    FramebufferAttachment &operator=(const FramebufferAttachment &other)
+    {
+        mType = other.mType;
+        mTarget = other.mTarget;
+        mResource.set(other.mResource.get());
+        return *this;
+    }
+
     ~FramebufferAttachment();
 
     // A framebuffer attachment points to one of three types of resources: Renderbuffers,
@@ -61,6 +79,12 @@ class FramebufferAttachment final : angle::NonCopyable
         GLenum mBinding;
         ImageIndex mTextureIndex;
     };
+
+    void detach();
+    void attach(GLenum type,
+                GLenum binding,
+                const ImageIndex &textureIndex,
+                FramebufferAttachmentObject *resource);
 
     // Helper methods
     GLuint getRedSize() const;
@@ -89,6 +113,7 @@ class FramebufferAttachment final : angle::NonCopyable
     GLenum getInternalFormat() const;
     GLsizei getSamples() const;
     GLenum type() const { return mType; }
+    bool isAttached() const { return mType != GL_NONE; }
 
     Renderbuffer *getRenderbuffer() const;
     Texture *getTexture() const;

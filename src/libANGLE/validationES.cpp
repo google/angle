@@ -636,8 +636,8 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
     {
         if (mask & masks[i])
         {
-            gl::FramebufferAttachment *readBuffer = readFramebuffer->getAttachment(attachments[i]);
-            gl::FramebufferAttachment *drawBuffer = drawFramebuffer->getAttachment(attachments[i]);
+            const gl::FramebufferAttachment *readBuffer = readFramebuffer->getAttachment(attachments[i]);
+            const gl::FramebufferAttachment *drawBuffer = drawFramebuffer->getAttachment(attachments[i]);
 
             if (readBuffer && drawBuffer)
             {

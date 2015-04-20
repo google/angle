@@ -19,6 +19,9 @@ namespace gl
 {
 class FramebufferAttachment;
 struct PixelPackState;
+
+typedef std::vector<const FramebufferAttachment *> AttachmentList;
+
 }
 
 namespace rx

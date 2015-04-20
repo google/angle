@@ -64,12 +64,15 @@ static gl::Error InvalidateAttachmentSwizzles(const gl::FramebufferAttachment *a
 
 gl::Error Framebuffer11::invalidateSwizzles() const
 {
-    for (const auto *colorAttachment : mData.getColorAttachments())
+    for (const auto &colorAttachment : mData.getColorAttachments())
     {
-        gl::Error error = InvalidateAttachmentSwizzles(colorAttachment);
-        if (error.isError())
+        if (colorAttachment.isAttached())
         {
-            return error;
+            gl::Error error = InvalidateAttachmentSwizzles(&colorAttachment);
+            if (error.isError())
+            {
+                return error;
+            }
         }
     }
 
@@ -185,7 +188,7 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
         const gl::FramebufferAttachment *readBuffer = sourceFramebuffer->getReadColorbuffer();
         ASSERT(readBuffer);
 
-        RenderTargetD3D *readRenderTarget = NULL;
+        RenderTargetD3D *readRenderTarget = nullptr;
         gl::Error error = GetAttachmentRenderTarget(readBuffer, &readRenderTarget);
         if (error.isError())
         {
@@ -195,15 +198,16 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
 
         const auto &colorAttachments = mData.getColorAttachments();
         const auto &drawBufferStates = mData.getDrawBufferStates();
+
         for (size_t colorAttachment = 0; colorAttachment < colorAttachments.size(); colorAttachment++)
         {
-            if (colorAttachments[colorAttachment] != nullptr &&
+            const gl::FramebufferAttachment &drawBuffer = colorAttachments[colorAttachment];
+
+            if (drawBuffer.isAttached() &&
                 drawBufferStates[colorAttachment] != GL_NONE)
             {
-                const gl::FramebufferAttachment *drawBuffer = colorAttachments[colorAttachment];
-
-                RenderTargetD3D *drawRenderTarget = NULL;
-                error = GetAttachmentRenderTarget(drawBuffer, &drawRenderTarget);
+                RenderTargetD3D *drawRenderTarget = nullptr;
+                error = GetAttachmentRenderTarget(&drawBuffer, &drawRenderTarget);
                 if (error.isError())
                 {
                     return error;
