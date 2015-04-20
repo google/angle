@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d06c3e17_cbddd50c",
+        "filename": "src/libANGLE/renderer/gl/RenderbufferGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-20T15:30:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d06c3e17_abfb39b9",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 50
+      },
+      "revId": "f76808a95906f8fd0c04397debd8cf0100c4a1da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f055c239_a6541826",
         "filename": "src/libANGLE/renderer/gl/RenderbufferGL.cpp",
         "patchSetId": 9
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "d06c3e17_6ba48185",
+        "filename": "src/libANGLE/renderer/gl/RenderbufferGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-20T15:30:09Z",
+      "side": 1,
+      "message": "I now check the format caps from the renderer and only check the GL error if the requested format doesn\u0027t support this many samples.",
+      "parentUuid": "f055c239_a6541826",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 33
+      },
+      "revId": "f76808a95906f8fd0c04397debd8cf0100c4a1da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d06c3e17_ab2219cd",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 9
@@ -59,6 +107,24 @@
       "writtenOn": "2015-04-20T14:49:58Z",
       "side": 1,
       "message": "leave a comment here explaining what\u0027s happening in the implementation",
+      "revId": "f76808a95906f8fd0c04397debd8cf0100c4a1da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "305cba63_ad32359b",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-20T15:30:09Z",
+      "side": 1,
+      "message": "Done, I actually put the check back in, but only for ES3 with a comment explaining that TextureCaps::getMaxSamples is only guaranteed to be valid in ES3.",
+      "parentUuid": "d06c3e17_ab2219cd",
       "revId": "f76808a95906f8fd0c04397debd8cf0100c4a1da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
