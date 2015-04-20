@@ -30,7 +30,7 @@ ImageD3D::ImageD3D()
 
 gl::Error ImageD3D::copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, const gl::Framebuffer *source)
 {
-    gl::FramebufferAttachment *colorbuffer = source->getReadColorbuffer();
+    const gl::FramebufferAttachment *colorbuffer = source->getReadColorbuffer();
     ASSERT(colorbuffer);
 
     RenderTargetD3D *renderTarget = NULL;

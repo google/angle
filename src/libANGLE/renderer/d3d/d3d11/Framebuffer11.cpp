@@ -64,7 +64,7 @@ static gl::Error InvalidateAttachmentSwizzles(const gl::FramebufferAttachment *a
 
 gl::Error Framebuffer11::invalidateSwizzles() const
 {
-    for (gl::FramebufferAttachment *colorAttachment : mData.mColorAttachments)
+    for (const auto *colorAttachment : mData.getColorAttachments())
     {
         gl::Error error = InvalidateAttachmentSwizzles(colorAttachment);
         if (error.isError())
@@ -73,13 +73,13 @@ gl::Error Framebuffer11::invalidateSwizzles() const
         }
     }
 
-    gl::Error error = InvalidateAttachmentSwizzles(mData.mDepthAttachment);
+    gl::Error error = InvalidateAttachmentSwizzles(mData.getDepthAttachment());
     if (error.isError())
     {
         return error;
     }
 
-    error = InvalidateAttachmentSwizzles(mData.mStencilAttachment);
+    error = InvalidateAttachmentSwizzles(mData.getStencilAttachment());
     if (error.isError())
     {
         return error;
@@ -193,12 +193,14 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
         }
         ASSERT(readRenderTarget);
 
-        for (size_t colorAttachment = 0; colorAttachment < mData.mColorAttachments.size(); colorAttachment++)
+        const auto &colorAttachments = mData.getColorAttachments();
+        const auto &drawBufferStates = mData.getDrawBufferStates();
+        for (size_t colorAttachment = 0; colorAttachment < colorAttachments.size(); colorAttachment++)
         {
-            if (mData.mColorAttachments[colorAttachment] != nullptr &&
-                mData.mDrawBufferStates[colorAttachment] != GL_NONE)
+            if (colorAttachments[colorAttachment] != nullptr &&
+                drawBufferStates[colorAttachment] != GL_NONE)
             {
-                const gl::FramebufferAttachment *drawBuffer = mData.mColorAttachments[colorAttachment];
+                const gl::FramebufferAttachment *drawBuffer = colorAttachments[colorAttachment];
 
                 RenderTargetD3D *drawRenderTarget = NULL;
                 error = GetAttachmentRenderTarget(drawBuffer, &drawRenderTarget);
@@ -220,7 +222,7 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
 
     if (blitDepth || blitStencil)
     {
-        gl::FramebufferAttachment *readBuffer = sourceFramebuffer->getDepthOrStencilbuffer();
+        const gl::FramebufferAttachment *readBuffer = sourceFramebuffer->getDepthOrStencilbuffer();
         ASSERT(readBuffer);
 
         RenderTargetD3D *readRenderTarget = NULL;

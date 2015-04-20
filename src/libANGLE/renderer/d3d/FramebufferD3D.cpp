@@ -87,7 +87,7 @@ ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
 FramebufferD3D::FramebufferD3D(const gl::Framebuffer::Data &data, RendererD3D *renderer)
     : FramebufferImpl(data),
       mRenderer(renderer),
-      mColorAttachmentsForRender(mData.mColorAttachments.size(), nullptr),
+      mColorAttachmentsForRender(mData.getColorAttachments().size(), nullptr),
       mInvalidateColorAttachmentCache(true)
 {
     ASSERT(mRenderer != nullptr);
@@ -291,7 +291,7 @@ gl::Error FramebufferD3D::blit(const gl::State &state, const gl::Rectangle &sour
     bool blitStencil = false;
     if ((mask & GL_STENCIL_BUFFER_BIT) &&
         sourceFramebuffer->getStencilbuffer() != nullptr &&
-        mData.mStencilAttachment != nullptr)
+        mData.getStencilAttachment() != nullptr)
     {
         blitStencil = true;
     }
@@ -299,7 +299,7 @@ gl::Error FramebufferD3D::blit(const gl::State &state, const gl::Rectangle &sour
     bool blitDepth = false;
     if ((mask & GL_DEPTH_BUFFER_BIT) &&
         sourceFramebuffer->getDepthbuffer() != nullptr &&
-        mData.mDepthAttachment != nullptr)
+        mData.getDepthAttachment() != nullptr)
     {
         blitDepth = true;
     }
@@ -321,14 +321,15 @@ gl::Error FramebufferD3D::blit(const gl::State &state, const gl::Rectangle &sour
 GLenum FramebufferD3D::checkStatus() const
 {
     // D3D11 does not allow for overlapping RenderTargetViews, so ensure uniqueness
-    for (size_t colorAttachment = 0; colorAttachment < mData.mColorAttachments.size(); colorAttachment++)
+    const auto &colorAttachments = mData.getColorAttachments();
+    for (size_t colorAttachment = 0; colorAttachment < colorAttachments.size(); colorAttachment++)
     {
-        const gl::FramebufferAttachment *attachment = mData.mColorAttachments[colorAttachment];
+        const gl::FramebufferAttachment *attachment = colorAttachments[colorAttachment];
         if (attachment != nullptr)
         {
             for (size_t prevColorAttachment = 0; prevColorAttachment < colorAttachment; prevColorAttachment++)
             {
-                const gl::FramebufferAttachment *prevAttachment = mData.mColorAttachments[prevColorAttachment];
+                const gl::FramebufferAttachment *prevAttachment = colorAttachments[prevColorAttachment];
                 if (prevAttachment != nullptr &&
                     (attachment->id() == prevAttachment->id() &&
                      attachment->type() == prevAttachment->type()))
@@ -344,11 +345,6 @@ GLenum FramebufferD3D::checkStatus() const
 
 const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const Workarounds &workarounds) const
 {
-    if (!workarounds.mrtPerfWorkaround)
-    {
-        return mData.mColorAttachments;
-    }
-
     if (!mInvalidateColorAttachmentCache)
     {
         return mColorAttachmentsForRender;
@@ -357,15 +353,21 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const Wor
     // Does not actually free memory
     mColorAttachmentsForRender.clear();
 
-    for (size_t attachmentIndex = 0; attachmentIndex < mData.mColorAttachments.size(); ++attachmentIndex)
+    const auto &colorAttachments = mData.getColorAttachments();
+    const auto &drawBufferStates = mData.getDrawBufferStates();
+    for (size_t attachmentIndex = 0; attachmentIndex < colorAttachments.size(); ++attachmentIndex)
     {
-        GLenum drawBufferState = mData.mDrawBufferStates[attachmentIndex];
-        gl::FramebufferAttachment *colorAttachment = mData.mColorAttachments[attachmentIndex];
+        GLenum drawBufferState = drawBufferStates[attachmentIndex];
+        const gl::FramebufferAttachment *colorAttachment = colorAttachments[attachmentIndex];
 
         if (colorAttachment != nullptr && drawBufferState != GL_NONE)
         {
             ASSERT(drawBufferState == GL_BACK || drawBufferState == (GL_COLOR_ATTACHMENT0_EXT + attachmentIndex));
             mColorAttachmentsForRender.push_back(colorAttachment);
+        }
+        else if (!workarounds.mrtPerfWorkaround)
+        {
+            mColorAttachmentsForRender.push_back(nullptr);
         }
     }
 

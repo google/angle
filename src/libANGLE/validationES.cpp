@@ -415,7 +415,7 @@ bool ValidateFramebufferRenderbufferParameters(gl::Context *context, GLenum targ
     return true;
 }
 
-static bool IsPartialBlit(gl::Context *context, gl::FramebufferAttachment *readBuffer, gl::FramebufferAttachment *writeBuffer,
+static bool IsPartialBlit(gl::Context *context, const gl::FramebufferAttachment *readBuffer, const gl::FramebufferAttachment *writeBuffer,
                           GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
                           GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1)
 {
@@ -529,8 +529,8 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
 
     if (mask & GL_COLOR_BUFFER_BIT)
     {
-        gl::FramebufferAttachment *readColorBuffer = readFramebuffer->getReadColorbuffer();
-        gl::FramebufferAttachment *drawColorBuffer = drawFramebuffer->getFirstColorbuffer();
+        const gl::FramebufferAttachment *readColorBuffer = readFramebuffer->getReadColorbuffer();
+        const gl::FramebufferAttachment *drawColorBuffer = drawFramebuffer->getFirstColorbuffer();
 
         if (readColorBuffer && drawColorBuffer)
         {
@@ -583,7 +583,7 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
 
             if (fromAngleExtension)
             {
-                FramebufferAttachment *readColorAttachment = readFramebuffer->getReadColorbuffer();
+                const FramebufferAttachment *readColorAttachment = readFramebuffer->getReadColorbuffer();
                 if (!readColorAttachment ||
                     (!(readColorAttachment->type() == GL_TEXTURE && readColorAttachment->getTextureImageIndex().type == GL_TEXTURE_2D) &&
                     readColorAttachment->type() != GL_RENDERBUFFER &&
@@ -1174,7 +1174,7 @@ bool ValidateStateQuery(gl::Context *context, GLenum pname, GLenum *nativeType, 
                 return false;
             }
 
-            FramebufferAttachment *attachment = framebuffer->getReadColorbuffer();
+            const FramebufferAttachment *attachment = framebuffer->getReadColorbuffer();
             if (!attachment)
             {
                 context->recordError(Error(GL_INVALID_OPERATION));

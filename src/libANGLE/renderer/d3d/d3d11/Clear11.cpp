@@ -179,10 +179,10 @@ Clear11::~Clear11()
 
 gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams, const gl::Framebuffer::Data &fboData)
 {
-    const auto &colorAttachments = fboData.mColorAttachments;
-    const auto &drawBufferStates = fboData.mDrawBufferStates;
-    const auto *depthAttachment = fboData.mDepthAttachment;
-    const auto *stencilAttachment = fboData.mStencilAttachment;
+    const auto &colorAttachments = fboData.getColorAttachments();
+    const auto &drawBufferStates = fboData.getDrawBufferStates();
+    const auto *depthAttachment = fboData.getDepthAttachment();
+    const auto *stencilAttachment = fboData.getStencilAttachment();
 
     ASSERT(colorAttachments.size() == drawBufferStates.size());
 
@@ -207,11 +207,11 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams, const gl
 
     gl::Extents framebufferSize;
 
-    auto iter = std::find_if(colorAttachments.begin(), colorAttachments.end(), [](const gl::FramebufferAttachment *attachment) { return attachment != nullptr; });
-    if (iter != colorAttachments.end())
+    const gl::FramebufferAttachment *colorAttachment = fboData.getFirstColorAttachment();
+    if (colorAttachment != nullptr)
     {
-        framebufferSize.width = (*iter)->getWidth();
-        framebufferSize.height = (*iter)->getHeight();
+        framebufferSize.width = colorAttachment->getWidth();
+        framebufferSize.height = colorAttachment->getHeight();
         framebufferSize.depth = 1;
     }
     else if (depthAttachment != nullptr)

@@ -43,7 +43,7 @@ struct Extensions;
 struct ImageIndex;
 struct Rectangle;
 
-typedef std::vector<FramebufferAttachment *> AttachmentList;
+typedef std::vector<const FramebufferAttachment *> AttachmentList;
 
 class Framebuffer
 {
@@ -55,11 +55,25 @@ class Framebuffer
         explicit Data(const Caps &caps);
         ~Data();
 
-        FramebufferAttachment *getReadAttachment() const;
-        FramebufferAttachment *getFirstColorAttachment() const;
-        FramebufferAttachment *getDepthOrStencilAttachment() const;
+        const FramebufferAttachment *getReadAttachment() const;
+        const FramebufferAttachment *getFirstColorAttachment() const;
+        const FramebufferAttachment *getDepthOrStencilAttachment() const;
+        const FramebufferAttachment *getColorAttachment(unsigned int colorAttachment) const;
+        const FramebufferAttachment *getDepthAttachment() const;
+        const FramebufferAttachment *getStencilAttachment() const;
+        const FramebufferAttachment *getDepthStencilAttachment() const;
 
-        AttachmentList mColorAttachments;
+        const std::vector<GLenum> &getDrawBufferStates() const { return mDrawBufferStates; }
+        const std::vector<FramebufferAttachment *> &getColorAttachments() const { return mColorAttachments; }
+
+      private:
+        friend class Framebuffer;
+        FramebufferAttachment *getColorAttachment(unsigned int colorAttachment);
+        FramebufferAttachment *getDepthAttachment();
+        FramebufferAttachment *getStencilAttachment();
+        FramebufferAttachment *getDepthStencilAttachment();
+
+        std::vector<FramebufferAttachment *> mColorAttachments;
         FramebufferAttachment *mDepthAttachment;
         FramebufferAttachment *mStencilAttachment;
 
@@ -82,16 +96,21 @@ class Framebuffer
     void detachTexture(GLuint texture);
     void detachRenderbuffer(GLuint renderbuffer);
 
-    FramebufferAttachment *getColorbuffer(unsigned int colorAttachment) const;
-    FramebufferAttachment *getDepthbuffer() const;
-    FramebufferAttachment *getStencilbuffer() const;
-    FramebufferAttachment *getDepthStencilBuffer() const;
-    FramebufferAttachment *getDepthOrStencilbuffer() const;
-    FramebufferAttachment *getReadColorbuffer() const;
+    FramebufferAttachment *getColorbuffer(unsigned int colorAttachment);
+    const FramebufferAttachment *getColorbuffer(unsigned int colorAttachment) const;
+    FramebufferAttachment *getDepthbuffer();
+    const FramebufferAttachment *getDepthbuffer() const;
+    FramebufferAttachment *getStencilbuffer();
+    const FramebufferAttachment *getStencilbuffer() const;
+    FramebufferAttachment *getDepthStencilBuffer();
+    const FramebufferAttachment *getDepthStencilBuffer() const;
+    const FramebufferAttachment *getDepthOrStencilbuffer() const;
+    const FramebufferAttachment *getReadColorbuffer() const;
     GLenum getReadColorbufferType() const;
-    FramebufferAttachment *getFirstColorbuffer() const;
+    const FramebufferAttachment *getFirstColorbuffer() const;
 
-    FramebufferAttachment *getAttachment(GLenum attachment) const;
+    FramebufferAttachment *getAttachment(GLenum attachment);
+    const FramebufferAttachment *getAttachment(GLenum attachment) const;
 
     GLenum getDrawBufferState(unsigned int colorAttachment) const;
     void setDrawBuffers(size_t count, const GLenum *buffers);

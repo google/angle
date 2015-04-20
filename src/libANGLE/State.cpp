@@ -1255,7 +1255,7 @@ void State::getIntegerv(const gl::Data &data, GLenum pname, GLint *params)
       case GL_ALPHA_BITS:
         {
             gl::Framebuffer *framebuffer = getDrawFramebuffer();
-            gl::FramebufferAttachment *colorbuffer = framebuffer->getFirstColorbuffer();
+            const gl::FramebufferAttachment *colorbuffer = framebuffer->getFirstColorbuffer();
 
             if (colorbuffer)
             {

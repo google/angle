@@ -34,7 +34,7 @@ Framebuffer9::~Framebuffer9()
 
 gl::Error Framebuffer9::clear(const gl::State &state, const ClearParameters &clearParams)
 {
-    const gl::FramebufferAttachment *colorAttachment = mData.mColorAttachments[0];
+    const gl::FramebufferAttachment *colorAttachment = mData.getColorAttachment(0);
     const gl::FramebufferAttachment *depthStencilAttachment = mData.getDepthOrStencilAttachment();
 
     gl::Error error = mRenderer->applyRenderTarget(colorAttachment, depthStencilAttachment);
@@ -56,7 +56,7 @@ gl::Error Framebuffer9::readPixels(const gl::Rectangle &area, GLenum format, GLe
 {
     ASSERT(pack.pixelBuffer.get() == NULL);
 
-    const gl::FramebufferAttachment *colorbuffer = mData.mColorAttachments[0];
+    const gl::FramebufferAttachment *colorbuffer = mData.getColorAttachment(0);
     ASSERT(colorbuffer);
 
     RenderTarget9 *renderTarget = NULL;
@@ -254,7 +254,7 @@ gl::Error Framebuffer9::blit(const gl::Rectangle &sourceArea, const gl::Rectangl
         }
         ASSERT(readRenderTarget);
 
-        const gl::FramebufferAttachment *drawBuffer = mData.mColorAttachments[0];
+        const gl::FramebufferAttachment *drawBuffer = mData.getColorAttachment(0);
         ASSERT(drawBuffer);
 
         RenderTarget9 *drawRenderTarget = NULL;

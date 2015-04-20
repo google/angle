@@ -963,7 +963,7 @@ gl::Error Renderer9::setBlendState(const gl::Framebuffer *framebuffer, const gl:
             FIXME("Sample alpha to coverage is unimplemented.");
         }
 
-        gl::FramebufferAttachment *attachment = framebuffer->getFirstColorbuffer();
+        const gl::FramebufferAttachment *attachment = framebuffer->getFirstColorbuffer();
         GLenum internalFormat = attachment ? attachment->getInternalFormat() : GL_NONE;
 
         // Set the color mask
