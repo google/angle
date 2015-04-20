@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "10dc16fc_f98ccb09",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-20T14:57:06Z",
+      "side": 1,
+      "message": "nit: comment at top of file with description",
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10dc16fc_77fa1ff5",
         "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
         "patchSetId": 3
@@ -16,6 +33,29 @@
       "range": {
         "startLine": 9,
         "startChar": 10,
+        "endLine": 9,
+        "endChar": 11
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907ac6a8_5b25a560",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-20T14:57:06Z",
+      "side": 1,
+      "message": "nit: newline",
+      "range": {
+        "startLine": 9,
+        "startChar": 9,
         "endLine": 9,
         "endChar": 11
       },
@@ -48,6 +88,30 @@
     },
     {
       "key": {
+        "uuid": "305cba63_ad3eb588",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-20T14:57:06Z",
+      "side": 1,
+      "message": "+1. if you use a TIntermSymbol, it\u0027s scoped in the namespace as the user symbols, so you need to use a reserved prefix. If you use TIntermRaw with HLSL output, you can use any name that starts without \"_\" since ANGLE decorates all user symbols with \"_\" in the HLSL translator.",
+      "parentUuid": "d080bec6_b9ef25b4",
+      "range": {
+        "startLine": 24,
+        "startChar": 33,
+        "endLine": 24,
+        "endChar": 45
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d080bec6_997ca970",
         "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
         "patchSetId": 3
@@ -59,6 +123,30 @@
       "writtenOn": "2015-04-16T22:40:53Z",
       "side": 1,
       "message": "and here, use a different name than \"angle_return\".",
+      "range": {
+        "startLine": 96,
+        "startChar": 61,
+        "endLine": 96,
+        "endChar": 73
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f055c239_06ad0497",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-20T14:57:06Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "d080bec6_997ca970",
       "range": {
         "startLine": 96,
         "startChar": 61,
@@ -128,6 +216,30 @@
       "writtenOn": "2015-04-16T22:40:53Z",
       "side": 1,
       "message": "Note this can be a private inheritance if you expose a static function to do all the dirty work.",
+      "range": {
+        "startLine": 15,
+        "startChar": 6,
+        "endLine": 15,
+        "endChar": 36
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f055c239_4696dc4b",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-20T14:57:06Z",
+      "side": 1,
+      "message": "+1 to using a local static class and exposing a helper",
+      "parentUuid": "907ac6a8_01525b38",
       "range": {
         "startLine": 15,
         "startChar": 6,
