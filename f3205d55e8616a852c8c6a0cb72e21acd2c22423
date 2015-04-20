@@ -22,6 +22,30 @@
       "revId": "f3205d55e8616a852c8c6a0cb72e21acd2c22423",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "305cba63_8dcdb169",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 715,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-20T14:02:56Z",
+      "side": 1,
+      "message": "I refactored a little bit by moving the extensions vector and version information right into the FunctionsGL class.",
+      "parentUuid": "10597645_fd0ec136",
+      "range": {
+        "startLine": 715,
+        "startChar": 8,
+        "endLine": 715,
+        "endChar": 18
+      },
+      "revId": "f3205d55e8616a852c8c6a0cb72e21acd2c22423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
