@@ -22,6 +22,30 @@
       "revId": "f2cc95330960b3bf4341c5efb7b248521ff583c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "302afabf_8c548726",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-20T20:35:11Z",
+      "side": 1,
+      "message": "I added a TODO in Platform.h. It\u0027s not clear to me if we\u0027d need \u0027currentTime\u0027 if we had an internal timing li (possibly for synching Chrome + D3D GPU times)",
+      "parentUuid": "f02302ea_ea89a7f7",
+      "range": {
+        "startLine": 387,
+        "startChar": 8,
+        "endLine": 389,
+        "endChar": 79
+      },
+      "revId": "f2cc95330960b3bf4341c5efb7b248521ff583c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
