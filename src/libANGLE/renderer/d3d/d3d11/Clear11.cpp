@@ -253,27 +253,27 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams, const gl
 
     for (size_t colorAttachment = 0; colorAttachment < colorAttachments.size(); colorAttachment++)
     {
-        const gl::FramebufferAttachment &attachment = colorAttachments[colorAttachment];
-
         if (clearParams.clearColor[colorAttachment] &&
-            attachment.isAttached() &&
+            colorAttachments[colorAttachment] != nullptr &&
             drawBufferStates[colorAttachment] != GL_NONE)
         {
+            const gl::FramebufferAttachment *attachment = colorAttachments[colorAttachment];
+
             RenderTarget11 *renderTarget = NULL;
-            gl::Error error = d3d11::GetAttachmentRenderTarget(&attachment, &renderTarget);
+            gl::Error error = d3d11::GetAttachmentRenderTarget(attachment, &renderTarget);
             if (error.isError())
             {
                 return error;
             }
 
-            const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(attachment.getInternalFormat());
+            const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(attachment->getInternalFormat());
 
             if (clearParams.colorClearType == GL_FLOAT &&
                 !(formatInfo.componentType == GL_FLOAT || formatInfo.componentType == GL_UNSIGNED_NORMALIZED || formatInfo.componentType == GL_SIGNED_NORMALIZED))
             {
                 ERR("It is undefined behaviour to clear a render buffer which is not normalized fixed point or floating-"
                     "point to floating point values (color attachment %u has internal format 0x%X).", colorAttachment,
-                    attachment.getInternalFormat());
+                    attachment->getInternalFormat());
             }
 
             if ((formatInfo.redBits == 0 || !clearParams.colorMaskRed) &&

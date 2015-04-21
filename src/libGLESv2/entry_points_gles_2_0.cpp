@@ -1342,11 +1342,11 @@ void GL_APIENTRY FramebufferRenderbuffer(GLenum target, GLenum attachment, GLenu
         if (renderbuffer != 0)
         {
             Renderbuffer *renderbufferObject = context->getRenderbuffer(renderbuffer);
-            framebuffer->setAttachment(GL_RENDERBUFFER, attachment, gl::ImageIndex::MakeInvalid(), renderbufferObject);
+            framebuffer->setRenderbufferAttachment(attachment, renderbufferObject);
         }
         else
         {
-            framebuffer->resetAttachment(attachment);
+            framebuffer->setNULLAttachment(attachment);
         }
     }
 }
@@ -1383,11 +1383,11 @@ void GL_APIENTRY FramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
                 index = ImageIndex::MakeCube(textarget, level);
             }
 
-            framebuffer->setAttachment(GL_TEXTURE, attachment, index, textureObj);
+            framebuffer->setTextureAttachment(attachment, textureObj, index);
         }
         else
         {
-            framebuffer->resetAttachment(attachment);
+            framebuffer->setNULLAttachment(attachment);
         }
     }
 }

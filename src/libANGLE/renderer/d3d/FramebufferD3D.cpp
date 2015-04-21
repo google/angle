@@ -324,15 +324,15 @@ GLenum FramebufferD3D::checkStatus() const
     const auto &colorAttachments = mData.getColorAttachments();
     for (size_t colorAttachment = 0; colorAttachment < colorAttachments.size(); colorAttachment++)
     {
-        const gl::FramebufferAttachment &attachment = colorAttachments[colorAttachment];
-        if (attachment.isAttached())
+        const gl::FramebufferAttachment *attachment = colorAttachments[colorAttachment];
+        if (attachment != nullptr)
         {
             for (size_t prevColorAttachment = 0; prevColorAttachment < colorAttachment; prevColorAttachment++)
             {
-                const gl::FramebufferAttachment &prevAttachment = colorAttachments[prevColorAttachment];
-                if (prevAttachment.isAttached() &&
-                    (attachment.id() == prevAttachment.id() &&
-                     attachment.type() == prevAttachment.type()))
+                const gl::FramebufferAttachment *prevAttachment = colorAttachments[prevColorAttachment];
+                if (prevAttachment != nullptr &&
+                    (attachment->id() == prevAttachment->id() &&
+                     attachment->type() == prevAttachment->type()))
                 {
                     return GL_FRAMEBUFFER_UNSUPPORTED;
                 }
@@ -355,16 +355,15 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const Wor
 
     const auto &colorAttachments = mData.getColorAttachments();
     const auto &drawBufferStates = mData.getDrawBufferStates();
-
     for (size_t attachmentIndex = 0; attachmentIndex < colorAttachments.size(); ++attachmentIndex)
     {
         GLenum drawBufferState = drawBufferStates[attachmentIndex];
-        const gl::FramebufferAttachment &colorAttachment = colorAttachments[attachmentIndex];
+        const gl::FramebufferAttachment *colorAttachment = colorAttachments[attachmentIndex];
 
-        if (colorAttachment.isAttached() && drawBufferState != GL_NONE)
+        if (colorAttachment != nullptr && drawBufferState != GL_NONE)
         {
             ASSERT(drawBufferState == GL_BACK || drawBufferState == (GL_COLOR_ATTACHMENT0_EXT + attachmentIndex));
-            mColorAttachmentsForRender.push_back(&colorAttachment);
+            mColorAttachmentsForRender.push_back(colorAttachment);
         }
         else if (!workarounds.mrtPerfWorkaround)
         {

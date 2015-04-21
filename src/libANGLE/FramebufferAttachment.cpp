@@ -43,12 +43,6 @@ FramebufferAttachment::Target &FramebufferAttachment::Target::operator=(const Ta
 
 ////// FramebufferAttachment Implementation //////
 
-FramebufferAttachment::FramebufferAttachment()
-    : mType(GL_NONE),
-      mTarget(GL_NONE, ImageIndex::MakeInvalid())
-{
-}
-
 FramebufferAttachment::FramebufferAttachment(GLenum type,
                                              GLenum binding,
                                              const ImageIndex &textureIndex,
@@ -56,25 +50,6 @@ FramebufferAttachment::FramebufferAttachment(GLenum type,
     : mType(type),
       mTarget(binding, textureIndex)
 {
-    mResource.set(resource);
-}
-
-void FramebufferAttachment::detach()
-{
-    mType = GL_NONE;
-    mResource.set(nullptr);
-
-    // not technically necessary, could omit for performance
-    mTarget = Target(GL_NONE, ImageIndex::MakeInvalid());
-}
-
-void FramebufferAttachment::attach(GLenum type,
-                                   GLenum binding,
-                                   const ImageIndex &textureIndex,
-                                   FramebufferAttachmentObject *resource)
-{
-    mType = type;
-    mTarget = Target(binding, textureIndex);
     mResource.set(resource);
 }
 

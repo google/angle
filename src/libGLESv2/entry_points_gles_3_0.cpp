@@ -763,11 +763,11 @@ void GL_APIENTRY FramebufferTextureLayer(GLenum target, GLenum attachment, GLuin
                 index = ImageIndex::Make2DArray(level, layer);
             }
 
-            framebuffer->setAttachment(GL_TEXTURE, attachment, index, textureObject);
+            framebuffer->setTextureAttachment(attachment, textureObject, index);
         }
         else
         {
-            framebuffer->resetAttachment(attachment);
+            framebuffer->setNULLAttachment(attachment);
         }
     }
 }
