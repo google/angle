@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "302afabf_329171a1",
+        "filename": "src/compiler/translator/SeparateArrayInitialization.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-21T16:47:04Z",
+      "side": 1,
+      "message": "nit: on newline",
+      "range": {
+        "startLine": 15,
+        "startChar": 10,
+        "endLine": 15,
+        "endChar": 11
+      },
+      "revId": "22edfe1a16858d4a71ea6f0bfbc0c8c6f92e4f60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01a7eb3_f7969f92",
+        "filename": "src/compiler/translator/SeparateArrayInitialization.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-21T16:47:04Z",
+      "side": 1,
+      "message": "nit: 2 space indent",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 6
+      },
+      "revId": "22edfe1a16858d4a71ea6f0bfbc0c8c6f92e4f60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f02302ea_04e5074d",
+        "filename": "src/compiler/translator/SeparateArrayInitialization.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-21T16:47:04Z",
+      "side": 1,
+      "message": "dit",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 7
+      },
+      "revId": "22edfe1a16858d4a71ea6f0bfbc0c8c6f92e4f60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f02302ea_44aa5fd5",
+        "filename": "src/compiler/translator/SeparateArrayInitialization.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-21T16:47:04Z",
+      "side": 1,
+      "message": "can stuff all this in the namespace {} block",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 1
+      },
+      "revId": "22edfe1a16858d4a71ea6f0bfbc0c8c6f92e4f60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
