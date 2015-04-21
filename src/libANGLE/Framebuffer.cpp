@@ -84,7 +84,7 @@ const FramebufferAttachment *Framebuffer::Data::getDepthOrStencilAttachment() co
     return nullptr;
 }
 
-const FramebufferAttachment *Framebuffer::Data::getColorAttachment(unsigned int colorAttachment) const
+FramebufferAttachment *Framebuffer::Data::getColorAttachment(unsigned int colorAttachment)
 {
     ASSERT(colorAttachment < mColorAttachments.size());
     return mColorAttachments[colorAttachment].isAttached() ?
@@ -92,17 +92,32 @@ const FramebufferAttachment *Framebuffer::Data::getColorAttachment(unsigned int 
            nullptr;
 }
 
-const FramebufferAttachment *Framebuffer::Data::getDepthAttachment() const
+const FramebufferAttachment *Framebuffer::Data::getColorAttachment(unsigned int colorAttachment) const
+{
+    return const_cast<Framebuffer::Data *>(this)->getColorAttachment(colorAttachment);
+}
+
+FramebufferAttachment *Framebuffer::Data::getDepthAttachment()
 {
     return mDepthAttachment.isAttached() ? &mDepthAttachment : nullptr;
 }
 
-const FramebufferAttachment *Framebuffer::Data::getStencilAttachment() const
+const FramebufferAttachment *Framebuffer::Data::getDepthAttachment() const
+{
+    return const_cast<Framebuffer::Data *>(this)->getDepthAttachment();
+}
+
+FramebufferAttachment *Framebuffer::Data::getStencilAttachment()
 {
     return mStencilAttachment.isAttached() ? &mStencilAttachment : nullptr;
 }
 
-const FramebufferAttachment *Framebuffer::Data::getDepthStencilAttachment() const
+const FramebufferAttachment *Framebuffer::Data::getStencilAttachment() const
+{
+    return const_cast<Framebuffer::Data *>(this)->getStencilAttachment();
+}
+
+FramebufferAttachment *Framebuffer::Data::getDepthStencilAttachment()
 {
     // A valid depth-stencil attachment has the same resource bound to both the
     // depth and stencil attachment points.
@@ -114,6 +129,11 @@ const FramebufferAttachment *Framebuffer::Data::getDepthStencilAttachment() cons
     }
 
     return nullptr;
+}
+
+const FramebufferAttachment *Framebuffer::Data::getDepthStencilAttachment() const
+{
+    return const_cast<Framebuffer::Data *>(this)->getDepthStencilAttachment();
 }
 
 Framebuffer::Framebuffer(const Caps &caps, rx::ImplFactory *factory, GLuint id)
@@ -158,9 +178,19 @@ void Framebuffer::detachResourceById(GLenum resourceType, GLuint resourceId)
     DetachMatchingAttachment(&mData.mStencilAttachment, resourceType, resourceId);
 }
 
+FramebufferAttachment *Framebuffer::getColorbuffer(unsigned int colorAttachment)
+{
+    return mData.getColorAttachment(colorAttachment);
+}
+
 const FramebufferAttachment *Framebuffer::getColorbuffer(unsigned int colorAttachment) const
 {
     return mData.getColorAttachment(colorAttachment);
+}
+
+FramebufferAttachment *Framebuffer::getDepthbuffer()
+{
+    return mData.getDepthAttachment();
 }
 
 const FramebufferAttachment *Framebuffer::getDepthbuffer() const
@@ -168,9 +198,19 @@ const FramebufferAttachment *Framebuffer::getDepthbuffer() const
     return mData.getDepthAttachment();
 }
 
+FramebufferAttachment *Framebuffer::getStencilbuffer()
+{
+    return mData.getStencilAttachment();
+}
+
 const FramebufferAttachment *Framebuffer::getStencilbuffer() const
 {
     return mData.getStencilAttachment();
+}
+
+FramebufferAttachment *Framebuffer::getDepthStencilBuffer()
+{
+    return mData.getDepthStencilAttachment();
 }
 
 const FramebufferAttachment *Framebuffer::getDepthStencilBuffer() const
@@ -203,7 +243,7 @@ const FramebufferAttachment *Framebuffer::getAttachment(GLenum attachment) const
 {
     if (attachment >= GL_COLOR_ATTACHMENT0 && attachment <= GL_COLOR_ATTACHMENT15)
     {
-        return mData.getColorAttachment(attachment - GL_COLOR_ATTACHMENT0);
+        return getColorbuffer(attachment - GL_COLOR_ATTACHMENT0);
     }
     else
     {
@@ -211,13 +251,13 @@ const FramebufferAttachment *Framebuffer::getAttachment(GLenum attachment) const
         {
           case GL_COLOR:
           case GL_BACK:
-            return mData.getColorAttachment(0);
+            return getColorbuffer(0);
           case GL_DEPTH:
           case GL_DEPTH_ATTACHMENT:
-            return mData.getDepthAttachment();
+            return getDepthbuffer();
           case GL_STENCIL:
           case GL_STENCIL_ATTACHMENT:
-            return mData.getStencilAttachment();
+            return getStencilbuffer();
           case GL_DEPTH_STENCIL:
           case GL_DEPTH_STENCIL_ATTACHMENT:
             return getDepthStencilBuffer();

@@ -1922,7 +1922,7 @@ void GL_APIENTRY GetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             break;
         }
 
-        const Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
+        Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
         ASSERT(framebuffer);
 
         if (framebuffer->id() == 0)

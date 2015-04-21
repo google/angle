@@ -66,6 +66,10 @@ class Framebuffer
 
       private:
         friend class Framebuffer;
+        FramebufferAttachment *getColorAttachment(unsigned int colorAttachment);
+        FramebufferAttachment *getDepthAttachment();
+        FramebufferAttachment *getStencilAttachment();
+        FramebufferAttachment *getDepthStencilAttachment();
 
         std::vector<FramebufferAttachment> mColorAttachments;
         FramebufferAttachment mDepthAttachment;
@@ -92,9 +96,13 @@ class Framebuffer
     void detachTexture(GLuint texture);
     void detachRenderbuffer(GLuint renderbuffer);
 
+    FramebufferAttachment *getColorbuffer(unsigned int colorAttachment);
     const FramebufferAttachment *getColorbuffer(unsigned int colorAttachment) const;
+    FramebufferAttachment *getDepthbuffer();
     const FramebufferAttachment *getDepthbuffer() const;
+    FramebufferAttachment *getStencilbuffer();
     const FramebufferAttachment *getStencilbuffer() const;
+    FramebufferAttachment *getDepthStencilBuffer();
     const FramebufferAttachment *getDepthStencilBuffer() const;
     const FramebufferAttachment *getDepthOrStencilbuffer() const;
     const FramebufferAttachment *getReadColorbuffer() const;
