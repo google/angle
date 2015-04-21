@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "102176e2_68778351",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-21T14:45:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10dc16fc_f98ccb09",
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10dc16fc_77fa1ff5",
         "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
         "patchSetId": 3
@@ -53,6 +71,30 @@
       "writtenOn": "2015-04-20T14:57:06Z",
       "side": 1,
       "message": "nit: newline",
+      "range": {
+        "startLine": 9,
+        "startChar": 9,
+        "endLine": 9,
+        "endChar": 11
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70f6329f_6b25c161",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-21T14:45:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "907ac6a8_5b25a560",
       "range": {
         "startLine": 9,
         "startChar": 9,
@@ -100,6 +142,30 @@
       "side": 1,
       "message": "+1. if you use a TIntermSymbol, it\u0027s scoped in the namespace as the user symbols, so you need to use a reserved prefix. If you use TIntermRaw with HLSL output, you can use any name that starts without \"_\" since ANGLE decorates all user symbols with \"_\" in the HLSL translator.",
       "parentUuid": "d080bec6_b9ef25b4",
+      "range": {
+        "startLine": 24,
+        "startChar": 33,
+        "endLine": 24,
+        "endChar": 45
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "102176e2_28bf4b45",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-21T14:45:19Z",
+      "side": 1,
+      "message": "Using TIntermRaw requires duplicating logic to print out the correct qualifiers. I\u0027d rather try to keep the semantics of the AST intact as much as possible here to make this class more self-contained. There\u0027s some precedent in the code for marking symbols as internal to avoid prefixing them with the underscore, so I went with a similar approach in the latest patch set.",
+      "parentUuid": "305cba63_ad3eb588",
       "range": {
         "startLine": 24,
         "startChar": 33,
@@ -182,6 +248,30 @@
     },
     {
       "key": {
+        "uuid": "102176e2_487c3f34",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-21T14:45:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d080bec6_99182978",
+      "range": {
+        "startLine": 12,
+        "startChar": 8,
+        "endLine": 12,
+        "endChar": 13
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10dc16fc_f7c60fc8",
         "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.h",
         "patchSetId": 3
@@ -193,6 +283,30 @@
       "writtenOn": "2015-04-16T22:40:53Z",
       "side": 1,
       "message": "I think it\u0027s worth mentioning \"be handled separately\" where/by whom.\n\nIf to be implemented, then maybe a TODO.",
+      "range": {
+        "startLine": 13,
+        "startChar": 50,
+        "endLine": 13,
+        "endChar": 51
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70f6329f_ab0e89e7",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-21T14:45:19Z",
+      "side": 1,
+      "message": "I\u0027ll change this so that this class also handles call sites and they don\u0027t need to be handled separately.",
+      "parentUuid": "10dc16fc_f7c60fc8",
       "range": {
         "startLine": 13,
         "startChar": 50,
@@ -252,6 +366,30 @@
     },
     {
       "key": {
+        "uuid": "d0f19ea3_4ece1304",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-21T14:45:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f055c239_4696dc4b",
+      "range": {
+        "startLine": 15,
+        "startChar": 6,
+        "endLine": 15,
+        "endChar": 36
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d080bec6_996d8987",
         "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.h",
         "patchSetId": 3
@@ -275,6 +413,30 @@
     },
     {
       "key": {
+        "uuid": "102176e2_e88a53b2",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-21T14:45:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d080bec6_996d8987",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 34
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10dc16fc_7a5d2656",
         "filename": "src/compiler/translator/TranslatorHLSL.cpp",
         "patchSetId": 3
@@ -286,6 +448,30 @@
       "writtenOn": "2015-04-16T22:40:53Z",
       "side": 1,
       "message": "Same here, a static function call from ArrayReturnValueToOutParameter would be easier to read.",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 34
+      },
+      "revId": "e833fdd3c8006f2c57d0d3311981e8695a42ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0f19ea3_0ec40be2",
+        "filename": "src/compiler/translator/TranslatorHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-21T14:45:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10dc16fc_7a5d2656",
       "range": {
         "startLine": 36,
         "startChar": 4,
