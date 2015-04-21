@@ -65,12 +65,20 @@ static void AssignGLEntryPoint(void *function, T *outFunction)
 }
 
 template <typename T>
-static void AssignGLExtensionEntryPoint(const std::vector<std::string> &extensions, const std::string &extension, void *function, T *outFunction)
+static void AssignGLExtensionEntryPoint(const std::vector<std::string> &extensions, const char *requiredExtensionString,
+                                        void *function, T *outFunction)
 {
-    if (std::find(extensions.begin(), extensions.end(), extension) != extensions.end())
+    std::vector<std::string> requiredExtensions = TokenizeExtensionsString(requiredExtensionString);
+    for (const std::string& requiredExtension : requiredExtensions)
     {
-        *outFunction = reinterpret_cast<T>(function);
+        if (std::find(extensions.begin(), extensions.end(), requiredExtension) == extensions.end())
+        {
+            *outFunction = nullptr;
+            return;
+        }
     }
+
+    *outFunction = reinterpret_cast<T>(function);
 }
 
 FunctionsGL::FunctionsGL()
@@ -887,6 +895,13 @@ void FunctionsGL::initialize()
         AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glGetFenceivNV"), &getFenceivNV);
         AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glFinishFenceNV"), &finishFenceNV);
         AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glSetFenceNV"), &setFenceNV);
+
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage", loadProcAddress("glTexStorage1DEXT"), &texStorage1D);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage", loadProcAddress("glTexStorage2DEXT"), &texStorage2D);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage GL_EXT_texture3D", loadProcAddress("glTexStorage3DEXT"), &texStorage3D);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage GL_EXT_direct_state_access", loadProcAddress("glTextureStorage1DEXT"), &textureStorage1D);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage GL_EXT_direct_state_access", loadProcAddress("glTextureStorage2DEXT"), &textureStorage2D);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage GL_EXT_direct_state_access GL_EXT_texture3D", loadProcAddress("glTextureStorage3DEXT"), &textureStorage3D);
     }
 
     // 1.3
