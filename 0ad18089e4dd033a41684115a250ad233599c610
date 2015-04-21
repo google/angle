@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "102176e2_88dab710",
+        "filename": "src/compiler/translator/SeparateArrayInitialization.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-21T14:43:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10dc16fc_37d337da",
+      "revId": "0ad18089e4dd033a41684115a250ad233599c610",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10dc16fc_594e374f",
         "filename": "src/compiler/translator/SeparateArrayInitialization.h",
         "patchSetId": 3
@@ -54,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "d0f19ea3_ce6163ba",
+        "filename": "src/compiler/translator/SeparateArrayInitialization.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-21T14:43:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "907ac6a8_e653b5ef",
+      "revId": "0ad18089e4dd033a41684115a250ad233599c610",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10dc16fc_bab2aec2",
         "filename": "src/compiler/translator/SeparateArrayInitialization.h",
         "patchSetId": 3
@@ -65,6 +101,30 @@
       "writtenOn": "2015-04-16T22:42:57Z",
       "side": 1,
       "message": "This can be private inheritance if you add a static function. Also, public members can all be private members.",
+      "range": {
+        "startLine": 19,
+        "startChar": 6,
+        "endLine": 19,
+        "endChar": 33
+      },
+      "revId": "0ad18089e4dd033a41684115a250ad233599c610",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70f6329f_2b957916",
+        "filename": "src/compiler/translator/SeparateArrayInitialization.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-21T14:43:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10dc16fc_bab2aec2",
       "range": {
         "startLine": 19,
         "startChar": 6,
@@ -111,6 +171,54 @@
       "writtenOn": "2015-04-16T22:21:05Z",
       "side": 1,
       "message": "+1\n\nIt also may worth mentioning again that SeparateDeclarations should be before SeparateArrayInitialization.",
+      "parentUuid": "907ac6a8_bb72b95f",
+      "range": {
+        "startLine": 28,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 30
+      },
+      "revId": "0ad18089e4dd033a41684115a250ad233599c610",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0f19ea3_2e4e274e",
+        "filename": "src/compiler/translator/TranslatorHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-21T14:43:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d080bec6_d91f8188",
+      "range": {
+        "startLine": 28,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 30
+      },
+      "revId": "0ad18089e4dd033a41684115a250ad233599c610",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70f6329f_0b9a3d46",
+        "filename": "src/compiler/translator/TranslatorHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-21T14:43:18Z",
+      "side": 1,
+      "message": "Done",
       "parentUuid": "907ac6a8_bb72b95f",
       "range": {
         "startLine": 28,
