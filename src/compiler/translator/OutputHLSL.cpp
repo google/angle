@@ -1389,7 +1389,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
             mUsesFragDepth = true;
             out << "gl_Depth";
         }
-        else if (qualifier == EvqInternal)
+        else if (node->isInternal())
         {
             out << name;
         }

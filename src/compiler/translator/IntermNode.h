@@ -212,7 +212,8 @@ class TIntermSymbol : public TIntermTyped
     // per compile it is essential to use "symbol = sym" to assign to symbol
     TIntermSymbol(int id, const TString &symbol, const TType &type)
         : TIntermTyped(type),
-          mId(id)
+          mId(id),
+          mInternal(false)
     {
         mSymbol = symbol;
     }
@@ -224,12 +225,16 @@ class TIntermSymbol : public TIntermTyped
 
     void setId(int newId) { mId = newId; }
 
+    bool isInternal() const { return mInternal; }
+    void setInternal(bool isInternal) { mInternal = isInternal; }
+
     virtual void traverse(TIntermTraverser *);
     virtual TIntermSymbol *getAsSymbolNode() { return this; }
     virtual bool replaceChildNode(TIntermNode *, TIntermNode *) { return false; }
 
   protected:
     int mId;
+    bool mInternal;
     TString mSymbol;
 };
 

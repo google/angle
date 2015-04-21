@@ -286,7 +286,6 @@ enum TQualifier
 {
     EvqTemporary,     // For temporaries (within a function), read/write
     EvqGlobal,        // For globals read/write
-    EvqInternal,      // For internal use, not visible to the user
     EvqConst,         // User defined constants and non-output parameters in functions
     EvqAttribute,     // Readonly
     EvqVaryingIn,     // readonly, fragment shaders only

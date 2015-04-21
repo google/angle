@@ -34,8 +34,10 @@ class ElseBlockRewriter : public TIntermTraverser
 
 TIntermSymbol *MakeNewTemporary(const TString &name, TBasicType type)
 {
-    TType variableType(type, EbpHigh, EvqInternal);
-    return new TIntermSymbol(-1, name, variableType);
+    TType variableType(type, EbpHigh, EvqTemporary);
+    TIntermSymbol *node = new TIntermSymbol(-1, name, variableType);
+    node->setInternal(true);
+    return node;
 }
 
 TIntermBinary *MakeNewBinary(TOperator op, TIntermTyped *left, TIntermTyped *right, const TType &resultType)
