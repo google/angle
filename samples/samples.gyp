@@ -37,16 +37,6 @@
                 },
 
                 {
-                    'target_name': 'dds_to_header',
-                    'type': 'executable',
-                    'includes': [ '../build/common_defines.gypi', ],
-                    'sources':
-                    [
-                        '<!@(python <(angle_path)/enumerate_files.py dds_to_header -types *.cpp)',
-                    ],
-                },
-
-                {
                     'target_name': 'sample_util',
                     'type': 'static_library',
                     'includes': [ '../build/common_defines.gypi', ],
