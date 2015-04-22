@@ -140,8 +140,37 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
     return result;
 }
 
+#if !defined(ANGLE_ENABLE_WINDOWS_STORE)
+namespace
+{
+
+LRESULT CALLBACK IntermediateWindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+      case WM_ERASEBKGND:
+        // Prevent windows from erasing the background.
+        return 1;
+      case WM_PAINT:
+        // Do not paint anything.
+        PAINTSTRUCT paint;
+        if (BeginPaint(window, &paint))
+        {
+            EndPaint(window, &paint);
+        }
+        return 0;
+    }
+
+    return DefWindowProc(window, message, wParam, lParam);
+}
+
+}
+#endif
+
 DisplayD3D::DisplayD3D()
-    : mRenderer(nullptr),
+    : mDisplay(nullptr),
+      mRenderer(nullptr),
+      mChildWindowClass(0),
       mDevice(nullptr)
 {
 }
@@ -262,13 +291,45 @@ egl::Error DisplayD3D::initialize(egl::Display *display)
 
     ASSERT(mDevice == nullptr);
     mDevice = new DeviceD3D(mRenderer);
-    return error;
+
+#if !defined(ANGLE_ENABLE_WINDOWS_STORE)
+    // Work around compile error from not defining "UNICODE" while Chromium does
+    const LPSTR idcArrow = MAKEINTRESOURCEA(32512);
+
+    WNDCLASSA childWindowClassDesc = { 0 };
+    childWindowClassDesc.style = CS_OWNDC;
+    childWindowClassDesc.lpfnWndProc = IntermediateWindowProc;
+    childWindowClassDesc.cbClsExtra = 0;
+    childWindowClassDesc.cbWndExtra = 0;
+    childWindowClassDesc.hInstance = GetModuleHandle(nullptr);
+    childWindowClassDesc.hIcon = LoadIconA(nullptr, IDI_APPLICATION);
+    childWindowClassDesc.hCursor = LoadCursorA(nullptr, idcArrow);
+    childWindowClassDesc.hbrBackground = 0;
+    childWindowClassDesc.lpszMenuName = nullptr;
+    childWindowClassDesc.lpszClassName = "ANGLE DisplayD3D Child Window Class";
+
+    mChildWindowClass = RegisterClassA(&childWindowClassDesc);
+    if (!mChildWindowClass)
+    {
+        return egl::Error(EGL_NOT_INITIALIZED, "Failed to register child window class.");
+    }
+#endif
+
+    return egl::Error(EGL_SUCCESS);
 }
 
 void DisplayD3D::terminate()
 {
     SafeDelete(mDevice);
     SafeDelete(mRenderer);
+
+#if !defined(ANGLE_ENABLE_WINDOWS_STORE)
+    if (mChildWindowClass != 0)
+    {
+        UnregisterClassA(reinterpret_cast<const char*>(mChildWindowClass), NULL);
+        mChildWindowClass = 0;
+    }
+#endif
 }
 
 egl::ConfigSet DisplayD3D::generateConfigs() const
@@ -368,6 +429,11 @@ void DisplayD3D::generateCaps(egl::Caps *outCaps) const
     ASSERT(mRenderer != nullptr);
 
     outCaps->textureNPOT = mRenderer->getRendererExtensions().textureNPOT;
+}
+
+ATOM DisplayD3D::getChildWindowClass() const
+{
+    return mChildWindowClass;
 }
 
 }
