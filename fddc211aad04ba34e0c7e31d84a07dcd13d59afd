@@ -46,6 +46,30 @@
       "revId": "fddc211aad04ba34e0c7e31d84a07dcd13d59afd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d08d1e46_c864d395",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-22T15:01:05Z",
+      "side": 0,
+      "message": "Yes, leave that in, and thanks for checking.",
+      "parentUuid": "309d9a70_05b082b9",
+      "range": {
+        "startLine": 392,
+        "startChar": 0,
+        "endLine": 426,
+        "endChar": 6
+      },
+      "revId": "fddc211aad04ba34e0c7e31d84a07dcd13d59afd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
