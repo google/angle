@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10a416b9_7fce3b04",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-22T13:46:49Z",
+      "side": 1,
+      "message": "nit: generateMipmapsUsingImages is succinct",
+      "range": {
+        "startLine": 110,
+        "startChar": 14,
+        "endLine": 110,
+        "endChar": 52
+      },
+      "revId": "1a296d5db4a349b67504cf508d5b5101b7448aed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
