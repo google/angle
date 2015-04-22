@@ -16,6 +16,24 @@
       "revId": "8368b88d1b88b35f7c2da614fc0ac367f6087806",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10a416b9_9fccbfba",
+        "filename": "src/compiler/translator/VersionGLSL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-22T12:27:26Z",
+      "side": 1,
+      "message": "Ah, thanks for catching this Olli.",
+      "parentUuid": "b088aa37_ed1525f0",
+      "revId": "8368b88d1b88b35f7c2da614fc0ac367f6087806",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
