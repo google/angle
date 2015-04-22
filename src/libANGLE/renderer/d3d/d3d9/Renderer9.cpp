@@ -637,6 +637,12 @@ gl::Error Renderer9::finish()
     return gl::Error(GL_NO_ERROR);
 }
 
+bool Renderer9::shouldCreateChildWindowForSurface(EGLNativeWindowType window) const
+{
+    // D3D9 never needs to create child windows
+    return false;
+}
+
 SwapChainD3D *Renderer9::createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
 {
     return new SwapChain9(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat);
