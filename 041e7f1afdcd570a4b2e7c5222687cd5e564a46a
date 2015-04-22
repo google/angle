@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "50984e8f_22fb8e42",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-22T11:27:41Z",
+      "side": 1,
+      "message": "What if the buffer is already mapped when the index range needs to be computed? The GL spec allows undefined behavior in this case, but maybe ANGLE should at least refrain from accessing a NULL pointer here in that case.",
+      "revId": "041e7f1afdcd570a4b2e7c5222687cd5e564a46a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
