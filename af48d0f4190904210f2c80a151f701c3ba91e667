@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "309d9a70_c5af5a0f",
+        "filename": "src/tests/compiler_tests/compiler_tests.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-22T15:54:57Z",
+      "side": 1,
+      "message": "if you feel like it, try testing these includes in Chromium without the \u003c(angle_path)/tests bit. removing it makes the project files nicer, and the perf_tests.gypi doesn\u0027t use them, and it seems to work in Chromium. Note that it\u0027s in the parent folder, not sure if that matters.",
+      "range": {
+        "startLine": 8,
+        "startChar": 9,
+        "endLine": 8,
+        "endChar": 28
+      },
+      "revId": "af48d0f4190904210f2c80a151f701c3ba91e667",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
