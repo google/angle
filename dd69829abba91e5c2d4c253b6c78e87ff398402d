@@ -73,6 +73,23 @@
     },
     {
       "key": {
+        "uuid": "309d9a70_bd5a6a09",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2015-04-22T21:31:05Z",
+      "side": 1,
+      "message": "Could you check that this works with multiple windows at the same time? I thought you were only supposed to register a class once.",
+      "revId": "dd69829abba91e5c2d4c253b6c78e87ff398402d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "309d9a70_0539629f",
         "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
         "patchSetId": 7
