@@ -254,7 +254,9 @@
                             },
                             'sources':
                             [
-                                '<!@(python <(angle_path)/enumerate_files.py gles_conformance_tests -types *.cpp *.h *.inl)',
+                                'gles_conformance_tests/gles_conformance_tests.cpp',
+                                'gles_conformance_tests/gles_conformance_tests.h',
+                                'gles_conformance_tests/gles_conformance_tests_main.cpp',
                                 '<(gles2_conformance_tests_generated_file)',
                             ],
                             'include_dirs':
@@ -319,7 +321,9 @@
                             },
                             'sources':
                             [
-                                '<!@(python <(angle_path)/enumerate_files.py gles_conformance_tests -types *.cpp *.h *.inl)',
+                                'gles_conformance_tests/gles_conformance_tests.cpp',
+                                'gles_conformance_tests/gles_conformance_tests.h',
+                                'gles_conformance_tests/gles_conformance_tests_main.cpp',
                                 '<(gles3_conformance_tests_generated_file)',
                             ],
                             'include_dirs':
@@ -396,7 +400,9 @@
                             },
                             'sources':
                             [
-                                '<!@(python <(angle_path)/enumerate_files.py deqp_tests -types *.cpp *.h *.inl)',
+                                'deqp_tests/deqp_test_main.cpp',
+                                'deqp_tests/deqp_tests.cpp',
+                                'deqp_tests/deqp_tests.h',
                                 '<(deqp_tests_generated_file)',
                             ],
                             'actions':

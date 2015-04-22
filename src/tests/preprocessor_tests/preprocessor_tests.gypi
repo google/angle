@@ -5,9 +5,22 @@
 {
     'sources':
     [
-        '<!@(python <(angle_path)/enumerate_files.py \
-          -dirs <(angle_path)/tests/preprocessor_tests \
-          -types *.cpp *.h \
-          -excludes <(angle_path)/tests/preprocessor_tests/preprocessor_test_main.cpp)'
+        'PreprocessorTest.cpp',
+        'PreprocessorTest.h',
+        'char_test.cpp',
+        'comment_test.cpp',
+        'define_test.cpp',
+        'error_test.cpp',
+        'extension_test.cpp',
+        'identifier_test.cpp',
+        'if_test.cpp',
+        'input_test.cpp',
+        'location_test.cpp',
+        'number_test.cpp',
+        'operator_test.cpp',
+        'pragma_test.cpp',
+        'space_test.cpp',
+        'token_test.cpp',
+        'version_test.cpp',
     ],
 }

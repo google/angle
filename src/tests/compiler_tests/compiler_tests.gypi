@@ -5,9 +5,18 @@
 {
     'sources':
     [
-        '<!@(python <(angle_path)/enumerate_files.py \
-          -dirs <(angle_path)/tests/compiler_tests \
-          -types *.cpp *.h \
-          -excludes <(angle_path)/tests/compiler_tests/compiler_test_main.cpp)'
+        'API_test.cpp',
+        'CollectVariables_test.cpp',
+        'ConstantFolding_test.cpp',
+        'DebugShaderPrecision_test.cpp',
+        'ExpressionLimit_test.cpp',
+        'MalformedShader_test.cpp',
+        'NV_draw_buffers_test.cpp',
+        'PruneUnusedFunctions_test.cpp',
+        'ShaderExtension_test.cpp',
+        'ShaderVariable_test.cpp',
+        'TypeTracking_test.cpp',
+        'UnrollFlatten_test.cpp',
+        'VariablePacker_test.cpp',
     ],
 }
