@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "50984e8f_22eb8ef4",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-22T10:49:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "302afabf_72b48933",
+      "range": {
+        "startLine": 672,
+        "startChar": 3,
+        "endLine": 673,
+        "endChar": 78
+      },
+      "revId": "dfb827793a09a8ed6ba1b61a25c5cee5847891ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "302afabf_d2b8d528",
         "filename": "src/compiler/translator/SeparateDeclarations.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-21T16:45:37Z",
       "side": 1,
       "message": "nit: 2 space indent",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 6
+      },
+      "revId": "dfb827793a09a8ed6ba1b61a25c5cee5847891ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b088aa37_8d2581da",
+        "filename": "src/compiler/translator/SeparateDeclarations.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-22T10:49:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "302afabf_d2b8d528",
       "range": {
         "startLine": 22,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "b088aa37_ad223dcd",
+        "filename": "src/compiler/translator/SeparateDeclarations.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-22T10:49:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d01a7eb3_379157a1",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 7
+      },
+      "revId": "dfb827793a09a8ed6ba1b61a25c5cee5847891ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "302afabf_b2b5612f",
         "filename": "src/compiler/translator/SeparateDeclarations.cpp",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2015-04-21T16:45:37Z",
       "side": 1,
       "message": "can omit this word (also \u0027anonymous\u0027)",
+      "range": {
+        "startLine": 29,
+        "startChar": 6,
+        "endLine": 29,
+        "endChar": 16
+      },
+      "revId": "dfb827793a09a8ed6ba1b61a25c5cee5847891ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90972654_2c373313",
+        "filename": "src/compiler/translator/SeparateDeclarations.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-22T10:49:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "302afabf_b2b5612f",
       "range": {
         "startLine": 29,
         "startChar": 6,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "90972654_0c327722",
+        "filename": "src/compiler/translator/SeparateDeclarations.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-22T10:49:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f02302ea_84f9f7fd",
+      "range": {
+        "startLine": 31,
+        "startChar": 50,
+        "endLine": 31,
+        "endChar": 51
+      },
+      "revId": "dfb827793a09a8ed6ba1b61a25c5cee5847891ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "302afabf_12c38da7",
         "filename": "src/compiler/translator/SeparateDeclarations.cpp",
         "patchSetId": 4
@@ -128,6 +248,30 @@
       "writtenOn": "2015-04-21T16:45:37Z",
       "side": 1,
       "message": "might as well stuff the rest of this in the namespace {} block",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 51
+      },
+      "revId": "dfb827793a09a8ed6ba1b61a25c5cee5847891ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50984e8f_020bea5e",
+        "filename": "src/compiler/translator/SeparateDeclarations.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-22T10:49:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "302afabf_12c38da7",
       "range": {
         "startLine": 35,
         "startChar": 0,
