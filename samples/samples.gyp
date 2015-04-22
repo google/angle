@@ -6,12 +6,12 @@
     'targets':
     [
         {
-            'target_name': 'essl_to_glsl',
+            'target_name': 'shader_translator',
             'type': 'executable',
             'includes': [ '../build/common_defines.gypi', ],
             'dependencies': [ '../src/angle.gyp:translator_static', ],
             'include_dirs': [ '../include', ],
-            'sources': [ '<!@(python <(angle_path)/enumerate_files.py translator -types *.cpp *.h)' ],
+            'sources': [ 'shader_translator/shader_translator.cpp' ],
         },
     ],
     'conditions':
@@ -20,22 +20,6 @@
         {
             'targets':
             [
-                {
-                    'target_name': 'essl_to_hlsl',
-                    'type': 'executable',
-                    'includes': [ '../build/common_defines.gypi', ],
-                    'dependencies': [ '../src/angle.gyp:translator_static', ],
-                    'include_dirs':
-                    [
-                        '../include',
-                        '../src',
-                    ],
-                    'sources':
-                    [
-                        '<!@(python <(angle_path)/enumerate_files.py translator -types *.cpp *.h)',
-                    ],
-                },
-
                 {
                     'target_name': 'sample_util',
                     'type': 'static_library',
