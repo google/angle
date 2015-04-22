@@ -22,6 +22,30 @@
       "revId": "fddc211aad04ba34e0c7e31d84a07dcd13d59afd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "309d9a70_05b082b9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-22T14:40:05Z",
+      "side": 0,
+      "message": "Will it cause problems to remove the D3D11_INIT_INCOMPATIBLE_DXGI enum?",
+      "parentUuid": "10a416b9_bf4ee3c6",
+      "range": {
+        "startLine": 392,
+        "startChar": 0,
+        "endLine": 426,
+        "endChar": 6
+      },
+      "revId": "fddc211aad04ba34e0c7e31d84a07dcd13d59afd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

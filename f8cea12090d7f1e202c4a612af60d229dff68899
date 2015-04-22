@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "10a416b9_4ae53722",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-22T14:40:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "309d9a70_050c023d",
+      "range": {
+        "startLine": 37,
+        "startChar": 78,
+        "endLine": 37,
+        "endChar": 102
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "309d9a70_45c8ca57",
         "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-22T14:25:18Z",
       "side": 1,
       "message": "this should probably be mChildWindow !\u003d nullptr",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 26
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d08d1e46_0816dbfb",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-22T14:40:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "309d9a70_45c8ca57",
       "range": {
         "startLine": 69,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "309d9a70_e5b29ec3",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-22T14:40:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d08d1e46_884d6b50",
+      "range": {
+        "startLine": 72,
+        "startChar": 55,
+        "endLine": 72,
+        "endChar": 72
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d08d1e46_88764b82",
         "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
         "patchSetId": 6
@@ -82,6 +154,30 @@
       "writtenOn": "2015-04-22T14:25:18Z",
       "side": 1,
       "message": "this should go up at the top as a local function (and if static, in a namespace {} block)",
+      "range": {
+        "startLine": 83,
+        "startChar": 24,
+        "endLine": 83,
+        "endChar": 46
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d08d1e46_e818af2a",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-22T14:40:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d08d1e46_88764b82",
       "range": {
         "startLine": 83,
         "startChar": 24,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "d08d1e46_c80bf3d6",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-22T14:40:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "309d9a70_c5b3dad7",
+      "range": {
+        "startLine": 109,
+        "startChar": 12,
+        "endLine": 109,
+        "endChar": 30
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d08d1e46_a85a2709",
         "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
         "patchSetId": 6
@@ -128,6 +248,30 @@
       "writtenOn": "2015-04-22T14:25:18Z",
       "side": 1,
       "message": "I feel like missing this define is causing quite a few workarounds - we should consider putting it back in when necessary.",
+      "range": {
+        "startLine": 117,
+        "startChar": 49,
+        "endLine": 117,
+        "endChar": 86
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "309d9a70_857b9273",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-22T14:40:05Z",
+      "side": 1,
+      "message": "AFAIK it\u0027s just this IDC_ARROW that is missing.  I think it was DEQP that wasn\u0027t able to handle compiling with UNICODE defined?",
+      "parentUuid": "d08d1e46_a85a2709",
       "range": {
         "startLine": 117,
         "startChar": 49,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "309d9a70_c5a59a80",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-22T14:40:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d08d1e46_08625bbd",
+      "range": {
+        "startLine": 128,
+        "startChar": 49,
+        "endLine": 128,
+        "endChar": 53
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d08d1e46_c83e938a",
         "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
         "patchSetId": 6
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "309d9a70_25958616",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-22T14:40:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d08d1e46_c83e938a",
+      "range": {
+        "startLine": 216,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 5
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "309d9a70_e5c0de2b",
         "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
         "patchSetId": 6
@@ -197,6 +389,30 @@
       "writtenOn": "2015-04-22T14:25:18Z",
       "side": 1,
       "message": "mChildWindow !\u003d nullptr",
+      "range": {
+        "startLine": 261,
+        "startChar": 8,
+        "endLine": 261,
+        "endChar": 26
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10a416b9_2ae0f312",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-22T14:40:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "309d9a70_e5c0de2b",
       "range": {
         "startLine": 261,
         "startChar": 8,
