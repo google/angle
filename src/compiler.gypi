@@ -78,6 +78,8 @@
             'compiler/translator/PoolAlloc.cpp',
             'compiler/translator/PoolAlloc.h',
             'compiler/translator/Pragma.h',
+            'compiler/translator/PruneEmptyDeclarations.cpp',
+            'compiler/translator/PruneEmptyDeclarations.h',
             'compiler/translator/QualifierAlive.cpp',
             'compiler/translator/QualifierAlive.h',
             'compiler/translator/RegenerateStructNames.cpp',
