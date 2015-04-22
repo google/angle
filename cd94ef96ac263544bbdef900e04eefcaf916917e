@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90b566fa_5f6e6ffd",
+        "filename": "src/compiler/translator/VersionGLSL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-22T18:05:49Z",
+      "side": 0,
+      "message": "I\u0027m pretty sure the 110 and 120 versions were needed to support certain GLSL ES 1.0 features on desktop GL drivers, Mac OS in particular. They\u0027re probably still needed if the compatibility profile\u0027s output is requested.",
+      "range": {
+        "startLine": 10,
+        "startChar": 36,
+        "endLine": 10,
+        "endChar": 39
+      },
+      "revId": "cd94ef96ac263544bbdef900e04eefcaf916917e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
