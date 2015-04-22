@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "309d9a70_050c023d",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-22T14:25:18Z",
+      "side": 1,
+      "message": "it seems like this parameter is redundant, you can all renderer-\u003eshouldCreateChildWindow(window)",
+      "range": {
+        "startLine": 37,
+        "startChar": 78,
+        "endLine": 37,
+        "endChar": 102
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "309d9a70_45c8ca57",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-22T14:25:18Z",
+      "side": 1,
+      "message": "this should probably be mChildWindow !\u003d nullptr",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 26
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d08d1e46_884d6b50",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-22T14:25:18Z",
+      "side": 1,
+      "message": "this can check mChildWindowClass !\u003d 0. Could possibly be a thing if there\u0027s an error in init.",
+      "range": {
+        "startLine": 72,
+        "startChar": 55,
+        "endLine": 72,
+        "endChar": 72
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d08d1e46_88764b82",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-22T14:25:18Z",
+      "side": 1,
+      "message": "this should go up at the top as a local function (and if static, in a namespace {} block)",
+      "range": {
+        "startLine": 83,
+        "startChar": 24,
+        "endLine": 83,
+        "endChar": 46
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "309d9a70_c5b3dad7",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-22T14:25:18Z",
+      "side": 1,
+      "message": "can put the Renderer check here instead of using a member",
+      "range": {
+        "startLine": 109,
+        "startChar": 12,
+        "endLine": 109,
+        "endChar": 30
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d08d1e46_a85a2709",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-22T14:25:18Z",
+      "side": 1,
+      "message": "I feel like missing this define is causing quite a few workarounds - we should consider putting it back in when necessary.",
+      "range": {
+        "startLine": 117,
+        "startChar": 49,
+        "endLine": 117,
+        "endChar": 86
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d08d1e46_08625bbd",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-22T14:25:18Z",
+      "side": 1,
+      "message": "nit: nullptr (other instances, not repeating)",
+      "range": {
+        "startLine": 128,
+        "startChar": 49,
+        "endLine": 128,
+        "endChar": 53
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d08d1e46_c83e938a",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-22T14:25:18Z",
+      "side": 1,
+      "message": "wind *swapChainWindow \u003d mChildWindow !\u003d nullptr ? mChildWindow : mNativeWindow;\n mRenderer-\u003ecreateSwapChain(swapChainWindow,....)",
+      "range": {
+        "startLine": 216,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 5
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "309d9a70_e5c0de2b",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-22T14:25:18Z",
+      "side": 1,
+      "message": "mChildWindow !\u003d nullptr",
+      "range": {
+        "startLine": 261,
+        "startChar": 8,
+        "endLine": 261,
+        "endChar": 26
+      },
+      "revId": "f8cea12090d7f1e202c4a612af60d229dff68899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
