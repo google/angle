@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b088aa37_ed1525f0",
+        "filename": "src/compiler/translator/VersionGLSL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-22T11:39:08Z",
+      "side": 1,
+      "message": "This doesn\u0027t compile. Please make sure that the code compiles before submitting for review.",
+      "revId": "8368b88d1b88b35f7c2da614fc0ac367f6087806",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
