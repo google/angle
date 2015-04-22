@@ -53,11 +53,11 @@
                     'include_dirs':
                     [
                         '<(angle_path)/include',
-                        'angle/sample_util',
+                        'sample_util',
                     ],
                     'sources':
                     [
-                        '<!@(python <(angle_path)/enumerate_files.py angle/sample_util -types *.cpp *.h)'
+                        '<!@(python <(angle_path)/enumerate_files.py sample_util -types *.cpp *.h)'
                     ],
                     'msvs_disabled_warnings': [ 4201 ],
                     'direct_dependent_settings':
@@ -65,7 +65,7 @@
                         'msvs_disabled_warnings': [ 4201 ],
                         'include_dirs':
                         [
-                            'angle/sample_util',
+                            'sample_util',
                         ],
                     },
                 },
@@ -75,7 +75,7 @@
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/hello_triangle -types *.cpp *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py hello_triangle -types *.cpp *.h)' ],
                 },
 
                 {
@@ -83,7 +83,7 @@
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/mip_map_2d -types *.cpp *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py mip_map_2d -types *.cpp *.h)' ],
                 },
 
                 {
@@ -91,12 +91,12 @@
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/multi_texture -types *.cpp *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py multi_texture -types *.cpp *.h)' ],
                     'copies':
                     [
                         {
                             'destination': '<(PRODUCT_DIR)',
-                            'files': [ '<!@(python <(angle_path)/enumerate_files.py angle/multi_texture -types *.tga)' ],
+                            'files': [ '<!@(python <(angle_path)/enumerate_files.py multi_texture -types *.tga)' ],
                         },
                     ]
                 },
@@ -106,12 +106,12 @@
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/particle_system -types *.cpp *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py particle_system -types *.cpp *.h)' ],
                     'copies':
                     [
                         {
                             'destination': '<(PRODUCT_DIR)',
-                            'files': [ '<!@(python <(angle_path)/enumerate_files.py angle/particle_system -types *.tga)' ],
+                            'files': [ '<!@(python <(angle_path)/enumerate_files.py particle_system -types *.tga)' ],
                         }
                     ]
                 },
@@ -121,7 +121,7 @@
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/simple_instancing -types *.cpp *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py simple_instancing -types *.cpp *.h)' ],
                 },
 
                 {
@@ -129,7 +129,7 @@
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/tri_fan_microbench -types *.cpp *.h *.glsl)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py tri_fan_microbench -types *.cpp *.h *.glsl)' ],
                 },
 
                 {
@@ -137,7 +137,7 @@
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/tex_redef_microbench -types *.cpp *.h *.glsl)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py tex_redef_microbench -types *.cpp *.h *.glsl)' ],
                 },
 
                 {
@@ -145,12 +145,12 @@
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/multiple_draw_buffers -types *.cpp *.h *.glsl)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py multiple_draw_buffers -types *.cpp *.h *.glsl)' ],
                     'copies':
                     [
                         {
                             'destination': '<(PRODUCT_DIR)',
-                            'files': [ '<!@(python <(angle_path)/enumerate_files.py angle/multiple_draw_buffers -types *.glsl)' ],
+                            'files': [ '<!@(python <(angle_path)/enumerate_files.py multiple_draw_buffers -types *.glsl)' ],
                         }
                     ]
                 },
@@ -160,7 +160,7 @@
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/simple_texture_2d -types *.cpp *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py simple_texture_2d -types *.cpp *.h)' ],
                 },
 
                 {
@@ -168,7 +168,7 @@
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/simple_texture_cubemap -types *.cpp *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py simple_texture_cubemap -types *.cpp *.h)' ],
                 },
 
                 {
@@ -176,7 +176,7 @@
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/simple_vertex_shader -types *.cpp *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py simple_vertex_shader -types *.cpp *.h)' ],
                 },
 
                 {
@@ -184,7 +184,7 @@
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/stencil_operations -types *.cpp *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py stencil_operations -types *.cpp *.h)' ],
                 },
 
                 {
@@ -192,7 +192,7 @@
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/texture_wrap -types *.cpp *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py texture_wrap -types *.cpp *.h)' ],
                 },
 
                 {
@@ -200,7 +200,7 @@
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/post_sub_buffer -types *.cpp *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py post_sub_buffer -types *.cpp *.h)' ],
                 },
             ],
         }
