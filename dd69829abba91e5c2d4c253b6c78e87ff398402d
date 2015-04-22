@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "10a416b9_eab26bc3",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-22T15:39:42Z",
+      "side": 1,
+      "message": "I see, thanks.",
+      "parentUuid": "10a416b9_aaa223a6",
+      "range": {
+        "startLine": 90,
+        "startChar": 8,
+        "endLine": 90,
+        "endChar": 20
+      },
+      "revId": "dd69829abba91e5c2d4c253b6c78e87ff398402d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "309d9a70_0539629f",
         "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
         "patchSetId": 7
