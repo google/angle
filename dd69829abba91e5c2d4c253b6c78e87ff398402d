@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "10a416b9_dc1483c8",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-23T18:18:37Z",
+      "side": 1,
+      "message": "Thanks, turned out that it does fail.  I moved the window class creation to the Display level.",
+      "parentUuid": "309d9a70_bd5a6a09",
+      "revId": "dd69829abba91e5c2d4c253b6c78e87ff398402d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "309d9a70_0539629f",
         "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
         "patchSetId": 7
