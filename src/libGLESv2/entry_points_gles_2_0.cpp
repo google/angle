@@ -2512,6 +2512,12 @@ void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        if (!ValidTextureTarget(context, target))
+        {
+            context->recordError(Error(GL_INVALID_ENUM, "Invalid texture target"));
+            return;
+        }
+
         Texture *texture = context->getTargetTexture(target);
 
         if (!texture)
@@ -2644,6 +2650,12 @@ void GL_APIENTRY GetTexParameteriv(GLenum target, GLenum pname, GLint* params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        if (!ValidTextureTarget(context, target))
+        {
+            context->recordError(Error(GL_INVALID_ENUM, "Invalid texture target"));
+            return;
+        }
+
         Texture *texture = context->getTargetTexture(target);
 
         if (!texture)
@@ -3648,6 +3660,12 @@ void GL_APIENTRY TexParameterf(GLenum target, GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        if (!ValidTextureTarget(context, target))
+        {
+            context->recordError(Error(GL_INVALID_ENUM, "Invalid texture target"));
+            return;
+        }
+
         if (!ValidateTexParamParameters(context, pname, static_cast<GLint>(param)))
         {
             return;
@@ -3697,6 +3715,12 @@ void GL_APIENTRY TexParameteri(GLenum target, GLenum pname, GLint param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        if (!ValidTextureTarget(context, target))
+        {
+            context->recordError(Error(GL_INVALID_ENUM, "Invalid Texture target"));
+            return;
+        }
+
         if (!ValidateTexParamParameters(context, pname, param))
         {
             return;
