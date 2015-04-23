@@ -143,7 +143,7 @@ TIntermTyped *TIntermediate::addUnaryMath(
 
     if (childTempConstant)
     {
-        TIntermTyped *newChild = childTempConstant->fold(op, 0, mInfoSink);
+        TIntermTyped *newChild = childTempConstant->fold(op, nullptr, mInfoSink);
 
         if (newChild)
             return newChild;

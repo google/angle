@@ -293,7 +293,7 @@ class TIntermConstantUnion : public TIntermTyped
     virtual void traverse(TIntermTraverser *);
     virtual bool replaceChildNode(TIntermNode *, TIntermNode *) { return false; }
 
-    TIntermTyped *fold(TOperator, TIntermTyped *, TInfoSink &);
+    TIntermTyped *fold(TOperator op, TIntermConstantUnion *rightNode, TInfoSink &infoSink);
 
   protected:
     ConstantUnion *mUnionArrayPointer;
