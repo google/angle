@@ -518,6 +518,27 @@ OSWindow *CreateOSWindow()
     return new Win32Window();
 }
 
+bool Win32Window::setPosition(int x, int y)
+{
+    if (mX == x && mY == mY)
+    {
+        return true;
+    }
+
+    RECT windowRect;
+    if (!GetWindowRect(mParentWindow, &windowRect))
+    {
+        return false;
+    }
+
+    if (!MoveWindow(mParentWindow, x, y, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top, TRUE))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool Win32Window::resize(int width, int height)
 {
     if (width == mWidth && height == mHeight)
@@ -539,7 +560,7 @@ bool Win32Window::resize(int width, int height)
 
     LONG diffX = (windowRect.right - windowRect.left) - clientRect.right;
     LONG diffY = (windowRect.bottom - windowRect.top) - clientRect.bottom;
-    if (!MoveWindow(mParentWindow, windowRect.left, windowRect.top, width + diffX, height + diffY, FALSE))
+    if (!MoveWindow(mParentWindow, windowRect.left, windowRect.top, width + diffX, height + diffY, TRUE))
     {
         return false;
     }

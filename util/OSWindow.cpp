@@ -7,13 +7,25 @@
 #include "OSWindow.h"
 
 OSWindow::OSWindow()
-    : mWidth(0),
+    : mX(0),
+      mY(0),
+      mWidth(0),
       mHeight(0)
 {
 }
 
 OSWindow::~OSWindow()
 {}
+
+int OSWindow::getX() const
+{
+    return mX;
+}
+
+int OSWindow::getY() const
+{
+    return mY;
+}
 
 int OSWindow::getWidth() const
 {
@@ -43,6 +55,10 @@ void OSWindow::pushEvent(Event event)
 {
     switch (event.Type)
     {
+      case Event::EVENT_MOVED:
+        mX = event.Move.X;
+        mY = event.Move.Y;
+        break;
       case Event::EVENT_RESIZED:
         mWidth = event.Size.Width;
         mHeight = event.Size.Height;

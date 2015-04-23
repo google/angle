@@ -101,6 +101,14 @@
                 },
 
                 {
+                    'target_name': 'multi_window',
+                    'type': 'executable',
+                    'dependencies': [ 'sample_util' ],
+                    'includes': [ '../build/common_defines.gypi', ],
+                    'sources': [ 'multi_window/MultiWindow.cpp', ],
+                },
+
+                {
                     'target_name': 'multiple_draw_buffers',
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
