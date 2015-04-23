@@ -22,6 +22,30 @@
       "revId": "af48d0f4190904210f2c80a151f701c3ba91e667",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90b566fa_68360862",
+        "filename": "src/tests/compiler_tests/compiler_tests.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-23T14:46:47Z",
+      "side": 1,
+      "message": "Done, seems to work in chrome.",
+      "parentUuid": "309d9a70_c5af5a0f",
+      "range": {
+        "startLine": 8,
+        "startChar": 9,
+        "endLine": 8,
+        "endChar": 28
+      },
+      "revId": "af48d0f4190904210f2c80a151f701c3ba91e667",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
