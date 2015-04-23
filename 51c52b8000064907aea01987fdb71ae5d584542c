@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "b088aa37_56c32a8a",
+        "filename": "src/compiler/translator/PruneEmptyDeclarations.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-23T17:49:03Z",
+      "side": 1,
+      "message": "Right, I don\u0027t think that using an empty sequence is really a problem for the later processing steps. It shouldn\u0027t add much overhead, and how it gets processed is intuitively quite clear at least to me.",
+      "parentUuid": "10a416b9_117514f4",
+      "range": {
+        "startLine": 56,
+        "startChar": 49,
+        "endLine": 56,
+        "endChar": 77
+      },
+      "revId": "51c52b8000064907aea01987fdb71ae5d584542c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0d43e30_16e57c4c",
         "filename": "src/compiler/translator/PruneEmptyDeclarations.cpp",
         "patchSetId": 3
