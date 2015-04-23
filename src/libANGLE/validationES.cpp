@@ -386,11 +386,11 @@ bool ValidateFramebufferRenderbufferParameters(gl::Context *context, GLenum targ
     }
 
     gl::Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
-    GLuint framebufferHandle = context->getState().getTargetFramebuffer(target)->id();
 
-    if (!framebuffer || (framebufferHandle == 0 && renderbuffer != 0))
+    ASSERT(framebuffer);
+    if (framebuffer->id() == 0)
     {
-        context->recordError(Error(GL_INVALID_OPERATION));
+        context->recordError(Error(GL_INVALID_OPERATION, "Cannot change default FBO's attachments"));
         return false;
     }
 
@@ -1735,11 +1735,11 @@ bool ValidateFramebufferTextureBase(Context *context, GLenum target, GLenum atta
     }
 
     const gl::Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
-    GLuint framebufferHandle = context->getState().getTargetFramebuffer(target)->id();
+    ASSERT(framebuffer);
 
-    if (framebufferHandle == 0 || !framebuffer)
+    if (framebuffer->id() == 0)
     {
-        context->recordError(Error(GL_INVALID_OPERATION));
+        context->recordError(Error(GL_INVALID_OPERATION, "Cannot change default FBO's attachments"));
         return false;
     }
 
