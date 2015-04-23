@@ -32,12 +32,16 @@ namespace tcu
 class ANGLEWin32NativeDisplayFactory : public eglu::NativeDisplayFactory
 {
   public:
-    ANGLEWin32NativeDisplayFactory(HINSTANCE instance);
+    ANGLEWin32NativeDisplayFactory(const std::string &name,
+                                   const std::string &description,
+                                   const std::vector<eglw::EGLAttrib> &platformAttributes,
+                                   HINSTANCE instance);
     ~ANGLEWin32NativeDisplayFactory() override;
 
     eglu::NativeDisplay *createDisplay(const eglw::EGLAttrib* attribList) const override;
 
   private:
+    std::vector<eglw::EGLAttrib> mPlatformAttributes;
     const HINSTANCE mInstance;
 };
 
