@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "10a416b9_29b470c0",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-23T19:31:49Z",
+      "side": 1,
+      "message": "quick comment here couldn\u0027t hurt explaining the need for the step (rather than what the step is)",
+      "range": {
+        "startLine": 254,
+        "startChar": 12,
+        "endLine": 254,
+        "endChar": 34
+      },
+      "revId": "51c52b8000064907aea01987fdb71ae5d584542c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10a416b9_b15368be",
         "filename": "src/compiler/translator/PruneEmptyDeclarations.cpp",
         "patchSetId": 3
