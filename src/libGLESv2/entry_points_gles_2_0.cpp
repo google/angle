@@ -537,11 +537,6 @@ void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
             return;
         }
 
-        if (data == NULL)
-        {
-            return;
-        }
-
         if (!ValidBufferTarget(context, target))
         {
             context->recordError(Error(GL_INVALID_ENUM));
@@ -572,6 +567,11 @@ void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
         if (size + offset > buffer->getSize())
         {
             context->recordError(Error(GL_INVALID_VALUE));
+            return;
+        }
+
+        if (data == NULL)
+        {
             return;
         }
 
