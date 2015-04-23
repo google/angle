@@ -3148,7 +3148,7 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
     if (thisNode != nullptr)
     {
         ConstantUnion *unionArray = new ConstantUnion[1];
-        unsigned int arraySize = 0;
+        int arraySize = 0;
         TIntermTyped *typedThis = thisNode->getAsTyped();
         if (fnCall->getName() != "length")
         {
@@ -3167,7 +3167,7 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
         }
         else
         {
-            arraySize = static_cast<unsigned int>(typedThis->getArraySize());
+            arraySize = typedThis->getArraySize();
             if (typedThis->hasSideEffects())
             {
                 // This code path can be hit with an expression like this:
@@ -3176,8 +3176,8 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
                 UNIMPLEMENTED();
             }
         }
-        unionArray->setUConst(arraySize);
-        callNode = intermediate.addConstantUnion(unionArray, TType(EbtUInt, EbpUndefined, EvqConst), loc);
+        unionArray->setIConst(arraySize);
+        callNode = intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), loc);
     }
     else if (op != EOpNull)
     {

@@ -422,3 +422,22 @@ TEST_F(MalformedShaderTest, TernaryOperatorOnStructs)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Array length() returns a constant signed integral expression (ESSL 3.00 section 4.1.9)
+// Assigning it to unsigned should result in an error.
+TEST_F(MalformedShaderTest, AssignArrayLengthToUnsigned)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   int[1] arr;\n"
+        "   uint l = arr.length();\n"
+        "   my_FragColor = vec4(float(l));\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
