@@ -202,7 +202,7 @@ bool TIntermAggregate::replaceChildNodeWithMultiple(TIntermNode *original, TInte
         if (*it == original)
         {
             it = mSequence.erase(it);
-            it = mSequence.insert(it, replacements.begin(), replacements.end());
+            mSequence.insert(it, replacements.begin(), replacements.end());
             return true;
         }
     }
