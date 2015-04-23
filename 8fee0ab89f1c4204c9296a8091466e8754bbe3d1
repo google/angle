@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10a416b9_565dd255",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-23T12:21:44Z",
+      "side": 1,
+      "message": "this is not quite correct. you\u0027re using the c++11 syntax of insert, which isn\u0027t supported on Mac and Linux it seems (probably Android too)\n\nsee http://www.cplusplus.com/reference/vector/vector/insert/",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 20
+      },
+      "revId": "8fee0ab89f1c4204c9296a8091466e8754bbe3d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
