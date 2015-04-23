@@ -3168,12 +3168,17 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
         else
         {
             arraySize = typedThis->getArraySize();
-            if (typedThis->hasSideEffects())
+            if (typedThis->getAsSymbolNode() == nullptr)
             {
-                // This code path can be hit with an expression like this:
+                // This code path can be hit with expressions like these:
                 // (a = b).length()
-                // where a and b are both arrays.
-                UNIMPLEMENTED();
+                // (func()).length()
+                // (int[3](0, 1, 2)).length()
+                // ESSL 3.00 section 5.9 defines expressions so that this is not actually a valid expression.
+                // It allows "An array name with the length method applied" in contrast to GLSL 4.4 spec section 5.9
+                // which allows "An array, vector or matrix expression with the length method applied".
+                error(loc, "length can only be called on array names, not on array expressions", "length");
+                recover();
             }
         }
         unionArray->setIConst(arraySize);
