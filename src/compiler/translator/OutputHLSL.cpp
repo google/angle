@@ -11,6 +11,7 @@
 #include <stdio.h>
 
 #include "common/angleutils.h"
+#include "common/debug.h"
 #include "common/utilities.h"
 #include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/BuiltInFunctionEmulatorHLSL.h"
@@ -26,7 +27,6 @@
 #include "compiler/translator/UniformHLSL.h"
 #include "compiler/translator/UtilsHLSL.h"
 #include "compiler/translator/blocklayout.h"
-#include "compiler/translator/compilerdebug.h"
 #include "compiler/translator/util.h"
 
 namespace sh
@@ -185,6 +185,7 @@ void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
     // Now that we are done changing the AST, do the analyses need for HLSL generation
     CallDAG::InitResult success = mCallDag.init(treeRoot, &objSink);
     ASSERT(success == CallDAG::INITDAG_SUCCESS);
+    UNUSED_ASSERTION_VARIABLE(success);
     mASTMetadataList = CreateASTMetadataHLSL(treeRoot, mCallDag);
 
     // Output the body and footer first to determine what has to go in the header

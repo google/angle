@@ -237,6 +237,7 @@ size_t CallDAG::findIndex(const TIntermAggregate *function) const
 {
     TOperator op = function->getOp();
     ASSERT(op == EOpPrototype || op == EOpFunction || op == EOpFunctionCall);
+    UNUSED_ASSERTION_VARIABLE(op);
 
     auto it = mFunctionIdToIndex.find(function->getFunctionId());
 

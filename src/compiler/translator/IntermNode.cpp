@@ -1495,6 +1495,7 @@ void TIntermTraverser::updateTree()
         bool replaced = replacement.parent->replaceChildNode(
             replacement.original, replacement.replacement);
         ASSERT(replaced);
+        UNUSED_ASSERTION_VARIABLE(replaced);
 
         if (!replacement.originalBecomesChildOfReplacement)
         {
@@ -1517,5 +1518,6 @@ void TIntermTraverser::updateTree()
         bool replaced = replacement.parent->replaceChildNodeWithMultiple(
             replacement.original, replacement.replacements);
         ASSERT(replaced);
+        UNUSED_ASSERTION_VARIABLE(replaced);
     }
 }
