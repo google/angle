@@ -1257,9 +1257,20 @@ TIntermAggregate *TParseContext::parseSingleDeclaration(TPublicType &publicType,
 {
     TIntermSymbol *symbol = intermediate.addSymbol(0, identifier, TType(publicType), identifierOrTypeLocation);
 
-    mDeferredSingleDeclarationErrorCheck = (identifier == "");
+    bool emptyDeclaration = (identifier == "");
 
-    if (!mDeferredSingleDeclarationErrorCheck)
+    mDeferredSingleDeclarationErrorCheck = emptyDeclaration;
+
+    if (emptyDeclaration)
+    {
+        if (publicType.isUnsizedArray())
+        {
+            // ESSL3 spec section 4.1.9: Array declaration which leaves the size unspecified is an error.
+            // It is assumed that this applies to empty declarations as well.
+            error(identifierOrTypeLocation, "empty array declaration needs to specify a size", identifier.c_str());
+        }
+    }
+    else
     {
         if (singleDeclarationErrorCheck(publicType, identifierOrTypeLocation))
             recover();
