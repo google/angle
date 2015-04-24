@@ -14,9 +14,9 @@
 #include <limits>
 #include <stdio.h>
 
-#include "compiler/translator/PoolAlloc.h"
-#include "compiler/translator/compilerdebug.h"
 #include "common/angleutils.h"
+#include "common/debug.h"
+#include "compiler/translator/PoolAlloc.h"
 
 struct TSourceLoc {
     int first_file;

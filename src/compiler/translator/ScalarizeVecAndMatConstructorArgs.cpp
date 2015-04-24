@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
+#include "common/debug.h"
 #include "compiler/translator/ScalarizeVecAndMatConstructorArgs.h"
-#include "compiler/translator/compilerdebug.h"
 
 #include <algorithm>
 
