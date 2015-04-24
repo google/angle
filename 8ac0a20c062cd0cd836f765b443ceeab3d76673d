@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "50984e8f_165d6c56",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-24T10:53:19Z",
+      "side": 1,
+      "message": "Agreed, I\u0027ll go with \"Create\".",
+      "parentUuid": "d0d43e30_0a1b0b2d",
+      "range": {
+        "startLine": 25,
+        "startChar": 15,
+        "endLine": 25,
+        "endChar": 35
+      },
+      "revId": "8ac0a20c062cd0cd836f765b443ceeab3d76673d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0d43e30_6ada7fec",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "50984e8f_96717cdc",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1478,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-24T10:53:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0d43e30_6ada7fec",
+      "range": {
+        "startLine": 1478,
+        "startChar": 12,
+        "endLine": 1478,
+        "endChar": 14
+      },
+      "revId": "8ac0a20c062cd0cd836f765b443ceeab3d76673d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "309d9a70_42e432a9",
         "filename": "src/compiler/translator/TranslatorHLSL.cpp",
         "patchSetId": 7
@@ -59,6 +107,30 @@
       "writtenOn": "2015-04-23T19:28:10Z",
       "side": 1,
       "message": "quick comment here explaining the limitation in HLSL would be nice",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 34
+      },
+      "revId": "8ac0a20c062cd0cd836f765b443ceeab3d76673d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b088aa37_167c426e",
+        "filename": "src/compiler/translator/TranslatorHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-04-24T10:53:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "309d9a70_42e432a9",
       "range": {
         "startLine": 33,
         "startChar": 4,
