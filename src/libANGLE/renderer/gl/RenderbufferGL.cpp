@@ -57,7 +57,7 @@ gl::Error RenderbufferGL::setStorageMultisample(size_t samples, GLenum internalf
         GLenum error = GL_NO_ERROR;
         do
         {
-            GLenum error = mFunctions->getError();
+            error = mFunctions->getError();
             if (error == GL_OUT_OF_MEMORY)
             {
                 return gl::Error(GL_OUT_OF_MEMORY);
