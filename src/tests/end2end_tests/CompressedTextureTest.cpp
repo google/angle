@@ -2,7 +2,7 @@
 #include "media/pixel.inl"
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(CompressedTextureTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3);
+ANGLE_TYPED_TEST_CASE(CompressedTextureTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3, ES2_OPENGL, ES3_OPENGL);
 
 template<typename T>
 class CompressedTextureTest : public ANGLETest
@@ -72,8 +72,9 @@ protected:
 
 TYPED_TEST(CompressedTextureTest, CompressedTexImage)
 {
-    if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_texture_compression_dxt1"))
+    if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
     {
+        std::cout << "Test skipped because GL_EXT_texture_compression_dxt1 is not available." << std::endl;
         return;
     }
 
@@ -112,13 +113,15 @@ TYPED_TEST(CompressedTextureTest, CompressedTexImage)
 
 TYPED_TEST(CompressedTextureTest, CompressedTexStorage)
 {
-    if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_texture_compression_dxt1"))
+    if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
     {
+        std::cout << "Test skipped due to missing GL_EXT_texture_compression_dxt1" << std::endl;
         return;
     }
 
     if (getClientVersion() < 3 && (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8")))
     {
+        std::cout << "Test skipped due to missing ES3 or GL_EXT_texture_storage or GL_OES_rgb8_rgba8" << std::endl;
         return;
     }
 

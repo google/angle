@@ -3,7 +3,7 @@
 #include <array>
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(UnpackAlignmentTest, ES2_D3D9, ES2_D3D11);
+ANGLE_TYPED_TEST_CASE(UnpackAlignmentTest, ES2_D3D9, ES2_D3D11, ES2_OPENGL, ES3_OPENGL);
 
 template<typename T>
 class UnpackAlignmentTest : public ANGLETest

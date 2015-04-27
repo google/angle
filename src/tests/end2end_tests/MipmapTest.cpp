@@ -2,7 +2,7 @@
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // Note: we run these tests against 9_3 on WARP due to hardware driver issues on Win7
-ANGLE_TYPED_TEST_CASE(MipmapTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3_WARP);
+ANGLE_TYPED_TEST_CASE(MipmapTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3_WARP, ES2_OPENGL, ES3_OPENGL);
 ANGLE_TYPED_TEST_CASE(MipmapTestES3, ES3_D3D11);
 
 template<typename T>

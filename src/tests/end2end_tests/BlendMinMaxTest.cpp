@@ -1,7 +1,7 @@
 #include "ANGLETest.h"
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(BlendMinMaxTest, ES2_D3D9, ES2_D3D11);
+ANGLE_TYPED_TEST_CASE(BlendMinMaxTest, ES2_D3D9, ES2_D3D11, ES2_OPENGL);
 
 template<typename T>
 class BlendMinMaxTest : public ANGLETest
@@ -34,6 +34,12 @@ protected:
 
     void runTest()
     {
+        if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_blend_minmax"))
+        {
+            std::cout << "Test skipped because ES3 or GL_EXT_blend_minmax is not available." << std::endl;
+            return;
+        }
+
         const size_t colorCount = 1024;
         Color colors[colorCount];
         for (size_t i = 0; i < colorCount; i++)
@@ -148,12 +154,24 @@ TYPED_TEST(BlendMinMaxTest, RGBA8)
 
 TYPED_TEST(BlendMinMaxTest, RGBA32f)
 {
+    if (getClientVersion() < 3 && !extensionEnabled("GL_OES_texture_float"))
+    {
+        std::cout << "Test skipped because ES3 or GL_OES_texture_float is not available." << std::endl;
+        return;
+    }
+
     SetUpFramebuffer(GL_RGBA32F);
     runTest();
 }
 
 TYPED_TEST(BlendMinMaxTest, RGBA16F)
 {
+    if (getClientVersion() < 3 && !extensionEnabled("GL_OES_texture_half_float"))
+    {
+        std::cout << "Test skipped because ES3 or GL_OES_texture_half_float is not available." << std::endl;
+        return;
+    }
+
     SetUpFramebuffer(GL_RGBA16F);
     runTest();
 }

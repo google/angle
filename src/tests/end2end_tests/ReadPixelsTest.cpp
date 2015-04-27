@@ -299,6 +299,12 @@ TYPED_TEST(ReadPixelsTest, DrawWithPBO)
 
 TYPED_TEST(ReadPixelsTest, MultisampledPBO)
 {
+    if (getClientVersion() < 3 && !extensionEnabled("GL_ANGLE_framebuffer_multisample"))
+    {
+        std::cout << "Test skipped because ES3 or GL_ANGLE_framebuffer_multisample is not available." << std::endl;
+        return;
+    }
+
     GLuint fbo;
     glGenFramebuffers(1, &fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -306,7 +312,15 @@ TYPED_TEST(ReadPixelsTest, MultisampledPBO)
     GLuint rbo;
     glGenRenderbuffers(1, &rbo);
     glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-    glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, 2, GL_RGBA8, 4, 4);
+
+    if (extensionEnabled("GL_ANGLE_framebuffer_multisample"))
+    {
+        glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, 2, GL_RGBA8, 4, 4);
+    }
+    else
+    {
+        glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_RGBA8, 4, 4);
+    }
 
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
 
