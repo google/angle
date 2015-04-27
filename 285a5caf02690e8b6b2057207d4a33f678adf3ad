@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0d42a38_02777803",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-27T15:10:26Z",
+      "side": 1,
+      "message": "split the binary saving/loading attrib code into the stuff that\u0027s sized by the macro, and the dynamic part.",
+      "range": {
+        "startLine": 449,
+        "startChar": 4,
+        "endLine": 450,
+        "endChar": 48
+      },
+      "revId": "285a5caf02690e8b6b2057207d4a33f678adf3ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
