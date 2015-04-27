@@ -299,6 +299,10 @@ void GetVariableTraverser::setTypeSpecificInfo(
     {
       case EvqVaryingIn:
       case EvqVaryingOut:
+      case EvqVertexOut:
+      case EvqSmoothOut:
+      case EvqFlatOut:
+      case EvqCentroidOut:
         if (mSymbolTable.isVaryingInvariant(std::string(name.c_str())) || type.isInvariant())
         {
             variable->isInvariant = true;
