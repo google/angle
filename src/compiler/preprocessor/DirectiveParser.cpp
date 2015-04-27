@@ -435,6 +435,12 @@ void DirectiveParser::parseUndef(Token *token)
     }
 
     mTokenizer->lex(token);
+    if (!isEOD(token))
+    {
+        mDiagnostics->report(Diagnostics::PP_UNEXPECTED_TOKEN,
+                             token->location, token->text);
+        skipUntilEOD(mTokenizer, token);
+    }
 }
 
 void DirectiveParser::parseIf(Token *token)
