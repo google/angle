@@ -6,6 +6,7 @@
 
 #include "DirectiveParser.h"
 
+#include <algorithm>
 #include <cassert>
 #include <cstdlib>
 #include <sstream>
@@ -364,6 +365,14 @@ void DirectiveParser::parseDefine(Token *token)
             mTokenizer->lex(token);
             if (token->type != Token::IDENTIFIER)
                 break;
+
+            if (std::find(macro.parameters.begin(), macro.parameters.end(), token->text) != macro.parameters.end())
+            {
+                mDiagnostics->report(Diagnostics::PP_MACRO_DUPLICATE_PARAMETER_NAMES,
+                                     token->location, token->text);
+                return;
+            }
+
             macro.parameters.push_back(token->text);
 
             mTokenizer->lex(token);  // Get ','.
