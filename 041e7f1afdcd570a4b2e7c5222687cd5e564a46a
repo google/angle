@@ -16,6 +16,24 @@
       "revId": "041e7f1afdcd570a4b2e7c5222687cd5e564a46a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0d99e70_8e05d015",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-27T19:51:16Z",
+      "side": 1,
+      "message": "Thanks, I covered this case by adding an assert that the buffer is not mapped.  It shouldn\u0027t be possible to get here while the buffer is mapped because our validation layer checks for this.",
+      "parentUuid": "50984e8f_22fb8e42",
+      "revId": "041e7f1afdcd570a4b2e7c5222687cd5e564a46a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
