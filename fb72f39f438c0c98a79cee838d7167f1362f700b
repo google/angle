@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0d99e70_c88f532e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-27T14:00:19Z",
+      "side": 1,
+      "message": "Could you build a sh::Attribute object here and pass it in instead of adding a method that constructs one?",
+      "range": {
+        "startLine": 453,
+        "startChar": 8,
+        "endLine": 458,
+        "endChar": 84
+      },
+      "revId": "fb72f39f438c0c98a79cee838d7167f1362f700b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
