@@ -70,6 +70,8 @@ class DirectiveParser : public Lexer
         }
     };
     bool mPastFirstStatement;
+    bool mSeenNonPreprocessorToken; // Tracks if a non-preprocessor token has been seen yet.  Some macros, such as
+                                    // #extension must be declared before all shader code.
     std::vector<ConditionalBlock> mConditionalStack;
     Tokenizer *mTokenizer;
     MacroSet *mMacroSet;

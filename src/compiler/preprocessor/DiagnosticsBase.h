@@ -70,6 +70,7 @@ class Diagnostics
         PP_WARNING_BEGIN,
         PP_EOF_IN_DIRECTIVE,
         PP_UNRECOGNIZED_PRAGMA,
+        PP_NON_PP_TOKEN_BEFORE_EXTENSION,
         PP_WARNING_END
     };
 
