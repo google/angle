@@ -98,6 +98,8 @@ TEST_F(TransformFeedbackTest, BufferBinding)
     static const size_t bindIndex = 0;
 
     rx::MockTransformFeedbackImpl *feedbackImpl = new rx::MockTransformFeedbackImpl;
+    EXPECT_CALL(*feedbackImpl, destructor()).Times(1).RetiresOnSaturation();
+
     gl::TransformFeedback *feedback = new gl::TransformFeedback(feedbackImpl, 1, mCaps);
 
     EXPECT_EQ(feedback->getIndexedBufferCount(), mCaps.maxTransformFeedbackSeparateAttributes);
