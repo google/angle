@@ -155,10 +155,23 @@ void StateManagerGL::setPixelUnpackState(GLint alignment, GLint rowLength)
 
 void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
 {
-    if (mFramebuffers[type] != framebuffer)
+    if (type == GL_FRAMEBUFFER)
     {
-        mFramebuffers[type] = framebuffer;
-        mFunctions->bindFramebuffer(type, framebuffer);
+        if (mFramebuffers[GL_READ_FRAMEBUFFER] != framebuffer ||
+            mFramebuffers[GL_DRAW_FRAMEBUFFER] != framebuffer)
+        {
+            mFramebuffers[GL_READ_FRAMEBUFFER] = framebuffer;
+            mFramebuffers[GL_DRAW_FRAMEBUFFER] = framebuffer;
+            mFunctions->bindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        }
+    }
+    else
+    {
+        if (mFramebuffers[type] != framebuffer)
+        {
+            mFramebuffers[type] = framebuffer;
+            mFunctions->bindFramebuffer(type, framebuffer);
+        }
     }
 }
 
