@@ -131,4 +131,26 @@ void ProgramImpl::reset()
     mTransformFeedbackLinkedVaryings.clear();
 }
 
+void ProgramImpl::setShaderAttribute(size_t index, const sh::Attribute &attrib)
+{
+    if (mShaderAttributes.size() <= index)
+    {
+        mShaderAttributes.resize(index + 1);
+    }
+    mShaderAttributes[index] = attrib;
+}
+
+void ProgramImpl::setShaderAttribute(size_t index, GLenum type, GLenum precision, const std::string &name, GLint size, int location)
+{
+    if (mShaderAttributes.size() <= index)
+    {
+        mShaderAttributes.resize(index + 1);
+    }
+    mShaderAttributes[index].type = type;
+    mShaderAttributes[index].precision = precision;
+    mShaderAttributes[index].name = name;
+    mShaderAttributes[index].arraySize = size;
+    mShaderAttributes[index].location = location;
+}
+
 }

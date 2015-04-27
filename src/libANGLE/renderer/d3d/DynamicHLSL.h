@@ -56,8 +56,9 @@ class DynamicHLSL : angle::NonCopyable
 
     int packVaryings(gl::InfoLog &infoLog, VaryingPacking packing, ShaderD3D *fragmentShader,
                      ShaderD3D *vertexShader, const std::vector<std::string>& transformFeedbackVaryings);
-    std::string generateVertexShaderForInputLayout(const std::string &sourceShader, const gl::VertexFormat inputLayout[],
-                                                   const sh::Attribute shaderAttributes[]) const;
+    std::string generateVertexShaderForInputLayout(const std::string &sourceShader,
+                                                   const gl::VertexFormat inputLayout[],
+                                                   const std::vector<sh::Attribute> &shaderAttributes) const;
     std::string generatePixelShaderForOutputSignature(const std::string &sourceShader, const std::vector<PixelShaderOutputVariable> &outputVariables,
                                                       bool usesFragDepth, const std::vector<GLenum> &outputLayout) const;
     bool generateShaderLinkHLSL(const gl::Data &data, gl::InfoLog &infoLog, int registers,

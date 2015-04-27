@@ -379,7 +379,7 @@ std::string DynamicHLSL::generateVaryingHLSL(const ShaderD3D *shader) const
 
 std::string DynamicHLSL::generateVertexShaderForInputLayout(const std::string &sourceShader,
                                                             const VertexFormat inputLayout[],
-                                                            const sh::Attribute shaderAttributes[]) const
+                                                            const std::vector<sh::Attribute> &shaderAttributes) const
 {
     std::string structHLSL, initHLSL;
 
@@ -406,7 +406,7 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(const std::string &s
         structHLSL += "    float2 spriteTexCoord : SPRITETEXCOORD0;\n";
     }
 
-    for (unsigned int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
+    for (size_t attributeIndex = 0; attributeIndex < shaderAttributes.size(); ++attributeIndex)
     {
         const sh::Attribute &shaderAttribute = shaderAttributes[attributeIndex];
         if (!shaderAttribute.name.empty())

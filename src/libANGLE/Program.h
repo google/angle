@@ -224,7 +224,10 @@ class Program : angle::NonCopyable
     void unlink(bool destroy = false);
     void resetUniformBlockBindings();
 
-    bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, const Shader *vertexShader);
+    bool linkAttributes(const Data &data,
+                        InfoLog &infoLog,
+                        const AttributeBindings &attributeBindings,
+                        const Shader *vertexShader);
     bool linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShader, const Shader &fragmentShader, const Caps &caps);
     bool areMatchingInterfaceBlocks(gl::InfoLog &infoLog, const sh::InterfaceBlock &vertexInterfaceBlock,
                                     const sh::InterfaceBlock &fragmentInterfaceBlock);

@@ -322,7 +322,7 @@ Error Program::link(const Data &data)
     }
     ASSERT(mVertexShader->getType() == GL_VERTEX_SHADER);
 
-    if (!linkAttributes(mInfoLog, mAttributeBindings, mVertexShader))
+    if (!linkAttributes(data, mInfoLog, mAttributeBindings, mVertexShader))
     {
         return Error(GL_NO_ERROR);
     }
@@ -446,13 +446,23 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
         return Error(GL_NO_ERROR);
     }
 
+    // TODO(jmadill): replace MAX_VERTEX_ATTRIBS
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
         stream.readInt(&mLinkedAttribute[i].type);
         stream.readString(&mLinkedAttribute[i].name);
-        stream.readInt(&mProgram->getShaderAttributes()[i].type);
-        stream.readString(&mProgram->getShaderAttributes()[i].name);
         stream.readInt(&mProgram->getSemanticIndexes()[i]);
+    }
+
+    unsigned int attribCount = stream.readInt<unsigned int>();
+    for (unsigned int attribIndex = 0; attribIndex < attribCount; ++attribIndex)
+    {
+        GLenum type = stream.readInt<GLenum>();
+        GLenum precision = stream.readInt<GLenum>();
+        std::string name = stream.readString();
+        GLint arraySize = stream.readInt<GLint>();
+        int location = stream.readInt<int>();
+        mProgram->setShaderAttribute(attribIndex, type, precision, name, arraySize, location);
     }
 
     rx::LinkResult result = mProgram->load(mInfoLog, &stream);
@@ -480,13 +490,23 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
     stream.writeInt(ANGLE_MINOR_VERSION);
     stream.writeBytes(reinterpret_cast<const unsigned char*>(ANGLE_COMMIT_HASH), ANGLE_COMMIT_HASH_SIZE);
 
+    // TODO(jmadill): replace MAX_VERTEX_ATTRIBS
     for (unsigned int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
         stream.writeInt(mLinkedAttribute[i].type);
         stream.writeString(mLinkedAttribute[i].name);
-        stream.writeInt(mProgram->getShaderAttributes()[i].type);
-        stream.writeString(mProgram->getShaderAttributes()[i].name);
         stream.writeInt(mProgram->getSemanticIndexes()[i]);
+    }
+
+    const auto &shaderAttributes = mProgram->getShaderAttributes();
+    stream.writeInt(shaderAttributes.size());
+    for (const auto &attrib : shaderAttributes)
+    {
+        stream.writeInt(attrib.type);
+        stream.writeInt(attrib.precision);
+        stream.writeString(attrib.name);
+        stream.writeInt(attrib.arraySize);
+        stream.writeInt(attrib.location);
     }
 
     gl::Error error = mProgram->save(&stream);
@@ -1306,10 +1326,21 @@ bool Program::linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::stri
 }
 
 // Determines the mapping between GL attributes and Direct3D 9 vertex stream usage indices
-bool Program::linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, const Shader *vertexShader)
+bool Program::linkAttributes(const Data &data,
+                             InfoLog &infoLog,
+                             const AttributeBindings &attributeBindings,
+                             const Shader *vertexShader)
 {
     unsigned int usedLocations = 0;
     const std::vector<sh::Attribute> &shaderAttributes = vertexShader->getActiveAttributes();
+    GLuint maxAttribs = data.caps->maxVertexAttributes;
+
+    // TODO(jmadill): handle aliasing robustly
+    if (shaderAttributes.size() >= maxAttribs)
+    {
+        infoLog.append("Too many vertex attributes.");
+        return false;
+    }
 
     // Link attributes that have a binding location
     for (unsigned int attributeIndex = 0; attributeIndex < shaderAttributes.size(); attributeIndex++)
@@ -1320,13 +1351,13 @@ bool Program::linkAttributes(InfoLog &infoLog, const AttributeBindings &attribut
 
         const int location = attribute.location == -1 ? attributeBindings.getAttributeBinding(attribute.name) : attribute.location;
 
-        mProgram->getShaderAttributes()[attributeIndex] = attribute;
+        mProgram->setShaderAttribute(attributeIndex, attribute);
 
         if (location != -1)   // Set by glBindAttribLocation or by location layout qualifier
         {
             const int rows = VariableRegisterCount(attribute.type);
 
-            if (rows + location > MAX_VERTEX_ATTRIBS)
+            if (static_cast<GLuint>(rows + location) > maxAttribs)
             {
                 infoLog.append("Active attribute (%s) at location %d is too big to fit", attribute.name.c_str(), location);
 
@@ -1339,8 +1370,9 @@ bool Program::linkAttributes(InfoLog &infoLog, const AttributeBindings &attribut
                 sh::ShaderVariable &linkedAttribute = mLinkedAttribute[rowLocation];
 
                 // In GLSL 3.00, attribute aliasing produces a link error
-                // In GLSL 1.00, attribute aliasing is allowed
-                if (mProgram->getShaderVersion() >= 300)
+                // In GLSL 1.00, attribute aliasing is allowed, but ANGLE currently has a bug
+                // TODO(jmadill): fix aliasing on ES2
+                // if (mProgram->getShaderVersion() >= 300)
                 {
                     if (!linkedAttribute.name.empty())
                     {
@@ -1367,9 +1399,9 @@ bool Program::linkAttributes(InfoLog &infoLog, const AttributeBindings &attribut
         if (location == -1)   // Not set by glBindAttribLocation or by location layout qualifier
         {
             int rows = VariableRegisterCount(attribute.type);
-            int availableIndex = AllocateFirstFreeBits(&usedLocations, rows, MAX_VERTEX_ATTRIBS);
+            int availableIndex = AllocateFirstFreeBits(&usedLocations, rows, maxAttribs);
 
-            if (availableIndex == -1 || availableIndex + rows > MAX_VERTEX_ATTRIBS)
+            if (availableIndex == -1 || static_cast<GLuint>(availableIndex + rows) > maxAttribs)
             {
                 infoLog.append("Too many active attributes (%s)", attribute.name.c_str());
 
@@ -1380,7 +1412,7 @@ bool Program::linkAttributes(InfoLog &infoLog, const AttributeBindings &attribut
         }
     }
 
-    for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; )
+    for (GLuint attributeIndex = 0; attributeIndex < maxAttribs;)
     {
         int index = vertexShader->getSemanticIndex(mLinkedAttribute[attributeIndex].name);
         int rows = VariableRegisterCount(mLinkedAttribute[attributeIndex].type);
