@@ -29,6 +29,8 @@ class TDiagnostics : public pp::Diagnostics, angle::NonCopyable
                    const std::string& token,
                    const std::string& extra);
 
+    void writeDebug(const std::string& str);
+
   protected:
     virtual void print(ID id,
                        const pp::SourceLocation& loc,

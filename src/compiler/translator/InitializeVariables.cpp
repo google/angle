@@ -5,8 +5,7 @@
 //
 
 #include "compiler/translator/InitializeVariables.h"
-
-#include "common/debug.h"
+#include "compiler/translator/compilerdebug.h"
 
 namespace
 {

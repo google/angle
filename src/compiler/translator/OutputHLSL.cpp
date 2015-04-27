@@ -11,7 +11,6 @@
 #include <stdio.h>
 
 #include "common/angleutils.h"
-#include "common/debug.h"
 #include "common/utilities.h"
 #include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/BuiltInFunctionEmulatorHLSL.h"
@@ -27,6 +26,7 @@
 #include "compiler/translator/UniformHLSL.h"
 #include "compiler/translator/UtilsHLSL.h"
 #include "compiler/translator/blocklayout.h"
+#include "compiler/translator/compilerdebug.h"
 #include "compiler/translator/util.h"
 
 namespace sh

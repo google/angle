@@ -113,6 +113,8 @@
             'compiler/translator/VersionGLSL.h',
             'compiler/translator/blocklayout.cpp',
             'compiler/translator/blocklayout.h',
+            'compiler/translator/compilerdebug.cpp',
+            'compiler/translator/compilerdebug.h',
             'compiler/translator/depgraph/DependencyGraph.cpp',
             'compiler/translator/depgraph/DependencyGraph.h',
             'compiler/translator/depgraph/DependencyGraphBuilder.cpp',

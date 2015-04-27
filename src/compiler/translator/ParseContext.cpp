@@ -198,6 +198,11 @@ void TParseContext::warning(const TSourceLoc& loc,
                           srcLoc, reason, token, extraInfo);
 }
 
+void TParseContext::trace(const char* str)
+{
+    diagnostics.writeDebug(str);
+}
+
 //
 // Same error message for all places assignments don't work.
 //

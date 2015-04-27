@@ -5,8 +5,7 @@
 //
 
 #include "compiler/translator/OutputGLSLBase.h"
-
-#include "common/debug.h"
+#include "compiler/translator/compilerdebug.h"
 
 #include <cfloat>
 

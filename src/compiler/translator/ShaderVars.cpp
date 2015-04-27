@@ -9,7 +9,7 @@
 
 #include <GLSLANG/ShaderLang.h>
 
-#include "common/debug.h"
+#include "compiler/translator/compilerdebug.h"
 
 namespace sh
 {

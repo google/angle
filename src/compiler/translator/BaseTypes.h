@@ -7,7 +7,7 @@
 #ifndef COMPILER_TRANSLATOR_BASETYPES_H_
 #define COMPILER_TRANSLATOR_BASETYPES_H_
 
-#include "common/debug.h"
+#include "compiler/translator/compilerdebug.h"
 
 //
 // Precision qualifiers

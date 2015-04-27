@@ -8,10 +8,10 @@
 #define COMPILER_TRANSLATOR_TYPES_H_
 
 #include "common/angleutils.h"
-#include "common/debug.h"
 
 #include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/Common.h"
+#include "compiler/translator/compilerdebug.h"
 
 struct TPublicType;
 class TType;
