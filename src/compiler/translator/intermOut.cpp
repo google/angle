@@ -61,6 +61,8 @@ TString TType::getCompleteString() const
 {
     TStringStream stream;
 
+    if (invariant)
+        stream << "invariant ";
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
         stream << getQualifierString() << " ";
     if (precision != EbpUndefined)

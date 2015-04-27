@@ -219,7 +219,6 @@ bool IsVaryingOut(TQualifier qualifier)
     switch (qualifier)
     {
       case EvqVaryingOut:
-      case EvqInvariantVaryingOut:
       case EvqSmoothOut:
       case EvqFlatOut:
       case EvqCentroidOut:
@@ -237,7 +236,6 @@ bool IsVaryingIn(TQualifier qualifier)
     switch (qualifier)
     {
       case EvqVaryingIn:
-      case EvqInvariantVaryingIn:
       case EvqSmoothIn:
       case EvqFlatIn:
       case EvqCentroidIn:
@@ -269,8 +267,6 @@ InterpolationType GetInterpolationType(TQualifier qualifier)
       case EvqFragmentIn:
       case EvqVaryingIn:
       case EvqVaryingOut:
-      case EvqInvariantVaryingIn:
-      case EvqInvariantVaryingOut:
         return INTERPOLATION_SMOOTH;
 
       case EvqCentroidIn:
@@ -301,13 +297,9 @@ void GetVariableTraverser::setTypeSpecificInfo(
     ASSERT(variable);
     switch (type.getQualifier())
     {
-      case EvqInvariantVaryingIn:
-      case EvqInvariantVaryingOut:
-        variable->isInvariant = true;
-        break;
       case EvqVaryingIn:
       case EvqVaryingOut:
-        if (mSymbolTable.isVaryingInvariant(std::string(name.c_str())))
+        if (mSymbolTable.isVaryingInvariant(std::string(name.c_str())) || type.isInvariant())
         {
             variable->isInvariant = true;
         }

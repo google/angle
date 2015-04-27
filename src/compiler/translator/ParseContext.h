@@ -124,8 +124,8 @@ struct TParseContext {
     bool executeInitializer(const TSourceLoc &line, const TString &identifier, TPublicType &pType,
                             TIntermTyped *initializer, TIntermNode **intermNode);
 
-    TPublicType addFullySpecifiedType(TQualifier qualifier, const TPublicType& typeSpecifier);
-    TPublicType addFullySpecifiedType(TQualifier qualifier, TLayoutQualifier layoutQualifier, const TPublicType& typeSpecifier);
+    TPublicType addFullySpecifiedType(TQualifier qualifier, bool invariant, TLayoutQualifier layoutQualifier,
+                                      const TPublicType& typeSpecifier);
 
     TIntermAggregate *parseSingleDeclaration(TPublicType &publicType,
                                              const TSourceLoc &identifierOrTypeLocation, const TString &identifier);

@@ -123,7 +123,6 @@ class TIntermTyped : public TIntermNode
     bool isScalar() const { return mType.isScalar(); }
     bool isScalarInt() const { return mType.isScalarInt(); }
     const char *getBasicString() const { return mType.getBasicString(); }
-    const char *getQualifierString() const { return mType.getQualifierString(); }
     TString getCompleteString() const { return mType.getCompleteString(); }
 
     int getArraySize() const { return mType.getArraySize(); }

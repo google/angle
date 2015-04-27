@@ -74,9 +74,7 @@ bool TVersionGLSL::visitAggregate(Visit, TIntermAggregate *node)
       case EOpDeclaration:
         {
             const TIntermSequence &sequence = *(node->getSequence());
-            TQualifier qualifier = sequence.front()->getAsTyped()->getQualifier();
-            if ((qualifier == EvqInvariantVaryingIn) ||
-                (qualifier == EvqInvariantVaryingOut))
+            if (sequence.front()->getAsTyped()->getType().isInvariant())
             {
                 updateVersion(GLSL_VERSION_120);
             }

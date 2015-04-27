@@ -1183,10 +1183,12 @@ bool TParseContext::areAllChildConst(TIntermAggregate* aggrNode)
     return allConstant;
 }
 
-TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, TLayoutQualifier layoutQualifier, const TPublicType& typeSpecifier)
+TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, bool invariant, TLayoutQualifier layoutQualifier,
+                                                 const TPublicType& typeSpecifier)
 {
     TPublicType returnType = typeSpecifier;
     returnType.qualifier = qualifier;
+    returnType.invariant = invariant;
     returnType.layoutQualifier = layoutQualifier;
 
     if (typeSpecifier.array)

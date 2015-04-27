@@ -217,13 +217,11 @@ TString InterpolationString(TQualifier qualifier)
     {
       case EvqVaryingIn:           return "";
       case EvqFragmentIn:          return "";
-      case EvqInvariantVaryingIn:  return "";
       case EvqSmoothIn:            return "linear";
       case EvqFlatIn:              return "nointerpolation";
       case EvqCentroidIn:          return "centroid";
       case EvqVaryingOut:          return "";
       case EvqVertexOut:           return "";
-      case EvqInvariantVaryingOut: return "";
       case EvqSmoothOut:           return "linear";
       case EvqFlatOut:             return "nointerpolation";
       case EvqCentroidOut:         return "centroid";

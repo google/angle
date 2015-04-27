@@ -46,9 +46,9 @@ const char* getBasicString(TBasicType t)
 }
 
 TType::TType(const TPublicType &p)
-    : type(p.type), precision(p.precision), qualifier(p.qualifier), layoutQualifier(p.layoutQualifier),
-      primarySize(p.primarySize), secondarySize(p.secondarySize), array(p.array), arraySize(p.arraySize),
-      interfaceBlock(0), structure(0)
+    : type(p.type), precision(p.precision), qualifier(p.qualifier), invariant(p.invariant),
+      layoutQualifier(p.layoutQualifier), primarySize(p.primarySize), secondarySize(p.secondarySize),
+      array(p.array), arraySize(p.arraySize), interfaceBlock(0), structure(0)
 {
     if (p.userDef)
         structure = p.userDef->getStruct();

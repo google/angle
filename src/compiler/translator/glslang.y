@@ -940,7 +940,7 @@ fully_specified_type
         }
     }
     | type_qualifier type_specifier  {
-        $$ = context->addFullySpecifiedType($1.qualifier, $1.layoutQualifier, $2);
+        $$ = context->addFullySpecifiedType($1.qualifier, $1.invariant, $1.layoutQualifier, $2);
     }
     ;
 
@@ -981,9 +981,10 @@ type_qualifier
         if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "invariant varying"))
             context->recover();
         if (context->shaderType == GL_VERTEX_SHADER)
-            $$.setBasic(EbtVoid, EvqInvariantVaryingOut, @1);
+            $$.setBasic(EbtVoid, EvqVaryingOut, @1);
         else
-            $$.setBasic(EbtVoid, EvqInvariantVaryingIn, @1);
+            $$.setBasic(EbtVoid, EvqVaryingIn, @1);
+        $$.invariant = true;
     }
     | storage_qualifier {
         if ($1.qualifier != EvqConst && !context->symbolTable.atGlobalLevel()) {

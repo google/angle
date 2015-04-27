@@ -233,7 +233,7 @@ class TType
     {
     }
     TType(TBasicType t, unsigned char ps = 1, unsigned char ss = 1)
-        : type(t), precision(EbpUndefined), qualifier(EvqGlobal),
+        : type(t), precision(EbpUndefined), qualifier(EvqGlobal), invariant(false),
           layoutQualifier(TLayoutQualifier::create()),
           primarySize(ps), secondarySize(ss), array(false), arraySize(0),
           interfaceBlock(0), structure(0)
@@ -241,7 +241,7 @@ class TType
     }
     TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary,
           unsigned char ps = 1, unsigned char ss = 1, bool a = false)
-        : type(t), precision(p), qualifier(q),
+        : type(t), precision(p), qualifier(q), invariant(false),
           layoutQualifier(TLayoutQualifier::create()),
           primarySize(ps), secondarySize(ss), array(a), arraySize(0),
           interfaceBlock(0), structure(0)
@@ -249,7 +249,7 @@ class TType
     }
     explicit TType(const TPublicType &p);
     TType(TStructure *userDef, TPrecision p = EbpUndefined)
-        : type(EbtStruct), precision(p), qualifier(EvqTemporary),
+        : type(EbtStruct), precision(p), qualifier(EvqTemporary), invariant(false),
           layoutQualifier(TLayoutQualifier::create()),
           primarySize(1), secondarySize(1), array(false), arraySize(0),
           interfaceBlock(0), structure(userDef)
@@ -258,7 +258,7 @@ class TType
     TType(TInterfaceBlock *interfaceBlockIn, TQualifier qualifierIn,
           TLayoutQualifier layoutQualifierIn, int arraySizeIn)
         : type(EbtInterfaceBlock), precision(EbpUndefined), qualifier(qualifierIn),
-          layoutQualifier(layoutQualifierIn),
+          invariant(false), layoutQualifier(layoutQualifierIn),
           primarySize(1), secondarySize(1), array(arraySizeIn > 0), arraySize(arraySizeIn),
           interfaceBlock(interfaceBlockIn), structure(0)
     {
@@ -289,6 +289,11 @@ class TType
     void setQualifier(TQualifier q)
     {
         qualifier = q;
+    }
+
+    bool isInvariant() const
+    {
+        return invariant;
     }
 
     TLayoutQualifier getLayoutQualifier() const
@@ -494,6 +499,7 @@ class TType
     TBasicType type;
     TPrecision precision;
     TQualifier qualifier;
+    bool invariant;
     TLayoutQualifier layoutQualifier;
     unsigned char primarySize; // size of vector or cols matrix
     unsigned char secondarySize; // rows of a matrix
@@ -523,6 +529,7 @@ struct TPublicType
     TBasicType type;
     TLayoutQualifier layoutQualifier;
     TQualifier qualifier;
+    bool invariant;
     TPrecision precision;
     unsigned char primarySize;          // size of vector or cols of matrix
     unsigned char secondarySize;        // rows of matrix
@@ -536,6 +543,7 @@ struct TPublicType
         type = bt;
         layoutQualifier = TLayoutQualifier::create();
         qualifier = q;
+        invariant = false;
         precision = EbpUndefined;
         primarySize = 1;
         secondarySize = 1;
