@@ -11,7 +11,7 @@
 
 #include "libANGLE/Device.h"
 #include "libANGLE/renderer/DeviceImpl.h"
-#include "libANGLE/renderer/d3d/rendererd3d.h"
+#include "libANGLE/renderer/d3d/RendererD3D.h"
 
 namespace rx
 {

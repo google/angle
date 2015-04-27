@@ -6,7 +6,7 @@
 
 // SurfaceWGL.cpp: WGL implementation of egl::Surface
 
-#include "libANGLE/renderer/gl/wgl/PBufferSurfaceWGL.h"
+#include "libANGLE/renderer/gl/wgl/PbufferSurfaceWGL.h"
 
 #include "common/debug.h"
 #include "libANGLE/renderer/gl/wgl/FunctionsWGL.h"

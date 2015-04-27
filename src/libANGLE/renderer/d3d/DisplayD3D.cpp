@@ -16,7 +16,7 @@
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/SurfaceD3D.h"
 #include "libANGLE/renderer/d3d/SwapChainD3D.h"
-#include "libANGLE/renderer/d3d/deviced3d.h"
+#include "libANGLE/renderer/d3d/DeviceD3D.h"
 
 #include <EGL/eglext.h>
 

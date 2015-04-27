@@ -7,6 +7,9 @@
 // FunctionsGL.cpp: Implements the FuntionsGL class to contain loaded GL functions
 
 #include "libANGLE/renderer/gl/FunctionsGL.h"
+
+#include <algorithm>
+
 #include "libANGLE/renderer/gl/renderergl_utils.h"
 
 namespace rx
