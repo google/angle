@@ -211,6 +211,7 @@ DirectiveParser::DirectiveParser(Tokenizer *tokenizer,
                                  Diagnostics *diagnostics,
                                  DirectiveHandler *directiveHandler)
     : mPastFirstStatement(false),
+      mSeenNonPreprocessorToken(false),
       mTokenizer(tokenizer),
       mMacroSet(macroSet),
       mDiagnostics(diagnostics),
@@ -228,6 +229,10 @@ void DirectiveParser::lex(Token *token)
         {
             parseDirective(token);
             mPastFirstStatement = true;
+        }
+        else if (!isEOD(token))
+        {
+            mSeenNonPreprocessorToken = true;
         }
 
         if (token->type == Token::LAST)
@@ -714,6 +719,11 @@ void DirectiveParser::parseExtension(Token *token)
         mDiagnostics->report(Diagnostics::PP_INVALID_EXTENSION_DIRECTIVE,
                              token->location, token->text);
         valid = false;
+    }
+    if (valid && mSeenNonPreprocessorToken)
+    {
+        mDiagnostics->report(Diagnostics::PP_NON_PP_TOKEN_BEFORE_EXTENSION,
+                             token->location, token->text);
     }
     if (valid)
         mDirectiveHandler->handleExtension(token->location, name, behavior);
