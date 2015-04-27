@@ -12,6 +12,7 @@
 #include "compiler/preprocessor/SourceLocation.h"
 #include "compiler/translator/glslang.h"
 #include "compiler/translator/ValidateSwitch.h"
+#include "compiler/translator/util.h"
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -967,6 +968,15 @@ bool TParseContext::functionCallLValueErrorCheck(const TFunction *fnCandidate, T
         }
     }
     return false;
+}
+
+void TParseContext::es3InvariantErrorCheck(const TQualifier qualifier, const TSourceLoc &invariantLocation)
+{
+    if (!sh::IsVaryingOut(qualifier) && qualifier != EvqFragmentOut)
+    {
+        error(invariantLocation, "Only out variables can be invariant.", "invariant");
+        recover();
+    }
 }
 
 bool TParseContext::supportsExtension(const char* extension)
