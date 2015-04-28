@@ -200,7 +200,7 @@ class Context final : angle::NonCopyable
     State &getState() { return mState; }
     const State &getState() const { return mState; }
 
-    Data getData() const;
+    const Data &getData() const { return mData; }
 
   private:
     void detachBuffer(GLuint buffer);
@@ -272,7 +272,11 @@ class Context final : angle::NonCopyable
     bool mRobustAccess;
 
     ResourceManager *mResourceManager;
+
+    // Cache the Data object to avoid re-calling the constructor
+    Data mData;
 };
+
 }
 
 #endif   // LIBANGLE_CONTEXT_H_

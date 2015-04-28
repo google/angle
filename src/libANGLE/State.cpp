@@ -30,7 +30,7 @@ State::~State()
     reset();
 }
 
-void State::initialize(const Caps& caps, GLuint clientVersion)
+void State::initialize(const Caps &caps, GLuint clientVersion)
 {
     mMaxDrawBuffers = caps.maxDrawBuffers;
     mMaxCombinedTextureImageUnits = caps.maxCombinedTextureImageUnits;

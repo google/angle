@@ -37,7 +37,8 @@ namespace gl
 {
 
 Context::Context(const egl::Config *config, int clientVersion, const Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess)
-    : mRenderer(renderer)
+    : mRenderer(renderer),
+      mData(clientVersion, mState, mCaps, mTextureCaps, mExtensions, nullptr)
 {
     ASSERT(robustAccess == false);   // Unimplemented
 
@@ -61,6 +62,8 @@ Context::Context(const egl::Config *config, int clientVersion, const Context *sh
     {
         mResourceManager = new ResourceManager(mRenderer);
     }
+
+    mData.resourceManager = mResourceManager;
 
     // [OpenGL ES 2.0.24] section 3.7 page 83:
     // In the initial state, TEXTURE_2D and TEXTURE_CUBE_MAP have twodimensional
@@ -1576,11 +1579,6 @@ void Context::initCaps(GLuint clientVersion)
 
         mTextureCaps.insert(format, formatCaps);
     }
-}
-
-Data Context::getData() const
-{
-    return Data(mClientVersion, mState, mCaps, mTextureCaps, mExtensions, mResourceManager);
 }
 
 }
