@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0d99e70_b9fc4ab2",
+        "filename": "src/compiler/preprocessor/DirectiveParser.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 623,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-28T19:40:42Z",
+      "side": 0,
+      "message": "nit: comment explaining pragma values are validated later? also, don\u0027t quite understand, as won\u0027t On and Off, or any ascii sequence, be identifiers?",
+      "range": {
+        "startLine": 623,
+        "startChar": 12,
+        "endLine": 623,
+        "endChar": 64
+      },
+      "revId": "4e8a592b6b8930a5dc06383ef8b463583a000172",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
