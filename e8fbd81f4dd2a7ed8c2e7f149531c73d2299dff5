@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b0d42a38_3a9baa74",
+        "filename": "src/tests/end2end_tests/CompressedTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-28T14:48:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0f222e5_fdb3eafb",
+      "range": {
+        "startLine": 77,
+        "startChar": 42,
+        "endLine": 77,
+        "endChar": 43
+      },
+      "revId": "e8fbd81f4dd2a7ed8c2e7f149531c73d2299dff5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0d99e70_d06b6eed",
         "filename": "src/tests/end2end_tests/CompressedTextureTest.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-28T04:31:09Z",
       "side": 1,
       "message": "Looks to me like this should mention ES3.",
+      "range": {
+        "startLine": 124,
+        "startChar": 42,
+        "endLine": 124,
+        "endChar": 49
+      },
+      "revId": "e8fbd81f4dd2a7ed8c2e7f149531c73d2299dff5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0d42a38_1a90ee4a",
+        "filename": "src/tests/end2end_tests/CompressedTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-28T14:48:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0d99e70_d06b6eed",
       "range": {
         "startLine": 124,
         "startChar": 42,
