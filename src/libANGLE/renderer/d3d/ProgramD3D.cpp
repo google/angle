@@ -336,6 +336,13 @@ void ProgramD3D::updateSamplerMapping()
 
 bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
 {
+    // Skip cache if we're using an infolog, so we get the full error.
+    // Also skip the cache if the sample mapping has changed, or if we haven't ever validated.
+    if (!mDirtySamplerMapping && infoLog == nullptr && mCachedValidateSamplersResult.valid())
+    {
+        return mCachedValidateSamplersResult.value();
+    }
+
     // if any two active samplers in a program are of different types, but refer to the same
     // texture image unit, and this is the current program, then ValidateProgram will fail, and
     // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
@@ -356,6 +363,7 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
                     infoLog->append("Sampler uniform (%d) exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, caps.maxCombinedTextureImageUnits);
                 }
 
+                mCachedValidateSamplersResult = false;
                 return false;
             }
 
@@ -368,6 +376,7 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
                         infoLog->append("Samplers of conflicting types refer to the same texture image unit (%d).", unit);
                     }
 
+                    mCachedValidateSamplersResult = false;
                     return false;
                 }
             }
@@ -391,6 +400,7 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
                     infoLog->append("Sampler uniform (%d) exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, caps.maxCombinedTextureImageUnits);
                 }
 
+                mCachedValidateSamplersResult = false;
                 return false;
             }
 
@@ -403,6 +413,7 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
                         infoLog->append("Samplers of conflicting types refer to the same texture image unit (%d).", unit);
                     }
 
+                    mCachedValidateSamplersResult = false;
                     return false;
                 }
             }
@@ -413,6 +424,7 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
         }
     }
 
+    mCachedValidateSamplersResult = true;
     return true;
 }
 

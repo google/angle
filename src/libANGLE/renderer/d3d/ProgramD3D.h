@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_PROGRAMD3D_H_
 #define LIBANGLE_RENDERER_D3D_PROGRAMD3D_H_
 
+#include "common/Optional.h"
 #include "compiler/translator/blocklayoutHLSL.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/renderer/ProgramImpl.h"
@@ -234,6 +235,8 @@ class ProgramD3D : public ProgramImpl
     int mAttributesByLayout[gl::MAX_VERTEX_ATTRIBS];
 
     unsigned int mSerial;
+
+    Optional<bool> mCachedValidateSamplersResult;
 
     static unsigned int issueSerial();
     static unsigned int mCurrentSerial;

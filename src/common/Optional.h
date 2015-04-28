@@ -35,6 +35,18 @@ struct Optional
         return *this;
     }
 
+    Optional &operator=(const T &value)
+    {
+        mValue = value;
+        mValid = true;
+        return *this;
+    }
+
+    void reset()
+    {
+        mValid = false;
+    }
+
     static Optional None()
     {
         return Optional();
