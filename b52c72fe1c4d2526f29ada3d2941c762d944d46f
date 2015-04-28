@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f08ea27f_0f6545c5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-28T21:12:17Z",
+      "side": 1,
+      "message": "This should be after the switch, a null device is returned if result is an error.",
+      "range": {
+        "startLine": 356,
+        "startChar": 8,
+        "endLine": 359,
+        "endChar": 9
+      },
+      "revId": "b52c72fe1c4d2526f29ada3d2941c762d944d46f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
