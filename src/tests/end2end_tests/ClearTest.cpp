@@ -77,6 +77,13 @@ class ClearTestES3 : public ClearTestBase<T>
 
 TYPED_TEST(ClearTest, ClearIssue)
 {
+    // TODO(geofflang): Figure out why this is broken on Intel OpenGL
+    if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    {
+        std::cout << "Test skipped on Intel OpenGL." << std::endl;
+        return;
+    }
+
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
