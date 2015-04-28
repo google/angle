@@ -1407,7 +1407,8 @@ static bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count, GLsiz
     const VertexArray *vao = state.getVertexArray();
     const auto &vertexAttribs = vao->getVertexAttributes();
     const int *semanticIndexes = program->getSemanticIndexes();
-    for (size_t attributeIndex = 0; attributeIndex < vertexAttribs.size(); ++attributeIndex)
+    unsigned int maxEnabledAttrib = vao->getMaxEnabledAttribute();
+    for (size_t attributeIndex = 0; attributeIndex < maxEnabledAttrib; ++attributeIndex)
     {
         const VertexAttribute &attrib = vertexAttribs[attributeIndex];
         bool attribActive = (semanticIndexes[attributeIndex] != -1);

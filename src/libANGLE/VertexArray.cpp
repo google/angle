@@ -16,7 +16,8 @@ namespace gl
 VertexArray::VertexArray(rx::VertexArrayImpl *impl, GLuint id, size_t maxAttribs)
     : mId(id),
       mVertexArray(impl),
-      mVertexAttributes(maxAttribs)
+      mVertexAttributes(maxAttribs),
+      mMaxEnabledAttribute(0)
 {
     ASSERT(impl != NULL);
 }
@@ -76,6 +77,19 @@ void VertexArray::enableAttribute(unsigned int attributeIndex, bool enabledState
     ASSERT(attributeIndex < getMaxAttribs());
     mVertexAttributes[attributeIndex].enabled = enabledState;
     mVertexArray->enableAttribute(attributeIndex, enabledState);
+
+    // Update state cache
+    if (enabledState)
+    {
+        mMaxEnabledAttribute = std::max(attributeIndex, mMaxEnabledAttribute);
+    }
+    else if (mMaxEnabledAttribute == attributeIndex)
+    {
+        while (mMaxEnabledAttribute > 0 && !mVertexAttributes[mMaxEnabledAttribute].enabled)
+        {
+            --mMaxEnabledAttribute;
+        }
+    }
 }
 
 void VertexArray::setAttributeState(unsigned int attributeIndex, gl::Buffer *boundBuffer, GLint size, GLenum type,

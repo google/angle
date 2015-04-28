@@ -1418,7 +1418,8 @@ bool State::hasMappedBuffer(GLenum target) const
     {
         const VertexArray *vao = getVertexArray();
         const auto &vertexAttribs = vao->getVertexAttributes();
-        for (size_t attribIndex = 0; attribIndex < vertexAttribs.size(); attribIndex++)
+        unsigned int maxEnabledAttrib = vao->getMaxEnabledAttribute();
+        for (size_t attribIndex = 0; attribIndex < maxEnabledAttrib; attribIndex++)
         {
             const gl::VertexAttribute &vertexAttrib = vertexAttribs[attribIndex];
             gl::Buffer *boundBuffer = vertexAttrib.buffer.get();

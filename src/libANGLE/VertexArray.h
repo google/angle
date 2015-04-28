@@ -53,12 +53,15 @@ class VertexArray
     rx::VertexArrayImpl *getImplementation() { return mVertexArray; }
     const rx::VertexArrayImpl *getImplementation() const { return mVertexArray; }
 
+    unsigned int getMaxEnabledAttribute() const { return mMaxEnabledAttribute; }
+
   private:
     GLuint mId;
 
     rx::VertexArrayImpl *mVertexArray;
     std::vector<VertexAttribute> mVertexAttributes;
     BindingPointer<Buffer> mElementArrayBuffer;
+    unsigned int mMaxEnabledAttribute;
 };
 
 }
