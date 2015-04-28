@@ -498,8 +498,8 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
         return false;
     }
 
-    gl::Framebuffer *readFramebuffer = context->getState().getReadFramebuffer();
-    gl::Framebuffer *drawFramebuffer = context->getState().getDrawFramebuffer();
+    const gl::Framebuffer *readFramebuffer = context->getState().getReadFramebuffer();
+    const gl::Framebuffer *drawFramebuffer = context->getState().getDrawFramebuffer();
 
     if (!readFramebuffer || !drawFramebuffer)
     {
@@ -597,7 +597,7 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
                 {
                     if (drawFramebuffer->isEnabledColorAttachment(colorAttachment))
                     {
-                        FramebufferAttachment *attachment = drawFramebuffer->getColorbuffer(colorAttachment);
+                        const FramebufferAttachment *attachment = drawFramebuffer->getColorbuffer(colorAttachment);
                         ASSERT(attachment);
 
                         if (!(attachment->type() == GL_TEXTURE && attachment->getTextureImageIndex().type == GL_TEXTURE_2D) &&
