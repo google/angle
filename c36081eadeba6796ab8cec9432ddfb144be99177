@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d0d99e70_a662e584",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-28T19:22:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0d99e70_a202d809",
+      "range": {
+        "startLine": 26,
+        "startChar": 3,
+        "endLine": 26,
+        "endChar": 6
+      },
+      "revId": "c36081eadeba6796ab8cec9432ddfb144be99177",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f02302ea_890bd0aa",
         "filename": "src/libANGLE/FramebufferAttachment.h",
         "patchSetId": 11
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "f0f222e5_618878ba",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-28T19:22:38Z",
+      "side": 1,
+      "message": "Done. It was saving from implementing the stub in the child classes (GL, Mock).",
+      "parentUuid": "d0d99e70_3032b223",
+      "range": {
+        "startLine": 183,
+        "startChar": 48,
+        "endLine": 183,
+        "endChar": 81
+      },
+      "revId": "c36081eadeba6796ab8cec9432ddfb144be99177",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0d99e70_1037b612",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 11
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "d0d99e70_e6b34d79",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-28T19:22:38Z",
+      "side": 1,
+      "message": "Changed the code to not use reinterpret_cast at all.",
+      "parentUuid": "d0d99e70_1037b612",
+      "range": {
+        "startLine": 582,
+        "startChar": 34,
+        "endLine": 582,
+        "endChar": 46
+      },
+      "revId": "c36081eadeba6796ab8cec9432ddfb144be99177",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0d42a38_67187b77",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
         "patchSetId": 11
@@ -105,6 +177,30 @@
       "writtenOn": "2015-04-28T04:27:54Z",
       "side": 1,
       "message": "nullptr is used in half the changes in this file and NULL in the other half. Can we make them consistent?",
+      "range": {
+        "startLine": 117,
+        "startChar": 35,
+        "endLine": 117,
+        "endChar": 42
+      },
+      "revId": "c36081eadeba6796ab8cec9432ddfb144be99177",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0f222e5_0a71c18b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-28T19:22:38Z",
+      "side": 1,
+      "message": "Done (in previous refactoring patch)",
+      "parentUuid": "b0d42a38_67187b77",
       "range": {
         "startLine": 117,
         "startChar": 35,
