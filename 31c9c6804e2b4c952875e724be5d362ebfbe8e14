@@ -22,6 +22,30 @@
       "revId": "31c9c6804e2b4c952875e724be5d362ebfbe8e14",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0d99e70_9ce85c28",
+        "filename": "src/compiler/preprocessor/DiagnosticsBase.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-28T20:47:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0d99e70_39473a11",
+      "range": {
+        "startLine": 82,
+        "startChar": 32,
+        "endLine": 82,
+        "endChar": 42
+      },
+      "revId": "31c9c6804e2b4c952875e724be5d362ebfbe8e14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
