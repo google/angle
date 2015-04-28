@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0d42a38_91f04063",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-28T19:33:48Z",
+      "side": 1,
+      "message": "nit: \"invariant \"? any idea why we use a separated \u003c\u003c below? It seems unnecessary.",
+      "range": {
+        "startLine": 97,
+        "startChar": 8,
+        "endLine": 97,
+        "endChar": 34
+      },
+      "revId": "76a2c97d0b4e4824432e130d4afaddc4de363536",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0f222e5_6a2ded3c",
+        "filename": "src/compiler/translator/intermOut.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-28T19:33:48Z",
+      "side": 1,
+      "message": "same here, any idea why we separate the two \u003c\u003cs?",
+      "range": {
+        "startLine": 65,
+        "startChar": 18,
+        "endLine": 65,
+        "endChar": 37
+      },
+      "revId": "76a2c97d0b4e4824432e130d4afaddc4de363536",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
