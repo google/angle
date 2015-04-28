@@ -137,9 +137,9 @@ TEST_P(InvalidPragmaTest, Identified)
     using testing::_;
     // No handlePragma calls.
     EXPECT_CALL(mDirectiveHandler, handlePragma(_, _, _, false)).Times(0);
-    // Unrecognized pragma warning.
+    // Invalid pragma error.
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::PP_UNRECOGNIZED_PRAGMA,
+                print(pp::Diagnostics::PP_INVALID_PRAGMA,
                       pp::SourceLocation(0, 1), _));
 
     preprocess(str, expected);

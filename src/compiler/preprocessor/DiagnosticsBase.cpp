@@ -109,6 +109,10 @@ std::string Diagnostics::message(ID id)
         return "invalid file number";
       case PP_INVALID_LINE_DIRECTIVE:
         return "invalid line directive";
+      case PP_INVALID_PRAGMA:
+        return "invalid pragma";
+      case PP_INVALID_PRAGMA_VALUE:
+        return "invalid pragma value, must be 'on' or 'off'";
       // Errors end.
       // Warnings begin.
       case PP_EOF_IN_DIRECTIVE:

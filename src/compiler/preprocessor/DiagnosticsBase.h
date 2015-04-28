@@ -61,6 +61,8 @@ class Diagnostics
         PP_INVALID_LINE_NUMBER,
         PP_INVALID_FILE_NUMBER,
         PP_INVALID_LINE_DIRECTIVE,
+        PP_INVALID_PRAGMA,
+        PP_INVALID_PRAGMA_VALUE,
         PP_ERROR_END,
 
         PP_WARNING_BEGIN,
