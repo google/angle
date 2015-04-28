@@ -302,7 +302,7 @@ egl::Error DisplayD3D::initialize(egl::Display *display)
     childWindowClassDesc.cbClsExtra = 0;
     childWindowClassDesc.cbWndExtra = 0;
     childWindowClassDesc.hInstance = GetModuleHandle(nullptr);
-    childWindowClassDesc.hIcon = nullptr;
+    childWindowClassDesc.hIcon = LoadIconA(nullptr, IDI_APPLICATION);
     childWindowClassDesc.hCursor = LoadCursorA(nullptr, idcArrow);
     childWindowClassDesc.hbrBackground = 0;
     childWindowClassDesc.lpszMenuName = nullptr;
