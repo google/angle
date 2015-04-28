@@ -22,6 +22,30 @@
       "revId": "4e8a592b6b8930a5dc06383ef8b463583a000172",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0d99e70_79aa6280",
+        "filename": "src/compiler/preprocessor/DirectiveParser.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 623,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-28T19:44:46Z",
+      "side": 0,
+      "message": "Done.  Tokens such as integers or floats are not considered identifiers so it would only warn when you do something like:\n\n  #pragma debug(12.34)\n\nNow it spits out an error in DirectiveHandler::handlePragma.",
+      "parentUuid": "d0d99e70_b9fc4ab2",
+      "range": {
+        "startLine": 623,
+        "startChar": 12,
+        "endLine": 623,
+        "endChar": 64
+      },
+      "revId": "4e8a592b6b8930a5dc06383ef8b463583a000172",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
