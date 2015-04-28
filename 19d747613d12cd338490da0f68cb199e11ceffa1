@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0d42a38_65586a8d",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-28T21:54:47Z",
+      "side": 1,
+      "message": "Sorry I didn\u0027t think this through carefully the first time through, but somewhere (rather than just in the calling code) it should be documented what the legal type parameters are for this method on a per-renderer basis. I agree with Geoff that it is a little unfortunate that with this patch it\u0027s easy to call this method with a bogus pointer argument. Have been thinking about alternatives like defining per-renderer helper functions that are friends of this class, calling this method in them, and making this method private. Not sure whether any would be cleaner, or just add complexity.",
+      "range": {
+        "startLine": 138,
+        "startChar": 8,
+        "endLine": 138,
+        "endChar": 13
+      },
+      "revId": "19d747613d12cd338490da0f68cb199e11ceffa1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0d99e70_d236cb91",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-28T21:54:47Z",
+      "side": 1,
+      "message": "Should standardize on nullptr rather than NULL in this file.",
+      "range": {
+        "startLine": 191,
+        "startChar": 44,
+        "endLine": 191,
+        "endChar": 48
+      },
+      "revId": "19d747613d12cd338490da0f68cb199e11ceffa1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
