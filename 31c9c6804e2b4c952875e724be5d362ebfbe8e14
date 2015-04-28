@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0d99e70_39473a11",
+        "filename": "src/compiler/preprocessor/DiagnosticsBase.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-28T20:00:44Z",
+      "side": 1,
+      "message": "nit: parameter",
+      "range": {
+        "startLine": 82,
+        "startChar": 32,
+        "endLine": 82,
+        "endChar": 42
+      },
+      "revId": "31c9c6804e2b4c952875e724be5d362ebfbe8e14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
