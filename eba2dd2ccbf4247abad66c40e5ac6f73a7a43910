@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0d99e70_5944467b",
+        "filename": "src/compiler/preprocessor/DiagnosticsBase.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-28T19:44:20Z",
+      "side": 1,
+      "message": "isn\u0027t non-unique another word for duplicate?",
+      "range": {
+        "startLine": 49,
+        "startChar": 17,
+        "endLine": 49,
+        "endChar": 27
+      },
+      "revId": "eba2dd2ccbf4247abad66c40e5ac6f73a7a43910",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
