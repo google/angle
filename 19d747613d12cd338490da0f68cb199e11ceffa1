@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f0f222e5_8333576f",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-29T14:00:36Z",
+      "side": 1,
+      "message": "Ken, did you notice it\u0027s a static_cast? Any random type pointer will not compile - T has to be directly type related to FramebufferAttachmentRenderTarget. The intermediate cast is because of the \"**\". Your comment wasn\u0027t clear if you were aware of this, so didn\u0027t change this significantly.",
+      "parentUuid": "b0d42a38_65586a8d",
+      "range": {
+        "startLine": 138,
+        "startChar": 8,
+        "endLine": 138,
+        "endChar": 13
+      },
+      "revId": "19d747613d12cd338490da0f68cb199e11ceffa1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0d99e70_d236cb91",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
         "patchSetId": 12
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-28T21:54:47Z",
       "side": 1,
       "message": "Should standardize on nullptr rather than NULL in this file.",
+      "range": {
+        "startLine": 191,
+        "startChar": 44,
+        "endLine": 191,
+        "endChar": 48
+      },
+      "revId": "19d747613d12cd338490da0f68cb199e11ceffa1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0d99e70_e67582f4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-29T14:00:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0d99e70_d236cb91",
       "range": {
         "startLine": 191,
         "startChar": 44,
