@@ -1321,8 +1321,8 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 
         if (qualifier == EvqUniform)
         {
-            const TType& nodeType = node->getType();
-            const TInterfaceBlock* interfaceBlock = nodeType.getInterfaceBlock();
+            const TType &nodeType = node->getType();
+            const TInterfaceBlock *interfaceBlock = nodeType.getInterfaceBlock();
 
             if (interfaceBlock)
             {
@@ -1332,6 +1332,8 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
             {
                 mReferencedUniforms[name] = node;
             }
+
+            ensureStructDefined(nodeType);
 
             out << DecorateUniform(name, nodeType);
         }
@@ -1877,12 +1879,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
             if (variable && (variable->getQualifier() == EvqTemporary || variable->getQualifier() == EvqGlobal))
             {
-                TStructure *structure = variable->getType().getStruct();
-
-                if (structure)
-                {
-                    mStructureHLSL->addConstructor(variable->getType(), StructNameString(*structure), NULL);
-                }
+                ensureStructDefined(variable->getType());
 
                 if (!variable->getAsSymbolNode() || variable->getAsSymbolNode()->getSymbol() != "")   // Variable declaration
                 {
@@ -2027,12 +2024,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                 if (symbol)
                 {
-                    TStructure *structure = symbol->getType().getStruct();
-
-                    if (structure)
-                    {
-                        mStructureHLSL->addConstructor(symbol->getType(), StructNameString(*structure), NULL);
-                    }
+                    ensureStructDefined(symbol->getType());
 
                     out << argumentString(symbol);
 
@@ -3206,6 +3198,17 @@ TString OutputHLSL::addArrayConstructIntoFunction(const TType& type)
 
     return function.functionName;
 }
+
+void OutputHLSL::ensureStructDefined(const TType &type)
+{
+    TStructure *structure = type.getStruct();
+
+    if (structure)
+    {
+        mStructureHLSL->addConstructor(type, StructNameString(*structure), nullptr);
+    }
+}
+
 
 
 }

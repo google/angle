@@ -1047,3 +1047,23 @@ TYPED_TEST(GLSLTest_ES3, GlobalStaticAndInstanceID)
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_EQ(0, 0, 6, 0, 0, 255);
 }
+
+// Test that structs defined in uniforms are translated correctly.
+TYPED_TEST(GLSLTest, StructSpecifiersUniforms)
+{
+    const std::string fragmentShaderSource = SHADER_SOURCE
+    (
+        precision mediump float;
+
+        uniform struct S { float field;} s;
+
+        void main()
+        {
+            gl_FragColor = vec4(1, 0, 0, 1);
+            gl_FragColor.a += s.field;
+        }
+    );
+
+    GLuint program = CompileProgram(mSimpleVSSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}

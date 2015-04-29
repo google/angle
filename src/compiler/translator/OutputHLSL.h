@@ -93,6 +93,9 @@ class OutputHLSL : public TIntermTraverser
     TString addArrayAssignmentFunction(const TType &type);
     TString addArrayConstructIntoFunction(const TType &type);
 
+    // Ensures if the type is a struct, the struct is defined
+    void ensureStructDefined(const TType &type);
+
     sh::GLenum mShaderType;
     int mShaderVersion;
     const TExtensionBehavior &mExtensionBehavior;
