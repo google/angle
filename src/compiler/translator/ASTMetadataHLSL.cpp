@@ -213,8 +213,6 @@ class PullComputeDiscontinuousLoops : public TIntermTraverser
         {
             switch (node->getFlowOp())
             {
-              case EOpKill:
-                break;
               case EOpBreak:
                 {
                     ASSERT(!mLoopsAndSwitches.empty());
@@ -241,8 +239,9 @@ class PullComputeDiscontinuousLoops : public TIntermTraverser
                     onDiscontinuousLoop();
                 }
                 break;
+              case EOpKill:
               case EOpReturn:
-                // A return jumps out of all the enclosing loops
+                // A return or discard jumps out of all the enclosing loops
                 if (!mLoopsAndSwitches.empty())
                 {
                     for (TIntermNode* node : mLoopsAndSwitches)

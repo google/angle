@@ -149,12 +149,13 @@ TEST_F(UnrollFlattenTest, GradientNotInDiscont)
         "    for (int i = 0; i < 10; i++) {\n" // 4
         "        if (a > 1.0) {}\n" // 5
         "        a = fun(a);\n" // 6
+        "        a += texture2D(tex, vec2(a, 0.0)).x;" // 7
         "    }\n"
         "    return a;\n"
         "}\n"
         "void main() {\n"
         "    float accum = 0.0;\n"
-        "    if (f < 5.0) {accum = fun2(accum);}\n" // 7
+        "    if (f < 5.0) {accum = fun2(accum);}\n" // 8
         "    gl_FragColor = vec4(accum);\n"
         "}\n";
     // 1 - shouldn't get a Lod0 version generated
@@ -162,13 +163,14 @@ TEST_F(UnrollFlattenTest, GradientNotInDiscont)
     // 3 - shouldn't get a Lod0 version generated (not in discont loop)
     // 4 - should have LOOP because it contains a gradient operation (even if Lod0)
     // 5 - no FLATTEN because doesn't contain discont loop
-    // 6 - call Lod0 version
-    // 7 - no FLATTEN
+    // 6 - call non-Lod0 version
+    // 7 - call non-Lod0 version
+    // 8 - no FLATTEN
     compile(shaderString);
     const char *expectations[] =
     {
         "fun(", "texture2D(",
-        "fun2(", "LOOP", "for", "if", "fun(",
+        "fun2(", "LOOP", "for", "if", "fun(", "texture2D(",
         "main(", "if", "fun2("
     };
     expect(expectations, ArraySize(expectations));
@@ -189,12 +191,13 @@ TEST_F(UnrollFlattenTest, GradientInDiscont)
         "    for (int i = 0; i < 10; i++) {\n" // 4
         "        if (a > 1.0) {break;}\n" // 5
         "        a = fun(a);\n" // 6
+        "        a += texture2D(tex, vec2(a, 0.0)).x;" // 7
         "    }\n"
         "    return a;\n"
         "}\n"
         "void main() {\n"
         "    float accum = 0.0;\n"
-        "    if (f < 5.0) {accum = fun2(accum);}\n" // 7
+        "    if (f < 5.0) {accum = fun2(accum);}\n" // 8
         "    gl_FragColor = vec4(accum);\n"
         "}\n";
     // 1 - should get a Lod0 version generated (gradient + discont loop)
@@ -203,13 +206,14 @@ TEST_F(UnrollFlattenTest, GradientInDiscont)
     // 4 - should have LOOP because it contains a gradient operation (even if Lod0)
     // 5 - no FLATTEN because doesn't contain discont loop
     // 6 - call Lod0 version
-    // 7 - should have a FLATTEN because has a discont loop and gradient
+    // 7 - call Lod0 version
+    // 8 - should have a FLATTEN because has a discont loop and gradient
     compile(shaderString);
     const char *expectations[] =
     {
         "fun(", "texture2D(",
         "funLod0(", "texture2DLod0(",
-        "fun2(", "LOOP", "for", "if", "break", "funLod0(",
+        "fun2(", "LOOP", "for", "if", "break", "funLod0(", "texture2DLod0",
         "main(", "FLATTEN", "if", "fun2("
     };
     expect(expectations, ArraySize(expectations));

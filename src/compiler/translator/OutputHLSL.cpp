@@ -2415,7 +2415,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 
     bool wasDiscontinuous = mInsideDiscontinuousLoop;
     mInsideDiscontinuousLoop = mInsideDiscontinuousLoop ||
-    mCurrentFunctionMetadata->mDiscontinuousLoops.count(node) >= 0;
+    mCurrentFunctionMetadata->mDiscontinuousLoops.count(node) > 0;
 
     if (mOutputType == SH_HLSL9_OUTPUT)
     {
