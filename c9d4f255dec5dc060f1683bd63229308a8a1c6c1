@@ -22,6 +22,30 @@
       "revId": "c9d4f255dec5dc060f1683bd63229308a8a1c6c1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0f222e5_befc2eb2",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-29T14:00:58Z",
+      "side": 1,
+      "message": "The default FBO isn\u0027t quite immutable, the user can change the ReadBuffer and DrawBuffers parameters (to GL_NONE, but still). I changed the check here to no-op if the FBO is already initialized to the Surface.",
+      "parentUuid": "d0d99e70_fb651f8f",
+      "range": {
+        "startLine": 187,
+        "startChar": 22,
+        "endLine": 187,
+        "endChar": 33
+      },
+      "revId": "c9d4f255dec5dc060f1683bd63229308a8a1c6c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
