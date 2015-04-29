@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1065f695_cb31691f",
+        "filename": "src/compiler/preprocessor/DirectiveParser.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-29T14:07:17Z",
+      "side": 1,
+      "message": "please add a descriptive comment here on what it means to see a \u0027non-preprocessor token\u0027 and why we need to track this.",
+      "range": {
+        "startLine": 73,
+        "startChar": 9,
+        "endLine": 73,
+        "endChar": 34
+      },
+      "revId": "3c3114ec4c8bbab85e14e6a1b615456fa6591f8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
