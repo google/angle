@@ -488,13 +488,6 @@ GLenum Framebuffer::checkStatus(const gl::Data &data) const
         }
     }
 
-    // if we have both a depth and stencil buffer, they must refer to the same object
-    // since we only support packed_depth_stencil and not separate depth and stencil
-    if (depthAttachment.isAttached() && stencilAttachment.isAttached() && !hasValidDepthStencil())
-    {
-        return GL_FRAMEBUFFER_UNSUPPORTED;
-    }
-
     // we need to have at least one attachment to be complete
     if (missingAttachment)
     {

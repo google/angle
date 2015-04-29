@@ -320,6 +320,14 @@ gl::Error FramebufferD3D::blit(const gl::State &state, const gl::Rectangle &sour
 
 GLenum FramebufferD3D::checkStatus() const
 {
+    // if we have both a depth and stencil buffer, they must refer to the same object
+    // since we only support packed_depth_stencil and not separate depth and stencil
+    if (mData.getDepthAttachment() != nullptr && mData.getStencilAttachment() != nullptr &&
+        mData.getDepthStencilAttachment() == nullptr)
+    {
+        return GL_FRAMEBUFFER_UNSUPPORTED;
+    }
+
     // D3D11 does not allow for overlapping RenderTargetViews, so ensure uniqueness
     const auto &colorAttachments = mData.getColorAttachments();
     for (size_t colorAttachment = 0; colorAttachment < colorAttachments.size(); colorAttachment++)
