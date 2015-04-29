@@ -7,7 +7,7 @@
 //   Tests pertaining to egl::Surface.
 //
 
-#include <gtest/gtest.h>
+#include <ANGLETest.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <GLES2/gl2.h>
@@ -221,6 +221,47 @@ TEST_F(EGLSurfaceTest, MakeCurrentTwice)
 
     // Simple operation to test the FBO is set appropriately
     glClear(GL_COLOR_BUFFER_BIT);
+}
+
+// Test that the D3D window surface is correctly resized after calling swapBuffers
+TEST_F(EGLSurfaceTest, ResizeD3DWindow)
+{
+    const char *extensionsString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
+    if (strstr(extensionsString, "EGL_ANGLE_platform_angle_d3d") == nullptr)
+    {
+        std::cout << "D3D Platform not supported in ANGLE";
+        return;
+    }
+
+    initializeSurface(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_EGL_SUCCESS();
+
+    EGLint height;
+    eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_EQ(64, height);  // initial size
+
+    // set window's height to 0
+    mOSWindow->resize(64, 0);
+
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_EGL_SUCCESS();
+
+    eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_EQ(0, height);
+
+    // restore window's height
+    mOSWindow->resize(64, 64);
+
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_EGL_SUCCESS();
+
+    eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_EQ(64, height);
 }
 
 }

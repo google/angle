@@ -255,21 +255,19 @@ egl::Error SurfaceD3D::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
         height = mHeight - y;
     }
 
-    if (width == 0 || height == 0)
+    if (width != 0 && height != 0)
     {
-        return egl::Error(EGL_SUCCESS);
-    }
+        EGLint status = mSwapChain->swapRect(x, y, width, height);
 
-    EGLint status = mSwapChain->swapRect(x, y, width, height);
-
-    if (status == EGL_CONTEXT_LOST)
-    {
-        mRenderer->notifyDeviceLost();
-        return egl::Error(status);
-    }
-    else if (status != EGL_SUCCESS)
-    {
-        return egl::Error(status);
+        if (status == EGL_CONTEXT_LOST)
+        {
+            mRenderer->notifyDeviceLost();
+            return egl::Error(status);
+        }
+        else if (status != EGL_SUCCESS)
+        {
+            return egl::Error(status);
+        }
     }
 
     checkForOutOfDateSwapChain();
