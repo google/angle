@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0d99e70_fb651f8f",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-29T02:00:29Z",
+      "side": 1,
+      "message": "This seems like a lot of work to do at each makeCurrent call, but on the other hand I see that it was done in a different place earlier, plus a memory allocation.\n\nIs there no way to avoid some of this work? Chromium doesn\u0027t do this in its command buffer implementation. If there\u0027s any representation of the default framebuffer, it\u0027s immutable and doesn\u0027t need to be reset every time the context is made current.",
+      "range": {
+        "startLine": 187,
+        "startChar": 22,
+        "endLine": 187,
+        "endChar": 33
+      },
+      "revId": "c9d4f255dec5dc060f1683bd63229308a8a1c6c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
