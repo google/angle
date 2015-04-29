@@ -94,6 +94,30 @@
       "revId": "b52c72fe1c4d2526f29ada3d2941c762d944d46f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1065f695_28492bbe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-04-29T13:52:53Z",
+      "side": 1,
+      "message": "Yes, thanks. I fixed that.",
+      "parentUuid": "f0f222e5_9e096a61",
+      "range": {
+        "startLine": 356,
+        "startChar": 8,
+        "endLine": 359,
+        "endChar": 9
+      },
+      "revId": "b52c72fe1c4d2526f29ada3d2941c762d944d46f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
