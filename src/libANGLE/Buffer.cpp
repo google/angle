@@ -18,7 +18,7 @@ namespace gl
 Buffer::Buffer(rx::BufferImpl *impl, GLuint id)
     : RefCountObject(id),
       mBuffer(impl),
-      mUsage(GL_DYNAMIC_DRAW),
+      mUsage(GL_STATIC_DRAW),
       mSize(0),
       mAccessFlags(0),
       mAccess(GL_WRITE_ONLY_OES),
