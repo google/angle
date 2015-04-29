@@ -22,6 +22,29 @@
       "revId": "e5519a8b6b9ba9f9516d26f332d43e5b3638e311",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0d99e70_a77c146f",
+        "filename": "src/tests/standalone_tests/EGLSurfaceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-29T17:11:09Z",
+      "side": 1,
+      "message": "nit: we also have a macro for this: ASSERT_EGL_SUCCESS",
+      "range": {
+        "startLine": 243,
+        "startChar": 4,
+        "endLine": 243,
+        "endChar": 46
+      },
+      "revId": "e5519a8b6b9ba9f9516d26f332d43e5b3638e311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
