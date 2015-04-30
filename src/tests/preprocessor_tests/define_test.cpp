@@ -65,32 +65,24 @@ TEST_F(DefineTest, RedefinePredefined)
     preprocess(input, expected);
 }
 
-TEST_F(DefineTest, ReservedUnderScore1)
+TEST_F(DefineTest, UnderScore1)
 {
-    const char* input = "#define __foo bar\n"
-                        "__foo\n";
-    const char* expected = "\n"
-                           "__foo\n";
+    const char* input = "#define __foo bar\n";
+    const char* expected = "\n";
 
-    EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::PP_MACRO_NAME_RESERVED,
-                      pp::SourceLocation(0, 1),
-                      "__foo"));
+    using testing::_;
+    EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
     preprocess(input, expected);
 }
 
-TEST_F(DefineTest, ReservedUnderScore2)
+TEST_F(DefineTest, UnderScore2)
 {
-    const char* input = "#define foo__bar baz\n"
-                        "foo__bar\n";
-    const char* expected = "\n"
-                           "foo__bar\n";
+    const char* input = "#define foo__bar baz\n";
+    const char* expected = "\n";
 
-    EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::PP_MACRO_NAME_RESERVED,
-                      pp::SourceLocation(0, 1),
-                      "foo__bar"));
+    using testing::_;
+    EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
     preprocess(input, expected);
 }
