@@ -35,6 +35,13 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 #pragma warning(disable: 4244)
 #endif
 
+// Workaround for flex using the register keyword, deprecated in C++11.
+#ifdef __cplusplus
+#if __cplusplus > 199711L
+#define register
+#endif
+#endif
+
 typedef std::string YYSTYPE;
 typedef pp::SourceLocation YYLTYPE;
 

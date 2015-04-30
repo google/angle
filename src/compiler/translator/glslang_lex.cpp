@@ -1034,6 +1034,13 @@ WHICH GENERATES THE GLSL ES LEXER (glslang_lex.cpp).
 #pragma warning(disable : 4102)
 #endif
 
+// Workaround for flex using the register keyword, deprecated in C++11.
+#ifdef __cplusplus
+#if __cplusplus > 199711L
+#define register
+#endif
+#endif
+
 #define YY_USER_ACTION                                 \
     yylloc->first_file = yylloc->last_file = yycolumn; \
     yylloc->first_line = yylloc->last_line = yylineno;
