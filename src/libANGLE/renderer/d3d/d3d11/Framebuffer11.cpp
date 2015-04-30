@@ -43,7 +43,7 @@ static gl::Error InvalidateAttachmentSwizzles(const gl::FramebufferAttachment *a
 
         TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
 
-        TextureStorage *texStorage = NULL;
+        TextureStorage *texStorage = nullptr;
         gl::Error error = textureD3D->getNativeTexture(&texStorage);
         if (error.isError())
         {
@@ -114,7 +114,7 @@ static gl::Error getRenderTargetResource(const gl::FramebufferAttachment *colorb
 {
     ASSERT(colorbuffer);
 
-    RenderTarget11 *renderTarget = NULL;
+    RenderTarget11 *renderTarget = nullptr;
     gl::Error error = d3d11::GetAttachmentRenderTarget(colorbuffer, &renderTarget);
     if (error.isError())
     {
@@ -137,7 +137,7 @@ static gl::Error getRenderTargetResource(const gl::FramebufferAttachment *colorb
 
 gl::Error Framebuffer11::readPixels(const gl::Rectangle &area, GLenum format, GLenum type, size_t outputPitch, const gl::PixelPackState &pack, uint8_t *pixels) const
 {
-    ID3D11Texture2D *colorBufferTexture = NULL;
+    ID3D11Texture2D *colorBufferTexture = nullptr;
     unsigned int subresourceIndex = 0;
 
     const gl::FramebufferAttachment *colorbuffer = mData.getReadAttachment();
@@ -150,7 +150,7 @@ gl::Error Framebuffer11::readPixels(const gl::Rectangle &area, GLenum format, GL
     }
 
     gl::Buffer *packBuffer = pack.pixelBuffer.get();
-    if (packBuffer != NULL)
+    if (packBuffer != nullptr)
     {
         Buffer11 *packBufferStorage = GetImplAs<Buffer11>(packBuffer);
         PackPixelsParams packParams(area, format, type, outputPitch, pack, reinterpret_cast<ptrdiff_t>(pixels));
@@ -229,7 +229,7 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
         const gl::FramebufferAttachment *readBuffer = sourceFramebuffer->getDepthOrStencilbuffer();
         ASSERT(readBuffer);
 
-        RenderTargetD3D *readRenderTarget = NULL;
+        RenderTargetD3D *readRenderTarget = nullptr;
         gl::Error error = GetAttachmentRenderTarget(readBuffer, &readRenderTarget);
         if (error.isError())
         {
@@ -240,7 +240,7 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
         const gl::FramebufferAttachment *drawBuffer = mData.getDepthOrStencilAttachment();
         ASSERT(drawBuffer);
 
-        RenderTargetD3D *drawRenderTarget = NULL;
+        RenderTargetD3D *drawRenderTarget = nullptr;
         error = GetAttachmentRenderTarget(drawBuffer, &drawRenderTarget);
         if (error.isError())
         {
