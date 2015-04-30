@@ -93,39 +93,47 @@ static void BindFramebufferAttachment(const FunctionsGL *functions, GLenum attac
     }
 }
 
-void FramebufferGL::setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment)
+void FramebufferGL::onUpdateColorAttachment(size_t index)
 {
     if (mFramebufferID != 0)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-        BindFramebufferAttachment(mFunctions, GL_COLOR_ATTACHMENT0 + index, attachment);
+        BindFramebufferAttachment(mFunctions,
+                                  GL_COLOR_ATTACHMENT0 + index,
+                                  mData.getColorAttachment(static_cast<unsigned int>(index)));
     }
 }
 
-void FramebufferGL::setDepthAttachment(const gl::FramebufferAttachment *attachment)
+void FramebufferGL::onUpdateDepthAttachment()
 {
     if (mFramebufferID != 0)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-        BindFramebufferAttachment(mFunctions, GL_DEPTH_ATTACHMENT, attachment);
+        BindFramebufferAttachment(mFunctions,
+                                  GL_DEPTH_ATTACHMENT,
+                                  mData.getDepthAttachment());
     }
 }
 
-void FramebufferGL::setStencilAttachment(const gl::FramebufferAttachment *attachment)
+void FramebufferGL::onUpdateStencilAttachment()
 {
     if (mFramebufferID != 0)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-        BindFramebufferAttachment(mFunctions, GL_STENCIL_ATTACHMENT, attachment);
+        BindFramebufferAttachment(mFunctions,
+                                  GL_STENCIL_ATTACHMENT,
+                                  mData.getStencilAttachment());
     }
 }
 
-void FramebufferGL::setDepthStencilAttachment(const gl::FramebufferAttachment *attachment)
+void FramebufferGL::onUpdateDepthStencilAttachment()
 {
     if (mFramebufferID != 0)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-        BindFramebufferAttachment(mFunctions, GL_DEPTH_STENCIL_ATTACHMENT, attachment);
+        BindFramebufferAttachment(mFunctions,
+                                  GL_DEPTH_STENCIL_ATTACHMENT,
+                                  mData.getDepthStencilAttachment());
     }
 }
 

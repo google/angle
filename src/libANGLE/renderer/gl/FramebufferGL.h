@@ -23,10 +23,10 @@ class FramebufferGL : public FramebufferImpl
     FramebufferGL(const gl::Framebuffer::Data &data, const FunctionsGL *functions, StateManagerGL *stateManager, bool isDefault);
     ~FramebufferGL() override;
 
-    void setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment) override;
-    void setDepthAttachment(const gl::FramebufferAttachment *attachment) override;
-    void setStencilAttachment(const gl::FramebufferAttachment *attachment) override;
-    void setDepthStencilAttachment(const gl::FramebufferAttachment *attachment) override;
+    void onUpdateColorAttachment(size_t index) override;
+    void onUpdateDepthAttachment() override;
+    void onUpdateStencilAttachment() override;
+    void onUpdateDepthStencilAttachment() override;
 
     void setDrawBuffers(size_t count, const GLenum *buffers) override;
     void setReadBuffer(GLenum buffer) override;

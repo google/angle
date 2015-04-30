@@ -604,38 +604,32 @@ void Framebuffer::setAttachment(GLenum type,
             mData.mDepthAttachment.detach();
             mData.mStencilAttachment.detach();
         }
-        mImpl->setDepthStencilAttachment(&mData.mDepthAttachment);
+        mImpl->onUpdateDepthStencilAttachment();
     }
     else
     {
-        FramebufferAttachment *attachment = nullptr;
-
         switch (binding)
         {
           case GL_DEPTH:
           case GL_DEPTH_ATTACHMENT:
-            attachment = &mData.mDepthAttachment;
-            attachment->attach(type, binding, textureIndex, resource);
-            mImpl->setDepthAttachment(attachment);
+            mData.mDepthAttachment.attach(type, binding, textureIndex, resource);
+            mImpl->onUpdateDepthAttachment();
             break;
           case GL_STENCIL:
           case GL_STENCIL_ATTACHMENT:
-            attachment = &mData.mStencilAttachment;
-            attachment->attach(type, binding, textureIndex, resource);
-            mImpl->setStencilAttachment(attachment);
+            mData.mStencilAttachment.attach(type, binding, textureIndex, resource);
+            mImpl->onUpdateStencilAttachment();
             break;
           case GL_BACK:
-            attachment = &mData.mColorAttachments[0];
-            attachment->attach(type, binding, textureIndex, resource);
-            mImpl->setColorAttachment(0, attachment);
+            mData.mColorAttachments[0].attach(type, binding, textureIndex, resource);
+            mImpl->onUpdateColorAttachment(0);
             break;
           default:
             {
                 size_t colorIndex = binding - GL_COLOR_ATTACHMENT0;
                 ASSERT(colorIndex < mData.mColorAttachments.size());
-                attachment = &mData.mColorAttachments[colorIndex];
-                attachment->attach(type, binding, textureIndex, resource);
-                mImpl->setColorAttachment(colorIndex, attachment);
+                mData.mColorAttachments[colorIndex].attach(type, binding, textureIndex, resource);
+                mImpl->onUpdateColorAttachment(colorIndex);
             }
             break;
         }
