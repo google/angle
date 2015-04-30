@@ -14,6 +14,7 @@
 #include "angle_gl.h"
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/ImageIndex.h"
 
 namespace egl
@@ -35,7 +36,7 @@ struct SamplerState;
 namespace rx
 {
 
-class TextureImpl : angle::NonCopyable
+class TextureImpl : public FramebufferAttachmentObjectImpl
 {
   public:
     TextureImpl() {}

@@ -1312,17 +1312,19 @@ gl::Error Renderer9::getNullColorbuffer(const gl::FramebufferAttachment *depthbu
 
 gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorBuffer, const gl::FramebufferAttachment *depthStencilBuffer)
 {
+    const gl::FramebufferAttachment *renderAttachment = colorBuffer;
+
     // if there is no color attachment we must synthesize a NULL colorattachment
     // to keep the D3D runtime happy.  This should only be possible if depth texturing.
-    if (!colorBuffer)
+    if (renderAttachment == nullptr)
     {
-        gl::Error error = getNullColorbuffer(depthStencilBuffer, &colorBuffer);
+        gl::Error error = getNullColorbuffer(depthStencilBuffer, &renderAttachment);
         if (error.isError())
         {
             return error;
         }
     }
-    ASSERT(colorBuffer);
+    ASSERT(renderAttachment != nullptr);
 
     size_t renderTargetWidth = 0;
     size_t renderTargetHeight = 0;
@@ -1333,8 +1335,8 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorBuf
     if (renderTargetSerial != mAppliedRenderTargetSerial)
     {
         // Apply the render target on the device
-        RenderTarget9 *renderTarget = NULL;
-        gl::Error error = d3d9::GetAttachmentRenderTarget(colorBuffer, &renderTarget);
+        RenderTarget9 *renderTarget = nullptr;
+        gl::Error error = renderAttachment->getRenderTarget(&renderTarget);
         if (error.isError())
         {
             return error;
@@ -1364,8 +1366,8 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorBuf
         // Apply the depth stencil on the device
         if (depthStencilBuffer)
         {
-            RenderTarget9 *depthStencilRenderTarget = NULL;
-            gl::Error error = d3d9::GetAttachmentRenderTarget(depthStencilBuffer, &depthStencilRenderTarget);
+            RenderTarget9 *depthStencilRenderTarget = nullptr;
+            gl::Error error = depthStencilBuffer->getRenderTarget(&depthStencilRenderTarget);
             if (error.isError())
             {
                 return error;
@@ -2010,8 +2012,10 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
     unsigned int stencilUnmasked = 0x0;
     if (clearParams.clearStencil && depthStencilBuffer->getStencilSize() > 0)
     {
-        RenderTargetD3D *stencilRenderTarget = NULL;
-        gl::Error error = GetAttachmentRenderTarget(depthStencilBuffer, &stencilRenderTarget);
+        ASSERT(depthStencilBuffer != nullptr);
+
+        RenderTargetD3D *stencilRenderTarget = nullptr;
+        gl::Error error = depthStencilBuffer->getRenderTarget(&stencilRenderTarget);
         if (error.isError())
         {
             return error;
@@ -2031,8 +2035,10 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
     D3DCOLOR color = D3DCOLOR_ARGB(255, 0, 0, 0);
     if (clearColor)
     {
+        ASSERT(colorBuffer != nullptr);
+
         RenderTargetD3D *colorRenderTarget = NULL;
-        gl::Error error = GetAttachmentRenderTarget(colorBuffer, &colorRenderTarget);
+        gl::Error error = colorBuffer->getRenderTarget(&colorRenderTarget);
         if (error.isError())
         {
             return error;

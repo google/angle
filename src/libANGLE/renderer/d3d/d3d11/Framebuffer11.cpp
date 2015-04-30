@@ -115,7 +115,7 @@ static gl::Error getRenderTargetResource(const gl::FramebufferAttachment *colorb
     ASSERT(colorbuffer);
 
     RenderTarget11 *renderTarget = nullptr;
-    gl::Error error = d3d11::GetAttachmentRenderTarget(colorbuffer, &renderTarget);
+    gl::Error error = colorbuffer->getRenderTarget(&renderTarget);
     if (error.isError())
     {
         return error;
@@ -189,7 +189,7 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
         ASSERT(readBuffer);
 
         RenderTargetD3D *readRenderTarget = nullptr;
-        gl::Error error = GetAttachmentRenderTarget(readBuffer, &readRenderTarget);
+        gl::Error error = readBuffer->getRenderTarget(&readRenderTarget);
         if (error.isError())
         {
             return error;
@@ -207,7 +207,7 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
                 drawBufferStates[colorAttachment] != GL_NONE)
             {
                 RenderTargetD3D *drawRenderTarget = nullptr;
-                error = GetAttachmentRenderTarget(&drawBuffer, &drawRenderTarget);
+                error = drawBuffer.getRenderTarget(&drawRenderTarget);
                 if (error.isError())
                 {
                     return error;
@@ -230,7 +230,7 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
         ASSERT(readBuffer);
 
         RenderTargetD3D *readRenderTarget = nullptr;
-        gl::Error error = GetAttachmentRenderTarget(readBuffer, &readRenderTarget);
+        gl::Error error = readBuffer->getRenderTarget(&readRenderTarget);
         if (error.isError())
         {
             return error;
@@ -241,7 +241,7 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
         ASSERT(drawBuffer);
 
         RenderTargetD3D *drawRenderTarget = nullptr;
-        error = GetAttachmentRenderTarget(drawBuffer, &drawRenderTarget);
+        error = drawBuffer->getRenderTarget(&drawRenderTarget);
         if (error.isError())
         {
             return error;

@@ -19,15 +19,11 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/angletypes.h"
+#include "libANGLE/renderer/TextureImpl.h"
 
 namespace egl
 {
 class Surface;
-}
-
-namespace rx
-{
-class TextureImpl;
 }
 
 namespace gl
@@ -101,6 +97,7 @@ class Texture final : public FramebufferAttachmentObject
     GLsizei getAttachmentSamples(const FramebufferAttachment::Target &target) const override;
 
   private:
+    rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override { return mTexture; }
     static unsigned int issueTextureSerial();
 
     rx::TextureImpl *mTexture;
