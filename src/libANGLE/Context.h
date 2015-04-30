@@ -126,8 +126,6 @@ class Context final : angle::NonCopyable
     Error beginQuery(GLenum target, GLuint query);
     Error endQuery(GLenum target);
 
-    void setFramebufferZero(Framebuffer *framebuffer);
-
     void setVertexAttribDivisor(GLuint index, GLuint divisor);
 
     void samplerParameteri(GLuint sampler, GLenum pname, GLint param);
@@ -231,7 +229,6 @@ class Context final : angle::NonCopyable
 
     EGLint mConfigID;
     EGLenum mClientType;
-    EGLenum mRenderBuffer;
 
     TextureMap mZeroTextures;
 

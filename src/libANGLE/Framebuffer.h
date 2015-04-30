@@ -142,12 +142,6 @@ class Framebuffer
     GLuint mId;
 };
 
-class DefaultFramebuffer : public Framebuffer
-{
-  public:
-    DefaultFramebuffer(const gl::Caps &caps, rx::ImplFactory *factory, egl::Surface *surface);
-};
-
 }
 
 #endif   // LIBANGLE_FRAMEBUFFER_H_
