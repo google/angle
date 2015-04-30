@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "300cbaed_dbf99e00",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-04-30T02:46:13Z",
+      "side": 1,
+      "message": "I\u0027d missed that fact. I\u0027m glad to hear that bogus uses of this method won\u0027t compile.",
+      "parentUuid": "f0f222e5_8333576f",
+      "range": {
+        "startLine": 138,
+        "startChar": 8,
+        "endLine": 138,
+        "endChar": 13
+      },
+      "revId": "19d747613d12cd338490da0f68cb199e11ceffa1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0d99e70_d236cb91",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
         "patchSetId": 12
