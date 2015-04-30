@@ -908,7 +908,7 @@ YY_RULE_SETUP
 	YY_BREAK
 /* Block comment */
 /* Line breaks are just counted - not returned. */
-/* The comment is replaced by a single space. */ 
+/* The comment is replaced by a single space. */
 case 2:
 YY_RULE_SETUP
 { BEGIN(COMMENT); }

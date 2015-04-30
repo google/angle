@@ -95,7 +95,7 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
     /* Block comment */
     /* Line breaks are just counted - not returned. */
-    /* The comment is replaced by a single space. */ 
+    /* The comment is replaced by a single space. */
 "/*" { BEGIN(COMMENT); }
 <COMMENT>[^*\r\n]+
 <COMMENT>"*"
