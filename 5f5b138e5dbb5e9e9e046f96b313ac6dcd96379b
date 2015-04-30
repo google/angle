@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90fd66eb_d705fb97",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-30T21:06:36Z",
+      "side": 1,
+      "message": "Since ShaderVariable::name is a std::string now, can we just assign it directly?",
+      "range": {
+        "startLine": 181,
+        "startChar": 12,
+        "endLine": 182,
+        "endChar": 30
+      },
+      "revId": "5f5b138e5dbb5e9e9e046f96b313ac6dcd96379b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "300cbaed_fcbe0f46",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-04-30T21:06:36Z",
+      "side": 1,
+      "message": "Are all gl_* variables now added? Maybe just an assertion that var is non-null is enough now.",
+      "range": {
+        "startLine": 253,
+        "startChar": 23,
+        "endLine": 253,
+        "endChar": 60
+      },
+      "revId": "5f5b138e5dbb5e9e9e046f96b313ac6dcd96379b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
