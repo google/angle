@@ -47,6 +47,7 @@ class CollectVariables : public TIntermTraverser
 
     std::map<std::string, InterfaceBlockField *> mInterfaceBlockFields;
 
+    bool mDepthRangeAdded;
     bool mPointCoordAdded;
     bool mFrontFacingAdded;
     bool mFragCoordAdded;
