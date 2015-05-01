@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f06142bc_b7f5c89a",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-01T17:52:07Z",
+      "side": 1,
+      "message": "This style avoids repeating the literal string \"gl_DepthRange\" in both the name and mappedName fields, and so on for the other builtins. The string constructors will get called from this as normal.",
+      "parentUuid": "90fd66eb_d705fb97",
+      "range": {
+        "startLine": 181,
+        "startChar": 12,
+        "endLine": 182,
+        "endChar": 30
+      },
+      "revId": "5f5b138e5dbb5e9e9e046f96b313ac6dcd96379b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "300cbaed_fcbe0f46",
         "filename": "src/compiler/translator/VariableInfo.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "d078be71_9631ac20",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-01T17:52:07Z",
+      "side": 1,
+      "message": "If another gl_ variable somehow slips through our parsing layer, this will catch that internal error. The ASSERT was bugged before (hence it didn\u0027t catch DepthRange). It looks a bit awkward but it does have a function.",
+      "parentUuid": "300cbaed_fcbe0f46",
+      "range": {
+        "startLine": 253,
+        "startChar": 23,
+        "endLine": 253,
+        "endChar": 60
+      },
+      "revId": "5f5b138e5dbb5e9e9e046f96b313ac6dcd96379b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "300cbaed_3c0b67ad",
         "filename": "src/tests/compiler_tests/CollectVariables_test.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2015-04-30T21:10:16Z",
       "side": 1,
       "message": "You should check uniform name is gl_DepthRange here.",
+      "range": {
+        "startLine": 59,
+        "startChar": 27,
+        "endLine": 59,
+        "endChar": 34
+      },
+      "revId": "5f5b138e5dbb5e9e9e046f96b313ac6dcd96379b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "105fb6fa_d8cc2d6d",
+        "filename": "src/tests/compiler_tests/CollectVariables_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-01T17:52:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "300cbaed_3c0b67ad",
       "range": {
         "startLine": 59,
         "startChar": 27,
