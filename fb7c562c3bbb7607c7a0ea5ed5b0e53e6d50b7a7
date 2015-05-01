@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "105fb6fa_3b6e03fd",
+        "filename": "src/compiler/preprocessor/Tokenizer.l",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-01T18:16:28Z",
+      "side": 1,
+      "message": "there\u0027s some weird character here that gerrit is highlighting - scott can you check what this is about?",
+      "range": {
+        "startLine": 28,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 6
+      },
+      "revId": "fb7c562c3bbb7607c7a0ea5ed5b0e53e6d50b7a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
