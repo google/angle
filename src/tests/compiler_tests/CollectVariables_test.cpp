@@ -19,10 +19,8 @@ class CollectVariablesTest : public testing::Test
 {
   public:
     CollectVariablesTest(GLenum shaderType)
-        : mShaderType(shaderType),
-          mTranslator(nullptr)
-    {
-    }
+        : mShaderType(shaderType)
+    {}
 
   protected:
     virtual void SetUp()
@@ -31,67 +29,14 @@ class CollectVariablesTest : public testing::Test
         ShInitBuiltInResources(&resources);
         resources.MaxDrawBuffers = 8;
 
-        initTranslator(resources);
-    }
-
-    virtual void TearDown()
-    {
-        SafeDelete(mTranslator);
-    }
-
-    void initTranslator(const ShBuiltInResources &resources)
-    {
-        SafeDelete(mTranslator);
         mTranslator = new TranslatorGLSL(
             mShaderType, SH_GLES3_SPEC, SH_GLSL_COMPATIBILITY_OUTPUT);
         ASSERT_TRUE(mTranslator->Init(resources));
     }
 
-    // For use in the gl_DepthRange tests.
-    void validateDepthRangeShader(const std::string &shaderString)
+    virtual void TearDown()
     {
-        const char *shaderStrings[] = { shaderString.c_str() };
-        ASSERT_TRUE(mTranslator->compile(shaderStrings, 1, SH_VARIABLES));
-
-        const std::vector<sh::Uniform> &uniforms = mTranslator->getUniforms();
-        ASSERT_EQ(1u, uniforms.size());
-
-        const sh::Uniform &uniform = uniforms[0];
-        EXPECT_EQ("gl_DepthRange", uniform.name);
-        ASSERT_TRUE(uniform.isStruct());
-        ASSERT_EQ(3u, uniform.fields.size());
-
-        bool foundNear = false;
-        bool foundFar = false;
-        bool foundDiff = false;
-
-        for (const auto &field : uniform.fields)
-        {
-            if (field.name == "near")
-            {
-                EXPECT_FALSE(foundNear);
-                foundNear = true;
-            }
-            else if (field.name == "far")
-            {
-                EXPECT_FALSE(foundFar);
-                foundFar = true;
-            }
-            else
-            {
-                ASSERT_EQ("diff", field.name);
-                EXPECT_FALSE(foundDiff);
-                foundDiff = true;
-            }
-
-            EXPECT_EQ(0u, field.arraySize);
-            EXPECT_FALSE(field.isStruct());
-            EXPECT_EQ(GL_HIGH_FLOAT, field.precision);
-            EXPECT_TRUE(field.staticUse);
-            EXPECT_EQ(GL_FLOAT, field.type);
-        }
-
-        EXPECT_TRUE(foundNear && foundFar && foundDiff);
+        delete mTranslator;
     }
 
     GLenum mShaderType;
@@ -423,28 +368,4 @@ TEST_F(CollectVertexVariablesTest, VaryingInterpolation)
     EXPECT_GLENUM_EQ(GL_FLOAT, varying->type);
     EXPECT_EQ("vary", varying->name);
     EXPECT_EQ(sh::INTERPOLATION_CENTROID, varying->interpolation);
-}
-
-// Test for builtin uniform "gl_DepthRange" (Vertex shader)
-TEST_F(CollectVertexVariablesTest, DepthRange)
-{
-    const std::string &shaderString =
-        "attribute vec4 position;\n"
-        "void main() {\n"
-        "   gl_Position = position + vec4(gl_DepthRange.near, gl_DepthRange.far, gl_DepthRange.diff, 1.0);\n"
-        "}\n";
-
-    validateDepthRangeShader(shaderString);
-}
-
-// Test for builtin uniform "gl_DepthRange" (Fragment shader)
-TEST_F(CollectFragmentVariablesTest, DepthRange)
-{
-    const std::string &shaderString =
-        "precision mediump float;\n"
-        "void main() {\n"
-        "   gl_FragColor = vec4(gl_DepthRange.near, gl_DepthRange.far, gl_DepthRange.diff, 1.0);\n"
-        "}\n";
-
-    validateDepthRangeShader(shaderString);
 }

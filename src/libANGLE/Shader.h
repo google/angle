@@ -45,6 +45,7 @@ struct PackedVarying : public sh::Varying
     {}
 
     bool registerAssigned() const { return registerIndex != GL_INVALID_INDEX; }
+    bool isBuiltIn() const { return name.compare(0, 3, "gl_") == 0; }
 
     void resetRegisterAssignment()
     {
