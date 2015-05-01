@@ -118,28 +118,13 @@ void skipUntilEOD(pp::Lexer *lexer, pp::Token *token)
 
 bool isMacroNameReserved(const std::string &name)
 {
-    const char *kPredefinedMacros[] =
-    {
-        "__LINE__",
-        "__FILE__",
-        "__VERSION__",
-        "GL_ES",
-    };
-    const size_t kPredefinedMacrosCount = sizeof(kPredefinedMacros) / sizeof(*kPredefinedMacros);
-
-    for (size_t i = 0; i < kPredefinedMacrosCount; i++)
-    {
-        if (name == kPredefinedMacros[i])
-        {
-            return true;
-        }
-    }
-
     // Names prefixed with "GL_" are reserved.
-    if (name.compare(0, 3, "GL_") == 0)
-    {
+    if (name.substr(0, 3) == "GL_")
         return true;
-    }
+
+    // Names containing two consecutive underscores are reserved.
+    if (name.find("__") != std::string::npos)
+        return true;
 
     return false;
 }
