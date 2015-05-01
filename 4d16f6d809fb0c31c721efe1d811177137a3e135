@@ -16,6 +16,24 @@
       "revId": "4d16f6d809fb0c31c721efe1d811177137a3e135",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90fd66eb_6e3371a2",
+        "filename": "src/compiler/translator/glslang_lex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-01T00:33:32Z",
+      "side": 0,
+      "message": "It\u0027s a side-effect of upgrading Bison. We require using the latest version shipped with Cygwin. Not really sure why the generated file change - the next patch has the logic change.",
+      "parentUuid": "300cbaed_d0068f4c",
+      "revId": "4d16f6d809fb0c31c721efe1d811177137a3e135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
