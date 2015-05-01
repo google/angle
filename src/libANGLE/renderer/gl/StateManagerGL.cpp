@@ -24,6 +24,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
     : mFunctions(functions),
       mProgram(0),
       mVAO(0),
+      mVertexAttribCurrentValues(rendererCaps.maxVertexAttributes),
       mBuffers(),
       mTextureUnitIndex(0),
       mTextures(),
@@ -345,6 +346,17 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
     const gl::State &state = *data.state;
     const gl::Caps &caps = *data.caps;
 
+    const gl::VertexArray *vao = state.getVertexArray();
+    const std::vector<gl::VertexAttribute>& attribs = vao->getVertexAttributes();
+    for (size_t i = 0; i < attribs.size(); i++)
+    {
+        if (!attribs[i].enabled)
+        {
+            // TODO: Don't sync this attribute if it is not used by the program.
+            setAttributeCurrentData(i, state.getVertexAttribCurrentValue(i));
+        }
+    }
+
     const gl::Program *program = state.getProgram();
     const ProgramGL *programGL = GetImplAs<ProgramGL>(program);
     useProgram(programGL->getProgramID());
@@ -460,6 +472,21 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
     setPrimitiveRestartEnabled(state.isPrimitiveRestartEnabled());
 
     return gl::Error(GL_NO_ERROR);
+}
+
+void StateManagerGL::setAttributeCurrentData(size_t index, const gl::VertexAttribCurrentValueData &data)
+{
+    if (mVertexAttribCurrentValues[index] != data)
+    {
+        mVertexAttribCurrentValues[index] = data;
+        switch (mVertexAttribCurrentValues[index].Type)
+        {
+          case GL_FLOAT:        mFunctions->vertexAttrib4fv(index,  mVertexAttribCurrentValues[index].FloatValues);
+          case GL_INT:          mFunctions->vertexAttrib4iv(index,  mVertexAttribCurrentValues[index].IntValues);
+          case GL_UNSIGNED_INT: mFunctions->vertexAttrib4uiv(index, mVertexAttribCurrentValues[index].UnsignedIntValues);
+          default: UNREACHABLE();
+        }
+    }
 }
 
 void StateManagerGL::setScissorTestEnabled(bool enabled)

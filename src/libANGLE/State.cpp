@@ -112,12 +112,7 @@ void State::initialize(const Caps &caps, GLuint clientVersion)
 
     mActiveSampler = 0;
 
-    const GLfloat defaultFloatValues[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     mVertexAttribCurrentValues.resize(caps.maxVertexAttributes);
-    for (size_t attribIndex = 0; attribIndex < mVertexAttribCurrentValues.size(); ++attribIndex)
-    {
-        mVertexAttribCurrentValues[attribIndex].setFloatValues(defaultFloatValues);
-    }
 
     mUniformBuffers.resize(caps.maxCombinedUniformBlocks);
 

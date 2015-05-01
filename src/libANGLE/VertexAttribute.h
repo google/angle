@@ -79,6 +79,15 @@ struct VertexAttribCurrentValueData
     };
     GLenum Type;
 
+    VertexAttribCurrentValueData()
+        : Type(GL_FLOAT)
+    {
+        FloatValues[0] = 0.0f;
+        FloatValues[1] = 0.0f;
+        FloatValues[2] = 0.0f;
+        FloatValues[3] = 1.0f;
+    }
+
     void setFloatValues(const GLfloat floatValues[4])
     {
         for (unsigned int valueIndex = 0; valueIndex < 4; valueIndex++)
