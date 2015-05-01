@@ -286,7 +286,7 @@ EGLint SwapChain9::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
         device->SetStreamSourceFreq(streamIndex, 1);
     }
 
-    D3DVIEWPORT9 viewport = {0, 0, mWidth, mHeight, 0.0f, 1.0f};
+    D3DVIEWPORT9 viewport = {0, 0, static_cast<DWORD>(mWidth), static_cast<DWORD>(mHeight), 0.0f, 1.0f};
     device->SetViewport(&viewport);
 
     float x1 = x - 0.5f;

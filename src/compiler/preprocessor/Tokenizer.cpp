@@ -540,6 +540,10 @@ http://msdn.microsoft.com/en-us/library/2scxys89.aspx
 IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 */
 
+#if defined(_MSC_VER)
+#pragma warning(disable: 4005)
+#endif
+
 #include "Tokenizer.h"
 
 #include "DiagnosticsBase.h"
