@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f06142bc_4a04b6cf",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-04T17:19:31Z",
+      "side": 1,
+      "message": "Could you remove this block entirely? It\u0027s an error to call eglCreateWindowSurface with an null window.",
+      "range": {
+        "startLine": 172,
+        "startChar": 8,
+        "endLine": 172,
+        "endChar": 70
+      },
+      "revId": "f7fb1616b12ce844db4fd6225e7332a8d673de37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
