@@ -16,6 +16,24 @@
       "revId": "f965b0ec2852e32eaf736ffada2bf7ed626c7b0b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7042b231_d1808448",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-04T16:51:18Z",
+      "side": 1,
+      "message": "Mo, \"ConstantUnion\" uses the same pool allocator as most of the objects in the translator. We don\u0027t delete these objects here, but when the translator finishes compiling they all get destroyed at the same time. Will add a comment.",
+      "parentUuid": "f06142bc_ef7bdcec",
+      "revId": "f965b0ec2852e32eaf736ffada2bf7ed626c7b0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
