@@ -618,6 +618,7 @@ FunctionsGL::FunctionsGL()
       getDebugMessageLog(nullptr),
       getFramebufferParameteriv(nullptr),
       getInternalformati64v(nullptr),
+      getPointerv(nullptr),
       getObjectLabel(nullptr),
       getObjectPtrLabel(nullptr),
       getProgramInterfaceiv(nullptr),
@@ -863,6 +864,19 @@ void FunctionsGL::initialize()
         AssignGLEntryPoint(loadProcAddress("glPolygonOffset"), &polygonOffset);
         AssignGLEntryPoint(loadProcAddress("glTexSubImage1D"), &texSubImage1D);
         AssignGLEntryPoint(loadProcAddress("glTexSubImage2D"), &texSubImage2D);
+
+        // Extensions
+        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glDebugMessageControl"), &debugMessageControl);
+        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glDebugMessageInsert"), &debugMessageInsert);
+        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glDebugMessageCallback"), &debugMessageCallback);
+        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glGetDebugMessageLog"), &getDebugMessageLog);
+        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glGetPointerv"), &getPointerv);
+        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glPushDebugGroup"), &pushDebugGroup);
+        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glPopDebugGroup"), &popDebugGroup);
+        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glObjectLabel"), &objectLabel);
+        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glGetObjectLabel"), &getObjectLabel);
+        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glObjectPtrLabel"), &objectPtrLabel);
+        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glGetObjectPtrLabel"), &getObjectPtrLabel);
     }
 
     // 1.2
@@ -1397,6 +1411,7 @@ void FunctionsGL::initialize()
         AssignGLEntryPoint(loadProcAddress("glGetDebugMessageLog"), &getDebugMessageLog);
         AssignGLEntryPoint(loadProcAddress("glGetFramebufferParameteriv"), &getFramebufferParameteriv);
         AssignGLEntryPoint(loadProcAddress("glGetInternalformati64v"), &getInternalformati64v);
+        AssignGLEntryPoint(loadProcAddress("glGetPointerv"), &getPointerv);
         AssignGLEntryPoint(loadProcAddress("glGetObjectLabel"), &getObjectLabel);
         AssignGLEntryPoint(loadProcAddress("glGetObjectPtrLabel"), &getObjectPtrLabel);
         AssignGLEntryPoint(loadProcAddress("glGetProgramInterfaceiv"), &getProgramInterfaceiv);
