@@ -80,6 +80,11 @@ bool LinkedUniform::isSampler() const
     return IsSamplerType(type);
 }
 
+bool LinkedUniform::isBuiltIn() const
+{
+    return name.compare(0, 3, "gl_") == 0;
+}
+
 UniformBlock::UniformBlock(const std::string &name, unsigned int elementIndex, unsigned int dataSize)
     : name(name),
       elementIndex(elementIndex),

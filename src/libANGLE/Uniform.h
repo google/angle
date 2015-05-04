@@ -32,6 +32,7 @@ struct LinkedUniform : angle::NonCopyable
     bool isInDefaultBlock() const;
     size_t dataSize() const;
     bool isSampler() const;
+    bool isBuiltIn() const;
 
     const GLenum type;
     const GLenum precision;

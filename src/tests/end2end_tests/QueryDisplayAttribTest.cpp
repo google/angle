@@ -1,5 +1,16 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
+#ifndef ANGLE_ENABLE_D3D9
 #define ANGLE_ENABLE_D3D9
+#endif
+
+#ifndef ANGLE_ENABLE_D3D11
 #define ANGLE_ENABLE_D3D11
+#endif
 
 #include "ANGLETest.h"
 #include "com_utils.h"

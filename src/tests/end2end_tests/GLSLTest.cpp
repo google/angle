@@ -1,4 +1,13 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
+
+#include "libANGLE/Context.h"
+#include "libANGLE/Program.h"
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_TYPED_TEST_CASE(GLSLTest, ES2_D3D9, ES2_D3D11);
@@ -1066,4 +1075,37 @@ TYPED_TEST(GLSLTest, StructSpecifiersUniforms)
 
     GLuint program = CompileProgram(mSimpleVSSource, fragmentShaderSource);
     EXPECT_NE(0u, program);
+}
+
+// Test that gl_DepthRange is not stored as a uniform location. Since uniforms
+// beginning with "gl_" are filtered out by our validation logic, we must
+// bypass the validation to test the behaviour of the implementation.
+// (note this test is still Impl-independent)
+TYPED_TEST(GLSLTest, DepthRangeUniforms)
+{
+    const std::string fragmentShaderSource = SHADER_SOURCE
+    (
+        precision mediump float;
+
+        void main()
+        {
+            gl_FragColor = vec4(gl_DepthRange.near, gl_DepthRange.far, gl_DepthRange.diff, 1);
+        }
+    );
+
+    GLuint program = CompileProgram(mSimpleVSSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+
+    // dive into the ANGLE internals, so we can bypass validation.
+    gl::Context *context = reinterpret_cast<gl::Context *>(getEGLWindow()->getContext());
+    gl::Program *glProgram = context->getProgram(program);
+    GLint nearIndex = glProgram->getUniformLocation("gl_DepthRange.near");
+    EXPECT_EQ(-1, nearIndex);
+
+    // Test drawing does not throw an exception.
+    drawQuad(program, "inputAttribute", 0.5f);
+
+    EXPECT_GL_NO_ERROR();
+
+    glDeleteProgram(program);
 }

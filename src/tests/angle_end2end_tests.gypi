@@ -61,6 +61,7 @@
     },
     'dependencies':
     [
+        '<(angle_path)/src/angle.gyp:libANGLE',
         '<(angle_path)/src/angle.gyp:libEGL',
         '<(angle_path)/src/angle.gyp:libGLESv2',
         '<(angle_path)/src/tests/tests.gyp:angle_test_support',

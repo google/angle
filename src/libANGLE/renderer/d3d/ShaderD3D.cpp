@@ -218,7 +218,7 @@ void ShaderD3D::compileToHLSL(ShHandle compiler, const std::string &source)
         {
             const sh::Uniform &uniform = mUniforms[uniformIndex];
 
-            if (uniform.staticUse)
+            if (uniform.staticUse && !uniform.isBuiltIn())
             {
                 unsigned int index = static_cast<unsigned int>(-1);
                 bool getUniformRegisterResult = ShGetUniformRegister(compiler, uniform.name, &index);

@@ -70,6 +70,8 @@ struct COMPILER_EXPORT ShaderVariable
                               const ShaderVariable **leafVar,
                               std::string* originalFullName) const;
 
+    bool isBuiltIn() const { return name.compare(0, 3, "gl_") == 0; }
+
     GLenum type;
     GLenum precision;
     std::string name;

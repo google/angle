@@ -1375,7 +1375,9 @@ bool ProgramD3D::linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShad
 
         if (uniform.staticUse)
         {
-            defineUniformBase(vertexShaderD3D, uniform, vertexShaderD3D->getUniformRegister(uniform.name));
+            unsigned int registerBase = uniform.isBuiltIn() ? GL_INVALID_INDEX :
+                vertexShaderD3D->getUniformRegister(uniform.name);
+            defineUniformBase(vertexShaderD3D, uniform, registerBase);
         }
     }
 
@@ -1385,7 +1387,9 @@ bool ProgramD3D::linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShad
 
         if (uniform.staticUse)
         {
-            defineUniformBase(fragmentShaderD3D, uniform, fragmentShaderD3D->getUniformRegister(uniform.name));
+            unsigned int registerBase = uniform.isBuiltIn() ? GL_INVALID_INDEX :
+                fragmentShaderD3D->getUniformRegister(uniform.name);
+            defineUniformBase(fragmentShaderD3D, uniform, registerBase);
         }
     }
 
@@ -1396,21 +1400,17 @@ bool ProgramD3D::linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShad
 
     initializeUniformStorage();
 
-    // special case for gl_DepthRange, the only built-in uniform (also a struct)
-    if (vertexShaderD3D->usesDepthRange() || fragmentShaderD3D->usesDepthRange())
-    {
-        const sh::BlockMemberInfo &defaultInfo = sh::BlockMemberInfo::getDefaultBlockInfo();
-
-        mUniforms.push_back(new gl::LinkedUniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.near", 0, -1, defaultInfo));
-        mUniforms.push_back(new gl::LinkedUniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.far", 0, -1, defaultInfo));
-        mUniforms.push_back(new gl::LinkedUniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.diff", 0, -1, defaultInfo));
-    }
-
     return true;
 }
 
 void ProgramD3D::defineUniformBase(const ShaderD3D *shader, const sh::Uniform &uniform, unsigned int uniformRegister)
 {
+    if (uniformRegister == GL_INVALID_INDEX)
+    {
+        defineUniform(shader, uniform, uniform.name, nullptr);
+        return;
+    }
+
     ShShaderOutput outputType = shader->getCompilerOutputType();
     sh::HLSLBlockEncoder encoder(sh::HLSLBlockEncoder::GetStrategyFor(outputType));
     encoder.skipRegisters(uniformRegister);
@@ -1427,7 +1427,8 @@ void ProgramD3D::defineUniform(const ShaderD3D *shader, const sh::ShaderVariable
         {
             const std::string &elementString = (uniform.isArray() ? ArrayString(elementIndex) : "");
 
-            encoder->enterAggregateType();
+            if (encoder)
+                encoder->enterAggregateType();
 
             for (size_t fieldIndex = 0; fieldIndex < uniform.fields.size(); fieldIndex++)
             {
@@ -1437,13 +1438,14 @@ void ProgramD3D::defineUniform(const ShaderD3D *shader, const sh::ShaderVariable
                 defineUniform(shader, field, fieldFullName, encoder);
             }
 
-            encoder->exitAggregateType();
+            if (encoder)
+                encoder->exitAggregateType();
         }
     }
     else // Not a struct
     {
         // Arrays are treated as aggregate types
-        if (uniform.isArray())
+        if (uniform.isArray() && encoder)
         {
             encoder->enterAggregateType();
         }
@@ -1451,29 +1453,36 @@ void ProgramD3D::defineUniform(const ShaderD3D *shader, const sh::ShaderVariable
         gl::LinkedUniform *linkedUniform = getUniformByName(fullName);
 
         // Advance the uniform offset, to track registers allocation for structs
-        sh::BlockMemberInfo blockInfo = encoder->encodeType(uniform.type, uniform.arraySize, false);
+        sh::BlockMemberInfo blockInfo = encoder ?
+            encoder->encodeType(uniform.type, uniform.arraySize, false) :
+            sh::BlockMemberInfo::getDefaultBlockInfo();
 
         if (!linkedUniform)
         {
             linkedUniform = new gl::LinkedUniform(uniform.type, uniform.precision, fullName, uniform.arraySize,
                                                   -1, sh::BlockMemberInfo::getDefaultBlockInfo());
             ASSERT(linkedUniform);
-            linkedUniform->registerElement = sh::HLSLBlockEncoder::getBlockRegisterElement(blockInfo);
+
+            if (encoder)
+                linkedUniform->registerElement = sh::HLSLBlockEncoder::getBlockRegisterElement(blockInfo);
             mUniforms.push_back(linkedUniform);
         }
 
-        if (shader->getShaderType() == GL_FRAGMENT_SHADER)
+        if (encoder)
         {
-            linkedUniform->psRegisterIndex = sh::HLSLBlockEncoder::getBlockRegister(blockInfo);
+            if (shader->getShaderType() == GL_FRAGMENT_SHADER)
+            {
+                linkedUniform->psRegisterIndex = sh::HLSLBlockEncoder::getBlockRegister(blockInfo);
+            }
+            else if (shader->getShaderType() == GL_VERTEX_SHADER)
+            {
+                linkedUniform->vsRegisterIndex = sh::HLSLBlockEncoder::getBlockRegister(blockInfo);
+            }
+            else UNREACHABLE();
         }
-        else if (shader->getShaderType() == GL_VERTEX_SHADER)
-        {
-            linkedUniform->vsRegisterIndex = sh::HLSLBlockEncoder::getBlockRegister(blockInfo);
-        }
-        else UNREACHABLE();
 
         // Arrays are treated as aggregate types
-        if (uniform.isArray())
+        if (uniform.isArray() && encoder)
         {
             encoder->exitAggregateType();
         }
@@ -1934,9 +1943,12 @@ bool ProgramD3D::indexUniforms(gl::InfoLog &infoLog, const gl::Caps &caps)
             }
         }
 
-        for (unsigned int arrayElementIndex = 0; arrayElementIndex < uniform.elementCount(); arrayElementIndex++)
+        for (unsigned int arrayIndex = 0; arrayIndex < uniform.elementCount(); arrayIndex++)
         {
-            mUniformIndex.push_back(gl::VariableLocation(uniform.name, arrayElementIndex, uniformIndex));
+            if (!uniform.isBuiltIn())
+            {
+                mUniformIndex.push_back(gl::VariableLocation(uniform.name, arrayIndex, uniformIndex));
+            }
         }
     }
 
