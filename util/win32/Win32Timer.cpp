@@ -7,7 +7,7 @@
 #include "win32/Win32Timer.h"
 
 Win32Timer::Win32Timer()
-    : mRunning(0),
+    : mRunning(false),
       mStartTime(0),
       mStopTime(0)
 {
