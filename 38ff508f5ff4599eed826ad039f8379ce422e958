@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f06142bc_b433f96e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-04T14:48:32Z",
+      "side": 1,
+      "message": "Yup, I had considered the options and settled on this as the best choice, given we don\u0027t use it internally.",
+      "parentUuid": "f06142bc_34a52929",
+      "range": {
+        "startLine": 68,
+        "startChar": 10,
+        "endLine": 68,
+        "endChar": 34
+      },
+      "revId": "38ff508f5ff4599eed826ad039f8379ce422e958",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7042b231_ee267f34",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-04T14:26:35Z",
       "side": 1,
       "message": "Should be GLsizei.",
+      "range": {
+        "startLine": 90,
+        "startChar": 30,
+        "endLine": 90,
+        "endChar": 36
+      },
+      "revId": "38ff508f5ff4599eed826ad039f8379ce422e958",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "105fb6fa_e22cd719",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-04T14:48:32Z",
+      "side": 1,
+      "message": "Whoops, fixed, ty.",
+      "parentUuid": "7042b231_ee267f34",
       "range": {
         "startLine": 90,
         "startChar": 30,
