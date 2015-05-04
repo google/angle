@@ -16,7 +16,7 @@
 class ConstantFinder : public TIntermTraverser
 {
   public:
-    ConstantFinder(ConstantUnion constToFind)
+    ConstantFinder(TConstantUnion constToFind)
         : mConstToFind(constToFind),
           mFound(false)
     {}
@@ -32,7 +32,7 @@ class ConstantFinder : public TIntermTraverser
     bool found() const { return mFound; }
 
   private:
-    ConstantUnion mConstToFind;
+    TConstantUnion mConstToFind;
     bool mFound;
 };
 
@@ -72,7 +72,7 @@ class ConstantFoldingTest : public testing::Test
         }
     }
 
-    bool constantFoundInAST(ConstantUnion c)
+    bool constantFoundInAST(TConstantUnion c)
     {
         ConstantFinder finder(c);
         mASTRoot->traverse(&finder);
@@ -81,7 +81,7 @@ class ConstantFoldingTest : public testing::Test
 
     bool constantFoundInAST(int i)
     {
-        ConstantUnion c;
+        TConstantUnion c;
         c.setIConst(i);
         return constantFoundInAST(c);
     }

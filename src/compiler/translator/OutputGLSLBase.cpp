@@ -168,8 +168,8 @@ void TOutputGLSLBase::writeFunctionParameters(const TIntermSequence &args)
     }
 }
 
-const ConstantUnion *TOutputGLSLBase::writeConstantUnion(
-    const TType &type, const ConstantUnion *pConstUnion)
+const TConstantUnion *TOutputGLSLBase::writeConstantUnion(
+    const TType &type, const TConstantUnion *pConstUnion)
 {
     TInfoSinkBase &out = objSink();
 
@@ -386,7 +386,7 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
                 TIntermConstantUnion *element = (*sit)->getAsConstantUnion();
                 ASSERT(element->getBasicType() == EbtInt);
                 ASSERT(element->getNominalSize() == 1);
-                const ConstantUnion& data = element->getUnionArrayPointer()[0];
+                const TConstantUnion& data = element->getUnionArrayPointer()[0];
                 ASSERT(data.getType() == EbtInt);
                 switch (data.getIConst())
                 {

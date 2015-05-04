@@ -1133,7 +1133,7 @@ bool TParseContext::executeInitializer(const TSourceLoc &line, const TString &id
             const TSymbol* symbol = symbolTable.find(initializer->getAsSymbolNode()->getSymbol(), 0);
             const TVariable* tVar = static_cast<const TVariable*>(symbol);
 
-            ConstantUnion* constArray = tVar->getConstPointer();
+            TConstantUnion* constArray = tVar->getConstPointer();
             variable->shareConstPointer(constArray);
         } else {
             std::stringstream extraInfoStream;
@@ -1786,7 +1786,7 @@ TIntermTyped* TParseContext::foldConstConstructor(TIntermAggregate* aggrNode, co
     aggrNode->setType(type);
     if (canBeFolded) {
         bool returnVal = false;
-        ConstantUnion* unionArray = new ConstantUnion[type.getObjectSize()];
+        TConstantUnion* unionArray = new TConstantUnion[type.getObjectSize()];
         if (aggrNode->getSequence()->size() == 1)  {
             returnVal = intermediate.parseConstTree(aggrNode->getLine(), aggrNode, unionArray, aggrNode->getOp(), type, true);
         }
@@ -1814,7 +1814,7 @@ TIntermTyped* TParseContext::addConstVectorNode(TVectorFields& fields, TIntermTy
     TIntermTyped* typedNode;
     TIntermConstantUnion* tempConstantNode = node->getAsConstantUnion();
 
-    ConstantUnion *unionArray;
+    TConstantUnion *unionArray;
     if (tempConstantNode) {
         unionArray = tempConstantNode->getUnionArrayPointer();
 
@@ -1828,7 +1828,7 @@ TIntermTyped* TParseContext::addConstVectorNode(TVectorFields& fields, TIntermTy
         return 0;
     }
 
-    ConstantUnion* constArray = new ConstantUnion[fields.num];
+    TConstantUnion* constArray = new TConstantUnion[fields.num];
 
     for (int i = 0; i < fields.num; i++) {
         if (fields.offsets[i] >= node->getType().getNominalSize()) {
@@ -1868,7 +1868,7 @@ TIntermTyped* TParseContext::addConstMatrixNode(int index, TIntermTyped* node, c
     }
 
     if (tempConstantNode) {
-         ConstantUnion* unionArray = tempConstantNode->getUnionArrayPointer();
+         TConstantUnion* unionArray = tempConstantNode->getUnionArrayPointer();
          int size = tempConstantNode->getType().getCols();
          typedNode = intermediate.addConstantUnion(&unionArray[size*index], tempConstantNode->getType(), line);
     } else {
@@ -1906,7 +1906,7 @@ TIntermTyped* TParseContext::addConstArrayNode(int index, TIntermTyped* node, co
 
     if (tempConstantNode) {
         size_t arrayElementSize = arrayElementType.getObjectSize();
-        ConstantUnion* unionArray = tempConstantNode->getUnionArrayPointer();
+        TConstantUnion* unionArray = tempConstantNode->getUnionArrayPointer();
         typedNode = intermediate.addConstantUnion(&unionArray[arrayElementSize * index], tempConstantNode->getType(), line);
     } else {
         error(line, "Cannot offset into the array", "Error");
@@ -1940,7 +1940,7 @@ TIntermTyped* TParseContext::addConstStruct(const TString &identifier, TIntermTy
     TIntermTyped *typedNode;
     TIntermConstantUnion *tempConstantNode = node->getAsConstantUnion();
     if (tempConstantNode) {
-         ConstantUnion* constArray = tempConstantNode->getUnionArrayPointer();
+         TConstantUnion* constArray = tempConstantNode->getUnionArrayPointer();
 
          typedNode = intermediate.addConstantUnion(constArray+instanceSize, tempConstantNode->getType(), line); // type will be changed in the calling function
     } else {
@@ -2252,7 +2252,7 @@ TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, co
 
     if (indexedExpression == 0)
     {
-        ConstantUnion *unionArray = new ConstantUnion[1];
+        TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setFConst(0.0f);
         indexedExpression = intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpHigh, EvqConst), location);
     }
@@ -2356,7 +2356,7 @@ TIntermTyped* TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
         {
             error(dotLocation, " non-scalar fields not implemented yet", ".");
             recover();
-            ConstantUnion *unionArray = new ConstantUnion[1];
+            TConstantUnion *unionArray = new TConstantUnion[1];
             unionArray->setIConst(0);
             TIntermTyped* index = intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), fieldLocation);
             indexedExpression = intermediate.addIndex(EOpIndexDirect, baseExpression, index, dotLocation);
@@ -2365,7 +2365,7 @@ TIntermTyped* TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
         }
         else
         {
-            ConstantUnion *unionArray = new ConstantUnion[1];
+            TConstantUnion *unionArray = new TConstantUnion[1];
             unionArray->setIConst(fields.col * baseExpression->getRows() + fields.row);
             TIntermTyped* index = intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), fieldLocation);
             indexedExpression = intermediate.addIndex(EOpIndexDirect, baseExpression, index, dotLocation);
@@ -2413,7 +2413,7 @@ TIntermTyped* TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
                 }
                 else
                 {
-                    ConstantUnion *unionArray = new ConstantUnion[1];
+                    TConstantUnion *unionArray = new TConstantUnion[1];
                     unionArray->setIConst(i);
                     TIntermTyped* index = intermediate.addConstantUnion(unionArray, *fields[i]->type(), fieldLocation);
                     indexedExpression = intermediate.addIndex(EOpIndexDirectStruct, baseExpression, index, dotLocation);
@@ -2451,7 +2451,7 @@ TIntermTyped* TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
             }
             if (fieldFound)
             {
-                ConstantUnion *unionArray = new ConstantUnion[1];
+                TConstantUnion *unionArray = new TConstantUnion[1];
                 unionArray->setIConst(i);
                 TIntermTyped* index = intermediate.addConstantUnion(unionArray, *fields[i]->type(), fieldLocation);
                 indexedExpression = intermediate.addIndex(EOpIndexDirectInterfaceBlock, baseExpression, index, dotLocation);
@@ -3054,7 +3054,7 @@ TIntermTyped *TParseContext::addBinaryMathBooleanResult(TOperator op, TIntermTyp
     {
         binaryOpError(loc, GetOperatorString(op), left->getCompleteString(), right->getCompleteString());
         recover();
-        ConstantUnion *unionArray = new ConstantUnion[1];
+        TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setBConst(false);
         return intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), loc);
     }
@@ -3142,7 +3142,7 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
 
     if (thisNode != nullptr)
     {
-        ConstantUnion *unionArray = new ConstantUnion[1];
+        TConstantUnion *unionArray = new TConstantUnion[1];
         int arraySize = 0;
         TIntermTyped *typedThis = thisNode->getAsTyped();
         if (fnCall->getName() != "length")
@@ -3282,7 +3282,7 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
         {
             // error message was put out by findFunction()
             // Put on a dummy node for error recovery
-            ConstantUnion *unionArray = new ConstantUnion[1];
+            TConstantUnion *unionArray = new TConstantUnion[1];
             unionArray->setFConst(0.0f);
             callNode = intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpUndefined, EvqConst), loc);
             recover();

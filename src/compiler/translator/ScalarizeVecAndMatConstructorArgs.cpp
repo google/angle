@@ -39,7 +39,7 @@ bool ContainsVectorNode(const TIntermSequence &sequence)
 
 TIntermConstantUnion *ConstructIndexNode(int index)
 {
-    ConstantUnion *u = new ConstantUnion[1];
+    TConstantUnion *u = new TConstantUnion[1];
     u[0].setIConst(index);
 
     TType type(EbtInt, EbpUndefined, EvqConst, 1);

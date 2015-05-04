@@ -64,12 +64,12 @@ bool ValidateMultiplication(TOperator op, const TType &left, const TType &right)
 }
 
 bool CompareStructure(const TType& leftNodeType,
-                      ConstantUnion *rightUnionArray,
-                      ConstantUnion *leftUnionArray);
+                      TConstantUnion *rightUnionArray,
+                      TConstantUnion *leftUnionArray);
 
 bool CompareStruct(const TType &leftNodeType,
-                   ConstantUnion *rightUnionArray,
-                   ConstantUnion *leftUnionArray)
+                   TConstantUnion *rightUnionArray,
+                   TConstantUnion *leftUnionArray)
 {
     const TFieldList &fields = leftNodeType.getStruct()->fields();
 
@@ -102,8 +102,8 @@ bool CompareStruct(const TType &leftNodeType,
 }
 
 bool CompareStructure(const TType &leftNodeType,
-                      ConstantUnion *rightUnionArray,
-                      ConstantUnion *leftUnionArray)
+                      TConstantUnion *rightUnionArray,
+                      TConstantUnion *leftUnionArray)
 {
     if (leftNodeType.isArray())
     {
@@ -668,7 +668,7 @@ bool TIntermBinary::promote(TInfoSink &infoSink)
 TIntermTyped *TIntermConstantUnion::fold(
     TOperator op, TIntermConstantUnion *rightNode, TInfoSink &infoSink)
 {
-    ConstantUnion *unionArray = getUnionArrayPointer();
+    TConstantUnion *unionArray = getUnionArrayPointer();
 
     if (!unionArray)
         return nullptr;
@@ -678,7 +678,7 @@ TIntermTyped *TIntermConstantUnion::fold(
     if (rightNode)
     {
         // binary operations
-        ConstantUnion *rightUnionArray = rightNode->getUnionArrayPointer();
+        TConstantUnion *rightUnionArray = rightNode->getUnionArrayPointer();
         TType returnType = getType();
 
         if (!rightUnionArray)
@@ -687,7 +687,7 @@ TIntermTyped *TIntermConstantUnion::fold(
         // for a case like float f = vec4(2, 3, 4, 5) + 1.2;
         if (rightNode->getType().getObjectSize() == 1 && objectSize > 1)
         {
-            rightUnionArray = new ConstantUnion[objectSize];
+            rightUnionArray = new TConstantUnion[objectSize];
             for (size_t i = 0; i < objectSize; ++i)
             {
                 rightUnionArray[i] = *rightNode->getUnionArrayPointer();
@@ -697,7 +697,7 @@ TIntermTyped *TIntermConstantUnion::fold(
         else if (rightNode->getType().getObjectSize() > 1 && objectSize == 1)
         {
             // for a case like float f = 1.2 + vec4(2, 3, 4, 5);
-            unionArray = new ConstantUnion[rightNode->getType().getObjectSize()];
+            unionArray = new TConstantUnion[rightNode->getType().getObjectSize()];
             for (size_t i = 0; i < rightNode->getType().getObjectSize(); ++i)
             {
                 unionArray[i] = *getUnionArrayPointer();
@@ -706,19 +706,19 @@ TIntermTyped *TIntermConstantUnion::fold(
             objectSize = rightNode->getType().getObjectSize();
         }
 
-        ConstantUnion *tempConstArray = nullptr;
+        TConstantUnion *tempConstArray = nullptr;
         TIntermConstantUnion *tempNode;
 
         bool boolNodeFlag = false;
         switch(op)
         {
           case EOpAdd:
-            tempConstArray = new ConstantUnion[objectSize];
+            tempConstArray = new TConstantUnion[objectSize];
             for (size_t i = 0; i < objectSize; i++)
                 tempConstArray[i] = unionArray[i] + rightUnionArray[i];
             break;
           case EOpSub:
-            tempConstArray = new ConstantUnion[objectSize];
+            tempConstArray = new TConstantUnion[objectSize];
             for (size_t i = 0; i < objectSize; i++)
                 tempConstArray[i] = unionArray[i] - rightUnionArray[i];
             break;
@@ -726,7 +726,7 @@ TIntermTyped *TIntermConstantUnion::fold(
           case EOpMul:
           case EOpVectorTimesScalar:
           case EOpMatrixTimesScalar:
-            tempConstArray = new ConstantUnion[objectSize];
+            tempConstArray = new TConstantUnion[objectSize];
             for (size_t i = 0; i < objectSize; i++)
                 tempConstArray[i] = unionArray[i] * rightUnionArray[i];
             break;
@@ -749,7 +749,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                 const int resultCols = rightCols;
                 const int resultRows = leftRows;
 
-                tempConstArray = new ConstantUnion[resultCols * resultRows];
+                tempConstArray = new TConstantUnion[resultCols * resultRows];
                 for (int row = 0; row < resultRows; row++)
                 {
                     for (int column = 0; column < resultCols; column++)
@@ -774,7 +774,7 @@ TIntermTyped *TIntermConstantUnion::fold(
           case EOpDiv:
           case EOpIMod:
             {
-                tempConstArray = new ConstantUnion[objectSize];
+                tempConstArray = new TConstantUnion[objectSize];
                 for (size_t i = 0; i < objectSize; i++)
                 {
                     switch (getType().getBasicType())
@@ -872,7 +872,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                 const int matrixCols = getCols();
                 const int matrixRows = getRows();
 
-                tempConstArray = new ConstantUnion[matrixRows];
+                tempConstArray = new TConstantUnion[matrixRows];
 
                 for (int matrixRow = 0; matrixRow < matrixRows; matrixRow++)
                 {
@@ -908,7 +908,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                 const int matrixCols = rightNode->getType().getCols();
                 const int matrixRows = rightNode->getType().getRows();
 
-                tempConstArray = new ConstantUnion[matrixCols];
+                tempConstArray = new TConstantUnion[matrixCols];
 
                 for (int matrixCol = 0; matrixCol < matrixCols; matrixCol++)
                 {
@@ -930,7 +930,7 @@ TIntermTyped *TIntermConstantUnion::fold(
             // this code is written for possible future use,
             // will not get executed currently
             {
-                tempConstArray = new ConstantUnion[objectSize];
+                tempConstArray = new TConstantUnion[objectSize];
                 for (size_t i = 0; i < objectSize; i++)
                 {
                     tempConstArray[i] = unionArray[i] && rightUnionArray[i];
@@ -942,7 +942,7 @@ TIntermTyped *TIntermConstantUnion::fold(
             // this code is written for possible future use,
             // will not get executed currently
             {
-                tempConstArray = new ConstantUnion[objectSize];
+                tempConstArray = new TConstantUnion[objectSize];
                 for (size_t i = 0; i < objectSize; i++)
                 {
                     tempConstArray[i] = unionArray[i] || rightUnionArray[i];
@@ -952,7 +952,7 @@ TIntermTyped *TIntermConstantUnion::fold(
 
           case EOpLogicalXor:
             {
-                tempConstArray = new ConstantUnion[objectSize];
+                tempConstArray = new TConstantUnion[objectSize];
                 for (size_t i = 0; i < objectSize; i++)
                 {
                     switch (getType().getBasicType())
@@ -970,41 +970,41 @@ TIntermTyped *TIntermConstantUnion::fold(
             break;
 
           case EOpBitwiseAnd:
-            tempConstArray = new ConstantUnion[objectSize];
+            tempConstArray = new TConstantUnion[objectSize];
             for (size_t i = 0; i < objectSize; i++)
                 tempConstArray[i] = unionArray[i] & rightUnionArray[i];
             break;
           case EOpBitwiseXor:
-            tempConstArray = new ConstantUnion[objectSize];
+            tempConstArray = new TConstantUnion[objectSize];
             for (size_t i = 0; i < objectSize; i++)
                 tempConstArray[i] = unionArray[i] ^ rightUnionArray[i];
             break;
           case EOpBitwiseOr:
-            tempConstArray = new ConstantUnion[objectSize];
+            tempConstArray = new TConstantUnion[objectSize];
             for (size_t i = 0; i < objectSize; i++)
                 tempConstArray[i] = unionArray[i] | rightUnionArray[i];
             break;
           case EOpBitShiftLeft:
-            tempConstArray = new ConstantUnion[objectSize];
+            tempConstArray = new TConstantUnion[objectSize];
             for (size_t i = 0; i < objectSize; i++)
                 tempConstArray[i] = unionArray[i] << rightUnionArray[i];
             break;
           case EOpBitShiftRight:
-            tempConstArray = new ConstantUnion[objectSize];
+            tempConstArray = new TConstantUnion[objectSize];
             for (size_t i = 0; i < objectSize; i++)
                 tempConstArray[i] = unionArray[i] >> rightUnionArray[i];
             break;
 
           case EOpLessThan:
             ASSERT(objectSize == 1);
-            tempConstArray = new ConstantUnion[1];
+            tempConstArray = new TConstantUnion[1];
             tempConstArray->setBConst(*unionArray < *rightUnionArray);
             returnType = TType(EbtBool, EbpUndefined, EvqConst);
             break;
 
           case EOpGreaterThan:
             ASSERT(objectSize == 1);
-            tempConstArray = new ConstantUnion[1];
+            tempConstArray = new TConstantUnion[1];
             tempConstArray->setBConst(*unionArray > *rightUnionArray);
             returnType = TType(EbtBool, EbpUndefined, EvqConst);
             break;
@@ -1012,9 +1012,9 @@ TIntermTyped *TIntermConstantUnion::fold(
           case EOpLessThanEqual:
             {
                 ASSERT(objectSize == 1);
-                ConstantUnion constant;
+                TConstantUnion constant;
                 constant.setBConst(*unionArray > *rightUnionArray);
-                tempConstArray = new ConstantUnion[1];
+                tempConstArray = new TConstantUnion[1];
                 tempConstArray->setBConst(!constant.getBConst());
                 returnType = TType(EbtBool, EbpUndefined, EvqConst);
                 break;
@@ -1023,9 +1023,9 @@ TIntermTyped *TIntermConstantUnion::fold(
           case EOpGreaterThanEqual:
             {
                 ASSERT(objectSize == 1);
-                ConstantUnion constant;
+                TConstantUnion constant;
                 constant.setBConst(*unionArray < *rightUnionArray);
-                tempConstArray = new ConstantUnion[1];
+                tempConstArray = new TConstantUnion[1];
                 tempConstArray->setBConst(!constant.getBConst());
                 returnType = TType(EbtBool, EbpUndefined, EvqConst);
                 break;
@@ -1053,7 +1053,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                 }
             }
 
-            tempConstArray = new ConstantUnion[1];
+            tempConstArray = new TConstantUnion[1];
             if (!boolNodeFlag)
             {
                 tempConstArray->setBConst(true);
@@ -1091,7 +1091,7 @@ TIntermTyped *TIntermConstantUnion::fold(
                 }
             }
 
-            tempConstArray = new ConstantUnion[1];
+            tempConstArray = new TConstantUnion[1];
             if (!boolNodeFlag)
             {
                 tempConstArray->setBConst(true);
@@ -1124,7 +1124,7 @@ TIntermTyped *TIntermConstantUnion::fold(
         // Do unary operations
         //
         TIntermConstantUnion *newNode = 0;
-        ConstantUnion* tempConstArray = new ConstantUnion[objectSize];
+        TConstantUnion* tempConstArray = new TConstantUnion[objectSize];
         for (size_t i = 0; i < objectSize; i++)
         {
             switch(op)
@@ -1457,8 +1457,8 @@ TIntermTyped *TIntermConstantUnion::fold(
     }
 }
 
-bool TIntermConstantUnion::foldFloatTypeUnary(const ConstantUnion &parameter, FloatTypeUnaryFunc builtinFunc,
-                                              TInfoSink &infoSink, ConstantUnion *result) const
+bool TIntermConstantUnion::foldFloatTypeUnary(const TConstantUnion &parameter, FloatTypeUnaryFunc builtinFunc,
+                                              TInfoSink &infoSink, TConstantUnion *result) const
 {
     ASSERT(builtinFunc);
 

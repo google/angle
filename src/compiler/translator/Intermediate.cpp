@@ -361,7 +361,7 @@ TIntermCase *TIntermediate::addCase(
 //
 
 TIntermConstantUnion *TIntermediate::addConstantUnion(
-    ConstantUnion *unionArrayPointer, const TType &t, const TSourceLoc &line)
+    TConstantUnion *unionArrayPointer, const TType &t, const TSourceLoc &line)
 {
     TIntermConstantUnion *node = new TIntermConstantUnion(unionArrayPointer, t);
     node->setLine(line);
@@ -378,11 +378,11 @@ TIntermTyped *TIntermediate::addSwizzle(
     node->setLine(line);
     TIntermConstantUnion *constIntNode;
     TIntermSequence *sequenceVector = node->getSequence();
-    ConstantUnion *unionArray;
+    TConstantUnion *unionArray;
 
     for (int i = 0; i < fields.num; i++)
     {
-        unionArray = new ConstantUnion[1];
+        unionArray = new TConstantUnion[1];
         unionArray->setIConst(fields.offsets[i]);
         constIntNode = addConstantUnion(
             unionArray, TType(EbtInt, EbpUndefined, EvqConst), line);

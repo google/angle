@@ -35,7 +35,7 @@ class TOutputGLSLBase : public TIntermTraverser
     void writeVariableType(const TType &type);
     virtual bool writeVariablePrecision(TPrecision precision) = 0;
     void writeFunctionParameters(const TIntermSequence &args);
-    const ConstantUnion *writeConstantUnion(const TType &type, const ConstantUnion *pConstUnion);
+    const TConstantUnion *writeConstantUnion(const TType &type, const TConstantUnion *pConstUnion);
     void writeConstructorTriplet(Visit visit, const TType &type, const char *constructorBaseType);
     TString getTypeName(const TType &type);
 

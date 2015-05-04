@@ -76,7 +76,7 @@ class OutputHLSL : public TIntermTraverser
 
     // Emit constructor. Called with literal names so using const char* instead of TString.
     void outputConstructor(Visit visit, const TType &type, const char *name, const TIntermSequence *parameters);
-    const ConstantUnion *writeConstantUnion(const TType &type, const ConstantUnion *constUnion);
+    const TConstantUnion *writeConstantUnion(const TType &type, const TConstantUnion *constUnion);
 
     void outputEqual(Visit visit, const TType &type, TOperator op, TInfoSinkBase &out);
 

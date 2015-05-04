@@ -265,7 +265,7 @@ bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary *node)
         OutputTreeText(out, intermConstantUnion, mDepth + 1);
 
         // The following code finds the field name from the constant union
-        const ConstantUnion *constantUnion = intermConstantUnion->getUnionArrayPointer();
+        const TConstantUnion *constantUnion = intermConstantUnion->getUnionArrayPointer();
         const TStructure *structure = node->getLeft()->getType().getStruct();
         const TInterfaceBlock *interfaceBlock = node->getLeft()->getType().getInterfaceBlock();
         ASSERT(structure || interfaceBlock);

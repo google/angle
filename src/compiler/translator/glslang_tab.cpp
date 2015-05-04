@@ -2361,7 +2361,7 @@ yyreduce:
 
         if (variable->getType().getQualifier() == EvqConst)
         {
-            ConstantUnion* constArray = variable->getConstPointer();
+            TConstantUnion* constArray = variable->getConstPointer();
             TType t(variable->getType());
             (yyval.interm.intermTypedNode) = context->intermediate.addConstantUnion(constArray, t, (yylsp[0]));
         }
@@ -2390,7 +2390,7 @@ yyreduce:
   case 6:
 
     {
-        ConstantUnion *unionArray = new ConstantUnion[1];
+        TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setIConst((yyvsp[0].lex).i);
         (yyval.interm.intermTypedNode) = context->intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), (yylsp[0]));
     }
@@ -2400,7 +2400,7 @@ yyreduce:
   case 7:
 
     {
-        ConstantUnion *unionArray = new ConstantUnion[1];
+        TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setUConst((yyvsp[0].lex).u);
         (yyval.interm.intermTypedNode) = context->intermediate.addConstantUnion(unionArray, TType(EbtUInt, EbpUndefined, EvqConst), (yylsp[0]));
     }
@@ -2410,7 +2410,7 @@ yyreduce:
   case 8:
 
     {
-        ConstantUnion *unionArray = new ConstantUnion[1];
+        TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setFConst((yyvsp[0].lex).f);
         (yyval.interm.intermTypedNode) = context->intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpUndefined, EvqConst), (yylsp[0]));
     }
@@ -2420,7 +2420,7 @@ yyreduce:
   case 9:
 
     {
-        ConstantUnion *unionArray = new ConstantUnion[1];
+        TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setBConst((yyvsp[0].lex).b);
         (yyval.interm.intermTypedNode) = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), (yylsp[0]));
     }

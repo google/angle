@@ -133,20 +133,20 @@ class TVariable : public TSymbol
         type.setQualifier(qualifier);
     }
 
-    ConstantUnion *getConstPointer()
+    TConstantUnion *getConstPointer()
     { 
         if (!unionArray)
-            unionArray = new ConstantUnion[type.getObjectSize()];
+            unionArray = new TConstantUnion[type.getObjectSize()];
 
         return unionArray;
     }
 
-    ConstantUnion *getConstPointer() const
+    TConstantUnion *getConstPointer() const
     {
         return unionArray;
     }
 
-    void shareConstPointer(ConstantUnion *constArray)
+    void shareConstPointer(TConstantUnion *constArray)
     {
         if (unionArray == constArray)
             return;
@@ -160,7 +160,7 @@ class TVariable : public TSymbol
     bool userType;
     // we are assuming that Pool Allocator will free the memory
     // allocated to unionArray when this object is destroyed.
-    ConstantUnion *unionArray;
+    TConstantUnion *unionArray;
 };
 
 // The function sub-class of symbols and the parser will need to

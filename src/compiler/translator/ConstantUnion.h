@@ -9,16 +9,18 @@
 
 #include <assert.h>
 
-class ConstantUnion {
+#include "compiler/translator/BaseTypes.h"
+
+class TConstantUnion {
 public:
     POOL_ALLOCATOR_NEW_DELETE();
-    ConstantUnion()
+    TConstantUnion()
     {
         iConst = 0;
         type = EbtVoid;
     }
 
-    bool cast(TBasicType newType, const ConstantUnion &constant)
+    bool cast(TBasicType newType, const TConstantUnion &constant)
     {
         switch (newType)
         {
@@ -109,7 +111,7 @@ public:
         return b == bConst;
     }
 
-    bool operator==(const ConstantUnion& constant) const
+    bool operator==(const TConstantUnion& constant) const
     {
         if (constant.type != type)
             return false;
@@ -148,12 +150,12 @@ public:
         return !operator==(b);
     }
 
-    bool operator!=(const ConstantUnion& constant) const
+    bool operator!=(const TConstantUnion& constant) const
     {
         return !operator==(constant);
     }
 
-    bool operator>(const ConstantUnion& constant) const
+    bool operator>(const TConstantUnion& constant) const
     { 
         assert(type == constant.type);
         switch (type) {
@@ -168,7 +170,7 @@ public:
         }
     }
 
-    bool operator<(const ConstantUnion& constant) const
+    bool operator<(const TConstantUnion& constant) const
     { 
         assert(type == constant.type);
         switch (type) {
@@ -183,9 +185,9 @@ public:
         }
     }
 
-    ConstantUnion operator+(const ConstantUnion& constant) const
+    TConstantUnion operator+(const TConstantUnion& constant) const
     { 
-        ConstantUnion returnValue;
+        TConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt: returnValue.setIConst(iConst + constant.iConst); break;
@@ -197,9 +199,9 @@ public:
         return returnValue;
     }
 
-    ConstantUnion operator-(const ConstantUnion& constant) const
+    TConstantUnion operator-(const TConstantUnion& constant) const
     { 
-        ConstantUnion returnValue;
+        TConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt: returnValue.setIConst(iConst - constant.iConst); break;
@@ -211,9 +213,9 @@ public:
         return returnValue;
     }
 
-    ConstantUnion operator*(const ConstantUnion& constant) const
+    TConstantUnion operator*(const TConstantUnion& constant) const
     { 
-        ConstantUnion returnValue;
+        TConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt: returnValue.setIConst(iConst * constant.iConst); break;
@@ -225,9 +227,9 @@ public:
         return returnValue;
     }
 
-    ConstantUnion operator%(const ConstantUnion& constant) const
+    TConstantUnion operator%(const TConstantUnion& constant) const
     { 
-        ConstantUnion returnValue;
+        TConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt: returnValue.setIConst(iConst % constant.iConst); break;
@@ -238,9 +240,9 @@ public:
         return returnValue;
     }
 
-    ConstantUnion operator>>(const ConstantUnion& constant) const
+    TConstantUnion operator>>(const TConstantUnion& constant) const
     { 
-        ConstantUnion returnValue;
+        TConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt: returnValue.setIConst(iConst >> constant.iConst); break;
@@ -251,9 +253,9 @@ public:
         return returnValue;
     }
 
-    ConstantUnion operator<<(const ConstantUnion& constant) const
+    TConstantUnion operator<<(const TConstantUnion& constant) const
     { 
-        ConstantUnion returnValue;
+        TConstantUnion returnValue;
         // The signedness of the second parameter might be different, but we
         // don't care, since the result is undefined if the second parameter is
         // negative, and aliasing should not be a problem with unions.
@@ -267,9 +269,9 @@ public:
         return returnValue;
     }
 
-    ConstantUnion operator&(const ConstantUnion& constant) const
+    TConstantUnion operator&(const TConstantUnion& constant) const
     { 
-        ConstantUnion returnValue;
+        TConstantUnion returnValue;
         assert(constant.type == EbtInt || constant.type == EbtUInt);
         switch (type) {
         case EbtInt:  returnValue.setIConst(iConst & constant.iConst); break;
@@ -280,9 +282,9 @@ public:
         return returnValue;
     }
 
-    ConstantUnion operator|(const ConstantUnion& constant) const
+    TConstantUnion operator|(const TConstantUnion& constant) const
     { 
-        ConstantUnion returnValue;
+        TConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt:  returnValue.setIConst(iConst | constant.iConst); break;
@@ -293,9 +295,9 @@ public:
         return returnValue;
     }
 
-    ConstantUnion operator^(const ConstantUnion& constant) const
+    TConstantUnion operator^(const TConstantUnion& constant) const
     { 
-        ConstantUnion returnValue;
+        TConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt:  returnValue.setIConst(iConst ^ constant.iConst); break;
@@ -306,9 +308,9 @@ public:
         return returnValue;
     }
 
-    ConstantUnion operator&&(const ConstantUnion& constant) const
+    TConstantUnion operator&&(const TConstantUnion& constant) const
     { 
-        ConstantUnion returnValue;
+        TConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtBool: returnValue.setBConst(bConst && constant.bConst); break;
@@ -318,9 +320,9 @@ public:
         return returnValue;
     }
 
-    ConstantUnion operator||(const ConstantUnion& constant) const
+    TConstantUnion operator||(const TConstantUnion& constant) const
     { 
-        ConstantUnion returnValue;
+        TConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtBool: returnValue.setBConst(bConst || constant.bConst); break;

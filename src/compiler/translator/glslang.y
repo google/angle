@@ -218,7 +218,7 @@ variable_identifier
 
         if (variable->getType().getQualifier() == EvqConst)
         {
-            ConstantUnion* constArray = variable->getConstPointer();
+            TConstantUnion* constArray = variable->getConstPointer();
             TType t(variable->getType());
             $$ = context->intermediate.addConstantUnion(constArray, t, @1);
         }
@@ -240,22 +240,22 @@ primary_expression
         $$ = $1;
     }
     | INTCONSTANT {
-        ConstantUnion *unionArray = new ConstantUnion[1];
+        TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setIConst($1.i);
         $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), @1);
     }
     | UINTCONSTANT {
-        ConstantUnion *unionArray = new ConstantUnion[1];
+        TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setUConst($1.u);
         $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtUInt, EbpUndefined, EvqConst), @1);
     }
     | FLOATCONSTANT {
-        ConstantUnion *unionArray = new ConstantUnion[1];
+        TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setFConst($1.f);
         $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpUndefined, EvqConst), @1);
     }
     | BOOLCONSTANT {
-        ConstantUnion *unionArray = new ConstantUnion[1];
+        TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setBConst($1.b);
         $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), @1);
     }

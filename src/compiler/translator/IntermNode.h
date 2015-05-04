@@ -23,9 +23,9 @@
 
 #include "common/angleutils.h"
 #include "compiler/translator/Common.h"
-#include "compiler/translator/Types.h"
 #include "compiler/translator/ConstantUnion.h"
 #include "compiler/translator/Operator.h"
+#include "compiler/translator/Types.h"
 
 class TIntermTraverser;
 class TIntermAggregate;
@@ -264,13 +264,13 @@ class TIntermRaw : public TIntermTyped
 class TIntermConstantUnion : public TIntermTyped
 {
   public:
-    TIntermConstantUnion(ConstantUnion *unionPointer, const TType &type)
+    TIntermConstantUnion(TConstantUnion *unionPointer, const TType &type)
         : TIntermTyped(type),
           mUnionArrayPointer(unionPointer) { }
 
     virtual bool hasSideEffects() const { return false; }
 
-    ConstantUnion *getUnionArrayPointer() const { return mUnionArrayPointer; }
+    TConstantUnion *getUnionArrayPointer() const { return mUnionArrayPointer; }
 
     int getIConst(size_t index) const
     {
@@ -296,11 +296,11 @@ class TIntermConstantUnion : public TIntermTyped
     TIntermTyped *fold(TOperator op, TIntermConstantUnion *rightNode, TInfoSink &infoSink);
 
   protected:
-    ConstantUnion *mUnionArrayPointer;
+    TConstantUnion *mUnionArrayPointer;
 
   private:
     typedef float(*FloatTypeUnaryFunc) (float);
-    bool foldFloatTypeUnary(const ConstantUnion &parameter, FloatTypeUnaryFunc builtinFunc, TInfoSink &infoSink, ConstantUnion *result) const;
+    bool foldFloatTypeUnary(const TConstantUnion &parameter, FloatTypeUnaryFunc builtinFunc, TInfoSink &infoSink, TConstantUnion *result) const;
 };
 
 //

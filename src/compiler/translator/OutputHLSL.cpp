@@ -2895,7 +2895,7 @@ void OutputHLSL::outputConstructor(Visit visit, const TType &type, const char *n
     }
 }
 
-const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const ConstantUnion *constUnion)
+const TConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const TConstantUnion *constUnion)
 {
     TInfoSinkBase &out = getInfoSink();
 
