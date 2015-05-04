@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f06142bc_34a52929",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-04T14:26:35Z",
+      "side": 1,
+      "message": "This probably isn\u0027t the most efficient but it looks like the other solutions (https://stackoverflow.com/questions/4432793/size-of-stringstream) are non-const.",
+      "range": {
+        "startLine": 68,
+        "startChar": 10,
+        "endLine": 68,
+        "endChar": 34
+      },
+      "revId": "38ff508f5ff4599eed826ad039f8379ce422e958",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7042b231_ee267f34",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-04T14:26:35Z",
+      "side": 1,
+      "message": "Should be GLsizei.",
+      "range": {
+        "startLine": 90,
+        "startChar": 30,
+        "endLine": 90,
+        "endChar": 36
+      },
+      "revId": "38ff508f5ff4599eed826ad039f8379ce422e958",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
