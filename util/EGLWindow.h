@@ -64,7 +64,7 @@ class EGLWindow : angle::NonCopyable
 
     void swap();
 
-    GLuint getClientVersion() const { return mClientVersion; }
+    EGLint getClientVersion() const { return mClientVersion; }
     const EGLPlatformParameters &getPlatform() const { return mPlatform; }
     EGLConfig getConfig() const;
     EGLDisplay getDisplay() const;
@@ -91,7 +91,7 @@ class EGLWindow : angle::NonCopyable
     EGLSurface mSurface;
     EGLContext mContext;
 
-    GLuint mClientVersion;
+    EGLint mClientVersion;
     EGLPlatformParameters mPlatform;
     size_t mWidth;
     size_t mHeight;
