@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30683a9e_e8ae7be6",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-04T21:34:52Z",
+      "side": 1,
+      "message": "I\u0027m not sure this implements the spec properly. The man page says:\n\n\"If a program object is in use as part of current rendering state, it will be flagged for deletion, but it will not be deleted until it is no longer part of current state for any rendering context.\"\n\nTherefore in this case the program\u0027s supposed to be flagged for later deletion. It looks to me like the same issue is present for the other types in this file. Am I misreading this, or misunderstanding how this CL works?",
+      "range": {
+        "startLine": 102,
+        "startChar": 12,
+        "endLine": 102,
+        "endChar": 22
+      },
+      "revId": "6b08c0a24d243bd70374592940a8e7d346e6ee58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
