@@ -34,6 +34,24 @@
       "revId": "f965b0ec2852e32eaf736ffada2bf7ed626c7b0b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7042b231_34ca969d",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-05-04T16:53:24Z",
+      "side": 1,
+      "message": "That\u0027s nasty.  Usually we use the type name starts with T to indicate it\u0027s using the pool allocator.\n\nIt didn\u0027t hurt to delete here anyway, right? Then maybe we should just delete, even though it\u0027s a non-op.  I really hope I can allocate some time to fix this mem mess.",
+      "parentUuid": "7042b231_d1808448",
+      "revId": "f965b0ec2852e32eaf736ffada2bf7ed626c7b0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
