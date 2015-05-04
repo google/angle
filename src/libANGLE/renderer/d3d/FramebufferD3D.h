@@ -106,7 +106,6 @@ class FramebufferD3D : public FramebufferImpl
     virtual GLenum getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const = 0;
 };
 
-gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTargetD3D **outRT);
 unsigned int GetAttachmentSerial(const gl::FramebufferAttachment *attachment);
 
 }

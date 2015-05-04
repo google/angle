@@ -75,4 +75,11 @@ unsigned int RenderbufferD3D::getRenderTargetSerial() const
     return (mRenderTarget ? mRenderTarget->getSerial() : 0);
 }
 
+gl::Error RenderbufferD3D::getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
+                                                     FramebufferAttachmentRenderTarget **rtOut)
+{
+    *rtOut = mRenderTarget;
+    return gl::Error(GL_NO_ERROR);
+}
+
 }

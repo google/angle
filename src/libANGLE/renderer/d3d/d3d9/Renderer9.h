@@ -105,7 +105,8 @@ class Renderer9 : public RendererD3D
                              bool ignoreViewport);
 
     gl::Error applyRenderTarget(const gl::Framebuffer *frameBuffer) override;
-    gl::Error applyRenderTarget(const gl::FramebufferAttachment *colorBuffer, const gl::FramebufferAttachment *depthStencilBuffer);
+    gl::Error applyRenderTarget(const gl::FramebufferAttachment *colorAttachment,
+                                const gl::FramebufferAttachment *depthStencilAttachment);
     virtual gl::Error applyShaders(gl::Program *program, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
                                    bool rasterizerDiscard, bool transformFeedbackActive);
     virtual gl::Error applyUniforms(const ProgramImpl &program, const std::vector<gl::LinkedUniform*> &uniformArray);

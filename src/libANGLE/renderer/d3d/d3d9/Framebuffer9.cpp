@@ -60,7 +60,7 @@ gl::Error Framebuffer9::readPixels(const gl::Rectangle &area, GLenum format, GLe
     ASSERT(colorbuffer);
 
     RenderTarget9 *renderTarget = nullptr;
-    gl::Error error = d3d9::GetAttachmentRenderTarget(colorbuffer, &renderTarget);
+    gl::Error error = colorbuffer->getRenderTarget(&renderTarget);
     if (error.isError())
     {
         return error;
@@ -247,7 +247,7 @@ gl::Error Framebuffer9::blit(const gl::Rectangle &sourceArea, const gl::Rectangl
         ASSERT(readBuffer);
 
         RenderTarget9 *readRenderTarget = nullptr;
-        gl::Error error = d3d9::GetAttachmentRenderTarget(readBuffer, &readRenderTarget);
+        gl::Error error = readBuffer->getRenderTarget(&readRenderTarget);
         if (error.isError())
         {
             return error;
@@ -258,7 +258,7 @@ gl::Error Framebuffer9::blit(const gl::Rectangle &sourceArea, const gl::Rectangl
         ASSERT(drawBuffer);
 
         RenderTarget9 *drawRenderTarget = nullptr;
-        error = d3d9::GetAttachmentRenderTarget(drawBuffer, &drawRenderTarget);
+        error = drawBuffer->getRenderTarget(&drawRenderTarget);
         if (error.isError())
         {
             return error;
@@ -373,7 +373,7 @@ gl::Error Framebuffer9::blit(const gl::Rectangle &sourceArea, const gl::Rectangl
         ASSERT(readBuffer);
 
         RenderTarget9 *readDepthStencil = nullptr;
-        gl::Error error = d3d9::GetAttachmentRenderTarget(readBuffer, &readDepthStencil);
+        gl::Error error = readBuffer->getRenderTarget(&readDepthStencil);
         if (error.isError())
         {
             return error;
@@ -384,7 +384,7 @@ gl::Error Framebuffer9::blit(const gl::Rectangle &sourceArea, const gl::Rectangl
         ASSERT(drawBuffer);
 
         RenderTarget9 *drawDepthStencil = nullptr;
-        error = d3d9::GetAttachmentRenderTarget(drawBuffer, &drawDepthStencil);
+        error = drawBuffer->getRenderTarget(&drawDepthStencil);
         if (error.isError())
         {
             return error;

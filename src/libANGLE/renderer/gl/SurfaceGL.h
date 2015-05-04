@@ -20,6 +20,12 @@ class SurfaceGL : public SurfaceImpl
     SurfaceGL();
     ~SurfaceGL() override;
 
+    gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
+                                        FramebufferAttachmentRenderTarget **rtOut) override
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "Not supported on OpenGL");
+    }
+
     virtual egl::Error makeCurrent() = 0;
 };
 

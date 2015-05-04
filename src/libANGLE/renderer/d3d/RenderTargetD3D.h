@@ -12,11 +12,12 @@
 
 #include "common/angleutils.h"
 #include "libANGLE/angletypes.h"
+#include "libANGLE/FramebufferAttachment.h"
 
 namespace rx
 {
 
-class RenderTargetD3D : angle::NonCopyable
+class RenderTargetD3D : public FramebufferAttachmentRenderTarget
 {
   public:
     RenderTargetD3D();

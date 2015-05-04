@@ -226,7 +226,7 @@ GLenum FramebufferD3D::getImplementationColorReadFormat() const
     }
 
     RenderTargetD3D *attachmentRenderTarget = NULL;
-    gl::Error error = GetAttachmentRenderTarget(readAttachment, &attachmentRenderTarget);
+    gl::Error error = readAttachment->getRenderTarget(&attachmentRenderTarget);
     if (error.isError())
     {
         return GL_NONE;
@@ -248,7 +248,7 @@ GLenum FramebufferD3D::getImplementationColorReadType() const
     }
 
     RenderTargetD3D *attachmentRenderTarget = NULL;
-    gl::Error error = GetAttachmentRenderTarget(readAttachment, &attachmentRenderTarget);
+    gl::Error error = readAttachment->getRenderTarget(&attachmentRenderTarget);
     if (error.isError())
     {
         return GL_NONE;
@@ -374,48 +374,6 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const Wor
 
     mInvalidateColorAttachmentCache = false;
     return mColorAttachmentsForRender;
-}
-
-gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTargetD3D **outRT)
-{
-    if (attachment->type() == GL_TEXTURE)
-    {
-        gl::Texture *texture = attachment->getTexture();
-        ASSERT(texture);
-        TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
-        const gl::ImageIndex &index = attachment->getTextureImageIndex();
-        return textureD3D->getRenderTarget(index, outRT);
-    }
-    else if (attachment->type() == GL_RENDERBUFFER)
-    {
-        gl::Renderbuffer *renderbuffer = attachment->getRenderbuffer();
-        ASSERT(renderbuffer);
-        RenderbufferD3D *renderbufferD3D = GetImplAs<RenderbufferD3D>(renderbuffer);
-        *outRT = renderbufferD3D->getRenderTarget();
-        return gl::Error(GL_NO_ERROR);
-    }
-    else if (attachment->type() == GL_FRAMEBUFFER_DEFAULT)
-    {
-        const egl::Surface *surface = attachment->getSurface();
-        ASSERT(surface);
-        const SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
-        ASSERT(surfaceD3D);
-
-        if (attachment->getBinding() == GL_BACK)
-        {
-            *outRT = surfaceD3D->getSwapChain()->getColorRenderTarget();
-        }
-        else
-        {
-            *outRT = surfaceD3D->getSwapChain()->getDepthStencilRenderTarget();
-        }
-        return gl::Error(GL_NO_ERROR);
-    }
-    else
-    {
-        UNREACHABLE();
-        return gl::Error(GL_INVALID_OPERATION);
-    }
 }
 
 // Note: RenderTarget serials should ideally be in the RenderTargets themselves.
