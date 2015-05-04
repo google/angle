@@ -155,6 +155,7 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     extensions->textureNPOT = true;
     extensions->textureStorage = true;
     extensions->fboRenderMipmap = true;
+    extensions->framebufferBlit = (functions->blitFramebuffer != nullptr);
     extensions->framebufferMultisample = caps->maxSamples > 0;
     extensions->fence = std::find(functions->extensions.begin(), functions->extensions.end(), "GL_NV_fence") != functions->extensions.end();
 }

@@ -853,6 +853,8 @@ void FunctionsGL::initialize()
         AssignGLEntryPoint(loadProcAddress("glTexSubImage2D"), &texSubImage2D);
 
         // Extensions
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_blit", loadProcAddress("glBlitFramebufferEXT"), &blitFramebuffer);
+
         AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glDebugMessageControl"), &debugMessageControl);
         AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glDebugMessageInsert"), &debugMessageInsert);
         AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glDebugMessageCallback"), &debugMessageCallback);
