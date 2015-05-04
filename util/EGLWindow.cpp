@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 //
 
+#include <string.h>
 #include <cassert>
 #include <vector>
 
