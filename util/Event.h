@@ -84,4 +84,4 @@ class Event
     };
 };
 
-#endif SAMPLE_UTIL_EVENT_H
+#endif // SAMPLE_UTIL_EVENT_H
