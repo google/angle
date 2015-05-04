@@ -12,7 +12,6 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/d3d/DisplayD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
-#include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 #include "libANGLE/renderer/d3d/SwapChainD3D.h"
 
 #include <tchar.h>
@@ -359,20 +358,6 @@ egl::Error SurfaceD3D::querySurfacePointerANGLE(EGLint attribute, void **value)
     ASSERT(attribute == EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE);
     *value = mSwapChain->getShareHandle();
     return egl::Error(EGL_SUCCESS);
-}
-
-gl::Error SurfaceD3D::getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
-                                                FramebufferAttachmentRenderTarget **rtOut)
-{
-    if (target.binding() == GL_BACK)
-    {
-        *rtOut = mSwapChain->getColorRenderTarget();
-    }
-    else
-    {
-        *rtOut = mSwapChain->getDepthStencilRenderTarget();
-    }
-    return gl::Error(GL_NO_ERROR);
 }
 
 }

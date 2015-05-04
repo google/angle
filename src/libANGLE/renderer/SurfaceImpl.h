@@ -11,7 +11,6 @@
 
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/FramebufferAttachment.h"
 
 namespace egl
 {
@@ -22,7 +21,7 @@ struct Config;
 namespace rx
 {
 
-class SurfaceImpl : public FramebufferAttachmentObjectImpl
+class SurfaceImpl : angle::NonCopyable
 {
   public:
     SurfaceImpl();

@@ -14,6 +14,7 @@
 #include "libANGLE/Data.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/TextureImpl.h"
 
 namespace gl
 {

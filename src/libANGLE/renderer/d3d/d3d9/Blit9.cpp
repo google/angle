@@ -239,8 +239,8 @@ gl::Error Blit9::copy2D(const gl::Framebuffer *framebuffer, const RECT &sourceRe
     const gl::FramebufferAttachment *colorbuffer = framebuffer->getColorbuffer(0);
     ASSERT(colorbuffer);
 
-    RenderTarget9 *renderTarget9 = nullptr;
-    error = colorbuffer->getRenderTarget(&renderTarget9);
+    RenderTarget9 *renderTarget9 = NULL;
+    error = d3d9::GetAttachmentRenderTarget(colorbuffer, &renderTarget9);
     if (error.isError())
     {
         return error;
@@ -278,8 +278,8 @@ gl::Error Blit9::copyCube(const gl::Framebuffer *framebuffer, const RECT &source
     const gl::FramebufferAttachment *colorbuffer = framebuffer->getColorbuffer(0);
     ASSERT(colorbuffer);
 
-    RenderTarget9 *renderTarget9 = nullptr;
-    error = colorbuffer->getRenderTarget(&renderTarget9);
+    RenderTarget9 *renderTarget9 = NULL;
+    error = d3d9::GetAttachmentRenderTarget(colorbuffer, &renderTarget9);
     if (error.isError())
     {
         return error;

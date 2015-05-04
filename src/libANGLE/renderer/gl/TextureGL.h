@@ -51,12 +51,6 @@ class TextureGL : public TextureImpl
     void syncSamplerState(const gl::SamplerState &samplerState) const;
     GLuint getTextureID() const;
 
-    gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
-                                        FramebufferAttachmentRenderTarget **rtOut) override
-    {
-        return gl::Error(GL_OUT_OF_MEMORY, "Not supported on OpenGL");
-    }
-
   private:
     GLenum mTextureType;
 

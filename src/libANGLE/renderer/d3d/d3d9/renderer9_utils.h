@@ -76,6 +76,7 @@ inline bool isDeviceLostError(HRESULT errorCode)
     }
 }
 
+gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget9 **outRT);
 Workarounds GenerateWorkarounds();
 
 }

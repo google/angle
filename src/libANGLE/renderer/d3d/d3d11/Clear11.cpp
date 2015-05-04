@@ -260,7 +260,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams, const gl
             drawBufferStates[colorAttachment] != GL_NONE)
         {
             RenderTarget11 *renderTarget = NULL;
-            gl::Error error = attachment.getRenderTarget(&renderTarget);
+            gl::Error error = d3d11::GetAttachmentRenderTarget(&attachment, &renderTarget);
             if (error.isError())
             {
                 return error;
@@ -349,7 +349,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams, const gl
         ASSERT(attachment != nullptr);
 
         RenderTarget11 *renderTarget = NULL;
-        gl::Error error = attachment->getRenderTarget(&renderTarget);
+        gl::Error error = d3d11::GetAttachmentRenderTarget(attachment, &renderTarget);
         if (error.isError())
         {
             return error;

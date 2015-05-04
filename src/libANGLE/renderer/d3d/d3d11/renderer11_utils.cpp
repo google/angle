@@ -1189,6 +1189,18 @@ HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
 #endif
 }
 
+gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget11 **outRT)
+{
+    RenderTargetD3D *renderTarget = NULL;
+    gl::Error error = rx::GetAttachmentRenderTarget(attachment, &renderTarget);
+    if (error.isError())
+    {
+        return error;
+    }
+    *outRT = GetAs<RenderTarget11>(renderTarget);
+    return gl::Error(GL_NO_ERROR);
+}
+
 Workarounds GenerateWorkarounds(D3D_FEATURE_LEVEL featureLevel)
 {
     Workarounds workarounds;

@@ -13,7 +13,6 @@
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
-#include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 
 namespace rx
 {
@@ -31,11 +30,11 @@ ImageD3D::ImageD3D()
 
 gl::Error ImageD3D::copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, const gl::Framebuffer *source)
 {
-    const gl::FramebufferAttachment *srcAttachment = source->getReadColorbuffer();
-    ASSERT(srcAttachment);
+    const gl::FramebufferAttachment *colorbuffer = source->getReadColorbuffer();
+    ASSERT(colorbuffer);
 
     RenderTargetD3D *renderTarget = NULL;
-    gl::Error error = srcAttachment->getRenderTarget(&renderTarget);
+    gl::Error error = GetAttachmentRenderTarget(colorbuffer, &renderTarget);
     if (error.isError())
     {
         return error;
