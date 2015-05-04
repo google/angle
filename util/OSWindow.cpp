@@ -63,6 +63,8 @@ void OSWindow::pushEvent(Event event)
         mWidth = event.Size.Width;
         mHeight = event.Size.Height;
         break;
+      default:
+        break;
     }
 
     mEvents.push_back(event);
