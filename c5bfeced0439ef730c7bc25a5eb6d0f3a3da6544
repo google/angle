@@ -45,6 +45,23 @@
       "revId": "c5bfeced0439ef730c7bc25a5eb6d0f3a3da6544",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7042b231_3139c852",
+        "filename": "src/tests/end2end_tests/GLSLTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1080,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-05-04T16:44:33Z",
+      "side": 1,
+      "message": "If there is any spec text defining this behavior, it would be nice to add it here.  Although I couldn\u0027t find any.",
+      "revId": "c5bfeced0439ef730c7bc25a5eb6d0f3a3da6544",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
