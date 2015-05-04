@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7042b231_516574c4",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1411,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-04T16:28:54Z",
+      "side": 1,
+      "message": "first fix: fixes crash in gles2_conform_tests (and added test)",
+      "range": {
+        "startLine": 1411,
+        "startChar": 8,
+        "endLine": 1411,
+        "endChar": 14
+      },
+      "revId": "c5bfeced0439ef730c7bc25a5eb6d0f3a3da6544",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "105fb6fa_9578b3bd",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1948,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-04T16:28:54Z",
+      "side": 1,
+      "message": "second fix: avoids storing builtins in the index (added test)",
+      "range": {
+        "startLine": 1947,
+        "startChar": 9,
+        "endLine": 1948,
+        "endChar": 37
+      },
+      "revId": "c5bfeced0439ef730c7bc25a5eb6d0f3a3da6544",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
