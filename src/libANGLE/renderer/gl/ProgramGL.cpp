@@ -154,6 +154,15 @@ LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog,
                 }
 
                 mUniformIndex[location] = gl::VariableLocation(uniformName, arrayIndex, static_cast<unsigned int>(mUniforms.size()));
+
+                // If the uniform is a sampler, track it in the sampler bindings array
+                if (gl::IsSamplerType(uniformType))
+                {
+                    SamplerLocation samplerLoc;
+                    samplerLoc.samplerIndex = mSamplerBindings.size();
+                    samplerLoc.arrayIndex = arrayIndex;
+                    mSamplerUniformMap[location] = samplerLoc;
+                }
             }
         }
 
@@ -162,6 +171,15 @@ LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog,
 
         // TODO: determine uniform precision
         mUniforms.push_back(new gl::LinkedUniform(uniformType, GL_NONE, uniformName, arraySize, -1, sh::BlockMemberInfo::getDefaultBlockInfo()));
+
+        // If uniform is a sampler type, insert it into the mSamplerBindings array
+        if (gl::IsSamplerType(uniformType))
+        {
+            SamplerBindingGL samplerBinding;
+            samplerBinding.textureType = gl::SamplerTypeToTextureType(uniformType);
+            samplerBinding.boundTextureUnits.resize(uniformSize, 0);
+            mSamplerBindings.push_back(samplerBinding);
+        }
     }
 
     // Query the attribute information
@@ -223,6 +241,16 @@ void ProgramGL::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 {
     mStateManager->useProgram(mProgramID);
     mFunctions->uniform1iv(location, count, v);
+
+    auto iter = mSamplerUniformMap.find(location);
+    if (iter != mSamplerUniformMap.end())
+    {
+        const SamplerLocation &samplerLoc = iter->second;
+        std::vector<GLuint> &boundTextureUnits = mSamplerBindings[samplerLoc.samplerIndex].boundTextureUnits;
+
+        size_t copyCount = std::max<size_t>(count, boundTextureUnits.size() - samplerLoc.arrayIndex);
+        std::copy(v, v + copyCount, boundTextureUnits.begin() + samplerLoc.arrayIndex);
+    }
 }
 
 void ProgramGL::setUniform2iv(GLint location, GLsizei count, const GLint *v)
@@ -408,11 +436,19 @@ bool ProgramGL::assignUniformBlockRegister(gl::InfoLog &infoLog, gl::UniformBloc
 void ProgramGL::reset()
 {
     ProgramImpl::reset();
+
+    mSamplerUniformMap.clear();
+    mSamplerBindings.clear();
 }
 
 GLuint ProgramGL::getProgramID() const
 {
     return mProgramID;
+}
+
+const std::vector<SamplerBindingGL> &ProgramGL::getAppliedSamplerUniforms() const
+{
+    return mSamplerBindings;
 }
 
 }

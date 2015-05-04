@@ -344,7 +344,6 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::Data &data, GLsizei cou
 gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
 {
     const gl::State &state = *data.state;
-    const gl::Caps &caps = *data.caps;
 
     const gl::VertexArray *vao = state.getVertexArray();
     const std::vector<gl::VertexAttribute>& attribs = vao->getVertexAttributes();
@@ -361,37 +360,24 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
     const ProgramGL *programGL = GetImplAs<ProgramGL>(program);
     useProgram(programGL->getProgramID());
 
-    // TODO: Only apply textures referenced by the program.
-    for (auto textureTypeIter = mTextures.begin(); textureTypeIter != mTextures.end(); textureTypeIter++)
+    const std::vector<SamplerBindingGL> &appliedSamplerUniforms = programGL->getAppliedSamplerUniforms();
+    for (const SamplerBindingGL &samplerUniform : appliedSamplerUniforms)
     {
-        GLenum textureType = textureTypeIter->first;
-
-        // Determine if this texture type can exist in the source context
-        bool validTextureType = (textureType == GL_TEXTURE_2D || textureType == GL_TEXTURE_CUBE_MAP ||
-                                 (textureType == GL_TEXTURE_2D_ARRAY && data.clientVersion >= 3) ||
-                                 (textureType == GL_TEXTURE_3D && data.clientVersion >= 3));
-
-        const std::vector<GLuint> &textureVector = textureTypeIter->second;
-        for (size_t textureUnitIndex = 0; textureUnitIndex < textureVector.size(); textureUnitIndex++)
+        GLenum textureType = samplerUniform.textureType;
+        for (GLuint textureUnitIndex : samplerUniform.boundTextureUnits)
         {
-            const gl::Texture *texture = nullptr;
-
-            bool validTextureUnit = textureUnitIndex < caps.maxCombinedTextureImageUnits;
-            if (validTextureType && validTextureUnit)
-            {
-                texture = state.getSamplerTexture(textureUnitIndex, textureType);
-            }
-
+            const gl::Texture *texture = state.getSamplerTexture(textureUnitIndex, textureType);
             if (texture != nullptr)
             {
                 const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
-                textureGL->syncSamplerState(texture->getSamplerState());
 
                 if (mTextures[textureType][textureUnitIndex] != textureGL->getTextureID())
                 {
                     activeTexture(textureUnitIndex);
                     bindTexture(textureType, textureGL->getTextureID());
                 }
+
+                textureGL->syncSamplerState(texture->getSamplerState());
 
                 // TODO: apply sampler object if one is bound
             }

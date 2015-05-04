@@ -279,6 +279,39 @@ bool IsSamplerType(GLenum type)
     return false;
 }
 
+GLenum SamplerTypeToTextureType(GLenum samplerType)
+{
+    switch (samplerType)
+    {
+      case GL_SAMPLER_2D:
+      case GL_INT_SAMPLER_2D:
+      case GL_UNSIGNED_INT_SAMPLER_2D:
+      case GL_SAMPLER_2D_SHADOW:
+        return GL_TEXTURE_2D;
+
+      case GL_SAMPLER_CUBE:
+      case GL_INT_SAMPLER_CUBE:
+      case GL_UNSIGNED_INT_SAMPLER_CUBE:
+      case GL_SAMPLER_CUBE_SHADOW:
+        return GL_TEXTURE_CUBE_MAP;
+
+      case GL_SAMPLER_2D_ARRAY:
+      case GL_INT_SAMPLER_2D_ARRAY:
+      case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+      case GL_SAMPLER_2D_ARRAY_SHADOW:
+        return GL_TEXTURE_2D_ARRAY;
+
+      case GL_SAMPLER_3D:
+      case GL_INT_SAMPLER_3D:
+      case GL_UNSIGNED_INT_SAMPLER_3D:
+        return GL_TEXTURE_3D;
+
+      default:
+        UNREACHABLE();
+        return 0;
+    }
+}
+
 bool IsMatrixType(GLenum type)
 {
     return VariableRowCount(type) > 1;
