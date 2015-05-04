@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7042b231_1f8a131e",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-04T17:38:24Z",
+      "side": 1,
+      "message": "ASSERT(mSurface !\u003d EGL_NO_SURFACE)",
+      "range": {
+        "startLine": 174,
+        "startChar": 0,
+        "endLine": 175,
+        "endChar": 4
+      },
+      "revId": "722f38dc4c430773f1c7e0ae7b2f1b007bc4236e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
