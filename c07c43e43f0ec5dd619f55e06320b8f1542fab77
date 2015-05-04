@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "102df676_428d9602",
+        "filename": "src/libANGLE/renderer/BufferImpl.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-04T22:55:27Z",
+      "side": 0,
+      "message": "glad to rid ourselves of this",
+      "range": {
+        "startLine": 34,
+        "startChar": 3,
+        "endLine": 34,
+        "endChar": 59
+      },
+      "revId": "c07c43e43f0ec5dd619f55e06320b8f1542fab77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
