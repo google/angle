@@ -36,11 +36,8 @@ FramebufferGL::FramebufferGL(const gl::Framebuffer::Data &data, const FunctionsG
 
 FramebufferGL::~FramebufferGL()
 {
-    if (mFramebufferID != 0)
-    {
-        mFunctions->deleteFramebuffers(1, &mFramebufferID);
-        mFramebufferID = 0;
-    }
+    mStateManager->deleteFramebuffer(mFramebufferID);
+    mFramebufferID = 0;
 }
 
 static void BindFramebufferAttachment(const FunctionsGL *functions, GLenum attachmentPoint,

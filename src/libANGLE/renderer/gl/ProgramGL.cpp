@@ -404,11 +404,8 @@ void ProgramGL::reset()
 {
     ProgramImpl::reset();
 
-    if (mProgramID)
-    {
-        mFunctions->deleteProgram(mProgramID);
-        mProgramID = 0;
-    }
+    mStateManager->deleteProgram(mProgramID);
+    mProgramID = 0;
 }
 
 GLuint ProgramGL::getProgramID() const

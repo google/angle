@@ -93,6 +93,97 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
     mFramebuffers[GL_DRAW_FRAMEBUFFER] = 0;
 }
 
+void StateManagerGL::deleteProgram(GLuint program)
+{
+    if (program != 0)
+    {
+        if (mProgram == program)
+        {
+            useProgram(0);
+        }
+
+        mFunctions->deleteProgram(program);
+    }
+}
+
+void StateManagerGL::deleteVertexArray(GLuint vao)
+{
+    if (vao != 0)
+    {
+        if (mVAO == vao)
+        {
+            bindVertexArray(0);
+        }
+
+        mFunctions->deleteVertexArrays(1, &vao);
+    }
+}
+
+void StateManagerGL::deleteTexture(GLuint texture)
+{
+    if (texture != 0)
+    {
+        for (const auto &textureTypeIter : mTextures)
+        {
+            const std::vector<GLuint> &textureVector = textureTypeIter.second;
+            for (size_t textureUnitIndex = 0; textureUnitIndex < textureVector.size(); textureUnitIndex++)
+            {
+                if (textureVector[textureUnitIndex] == texture)
+                {
+                    activeTexture(textureUnitIndex);
+                    bindTexture(textureTypeIter.first, 0);
+                }
+            }
+        }
+
+        mFunctions->deleteTextures(1, &texture);
+    }
+}
+void StateManagerGL::deleteBuffer(GLuint buffer)
+{
+    if (buffer != 0)
+    {
+        for (const auto &bufferTypeIter : mBuffers)
+        {
+            if (bufferTypeIter.second == buffer)
+            {
+                bindBuffer(bufferTypeIter.first, 0);
+            }
+        }
+
+        mFunctions->deleteBuffers(1, &buffer);
+    }
+}
+
+void StateManagerGL::deleteFramebuffer(GLuint fbo)
+{
+    if (fbo != 0)
+    {
+        for (auto fboTypeIter : mFramebuffers)
+        {
+            if (fboTypeIter.second == fbo)
+            {
+                bindFramebuffer(fboTypeIter.first, 0);
+            }
+
+            mFunctions->deleteFramebuffers(1, &fbo);
+        }
+    }
+}
+
+void StateManagerGL::deleteRenderbuffer(GLuint rbo)
+{
+    if (rbo != 0)
+    {
+        if (mRenderbuffer == rbo)
+        {
+            bindRenderbuffer(GL_RENDERBUFFER, 0);
+        }
+
+        mFunctions->deleteRenderbuffers(1, &rbo);
+    }
+}
+
 void StateManagerGL::useProgram(GLuint program)
 {
     if (mProgram != program)

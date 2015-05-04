@@ -48,25 +48,16 @@ VertexArrayGL::VertexArrayGL(const FunctionsGL *functions, StateManagerGL *state
 
 VertexArrayGL::~VertexArrayGL()
 {
-    if (mVertexArrayID != 0)
-    {
-        mFunctions->deleteVertexArrays(1, &mVertexArrayID);
-        mVertexArrayID = 0;
-    }
+    mStateManager->deleteVertexArray(mVertexArrayID);
+    mVertexArrayID = 0;
 
-    if (mStreamingElementArrayBuffer != 0)
-    {
-        mFunctions->deleteBuffers(1, &mStreamingElementArrayBuffer);
-        mStreamingElementArrayBufferSize = 0;
-        mStreamingElementArrayBuffer = 0;
-    }
+    mStateManager->deleteBuffer(mStreamingElementArrayBuffer);
+    mStreamingElementArrayBufferSize = 0;
+    mStreamingElementArrayBuffer = 0;
 
-    if (mStreamingArrayBuffer != 0)
-    {
-        mFunctions->deleteBuffers(1, &mStreamingArrayBuffer);
-        mStreamingArrayBufferSize = 0;
-        mStreamingArrayBuffer = 0;
-    }
+    mStateManager->deleteBuffer(mStreamingArrayBuffer);
+    mStreamingArrayBufferSize = 0;
+    mStreamingArrayBuffer = 0;
 
     mElementArrayBuffer.set(nullptr);
     for (size_t idx = 0; idx < mAttributes.size(); idx++)

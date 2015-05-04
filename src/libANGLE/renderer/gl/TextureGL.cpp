@@ -73,11 +73,8 @@ TextureGL::TextureGL(GLenum type, const FunctionsGL *functions, StateManagerGL *
 
 TextureGL::~TextureGL()
 {
-    if (mTextureID)
-    {
-        mFunctions->deleteTextures(1, &mTextureID);
-        mTextureID = 0;
-    }
+    mStateManager->deleteTexture(mTextureID);
+    mTextureID = 0;
 }
 
 void TextureGL::setUsage(GLenum usage)

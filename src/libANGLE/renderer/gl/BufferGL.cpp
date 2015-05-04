@@ -42,11 +42,8 @@ BufferGL::BufferGL(const FunctionsGL *functions, StateManagerGL *stateManager)
 
 BufferGL::~BufferGL()
 {
-    if (mBufferID)
-    {
-        mFunctions->deleteBuffers(1, &mBufferID);
-        mBufferID = 0;
-    }
+    mStateManager->deleteBuffer(mBufferID);
+    mBufferID = 0;
 }
 
 gl::Error BufferGL::setData(const void* data, size_t size, GLenum usage)

@@ -30,11 +30,8 @@ RenderbufferGL::RenderbufferGL(const FunctionsGL *functions, StateManagerGL *sta
 
 RenderbufferGL::~RenderbufferGL()
 {
-    if (mRenderbufferID != 0)
-    {
-        mFunctions->deleteRenderbuffers(1, &mRenderbufferID);
-        mRenderbufferID = 0;
-    }
+    mStateManager->deleteRenderbuffer(mRenderbufferID);
+    mRenderbufferID = 0;
 }
 
 gl::Error RenderbufferGL::setStorage(GLenum internalformat, size_t width, size_t height)
