@@ -7,10 +7,11 @@
 #ifndef SAMPLE_UTIL_GEOMETRY_UTILS_H
 #define SAMPLE_UTIL_GEOMETRY_UTILS_H
 
+#include <cstddef>
+#include <vector>
 #include <GLES2/gl2.h>
 
 #include "Vector.h"
-#include <vector>
 
 struct SphereGeometry
 {

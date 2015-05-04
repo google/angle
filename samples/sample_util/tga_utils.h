@@ -7,10 +7,10 @@
 #ifndef SAMPLE_UTIL_TGA_UTILS_HPP
 #define SAMPLE_UTIL_TGA_UTILS_HPP
 
-#include <GLES2/gl2.h>
-
 #include <array>
 #include <vector>
+
+#include <GLES2/gl2.h>
 
 typedef std::array<unsigned char, 4> Byte4;
 

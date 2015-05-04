@@ -6,10 +6,11 @@
 
 #include "tga_utils.h"
 
-#include <iostream>
-#include <fstream>
-#include <string>
+#include <limits.h>
 #include <cstdint>
+#include <fstream>
+#include <iostream>
+#include <string>
 
 TGAImage::TGAImage()
     : data(0), width(0), height(0)
