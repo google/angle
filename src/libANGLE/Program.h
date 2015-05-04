@@ -21,6 +21,7 @@
 #include <GLSLANG/ShaderLang.h>
 
 #include <vector>
+#include <sstream>
 #include <string>
 #include <set>
 
@@ -66,14 +67,14 @@ class InfoLog : angle::NonCopyable
     InfoLog();
     ~InfoLog();
 
-    int getLength() const;
+    size_t getLength() const;
     void getLog(GLsizei bufSize, GLsizei *length, char *infoLog);
 
     void appendSanitized(const char *message);
     void append(const char *info, ...);
     void reset();
   private:
-    char *mInfoLog;
+    std::stringstream mStream;
 };
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles
