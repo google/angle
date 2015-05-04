@@ -167,12 +167,17 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
     surfaceAttributes.push_back(EGL_NONE);
 
     mSurface = eglCreateWindowSurface(mDisplay, mConfig, osWindow->getNativeWindow(), &surfaceAttributes[0]);
+    if (mSurface == EGL_NO_SURFACE)
+    {
+        eglGetError(); // Clear error and try again
+        mSurface = eglCreateWindowSurface(mDisplay, mConfig, NULL, NULL);
+    }
+
     if (eglGetError() != EGL_SUCCESS)
     {
         destroyGL();
         return false;
     }
-    ASSERT(mSurface != EGL_NO_SURFACE);
 
     EGLint contextAttibutes[] =
     {
