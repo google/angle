@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7042b231_9adff156",
+        "filename": "samples/sample_util/geometry_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-04T17:58:23Z",
+      "side": 1,
+      "message": "can you fix the include order here while you\u0027re at it?",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 17
+      },
+      "revId": "b7bf0165a37f588166a1a44eca044618c6c1706e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "105fb6fa_587e522b",
+        "filename": "samples/sample_util/tga_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-04T17:58:23Z",
+      "side": 1,
+      "message": "can you fix the include order here while you\u0027re at it?",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 18
+      },
+      "revId": "b7bf0165a37f588166a1a44eca044618c6c1706e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
