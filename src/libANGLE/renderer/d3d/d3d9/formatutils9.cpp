@@ -558,9 +558,9 @@ static inline unsigned int ComputeTypeIndex(GLenum type)
 const VertexFormat &GetVertexFormatInfo(DWORD supportedDeclTypes, const gl::VertexFormat &vertexFormat)
 {
     static bool initialized = false;
-    static DWORD intializedDeclTypes = 0;
+    static DWORD initializedDeclTypes = 0;
     static VertexFormat formatConverters[NUM_GL_VERTEX_ATTRIB_TYPES][2][4];
-    if (intializedDeclTypes != supportedDeclTypes)
+    if (initializedDeclTypes != supportedDeclTypes)
     {
         const TranslationDescription translations[NUM_GL_VERTEX_ATTRIB_TYPES][2][4] = // [GL types as enumerated by typeIndex()][normalized][size-1]
         {
@@ -589,7 +589,7 @@ const VertexFormat &GetVertexFormatInfo(DWORD supportedDeclTypes, const gl::Vert
             }
         }
         initialized = true;
-        intializedDeclTypes = supportedDeclTypes;
+        initializedDeclTypes = supportedDeclTypes;
     }
 
     // Pure integer attributes only supported in ES3.0

@@ -18,7 +18,7 @@ class FunctionsWGL : angle::NonCopyable
     FunctionsWGL();
 
     // Loads all available wgl functions, may be called multiple times
-    void intialize(HMODULE glModule, HDC context);
+    void initialize(HMODULE glModule, HDC context);
 
     // Base WGL functions
     PFNWGLCOPYCONTEXTPROC copyContext;

@@ -104,7 +104,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     }
 
     mFunctionsWGL = new FunctionsWGL();
-    mFunctionsWGL->intialize(mOpenGLModule, nullptr);
+    mFunctionsWGL->initialize(mOpenGLModule, nullptr);
 
     // WGL can't grab extensions until it creates a context because it needs to load the driver's DLLs first.
     // Create a dummy context to load the driver and determine which GL versions are available.
@@ -185,7 +185,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     }
 
     // Reinitialize the wgl functions to grab the extensions
-    mFunctionsWGL->intialize(mOpenGLModule, dummyDeviceContext);
+    mFunctionsWGL->initialize(mOpenGLModule, dummyDeviceContext);
 
     // Destroy the dummy window and context
     mFunctionsWGL->makeCurrent(dummyDeviceContext, NULL);

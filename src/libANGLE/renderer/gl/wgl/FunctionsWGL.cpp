@@ -80,7 +80,7 @@ FunctionsWGL::FunctionsWGL()
 {
 }
 
-void FunctionsWGL::intialize(HMODULE glModule, HDC context)
+void FunctionsWGL::initialize(HMODULE glModule, HDC context)
 {
     // First grab the wglGetProcAddress function from the gl module
     GetWGLProcAddress(glModule, nullptr, "wglGetProcAddress", &getProcAddress);
