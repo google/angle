@@ -323,8 +323,8 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
         setBlendColor(state.getBlendColor());
         setBlendFuncs(blendState.sourceBlendRGB, blendState.destBlendRGB, blendState.sourceBlendAlpha, blendState.destBlendAlpha);
         setBlendEquations(blendState.blendEquationRGB, blendState.blendEquationAlpha);
-        setColorMask(blendState.colorMaskRed, blendState.colorMaskGreen, blendState.colorMaskBlue, blendState.colorMaskAlpha);
     }
+    setColorMask(blendState.colorMaskRed, blendState.colorMaskGreen, blendState.colorMaskBlue, blendState.colorMaskAlpha);
     setSampleAlphaToCoverageEnabled(blendState.sampleAlphaToCoverage);
     setSampleCoverageEnabled(state.isSampleCoverageEnabled());
     setSampleCoverage(state.getSampleCoverageValue(), state.getSampleCoverageInvert());
@@ -334,27 +334,27 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
     if (depthStencilState.depthTest)
     {
         setDepthFunc(depthStencilState.depthFunc);
-        setDepthMask(depthStencilState.depthMask);
     }
+    setDepthMask(depthStencilState.depthMask);
 
     setStencilTestEnabled(depthStencilState.stencilTest);
     if (depthStencilState.stencilTest)
     {
-        setStencilFrontWritemask(state.getDepthStencilState().stencilWritemask);
-        setStencilBackWritemask(state.getDepthStencilState().stencilBackWritemask);
         setStencilFrontFuncs(depthStencilState.stencilFunc, state.getStencilRef(), depthStencilState.stencilMask);
         setStencilBackFuncs(depthStencilState.stencilBackFunc, state.getStencilBackRef(), depthStencilState.stencilBackMask);
         setStencilFrontOps(depthStencilState.stencilFail, depthStencilState.stencilPassDepthFail, depthStencilState.stencilPassDepthPass);
         setStencilBackOps(depthStencilState.stencilBackFail, depthStencilState.stencilBackPassDepthFail, depthStencilState.stencilBackPassDepthPass);
     }
+    setStencilFrontWritemask(state.getDepthStencilState().stencilWritemask);
+    setStencilBackWritemask(state.getDepthStencilState().stencilBackWritemask);
 
     const gl::RasterizerState &rasterizerState = state.getRasterizerState();
     setCullFaceEnabled(rasterizerState.cullFace);
     if (rasterizerState.cullFace)
     {
         setCullFace(rasterizerState.cullMode);
-        setFrontFace(rasterizerState.frontFace);
     }
+    setFrontFace(rasterizerState.frontFace);
 
     setPolygonOffsetFillEnabled(rasterizerState.polygonOffsetFill);
     if (rasterizerState.polygonOffsetFill)
