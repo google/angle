@@ -177,7 +177,7 @@ void TConstTraverser::visitConstantUnion(TIntermConstantUnion *node)
     if (!mSingleConstantParam)
     {
         size_t objectSize = node->getType().getObjectSize();
-        TConstantUnion *rightUnionArray = node->getUnionArrayPointer();
+        const TConstantUnion *rightUnionArray = node->getUnionArrayPointer();
         for (size_t i=0; i < objectSize; i++)
         {
             if (mIndex >= instanceSize)
@@ -189,7 +189,7 @@ void TConstTraverser::visitConstantUnion(TIntermConstantUnion *node)
     else
     {
         size_t totalSize = mIndex + mSize;
-        TConstantUnion *rightUnionArray = node->getUnionArrayPointer();
+        const TConstantUnion *rightUnionArray = node->getUnionArrayPointer();
         if (!mIsDiagonalMatrixInit)
         {
             int count = 0;

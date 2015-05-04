@@ -1814,7 +1814,7 @@ TIntermTyped* TParseContext::addConstVectorNode(TVectorFields& fields, TIntermTy
     TIntermTyped* typedNode;
     TIntermConstantUnion* tempConstantNode = node->getAsConstantUnion();
 
-    TConstantUnion *unionArray;
+    const TConstantUnion *unionArray;
     if (tempConstantNode) {
         unionArray = tempConstantNode->getUnionArrayPointer();
 
@@ -1868,7 +1868,7 @@ TIntermTyped* TParseContext::addConstMatrixNode(int index, TIntermTyped* node, c
     }
 
     if (tempConstantNode) {
-         TConstantUnion* unionArray = tempConstantNode->getUnionArrayPointer();
+         TConstantUnion *unionArray = tempConstantNode->getUnionArrayPointer();
          int size = tempConstantNode->getType().getCols();
          typedNode = intermediate.addConstantUnion(&unionArray[size*index], tempConstantNode->getType(), line);
     } else {
@@ -2202,6 +2202,8 @@ TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, co
         }
         else
         {
+            int safeIndex = -1;
+
             if (baseExpression->isArray())
             {
                 if (index >= baseExpression->getType().getArraySize())
@@ -2211,13 +2213,13 @@ TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, co
                     std::string extraInfo = extraInfoStream.str();
                     error(location, "", "[", extraInfo.c_str());
                     recover();
-                    index = baseExpression->getType().getArraySize() - 1;
+                    safeIndex = baseExpression->getType().getArraySize() - 1;
                 }
                 else if (baseExpression->getQualifier() == EvqFragData && index > 0 && !isExtensionEnabled("GL_EXT_draw_buffers"))
                 {
                     error(location, "", "[", "array indexes for gl_FragData must be zero when GL_EXT_draw_buffers is disabled");
                     recover();
-                    index = 0;
+                    safeIndex = 0;
                 }
             }
             else if ((baseExpression->isVector() || baseExpression->isMatrix()) && baseExpression->getType().getNominalSize() <= index)
@@ -2227,10 +2229,18 @@ TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, co
                 std::string extraInfo = extraInfoStream.str();
                 error(location, "", "[", extraInfo.c_str());
                 recover();
-                index = baseExpression->getType().getNominalSize() - 1;
+                safeIndex = baseExpression->getType().getNominalSize() - 1;
             }
 
-            indexConstantUnion->getUnionArrayPointer()->setIConst(index);
+            // Don't modify the data of the previous constant union, because it can point
+            // to builtins, like gl_MaxDrawBuffers. Instead use a new sanitized object.
+            if (safeIndex != -1)
+            {
+                TConstantUnion *safeConstantUnion = new TConstantUnion();
+                safeConstantUnion->setIConst(safeIndex);
+                indexConstantUnion->replaceConstantUnion(safeConstantUnion);
+            }
+
             indexedExpression = intermediate.addIndex(EOpIndexDirect, baseExpression, indexExpression, location);
         }
     }

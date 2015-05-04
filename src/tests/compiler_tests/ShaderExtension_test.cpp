@@ -81,7 +81,7 @@ class ShaderExtensionTest : public testing::Test
     {
         bool success = ShCompile(mCompiler, shaderStrings, stringCount, 0);
         const std::string& compileLog = ShGetInfoLog(mCompiler);
-        EXPECT_EQ(success, expectation) << compileLog;
+        EXPECT_EQ(expectation, success) << compileLog;
     }
 
   protected:
@@ -194,4 +194,24 @@ TEST_F(ShaderExtensionTest, TextureLODExtResetsInternalStates)
     TestShaderExtension(TextureLODShdr, 2, true);
     TestShaderExtension(&TextureLODShdr[1], 1, false);
     TestShaderExtension(TextureLODShdr, 2, true);
+}
+
+// Test a bug where we could modify the value of a builtin variable.
+TEST_F(ShaderExtensionTest, BuiltinRewritingBug)
+{
+    mResources.MaxDrawBuffers = 4;
+    mResources.EXT_draw_buffers = 1;
+    InitializeCompiler();
+
+    const std::string &shaderString =
+        "#extension GL_EXT_draw_buffers : require\n"
+        "precision mediump float;\n"
+        "void main() {\n"
+        "    gl_FragData[gl_MaxDrawBuffers] = vec4(0.0);\n"
+        "}";
+
+    const char *shaderStrings[] = { shaderString.c_str() };
+
+    TestShaderExtension(shaderStrings, 1, false);
+    TestShaderExtension(shaderStrings, 1, false);
 }

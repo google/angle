@@ -361,9 +361,9 @@ TIntermCase *TIntermediate::addCase(
 //
 
 TIntermConstantUnion *TIntermediate::addConstantUnion(
-    TConstantUnion *unionArrayPointer, const TType &t, const TSourceLoc &line)
+    TConstantUnion *constantUnion, const TType &type, const TSourceLoc &line)
 {
-    TIntermConstantUnion *node = new TIntermConstantUnion(unionArrayPointer, t);
+    TIntermConstantUnion *node = new TIntermConstantUnion(constantUnion, type);
     node->setLine(line);
 
     return node;

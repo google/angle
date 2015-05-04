@@ -64,12 +64,12 @@ bool ValidateMultiplication(TOperator op, const TType &left, const TType &right)
 }
 
 bool CompareStructure(const TType& leftNodeType,
-                      TConstantUnion *rightUnionArray,
-                      TConstantUnion *leftUnionArray);
+                      const TConstantUnion *rightUnionArray,
+                      const TConstantUnion *leftUnionArray);
 
 bool CompareStruct(const TType &leftNodeType,
-                   TConstantUnion *rightUnionArray,
-                   TConstantUnion *leftUnionArray)
+                   const TConstantUnion *rightUnionArray,
+                   const TConstantUnion *leftUnionArray)
 {
     const TFieldList &fields = leftNodeType.getStruct()->fields();
 
@@ -102,8 +102,8 @@ bool CompareStruct(const TType &leftNodeType,
 }
 
 bool CompareStructure(const TType &leftNodeType,
-                      TConstantUnion *rightUnionArray,
-                      TConstantUnion *leftUnionArray)
+                      const TConstantUnion *rightUnionArray,
+                      const TConstantUnion *leftUnionArray)
 {
     if (leftNodeType.isArray())
     {

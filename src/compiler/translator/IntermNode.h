@@ -270,7 +270,8 @@ class TIntermConstantUnion : public TIntermTyped
 
     virtual bool hasSideEffects() const { return false; }
 
-    TConstantUnion *getUnionArrayPointer() const { return mUnionArrayPointer; }
+    const TConstantUnion *getUnionArrayPointer() const { return mUnionArrayPointer; }
+    TConstantUnion *getUnionArrayPointer() { return mUnionArrayPointer; }
 
     int getIConst(size_t index) const
     {
@@ -287,6 +288,12 @@ class TIntermConstantUnion : public TIntermTyped
     bool getBConst(size_t index) const
     {
         return mUnionArrayPointer ? mUnionArrayPointer[index].getBConst() : false;
+    }
+
+    void replaceConstantUnion(TConstantUnion *safeConstantUnion)
+    {
+        // Previous union pointer freed on pool deallocation.
+        mUnionArrayPointer = safeConstantUnion;
     }
 
     virtual TIntermConstantUnion *getAsConstantUnion()  { return this; }
