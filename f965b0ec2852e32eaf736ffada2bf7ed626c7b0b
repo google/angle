@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f06142bc_ef7bdcec",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-05-04T16:48:49Z",
+      "side": 1,
+      "message": "I didn\u0027t dig deep enough, but won\u0027t this cause a mem leak?\n\nIf not, please add some text here explaining why, otherwise the readers of this code will be confused.",
+      "revId": "f965b0ec2852e32eaf736ffada2bf7ed626c7b0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
