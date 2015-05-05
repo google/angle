@@ -441,3 +441,19 @@ bool TIntermediate::postProcess(TIntermNode *root)
 
     return true;
 }
+
+TIntermTyped *TIntermediate::foldAggregateBuiltIn(TOperator op, TIntermAggregate *aggregate)
+{
+    switch (op)
+    {
+      case EOpMin:
+      case EOpMax:
+      case EOpClamp:
+        return TIntermConstantUnion::FoldAggregateBuiltIn(op, aggregate);
+      default:
+        // Constant folding not supported for the built-in.
+        return nullptr;
+    }
+
+    return nullptr;
+}
