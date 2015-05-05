@@ -416,7 +416,6 @@ egl::ConfigSet DisplayWGL::generateConfigs() const
     config.bindToTextureRGBA = (QueryWGLFormatAttrib(mDeviceContext, mPixelFormat, WGL_BIND_TO_TEXTURE_RGBA_ARB, mFunctionsWGL) == TRUE);
     config.colorBufferType = EGL_RGB_BUFFER;
     config.configCaveat = EGL_NONE;
-    config.configID = mPixelFormat;
     config.conformant = EGL_OPENGL_ES2_BIT | EGL_OPENGL_ES3_BIT_KHR; // TODO: determine the GL version and what ES versions it supports
     config.depthSize = pixelFormatDescriptor.cDepthBits;
     config.level = 0;
