@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d19f971_79fbfff6",
+        "filename": "src/common/platform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-05T23:16:25Z",
+      "side": 1,
+      "message": "LOL. What\u0027s the failure without this hack? Maybe at least use TODO here.",
+      "range": {
+        "startLine": 23,
+        "startChar": 27,
+        "endLine": 23,
+        "endChar": 35
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_3afa1989",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-05T23:16:25Z",
+      "side": 1,
+      "message": "Let\u0027s state what minimum version is required in the error message.",
+      "range": {
+        "startLine": 82,
+        "startChar": 12,
+        "endLine": 82,
+        "endChar": 18
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_bad86918",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-05T23:16:25Z",
+      "side": 1,
+      "message": "Chrome still has an older code path using glXCreateNewContext; see src/ui/gl/gl_context_glx.cc . However, I think it\u0027s reasonable to require GLX_ARB_create_context as long as the most common Linux drivers (Mesa + Intel) support it at this point.",
+      "range": {
+        "startLine": 97,
+        "startChar": 23,
+        "endLine": 97,
+        "endChar": 24
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_bab189c2",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-05T23:16:25Z",
+      "side": 1,
+      "message": "Should be TODO(cwallez).",
+      "range": {
+        "startLine": 200,
+        "startChar": 6,
+        "endLine": 200,
+        "endChar": 10
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d19f971_3ceb3578",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-05T23:16:25Z",
+      "side": 1,
+      "message": "There\u0027s a 1:1 mapping between visual ID and GLXFBConfig; check the output of glxinfo. This means that this loop will only ever return a set with 1 EGLConfig in it. Since you\u0027re creating a child window in eglCreateWindowSurface, you have the opportunity to use a new visual for it and therefore a different GLXFBConfig.",
+      "range": {
+        "startLine": 243,
+        "startChar": 24,
+        "endLine": 243,
+        "endChar": 40
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_fc7f0125",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-05T23:16:25Z",
+      "side": 1,
+      "message": "https://www.khronos.org/registry/egl/sdk/docs/man/html/eglChooseConfig.xhtml seems to define EGL_BUFFER_SIZE as the sum of the red, green, blue, and alpha sizes.",
+      "range": {
+        "startLine": 264,
+        "startChar": 39,
+        "endLine": 264,
+        "endChar": 45
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_3aae99e7",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-05T23:16:25Z",
+      "side": 1,
+      "message": "Hmm, there\u0027s a mismatch here between how the Direct3D APIs and OpenGL APIs report GPU resets. Direct3D loses the \"device\" while OpenGL loses all contexts in the share group. Might need to rethink this API.",
+      "range": {
+        "startLine": 338,
+        "startChar": 4,
+        "endLine": 338,
+        "endChar": 10
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
