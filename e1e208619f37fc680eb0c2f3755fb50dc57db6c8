@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "102df676_a31d7191",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-05T15:40:25Z",
+      "side": 1,
+      "message": "is there any reason not to use a Range output variable? seems like every calling instance uses one, unless I missed something.",
+      "range": {
+        "startLine": 386,
+        "startChar": 79,
+        "endLine": 386,
+        "endChar": 117
+      },
+      "revId": "e1e208619f37fc680eb0c2f3755fb50dc57db6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0218a87_2b587d11",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1567,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-05T15:40:25Z",
+      "side": 1,
+      "message": "dit",
+      "range": {
+        "startLine": 1567,
+        "startChar": 38,
+        "endLine": 1567,
+        "endChar": 39
+      },
+      "revId": "e1e208619f37fc680eb0c2f3755fb50dc57db6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d026fe9b_c380a9d1",
+        "filename": "src/libANGLE/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-05T15:40:25Z",
+      "side": 1,
+      "message": "nit: existing style bug here",
+      "range": {
+        "startLine": 74,
+        "startChar": 38,
+        "endLine": 74,
+        "endChar": 39
+      },
+      "revId": "e1e208619f37fc680eb0c2f3755fb50dc57db6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
