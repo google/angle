@@ -35,8 +35,8 @@ bool ValidES3ReadFormatType(Context *context, GLenum internalFormat, GLenum form
 bool ValidateES3RenderbufferStorageParameters(Context *context, GLenum target, GLsizei samples,
                                               GLenum internalformat, GLsizei width, GLsizei height);
 
-bool ValidateInvalidateFramebufferParameters(Context *context, GLenum target, GLsizei numAttachments,
-                                             const GLenum* attachments);
+bool ValidateInvalidateFramebuffer(Context *context, GLenum target, GLsizei numAttachments,
+                                   const GLenum *attachments);
 
 bool ValidateClearBuffer(Context *context);
 

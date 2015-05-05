@@ -497,6 +497,11 @@ GLenum Framebuffer::checkStatus(const gl::Data &data) const
     return mImpl->checkStatus();
 }
 
+Error Framebuffer::discard(size_t count, const GLenum *attachments)
+{
+    return mImpl->discard(count, attachments);
+}
+
 Error Framebuffer::invalidate(size_t count, const GLenum *attachments)
 {
     return mImpl->invalidate(count, attachments);

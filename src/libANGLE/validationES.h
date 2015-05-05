@@ -89,6 +89,9 @@ bool ValidateGetUniformiv(Context *context, GLuint program, GLint location, GLin
 bool ValidateGetnUniformfvEXT(Context *context, GLuint program, GLint location, GLsizei bufSize, GLfloat* params);
 bool ValidateGetnUniformivEXT(Context *context, GLuint program, GLint location, GLsizei bufSize, GLint* params);
 
+bool ValidateDiscardFramebufferBase(Context *context, GLenum target, GLsizei numAttachments,
+                                    const GLenum *attachments, bool defaultFramebuffer);
+
 }
 
 #endif // LIBANGLE_VALIDATION_ES_H_

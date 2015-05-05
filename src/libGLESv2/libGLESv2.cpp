@@ -1256,6 +1256,11 @@ void GL_APIENTRY glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei sa
     return gl::RenderbufferStorageMultisampleANGLE(target, samples, internalformat, width, height);
 }
 
+void GL_APIENTRY glDiscardFramebufferEXT(GLenum target, GLsizei numAttachments, const GLenum *attachments)
+{
+    return gl::DiscardFramebufferEXT(target, numAttachments, attachments);
+}
+
 void GL_APIENTRY glDeleteFencesNV(GLsizei n, const GLuint* fences)
 {
     return gl::DeleteFencesNV(n, fences);

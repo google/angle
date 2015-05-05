@@ -152,6 +152,12 @@ void FramebufferGL::setReadBuffer(GLenum buffer)
     }
 }
 
+gl::Error FramebufferGL::discard(size_t count, const GLenum *attachments)
+{
+    UNIMPLEMENTED();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
 gl::Error FramebufferGL::invalidate(size_t count, const GLenum *attachments)
 {
     // Since this function is just a hint and not available until OpenGL 4.3, only call it if it is available.

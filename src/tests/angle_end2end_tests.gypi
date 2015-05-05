@@ -21,6 +21,7 @@
             '<(angle_path)/src/tests/gl_tests/CompressedTextureTest.cpp',
             '<(angle_path)/src/tests/gl_tests/CubeMapTextureTest.cpp',
             '<(angle_path)/src/tests/gl_tests/DepthStencilFormatsTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/DiscardFramebufferEXTTest.cpp',
             '<(angle_path)/src/tests/gl_tests/DrawBuffersTest.cpp',
             '<(angle_path)/src/tests/gl_tests/FenceSyncTests.cpp',
             '<(angle_path)/src/tests/gl_tests/FramebufferFormatsTest.cpp',

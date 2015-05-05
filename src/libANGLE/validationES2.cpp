@@ -879,4 +879,22 @@ bool ValidES2ReadFormatType(Context *context, GLenum format, GLenum type)
     return true;
 }
 
+bool ValidateDiscardFramebufferEXT(Context *context, GLenum target, GLsizei numAttachments,
+                                   const GLenum *attachments)
+{
+    bool defaultFramebuffer = false;
+
+    switch (target)
+    {
+      case GL_FRAMEBUFFER:
+        defaultFramebuffer = (context->getState().getTargetFramebuffer(GL_FRAMEBUFFER)->id() == 0);
+        break;
+      default:
+        context->recordError(Error(GL_INVALID_ENUM, "Invalid framebuffer target"));
+        return false;
+    }
+
+    return ValidateDiscardFramebufferBase(context, target, numAttachments, attachments, defaultFramebuffer);
+}
+
 }

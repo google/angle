@@ -21,6 +21,10 @@ class Framebuffer9 : public FramebufferD3D
     Framebuffer9(const gl::Framebuffer::Data &data, Renderer9 *renderer);
     virtual ~Framebuffer9();
 
+    gl::Error discard(size_t count, const GLenum *attachments) override;
+    gl::Error invalidate(size_t count, const GLenum *attachments) override;
+    gl::Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area) override;
+
   private:
     gl::Error clear(const gl::State &state, const ClearParameters &clearParams) override;
 

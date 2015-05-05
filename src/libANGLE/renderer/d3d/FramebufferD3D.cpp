@@ -123,18 +123,6 @@ void FramebufferD3D::setReadBuffer(GLenum)
 {
 }
 
-gl::Error FramebufferD3D::invalidate(size_t, const GLenum *)
-{
-    // No-op in D3D
-    return gl::Error(GL_NO_ERROR);
-}
-
-gl::Error FramebufferD3D::invalidateSub(size_t, const GLenum *, const gl::Rectangle &)
-{
-    // No-op in D3D
-    return gl::Error(GL_NO_ERROR);
-}
-
 gl::Error FramebufferD3D::clear(const gl::Data &data, GLbitfield mask)
 {
     const gl::State &state = *data.state;

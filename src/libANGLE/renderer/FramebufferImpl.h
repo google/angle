@@ -39,6 +39,7 @@ class FramebufferImpl : angle::NonCopyable
     virtual void setDrawBuffers(size_t count, const GLenum *buffers) = 0;
     virtual void setReadBuffer(GLenum buffer) = 0;
 
+    virtual gl::Error discard(size_t count, const GLenum *attachments) = 0;
     virtual gl::Error invalidate(size_t count, const GLenum *attachments) = 0;
     virtual gl::Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area) = 0;
 

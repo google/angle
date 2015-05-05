@@ -1884,4 +1884,62 @@ bool ValidateGetnUniformivEXT(Context *context, GLuint program, GLint location, 
     return ValidateSizedGetUniform(context, program, location, bufSize);
 }
 
+bool ValidateDiscardFramebufferBase(Context *context, GLenum target, GLsizei numAttachments,
+                                    const GLenum *attachments, bool defaultFramebuffer)
+{
+    if (numAttachments < 0)
+    {
+        context->recordError(Error(GL_INVALID_VALUE, "numAttachments must not be less than zero"));
+        return false;
+    }
+
+    for (GLsizei i = 0; i < numAttachments; ++i)
+    {
+        if (attachments[i] >= GL_COLOR_ATTACHMENT0 && attachments[i] <= GL_COLOR_ATTACHMENT15)
+        {
+            if (defaultFramebuffer)
+            {
+                context->recordError(Error(GL_INVALID_ENUM, "Invalid attachment when the default framebuffer is bound"));
+                return false;
+            }
+
+            if (attachments[i] >= GL_COLOR_ATTACHMENT0 + context->getCaps().maxColorAttachments)
+            {
+                context->recordError(Error(GL_INVALID_OPERATION,
+                                           "Requested color attachment is greater than the maximum supported color attachments"));
+                return false;
+            }
+        }
+        else
+        {
+            switch (attachments[i])
+            {
+              case GL_DEPTH_ATTACHMENT:
+              case GL_STENCIL_ATTACHMENT:
+              case GL_DEPTH_STENCIL_ATTACHMENT:
+                if (defaultFramebuffer)
+                {
+                    context->recordError(Error(GL_INVALID_ENUM, "Invalid attachment when the default framebuffer is bound"));
+                    return false;
+                }
+                break;
+              case GL_COLOR:
+              case GL_DEPTH:
+              case GL_STENCIL:
+                if (!defaultFramebuffer)
+                {
+                    context->recordError(Error(GL_INVALID_ENUM, "Invalid attachment when the default framebuffer is not bound"));
+                    return false;
+                }
+                break;
+              default:
+                context->recordError(Error(GL_INVALID_ENUM, "Invalid attachment"));
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 }

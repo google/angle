@@ -66,9 +66,6 @@ class FramebufferD3D : public FramebufferImpl
     void setDrawBuffers(size_t count, const GLenum *buffers) override;
     void setReadBuffer(GLenum buffer) override;
 
-    gl::Error invalidate(size_t count, const GLenum *attachments) override;
-    gl::Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area) override;
-
     gl::Error clear(const gl::Data &data, GLbitfield mask) override;
     gl::Error clearBufferfv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLfloat *values) override;
     gl::Error clearBufferuiv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLuint *values) override;
