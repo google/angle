@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd24a5a6_f91393dd",
+        "filename": "util/linux/LinuxTimer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-05T22:44:39Z",
+      "side": 1,
+      "message": "May be better to put this in something like posix/PosixTimer.h. It looks like it could be reused on Android.",
+      "range": {
+        "startLine": 7,
+        "startChar": 10,
+        "endLine": 7,
+        "endChar": 15
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d19f971_79c2df3a",
+        "filename": "util/linux/LinuxWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-05T22:44:39Z",
+      "side": 1,
+      "message": "It might be worth putting this in something like x11/X11Window.h.",
+      "range": {
+        "startLine": 7,
+        "startChar": 10,
+        "endLine": 7,
+        "endChar": 15
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_f93cb343",
+        "filename": "util/linux/LinuxWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-05T22:44:39Z",
+      "side": 1,
+      "message": "Let\u0027s add a TODO here about thinking through visual selection and the implementation of eglChooseConfig and eglCreateWindowSurface. The visual selection implicitly determines the EGLConfig that will be associated with the window.",
+      "range": {
+        "startLine": 34,
+        "startChar": 21,
+        "endLine": 34,
+        "endChar": 34
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_7cae519a",
+        "filename": "util/linux/Linux_path_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-05T22:44:39Z",
+      "side": 1,
+      "message": "Should be sb.st_size here.",
+      "range": {
+        "startLine": 26,
+        "startChar": 54,
+        "endLine": 26,
+        "endChar": 56
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_97e58650",
+        "filename": "util/linux/Linux_path_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-05T22:44:39Z",
+      "side": 1,
+      "message": "This could be a bit more precise by checking \"if (result !\u003d sb.st_size)\". I\u0027m not sure we want to return anything if we read fewer bytes than expected.",
+      "range": {
+        "startLine": 27,
+        "startChar": 8,
+        "endLine": 27,
+        "endChar": 14
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
