@@ -19,7 +19,6 @@
 #include "libANGLE/Uniform.h"
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/VertexArray.h"
-#include "libANGLE/renderer/BufferImpl.h"
 
 #include "common/mathutil.h"
 #include "common/utilities.h"
@@ -1644,20 +1643,11 @@ bool ValidateDrawElements(Context *context, GLenum mode, GLsizei count, GLenum t
     if (elementArrayBuffer)
     {
         uintptr_t offset = reinterpret_cast<uintptr_t>(indices);
-        if (!elementArrayBuffer->getIndexRangeCache()->findRange(type, static_cast<unsigned int>(offset), count, indexRangeOut))
+        Error error = elementArrayBuffer->getIndexRange(type, static_cast<size_t>(offset), count, indexRangeOut);
+        if (error.isError())
         {
-            rx::BufferImpl *bufferImpl = elementArrayBuffer->getImplementation();
-            const uint8_t *dataPointer = NULL;
-            Error error = bufferImpl->getData(&dataPointer);
-            if (error.isError())
-            {
-                context->recordError(error);
-                return false;
-            }
-
-            const uint8_t *offsetPointer = dataPointer + offset;
-            *indexRangeOut = ComputeIndexRange(type, offsetPointer, count);
-            elementArrayBuffer->getIndexRangeCache()->addRange(type, static_cast<unsigned int>(offset), count, *indexRangeOut);
+            context->recordError(error);
+            return false;
         }
     }
     else

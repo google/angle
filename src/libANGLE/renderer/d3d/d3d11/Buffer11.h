@@ -9,6 +9,8 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_BUFFER11_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_BUFFER11_H_
 
+#include <map>
+
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 
@@ -59,10 +61,10 @@ class Buffer11 : public BufferD3D
     // BufferD3D implementation
     virtual size_t getSize() const { return mSize; }
     virtual bool supportsDirectBinding() const;
+    gl::Error getData(const uint8_t **outData) override;
 
     // BufferImpl implementation
     virtual gl::Error setData(const void* data, size_t size, GLenum usage);
-    gl::Error getData(const uint8_t **outData) override;
     virtual gl::Error setSubData(const void* data, size_t size, size_t offset);
     virtual gl::Error copySubData(BufferImpl* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size);
     virtual gl::Error map(GLenum access, GLvoid **mapPtr);

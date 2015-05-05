@@ -38,6 +38,11 @@ class Buffer : public RefCountObject
     Error mapRange(GLintptr offset, GLsizeiptr length, GLbitfield access);
     Error unmap(GLboolean *result);
 
+    void onTransformFeedback();
+    void onPixelUnpack();
+
+    Error getIndexRange(GLenum type, size_t offset, size_t count, RangeUI *outRange) const;
+
     GLenum getUsage() const { return mUsage; }
     GLbitfield getAccessFlags() const { return mAccessFlags; }
     GLenum getAccess() const { return mAccess; }
@@ -48,9 +53,6 @@ class Buffer : public RefCountObject
     GLint64 getSize() const { return mSize; }
 
     rx::BufferImpl *getImplementation() const { return mBuffer; }
-
-    IndexRangeCache *getIndexRangeCache() { return &mIndexRangeCache; }
-    const IndexRangeCache *getIndexRangeCache() const { return &mIndexRangeCache; }
 
   private:
     rx::BufferImpl *mBuffer;
@@ -64,7 +66,7 @@ class Buffer : public RefCountObject
     GLint64 mMapOffset;
     GLint64 mMapLength;
 
-    IndexRangeCache mIndexRangeCache;
+    mutable IndexRangeCache mIndexRangeCache;
 };
 
 }

@@ -62,9 +62,9 @@ bool ValidateUniformMatrix(Context *context, GLenum matrixType, GLint location, 
 
 bool ValidateStateQuery(Context *context, GLenum pname, GLenum *nativeType, unsigned int *numParams);
 
-bool ValidateCopyTexImageParametersBase(Context* context, GLenum target, GLint level, GLenum internalformat, bool isSubImage,
-                                                     GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height,
-                                                     GLint border, GLenum *textureInternalFormatOut);
+bool ValidateCopyTexImageParametersBase(Context *context, GLenum target, GLint level, GLenum internalformat, bool isSubImage,
+                                        GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height,
+                                        GLint border, GLenum *textureInternalFormatOut);
 
 bool ValidateDrawArrays(Context *context, GLenum mode, GLint first, GLsizei count, GLsizei primcount);
 bool ValidateDrawArraysInstanced(Context *context, GLenum mode, GLint first, GLsizei count, GLsizei primcount);

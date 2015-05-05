@@ -6,6 +6,7 @@
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "libANGLE/Buffer.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/renderer/BufferImpl_mock.h"

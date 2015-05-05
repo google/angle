@@ -1219,7 +1219,26 @@ bool Context::getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned
 
 Error Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances)
 {
-    return mRenderer->drawArrays(getData(), mode, first, count, instances);
+    Error error = mRenderer->drawArrays(getData(), mode, first, count, instances);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    TransformFeedback *transformFeedback = mState.getCurrentTransformFeedback();
+    if (transformFeedback->isActive() && !transformFeedback->isPaused())
+    {
+        for (size_t tfBufferIndex = 0; tfBufferIndex < transformFeedback->getIndexedBufferCount(); tfBufferIndex++)
+        {
+            const OffsetBindingPointer<Buffer> &buffer = transformFeedback->getIndexedBuffer(tfBufferIndex);
+            if (buffer.get() != nullptr)
+            {
+                buffer->onTransformFeedback();
+            }
+        }
+    }
+
+    return Error(GL_NO_ERROR);
 }
 
 Error Context::drawElements(GLenum mode, GLsizei count, GLenum type,

@@ -551,7 +551,19 @@ GLenum Framebuffer::getImplementationColorReadType() const
 
 Error Framebuffer::readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const
 {
-    return mImpl->readPixels(state, area, format, type, pixels);
+    Error error = mImpl->readPixels(state, area, format, type, pixels);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    Buffer *unpackBuffer = state.getUnpackState().pixelBuffer.get();
+    if (unpackBuffer)
+    {
+        unpackBuffer->onPixelUnpack();
+    }
+
+    return Error(GL_NO_ERROR);
 }
 
 Error Framebuffer::blit(const gl::State &state, const gl::Rectangle &sourceArea, const gl::Rectangle &destArea,

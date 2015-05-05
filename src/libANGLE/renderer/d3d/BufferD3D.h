@@ -9,8 +9,8 @@
 #ifndef LIBANGLE_RENDERER_D3D_BUFFERD3D_H_
 #define LIBANGLE_RENDERER_D3D_BUFFERD3D_H_
 
-#include "libANGLE/renderer/BufferImpl.h"
 #include "libANGLE/angletypes.h"
+#include "libANGLE/renderer/BufferImpl.h"
 
 #include <stdint.h>
 
@@ -31,6 +31,7 @@ class BufferD3D : public BufferImpl
     virtual size_t getSize() const = 0;
     virtual bool supportsDirectBinding() const = 0;
     virtual void markTransformFeedbackUsage() = 0;
+    virtual gl::Error getData(const uint8_t **outData) = 0;
 
     StaticVertexBufferInterface *getStaticVertexBuffer() { return mStaticVertexBuffer; }
     StaticIndexBufferInterface *getStaticIndexBuffer() { return mStaticIndexBuffer; }
@@ -38,6 +39,8 @@ class BufferD3D : public BufferImpl
     void initializeStaticData();
     void invalidateStaticData();
     void promoteStaticUsage(int dataSize);
+
+    gl::Error getIndexRange(GLenum type, size_t offset, size_t count, gl::RangeUI *outRange) override;
 
   protected:
     void updateSerial();

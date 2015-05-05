@@ -28,7 +28,7 @@ class MockBufferImpl : public BufferImpl
     MOCK_METHOD4(mapRange, gl::Error(size_t, size_t, GLbitfield, GLvoid **));
     MOCK_METHOD1(unmap, gl::Error(GLboolean *result));
 
-    MOCK_METHOD1(getData, gl::Error(const uint8_t **));
+    MOCK_METHOD4(getIndexRange, gl::Error(GLenum, size_t, size_t, gl::RangeUI *));
 
     MOCK_METHOD0(destructor, void());
 };

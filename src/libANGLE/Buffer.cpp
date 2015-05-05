@@ -93,8 +93,7 @@ Error Buffer::map(GLenum access)
     mMapLength = mSize;
     mAccess = access;
     mAccessFlags = GL_MAP_WRITE_BIT;
-
-    mIndexRangeCache.invalidateRange(0, static_cast<unsigned int>(mMapLength));
+    mIndexRangeCache.clear();
 
     return error;
 }
@@ -149,6 +148,34 @@ Error Buffer::unmap(GLboolean *result)
     mAccessFlags = 0;
 
     return error;
+}
+
+void Buffer::onTransformFeedback()
+{
+    mIndexRangeCache.clear();
+}
+
+void Buffer::onPixelUnpack()
+{
+    mIndexRangeCache.clear();
+}
+
+Error Buffer::getIndexRange(GLenum type, size_t offset, size_t count, gl::RangeUI *outRange) const
+{
+    if (mIndexRangeCache.findRange(type, offset, count, outRange))
+    {
+        return gl::Error(GL_NO_ERROR);
+    }
+
+    Error error = mBuffer->getIndexRange(type, offset, count, outRange);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    mIndexRangeCache.addRange(type, offset, count, *outRange);
+
+    return Error(GL_NO_ERROR);
 }
 
 }

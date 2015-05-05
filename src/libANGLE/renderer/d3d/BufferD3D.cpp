@@ -8,6 +8,7 @@
 
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 
+#include "common/utilities.h"
 #include "libANGLE/renderer/d3d/IndexBuffer.h"
 #include "libANGLE/renderer/d3d/VertexBuffer.h"
 
@@ -75,6 +76,19 @@ void BufferD3D::promoteStaticUsage(int dataSize)
             initializeStaticData();
         }
     }
+}
+
+gl::Error BufferD3D::getIndexRange(GLenum type, size_t offset, size_t count, gl::RangeUI *outRange)
+{
+    const uint8_t *data = nullptr;
+    gl::Error error = getData(&data);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    *outRange = gl::ComputeIndexRange(type, data + offset, count);
+    return gl::Error(GL_NO_ERROR);
 }
 
 }
