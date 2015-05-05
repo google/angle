@@ -86,7 +86,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     gl::Error drawElements(const gl::Data &data,
                            GLenum mode, GLsizei count, GLenum type,
                            const GLvoid *indices, GLsizei instances,
-                           const RangeUI &indexRange) override;
+                           const gl::RangeUI &indexRange) override;
 
     bool isDeviceLost() const override;
     std::string getVendorString() const override;

@@ -94,7 +94,7 @@ static bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER
             unsigned mipMin = index.mipIndex;
             unsigned mipMax = (layerIndex == -1) ? INT_MAX : layerIndex;
 
-            return type == GL_TEXTURE_2D && RangeUI(mipMin, mipMax).intersects(RangeUI(desc.Texture2D.MostDetailedMip, maxSrvMip));
+            return type == GL_TEXTURE_2D && gl::RangeUI(mipMin, mipMax).intersects(gl::RangeUI(desc.Texture2D.MostDetailedMip, maxSrvMip));
         }
 
       case D3D11_SRV_DIMENSION_TEXTURE2DARRAY:

@@ -1236,7 +1236,7 @@ void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const GLv
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        rx::RangeUI indexRange;
+        RangeUI indexRange;
         if (!ValidateDrawElements(context, mode, count, type, indices, 0, &indexRange))
         {
             return;

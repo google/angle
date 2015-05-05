@@ -129,7 +129,7 @@ gl::Error RendererGL::drawArrays(const gl::Data &data, GLenum mode,
 
 gl::Error RendererGL::drawElements(const gl::Data &data, GLenum mode, GLsizei count, GLenum type,
                                    const GLvoid *indices, GLsizei instances,
-                                   const RangeUI &indexRange)
+                                   const gl::RangeUI &indexRange)
 {
     if (instances > 0)
     {

@@ -4,11 +4,11 @@
 // found in the LICENSE file.
 //
 
-// IndexRangeCache.h: Defines the rx::IndexRangeCache class which stores information about
+// IndexRangeCache.h: Defines the gl::IndexRangeCache class which stores information about
 // ranges of indices.
 
-#ifndef LIBANGLE_RENDERER_INDEXRANGECACHE_H_
-#define LIBANGLE_RENDERER_INDEXRANGECACHE_H_
+#ifndef LIBANGLE_INDEXRANGECACHE_H_
+#define LIBANGLE_INDEXRANGECACHE_H_
 
 #include "common/angleutils.h"
 #include "common/mathutil.h"
@@ -17,7 +17,7 @@
 
 #include <map>
 
-namespace rx
+namespace gl
 {
 
 class IndexRangeCache
@@ -28,8 +28,6 @@ class IndexRangeCache
 
     void invalidateRange(unsigned int offset, unsigned int size);
     void clear();
-
-    static RangeUI ComputeRange(GLenum type, const GLvoid *indices, GLsizei count);
 
   private:
     struct IndexRange
@@ -50,4 +48,4 @@ class IndexRangeCache
 
 }
 
-#endif // LIBANGLE_RENDERER_INDEXRANGECACHE_H_
+#endif // LIBANGLE_INDEXRANGECACHE_H_

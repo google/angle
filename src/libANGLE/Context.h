@@ -167,7 +167,7 @@ class Context final : angle::NonCopyable
     Error drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances);
     Error drawElements(GLenum mode, GLsizei count, GLenum type,
                        const GLvoid *indices, GLsizei instances,
-                       const rx::RangeUI &indexRange);
+                       const RangeUI &indexRange);
     Error flush();
     Error finish();
 

@@ -10,6 +10,7 @@
 
 #include "common/debug.h"
 #include "common/mathutil.h"
+#include "common/utilities.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
@@ -117,7 +118,7 @@ gl::Error VertexArrayGL::syncDrawState(GLint first, GLsizei count, GLenum type, 
     bool attributesNeedStreaming = doAttributesNeedStreaming();
 
     // Determine if an index buffer needs to be streamed and the range of vertices that need to be copied
-    RangeUI indexRange(0, 0);
+    gl::RangeUI indexRange(0, 0);
     if (type != GL_NONE)
     {
         gl::Error error = syncIndexData(count, type, indices, attributesNeedStreaming, &indexRange, outIndices);
@@ -170,7 +171,7 @@ bool VertexArrayGL::doAttributesNeedStreaming() const
     return false;
 }
 
-gl::Error VertexArrayGL::syncAttributeState(bool attributesNeedStreaming, const RangeUI &indexRange,
+gl::Error VertexArrayGL::syncAttributeState(bool attributesNeedStreaming, const gl::RangeUI &indexRange,
                                             size_t *outStreamingDataSize, size_t *outMaxAttributeDataSize) const
 {
     *outStreamingDataSize = 0;
@@ -241,7 +242,7 @@ gl::Error VertexArrayGL::syncAttributeState(bool attributesNeedStreaming, const 
 }
 
 gl::Error VertexArrayGL::syncIndexData(GLsizei count, GLenum type, const GLvoid *indices, bool attributesNeedStreaming,
-                                       RangeUI *outIndexRange, const GLvoid **outIndices) const
+                                       gl::RangeUI *outIndexRange, const GLvoid **outIndices) const
 {
     ASSERT(outIndices);
 
@@ -262,7 +263,7 @@ gl::Error VertexArrayGL::syncIndexData(GLsizei count, GLenum type, const GLvoid 
             ptrdiff_t elementArrayBufferOffset = reinterpret_cast<ptrdiff_t>(indices);
 
             // Find the index range in the buffer
-            const IndexRangeCache *rangeCache = mElementArrayBuffer.get()->getIndexRangeCache();
+            const gl::IndexRangeCache *rangeCache = mElementArrayBuffer.get()->getIndexRangeCache();
 
             if (!rangeCache->findRange(type, static_cast<unsigned int>(elementArrayBufferOffset), count, outIndexRange))
             {
@@ -270,10 +271,10 @@ gl::Error VertexArrayGL::syncIndexData(GLsizei count, GLenum type, const GLvoid 
                 mStateManager->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementArrayBufferID);
                 uint8_t *elementArrayBufferPointer = reinterpret_cast<uint8_t*>(mFunctions->mapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_ONLY));
 
-                *outIndexRange = IndexRangeCache::ComputeRange(type, elementArrayBufferPointer + elementArrayBufferOffset, count);
+                *outIndexRange = gl::ComputeIndexRange(type, elementArrayBufferPointer + elementArrayBufferOffset, count);
 
                 // TODO: Store the range cache at the impl level since the gl::Buffer object is supposed to remain constant
-                const_cast<IndexRangeCache*>(rangeCache)->addRange(type, static_cast<unsigned int>(elementArrayBufferOffset), count, *outIndexRange);
+                const_cast<gl::IndexRangeCache*>(rangeCache)->addRange(type, static_cast<unsigned int>(elementArrayBufferOffset), count, *outIndexRange);
 
                 if (!mFunctions->unmapBuffer(GL_ELEMENT_ARRAY_BUFFER))
                 {
@@ -293,7 +294,7 @@ gl::Error VertexArrayGL::syncIndexData(GLsizei count, GLenum type, const GLvoid 
         // Only compute the index range if the attributes also need to be streamed
         if (attributesNeedStreaming)
         {
-            *outIndexRange = IndexRangeCache::ComputeRange(type, indices, count);
+            *outIndexRange = gl::ComputeIndexRange(type, indices, count);
         }
 
         // Allocate the streaming element array buffer
@@ -328,7 +329,7 @@ gl::Error VertexArrayGL::syncIndexData(GLsizei count, GLenum type, const GLvoid 
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error VertexArrayGL::streamAttributes(size_t streamingDataSize, size_t maxAttributeDataSize, const RangeUI &indexRange) const
+gl::Error VertexArrayGL::streamAttributes(size_t streamingDataSize, size_t maxAttributeDataSize, const gl::RangeUI &indexRange) const
 {
     if (mStreamingArrayBuffer == 0)
     {

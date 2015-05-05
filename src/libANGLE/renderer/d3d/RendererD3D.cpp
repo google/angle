@@ -57,7 +57,7 @@ void RendererD3D::cleanup()
 gl::Error RendererD3D::drawElements(const gl::Data &data,
                                     GLenum mode, GLsizei count, GLenum type,
                                     const GLvoid *indices, GLsizei instances,
-                                    const RangeUI &indexRange)
+                                    const gl::RangeUI &indexRange)
 {
     if (data.state->isPrimitiveRestartEnabled())
     {

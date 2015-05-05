@@ -1196,7 +1196,7 @@ bool ValidateStateQuery(gl::Context *context, GLenum pname, GLenum *nativeType, 
     return true;
 }
 
-bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLint level, GLenum internalformat, bool isSubImage,
+bool ValidateCopyTexImageParametersBase(gl::Context *context, GLenum target, GLint level, GLenum internalformat, bool isSubImage,
                                         GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height,
                                         GLint border, GLenum *textureFormatOut)
 {
@@ -1564,7 +1564,7 @@ bool ValidateDrawArraysInstancedANGLE(Context *context, GLenum mode, GLint first
 }
 
 bool ValidateDrawElements(Context *context, GLenum mode, GLsizei count, GLenum type,
-                          const GLvoid* indices, GLsizei primcount, rx::RangeUI *indexRangeOut)
+                          const GLvoid *indices, GLsizei primcount, RangeUI *indexRangeOut)
 {
     switch (type)
     {
@@ -1656,13 +1656,13 @@ bool ValidateDrawElements(Context *context, GLenum mode, GLsizei count, GLenum t
             }
 
             const uint8_t *offsetPointer = dataPointer + offset;
-            *indexRangeOut = rx::IndexRangeCache::ComputeRange(type, offsetPointer, count);
+            *indexRangeOut = ComputeIndexRange(type, offsetPointer, count);
             elementArrayBuffer->getIndexRangeCache()->addRange(type, static_cast<unsigned int>(offset), count, *indexRangeOut);
         }
     }
     else
     {
-        *indexRangeOut = rx::IndexRangeCache::ComputeRange(type, indices, count);
+        *indexRangeOut = ComputeIndexRange(type, indices, count);
     }
 
     if (!ValidateDrawBase(context, mode, count, static_cast<GLsizei>(indexRangeOut->end), primcount))
@@ -1676,7 +1676,7 @@ bool ValidateDrawElements(Context *context, GLenum mode, GLsizei count, GLenum t
 bool ValidateDrawElementsInstanced(Context *context,
                                    GLenum mode, GLsizei count, GLenum type,
                                    const GLvoid *indices, GLsizei primcount,
-                                   rx::RangeUI *indexRangeOut)
+                                   RangeUI *indexRangeOut)
 {
     if (primcount < 0)
     {
@@ -1694,7 +1694,7 @@ bool ValidateDrawElementsInstanced(Context *context,
 }
 
 bool ValidateDrawElementsInstancedANGLE(Context *context, GLenum mode, GLsizei count, GLenum type,
-                                        const GLvoid *indices, GLsizei primcount, rx::RangeUI *indexRangeOut)
+                                        const GLvoid *indices, GLsizei primcount, RangeUI *indexRangeOut)
 {
     if (!ValidateDrawInstancedANGLE(context))
     {

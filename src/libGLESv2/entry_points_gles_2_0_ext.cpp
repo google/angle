@@ -117,7 +117,7 @@ void GL_APIENTRY DrawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum t
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        rx::RangeUI indexRange;
+        RangeUI indexRange;
         if (!ValidateDrawElementsInstancedANGLE(context, mode, count, type, indices, primcount, &indexRange))
         {
             return;

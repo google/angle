@@ -1224,7 +1224,7 @@ Error Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei insta
 
 Error Context::drawElements(GLenum mode, GLsizei count, GLenum type,
                             const GLvoid *indices, GLsizei instances,
-                            const rx::RangeUI &indexRange)
+                            const RangeUI &indexRange)
 {
     return mRenderer->drawElements(getData(), mode, count, type, indices, instances, indexRange);
 }

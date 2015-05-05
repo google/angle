@@ -29,7 +29,7 @@ class RendererGL : public Renderer
                          GLint first, GLsizei count, GLsizei instances) override;
     gl::Error drawElements(const gl::Data &data, GLenum mode, GLsizei count, GLenum type,
                            const GLvoid *indices, GLsizei instances,
-                           const RangeUI &indexRange) override;
+                           const gl::RangeUI &indexRange) override;
 
     // Shader creation
     CompilerImpl *createCompiler(const gl::Data &data) override;

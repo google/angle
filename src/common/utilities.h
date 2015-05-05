@@ -13,6 +13,8 @@
 #include <string>
 #include <math.h>
 
+#include "common/mathutil.h"
+
 namespace gl
 {
 
@@ -43,6 +45,8 @@ GLenum LayerIndexToCubeMapTextureTarget(size_t index);
 // Parse the base uniform name and array index.  Returns the base name of the uniform. outSubscript is
 // set to GL_INVALID_INDEX if the provided name is not an array or the array index is invalid.
 std::string ParseUniformName(const std::string &name, size_t *outSubscript);
+
+RangeUI ComputeIndexRange(GLenum indexType, const GLvoid *indices, GLsizei count);
 
 bool IsTriangleMode(GLenum drawMode);
 

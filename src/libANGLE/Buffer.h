@@ -11,11 +11,10 @@
 #ifndef LIBANGLE_BUFFER_H_
 #define LIBANGLE_BUFFER_H_
 
-#include "libANGLE/Error.h"
-#include "libANGLE/RefCountObject.h"
-#include "libANGLE/renderer/IndexRangeCache.h"
-
 #include "common/angleutils.h"
+#include "libANGLE/Error.h"
+#include "libANGLE/IndexRangeCache.h"
+#include "libANGLE/RefCountObject.h"
 
 namespace rx
 {
@@ -50,8 +49,8 @@ class Buffer : public RefCountObject
 
     rx::BufferImpl *getImplementation() const { return mBuffer; }
 
-    rx::IndexRangeCache *getIndexRangeCache() { return &mIndexRangeCache; }
-    const rx::IndexRangeCache *getIndexRangeCache() const { return &mIndexRangeCache; }
+    IndexRangeCache *getIndexRangeCache() { return &mIndexRangeCache; }
+    const IndexRangeCache *getIndexRangeCache() const { return &mIndexRangeCache; }
 
   private:
     rx::BufferImpl *mBuffer;
@@ -65,7 +64,7 @@ class Buffer : public RefCountObject
     GLint64 mMapOffset;
     GLint64 mMapLength;
 
-    rx::IndexRangeCache mIndexRangeCache;
+    IndexRangeCache mIndexRangeCache;
 };
 
 }

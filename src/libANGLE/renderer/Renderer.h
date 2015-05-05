@@ -55,7 +55,7 @@ class Renderer : public ImplFactory
                                  GLint first, GLsizei count, GLsizei instances) = 0;
     virtual gl::Error drawElements(const gl::Data &data, GLenum mode, GLsizei count, GLenum type,
                                    const GLvoid *indices, GLsizei instances,
-                                   const RangeUI &indexRange) = 0;
+                                   const gl::RangeUI &indexRange) = 0;
 
     // lost device
     //TODO(jmadill): investigate if this stuff is necessary in GL

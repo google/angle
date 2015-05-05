@@ -501,11 +501,6 @@ inline unsigned int averageFloat10(unsigned int a, unsigned int b)
     return float32ToFloat10((float10ToFloat32(static_cast<unsigned short>(a)) + float10ToFloat32(static_cast<unsigned short>(b))) * 0.5f);
 }
 
-}
-
-namespace rx
-{
-
 // Represents intervals of the type [a, b)
 template <typename T>
 struct Range
@@ -533,6 +528,11 @@ struct Range
 
 typedef Range<int> RangeI;
 typedef Range<unsigned int> RangeUI;
+
+}
+
+namespace rx
+{
 
 template <typename T>
 T roundUp(const T value, const T alignment)
