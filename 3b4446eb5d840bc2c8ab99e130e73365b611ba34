@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0218a87_df75e380",
+        "filename": "src/angle.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-05T20:35:30Z",
+      "side": 1,
+      "message": "This should be a check for linux, it will probably generate errors when trying to build on android or mac.",
+      "range": {
+        "startLine": 29,
+        "startChar": 12,
+        "endLine": 31,
+        "endChar": 15
+      },
+      "revId": "3b4446eb5d840bc2c8ab99e130e73365b611ba34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0218a87_bfcd8739",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-05T20:35:30Z",
+      "side": 1,
+      "message": "Looks like this is used a few places now, move it to renderergl_utils?",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 1
+      },
+      "revId": "3b4446eb5d840bc2c8ab99e130e73365b611ba34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d026fe9b_77a08c9f",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-05T20:35:30Z",
+      "side": 1,
+      "message": "We should probably discard this config entirely if it\u0027s non conformant.",
+      "range": {
+        "startLine": 309,
+        "startChar": 8,
+        "endLine": 312,
+        "endChar": 9
+      },
+      "revId": "3b4446eb5d840bc2c8ab99e130e73365b611ba34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0218a87_3f0c37ef",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-05T20:35:30Z",
+      "side": 1,
+      "message": "nit: probably unnecessary.",
+      "range": {
+        "startLine": 328,
+        "startChar": 29,
+        "endLine": 328,
+        "endChar": 32
+      },
+      "revId": "3b4446eb5d840bc2c8ab99e130e73365b611ba34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0218a87_df3b237c",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-05T20:35:30Z",
+      "side": 1,
+      "message": "Looks like these need check for the GLX_EXT_swap_control extension and query GLX_MAX_SWAP_INTERVAL_EXT.  Otherwise, just use 1 and 1.",
+      "range": {
+        "startLine": 333,
+        "startChar": 9,
+        "endLine": 335,
+        "endChar": 35
+      },
+      "revId": "3b4446eb5d840bc2c8ab99e130e73365b611ba34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0218a87_ff4c5f53",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-05T20:35:30Z",
+      "side": 1,
+      "message": "We may want to move these includes to platform.h.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 22
+      },
+      "revId": "3b4446eb5d840bc2c8ab99e130e73365b611ba34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0218a87_bf6bc79f",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-05T20:35:30Z",
+      "side": 1,
+      "message": "Should probably name this mGLXDisplay to remove ambiguity.",
+      "range": {
+        "startLine": 77,
+        "startChar": 13,
+        "endLine": 77,
+        "endChar": 21
+      },
+      "revId": "3b4446eb5d840bc2c8ab99e130e73365b611ba34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
