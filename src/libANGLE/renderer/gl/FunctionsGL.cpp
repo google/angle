@@ -21,19 +21,19 @@ static void GetGLVersion(PFNGLGETSTRINGPROC getStringFunction, GLuint *outMajorV
     const std::string version = reinterpret_cast<const char*>(getStringFunction(GL_VERSION));
     if (version.find("OpenGL ES") == std::string::npos)
     {
-        // ES spec states that the GL_VERSION string will be in the following format:
-        // "OpenGL ES N.M vendor-specific information"
+        // OpenGL spec states the GL_VERSION string will be in the following format:
+        // <version number><space><vendor-specific information>
+        // The version number is either of the form major number.minor number or major
+        // number.minor number.release number, where the numbers all have one or more
+        // digits
         *outIsES = false;
         *outMajorVersion = version[0] - '0';
         *outMinorVersion = version[2] - '0';
     }
     else
     {
-        // OpenGL spec states the GL_VERSION string will be in the following format:
-        // <version number><space><vendor-specific information>
-        // The version number is either of the form major number.minor number or major
-        // number.minor number.release number, where the numbers all have one or more
-        // digits
+        // ES spec states that the GL_VERSION string will be in the following format:
+        // "OpenGL ES N.M vendor-specific information"
         *outIsES = true;
         *outMajorVersion = version[10] - '0';
         *outMinorVersion = version[12] - '0';
