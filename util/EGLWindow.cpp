@@ -12,8 +12,7 @@
 #include "OSWindow.h"
 
 #ifdef _WIN32
-#include "win32/Win32Timer.h"
-#include "win32/Win32Window.h"
+#elif __linux__
 #else
 #error unsupported OS.
 #endif

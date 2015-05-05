@@ -1,21 +1,26 @@
 //
-// Copyright (c) 2014 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2015 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
 
-#ifndef SAMPLE_UTIL_WIN32_WINDOW_H
-#define SAMPLE_UTIL_WIN32_WINDOW_H
+// X11Window.h: Definition of the implementation of OSWindow for X11
+
+#ifndef UTIL_X11_WINDOW_H
+#define UTIL_X11_WINDOW_H
+
+#include <string>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xresource.h>
 
 #include "OSWindow.h"
-#include <string>
-#include <windows.h>
 
-class Win32Window : public OSWindow
+class X11Window : public OSWindow
 {
   public:
-    Win32Window();
-    ~Win32Window();
+    X11Window();
+    ~X11Window();
 
     bool initialize(const std::string &name, size_t width, size_t height) override;
     void destroy() override;
@@ -35,12 +40,8 @@ class Win32Window : public OSWindow
     void signalTestEvent() override;
 
   private:
-    std::string mParentClassName;
-    std::string mChildClassName;
-
-    EGLNativeWindowType mNativeWindow;
-    EGLNativeWindowType mParentWindow;
-    EGLNativeDisplayType mNativeDisplay;
+    Display *mDisplay;
+    Window mWindow;
 };
 
-#endif // SAMPLE_UTIL_WIN32_WINDOW_H
+#endif // UTIL_X11_WINDOW_H
