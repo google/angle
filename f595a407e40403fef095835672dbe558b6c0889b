@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "102df676_88724c0a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1220,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-05T15:30:36Z",
+      "side": 1,
+      "message": "Merged this into drawArrays since transform feedback cannot be active during drawElements.",
+      "parentUuid": "105fb6fa_8a016dc1",
+      "range": {
+        "startLine": 1220,
+        "startChar": 12,
+        "endLine": 1220,
+        "endChar": 38
+      },
+      "revId": "f595a407e40403fef095835672dbe558b6c0889b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "102df676_42dbd616",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 11
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-04T22:55:27Z",
       "side": 1,
       "message": "nit: alignment",
+      "range": {
+        "startLine": 1227,
+        "startChar": 46,
+        "endLine": 1227,
+        "endChar": 47
+      },
+      "revId": "f595a407e40403fef095835672dbe558b6c0889b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d026fe9b_a3f00dab",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1227,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-05T15:30:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "102df676_42dbd616",
       "range": {
         "startLine": 1227,
         "startChar": 46,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d026fe9b_c3f5099a",
+        "filename": "src/libANGLE/TransformFeedback_unittest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-05T15:30:36Z",
+      "side": 1,
+      "message": "Yep, removed an include of Buffer.h from BufferImpl.h.",
+      "parentUuid": "105fb6fa_0a72bd61",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 28
+      },
+      "revId": "f595a407e40403fef095835672dbe558b6c0889b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "105fb6fa_aa62b184",
         "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
         "patchSetId": 11
@@ -82,6 +154,30 @@
       "writtenOn": "2015-05-04T22:55:27Z",
       "side": 1,
       "message": "can possibly re-use some hasStaticBuffers here? not sure",
+      "range": {
+        "startLine": 55,
+        "startChar": 8,
+        "endLine": 55,
+        "endChar": 97
+      },
+      "revId": "f595a407e40403fef095835672dbe558b6c0889b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0218a87_eba3c57b",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-05T15:30:36Z",
+      "side": 1,
+      "message": "Moved hasStaticBuffers to another patch.",
+      "parentUuid": "105fb6fa_aa62b184",
       "range": {
         "startLine": 55,
         "startChar": 8,
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "102df676_085d7c7b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-05T15:30:36Z",
+      "side": 1,
+      "message": "Bug fixes that I noticed when making sure Buffer11 was always clearing the cache in the right places.  Moved to a separate patch.",
+      "parentUuid": "d026fe9b_6f2361a2",
+      "range": {
+        "startLine": 403,
+        "startChar": 8,
+        "endLine": 403,
+        "endChar": 28
+      },
+      "revId": "f595a407e40403fef095835672dbe558b6c0889b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "105fb6fa_6a9a59ed",
         "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
         "patchSetId": 11
@@ -151,6 +271,30 @@
       "writtenOn": "2015-05-04T22:55:27Z",
       "side": 1,
       "message": "hm, i guess we could implement getData with map? For some reason I was under the impression it was impossible. still good to have it gone I suppose.",
+      "range": {
+        "startLine": 112,
+        "startChar": 71,
+        "endLine": 112,
+        "endChar": 80
+      },
+      "revId": "f595a407e40403fef095835672dbe558b6c0889b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d026fe9b_03172144",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-05T15:30:36Z",
+      "side": 1,
+      "message": "Yep, it is possible but Buffer9 doesn\u0027t implement map yet and I feel that giving the implementation the ability to optimize by having cpu-side data (like Buffer11 does in some cases) to compute index ranges on is a benefit.",
+      "parentUuid": "105fb6fa_6a9a59ed",
       "range": {
         "startLine": 112,
         "startChar": 71,
