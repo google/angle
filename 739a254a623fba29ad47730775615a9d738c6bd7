@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f056a2ec_32970ec3",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1119,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-05T13:24:36Z",
+      "side": 1,
+      "message": "You shouldn\u0027t need to care about the object size at this point, in case only one of the parameters is a vector the other parameter will get vectorized automatically at the top of the function.",
+      "revId": "739a254a623fba29ad47730775615a9d738c6bd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f056a2ec_f20f46b4",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-05T13:24:36Z",
+      "side": 1,
+      "message": "Instead of reusing the existing folding function, it might be smarter to add a separate folding function for built-in function calls. That way it will be easier to expand the support for built-ins that have more than 2 parameters, the variable names will make more sense etc. Some code could be refactored out of the existing folding function so that it can be reused in both new folding functions.",
+      "revId": "739a254a623fba29ad47730775615a9d738c6bd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "105416e3_93c8be2a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3267,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-05T13:24:36Z",
+      "side": 1,
+      "message": "I think you should rather add this logic to setAggregateOperator. We don\u0027t want to duplicate code that\u0027s for setting type, precision etc.",
+      "revId": "739a254a623fba29ad47730775615a9d738c6bd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
