@@ -24,14 +24,18 @@ class DisplayD3D : public DisplayImpl
     egl::Error initialize(egl::Display *display) override;
     virtual void terminate() override;
 
-    egl::Error createWindowSurface(const egl::Config *configuration, EGLNativeWindowType window, const egl::AttributeMap &attribs,
-                                   SurfaceImpl **outSurface) override;
-    egl::Error createPbufferSurface(const egl::Config *configuration, const egl::AttributeMap &attribs,
-                                    SurfaceImpl **outSurface) override;
-    egl::Error createPbufferFromClientBuffer(const egl::Config *configuration, EGLClientBuffer shareHandle,
-                                             const egl::AttributeMap &attribs, SurfaceImpl **outSurface) override;
-    egl::Error createPixmapSurface(const egl::Config *configuration, NativePixmapType nativePixmap,
-                                   const egl::AttributeMap &attribs, SurfaceImpl **outSurface) override;
+    // Surface creation
+    SurfaceImpl *createWindowSurface(const egl::Config *configuration,
+                                     EGLNativeWindowType window,
+                                     const egl::AttributeMap &attribs) override;
+    SurfaceImpl *createPbufferSurface(const egl::Config *configuration,
+                                      const egl::AttributeMap &attribs) override;
+    SurfaceImpl *createPbufferFromClientBuffer(const egl::Config *configuration,
+                                               EGLClientBuffer shareHandle,
+                                               const egl::AttributeMap &attribs) override;
+    SurfaceImpl *createPixmapSurface(const egl::Config *configuration,
+                                     NativePixmapType nativePixmap,
+                                     const egl::AttributeMap &attribs) override;
 
     egl::Error createContext(const egl::Config *config, const gl::Context *shareContext, const egl::AttributeMap &attribs,
                              gl::Context **outContext) override;

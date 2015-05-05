@@ -318,23 +318,15 @@ void DisplayWGL::terminate()
     mOpenGLModule = nullptr;
 }
 
-egl::Error DisplayWGL::createWindowSurface(const egl::Config *configuration, EGLNativeWindowType window,
-                                           const egl::AttributeMap &attribs, SurfaceImpl **outSurface)
+SurfaceImpl *DisplayWGL::createWindowSurface(const egl::Config *configuration,
+                                             EGLNativeWindowType window,
+                                             const egl::AttributeMap &attribs)
 {
-    WindowSurfaceWGL *surface = new WindowSurfaceWGL(window, mWindowClass, mPixelFormat, mWGLContext, mFunctionsWGL);
-    egl::Error error = surface->initialize();
-    if (error.isError())
-    {
-        SafeDelete(surface);
-        return error;
-    }
-
-    *outSurface = surface;
-    return egl::Error(EGL_SUCCESS);
+    return new WindowSurfaceWGL(window, mWindowClass, mPixelFormat, mWGLContext, mFunctionsWGL);
 }
 
-egl::Error DisplayWGL::createPbufferSurface(const egl::Config *configuration, const egl::AttributeMap &attribs,
-                                            SurfaceImpl **outSurface)
+SurfaceImpl *DisplayWGL::createPbufferSurface(const egl::Config *configuration,
+                                              const egl::AttributeMap &attribs)
 {
     EGLint width = attribs.get(EGL_WIDTH, 0);
     EGLint height = attribs.get(EGL_HEIGHT, 0);
@@ -342,31 +334,24 @@ egl::Error DisplayWGL::createPbufferSurface(const egl::Config *configuration, co
     EGLenum textureFormat = attribs.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
     EGLenum textureTarget = attribs.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
 
-    PbufferSurfaceWGL *surface = new PbufferSurfaceWGL(width, height, textureFormat, textureTarget, largest,
-                                                       mPixelFormat, mDeviceContext, mWGLContext, mFunctionsWGL);
-    egl::Error error = surface->initialize();
-    if (error.isError())
-    {
-        SafeDelete(surface);
-        return error;
-    }
-
-    *outSurface = surface;
-    return egl::Error(EGL_SUCCESS);
+    return new PbufferSurfaceWGL(width, height, textureFormat, textureTarget, largest,
+                                 mPixelFormat, mDeviceContext, mWGLContext, mFunctionsWGL);
 }
 
-egl::Error DisplayWGL::createPbufferFromClientBuffer(const egl::Config *configuration, EGLClientBuffer shareHandle,
-                                                     const egl::AttributeMap &attribs, SurfaceImpl **outSurface)
+SurfaceImpl *DisplayWGL::createPbufferFromClientBuffer(const egl::Config *configuration,
+                                                       EGLClientBuffer shareHandle,
+                                                       const egl::AttributeMap &attribs)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_BAD_DISPLAY);
+    return nullptr;
 }
 
-egl::Error DisplayWGL::createPixmapSurface(const egl::Config *configuration, NativePixmapType nativePixmap,
-                                           const egl::AttributeMap &attribs, SurfaceImpl **outSurface)
+SurfaceImpl *DisplayWGL::createPixmapSurface(const egl::Config *configuration,
+                                             NativePixmapType nativePixmap,
+                                             const egl::AttributeMap &attribs)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_BAD_DISPLAY);
+    return nullptr;
 }
 
 static int QueryWGLFormatAttrib(HDC dc, int format, int attribName, const FunctionsWGL *functions)

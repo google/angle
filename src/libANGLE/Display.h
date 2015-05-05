@@ -121,7 +121,7 @@ class Display final : angle::NonCopyable
 
     std::string mVendorString;
 
-    Device* mDevice;
+    Device *mDevice;
 };
 
 }

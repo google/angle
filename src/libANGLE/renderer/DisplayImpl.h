@@ -46,14 +46,17 @@ class DisplayImpl : angle::NonCopyable
     virtual egl::Error initialize(egl::Display *display) = 0;
     virtual void terminate() = 0;
 
-    virtual egl::Error createWindowSurface(const egl::Config *configuration, EGLNativeWindowType window, const egl::AttributeMap &attribs,
-                                           SurfaceImpl **outSurface) = 0;
-    virtual egl::Error createPbufferSurface(const egl::Config *configuration, const egl::AttributeMap &attribs,
-                                            SurfaceImpl **outSurface) = 0;
-    virtual egl::Error createPbufferFromClientBuffer(const egl::Config *configuration, EGLClientBuffer shareHandle,
-                                                     const egl::AttributeMap &attribs, SurfaceImpl **outSurface) = 0;
-    virtual egl::Error createPixmapSurface(const egl::Config *configuration, NativePixmapType nativePixmap,
-                                           const egl::AttributeMap &attribs, SurfaceImpl **outSurface) = 0;
+    virtual SurfaceImpl *createWindowSurface(const egl::Config *configuration,
+                                             EGLNativeWindowType window,
+                                             const egl::AttributeMap &attribs) = 0;
+    virtual SurfaceImpl *createPbufferSurface(const egl::Config *configuration,
+                                              const egl::AttributeMap &attribs) = 0;
+    virtual SurfaceImpl *createPbufferFromClientBuffer(const egl::Config *configuration,
+                                                       EGLClientBuffer shareHandle,
+                                                       const egl::AttributeMap &attribs) = 0;
+    virtual SurfaceImpl *createPixmapSurface(const egl::Config *configuration,
+                                             NativePixmapType nativePixmap,
+                                             const egl::AttributeMap &attribs) = 0;
     virtual egl::Error createContext(const egl::Config *config, const gl::Context *shareContext, const egl::AttributeMap &attribs,
                                      gl::Context **outContext) = 0;
 

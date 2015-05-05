@@ -350,14 +350,16 @@ Error Display::createWindowSurface(const Config *configuration, EGLNativeWindowT
         }
     }
 
-    rx::SurfaceImpl *surfaceImpl = nullptr;
-    Error error = mImplementation->createWindowSurface(configuration, window, attribs, &surfaceImpl);
+    rx::SurfaceImpl *surfaceImpl = mImplementation->createWindowSurface(configuration, window, attribs);
+    ASSERT(surfaceImpl != nullptr);
+
+    Error error = surfaceImpl->initialize();
     if (error.isError())
     {
+        SafeDelete(surfaceImpl);
         return error;
     }
 
-    ASSERT(surfaceImpl != nullptr);
     Surface *surface = new Surface(surfaceImpl, EGL_WINDOW_BIT, configuration, attribs);
     mImplementation->getSurfaceSet().insert(surface);
 
@@ -383,14 +385,16 @@ Error Display::createPbufferSurface(const Config *configuration, const Attribute
         }
     }
 
-    rx::SurfaceImpl *surfaceImpl = nullptr;
-    Error error = mImplementation->createPbufferSurface(configuration, attribs, &surfaceImpl);
+    rx::SurfaceImpl *surfaceImpl = mImplementation->createPbufferSurface(configuration, attribs);
+    ASSERT(surfaceImpl != nullptr);
+
+    Error error = surfaceImpl->initialize();
     if (error.isError())
     {
+        SafeDelete(surfaceImpl);
         return error;
     }
 
-    ASSERT(surfaceImpl != nullptr);
     Surface *surface = new Surface(surfaceImpl, EGL_PBUFFER_BIT, configuration, attribs);
     mImplementation->getSurfaceSet().insert(surface);
 
@@ -413,14 +417,16 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration, EGLCli
         }
     }
 
-    rx::SurfaceImpl *surfaceImpl = nullptr;
-    Error error = mImplementation->createPbufferFromClientBuffer(configuration, shareHandle, attribs, &surfaceImpl);
+    rx::SurfaceImpl *surfaceImpl = mImplementation->createPbufferFromClientBuffer(configuration, shareHandle, attribs);
+    ASSERT(surfaceImpl != nullptr);
+
+    Error error = surfaceImpl->initialize();
     if (error.isError())
     {
+        SafeDelete(surfaceImpl);
         return error;
     }
 
-    ASSERT(surfaceImpl != nullptr);
     Surface *surface = new Surface(surfaceImpl, EGL_PBUFFER_BIT, configuration, attribs);
     mImplementation->getSurfaceSet().insert(surface);
 
@@ -443,14 +449,16 @@ Error Display::createPixmapSurface(const Config *configuration, NativePixmapType
         }
     }
 
-    rx::SurfaceImpl *surfaceImpl = nullptr;
-    Error error = mImplementation->createPixmapSurface(configuration, nativePixmap, attribs, &surfaceImpl);
+    rx::SurfaceImpl *surfaceImpl = mImplementation->createPixmapSurface(configuration, nativePixmap, attribs);
+    ASSERT(surfaceImpl != nullptr);
+
+    Error error = surfaceImpl->initialize();
     if (error.isError())
     {
+        SafeDelete(surfaceImpl);
         return error;
     }
 
-    ASSERT(surfaceImpl != nullptr);
     Surface *surface = new Surface(surfaceImpl, EGL_PIXMAP_BIT, configuration, attribs);
     mImplementation->getSurfaceSet().insert(surface);
 
