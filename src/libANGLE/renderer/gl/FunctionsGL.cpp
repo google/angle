@@ -40,20 +40,6 @@ static void GetGLVersion(PFNGLGETSTRINGPROC getStringFunction, GLuint *outMajorV
     }
 }
 
-static std::vector<std::string> GetNonIndexedExtensions(PFNGLGETSTRINGPROC getStringFunction)
-{
-    std::vector<std::string> result;
-
-    std::istringstream stream(reinterpret_cast<const char*>(getStringFunction(GL_EXTENSIONS)));
-    std::string extension;
-    while (std::getline(stream, extension, ' '))
-    {
-        result.push_back(extension);
-    }
-
-    return result;
-}
-
 static std::vector<std::string> GetIndexedExtensions(PFNGLGETINTEGERVPROC getIntegerFunction, PFNGLGETSTRINGIPROC getStringIFunction)
 {
     std::vector<std::string> result;
@@ -792,7 +778,8 @@ void FunctionsGL::initialize()
     }
     else
     {
-        extensions = GetNonIndexedExtensions(getString);
+        const char *exts = reinterpret_cast<const char*>(getString(GL_EXTENSIONS));
+        extensions = TokenizeExtensionsString(exts);
     }
 
     // 1.0

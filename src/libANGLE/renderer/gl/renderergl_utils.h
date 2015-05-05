@@ -12,6 +12,7 @@
 
 #include "libANGLE/renderer/gl/functionsgl_typedefs.h"
 
+#include <string>
 #include <vector>
 
 namespace gl
@@ -30,9 +31,9 @@ namespace nativegl_gl
 
 void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap,
                   gl::Extensions *extensions);
-
 }
 
+std::vector<std::string> TokenizeExtensionsString(const char *extensions);
 }
 
 #endif // LIBANGLE_RENDERER_GL_RENDERERGLUTILS_H_

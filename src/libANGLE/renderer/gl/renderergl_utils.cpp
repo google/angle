@@ -17,6 +17,7 @@
 #include "libANGLE/renderer/gl/formatutilsgl.h"
 
 #include <algorithm>
+#include <sstream>
 
 namespace rx
 {
@@ -158,6 +159,20 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     extensions->fence = std::find(functions->extensions.begin(), functions->extensions.end(), "GL_NV_fence") != functions->extensions.end();
 }
 
+}
+
+std::vector<std::string> TokenizeExtensionsString(const char *extensions)
+{
+    std::vector<std::string> result;
+
+    std::istringstream stream(extensions);
+    std::string extension;
+    while (std::getline(stream, extension, ' '))
+    {
+        result.push_back(extension);
+    }
+
+    return result;
 }
 
 }
