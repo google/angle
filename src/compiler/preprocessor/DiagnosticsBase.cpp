@@ -123,8 +123,6 @@ std::string Diagnostics::message(ID id)
         return "unexpected token after conditional expression";
       case PP_UNRECOGNIZED_PRAGMA:
         return "unrecognized pragma";
-      case PP_NON_PP_TOKEN_BEFORE_EXTENSION:
-        return "extension directive must occur before any non-preprocessor tokens";
       // Warnings end.
       default:
         assert(false);
