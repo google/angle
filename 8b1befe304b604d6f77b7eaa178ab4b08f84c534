@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd24a5a6_8b431d05",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-06T17:15:35Z",
+      "side": 1,
+      "message": "nit: \"Win32Window:\"\n     \"  Blah...\"",
+      "revId": "8b1befe304b604d6f77b7eaa178ab4b08f84c534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
