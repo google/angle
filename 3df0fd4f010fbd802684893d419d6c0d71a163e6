@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d1e2d58_b1ebe7f0",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-06T17:27:08Z",
+      "side": 1,
+      "message": "we shouldn\u0027t commit this... is this necessary?",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 75
+      },
+      "revId": "3df0fd4f010fbd802684893d419d6c0d71a163e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_311917af",
+        "filename": "util/linux/LinuxTimer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-06T17:27:08Z",
+      "side": 1,
+      "message": "nit: include the class/file name in the comment (see (most) of the libANGLE files)",
+      "revId": "3df0fd4f010fbd802684893d419d6c0d71a163e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
