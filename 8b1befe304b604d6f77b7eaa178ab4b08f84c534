@@ -52,6 +52,24 @@
       "revId": "8b1befe304b604d6f77b7eaa178ab4b08f84c534",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d19f971_55591f8e",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T17:49:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d1e2d58_71c78f49",
+      "revId": "8b1befe304b604d6f77b7eaa178ab4b08f84c534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
