@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8d1e2d58_fbc820a4",
+        "filename": "src/common/platform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T16:35:51Z",
+      "side": 1,
+      "message": "It induces errors like this, I am not sure how to fix it nicely:\n/usr/include/GL/glext.h:2182:26: error: typedef redefinition with different types (\u0027void (*)(GLenum, GLenum, GLuint, GLenum, GLsizei, const GLchar *, const void *)\u0027 vs \u0027void (*)(GLenum, GLenum, GLuint, GLenum, GLsizei, const GLchar *, GLvoid *)\u0027)\ntypedef void (APIENTRY  *GLDEBUGPROC)(GLenum source,GLenum type,GLuint id,GLenum severity,GLsizei length,const GLchar *message,const void *userParam);\n                         ^\ninclude/GLES2/gl2ext.h:186:28: note: previous definition is here\ntypedef void (GL_APIENTRYP GLDEBUGPROC)(GLenum source,GLenum type,GLuint id,GLenum severity,GLsizei length,const GLchar *message,GLvoid *userParam);\n\nMade it a TODO",
+      "parentUuid": "6d19f971_79fbfff6",
+      "range": {
+        "startLine": 23,
+        "startChar": 27,
+        "endLine": 23,
+        "endChar": 35
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d1e2d58_3afa1989",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-05T23:16:25Z",
       "side": 1,
       "message": "Let\u0027s state what minimum version is required in the error message.",
+      "range": {
+        "startLine": 82,
+        "startChar": 12,
+        "endLine": 82,
+        "endChar": 18
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_f0c280b3",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T16:35:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d1e2d58_3afa1989",
       "range": {
         "startLine": 82,
         "startChar": 12,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "cd24a5a6_7038b000",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T16:35:51Z",
+      "side": 1,
+      "message": "Mesa 8.0 has it behind a compile flag that seems to be on most of the time and Mesa 9.0 has it always on. This makes me thing all up-to-date linux installation using Mesa will have it. For proprietary driver, I assume it will be present (they are usually a big superset of OSS drivers).\nAdded a comment.",
+      "parentUuid": "8d1e2d58_bad86918",
+      "range": {
+        "startLine": 97,
+        "startChar": 23,
+        "endLine": 97,
+        "endChar": 24
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d1e2d58_bab189c2",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2015-05-05T23:16:25Z",
       "side": 1,
       "message": "Should be TODO(cwallez).",
+      "range": {
+        "startLine": 200,
+        "startChar": 6,
+        "endLine": 200,
+        "endChar": 10
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d19f971_df078e4a",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T16:35:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d1e2d58_bab189c2",
       "range": {
         "startLine": 200,
         "startChar": 6,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "6d19f971_bf1a92ed",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T16:35:51Z",
+      "side": 1,
+      "message": "So that\u0027s what these annoying arrays of numbers mean! Mind blown. Wrt your comment, I will try to see if it is the X visuals or the GLX visuals have to match. If it is the GLX visual, I fear we will have to advertise only one, as it needs to match the unique context created in initialize.",
+      "parentUuid": "6d19f971_3ceb3578",
+      "range": {
+        "startLine": 243,
+        "startChar": 24,
+        "endLine": 243,
+        "endChar": 40
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd24a5a6_fc7f0125",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 2
@@ -128,6 +248,30 @@
       "writtenOn": "2015-05-05T23:16:25Z",
       "side": 1,
       "message": "https://www.khronos.org/registry/egl/sdk/docs/man/html/eglChooseConfig.xhtml seems to define EGL_BUFFER_SIZE as the sum of the red, green, blue, and alpha sizes.",
+      "range": {
+        "startLine": 264,
+        "startChar": 39,
+        "endLine": 264,
+        "endChar": 45
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_9b0a4c57",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T16:35:51Z",
+      "side": 1,
+      "message": "Ah yes.\nDone",
+      "parentUuid": "cd24a5a6_fc7f0125",
       "range": {
         "startLine": 264,
         "startChar": 39,
