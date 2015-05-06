@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd24a5a6_dd267cb3",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-05-06T17:47:02Z",
+      "side": 1,
+      "message": "For the moment ANGLE doesn\u0027t provide an API to query the shader version of a shader.  With this API change, that should be required, but it\u0027s OK to do it in another CL.",
+      "revId": "9a9ea779605120b9ac5efa164a3bc0d5fc7d5b45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_51249366",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-05-06T17:47:02Z",
+      "side": 1,
+      "message": "Can we just remove this one?  Since we already changed the ANGLE version, so it\u0027s easier for browsers to handle the extra arg when they roll ANGLE.  Otherwise it\u0027s easy to not update on the browser side.",
+      "revId": "9a9ea779605120b9ac5efa164a3bc0d5fc7d5b45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
