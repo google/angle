@@ -1,16 +1,13 @@
 Known failures in the WebGL CTS 1.0.4, ToT ANGLE (Release/x64), using Canary
 https://www.khronos.org/registry/webgl/sdk/tests/webgl-conformance-tests.html
 
-conformance/extensions/webgl-draw-buffers-max-draw-buffers.html: 2 tests failed
 conformance/glsl/bugs/pow-of-small-constant-in-user-defined-function.html: 1 tests failed
 conformance/glsl/bugs/sampler-struct-function-arg.html: 1 tests failed
 conformance/glsl/misc/const-variable-initialization.html: 90 tests failed
 conformance/glsl/misc/ternary-operators-in-global-initializers.html: 12 tests failed
-conformance/misc/expando-loss.html: 2 tests failed
-conformance/ogles/GL/biuDepthRange/biuDepthRange_001_to_002.html: 2 tests failed
-conformance/ogles/GL/gl_FragCoord/gl_FragCoord_001_to_003.html: 1 tests failed
+conformance/misc/expando-loss.html: 8 tests failed
 deqp/data/gles2/shaders/constant_expressions.html: 2 tests failed
 deqp/data/gles2/shaders/fragdata.html: 3 tests failed
 deqp/data/gles2/shaders/functions.html: 8 tests failed
-deqp/data/gles2/shaders/preprocessor.html: 41 tests failed
+deqp/data/gles2/shaders/preprocessor.html: 23 tests failed
 deqp/data/gles2/shaders/scoping.html: 4 tests failed
