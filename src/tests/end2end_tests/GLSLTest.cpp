@@ -1109,3 +1109,44 @@ TYPED_TEST(GLSLTest, DepthRangeUniforms)
 
     glDeleteProgram(program);
 }
+
+// Covers the WebGL test 'glsl/bugs/pow-of-small-constant-in-user-defined-function'
+// See https://code.google.com/p/angleproject/issues/detail?id=851
+// TODO(jmadill): ANGLE constant folding can fix this
+TYPED_TEST(GLSLTest, DISABLED_PowOfSmallConstant)
+{
+    const std::string &fragmentShaderSource = SHADER_SOURCE
+    (
+        precision highp float;
+
+        float fun(float arg)
+        {
+            // These values are still easily within the highp range.
+            // The minimum range in terms of 10's exponent is around -19 to 19, and IEEE-754 single precision range is higher than that.
+            return pow(arg, 2.0);
+        }
+
+        void main()
+        {
+            // Note that the bug did not reproduce if an uniform was passed to the function instead of a constant,
+            // or if the expression was moved outside the user-defined function.
+            const float a = 1.0e-6;
+            float b = 1.0e12 * fun(a);
+            if (abs(b - 1.0) < 0.01)
+            {
+                gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0); // green
+            }
+            else
+            {
+                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // red
+            }
+        }
+    );
+
+    GLuint program = CompileProgram(mSimpleVSSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+
+    drawQuad(program, "inputAttribute", 0.5f);
+    EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+    EXPECT_GL_NO_ERROR();
+}
