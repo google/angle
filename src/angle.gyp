@@ -26,6 +26,10 @@
                 'angle_enable_d3d11%': 1,
                 'angle_enable_hlsl%': 1,
             }],
+            ['OS=="linux"',
+            {
+                'angle_enable_gl%': 1,
+            }],
         ],
     },
     'includes':

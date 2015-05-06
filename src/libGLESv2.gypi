@@ -433,6 +433,13 @@
             'libANGLE/renderer/gl/wgl/wgl_utils.h',
             'third_party/khronos/GL/wglext.h',
         ],
+        'libangle_gl_glx_sources':
+        [
+            'libANGLE/renderer/gl/glx/DisplayGLX.cpp',
+            'libANGLE/renderer/gl/glx/DisplayGLX.h',
+            'libANGLE/renderer/gl/glx/WindowSurfaceGLX.cpp',
+            'libANGLE/renderer/gl/glx/WindowSurfaceGLX.h',
+        ],
         'libglesv2_sources':
         [
             'common/angleutils.h',
@@ -641,6 +648,13 @@
                             'sources':
                             [
                                 '<@(libangle_gl_wgl_sources)',
+                            ],
+                        }],
+                        ['OS=="linux"',
+                        {
+                            'sources':
+                            [
+                                '<@(libangle_gl_glx_sources)',
                             ],
                         }],
                     ],
