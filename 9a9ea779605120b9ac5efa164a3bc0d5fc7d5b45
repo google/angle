@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cd24a5a6_5d702c88",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-05-06T17:49:01Z",
+      "side": 1,
+      "message": "Never mind.  There is an API ShGetShaderVersion().",
+      "parentUuid": "cd24a5a6_dd267cb3",
+      "revId": "9a9ea779605120b9ac5efa164a3bc0d5fc7d5b45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d1e2d58_51249366",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 2
