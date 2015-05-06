@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "8d1e2d58_09c6f9c9",
+        "filename": "util/linux/LinuxTimer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-06T12:21:52Z",
+      "side": 1,
+      "message": "ditto here for the comment, and in the Window class",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd24a5a6_f91393dd",
         "filename": "util/linux/LinuxTimer.cpp",
         "patchSetId": 1
@@ -18,6 +41,46 @@
         "startChar": 10,
         "endLine": 7,
         "endChar": 15
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_29e1b54d",
+        "filename": "util/linux/LinuxTimer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-06T12:21:52Z",
+      "side": 1,
+      "message": "add a short comment at the top as per the style in libANGLE",
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_05a13cec",
+        "filename": "util/linux/LinuxTimer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-06T12:21:52Z",
+      "side": 1,
+      "message": "nit: can remove SAMPLE_",
+      "range": {
+        "startLine": 8,
+        "startChar": 8,
+        "endLine": 8,
+        "endChar": 33
       },
       "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -64,6 +127,29 @@
         "startChar": 21,
         "endLine": 34,
         "endChar": 34
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_e9c29db3",
+        "filename": "util/linux/LinuxWindow.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-06T12:21:52Z",
+      "side": 1,
+      "message": "nit: SAMPLE_ can go",
+      "range": {
+        "startLine": 8,
+        "startChar": 8,
+        "endLine": 8,
+        "endChar": 16
       },
       "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
