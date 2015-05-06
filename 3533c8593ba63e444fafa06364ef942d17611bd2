@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d19f971_eb260cb3",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-06T18:27:58Z",
+      "side": 1,
+      "message": "can you make a patch to conditionally include the device type only for D3D11/9 (or non-OpenGL) platforms? For instance, using a std::vector and an if statement in this function.",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 6
+      },
+      "revId": "3533c8593ba63e444fafa06364ef942d17611bd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
