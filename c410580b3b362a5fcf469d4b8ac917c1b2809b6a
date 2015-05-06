@@ -22,6 +22,30 @@
       "revId": "c410580b3b362a5fcf469d4b8ac917c1b2809b6a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_3e5e8678",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T18:03:21Z",
+      "side": 1,
+      "message": "As you wish.\nDone",
+      "parentUuid": "6d19f971_12c61dca",
+      "range": {
+        "startLine": 36,
+        "startChar": 25,
+        "endLine": 36,
+        "endChar": 47
+      },
+      "revId": "c410580b3b362a5fcf469d4b8ac917c1b2809b6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
