@@ -70,6 +70,30 @@
       "revId": "52da258453a111a10dec4d69c22ace3a244a2879",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e356daec_24ed0836",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-06T21:29:06Z",
+      "side": 1,
+      "message": "The target hasn\u0027t changed. I haven\u0027t been keeping on top of of which desktop OpenGL version we\u0027re targeting for WebGL 2. There are a few different versions listed in different parts of the code. 4.1 is fine.",
+      "parentUuid": "63a66a29_4b8045f8",
+      "range": {
+        "startLine": 39,
+        "startChar": 37,
+        "endLine": 39,
+        "endChar": 41
+      },
+      "revId": "52da258453a111a10dec4d69c22ace3a244a2879",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
