@@ -4,6 +4,8 @@
 // found in the LICENSE file.
 //
 
+// Win32_path_utils.cpp: Implementation of OS-specific path functions for Windows
+
 #include "path_utils.h"
 #include <array>
 #include <windows.h>

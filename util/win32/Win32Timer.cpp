@@ -4,6 +4,8 @@
 // found in the LICENSE file.
 //
 
+// Win32Timer.cpp: Implementation of a high precision timer class on Windows
+
 #include "win32/Win32Timer.h"
 
 Win32Timer::Win32Timer()
