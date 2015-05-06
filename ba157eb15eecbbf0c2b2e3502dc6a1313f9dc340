@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "8d1e2d58_34ffc579",
+        "filename": "src/common/platform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-06T18:47:45Z",
+      "side": 1,
+      "message": "That\u0027s happening because most of the ANGLE sources are compiled against the OpenGL ES headers, and it isn\u0027t possible to correctly include both the OpenGL and OpenGL ES headers in the same translation unit.\n\nThe correct fix for this problem is to only #include the GLX and X11 headers in the .cpp files where they\u0027re absolutely needed, and use forward declarations in header files as needed to prevent other .cpp files from including them. That means these includes should be moved from platform.h to some other header that isn\u0027t commonly included.\n\nIt might also be necessary to short-circuit the inclusion of the GLES headers -- not sure.\n\nIt\u0027d be fine to fix this as a TODO after the initial commit; I\u0027d be happy to help with that.",
+      "parentUuid": "8d1e2d58_fbc820a4",
+      "range": {
+        "startLine": 23,
+        "startChar": 27,
+        "endLine": 23,
+        "endChar": 35
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d1e2d58_3afa1989",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 2
@@ -225,6 +249,30 @@
       "side": 1,
       "message": "So that\u0027s what these annoying arrays of numbers mean! Mind blown. Wrt your comment, I will try to see if it is the X visuals or the GLX visuals have to match. If it is the GLX visual, I fear we will have to advertise only one, as it needs to match the unique context created in initialize.",
       "parentUuid": "6d19f971_3ceb3578",
+      "range": {
+        "startLine": 243,
+        "startChar": 24,
+        "endLine": 243,
+        "endChar": 40
+      },
+      "revId": "ba157eb15eecbbf0c2b2e3502dc6a1313f9dc340",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_60fa1b8a",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-06T18:47:45Z",
+      "side": 1,
+      "message": "Again, there\u0027s a 1:1 mapping \n\nPer the man page for glXCreateContextAttribsARB: \"This handle can be used to render to any GLX surface (window, pixmap, or pbuffer) compatible with /config/...\" so the real question is what \"compatible\" means. It should be possible to make a GLX context current to surfaces created with many different visuals.\n\nWe\u0027ll need to verify this, and also work on the config enumeration and selection algorithms. My experience has been that delegating to glXChooseFBConfig works better than trying to implement the visual selection algorithm by hand.",
+      "parentUuid": "6d19f971_bf1a92ed",
       "range": {
         "startLine": 243,
         "startChar": 24,
