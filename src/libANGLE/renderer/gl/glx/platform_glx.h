@@ -15,4 +15,8 @@
 #include <GL/glx.h>
 #undef __glext_h_
 
+#include <X11/Xlib.h>
+#include <X11/Xresource.h>
+#include <X11/Xutil.h>
+
 #endif // LIBANGLE_RENDERER_GL_GLX_PLATFORMGLX_H_

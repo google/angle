@@ -9,7 +9,11 @@
 #ifndef LIBANGLE_RENDERER_GL_GLX_DISPLAYGLX_H_
 #define LIBANGLE_RENDERER_GL_GLX_DISPLAYGLX_H_
 
+#include <string>
+#include <vector>
+
 #include "libANGLE/renderer/gl/DisplayGL.h"
+#include "libANGLE/renderer/gl/glx/FunctionsGLX.h"
 
 namespace rx
 {
@@ -55,7 +59,22 @@ class DisplayGLX : public DisplayGL
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 
+    int getGLXFBConfigAttrib(GLXFBConfig config, int attrib) const;
+
     FunctionsGL *mFunctionsGL;
+
+    //TODO(cwallez) yuck, change generateConfigs to be non-const or add a userdata member to egl::Config?
+    mutable std::map<int, GLXFBConfig> configIdToGLXConfig;
+
+    // The ID of the visual used to create the context
+    int mContextVisualId;
+    GLXContext mContext;
+    // A pbuffer the context is current on during ANGLE initialization
+    GLXPbuffer mDummyPbuffer;
+
+    FunctionsGLX mGLX;
+    egl::Display *mEGLDisplay;
+    Display *mXDisplay;
 };
 
 }
