@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d1e2d58_ef897abe",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 9
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-06T18:57:56Z",
+      "side": 1,
+      "message": "This is pretty gross -- can you please study Chromium\u0027s relevant .gypi files to see how these dependencies should be properly specified?",
+      "range": {
+        "startLine": 745,
+        "startChar": 26,
+        "endLine": 745,
+        "endChar": 30
+      },
+      "revId": "6fe4884dde2aa1022e7bd07bf1689504b485041e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
