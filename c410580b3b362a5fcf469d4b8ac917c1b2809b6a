@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d19f971_12c61dca",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-06T17:16:48Z",
+      "side": 1,
+      "message": "sounds like a \u0027style extension\u0027 is a specific kind of GL extension. how about \u0027TokenizeExtensionsString\u0027",
+      "range": {
+        "startLine": 36,
+        "startChar": 25,
+        "endLine": 36,
+        "endChar": 47
+      },
+      "revId": "c410580b3b362a5fcf469d4b8ac917c1b2809b6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
