@@ -319,6 +319,30 @@
     },
     {
       "key": {
+        "uuid": "6d19f971_d081bdfe",
+        "filename": "util/linux/LinuxWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-06T17:57:29Z",
+      "side": 1,
+      "message": "OK, I hadn\u0027t understood that until looking at your other patch set. There aren\u0027t any constraints between parent and child windows\u0027 visuals, so this looks fine.",
+      "parentUuid": "cd24a5a6_d0d5443a",
+      "range": {
+        "startLine": 34,
+        "startChar": 21,
+        "endLine": 34,
+        "endChar": 34
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d1e2d58_e9c29db3",
         "filename": "util/linux/LinuxWindow.h",
         "patchSetId": 1
