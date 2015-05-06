@@ -22,6 +22,30 @@
       "revId": "6fe4884dde2aa1022e7bd07bf1689504b485041e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_2f69b26b",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 9
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-06T19:01:17Z",
+      "side": 1,
+      "message": "We should probably be loading in the necessary functions at runtime instead of linking against the libs. We had problems on Windows when hard-linking opengl32.lib, the wgl functions, etc.",
+      "parentUuid": "8d1e2d58_ef897abe",
+      "range": {
+        "startLine": 745,
+        "startChar": 26,
+        "endLine": 745,
+        "endChar": 30
+      },
+      "revId": "6fe4884dde2aa1022e7bd07bf1689504b485041e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
