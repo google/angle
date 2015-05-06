@@ -99,16 +99,22 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
         return false;
     }
 
-    const EGLint displayAttributes[] =
-    {
-        EGL_PLATFORM_ANGLE_TYPE_ANGLE,              mPlatform.renderer,
-        EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, mPlatform.majorVersion,
-        EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, mPlatform.minorVersion,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE,       mPlatform.deviceType,
-        EGL_NONE,
-    };
+    std::vector<EGLint> displayAttributes;
+    displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
+    displayAttributes.push_back(mPlatform.renderer);
+    displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE);
+    displayAttributes.push_back(mPlatform.majorVersion);
+    displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE);
+    displayAttributes.push_back(mPlatform.minorVersion);
 
-    mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, osWindow->getNativeDisplay(), displayAttributes);
+    if (mPlatform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE || mPlatform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    {
+        displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
+        displayAttributes.push_back(mPlatform.deviceType);
+    }
+    displayAttributes.push_back(EGL_NONE);
+
+    mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, osWindow->getNativeDisplay(), displayAttributes.data());
     if (mDisplay == EGL_NO_DISPLAY)
     {
         destroyGL();
