@@ -46,6 +46,30 @@
       "revId": "6b08c0a24d243bd70374592940a8e7d346e6ee58",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_569ec939",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-06T20:47:52Z",
+      "side": 1,
+      "message": "OK. Thanks for the explanation.",
+      "parentUuid": "cd24a5a6_90334c27",
+      "range": {
+        "startLine": 102,
+        "startChar": 12,
+        "endLine": 102,
+        "endChar": 22
+      },
+      "revId": "6b08c0a24d243bd70374592940a8e7d346e6ee58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
