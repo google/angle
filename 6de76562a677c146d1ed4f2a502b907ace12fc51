@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6d19f971_1c53d470",
+        "filename": "util/linux/LinuxTimer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T14:48:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d1e2d58_09c6f9c9",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd24a5a6_f91393dd",
         "filename": "util/linux/LinuxTimer.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-05T22:44:39Z",
       "side": 1,
       "message": "May be better to put this in something like posix/PosixTimer.h. It looks like it could be reused on Android.",
+      "range": {
+        "startLine": 7,
+        "startChar": 10,
+        "endLine": 7,
+        "endChar": 15
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_30c7d898",
+        "filename": "util/linux/LinuxTimer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T14:48:01Z",
+      "side": 1,
+      "message": "Here, to have the best precision I used CLOCK_PROCESS_CPUTIME_ID which is Linux-specific and not in POSIX. Moving it in posix would make it sound like it would work on OSX, whereas Android is still a Linux at its core.",
+      "parentUuid": "cd24a5a6_f91393dd",
       "range": {
         "startLine": 7,
         "startChar": 10,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "6d19f971_fc4ff8c1",
+        "filename": "util/linux/LinuxTimer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T14:48:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d1e2d58_29e1b54d",
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd24a5a6_05a13cec",
         "filename": "util/linux/LinuxTimer.h",
         "patchSetId": 1
@@ -76,6 +142,30 @@
       "writtenOn": "2015-05-06T12:21:52Z",
       "side": 1,
       "message": "nit: can remove SAMPLE_",
+      "range": {
+        "startLine": 8,
+        "startChar": 8,
+        "endLine": 8,
+        "endChar": 33
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_f0c840a4",
+        "filename": "util/linux/LinuxTimer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T14:48:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd24a5a6_05a13cec",
       "range": {
         "startLine": 8,
         "startChar": 8,
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "8d1e2d58_49807146",
+        "filename": "util/linux/LinuxTimer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T14:48:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d19f971_7cd76877",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 35
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d19f971_79c2df3a",
         "filename": "util/linux/LinuxWindow.cpp",
         "patchSetId": 1
@@ -122,6 +236,30 @@
       "writtenOn": "2015-05-05T22:44:39Z",
       "side": 1,
       "message": "It might be worth putting this in something like x11/X11Window.h.",
+      "range": {
+        "startLine": 7,
+        "startChar": 10,
+        "endLine": 7,
+        "endChar": 15
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_29853556",
+        "filename": "util/linux/LinuxWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T14:48:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d19f971_79c2df3a",
       "range": {
         "startLine": 7,
         "startChar": 10,
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "cd24a5a6_d0d5443a",
+        "filename": "util/linux/LinuxWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T14:48:01Z",
+      "side": 1,
+      "message": "The goal of the EGL implementation is to work with all types of parent window, and uses a child window trick to do so. So if I understand things correctly the Visual selection doesn\u0027t matter in this file which is only about providing basic windowing facilities. I might have missed something on the constraint there are between a child window and its parent though.",
+      "parentUuid": "cd24a5a6_f93cb343",
+      "range": {
+        "startLine": 34,
+        "startChar": 21,
+        "endLine": 34,
+        "endChar": 34
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d1e2d58_e9c29db3",
         "filename": "util/linux/LinuxWindow.h",
         "patchSetId": 1
@@ -168,6 +330,30 @@
       "writtenOn": "2015-05-06T12:21:52Z",
       "side": 1,
       "message": "nit: SAMPLE_ can go",
+      "range": {
+        "startLine": 8,
+        "startChar": 8,
+        "endLine": 8,
+        "endChar": 16
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d19f971_dc4c3cd0",
+        "filename": "util/linux/LinuxWindow.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T14:48:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d1e2d58_e9c29db3",
       "range": {
         "startLine": 8,
         "startChar": 8,
@@ -203,6 +389,30 @@
     },
     {
       "key": {
+        "uuid": "cd24a5a6_70e67032",
+        "filename": "util/linux/Linux_path_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T14:48:01Z",
+      "side": 1,
+      "message": "Whoops\nDone",
+      "parentUuid": "cd24a5a6_7cae519a",
+      "range": {
+        "startLine": 26,
+        "startChar": 54,
+        "endLine": 26,
+        "endChar": 56
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d1e2d58_97e58650",
         "filename": "util/linux/Linux_path_utils.cpp",
         "patchSetId": 1
@@ -214,6 +424,30 @@
       "writtenOn": "2015-05-05T22:44:39Z",
       "side": 1,
       "message": "This could be a bit more precise by checking \"if (result !\u003d sb.st_size)\". I\u0027m not sure we want to return anything if we read fewer bytes than expected.",
+      "range": {
+        "startLine": 27,
+        "startChar": 8,
+        "endLine": 27,
+        "endChar": 14
+      },
+      "revId": "6de76562a677c146d1ed4f2a502b907ace12fc51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d19f971_bc4980be",
+        "filename": "util/linux/Linux_path_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-06T14:48:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d1e2d58_97e58650",
       "range": {
         "startLine": 27,
         "startChar": 8,
