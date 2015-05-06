@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d19f971_759c1b69",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-06T17:27:08Z",
+      "side": 1,
+      "message": "we shouldn\u0027t commit this as is, it\u0027ll break tests. we should fix the bug in EGL validation, and also fix EGL init to only include this attribute for supported platforms.",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 75
+      },
+      "revId": "59504ca274a040a22691f41fd2e5ee583e83af62",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_3dc7b098",
+        "filename": "util/linux/LinuxTimer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-06T17:27:08Z",
+      "side": 1,
+      "message": "nit: include the class or file name in the header for each file (eg \"LinuxTimer:\")",
+      "revId": "59504ca274a040a22691f41fd2e5ee583e83af62",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
