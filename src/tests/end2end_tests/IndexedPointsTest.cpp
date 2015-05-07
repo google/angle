@@ -1,11 +1,20 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
+
 #include <array>
 
-template <typename T, typename IndexType, GLenum IndexTypeName>
+using namespace angle;
+
+template <typename IndexType, GLenum IndexTypeName>
 class IndexedPointsTest : public ANGLETest
 {
-protected:
-    IndexedPointsTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    IndexedPointsTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -123,53 +132,53 @@ protected:
     static const GLuint mPointCount = 4;
 };
 
-typedef IndexedPointsTest<ES2_D3D11, GLubyte, GL_UNSIGNED_BYTE> IndexedPointsTestUByte;
+typedef IndexedPointsTest<GLubyte, GL_UNSIGNED_BYTE> IndexedPointsTestUByte;
 
-TEST_F(IndexedPointsTestUByte, UnsignedByteOffset0)
+TEST_P(IndexedPointsTestUByte, UnsignedByteOffset0)
 {
     runTest(0);
 }
 
-TEST_F(IndexedPointsTestUByte, UnsignedByteOffset1)
+TEST_P(IndexedPointsTestUByte, UnsignedByteOffset1)
 {
     runTest(1);
 }
 
-TEST_F(IndexedPointsTestUByte, UnsignedByteOffset2)
+TEST_P(IndexedPointsTestUByte, UnsignedByteOffset2)
 {
     runTest(2);
 }
 
-TEST_F(IndexedPointsTestUByte, UnsignedByteOffset3)
+TEST_P(IndexedPointsTestUByte, UnsignedByteOffset3)
 {
     runTest(3);
 }
 
-typedef IndexedPointsTest<ES2_D3D11, GLushort, GL_UNSIGNED_SHORT> IndexedPointsTestUShort;
+typedef IndexedPointsTest<GLushort, GL_UNSIGNED_SHORT> IndexedPointsTestUShort;
 
-TEST_F(IndexedPointsTestUShort, UnsignedShortOffset0)
+TEST_P(IndexedPointsTestUShort, UnsignedShortOffset0)
 {
     runTest(0);
 }
 
-TEST_F(IndexedPointsTestUShort, UnsignedShortOffset1)
+TEST_P(IndexedPointsTestUShort, UnsignedShortOffset1)
 {
     runTest(1);
 }
 
-TEST_F(IndexedPointsTestUShort, UnsignedShortOffset2)
+TEST_P(IndexedPointsTestUShort, UnsignedShortOffset2)
 {
     runTest(2);
 }
 
-TEST_F(IndexedPointsTestUShort, UnsignedShortOffset3)
+TEST_P(IndexedPointsTestUShort, UnsignedShortOffset3)
 {
     runTest(3);
 }
 
-typedef IndexedPointsTest<ES2_D3D11, GLuint, GL_UNSIGNED_INT> IndexedPointsTestUInt;
+typedef IndexedPointsTest<GLuint, GL_UNSIGNED_INT> IndexedPointsTestUInt;
 
-TEST_F(IndexedPointsTestUInt, UnsignedIntOffset0)
+TEST_P(IndexedPointsTestUInt, UnsignedIntOffset0)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_OES_element_index_uint"))
     {
@@ -179,7 +188,7 @@ TEST_F(IndexedPointsTestUInt, UnsignedIntOffset0)
     runTest(0);
 }
 
-TEST_F(IndexedPointsTestUInt, UnsignedIntOffset1)
+TEST_P(IndexedPointsTestUInt, UnsignedIntOffset1)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_OES_element_index_uint"))
     {
@@ -189,7 +198,7 @@ TEST_F(IndexedPointsTestUInt, UnsignedIntOffset1)
     runTest(1);
 }
 
-TEST_F(IndexedPointsTestUInt, UnsignedIntOffset2)
+TEST_P(IndexedPointsTestUInt, UnsignedIntOffset2)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_OES_element_index_uint"))
     {
@@ -199,7 +208,7 @@ TEST_F(IndexedPointsTestUInt, UnsignedIntOffset2)
     runTest(2);
 }
 
-TEST_F(IndexedPointsTestUInt, UnsignedIntOffset3)
+TEST_P(IndexedPointsTestUInt, UnsignedIntOffset3)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_OES_element_index_uint"))
     {
@@ -208,3 +217,7 @@ TEST_F(IndexedPointsTestUInt, UnsignedIntOffset3)
 
     runTest(3);
 }
+
+ANGLE_INSTANTIATE_TEST(IndexedPointsTestUByte, ES2_D3D11());
+ANGLE_INSTANTIATE_TEST(IndexedPointsTestUShort, ES2_D3D11());
+ANGLE_INSTANTIATE_TEST(IndexedPointsTestUInt, ES2_D3D11());

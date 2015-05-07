@@ -1,13 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(FramebufferFormatsTest, ES2_D3D9, ES2_D3D11, ES3_D3D11);
+using namespace angle;
 
-template<typename T>
 class FramebufferFormatsTest : public ANGLETest
 {
-protected:
-    FramebufferFormatsTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    FramebufferFormatsTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -66,7 +70,8 @@ protected:
 
     void testRenderbufferMultisampleFormat(int minESVersion, GLenum attachmentType, GLenum internalFormat)
     {
-        if (T::GetGlesMajorVersion() < minESVersion)
+        GLint clientVersion = GetParam().mClientVersion;
+        if (clientVersion < minESVersion)
         {
             return;
         }
@@ -74,7 +79,7 @@ protected:
         // Check that multisample is supported with at least two samples (minimum required is 1)
         bool supports2Samples = false;
 
-        if (T::GetGlesMajorVersion() == 2)
+        if (clientVersion == 2)
         {
             if (extensionEnabled("ANGLE_framebuffer_multisample"))
             {
@@ -85,7 +90,7 @@ protected:
         }
         else
         {
-            assert(T::GetGlesMajorVersion() >= 3);
+            assert(clientVersion >= 3);
             int maxSamples;
             glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
             supports2Samples = maxSamples >= 2;
@@ -125,57 +130,60 @@ protected:
     }
 };
 
-TYPED_TEST(FramebufferFormatsTest, RGBA4)
+TEST_P(FramebufferFormatsTest, RGBA4)
 {
     testTextureFormat(GL_RGBA4, 4, 4, 4, 4);
 }
 
-TYPED_TEST(FramebufferFormatsTest, RGB565)
+TEST_P(FramebufferFormatsTest, RGB565)
 {
     testTextureFormat(GL_RGB565, 5, 6, 5, 0);
 }
 
-TYPED_TEST(FramebufferFormatsTest, RGB8)
+TEST_P(FramebufferFormatsTest, RGB8)
 {
     testTextureFormat(GL_RGB8_OES, 8, 8, 8, 0);
 }
 
-TYPED_TEST(FramebufferFormatsTest, BGRA8)
+TEST_P(FramebufferFormatsTest, BGRA8)
 {
     testTextureFormat(GL_BGRA8_EXT, 8, 8, 8, 8);
 }
 
-TYPED_TEST(FramebufferFormatsTest, RGBA8)
+TEST_P(FramebufferFormatsTest, RGBA8)
 {
     testTextureFormat(GL_RGBA8_OES, 8, 8, 8, 8);
 }
 
-TYPED_TEST(FramebufferFormatsTest, RenderbufferMultisample_DEPTH16)
+TEST_P(FramebufferFormatsTest, RenderbufferMultisample_DEPTH16)
 {
     testRenderbufferMultisampleFormat(2, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT16);
 }
 
-TYPED_TEST(FramebufferFormatsTest, RenderbufferMultisample_DEPTH24)
+TEST_P(FramebufferFormatsTest, RenderbufferMultisample_DEPTH24)
 {
     testRenderbufferMultisampleFormat(3, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT24);
 }
 
-TYPED_TEST(FramebufferFormatsTest, RenderbufferMultisample_DEPTH32F)
+TEST_P(FramebufferFormatsTest, RenderbufferMultisample_DEPTH32F)
 {
     testRenderbufferMultisampleFormat(3, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT32F);
 }
 
-TYPED_TEST(FramebufferFormatsTest, RenderbufferMultisample_DEPTH24_STENCIL8)
+TEST_P(FramebufferFormatsTest, RenderbufferMultisample_DEPTH24_STENCIL8)
 {
     testRenderbufferMultisampleFormat(3, GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH24_STENCIL8);
 }
 
-TYPED_TEST(FramebufferFormatsTest, RenderbufferMultisample_DEPTH32F_STENCIL8)
+TEST_P(FramebufferFormatsTest, RenderbufferMultisample_DEPTH32F_STENCIL8)
 {
     testRenderbufferMultisampleFormat(3, GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH32F_STENCIL8);
 }
 
-TYPED_TEST(FramebufferFormatsTest, RenderbufferMultisample_STENCIL_INDEX8)
+TEST_P(FramebufferFormatsTest, RenderbufferMultisample_STENCIL_INDEX8)
 {
     testRenderbufferMultisampleFormat(2, GL_STENCIL_ATTACHMENT, GL_STENCIL_INDEX8);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(FramebufferFormatsTest, ES2_D3D9(), ES2_D3D11(), ES3_D3D11());

@@ -1,13 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(MaxTextureSizeTest, ES2_D3D9, ES2_D3D11);
+using namespace angle;
 
-template<typename T>
 class MaxTextureSizeTest : public ANGLETest
 {
-protected:
-    MaxTextureSizeTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    MaxTextureSizeTest()
     {
         setWindowWidth(512);
         setWindowHeight(512);
@@ -90,7 +94,7 @@ protected:
     GLint mMaxRenderbufferSize;
 };
 
-TYPED_TEST(MaxTextureSizeTest, SpecificationTexImage)
+TEST_P(MaxTextureSizeTest, SpecificationTexImage)
 {
     GLuint tex;
     glGenTextures(1, &tex);
@@ -145,7 +149,7 @@ TYPED_TEST(MaxTextureSizeTest, SpecificationTexImage)
     }
 }
 
-TYPED_TEST(MaxTextureSizeTest, SpecificationTexStorage)
+TEST_P(MaxTextureSizeTest, SpecificationTexStorage)
 {
     if (getClientVersion() < 3 && (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8")))
     {
@@ -215,7 +219,7 @@ TYPED_TEST(MaxTextureSizeTest, SpecificationTexStorage)
     }
 }
 
-TYPED_TEST(MaxTextureSizeTest, RenderToTexture)
+TEST_P(MaxTextureSizeTest, RenderToTexture)
 {
     GLuint fbo = 0;
     GLuint textureId = 0;
@@ -280,3 +284,6 @@ TYPED_TEST(MaxTextureSizeTest, RenderToTexture)
     glDeleteFramebuffers(1, &fbo);
     glDeleteTextures(1, &textureId);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(MaxTextureSizeTest, ES2_D3D9(), ES2_D3D11());

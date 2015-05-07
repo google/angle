@@ -1,15 +1,20 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
+
 #include <memory>
 #include <stdint.h>
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(ProgramBinaryTest, ES2_D3D9, ES2_D3D11);
+using namespace angle;
 
-template<typename T>
 class ProgramBinaryTest : public ANGLETest
 {
   protected:
-    ProgramBinaryTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    ProgramBinaryTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -68,7 +73,7 @@ class ProgramBinaryTest : public ANGLETest
 
 // This tests the assumption that float attribs of different size
 // should not internally cause a vertex shader recompile (for conversion).
-TYPED_TEST(ProgramBinaryTest, FloatDynamicShaderSize)
+TEST_P(ProgramBinaryTest, FloatDynamicShaderSize)
 {
     glUseProgram(mProgram);
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
@@ -96,7 +101,7 @@ TYPED_TEST(ProgramBinaryTest, FloatDynamicShaderSize)
 }
 
 // This tests the ability to successfully save and load a program binary.
-TYPED_TEST(ProgramBinaryTest, SaveAndLoadBinary)
+TEST_P(ProgramBinaryTest, SaveAndLoadBinary)
 {
     GLint programLength = 0;
     GLint writtenLength = 0;
@@ -152,3 +157,6 @@ TYPED_TEST(ProgramBinaryTest, SaveAndLoadBinary)
         glDeleteProgram(program2);
     }
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(ProgramBinaryTest, ES2_D3D9(), ES2_D3D11());

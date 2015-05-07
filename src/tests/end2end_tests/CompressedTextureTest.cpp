@@ -1,14 +1,19 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
+
 #include "media/pixel.inl"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(CompressedTextureTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3, ES2_OPENGL, ES3_OPENGL);
+using namespace angle;
 
-template<typename T>
 class CompressedTextureTest : public ANGLETest
 {
-protected:
-    CompressedTextureTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    CompressedTextureTest()
     {
         setWindowWidth(512);
         setWindowHeight(512);
@@ -70,7 +75,7 @@ protected:
     GLint mTextureUniformLocation;
 };
 
-TYPED_TEST(CompressedTextureTest, CompressedTexImage)
+TEST_P(CompressedTextureTest, CompressedTexImage)
 {
     if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
     {
@@ -111,7 +116,7 @@ TYPED_TEST(CompressedTextureTest, CompressedTexImage)
     EXPECT_GL_NO_ERROR();
 }
 
-TYPED_TEST(CompressedTextureTest, CompressedTexStorage)
+TEST_P(CompressedTextureTest, CompressedTexStorage)
 {
     if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
     {
@@ -168,18 +173,11 @@ TYPED_TEST(CompressedTextureTest, CompressedTexStorage)
     EXPECT_GL_NO_ERROR();
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(CompressedTextureTestES3, ES3_D3D11);
+class CompressedTextureTestES3 : public CompressedTextureTest { };
 
-template<typename T>
-class CompressedTextureTestES3 : public CompressedTextureTest<T> { };
+class CompressedTextureTestD3D11 : public CompressedTextureTest { };
 
-ANGLE_TYPED_TEST_CASE(CompressedTextureTestD3D11, ES2_D3D11, ES3_D3D11, ES2_D3D11_FL9_3);
-
-template<typename T>
-class CompressedTextureTestD3D11 : public CompressedTextureTest<T> { };
-
-TYPED_TEST(CompressedTextureTestES3, PBOCompressedTexImage)
+TEST_P(CompressedTextureTestES3, PBOCompressedTexImage)
 {
     GLuint texture;
     glGenTextures(1, &texture);
@@ -232,7 +230,7 @@ TYPED_TEST(CompressedTextureTestES3, PBOCompressedTexImage)
 }
 
 
-TYPED_TEST(CompressedTextureTestD3D11, PBOCompressedTexStorage)
+TEST_P(CompressedTextureTestD3D11, PBOCompressedTexStorage)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_texture_compression_dxt1"))
     {
@@ -302,3 +300,13 @@ TYPED_TEST(CompressedTextureTestD3D11, PBOCompressedTexStorage)
 
     EXPECT_GL_NO_ERROR();
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(
+    CompressedTextureTest,
+    ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL(), ES3_OPENGL());
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(CompressedTextureTestES3, ES3_D3D11());
+
+ANGLE_INSTANTIATE_TEST(CompressedTextureTestD3D11, ES2_D3D11(), ES3_D3D11(), ES2_D3D11_FL9_3());

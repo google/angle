@@ -1,13 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(PbufferTest, ES2_D3D9, ES2_D3D11, ES2_OPENGL, ES2_D3D11_WARP, ES2_D3D11_REFERENCE);
+using namespace angle;
 
-template<typename T>
 class PbufferTest : public ANGLETest
 {
   protected:
-    PbufferTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    PbufferTest()
     {
         setWindowWidth(512);
         setWindowHeight(512);
@@ -109,7 +113,7 @@ class PbufferTest : public ANGLETest
 };
 
 // Test clearing a Pbuffer and checking the color is correct
-TYPED_TEST(PbufferTest, Clearing)
+TEST_P(PbufferTest, Clearing)
 {
     if (!mSupportsPbuffers)
     {
@@ -145,7 +149,7 @@ TYPED_TEST(PbufferTest, Clearing)
 }
 
 // Bind the Pbuffer to a texture and verify it renders correctly
-TYPED_TEST(PbufferTest, BindTexImage)
+TEST_P(PbufferTest, BindTexImage)
 {
     if (!mSupportsPbuffers)
     {
@@ -208,7 +212,7 @@ TYPED_TEST(PbufferTest, BindTexImage)
 
 // Verify that when eglBind/ReleaseTexImage are called, the texture images are freed and their
 // size information is correctly updated.
-TYPED_TEST(PbufferTest, TextureSizeReset)
+TEST_P(PbufferTest, TextureSizeReset)
 {
     if (!mSupportsPbuffers)
     {
@@ -261,3 +265,6 @@ TYPED_TEST(PbufferTest, TextureSizeReset)
     drawQuad(mTextureProgram, "position", 0.5f);
     EXPECT_PIXEL_EQ(0, 0, 0, 0, 0, 255);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(PbufferTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_D3D11_WARP(), ES2_D3D11_REFERENCE());

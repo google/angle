@@ -1,13 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(CubeMapTextureTest, ES2_D3D11, ES2_D3D11_FL9_3);
+using namespace angle;
 
-template<typename T>
 class CubeMapTextureTest : public ANGLETest
 {
-protected:
-    CubeMapTextureTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    CubeMapTextureTest()
     {
         setWindowWidth(256);
         setWindowHeight(256);
@@ -71,7 +75,7 @@ protected:
 };
 
 // Verify that rendering to the faces of a cube map consecutively will correctly render to each face.
-TYPED_TEST(CubeMapTextureTest, RenderToFacesConsecutively)
+TEST_P(CubeMapTextureTest, RenderToFacesConsecutively)
 {
     const GLfloat faceColors[] =
     {
@@ -123,3 +127,6 @@ TYPED_TEST(CubeMapTextureTest, RenderToFacesConsecutively)
 
     EXPECT_GL_NO_ERROR();
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(CubeMapTextureTest, ES2_D3D11(), ES2_D3D11_FL9_3());

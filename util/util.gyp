@@ -15,7 +15,6 @@
             'random_utils.h',
             'shader_utils.cpp',
             'shader_utils.h',
-            'testfixturetypes.h',
             'EGLWindow.cpp',
             'EGLWindow.h',
             'Event.h',

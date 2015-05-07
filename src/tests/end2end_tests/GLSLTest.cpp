@@ -9,14 +9,12 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(GLSLTest, ES2_D3D9, ES2_D3D11);
+using namespace angle;
 
-template<typename T>
 class GLSLTest : public ANGLETest
 {
-protected:
-    GLSLTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    GLSLTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -349,18 +347,13 @@ protected:
     }
 
     std::string mSimpleVSSource;
-    T fixtureType;
 };
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(GLSLTest_ES3, ES3_D3D11);
-
-template<typename T>
-class GLSLTest_ES3 : public GLSLTest<T>
+class GLSLTest_ES3 : public GLSLTest
 {
 };
 
-TYPED_TEST(GLSLTest, NamelessScopedStructs)
+TEST_P(GLSLTest, NamelessScopedStructs)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -382,7 +375,7 @@ TYPED_TEST(GLSLTest, NamelessScopedStructs)
     EXPECT_NE(0u, program);
 }
 
-TYPED_TEST(GLSLTest, ScopedStructsOrderBug)
+TEST_P(GLSLTest, ScopedStructsOrderBug)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -414,7 +407,7 @@ TYPED_TEST(GLSLTest, ScopedStructsOrderBug)
     EXPECT_NE(0u, program);
 }
 
-TYPED_TEST(GLSLTest, ScopedStructsBug)
+TEST_P(GLSLTest, ScopedStructsBug)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -446,7 +439,7 @@ TYPED_TEST(GLSLTest, ScopedStructsBug)
     EXPECT_NE(0u, program);
 }
 
-TYPED_TEST(GLSLTest, DxPositionBug)
+TEST_P(GLSLTest, DxPositionBug)
 {
     const std::string &vertexShaderSource = SHADER_SOURCE
     (
@@ -475,7 +468,7 @@ TYPED_TEST(GLSLTest, DxPositionBug)
     EXPECT_NE(0u, program);
 }
 
-TYPED_TEST(GLSLTest, ElseIfRewriting)
+TEST_P(GLSLTest, ElseIfRewriting)
 {
     const std::string &vertexShaderSource =
         "attribute vec4 a_position;\n"
@@ -510,7 +503,7 @@ TYPED_TEST(GLSLTest, ElseIfRewriting)
     EXPECT_PIXEL_EQ(getWindowWidth()-1, 0, 0, 255, 0, 255);
 }
 
-TYPED_TEST(GLSLTest, TwoElseIfRewriting)
+TEST_P(GLSLTest, TwoElseIfRewriting)
 {
     const std::string &vertexShaderSource =
         "attribute vec4 a_position;\n"
@@ -537,7 +530,7 @@ TYPED_TEST(GLSLTest, TwoElseIfRewriting)
     EXPECT_NE(0u, program);
 }
 
-TYPED_TEST(GLSLTest, InvariantVaryingOut)
+TEST_P(GLSLTest, InvariantVaryingOut)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -557,9 +550,9 @@ TYPED_TEST(GLSLTest, InvariantVaryingOut)
     EXPECT_NE(0u, program);
 }
 
-TYPED_TEST(GLSLTest, FrontFacingAndVarying)
+TEST_P(GLSLTest, FrontFacingAndVarying)
 {
-    EGLPlatformParameters platform = fixtureType.GetPlatform();
+    EGLPlatformParameters platform = GetParam().mEGLPlatformParameters;
 
     // Disable this test on D3D11 feature level 9_3, since gl_FrontFacing isn't supported.
     if (platform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
@@ -605,7 +598,7 @@ TYPED_TEST(GLSLTest, FrontFacingAndVarying)
     EXPECT_NE(0u, program);
 }
 
-TYPED_TEST(GLSLTest, InvariantVaryingIn)
+TEST_P(GLSLTest, InvariantVaryingIn)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -625,7 +618,7 @@ TYPED_TEST(GLSLTest, InvariantVaryingIn)
     EXPECT_NE(0u, program);
 }
 
-TYPED_TEST(GLSLTest, InvariantVaryingBoth)
+TEST_P(GLSLTest, InvariantVaryingBoth)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -645,7 +638,7 @@ TYPED_TEST(GLSLTest, InvariantVaryingBoth)
     EXPECT_NE(0u, program);
 }
 
-TYPED_TEST(GLSLTest, InvariantGLPosition)
+TEST_P(GLSLTest, InvariantGLPosition)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -666,7 +659,7 @@ TYPED_TEST(GLSLTest, InvariantGLPosition)
     EXPECT_NE(0u, program);
 }
 
-TYPED_TEST(GLSLTest, InvariantAll)
+TEST_P(GLSLTest, InvariantAll)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -685,7 +678,7 @@ TYPED_TEST(GLSLTest, InvariantAll)
     EXPECT_NE(0u, program);
 }
 
-TYPED_TEST(GLSLTest, MaxVaryingVec4)
+TEST_P(GLSLTest, MaxVaryingVec4)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -693,7 +686,7 @@ TYPED_TEST(GLSLTest, MaxVaryingVec4)
     VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings, 0, false, false, false, true);
 }
 
-TYPED_TEST(GLSLTest, MaxMinusTwoVaryingVec4PlusTwoSpecialVariables)
+TEST_P(GLSLTest, MaxMinusTwoVaryingVec4PlusTwoSpecialVariables)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -702,7 +695,7 @@ TYPED_TEST(GLSLTest, MaxMinusTwoVaryingVec4PlusTwoSpecialVariables)
     VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings - 2, 0, true, true, false, true);
 }
 
-TYPED_TEST(GLSLTest, MaxMinusTwoVaryingVec4PlusThreeSpecialVariables)
+TEST_P(GLSLTest, MaxMinusTwoVaryingVec4PlusThreeSpecialVariables)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -711,7 +704,7 @@ TYPED_TEST(GLSLTest, MaxMinusTwoVaryingVec4PlusThreeSpecialVariables)
     VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings - 2, 0, true, true, true, true);
 }
 
-TYPED_TEST(GLSLTest, MaxVaryingVec4PlusFragCoord)
+TEST_P(GLSLTest, MaxVaryingVec4PlusFragCoord)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -721,7 +714,7 @@ TYPED_TEST(GLSLTest, MaxVaryingVec4PlusFragCoord)
     VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings, 0, true, false, false, false);
 }
 
-TYPED_TEST(GLSLTest, MaxVaryingVec4PlusPointCoord)
+TEST_P(GLSLTest, MaxVaryingVec4PlusPointCoord)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -731,7 +724,7 @@ TYPED_TEST(GLSLTest, MaxVaryingVec4PlusPointCoord)
     VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings, 0, false, true, false, false);
 }
 
-TYPED_TEST(GLSLTest, MaxVaryingVec3)
+TEST_P(GLSLTest, MaxVaryingVec3)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -739,7 +732,7 @@ TYPED_TEST(GLSLTest, MaxVaryingVec3)
     VaryingTestBase(0, 0, 0, 0, maxVaryings, 0, 0, 0, false, false, false, true);
 }
 
-TYPED_TEST(GLSLTest, MaxVaryingVec3Array)
+TEST_P(GLSLTest, MaxVaryingVec3Array)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -748,7 +741,7 @@ TYPED_TEST(GLSLTest, MaxVaryingVec3Array)
 }
 
 // Disabled because of a failure in D3D9
-TYPED_TEST(GLSLTest, DISABLED_MaxVaryingVec3AndOneFloat)
+TEST_P(GLSLTest, DISABLED_MaxVaryingVec3AndOneFloat)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -757,7 +750,7 @@ TYPED_TEST(GLSLTest, DISABLED_MaxVaryingVec3AndOneFloat)
 }
 
 // Disabled because of a failure in D3D9
-TYPED_TEST(GLSLTest, DISABLED_MaxVaryingVec3ArrayAndOneFloatArray)
+TEST_P(GLSLTest, DISABLED_MaxVaryingVec3ArrayAndOneFloatArray)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -766,7 +759,7 @@ TYPED_TEST(GLSLTest, DISABLED_MaxVaryingVec3ArrayAndOneFloatArray)
 }
 
 // Disabled because of a failure in D3D9
-TYPED_TEST(GLSLTest, DISABLED_TwiceMaxVaryingVec2)
+TEST_P(GLSLTest, DISABLED_TwiceMaxVaryingVec2)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -775,7 +768,7 @@ TYPED_TEST(GLSLTest, DISABLED_TwiceMaxVaryingVec2)
 }
 
 // Disabled because of a failure in D3D9
-TYPED_TEST(GLSLTest, DISABLED_MaxVaryingVec2Arrays)
+TEST_P(GLSLTest, DISABLED_MaxVaryingVec2Arrays)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -783,7 +776,7 @@ TYPED_TEST(GLSLTest, DISABLED_MaxVaryingVec2Arrays)
     VaryingTestBase(0, 0, 0, maxVaryings, 0, 0, 0, 0, false, false, false, true);
 }
 
-TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec3)
+TEST_P(GLSLTest, MaxPlusOneVaryingVec3)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -791,7 +784,7 @@ TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec3)
     VaryingTestBase(0, 0, 0, 0, maxVaryings + 1, 0, 0, 0, false, false, false, false);
 }
 
-TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec3Array)
+TEST_P(GLSLTest, MaxPlusOneVaryingVec3Array)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -799,7 +792,7 @@ TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec3Array)
     VaryingTestBase(0, 0, 0, 0, 0, maxVaryings / 2 + 1, 0, 0, false, false, false, false);
 }
 
-TYPED_TEST(GLSLTest, MaxVaryingVec3AndOneVec2)
+TEST_P(GLSLTest, MaxVaryingVec3AndOneVec2)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -807,7 +800,7 @@ TYPED_TEST(GLSLTest, MaxVaryingVec3AndOneVec2)
     VaryingTestBase(0, 0, 1, 0, maxVaryings, 0, 0, 0, false, false, false, false);
 }
 
-TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec2)
+TEST_P(GLSLTest, MaxPlusOneVaryingVec2)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -815,7 +808,7 @@ TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec2)
     VaryingTestBase(0, 0, 2 * maxVaryings + 1, 0, 0, 0, 0, 0, false, false, false, false);
 }
 
-TYPED_TEST(GLSLTest, MaxVaryingVec3ArrayAndMaxPlusOneFloatArray)
+TEST_P(GLSLTest, MaxVaryingVec3ArrayAndMaxPlusOneFloatArray)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -824,7 +817,7 @@ TYPED_TEST(GLSLTest, MaxVaryingVec3ArrayAndMaxPlusOneFloatArray)
 }
 
 // Verify shader source with a fixed length that is less than the null-terminated length will compile.
-TYPED_TEST(GLSLTest, FixedShaderLength)
+TEST_P(GLSLTest, FixedShaderLength)
 {
     GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -841,7 +834,7 @@ TYPED_TEST(GLSLTest, FixedShaderLength)
 }
 
 // Verify that a negative shader source length is treated as a null-terminated length.
-TYPED_TEST(GLSLTest, NegativeShaderLength)
+TEST_P(GLSLTest, NegativeShaderLength)
 {
     GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -856,7 +849,7 @@ TYPED_TEST(GLSLTest, NegativeShaderLength)
 }
 
 // Verify that a length array with mixed positive and negative values compiles.
-TYPED_TEST(GLSLTest, MixedShaderLengths)
+TEST_P(GLSLTest, MixedShaderLengths)
 {
     GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -885,7 +878,7 @@ TYPED_TEST(GLSLTest, MixedShaderLengths)
 }
 
 // Verify that zero-length shader source does not affect shader compilation.
-TYPED_TEST(GLSLTest, ZeroShaderLength)
+TEST_P(GLSLTest, ZeroShaderLength)
 {
     GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -917,7 +910,7 @@ TYPED_TEST(GLSLTest, ZeroShaderLength)
 
 // Tests that bad index expressions don't crash ANGLE's translator.
 // https://code.google.com/p/angleproject/issues/detail?id=857
-TYPED_TEST(GLSLTest, BadIndexBug)
+TEST_P(GLSLTest, BadIndexBug)
 {
     const std::string &fragmentShaderSourceVec =
         "precision mediump float;\n"
@@ -970,7 +963,7 @@ TYPED_TEST(GLSLTest, BadIndexBug)
 
 // Tests that using a global static initialized from a varying works as expected.
 // See: https://code.google.com/p/angleproject/issues/detail?id=878
-TYPED_TEST(GLSLTest, GlobalStaticAndVarying)
+TEST_P(GLSLTest, GlobalStaticAndVarying)
 {
     const std::string &vertexShaderSource =
         "attribute vec4 a_position;\n"
@@ -1000,7 +993,7 @@ TYPED_TEST(GLSLTest, GlobalStaticAndVarying)
 }
 
 // Tests that using a global static initialized from gl_InstanceID works as expected.
-TYPED_TEST(GLSLTest_ES3, GlobalStaticAndInstanceID)
+TEST_P(GLSLTest_ES3, GlobalStaticAndInstanceID)
 {
     const std::string &vertexShaderSource =
         "#version 300 es\n"
@@ -1058,7 +1051,7 @@ TYPED_TEST(GLSLTest_ES3, GlobalStaticAndInstanceID)
 }
 
 // Test that structs defined in uniforms are translated correctly.
-TYPED_TEST(GLSLTest, StructSpecifiersUniforms)
+TEST_P(GLSLTest, StructSpecifiersUniforms)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -1081,7 +1074,7 @@ TYPED_TEST(GLSLTest, StructSpecifiersUniforms)
 // beginning with "gl_" are filtered out by our validation logic, we must
 // bypass the validation to test the behaviour of the implementation.
 // (note this test is still Impl-independent)
-TYPED_TEST(GLSLTest, DepthRangeUniforms)
+TEST_P(GLSLTest, DepthRangeUniforms)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -1113,7 +1106,7 @@ TYPED_TEST(GLSLTest, DepthRangeUniforms)
 // Covers the WebGL test 'glsl/bugs/pow-of-small-constant-in-user-defined-function'
 // See https://code.google.com/p/angleproject/issues/detail?id=851
 // TODO(jmadill): ANGLE constant folding can fix this
-TYPED_TEST(GLSLTest, DISABLED_PowOfSmallConstant)
+TEST_P(GLSLTest, DISABLED_PowOfSmallConstant)
 {
     const std::string &fragmentShaderSource = SHADER_SOURCE
     (
@@ -1150,3 +1143,9 @@ TYPED_TEST(GLSLTest, DISABLED_PowOfSmallConstant)
     EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
     EXPECT_GL_NO_ERROR();
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(GLSLTest, ES2_D3D9(), ES2_D3D11());
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(GLSLTest_ES3, ES3_D3D11());

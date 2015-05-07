@@ -15,14 +15,12 @@
 #include "ANGLETest.h"
 #include "com_utils.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(QueryDisplayAttributeTest, ES2_D3D9, ES2_D3D11);
+using namespace angle;
 
-template<typename T>
 class QueryDisplayAttributeTest : public ANGLETest
 {
   protected:
-    QueryDisplayAttributeTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    QueryDisplayAttributeTest()
     {
         mQueryDisplayAttribEXT = nullptr;
         mQueryDeviceAttribEXT = nullptr;
@@ -78,7 +76,7 @@ class QueryDisplayAttributeTest : public ANGLETest
 // This test attempts to obtain a D3D11 device and a D3D9 device using the eglQueryDeviceAttribEXT function.
 // If the test is configured to use D3D11 then it should succeed to obtain a D3D11 device.
 // If the test is confitured to use D3D9, then it should succeed to obtain a D3D9 device.
-TYPED_TEST(QueryDisplayAttributeTest, QueryDevice)
+TEST_P(QueryDisplayAttributeTest, QueryDevice)
 {
     EGLAttrib device = 0;
     EGLAttrib angleDevice = 0;
@@ -108,7 +106,7 @@ TYPED_TEST(QueryDisplayAttributeTest, QueryDevice)
 // a D3D11 configured system using the eglQueryDeviceAttribEXT function.
 // If the test is configured to use D3D11 then it should fail to obtain a D3D11 device.
 // If the test is confitured to use D3D9, then it should fail to obtain a D3D9 device.
-TYPED_TEST(QueryDisplayAttributeTest, QueryDeviceBadAttrbiute)
+TEST_P(QueryDisplayAttributeTest, QueryDeviceBadAttrbiute)
 {
     EGLAttrib device = 0;
     EGLAttrib angleDevice = 0;
@@ -124,3 +122,6 @@ TYPED_TEST(QueryDisplayAttributeTest, QueryDeviceBadAttrbiute)
         EXPECT_EQ(EGL_FALSE, mQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice), EGL_D3D11_DEVICE_ANGLE, &device));
     }
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(QueryDisplayAttributeTest, ES2_D3D9(), ES2_D3D11());

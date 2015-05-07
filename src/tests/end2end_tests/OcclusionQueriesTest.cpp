@@ -1,16 +1,20 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
 // Needed for Sleep()
 #include <Windows.h>
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(OcclusionQueriesTest, ES2_D3D9, ES2_D3D11);
+using namespace angle;
 
-template<typename T>
 class OcclusionQueriesTest : public ANGLETest
 {
-protected:
-    OcclusionQueriesTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    OcclusionQueriesTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -62,7 +66,7 @@ protected:
     GLuint mProgram;
 };
 
-TYPED_TEST(OcclusionQueriesTest, IsOccluded)
+TEST_P(OcclusionQueriesTest, IsOccluded)
 {
     glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -102,7 +106,7 @@ TYPED_TEST(OcclusionQueriesTest, IsOccluded)
     EXPECT_EQ(result, GL_FALSE);
 }
 
-TYPED_TEST(OcclusionQueriesTest, IsNotOccluded)
+TEST_P(OcclusionQueriesTest, IsNotOccluded)
 {
     glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -129,7 +133,7 @@ TYPED_TEST(OcclusionQueriesTest, IsNotOccluded)
     EXPECT_EQ(result, GL_TRUE);
 }
 
-TYPED_TEST(OcclusionQueriesTest, Errors)
+TEST_P(OcclusionQueriesTest, Errors)
 {
     glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -183,3 +187,6 @@ TYPED_TEST(OcclusionQueriesTest, Errors)
 
     EXPECT_GL_NO_ERROR();
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(OcclusionQueriesTest, ES2_D3D9(), ES2_D3D11());

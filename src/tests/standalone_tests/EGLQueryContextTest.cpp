@@ -4,16 +4,18 @@
 // found in the LICENSE file.
 //
 
+#include <gtest/gtest.h>
+
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
-#include "gtest/gtest.h"
 
-template <int clientVersion>
-class EGLQueryContextTest : public testing::Test
+class EGLQueryContextTest : public testing::TestWithParam<int>
 {
   public:
-    virtual void SetUp()
+    void SetUp() override
     {
+        int clientVersion = GetParam();
+
         PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(eglGetProcAddress("eglGetPlatformDisplayEXT"));
         EXPECT_TRUE(eglGetPlatformDisplayEXT != NULL);
 
@@ -71,12 +73,7 @@ class EGLQueryContextTest : public testing::Test
     EGLSurface mSurface;
 };
 
-typedef EGLQueryContextTest<2> EGLQueryContextTestES2;
-
-typedef EGLQueryContextTest<3> EGLQueryContextTestES3;
-
-
-TEST_F(EGLQueryContextTestES2, GetConfigID)
+TEST_P(EGLQueryContextTest, GetConfigID)
 {
     EGLint configId, contextConfigId;
     EXPECT_TRUE(eglGetConfigAttrib(mDisplay, mConfig, EGL_CONFIG_ID, &configId) != EGL_FALSE);
@@ -84,28 +81,28 @@ TEST_F(EGLQueryContextTestES2, GetConfigID)
     EXPECT_TRUE(configId == contextConfigId);
 }
 
-TEST_F(EGLQueryContextTestES2, GetClientType)
+TEST_P(EGLQueryContextTest, GetClientType)
 {
     EGLint clientType;
     EXPECT_TRUE(eglQueryContext(mDisplay, mContext, EGL_CONTEXT_CLIENT_TYPE, &clientType) != EGL_FALSE);
     EXPECT_TRUE(clientType == EGL_OPENGL_ES_API);
 }
 
-TEST_F(EGLQueryContextTestES2, GetClientVersion)
+TEST_P(EGLQueryContextTest, GetClientVersion)
 {
     EGLint clientVersion;
     EXPECT_TRUE(eglQueryContext(mDisplay, mContext, EGL_CONTEXT_CLIENT_VERSION, &clientVersion) != EGL_FALSE);
-    EXPECT_TRUE(clientVersion == 2);
+    EXPECT_TRUE(clientVersion == GetParam());
 }
 
-TEST_F(EGLQueryContextTestES2, GetRenderBufferNoSurface)
+TEST_P(EGLQueryContextTest, GetRenderBufferNoSurface)
 {
     EGLint renderBuffer;
     EXPECT_TRUE(eglQueryContext(mDisplay, mContext, EGL_RENDER_BUFFER, &renderBuffer) != EGL_FALSE);
     EXPECT_TRUE(renderBuffer == EGL_NONE);
 }
 
-TEST_F(EGLQueryContextTestES2, GetRenderBufferBoundSurface)
+TEST_P(EGLQueryContextTest, GetRenderBufferBoundSurface)
 {
     EGLint renderBuffer, contextRenderBuffer;
     EXPECT_TRUE(eglQuerySurface(mDisplay, mSurface, EGL_RENDER_BUFFER, &renderBuffer) != EGL_FALSE);
@@ -114,14 +111,14 @@ TEST_F(EGLQueryContextTestES2, GetRenderBufferBoundSurface)
     EXPECT_TRUE(renderBuffer == contextRenderBuffer);
 }
 
-TEST_F(EGLQueryContextTestES2, BadDisplay)
+TEST_P(EGLQueryContextTest, BadDisplay)
 {
     EGLint val;
     EXPECT_TRUE(eglQueryContext(EGL_NO_DISPLAY, mContext, EGL_CONTEXT_CLIENT_TYPE, &val) == EGL_FALSE);
     EXPECT_TRUE(eglGetError() == EGL_BAD_DISPLAY);
 }
 
-TEST_F(EGLQueryContextTestES2, NotInitialized)
+TEST_P(EGLQueryContextTest, NotInitialized)
 {
     EGLint val;
     TearDown();
@@ -133,23 +130,18 @@ TEST_F(EGLQueryContextTestES2, NotInitialized)
     mContext = EGL_NO_CONTEXT;
 }
 
-TEST_F(EGLQueryContextTestES2, BadContext)
+TEST_P(EGLQueryContextTest, BadContext)
 {
     EGLint val;
     EXPECT_TRUE(eglQueryContext(mDisplay, EGL_NO_CONTEXT, EGL_CONTEXT_CLIENT_TYPE, &val) == EGL_FALSE);
     EXPECT_TRUE(eglGetError() == EGL_BAD_CONTEXT);
 }
 
-TEST_F(EGLQueryContextTestES2, BadAttribute)
+TEST_P(EGLQueryContextTest, BadAttribute)
 {
     EGLint val;
     EXPECT_TRUE(eglQueryContext(mDisplay, mContext, EGL_HEIGHT, &val) == EGL_FALSE);
     EXPECT_TRUE(eglGetError() == EGL_BAD_ATTRIBUTE);
 }
 
-TEST_F(EGLQueryContextTestES3, GetClientVersion)
-{
-    EGLint clientVersion;
-    EXPECT_TRUE(eglQueryContext(mDisplay, mContext, EGL_CONTEXT_CLIENT_VERSION, &clientVersion) != EGL_FALSE);
-    EXPECT_TRUE(clientVersion == 3);
-}
+INSTANTIATE_TEST_CASE_P(ANGLE, EGLQueryContextTest, testing::Values(2, 3));

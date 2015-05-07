@@ -1,13 +1,20 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(TextureTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3);
+using namespace angle;
 
-template<typename T>
+namespace
+{
+
 class TextureTest : public ANGLETest
 {
   protected:
-    TextureTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    TextureTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -17,7 +24,7 @@ class TextureTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    virtual void SetUp()
+    void SetUp() override
     {
         ANGLETest::SetUp();
         glGenTextures(1, &mTexture2D);
@@ -93,7 +100,7 @@ class TextureTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         glDeleteTextures(1, &mTexture2D);
         glDeleteTextures(1, &mTextureCube);
@@ -242,7 +249,7 @@ class TextureTest : public ANGLETest
     GLint mTextureScaleUniformLocation;
 };
 
-TYPED_TEST(TextureTest, NegativeAPISubImage)
+TEST_P(TextureTest, NegativeAPISubImage)
 {
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     EXPECT_GL_ERROR(GL_NO_ERROR);
@@ -252,7 +259,7 @@ TYPED_TEST(TextureTest, NegativeAPISubImage)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
-TYPED_TEST(TextureTest, ZeroSizedUploads)
+TEST_P(TextureTest, ZeroSizedUploads)
 {
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     EXPECT_GL_ERROR(GL_NO_ERROR);
@@ -275,7 +282,7 @@ TYPED_TEST(TextureTest, ZeroSizedUploads)
 }
 
 // Test drawing with two texture types, to trigger an ANGLE bug in validation
-TYPED_TEST(TextureTest, CubeMapBug)
+TEST_P(TextureTest, CubeMapBug)
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
@@ -295,7 +302,7 @@ TYPED_TEST(TextureTest, CubeMapBug)
 }
 
 // Copy of a test in conformance/textures/texture-mips, to test generate mipmaps
-TYPED_TEST(TextureTest, MipmapsTwice)
+TEST_P(TextureTest, MipmapsTwice)
 {
     int px = getWindowWidth() / 2;
     int py = getWindowHeight() / 2;
@@ -357,7 +364,7 @@ TYPED_TEST(TextureTest, MipmapsTwice)
 
 // Test creating a FBO with a cube map render target, to test an ANGLE bug
 // https://code.google.com/p/angleproject/issues/detail?id=849
-TYPED_TEST(TextureTest, CubeMapFBO)
+TEST_P(TextureTest, CubeMapFBO)
 {
     GLuint fbo;
     glGenFramebuffers(1, &fbo);
@@ -374,7 +381,7 @@ TYPED_TEST(TextureTest, CubeMapFBO)
 }
 
 // Test that glTexSubImage2D works properly when glTexStorage2DEXT has initialized the image with a default color.
-TYPED_TEST(TextureTest, TexStorage)
+TEST_P(TextureTest, TexStorage)
 {
     int width = getWindowWidth();
     int height = getWindowHeight();
@@ -419,7 +426,7 @@ TYPED_TEST(TextureTest, TexStorage)
 }
 
 // Test that glTexSubImage2D combined with a PBO works properly when glTexStorage2DEXT has initialized the image with a default color.
-TYPED_TEST(TextureTest, TexStorageWithPBO)
+TEST_P(TextureTest, TexStorageWithPBO)
 {
     if (extensionEnabled("NV_pixel_buffer_object"))
     {
@@ -470,59 +477,59 @@ TYPED_TEST(TextureTest, TexStorageWithPBO)
 }
 
 // See description on testFloatCopySubImage
-TYPED_TEST(TextureTest, CopySubImageFloat_R_R)
+TEST_P(TextureTest, CopySubImageFloat_R_R)
 {
     testFloatCopySubImage(1, 1);
 }
 
-TYPED_TEST(TextureTest, CopySubImageFloat_RG_R)
+TEST_P(TextureTest, CopySubImageFloat_RG_R)
 {
     testFloatCopySubImage(2, 1);
 }
 
-TYPED_TEST(TextureTest, CopySubImageFloat_RG_RG)
+TEST_P(TextureTest, CopySubImageFloat_RG_RG)
 {
     testFloatCopySubImage(2, 2);
 }
 
-TYPED_TEST(TextureTest, CopySubImageFloat_RGB_R)
+TEST_P(TextureTest, CopySubImageFloat_RGB_R)
 {
     testFloatCopySubImage(3, 1);
 }
 
-TYPED_TEST(TextureTest, CopySubImageFloat_RGB_RG)
+TEST_P(TextureTest, CopySubImageFloat_RGB_RG)
 {
     testFloatCopySubImage(3, 2);
 }
 
-TYPED_TEST(TextureTest, CopySubImageFloat_RGB_RGB)
+TEST_P(TextureTest, CopySubImageFloat_RGB_RGB)
 {
     testFloatCopySubImage(3, 3);
 }
 
-TYPED_TEST(TextureTest, CopySubImageFloat_RGBA_R)
+TEST_P(TextureTest, CopySubImageFloat_RGBA_R)
 {
     testFloatCopySubImage(4, 1);
 }
 
-TYPED_TEST(TextureTest, CopySubImageFloat_RGBA_RG)
+TEST_P(TextureTest, CopySubImageFloat_RGBA_RG)
 {
     testFloatCopySubImage(4, 2);
 }
 
-TYPED_TEST(TextureTest, CopySubImageFloat_RGBA_RGB)
+TEST_P(TextureTest, CopySubImageFloat_RGBA_RGB)
 {
     testFloatCopySubImage(4, 3);
 }
 
-TYPED_TEST(TextureTest, CopySubImageFloat_RGBA_RGBA)
+TEST_P(TextureTest, CopySubImageFloat_RGBA_RGBA)
 {
     testFloatCopySubImage(4, 4);
 }
 
 // Port of https://www.khronos.org/registry/webgl/conformance-suites/1.0.3/conformance/textures/texture-npot.html
 // Run against GL_ALPHA/UNSIGNED_BYTE format, to ensure that D3D11 Feature Level 9_3 correctly handles GL_ALPHA
-TYPED_TEST(TextureTest, TextureNPOT_GL_ALPHA_UBYTE)
+TEST_P(TextureTest, TextureNPOT_GL_ALPHA_UBYTE)
 {
     const int npotTexSize = 5;
     const int potTexSize = 4; // Should be less than npotTexSize
@@ -602,3 +609,8 @@ TYPED_TEST(TextureTest, TextureNPOT_GL_ALPHA_UBYTE)
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 0, 64);
     EXPECT_GL_NO_ERROR();
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(TextureTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
+
+} // namespace

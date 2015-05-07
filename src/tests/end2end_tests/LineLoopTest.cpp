@@ -1,13 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(LineLoopTest, ES2_D3D9, ES2_D3D11);
+using namespace angle;
 
-template<typename T>
 class LineLoopTest : public ANGLETest
 {
-protected:
-    LineLoopTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    LineLoopTest()
     {
         setWindowWidth(256);
         setWindowHeight(256);
@@ -130,19 +134,19 @@ protected:
     GLint mColorLocation;
 };
 
-TYPED_TEST(LineLoopTest, LineLoopUByteIndices)
+TEST_P(LineLoopTest, LineLoopUByteIndices)
 {
     static const GLubyte indices[] = { 0, 7, 6, 9, 8, 0 };
     runTest(GL_UNSIGNED_BYTE, 0, indices + 1);
 }
 
-TYPED_TEST(LineLoopTest, LineLoopUShortIndices)
+TEST_P(LineLoopTest, LineLoopUShortIndices)
 {
     static const GLushort indices[] = { 0, 7, 6, 9, 8, 0 };
     runTest(GL_UNSIGNED_SHORT, 0, indices + 1);
 }
 
-TYPED_TEST(LineLoopTest, LineLoopUIntIndices)
+TEST_P(LineLoopTest, LineLoopUIntIndices)
 {
     if (!extensionEnabled("GL_OES_element_index_uint"))
     {
@@ -153,7 +157,7 @@ TYPED_TEST(LineLoopTest, LineLoopUIntIndices)
     runTest(GL_UNSIGNED_INT, 0, indices + 1);
 }
 
-TYPED_TEST(LineLoopTest, LineLoopUByteIndexBuffer)
+TEST_P(LineLoopTest, LineLoopUByteIndexBuffer)
 {
     static const GLubyte indices[] = { 0, 7, 6, 9, 8, 0 };
 
@@ -167,7 +171,7 @@ TYPED_TEST(LineLoopTest, LineLoopUByteIndexBuffer)
     glDeleteBuffers(1, &buf);
 }
 
-TYPED_TEST(LineLoopTest, LineLoopUShortIndexBuffer)
+TEST_P(LineLoopTest, LineLoopUShortIndexBuffer)
 {
     static const GLushort indices[] = { 0, 7, 6, 9, 8, 0 };
 
@@ -181,7 +185,7 @@ TYPED_TEST(LineLoopTest, LineLoopUShortIndexBuffer)
     glDeleteBuffers(1, &buf);
 }
 
-TYPED_TEST(LineLoopTest, LineLoopUIntIndexBuffer)
+TEST_P(LineLoopTest, LineLoopUIntIndexBuffer)
 {
     if (!extensionEnabled("GL_OES_element_index_uint"))
     {
@@ -199,3 +203,6 @@ TYPED_TEST(LineLoopTest, LineLoopUIntIndexBuffer)
 
     glDeleteBuffers(1, &buf);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(LineLoopTest, ES2_D3D9(), ES2_D3D11());

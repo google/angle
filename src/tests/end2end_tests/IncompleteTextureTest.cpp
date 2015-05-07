@@ -1,15 +1,19 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
 #include <vector>
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(IncompleteTextureTest, ES2_D3D9, ES2_D3D11);
+using namespace angle;
 
-template<typename T>
 class IncompleteTextureTest : public ANGLETest
 {
-protected:
-    IncompleteTextureTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    IncompleteTextureTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -80,7 +84,7 @@ protected:
     GLint mTextureUniformLocation;
 };
 
-TYPED_TEST(IncompleteTextureTest, IncompleteTexture2D)
+TEST_P(IncompleteTextureTest, IncompleteTexture2D)
 {
     GLuint tex;
     glGenTextures(1, &tex);
@@ -114,7 +118,7 @@ TYPED_TEST(IncompleteTextureTest, IncompleteTexture2D)
     glDeleteTextures(1, &tex);
 }
 
-TYPED_TEST(IncompleteTextureTest, UpdateTexture)
+TEST_P(IncompleteTextureTest, UpdateTexture)
 {
     GLuint tex;
     glGenTextures(1, &tex);
@@ -157,3 +161,6 @@ TYPED_TEST(IncompleteTextureTest, UpdateTexture)
 
     glDeleteTextures(1, &tex);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(IncompleteTextureTest, ES2_D3D9(), ES2_D3D11());

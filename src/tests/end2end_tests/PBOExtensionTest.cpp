@@ -1,13 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(PBOExtensionTest, ES2_D3D11, ES3_D3D11);
+using namespace angle;
 
-template<typename T>
 class PBOExtensionTest : public ANGLETest
 {
-protected:
-    PBOExtensionTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    PBOExtensionTest()
     {
         setWindowWidth(32);
         setWindowHeight(32);
@@ -76,7 +80,7 @@ protected:
     GLuint mPositionVBO;
 };
 
-TYPED_TEST(PBOExtensionTest, PBOWithOtherTarget)
+TEST_P(PBOExtensionTest, PBOWithOtherTarget)
 {
     if (extensionEnabled("NV_pixel_buffer_object"))
     {
@@ -104,7 +108,7 @@ TYPED_TEST(PBOExtensionTest, PBOWithOtherTarget)
     EXPECT_GL_NO_ERROR();
 }
 
-TYPED_TEST(PBOExtensionTest, PBOWithExistingData)
+TEST_P(PBOExtensionTest, PBOWithExistingData)
 {
     if (extensionEnabled("NV_pixel_buffer_object"))
     {
@@ -144,3 +148,6 @@ TYPED_TEST(PBOExtensionTest, PBOWithExistingData)
     }
     EXPECT_GL_NO_ERROR();
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(PBOExtensionTest, ES2_D3D11(), ES3_D3D11());

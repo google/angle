@@ -1,13 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(ReadPixelsTest, ES3_D3D11);
+using namespace angle;
 
-template<typename T>
 class ReadPixelsTest : public ANGLETest
 {
-protected:
-    ReadPixelsTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    ReadPixelsTest()
     {
         setWindowWidth(32);
         setWindowHeight(32);
@@ -87,7 +91,7 @@ protected:
     GLuint mPositionVBO;
 };
 
-TYPED_TEST(ReadPixelsTest, OutOfBounds)
+TEST_P(ReadPixelsTest, OutOfBounds)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -120,7 +124,7 @@ TYPED_TEST(ReadPixelsTest, OutOfBounds)
     }
 }
 
-TYPED_TEST(ReadPixelsTest, PBOWithOtherTarget)
+TEST_P(ReadPixelsTest, PBOWithOtherTarget)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -145,7 +149,7 @@ TYPED_TEST(ReadPixelsTest, PBOWithOtherTarget)
     EXPECT_GL_NO_ERROR();
 }
 
-TYPED_TEST(ReadPixelsTest, PBOWithExistingData)
+TEST_P(ReadPixelsTest, PBOWithExistingData)
 {
     // Clear backbuffer to red
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
@@ -183,7 +187,7 @@ TYPED_TEST(ReadPixelsTest, PBOWithExistingData)
     EXPECT_GL_NO_ERROR();
 }
 
-TYPED_TEST(ReadPixelsTest, PBOAndSubData)
+TEST_P(ReadPixelsTest, PBOAndSubData)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -211,7 +215,7 @@ TYPED_TEST(ReadPixelsTest, PBOAndSubData)
     EXPECT_GL_NO_ERROR();
 }
 
-TYPED_TEST(ReadPixelsTest, PBOAndSubDataOffset)
+TEST_P(ReadPixelsTest, PBOAndSubDataOffset)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -244,7 +248,7 @@ TYPED_TEST(ReadPixelsTest, PBOAndSubDataOffset)
     EXPECT_GL_NO_ERROR();
 }
 
-TYPED_TEST(ReadPixelsTest, DrawWithPBO)
+TEST_P(ReadPixelsTest, DrawWithPBO)
 {
     unsigned char data[4] = { 1, 2, 3, 4 };
 
@@ -297,7 +301,7 @@ TYPED_TEST(ReadPixelsTest, DrawWithPBO)
     EXPECT_EQ(4, data[3]);
 }
 
-TYPED_TEST(ReadPixelsTest, MultisampledPBO)
+TEST_P(ReadPixelsTest, MultisampledPBO)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_ANGLE_framebuffer_multisample"))
     {
@@ -340,3 +344,6 @@ TYPED_TEST(ReadPixelsTest, MultisampledPBO)
     glDeleteRenderbuffers(1, &rbo);
     glDeleteFramebuffers(1, &fbo);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(ReadPixelsTest, ES3_D3D11());

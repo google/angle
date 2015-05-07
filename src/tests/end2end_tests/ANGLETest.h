@@ -7,17 +7,13 @@
 #ifndef ANGLE_TESTS_ANGLE_TEST_H_
 #define ANGLE_TESTS_ANGLE_TEST_H_
 
-#include "gtest/gtest.h"
-
-#define GL_GLEXT_PROTOTYPES
-
-#include "angle_gl.h"
+#include <gtest/gtest.h>
 #include <algorithm>
 
+#include "angle_gl.h"
+#include "angle_test_configs.h"
 #include "common/angleutils.h"
 #include "shader_utils.h"
-
-#include "testfixturetypes.h"
 
 #define EXPECT_GL_ERROR(err) EXPECT_EQ((err), glGetError())
 #define EXPECT_GL_NO_ERROR() EXPECT_GL_ERROR(GL_NO_ERROR)
@@ -56,10 +52,10 @@
 class EGLWindow;
 class OSWindow;
 
-class ANGLETest : public testing::Test
+class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
 {
   protected:
-    ANGLETest(EGLint glesMajorVersion, const EGLPlatformParameters &platform);
+    ANGLETest();
     ~ANGLETest();
 
   public:

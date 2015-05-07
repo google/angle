@@ -1,13 +1,20 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(SRGBTextureTest, ES2_D3D9, ES2_D3D11, ES3_D3D11, ES2_OPENGL);
+using namespace angle;
 
-template<typename T>
+namespace
+{
+
 class SRGBTextureTest : public ANGLETest
 {
-protected:
-    SRGBTextureTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    SRGBTextureTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -17,18 +24,18 @@ protected:
         setConfigAlphaBits(8);
     }
 
-    virtual void SetUp()
+    void SetUp() override
     {
         ANGLETest::SetUp();
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         ANGLETest::TearDown();
     }
 };
 
-TYPED_TEST(SRGBTextureTest, SRGBValidation)
+TEST_P(SRGBTextureTest, SRGBValidation)
 {
     bool supported = extensionEnabled("GL_EXT_sRGB") || getClientVersion() == 3;
 
@@ -56,7 +63,7 @@ TYPED_TEST(SRGBTextureTest, SRGBValidation)
     glDeleteTextures(1, &tex);
 }
 
-TYPED_TEST(SRGBTextureTest, SRGBAValidation)
+TEST_P(SRGBTextureTest, SRGBAValidation)
 {
     bool supported = extensionEnabled("GL_EXT_sRGB") || getClientVersion() == 3;
 
@@ -91,7 +98,7 @@ TYPED_TEST(SRGBTextureTest, SRGBAValidation)
     glDeleteTextures(1, &tex);
 }
 
-TYPED_TEST(SRGBTextureTest, SRGBARenderbuffer)
+TEST_P(SRGBTextureTest, SRGBARenderbuffer)
 {
     bool supported = extensionEnabled("GL_EXT_sRGB") || getClientVersion() == 3;
 
@@ -135,3 +142,8 @@ TYPED_TEST(SRGBTextureTest, SRGBARenderbuffer)
     glDeleteFramebuffers(1, &fbo);
     glDeleteRenderbuffers(1, &rbo);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(SRGBTextureTest, ES2_D3D9(), ES2_D3D11(), ES3_D3D11(), ES2_OPENGL());
+
+} // namespace

@@ -1,13 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(FramebufferRenderMipmapTest, ES2_D3D9, ES2_D3D11, ES3_D3D11, ES2_OPENGL, ES3_OPENGL);
+using namespace angle;
 
-template<typename T>
 class FramebufferRenderMipmapTest : public ANGLETest
 {
-protected:
-    FramebufferRenderMipmapTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    FramebufferRenderMipmapTest()
     {
         setWindowWidth(256);
         setWindowHeight(256);
@@ -72,7 +76,7 @@ protected:
 
 // Validate that if we are in ES3 or GL_OES_fbo_render_mipmap exists, there are no validation errors
 // when using a non-zero level in glFramebufferTexture2D.
-TYPED_TEST(FramebufferRenderMipmapTest, Validation)
+TEST_P(FramebufferRenderMipmapTest, Validation)
 {
     bool renderToMipmapSupported = extensionEnabled("GL_OES_fbo_render_mipmap") || getClientVersion() > 2;
 
@@ -114,7 +118,7 @@ TYPED_TEST(FramebufferRenderMipmapTest, Validation)
 }
 
 // Render to various levels of a texture and check that they have the correct color data via ReadPixels
-TYPED_TEST(FramebufferRenderMipmapTest, RenderToMipmap)
+TEST_P(FramebufferRenderMipmapTest, RenderToMipmap)
 {
     // TODO(geofflang): Figure out why this is broken on Intel OpenGL
     if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
@@ -186,3 +190,6 @@ TYPED_TEST(FramebufferRenderMipmapTest, RenderToMipmap)
 
     EXPECT_GL_NO_ERROR();
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(FramebufferRenderMipmapTest, ES2_D3D9(), ES2_D3D11(), ES3_D3D11(), ES2_OPENGL(), ES3_OPENGL());

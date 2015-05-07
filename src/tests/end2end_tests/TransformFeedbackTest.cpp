@@ -1,13 +1,20 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(TransformFeedbackTest, ES3_D3D11);
+using namespace angle;
 
-template<typename T>
+namespace
+{
+
 class TransformFeedbackTest : public ANGLETest
 {
   protected:
-    TransformFeedbackTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    TransformFeedbackTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -17,7 +24,7 @@ class TransformFeedbackTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    virtual void SetUp()
+    void SetUp() override
     {
         ANGLETest::SetUp();
 
@@ -56,7 +63,7 @@ class TransformFeedbackTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         glDeleteProgram(mProgram);
         glDeleteBuffers(1, &mTransformFeedbackBuffer);
@@ -69,7 +76,7 @@ class TransformFeedbackTest : public ANGLETest
     GLuint mTransformFeedbackBuffer;
 };
 
-TYPED_TEST(TransformFeedbackTest, ZeroSizedViewport)
+TEST_P(TransformFeedbackTest, ZeroSizedViewport)
 {
     // Set the program's transform feedback varyings (just gl_Position)
     const GLchar* transformFeedbackVaryings[] =
@@ -115,7 +122,7 @@ TYPED_TEST(TransformFeedbackTest, ZeroSizedViewport)
 }
 
 // Test that XFB can write back vertices to a buffer and that we can draw from this buffer afterward.
-TYPED_TEST(TransformFeedbackTest, RecordAndDraw)
+TEST_P(TransformFeedbackTest, RecordAndDraw)
 {
     // Set the program's transform feedback varyings (just gl_Position)
     const GLchar* transformFeedbackVaryings[] =
@@ -196,7 +203,7 @@ TYPED_TEST(TransformFeedbackTest, RecordAndDraw)
 }
 
 // Test that buffer binding happens only on the current transform feedback object
-TYPED_TEST(TransformFeedbackTest, BufferBinding)
+TEST_P(TransformFeedbackTest, BufferBinding)
 {
     // Reset any state
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
@@ -252,3 +259,8 @@ TYPED_TEST(TransformFeedbackTest, BufferBinding)
     glDeleteTransformFeedbacks(1, &transformFeedbackObject);
     glDeleteBuffers(1, &scratchBuffer);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(TransformFeedbackTest, ES3_D3D11());
+
+} // namespace

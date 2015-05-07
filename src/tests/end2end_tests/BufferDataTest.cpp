@@ -1,15 +1,19 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
 #include <cstdint>
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(BufferDataTest, ES2_D3D9, ES2_D3D11, ES2_OPENGL);
+using namespace angle;
 
-template<typename T>
 class BufferDataTest : public ANGLETest
 {
   protected:
-      BufferDataTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    BufferDataTest()
     {
         setWindowWidth(16);
         setWindowHeight(16);
@@ -81,7 +85,7 @@ class BufferDataTest : public ANGLETest
     GLint mAttribLocation;
 };
 
-TYPED_TEST(BufferDataTest, NULLData)
+TEST_P(BufferDataTest, NULLData)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     EXPECT_GL_NO_ERROR();
@@ -104,7 +108,7 @@ TYPED_TEST(BufferDataTest, NULLData)
     }
 }
 
-TYPED_TEST(BufferDataTest, ZeroNonNULLData)
+TEST_P(BufferDataTest, ZeroNonNULLData)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     EXPECT_GL_NO_ERROR();
@@ -119,7 +123,7 @@ TYPED_TEST(BufferDataTest, ZeroNonNULLData)
     delete [] zeroData;
 }
 
-TYPED_TEST(BufferDataTest, NULLResolvedData)
+TEST_P(BufferDataTest, NULLResolvedData)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     glBufferData(GL_ARRAY_BUFFER, 128, NULL, GL_DYNAMIC_DRAW);
@@ -134,7 +138,7 @@ TYPED_TEST(BufferDataTest, NULLResolvedData)
 
 // Tests that a huge allocation returns GL_OUT_OF_MEMORY
 // TODO(jmadill): Figure out how to test this reliably on the Chromium bots
-TYPED_TEST(BufferDataTest, DISABLED_HugeSetDataShouldNotCrash)
+TEST_P(BufferDataTest, DISABLED_HugeSetDataShouldNotCrash)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     EXPECT_GL_NO_ERROR();
@@ -203,14 +207,10 @@ TYPED_TEST(BufferDataTest, DISABLED_HugeSetDataShouldNotCrash)
     delete[] data;
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(IndexedBufferCopyTest, ES3_D3D11);
-
-template<typename T>
 class IndexedBufferCopyTest : public ANGLETest
 {
   protected:
-    IndexedBufferCopyTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    IndexedBufferCopyTest()
     {
         setWindowWidth(16);
         setWindowHeight(16);
@@ -285,7 +285,7 @@ class IndexedBufferCopyTest : public ANGLETest
 // The following test covers an ANGLE bug where our index ranges
 // weren't updated from CopyBufferSubData calls
 // https://code.google.com/p/angleproject/issues/detail?id=709
-TYPED_TEST(IndexedBufferCopyTest, IndexRangeBug)
+TEST_P(IndexedBufferCopyTest, IndexRangeBug)
 {
     unsigned char vertexData[] = { 255, 0, 0, 0, 0, 0 };
     unsigned int indexData[] = { 0, 1 };
@@ -332,18 +332,14 @@ TYPED_TEST(IndexedBufferCopyTest, IndexRangeBug)
     EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(BufferDataTestES3, ES3_D3D11);
-
-template<typename T>
-class BufferDataTestES3 : public BufferDataTest<T>
+class BufferDataTestES3 : public BufferDataTest
 {
 };
 
 // The following test covers an ANGLE bug where the buffer storage
 // is not resized by Buffer11::getLatestBufferStorage when needed.
 // https://code.google.com/p/angleproject/issues/detail?id=897
-TYPED_TEST(BufferDataTestES3, BufferResizing)
+TEST_P(BufferDataTestES3, BufferResizing)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     ASSERT_GL_NO_ERROR();
@@ -403,3 +399,12 @@ TYPED_TEST(BufferDataTestES3, BufferResizing)
 
     EXPECT_GL_NO_ERROR();
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(BufferDataTestES3, ES3_D3D11());
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(IndexedBufferCopyTest, ES3_D3D11());
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(BufferDataTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());

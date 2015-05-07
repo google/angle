@@ -1,15 +1,22 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
 #include <array>
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(UnpackAlignmentTest, ES2_D3D9, ES2_D3D11, ES2_OPENGL, ES3_OPENGL);
+using namespace angle;
 
-template<typename T>
+namespace
+{
+
 class UnpackAlignmentTest : public ANGLETest
 {
-protected:
-    UnpackAlignmentTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    UnpackAlignmentTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -22,7 +29,7 @@ protected:
         mProgram = 0;
     }
 
-    virtual void SetUp()
+    void SetUp() override
     {
         ANGLETest::SetUp();
 
@@ -54,7 +61,7 @@ protected:
         }
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         glDeleteProgram(mProgram);
 
@@ -137,7 +144,7 @@ protected:
     GLuint mProgram;
 };
 
-TYPED_TEST(UnpackAlignmentTest, DefaultAlignment)
+TEST_P(UnpackAlignmentTest, DefaultAlignment)
 {
     GLint defaultAlignment;
     glGetIntegerv(GL_UNPACK_ALIGNMENT, &defaultAlignment);
@@ -145,165 +152,172 @@ TYPED_TEST(UnpackAlignmentTest, DefaultAlignment)
 }
 
 
-TYPED_TEST(UnpackAlignmentTest, Alignment1RGBAUByte)
+TEST_P(UnpackAlignmentTest, Alignment1RGBAUByte)
 {
     testAlignment(1, 7 * 4, GL_RGBA, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment1RGBUByte)
+TEST_P(UnpackAlignmentTest, Alignment1RGBUByte)
 {
     testAlignment(1, 7 * 3, GL_RGB, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment1RGBAUShort4444)
+TEST_P(UnpackAlignmentTest, Alignment1RGBAUShort4444)
 {
     testAlignment(1, 7 * 2, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment1RGBAUShort5551)
+TEST_P(UnpackAlignmentTest, Alignment1RGBAUShort5551)
 {
     testAlignment(1, 7 * 2, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment1RGBAUShort565)
+TEST_P(UnpackAlignmentTest, Alignment1RGBAUShort565)
 {
     testAlignment(1, 7 * 2, GL_RGB, GL_UNSIGNED_SHORT_5_6_5);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment1LAUByte)
+TEST_P(UnpackAlignmentTest, Alignment1LAUByte)
 {
     testAlignment(1, 7 * 2, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment1LUByte)
+TEST_P(UnpackAlignmentTest, Alignment1LUByte)
 {
     testAlignment(1, 7, GL_LUMINANCE, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment1AUByte)
+TEST_P(UnpackAlignmentTest, Alignment1AUByte)
 {
     testAlignment(1, 7, GL_ALPHA, GL_UNSIGNED_BYTE);
 }
 
 
-TYPED_TEST(UnpackAlignmentTest, Alignment2RGBAUByte)
+TEST_P(UnpackAlignmentTest, Alignment2RGBAUByte)
 {
     testAlignment(2, 7 * 4, GL_RGBA, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment2RGBUByte)
+TEST_P(UnpackAlignmentTest, Alignment2RGBUByte)
 {
     testAlignment(2, 7 * 3 + 1, GL_RGB, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment2RGBAUShort4444)
+TEST_P(UnpackAlignmentTest, Alignment2RGBAUShort4444)
 {
     testAlignment(2, 7 * 2, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment2RGBAUShort5551)
+TEST_P(UnpackAlignmentTest, Alignment2RGBAUShort5551)
 {
     testAlignment(2, 7 * 2, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment2RGBAUShort565)
+TEST_P(UnpackAlignmentTest, Alignment2RGBAUShort565)
 {
     testAlignment(2, 7 * 2, GL_RGB, GL_UNSIGNED_SHORT_5_6_5);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment2LAUByte)
+TEST_P(UnpackAlignmentTest, Alignment2LAUByte)
 {
     testAlignment(2, 7 * 2, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment2LAByte)
+TEST_P(UnpackAlignmentTest, Alignment2LAByte)
 {
     testAlignment(2, 7 + 1, GL_LUMINANCE, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment2AUByte)
+TEST_P(UnpackAlignmentTest, Alignment2AUByte)
 {
     testAlignment(2, 7 + 1, GL_ALPHA, GL_UNSIGNED_BYTE);
 }
 
 
-TYPED_TEST(UnpackAlignmentTest, Alignment4RGBAUByte)
+TEST_P(UnpackAlignmentTest, Alignment4RGBAUByte)
 {
     testAlignment(4, 7 * 4, GL_RGBA, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment4RGBUByte)
+TEST_P(UnpackAlignmentTest, Alignment4RGBUByte)
 {
     testAlignment(4, 7 * 3 + 3, GL_RGB, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment4RGBAUShort4444)
+TEST_P(UnpackAlignmentTest, Alignment4RGBAUShort4444)
 {
     testAlignment(4, 7 * 2 + 2, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment4RGBAUShort5551)
+TEST_P(UnpackAlignmentTest, Alignment4RGBAUShort5551)
 {
     testAlignment(4, 7 * 2 + 2, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment4RGBAUShort565)
+TEST_P(UnpackAlignmentTest, Alignment4RGBAUShort565)
 {
     testAlignment(4, 7 * 2 + 2, GL_RGB, GL_UNSIGNED_SHORT_5_6_5);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment4LAUByte)
+TEST_P(UnpackAlignmentTest, Alignment4LAUByte)
 {
     testAlignment(4, 7 * 2 + 2, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment4LUByte)
+TEST_P(UnpackAlignmentTest, Alignment4LUByte)
 {
     testAlignment(4, 7 + 1, GL_LUMINANCE, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment4AUByte)
+TEST_P(UnpackAlignmentTest, Alignment4AUByte)
 {
     testAlignment(4, 7 + 1, GL_ALPHA, GL_UNSIGNED_BYTE);
 }
 
 
-TYPED_TEST(UnpackAlignmentTest, Alignment8RGBAUByte)
+TEST_P(UnpackAlignmentTest, Alignment8RGBAUByte)
 {
     testAlignment(8, 7 * 4 + 4, GL_RGBA, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment8RGBUByte)
+TEST_P(UnpackAlignmentTest, Alignment8RGBUByte)
 {
     testAlignment(8, 7 * 3 + 3, GL_RGB, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment8RGBAUShort4444)
+TEST_P(UnpackAlignmentTest, Alignment8RGBAUShort4444)
 {
     testAlignment(8, 7 * 2 + 2, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment8RGBAUShort5551)
+TEST_P(UnpackAlignmentTest, Alignment8RGBAUShort5551)
 {
     testAlignment(8, 7 * 2 + 2, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment8RGBAUShort565)
+TEST_P(UnpackAlignmentTest, Alignment8RGBAUShort565)
 {
     testAlignment(8, 7 * 2 + 2, GL_RGB, GL_UNSIGNED_SHORT_5_6_5);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment8LAUByte)
+TEST_P(UnpackAlignmentTest, Alignment8LAUByte)
 {
     testAlignment(8, 7 * 2 + 2, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment8LUByte)
+TEST_P(UnpackAlignmentTest, Alignment8LUByte)
 {
     testAlignment(8, 7 + 1, GL_LUMINANCE, GL_UNSIGNED_BYTE);
 }
 
-TYPED_TEST(UnpackAlignmentTest, Alignment8AUByte)
+TEST_P(UnpackAlignmentTest, Alignment8AUByte)
 {
     testAlignment(8, 7 + 1, GL_ALPHA, GL_UNSIGNED_BYTE);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+INSTANTIATE_TEST_CASE_P(
+    ANGLE, UnpackAlignmentTest,
+    testing::Values(ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES3_OPENGL()));
+
+} // namespace

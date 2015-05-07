@@ -1,13 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(DrawBuffersTest, ES2_D3D11, ES3_D3D11);
+using namespace angle;
 
-template<typename T>
 class DrawBuffersTest : public ANGLETest
 {
   protected:
-    DrawBuffersTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    DrawBuffersTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -201,7 +205,7 @@ class DrawBuffersTest : public ANGLETest
     GLuint mBuffer;
 };
 
-TYPED_TEST(DrawBuffersTest, Gaps)
+TEST_P(DrawBuffersTest, Gaps)
 {
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mTextures[0], 0);
@@ -225,7 +229,7 @@ TYPED_TEST(DrawBuffersTest, Gaps)
     glDeleteProgram(program);
 }
 
-TYPED_TEST(DrawBuffersTest, FirstAndLast)
+TEST_P(DrawBuffersTest, FirstAndLast)
 {
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
@@ -258,7 +262,7 @@ TYPED_TEST(DrawBuffersTest, FirstAndLast)
     glDeleteProgram(program);
 }
 
-TYPED_TEST(DrawBuffersTest, FirstHalfNULL)
+TEST_P(DrawBuffersTest, FirstHalfNULL)
 {
     bool flags[8] = { false };
     GLenum bufs[8] = { GL_NONE };
@@ -288,7 +292,7 @@ TYPED_TEST(DrawBuffersTest, FirstHalfNULL)
     glDeleteProgram(program);
 }
 
-TYPED_TEST(DrawBuffersTest, UnwrittenOutputVariablesShouldNotCrash)
+TEST_P(DrawBuffersTest, UnwrittenOutputVariablesShouldNotCrash)
 {
     // Bind two render targets but use a shader which writes only to the first one.
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
@@ -322,3 +326,6 @@ TYPED_TEST(DrawBuffersTest, UnwrittenOutputVariablesShouldNotCrash)
 
     glDeleteProgram(program);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(DrawBuffersTest, ES2_D3D11(), ES3_D3D11());

@@ -1,13 +1,20 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(UniformTest, ES2_D3D9, ES2_D3D11, ES2_OPENGL);
+using namespace angle;
 
-template<typename T>
+namespace
+{
+
 class UniformTest : public ANGLETest
 {
   protected:
-    UniformTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    UniformTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -17,7 +24,7 @@ class UniformTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    virtual void SetUp()
+    void SetUp() override
     {
         ANGLETest::SetUp();
 
@@ -40,7 +47,7 @@ class UniformTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         glDeleteProgram(mProgram);
         ANGLETest::TearDown();
@@ -51,7 +58,7 @@ class UniformTest : public ANGLETest
     GLint mUniformILocation;
 };
 
-TYPED_TEST(UniformTest, GetUniformNoCurrentProgram)
+TEST_P(UniformTest, GetUniformNoCurrentProgram)
 {
     glUseProgram(mProgram);
     glUniform1f(mUniformFLocation, 1.0f);
@@ -77,7 +84,7 @@ TYPED_TEST(UniformTest, GetUniformNoCurrentProgram)
     EXPECT_EQ(1, i);
 }
 
-TYPED_TEST(UniformTest, UniformArrayLocations)
+TEST_P(UniformTest, UniformArrayLocations)
 {
     // TODO(geofflang): Figure out why this is broken on Intel OpenGL
     if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
@@ -147,3 +154,8 @@ TYPED_TEST(UniformTest, UniformArrayLocations)
 
     glDeleteProgram(program);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(UniformTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
+
+} // namespace

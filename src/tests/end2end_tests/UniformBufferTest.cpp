@@ -1,13 +1,20 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(UniformBufferTest, ES3_D3D11, ES3_D3D11_FL11_1, ES3_D3D11_FL11_1_REFERENCE);
+using namespace angle;
 
-template<typename T>
+namespace
+{
+
 class UniformBufferTest : public ANGLETest
 {
   protected:
-    UniformBufferTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    UniformBufferTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -70,7 +77,7 @@ class UniformBufferTest : public ANGLETest
 // Test that using a UBO with a non-zero offset and size actually works.
 // The first step of this test renders a color from a UBO with a zero offset.
 // The second step renders a color from a UBO with a non-zero offset.
-TYPED_TEST(UniformBufferTest, UniformBufferRange)
+TEST_P(UniformBufferTest, UniformBufferRange)
 {
     int px = getWindowWidth() / 2;
     int py = getWindowHeight() / 2;
@@ -141,7 +148,7 @@ TYPED_TEST(UniformBufferTest, UniformBufferRange)
 }
 
 // Test uniform block bindings.
-TYPED_TEST(UniformBufferTest, UniformBufferBindings)
+TEST_P(UniformBufferTest, UniformBufferBindings)
 {
     int px = getWindowWidth() / 2;
     int py = getWindowHeight() / 2;
@@ -185,7 +192,7 @@ TYPED_TEST(UniformBufferTest, UniformBufferBindings)
 
 // Test that ANGLE handles used but unbound UBO.
 // TODO: A test case shouldn't depend on the error code of an undefined behaviour. Move this to unit tests of the validation layer.
-TYPED_TEST(UniformBufferTest, UnboundUniformBuffer)
+TEST_P(UniformBufferTest, UnboundUniformBuffer)
 {
     glUniformBlockBinding(mProgram, mUniformBufferIndex, 0);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, 0);
@@ -197,7 +204,7 @@ TYPED_TEST(UniformBufferTest, UnboundUniformBuffer)
 
 // Update a UBO many time and verify that ANGLE uses the latest version of the data.
 // https://code.google.com/p/angleproject/issues/detail?id=965
-TYPED_TEST(UniformBufferTest, UniformBufferManyUpdates)
+TEST_P(UniformBufferTest, UniformBufferManyUpdates)
 {
     int px = getWindowWidth() / 2;
     int py = getWindowHeight() / 2;
@@ -230,7 +237,7 @@ TYPED_TEST(UniformBufferTest, UniformBufferManyUpdates)
 }
 
 // Use a large number of buffer ranges (compared to the actual size of the UBO)
-TYPED_TEST(UniformBufferTest, ManyUniformBufferRange)
+TEST_P(UniformBufferTest, ManyUniformBufferRange)
 {
     int px = getWindowWidth() / 2;
     int py = getWindowHeight() / 2;
@@ -305,3 +312,10 @@ TYPED_TEST(UniformBufferTest, ManyUniformBufferRange)
         EXPECT_PIXEL_EQ(px, py, 10 + i, 20 + i, 30 + i, 40 + i);
     }
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+INSTANTIATE_TEST_CASE_P(
+    ANGLE, UniformBufferTest,
+    testing::Values(ES3_D3D11(), ES3_D3D11_FL11_1(), ES3_D3D11_FL11_1_REFERENCE()));
+
+} // namespace

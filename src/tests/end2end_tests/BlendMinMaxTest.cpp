@@ -1,13 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(BlendMinMaxTest, ES2_D3D9, ES2_D3D11, ES2_OPENGL);
+using namespace angle;
 
-template<typename T>
 class BlendMinMaxTest : public ANGLETest
 {
-protected:
-    BlendMinMaxTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    BlendMinMaxTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -146,13 +150,13 @@ protected:
     GLuint mColorRenderbuffer;
 };
 
-TYPED_TEST(BlendMinMaxTest, RGBA8)
+TEST_P(BlendMinMaxTest, RGBA8)
 {
     SetUpFramebuffer(GL_RGBA8);
     runTest();
 }
 
-TYPED_TEST(BlendMinMaxTest, RGBA32f)
+TEST_P(BlendMinMaxTest, RGBA32f)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_OES_texture_float"))
     {
@@ -164,7 +168,7 @@ TYPED_TEST(BlendMinMaxTest, RGBA32f)
     runTest();
 }
 
-TYPED_TEST(BlendMinMaxTest, RGBA16F)
+TEST_P(BlendMinMaxTest, RGBA16F)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_OES_texture_half_float"))
     {
@@ -175,3 +179,6 @@ TYPED_TEST(BlendMinMaxTest, RGBA16F)
     SetUpFramebuffer(GL_RGBA16F);
     runTest();
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(BlendMinMaxTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());

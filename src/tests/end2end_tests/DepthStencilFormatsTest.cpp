@@ -1,14 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(DepthStencilFormatsTest, ES2_D3D9, ES2_D3D11);
-ANGLE_TYPED_TEST_CASE(DepthStencilFormatsTestES3, ES3_D3D11);
+using namespace angle;
 
-template<typename T>
 class DepthStencilFormatsTestBase : public ANGLETest
 {
   protected:
-    DepthStencilFormatsTestBase() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    DepthStencilFormatsTestBase()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -112,15 +115,13 @@ class DepthStencilFormatsTestBase : public ANGLETest
     GLint mTextureUniformLocation;
 };
 
-template <typename T>
-class DepthStencilFormatsTest : public DepthStencilFormatsTestBase<T>
+class DepthStencilFormatsTest : public DepthStencilFormatsTestBase
 {};
 
-template <typename T>
-class DepthStencilFormatsTestES3 : public DepthStencilFormatsTestBase<T>
+class DepthStencilFormatsTestES3 : public DepthStencilFormatsTestBase
 {};
 
-TYPED_TEST(DepthStencilFormatsTest, DepthTexture)
+TEST_P(DepthStencilFormatsTest, DepthTexture)
 {
     bool shouldHaveTextureSupport = extensionEnabled("GL_ANGLE_depth_texture");
     EXPECT_EQ(shouldHaveTextureSupport, checkTexImageFormatSupport(GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT));
@@ -133,7 +134,7 @@ TYPED_TEST(DepthStencilFormatsTest, DepthTexture)
     }
 }
 
-TYPED_TEST(DepthStencilFormatsTest, PackedDepthStencil)
+TEST_P(DepthStencilFormatsTest, PackedDepthStencil)
 {
     // Expected to fail in D3D9 if GL_OES_packed_depth_stencil is not present.
     // Expected to fail in D3D11 if GL_OES_packed_depth_stencil or GL_ANGLE_depth_texture is not present.
@@ -151,7 +152,7 @@ TYPED_TEST(DepthStencilFormatsTest, PackedDepthStencil)
     }
 }
 
-TYPED_TEST(DepthStencilFormatsTestES3, DrawWithDepthStencil)
+TEST_P(DepthStencilFormatsTestES3, DrawWithDepthStencil)
 {
     GLushort data[16];
     for (unsigned int i = 0; i < 16; i++)
@@ -175,3 +176,7 @@ TYPED_TEST(DepthStencilFormatsTestES3, DrawWithDepthStencil)
 
     EXPECT_PIXEL_NEAR(0, 0, 255, 0, 0, 255, 2.0);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(DepthStencilFormatsTest, ES2_D3D9(), ES2_D3D11());
+ANGLE_INSTANTIATE_TEST(DepthStencilFormatsTestES3, ES3_D3D11());

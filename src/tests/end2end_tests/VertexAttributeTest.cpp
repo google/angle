@@ -1,14 +1,20 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-// D3D11 Feature Level 9_3 uses different D3D formats for vertex attribs compared to Feature Levels 10_0+, so we should test them separately.
-ANGLE_TYPED_TEST_CASE(VertexAttributeTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3, ES2_OPENGL, ES3_OPENGL);
+using namespace angle;
 
-template<typename T>
+namespace
+{
+
 class VertexAttributeTest : public ANGLETest
 {
   protected:
-    VertexAttributeTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    VertexAttributeTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -70,7 +76,7 @@ class VertexAttributeTest : public ANGLETest
         }
     }
 
-    virtual void SetUp()
+    void SetUp() override
     {
         ANGLETest::SetUp();
 
@@ -116,7 +122,7 @@ class VertexAttributeTest : public ANGLETest
         glDisable(GL_DEPTH_TEST);
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         glDeleteProgram(mProgram);
 
@@ -130,7 +136,7 @@ class VertexAttributeTest : public ANGLETest
     GLint mExpectedAttrib;
 };
 
-TYPED_TEST(VertexAttributeTest, UnsignedByteUnnormalized)
+TEST_P(VertexAttributeTest, UnsignedByteUnnormalized)
 {
     GLubyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, 5, 6, 7, 125, 126, 127, 128, 129, 250, 251, 252, 253, 254, 255 };
     GLfloat expectedData[mVertexCount];
@@ -143,7 +149,7 @@ TYPED_TEST(VertexAttributeTest, UnsignedByteUnnormalized)
     runTest(data);
 }
 
-TYPED_TEST(VertexAttributeTest, UnsignedByteNormalized)
+TEST_P(VertexAttributeTest, UnsignedByteNormalized)
 {
     GLubyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, 5, 6, 7, 125, 126, 127, 128, 129, 250, 251, 252, 253, 254, 255 };
     GLfloat expectedData[mVertexCount];
@@ -156,7 +162,7 @@ TYPED_TEST(VertexAttributeTest, UnsignedByteNormalized)
     runTest(data);
 }
 
-TYPED_TEST(VertexAttributeTest, ByteUnnormalized)
+TEST_P(VertexAttributeTest, ByteUnnormalized)
 {
     GLbyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, -1, -2, -3, -4, 125, 126, 127, -128, -127, -126 };
     GLfloat expectedData[mVertexCount];
@@ -169,7 +175,7 @@ TYPED_TEST(VertexAttributeTest, ByteUnnormalized)
     runTest(data);
 }
 
-TYPED_TEST(VertexAttributeTest, ByteNormalized)
+TEST_P(VertexAttributeTest, ByteNormalized)
 {
     GLbyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, -1, -2, -3, -4, 125, 126, 127, -128, -127, -126 };
     GLfloat expectedData[mVertexCount];
@@ -182,7 +188,7 @@ TYPED_TEST(VertexAttributeTest, ByteNormalized)
     runTest(data);
 }
 
-TYPED_TEST(VertexAttributeTest, UnsignedShortUnnormalized)
+TEST_P(VertexAttributeTest, UnsignedShortUnnormalized)
 {
     GLushort inputData[mVertexCount] = { 0, 1, 2, 3, 254, 255, 256, 32766, 32767, 32768, 65533, 65534, 65535 };
     GLfloat expectedData[mVertexCount];
@@ -195,7 +201,7 @@ TYPED_TEST(VertexAttributeTest, UnsignedShortUnnormalized)
     runTest(data);
 }
 
-TYPED_TEST(VertexAttributeTest, UnsignedShortNormalized)
+TEST_P(VertexAttributeTest, UnsignedShortNormalized)
 {
     GLushort inputData[mVertexCount] = { 0, 1, 2, 3, 254, 255, 256, 32766, 32767, 32768, 65533, 65534, 65535 };
     GLfloat expectedData[mVertexCount];
@@ -208,7 +214,7 @@ TYPED_TEST(VertexAttributeTest, UnsignedShortNormalized)
     runTest(data);
 }
 
-TYPED_TEST(VertexAttributeTest, ShortUnnormalized)
+TEST_P(VertexAttributeTest, ShortUnnormalized)
 {
     GLshort inputData[mVertexCount] = {  0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766 };
     GLfloat expectedData[mVertexCount];
@@ -221,7 +227,7 @@ TYPED_TEST(VertexAttributeTest, ShortUnnormalized)
     runTest(data);
 }
 
-TYPED_TEST(VertexAttributeTest, ShortNormalized)
+TEST_P(VertexAttributeTest, ShortNormalized)
 {
     GLshort inputData[mVertexCount] = {  0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766 };
     GLfloat expectedData[mVertexCount];
@@ -233,3 +239,11 @@ TYPED_TEST(VertexAttributeTest, ShortNormalized)
     TestData data = { GL_SHORT, GL_TRUE, inputData, expectedData };
     runTest(data);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// D3D11 Feature Level 9_3 uses different D3D formats for vertex attribs compared to Feature Levels 10_0+, so we should test them separately.
+INSTANTIATE_TEST_CASE_P(
+    ANGLE, VertexAttributeTest,
+    testing::Values(ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL(), ES3_OPENGL()));
+
+} // namespace

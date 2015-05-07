@@ -1,31 +1,31 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+// RendererTest:
+//   These tests are designed to ensure that the various configurations of the test fixtures work as expected.
+//   If one of these tests fails, then it is likely that some of the other tests are being configured incorrectly.
+//   For example, they might be using the D3D11 renderer when the test is meant to be using the D3D9 renderer.
+
 #include "ANGLETest.h"
 
-// These tests are designed to ensure that the various configurations of the test fixtures work as expected.
-// If one of these tests fails, then it is likely that some of the other tests are being configured incorrectly.
-// For example, they might be using the D3D11 renderer when the test is meant to be using the D3D9 renderer.
+using namespace angle;
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+namespace
+{
 
-ANGLE_TYPED_TEST_CASE(RendererTest, ES2_D3D9,           ES2_D3D11,        ES2_D3D11_WARP,        ES2_D3D11_REFERENCE,        ES3_D3D11,        ES3_D3D11_WARP,        ES3_D3D11_REFERENCE,        ES2_OPENGL,
-                                    ES2_D3D9_REFERENCE, ES2_D3D11_FL11_0, ES2_D3D11_FL11_0_WARP, ES2_D3D11_FL11_0_REFERENCE, ES3_D3D11_FL11_0, ES3_D3D11_FL11_0_WARP, ES3_D3D11_FL11_0_REFERENCE, ES3_OPENGL,
-                                                        ES2_D3D11_FL10_1, ES2_D3D11_FL10_1_WARP, ES2_D3D11_FL10_1_REFERENCE, ES3_D3D11_FL10_1, ES3_D3D11_FL10_1_WARP, ES3_D3D11_FL10_1_REFERENCE,
-                                                        ES2_D3D11_FL10_0, ES2_D3D11_FL10_0_WARP, ES2_D3D11_FL10_0_REFERENCE, ES3_D3D11_FL10_0, ES3_D3D11_FL10_0_WARP, ES3_D3D11_FL10_0_REFERENCE,
-                                                        ES2_D3D11_FL9_3,  ES2_D3D11_FL9_3_WARP,  ES2_D3D11_FL9_3_REFERENCE);
-
-template<typename T>
 class RendererTest : public ANGLETest
 {
   protected:
-    RendererTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    RendererTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
     }
-
-    T fixtureType;
 };
 
-TYPED_TEST(RendererTest, RequestedRendererCreated)
+TEST_P(RendererTest, RequestedRendererCreated)
 {
     std::string rendererString = std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
     std::transform(rendererString.begin(), rendererString.end(), rendererString.begin(), ::tolower);
@@ -33,7 +33,7 @@ TYPED_TEST(RendererTest, RequestedRendererCreated)
     std::string versionString = std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
     std::transform(versionString.begin(), versionString.end(), versionString.begin(), ::tolower);
 
-    EGLPlatformParameters platform = fixtureType.GetPlatform();
+    const EGLPlatformParameters &platform = GetParam().mEGLPlatformParameters;
 
     // Ensure that the renderer string contains D3D11, if we requested a D3D11 renderer.
     if (platform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
@@ -101,7 +101,7 @@ TYPED_TEST(RendererTest, RequestedRendererCreated)
         ASSERT_TRUE(found);
     }
 
-    EGLint glesMajorVersion = fixtureType.GetGlesMajorVersion();
+    EGLint glesMajorVersion = GetParam().mClientVersion;
 
     // Ensure that the renderer string contains GL ES 3.0, if we requested a GL ES 3.0
     if (glesMajorVersion == 3)
@@ -117,9 +117,23 @@ TYPED_TEST(RendererTest, RequestedRendererCreated)
 }
 
 // Perform a simple operation (clear and read pixels) to verify the device is working
-TYPED_TEST(RendererTest, SimpleOperation)
+TEST_P(RendererTest, SimpleOperation)
 {
     glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+}
+
+// Select configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+
+ANGLE_INSTANTIATE_TEST(RendererTest,
+    ES2_D3D9(),            ES2_D3D9_REFERENCE(),
+    ES2_D3D11(),           ES2_D3D11_FL11_0(),           ES2_D3D11_FL10_1(),           ES2_D3D11_FL10_0(),           ES2_D3D11_FL9_3(),
+    ES2_D3D11_WARP(),      ES2_D3D11_FL11_0_WARP(),      ES2_D3D11_FL10_1_WARP(),      ES2_D3D11_FL10_0_WARP(),      ES2_D3D11_FL9_3_WARP(),
+    ES2_D3D11_REFERENCE(), ES2_D3D11_FL11_0_REFERENCE(), ES2_D3D11_FL10_1_REFERENCE(), ES2_D3D11_FL10_0_REFERENCE(), ES2_D3D11_FL9_3_REFERENCE(),
+    ES3_D3D11(),           ES3_D3D11_FL11_0(),           ES3_D3D11_FL10_1(),           ES3_D3D11_FL10_0(),
+    ES3_D3D11_WARP(),      ES3_D3D11_FL11_0_WARP(),      ES3_D3D11_FL10_1_WARP(),      ES3_D3D11_FL10_0_WARP(),
+    ES3_D3D11_REFERENCE(), ES3_D3D11_FL11_0_REFERENCE(), ES3_D3D11_FL10_1_REFERENCE(), ES3_D3D11_FL10_0_REFERENCE(),
+    ES2_OPENGL(),          ES3_OPENGL());
+
 }

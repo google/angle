@@ -1,14 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(ClearTest, ES2_D3D9, ES2_D3D11, ES3_D3D11, ES2_OPENGL, ES3_OPENGL);
-ANGLE_TYPED_TEST_CASE(ClearTestES3, ES3_D3D11);
+using namespace angle;
 
-template<typename T>
 class ClearTestBase : public ANGLETest
 {
   protected:
-    ClearTestBase() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    ClearTestBase()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -67,15 +70,10 @@ class ClearTestBase : public ANGLETest
     GLuint mFBO;
 };
 
-template <typename T>
-class ClearTest : public ClearTestBase<T>
-{};
+class ClearTest : public ClearTestBase {};
+class ClearTestES3 : public ClearTestBase {};
 
-template <typename T>
-class ClearTestES3 : public ClearTestBase<T>
-{};
-
-TYPED_TEST(ClearTest, ClearIssue)
+TEST_P(ClearTest, ClearIssue)
 {
     // TODO(geofflang): Figure out why this is broken on Intel OpenGL
     if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
@@ -123,7 +121,7 @@ TYPED_TEST(ClearTest, ClearIssue)
 // Requires ES3
 // This tests a bug where in a masked clear when calling "ClearBuffer", we would
 // mistakenly clear every channel (including the masked-out ones)
-TYPED_TEST(ClearTestES3, MaskedClearBufferBug)
+TEST_P(ClearTestES3, MaskedClearBufferBug)
 {
     unsigned char pixelData[] = { 255, 255, 255, 255 };
 
@@ -162,7 +160,7 @@ TYPED_TEST(ClearTestES3, MaskedClearBufferBug)
     glDeleteTextures(2, textures);
 }
 
-TYPED_TEST(ClearTestES3, BadFBOSerialBug)
+TEST_P(ClearTestES3, BadFBOSerialBug)
 {
     // First make a simple framebuffer, and clear it to green
     glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
@@ -209,3 +207,7 @@ TYPED_TEST(ClearTestES3, BadFBOSerialBug)
     glDeleteTextures(2, textures);
     glDeleteFramebuffers(1, &fbo2);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(ClearTest, ES2_D3D9(), ES2_D3D11(), ES3_D3D11(), ES2_OPENGL(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(ClearTestES3, ES3_D3D11());

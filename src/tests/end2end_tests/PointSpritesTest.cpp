@@ -1,24 +1,21 @@
-#include "ANGLETest.h"
-
-// Use this to select which configurations (e.g. which renderer, which GLES
-// major version) these tests should be run against.
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
 //
 // Some of the pointsprite tests below were ported from Khronos WebGL
 // conformance test suite.
 
-//
-// We test on D3D11 9_3 because the existing D3D11 PointSprite implementation
-// uses Geometry Shaders which are not supported for 9_3.
-// D3D9 and D3D11 are also tested to ensure no regressions.
-ANGLE_TYPED_TEST_CASE(PointSpritesTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3);
+#include "ANGLETest.h"
 
-template<typename T>
+using namespace angle;
+
 class PointSpritesTest : public ANGLETest
 {
   protected:
     const int windowWidth = 256;
     const int windowHeight = 256;
-    PointSpritesTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    PointSpritesTest()
     {
         setWindowWidth(windowWidth);
         setWindowHeight(windowHeight);
@@ -41,7 +38,7 @@ class PointSpritesTest : public ANGLETest
 
 // Checks gl_PointCoord and gl_PointSize
 // https://www.khronos.org/registry/webgl/sdk/tests/conformance/glsl/variables/gl-pointcoord.html
-TYPED_TEST(PointSpritesTest, PointCoordAndPointSizeCompliance)
+TEST_P(PointSpritesTest, PointCoordAndPointSizeCompliance)
 {
     const std::string fs = SHADER_SOURCE
     (
@@ -146,7 +143,7 @@ TYPED_TEST(PointSpritesTest, PointCoordAndPointSizeCompliance)
 
 // Verify that drawing a point without enabling any attributes succeeds
 // https://www.khronos.org/registry/webgl/sdk/tests/conformance/rendering/point-no-attributes.html
-TYPED_TEST(PointSpritesTest, PointWithoutAttributesCompliance)
+TEST_P(PointSpritesTest, PointWithoutAttributesCompliance)
 {
     const std::string fs = SHADER_SOURCE
     (
@@ -181,7 +178,7 @@ TYPED_TEST(PointSpritesTest, PointWithoutAttributesCompliance)
 
 // This is a regression test for a graphics driver bug affecting end caps on roads in MapsGL
 // https://www.khronos.org/registry/webgl/sdk/tests/conformance/rendering/point-with-gl-pointcoord-in-fragment-shader.html
-TYPED_TEST(PointSpritesTest, PointCoordRegressionTest)
+TEST_P(PointSpritesTest, PointCoordRegressionTest)
 {
     const std::string fs = SHADER_SOURCE
     (
@@ -266,7 +263,7 @@ TYPED_TEST(PointSpritesTest, PointCoordRegressionTest)
 
 // Verify GL_VERTEX_PROGRAM_POINT_SIZE is enabled
 // https://www.khronos.org/registry/webgl/sdk/tests/conformance/rendering/point-size.html
-TYPED_TEST(PointSpritesTest, PointSizeEnabledCompliance)
+TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
 {
     const std::string fs = SHADER_SOURCE
     (
@@ -390,7 +387,7 @@ TYPED_TEST(PointSpritesTest, PointSizeEnabledCompliance)
 }
 
 // Verify that rendering works correctly when gl_PointSize is declared in a shader but isn't used
-TYPED_TEST(PointSpritesTest, PointSizeDeclaredButUnused)
+TEST_P(PointSpritesTest, PointSizeDeclaredButUnused)
 {
     const std::string vs = SHADER_SOURCE
     (
@@ -424,3 +421,11 @@ TYPED_TEST(PointSpritesTest, PointSizeDeclaredButUnused)
 
     glDeleteProgram(program);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES
+// major version) these tests should be run against.
+//
+// We test on D3D11 9_3 because the existing D3D11 PointSprite implementation
+// uses Geometry Shaders which are not supported for 9_3.
+// D3D9 and D3D11 are also tested to ensure no regressions.
+ANGLE_INSTANTIATE_TEST(PointSpritesTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());

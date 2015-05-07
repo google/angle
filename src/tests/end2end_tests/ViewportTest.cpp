@@ -1,14 +1,20 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-// D3D11 Feature Level 9 and D3D9 emulate large and negative viewports in the vertex shader. We should test both of these as well as D3D11 Feature Level 10_0+.
-ANGLE_TYPED_TEST_CASE(ViewportTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3);
+using namespace angle;
 
-template<typename T>
+namespace
+{
+
 class ViewportTest : public ANGLETest
 {
   protected:
-    ViewportTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    ViewportTest()
     {
         setWindowWidth(512);
         setWindowHeight(512);
@@ -112,7 +118,7 @@ class ViewportTest : public ANGLETest
         }
     }
 
-    virtual void SetUp()
+    void SetUp() override
     {
         ANGLETest::SetUp();
 
@@ -152,7 +158,7 @@ class ViewportTest : public ANGLETest
         glDisable(GL_DEPTH_TEST);
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         glDeleteProgram(mProgram);
 
@@ -162,7 +168,7 @@ class ViewportTest : public ANGLETest
     GLuint mProgram;
 };
 
-TYPED_TEST(ViewportTest, QuarterWindow)
+TEST_P(ViewportTest, QuarterWindow)
 {
     glViewport(0, 0, getWindowWidth() / 4, getWindowHeight() / 4);
 
@@ -171,7 +177,7 @@ TYPED_TEST(ViewportTest, QuarterWindow)
     runScissoredTest();
 }
 
-TYPED_TEST(ViewportTest, QuarterWindowCentered)
+TEST_P(ViewportTest, QuarterWindowCentered)
 {
     glViewport(getWindowWidth() * 3 / 8, getWindowHeight() * 3 / 8, getWindowWidth() / 4, getWindowHeight() / 4);
 
@@ -180,7 +186,7 @@ TYPED_TEST(ViewportTest, QuarterWindowCentered)
     runScissoredTest();
 }
 
-TYPED_TEST(ViewportTest, FullWindow)
+TEST_P(ViewportTest, FullWindow)
 {
     glViewport(0, 0, getWindowWidth(), getWindowHeight());
 
@@ -189,7 +195,7 @@ TYPED_TEST(ViewportTest, FullWindow)
     runScissoredTest();
 }
 
-TYPED_TEST(ViewportTest, FullWindowOffCenter)
+TEST_P(ViewportTest, FullWindowOffCenter)
 {
     glViewport(-getWindowWidth() / 2, getWindowHeight() / 2, getWindowWidth(), getWindowHeight());
 
@@ -198,7 +204,7 @@ TYPED_TEST(ViewportTest, FullWindowOffCenter)
     runScissoredTest();
 }
 
-TYPED_TEST(ViewportTest, DoubleWindow)
+TEST_P(ViewportTest, DoubleWindow)
 {
     glViewport(0, 0, getWindowWidth() * 2, getWindowHeight() * 2);
 
@@ -207,7 +213,7 @@ TYPED_TEST(ViewportTest, DoubleWindow)
     runScissoredTest();
 }
 
-TYPED_TEST(ViewportTest, DoubleWindowCentered)
+TEST_P(ViewportTest, DoubleWindowCentered)
 {
     glViewport(-getWindowWidth() / 2, -getWindowHeight() / 2, getWindowWidth() * 2, getWindowHeight() * 2);
 
@@ -216,7 +222,7 @@ TYPED_TEST(ViewportTest, DoubleWindowCentered)
     runScissoredTest();
 }
 
-TYPED_TEST(ViewportTest, DoubleWindowOffCenter)
+TEST_P(ViewportTest, DoubleWindowOffCenter)
 {
     glViewport(-getWindowWidth() * 3 / 4, getWindowHeight() * 3 / 4, getWindowWidth(), getWindowHeight());
 
@@ -225,7 +231,7 @@ TYPED_TEST(ViewportTest, DoubleWindowOffCenter)
     runScissoredTest();
 }
 
-TYPED_TEST(ViewportTest, TripleWindow)
+TEST_P(ViewportTest, TripleWindow)
 {
     glViewport(0, 0, getWindowWidth() * 3, getWindowHeight() * 3);
 
@@ -234,7 +240,7 @@ TYPED_TEST(ViewportTest, TripleWindow)
     runScissoredTest();
 }
 
-TYPED_TEST(ViewportTest, TripleWindowCentered)
+TEST_P(ViewportTest, TripleWindowCentered)
 {
     glViewport(-getWindowWidth(), -getWindowHeight(), getWindowWidth() * 3, getWindowHeight() * 3);
 
@@ -243,7 +249,7 @@ TYPED_TEST(ViewportTest, TripleWindowCentered)
     runScissoredTest();
 }
 
-TYPED_TEST(ViewportTest, TripleWindowOffCenter)
+TEST_P(ViewportTest, TripleWindowOffCenter)
 {
     glViewport(-getWindowWidth() * 3 / 2, -getWindowHeight() * 3 / 2, getWindowWidth() * 3, getWindowHeight() * 3);
 
@@ -251,3 +257,9 @@ TYPED_TEST(ViewportTest, TripleWindowOffCenter)
 
     runScissoredTest();
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// D3D11 Feature Level 9 and D3D9 emulate large and negative viewports in the vertex shader. We should test both of these as well as D3D11 Feature Level 10_0+.
+ANGLE_INSTANTIATE_TEST(ViewportTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
+
+} // namespace

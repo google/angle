@@ -1,15 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-// Note: we run these tests against 9_3 on WARP due to hardware driver issues on Win7
-ANGLE_TYPED_TEST_CASE(MipmapTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3_WARP, ES2_OPENGL, ES3_OPENGL);
-ANGLE_TYPED_TEST_CASE(MipmapTestES3, ES3_D3D11);
+using namespace angle;
 
-template<typename T>
 class MipmapTest : public ANGLETest
 {
   protected:
-    MipmapTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    MipmapTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -214,11 +216,10 @@ class MipmapTest : public ANGLETest
     GLubyte* mLevelTwoInitData;
 };
 
-template<typename T>
 class MipmapTestES3 : public ANGLETest
 {
-protected:
-    MipmapTestES3() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    MipmapTestES3()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -362,7 +363,7 @@ protected:
 // This test uses init data for the first three levels of the texture. It passes the level 0 data in, then renders, then level 1, then renders, etc.
 // This ensures that renderers using the zero LOD workaround (e.g. D3D11 FL9_3) correctly pass init data to the mipmapped texture,
 // even if the the zero-LOD texture is currently in use.
-TYPED_TEST(MipmapTest, DISABLED_ThreeLevelsInitData)
+TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
 {
     // Pass in level zero init data.
     glBindTexture(GL_TEXTURE_2D, mOffscreenTexture2D);
@@ -468,7 +469,7 @@ TYPED_TEST(MipmapTest, DISABLED_ThreeLevelsInitData)
 // To do this, D3D11 has to convert the TextureStorage into a renderable one.
 // This test ensures that the conversion works correctly.
 // In particular, on D3D11 Feature Level 9_3 it ensures that both the zero LOD workaround texture AND the 'normal' texture are copied during conversion.
-TYPED_TEST(MipmapTest, GenerateMipmapFromInitDataThenRender)
+TEST_P(MipmapTest, GenerateMipmapFromInitDataThenRender)
 {
     // Pass in initial data so the texture is blue.
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, mLevelZeroBlueInitData);
@@ -523,7 +524,7 @@ TYPED_TEST(MipmapTest, GenerateMipmapFromInitDataThenRender)
 // This test ensures that mips are correctly generated from a rendered image.
 // In particular, on D3D11 Feature Level 9_3, the clear call will be performed on the zero-level texture, rather than the mipped one.
 // The test ensures that the zero-level texture is correctly copied into the mipped texture before the mipmaps are generated.
-TYPED_TEST(MipmapTest, GenerateMipmapFromRenderedImage)
+TEST_P(MipmapTest, GenerateMipmapFromRenderedImage)
 {
     // Bind the offscreen framebuffer/texture.
     glBindFramebuffer(GL_FRAMEBUFFER, mOffscreenFramebuffer);
@@ -554,7 +555,7 @@ TYPED_TEST(MipmapTest, GenerateMipmapFromRenderedImage)
 
 // Test to ensure that rendering to a mipmapped texture works, regardless of whether mipmaps are enabled or not.
 // TODO: This test hits a texture rebind bug in the D3D11 renderer. Fix this.
-TYPED_TEST(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
+TEST_P(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
 {
     // TODO(geofflang): Figure out why this is broken on AMD OpenGL
     if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
@@ -630,7 +631,7 @@ TYPED_TEST(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
 
 // This test ensures that the level-zero workaround for TextureCubes (on D3D11 Feature Level 9_3)
 // works as expected. It tests enabling/disabling mipmaps, generating mipmaps, and rendering to level zero.
-TYPED_TEST(MipmapTest, TextureCubeGeneralLevelZero)
+TEST_P(MipmapTest, TextureCubeGeneralLevelZero)
 {
     GLfloat vertexLocations[] =
     {
@@ -704,7 +705,7 @@ TYPED_TEST(MipmapTest, TextureCubeGeneralLevelZero)
 }
 
 // This test ensures that rendering to level-zero of a TextureCube works as expected.
-TYPED_TEST(MipmapTest, TextureCubeRenderToLevelZero)
+TEST_P(MipmapTest, TextureCubeRenderToLevelZero)
 {
     GLfloat vertexLocations[] =
     {
@@ -756,7 +757,7 @@ TYPED_TEST(MipmapTest, TextureCubeRenderToLevelZero)
 
 // Creates a mipmapped 2D array texture with three layers, and calls ANGLE's GenerateMipmap.
 // Then tests if the mipmaps are rendered correctly for all three layers.
-TYPED_TEST(MipmapTestES3, MipmapsForTextureArray)
+TEST_P(MipmapTestES3, MipmapsForTextureArray)
 {
     int px = getWindowWidth() / 2;
     int py = getWindowHeight() / 2;
@@ -838,7 +839,7 @@ TYPED_TEST(MipmapTestES3, MipmapsForTextureArray)
 
 // Creates a mipmapped 3D texture with two layers, and calls ANGLE's GenerateMipmap.
 // Then tests if the mipmaps are rendered correctly for all two layers.
-TYPED_TEST(MipmapTestES3, MipmapsForTexture3D)
+TEST_P(MipmapTestES3, MipmapsForTexture3D)
 {
     int px = getWindowWidth() / 2;
     int py = getWindowHeight() / 2;
@@ -916,3 +917,8 @@ TYPED_TEST(MipmapTestES3, MipmapsForTexture3D)
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_EQ(px, py, 127, 127, 0, 255);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Note: we run these tests against 9_3 on WARP due to hardware driver issues on Win7
+ANGLE_INSTANTIATE_TEST(MipmapTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3_WARP(), ES2_OPENGL(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(MipmapTestES3, ES3_D3D11());

@@ -1,15 +1,24 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+// SimpleOperationTest:
+//   Basic GL commands such as linking a program, initializing a buffer, etc.
+
 #include "ANGLETest.h"
 
 #include <vector>
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(SimpleOperationTest, ES2_D3D9, ES2_D3D11, ES3_D3D11, ES2_OPENGL, ES3_OPENGL);
+using namespace angle;
 
-template<typename T>
+namespace
+{
+
 class SimpleOperationTest : public ANGLETest
 {
   protected:
-    SimpleOperationTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    SimpleOperationTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -20,7 +29,7 @@ class SimpleOperationTest : public ANGLETest
     }
 };
 
-TYPED_TEST(SimpleOperationTest, CompileVertexShader)
+TEST_P(SimpleOperationTest, CompileVertexShader)
 {
     const std::string source = SHADER_SOURCE
     (
@@ -38,7 +47,7 @@ TYPED_TEST(SimpleOperationTest, CompileVertexShader)
     EXPECT_GL_NO_ERROR();
 }
 
-TYPED_TEST(SimpleOperationTest, CompileFragmentShader)
+TEST_P(SimpleOperationTest, CompileFragmentShader)
 {
     const std::string source = SHADER_SOURCE
     (
@@ -57,7 +66,7 @@ TYPED_TEST(SimpleOperationTest, CompileFragmentShader)
     EXPECT_GL_NO_ERROR();
 }
 
-TYPED_TEST(SimpleOperationTest, LinkProgram)
+TEST_P(SimpleOperationTest, LinkProgram)
 {
     const std::string vsSource = SHADER_SOURCE
     (
@@ -82,7 +91,7 @@ TYPED_TEST(SimpleOperationTest, LinkProgram)
     EXPECT_GL_NO_ERROR();
 }
 
-TYPED_TEST(SimpleOperationTest, LinkProgramWithUniforms)
+TEST_P(SimpleOperationTest, LinkProgramWithUniforms)
 {
     const std::string vsSource = SHADER_SOURCE
     (
@@ -113,7 +122,7 @@ TYPED_TEST(SimpleOperationTest, LinkProgramWithUniforms)
     EXPECT_GL_NO_ERROR();
 }
 
-TYPED_TEST(SimpleOperationTest, LinkProgramWithAttributes)
+TEST_P(SimpleOperationTest, LinkProgramWithAttributes)
 {
     const std::string vsSource = SHADER_SOURCE
     (
@@ -143,7 +152,7 @@ TYPED_TEST(SimpleOperationTest, LinkProgramWithAttributes)
     EXPECT_GL_NO_ERROR();
 }
 
-TYPED_TEST(SimpleOperationTest, BufferDataWithData)
+TEST_P(SimpleOperationTest, BufferDataWithData)
 {
     GLuint buffer;
     glGenBuffers(1, &buffer);
@@ -157,7 +166,7 @@ TYPED_TEST(SimpleOperationTest, BufferDataWithData)
     EXPECT_GL_NO_ERROR();
 }
 
-TYPED_TEST(SimpleOperationTest, BufferDataWithNoData)
+TEST_P(SimpleOperationTest, BufferDataWithNoData)
 {
     GLuint buffer;
     glGenBuffers(1, &buffer);
@@ -168,7 +177,7 @@ TYPED_TEST(SimpleOperationTest, BufferDataWithNoData)
     EXPECT_GL_NO_ERROR();
 }
 
-TYPED_TEST(SimpleOperationTest, BufferSubData)
+TEST_P(SimpleOperationTest, BufferSubData)
 {
     GLuint buffer;
     glGenBuffers(1, &buffer);
@@ -188,3 +197,10 @@ TYPED_TEST(SimpleOperationTest, BufferSubData)
 
     EXPECT_GL_NO_ERROR();
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(
+    SimpleOperationTest,
+    ES2_D3D9(), ES2_D3D11(), ES3_D3D11(), ES2_OPENGL(), ES3_OPENGL());
+
+} // namespace

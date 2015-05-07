@@ -1,17 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-// We test on D3D9 and D3D11 9_3 because they use special codepaths when attribute zero is instanced, unlike D3D11.
-ANGLE_TYPED_TEST_CASE(InstancingTestAllConfigs, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3);
+using namespace angle;
 
-// TODO(jmadill): Figure out the situation with DrawInstanced on FL 9_3
-ANGLE_TYPED_TEST_CASE(InstancingTestNo9_3, ES2_D3D9, ES2_D3D11);
-
-template<typename T>
 class InstancingTest : public ANGLETest
 {
   protected:
-    InstancingTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    InstancingTest()
     {
         setWindowWidth(256);
         setWindowHeight(256);
@@ -243,15 +243,13 @@ class InstancingTest : public ANGLETest
     const GLfloat quadRadius = 0.30f;
 };
 
-template<typename T>
-class InstancingTestAllConfigs : public InstancingTest<T>
+class InstancingTestAllConfigs : public InstancingTest
 {
   protected:
     InstancingTestAllConfigs() {}
 };
 
-template<typename T>
-class InstancingTestNo9_3 : public InstancingTest<T>
+class InstancingTestNo9_3 : public InstancingTest
 {
   protected:
     InstancingTestNo9_3() {}
@@ -260,7 +258,7 @@ class InstancingTestNo9_3 : public InstancingTest<T>
 // This test uses a vertex shader with the first attribute (attribute zero) instanced.
 // On D3D9 and D3D11 FL9_3, this triggers a special codepath that rearranges the input layout sent to D3D,
 // to ensure that slot/stream zero of the input layout doesn't contain per-instance data.
-TYPED_TEST(InstancingTestAllConfigs, AttributeZeroInstanced)
+TEST_P(InstancingTestAllConfigs, AttributeZeroInstanced)
 {
     const std::string vs = SHADER_SOURCE
     (
@@ -277,7 +275,7 @@ TYPED_TEST(InstancingTestAllConfigs, AttributeZeroInstanced)
 
 // Same as AttributeZeroInstanced, but attribute zero is not instanced.
 // This ensures the general instancing codepath (i.e. without rearranging the input layout) works as expected.
-TYPED_TEST(InstancingTestAllConfigs, AttributeZeroNotInstanced)
+TEST_P(InstancingTestAllConfigs, AttributeZeroNotInstanced)
 {
     const std::string vs = SHADER_SOURCE
     (
@@ -294,7 +292,7 @@ TYPED_TEST(InstancingTestAllConfigs, AttributeZeroNotInstanced)
 
 // Tests that the "first" parameter to glDrawArraysInstancedANGLE is only an offset into
 // the non-instanced vertex attributes.
-TYPED_TEST(InstancingTestNo9_3, DrawArraysWithOffset)
+TEST_P(InstancingTestNo9_3, DrawArraysWithOffset)
 {
     const std::string vs = SHADER_SOURCE
     (
@@ -320,3 +318,10 @@ TYPED_TEST(InstancingTestNo9_3, DrawArraysWithOffset)
 
     glDeleteProgram(program);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// We test on D3D9 and D3D11 9_3 because they use special codepaths when attribute zero is instanced, unlike D3D11.
+ANGLE_INSTANTIATE_TEST(InstancingTestAllConfigs, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
+
+// TODO(jmadill): Figure out the situation with DrawInstanced on FL 9_3
+ANGLE_INSTANTIATE_TEST(InstancingTestNo9_3, ES2_D3D9(), ES2_D3D11());

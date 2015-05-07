@@ -1,15 +1,22 @@
-#include "ANGLETest.h"
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(UnpackRowLengthTest, ES3_D3D11, ES2_D3D11, ES2_OPENGL, ES3_OPENGL);
+#include "ANGLETest.h"
 
 #include <array>
 
-template<typename T>
+using namespace angle;
+
+namespace
+{
+
 class UnpackRowLengthTest : public ANGLETest
 {
   protected:
-    UnpackRowLengthTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    UnpackRowLengthTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -22,7 +29,7 @@ class UnpackRowLengthTest : public ANGLETest
         mProgram = 0;
     }
 
-    virtual void SetUp() override
+    void SetUp() override
     {
         ANGLETest::SetUp();
 
@@ -54,7 +61,7 @@ class UnpackRowLengthTest : public ANGLETest
         }
     }
 
-    virtual void TearDown() override
+    void TearDown() override
     {
         glDeleteProgram(mProgram);
 
@@ -102,12 +109,19 @@ class UnpackRowLengthTest : public ANGLETest
     GLuint mProgram;
 };
 
-TYPED_TEST(UnpackRowLengthTest, RowLength128)
+TEST_P(UnpackRowLengthTest, RowLength128)
 {
     testRowLength(128, 128);
 }
 
-TYPED_TEST(UnpackRowLengthTest, RowLength1024)
+TEST_P(UnpackRowLengthTest, RowLength1024)
 {
     testRowLength(128, 1024);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+INSTANTIATE_TEST_CASE_P(
+    ANGLE, UnpackRowLengthTest,
+    testing::Values(ES3_D3D11(), ES2_D3D11(), ES2_OPENGL(), ES3_OPENGL()));
+
+} // namespace

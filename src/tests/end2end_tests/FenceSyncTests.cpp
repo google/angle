@@ -1,14 +1,17 @@
+//
+// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
 #include "ANGLETest.h"
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(FenceNVTest, ES2_D3D9, ES2_D3D11, ES3_D3D11, ES2_OPENGL, ES3_OPENGL);
-ANGLE_TYPED_TEST_CASE(FenceSyncTest, ES3_D3D11, ES3_OPENGL);
+using namespace angle;
 
-template<typename T>
 class FenceNVTest : public ANGLETest
 {
   protected:
-    FenceNVTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+    FenceNVTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -20,11 +23,10 @@ class FenceNVTest : public ANGLETest
     }
 };
 
-template<typename T>
 class FenceSyncTest : public ANGLETest
 {
-protected:
-    FenceSyncTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
+  protected:
+    FenceSyncTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -37,7 +39,7 @@ protected:
 };
 
 // FenceNV objects should respond false to glIsFenceNV until they've been set
-TYPED_TEST(FenceNVTest, IsFence)
+TEST_P(FenceNVTest, IsFence)
 {
     if (!extensionEnabled("GL_NV_fence"))
     {
@@ -60,7 +62,7 @@ TYPED_TEST(FenceNVTest, IsFence)
 }
 
 // Test error cases for all FenceNV functions
-TYPED_TEST(FenceNVTest, Errors)
+TEST_P(FenceNVTest, Errors)
 {
     if (!extensionEnabled("GL_NV_fence"))
     {
@@ -107,7 +109,7 @@ TYPED_TEST(FenceNVTest, Errors)
 }
 
 // Test that basic usage works and doesn't generate errors or crash
-TYPED_TEST(FenceNVTest, BasicOperations)
+TEST_P(FenceNVTest, BasicOperations)
 {
     if (!extensionEnabled("GL_NV_fence"))
     {
@@ -144,7 +146,7 @@ TYPED_TEST(FenceNVTest, BasicOperations)
 }
 
 // FenceSync objects should respond true to IsSync after they are created with glFenceSync
-TYPED_TEST(FenceSyncTest, IsSync)
+TEST_P(FenceSyncTest, IsSync)
 {
     GLsync sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
     EXPECT_GL_NO_ERROR();
@@ -154,7 +156,7 @@ TYPED_TEST(FenceSyncTest, IsSync)
 }
 
 // Test error cases for all FenceSync function
-TYPED_TEST(FenceSyncTest, Errors)
+TEST_P(FenceSyncTest, Errors)
 {
     GLsync sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
 
@@ -206,7 +208,7 @@ TYPED_TEST(FenceSyncTest, Errors)
 }
 
 // Test usage of glGetSynciv
-TYPED_TEST(FenceSyncTest, BasicQueries)
+TEST_P(FenceSyncTest, BasicQueries)
 {
     GLsizei length = 0;
     GLint value = 0;
@@ -226,7 +228,7 @@ TYPED_TEST(FenceSyncTest, BasicQueries)
 }
 
 // Test that basic usage works and doesn't generate errors or crash
-TYPED_TEST(FenceSyncTest, BasicOperations)
+TEST_P(FenceSyncTest, BasicOperations)
 {
     // TODO(geofflang): Figure out why this is broken on Intel OpenGL
     if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
@@ -258,3 +260,7 @@ TYPED_TEST(FenceSyncTest, BasicOperations)
         EXPECT_GL_NO_ERROR();
     }
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(FenceNVTest, ES2_D3D9(), ES2_D3D11(), ES3_D3D11(), ES2_OPENGL(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(FenceSyncTest, ES3_D3D11(), ES3_OPENGL());
