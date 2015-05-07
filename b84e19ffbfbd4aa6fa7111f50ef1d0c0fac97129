@@ -22,6 +22,30 @@
       "revId": "b84e19ffbfbd4aa6fa7111f50ef1d0c0fac97129",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_8dffa477",
+        "filename": "src/tests/end2end_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1122,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-07T14:56:34Z",
+      "side": 1,
+      "message": "There are previous examples in this file (and many other places in the tests) where we don\u0027t put every brace on a newline in shaders, should I fix those too?",
+      "parentUuid": "8d1e2d58_2d85300b",
+      "range": {
+        "startLine": 1122,
+        "startChar": 28,
+        "endLine": 1122,
+        "endChar": 30
+      },
+      "revId": "b84e19ffbfbd4aa6fa7111f50ef1d0c0fac97129",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
