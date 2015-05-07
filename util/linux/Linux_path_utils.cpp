@@ -7,36 +7,25 @@
 // Linux_path_utils.cpp: Implementation of OS-specific path functions for Linux
 
 #include "path_utils.h"
-#include <array>
+
 #include <sys/stat.h>
 #include <unistd.h>
+#include <array>
 
 std::string GetExecutablePath()
 {
-    struct stat sb;
-    if (lstat("/proc/self/exe", &sb) == -1)
+    // We cannot use lstat to get the size of /proc/self/exe as it always returns 0
+    // so we just use a big buffer and hope the path fits in it.
+    char path[4096];
+
+    ssize_t result = readlink("/proc/self/exe", path, sizeof(path) - 1);
+    if (result < 0 || result >= sizeof(path) - 1)
     {
         return "";
     }
 
-    char *path = static_cast<char*>(malloc(sb.st_size + 1));
-    if (!path)
-    {
-        return "";
-    }
-
-    ssize_t result = readlink("/proc/self/exe", path, sb.st_size);
-    if (result != sb.st_size)
-    {
-        free(path);
-        return "";
-    }
-
-    path[sb.st_size] = '\0';
-
-    std::string strPath(path);
-    free(path);
-    return strPath;
+    path[result] = '\0';
+    return path;
 }
 
 std::string GetExecutableDirectory()
