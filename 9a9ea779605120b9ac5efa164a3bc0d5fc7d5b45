@@ -69,6 +69,24 @@
       "revId": "9a9ea779605120b9ac5efa164a3bc0d5fc7d5b45",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_3b6a0919",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-07T11:31:19Z",
+      "side": 1,
+      "message": "Mo\u0027s suggesting you patch chromium at the same time you roll ANGLE to use the new ShaderLang.h APIs, that way you wouldn\u0027t have to do an extra patch to remove the APIs after.",
+      "parentUuid": "cd290587_b4d86818",
+      "revId": "9a9ea779605120b9ac5efa164a3bc0d5fc7d5b45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
