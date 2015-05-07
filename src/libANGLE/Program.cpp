@@ -55,38 +55,32 @@ AttributeBindings::~AttributeBindings()
 {
 }
 
-InfoLog::InfoLog() : mInfoLog(NULL)
+InfoLog::InfoLog()
 {
 }
 
 InfoLog::~InfoLog()
 {
-    delete[] mInfoLog;
 }
 
-
-int InfoLog::getLength() const
+size_t InfoLog::getLength() const
 {
-    if (!mInfoLog)
-    {
-        return 0;
-    }
-    else
-    {
-       return strlen(mInfoLog) + 1;
-    }
+    const std::string &logString = mStream.str();
+    return logString.empty() ? 0 : logString.length() + 1;
 }
 
 void InfoLog::getLog(GLsizei bufSize, GLsizei *length, char *infoLog)
 {
-    int index = 0;
+    size_t index = 0;
 
     if (bufSize > 0)
     {
-        if (mInfoLog)
+        const std::string str(mStream.str());
+
+        if (!str.empty())
         {
-            index = std::min(bufSize - 1, (int)strlen(mInfoLog));
-            memcpy(infoLog, mInfoLog, index);
+            index = std::min(static_cast<size_t>(bufSize) - 1, str.length());
+            memcpy(infoLog, str.c_str(), index);
         }
 
         infoLog[index] = '\0';
@@ -94,7 +88,7 @@ void InfoLog::getLog(GLsizei bufSize, GLsizei *length, char *infoLog)
 
     if (length)
     {
-        *length = index;
+        *length = static_cast<GLsizei>(index);
     }
 }
 
@@ -116,7 +110,7 @@ void InfoLog::appendSanitized(const char *message)
     }
     while (found != std::string::npos);
 
-    append("%s", msg.c_str());
+    mStream << message << std::endl;
 }
 
 void InfoLog::append(const char *format, ...)
@@ -128,52 +122,27 @@ void InfoLog::append(const char *format, ...)
 
     va_list vararg;
     va_start(vararg, format);
-    size_t infoLength = vsnprintf(NULL, 0, format, vararg);
+    std::string tempString(FormatString(format, vararg));
     va_end(vararg);
 
-    char *logPointer = NULL;
-
-    if (!mInfoLog)
-    {
-        mInfoLog = new char[infoLength + 2];
-        logPointer = mInfoLog;
-    }
-    else
-    {
-        size_t currentlogLength = strlen(mInfoLog);
-        char *newLog = new char[currentlogLength + infoLength + 2];
-        strcpy(newLog, mInfoLog);
-
-        delete[] mInfoLog;
-        mInfoLog = newLog;
-
-        logPointer = mInfoLog + currentlogLength;
-    }
-
-    va_start(vararg, format);
-    vsnprintf(logPointer, infoLength, format, vararg);
-    va_end(vararg);
-
-    logPointer[infoLength] = 0;
-    strcpy(logPointer + infoLength, "\n");
+    mStream << tempString << std::endl;
 }
 
 void InfoLog::reset()
 {
-    if (mInfoLog)
-    {
-        delete [] mInfoLog;
-        mInfoLog = NULL;
-    }
 }
 
 VariableLocation::VariableLocation()
-    : name(), element(0), index(0)
+    : name(),
+      element(0),
+      index(0)
 {
 }
 
 VariableLocation::VariableLocation(const std::string &name, unsigned int element, unsigned int index)
-    : name(name), element(element), index(index)
+    : name(name),
+      element(element),
+      index(index)
 {
 }
 
@@ -192,8 +161,8 @@ Program::Program(rx::ProgramImpl *impl, ResourceManager *manager, GLuint handle)
       mValidated(false),
       mTransformFeedbackVaryings(),
       mTransformFeedbackBufferMode(GL_NONE),
-      mFragmentShader(NULL),
-      mVertexShader(NULL),
+      mFragmentShader(nullptr),
+      mVertexShader(nullptr),
       mLinked(false),
       mDeleteStatus(false),
       mRefCount(0),
@@ -210,12 +179,12 @@ Program::~Program()
 {
     unlink(true);
 
-    if (mVertexShader != NULL)
+    if (mVertexShader != nullptr)
     {
         mVertexShader->release();
     }
 
-    if (mFragmentShader != NULL)
+    if (mFragmentShader != nullptr)
     {
         mFragmentShader->release();
     }
@@ -260,7 +229,7 @@ bool Program::detachShader(Shader *shader)
         }
 
         mVertexShader->release();
-        mVertexShader = NULL;
+        mVertexShader = nullptr;
     }
     else if (shader->getType() == GL_FRAGMENT_SHADER)
     {
@@ -270,7 +239,7 @@ bool Program::detachShader(Shader *shader)
         }
 
         mFragmentShader->release();
-        mFragmentShader = NULL;
+        mFragmentShader = nullptr;
     }
     else UNREACHABLE();
 
@@ -387,13 +356,13 @@ void Program::unlink(bool destroy)
         if (mFragmentShader)
         {
             mFragmentShader->release();
-            mFragmentShader = NULL;
+            mFragmentShader = nullptr;
         }
 
         if (mVertexShader)
         {
             mVertexShader->release();
-            mVertexShader = NULL;
+            mVertexShader = nullptr;
         }
     }
 
@@ -552,7 +521,7 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
 GLint Program::getBinaryLength() const
 {
     GLint length;
-    Error error = saveBinary(NULL, NULL, std::numeric_limits<GLint>::max(), &length);
+    Error error = saveBinary(nullptr, nullptr, std::numeric_limits<GLint>::max(), &length);
     if (error.isError())
     {
         return 0;
@@ -583,7 +552,7 @@ unsigned int Program::getRefCount() const
 
 int Program::getInfoLogLength() const
 {
-    return mInfoLog.getLength();
+    return static_cast<int>(mInfoLog.getLength());
 }
 
 void Program::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
