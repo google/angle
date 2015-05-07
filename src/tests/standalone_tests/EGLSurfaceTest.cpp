@@ -83,16 +83,22 @@ class EGLSurfaceTest : public testing::Test
         PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(eglGetProcAddress("eglGetPlatformDisplayEXT"));
         ASSERT_TRUE(eglGetPlatformDisplayEXT != nullptr);
 
-        const EGLint displayAttributes[] =
-        {
-            EGL_PLATFORM_ANGLE_TYPE_ANGLE, platformType,
-            EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE,
-            EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE,
-            EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE,
-            EGL_NONE,
-        };
+        std::vector<EGLint> displayAttributes;
+        displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
+        displayAttributes.push_back(platformType);
+        displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE);
+        displayAttributes.push_back(EGL_DONT_CARE);
+        displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE);
+        displayAttributes.push_back(EGL_DONT_CARE);
 
-        mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, mOSWindow->getNativeDisplay(), displayAttributes);
+        if (platformType == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE || platformType == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+        {
+            displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
+            displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
+        }
+        displayAttributes.push_back(EGL_NONE);
+
+        mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, mOSWindow->getNativeDisplay(), displayAttributes.data());
         ASSERT_TRUE(mDisplay != EGL_NO_DISPLAY);
 
         EGLint majorVersion, minorVersion;
