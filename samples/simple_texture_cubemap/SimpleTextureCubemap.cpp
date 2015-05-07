@@ -22,7 +22,7 @@
 class SimpleTextureCubemapSample : public SampleApplication
 {
   public:
-    SimpleTextureCubemapSample::SimpleTextureCubemapSample()
+    SimpleTextureCubemapSample()
         : SampleApplication("SimpleTextureCubemap", 1280, 720)
     {
     }

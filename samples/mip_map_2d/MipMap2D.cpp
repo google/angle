@@ -20,7 +20,7 @@
 class MipMap2DSample : public SampleApplication
 {
   public:
-    MipMap2DSample::MipMap2DSample()
+    MipMap2DSample()
         : SampleApplication("MipMap2D", 1280, 720)
     {
     }

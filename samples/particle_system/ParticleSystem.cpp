@@ -26,7 +26,7 @@
 class ParticleSystemSample : public SampleApplication
 {
   public:
-      ParticleSystemSample::ParticleSystemSample()
+    ParticleSystemSample()
         : SampleApplication("ParticleSystem", 1280, 720)
     {
     }

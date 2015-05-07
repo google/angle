@@ -20,7 +20,7 @@
 class SimpleTexture2DSample : public SampleApplication
 {
   public:
-    SimpleTexture2DSample::SimpleTexture2DSample()
+    SimpleTexture2DSample()
         : SampleApplication("SimpleTexture2D", 1280, 720)
     {
     }

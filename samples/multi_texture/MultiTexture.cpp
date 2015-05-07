@@ -21,7 +21,7 @@
 class MultiTextureSample : public SampleApplication
 {
   public:
-    MultiTextureSample::MultiTextureSample()
+    MultiTextureSample()
         : SampleApplication("MultiTexture", 1280, 720)
     {
     }

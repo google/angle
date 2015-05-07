@@ -19,7 +19,7 @@
 class StencilOperationsSample : public SampleApplication
 {
   public:
-    StencilOperationsSample::StencilOperationsSample()
+    StencilOperationsSample()
         : SampleApplication("StencilOperations", 1280, 720)
     {
     }

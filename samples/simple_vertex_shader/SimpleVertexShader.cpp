@@ -20,10 +20,12 @@
 #include "Vector.h"
 #include "Matrix.h"
 
+#include <cmath>
+
 class SimpleVertexShaderSample : public SampleApplication
 {
   public:
-    SimpleVertexShaderSample::SimpleVertexShaderSample()
+    SimpleVertexShaderSample()
         : SampleApplication("SimpleVertexShader", 1280, 720)
     {
     }

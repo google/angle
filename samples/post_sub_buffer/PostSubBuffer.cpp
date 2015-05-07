@@ -19,12 +19,14 @@
 #include "geometry_utils.h"
 #include "Vector.h"
 #include "Matrix.h"
+
+#include <cmath>
 #include <iostream>
 
 class PostSubBufferSample : public SampleApplication
 {
   public:
-    PostSubBufferSample::PostSubBufferSample()
+    PostSubBufferSample()
         : SampleApplication("PostSubBuffer", 1280, 720)
     {
     }

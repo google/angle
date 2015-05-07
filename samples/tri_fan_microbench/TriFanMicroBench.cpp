@@ -13,10 +13,11 @@
 // URLs:      http://safari.informit.com/9780321563835
 //            http://www.opengles-book.com
 
-#include <iostream>
-
 #include "SampleApplication.h"
 #include "shader_utils.h"
+
+#include <cstring>
+#include <iostream>
 
 // This small sample compares the per-frame render time for a series of 
 // squares drawn with TRIANGLE_FANS versus squares drawn with TRIANGLES.
@@ -26,7 +27,7 @@
 class TriangleFanBenchSample : public SampleApplication
 {
   public:
-    TriangleFanBenchSample::TriangleFanBenchSample()
+    TriangleFanBenchSample()
         : SampleApplication("Microbench", 1280, 1280),
           mFrameCount(0)
     {

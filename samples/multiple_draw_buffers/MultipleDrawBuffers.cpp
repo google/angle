@@ -18,12 +18,13 @@
 #include "path_utils.h"
 #include "texture_utils.h"
 
+#include <cstring>
 #include <iostream>
 
 class MultipleDrawBuffersSample : public SampleApplication
 {
   public:
-    MultipleDrawBuffersSample::MultipleDrawBuffersSample()
+    MultipleDrawBuffersSample()
         : SampleApplication("MultipleDrawBuffers", 1280, 720)
     {
     }

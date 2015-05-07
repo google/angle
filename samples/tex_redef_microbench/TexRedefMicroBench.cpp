@@ -13,11 +13,12 @@
 // URLs:      http://safari.informit.com/9780321563835
 //            http://www.opengles-book.com
 
-#include <iostream>
-
 #include "SampleApplication.h"
 #include "shader_utils.h"
 #include "texture_utils.h"
+
+#include <cstring>
+#include <iostream>
 
 // This sample demonstrates the differences in rendering efficiency when
 // drawing with already-created textures whose dimensions have been altered
@@ -45,7 +46,7 @@
 class TexRedefBenchSample : public SampleApplication
 {
   public:
-    TexRedefBenchSample::TexRedefBenchSample()
+    TexRedefBenchSample()
         : SampleApplication("Microbench", 1280, 1280),
           mFrameCount(0), mPixelsResize(NULL), mPixelsNewTex(NULL), mTimeFrame(false)
     {

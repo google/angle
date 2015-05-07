@@ -20,7 +20,7 @@
 class TextureWrapSample : public SampleApplication
 {
   public:
-      TextureWrapSample::TextureWrapSample()
+    TextureWrapSample()
         : SampleApplication("TextureWrap", 1280, 720)
     {
     }

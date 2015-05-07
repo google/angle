@@ -15,7 +15,7 @@
 class MultiWindowSample : public SampleApplication
 {
   public:
-    MultiWindowSample::MultiWindowSample()
+    MultiWindowSample()
         : SampleApplication("MultiWindow", 256, 256)
     {
     }

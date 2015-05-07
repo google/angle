@@ -18,13 +18,14 @@
 #include "shader_utils.h"
 #include "texture_utils.h"
 
+#include <cstring>
 #include <iostream>
 #include <vector>
 
 class SimpleInstancingSample : public SampleApplication
 {
   public:
-    SimpleInstancingSample::SimpleInstancingSample()
+    SimpleInstancingSample()
         : SampleApplication("SimpleInstancing", 1280, 720)
     {
     }
