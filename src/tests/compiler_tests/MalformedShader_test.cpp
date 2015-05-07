@@ -545,3 +545,20 @@ TEST_F(MalformedShaderTest, AssignConstGlobalToGlobal)
         FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
     }
 }
+
+// Statically assigning to both gl_FragData and gl_FragColor is forbidden (ESSL 1.00 section 7.2)
+TEST_F(MalformedShaderTest, WriteBothFragDataAndFragColor)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "void foo() {\n"
+        "   gl_FragData[0].a++;\n"
+        "}\n"
+        "void main() {\n"
+        "   gl_FragColor.x += 0.0;\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

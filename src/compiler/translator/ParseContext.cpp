@@ -1049,6 +1049,27 @@ const TVariable *TParseContext::getNamedVariable(const TSourceLoc &location,
         {
             recover();
         }
+
+        // Reject shaders using both gl_FragData and gl_FragColor
+        TQualifier qualifier = variable->getType().getQualifier();
+        if (qualifier == EvqFragData)
+        {
+            mUsesFragData = true;
+        }
+        else if (qualifier == EvqFragColor)
+        {
+            mUsesFragColor = true;
+        }
+
+        // This validation is not quite correct - it's only an error to write to
+        // both FragData and FragColor. For simplicity, and because users shouldn't
+        // be rewarded for reading from undefined varaibles, return an error
+        // if they are both referenced, rather than assigned.
+        if (mUsesFragData && mUsesFragColor)
+        {
+            error(location, "cannot use both gl_FragData and gl_FragColor", name->c_str());
+            recover();
+        }
     }
 
     if (!variable)

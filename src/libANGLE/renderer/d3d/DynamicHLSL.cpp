@@ -750,18 +750,13 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data, InfoLog &infoLog,
     }
 
     bool usesMRT = fragmentShader->mUsesMultipleRenderTargets;
-    bool usesFragColor = fragmentShader->mUsesFragColor;
-    bool usesFragData = fragmentShader->mUsesFragData;
     bool usesFragCoord = fragmentShader->mUsesFragCoord;
     bool usesPointCoord = fragmentShader->mUsesPointCoord;
     bool usesPointSize = vertexShader->mUsesPointSize;
     bool useInstancedPointSpriteEmulation = usesPointSize && mRenderer->getWorkarounds().useInstancedPointSpriteEmulation;
 
-    if (usesFragColor && usesFragData)
-    {
-        infoLog << "Cannot use both gl_FragColor and gl_FragData in the same fragment shader.";
-        return false;
-    }
+    // Validation done in the compiler
+    ASSERT(!fragmentShader->mUsesFragColor || !fragmentShader->mUsesFragData);
 
     // Write the HLSL input/output declarations
     const int shaderModel = mRenderer->getMajorShaderModel();
