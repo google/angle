@@ -51,6 +51,24 @@
       "revId": "9a9ea779605120b9ac5efa164a3bc0d5fc7d5b45",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd290587_b4d86818",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-07T08:54:16Z",
+      "side": 1,
+      "message": "I agree this can eventually be removed, but wouldn\u0027t it be easier to do that after Chromium has been patched not to use it?",
+      "parentUuid": "8d1e2d58_51249366",
+      "revId": "9a9ea779605120b9ac5efa164a3bc0d5fc7d5b45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
