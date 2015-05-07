@@ -113,7 +113,7 @@ LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog,
         mFunctions->deleteProgram(mProgramID);
         mProgramID = 0;
 
-        infoLog.append(&buf[0]);
+        infoLog << &buf[0];
         TRACE("\n%s", &buf[0]);
 
         // TODO, return GL_OUT_OF_MEMORY or just fail the link? This is an unexpected case

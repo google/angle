@@ -113,21 +113,6 @@ void InfoLog::appendSanitized(const char *message)
     mStream << message << std::endl;
 }
 
-void InfoLog::append(const char *format, ...)
-{
-    if (!format)
-    {
-        return;
-    }
-
-    va_list vararg;
-    va_start(vararg, format);
-    std::string tempString(FormatString(format, vararg));
-    va_end(vararg);
-
-    mStream << tempString << std::endl;
-}
-
 void InfoLog::reset()
 {
 }
@@ -326,7 +311,7 @@ Error Program::link(const Data &data)
     result = mProgram->compileProgramExecutables(mInfoLog, mFragmentShader, mVertexShader, registers);
     if (result.error.isError() || !result.linkSuccess)
     {
-        mInfoLog.append("Failed to create D3D shaders.");
+        mInfoLog << "Failed to create D3D shaders.";
         unlink(false);
         return result.error;
     }
@@ -395,7 +380,7 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
     GLenum format = stream.readInt<GLenum>();
     if (format != mProgram->getBinaryFormat())
     {
-        mInfoLog.append("Invalid program binary format.");
+        mInfoLog << "Invalid program binary format.";
         return Error(GL_NO_ERROR);
     }
 
@@ -403,7 +388,7 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
     int minorVersion = stream.readInt<int>();
     if (majorVersion != ANGLE_MAJOR_VERSION || minorVersion != ANGLE_MINOR_VERSION)
     {
-        mInfoLog.append("Invalid program binary version.");
+        mInfoLog << "Invalid program binary version.";
         return Error(GL_NO_ERROR);
     }
 
@@ -411,7 +396,7 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
     stream.readBytes(commitString, ANGLE_COMMIT_HASH_SIZE);
     if (memcmp(commitString, ANGLE_COMMIT_HASH, sizeof(unsigned char) * ANGLE_COMMIT_HASH_SIZE) != 0)
     {
-        mInfoLog.append("Invalid program binary version.");
+        mInfoLog << "Invalid program binary version.";
         return Error(GL_NO_ERROR);
     }
 
@@ -1022,7 +1007,7 @@ void Program::validate(const Caps &caps)
     }
     else
     {
-        mInfoLog.append("Program has not been successfully linked.");
+        mInfoLog << "Program has not been successfully linked.";
     }
 }
 
@@ -1270,7 +1255,7 @@ bool Program::linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shader *ver
         // We permit unmatched, unreferenced varyings
         if (!matched && input->staticUse)
         {
-            infoLog.append("Fragment varying %s does not match any vertex varying", input->name.c_str());
+            infoLog << "Fragment varying " << input->name << " does not match any vertex varying";
             return false;
         }
     }
@@ -1287,7 +1272,7 @@ bool Program::linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::stri
 
     if (vertexUniform.isRowMajorLayout != fragmentUniform.isRowMajorLayout)
     {
-        infoLog.append("Matrix packings for %s differ between vertex and fragment shaders", uniformName.c_str());
+        infoLog << "Matrix packings for " << uniformName << " differ between vertex and fragment shaders";
         return false;
     }
 
@@ -1307,7 +1292,7 @@ bool Program::linkAttributes(const Data &data,
     // TODO(jmadill): handle aliasing robustly
     if (shaderAttributes.size() >= maxAttribs)
     {
-        infoLog.append("Too many vertex attributes.");
+        infoLog << "Too many vertex attributes.";
         return false;
     }
 
@@ -1328,7 +1313,8 @@ bool Program::linkAttributes(const Data &data,
 
             if (static_cast<GLuint>(rows + location) > maxAttribs)
             {
-                infoLog.append("Active attribute (%s) at location %d is too big to fit", attribute.name.c_str(), location);
+                infoLog << "Active attribute (" << attribute.name << ") at location "
+                        << location << " is too big to fit";
 
                 return false;
             }
@@ -1345,7 +1331,9 @@ bool Program::linkAttributes(const Data &data,
                 {
                     if (!linkedAttribute.name.empty())
                     {
-                        infoLog.append("Attribute '%s' aliases attribute '%s' at location %d", attribute.name.c_str(), linkedAttribute.name.c_str(), rowLocation);
+                        infoLog << "Attribute '" << attribute.name
+                                << "' aliases attribute '" << linkedAttribute.name
+                                << "' at location " << rowLocation;
                         return false;
                     }
                 }
@@ -1372,8 +1360,7 @@ bool Program::linkAttributes(const Data &data,
 
             if (availableIndex == -1 || static_cast<GLuint>(availableIndex + rows) > maxAttribs)
             {
-                infoLog.append("Too many active attributes (%s)", attribute.name.c_str());
-
+                infoLog << "Too many active attributes (" << attribute.name << ")";
                 return false;   // Fail to link
             }
 
@@ -1454,17 +1441,20 @@ bool Program::areMatchingInterfaceBlocks(gl::InfoLog &infoLog, const sh::Interfa
     // validate blocks for the same member types
     if (vertexInterfaceBlock.fields.size() != fragmentInterfaceBlock.fields.size())
     {
-        infoLog.append("Types for interface block '%s' differ between vertex and fragment shaders", blockName);
+        infoLog << "Types for interface block '" << blockName
+                << "' differ between vertex and fragment shaders";
         return false;
     }
     if (vertexInterfaceBlock.arraySize != fragmentInterfaceBlock.arraySize)
     {
-        infoLog.append("Array sizes differ for interface block '%s' between vertex and fragment shaders", blockName);
+        infoLog << "Array sizes differ for interface block '" << blockName
+                << "' between vertex and fragment shaders";
         return false;
     }
     if (vertexInterfaceBlock.layout != fragmentInterfaceBlock.layout || vertexInterfaceBlock.isRowMajorLayout != fragmentInterfaceBlock.isRowMajorLayout)
     {
-        infoLog.append("Layout qualifiers differ for interface block '%s' between vertex and fragment shaders", blockName);
+        infoLog << "Layout qualifiers differ for interface block '" << blockName
+                << "' between vertex and fragment shaders";
         return false;
     }
     const unsigned int numBlockMembers = vertexInterfaceBlock.fields.size();
@@ -1474,8 +1464,10 @@ bool Program::areMatchingInterfaceBlocks(gl::InfoLog &infoLog, const sh::Interfa
         const sh::InterfaceBlockField &fragmentMember = fragmentInterfaceBlock.fields[blockMemberIndex];
         if (vertexMember.name != fragmentMember.name)
         {
-            infoLog.append("Name mismatch for field %d of interface block '%s': (in vertex: '%s', in fragment: '%s')",
-                           blockMemberIndex, blockName, vertexMember.name.c_str(), fragmentMember.name.c_str());
+            infoLog << "Name mismatch for field " << blockMemberIndex
+                    << " of interface block '" << blockName
+                    << "': (in vertex: '" << vertexMember.name
+                    << "', in fragment: '" << fragmentMember.name << "')";
             return false;
         }
         std::string memberName = "interface block '" + vertexInterfaceBlock.name + "' member '" + vertexMember.name + "'";
@@ -1492,23 +1484,23 @@ bool Program::linkValidateVariablesBase(InfoLog &infoLog, const std::string &var
 {
     if (vertexVariable.type != fragmentVariable.type)
     {
-        infoLog.append("Types for %s differ between vertex and fragment shaders", variableName.c_str());
+        infoLog << "Types for " << variableName << " differ between vertex and fragment shaders";
         return false;
     }
     if (vertexVariable.arraySize != fragmentVariable.arraySize)
     {
-        infoLog.append("Array sizes for %s differ between vertex and fragment shaders", variableName.c_str());
+        infoLog << "Array sizes for " << variableName << " differ between vertex and fragment shaders";
         return false;
     }
     if (validatePrecision && vertexVariable.precision != fragmentVariable.precision)
     {
-        infoLog.append("Precisions for %s differ between vertex and fragment shaders", variableName.c_str());
+        infoLog << "Precisions for " << variableName << " differ between vertex and fragment shaders";
         return false;
     }
 
     if (vertexVariable.fields.size() != fragmentVariable.fields.size())
     {
-        infoLog.append("Structure lengths for %s differ between vertex and fragment shaders", variableName.c_str());
+        infoLog << "Structure lengths for " << variableName << " differ between vertex and fragment shaders";
         return false;
     }
     const unsigned int numMembers = vertexVariable.fields.size();
@@ -1519,9 +1511,10 @@ bool Program::linkValidateVariablesBase(InfoLog &infoLog, const std::string &var
 
         if (vertexMember.name != fragmentMember.name)
         {
-            infoLog.append("Name mismatch for field '%d' of %s: (in vertex: '%s', in fragment: '%s')",
-                           memberIndex, variableName.c_str(),
-                           vertexMember.name.c_str(), fragmentMember.name.c_str());
+            infoLog << "Name mismatch for field '" << memberIndex
+                    << "' of " << variableName
+                    << ": (in vertex: '" << vertexMember.name
+                    << "', in fragment: '" << fragmentMember.name << "')";
             return false;
         }
 
@@ -1556,7 +1549,7 @@ bool Program::linkValidateVaryings(InfoLog &infoLog, const std::string &varyingN
 
     if (!sh::InterpolationTypesMatch(vertexVarying.interpolation, fragmentVarying.interpolation))
     {
-        infoLog.append("Interpolation types for %s differ between vertex and fragment shaders", varyingName.c_str());
+        infoLog << "Interpolation types for " << varyingName << " differ between vertex and fragment shaders";
         return false;
     }
 
@@ -1584,7 +1577,8 @@ bool Program::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std:
                 {
                     if (outTransformFeedbackLinkedVaryings->at(k).name == linkedVaryings[j].name)
                     {
-                        infoLog.append("Two transform feedback varyings specify the same output variable (%s).", linkedVaryings[j].name.c_str());
+                        infoLog << "Two transform feedback varyings specify the same output variable ("
+                                << linkedVaryings[j].name << ").";
                         return false;
                     }
                 }
@@ -1593,8 +1587,10 @@ bool Program::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std:
                 if (transformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
                     componentCount > caps.maxTransformFeedbackSeparateComponents)
                 {
-                    infoLog.append("Transform feedback varying's %s components (%u) exceed the maximum separate components (%u).",
-                                   linkedVaryings[j].name.c_str(), componentCount, caps.maxTransformFeedbackSeparateComponents);
+                    infoLog << "Transform feedback varying's " << linkedVaryings[j].name
+                            << " components (" << componentCount
+                            << ") exceed the maximum separate components ("
+                            << caps.maxTransformFeedbackSeparateComponents << ").";
                     return false;
                 }
 
@@ -1610,10 +1606,12 @@ bool Program::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std:
         ASSERT(found);
     }
 
-    if (transformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS && totalComponents > caps.maxTransformFeedbackInterleavedComponents)
+    if (transformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS &&
+        totalComponents > caps.maxTransformFeedbackInterleavedComponents)
     {
-        infoLog.append("Transform feedback varying total components (%u) exceed the maximum interleaved components (%u).",
-                       totalComponents, caps.maxTransformFeedbackInterleavedComponents);
+        infoLog << "Transform feedback varying total components (" << totalComponents
+                << ") exceed the maximum interleaved components ("
+                << caps.maxTransformFeedbackInterleavedComponents << ").";
         return false;
     }
 

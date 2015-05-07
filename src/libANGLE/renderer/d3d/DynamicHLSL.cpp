@@ -262,7 +262,7 @@ int DynamicHLSL::packVaryings(InfoLog &infoLog, VaryingPacking packing, ShaderD3
         }
         else
         {
-            infoLog.append("Could not pack varying %s", varying->name.c_str());
+            infoLog << "Could not pack varying " << varying->name;
             return -1;
         }
     }
@@ -287,7 +287,7 @@ int DynamicHLSL::packVaryings(InfoLog &infoLog, VaryingPacking packing, ShaderD3
                 {
                     if (!packVarying(varying, maxVaryingVectors, packing))
                     {
-                        infoLog.append("Could not pack varying %s", varying->name.c_str());
+                        infoLog << "Could not pack varying " << varying->name;
                         return -1;
                     }
 
@@ -298,7 +298,9 @@ int DynamicHLSL::packVaryings(InfoLog &infoLog, VaryingPacking packing, ShaderD3
 
             if (!found)
             {
-                infoLog.append("Transform feedback varying %s does not exist in the vertex shader.", transformFeedbackVarying.c_str());
+                infoLog << "Transform feedback varying "
+                        << transformFeedbackVarying
+                        << " does not exist in the vertex shader.";
                 return -1;
             }
         }
@@ -757,7 +759,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data, InfoLog &infoLog,
 
     if (usesFragColor && usesFragData)
     {
-        infoLog.append("Cannot use both gl_FragColor and gl_FragData in the same fragment shader.");
+        infoLog << "Cannot use both gl_FragColor and gl_FragData in the same fragment shader.";
         return false;
     }
 
@@ -780,7 +782,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data, InfoLog &infoLog,
 
     if (static_cast<GLuint>(registersNeeded) > data.caps->maxVaryingVectors)
     {
-        infoLog.append("No varying registers left to support gl_FragCoord/gl_PointCoord");
+        infoLog << "No varying registers left to support gl_FragCoord/gl_PointCoord";
         return false;
     }
 

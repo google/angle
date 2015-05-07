@@ -21,10 +21,23 @@ TEST(InfoLogTest, LogLengthCountsTerminator)
 {
     InfoLog infoLog;
     EXPECT_EQ(0u, infoLog.getLength());
-    infoLog.append(" ");
+    infoLog << " ";
 
     // " \n\0" = 3 characters
     EXPECT_EQ(3u, infoLog.getLength());
+}
+
+// Tests that newlines get appended to the info log properly.
+TEST(InfoLogTest, AppendingNewline)
+{
+    InfoLog infoLog;
+
+    infoLog << "First" << 1 << 'x';
+    infoLog << "Second" << 2 << 'y';
+
+    std::string expected = "First1x\nSecond2y\n";
+
+    EXPECT_EQ(expected, infoLog.str());
 }
 
 } // namespace

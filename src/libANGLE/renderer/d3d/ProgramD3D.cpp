@@ -360,7 +360,9 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
             {
                 if (infoLog)
                 {
-                    infoLog->append("Sampler uniform (%d) exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, caps.maxCombinedTextureImageUnits);
+                    (*infoLog) << "Sampler uniform (" << unit
+                               << ") exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS ("
+                               << caps.maxCombinedTextureImageUnits << ")";
                 }
 
                 mCachedValidateSamplersResult = false;
@@ -373,7 +375,8 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
                 {
                     if (infoLog)
                     {
-                        infoLog->append("Samplers of conflicting types refer to the same texture image unit (%d).", unit);
+                        (*infoLog) << "Samplers of conflicting types refer to the same texture image unit ("
+                                   << unit << ").";
                     }
 
                     mCachedValidateSamplersResult = false;
@@ -397,7 +400,9 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
             {
                 if (infoLog)
                 {
-                    infoLog->append("Sampler uniform (%d) exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, caps.maxCombinedTextureImageUnits);
+                    (*infoLog) << "Sampler uniform (" << unit
+                               << ") exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS ("
+                               << caps.maxCombinedTextureImageUnits << ")";
                 }
 
                 mCachedValidateSamplersResult = false;
@@ -410,7 +415,8 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
                 {
                     if (infoLog)
                     {
-                        infoLog->append("Samplers of conflicting types refer to the same texture image unit (%d).", unit);
+                        (*infoLog) << "Samplers of conflicting types refer to the same texture image unit ("
+                                   << unit << ").";
                     }
 
                     mCachedValidateSamplersResult = false;
@@ -433,7 +439,7 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     int compileFlags = stream->readInt<int>();
     if (compileFlags != ANGLE_COMPILE_OPTIMIZATION_LEVEL)
     {
-        infoLog.append("Mismatched compilation flags.");
+        infoLog << "Mismatched compilation flags.";
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
@@ -464,7 +470,7 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     const unsigned int uniformCount = stream->readInt<unsigned int>();
     if (stream->error())
     {
-        infoLog.append("Invalid program binary.");
+        infoLog << "Invalid program binary.";
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
@@ -497,7 +503,7 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     const unsigned int uniformIndexCount = stream->readInt<unsigned int>();
     if (stream->error())
     {
-        infoLog.append("Invalid program binary.");
+        infoLog << "Invalid program binary.";
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
@@ -512,7 +518,7 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     unsigned int uniformBlockCount = stream->readInt<unsigned int>();
     if (stream->error())
     {
-        infoLog.append("Invalid program binary.");
+        infoLog << "Invalid program binary.";
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
@@ -602,7 +608,7 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 
         if (!shaderExecutable)
         {
-            infoLog.append("Could not create vertex shader.");
+            infoLog << "Could not create vertex shader.";
             return LinkResult(false, gl::Error(GL_NO_ERROR));
         }
 
@@ -640,7 +646,7 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 
         if (!shaderExecutable)
         {
-            infoLog.append("Could not create pixel shader.");
+            infoLog << "Could not create pixel shader.";
             return LinkResult(false, gl::Error(GL_NO_ERROR));
         }
 
@@ -666,7 +672,7 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 
         if (!mGeometryExecutable)
         {
-            infoLog.append("Could not create geometry shader.");
+            infoLog << "Could not create geometry shader.";
             return LinkResult(false, gl::Error(GL_NO_ERROR));
         }
         stream->skip(geometryShaderSize);
@@ -678,7 +684,7 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     GUID identifier = mRenderer->getAdapterIdentifier();
     if (memcmp(&identifier, &binaryIdentifier, sizeof(GUID)) != 0)
     {
-        infoLog.append("Invalid program binary.");
+        infoLog << "Invalid program binary.";
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
@@ -1188,7 +1194,7 @@ bool ProgramD3D::assignUniformBlockRegister(gl::InfoLog &infoLog, gl::UniformBlo
         uniformBlock->vsRegisterIndex = registerIndex;
         if (registerIndex - mRenderer->getReservedVertexUniformBuffers() >= caps.maxVertexUniformBlocks)
         {
-            infoLog.append("Vertex shader uniform block count exceed GL_MAX_VERTEX_UNIFORM_BLOCKS (%u)", caps.maxVertexUniformBlocks);
+            infoLog << "Vertex shader uniform block count exceed GL_MAX_VERTEX_UNIFORM_BLOCKS (" << caps.maxVertexUniformBlocks << ")";
             return false;
         }
     }
@@ -1197,7 +1203,7 @@ bool ProgramD3D::assignUniformBlockRegister(gl::InfoLog &infoLog, gl::UniformBlo
         uniformBlock->psRegisterIndex = registerIndex;
         if (registerIndex - mRenderer->getReservedFragmentUniformBuffers() >= caps.maxFragmentUniformBlocks)
         {
-            infoLog.append("Fragment shader uniform block count exceed GL_MAX_FRAGMENT_UNIFORM_BLOCKS (%u)", caps.maxFragmentUniformBlocks);
+            infoLog << "Fragment shader uniform block count exceed GL_MAX_FRAGMENT_UNIFORM_BLOCKS (" << caps.maxFragmentUniformBlocks << ")";
             return false;
         }
     }
@@ -1893,16 +1899,16 @@ bool ProgramD3D::indexSamplerUniform(const gl::LinkedUniform &uniform, gl::InfoL
         if (!assignSamplers(uniform.vsRegisterIndex, uniform.type, uniform.arraySize, mSamplersVS,
                             &mUsedVertexSamplerRange))
         {
-            infoLog.append("Vertex shader sampler count exceeds the maximum vertex texture units (%d).",
-                           mSamplersVS.size());
+            infoLog << "Vertex shader sampler count exceeds the maximum vertex texture units ("
+                    << mSamplersVS.size() << ").";
             return false;
         }
 
         unsigned int maxVertexVectors = mRenderer->getReservedVertexUniformVectors() + caps.maxVertexUniformVectors;
         if (uniform.vsRegisterIndex + uniform.registerCount > maxVertexVectors)
         {
-            infoLog.append("Vertex shader active uniforms exceed GL_MAX_VERTEX_UNIFORM_VECTORS (%u)",
-                           caps.maxVertexUniformVectors);
+            infoLog << "Vertex shader active uniforms exceed GL_MAX_VERTEX_UNIFORM_VECTORS ("
+                    << caps.maxVertexUniformVectors << ").";
             return false;
         }
     }
@@ -1912,16 +1918,16 @@ bool ProgramD3D::indexSamplerUniform(const gl::LinkedUniform &uniform, gl::InfoL
         if (!assignSamplers(uniform.psRegisterIndex, uniform.type, uniform.arraySize, mSamplersPS,
                             &mUsedPixelSamplerRange))
         {
-            infoLog.append("Pixel shader sampler count exceeds MAX_TEXTURE_IMAGE_UNITS (%d).",
-                           mSamplersPS.size());
+            infoLog << "Pixel shader sampler count exceeds MAX_TEXTURE_IMAGE_UNITS ("
+                    << mSamplersPS.size() << ").";
             return false;
         }
 
         unsigned int maxFragmentVectors = mRenderer->getReservedFragmentUniformVectors() + caps.maxFragmentUniformVectors;
         if (uniform.psRegisterIndex + uniform.registerCount > maxFragmentVectors)
         {
-            infoLog.append("Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (%u)",
-                           caps.maxFragmentUniformVectors);
+            infoLog << "Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS ("
+                    << caps.maxFragmentUniformVectors << ").";
             return false;
         }
     }

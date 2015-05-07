@@ -71,8 +71,62 @@ class InfoLog : angle::NonCopyable
     void getLog(GLsizei bufSize, GLsizei *length, char *infoLog);
 
     void appendSanitized(const char *message);
-    void append(const char *info, ...);
     void reset();
+
+    // This helper class ensures we append a newline after writing a line.
+    class StreamHelper : angle::NonCopyable
+    {
+      public:
+        StreamHelper(StreamHelper &&rhs)
+            : mStream(rhs.mStream)
+        {
+            rhs.mStream = nullptr;
+        }
+
+        StreamHelper &operator=(StreamHelper &&rhs)
+        {
+            std::swap(mStream, rhs.mStream);
+            return *this;
+        }
+
+        ~StreamHelper()
+        {
+            // Write newline when destroyed on the stack
+            if (mStream)
+            {
+                (*mStream) << std::endl;
+            }
+        }
+
+        template <typename T>
+        StreamHelper &operator<<(const T &value)
+        {
+            (*mStream) << value;
+            return *this;
+        }
+
+      private:
+        friend class InfoLog;
+
+        StreamHelper(std::stringstream *stream)
+            : mStream(stream)
+        {
+            ASSERT(stream);
+        }
+
+        std::stringstream *mStream;
+    };
+
+    template <typename T>
+    StreamHelper operator<<(const T &value)
+    {
+        StreamHelper helper(&mStream);
+        helper << value;
+        return helper;
+    }
+
+    std::string str() const { return mStream.str(); }
+
   private:
     std::stringstream mStream;
 };
