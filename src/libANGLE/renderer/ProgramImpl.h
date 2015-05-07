@@ -51,6 +51,8 @@ class ProgramImpl : angle::NonCopyable
                             int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
                             std::map<int, gl::VariableLocation> *outputVariables) = 0;
 
+    virtual void bindAttributeLocation(GLuint index, const std::string &name) = 0;
+
     virtual void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) = 0;
     virtual void setUniform2fv(GLint location, GLsizei count, const GLfloat *v) = 0;
     virtual void setUniform3fv(GLint location, GLsizei count, const GLfloat *v) = 0;

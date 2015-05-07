@@ -252,6 +252,7 @@ void AttributeBindings::bindAttributeLocation(GLuint index, const char *name)
 void Program::bindAttributeLocation(GLuint index, const char *name)
 {
     mAttributeBindings.bindAttributeLocation(index, name);
+    mProgram->bindAttributeLocation(index, name);
 }
 
 // Links the HLSL code of the vertex and pixel shader by matching up their varyings,

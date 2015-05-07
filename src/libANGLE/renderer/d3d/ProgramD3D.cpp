@@ -1086,6 +1086,10 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
     return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
 
+void ProgramD3D::bindAttributeLocation(GLuint index, const std::string &name)
+{
+}
+
 void ProgramD3D::getInputLayoutSignature(const gl::VertexFormat inputLayout[], GLenum signature[]) const
 {
     mDynamicHLSL->getInputLayoutSignature(inputLayout, signature);

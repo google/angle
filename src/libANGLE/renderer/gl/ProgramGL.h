@@ -38,6 +38,8 @@ class ProgramGL : public ProgramImpl
                     int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
                     std::map<int, gl::VariableLocation> *outputVariables) override;
 
+    void bindAttributeLocation(GLuint index, const std::string &name) override;
+
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;
     void setUniform2fv(GLint location, GLsizei count, const GLfloat *v) override;
     void setUniform3fv(GLint location, GLsizei count, const GLfloat *v) override;

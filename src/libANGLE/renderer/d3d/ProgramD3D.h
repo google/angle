@@ -78,6 +78,8 @@ class ProgramD3D : public ProgramImpl
                     int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
                     std::map<int, gl::VariableLocation> *outputVariables);
 
+    void bindAttributeLocation(GLuint index, const std::string &name) override;
+
     void getInputLayoutSignature(const gl::VertexFormat inputLayout[], GLenum signature[]) const;
 
     void initializeUniformStorage();
