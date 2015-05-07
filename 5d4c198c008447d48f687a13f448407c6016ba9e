@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d1e2d58_1ee2911d",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-07T22:30:37Z",
+      "side": 1,
+      "message": "It seems a bit strange to require the GLXFBConfig to support all of these drawable types -- eglChooseConfig allows selection of these bits, too -- but we can iterate on this later. (glxinfo -v indicates that only a small subset of the GLXFBConfigs support all three drawable types on nvidia gpus -- i wonder about AMD GPUs on Linux.)",
+      "range": {
+        "startLine": 129,
+        "startChar": 29,
+        "endLine": 129,
+        "endChar": 30
+      },
+      "revId": "5d4c198c008447d48f687a13f448407c6016ba9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
