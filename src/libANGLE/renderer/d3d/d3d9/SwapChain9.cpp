@@ -312,8 +312,8 @@ EGLint SwapChain9::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
 
     RECT rect =
     {
-        x, mHeight - y - height,
-        x + width, mHeight - y
+        static_cast<LONG>(x), static_cast<LONG>(mHeight - y - height),
+        static_cast<LONG>(x + width), static_cast<LONG>(mHeight - y)
     };
 
     HRESULT result = mSwapChain->Present(&rect, &rect, NULL, NULL, 0);

@@ -30,6 +30,7 @@ SwapChain11::SwapChain11(Renderer11 *renderer, NativeWindow nativeWindow, HANDLE
       mDepthStencilRenderTarget(this, renderer, true)
 {
     mSwapChain = NULL;
+    mSwapChain1 = nullptr;
     mBackBufferTexture = NULL;
     mBackBufferRTView = NULL;
     mOffscreenTexture = NULL;
@@ -57,6 +58,7 @@ SwapChain11::~SwapChain11()
 
 void SwapChain11::release()
 {
+    SafeRelease(mSwapChain1);
     SafeRelease(mSwapChain);
     SafeRelease(mBackBufferTexture);
     SafeRelease(mBackBufferRTView);
@@ -396,6 +398,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
 
     // Release specific resources to free up memory for the new render target, while the
     // old render target still exists for the purpose of preserving its contents.
+    SafeRelease(mSwapChain1);
     SafeRelease(mSwapChain);
     SafeRelease(mBackBufferTexture);
     SafeRelease(mBackBufferRTView);
@@ -435,6 +438,11 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
             {
                 return EGL_BAD_ALLOC;
             }
+        }
+
+        if (mRenderer->getRenderer11DeviceCaps().supportsDXGI1_2)
+        {
+            mSwapChain1 = d3d11::DynamicCastComObject<IDXGISwapChain1>(mSwapChain);
         }
 
         result = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&mBackBufferTexture);
@@ -598,7 +606,21 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
 #if ANGLE_VSYNC == ANGLE_DISABLED
     result = mSwapChain->Present(0, 0);
 #else
-    result = mSwapChain->Present(mSwapInterval, 0);
+    // Use IDXGISwapChain1::Present1 with a dirty rect if DXGI 1.2 is available.
+    if (mSwapChain1 != nullptr)
+    {
+        RECT rect =
+        {
+            static_cast<LONG>(x), static_cast<LONG>(mHeight - y - height),
+            static_cast<LONG>(x + width), static_cast<LONG>(mHeight - y)
+        };
+        DXGI_PRESENT_PARAMETERS params = { 1, &rect, nullptr, nullptr };
+        result = mSwapChain1->Present1(mSwapInterval, 0, &params);
+    }
+    else
+    {
+        result = mSwapChain->Present(mSwapInterval, 0);
+    }
 #endif
 
     if (result == DXGI_ERROR_DEVICE_REMOVED)

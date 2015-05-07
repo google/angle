@@ -1540,7 +1540,7 @@ gl::Error Renderer11::drawArrays(const gl::Data &data, GLenum mode, GLsizei coun
     {
         // Since point sprites are generated with a geometry shader, too many vertices will
         // be written if transform feedback is active.  To work around this, draw only the points
-        // with the stream out shader and no pixel shader to feed the stream out buffers and then 
+        // with the stream out shader and no pixel shader to feed the stream out buffers and then
         // draw again with the point sprite geometry shader to rasterize the point sprites.
 
         mDeviceContext->PSSetShader(NULL, NULL, 0);
@@ -1605,7 +1605,7 @@ gl::Error Renderer11::drawArrays(const gl::Data &data, GLenum mode, GLsizei coun
     else
     {
         // If gl_PointSize is used and GL_POINTS is specified, then it is expected to render pointsprites.
-        // If instanced pointsprite emulation is being used the topology is expexted to be 
+        // If instanced pointsprite emulation is being used the topology is expexted to be
         // D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST and DrawIndexedInstanced must be used.
         if (mode == GL_POINTS && useInstancedPointSpriteEmulation)
         {
@@ -2407,8 +2407,8 @@ bool Renderer11::getShareHandleSupport() const
 
 bool Renderer11::getPostSubBufferSupport() const
 {
-    // D3D11 does not support present with dirty rectangles until D3D11.1 and DXGI 1.2.
-    return false;
+    // D3D11 does not support present with dirty rectangles until DXGI 1.2.
+    return mRenderer11DeviceCaps.supportsDXGI1_2;
 }
 
 int Renderer11::getMajorShaderModel() const
