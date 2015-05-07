@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d1e2d58_17c279a3",
+        "filename": "util/linux/Linux_path_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-07T20:43:11Z",
+      "side": 1,
+      "message": "If we read 4095 bytes then we could null terminate the result. result should never be greater than the bufsz argument to readlink. So plausibly \"sizeof(path) - 1\" should be \"sizeof(path)\".",
+      "range": {
+        "startLine": 22,
+        "startChar": 22,
+        "endLine": 22,
+        "endChar": 28
+      },
+      "revId": "f743e24efe6b42f7d91cf2288a1fccf246aad79d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
