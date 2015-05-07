@@ -211,15 +211,11 @@ TEST(ShaderVariableTest, IsSameVaryingWithDifferentInvariance)
     fx.staticUse = true;
     fx.isInvariant = false;
 
-    // Default to ESSL1 behavior: invariance must match
-    EXPECT_FALSE(vx.isSameVaryingAtLinkTime(fx, 100));
-    // ESSL3 behavior: invariance doesn't need to match
-    EXPECT_TRUE(vx.isSameVaryingAtLinkTime(fx, 300));
+    EXPECT_FALSE(vx.isSameVaryingAtLinkTime(fx));
 
     // invariant varying float vary;
     fx.isInvariant = true;
-    EXPECT_TRUE(vx.isSameVaryingAtLinkTime(fx, 100));
-    EXPECT_TRUE(vx.isSameVaryingAtLinkTime(fx, 300));
+    EXPECT_TRUE(vx.isSameVaryingAtLinkTime(fx));
 }
 
 // Test that using invariant varyings doesn't trigger a double delete.

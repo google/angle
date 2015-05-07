@@ -303,11 +303,11 @@ bool Varying::operator==(const Varying &other) const
             isInvariant == other.isInvariant);
 }
 
-bool Varying::isSameVaryingAtLinkTime(const Varying &other, int shaderVersion) const
+bool Varying::isSameVaryingAtLinkTime(const Varying &other) const
 {
     return (ShaderVariable::isSameVariableAtLinkTime(other, false) &&
             interpolation == other.interpolation &&
-            (shaderVersion >= 300 || isInvariant == other.isInvariant));
+            isInvariant == other.isInvariant);
 }
 
 InterfaceBlock::InterfaceBlock()

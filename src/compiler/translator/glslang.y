@@ -1012,16 +1012,6 @@ type_qualifier
         $$.setBasic(EbtVoid, $2.qualifier, @2);
         $$.layoutQualifier = $1;
     }
-    | INVARIANT storage_qualifier {
-        context->es3InvariantErrorCheck($2.qualifier, @1);
-        $$.setBasic(EbtVoid, $2.qualifier, @2);
-        $$.invariant = true;
-    }
-    | INVARIANT interpolation_qualifier storage_qualifier {
-        context->es3InvariantErrorCheck($3.qualifier, @1);
-        $$ = context->joinInterpolationQualifiers(@2, $2.qualifier, @3, $3.qualifier);
-        $$.invariant = true;
-    }
     ;
 
 storage_qualifier

@@ -110,7 +110,6 @@ struct TParseContext {
     bool singleDeclarationErrorCheck(TPublicType &publicType, const TSourceLoc &identifierLocation);
     bool layoutLocationErrorCheck(const TSourceLoc& location, const TLayoutQualifier &layoutQualifier);
     bool functionCallLValueErrorCheck(const TFunction *fnCandidate, TIntermAggregate *);
-    void es3InvariantErrorCheck(const TQualifier qualifier, const TSourceLoc &invariantLocation);
 
     const TPragma& pragma() const { return directiveHandler.pragma(); }
     const TExtensionBehavior& extensionBehavior() const { return directiveHandler.extensionBehavior(); }

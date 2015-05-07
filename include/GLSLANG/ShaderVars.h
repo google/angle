@@ -161,10 +161,8 @@ struct COMPILER_EXPORT Varying : public ShaderVariable
 
     // Decide whether two varyings are the same at shader link time,
     // assuming one from vertex shader and the other from fragment shader.
-    // Invariance needs to match only in ESSL1. Relevant spec sections:
-    // GLSL ES 3.00.4, sections 4.6.1 and 4.3.9.
-    // GLSL ES 1.00.17, section 4.6.4.
-    bool isSameVaryingAtLinkTime(const Varying &other, int shaderVersion) const;
+    // See GLSL ES Spec 3.00.3, sec 4.3.9.
+    bool isSameVaryingAtLinkTime(const Varying &other) const;
 
     InterpolationType interpolation;
     bool isInvariant;
