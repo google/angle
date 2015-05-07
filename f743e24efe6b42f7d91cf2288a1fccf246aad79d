@@ -46,6 +46,30 @@
       "revId": "f743e24efe6b42f7d91cf2288a1fccf246aad79d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_f9d5bd39",
+        "filename": "util/linux/Linux_path_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-07T21:16:47Z",
+      "side": 1,
+      "message": "Yes, but the same is true for 4096, and we can handle 4095-length paths but not 4096-length paths. Either way, still LGTM.",
+      "parentUuid": "4d8435cc_f1df6016",
+      "range": {
+        "startLine": 22,
+        "startChar": 22,
+        "endLine": 22,
+        "endChar": 28
+      },
+      "revId": "f743e24efe6b42f7d91cf2288a1fccf246aad79d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
