@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0d679d0f_3ee0f110",
+        "filename": "src/common/platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-08T21:14:51Z",
+      "side": 1,
+      "message": "Done, see next comment",
+      "parentUuid": "4d6d15ec_806bda9e",
+      "range": {
+        "startLine": 20,
+        "startChar": 28,
+        "endLine": 20,
+        "endChar": 35
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d70e1c2_dca78188",
         "filename": "src/common/platform.h",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-08T20:09:52Z",
       "side": 1,
       "message": "As mentioned before I strongly think you should include this only in .cpp files and not put it in platform.h. I think that will probably avoid the #include conflicts currently requiring this hack.",
+      "range": {
+        "startLine": 27,
+        "startChar": 13,
+        "endLine": 27,
+        "endChar": 15
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d70e1c2_3f0f8fb7",
+        "filename": "src/common/platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-08T21:14:51Z",
+      "side": 1,
+      "message": "We discussed it quite a bit with Jamie and the options are the following:\n 1 - Bundle our own version of glx.h that includes khr_platform.h instead of gl.h but this is bad because we modify the Mesa header, and because we will assume it is portable.\n 2 - Use the current hack, but only in renderer/gl/glx which means only code there and renderer/Display.cpp will include it. This is bad because it is a hack.\n 3 - Make a two-layer implementation of DisplayGLX, WindowSurfaceGLX, etc. to shield ANGLE code from GLX code this is bad because it is complex and quite some work to do.\n\nWe decided that 2 is the best for now, and the new patch reflects that.",
+      "parentUuid": "2d70e1c2_dca78188",
       "range": {
         "startLine": 27,
         "startChar": 13,
@@ -94,6 +142,54 @@
     },
     {
       "key": {
+        "uuid": "0d679d0f_9b36ef60",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-08T21:14:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d5fd527_c7369161",
+      "range": {
+        "startLine": 21,
+        "startChar": 5,
+        "endLine": 21,
+        "endChar": 12
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d679d0f_fb392b51",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-08T21:14:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad921112_b1d8a818",
+      "range": {
+        "startLine": 21,
+        "startChar": 48,
+        "endLine": 21,
+        "endChar": 49
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d70e1c2_7c99954f",
         "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.cpp",
         "patchSetId": 1
@@ -105,6 +201,30 @@
       "writtenOn": "2015-05-08T20:09:52Z",
       "side": 1,
       "message": "I think this is libGL.so.1 on most Linux distros. See https://code.google.com/p/chromium/codesearch#chromium/src/ui/gl/gl_implementation_x11.cc\u0026q\u003dlibGL.so.1\u0026sq\u003dpackage:chromium\u0026type\u003dcs\u0026l\u003d37 .",
+      "range": {
+        "startLine": 59,
+        "startChar": 23,
+        "endLine": 59,
+        "endChar": 25
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d6d15ec_20ebee77",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-08T21:14:51Z",
+      "side": 1,
+      "message": "I was not sure bout it, thanks!\nDone",
+      "parentUuid": "2d70e1c2_7c99954f",
       "range": {
         "startLine": 59,
         "startChar": 23,
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "4d6d15ec_8300c470",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-08T21:14:51Z",
+      "side": 1,
+      "message": "Not sure why this is needed as we are in a cpp file.\nDone",
+      "parentUuid": "ad921112_f1de3006",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 75,
+        "endChar": 25
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed5b293d_519c5fe5",
         "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.h",
         "patchSetId": 1
@@ -151,6 +295,30 @@
       "writtenOn": "2015-05-08T20:14:18Z",
       "side": 1,
       "message": "Can you name this FunctionsGLX to match the others?",
+      "range": {
+        "startLine": 22,
+        "startChar": 6,
+        "endLine": 22,
+        "endChar": 15
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d679d0f_fbb4cb33",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-08T21:14:51Z",
+      "side": 1,
+      "message": "It is weird since it doesn\u0027t contain only functions.\nDone",
+      "parentUuid": "ed5b293d_519c5fe5",
       "range": {
         "startLine": 22,
         "startChar": 6,
@@ -197,6 +365,30 @@
       "writtenOn": "2015-05-08T20:14:18Z",
       "side": 1,
       "message": "Does this need to be separate from the destructor?",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 21
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d70e1c2_df42131d",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-08T21:14:51Z",
+      "side": 1,
+      "message": "Yes, it will be called in DisplayGLX::terminate so that is closes the library handle.",
+      "parentUuid": "4d5fd527_073dc93d",
       "range": {
         "startLine": 30,
         "startChar": 4,
