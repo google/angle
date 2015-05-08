@@ -2,6 +2,259 @@
   "comments": [
     {
       "key": {
+        "uuid": "cd24a5a6_5850e4b3",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "const TConstantUnion \u0026",
+      "range": {
+        "startLine": 133,
+        "startChar": 26,
+        "endLine": 133,
+        "endChar": 40
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d8435cc_a5eaa804",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "Capitalize local static methods",
+      "range": {
+        "startLine": 133,
+        "startChar": 16,
+        "endLine": 133,
+        "endChar": 25
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d8435cc_28b66ff6",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1482,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "you don\u0027t need to store this during the loop. it\u0027s useful for caching the value, but it simply represents \"maxSizeObject-\u003egetType().getObjectSize()\". suggest you init it below the loop.",
+      "range": {
+        "startLine": 1482,
+        "startChar": 4,
+        "endLine": 1482,
+        "endChar": 29
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_f832109d",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1483,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "I suggest you store maxSizeType instead of the object. I don\u0027t think you use any other properties of the object?",
+      "range": {
+        "startLine": 1483,
+        "startChar": 26,
+        "endLine": 1483,
+        "endChar": 39
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e2d58_4d9dd6af",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1485,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "nit: style (brace on newline)",
+      "range": {
+        "startLine": 1485,
+        "startChar": 63,
+        "endLine": 1485,
+        "endChar": 65
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_5877c451",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1485,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "for (const auto *p : *sequence)? (or non-const)",
+      "range": {
+        "startLine": 1485,
+        "startChar": 4,
+        "endLine": 1485,
+        "endChar": 63
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d8435cc_8813fb69",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1491,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "if the above suggestions are ok - if (maxSizeType \u003d\u003d nullptr || (paramConstant-\u003egetType().getObjectSize() \u003e\u003d maxSizeType-\u003egetObjectSize())",
+      "range": {
+        "startLine": 1491,
+        "startChar": 8,
+        "endLine": 1491,
+        "endChar": 70
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_18b38c7c",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1531,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "suggest you use a template function for these if you don\u0027t want to use std::min or std::max",
+      "range": {
+        "startLine": 1531,
+        "startChar": 54,
+        "endLine": 1531,
+        "endChar": 205
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_d8bcf449",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1534,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "nit: the indents on some of these need fixing (should be 2 spaces from case labels)",
+      "range": {
+        "startLine": 1534,
+        "startChar": 23,
+        "endLine": 1534,
+        "endChar": 26
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_98a8bc04",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1554,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "nit: case indents",
+      "range": {
+        "startLine": 1554,
+        "startChar": 18,
+        "endLine": 1554,
+        "endChar": 22
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_78aba0ff",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1555,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "also suggest template functions here",
+      "range": {
+        "startLine": 1555,
+        "startChar": 50,
+        "endLine": 1555,
+        "endChar": 70
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd290587_fdf493d4",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 3
@@ -13,6 +266,24 @@
       "writtenOn": "2015-05-08T15:04:52Z",
       "side": 1,
       "message": "I think we\u0027ll only want to add these error messages after folding is supported for all built-in functions.",
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_f89690c5",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1572,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "yes, maybe add a TODO with which builtins are left",
+      "parentUuid": "cd290587_fdf493d4",
       "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -42,6 +313,29 @@
     },
     {
       "key": {
+        "uuid": "8d1e2d58_2dd17a7c",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "nit: Capitalize to indicate we\u0027re a static method",
+      "range": {
+        "startLine": 304,
+        "startChar": 25,
+        "endLine": 304,
+        "endChar": 45
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d62a1ee_38c23588",
         "filename": "src/compiler/translator/Intermediate.h",
         "patchSetId": 3
@@ -59,6 +353,24 @@
     },
     {
       "key": {
+        "uuid": "4d8435cc_45039c6a",
+        "filename": "src/compiler/translator/Intermediate.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "Correct, it should not.",
+      "parentUuid": "2d62a1ee_38c23588",
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad24d1ad_e1106ed3",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 3
@@ -70,6 +382,30 @@
       "writtenOn": "2015-05-08T15:04:52Z",
       "side": 1,
       "message": "Name this foldedNode or something similar to better communicate what the variable is?",
+      "range": {
+        "startLine": 3290,
+        "startChar": 34,
+        "endLine": 3290,
+        "endChar": 38
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd24a5a6_786a809c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3290,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-08T17:09:44Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "ad24d1ad_e1106ed3",
       "range": {
         "startLine": 3290,
         "startChar": 34,
