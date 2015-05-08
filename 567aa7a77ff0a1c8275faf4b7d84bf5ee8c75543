@@ -48,6 +48,52 @@
     },
     {
       "key": {
+        "uuid": "ad921112_b1d8a818",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-08T20:14:18Z",
+      "side": 1,
+      "message": "nit:pointer alignment.",
+      "range": {
+        "startLine": 21,
+        "startChar": 48,
+        "endLine": 21,
+        "endChar": 49
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d5fd527_c7369161",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-08T20:14:18Z",
+      "side": 1,
+      "message": "Mark this as static or put it in the anonymous namespace.",
+      "range": {
+        "startLine": 21,
+        "startChar": 5,
+        "endLine": 21,
+        "endChar": 12
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d70e1c2_7c99954f",
         "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.cpp",
         "patchSetId": 1
@@ -64,6 +110,98 @@
         "startChar": 23,
         "endLine": 59,
         "endChar": 25
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad921112_f1de3006",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-08T20:14:18Z",
+      "side": 1,
+      "message": "Undef this after the last use.",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 75,
+        "endChar": 25
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed5b293d_519c5fe5",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-08T20:14:18Z",
+      "side": 1,
+      "message": "Can you name this FunctionsGLX to match the others?",
+      "range": {
+        "startLine": 22,
+        "startChar": 6,
+        "endLine": 22,
+        "endChar": 15
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed5b293d_1196e7c5",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-08T20:14:18Z",
+      "side": 1,
+      "message": "nit: pointer alignment.",
+      "range": {
+        "startLine": 29,
+        "startChar": 33,
+        "endLine": 29,
+        "endChar": 34
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d5fd527_073dc93d",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-08T20:14:18Z",
+      "side": 1,
+      "message": "Does this need to be separate from the destructor?",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 21
       },
       "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
