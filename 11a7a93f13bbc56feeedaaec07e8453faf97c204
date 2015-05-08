@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd290587_fdf493d4",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1572,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-08T15:04:52Z",
+      "side": 1,
+      "message": "I think we\u0027ll only want to add these error messages after folding is supported for all built-in functions.",
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d62a1ee_f8f49dd4",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-08T15:04:52Z",
+      "side": 1,
+      "message": "Maybe the code here could be simplified and shared between the paramsCount \u003d\u003d 2 case if an array was used to store the vectorized union arrays instead of firstParamUnionArray, secondParamUnionArray and so on.",
+      "range": {
+        "startLine": 1591,
+        "startChar": 0,
+        "endLine": 1603,
+        "endChar": 83
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d62a1ee_38c23588",
+        "filename": "src/compiler/translator/Intermediate.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-08T15:04:52Z",
+      "side": 1,
+      "message": "I don\u0027t think \"TIntermediate::\" should be here?",
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad24d1ad_e1106ed3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3290,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-08T15:04:52Z",
+      "side": 1,
+      "message": "Name this foldedNode or something similar to better communicate what the variable is?",
+      "range": {
+        "startLine": 3290,
+        "startChar": 34,
+        "endLine": 3290,
+        "endChar": 38
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
