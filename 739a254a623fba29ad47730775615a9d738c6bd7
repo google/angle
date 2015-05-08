@@ -104,6 +104,24 @@
       "revId": "739a254a623fba29ad47730775615a9d738c6bd7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad24d1ad_410aa2a7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3267,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-08T15:04:52Z",
+      "side": 1,
+      "message": "Okay, I think the solution in patch set #3 looks reasonable enough.",
+      "parentUuid": "ed42494b_9e2d813f",
+      "revId": "739a254a623fba29ad47730775615a9d738c6bd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
