@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ed42494b_1e42b1fe",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1119,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-08T13:40:10Z",
+      "side": 1,
+      "message": "Done, thanks for catching this.",
+      "parentUuid": "f056a2ec_32970ec3",
+      "revId": "739a254a623fba29ad47730775615a9d738c6bd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f056a2ec_f20f46b4",
         "filename": "src/compiler/translator/Intermediate.cpp",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "6d2e5992_1aa3e17f",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-08T13:40:10Z",
+      "side": 1,
+      "message": "Ok, I have now create new fold function for built-ins taking aggregate and reused code from fold that vectorizes non-vector components. created a separate utility function for vectorizing a constant.",
+      "parentUuid": "f056a2ec_f20f46b4",
+      "revId": "739a254a623fba29ad47730775615a9d738c6bd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "105416e3_93c8be2a",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2015-05-05T13:24:36Z",
       "side": 1,
       "message": "I think you should rather add this logic to setAggregateOperator. We don\u0027t want to duplicate code that\u0027s for setting type, precision etc.",
+      "revId": "739a254a623fba29ad47730775615a9d738c6bd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed42494b_9e2d813f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3267,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-08T13:40:10Z",
+      "side": 1,
+      "message": "I thought of adding it inside setAggregateOperator but couldn\u0027t do it easily because of below reasons:\n\n- setAggregateOperator is used at many other places\n- setAggregateOperator returns TIntermAggregate where as we return TIntermNode incase of constant folding. This can be fixed by changing setAggregateOperator return type but it needs changes at other places as well.\n- setAggregateOperator name itself doesn\u0027t suggest we could be folding constants inside.\n- Also we are setting type again only in case of constant folding.\n\nSo I have kept foldAggregateBuiltIn function call here, let me know if you still think it is not ok.",
+      "parentUuid": "105416e3_93c8be2a",
       "revId": "739a254a623fba29ad47730775615a9d738c6bd7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
