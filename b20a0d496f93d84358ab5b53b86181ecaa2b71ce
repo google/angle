@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "cd24a5a6_c26cfe04",
+        "filename": "src/tests/end2end_tests/SRGBTextureTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-08T17:32:13Z",
+      "side": 1,
+      "message": "Figure we might as well put this into the angle namespace too as a first step to move our generic code into that namespace.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 22
+      },
+      "revId": "b20a0d496f93d84358ab5b53b86181ecaa2b71ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d8435cc_28ee6fa7",
         "filename": "src/tests/end2end_tests/SRGBTextureTest.cpp",
         "patchSetId": 6
