@@ -434,6 +434,7 @@ class TIntermAggregate : public TIntermOperator
     virtual bool replaceChildNode(
         TIntermNode *original, TIntermNode *replacement);
     bool replaceChildNodeWithMultiple(TIntermNode *original, TIntermSequence replacements);
+    bool insertChildNodes(TIntermSequence::size_type position, TIntermSequence insertions);
     // Conservatively assume function calls and other aggregate operators have side-effects
     virtual bool hasSideEffects() const { return true; }
 
@@ -680,11 +681,27 @@ class TIntermTraverser : angle::NonCopyable
         TIntermSequence replacements;
     };
 
+    // To insert multiple nodes on the parent aggregate node
+    struct NodeInsertMultipleEntry
+    {
+        NodeInsertMultipleEntry(TIntermAggregate *_parent, TIntermSequence::size_type _position, TIntermSequence _insertions)
+            : parent(_parent),
+            position(_position),
+            insertions(_insertions)
+        {
+        }
+
+        TIntermAggregate *parent;
+        TIntermSequence::size_type position;
+        TIntermSequence insertions;
+    };
+
     // During traversing, save all the changes that need to happen into
     // mReplacements/mMultiReplacements, then do them by calling updateTree().
     // Multi replacements are processed after single replacements.
     std::vector<NodeUpdateEntry> mReplacements;
     std::vector<NodeReplaceWithMultipleEntry> mMultiReplacements;
+    std::vector<NodeInsertMultipleEntry> mInsertions;
 };
 
 //

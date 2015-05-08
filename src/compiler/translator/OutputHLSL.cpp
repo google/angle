@@ -23,7 +23,6 @@
 #include "compiler/translator/SearchSymbol.h"
 #include "compiler/translator/StructureHLSL.h"
 #include "compiler/translator/TranslatorHLSL.h"
-#include "compiler/translator/UnfoldShortCircuit.h"
 #include "compiler/translator/UniformHLSL.h"
 #include "compiler/translator/UtilsHLSL.h"
 #include "compiler/translator/blocklayout.h"
@@ -111,7 +110,6 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType, int shaderVersion,
       mCompileOptions(compileOptions),
       mCurrentFunctionMetadata(nullptr)
 {
-    mUnfoldShortCircuit = new UnfoldShortCircuit(this);
     mInsideFunction = false;
 
     mUsesFragColor = false;
@@ -153,7 +151,6 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType, int shaderVersion,
 
 OutputHLSL::~OutputHLSL()
 {
-    SafeDelete(mUnfoldShortCircuit);
     SafeDelete(mStructureHLSL);
     SafeDelete(mUniformHLSL);
     for (auto &eqFunction : mStructEqualityFunctions)
@@ -1672,31 +1669,19 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpMatrixTimesVector: outputTriplet(visit, "mul(transpose(", "), ", ")"); break;
       case EOpMatrixTimesMatrix: outputTriplet(visit, "transpose(mul(transpose(", "), transpose(", ")))"); break;
       case EOpLogicalOr:
-        if (node->getRight()->hasSideEffects())
-        {
-            out << "s" << mUnfoldShortCircuit->getNextTemporaryIndex();
-            return false;
-        }
-        else
-        {
-           outputTriplet(visit, "(", " || ", ")");
-           return true;
-        }
+        // HLSL doesn't short-circuit ||, so we assume that || affected by short-circuiting have been unfolded.
+        ASSERT(!node->getRight()->hasSideEffects());
+        outputTriplet(visit, "(", " || ", ")");
+        return true;
       case EOpLogicalXor:
         mUsesXor = true;
         outputTriplet(visit, "xor(", ", ", ")");
         break;
       case EOpLogicalAnd:
-        if (node->getRight()->hasSideEffects())
-        {
-            out << "s" << mUnfoldShortCircuit->getNextTemporaryIndex();
-            return false;
-        }
-        else
-        {
-           outputTriplet(visit, "(", " && ", ")");
-           return true;
-        }
+        // HLSL doesn't short-circuit &&, so we assume that && affected by short-circuiting have been unfolded.
+        ASSERT(!node->getRight()->hasSideEffects());
+        outputTriplet(visit, "(", " && ", ")");
+        return true;
       default: UNREACHABLE();
     }
 
@@ -1854,12 +1839,15 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 outputLineDirective((*sit)->getLine().first_line);
 
-                traverseStatements(*sit);
+                (*sit)->traverse(this);
 
                 // Don't output ; after case labels, they're terminated by :
                 // This is needed especially since outputting a ; after a case statement would turn empty
                 // case statements into non-empty case statements, disallowing fall-through from them.
-                if ((*sit)->getAsCaseNode() == nullptr)
+                // Also no need to output ; after selection (if) statements. This is done just for code clarity.
+                TIntermSelection *asSelection = (*sit)->getAsSelectionNode();
+                ASSERT(asSelection == nullptr || !asSelection->usesTernaryOperator());
+                if ((*sit)->getAsCaseNode() == nullptr && asSelection == nullptr)
                     out << ";\n";
             }
 
@@ -1876,6 +1864,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         {
             TIntermSequence *sequence = node->getSequence();
             TIntermTyped *variable = (*sequence)[0]->getAsTyped();
+            ASSERT(sequence->size() == 1);
 
             if (variable && (variable->getQualifier() == EvqTemporary || variable->getQualifier() == EvqGlobal))
             {
@@ -1883,37 +1872,24 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                 if (!variable->getAsSymbolNode() || variable->getAsSymbolNode()->getSymbol() != "")   // Variable declaration
                 {
-                    for (const auto &seqElement : *sequence)
+                    if (!mInsideFunction)
                     {
-                        if (isSingleStatement(seqElement))
-                        {
-                            mUnfoldShortCircuit->traverse(seqElement);
-                        }
+                        out << "static ";
+                    }
 
-                        if (!mInsideFunction)
-                        {
-                            out << "static ";
-                        }
+                    out << TypeString(variable->getType()) + " ";
 
-                        out << TypeString(variable->getType()) + " ";
+                    TIntermSymbol *symbol = variable->getAsSymbolNode();
 
-                        TIntermSymbol *symbol = seqElement->getAsSymbolNode();
-
-                        if (symbol)
-                        {
-                            symbol->traverse(this);
-                            out << ArrayString(symbol->getType());
-                            out << " = " + initializer(symbol->getType());
-                        }
-                        else
-                        {
-                            seqElement->traverse(this);
-                        }
-
-                        if (seqElement != sequence->back())
-                        {
-                            out << ";\n";
-                        }
+                    if (symbol)
+                    {
+                        symbol->traverse(this);
+                        out << ArrayString(symbol->getType());
+                        out << " = " + initializer(symbol->getType());
+                    }
+                    else
+                    {
+                        variable->traverse(this);
                     }
                 }
                 else if (variable->getAsSymbolNode() && variable->getAsSymbolNode()->getSymbol() == "")   // Type (struct) declaration
@@ -2300,66 +2276,63 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
 {
     TInfoSinkBase &out = getInfoSink();
 
-    if (node->usesTernaryOperator())
+    ASSERT(!node->usesTernaryOperator());
+
+    // D3D errors when there is a gradient operation in a loop in an unflattened if.
+    // We check for null mCurrentFunctionMetadata to prevent crashing in the case that the translator has generated if
+    // statements in the global scope when unfolding global initializers. This is a bug that should be addressed by
+    // moving the unfolded global initializers into a function.
+    if (mShaderType == GL_FRAGMENT_SHADER
+        && mCurrentFunctionMetadata != nullptr
+        && mCurrentFunctionMetadata->hasDiscontinuousLoop(node)
+        && mCurrentFunctionMetadata->hasGradientInCallGraph(node))
     {
-        out << "s" << mUnfoldShortCircuit->getNextTemporaryIndex();
+        out << "FLATTEN ";
     }
-    else  // if/else statement
+
+    out << "if (";
+
+    node->getCondition()->traverse(this);
+
+    out << ")\n";
+
+    outputLineDirective(node->getLine().first_line);
+    out << "{\n";
+
+    bool discard = false;
+
+    if (node->getTrueBlock())
     {
-        mUnfoldShortCircuit->traverse(node->getCondition());
+        node->getTrueBlock()->traverse(this);
 
-        // D3D errors when there is a gradient operation in a loop in an unflattened if.
-        if (mShaderType == GL_FRAGMENT_SHADER
-            && mCurrentFunctionMetadata->hasDiscontinuousLoop(node)
-            && mCurrentFunctionMetadata->hasGradientInCallGraph(node))
-        {
-            out << "FLATTEN ";
-        }
+        // Detect true discard
+        discard = (discard || FindDiscard::search(node->getTrueBlock()));
+    }
 
-        out << "if (";
+    outputLineDirective(node->getLine().first_line);
+    out << ";\n}\n";
 
-        node->getCondition()->traverse(this);
+    if (node->getFalseBlock())
+    {
+        out << "else\n";
 
-        out << ")\n";
-
-        outputLineDirective(node->getLine().first_line);
+        outputLineDirective(node->getFalseBlock()->getLine().first_line);
         out << "{\n";
 
-        bool discard = false;
+        outputLineDirective(node->getFalseBlock()->getLine().first_line);
+        node->getFalseBlock()->traverse(this);
 
-        if (node->getTrueBlock())
-        {
-            traverseStatements(node->getTrueBlock());
-
-            // Detect true discard
-            discard = (discard || FindDiscard::search(node->getTrueBlock()));
-        }
-
-        outputLineDirective(node->getLine().first_line);
+        outputLineDirective(node->getFalseBlock()->getLine().first_line);
         out << ";\n}\n";
 
-        if (node->getFalseBlock())
-        {
-            out << "else\n";
+        // Detect false discard
+        discard = (discard || FindDiscard::search(node->getFalseBlock()));
+    }
 
-            outputLineDirective(node->getFalseBlock()->getLine().first_line);
-            out << "{\n";
-
-            outputLineDirective(node->getFalseBlock()->getLine().first_line);
-            traverseStatements(node->getFalseBlock());
-
-            outputLineDirective(node->getFalseBlock()->getLine().first_line);
-            out << ";\n}\n";
-
-            // Detect false discard
-            discard = (discard || FindDiscard::search(node->getFalseBlock()));
-        }
-
-        // ANGLE issue 486: Detect problematic conditional discard
-        if (discard && FindSideEffectRewriting::search(node))
-        {
-            mUsesDiscardRewriting = true;
-        }
+    // ANGLE issue 486: Detect problematic conditional discard
+    if (discard && FindSideEffectRewriting::search(node))
+    {
+        mUsesDiscardRewriting = true;
     }
 
     return false;
@@ -2461,7 +2434,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 
     if (node->getBody())
     {
-        traverseStatements(node->getBody());
+        node->getBody()->traverse(this);
     }
 
     outputLineDirective(node->getLine().first_line);
@@ -2539,16 +2512,6 @@ bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
     }
 
     return true;
-}
-
-void OutputHLSL::traverseStatements(TIntermNode *node)
-{
-    if (isSingleStatement(node))
-    {
-        mUnfoldShortCircuit->traverse(node);
-    }
-
-    node->traverse(this);
 }
 
 bool OutputHLSL::isSingleStatement(TIntermNode *node)

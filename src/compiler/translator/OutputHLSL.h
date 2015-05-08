@@ -63,7 +63,6 @@ class OutputHLSL : public TIntermTraverser
     bool visitLoop(Visit visit, TIntermLoop*);
     bool visitBranch(Visit visit, TIntermBranch*);
 
-    void traverseStatements(TIntermNode *node);
     bool isSingleStatement(TIntermNode *node);
     bool handleExcessiveLoop(TIntermLoop *node);
 
@@ -103,7 +102,6 @@ class OutputHLSL : public TIntermTraverser
     const ShShaderOutput mOutputType;
     int mCompileOptions;
 
-    UnfoldShortCircuit *mUnfoldShortCircuit;
     bool mInsideFunction;
 
     // Output streams

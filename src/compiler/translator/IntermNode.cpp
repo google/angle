@@ -209,6 +209,21 @@ bool TIntermAggregate::replaceChildNodeWithMultiple(TIntermNode *original, TInte
     return false;
 }
 
+bool TIntermAggregate::insertChildNodes(TIntermSequence::size_type position, TIntermSequence insertions)
+{
+    TIntermSequence::size_type itPosition = 0;
+    for (auto it = mSequence.begin(); it < mSequence.end(); ++it)
+    {
+        if (itPosition == position)
+        {
+            mSequence.insert(it, insertions.begin(), insertions.end());
+            return true;
+        }
+        ++itPosition;
+    }
+    return false;
+}
+
 void TIntermAggregate::setPrecisionFromChildren()
 {
     if (getBasicType() == EbtBool)
@@ -1488,6 +1503,14 @@ TString TIntermTraverser::hash(const TString &name, ShHashFunction64 hashFunctio
 
 void TIntermTraverser::updateTree()
 {
+    for (size_t ii = 0; ii < mInsertions.size(); ++ii)
+    {
+        const NodeInsertMultipleEntry &insertion = mInsertions[ii];
+        ASSERT(insertion.parent);
+        bool inserted = insertion.parent->insertChildNodes(insertion.position, insertion.insertions);
+        ASSERT(inserted);
+        UNUSED_ASSERTION_VARIABLE(inserted);
+    }
     for (size_t ii = 0; ii < mReplacements.size(); ++ii)
     {
         const NodeUpdateEntry &replacement = mReplacements[ii];
