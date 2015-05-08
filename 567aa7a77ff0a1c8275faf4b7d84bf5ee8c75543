@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d6d15ec_806bda9e",
+        "filename": "src/common/platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-08T20:09:52Z",
+      "side": 1,
+      "message": "I\u0027m quite sure we don\u0027t want to include the GLX header when compiling with Emscripten.",
+      "range": {
+        "startLine": 20,
+        "startChar": 28,
+        "endLine": 20,
+        "endChar": 35
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d70e1c2_dca78188",
+        "filename": "src/common/platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-08T20:09:52Z",
+      "side": 1,
+      "message": "As mentioned before I strongly think you should include this only in .cpp files and not put it in platform.h. I think that will probably avoid the #include conflicts currently requiring this hack.",
+      "range": {
+        "startLine": 27,
+        "startChar": 13,
+        "endLine": 27,
+        "endChar": 15
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d70e1c2_7c99954f",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-08T20:09:52Z",
+      "side": 1,
+      "message": "I think this is libGL.so.1 on most Linux distros. See https://code.google.com/p/chromium/codesearch#chromium/src/ui/gl/gl_implementation_x11.cc\u0026q\u003dlibGL.so.1\u0026sq\u003dpackage:chromium\u0026type\u003dcs\u0026l\u003d37 .",
+      "range": {
+        "startLine": 59,
+        "startChar": 23,
+        "endLine": 59,
+        "endChar": 25
+      },
+      "revId": "567aa7a77ff0a1c8275faf4b7d84bf5ee8c75543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
