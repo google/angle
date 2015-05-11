@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad24d1ad_5cd72977",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-11T07:36:59Z",
+      "side": 1,
+      "message": "I think these should be private.",
+      "revId": "0dc281c0a13e2c0e41e8c905b861512efde16fb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
