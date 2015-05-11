@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d6d15ec_b7ac1418",
+        "filename": "src/tests/angle_end2end_tests.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-11T19:23:41Z",
+      "side": 1,
+      "message": "are any of these intended to be turned on in a later patch? maybe you could add a todo comment explaining which should eventually pass?",
+      "range": {
+        "startLine": 60,
+        "startChar": 22,
+        "endLine": 60,
+        "endChar": 33
+      },
+      "revId": "ea5757c8344a7dfde84cb43323de7df621bde905",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
