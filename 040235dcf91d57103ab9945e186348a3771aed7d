@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d70e1c2_36c9f1a6",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1505,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-11T14:54:56Z",
+      "side": 1,
+      "message": "ack, I\u0027m sorry, I didn\u0027t notice you used the index everywhere. Please go back to using a for loop",
+      "range": {
+        "startLine": 1505,
+        "startChar": 8,
+        "endLine": 1505,
+        "endChar": 12
+      },
+      "revId": "040235dcf91d57103ab9945e186348a3771aed7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d70e1c2_16ccedb6",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1512,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-11T14:54:56Z",
+      "side": 1,
+      "message": "nit: SafeDeleteArray",
+      "range": {
+        "startLine": 1512,
+        "startChar": 4,
+        "endLine": 1512,
+        "endChar": 25
+      },
+      "revId": "040235dcf91d57103ab9945e186348a3771aed7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d70e1c2_b6e6612f",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1601,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-11T14:54:56Z",
+      "side": 1,
+      "message": "we actually have a clamp helper function in common/mathutil.h. Can you see if you can include this file and use this?",
+      "range": {
+        "startLine": 1601,
+        "startChar": 31,
+        "endLine": 1601,
+        "endChar": 97
+      },
+      "revId": "040235dcf91d57103ab9945e186348a3771aed7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d679d0f_5f859c54",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1648,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-11T14:54:56Z",
+      "side": 1,
+      "message": "nit: SafeDeleteArray",
+      "range": {
+        "startLine": 1648,
+        "startChar": 4,
+        "endLine": 1648,
+        "endChar": 25
+      },
+      "revId": "040235dcf91d57103ab9945e186348a3771aed7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
