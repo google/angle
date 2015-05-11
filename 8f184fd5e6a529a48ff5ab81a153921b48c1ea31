@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d6d15ec_dcfe8f30",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2015-05-11T18:41:43Z",
+      "side": 1,
+      "message": "Make sure to check memory usage. Switching to 2 buffers will can an extra screen-size allocations.",
+      "revId": "8f184fd5e6a529a48ff5ab81a153921b48c1ea31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
