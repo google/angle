@@ -700,6 +700,7 @@
                     {
                         'Debug_Base':
                         {
+                            'abstract': 1,
                             'defines':
                             [
                                 'ANGLE_ENABLE_DEBUG_ANNOTATIONS',

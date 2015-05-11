@@ -102,6 +102,7 @@
             {
                 'x86_Base':
                 {
+                    'abstract': 1,
                     'msvs_settings':
                     {
                         'VCLinkerTool':
@@ -122,6 +123,7 @@
                 },
                 'x64_Base':
                 {
+                    'abstract': 1,
                     'msvs_settings':
                     {
                         'VCLinkerTool':
