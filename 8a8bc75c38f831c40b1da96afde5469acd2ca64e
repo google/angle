@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "4d6d15ec_e2e5e8a7",
+        "filename": "src/tests/angle_end2end_tests.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-11T19:57:46Z",
+      "side": 1,
+      "message": "It might be ok in that case then.  We should probably just put the source list directly here then if the variable is not referenced anywhere else.  If the variable was referenced elsewhere, it would not work.",
+      "parentUuid": "0d679d0f_33025fc5",
+      "range": {
+        "startLine": 78,
+        "startChar": 12,
+        "endLine": 78,
+        "endChar": 39
+      },
+      "revId": "8a8bc75c38f831c40b1da96afde5469acd2ca64e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d6d15ec_ceb335fd",
         "filename": "src/tests/angle_end2end_tests_main.cpp",
         "patchSetId": 1
