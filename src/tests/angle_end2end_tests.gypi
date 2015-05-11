@@ -33,12 +33,9 @@
             '<(angle_path)/src/tests/gl_tests/MaxTextureSizeTest.cpp',
             '<(angle_path)/src/tests/gl_tests/MipmapTest.cpp',
             '<(angle_path)/src/tests/gl_tests/media/pixel.inl',
-            '<(angle_path)/src/tests/gl_tests/OcclusionQueriesTest.cpp',
             '<(angle_path)/src/tests/gl_tests/PBOExtensionTest.cpp',
-            '<(angle_path)/src/tests/gl_tests/PbufferTest.cpp',
             '<(angle_path)/src/tests/gl_tests/PointSpritesTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ProgramBinaryTest.cpp',
-            '<(angle_path)/src/tests/gl_tests/QueryDisplayAttribTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ReadPixelsTest.cpp',
             '<(angle_path)/src/tests/gl_tests/RendererTest.cpp',
             '<(angle_path)/src/tests/gl_tests/SimpleOperationTest.cpp',
@@ -52,12 +49,23 @@
             '<(angle_path)/src/tests/gl_tests/UnpackRowLength.cpp',
             '<(angle_path)/src/tests/gl_tests/VertexAttributeTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ViewportTest.cpp',
-            '<(angle_path)/src/tests/egl_tests/EGLQueryContextTest.cpp',
-            '<(angle_path)/src/tests/egl_tests/EGLSurfaceTest.cpp',
-            '<(angle_path)/src/tests/egl_tests/EGLThreadTest.cpp',
             '<(angle_path)/src/tests/test_utils/ANGLETest.cpp',
             '<(angle_path)/src/tests/test_utils/ANGLETest.h',
             '<(angle_path)/src/tests/test_utils/angle_test_configs.h',
+        ],
+        'angle_end2end_tests_win_sources':
+        [
+            # TODO(cwallez) for Linux, requires only trying the OpenGL ANGLE platform
+            'egl_tests/EGLQueryContextTest.cpp',
+            # TODO(cwallez) for Linux, requires a portable implementation of sleep
+            '<(angle_path)/src/tests/gl_tests/OcclusionQueriesTest.cpp',
+            # TODO(cwallez) for Linux, requires implementation of eglBindTexImage for pbuffers
+            '<(angle_path)/src/tests/gl_tests/PbufferTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/QueryDisplayAttribTest.cpp',
+            # TODO(cwallez) for Linux, remove the reliance on the ANGLE_platform_angle_d3d extension
+            '<(angle_path)/src/tests/egl_tests/EGLSurfaceTest.cpp',
+            # TODO(cwallez) for Linux, requires a portable implementation of threads
+            '<(angle_path)/src/tests/egl_tests/EGLThreadTest.cpp',
         ],
     },
     'dependencies':
@@ -77,4 +85,14 @@
     [
         '<@(angle_end2end_tests_sources)',
     ],
+    'conditions':
+    [
+        ['OS=="win"',
+        {
+            'sources':
+            [
+                '<@(angle_end2end_tests_win_sources)',
+            ],
+        }],
+    ]
 }
