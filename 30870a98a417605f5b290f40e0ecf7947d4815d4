@@ -94,6 +94,30 @@
       "revId": "30870a98a417605f5b290f40e0ecf7947d4815d4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d70e1c2_6ad215d7",
+        "filename": "src/libANGLE/renderer/gl/glx/PbufferSurfaceGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-11T19:54:15Z",
+      "side": 1,
+      "message": "In EGL, the main use of a Pbuffer is setting it as the current surface, rendering to it, and then binding it to a texture for sampling.  There isn\u0027t a way to blit to a window or anything.",
+      "parentUuid": "4d6d15ec_42b374da",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 41
+      },
+      "revId": "30870a98a417605f5b290f40e0ecf7947d4815d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
