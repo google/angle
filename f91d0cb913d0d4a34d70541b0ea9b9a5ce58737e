@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d679d0f_bf9ab8b6",
+        "filename": "src/tests/end2end_tests/angle_test_configs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-11T14:49:10Z",
+      "side": 1,
+      "message": "nit: pointer alignment",
+      "range": {
+        "startLine": 90,
+        "startChar": 79,
+        "endLine": 90,
+        "endChar": 80
+      },
+      "revId": "f91d0cb913d0d4a34d70541b0ea9b9a5ce58737e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d679d0f_7f766009",
+        "filename": "src/tests/end2end_tests/angle_test_configs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-11T14:49:10Z",
+      "side": 1,
+      "message": "nit: numPlatforms",
+      "range": {
+        "startLine": 90,
+        "startChar": 99,
+        "endLine": 90,
+        "endChar": 109
+      },
+      "revId": "f91d0cb913d0d4a34d70541b0ea9b9a5ce58737e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d70e1c2_db49bebd",
+        "filename": "src/tests/end2end_tests/angle_test_configs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-11T14:49:10Z",
+      "side": 1,
+      "message": "this might look better as a switch (and avoid the remote possibility of having a compiler warning of unreachable code if none are enabled)",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 6
+      },
+      "revId": "f91d0cb913d0d4a34d70541b0ea9b9a5ce58737e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
