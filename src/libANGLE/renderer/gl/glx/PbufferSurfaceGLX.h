@@ -4,24 +4,27 @@
 // found in the LICENSE file.
 //
 
-// WindowSurfaceGLX.h: GLX implementation of egl::Surface
+// PBufferSurfaceGLX.h: GLX implementation of egl::Surface for PBuffers
 
-#ifndef LIBANGLE_RENDERER_GL_GLX_WINDOWSURFACEGLX_H_
-#define LIBANGLE_RENDERER_GL_GLX_WINDOWSURFACEGLX_H_
+#ifndef LIBANGLE_RENDERER_GL_GLX_PBUFFERSURFACEGLX_H_
+#define LIBANGLE_RENDERER_GL_GLX_PBUFFERSURFACEGLX_H_
 
 #include "libANGLE/renderer/gl/SurfaceGL.h"
 #include "libANGLE/renderer/gl/glx/platform_glx.h"
+
+#include <GL/glxext.h>
 
 namespace rx
 {
 
 class FunctionsGLX;
 
-class WindowSurfaceGLX : public SurfaceGL
+class PbufferSurfaceGLX : public SurfaceGL
 {
   public:
-    WindowSurfaceGLX(const FunctionsGLX &glx, Window window, Display *display, GLXContext context, GLXFBConfig fbConfig);
-    ~WindowSurfaceGLX() override;
+    PbufferSurfaceGLX(EGLint width, EGLint height, bool largest, const FunctionsGLX &glx,
+                      Display *display, GLXContext context, GLXFBConfig fbConfig);
+    ~PbufferSurfaceGLX() override;
 
     egl::Error initialize();
     egl::Error makeCurrent() override;
@@ -37,16 +40,19 @@ class WindowSurfaceGLX : public SurfaceGL
     EGLint getHeight() const override;
 
     EGLint isPostSubBufferSupported() const override;
+
   private:
+    unsigned mWidth;
+    unsigned mHeight;
+    bool mLargest;
+
     const FunctionsGLX &mGLX;
-    Window mParent;
     Display *mDisplay;
     GLXContext mContext;
     GLXFBConfig mFBConfig;
-    Window mWindow;
-    GLXWindow mGLXWindow;
+    GLXPbuffer mPbuffer;
 };
 
 }
 
-#endif // LIBANGLE_RENDERER_GL_GLX_WINDOWSURFACEGLX_H_
+#endif // LIBANGLE_RENDERER_GL_GLX_PBUFFERSURFACEGLX_H_

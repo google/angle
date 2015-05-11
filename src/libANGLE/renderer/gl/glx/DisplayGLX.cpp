@@ -17,6 +17,7 @@
 #include "libANGLE/Config.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/renderer/gl/glx/PbufferSurfaceGLX.h"
 #include "libANGLE/renderer/gl/glx/WindowSurfaceGLX.h"
 
 namespace rx
@@ -192,9 +193,14 @@ SurfaceImpl *DisplayGLX::createWindowSurface(const egl::Config *configuration,
 SurfaceImpl *DisplayGLX::createPbufferSurface(const egl::Config *configuration,
                                               const egl::AttributeMap &attribs)
 {
-    //TODO(cwallez) WGL implements it
-    UNIMPLEMENTED();
-    return nullptr;
+    ASSERT(configIdToGLXConfig.count(configuration->configID) > 0);
+    GLXFBConfig fbConfig = configIdToGLXConfig[configuration->configID];
+
+    EGLint width = attribs.get(EGL_WIDTH, 0);
+    EGLint height = attribs.get(EGL_HEIGHT, 0);
+    bool largest = (attribs.get(EGL_LARGEST_PBUFFER, EGL_FALSE) == EGL_TRUE);
+
+    return new PbufferSurfaceGLX(width, height, largest, mGLX, mXDisplay, mContext, fbConfig);
 }
 
 SurfaceImpl* DisplayGLX::createPbufferFromClientBuffer(const egl::Config *configuration,

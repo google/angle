@@ -55,6 +55,7 @@ class FunctionsGLX : angle::NonCopyable
     PFNGLXDESTROYWINDOWPROC destroyWindow;
     PFNGLXCREATEPBUFFERPROC createPbuffer;
     PFNGLXDESTROYPBUFFERPROC destroyPbuffer;
+    PFNGLXQUERYDRAWABLEPROC queryDrawable;
 
     // GLX_ARB_create_context
     PFNGLXCREATECONTEXTATTRIBSARBPROC createContextAttribsARB;

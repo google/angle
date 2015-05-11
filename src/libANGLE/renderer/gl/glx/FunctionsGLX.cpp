@@ -42,6 +42,7 @@ FunctionsGLX::FunctionsGLX()
     destroyWindow(nullptr),
     createPbuffer(nullptr),
     destroyPbuffer(nullptr),
+    queryDrawable(nullptr),
     createContextAttribsARB(nullptr),
     mLibHandle(nullptr)
 {
@@ -124,6 +125,7 @@ egl::Error FunctionsGLX::initialize(Display *xDisplay)
     GET_PROC_OR_ERROR(&destroyWindow, "glXDestroyWindow");
     GET_PROC_OR_ERROR(&createPbuffer, "glXCreatePbuffer");
     GET_PROC_OR_ERROR(&destroyPbuffer, "glXDestroyPbuffer");
+    GET_PROC_OR_ERROR(&queryDrawable, "glXQueryDrawable");
 
     // Extensions
     if (hasExtension("GLX_ARB_create_context"))

@@ -15,7 +15,7 @@
 namespace rx
 {
 
-WindowSurfaceGLX::WindowSurfaceGLX(const FunctionsGLX &glx, EGLNativeWindowType window, Display* display, GLXContext context, GLXFBConfig fbConfig)
+WindowSurfaceGLX::WindowSurfaceGLX(const FunctionsGLX &glx, EGLNativeWindowType window, Display *display, GLXContext context, GLXFBConfig fbConfig)
     : SurfaceGL(),
       mGLX(glx),
       mParent(window),
