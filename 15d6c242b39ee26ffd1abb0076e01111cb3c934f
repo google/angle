@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d70e1c2_bbc16aa0",
+        "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-11T14:35:56Z",
+      "side": 1,
+      "message": "nit: .cpp",
+      "range": {
+        "startLine": 7,
+        "startChar": 16,
+        "endLine": 7,
+        "endChar": 17
+      },
+      "revId": "15d6c242b39ee26ffd1abb0076e01111cb3c934f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d70e1c2_fbb7e235",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-11T14:35:56Z",
+      "side": 1,
+      "message": "Delete this file too.",
+      "revId": "15d6c242b39ee26ffd1abb0076e01111cb3c934f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d6d15ec_c64c7fd0",
+        "filename": "src/libANGLE/renderer/gl/glx/GLXLoader.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-11T14:35:56Z",
+      "side": 1,
+      "message": "This file should be deleted.",
+      "revId": "15d6c242b39ee26ffd1abb0076e01111cb3c934f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
