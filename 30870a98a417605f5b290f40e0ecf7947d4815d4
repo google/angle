@@ -46,6 +46,30 @@
       "revId": "30870a98a417605f5b290f40e0ecf7947d4815d4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d70e1c2_8aea09a0",
+        "filename": "src/libANGLE/renderer/gl/glx/PbufferSurfaceGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-11T19:46:49Z",
+      "side": 1,
+      "message": "I mean, it\u0027s a no-op for EGL to call SwapBuffers on a Pbuffer:\nIf surface is a pixel buffer or a pixmap, eglSwapBuffers has no effect, and no error is generated.",
+      "parentUuid": "4d6d15ec_6291d84f",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 41
+      },
+      "revId": "30870a98a417605f5b290f40e0ecf7947d4815d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
