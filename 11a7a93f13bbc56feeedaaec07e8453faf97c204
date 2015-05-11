@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "8d338df4_b30ab71f",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd24a5a6_5850e4b3",
+      "range": {
+        "startLine": 133,
+        "startChar": 26,
+        "endLine": 133,
+        "endChar": 40
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d338df4_9319fb7b",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d8435cc_a5eaa804",
+      "range": {
+        "startLine": 133,
+        "startChar": 16,
+        "endLine": 133,
+        "endChar": 25
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d8435cc_28b66ff6",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 3
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "6d2e5992_c517bef8",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1482,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d8435cc_28b66ff6",
+      "range": {
+        "startLine": 1482,
+        "startChar": 4,
+        "endLine": 1482,
+        "endChar": 29
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd24a5a6_f832109d",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 3
@@ -82,6 +154,30 @@
       "writtenOn": "2015-05-08T17:09:44Z",
       "side": 1,
       "message": "I suggest you store maxSizeType instead of the object. I don\u0027t think you use any other properties of the object?",
+      "range": {
+        "startLine": 1483,
+        "startChar": 26,
+        "endLine": 1483,
+        "endChar": 39
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d2e5992_a514b2f4",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1483,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd24a5a6_f832109d",
       "range": {
         "startLine": 1483,
         "startChar": 26,
@@ -140,6 +236,54 @@
     },
     {
       "key": {
+        "uuid": "6d2e5992_8543f604",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1485,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d1e2d58_4d9dd6af",
+      "range": {
+        "startLine": 1485,
+        "startChar": 63,
+        "endLine": 1485,
+        "endChar": 65
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed42494b_44ccec69",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1485,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd24a5a6_5877c451",
+      "range": {
+        "startLine": 1485,
+        "startChar": 4,
+        "endLine": 1485,
+        "endChar": 63
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d8435cc_8813fb69",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 3
@@ -151,6 +295,30 @@
       "writtenOn": "2015-05-08T17:09:44Z",
       "side": 1,
       "message": "if the above suggestions are ok - if (maxSizeType \u003d\u003d nullptr || (paramConstant-\u003egetType().getObjectSize() \u003e\u003d maxSizeType-\u003egetObjectSize())",
+      "range": {
+        "startLine": 1491,
+        "startChar": 8,
+        "endLine": 1491,
+        "endChar": 70
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed42494b_04b6e4cb",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1491,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d8435cc_8813fb69",
       "range": {
         "startLine": 1491,
         "startChar": 8,
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "6d2e5992_e533daa0",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1531,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done, using std::min now.",
+      "parentUuid": "cd24a5a6_18b38c7c",
+      "range": {
+        "startLine": 1531,
+        "startChar": 54,
+        "endLine": 1531,
+        "endChar": 205
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd24a5a6_d8bcf449",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 3
@@ -197,6 +389,30 @@
       "writtenOn": "2015-05-08T17:09:44Z",
       "side": 1,
       "message": "nit: the indents on some of these need fixing (should be 2 spaces from case labels)",
+      "range": {
+        "startLine": 1534,
+        "startChar": 23,
+        "endLine": 1534,
+        "endChar": 26
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d2e5992_c530de96",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1534,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd24a5a6_d8bcf449",
       "range": {
         "startLine": 1534,
         "startChar": 23,
@@ -255,6 +471,30 @@
     },
     {
       "key": {
+        "uuid": "6d2e5992_a586f2ac",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1555,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done, using std:max now.",
+      "parentUuid": "cd24a5a6_78aba0ff",
+      "range": {
+        "startLine": 1555,
+        "startChar": 50,
+        "endLine": 1555,
+        "endChar": 70
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd290587_fdf493d4",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 3
@@ -290,6 +530,24 @@
     },
     {
       "key": {
+        "uuid": "6d2e5992_45806e46",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1572,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done. OK, I have removed this error message. And added a TODO stating we need to add constant folding support for remaining built-ins. Also removed third parameter of TIntermNode::FoldAggregateBuiltIn which became unsued after this removal. Also this statement was anyway not reachable as I had another switch in InterMediate::fold* which early returns in case of non-supported built-ins.",
+      "parentUuid": "cd24a5a6_f89690c5",
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d62a1ee_f8f49dd4",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 3
@@ -313,6 +571,30 @@
     },
     {
       "key": {
+        "uuid": "8d338df4_d31d43e9",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done, using arrays now.",
+      "parentUuid": "2d62a1ee_f8f49dd4",
+      "range": {
+        "startLine": 1591,
+        "startChar": 0,
+        "endLine": 1603,
+        "endChar": 83
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d1e2d58_2dd17a7c",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 3
@@ -324,6 +606,30 @@
       "writtenOn": "2015-05-08T17:09:44Z",
       "side": 1,
       "message": "nit: Capitalize to indicate we\u0027re a static method",
+      "range": {
+        "startLine": 304,
+        "startChar": 25,
+        "endLine": 304,
+        "endChar": 45
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d338df4_1304eb17",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d1e2d58_2dd17a7c",
       "range": {
         "startLine": 304,
         "startChar": 25,
@@ -371,6 +677,24 @@
     },
     {
       "key": {
+        "uuid": "8d338df4_76f55d99",
+        "filename": "src/compiler/translator/Intermediate.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done. Sorry, looks like a copy-paste error where I defined function first and then just copied first line for declaration.",
+      "parentUuid": "4d8435cc_45039c6a",
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad24d1ad_e1106ed3",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 3
@@ -405,6 +729,30 @@
       "writtenOn": "2015-05-08T17:09:44Z",
       "side": 1,
       "message": "+1",
+      "parentUuid": "ad24d1ad_e1106ed3",
+      "range": {
+        "startLine": 3290,
+        "startChar": 34,
+        "endLine": 3290,
+        "endChar": 38
+      },
+      "revId": "11a7a93f13bbc56feeedaaec07e8453faf97c204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d2e5992_45ae2ee8",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3290,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T13:43:16Z",
+      "side": 1,
+      "message": "Done",
       "parentUuid": "ad24d1ad_e1106ed3",
       "range": {
         "startLine": 3290,
