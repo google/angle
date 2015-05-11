@@ -70,6 +70,30 @@
       "revId": "30870a98a417605f5b290f40e0ecf7947d4815d4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d6d15ec_42b374da",
+        "filename": "src/libANGLE/renderer/gl/glx/PbufferSurfaceGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-11T19:48:31Z",
+      "side": 1,
+      "message": "But then how are supposed swap the content of the pbuffer if swapbuffers is a noop?",
+      "parentUuid": "2d70e1c2_8aea09a0",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 41
+      },
+      "revId": "30870a98a417605f5b290f40e0ecf7947d4815d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
