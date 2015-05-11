@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "ed42494b_c41d7ce9",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1505,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T15:22:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d679d0f_5f5efc78",
+      "range": {
+        "startLine": 1505,
+        "startChar": 8,
+        "endLine": 1505,
+        "endChar": 12
+      },
+      "revId": "040235dcf91d57103ab9945e186348a3771aed7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d70e1c2_16ccedb6",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 5
@@ -84,6 +108,30 @@
       "writtenOn": "2015-05-11T14:54:56Z",
       "side": 1,
       "message": "nit: SafeDeleteArray",
+      "range": {
+        "startLine": 1512,
+        "startChar": 4,
+        "endLine": 1512,
+        "endChar": 25
+      },
+      "revId": "040235dcf91d57103ab9945e186348a3771aed7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d338df4_b623c5a1",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1512,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T15:22:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d70e1c2_16ccedb6",
       "range": {
         "startLine": 1512,
         "startChar": 4,
@@ -143,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "8d338df4_96c20938",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1601,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T15:22:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d338df4_3618f571",
+      "range": {
+        "startLine": 1601,
+        "startChar": 31,
+        "endLine": 1601,
+        "endChar": 97
+      },
+      "revId": "040235dcf91d57103ab9945e186348a3771aed7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d679d0f_5f859c54",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 5
@@ -154,6 +226,30 @@
       "writtenOn": "2015-05-11T14:54:56Z",
       "side": 1,
       "message": "nit: SafeDeleteArray",
+      "range": {
+        "startLine": 1648,
+        "startChar": 4,
+        "endLine": 1648,
+        "endChar": 25
+      },
+      "revId": "040235dcf91d57103ab9945e186348a3771aed7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed42494b_a41a78ed",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1648,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-11T15:22:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d679d0f_5f859c54",
       "range": {
         "startLine": 1648,
         "startChar": 4,
