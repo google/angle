@@ -62,6 +62,18 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     mEGLDisplay = display;
     mXDisplay = display->getNativeDisplayId();
 
+    // ANGLE_platform_angle allows the creation of a default display
+    // using EGL_DEFAULT_DISPLAY (= nullptr). In this case just open
+    // the display specified by the DISPLAY environment variable.
+    if (mXDisplay == EGL_DEFAULT_DISPLAY)
+    {
+        mXDisplay = XOpenDisplay(NULL);
+        if (!mXDisplay)
+        {
+            return egl::Error(EGL_NOT_INITIALIZED, "Could not open the default X display.");
+        }
+    }
+
     egl::Error glxInitResult = mGLX.initialize(mXDisplay);
     if (glxInitResult.isError())
     {
