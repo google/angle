@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d70e1c2_8a6be9ec",
+        "filename": "src/libANGLE/renderer/gl/glx/PbufferSurfaceGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-11T19:38:01Z",
+      "side": 1,
+      "message": "swapping on a pbuffer surface should be a no-op.",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 41
+      },
+      "revId": "30870a98a417605f5b290f40e0ecf7947d4815d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
