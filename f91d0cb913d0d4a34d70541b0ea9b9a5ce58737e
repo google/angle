@@ -68,6 +68,30 @@
       "revId": "f91d0cb913d0d4a34d70541b0ea9b9a5ce58737e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d679d0f_3f80e845",
+        "filename": "src/tests/end2end_tests/angle_test_configs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-11T14:50:33Z",
+      "side": 1,
+      "message": "Agreed, it would also be nice to have an assertion for unrecognized renderers too.",
+      "parentUuid": "2d70e1c2_db49bebd",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 6
+      },
+      "revId": "f91d0cb913d0d4a34d70541b0ea9b9a5ce58737e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
