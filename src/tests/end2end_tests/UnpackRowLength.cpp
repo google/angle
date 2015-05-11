@@ -120,8 +120,6 @@ TEST_P(UnpackRowLengthTest, RowLength1024)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-INSTANTIATE_TEST_CASE_P(
-    ANGLE, UnpackRowLengthTest,
-    testing::Values(ES3_D3D11(), ES2_D3D11(), ES2_OPENGL(), ES3_OPENGL()));
+ANGLE_INSTANTIATE_TEST(UnpackRowLengthTest, ES3_D3D11(), ES2_D3D11(), ES2_OPENGL(), ES3_OPENGL());
 
 } // namespace

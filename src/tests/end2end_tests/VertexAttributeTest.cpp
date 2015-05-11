@@ -242,8 +242,6 @@ TEST_P(VertexAttributeTest, ShortNormalized)
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // D3D11 Feature Level 9_3 uses different D3D formats for vertex attribs compared to Feature Levels 10_0+, so we should test them separately.
-INSTANTIATE_TEST_CASE_P(
-    ANGLE, VertexAttributeTest,
-    testing::Values(ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL(), ES3_OPENGL()));
+ANGLE_INSTANTIATE_TEST(VertexAttributeTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL(), ES3_OPENGL());
 
 } // namespace

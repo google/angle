@@ -144,4 +144,4 @@ TEST_P(EGLQueryContextTest, BadAttribute)
     EXPECT_TRUE(eglGetError() == EGL_BAD_ATTRIBUTE);
 }
 
-INSTANTIATE_TEST_CASE_P(ANGLE, EGLQueryContextTest, testing::Values(2, 3));
+INSTANTIATE_TEST_CASE_P(, EGLQueryContextTest, testing::Values(2, 3));

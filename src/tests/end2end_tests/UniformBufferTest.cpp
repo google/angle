@@ -314,8 +314,6 @@ TEST_P(UniformBufferTest, ManyUniformBufferRange)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-INSTANTIATE_TEST_CASE_P(
-    ANGLE, UniformBufferTest,
-    testing::Values(ES3_D3D11(), ES3_D3D11_FL11_1(), ES3_D3D11_FL11_1_REFERENCE()));
+ANGLE_INSTANTIATE_TEST(UniformBufferTest, ES3_D3D11(), ES3_D3D11_FL11_1(), ES3_D3D11_FL11_1_REFERENCE());
 
 } // namespace

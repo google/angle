@@ -316,8 +316,6 @@ TEST_P(UnpackAlignmentTest, Alignment8AUByte)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-INSTANTIATE_TEST_CASE_P(
-    ANGLE, UnpackAlignmentTest,
-    testing::Values(ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES3_OPENGL()));
+ANGLE_INSTANTIATE_TEST(UnpackAlignmentTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES3_OPENGL());
 
 } // namespace
