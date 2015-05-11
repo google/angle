@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "0d679d0f_5f5efc78",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1505,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-11T15:11:03Z",
+      "side": 1,
+      "message": "If you\u0027re using an integer index, the range-for syntax probably isn\u0027t as helpful. Better to use the normal \u0027for (int index \u003d 0; index \u003c max; ++index)\u0027 syntax.",
+      "parentUuid": "ed42494b_e41080d3",
+      "range": {
+        "startLine": 1505,
+        "startChar": 8,
+        "endLine": 1505,
+        "endChar": 12
+      },
+      "revId": "040235dcf91d57103ab9945e186348a3771aed7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d70e1c2_16ccedb6",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 5
