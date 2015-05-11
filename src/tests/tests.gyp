@@ -183,6 +183,19 @@
                         4244, # Conversion from 'type1' to 'type2', possible loss of data
                     ],
                 },
+                {
+                    'target_name': 'angle_end2end_tests',
+                    'type': 'executable',
+                    'includes':
+                    [
+                        '../../build/common_defines.gypi',
+                        'angle_end2end_tests.gypi',
+                    ],
+                    'sources':
+                    [
+                        'angle_end2end_tests_main.cpp',
+                    ],
+                },
             ],
             'conditions':
             [
@@ -190,19 +203,6 @@
                 {
                     'targets':
                     [
-                        {
-                            'target_name': 'angle_end2end_tests',
-                            'type': 'executable',
-                            'includes':
-                            [
-                                '../../build/common_defines.gypi',
-                                'angle_end2end_tests.gypi',
-                            ],
-                            'sources':
-                            [
-                                'angle_end2end_tests_main.cpp',
-                            ],
-                        },
 
                         {
                             'target_name': 'angle_perftests',
