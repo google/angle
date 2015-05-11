@@ -103,6 +103,10 @@ class TextureD3D : public TextureImpl
     bool mImmutable;
     TextureStorage *mTexStorage;
 
+    // TODO(jmadill): remove this debugging code after we fix the bug
+    friend class Renderer11;
+    bool mTriedToInitIncompleteStorage;
+
   private:
     virtual gl::Error initializeStorage(bool renderTarget) = 0;
 

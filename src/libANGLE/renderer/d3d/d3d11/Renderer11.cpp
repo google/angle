@@ -791,7 +791,15 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type, int index, gl::Textu
     // Storage should exist, texture should be complete
     ASSERT(storage);
 
-    samplerStateInternal.baseLevel += storage->getTopLevel();
+    // TODO(jmadill): remove this debugging code after we fix the bug
+    if (!storage && textureD3D->mTriedToInitIncompleteStorage)
+    {
+        samplerStateInternal.baseLevel += storage->getTopLevel();
+    }
+    else
+    {
+        samplerStateInternal.baseLevel += storage->getTopLevel();
+    }
 
     if (type == gl::SAMPLER_PIXEL)
     {
