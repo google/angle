@@ -262,7 +262,7 @@ TexSubImageParams D3D11Params()
     params.imageHeight = 1024;
     params.subImageWidth = 64;
     params.subImageHeight = 64;
-    params.iterations = 10;
+    params.iterations = 3;
 
     return params;
 }
@@ -281,7 +281,7 @@ TexSubImageParams D3D9Params()
     params.imageHeight = 1024;
     params.subImageWidth = 64;
     params.subImageHeight = 64;
-    params.iterations = 10;
+    params.iterations = 3;
 
     return params;
 }

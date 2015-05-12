@@ -319,16 +319,16 @@ BufferSubDataParams BufferUpdateD3D11Params()
 {
     BufferSubDataParams params;
     params.glesMajorVersion = 2;
-    params.widowWidth = 1280;
-    params.windowHeight = 720;
+    params.widowWidth = 512;
+    params.windowHeight = 512;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
     params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
     params.vertexType = GL_FLOAT;
     params.vertexComponentCount = 4;
     params.vertexNormalized = GL_FALSE;
     params.updateSize = 3000;
-    params.bufferSize = 67000000;
-    params.iterations = 10;
+    params.bufferSize = 40000000;
+    params.iterations = 2;
     params.updateRate = 1;
     return params;
 }
@@ -337,16 +337,16 @@ BufferSubDataParams BufferUpdateD3D9Params()
 {
     BufferSubDataParams params;
     params.glesMajorVersion = 2;
-    params.widowWidth = 1280;
-    params.windowHeight = 720;
+    params.widowWidth = 512;
+    params.windowHeight = 512;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
     params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
     params.vertexType = GL_FLOAT;
     params.vertexComponentCount = 4;
     params.vertexNormalized = GL_FALSE;
     params.updateSize = 3000;
-    params.bufferSize = 67000000;
-    params.iterations = 10;
+    params.bufferSize = 40000000;
+    params.iterations = 2;
     params.updateRate = 1;
     return params;
 }
