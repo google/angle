@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d338121_b08d6605",
+        "filename": "src/tests/angle_end2end_tests.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-12T15:46:12Z",
+      "side": 1,
+      "message": "this file is missing an absolute path",
+      "range": {
+        "startLine": 58,
+        "startChar": 12,
+        "endLine": 59,
+        "endChar": 48
+      },
+      "revId": "be39156b10bf56686b03b274046e51ef156283fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
