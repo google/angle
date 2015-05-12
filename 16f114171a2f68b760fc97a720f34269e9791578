@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d599572_ceee8334",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1124,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-12T22:22:52Z",
+      "side": 1,
+      "message": "Add space at the end of this string?",
+      "range": {
+        "startLine": 1124,
+        "startChar": 71,
+        "endLine": 1124,
+        "endChar": 82
+      },
+      "revId": "16f114171a2f68b760fc97a720f34269e9791578",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0a495c_ef07014a",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-12T22:22:52Z",
+      "side": 1,
+      "message": "Could you add a GLSL ES 1.00 version of this test that expects compilation to succeed, but that a warning is generated?",
+      "range": {
+        "startLine": 464,
+        "startChar": 28,
+        "endLine": 464,
+        "endChar": 49
+      },
+      "revId": "16f114171a2f68b760fc97a720f34269e9791578",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd43c57f_4f8272d9",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-12T22:22:52Z",
+      "side": 1,
+      "message": "Could you add another test that makes \"a\" a const and expects it to succeed? (Should it?)",
+      "range": {
+        "startLine": 483,
+        "startChar": 28,
+        "endLine": 483,
+        "endChar": 56
+      },
+      "revId": "16f114171a2f68b760fc97a720f34269e9791578",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
