@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d338121_10eff2ff",
+        "filename": "util/x11/X11Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-12T14:53:08Z",
+      "side": 1,
+      "message": "is this for debugging?",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 92,
+        "endChar": 22
+      },
+      "revId": "c0baf3a5ae1322bf16bf03bc86244c85c83b3642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd43c57f_98132d59",
+        "filename": "util/x11/X11Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-12T14:53:08Z",
+      "side": 1,
+      "message": "same comment as below",
+      "range": {
+        "startLine": 214,
+        "startChar": 16,
+        "endLine": 214,
+        "endChar": 77
+      },
+      "revId": "c0baf3a5ae1322bf16bf03bc86244c85c83b3642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad3e91ea_dca76488",
+        "filename": "util/x11/X11Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-12T14:53:08Z",
+      "side": 1,
+      "message": "nit: space here",
+      "range": {
+        "startLine": 240,
+        "startChar": 18,
+        "endLine": 240,
+        "endChar": 20
+      },
+      "revId": "c0baf3a5ae1322bf16bf03bc86244c85c83b3642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd43c57f_d803f50f",
+        "filename": "util/x11/X11Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-12T14:53:08Z",
+      "side": 1,
+      "message": "this case statement with repeated unknown checks and fallthrough is a bit odd, is it possible to clean it up?",
+      "range": {
+        "startLine": 243,
+        "startChar": 60,
+        "endLine": 243,
+        "endChar": 77
+      },
+      "revId": "c0baf3a5ae1322bf16bf03bc86244c85c83b3642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad3e91ea_9c9e7c37",
+        "filename": "util/x11/X11Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-12T14:53:08Z",
+      "side": 1,
+      "message": "nit: static_cast (or reinterpret if that doesn\u0027t work)",
+      "range": {
+        "startLine": 336,
+        "startChar": 12,
+        "endLine": 336,
+        "endChar": 18
+      },
+      "revId": "c0baf3a5ae1322bf16bf03bc86244c85c83b3642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad3e91ea_7ca3b07e",
+        "filename": "util/x11/X11Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-12T14:53:08Z",
+      "side": 1,
+      "message": "nit: space here",
+      "revId": "c0baf3a5ae1322bf16bf03bc86244c85c83b3642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
