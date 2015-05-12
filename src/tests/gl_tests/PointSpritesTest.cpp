@@ -336,7 +336,7 @@ TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
     glUniform1f(pointSizeLoc, 1.0f);
     ASSERT_GL_NO_ERROR();
 
-    glDrawArrays(GL_POINTS, 0, ArraySize(vertices) / 3);
+    glDrawArrays(GL_POINTS, 0, _countof(vertices) / 3);
     ASSERT_GL_NO_ERROR();
 
     // Test the pixels around the target Red pixel to ensure
@@ -370,7 +370,7 @@ TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
         glUniform1f(pointSizeLoc, 2.0f);
         ASSERT_GL_NO_ERROR();
 
-        glDrawArrays(GL_POINTS, 0, ArraySize(vertices) / 3);
+        glDrawArrays(GL_POINTS, 0, _countof(vertices) / 3);
         ASSERT_GL_NO_ERROR();
 
         // Test the pixels to ensure the target is ALL Red pixels

@@ -71,8 +71,8 @@ class PbufferTest : public ANGLETest
 
         const EGLint pBufferAttributes[] =
         {
-            EGL_WIDTH, static_cast<EGLint>(mPbufferSize),
-            EGL_HEIGHT, static_cast<EGLint>(mPbufferSize),
+            EGL_WIDTH, mPbufferSize,
+            EGL_HEIGHT, mPbufferSize,
             EGL_TEXTURE_FORMAT, mSupportsBindTexImage ? EGL_TEXTURE_RGBA : EGL_NO_TEXTURE,
             EGL_TEXTURE_TARGET, mSupportsBindTexImage ? EGL_TEXTURE_2D : EGL_NO_TEXTURE,
             EGL_NONE, EGL_NONE,

@@ -824,7 +824,7 @@ TEST_P(GLSLTest, FixedShaderLength)
     const std::string appendGarbage = "abcasdfasdfasdfasdfasdf";
     const std::string source = "void main() { gl_FragColor = vec4(0, 0, 0, 0); }" + appendGarbage;
     const char *sourceArray[1] = { source.c_str() };
-    GLint lengths[1] = { static_cast<GLint>(source.length() - appendGarbage.length()) };
+    GLint lengths[1] = { source.length() - appendGarbage.length() };
     glShaderSource(shader, ArraySize(sourceArray), sourceArray, lengths);
     glCompileShader(shader);
 
@@ -864,7 +864,7 @@ TEST_P(GLSLTest, MixedShaderLengths)
     {
         -10,
         1,
-        static_cast<GLint>(strlen(sourceArray[2])),
+        std::strlen(sourceArray[2]),
         -1,
     };
     ASSERT_EQ(ArraySize(sourceArray), ArraySize(lengths));
