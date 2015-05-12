@@ -30,8 +30,6 @@ class X11Window : public OSWindow
 
     void messageLoop() override;
 
-    void pushEvent(Event event) override;
-
     void setMousePosition(int x, int y) override;
     bool setPosition(int x, int y) override;
     bool resize(int width, int height) override;
@@ -40,6 +38,12 @@ class X11Window : public OSWindow
     void signalTestEvent() override;
 
   private:
+    void processEvent(const XEvent &event);
+
+    Atom WM_DELETE_WINDOW;
+    Atom WM_PROTOCOLS;
+    Atom TEST_EVENT;
+
     Display *mDisplay;
     Window mWindow;
 };
