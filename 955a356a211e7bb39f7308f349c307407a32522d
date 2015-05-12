@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad3e91ea_bcdb7814",
+        "filename": "util/OSWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-12T14:49:07Z",
+      "side": 1,
+      "message": "#ifndef DEBUG_EVENTS\n#define DEBUG_EVENTS 0\n#endif",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 22
+      },
+      "revId": "955a356a211e7bb39f7308f349c307407a32522d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d338121_b0f1e6e3",
+        "filename": "util/OSWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-12T14:49:07Z",
+      "side": 1,
+      "message": "it\u0027s fine to always include this imo",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 19
+      },
+      "revId": "955a356a211e7bb39f7308f349c307407a32522d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
