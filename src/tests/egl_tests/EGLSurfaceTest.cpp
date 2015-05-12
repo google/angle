@@ -7,13 +7,13 @@
 //   Tests pertaining to egl::Surface.
 //
 
-#include <test_utils/ANGLETest.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <GLES2/gl2.h>
 
-#include "common/angleutils.h"
 #include "OSWindow.h"
+#include "common/angleutils.h"
+#include "end2end_tests/ANGLETest.h"
 
 namespace
 {
