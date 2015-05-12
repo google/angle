@@ -390,6 +390,42 @@ egl::Error Renderer11::initialize()
         ANGLE_HISTOGRAM_TIMES("GPU.ANGLE.D3D11CreateDeviceMS", createDeviceMS);
     }
 
+#if !defined(ANGLE_ENABLE_WINDOWS_STORE)
+#if !ANGLE_SKIP_DXGI_1_2_CHECK
+    {
+        TRACE_EVENT0("gpu.angle", "Renderer11::initialize (DXGICheck)");
+        // In order to create a swap chain for an HWND owned by another process, DXGI 1.2 is required.
+        // The easiest way to check is to query for a IDXGIDevice2.
+        bool requireDXGI1_2 = false;
+        HWND hwnd = WindowFromDC(mDisplay->getNativeDisplayId());
+        if (hwnd)
+        {
+            DWORD currentProcessId = GetCurrentProcessId();
+            DWORD wndProcessId;
+            GetWindowThreadProcessId(hwnd, &wndProcessId);
+            requireDXGI1_2 = (currentProcessId != wndProcessId);
+        }
+        else
+        {
+            requireDXGI1_2 = true;
+        }
+
+        if (requireDXGI1_2)
+        {
+            IDXGIDevice2 *dxgiDevice2 = NULL;
+            result = mDevice->QueryInterface(__uuidof(IDXGIDevice2), (void**)&dxgiDevice2);
+            if (FAILED(result))
+            {
+                return egl::Error(EGL_NOT_INITIALIZED,
+                                  D3D11_INIT_INCOMPATIBLE_DXGI,
+                                  "DXGI 1.2 required to present to HWNDs owned by another process.");
+            }
+            SafeRelease(dxgiDevice2);
+        }
+    }
+#endif
+#endif
+
     {
         TRACE_EVENT0("gpu.angle", "Renderer11::initialize (ComQueries)");
         // Cast the DeviceContext to a DeviceContext1.
@@ -677,35 +713,6 @@ gl::Error Renderer11::finish()
     while (result == S_FALSE);
 
     return gl::Error(GL_NO_ERROR);
-}
-
-bool Renderer11::shouldCreateChildWindowForSurface(EGLNativeWindowType window) const
-{
-#if !defined(ANGLE_ENABLE_WINDOWS_STORE)
-    // In order to create a swap chain for an HWND owned by another process, DXGI 1.2 is required.
-    // The easiest way to check is to query for a IDXGIDevice2.
-    DWORD currentProcessId = GetCurrentProcessId();
-    DWORD wndProcessId;
-    GetWindowThreadProcessId(window, &wndProcessId);
-    if (currentProcessId == wndProcessId)
-    {
-        // Window is from this process, can always create a swap chain for it
-        return false;
-    }
-
-    IDXGIDevice2 *dxgiDevice2 = d3d11::DynamicCastComObject<IDXGIDevice2>(mDevice);
-    if (dxgiDevice2 != nullptr)
-    {
-        // DXGI 1.2 is available, can create a swap chain for this cross-process window
-        SafeRelease(dxgiDevice2);
-        return false;
-    }
-
-    // DXGI 1.2 is not available, need to create a child window.
-    return true;
-#else
-    return false;
-#endif
 }
 
 SwapChainD3D *Renderer11::createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)

@@ -54,8 +54,6 @@ class DisplayD3D : public DisplayImpl
 
     std::string getVendorString() const override;
 
-    ATOM getChildWindowClass() const;
-
   private:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
@@ -63,7 +61,6 @@ class DisplayD3D : public DisplayImpl
     egl::Display *mDisplay;
 
     rx::RendererD3D *mRenderer;
-    ATOM mChildWindowClass;
 
     DeviceImpl *mDevice;
 };

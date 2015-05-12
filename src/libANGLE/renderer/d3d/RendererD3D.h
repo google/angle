@@ -97,7 +97,6 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     // Direct3D Specific methods
     virtual GUID getAdapterIdentifier() const = 0;
 
-    virtual bool shouldCreateChildWindowForSurface(EGLNativeWindowType window) const = 0;
     virtual SwapChainD3D *createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat) = 0;
 
     virtual gl::Error generateSwizzle(gl::Texture *texture) = 0;
