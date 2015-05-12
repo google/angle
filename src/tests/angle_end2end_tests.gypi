@@ -49,13 +49,14 @@
             '<(angle_path)/src/tests/gl_tests/UnpackRowLength.cpp',
             '<(angle_path)/src/tests/gl_tests/VertexAttributeTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ViewportTest.cpp',
-            '<(angle_path)/src/tests/egl_tests/EGLQueryContextTest.cpp',
             '<(angle_path)/src/tests/test_utils/ANGLETest.cpp',
             '<(angle_path)/src/tests/test_utils/ANGLETest.h',
             '<(angle_path)/src/tests/test_utils/angle_test_configs.h',
         ],
         'angle_end2end_tests_win_sources':
         [
+            # TODO(cwallez) for Linux, requires only trying the OpenGL ANGLE platform
+            '<(angle_path)/src/tests/egl_tests/EGLQueryContextTest.cpp',
             # TODO(cwallez) for Linux, requires a portable implementation of sleep
             '<(angle_path)/src/tests/gl_tests/OcclusionQueriesTest.cpp',
             # TODO(cwallez) for Linux, requires implementation of eglBindTexImage for pbuffers
