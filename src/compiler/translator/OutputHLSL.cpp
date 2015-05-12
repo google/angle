@@ -1502,8 +1502,12 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             if (symbolNode->getQualifier() == EvqGlobal && expression->getQualifier() != EvqConst)
             {
                 // For variables which are not constant, defer their real initialization until
-                // after we initialize other globals: uniforms, attributes and varyings.
-                mDeferredGlobalInitializers.push_back(std::make_pair(symbolNode, expression));
+                // after we initialize uniforms.
+                TIntermBinary *deferredInit = new TIntermBinary(EOpAssign);
+                deferredInit->setLeft(node->getLeft());
+                deferredInit->setRight(node->getRight());
+                deferredInit->setType(node->getType());
+                mDeferredGlobalInitializers.push_back(deferredInit);
                 const TString &initString = initializer(node->getType());
                 node->setRight(new TIntermRaw(node->getType(), initString));
             }
@@ -2272,23 +2276,9 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
     return true;
 }
 
-bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
+void OutputHLSL::writeSelection(TIntermSelection *node)
 {
     TInfoSinkBase &out = getInfoSink();
-
-    ASSERT(!node->usesTernaryOperator());
-
-    // D3D errors when there is a gradient operation in a loop in an unflattened if.
-    // We check for null mCurrentFunctionMetadata to prevent crashing in the case that the translator has generated if
-    // statements in the global scope when unfolding global initializers. This is a bug that should be addressed by
-    // moving the unfolded global initializers into a function.
-    if (mShaderType == GL_FRAGMENT_SHADER
-        && mCurrentFunctionMetadata != nullptr
-        && mCurrentFunctionMetadata->hasDiscontinuousLoop(node)
-        && mCurrentFunctionMetadata->hasGradientInCallGraph(node))
-    {
-        out << "FLATTEN ";
-    }
 
     out << "if (";
 
@@ -2334,6 +2324,30 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
     {
         mUsesDiscardRewriting = true;
     }
+}
+
+bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
+{
+    TInfoSinkBase &out = getInfoSink();
+
+    ASSERT(!node->usesTernaryOperator());
+
+    if (!mInsideFunction)
+    {
+        // This is part of unfolded global initialization.
+        mDeferredGlobalInitializers.push_back(node);
+        return false;
+    }
+
+    // D3D errors when there is a gradient operation in a loop in an unflattened if.
+    if (mShaderType == GL_FRAGMENT_SHADER &&
+        mCurrentFunctionMetadata->hasDiscontinuousLoop(node) &&
+        mCurrentFunctionMetadata->hasGradientInCallGraph(node))
+    {
+        out << "FLATTEN ";
+    }
+
+    writeSelection(node);
 
     return false;
 }
@@ -2954,20 +2968,33 @@ void OutputHLSL::writeDeferredGlobalInitializers(TInfoSinkBase &out)
 
     for (const auto &deferredGlobal : mDeferredGlobalInitializers)
     {
-        TIntermSymbol *symbol = deferredGlobal.first;
-        TIntermTyped *expression = deferredGlobal.second;
-        ASSERT(symbol);
-        ASSERT(symbol->getQualifier() == EvqGlobal && expression->getQualifier() != EvqConst);
+        TIntermBinary *binary = deferredGlobal->getAsBinaryNode();
+        TIntermSelection *selection = deferredGlobal->getAsSelectionNode();
+        if (binary != nullptr)
+        {
+            TIntermSymbol *symbol = binary->getLeft()->getAsSymbolNode();
+            TIntermTyped *expression = binary->getRight();
+            ASSERT(symbol);
+            ASSERT(symbol->getQualifier() == EvqGlobal && expression->getQualifier() != EvqConst);
 
-        out << "    " << Decorate(symbol->getSymbol()) << " = ";
+            out << "    " << Decorate(symbol->getSymbol()) << " = ";
 
-        if (!writeSameSymbolInitializer(out, symbol, expression))
+            if (!writeSameSymbolInitializer(out, symbol, expression))
+            {
+                ASSERT(mInfoSinkStack.top() == &out);
+                expression->traverse(this);
+            }
+            out << ";\n";
+        }
+        else if (selection != nullptr)
         {
             ASSERT(mInfoSinkStack.top() == &out);
-            expression->traverse(this);
+            writeSelection(selection);
         }
-
-        out << ";\n";
+        else
+        {
+            UNREACHABLE();
+        }
     }
 
     out << "}\n"

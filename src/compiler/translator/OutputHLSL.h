@@ -85,6 +85,7 @@ class OutputHLSL : public TIntermTraverser
     // Returns true if it found a 'same symbol' initializer (initializer that references the variable it's initting)
     bool writeSameSymbolInitializer(TInfoSinkBase &out, TIntermSymbol *symbolNode, TIntermTyped *expression);
     void writeDeferredGlobalInitializers(TInfoSinkBase &out);
+    void writeSelection(TIntermSelection *node);
 
     // Returns the function name
     TString addStructEqualityFunction(const TStructure &structure);
@@ -185,11 +186,10 @@ class OutputHLSL : public TIntermTraverser
     std::map<TIntermTyped*, TString> mFlaggedStructMappedNames;
     std::map<TIntermTyped*, TString> mFlaggedStructOriginalNames;
 
-    // Some initializers use varyings, uniforms or attributes, thus we can't evaluate some variables
-    // at global static scope in HLSL. These variables depend on values which we retrieve from the
-    // shader input structure, which we set in the D3D main function. Instead, we can initialize
-    // these static globals after we initialize our other globals.
-    std::vector<std::pair<TIntermSymbol*, TIntermTyped*>> mDeferredGlobalInitializers;
+    // Some initializers may have been unfolded into if statements, thus we can't evaluate all initializers
+    // at global static scope in HLSL. Instead, we can initialize these static globals inside a helper function.
+    // This also enables initialization of globals with uniforms.
+    TIntermSequence mDeferredGlobalInitializers;
 
     struct HelperFunction
     {
