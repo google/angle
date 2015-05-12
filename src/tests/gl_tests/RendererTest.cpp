@@ -8,7 +8,7 @@
 //   If one of these tests fails, then it is likely that some of the other tests are being configured incorrectly.
 //   For example, they might be using the D3D11 renderer when the test is meant to be using the D3D9 renderer.
 
-#include "test_utils/ANGLETest.h"
+#include "end2end_tests/ANGLETest.h"
 
 using namespace angle;
 

@@ -49,8 +49,8 @@
             '<(angle_path)/src/tests/gl_tests/UnpackRowLength.cpp',
             '<(angle_path)/src/tests/gl_tests/VertexAttributeTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ViewportTest.cpp',
-            '<(angle_path)/src/tests/test_utils/ANGLETest.cpp',
-            '<(angle_path)/src/tests/test_utils/ANGLETest.h',
+            '<(angle_path)/src/tests/end2end_tests/ANGLETest.cpp',
+            '<(angle_path)/src/tests/end2end_tests/ANGLETest.h',
             '<(angle_path)/src/tests/test_utils/angle_test_configs.h',
         ],
         'angle_end2end_tests_win_sources':

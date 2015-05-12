@@ -6,7 +6,7 @@
 // Some of the pointsprite tests below were ported from Khronos WebGL
 // conformance test suite.
 
-#include "test_utils/ANGLETest.h"
+#include "end2end_tests/ANGLETest.h"
 
 using namespace angle;
 

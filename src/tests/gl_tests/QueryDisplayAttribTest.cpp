@@ -12,7 +12,7 @@
 #define ANGLE_ENABLE_D3D11
 #endif
 
-#include "test_utils/ANGLETest.h"
+#include "end2end_tests/ANGLETest.h"
 #include "com_utils.h"
 
 using namespace angle;

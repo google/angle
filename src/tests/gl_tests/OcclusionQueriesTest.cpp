@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "test_utils/ANGLETest.h"
+#include "end2end_tests/ANGLETest.h"
 
 // Needed for Sleep()
 #include <Windows.h>

@@ -11,7 +11,7 @@
 #include <algorithm>
 
 #include "angle_gl.h"
-#include "angle_test_configs.h"
+#include "test_utils/angle_test_configs.h"
 #include "common/angleutils.h"
 #include "shader_utils.h"
 
