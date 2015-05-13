@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8d146d89_2a457b79",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-05-13T19:46:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd1ae5b3_adf17ee3",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 71
+      },
+      "revId": "3a042c8835a4e8adc7806466de26e48615058471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed2329ea_f6cfced8",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-13T19:20:39Z",
       "side": 1,
       "message": "this line is too long, please break it up using a local temporary or other means",
+      "range": {
+        "startLine": 91,
+        "startChar": 133,
+        "endLine": 91,
+        "endChar": 171
+      },
+      "revId": "3a042c8835a4e8adc7806466de26e48615058471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d0f3979_66d210d7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-05-13T19:46:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed2329ea_f6cfced8",
       "range": {
         "startLine": 91,
         "startChar": 133,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "6d0f3979_86d8ecf1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-05-13T19:46:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad15b184_c442d31c",
+      "range": {
+        "startLine": 468,
+        "startChar": 67,
+        "endLine": 468,
+        "endChar": 71
+      },
+      "revId": "3a042c8835a4e8adc7806466de26e48615058471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd1ae5b3_4d0a8a59",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2015-05-13T19:20:39Z",
       "side": 1,
       "message": "maybe DXGI1_2?",
+      "range": {
+        "startLine": 45,
+        "startChar": 9,
+        "endLine": 45,
+        "endChar": 26
+      },
+      "revId": "3a042c8835a4e8adc7806466de26e48615058471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d146d89_0a4a3f87",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-05-13T19:46:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd1ae5b3_4d0a8a59",
       "range": {
         "startLine": 45,
         "startChar": 9,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "6d0f3979_46d714c5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-05-13T19:46:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad15b184_245487d9",
+      "range": {
+        "startLine": 268,
+        "startChar": 31,
+        "endLine": 268,
+        "endChar": 33
+      },
+      "revId": "3a042c8835a4e8adc7806466de26e48615058471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed2329ea_f6e86e27",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
         "patchSetId": 1
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "4dcc357d_96c75c96",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-05-13T19:46:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed2329ea_f6e86e27",
+      "range": {
+        "startLine": 38,
+        "startChar": 86,
+        "endLine": 38,
+        "endChar": 87
+      },
+      "revId": "3a042c8835a4e8adc7806466de26e48615058471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd1ae5b3_ad55fe23",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexBuffer11.cpp",
         "patchSetId": 1
@@ -151,6 +295,24 @@
       "writtenOn": "2015-05-13T19:20:39Z",
       "side": 1,
       "message": "these two lines are also getting a bit long, make sure they\u0027re under 100 chars horizontal",
+      "revId": "3a042c8835a4e8adc7806466de26e48615058471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d0f3979_a6db68ed",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexBuffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-05-13T19:46:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd1ae5b3_ad55fe23",
       "revId": "3a042c8835a4e8adc7806466de26e48615058471",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
