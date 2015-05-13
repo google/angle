@@ -10,7 +10,7 @@
 bool InitializeParseContextIndex();
 void FreeParseContextIndex();
 
-class TParseContext;
+struct TParseContext;
 extern void SetGlobalParseContext(TParseContext* context);
 extern TParseContext* GetGlobalParseContext();
 

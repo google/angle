@@ -354,28 +354,28 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
   } while (0)
 
 #define VERTEX_ONLY(S, L) {  \
-    if (context->getShaderType() != GL_VERTEX_SHADER) {  \
+    if (context->shaderType != GL_VERTEX_SHADER) {  \
         context->error(L, " supported in vertex shaders only ", S);  \
         context->recover();  \
     }  \
 }
 
 #define FRAG_ONLY(S, L) {  \
-    if (context->getShaderType() != GL_FRAGMENT_SHADER) {  \
+    if (context->shaderType != GL_FRAGMENT_SHADER) {  \
         context->error(L, " supported in fragment shaders only ", S);  \
         context->recover();  \
     }  \
 }
 
 #define ES2_ONLY(S, L) {  \
-    if (context->getShaderVersion() != 100) {  \
+    if (context->shaderVersion != 100) {  \
         context->error(L, " supported in GLSL ES 1.00 only ", S);  \
         context->recover();  \
     }  \
 }
 
 #define ES3_ONLY(TOKEN, LINE, REASON) {  \
-    if (context->getShaderVersion() != 300) {  \
+    if (context->shaderVersion != 300) {  \
         context->error(LINE, REASON " supported in GLSL ES 3.00 only ", TOKEN);  \
         context->recover();  \
     }  \
@@ -3110,7 +3110,7 @@ yyreduce:
   case 90:
 
     {
-        if (((yyvsp[-2].interm.precision) == EbpHigh) && (context->getShaderType() == GL_FRAGMENT_SHADER) && !context->getFragmentPrecisionHigh()) {
+        if (((yyvsp[-2].interm.precision) == EbpHigh) && (context->shaderType == GL_FRAGMENT_SHADER) && !context->fragmentPrecisionHigh) {
             context->error((yylsp[-3]), "precision is not supported in fragment shader", "highp");
             context->recover();
         }
@@ -3170,7 +3170,7 @@ yyreduce:
         //
         // Redeclarations are allowed.  But, return types and parameter qualifiers must match.
         //
-        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find((yyvsp[-1].interm.function)->getMangledName(), context->getShaderVersion()));
+        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find((yyvsp[-1].interm.function)->getMangledName(), context->shaderVersion));
         if (prevDec) {
             if (prevDec->getReturnType() != (yyvsp[-1].interm.function)->getReturnType()) {
                 context->error((yylsp[0]), "overloaded functions must have the same return type", (yyvsp[-1].interm.function)->getReturnType().getBasicString());
@@ -3187,7 +3187,7 @@ yyreduce:
         //
         // Check for previously declared variables using the same name.
         //
-        TSymbol *prevSym = context->symbolTable.find((yyvsp[-1].interm.function)->getName(), context->getShaderVersion());
+        TSymbol *prevSym = context->symbolTable.find((yyvsp[-1].interm.function)->getName(), context->shaderVersion);
         if (prevSym)
         {
             if (!prevSym->isFunction())
@@ -3540,7 +3540,7 @@ yyreduce:
 
         if ((yyvsp[0].interm.type).array) {
             ES3_ONLY("[]", (yylsp[0]), "first-class-array");
-            if (context->getShaderVersion() != 300) {
+            if (context->shaderVersion != 300) {
                 (yyvsp[0].interm.type).clearArrayness();
             }
         }
@@ -3598,7 +3598,7 @@ yyreduce:
         ES2_ONLY("varying", (yylsp[0]));
         if (context->globalErrorCheck((yylsp[0]), context->symbolTable.atGlobalLevel(), "varying"))
             context->recover();
-        if (context->getShaderType() == GL_VERTEX_SHADER)
+        if (context->shaderType == GL_VERTEX_SHADER)
             (yyval.interm.type).setBasic(EbtVoid, EvqVaryingOut, (yylsp[0]));
         else
             (yyval.interm.type).setBasic(EbtVoid, EvqVaryingIn, (yylsp[0]));
@@ -3612,7 +3612,7 @@ yyreduce:
         ES2_ONLY("varying", (yylsp[-1]));
         if (context->globalErrorCheck((yylsp[-1]), context->symbolTable.atGlobalLevel(), "invariant varying"))
             context->recover();
-        if (context->getShaderType() == GL_VERTEX_SHADER)
+        if (context->shaderType == GL_VERTEX_SHADER)
             (yyval.interm.type).setBasic(EbtVoid, EvqVaryingOut, (yylsp[-1]));
         else
             (yyval.interm.type).setBasic(EbtVoid, EvqVaryingIn, (yylsp[-1]));
@@ -3704,7 +3704,7 @@ yyreduce:
 
     {
         ES3_ONLY("in", (yylsp[0]), "storage qualifier");
-        (yyval.interm.type).qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqFragmentIn : EvqVertexIn;
+        (yyval.interm.type).qualifier = (context->shaderType == GL_FRAGMENT_SHADER) ? EvqFragmentIn : EvqVertexIn;
     }
 
     break;
@@ -3713,7 +3713,7 @@ yyreduce:
 
     {
         ES3_ONLY("out", (yylsp[0]), "storage qualifier");
-        (yyval.interm.type).qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqFragmentOut : EvqVertexOut;
+        (yyval.interm.type).qualifier = (context->shaderType == GL_FRAGMENT_SHADER) ? EvqFragmentOut : EvqVertexOut;
     }
 
     break;
@@ -3722,12 +3722,12 @@ yyreduce:
 
     {
         ES3_ONLY("centroid in", (yylsp[-1]), "storage qualifier");
-        if (context->getShaderType() == GL_VERTEX_SHADER)
+        if (context->shaderType == GL_VERTEX_SHADER)
         {
             context->error((yylsp[-1]), "invalid storage qualifier", "it is an error to use 'centroid in' in the vertex shader");
             context->recover();
         }
-        (yyval.interm.type).qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqCentroidIn : EvqVertexIn;
+        (yyval.interm.type).qualifier = (context->shaderType == GL_FRAGMENT_SHADER) ? EvqCentroidIn : EvqVertexIn;
     }
 
     break;
@@ -3736,12 +3736,12 @@ yyreduce:
 
     {
         ES3_ONLY("centroid out", (yylsp[-1]), "storage qualifier");
-        if (context->getShaderType() == GL_FRAGMENT_SHADER)
+        if (context->shaderType == GL_FRAGMENT_SHADER)
         {
             context->error((yylsp[-1]), "invalid storage qualifier", "it is an error to use 'centroid out' in the fragment shader");
             context->recover();
         }
-        (yyval.interm.type).qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqFragmentOut : EvqCentroidOut;
+        (yyval.interm.type).qualifier = (context->shaderType == GL_FRAGMENT_SHADER) ? EvqFragmentOut : EvqCentroidOut;
     }
 
     break;
@@ -4662,7 +4662,7 @@ yyreduce:
 
   case 247:
 
-    { context->incrSwitchNestingLevel(); }
+    { ++context->mSwitchNestingLevel; }
 
     break;
 
@@ -4670,7 +4670,7 @@ yyreduce:
 
     {
         (yyval.interm.intermSwitch) = context->addSwitch((yyvsp[-3].interm.intermTypedNode), (yyvsp[0].interm.intermAggregate), (yylsp[-5]));
-        context->decrSwitchNestingLevel();
+        --context->mSwitchNestingLevel;
     }
 
     break;
@@ -4720,7 +4720,7 @@ yyreduce:
 
   case 253:
 
-    { context->symbolTable.push(); context->incrLoopNestingLevel(); }
+    { context->symbolTable.push(); ++context->mLoopNestingLevel; }
 
     break;
 
@@ -4729,14 +4729,14 @@ yyreduce:
     {
         context->symbolTable.pop();
         (yyval.interm.intermNode) = context->intermediate.addLoop(ELoopWhile, 0, (yyvsp[-2].interm.intermTypedNode), 0, (yyvsp[0].interm.intermNode), (yylsp[-5]));
-        context->decrLoopNestingLevel();
+        --context->mLoopNestingLevel;
     }
 
     break;
 
   case 255:
 
-    { context->incrLoopNestingLevel(); }
+    { ++context->mLoopNestingLevel; }
 
     break;
 
@@ -4747,14 +4747,14 @@ yyreduce:
             context->recover();
 
         (yyval.interm.intermNode) = context->intermediate.addLoop(ELoopDoWhile, 0, (yyvsp[-2].interm.intermTypedNode), 0, (yyvsp[-5].interm.intermNode), (yylsp[-4]));
-        context->decrLoopNestingLevel();
+        --context->mLoopNestingLevel;
     }
 
     break;
 
   case 257:
 
-    { context->symbolTable.push(); context->incrLoopNestingLevel(); }
+    { context->symbolTable.push(); ++context->mLoopNestingLevel; }
 
     break;
 
@@ -4763,7 +4763,7 @@ yyreduce:
     {
         context->symbolTable.pop();
         (yyval.interm.intermNode) = context->intermediate.addLoop(ELoopFor, (yyvsp[-3].interm.intermNode), reinterpret_cast<TIntermTyped*>((yyvsp[-2].interm.nodePair).node1), reinterpret_cast<TIntermTyped*>((yyvsp[-2].interm.nodePair).node2), (yyvsp[0].interm.intermNode), (yylsp[-6]));
-        context->decrLoopNestingLevel();
+        --context->mLoopNestingLevel;
     }
 
     break;
@@ -4863,7 +4863,7 @@ yyreduce:
 
     {
         (yyval.interm.intermNode) = (yyvsp[0].interm.intermNode);
-        context->setTreeRoot((yyval.interm.intermNode));
+        context->treeRoot = (yyval.interm.intermNode);
     }
 
     break;
@@ -4872,7 +4872,7 @@ yyreduce:
 
     {
         (yyval.interm.intermNode) = context->intermediate.growAggregate((yyvsp[-1].interm.intermNode), (yyvsp[0].interm.intermNode), (yyloc));
-        context->setTreeRoot((yyval.interm.intermNode));
+        context->treeRoot = (yyval.interm.intermNode);
     }
 
     break;
@@ -4898,7 +4898,7 @@ yyreduce:
     {
         TFunction* function = (yyvsp[0].interm).function;
         
-        const TSymbol *builtIn = context->symbolTable.findBuiltIn(function->getMangledName(), context->getShaderVersion());
+        const TSymbol *builtIn = context->symbolTable.findBuiltIn(function->getMangledName(), context->shaderVersion);
         
         if (builtIn)
         {
@@ -4906,7 +4906,7 @@ yyreduce:
             context->recover();
         }
         
-        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find(function->getMangledName(), context->getShaderVersion()));
+        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find(function->getMangledName(), context->shaderVersion));
         //
         // Note:  'prevDec' could be 'function' if this is the first time we've seen function
         // as it would have just been put in the symbol table.  Otherwise, we're looking up
@@ -4944,8 +4944,8 @@ yyreduce:
         //
         // Remember the return type for later checking for RETURN statements.
         //
-        context->setCurrentFunctionType(&(prevDec->getReturnType()));
-        context->setFunctionReturnsValue(false);
+        context->currentFunctionType = &(prevDec->getReturnType());
+        context->mFunctionReturnsValue = false;
 
         //
         // Insert parameters into the symbol table.
@@ -4984,7 +4984,7 @@ yyreduce:
         }
         context->intermediate.setAggregateOperator(paramNodes, EOpParameters, (yylsp[0]));
         (yyvsp[0].interm).intermAggregate = paramNodes;
-        context->setLoopNestingLevel(0);
+        context->mLoopNestingLevel = 0;
     }
 
     break;
@@ -4994,7 +4994,7 @@ yyreduce:
     {
         //?? Check that all paths return a value if return type != void ?
         //   May be best done as post process phase on intermediate code
-        if (context->getCurrentFunctionType()->getBasicType() != EbtVoid && !context->getFunctionReturnsValue()) {
+        if (context->currentFunctionType->getBasicType() != EbtVoid && ! context->mFunctionReturnsValue) {
             context->error((yylsp[-2]), "function does not return a value:", "", (yyvsp[-2].interm).function->getName().c_str());
             context->recover();
         }
@@ -5255,5 +5255,5 @@ yyreturn:
 
 
 int glslang_parse(TParseContext* context) {
-    return yyparse(context, context->getScanner());
+    return yyparse(context, context->scanner);
 }

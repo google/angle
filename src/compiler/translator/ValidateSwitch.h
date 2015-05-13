@@ -9,7 +9,7 @@
 
 #include "compiler/translator/IntermNode.h"
 
-class TParseContext;
+struct TParseContext;
 
 class ValidateSwitch : public TIntermTraverser
 {

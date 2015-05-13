@@ -389,7 +389,7 @@ bool ValidateLimitations::validateFunctionCall(TIntermAggregate *node)
 
     bool valid = true;
     TSymbolTable& symbolTable = GetGlobalParseContext()->symbolTable;
-    TSymbol* symbol = symbolTable.find(node->getName(), GetGlobalParseContext()->getShaderVersion());
+    TSymbol* symbol = symbolTable.find(node->getName(), GetGlobalParseContext()->shaderVersion);
     ASSERT(symbol && symbol->isFunction());
     TFunction *function = static_cast<TFunction *>(symbol);
     for (ParamIndex::const_iterator i = pIndex.begin();

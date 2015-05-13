@@ -7,7 +7,7 @@
 #ifndef COMPILER_TRANSLATOR_GLSLANG_H_
 #define COMPILER_TRANSLATOR_GLSLANG_H_
 
-class TParseContext;
+struct TParseContext;
 extern int glslang_initialize(TParseContext* context);
 extern int glslang_finalize(TParseContext* context);
 
