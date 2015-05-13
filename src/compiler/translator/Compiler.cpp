@@ -202,7 +202,7 @@ TIntermNode *TCompiler::compileTreeImpl(const char* const shaderStrings[],
                                shaderType, shaderSpec, compileOptions, true,
                                infoSink, debugShaderPrecision);
 
-    parseContext.fragmentPrecisionHigh = fragmentPrecisionHigh;
+    parseContext.setFragmentPrecisionHigh(fragmentPrecisionHigh);
     SetGlobalParseContext(&parseContext);
 
     // We preserve symbols at the built-in level from compile-to-compile.
@@ -211,8 +211,8 @@ TIntermNode *TCompiler::compileTreeImpl(const char* const shaderStrings[],
 
     // Parse shader.
     bool success =
-        (PaParseStrings(numStrings - firstSource, &shaderStrings[firstSource], NULL, &parseContext) == 0) &&
-        (parseContext.treeRoot != NULL);
+        (PaParseStrings(numStrings - firstSource, &shaderStrings[firstSource], nullptr, &parseContext) == 0) &&
+        (parseContext.getTreeRoot() != nullptr);
 
     shaderVersion = parseContext.getShaderVersion();
     if (success && MapSpecToShaderVersion(shaderSpec) < shaderVersion)
@@ -222,7 +222,7 @@ TIntermNode *TCompiler::compileTreeImpl(const char* const shaderStrings[],
         success = false;
     }
 
-    TIntermNode *root = NULL;
+    TIntermNode *root = nullptr;
 
     if (success)
     {
@@ -232,7 +232,7 @@ TIntermNode *TCompiler::compileTreeImpl(const char* const shaderStrings[],
             symbolTable.setGlobalInvariant();
         }
 
-        root = parseContext.treeRoot;
+        root = parseContext.getTreeRoot();
         success = intermediate.postProcess(root);
 
         // Disallow expressions deemed too complex.
