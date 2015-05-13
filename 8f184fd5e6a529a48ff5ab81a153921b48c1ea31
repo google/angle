@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "cdf105a4_6ed2efd6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2015-05-13T00:26:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d6d15ec_dcfe8f30",
+      "revId": "8f184fd5e6a529a48ff5ab81a153921b48c1ea31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad3e91ea_a0651492",
         "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
         "patchSetId": 1
@@ -48,6 +66,24 @@
       "writtenOn": "2015-05-11T23:53:52Z",
       "side": 1,
       "message": "I don\u0027t think we need DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE",
+      "revId": "8f184fd5e6a529a48ff5ab81a153921b48c1ea31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd1ae5b3_a659a617",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2015-05-13T00:26:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad3e91ea_a0651492",
       "revId": "8f184fd5e6a529a48ff5ab81a153921b48c1ea31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
