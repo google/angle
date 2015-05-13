@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "ad15b184_546b3aed",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2387,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-13T15:02:03Z",
+      "side": 1,
+      "message": "This helper is the correct one to use, the other use case should be updated.  Agreed on merging the logic, maybe a bool in Renderer11, mSupportsDXGI1_2.",
+      "parentUuid": "cd1ae5b3_6f666129",
+      "range": {
+        "startLine": 2381,
+        "startChar": 0,
+        "endLine": 2387,
+        "endChar": 5
+      },
+      "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd1ae5b3_2ca75737",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 2
