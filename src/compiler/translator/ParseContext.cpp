@@ -12,7 +12,6 @@
 #include "compiler/preprocessor/SourceLocation.h"
 #include "compiler/translator/glslang.h"
 #include "compiler/translator/ValidateSwitch.h"
-#include "compiler/translator/ValidateGlobalInitializer.h"
 #include "compiler/translator/util.h"
 
 ///////////////////////////////////////////////////////////////////////
@@ -1109,20 +1108,6 @@ bool TParseContext::executeInitializer(const TSourceLoc &line, const TString &id
     if (!declareVariable(line, identifier, type, &variable))
     {
         return true;
-    }
-
-    bool globalInitWarning = false;
-    if (symbolTable.atGlobalLevel() && !ValidateGlobalInitializer(initializer, this, &globalInitWarning))
-    {
-        // Error message does not completely match behavior with ESSL 1.00, but
-        // we want to steer developers towards only using constant expressions.
-        error(line, "global variable initializers must be constant expressions", "=");
-        return true;
-    }
-    if (globalInitWarning)
-    {
-        warning(line, "global variable initializers should be constant expressions "
-                "(uniforms and globals are allowed in global initializers for legacy compatibility)", "=");
     }
 
     //

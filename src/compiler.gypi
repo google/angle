@@ -99,8 +99,6 @@
             'compiler/translator/Types.h',
             'compiler/translator/UnfoldShortCircuitAST.cpp',
             'compiler/translator/UnfoldShortCircuitAST.h',
-            'compiler/translator/ValidateGlobalInitializer.cpp',
-            'compiler/translator/ValidateGlobalInitializer.h',
             'compiler/translator/ValidateLimitations.cpp',
             'compiler/translator/ValidateLimitations.h',
             'compiler/translator/ValidateOutputs.cpp',
