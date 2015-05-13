@@ -5,10 +5,10 @@ deps = {
   # TODO(kbr): figure out how to better stay in sync with Chromium's
   # versions of googletest and googlemock.
   "src/tests/third_party/googletest":
-      "http://chromium.googlesource.com/external/googletest.git@be1868139ffe0ccd0e8e3b37292b84c821d9c8ad",
+      "http://chromium.googlesource.com/external/googletest.git@23574bf2333f834ff665f894c97bef8a5b33a0a9",
 
   "src/tests/third_party/googlemock":
-      "http://googlemock.googlecode.com/svn/trunk@410",
+      "http://googlemock.googlecode.com/svn/trunk@519",
 
   "src/tests/third_party/deqp":
       "https://android.googlesource.com/platform/external/deqp@d0cd12e34181184fcb63238790f93bda2313195a",
