@@ -208,6 +208,9 @@ bool UnfoldShortCircuitTraverser::visitSelection(Visit visit, TIntermSelection *
 
 bool UnfoldShortCircuitTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
 {
+    if (visit == PreVisit && mFoundShortCircuit)
+        return false; // No need to traverse further
+
     if (node->getOp() == EOpSequence)
     {
         if (visit == PreVisit)
@@ -222,6 +225,40 @@ bool UnfoldShortCircuitTraverser::visitAggregate(Visit visit, TIntermAggregate *
         {
             ASSERT(visit == PostVisit);
             mParentBlockStack.pop_back();
+        }
+    }
+    else if (node->getOp() == EOpComma)
+    {
+        ASSERT(visit != PreVisit || !mFoundShortCircuit);
+
+        if (visit == PostVisit && mFoundShortCircuit)
+        {
+            // We can be sure that we arrived here because there was a short-circuiting operator
+            // inside the sequence operator since we only start traversing the sequence operator in
+            // case a short-circuiting operator has not been found so far.
+            // We need to unfold the sequence (comma) operator, otherwise the evaluation order of
+            // statements would be messed up by unfolded operations inside.
+            // Don't do any other unfolding on this round of traversal.
+            mReplacements.clear();
+            mMultiReplacements.clear();
+            mInsertions.clear();
+
+            TIntermSequence insertions;
+            TIntermSequence *seq = node->getSequence();
+
+            TIntermSequence::size_type i = 0;
+            ASSERT(!seq->empty());
+            while (i < seq->size() - 1)
+            {
+                TIntermTyped *child = (*seq)[i]->getAsTyped();
+                insertions.push_back(child);
+                ++i;
+            }
+
+            NodeInsertMultipleEntry insert(mParentBlockStack.back().node, mParentBlockStack.back().pos, insertions);
+            mInsertions.push_back(insert);
+            NodeUpdateEntry replaceVariable(getParentNode(), node, (*seq)[i], false);
+            mReplacements.push_back(replaceVariable);
         }
     }
     return true;
