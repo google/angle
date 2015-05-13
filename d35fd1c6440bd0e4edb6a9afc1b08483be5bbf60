@@ -22,6 +22,30 @@
       "revId": "d35fd1c6440bd0e4edb6a9afc1b08483be5bbf60",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed2329ea_b63c3643",
+        "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-13T19:11:07Z",
+      "side": 1,
+      "message": "or !seq-\u003eempty()",
+      "parentUuid": "ed2329ea_b036fe91",
+      "range": {
+        "startLine": 244,
+        "startChar": 28,
+        "endLine": 244,
+        "endChar": 32
+      },
+      "revId": "d35fd1c6440bd0e4edb6a9afc1b08483be5bbf60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
