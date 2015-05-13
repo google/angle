@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd1ae5b3_cd683a6a",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1485,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-13T19:44:18Z",
+      "side": 1,
+      "message": "These lines are leaking memory, likely on the referenced return.  A std::vector should probably be used.",
+      "range": {
+        "startLine": 1484,
+        "startChar": 4,
+        "endLine": 1485,
+        "endChar": 50
+      },
+      "revId": "1137a2a6b4a68fe3f7497bb9289975b030576372",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd1ae5b3_2dac6e16",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1494,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-13T19:44:18Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 1494,
+        "startChar": 12,
+        "endLine": 1494,
+        "endChar": 27
+      },
+      "revId": "1137a2a6b4a68fe3f7497bb9289975b030576372",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
