@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad15b184_67c7a197",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2406,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-13T19:43:17Z",
+      "side": 1,
+      "message": "if you rebase on the aforementioned patch, you can use the caps value here",
+      "range": {
+        "startLine": 2400,
+        "startChar": 1,
+        "endLine": 2406,
+        "endChar": 5
+      },
+      "revId": "de1024c616e3bc1b28c97ee0027a2cf14ec5a322",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
