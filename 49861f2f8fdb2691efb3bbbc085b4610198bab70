@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "cd1ae5b3_2cfbd7f7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-13T13:39:34Z",
+      "side": 1,
+      "message": "I doubt it\u0027s a huge cost but we should move it to a member regardless.",
+      "parentUuid": "cd1ae5b3_2ca75737",
+      "range": {
+        "startLine": 602,
+        "startChar": 4,
+        "endLine": 602,
+        "endChar": 91
+      },
+      "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad15b184_d9fbe33d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 2
@@ -65,6 +89,52 @@
     },
     {
       "key": {
+        "uuid": "cd1ae5b3_8cc2cbb2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-13T13:39:34Z",
+      "side": 1,
+      "message": "suggest you block this out and use static_cast on mHeight and the others, as they convert from EGLint to whatever RECT uses",
+      "range": {
+        "startLine": 604,
+        "startChar": 8,
+        "endLine": 604,
+        "endChar": 76
+      },
+      "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd1ae5b3_0c009b6e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-13T13:39:34Z",
+      "side": 1,
+      "message": "nit: braces here as well",
+      "range": {
+        "startLine": 608,
+        "startChar": 4,
+        "endLine": 608,
+        "endChar": 12
+      },
+      "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd1ae5b3_8c976bc2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
         "patchSetId": 2
@@ -81,6 +151,29 @@
         "startChar": 20,
         "endLine": 52,
         "endChar": 27
+      },
+      "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd1ae5b3_6cf5cf00",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-13T13:39:34Z",
+      "side": 1,
+      "message": "nit: use static_cast, avoid reinterpret and c-style casts. you may have to use a temporary",
+      "range": {
+        "startLine": 66,
+        "startChar": 103,
+        "endLine": 66,
+        "endChar": 132
       },
       "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
