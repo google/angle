@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cd1ae5b3_81ea899f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2015-05-13T22:00:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed2329ea_2d0ab958",
+      "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd1ae5b3_6f666129",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -54,6 +72,30 @@
       "side": 1,
       "message": "This helper is the correct one to use, the other use case should be updated.  Agreed on merging the logic, maybe a bool in Renderer11, mSupportsDXGI1_2.",
       "parentUuid": "cd1ae5b3_6f666129",
+      "range": {
+        "startLine": 2381,
+        "startChar": 0,
+        "endLine": 2387,
+        "endChar": 5
+      },
+      "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd1ae5b3_61330d28",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2387,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2015-05-13T22:00:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad15b184_546b3aed",
       "range": {
         "startLine": 2381,
         "startChar": 0,
@@ -113,6 +155,30 @@
     },
     {
       "key": {
+        "uuid": "ed2329ea_1031c598",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2015-05-13T22:00:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd1ae5b3_2cfbd7f7",
+      "range": {
+        "startLine": 602,
+        "startChar": 4,
+        "endLine": 602,
+        "endChar": 91
+      },
+      "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad15b184_d9fbe33d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 2
@@ -124,6 +190,30 @@
       "writtenOn": "2015-05-13T13:24:57Z",
       "side": 1,
       "message": "nit: braces on the next line.",
+      "range": {
+        "startLine": 603,
+        "startChar": 31,
+        "endLine": 603,
+        "endChar": 32
+      },
+      "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed2329ea_3071695e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 603,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2015-05-13T22:00:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad15b184_d9fbe33d",
       "range": {
         "startLine": 603,
         "startChar": 31,
@@ -159,6 +249,30 @@
     },
     {
       "key": {
+        "uuid": "ed2329ea_506cdd87",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2015-05-13T22:00:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd1ae5b3_8cc2cbb2",
+      "range": {
+        "startLine": 604,
+        "startChar": 8,
+        "endLine": 604,
+        "endChar": 76
+      },
+      "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd1ae5b3_0c009b6e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 2
@@ -170,6 +284,30 @@
       "writtenOn": "2015-05-13T13:39:34Z",
       "side": 1,
       "message": "nit: braces here as well",
+      "range": {
+        "startLine": 608,
+        "startChar": 4,
+        "endLine": 608,
+        "endChar": 12
+      },
+      "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad15b184_73ff6378",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2015-05-13T22:00:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd1ae5b3_0c009b6e",
       "range": {
         "startLine": 608,
         "startChar": 4,
@@ -205,6 +343,30 @@
     },
     {
       "key": {
+        "uuid": "ed2329ea_305a09d6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2015-05-13T22:00:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd1ae5b3_8c976bc2",
+      "range": {
+        "startLine": 52,
+        "startChar": 20,
+        "endLine": 52,
+        "endChar": 27
+      },
+      "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd1ae5b3_6cf5cf00",
         "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
         "patchSetId": 2
@@ -216,6 +378,30 @@
       "writtenOn": "2015-05-13T13:39:34Z",
       "side": 1,
       "message": "nit: use static_cast, avoid reinterpret and c-style casts. you may have to use a temporary",
+      "range": {
+        "startLine": 66,
+        "startChar": 103,
+        "endLine": 66,
+        "endChar": 132
+      },
+      "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd1ae5b3_0105f941",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2015-05-13T22:00:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd1ae5b3_6cf5cf00",
       "range": {
         "startLine": 66,
         "startChar": 103,
