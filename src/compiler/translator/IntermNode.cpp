@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include <algorithm>
 
-#include "common/mathutil.h"
 #include "compiler/translator/HashNames.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/SymbolTable.h"
@@ -129,15 +128,6 @@ bool CompareStructure(const TType &leftNodeType,
         return CompareStruct(leftNodeType, rightUnionArray, leftUnionArray);
     }
     return true;
-}
-
-TConstantUnion *Vectorize(const TConstantUnion &constant, size_t size)
-{
-    TConstantUnion *constUnion = new TConstantUnion[size];
-    for (unsigned int i = 0; i < size; ++i)
-        constUnion[i] = constant;
-
-    return constUnion;
 }
 
 }  // namespace anonymous
@@ -697,13 +687,21 @@ TIntermTyped *TIntermConstantUnion::fold(
         // for a case like float f = vec4(2, 3, 4, 5) + 1.2;
         if (rightNode->getType().getObjectSize() == 1 && objectSize > 1)
         {
-            rightUnionArray = Vectorize(*rightNode->getUnionArrayPointer(), objectSize);
+            rightUnionArray = new TConstantUnion[objectSize];
+            for (size_t i = 0; i < objectSize; ++i)
+            {
+                rightUnionArray[i] = *rightNode->getUnionArrayPointer();
+            }
             returnType = getType();
         }
         else if (rightNode->getType().getObjectSize() > 1 && objectSize == 1)
         {
             // for a case like float f = 1.2 + vec4(2, 3, 4, 5);
-            unionArray = Vectorize(*getUnionArrayPointer(), rightNode->getType().getObjectSize());
+            unionArray = new TConstantUnion[rightNode->getType().getObjectSize()];
+            for (size_t i = 0; i < rightNode->getType().getObjectSize(); ++i)
+            {
+                unionArray[i] = *getUnionArrayPointer();
+            }
             returnType = rightNode->getType();
             objectSize = rightNode->getType().getObjectSize();
         }
@@ -1474,178 +1472,6 @@ bool TIntermConstantUnion::foldFloatTypeUnary(const TConstantUnion &parameter, F
         EPrefixInternalError, getLine(),
         "Unary operation not folded into constant");
     return false;
-}
-
-// static
-TIntermTyped *TIntermConstantUnion::FoldAggregateBuiltIn(TOperator op, TIntermAggregate *aggregate)
-{
-    TIntermSequence *sequence = aggregate->getSequence();
-    unsigned int paramsCount = sequence->size();
-    TConstantUnion **unionArrays = new TConstantUnion*[paramsCount];
-    size_t *objectSizes = new size_t[paramsCount];
-    TType *maxSizeType = nullptr;
-    TBasicType basicType = EbtVoid;
-    TSourceLoc loc;
-    for (unsigned int i = 0; i < paramsCount; i++)
-    {
-        TIntermConstantUnion *paramConstant = (*sequence)[i]->getAsConstantUnion();
-        // Make sure that all params are constant before actual constant folding.
-        if (!paramConstant)
-            return nullptr;
-
-        if (i == 0)
-        {
-            basicType = paramConstant->getType().getBasicType();
-            loc = paramConstant->getLine();
-        }
-        unionArrays[i] = paramConstant->getUnionArrayPointer();
-        objectSizes[i] = paramConstant->getType().getObjectSize();
-        if (maxSizeType == nullptr || (objectSizes[i] >= maxSizeType->getObjectSize()))
-            maxSizeType = paramConstant->getTypePointer();
-    }
-
-    size_t maxObjectSize = maxSizeType->getObjectSize();
-    for (unsigned int i = 0; i < paramsCount; i++)
-        if (objectSizes[i] != maxObjectSize)
-            unionArrays[i] = Vectorize(*unionArrays[i], maxObjectSize);
-    SafeDeleteArray(objectSizes);
-
-    TConstantUnion *tempConstArray = nullptr;
-    TIntermConstantUnion *tempNode = nullptr;
-    TType returnType = *maxSizeType;
-    if (paramsCount == 2)
-    {
-        //
-        // Binary built-in
-        //
-        switch (op)
-        {
-          case EOpMin:
-            {
-                tempConstArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    switch (basicType)
-                    {
-                      case EbtFloat:
-                        tempConstArray[i].setFConst(std::min(unionArrays[0][i].getFConst(), unionArrays[1][i].getFConst()));
-                        break;
-                      case EbtInt:
-                        tempConstArray[i].setIConst(std::min(unionArrays[0][i].getIConst(), unionArrays[1][i].getIConst()));
-                        break;
-                      case EbtUInt:
-                        tempConstArray[i].setUConst(std::min(unionArrays[0][i].getUConst(), unionArrays[1][i].getUConst()));
-                        break;
-                      default:
-                        UNREACHABLE();
-                        break;
-                    }
-                }
-            }
-            break;
-
-          case EOpMax:
-            {
-                tempConstArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    switch (basicType)
-                    {
-                      case EbtFloat:
-                        tempConstArray[i].setFConst(std::max(unionArrays[0][i].getFConst(), unionArrays[1][i].getFConst()));
-                        break;
-                      case EbtInt:
-                        tempConstArray[i].setIConst(std::max(unionArrays[0][i].getIConst(), unionArrays[1][i].getIConst()));
-                        break;
-                      case EbtUInt:
-                        tempConstArray[i].setUConst(std::max(unionArrays[0][i].getUConst(), unionArrays[1][i].getUConst()));
-                        break;
-                      default:
-                        UNREACHABLE();
-                        break;
-                    }
-                }
-            }
-            break;
-
-          default:
-            UNREACHABLE();
-            // TODO: Add constant folding support for other built-in operations that take 2 parameters and not handled above.
-            return nullptr;
-        }
-    }
-    else if (paramsCount == 3)
-    {
-        //
-        // Ternary built-in
-        //
-        switch (op)
-        {
-          case EOpClamp:
-            {
-                tempConstArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    switch (basicType)
-                    {
-                      case EbtFloat:
-                        {
-                            float x = unionArrays[0][i].getFConst();
-                            float min = unionArrays[1][i].getFConst();
-                            float max = unionArrays[2][i].getFConst();
-                            // Results are undefined if min > max.
-                            if (min > max)
-                                tempConstArray[i].setFConst(0.0f);
-                            else
-                                tempConstArray[i].setFConst(gl::clamp(x, min, max));
-                        }
-                        break;
-                      case EbtInt:
-                        {
-                            int x = unionArrays[0][i].getIConst();
-                            int min = unionArrays[1][i].getIConst();
-                            int max = unionArrays[2][i].getIConst();
-                            // Results are undefined if min > max.
-                            if (min > max)
-                                tempConstArray[i].setIConst(0);
-                            else
-                                tempConstArray[i].setIConst(gl::clamp(x, min, max));
-                        }
-                        break;
-                      case EbtUInt:
-                        {
-                            unsigned int x = unionArrays[0][i].getUConst();
-                            unsigned int min = unionArrays[1][i].getUConst();
-                            unsigned int max = unionArrays[2][i].getUConst();
-                            // Results are undefined if min > max.
-                            if (min > max)
-                                tempConstArray[i].setUConst(0u);
-                            else
-                                tempConstArray[i].setUConst(gl::clamp(x, min, max));
-                        }
-                        break;
-                      default:
-                        UNREACHABLE();
-                        break;
-                    }
-                }
-            }
-            break;
-
-          default:
-            UNREACHABLE();
-            // TODO: Add constant folding support for other built-in operations that take 3 parameters and not handled above.
-            return nullptr;
-        }
-    }
-
-    if (tempConstArray)
-    {
-        tempNode = new TIntermConstantUnion(tempConstArray, returnType);
-        tempNode->setLine(loc);
-    }
-    SafeDeleteArray(unionArrays);
-    return tempNode;
 }
 
 // static
