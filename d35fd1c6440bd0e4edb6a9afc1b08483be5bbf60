@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed2329ea_b036fe91",
+        "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-05-13T17:11:51Z",
+      "side": 1,
+      "message": "please assert seq-\u003esize() \u003e 0",
+      "range": {
+        "startLine": 244,
+        "startChar": 28,
+        "endLine": 244,
+        "endChar": 32
+      },
+      "revId": "d35fd1c6440bd0e4edb6a9afc1b08483be5bbf60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
