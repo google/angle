@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd1ae5b3_dabc75a9",
+        "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-05-13T17:01:03Z",
+      "side": 1,
+      "message": "nit: { to the next line",
+      "range": {
+        "startLine": 36,
+        "startChar": 23,
+        "endLine": 36,
+        "endChar": 24
+      },
+      "revId": "5c817c6d35cafa79982a74da23ea6baf3d6dc84f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd1ae5b3_7ae581d2",
+        "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-05-13T17:01:03Z",
+      "side": 1,
+      "message": "nit: { to a line line.",
+      "range": {
+        "startLine": 238,
+        "startChar": 7,
+        "endLine": 238,
+        "endChar": 8
+      },
+      "revId": "5c817c6d35cafa79982a74da23ea6baf3d6dc84f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
