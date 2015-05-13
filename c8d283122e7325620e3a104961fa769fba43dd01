@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd1ae5b3_ba42591b",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2344,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-05-13T17:07:23Z",
+      "side": 1,
+      "message": "nit: since you are touching this code, just get the style right, move \u0026\u0026 to the end of previous line.",
+      "range": {
+        "startLine": 2344,
+        "startChar": 11,
+        "endLine": 2344,
+        "endChar": 35
+      },
+      "revId": "c8d283122e7325620e3a104961fa769fba43dd01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
