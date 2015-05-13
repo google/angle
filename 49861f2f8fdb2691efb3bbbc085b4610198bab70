@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "cd1ae5b3_6f666129",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2387,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-05-13T14:58:20Z",
+      "side": 1,
+      "message": "Haven\u0027t we already done this check at Renderer initialization time in most cases? Should we cache that result instead of doing it a second time? (Also, we use QueryInterface instead of DynamicCast in init. Is there any reason to be doing the cast here, if we don\u0027t use the resulting pointer?)",
+      "range": {
+        "startLine": 2381,
+        "startChar": 0,
+        "endLine": 2387,
+        "endChar": 5
+      },
+      "revId": "49861f2f8fdb2691efb3bbbc085b4610198bab70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd1ae5b3_2ca75737",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 2
