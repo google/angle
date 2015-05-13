@@ -8,7 +8,7 @@
 // formats.
 
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
-
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/renderer/d3d/copyimage.h"
@@ -1028,12 +1028,12 @@ static D3D11ES3FormatMap BuildD3D11FormatMap()
     return map;
 }
 
-const TextureFormat &GetTextureFormatInfo(GLenum internalFormat, D3D_FEATURE_LEVEL featureLevel)
+const TextureFormat &GetTextureFormatInfo(GLenum internalFormat, const Renderer11DeviceCaps &renderer11DeviceCaps)
 {
     static const D3D11ES3FormatMap formatMap = BuildD3D11FormatMap();
     static const D3D11ES3FormatMap formatMapFL9_3Override = BuildD3D11_FL9_3FormatOverrideMap();
 
-    if (featureLevel == D3D_FEATURE_LEVEL_9_3)
+    if (renderer11DeviceCaps.featureLevel == D3D_FEATURE_LEVEL_9_3)
     {
         // First see if the internalFormat has a special map for FL9_3
         D3D11ES3FormatMap::const_iterator fl9_3Iter = formatMapFL9_3Override.find(internalFormat);

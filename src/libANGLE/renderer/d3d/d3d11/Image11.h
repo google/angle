@@ -65,7 +65,6 @@ class Image11 : public ImageD3D
     void releaseStagingTexture();
 
     Renderer11 *mRenderer;
-    D3D_FEATURE_LEVEL mFeatureLevel;
 
     DXGI_FORMAT mDXGIFormat;
     ID3D11Resource *mStagingTexture;

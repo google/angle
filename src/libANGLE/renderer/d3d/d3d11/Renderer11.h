@@ -39,6 +39,14 @@ class RenderTarget11;
 class Trim11;
 struct PackPixelsParams;
 
+struct Renderer11DeviceCaps
+{
+    D3D_FEATURE_LEVEL featureLevel;
+    bool supportsDXGI1_2;               // Support for DXGI 1.2
+    bool supportsClearView;             // Support for ID3D11DeviceContext1::ClearView
+    bool supportsConstantBufferOffsets; // Support for Constant buffer offset
+};
+
 enum
 {
     MAX_VERTEX_UNIFORM_VECTORS_D3D11 = 1024,
@@ -257,7 +265,7 @@ class Renderer11 : public RendererD3D
                                    bool colorBlit, bool depthBlit, bool stencilBlit);
 
     bool isES3Capable() const;
-    D3D_FEATURE_LEVEL getFeatureLevel() const { return mFeatureLevel; };
+    const Renderer11DeviceCaps &getRenderer11DeviceCaps() { return mRenderer11DeviceCaps; };
 
     RendererClass getRendererClass() const override { return RENDERER_D3D11; }
 
@@ -405,11 +413,8 @@ class Renderer11 : public RendererD3D
     // Sync query
     ID3D11Query *mSyncQuery;
 
-    // Constant buffer offset support
-    bool mSupportsConstantBufferOffsets;
-
     ID3D11Device *mDevice;
-    D3D_FEATURE_LEVEL mFeatureLevel;
+    Renderer11DeviceCaps mRenderer11DeviceCaps;
     ID3D11DeviceContext *mDeviceContext;
     ID3D11DeviceContext1 *mDeviceContext1;
     IDXGIAdapter *mDxgiAdapter;

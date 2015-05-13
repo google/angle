@@ -28,14 +28,15 @@ class RenderTarget11;
 class Renderer11;
 class SwapChain11;
 class Image11;
+struct Renderer11DeviceCaps;
 
 class TextureStorage11 : public TextureStorage
 {
   public:
     virtual ~TextureStorage11();
 
-    static DWORD GetTextureBindFlags(GLenum internalFormat, D3D_FEATURE_LEVEL featureLevel, bool renderTarget);
-    static DWORD GetTextureMiscFlags(GLenum internalFormat, D3D_FEATURE_LEVEL featureLevel, bool renderTarget, int levels);
+    static DWORD GetTextureBindFlags(GLenum internalFormat, const Renderer11DeviceCaps &renderer11DeviceCaps, bool renderTarget);
+    static DWORD GetTextureMiscFlags(GLenum internalFormat, const Renderer11DeviceCaps &renderer11DeviceCaps, bool renderTarget, int levels);
 
     UINT getBindFlags() const;
     UINT getMiscFlags() const;

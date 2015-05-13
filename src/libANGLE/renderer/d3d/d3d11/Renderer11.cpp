@@ -189,7 +189,9 @@ Renderer11::Renderer11(egl::Display *display)
 
     mSyncQuery = NULL;
 
-    mSupportsConstantBufferOffsets = false;
+    mRenderer11DeviceCaps.supportsClearView = false;
+    mRenderer11DeviceCaps.supportsConstantBufferOffsets = false;
+    mRenderer11DeviceCaps.supportsDXGI1_2 = false;
 
     mD3d11Module = NULL;
     mDxgiModule = NULL;
@@ -323,7 +325,7 @@ egl::Error Renderer11::initialize()
                                    mAvailableFeatureLevels.size(),
                                    D3D11_SDK_VERSION,
                                    &mDevice,
-                                   &mFeatureLevel,
+                                   &(mRenderer11DeviceCaps.featureLevel),
                                    &mDeviceContext);
     }
 
@@ -346,7 +348,7 @@ egl::Error Renderer11::initialize()
                                    mAvailableFeatureLevels.size(),
                                    D3D11_SDK_VERSION,
                                    &mDevice,
-                                   &mFeatureLevel,
+                                   &(mRenderer11DeviceCaps.featureLevel),
                                    &mDeviceContext);
 
         // Cleanup done by destructor
@@ -463,10 +465,11 @@ egl::Error Renderer11::initialize()
         SafeRelease(dxgiDevice);
 
         IDXGIAdapter2 *dxgiAdapter2 = d3d11::DynamicCastComObject<IDXGIAdapter2>(mDxgiAdapter);
+        mRenderer11DeviceCaps.supportsDXGI1_2 = (dxgiAdapter2 != nullptr);
 
         // On D3D_FEATURE_LEVEL_9_*, IDXGIAdapter::GetDesc returns "Software Adapter" for the description string.
         // If DXGI1.2 is available then IDXGIAdapter2::GetDesc2 can be used to get the actual hardware values.
-        if (mFeatureLevel <= D3D_FEATURE_LEVEL_9_3 && dxgiAdapter2 != NULL)
+        if (mRenderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3 && dxgiAdapter2 != NULL)
         {
             DXGI_ADAPTER_DESC2 adapterDesc2 = { 0 };
             dxgiAdapter2->GetDesc2(&adapterDesc2);
@@ -572,11 +575,15 @@ void Renderer11::initializeDevice()
 
     const gl::Caps &rendererCaps = getRendererCaps();
 
-    if (getDeviceContext1IfSupported())
+    if (mDeviceContext1)
     {
         D3D11_FEATURE_DATA_D3D11_OPTIONS d3d11Options;
-        mDevice->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS, &d3d11Options, sizeof(D3D11_FEATURE_DATA_D3D11_OPTIONS));
-        mSupportsConstantBufferOffsets = (d3d11Options.ConstantBufferOffsetting != FALSE);
+        HRESULT result = mDevice->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS, &d3d11Options, sizeof(D3D11_FEATURE_DATA_D3D11_OPTIONS));
+        if (SUCCEEDED(result))
+        {
+            mRenderer11DeviceCaps.supportsClearView = (d3d11Options.ClearView != FALSE);
+            mRenderer11DeviceCaps.supportsConstantBufferOffsets = (d3d11Options.ConstantBufferOffsetting != FALSE);
+        }
     }
 
     mForceSetVertexSamplerStates.resize(rendererCaps.maxVertexTextureImageUnits);
@@ -641,7 +648,7 @@ egl::ConfigSet Renderer11::generateConfigs() const
                     config.configCaveat = EGL_NONE;
                     config.configID = static_cast<EGLint>(configs.size() + 1);
                     // Can only support a conformant ES2 with feature level greater than 10.0.
-                    config.conformant = (mFeatureLevel >= D3D_FEATURE_LEVEL_10_0) ? (EGL_OPENGL_ES2_BIT | EGL_OPENGL_ES3_BIT_KHR) : EGL_NONE;
+                    config.conformant = (mRenderer11DeviceCaps.featureLevel >= D3D_FEATURE_LEVEL_10_0) ? (EGL_OPENGL_ES2_BIT | EGL_OPENGL_ES3_BIT_KHR) : EGL_NONE;
                     config.depthSize = depthStencilBufferFormatInfo.depthBits;
                     config.level = 0;
                     config.matchNativePixmap = EGL_NONE;
@@ -654,7 +661,7 @@ egl::ConfigSet Renderer11::generateConfigs() const
                     config.nativeVisualID = 0;
                     config.nativeVisualType = EGL_NONE;
                     // Can't support ES3 at all without feature level 10.0
-                    config.renderableType = EGL_OPENGL_ES2_BIT | ((mFeatureLevel >= D3D_FEATURE_LEVEL_10_0) ? EGL_OPENGL_ES3_BIT_KHR : 0);
+                    config.renderableType = EGL_OPENGL_ES2_BIT | ((mRenderer11DeviceCaps.featureLevel >= D3D_FEATURE_LEVEL_10_0) ? EGL_OPENGL_ES3_BIT_KHR : 0);
                     config.sampleBuffers = 0; // FIXME: enumerate multi-sampling
                     config.samples = 0;
                     config.stencilSize = depthStencilBufferFormatInfo.stencilBits;
@@ -896,7 +903,7 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
             Buffer11 *bufferStorage = GetImplAs<Buffer11>(uniformBuffer);
             ID3D11Buffer *constantBuffer;
 
-            if (mSupportsConstantBufferOffsets)
+            if (mRenderer11DeviceCaps.supportsConstantBufferOffsets)
             {
                 constantBuffer = bufferStorage->getBuffer(BUFFER_USAGE_UNIFORM);
             }
@@ -914,7 +921,7 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
                 mCurrentConstantBufferVSOffset[uniformBufferIndex] != uniformBufferOffset ||
                 mCurrentConstantBufferVSSize[uniformBufferIndex] != uniformBufferSize)
             {
-                if (mSupportsConstantBufferOffsets && uniformBufferSize != 0)
+                if (mRenderer11DeviceCaps.supportsConstantBufferOffsets && uniformBufferSize != 0)
                 {
                     UINT firstConstant = 0, numConstants = 0;
                     CalculateConstantBufferParams(uniformBufferOffset, uniformBufferSize, &firstConstant, &numConstants);
@@ -952,7 +959,7 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
             Buffer11 *bufferStorage = GetImplAs<Buffer11>(uniformBuffer);
             ID3D11Buffer *constantBuffer;
 
-            if (mSupportsConstantBufferOffsets)
+            if (mRenderer11DeviceCaps.supportsConstantBufferOffsets)
             {
                 constantBuffer = bufferStorage->getBuffer(BUFFER_USAGE_UNIFORM);
             }
@@ -970,7 +977,7 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
                 mCurrentConstantBufferPSOffset[uniformBufferIndex] != uniformBufferOffset ||
                 mCurrentConstantBufferPSSize[uniformBufferIndex] != uniformBufferSize)
             {
-                if (mSupportsConstantBufferOffsets && uniformBufferSize != 0)
+                if (mRenderer11DeviceCaps.supportsConstantBufferOffsets && uniformBufferSize != 0)
                 {
                     UINT firstConstant = 0, numConstants = 0;
                     CalculateConstantBufferParams(uniformBufferOffset, uniformBufferSize, &firstConstant, &numConstants);
@@ -1154,7 +1161,7 @@ void Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
         int dxMinViewportBoundsX = -dxMaxViewportBoundsX;
         int dxMinViewportBoundsY = -dxMaxViewportBoundsY;
 
-        if (mFeatureLevel <= D3D_FEATURE_LEVEL_9_3)
+        if (mRenderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3)
         {
             // Feature Level 9 viewports shouldn't exceed the dimensions of the rendertarget.
             dxMaxViewportBoundsX = mRenderTargetDesc.width;
@@ -1183,7 +1190,7 @@ void Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
         mCurFar = actualZFar;
 
         // On Feature Level 9_*, we must emulate large and/or negative viewports in the shaders using viewAdjust (like the D3D9 renderer).
-        if (mFeatureLevel <= D3D_FEATURE_LEVEL_9_3)
+        if (mRenderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3)
         {
             mVertexConstants.viewAdjust[0] = static_cast<float>((actualViewport.width  - dxViewportWidth)  + 2 * (actualViewport.x - dxViewportTopLeftX)) / dxViewport.Width;
             mVertexConstants.viewAdjust[1] = static_cast<float>((actualViewport.height - dxViewportHeight) + 2 * (actualViewport.y - dxViewportTopLeftY)) / dxViewport.Height;
@@ -2372,7 +2379,7 @@ bool Renderer11::getShareHandleSupport() const
     }
 
     // Also disable share handles on Feature Level 9_3, since it doesn't support share handles on RGBA8 textures/swapchains.
-    if (mFeatureLevel <= D3D_FEATURE_LEVEL_9_3)
+    if (mRenderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3)
     {
         return false;
     }
@@ -2394,7 +2401,7 @@ bool Renderer11::getPostSubBufferSupport() const
 
 int Renderer11::getMajorShaderModel() const
 {
-    switch (mFeatureLevel)
+    switch (mRenderer11DeviceCaps.featureLevel)
     {
       case D3D_FEATURE_LEVEL_11_0: return D3D11_SHADER_MAJOR_VERSION;   // 5
       case D3D_FEATURE_LEVEL_10_1: return D3D10_1_SHADER_MAJOR_VERSION; // 4
@@ -2406,7 +2413,7 @@ int Renderer11::getMajorShaderModel() const
 
 int Renderer11::getMinorShaderModel() const
 {
-    switch (mFeatureLevel)
+    switch (mRenderer11DeviceCaps.featureLevel)
     {
       case D3D_FEATURE_LEVEL_11_0: return D3D11_SHADER_MINOR_VERSION;   // 0
       case D3D_FEATURE_LEVEL_10_1: return D3D10_1_SHADER_MINOR_VERSION; // 1
@@ -2418,7 +2425,7 @@ int Renderer11::getMinorShaderModel() const
 
 std::string Renderer11::getShaderModelSuffix() const
 {
-    switch (mFeatureLevel)
+    switch (mRenderer11DeviceCaps.featureLevel)
     {
       case D3D_FEATURE_LEVEL_11_0: return "";
       case D3D_FEATURE_LEVEL_10_1: return "";
@@ -2656,7 +2663,7 @@ void Renderer11::setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView
 
 gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTargetD3D **outRT)
 {
-    const d3d11::TextureFormat &formatInfo = d3d11::GetTextureFormatInfo(format, mFeatureLevel);
+    const d3d11::TextureFormat &formatInfo = d3d11::GetTextureFormatInfo(format, mRenderer11DeviceCaps);
 
     const gl::TextureCaps &textureCaps = getRendererTextureCaps().get(format);
     GLuint supportedSamples = textureCaps.getNearestSamples(samples);
@@ -3030,7 +3037,7 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     ASSERT(getRendererExtensions().pixelBufferObject);
 
     const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
-    const d3d11::TextureFormat &d3d11FormatInfo = d3d11::GetTextureFormatInfo(internalFormat, mFeatureLevel);
+    const d3d11::TextureFormat &d3d11FormatInfo = d3d11::GetTextureFormatInfo(internalFormat, mRenderer11DeviceCaps);
     const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(d3d11FormatInfo.texFormat);
 
     // sRGB formats do not work with D3D11 buffer SRVs
@@ -3512,7 +3519,7 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const 
 
 bool Renderer11::isES3Capable() const
 {
-    return (d3d11_gl::GetMaximumClientVersion(mFeatureLevel) > 2);
+    return (d3d11_gl::GetMaximumClientVersion(mRenderer11DeviceCaps.featureLevel) > 2);
 };
 
 ID3D11Texture2D *Renderer11::resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource)
@@ -3575,22 +3582,22 @@ bool Renderer11::getLUID(LUID *adapterLuid) const
 
 VertexConversionType Renderer11::getVertexConversionType(const gl::VertexFormat &vertexFormat) const
 {
-    return d3d11::GetVertexFormatInfo(vertexFormat, mFeatureLevel).conversionType;
+    return d3d11::GetVertexFormatInfo(vertexFormat, mRenderer11DeviceCaps.featureLevel).conversionType;
 }
 
 GLenum Renderer11::getVertexComponentType(const gl::VertexFormat &vertexFormat) const
 {
-    return d3d11::GetDXGIFormatInfo(d3d11::GetVertexFormatInfo(vertexFormat, mFeatureLevel).nativeFormat).componentType;
+    return d3d11::GetDXGIFormatInfo(d3d11::GetVertexFormatInfo(vertexFormat, mRenderer11DeviceCaps.featureLevel).nativeFormat).componentType;
 }
 
 void Renderer11::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const
 {
-    d3d11_gl::GenerateCaps(mDevice, mDeviceContext, outCaps, outTextureCaps, outExtensions);
+    d3d11_gl::GenerateCaps(mDevice, mDeviceContext, mRenderer11DeviceCaps, outCaps, outTextureCaps, outExtensions);
 }
 
 Workarounds Renderer11::generateWorkarounds() const
 {
-    return d3d11::GenerateWorkarounds(mFeatureLevel);
+    return d3d11::GenerateWorkarounds(mRenderer11DeviceCaps.featureLevel);
 }
 
 void Renderer11::setShaderResource(gl::SamplerType shaderType, UINT resourceSlot, ID3D11ShaderResourceView *srv)

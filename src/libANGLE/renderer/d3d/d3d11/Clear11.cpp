@@ -86,7 +86,7 @@ Clear11::ClearShader Clear11::CreateClearShader(ID3D11Device *device, DXGI_FORMA
 
 Clear11::Clear11(Renderer11 *renderer)
     : mRenderer(renderer), mClearBlendStates(StructLessThan<ClearBlendInfo>), mClearDepthStencilStates(StructLessThan<ClearDepthStencilInfo>),
-      mVertexBuffer(NULL), mRasterizerState(NULL), mSupportsClearView(false)
+      mVertexBuffer(NULL), mRasterizerState(NULL)
 {
     TRACE_EVENT0("gpu.angle", "Clear11::Clear11");
 
@@ -121,7 +121,7 @@ Clear11::Clear11(Renderer11 *renderer)
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mRasterizerState, "Clear11 masked clear rasterizer state");
 
-    if (renderer->getFeatureLevel() <= D3D_FEATURE_LEVEL_9_3)
+    if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
     {
         mFloatClearShader = CreateClearShader(device, DXGI_FORMAT_R32G32B32A32_FLOAT, g_VS_ClearFloat, g_PS_ClearFloat_FL9);
     }
@@ -134,13 +134,6 @@ Clear11::Clear11(Renderer11 *renderer)
     {
         mUintClearShader  = CreateClearShader(device, DXGI_FORMAT_R32G32B32A32_UINT,  g_VS_ClearUint,  g_PS_ClearUint );
         mIntClearShader   = CreateClearShader(device, DXGI_FORMAT_R32G32B32A32_SINT,  g_VS_ClearSint,  g_PS_ClearSint );
-    }
-
-    if (renderer->getDeviceContext1IfSupported())
-    {
-        D3D11_FEATURE_DATA_D3D11_OPTIONS d3d11Options;
-        device->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS, &d3d11Options, sizeof(D3D11_FEATURE_DATA_D3D11_OPTIONS));
-        mSupportsClearView = (d3d11Options.ClearView != FALSE);
     }
 }
 
@@ -284,7 +277,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams, const gl
                 // Every channel either does not exist in the render target or is masked out
                 continue;
             }
-            else if ((!mSupportsClearView && needScissoredClear) || clearParams.colorClearType != GL_FLOAT ||
+            else if ((!(mRenderer->getRenderer11DeviceCaps().supportsClearView) && needScissoredClear) || clearParams.colorClearType != GL_FLOAT ||
                      (formatInfo.redBits   > 0 && !clearParams.colorMaskRed)   ||
                      (formatInfo.greenBits > 0 && !clearParams.colorMaskGreen) ||
                      (formatInfo.blueBits  > 0 && !clearParams.colorMaskBlue) ||

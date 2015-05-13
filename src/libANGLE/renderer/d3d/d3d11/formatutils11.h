@@ -19,6 +19,7 @@
 
 namespace rx
 {
+struct Renderer11DeviceCaps;
 
 namespace d3d11
 {
@@ -78,7 +79,7 @@ struct TextureFormat
     typedef std::map<GLenum, LoadImageFunction> LoadFunctionMap;
     LoadFunctionMap loadFunctions;
 };
-const TextureFormat &GetTextureFormatInfo(GLenum internalFormat, D3D_FEATURE_LEVEL featureLevel);
+const TextureFormat &GetTextureFormatInfo(GLenum internalFormat, const Renderer11DeviceCaps &renderer11DeviceCaps);
 
 struct VertexFormat
 {

@@ -77,8 +77,6 @@ class Clear11 : angle::NonCopyable
 
     ID3D11Buffer *mVertexBuffer;
     ID3D11RasterizerState *mRasterizerState;
-
-    bool mSupportsClearView;
 };
 
 }
