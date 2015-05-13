@@ -15,13 +15,12 @@ namespace rx
 {
 
 PbufferSurfaceGLX::PbufferSurfaceGLX(EGLint width, EGLint height, bool largest, const FunctionsGLX &glx,
-                                     Display *display, GLXContext context, GLXFBConfig fbConfig)
+                                     GLXContext context, GLXFBConfig fbConfig)
     : SurfaceGL(),
       mWidth(width),
       mHeight(height),
       mLargest(largest),
       mGLX(glx),
-      mDisplay(display),
       mContext(context),
       mFBConfig(fbConfig),
       mPbuffer(0)
@@ -32,7 +31,7 @@ PbufferSurfaceGLX::~PbufferSurfaceGLX()
 {
     if (mPbuffer)
     {
-        mGLX.destroyPbuffer(mDisplay, mPbuffer);
+        mGLX.destroyPbuffer(mPbuffer);
     }
 }
 
@@ -46,7 +45,7 @@ egl::Error PbufferSurfaceGLX::initialize()
         None
     };
 
-    mPbuffer = mGLX.createPbuffer(mDisplay, mFBConfig, attribs);
+    mPbuffer = mGLX.createPbuffer(mFBConfig, attribs);
     if (!mPbuffer)
     {
         return egl::Error(EGL_BAD_ALLOC, "Failed to create a native GLX pbuffer.");
@@ -54,8 +53,8 @@ egl::Error PbufferSurfaceGLX::initialize()
 
     if (mLargest)
     {
-        mGLX.queryDrawable(mDisplay, mPbuffer, GLX_WIDTH, &mWidth);
-        mGLX.queryDrawable(mDisplay, mPbuffer, GLX_HEIGHT, &mHeight);
+        mGLX.queryDrawable(mPbuffer, GLX_WIDTH, &mWidth);
+        mGLX.queryDrawable(mPbuffer, GLX_HEIGHT, &mHeight);
     }
 
     return egl::Error(EGL_SUCCESS);
@@ -63,7 +62,7 @@ egl::Error PbufferSurfaceGLX::initialize()
 
 egl::Error PbufferSurfaceGLX::makeCurrent()
 {
-    if (mGLX.makeCurrent(mDisplay, mPbuffer, mContext) != True)
+    if (mGLX.makeCurrent(mPbuffer, mContext) != True)
     {
         return egl::Error(EGL_BAD_DISPLAY);
     }

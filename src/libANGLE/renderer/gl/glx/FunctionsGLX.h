@@ -26,7 +26,7 @@ class FunctionsGLX : angle::NonCopyable
     ~FunctionsGLX();
 
     // Load data from GLX, can be called multiple times
-    egl::Error initialize(Display *xDisplay);
+    egl::Error initialize(Display *xDisplay, int screen);
     void terminate();
 
     bool hasExtension(const char *extension) const;
@@ -34,35 +34,65 @@ class FunctionsGLX : angle::NonCopyable
     int majorVersion;
     int minorVersion;
 
+    Display *getDisplay() const;
+    int getScreen() const;
+
     PFNGLXGETPROCADDRESSPROC getProc;
 
     // GLX 1.0
-    PFNGLXDESTROYCONTEXTPROC destroyContext;
-    PFNGLXMAKECURRENTPROC makeCurrent;
-    PFNGLXSWAPBUFFERSPROC swapBuffers;
-    PFNGLXQUERYEXTENSIONPROC queryExtension;
-    PFNGLXQUERYVERSIONPROC queryVersion;
+    void destroyContext(GLXContext context) const;
+    Bool makeCurrent(GLXDrawable drawable, GLXContext context) const;
+    void swapBuffers(GLXDrawable drawable) const;
+    Bool queryExtension(int *errorBase, int *event) const;
+    Bool queryVersion(int *major, int *minor) const;
 
     // GLX 1.1
-    PFNGLXQUERYEXTENSIONSSTRINGPROC queryExtensionsString;
+    const char *queryExtensionsString() const;
 
-    //GLX 1.3
-    PFNGLXGETFBCONFIGSPROC getFBConfigs;
-    PFNGLXCHOOSEFBCONFIGPROC chooseFBConfig;
-    PFNGLXGETFBCONFIGATTRIBPROC getFBConfigAttrib;
-    PFNGLXGETVISUALFROMFBCONFIGPROC getVisualFromFBConfig;
-    PFNGLXCREATEWINDOWPROC createWindow;
-    PFNGLXDESTROYWINDOWPROC destroyWindow;
-    PFNGLXCREATEPBUFFERPROC createPbuffer;
-    PFNGLXDESTROYPBUFFERPROC destroyPbuffer;
-    PFNGLXQUERYDRAWABLEPROC queryDrawable;
+    // GLX 1.3
+    GLXFBConfig *getFBConfigs(int *nElements) const;
+    GLXFBConfig *chooseFBConfig(const int *attribList, int *nElements) const;
+    int getFBConfigAttrib(GLXFBConfig config, int attribute, int *value) const;
+    XVisualInfo *getVisualFromFBConfig(GLXFBConfig config) const;
+    GLXWindow createWindow(GLXFBConfig config, Window window, const int *attribList) const;
+    void destroyWindow(GLXWindow window) const;
+    GLXPbuffer createPbuffer(GLXFBConfig config, const int *attribList) const;
+    void destroyPbuffer(GLXPbuffer pbuffer) const;
+    void queryDrawable(GLXDrawable drawable, int attribute, unsigned int *value) const;
 
     // GLX_ARB_create_context
-    PFNGLXCREATECONTEXTATTRIBSARBPROC createContextAttribsARB;
+    GLXContext createContextAttribsARB(GLXFBConfig config, GLXContext shareContext, Bool direct, const int *attribList) const;
 
   private:
     void *mLibHandle;
+    Display *mXDisplay;
+    int mXScreen;
+
     std::vector<std::string> mExtensions;
+
+    // GLX 1.0
+    PFNGLXDESTROYCONTEXTPROC mDestroyContextPtr;
+    PFNGLXMAKECURRENTPROC mMakeCurrentPtr;
+    PFNGLXSWAPBUFFERSPROC mSwapBuffersPtr;
+    PFNGLXQUERYEXTENSIONPROC mQueryExtensionPtr;
+    PFNGLXQUERYVERSIONPROC mQueryVersionPtr;
+
+    // GLX 1.1
+    PFNGLXQUERYEXTENSIONSSTRINGPROC mQueryExtensionsStringPtr;
+
+    //GLX 1.3
+    PFNGLXGETFBCONFIGSPROC mGetFBConfigsPtr;
+    PFNGLXCHOOSEFBCONFIGPROC mChooseFBConfigPtr;
+    PFNGLXGETFBCONFIGATTRIBPROC mGetFBConfigAttribPtr;
+    PFNGLXGETVISUALFROMFBCONFIGPROC mGetVisualFromFBConfigPtr;
+    PFNGLXCREATEWINDOWPROC mCreateWindowPtr;
+    PFNGLXDESTROYWINDOWPROC mDestroyWindowPtr;
+    PFNGLXCREATEPBUFFERPROC mCreatePbufferPtr;
+    PFNGLXDESTROYPBUFFERPROC mDestroyPbufferPtr;
+    PFNGLXQUERYDRAWABLEPROC mQueryDrawablePtr;
+
+    // GLX_ARB_create_context
+    PFNGLXCREATECONTEXTATTRIBSARBPROC mCreateContextAttribsARBPtr;
 };
 
 }

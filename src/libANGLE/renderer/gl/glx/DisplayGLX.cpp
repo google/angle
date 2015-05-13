@@ -49,8 +49,7 @@ DisplayGLX::DisplayGLX()
       mFunctionsGL(nullptr),
       mContext(nullptr),
       mDummyPbuffer(0),
-      mEGLDisplay(nullptr),
-      mXDisplay(nullptr)
+      mEGLDisplay(nullptr)
 {
 }
 
@@ -61,21 +60,21 @@ DisplayGLX::~DisplayGLX()
 egl::Error DisplayGLX::initialize(egl::Display *display)
 {
     mEGLDisplay = display;
-    mXDisplay = display->getNativeDisplayId();
+    Display *xDisplay = display->getNativeDisplayId();
 
     // ANGLE_platform_angle allows the creation of a default display
     // using EGL_DEFAULT_DISPLAY (= nullptr). In this case just open
     // the display specified by the DISPLAY environment variable.
-    if (mXDisplay == EGL_DEFAULT_DISPLAY)
+    if (xDisplay == EGL_DEFAULT_DISPLAY)
     {
-        mXDisplay = XOpenDisplay(NULL);
-        if (!mXDisplay)
+        xDisplay = XOpenDisplay(NULL);
+        if (!xDisplay)
         {
             return egl::Error(EGL_NOT_INITIALIZED, "Could not open the default X display.");
         }
     }
 
-    egl::Error glxInitResult = mGLX.initialize(mXDisplay);
+    egl::Error glxInitResult = mGLX.initialize(xDisplay, DefaultScreen(xDisplay));
     if (glxInitResult.isError())
     {
         return glxInitResult;
@@ -124,7 +123,7 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
             GLX_CONFIG_CAVEAT, GLX_NONE,
             None
         };
-        GLXFBConfig* candidates = mGLX.chooseFBConfig(mXDisplay, DefaultScreen(mXDisplay), attribList, &nConfigs);
+        GLXFBConfig* candidates = mGLX.chooseFBConfig(attribList, &nConfigs);
         if (nConfigs == 0)
         {
             XFree(candidates);
@@ -135,7 +134,7 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     }
     mContextVisualId = getGLXFBConfigAttrib(contextConfig, GLX_VISUAL_ID);
 
-    mContext = mGLX.createContextAttribsARB(mXDisplay, contextConfig, nullptr, True, nullptr);
+    mContext = mGLX.createContextAttribsARB(contextConfig, nullptr, True, nullptr);
     if (!mContext)
     {
         return egl::Error(EGL_NOT_INITIALIZED, "Could not create GL context.");
@@ -150,8 +149,8 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     // TODO(cwallez) during the initialization of ANGLE we need a gl context current
     // to query things like limits. Ideally we would want to unset the current context
     // and destroy the pbuffer before going back to the application but this is TODO
-    mDummyPbuffer = mGLX.createPbuffer(mXDisplay, contextConfig, nullptr);
-    mGLX.makeCurrent(mXDisplay, mDummyPbuffer, mContext);
+    mDummyPbuffer = mGLX.createPbuffer(contextConfig, nullptr);
+    mGLX.makeCurrent(mDummyPbuffer, mContext);
 
     mFunctionsGL = new FunctionsGLGLX(mGLX.getProc);
     mFunctionsGL->initialize();
@@ -165,13 +164,13 @@ void DisplayGLX::terminate()
 
     if (mDummyPbuffer)
     {
-        mGLX.destroyPbuffer(mXDisplay, mDummyPbuffer);
+        mGLX.destroyPbuffer(mDummyPbuffer);
         mDummyPbuffer = 0;
     }
 
     if (mContext)
     {
-        mGLX.destroyContext(mXDisplay, mContext);
+        mGLX.destroyContext(mContext);
         mContext = nullptr;
     }
 
@@ -187,7 +186,7 @@ SurfaceImpl *DisplayGLX::createWindowSurface(const egl::Config *configuration,
     ASSERT(configIdToGLXConfig.count(configuration->configID) > 0);
     GLXFBConfig fbConfig = configIdToGLXConfig[configuration->configID];
 
-    return new WindowSurfaceGLX(mGLX, window, mXDisplay, mContext, fbConfig);
+    return new WindowSurfaceGLX(mGLX, window, mGLX.getDisplay(), mContext, fbConfig);
 }
 
 SurfaceImpl *DisplayGLX::createPbufferSurface(const egl::Config *configuration,
@@ -200,7 +199,7 @@ SurfaceImpl *DisplayGLX::createPbufferSurface(const egl::Config *configuration,
     EGLint height = attribs.get(EGL_HEIGHT, 0);
     bool largest = (attribs.get(EGL_LARGEST_PBUFFER, EGL_FALSE) == EGL_TRUE);
 
-    return new PbufferSurfaceGLX(width, height, largest, mGLX, mXDisplay, mContext, fbConfig);
+    return new PbufferSurfaceGLX(width, height, largest, mGLX, mContext, fbConfig);
 }
 
 SurfaceImpl* DisplayGLX::createPbufferFromClientBuffer(const egl::Config *configuration,
@@ -234,7 +233,7 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
     bool hasTextureFromPixmap = mGLX.hasExtension("GLX_EXT_texture_from_pixmap");
 
     int glxConfigCount;
-    GLXFBConfig *glxConfigs = mGLX.getFBConfigs(mXDisplay, DefaultScreen(mXDisplay), &glxConfigCount);
+    GLXFBConfig *glxConfigs = mGLX.getFBConfigs(&glxConfigCount);
 
     for (int i = 0; i < glxConfigCount; i++)
     {
@@ -366,7 +365,7 @@ bool DisplayGLX::isValidNativeWindow(EGLNativeWindowType window) const
     Window parent;
     Window *children = nullptr;
     unsigned nChildren;
-    int status = XQueryTree(mXDisplay, window, &root, &parent, &children, &nChildren);
+    int status = XQueryTree(mGLX.getDisplay(), window, &root, &parent, &children, &nChildren);
     if (children)
     {
         XFree(children);
@@ -399,7 +398,7 @@ void DisplayGLX::generateCaps(egl::Caps *outCaps) const
 int DisplayGLX::getGLXFBConfigAttrib(GLXFBConfig config, int attrib) const
 {
     int result;
-    mGLX.getFBConfigAttrib(mXDisplay, config, attrib, &result);
+    mGLX.getFBConfigAttrib(config, attrib, &result);
     return result;
 }
 

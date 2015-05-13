@@ -74,7 +74,6 @@ class DisplayGLX : public DisplayGL
 
     FunctionsGLX mGLX;
     egl::Display *mEGLDisplay;
-    Display *mXDisplay;
 };
 
 }

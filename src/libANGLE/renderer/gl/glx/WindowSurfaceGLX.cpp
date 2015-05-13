@@ -29,14 +29,14 @@ WindowSurfaceGLX::WindowSurfaceGLX(const FunctionsGLX &glx, EGLNativeWindowType 
 
 WindowSurfaceGLX::~WindowSurfaceGLX()
 {
+    if (mGLXWindow)
+    {
+        mGLX.destroyWindow(mGLXWindow);
+    }
+
     if (mWindow)
     {
         XDestroyWindow(mDisplay, mWindow);
-    }
-
-    if (mGLXWindow)
-    {
-        mGLX.destroyWindow(mDisplay, mGLXWindow);
     }
 }
 
@@ -48,7 +48,7 @@ egl::Error WindowSurfaceGLX::initialize()
     // create a child window with the right visual that covers all of its
     // parent.
 
-    XVisualInfo* visualInfo = mGLX.getVisualFromFBConfig(mDisplay, mFBConfig);
+    XVisualInfo *visualInfo = mGLX.getVisualFromFBConfig(mFBConfig);
     if (!visualInfo)
     {
         return egl::Error(EGL_BAD_NATIVE_WINDOW, "Failed to get the XVisualInfo for the child window.");
@@ -76,7 +76,7 @@ egl::Error WindowSurfaceGLX::initialize()
     //TODO(cwallez) set up our own error handler to see if the call failed
     mWindow = XCreateWindow(mDisplay, mParent, 0, 0, parentAttribs.width, parentAttribs.height,
                             0, visualInfo->depth, InputOutput, visual, attributeMask, &attributes);
-    mGLXWindow = mGLX.createWindow(mDisplay, mFBConfig, mWindow, nullptr);
+    mGLXWindow = mGLX.createWindow(mFBConfig, mWindow, nullptr);
 
     XMapWindow(mDisplay, mWindow);
     XFlush(mDisplay);
@@ -89,7 +89,7 @@ egl::Error WindowSurfaceGLX::initialize()
 
 egl::Error WindowSurfaceGLX::makeCurrent()
 {
-    if (mGLX.makeCurrent(mDisplay, mGLXWindow, mContext) != True)
+    if (mGLX.makeCurrent(mGLXWindow, mContext) != True)
     {
         return egl::Error(EGL_BAD_DISPLAY);
     }
@@ -100,7 +100,7 @@ egl::Error WindowSurfaceGLX::swap()
 {
     //TODO(cwallez) resize support
     //TODO(cwallez) set up our own error handler to see if the call failed
-    mGLX.swapBuffers(mDisplay, mGLXWindow);
+    mGLX.swapBuffers(mGLXWindow);
     return egl::Error(EGL_SUCCESS);
 }
 

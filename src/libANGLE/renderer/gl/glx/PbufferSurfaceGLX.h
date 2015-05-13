@@ -23,7 +23,7 @@ class PbufferSurfaceGLX : public SurfaceGL
 {
   public:
     PbufferSurfaceGLX(EGLint width, EGLint height, bool largest, const FunctionsGLX &glx,
-                      Display *display, GLXContext context, GLXFBConfig fbConfig);
+                      GLXContext context, GLXFBConfig fbConfig);
     ~PbufferSurfaceGLX() override;
 
     egl::Error initialize();
@@ -47,7 +47,6 @@ class PbufferSurfaceGLX : public SurfaceGL
     bool mLargest;
 
     const FunctionsGLX &mGLX;
-    Display *mDisplay;
     GLXContext mContext;
     GLXFBConfig mFBConfig;
     GLXPbuffer mPbuffer;
