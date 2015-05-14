@@ -170,7 +170,6 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
     }
 
     surfaceAttributes.push_back(EGL_NONE);
-    surfaceAttributes.push_back(EGL_NONE);
 
     mSurface = eglCreateWindowSurface(mDisplay, mConfig, osWindow->getNativeWindow(), &surfaceAttributes[0]);
     if (eglGetError() != EGL_SUCCESS)
