@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd8d8546_384f664a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-14T19:14:38Z",
+      "side": 1,
+      "message": "The inlines here arn\u0027t required since only the addresses of these functions are being used so inlining is not possible.",
+      "range": {
+        "startLine": 292,
+        "startChar": 7,
+        "endLine": 292,
+        "endChar": 13
+      },
+      "revId": "6859e90d7534b3f19563cce0a8b69f1c6042cb08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd8d8546_38c84627",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-14T19:14:38Z",
+      "side": 1,
+      "message": "Maybe it would look nicer to have...\nAnyFL\nAtLeastFL\u003cFEATURE_LEVEL\u003e\nExactlyFL\u003cFEATURE_LEVEL\u003e\n\nI\u0027m not really sure, thoughts?",
+      "range": {
+        "startLine": 297,
+        "startChar": 0,
+        "endLine": 310,
+        "endChar": 1
+      },
+      "revId": "6859e90d7534b3f19563cce0a8b69f1c6042cb08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd8d8546_b8db56ed",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1013,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-14T19:14:38Z",
+      "side": 1,
+      "message": "Local named copies of the .first and .second would be nice.",
+      "range": {
+        "startLine": 1010,
+        "startChar": 12,
+        "endLine": 1013,
+        "endChar": 13
+      },
+      "revId": "6859e90d7534b3f19563cce0a8b69f1c6042cb08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0da4fdb8_ffbeab0e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-14T19:14:38Z",
+      "side": 1,
+      "message": "Should this be in another patch? Or the .cpp file only?",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 67
+      },
+      "revId": "6859e90d7534b3f19563cce0a8b69f1c6042cb08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
