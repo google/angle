@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eda6c9c2_7e19ddad",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-14T17:26:19Z",
+      "side": 1,
+      "message": "removed this, was causing assert failures in the tests",
+      "range": {
+        "startLine": 635,
+        "startChar": 8,
+        "endLine": 635,
+        "endChar": 62
+      },
+      "revId": "39efd44a974b26861f65dd6de6791e27cc787d34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
