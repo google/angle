@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd8d8546_4299a24f",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1644,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-14T13:53:25Z",
+      "side": 1,
+      "message": "TConstantUnion uses the pool allocation strategy - all objects are freed at the same time when the compile call finishes. Thus we don\u0027t have to deallocate pretty much any object of a type that begins with a capital \"T\". You can remove this block.",
+      "range": {
+        "startLine": 1642,
+        "startChar": 1,
+        "endLine": 1644,
+        "endChar": 114
+      },
+      "revId": "19b99ee3962c9882625dd0fbb6a3e0bdc033af50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
