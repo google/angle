@@ -114,6 +114,8 @@ class Platform
     virtual void histogramEnumeration(const char *name, int sample, int boundaryValue) { }
     // Unlike enumeration histograms, sparse histograms only allocate memory for non-empty buckets.
     virtual void histogramSparse(const char *name, int sample) { }
+    // Boolean histograms track two-state variables.
+    virtual void histogramBoolean(const char *name, bool sample) { }
 
   protected:
     virtual ~Platform() { }

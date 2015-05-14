@@ -75,7 +75,7 @@ enum
     MAX_TEXTURE_IMAGE_UNITS_VTF_SM4 = 16
 };
 
-static bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER_RESOURCE_VIEW_DESC desc)
+bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER_RESOURCE_VIEW_DESC desc)
 {
     unsigned mipLevel = index.mipIndex;
     unsigned layerIndex = index.layerIndex;
@@ -162,6 +162,32 @@ void CalculateConstantBufferParams(GLintptr offset, GLsizeiptr size, UINT *outFi
 egl::Error GenerateD3D11CreateDeviceErr(HRESULT errorCode)
 {
     return egl::Error(EGL_NOT_INITIALIZED, errorCode, "Could not create D3D11 device.");
+}
+
+enum ANGLEFeatureLevel
+{
+    ANGLE_FEATURE_LEVEL_INVALID,
+    ANGLE_FEATURE_LEVEL_9_3,
+    ANGLE_FEATURE_LEVEL_10_0,
+    ANGLE_FEATURE_LEVEL_10_1,
+    ANGLE_FEATURE_LEVEL_11_0,
+    ANGLE_FEATURE_LEVEL_11_1,
+    NUM_ANGLE_FEATURE_LEVELS
+};
+
+ANGLEFeatureLevel GetANGLEFeatureLevel(D3D_FEATURE_LEVEL d3dFeatureLevel)
+{
+    switch (d3dFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_9_3: return ANGLE_FEATURE_LEVEL_9_3;
+      case D3D_FEATURE_LEVEL_10_0: return ANGLE_FEATURE_LEVEL_10_0;
+      case D3D_FEATURE_LEVEL_10_1: return ANGLE_FEATURE_LEVEL_10_1;
+      case D3D_FEATURE_LEVEL_11_0: return ANGLE_FEATURE_LEVEL_11_0;
+      // Note: we don't ever request a 11_1 device, because this gives
+      // an E_INVALIDARG error on systems that don't have the platform update.
+      case D3D_FEATURE_LEVEL_11_1: return ANGLE_FEATURE_LEVEL_11_1;
+      default: return ANGLE_FEATURE_LEVEL_INVALID;
+    }
 }
 
 }
@@ -588,6 +614,24 @@ void Renderer11::initializeDevice()
     mCurPixelSRVs.resize(rendererCaps.maxTextureImageUnits);
 
     markAllStateDirty();
+
+    // Gather stats on DXGI and D3D feature level
+    ANGLE_HISTOGRAM_BOOLEAN("GPU.ANGLE.SupportsDXGI1_2", mRenderer11DeviceCaps.supportsDXGI1_2);
+
+    ANGLEFeatureLevel angleFeatureLevel = GetANGLEFeatureLevel(mRenderer11DeviceCaps.featureLevel);
+
+    // We don't actually request a 11_1 device, because of complications with the platform
+    // update. Instead we check if the mDeviceContext1 pointer cast succeeded.
+    // Note: we should support D3D11_0 always, but we aren't guaranteed to be at FL11_0
+    // because the app can specify a lower version (such as 9_3) on Display creation.
+    if (mDeviceContext1 != nullptr)
+    {
+        angleFeatureLevel = ANGLE_FEATURE_LEVEL_11_1;
+    }
+
+    ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.D3D11FeatureLevel",
+                                angleFeatureLevel,
+                                NUM_ANGLE_FEATURE_LEVELS);
 }
 
 egl::ConfigSet Renderer11::generateConfigs() const

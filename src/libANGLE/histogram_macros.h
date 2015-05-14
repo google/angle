@@ -48,6 +48,9 @@
 #define ANGLE_HISTOGRAM_PERCENTAGE(name, under_one_hundred) \
     ANGLE_HISTOGRAM_ENUMERATION(name, under_one_hundred, 101)
 
+#define ANGLE_HISTOGRAM_BOOLEAN(name, sample) \
+    ANGLEPlatformCurrent()->histogramBoolean(name, sample)
+
 #define ANGLE_HISTOGRAM_ENUMERATION(name, sample, boundary_value) \
     ANGLEPlatformCurrent()->histogramEnumeration(name, sample, boundary_value)
 
