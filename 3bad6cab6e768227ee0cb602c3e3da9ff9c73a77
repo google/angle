@@ -25,6 +25,53 @@
     },
     {
       "key": {
+        "uuid": "eda6c9c2_63878a68",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-14T17:14:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd8d8546_1d8d3f88",
+      "range": {
+        "startLine": 7,
+        "startChar": 51,
+        "endLine": 7,
+        "endChar": 62
+      },
+      "revId": "3bad6cab6e768227ee0cb602c3e3da9ff9c73a77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0da4fdb8_4461ae0e",
+        "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-14T17:14:46Z",
+      "side": 1,
+      "message": "changed back to a 3",
+      "range": {
+        "startLine": 52,
+        "startChar": 13,
+        "endLine": 52,
+        "endChar": 14
+      },
+      "revId": "3bad6cab6e768227ee0cb602c3e3da9ff9c73a77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0da4fdb8_a426dae3",
         "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.h",
         "patchSetId": 4
@@ -48,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "eda6c9c2_c39d96b2",
+        "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-14T17:14:46Z",
+      "side": 1,
+      "message": "Yes this would be easy to do now, it wouldn\u0027t be useful though, unless we hide the rest of GLX too (in particular types).",
+      "parentUuid": "0da4fdb8_a426dae3",
+      "range": {
+        "startLine": 74,
+        "startChar": 2,
+        "endLine": 95,
+        "endChar": 66
+      },
+      "revId": "3bad6cab6e768227ee0cb602c3e3da9ff9c73a77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd8d8546_dd73b70f",
         "filename": "src/libANGLE/renderer/gl/glx/WindowSurfaceGLX.cpp",
         "patchSetId": 4
@@ -59,6 +130,30 @@
       "writtenOn": "2015-05-14T17:09:43Z",
       "side": 1,
       "message": "nit: pointer alignment",
+      "range": {
+        "startLine": 51,
+        "startChar": 15,
+        "endLine": 51,
+        "endChar": 16
+      },
+      "revId": "3bad6cab6e768227ee0cb602c3e3da9ff9c73a77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd8d8546_280ab758",
+        "filename": "src/libANGLE/renderer/gl/glx/WindowSurfaceGLX.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-14T17:14:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd8d8546_dd73b70f",
       "range": {
         "startLine": 51,
         "startChar": 15,
