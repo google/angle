@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0da4fdb8_39c7734a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-14T15:16:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0da4fdb8_1919cf79",
+      "range": {
+        "startLine": 7,
+        "startChar": 20,
+        "endLine": 7,
+        "endChar": 33
+      },
+      "revId": "a82fc8842996e36773fe2ff44f57a9fe7cf23a3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd8d8546_62a13e1e",
         "filename": "BUILD.gn",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-14T15:11:46Z",
       "side": 1,
       "message": "nit: else if? we shouldn\u0027t be both :) (note: I\u0027m not familiar with gn if/else syntax)",
+      "range": {
+        "startLine": 247,
+        "startChar": 4,
+        "endLine": 247,
+        "endChar": 6
+      },
+      "revId": "a82fc8842996e36773fe2ff44f57a9fe7cf23a3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0da4fdb8_b929a384",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-14T15:16:42Z",
+      "side": 1,
+      "message": "neither am I :) I usually like to us else if only if the two conditions are not orthogonal.",
+      "parentUuid": "cd8d8546_62a13e1e",
       "range": {
         "startLine": 247,
         "startChar": 4,
