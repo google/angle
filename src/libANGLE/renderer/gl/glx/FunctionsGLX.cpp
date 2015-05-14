@@ -35,6 +35,8 @@ FunctionsGLX::FunctionsGLX()
     mSwapBuffersPtr(nullptr),
     mQueryExtensionPtr(nullptr),
     mQueryVersionPtr(nullptr),
+    mWaitXPtr(nullptr),
+    mWaitGLPtr(nullptr),
     mQueryExtensionsStringPtr(nullptr),
     mGetFBConfigsPtr(nullptr),
     mChooseFBConfigPtr(nullptr),
@@ -88,6 +90,8 @@ egl::Error FunctionsGLX::initialize(Display *xDisplay, int screen)
     GET_PROC_OR_ERROR(&mSwapBuffersPtr, "glXSwapBuffers");
     GET_PROC_OR_ERROR(&mQueryExtensionPtr, "glXQueryExtension");
     GET_PROC_OR_ERROR(&mQueryVersionPtr, "glXQueryVersion");
+    GET_PROC_OR_ERROR(&mWaitXPtr, "glXWaitX");
+    GET_PROC_OR_ERROR(&mWaitGLPtr, "glXWaitGL");
 
     // GLX 1.1
     GET_PROC_OR_ERROR(&mQueryExtensionsStringPtr, "glXQueryExtensionsString");
@@ -191,6 +195,14 @@ Bool FunctionsGLX::queryExtension(int *errorBase, int *event) const
 Bool FunctionsGLX::queryVersion(int *major, int *minor) const
 {
     return mQueryVersionPtr(mXDisplay, major, minor);
+}
+void FunctionsGLX::waitX() const
+{
+    mWaitXPtr();
+}
+void FunctionsGLX::waitGL() const
+{
+    mWaitGLPtr();
 }
 
 // GLX 1.1

@@ -45,6 +45,8 @@ class FunctionsGLX : angle::NonCopyable
     void swapBuffers(GLXDrawable drawable) const;
     Bool queryExtension(int *errorBase, int *event) const;
     Bool queryVersion(int *major, int *minor) const;
+    void waitX() const;
+    void waitGL() const;
 
     // GLX 1.1
     const char *queryExtensionsString() const;
@@ -76,6 +78,8 @@ class FunctionsGLX : angle::NonCopyable
     PFNGLXSWAPBUFFERSPROC mSwapBuffersPtr;
     PFNGLXQUERYEXTENSIONPROC mQueryExtensionPtr;
     PFNGLXQUERYVERSIONPROC mQueryVersionPtr;
+    PFNGLXWAITXPROC mWaitXPtr;
+    PFNGLXWAITGLPROC mWaitGLPtr;
 
     // GLX 1.1
     PFNGLXQUERYEXTENSIONSSTRINGPROC mQueryExtensionsStringPtr;
