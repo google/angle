@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "8dc2ad55_a8a163a6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-05-14T23:47:54Z",
+      "side": 1,
+      "message": "Happy to change it if you like. \n\nMaybe we could switch to templates in the future, instead of adding more feature-level functions (e.g. OnlyFL11Plus?)",
+      "parentUuid": "cd8d8546_38c84627",
+      "range": {
+        "startLine": 297,
+        "startChar": 0,
+        "endLine": 310,
+        "endChar": 1
+      },
+      "revId": "6859e90d7534b3f19563cce0a8b69f1c6042cb08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd8d8546_b8db56ed",
         "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
         "patchSetId": 3
