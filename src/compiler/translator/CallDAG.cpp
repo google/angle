@@ -18,9 +18,9 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
   public:
     CallDAGCreator(TInfoSinkBase *info)
         : TIntermTraverser(true, false, true),
+          mCreationInfo(info),
           mCurrentFunction(nullptr),
-          mCurrentIndex(0),
-          mCreationInfo(info)
+          mCurrentIndex(0)
     {
     }
 

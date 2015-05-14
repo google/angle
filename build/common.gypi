@@ -22,7 +22,6 @@
             '-Wextra',
             '-Wformat=2',
             '-Winit-self',
-            '-Wno-sign-compare',
             '-Wno-unused-function',
             '-Wno-unused-parameter',
             '-Wno-unknown-pragmas',
@@ -30,9 +29,7 @@
             '-Wpointer-arith',
             '-Wundef',
             '-Wwrite-strings',
-            '-Wno-reorder',
             '-Wno-format-nonliteral',
-            '-Wno-deprecated-register',
         ],
     },
     'target_defaults':

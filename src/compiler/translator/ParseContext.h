@@ -39,8 +39,10 @@ class TParseContext : angle::NonCopyable
                   bool debugShaderPrecisionSupported)
         : intermediate(interm),
           symbolTable(symt),
+          mDeferredSingleDeclarationErrorCheck(false),
           mShaderType(type),
           mShaderSpec(spec),
+          mShaderVersion(100),
           mTreeRoot(nullptr),
           mLoopNestingLevel(0),
           mStructNestingLevel(0),
@@ -52,11 +54,9 @@ class TParseContext : angle::NonCopyable
           mDefaultMatrixPacking(EmpColumnMajor),
           mDefaultBlockStorage(EbsShared),
           mDiagnostics(is),
-          mShaderVersion(100),
           mDirectiveHandler(ext, mDiagnostics, mShaderVersion, debugShaderPrecisionSupported),
           mPreprocessor(&mDiagnostics, &mDirectiveHandler),
           mScanner(nullptr),
-          mDeferredSingleDeclarationErrorCheck(false),
           mUsesFragData(false),
           mUsesFragColor(false)
     {

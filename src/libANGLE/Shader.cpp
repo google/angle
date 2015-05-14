@@ -25,12 +25,12 @@ namespace gl
 
 Shader::Shader(ResourceManager *manager, rx::ShaderImpl *impl, GLenum type, GLuint handle)
     : mShader(impl),
-      mType(type),
       mHandle(handle),
-      mResourceManager(manager),
+      mType(type),
       mRefCount(0),
       mDeleteStatus(false),
-      mCompiled(false)
+      mCompiled(false),
+      mResourceManager(manager)
 {
     ASSERT(impl);
 }

@@ -26,8 +26,8 @@ class InitializeVariables : public TIntermTraverser
     typedef TVector<InitVariableInfo> InitVariableInfoList;
 
     InitializeVariables(const InitVariableInfoList &vars)
-        : mCodeInserted(false),
-          mVariables(vars)
+        : mVariables(vars),
+          mCodeInserted(false)
     {
     }
 
