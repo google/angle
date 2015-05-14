@@ -142,7 +142,7 @@ TEST_P(PbufferTest, Clearing)
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_EQ(mPbufferSize / 2, mPbufferSize / 2, 255, 0, 255, 255);
 
-    // Rebind the window serfance and verify that it is still blue
+    // Rebind the window surface and verify that it is still blue
     eglMakeCurrent(window->getDisplay(), window->getSurface(), window->getSurface(), window->getContext());
     ASSERT_EGL_SUCCESS();
     EXPECT_PIXEL_EQ(window->getWidth() / 2, window->getHeight() / 2, 0, 0, 255, 255);
