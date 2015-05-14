@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "cd8d8546_3594cf1a",
+        "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-14T18:36:27Z",
+      "side": 1,
+      "message": "This change will go in a separate CL though (and I\u0027m still not sure what value it will provide).",
+      "parentUuid": "0da4fdb8_7fc71b97",
+      "range": {
+        "startLine": 74,
+        "startChar": 2,
+        "endLine": 95,
+        "endChar": 66
+      },
+      "revId": "3bad6cab6e768227ee0cb602c3e3da9ff9c73a77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd8d8546_dd73b70f",
         "filename": "src/libANGLE/renderer/gl/glx/WindowSurfaceGLX.cpp",
         "patchSetId": 4
