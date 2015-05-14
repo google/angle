@@ -8,6 +8,15 @@
 
 #include "x11/X11Window.h"
 
+namespace {
+
+Bool WaitForMapNotify(Display *dpy, XEvent *event, XPointer window)
+{
+    return event->type == MapNotify && event->xmap.window == reinterpret_cast<Window>(window);
+}
+
+}
+
 X11Window::X11Window()
     : WM_DELETE_WINDOW(None),
       mDisplay(nullptr),
@@ -158,12 +167,19 @@ void X11Window::setVisible(bool isVisible)
     if (isVisible)
     {
         XMapWindow(mDisplay, mWindow);
+
+        // Wait until we get an event saying this window is mapped so that the
+        // code calling setVisible can assume the window is visible.
+        // This is important when creating a framebuffer as the framebuffer content
+        // is undefined when the window is not visible.
+        XEvent dummyEvent;
+        XIfEvent(mDisplay, &dummyEvent, WaitForMapNotify, reinterpret_cast<XPointer>(mWindow));
     }
     else
     {
         XUnmapWindow(mDisplay, mWindow);
+        XFlush(mDisplay);
     }
-    XFlush(mDisplay);
 }
 
 void X11Window::signalTestEvent()
