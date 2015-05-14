@@ -44,8 +44,11 @@ if (is_win) {
     sources = [ "$windows_sdk_path/Redist/D3D/$target_cpu/d3dcompiler_47.dll" ]
     outputs = [ "$root_build_dir/d3dcompiler_47.dll" ]
   }
+} # is_win
 
-}  # is_win
+if (is_linux) {
+  angle_enable_gl = true
+}
 
 angle_enable_hlsl = false
 
@@ -240,6 +243,10 @@ static_library("libANGLE") {
 
     if (is_win) {
       sources += rebase_path(gles_gypi.libangle_gl_wgl_sources, ".", "src")
+    }
+    if (is_linux) {
+      sources += rebase_path(gles_gypi.libangle_gl_glx_sources, ".", "src")
+      libs += [ "X11" ]
     }
   }
 
