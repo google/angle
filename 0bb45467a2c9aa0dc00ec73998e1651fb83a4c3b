@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eda6c9c2_c9005506",
+        "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-14T18:27:08Z",
+      "side": 1,
+      "message": "I\u0027d suggest a more descriptive name to imply what the method will do instead of what happened.  flushXCommands or syncXCommands maybe.",
+      "range": {
+        "startLine": 36,
+        "startChar": 9,
+        "endLine": 36,
+        "endChar": 21
+      },
+      "revId": "0bb45467a2c9aa0dc00ec73998e1651fb83a4c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
