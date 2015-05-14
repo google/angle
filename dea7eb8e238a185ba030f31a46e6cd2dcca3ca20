@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eda6c9c2_89180d74",
+        "filename": "util/x11/X11Window.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-14T18:28:19Z",
+      "side": 1,
+      "message": "nit: brace alignment (also I have a mild preference for namespace {} over static, since it\u0027s how Chromium does things usually)",
+      "range": {
+        "startLine": 11,
+        "startChar": 75,
+        "endLine": 11,
+        "endChar": 76
+      },
+      "revId": "dea7eb8e238a185ba030f31a46e6cd2dcca3ca20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
