@@ -159,11 +159,6 @@ void CalculateConstantBufferParams(GLintptr offset, GLsizeiptr size, UINT *outFi
     // https://msdn.microsoft.com/en-us/library/windows/desktop/hh404649%28v=vs.85%29.aspx
 }
 
-egl::Error GenerateD3D11CreateDeviceErr(HRESULT errorCode)
-{
-    return egl::Error(EGL_NOT_INITIALIZED, errorCode, "Could not create D3D11 device.");
-}
-
 enum ANGLEFeatureLevel
 {
     ANGLE_FEATURE_LEVEL_INVALID,
@@ -378,39 +373,12 @@ egl::Error Renderer11::initialize()
                                    &mDeviceContext);
 
         // Cleanup done by destructor
-        if (FAILED(result))
+        if (!mDevice || FAILED(result))
         {
-            // Most likely error codes, see
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476082%28v=vs.85%29.aspx
-            // And https://msdn.microsoft.com/en-us/library/windows/desktop/ff476174(v=vs.85).aspx
-            switch (result)
-            {
-              case E_INVALIDARG:
-                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_INVALIDARG);
-              case E_FAIL:
-                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_FAIL);
-              case E_NOTIMPL:
-                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_NOTIMPL);
-              case E_OUTOFMEMORY:
-                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_OUTOFMEMORY);
-              case DXGI_ERROR_INVALID_CALL:
-                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_INVALIDCALL);
-              case DXGI_ERROR_SDK_COMPONENT_MISSING:
-                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_COMPONENTMISSING);
-              case DXGI_ERROR_WAS_STILL_DRAWING:
-                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_WASSTILLDRAWING);
-              case DXGI_ERROR_NOT_CURRENTLY_AVAILABLE:
-                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_NOTAVAILABLE);
-              case DXGI_ERROR_DEVICE_HUNG:
-                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_DEVICEHUNG);
-              default:
-                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_ERROR);
-            }
-        }
-
-        if (!mDevice)
-        {
-            return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_NULL);
+            ANGLE_HISTOGRAM_SPARSE_SLOWLY("GPU.ANGLE.D3D11CreateDeviceError", static_cast<int>(result));
+            return egl::Error(EGL_NOT_INITIALIZED,
+                              D3D11_INIT_CREATEDEVICE_ERROR,
+                              "Could not create D3D11 device.");
         }
 
         double createDeviceSec = ANGLEPlatformCurrent()->currentTime() - createDeviceBegin;

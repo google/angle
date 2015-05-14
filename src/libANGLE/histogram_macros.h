@@ -60,4 +60,7 @@
 #define ANGLE_HISTOGRAM_MEMORY_MB(name, sample) ANGLE_HISTOGRAM_CUSTOM_COUNTS( \
     name, sample, 1, 1000, 50)
 
+#define ANGLE_HISTOGRAM_SPARSE_SLOWLY(name, sample) \
+    ANGLEPlatformCurrent()->histogramSparse(name, sample)
+
 #endif  // BASE_METRICS_HISTOGRAM_MACROS_H_
