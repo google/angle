@@ -8,7 +8,7 @@
 #define COMPILER_TRANSLATOR_VALIDATEGLOBALINITIALIZER_H_
 
 class TIntermTyped;
-struct TParseContext;
+class TParseContext;
 
 // Returns true if the initializer is valid.
 bool ValidateGlobalInitializer(TIntermTyped *initializer, const TParseContext *context, bool *warning);

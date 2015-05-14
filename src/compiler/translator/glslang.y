@@ -110,28 +110,28 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
   } while (0)
 
 #define VERTEX_ONLY(S, L) {  \
-    if (context->shaderType != GL_VERTEX_SHADER) {  \
+    if (context->getShaderType() != GL_VERTEX_SHADER) {  \
         context->error(L, " supported in vertex shaders only ", S);  \
         context->recover();  \
     }  \
 }
 
 #define FRAG_ONLY(S, L) {  \
-    if (context->shaderType != GL_FRAGMENT_SHADER) {  \
+    if (context->getShaderType() != GL_FRAGMENT_SHADER) {  \
         context->error(L, " supported in fragment shaders only ", S);  \
         context->recover();  \
     }  \
 }
 
 #define ES2_ONLY(S, L) {  \
-    if (context->shaderVersion != 100) {  \
+    if (context->getShaderVersion() != 100) {  \
         context->error(L, " supported in GLSL ES 1.00 only ", S);  \
         context->recover();  \
     }  \
 }
 
 #define ES3_ONLY(TOKEN, LINE, REASON) {  \
-    if (context->shaderVersion != 300) {  \
+    if (context->getShaderVersion() != 300) {  \
         context->error(LINE, REASON " supported in GLSL ES 3.00 only ", TOKEN);  \
         context->recover();  \
     }  \
@@ -633,7 +633,7 @@ declaration
         $$ = aggNode;
     }
     | PRECISION precision_qualifier type_specifier_no_prec SEMICOLON {
-        if (($2 == EbpHigh) && (context->shaderType == GL_FRAGMENT_SHADER) && !context->fragmentPrecisionHigh) {
+        if (($2 == EbpHigh) && (context->getShaderType() == GL_FRAGMENT_SHADER) && !context->getFragmentPrecisionHigh()) {
             context->error(@1, "precision is not supported in fragment shader", "highp");
             context->recover();
         }
@@ -671,7 +671,7 @@ function_prototype
         //
         // Redeclarations are allowed.  But, return types and parameter qualifiers must match.
         //
-        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find($1->getMangledName(), context->shaderVersion));
+        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find($1->getMangledName(), context->getShaderVersion()));
         if (prevDec) {
             if (prevDec->getReturnType() != $1->getReturnType()) {
                 context->error(@2, "overloaded functions must have the same return type", $1->getReturnType().getBasicString());
@@ -688,7 +688,7 @@ function_prototype
         //
         // Check for previously declared variables using the same name.
         //
-        TSymbol *prevSym = context->symbolTable.find($1->getName(), context->shaderVersion);
+        TSymbol *prevSym = context->symbolTable.find($1->getName(), context->getShaderVersion());
         if (prevSym)
         {
             if (!prevSym->isFunction())
@@ -934,7 +934,7 @@ fully_specified_type
 
         if ($1.array) {
             ES3_ONLY("[]", @1, "first-class-array");
-            if (context->shaderVersion != 300) {
+            if (context->getShaderVersion() != 300) {
                 $1.clearArrayness();
             }
         }
@@ -971,7 +971,7 @@ type_qualifier
         ES2_ONLY("varying", @1);
         if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "varying"))
             context->recover();
-        if (context->shaderType == GL_VERTEX_SHADER)
+        if (context->getShaderType() == GL_VERTEX_SHADER)
             $$.setBasic(EbtVoid, EvqVaryingOut, @1);
         else
             $$.setBasic(EbtVoid, EvqVaryingIn, @1);
@@ -980,7 +980,7 @@ type_qualifier
         ES2_ONLY("varying", @1);
         if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "invariant varying"))
             context->recover();
-        if (context->shaderType == GL_VERTEX_SHADER)
+        if (context->getShaderType() == GL_VERTEX_SHADER)
             $$.setBasic(EbtVoid, EvqVaryingOut, @1);
         else
             $$.setBasic(EbtVoid, EvqVaryingIn, @1);
@@ -1030,29 +1030,29 @@ storage_qualifier
     }
     | IN_QUAL {
         ES3_ONLY("in", @1, "storage qualifier");
-        $$.qualifier = (context->shaderType == GL_FRAGMENT_SHADER) ? EvqFragmentIn : EvqVertexIn;
+        $$.qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqFragmentIn : EvqVertexIn;
     }
     | OUT_QUAL {
         ES3_ONLY("out", @1, "storage qualifier");
-        $$.qualifier = (context->shaderType == GL_FRAGMENT_SHADER) ? EvqFragmentOut : EvqVertexOut;
+        $$.qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqFragmentOut : EvqVertexOut;
     }
     | CENTROID IN_QUAL {
         ES3_ONLY("centroid in", @1, "storage qualifier");
-        if (context->shaderType == GL_VERTEX_SHADER)
+        if (context->getShaderType() == GL_VERTEX_SHADER)
         {
             context->error(@1, "invalid storage qualifier", "it is an error to use 'centroid in' in the vertex shader");
             context->recover();
         }
-        $$.qualifier = (context->shaderType == GL_FRAGMENT_SHADER) ? EvqCentroidIn : EvqVertexIn;
+        $$.qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqCentroidIn : EvqVertexIn;
     }
     | CENTROID OUT_QUAL {
         ES3_ONLY("centroid out", @1, "storage qualifier");
-        if (context->shaderType == GL_FRAGMENT_SHADER)
+        if (context->getShaderType() == GL_FRAGMENT_SHADER)
         {
             context->error(@1, "invalid storage qualifier", "it is an error to use 'centroid out' in the fragment shader");
             context->recover();
         }
-        $$.qualifier = (context->shaderType == GL_FRAGMENT_SHADER) ? EvqFragmentOut : EvqCentroidOut;
+        $$.qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqFragmentOut : EvqCentroidOut;
     }
     | UNIFORM {
         if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "uniform"))
@@ -1530,9 +1530,9 @@ selection_rest_statement
     ;
 
 switch_statement
-    : SWITCH LEFT_PAREN expression RIGHT_PAREN { ++context->mSwitchNestingLevel; } compound_statement {
+    : SWITCH LEFT_PAREN expression RIGHT_PAREN { context->incrSwitchNestingLevel(); } compound_statement {
         $$ = context->addSwitch($3, $6, @1);
-        --context->mSwitchNestingLevel;
+        context->decrSwitchNestingLevel();
     }
     ;
 
@@ -1567,22 +1567,22 @@ condition
     ;
 
 iteration_statement
-    : WHILE LEFT_PAREN { context->symbolTable.push(); ++context->mLoopNestingLevel; } condition RIGHT_PAREN statement_no_new_scope {
+    : WHILE LEFT_PAREN { context->symbolTable.push(); context->incrLoopNestingLevel(); } condition RIGHT_PAREN statement_no_new_scope {
         context->symbolTable.pop();
         $$ = context->intermediate.addLoop(ELoopWhile, 0, $4, 0, $6, @1);
-        --context->mLoopNestingLevel;
+        context->decrLoopNestingLevel();
     }
-    | DO { ++context->mLoopNestingLevel; } statement_with_scope WHILE LEFT_PAREN expression RIGHT_PAREN SEMICOLON {
+    | DO { context->incrLoopNestingLevel(); } statement_with_scope WHILE LEFT_PAREN expression RIGHT_PAREN SEMICOLON {
         if (context->boolErrorCheck(@8, $6))
             context->recover();
 
         $$ = context->intermediate.addLoop(ELoopDoWhile, 0, $6, 0, $3, @4);
-        --context->mLoopNestingLevel;
+        context->decrLoopNestingLevel();
     }
-    | FOR LEFT_PAREN { context->symbolTable.push(); ++context->mLoopNestingLevel; } for_init_statement for_rest_statement RIGHT_PAREN statement_no_new_scope {
+    | FOR LEFT_PAREN { context->symbolTable.push(); context->incrLoopNestingLevel(); } for_init_statement for_rest_statement RIGHT_PAREN statement_no_new_scope {
         context->symbolTable.pop();
         $$ = context->intermediate.addLoop(ELoopFor, $4, reinterpret_cast<TIntermTyped*>($5.node1), reinterpret_cast<TIntermTyped*>($5.node2), $7, @1);
-        --context->mLoopNestingLevel;
+        context->decrLoopNestingLevel();
     }
     ;
 
@@ -1639,11 +1639,11 @@ jump_statement
 translation_unit
     : external_declaration {
         $$ = $1;
-        context->treeRoot = $$;
+        context->setTreeRoot($$);
     }
     | translation_unit external_declaration {
         $$ = context->intermediate.growAggregate($1, $2, @$);
-        context->treeRoot = $$;
+        context->setTreeRoot($$);
     }
     ;
 
@@ -1660,7 +1660,7 @@ function_definition
     : function_prototype {
         TFunction* function = $1.function;
         
-        const TSymbol *builtIn = context->symbolTable.findBuiltIn(function->getMangledName(), context->shaderVersion);
+        const TSymbol *builtIn = context->symbolTable.findBuiltIn(function->getMangledName(), context->getShaderVersion());
         
         if (builtIn)
         {
@@ -1668,7 +1668,7 @@ function_definition
             context->recover();
         }
         
-        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find(function->getMangledName(), context->shaderVersion));
+        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find(function->getMangledName(), context->getShaderVersion()));
         //
         // Note:  'prevDec' could be 'function' if this is the first time we've seen function
         // as it would have just been put in the symbol table.  Otherwise, we're looking up
@@ -1706,8 +1706,8 @@ function_definition
         //
         // Remember the return type for later checking for RETURN statements.
         //
-        context->currentFunctionType = &(prevDec->getReturnType());
-        context->mFunctionReturnsValue = false;
+        context->setCurrentFunctionType(&(prevDec->getReturnType()));
+        context->setFunctionReturnsValue(false);
 
         //
         // Insert parameters into the symbol table.
@@ -1746,12 +1746,12 @@ function_definition
         }
         context->intermediate.setAggregateOperator(paramNodes, EOpParameters, @1);
         $1.intermAggregate = paramNodes;
-        context->mLoopNestingLevel = 0;
+        context->setLoopNestingLevel(0);
     }
     compound_statement_no_new_scope {
         //?? Check that all paths return a value if return type != void ?
         //   May be best done as post process phase on intermediate code
-        if (context->currentFunctionType->getBasicType() != EbtVoid && ! context->mFunctionReturnsValue) {
+        if (context->getCurrentFunctionType()->getBasicType() != EbtVoid && !context->getFunctionReturnsValue()) {
             context->error(@1, "function does not return a value:", "", $1.function->getName().c_str());
             context->recover();
         }
@@ -1774,5 +1774,5 @@ function_definition
 %%
 
 int glslang_parse(TParseContext* context) {
-    return yyparse(context, context->scanner);
+    return yyparse(context, context->getScanner());
 }

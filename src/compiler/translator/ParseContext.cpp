@@ -185,8 +185,8 @@ void TParseContext::error(const TSourceLoc& loc,
     pp::SourceLocation srcLoc;
     srcLoc.file = loc.first_file;
     srcLoc.line = loc.first_line;
-    diagnostics.writeInfo(pp::Diagnostics::PP_ERROR,
-                          srcLoc, reason, token, extraInfo);
+    mDiagnostics.writeInfo(pp::Diagnostics::PP_ERROR,
+                           srcLoc, reason, token, extraInfo);
 
 }
 
@@ -196,8 +196,8 @@ void TParseContext::warning(const TSourceLoc& loc,
     pp::SourceLocation srcLoc;
     srcLoc.file = loc.first_file;
     srcLoc.line = loc.first_line;
-    diagnostics.writeInfo(pp::Diagnostics::PP_WARNING,
-                          srcLoc, reason, token, extraInfo);
+    mDiagnostics.writeInfo(pp::Diagnostics::PP_WARNING,
+                           srcLoc, reason, token, extraInfo);
 }
 
 //
@@ -236,7 +236,7 @@ void TParseContext::binaryOpError(const TSourceLoc& line, const char* op, TStrin
 }
 
 bool TParseContext::precisionErrorCheck(const TSourceLoc& line, TPrecision precision, TBasicType type){
-    if (!checksPrecisionErrors)
+    if (!mChecksPrecisionErrors)
         return false;
     switch( type ){
     case EbtFloat:
@@ -433,7 +433,7 @@ bool TParseContext::reservedErrorCheck(const TSourceLoc& line, const TString& id
             error(line, reservedErrMsg, "gl_");
             return true;
         }
-        if (IsWebGLBasedSpec(shaderSpec)) {
+        if (IsWebGLBasedSpec(mShaderSpec)) {
             if (identifier.compare(0, 6, "webgl_") == 0) {
                 error(line, reservedErrMsg, "webgl_");
                 return true;
@@ -442,7 +442,7 @@ bool TParseContext::reservedErrorCheck(const TSourceLoc& line, const TString& id
                 error(line, reservedErrMsg, "_webgl_");
                 return true;
             }
-            if (shaderSpec == SH_CSS_SHADERS_SPEC && identifier.compare(0, 4, "css_") == 0) {
+            if (mShaderSpec == SH_CSS_SHADERS_SPEC && identifier.compare(0, 4, "css_") == 0) {
                 error(line, reservedErrMsg, "css_");
                 return true;
             }
@@ -736,7 +736,7 @@ bool TParseContext::arraySizeErrorCheck(const TSourceLoc& line, TIntermTyped* ex
 bool TParseContext::arrayQualifierErrorCheck(const TSourceLoc &line, const TPublicType &type)
 {
     if ((type.qualifier == EvqAttribute) || (type.qualifier == EvqVertexIn) ||
-        (type.qualifier == EvqConst && shaderVersion < 300))
+        (type.qualifier == EvqConst && mShaderVersion < 300))
     {
         error(line, "cannot declare arrays of this qualifier", TType(type).getCompleteString().c_str());
         return true;
@@ -779,7 +779,7 @@ bool TParseContext::nonInitErrorCheck(const TSourceLoc &line, const TString &ide
 
         // Generate informative error messages for ESSL1.
         // In ESSL3 arrays and structures containing arrays can be constant.
-        if (shaderVersion < 300 && type->isStructureContainingArrays())
+        if (mShaderVersion < 300 && type->isStructureContainingArrays())
         {
             error(line, "structures containing arrays may not be declared constant since they cannot be initialized", identifier.c_str());
         }
@@ -814,10 +814,10 @@ bool TParseContext::declareVariable(const TSourceLoc &line, const TString &ident
     if (type.isArray() && identifier.compare(0, 15, "gl_LastFragData") == 0)
     {
         const TVariable *maxDrawBuffers =
-            static_cast<const TVariable *>(symbolTable.findBuiltIn("gl_MaxDrawBuffers", shaderVersion));
+            static_cast<const TVariable *>(symbolTable.findBuiltIn("gl_MaxDrawBuffers", mShaderVersion));
         if (type.getArraySize() == maxDrawBuffers->getConstPointer()->getIConst())
         {
-            if (TSymbol *builtInSymbol = symbolTable.findBuiltIn(identifier, shaderVersion))
+            if (TSymbol *builtInSymbol = symbolTable.findBuiltIn(identifier, mShaderVersion))
             {
                 needsReservedErrorCheck = extensionErrorCheck(line, builtInSymbol->getExtension());
             }
@@ -1006,7 +1006,7 @@ void TParseContext::handleExtensionDirective(const TSourceLoc& loc, const char* 
     pp::SourceLocation srcLoc;
     srcLoc.file = loc.first_file;
     srcLoc.line = loc.first_line;
-    directiveHandler.handleExtension(srcLoc, extName, behavior);
+    mDirectiveHandler.handleExtension(srcLoc, extName, behavior);
 }
 
 void TParseContext::handlePragmaDirective(const TSourceLoc& loc, const char* name, const char* value, bool stdgl)
@@ -1014,7 +1014,7 @@ void TParseContext::handlePragmaDirective(const TSourceLoc& loc, const char* nam
     pp::SourceLocation srcLoc;
     srcLoc.file = loc.first_file;
     srcLoc.line = loc.first_line;
-    directiveHandler.handlePragma(srcLoc, name, value, stdgl);
+    mDirectiveHandler.handlePragma(srcLoc, name, value, stdgl);
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -1043,7 +1043,7 @@ const TVariable *TParseContext::getNamedVariable(const TSourceLoc &location,
     {
         variable = static_cast<const TVariable*>(symbol);
 
-        if (symbolTable.findBuiltIn(variable->getName(), shaderVersion) &&
+        if (symbolTable.findBuiltIn(variable->getName(), mShaderVersion) &&
             !variable->getExtension().empty() &&
             extensionErrorCheck(location, variable->getExtension()))
         {
@@ -1224,7 +1224,7 @@ TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, bool inva
         returnType.clearArrayness();
     }
 
-    if (shaderVersion < 300)
+    if (mShaderVersion < 300)
     {
         if (qualifier == EvqAttribute && (typeSpecifier.type == EbtBool || typeSpecifier.type == EbtInt))
         {
@@ -1645,7 +1645,7 @@ void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
     const TLayoutQualifier layoutQualifier = typeQualifier.layoutQualifier;
     ASSERT(!layoutQualifier.isEmpty());
 
-    if (shaderVersion < 300)
+    if (mShaderVersion < 300)
     {
         error(typeQualifier.line, "layout qualifiers supported in GLSL ES 3.00 only", "layout");
         recover();
@@ -1660,12 +1660,12 @@ void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
 
     if (layoutQualifier.matrixPacking != EmpUnspecified)
     {
-        defaultMatrixPacking = layoutQualifier.matrixPacking;
+        mDefaultMatrixPacking = layoutQualifier.matrixPacking;
     }
 
     if (layoutQualifier.blockStorage != EbsUnspecified)
     {
-        defaultBlockStorage = layoutQualifier.blockStorage;
+        mDefaultBlockStorage = layoutQualifier.blockStorage;
     }
 }
 
@@ -2016,12 +2016,12 @@ TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualif
 
     if (blockLayoutQualifier.matrixPacking == EmpUnspecified)
     {
-        blockLayoutQualifier.matrixPacking = defaultMatrixPacking;
+        blockLayoutQualifier.matrixPacking = mDefaultMatrixPacking;
     }
 
     if (blockLayoutQualifier.blockStorage == EbsUnspecified)
     {
-        blockLayoutQualifier.blockStorage = defaultBlockStorage;
+        blockLayoutQualifier.blockStorage = mDefaultBlockStorage;
     }
 
     TSymbol* blockNameSymbol = new TInterfaceBlockName(&blockName);
@@ -2135,12 +2135,12 @@ TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualif
 
 bool TParseContext::enterStructDeclaration(const TSourceLoc& line, const TString& identifier)
 {
-    ++structNestingLevel;
+    ++mStructNestingLevel;
 
     // Embedded structure definitions are not supported per GLSL ES spec.
     // They aren't allowed in GLSL either, but we need to detect this here
     // so we don't rely on the GLSL compiler to catch it.
-    if (structNestingLevel > 1) {
+    if (mStructNestingLevel > 1) {
         error(line, "", "Embedded struct definitions are not allowed");
         return true;
     }
@@ -2150,7 +2150,7 @@ bool TParseContext::enterStructDeclaration(const TSourceLoc& line, const TString
 
 void TParseContext::exitStructDeclaration()
 {
-    --structNestingLevel;
+    --mStructNestingLevel;
 }
 
 namespace {
@@ -2161,7 +2161,7 @@ const int kWebGLMaxStructNesting = 4;
 
 bool TParseContext::structNestingErrorCheck(const TSourceLoc& line, const TField& field)
 {
-    if (!IsWebGLBasedSpec(shaderSpec)) {
+    if (!IsWebGLBasedSpec(mShaderSpec)) {
         return false;
     }
 
@@ -2517,7 +2517,7 @@ TIntermTyped* TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
     }
     else
     {
-        if (shaderVersion < 300)
+        if (mShaderVersion < 300)
         {
             error(dotLocation, " field selection requires structure, vector, or matrix on left hand side", fieldString.c_str());
         }
@@ -2914,7 +2914,7 @@ bool TParseContext::binaryOpCommonCheck(TOperator op, TIntermTyped *left, TInter
 {
     if (left->isArray() || right->isArray())
     {
-        if (shaderVersion < 300)
+        if (mShaderVersion < 300)
         {
             error(loc, "Invalid operation for arrays", GetOperatorString(op));
             return false;
@@ -2994,7 +2994,7 @@ bool TParseContext::binaryOpCommonCheck(TOperator op, TIntermTyped *left, TInter
       case EOpEqual:
       case EOpNotEqual:
         // ESSL 1.00 sections 5.7, 5.8, 5.9
-        if (shaderVersion < 300 && left->getType().isStructureContainingArrays())
+        if (mShaderVersion < 300 && left->getType().isStructureContainingArrays())
         {
             error(loc, "undefined operation for structs containing arrays", GetOperatorString(op));
             return false;
@@ -3002,7 +3002,7 @@ bool TParseContext::binaryOpCommonCheck(TOperator op, TIntermTyped *left, TInter
         // Samplers as l-values are disallowed also in ESSL 3.00, see section 4.1.7,
         // we interpret the spec so that this extends to structs containing samplers,
         // similarly to ESSL 1.00 spec.
-        if ((shaderVersion < 300 || op == EOpAssign || op == EOpInitialize) &&
+        if ((mShaderVersion < 300 || op == EOpAssign || op == EOpInitialize) &&
             left->getType().isStructureContainingSamplers())
         {
             error(loc, "undefined operation for structs containing samplers", GetOperatorString(op));
@@ -3153,7 +3153,7 @@ TIntermBranch *TParseContext::addBranch(TOperator op, const TSourceLoc &loc)
         }
         break;
       case EOpReturn:
-        if (currentFunctionType->getBasicType() != EbtVoid)
+        if (mCurrentFunctionType->getBasicType() != EbtVoid)
         {
             error(loc, "non-void function must return a value", "return");
             recover();
@@ -3170,12 +3170,12 @@ TIntermBranch *TParseContext::addBranch(TOperator op, TIntermTyped *returnValue,
 {
     ASSERT(op == EOpReturn);
     mFunctionReturnsValue = true;
-    if (currentFunctionType->getBasicType() == EbtVoid)
+    if (mCurrentFunctionType->getBasicType() == EbtVoid)
     {
         error(loc, "void function cannot return a value", "return");
         recover();
     }
-    else if (*currentFunctionType != returnValue->getType())
+    else if (*mCurrentFunctionType != returnValue->getType())
     {
         error(loc, "function return is not matching type:", "return");
         recover();
@@ -3259,7 +3259,7 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
         //
         const TFunction* fnCandidate;
         bool builtIn;
-        fnCandidate = findFunction(loc, fnCall, shaderVersion, &builtIn);
+        fnCandidate = findFunction(loc, fnCall, mShaderVersion, &builtIn);
         if (fnCandidate)
         {
             //
