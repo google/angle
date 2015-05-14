@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6de499f7_41643648",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2015-05-14T22:13:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eda6c9c2_b856fde4",
+      "range": {
+        "startLine": 9,
+        "startChar": 3,
+        "endLine": 9,
+        "endChar": 19
+      },
+      "revId": "16667540f32fb0544d986e911a9a0e02360b70ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0da4fdb8_d9d5873a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-14T12:45:29Z",
       "side": 1,
       "message": "nit: capital \"FALSE\" is correct here, as it\u0027s a Win32 \"BOOL\"",
+      "range": {
+        "startLine": 58,
+        "startChar": 31,
+        "endLine": 58,
+        "endChar": 36
+      },
+      "revId": "16667540f32fb0544d986e911a9a0e02360b70ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "edb169f2_604f6817",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2015-05-14T22:13:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0da4fdb8_d9d5873a",
       "range": {
         "startLine": 58,
         "startChar": 31,
