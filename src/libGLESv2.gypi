@@ -751,7 +751,7 @@
                             '<!@(pkg-config --libs-only-L --libs-only-other x11 xi)',
                         ],
                         'libraries': [
-                            '<!@(pkg-config --libs-only-l x11 xi)',
+                            '<!@(pkg-config --libs-only-l x11 xi) -ldl',
                         ],
                     },
                 }],
