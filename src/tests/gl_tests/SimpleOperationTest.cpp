@@ -6,7 +6,7 @@
 // SimpleOperationTest:
 //   Basic GL commands such as linking a program, initializing a buffer, etc.
 
-#include "end2end_tests/ANGLETest.h"
+#include "test_utils/ANGLETest.h"
 
 #include <vector>
 

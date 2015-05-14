@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "end2end_tests/ANGLETest.h"
+#include "test_utils/ANGLETest.h"
 
 using namespace angle;
 

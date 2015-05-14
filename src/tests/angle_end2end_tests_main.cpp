@@ -5,7 +5,7 @@
 //
 
 #include "gtest/gtest.h"
-#include "end2end_tests/ANGLETest.h"
+#include "test_utils/ANGLETest.h"
 
 int main(int argc, char** argv)
 {

@@ -13,7 +13,7 @@
 
 #include "OSWindow.h"
 #include "common/angleutils.h"
-#include "end2end_tests/ANGLETest.h"
+#include "test_utils/ANGLETest.h"
 
 namespace
 {
