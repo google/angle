@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd8d8546_021b1af4",
+        "filename": "src/tests/end2end_tests/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-14T15:22:15Z",
+      "side": 1,
+      "message": "// TODO(cwazllez): remove this file once blah blah",
+      "revId": "8704531cb871ae51046b421b544ac7a115b4f02e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
