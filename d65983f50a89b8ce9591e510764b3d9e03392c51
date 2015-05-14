@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0da4fdb8_df79e7c0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-14T18:36:54Z",
+      "side": 1,
+      "message": "does this need updating?",
+      "range": {
+        "startLine": 538,
+        "startChar": 0,
+        "endLine": 541,
+        "endChar": 39
+      },
+      "revId": "d65983f50a89b8ce9591e510764b3d9e03392c51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd8d8546_f5d88719",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 846,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-14T18:36:54Z",
+      "side": 1,
+      "message": "can you alias some stuff locally? I\u0027m having a really hard time figuring out what a loadFunctionVector.second.first, .second, etc is",
+      "range": {
+        "startLine": 846,
+        "startChar": 15,
+        "endLine": 846,
+        "endChar": 45
+      },
+      "revId": "d65983f50a89b8ce9591e510764b3d9e03392c51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
