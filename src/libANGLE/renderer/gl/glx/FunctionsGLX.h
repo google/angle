@@ -30,7 +30,6 @@ class FunctionsGLX : angle::NonCopyable
     void terminate();
 
     bool hasExtension(const char *extension) const;
-
     int majorVersion;
     int minorVersion;
 

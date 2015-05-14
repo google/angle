@@ -10,19 +10,22 @@
 
 #include "common/debug.h"
 
+#include "libANGLE/renderer/gl/glx/DisplayGLX.h"
 #include "libANGLE/renderer/gl/glx/FunctionsGLX.h"
 
 namespace rx
 {
 
-WindowSurfaceGLX::WindowSurfaceGLX(const FunctionsGLX &glx, EGLNativeWindowType window, Display *display, GLXContext context, GLXFBConfig fbConfig)
+WindowSurfaceGLX::WindowSurfaceGLX(const FunctionsGLX &glx, const DisplayGLX &glxDisplay, Window window, Display *display,
+                                   GLXContext context, GLXFBConfig fbConfig)
     : SurfaceGL(),
-      mGLX(glx),
       mParent(window),
+      mWindow(0),
       mDisplay(display),
+      mGLX(glx),
+      mGLXDisplay(glxDisplay),
       mContext(context),
       mFBConfig(fbConfig),
-      mWindow(0),
       mGLXWindow(0)
 {
 }
@@ -38,6 +41,8 @@ WindowSurfaceGLX::~WindowSurfaceGLX()
     {
         XDestroyWindow(mDisplay, mWindow);
     }
+
+    mGLXDisplay.syncXCommands();
 }
 
 egl::Error WindowSurfaceGLX::initialize()
@@ -83,6 +88,8 @@ egl::Error WindowSurfaceGLX::initialize()
 
     XFree(visualInfo);
     XFreeColormap(mDisplay, colormap);
+
+    mGLXDisplay.syncXCommands();
 
     return egl::Error(EGL_SUCCESS);
 }
