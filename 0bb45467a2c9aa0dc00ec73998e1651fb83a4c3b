@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "0da4fdb8_5f66d728",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-14T18:33:25Z",
+      "side": 1,
+      "message": "I\u0027d suggest storing isNewDisplay (maybe renamed to something like mUsesNewXConnection) in Display, and making a helper method on Display to sync, instead of functionsGLX, since this is really a property of our Display implementation.",
+      "range": {
+        "startLine": 160,
+        "startChar": 4,
+        "endLine": 160,
+        "endChar": 24
+      },
+      "revId": "0bb45467a2c9aa0dc00ec73998e1651fb83a4c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eda6c9c2_c9005506",
         "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.h",
         "patchSetId": 3
