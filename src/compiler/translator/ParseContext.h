@@ -41,7 +41,6 @@ class TParseContext : angle::NonCopyable
           symbolTable(symt),
           mShaderType(type),
           mShaderSpec(spec),
-          mCompileOptions(options),
           mTreeRoot(nullptr),
           mLoopNestingLevel(0),
           mStructNestingLevel(0),
@@ -328,7 +327,6 @@ class TParseContext : angle::NonCopyable
     sh::GLenum mShaderType;              // vertex or fragment language (future: pack or unpack)
     ShShaderSpec mShaderSpec;              // The language specification compiler conforms to - GLES2 or WebGL.
     int mShaderVersion;
-    int mCompileOptions;
     TIntermNode *mTreeRoot;       // root of parse tree being created
     int mLoopNestingLevel;       // 0 if outside all loops
     int mStructNestingLevel;      // incremented while parsing a struct declaration
