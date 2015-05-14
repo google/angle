@@ -377,14 +377,6 @@ egl::Error Renderer11::initialize()
                 return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_NOTAVAILABLE);
               case DXGI_ERROR_DEVICE_HUNG:
                 return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_DEVICEHUNG);
-              case DXGI_ERROR_UNSUPPORTED:
-                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_UNSUPPORTED);
-              case DXGI_ERROR_DEVICE_RESET:
-                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_RESET);
-              case DXGI_ERROR_DEVICE_REMOVED:
-                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_REMOVED);
-              case DXGI_ERROR_DRIVER_INTERNAL_ERROR:
-                return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_INTERNALERROR);
               default:
                 return GenerateD3D11CreateDeviceErr(D3D11_INIT_CREATEDEVICE_ERROR);
             }
