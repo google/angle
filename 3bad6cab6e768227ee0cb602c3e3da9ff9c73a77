@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "eda6c9c2_2943a106",
+        "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-14T18:39:42Z",
+      "side": 1,
+      "message": "It would allow us to remove the glx headers from anywhere except a particular CPP file, which wouldn\u0027t have to include any ANGLE headers.",
+      "parentUuid": "cd8d8546_3594cf1a",
+      "range": {
+        "startLine": 74,
+        "startChar": 2,
+        "endLine": 95,
+        "endChar": 66
+      },
+      "revId": "3bad6cab6e768227ee0cb602c3e3da9ff9c73a77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd8d8546_dd73b70f",
         "filename": "src/libANGLE/renderer/gl/glx/WindowSurfaceGLX.cpp",
         "patchSetId": 4
