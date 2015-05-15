@@ -636,6 +636,11 @@ class TIntermTraverser : angle::NonCopyable
     void incrementParentBlockPos();
     void popParentBlock();
 
+    bool parentNodeIsBlock()
+    {
+        return !mParentBlockStack.empty() && getParentNode() == mParentBlockStack.back().node;
+    }
+
     // Return the original name if hash function pointer is NULL;
     // otherwise return the hashed name.
     static TString hash(const TString& name, ShHashFunction64 hashFunction);
