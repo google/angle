@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "8dc2ad55_2eae3b99",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-15T07:53:45Z",
+      "side": 1,
+      "message": "Ok, sorry for the confusion. Looks like I did not notice \u0026\u0026 changed to || in above assert.",
+      "parentUuid": "6d92d967_6ef04f60",
+      "range": {
+        "startLine": 770,
+        "startChar": 4,
+        "endLine": 770,
+        "endChar": 86
+      },
+      "revId": "b8e3a568bbd16fca1099a1b54cd82a981cd88a8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6dbd79c9_c7012ec1",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 10
