@@ -56,9 +56,7 @@ class TParseContext : angle::NonCopyable
           mDirectiveHandler(ext, mDiagnostics, mShaderVersion, debugShaderPrecisionSupported),
           mPreprocessor(&mDiagnostics, &mDirectiveHandler),
           mScanner(nullptr),
-          mDeferredSingleDeclarationErrorCheck(false),
-          mUsesFragData(false),
-          mUsesFragColor(false)
+          mDeferredSingleDeclarationErrorCheck(false)
     {
     }
 
@@ -75,7 +73,6 @@ class TParseContext : angle::NonCopyable
                const char *extraInfo="");
     void warning(const TSourceLoc &loc, const char *reason, const char *token,
                  const char *extraInfo="");
-
     void recover();
     TIntermNode *getTreeRoot() const { return mTreeRoot; }
     void setTreeRoot(TIntermNode *treeRoot) { mTreeRoot = treeRoot; }
@@ -342,8 +339,6 @@ class TParseContext : angle::NonCopyable
     TDirectiveHandler mDirectiveHandler;
     pp::Preprocessor mPreprocessor;
     void *mScanner;
-    bool mUsesFragData; // track if we are using both gl_FragData and gl_FragColor
-    bool mUsesFragColor;
 };
 
 int PaParseStrings(

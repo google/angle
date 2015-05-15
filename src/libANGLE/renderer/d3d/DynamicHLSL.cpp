@@ -757,8 +757,11 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data, InfoLog &infoLog,
     bool usesPointSize = vertexShader->mUsesPointSize;
     bool useInstancedPointSpriteEmulation = usesPointSize && mRenderer->getWorkarounds().useInstancedPointSpriteEmulation;
 
-    // Validation done in the compiler
-    ASSERT(!usesFragColor || !usesFragData);
+    if (usesFragColor && usesFragData)
+    {
+        infoLog << "Cannot use both gl_FragColor and gl_FragData in the same fragment shader.";
+        return false;
+    }
 
     // Write the HLSL input/output declarations
     const int shaderModel = mRenderer->getMajorShaderModel();
