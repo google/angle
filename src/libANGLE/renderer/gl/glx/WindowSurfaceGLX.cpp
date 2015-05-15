@@ -61,9 +61,12 @@ egl::Error WindowSurfaceGLX::initialize()
     // The depth, colormap and visual must match otherwise we get a X error
     // so we specify the colormap attribute. Also we do not want the window
     // to be taken into account for input so we specify the event and
-    // do-not-propagate masks to 0 (the defaults).
+    // do-not-propagate masks to 0 (the defaults). Finally we specify the
+    // border pixel attribute so that we can use a different visual depth
+    // than our parent (seems like X uses that as a condition to render
+    // the subwindow in a different buffer)
     XSetWindowAttributes attributes;
-    unsigned long attributeMask = CWColormap;
+    unsigned long attributeMask = CWColormap | CWBorderPixel;
 
     Colormap colormap = XCreateColormap(mDisplay, mParent, visual, AllocNone);
     if(!colormap)
@@ -72,6 +75,7 @@ egl::Error WindowSurfaceGLX::initialize()
         return egl::Error(EGL_BAD_NATIVE_WINDOW, "Failed to create the Colormap for the child window.");
     }
     attributes.colormap = colormap;
+    attributes.background_pixel = 0;
 
     //TODO(cwallez) set up our own error handler to see if the call failed
     mWindow = XCreateWindow(mDisplay, mParent, 0, 0, parentAttribs.width, parentAttribs.height,
