@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eda6c9c2_ea2c1d96",
+        "filename": "samples/tri_fan_microbench/TriFanMicroBench.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-15T15:13:24Z",
+      "side": 1,
+      "message": "nit: \u0027unsigned int\u0027",
+      "range": {
+        "startLine": 95,
+        "startChar": 13,
+        "endLine": 95,
+        "endChar": 21
+      },
+      "revId": "e89a79d58437569df74a5d0d4a60dd12f76d794d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eda6c9c2_0a2a4177",
+        "filename": "samples/tri_fan_microbench/TriFanMicroBench.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-15T15:13:24Z",
+      "side": 1,
+      "message": "change j as well if you change i",
+      "range": {
+        "startLine": 99,
+        "startChar": 17,
+        "endLine": 99,
+        "endChar": 20
+      },
+      "revId": "e89a79d58437569df74a5d0d4a60dd12f76d794d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd8d8546_91c2e885",
+        "filename": "samples/tri_fan_microbench/TriFanMicroBench.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-15T15:13:24Z",
+      "side": 1,
+      "message": "unsigned int for these",
+      "range": {
+        "startLine": 112,
+        "startChar": 13,
+        "endLine": 112,
+        "endChar": 21
+      },
+      "revId": "e89a79d58437569df74a5d0d4a60dd12f76d794d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0da4fdb8_9ce04213",
+        "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-15T15:13:24Z",
+      "side": 1,
+      "message": "we should not be using std::array in cross-platform code. Please change this to use fixed-size C arrays.",
+      "range": {
+        "startLine": 70,
+        "startChar": 8,
+        "endLine": 70,
+        "endChar": 55
+      },
+      "revId": "e89a79d58437569df74a5d0d4a60dd12f76d794d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eda6c9c2_6a190d79",
+        "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-15T15:13:24Z",
+      "side": 1,
+      "message": "ditto, and remove the #include",
+      "range": {
+        "startLine": 83,
+        "startChar": 7,
+        "endLine": 83,
+        "endChar": 24
+      },
+      "revId": "e89a79d58437569df74a5d0d4a60dd12f76d794d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
