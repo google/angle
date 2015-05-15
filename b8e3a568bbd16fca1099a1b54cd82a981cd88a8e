@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6dbd79c9_47827ed9",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-15T06:06:34Z",
+      "side": 1,
+      "message": "Is release build working for you guys?\n\nFor me it fails with errors:\nWarning\t3\twarning C4189: \u0027usesFragColor\u0027 : local variable is initialized but not referenced\tC:\\Users\\apatole\\2_angle\\src\\libANGLE\\renderer\\d3d\\DynamicHLSL.cpp\t753\t1\tlibANGLE\n\nWarning\t2\twarning C4189: \u0027usesFragData\u0027 : local variable is initialized but not referenced\tC:\\Users\\apatole\\2_angle\\src\\libANGLE\\renderer\\d3d\\DynamicHLSL.cpp\t754\t1\tlibANGLE",
+      "range": {
+        "startLine": 753,
+        "startChar": 9,
+        "endLine": 753,
+        "endChar": 22
+      },
+      "revId": "b8e3a568bbd16fca1099a1b54cd82a981cd88a8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
