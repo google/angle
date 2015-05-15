@@ -22,6 +22,30 @@
       "revId": "19b99ee3962c9882625dd0fbb6a3e0bdc033af50",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6dbd79c9_47a99edd",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1644,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-15T08:05:29Z",
+      "side": 1,
+      "message": "Done, Thanks for the explaining it Jamie, I was not aware of pool allocation strategy used for type beginning with \"T\".",
+      "parentUuid": "cd8d8546_4299a24f",
+      "range": {
+        "startLine": 1642,
+        "startChar": 1,
+        "endLine": 1644,
+        "endChar": 114
+      },
+      "revId": "19b99ee3962c9882625dd0fbb6a3e0bdc033af50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
