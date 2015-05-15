@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eda6c9c2_6a0aed59",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 909,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-15T13:58:55Z",
+      "side": 1,
+      "message": "Why not AnyDevice for this?",
+      "range": {
+        "startLine": 909,
+        "startChar": 177,
+        "endLine": 909,
+        "endChar": 188
+      },
+      "revId": "fc8912115e0e567309033aaa663f386b2cbeb716",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
