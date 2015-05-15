@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "0da4fdb8_45619eb8",
+        "filename": "src/libANGLE/renderer/gl/glx/FBConfigCompatibility.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-15T18:30:10Z",
+      "side": 1,
+      "message": "I haven\u0027t been able to test it as all the glxvisuals I have have the same depth for buffers, if they have a buffer. I took this requirement from the glx 1.4 spec at the top of page 3\nhttps://www.opengl.org/registry/doc/glx1.4.pdf",
+      "parentUuid": "cd8d8546_1940de12",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 5
+      },
+      "revId": "ede9887576488d43cbc50bc08a127c72dcf64ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd8d8546_5987c6aa",
         "filename": "src/libANGLE/renderer/gl/glx/FBConfigCompatibility.md",
         "patchSetId": 2
@@ -59,6 +83,30 @@
       "writtenOn": "2015-05-15T18:04:27Z",
       "side": 1,
       "message": "Looking at your analysis below, it looks like if the context was created with the double-buffered bit it must be made current to a double-buffered surface. Have you tried creating the context without the double-buffered property and seen whether it can be made current to both single-buffered and double-buffered surfaces?",
+      "range": {
+        "startLine": 38,
+        "startChar": 21,
+        "endLine": 38,
+        "endChar": 29
+      },
+      "revId": "ede9887576488d43cbc50bc08a127c72dcf64ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd8d8546_dcf00462",
+        "filename": "src/libANGLE/renderer/gl/glx/FBConfigCompatibility.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-15T18:30:10Z",
+      "side": 1,
+      "message": "That\u0027s a very interesting question, I did not test that. Added on the TODO list.",
+      "parentUuid": "cd8d8546_5987c6aa",
       "range": {
         "startLine": 38,
         "startChar": 21,
