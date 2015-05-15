@@ -221,7 +221,7 @@ HRESULT GetOptionalSizePropertyValue(const ComPtr<ABI::Windows::Foundation::Coll
 {
     if (!propertyMap || !propertyName || !value || !valueExists)
     {
-        return false;
+        return E_INVALIDARG;
     }
 
     // Assume that the value does not exist

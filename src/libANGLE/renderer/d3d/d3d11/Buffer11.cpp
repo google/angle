@@ -817,8 +817,12 @@ bool Buffer11::NativeStorage::copyFromStorage(BufferStorage *source, size_t sour
 
         D3D11_MAPPED_SUBRESOURCE mappedResource;
         HRESULT hr = context->Map(mNativeStorage, 0, D3D11_MAP_WRITE, 0, &mappedResource);
-        UNUSED_ASSERTION_VARIABLE(hr);
         ASSERT(SUCCEEDED(hr));
+        if (FAILED(hr))
+        {
+            source->unmap();
+            return false;
+        }
 
         uint8_t *destPointer = static_cast<uint8_t *>(mappedResource.pData) + destOffset;
 
@@ -955,9 +959,11 @@ uint8_t *Buffer11::NativeStorage::map(size_t offset, size_t length, GLbitfield a
     UINT d3dMapFlag = ((access & GL_MAP_UNSYNCHRONIZED_BIT) != 0 ? D3D11_MAP_FLAG_DO_NOT_WAIT : 0);
 
     HRESULT result = context->Map(mNativeStorage, 0, d3dMapType, d3dMapFlag, &mappedResource);
-    UNUSED_ASSERTION_VARIABLE(result);
     ASSERT(SUCCEEDED(result));
-
+    if (FAILED(result))
+    {
+        return nullptr;
+    }
     return static_cast<uint8_t*>(mappedResource.pData) + offset;
 }
 

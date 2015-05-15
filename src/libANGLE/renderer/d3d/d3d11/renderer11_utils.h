@@ -137,12 +137,15 @@ inline bool isDeviceLostError(HRESULT errorCode)
 
 inline ID3D11VertexShader *CompileVS(ID3D11Device *device, const BYTE *byteCode, size_t N, const char *name)
 {
-    ID3D11VertexShader *vs = NULL;
-    HRESULT result = device->CreateVertexShader(byteCode, N, NULL, &vs);
-    UNUSED_ASSERTION_VARIABLE(result);
+    ID3D11VertexShader *vs = nullptr;
+    HRESULT result = device->CreateVertexShader(byteCode, N, nullptr, &vs);
     ASSERT(SUCCEEDED(result));
-    SetDebugName(vs, name);
-    return vs;
+    if (SUCCEEDED(result))
+    {
+        SetDebugName(vs, name);
+        return vs;
+    }
+    return nullptr;
 }
 
 template <unsigned int N>
@@ -153,12 +156,15 @@ ID3D11VertexShader *CompileVS(ID3D11Device *device, const BYTE (&byteCode)[N], c
 
 inline ID3D11GeometryShader *CompileGS(ID3D11Device *device, const BYTE *byteCode, size_t N, const char *name)
 {
-    ID3D11GeometryShader *gs = NULL;
-    HRESULT result = device->CreateGeometryShader(byteCode, N, NULL, &gs);
-    UNUSED_ASSERTION_VARIABLE(result);
+    ID3D11GeometryShader *gs = nullptr;
+    HRESULT result = device->CreateGeometryShader(byteCode, N, nullptr, &gs);
     ASSERT(SUCCEEDED(result));
-    SetDebugName(gs, name);
-    return gs;
+    if (SUCCEEDED(result))
+    {
+        SetDebugName(gs, name);
+        return gs;
+    }
+    return nullptr;
 }
 
 template <unsigned int N>
@@ -169,12 +175,15 @@ ID3D11GeometryShader *CompileGS(ID3D11Device *device, const BYTE (&byteCode)[N],
 
 inline ID3D11PixelShader *CompilePS(ID3D11Device *device, const BYTE *byteCode, size_t N, const char *name)
 {
-    ID3D11PixelShader *ps = NULL;
-    HRESULT result = device->CreatePixelShader(byteCode, N, NULL, &ps);
-    UNUSED_ASSERTION_VARIABLE(result);
+    ID3D11PixelShader *ps = nullptr;
+    HRESULT result = device->CreatePixelShader(byteCode, N, nullptr, &ps);
     ASSERT(SUCCEEDED(result));
-    SetDebugName(ps, name);
-    return ps;
+    if (SUCCEEDED(result))
+    {
+        SetDebugName(ps, name);
+        return ps;
+    }
+    return nullptr;
 }
 
 template <unsigned int N>
@@ -259,12 +268,14 @@ inline ID3D11PixelShader *DeferredShader<ID3D11PixelShader>::getShader(ID3D11Dev
 template <class T>
 void SetBufferData(ID3D11DeviceContext *context, ID3D11Buffer *constantBuffer, const T &value)
 {
-    D3D11_MAPPED_SUBRESOURCE mappedResource;
-    context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-
-    memcpy(mappedResource.pData, &value, sizeof(T));
-
-    context->Unmap(constantBuffer, 0);
+    D3D11_MAPPED_SUBRESOURCE mappedResource = {};
+    HRESULT result = context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    ASSERT(SUCCEEDED(result));
+    if (SUCCEEDED(result))
+    {
+        memcpy(mappedResource.pData, &value, sizeof(T));
+        context->Unmap(constantBuffer, 0);
+    }
 }
 
 Workarounds GenerateWorkarounds(D3D_FEATURE_LEVEL featureLevel);

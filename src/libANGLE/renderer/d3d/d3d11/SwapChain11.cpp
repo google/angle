@@ -350,9 +350,16 @@ EGLint SwapChain11::resize(EGLint backbufferWidth, EGLint backbufferHeight)
 
     // Resize swap chain
     DXGI_SWAP_CHAIN_DESC desc;
-    mSwapChain->GetDesc(&desc);
+    HRESULT result = mSwapChain->GetDesc(&desc);
+    if (FAILED(result))
+    {
+        ERR("Error reading swap chain description: 0x%08X", result);
+        release();
+        return EGL_BAD_ALLOC;
+    }
+
     const d3d11::TextureFormat &backbufferFormatInfo = d3d11::GetTextureFormatInfo(mBackBufferFormat, mRenderer->getRenderer11DeviceCaps());
-    HRESULT result = mSwapChain->ResizeBuffers(desc.BufferCount, backbufferWidth, backbufferHeight, backbufferFormatInfo.texFormat, 0);
+    result = mSwapChain->ResizeBuffers(desc.BufferCount, backbufferWidth, backbufferHeight, backbufferFormatInfo.texFormat, 0);
 
     if (FAILED(result))
     {
@@ -374,10 +381,10 @@ EGLint SwapChain11::resize(EGLint backbufferWidth, EGLint backbufferHeight)
     if (SUCCEEDED(result))
     {
         d3d11::SetDebugName(mBackBufferTexture, "Back buffer texture");
+        result = device->CreateRenderTargetView(mBackBufferTexture, NULL, &mBackBufferRTView);
+        ASSERT(SUCCEEDED(result));
     }
 
-    result = device->CreateRenderTargetView(mBackBufferTexture, NULL, &mBackBufferRTView);
-    ASSERT(SUCCEEDED(result));
     if (SUCCEEDED(result))
     {
         d3d11::SetDebugName(mBackBufferRTView, "Back buffer render target");
