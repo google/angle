@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6d92d967_0e6c2b87",
+        "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-15T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd1ae5b3_dabc75a9",
+      "range": {
+        "startLine": 36,
+        "startChar": 23,
+        "endLine": 36,
+        "endChar": 24
+      },
+      "revId": "5c817c6d35cafa79982a74da23ea6baf3d6dc84f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed2329ea_d6b8ca54",
         "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-13T19:08:13Z",
       "side": 1,
       "message": "maybe a brief comment here that the one-pass-at-a-time design avoids the need to increment the index?",
+      "range": {
+        "startLine": 63,
+        "startChar": 28,
+        "endLine": 63,
+        "endChar": 43
+      },
+      "revId": "5c817c6d35cafa79982a74da23ea6baf3d6dc84f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d92d967_ee2d1f3e",
+        "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-15T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed2329ea_d6b8ca54",
       "range": {
         "startLine": 63,
         "startChar": 28,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "8d970d54_0f00a987",
+        "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-15T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd1ae5b3_7ae581d2",
+      "range": {
+        "startLine": 238,
+        "startChar": 7,
+        "endLine": 238,
+        "endChar": 8
+      },
+      "revId": "5c817c6d35cafa79982a74da23ea6baf3d6dc84f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad15b184_440a6359",
         "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2015-05-13T19:08:13Z",
       "side": 1,
       "message": "maybe do an if (foundShortCircuit) here to short-circuit the no-op?",
+      "range": {
+        "startLine": 241,
+        "startChar": 7,
+        "endLine": 241,
+        "endChar": 31
+      },
+      "revId": "5c817c6d35cafa79982a74da23ea6baf3d6dc84f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad885137_105fea77",
+        "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-15T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad15b184_440a6359",
       "range": {
         "startLine": 241,
         "startChar": 7,
