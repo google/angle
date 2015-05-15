@@ -22,6 +22,30 @@
       "revId": "55b11d38affe559b174065670b139c269cf0ee67",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eda6c9c2_ea29783d",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-15T19:10:47Z",
+      "side": 1,
+      "message": "Thanks, if I re-land this, I\u0027ll fix that up.",
+      "parentUuid": "6dbd79c9_c2d83cf3",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 8
+      },
+      "revId": "55b11d38affe559b174065670b139c269cf0ee67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
