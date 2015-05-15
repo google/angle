@@ -66,8 +66,6 @@ class DisplayGLX : public DisplayGL
     //TODO(cwallez) yuck, change generateConfigs to be non-const or add a userdata member to egl::Config?
     mutable std::map<int, GLXFBConfig> configIdToGLXConfig;
 
-    // The ID of the visual used to create the context
-    int mContextVisualId;
     GLXContext mContext;
     // A pbuffer the context is current on during ANGLE initialization
     GLXPbuffer mDummyPbuffer;

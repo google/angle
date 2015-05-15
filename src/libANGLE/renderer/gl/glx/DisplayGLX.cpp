@@ -96,17 +96,18 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     }
 
     GLXFBConfig contextConfig;
-    // When glXMakeCurrent is called the visual of the context FBConfig and of
-    // the drawable must match. This means that when generating the list of EGL
-    // configs, they must all have the same visual id as our unique GL context.
-    // Here we find a GLX framebuffer config we like to create our GL context
-    // so that we are sure there is a decent config given back to the application
-    // when it queries EGL.
+    // When glXMakeCurrent is called, the context and the surface must be
+    // compatible which in glX-speak means that their config have the same
+    // color buffer type, are both RGBA or ColorIndex, and their buffers have
+    // the same depth, if they exist.
+    // Since our whole EGL implementation is backed by only one GL context, this
+    // context must be compatible with all the GLXFBConfig corresponding to the
+    // EGLconfigs that we will be exposing.
     {
         int nConfigs;
         int attribList[] =
         {
-            // We want at least RGBA8 and DEPTH24_STENCIL8
+            // We want RGBA8 and DEPTH24_STENCIL8
             GLX_RED_SIZE, 8,
             GLX_GREEN_SIZE, 8,
             GLX_BLUE_SIZE, 8,
@@ -132,7 +133,6 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
         contextConfig = candidates[0];
         XFree(candidates);
     }
-    mContextVisualId = getGLXFBConfigAttrib(contextConfig, GLX_VISUAL_ID);
 
     mContext = mGLX.createContextAttribsARB(contextConfig, nullptr, True, nullptr);
     if (!mContext)
@@ -232,8 +232,16 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
     // GLX_EXT_texture_from_pixmap is required for the "bind to rgb(a)" attributes
     bool hasTextureFromPixmap = mGLX.hasExtension("GLX_EXT_texture_from_pixmap");
 
+    int attribList[] =
+    {
+        GLX_RENDER_TYPE, GLX_RGBA_BIT,
+        GLX_X_RENDERABLE, True,
+        GLX_DOUBLEBUFFER, True,
+        None,
+    };
+
     int glxConfigCount;
-    GLXFBConfig *glxConfigs = mGLX.getFBConfigs(&glxConfigCount);
+    GLXFBConfig *glxConfigs = mGLX.chooseFBConfig(attribList, &glxConfigCount);
 
     for (int i = 0; i < glxConfigCount; i++)
     {
@@ -241,13 +249,7 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
         egl::Config config;
 
         // Native stuff
-        int visualId = getGLXFBConfigAttrib(glxConfig, GLX_VISUAL_ID);
-        if (visualId != mContextVisualId)
-        {
-            // Filter out the configs that are incompatible with our GL context
-            continue;
-        }
-        config.nativeVisualID = visualId;
+        config.nativeVisualID = getGLXFBConfigAttrib(glxConfig, GLX_VISUAL_ID);
         config.nativeVisualType = getGLXFBConfigAttrib(glxConfig, GLX_X_VISUAL_TYPE);
         config.nativeRenderable = EGL_TRUE;
 
@@ -258,6 +260,16 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
         config.alphaSize = getGLXFBConfigAttrib(glxConfig, GLX_ALPHA_SIZE);
         config.depthSize = getGLXFBConfigAttrib(glxConfig, GLX_DEPTH_SIZE);
         config.stencilSize = getGLXFBConfigAttrib(glxConfig, GLX_STENCIL_SIZE);
+
+        // We require RGBA8 and the D24S8 (or no DS buffer)
+        if (config.redSize != 8 || config.greenSize != 8 || config.blueSize != 8 || config.alphaSize != 8)
+        {
+            continue;
+        }
+        if (!(config.depthSize == 24 && config.stencilSize == 8) && !(config.depthSize == 0 && config.stencilSize == 0))
+        {
+            continue;
+        }
 
         config.colorBufferType = EGL_RGB_BUFFER;
         config.luminanceSize = 0;
