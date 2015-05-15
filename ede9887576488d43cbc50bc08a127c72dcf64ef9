@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0da4fdb8_c20f44b4",
+        "filename": "src/libANGLE/renderer/gl/glx/FBConfigCompatibility.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-15T18:04:27Z",
+      "side": 1,
+      "message": "typo: \"we the following\"",
+      "range": {
+        "startLine": 9,
+        "startChar": 25,
+        "endLine": 9,
+        "endChar": 26
+      },
+      "revId": "ede9887576488d43cbc50bc08a127c72dcf64ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd8d8546_1940de12",
+        "filename": "src/libANGLE/renderer/gl/glx/FBConfigCompatibility.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-15T18:04:27Z",
+      "side": 1,
+      "message": "Are you sure this is true? I\u0027d be surprised if the context is really tied to the bit depths of the various buffers that are associated with the GLXFBConfig it was created with. Have you tested this assertion?",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 5
+      },
+      "revId": "ede9887576488d43cbc50bc08a127c72dcf64ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd8d8546_5987c6aa",
+        "filename": "src/libANGLE/renderer/gl/glx/FBConfigCompatibility.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-15T18:04:27Z",
+      "side": 1,
+      "message": "Looking at your analysis below, it looks like if the context was created with the double-buffered bit it must be made current to a double-buffered surface. Have you tried creating the context without the double-buffered property and seen whether it can be made current to both single-buffered and double-buffered surfaces?",
+      "range": {
+        "startLine": 38,
+        "startChar": 21,
+        "endLine": 38,
+        "endChar": 29
+      },
+      "revId": "ede9887576488d43cbc50bc08a127c72dcf64ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
