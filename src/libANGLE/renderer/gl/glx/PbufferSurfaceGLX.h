@@ -12,8 +12,6 @@
 #include "libANGLE/renderer/gl/SurfaceGL.h"
 #include "libANGLE/renderer/gl/glx/platform_glx.h"
 
-#include <GL/glxext.h>
-
 namespace rx
 {
 
@@ -23,7 +21,7 @@ class PbufferSurfaceGLX : public SurfaceGL
 {
   public:
     PbufferSurfaceGLX(EGLint width, EGLint height, bool largest, const FunctionsGLX &glx,
-                      GLXContext context, GLXFBConfig fbConfig);
+                      glx::Context context, glx::FBConfig fbConfig);
     ~PbufferSurfaceGLX() override;
 
     egl::Error initialize();
@@ -47,9 +45,9 @@ class PbufferSurfaceGLX : public SurfaceGL
     bool mLargest;
 
     const FunctionsGLX &mGLX;
-    GLXContext mContext;
-    GLXFBConfig mFBConfig;
-    GLXPbuffer mPbuffer;
+    glx::Context mContext;
+    glx::FBConfig mFBConfig;
+    glx::Pbuffer mPbuffer;
 };
 
 }

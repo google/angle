@@ -59,16 +59,16 @@ class DisplayGLX : public DisplayGL
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 
-    int getGLXFBConfigAttrib(GLXFBConfig config, int attrib) const;
+    int getGLXFBConfigAttrib(glx::FBConfig config, int attrib) const;
 
     FunctionsGL *mFunctionsGL;
 
     //TODO(cwallez) yuck, change generateConfigs to be non-const or add a userdata member to egl::Config?
-    mutable std::map<int, GLXFBConfig> configIdToGLXConfig;
+    mutable std::map<int, glx::FBConfig> configIdToGLXConfig;
 
-    GLXContext mContext;
+    glx::Context mContext;
     // A pbuffer the context is current on during ANGLE initialization
-    GLXPbuffer mDummyPbuffer;
+    glx::Pbuffer mDummyPbuffer;
 
     FunctionsGLX mGLX;
     egl::Display *mEGLDisplay;

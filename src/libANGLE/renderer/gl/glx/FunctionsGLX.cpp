@@ -6,23 +6,82 @@
 
 // FunctionsGLX.cpp: Implements the FunctionsGLX class.
 
+#define ANGLE_SKIP_GLX_DEFINES 1
 #include "libANGLE/renderer/gl/glx/FunctionsGLX.h"
+#undef ANGLE_SKIP_GLX_DEFINES
+
+// HACK(cwallez) this is a horrible hack to prevent glx from including GL/glext.h
+// as it causes a bunch of conflicts (macro redefinition, etc) with GLES2/gl2ext.h
+#define __glext_h_ 1
+#include <GL/glx.h>
+#undef __glext_h_
 
 #include <dlfcn.h>
 #include <algorithm>
 
-#include "libANGLE/Error.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
+#include "libANGLE/renderer/gl/glx/functionsglx_typedefs.h"
 
 namespace rx
 {
 
 template<typename T>
-static bool GetProc(PFNGLXGETPROCADDRESSPROC getProc, T *member, const char *name)
+static bool GetProc(PFNGETPROCPROC getProc, T *member, const char *name)
 {
-    *member = reinterpret_cast<T>(getProc(reinterpret_cast<const GLubyte*>(name)));
+    *member = reinterpret_cast<T>(getProc(name));
     return *member != nullptr;
 }
+
+struct FunctionsGLX::GLXFunctionTable
+{
+    GLXFunctionTable()
+      : destroyContextPtr(nullptr),
+        makeCurrentPtr(nullptr),
+        swapBuffersPtr(nullptr),
+        queryExtensionPtr(nullptr),
+        queryVersionPtr(nullptr),
+        waitXPtr(nullptr),
+        waitGLPtr(nullptr),
+        queryExtensionsStringPtr(nullptr),
+        getFBConfigsPtr(nullptr),
+        chooseFBConfigPtr(nullptr),
+        getFBConfigAttribPtr(nullptr),
+        getVisualFromFBConfigPtr(nullptr),
+        createWindowPtr(nullptr),
+        destroyWindowPtr(nullptr),
+        createPbufferPtr(nullptr),
+        destroyPbufferPtr(nullptr),
+        queryDrawablePtr(nullptr),
+        createContextAttribsARBPtr(nullptr)
+    {
+    }
+
+    // GLX 1.0
+    PFNGLXDESTROYCONTEXTPROC destroyContextPtr;
+    PFNGLXMAKECURRENTPROC makeCurrentPtr;
+    PFNGLXSWAPBUFFERSPROC swapBuffersPtr;
+    PFNGLXQUERYEXTENSIONPROC queryExtensionPtr;
+    PFNGLXQUERYVERSIONPROC queryVersionPtr;
+    PFNGLXWAITXPROC waitXPtr;
+    PFNGLXWAITGLPROC waitGLPtr;
+
+    // GLX 1.1
+    PFNGLXQUERYEXTENSIONSSTRINGPROC queryExtensionsStringPtr;
+
+    //GLX 1.3
+    PFNGLXGETFBCONFIGSPROC getFBConfigsPtr;
+    PFNGLXCHOOSEFBCONFIGPROC chooseFBConfigPtr;
+    PFNGLXGETFBCONFIGATTRIBPROC getFBConfigAttribPtr;
+    PFNGLXGETVISUALFROMFBCONFIGPROC getVisualFromFBConfigPtr;
+    PFNGLXCREATEWINDOWPROC createWindowPtr;
+    PFNGLXDESTROYWINDOWPROC destroyWindowPtr;
+    PFNGLXCREATEPBUFFERPROC createPbufferPtr;
+    PFNGLXDESTROYPBUFFERPROC destroyPbufferPtr;
+    PFNGLXQUERYDRAWABLEPROC queryDrawablePtr;
+
+    // GLX_ARB_create_context
+    PFNGLXCREATECONTEXTATTRIBSARBPROC createContextAttribsARBPtr;
+};
 
 FunctionsGLX::FunctionsGLX()
   : majorVersion(0),
@@ -30,29 +89,13 @@ FunctionsGLX::FunctionsGLX()
     mLibHandle(nullptr),
     mXDisplay(nullptr),
     mXScreen(-1),
-    mDestroyContextPtr(nullptr),
-    mMakeCurrentPtr(nullptr),
-    mSwapBuffersPtr(nullptr),
-    mQueryExtensionPtr(nullptr),
-    mQueryVersionPtr(nullptr),
-    mWaitXPtr(nullptr),
-    mWaitGLPtr(nullptr),
-    mQueryExtensionsStringPtr(nullptr),
-    mGetFBConfigsPtr(nullptr),
-    mChooseFBConfigPtr(nullptr),
-    mGetFBConfigAttribPtr(nullptr),
-    mGetVisualFromFBConfigPtr(nullptr),
-    mCreateWindowPtr(nullptr),
-    mDestroyWindowPtr(nullptr),
-    mCreatePbufferPtr(nullptr),
-    mDestroyPbufferPtr(nullptr),
-    mQueryDrawablePtr(nullptr),
-    mCreateContextAttribsARBPtr(nullptr)
+    mFnPtrs(new GLXFunctionTable())
 {
 }
 
 FunctionsGLX::~FunctionsGLX()
 {
+    SafeDelete(mFnPtrs);
     terminate();
 }
 
@@ -68,10 +111,10 @@ egl::Error FunctionsGLX::initialize(Display *xDisplay, int screen)
         return egl::Error(EGL_NOT_INITIALIZED, "Could not dlopen libGL.so.1: %s", dlerror());
     }
 
-    getProc = reinterpret_cast<PFNGLXGETPROCADDRESSPROC>(dlsym(mLibHandle, "glXGetProcAddress"));
+    getProc = reinterpret_cast<PFNGETPROCPROC>(dlsym(mLibHandle, "glXGetProcAddress"));
     if (!getProc)
     {
-        getProc = reinterpret_cast<PFNGLXGETPROCADDRESSPROC>(dlsym(mLibHandle, "glXGetProcAddressARB"));
+        getProc = reinterpret_cast<PFNGETPROCPROC>(dlsym(mLibHandle, "glXGetProcAddressARB"));
     }
     if (!getProc)
     {
@@ -85,16 +128,16 @@ egl::Error FunctionsGLX::initialize(Display *xDisplay, int screen)
     }
 
     // GLX 1.0
-    GET_PROC_OR_ERROR(&mDestroyContextPtr, "glXDestroyContext");
-    GET_PROC_OR_ERROR(&mMakeCurrentPtr, "glXMakeCurrent");
-    GET_PROC_OR_ERROR(&mSwapBuffersPtr, "glXSwapBuffers");
-    GET_PROC_OR_ERROR(&mQueryExtensionPtr, "glXQueryExtension");
-    GET_PROC_OR_ERROR(&mQueryVersionPtr, "glXQueryVersion");
-    GET_PROC_OR_ERROR(&mWaitXPtr, "glXWaitX");
-    GET_PROC_OR_ERROR(&mWaitGLPtr, "glXWaitGL");
+    GET_PROC_OR_ERROR(&mFnPtrs->destroyContextPtr, "glXDestroyContext");
+    GET_PROC_OR_ERROR(&mFnPtrs->makeCurrentPtr, "glXMakeCurrent");
+    GET_PROC_OR_ERROR(&mFnPtrs->swapBuffersPtr, "glXSwapBuffers");
+    GET_PROC_OR_ERROR(&mFnPtrs->queryExtensionPtr, "glXQueryExtension");
+    GET_PROC_OR_ERROR(&mFnPtrs->queryVersionPtr, "glXQueryVersion");
+    GET_PROC_OR_ERROR(&mFnPtrs->waitXPtr, "glXWaitX");
+    GET_PROC_OR_ERROR(&mFnPtrs->waitGLPtr, "glXWaitGL");
 
     // GLX 1.1
-    GET_PROC_OR_ERROR(&mQueryExtensionsStringPtr, "glXQueryExtensionsString");
+    GET_PROC_OR_ERROR(&mFnPtrs->queryExtensionsStringPtr, "glXQueryExtensionsString");
 
     // Check we have a working GLX
     {
@@ -124,24 +167,24 @@ egl::Error FunctionsGLX::initialize(Display *xDisplay, int screen)
     mExtensions = TokenizeExtensionsString(extensions);
 
     // GLX 1.3
-    GET_PROC_OR_ERROR(&mGetFBConfigsPtr, "glXGetFBConfigs");
-    GET_PROC_OR_ERROR(&mChooseFBConfigPtr, "glXChooseFBConfig");
-    GET_PROC_OR_ERROR(&mGetFBConfigAttribPtr, "glXGetFBConfigAttrib");
-    GET_PROC_OR_ERROR(&mGetVisualFromFBConfigPtr, "glXGetVisualFromFBConfig");
-    GET_PROC_OR_ERROR(&mCreateWindowPtr, "glXCreateWindow");
-    GET_PROC_OR_ERROR(&mDestroyWindowPtr, "glXDestroyWindow");
-    GET_PROC_OR_ERROR(&mCreatePbufferPtr, "glXCreatePbuffer");
-    GET_PROC_OR_ERROR(&mDestroyPbufferPtr, "glXDestroyPbuffer");
-    GET_PROC_OR_ERROR(&mQueryDrawablePtr, "glXQueryDrawable");
+    GET_PROC_OR_ERROR(&mFnPtrs->getFBConfigsPtr, "glXGetFBConfigs");
+    GET_PROC_OR_ERROR(&mFnPtrs->chooseFBConfigPtr, "glXChooseFBConfig");
+    GET_PROC_OR_ERROR(&mFnPtrs->getFBConfigAttribPtr, "glXGetFBConfigAttrib");
+    GET_PROC_OR_ERROR(&mFnPtrs->getVisualFromFBConfigPtr, "glXGetVisualFromFBConfig");
+    GET_PROC_OR_ERROR(&mFnPtrs->createWindowPtr, "glXCreateWindow");
+    GET_PROC_OR_ERROR(&mFnPtrs->destroyWindowPtr, "glXDestroyWindow");
+    GET_PROC_OR_ERROR(&mFnPtrs->createPbufferPtr, "glXCreatePbuffer");
+    GET_PROC_OR_ERROR(&mFnPtrs->destroyPbufferPtr, "glXDestroyPbuffer");
+    GET_PROC_OR_ERROR(&mFnPtrs->queryDrawablePtr, "glXQueryDrawable");
 
     // Extensions
     if (hasExtension("GLX_ARB_create_context"))
     {
-        GET_PROC_OR_ERROR(&mCreateContextAttribsARBPtr, "glXCreateContextAttribsARB");
+        GET_PROC_OR_ERROR(&mFnPtrs->createContextAttribsARBPtr, "glXCreateContextAttribsARB");
     }
     else
     {
-        mCreateContextAttribsARBPtr = nullptr;
+        mFnPtrs->createContextAttribsARBPtr = nullptr;
     }
 
 #undef GET_PROC_OR_ERROR
@@ -176,83 +219,94 @@ int FunctionsGLX::getScreen() const
 // GLX functions
 
 // GLX 1.0
-void FunctionsGLX::destroyContext(GLXContext context) const
+void FunctionsGLX::destroyContext(glx::Context context) const
 {
-    mDestroyContextPtr(mXDisplay, context);
+    GLXContext ctx = reinterpret_cast<GLXContext>(context);
+    mFnPtrs->destroyContextPtr(mXDisplay, ctx);
 }
-Bool FunctionsGLX::makeCurrent(GLXDrawable drawable, GLXContext context) const
+Bool FunctionsGLX::makeCurrent(glx::Drawable drawable, glx::Context context) const
 {
-    return mMakeCurrentPtr(mXDisplay, drawable, context);
+    GLXContext ctx = reinterpret_cast<GLXContext>(context);
+    return mFnPtrs->makeCurrentPtr(mXDisplay, drawable, ctx);
 }
-void FunctionsGLX::swapBuffers(GLXDrawable drawable) const
+void FunctionsGLX::swapBuffers(glx::Drawable drawable) const
 {
-    mSwapBuffersPtr(mXDisplay, drawable);
+    mFnPtrs->swapBuffersPtr(mXDisplay, drawable);
 }
 Bool FunctionsGLX::queryExtension(int *errorBase, int *event) const
 {
-    return mQueryExtensionPtr(mXDisplay, errorBase, event);
+    return mFnPtrs->queryExtensionPtr(mXDisplay, errorBase, event);
 }
 Bool FunctionsGLX::queryVersion(int *major, int *minor) const
 {
-    return mQueryVersionPtr(mXDisplay, major, minor);
+    return mFnPtrs->queryVersionPtr(mXDisplay, major, minor);
 }
 void FunctionsGLX::waitX() const
 {
-    mWaitXPtr();
+    mFnPtrs->waitXPtr();
 }
 void FunctionsGLX::waitGL() const
 {
-    mWaitGLPtr();
+    mFnPtrs->waitGLPtr();
 }
 
 // GLX 1.1
 const char *FunctionsGLX::queryExtensionsString() const
 {
-    return mQueryExtensionsStringPtr(mXDisplay, mXScreen);
+    return mFnPtrs->queryExtensionsStringPtr(mXDisplay, mXScreen);
 }
 
 // GLX 1.4
-GLXFBConfig *FunctionsGLX::getFBConfigs(int *nElements) const
+glx::FBConfig *FunctionsGLX::getFBConfigs(int *nElements) const
 {
-    return mGetFBConfigsPtr(mXDisplay, mXScreen, nElements);
+    GLXFBConfig *configs = mFnPtrs->getFBConfigsPtr(mXDisplay, mXScreen, nElements);
+    return reinterpret_cast<glx::FBConfig*>(configs);
 }
-GLXFBConfig *FunctionsGLX::chooseFBConfig(const int *attribList, int *nElements) const
+glx::FBConfig *FunctionsGLX::chooseFBConfig(const int *attribList, int *nElements) const
 {
-    return mChooseFBConfigPtr(mXDisplay, mXScreen, attribList, nElements);
+    GLXFBConfig *configs = mFnPtrs->chooseFBConfigPtr(mXDisplay, mXScreen, attribList, nElements);
+    return reinterpret_cast<glx::FBConfig*>(configs);
 }
-int FunctionsGLX::getFBConfigAttrib(GLXFBConfig config, int attribute, int *value) const
+int FunctionsGLX::getFBConfigAttrib(glx::FBConfig config, int attribute, int *value) const
 {
-    return mGetFBConfigAttribPtr(mXDisplay, config, attribute, value);
+    GLXFBConfig cfg = reinterpret_cast<GLXFBConfig>(config);
+    return mFnPtrs->getFBConfigAttribPtr(mXDisplay, cfg, attribute, value);
 }
-XVisualInfo *FunctionsGLX::getVisualFromFBConfig(GLXFBConfig config) const
+XVisualInfo *FunctionsGLX::getVisualFromFBConfig(glx::FBConfig config) const
 {
-    return mGetVisualFromFBConfigPtr(mXDisplay, config);
+    GLXFBConfig cfg = reinterpret_cast<GLXFBConfig>(config);
+    return mFnPtrs->getVisualFromFBConfigPtr(mXDisplay, cfg);
 }
-GLXWindow FunctionsGLX::createWindow(GLXFBConfig config, Window window, const int *attribList) const
+GLXWindow FunctionsGLX::createWindow(glx::FBConfig config, Window window, const int *attribList) const
 {
-    return mCreateWindowPtr(mXDisplay, config, window, attribList);
+    GLXFBConfig cfg = reinterpret_cast<GLXFBConfig>(config);
+    return mFnPtrs->createWindowPtr(mXDisplay, cfg, window, attribList);
 }
-void FunctionsGLX::destroyWindow(GLXWindow window) const
+void FunctionsGLX::destroyWindow(glx::Window window) const
 {
-    mDestroyWindowPtr(mXDisplay, window);
+    mFnPtrs->destroyWindowPtr(mXDisplay, window);
 }
-GLXPbuffer FunctionsGLX::createPbuffer(GLXFBConfig config, const int *attribList) const
+glx::Pbuffer FunctionsGLX::createPbuffer(glx::FBConfig config, const int *attribList) const
 {
-    return mCreatePbufferPtr(mXDisplay, config, attribList);
+    GLXFBConfig cfg = reinterpret_cast<GLXFBConfig>(config);
+    return mFnPtrs->createPbufferPtr(mXDisplay, cfg, attribList);
 }
-void FunctionsGLX::destroyPbuffer(GLXPbuffer pbuffer) const
+void FunctionsGLX::destroyPbuffer(glx::Pbuffer pbuffer) const
 {
-    mDestroyPbufferPtr(mXDisplay, pbuffer);
+    mFnPtrs->destroyPbufferPtr(mXDisplay, pbuffer);
 }
-void FunctionsGLX::queryDrawable(GLXDrawable drawable, int attribute, unsigned int *value) const
+void FunctionsGLX::queryDrawable(glx::Drawable drawable, int attribute, unsigned int *value) const
 {
-    mQueryDrawablePtr(mXDisplay, drawable, attribute, value);
+    mFnPtrs->queryDrawablePtr(mXDisplay, drawable, attribute, value);
 }
 
 // GLX_ARB_create_context
-GLXContext FunctionsGLX::createContextAttribsARB(GLXFBConfig config, GLXContext shareContext, Bool direct, const int *attribList) const
+glx::Context FunctionsGLX::createContextAttribsARB(glx::FBConfig config, glx::Context shareContext, Bool direct, const int *attribList) const
 {
-    return mCreateContextAttribsARBPtr(mXDisplay, config, shareContext, direct, attribList);
+    GLXContext shareCtx = reinterpret_cast<GLXContext>(shareContext);
+    GLXFBConfig cfg = reinterpret_cast<GLXFBConfig>(config);
+    GLXContext ctx = mFnPtrs->createContextAttribsARBPtr(mXDisplay, cfg, shareCtx, direct, attribList);
+    return reinterpret_cast<glx::Context>(ctx);
 }
 
 }

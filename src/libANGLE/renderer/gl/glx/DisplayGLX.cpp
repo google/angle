@@ -6,10 +6,8 @@
 
 // DisplayGLX.h: GLX implementation of egl::Display
 
-#define GLX_GLXEXT_PROTOTYPES
 #include "libANGLE/renderer/gl/glx/DisplayGLX.h"
 
-#include <GL/glxext.h>
 #include <EGL/eglext.h>
 #include <algorithm>
 
@@ -26,7 +24,7 @@ namespace rx
 class FunctionsGLGLX : public FunctionsGL
 {
   public:
-    FunctionsGLGLX(PFNGLXGETPROCADDRESSPROC getProc)
+    FunctionsGLGLX(PFNGETPROCPROC getProc)
       : mGetProc(getProc)
     {
     }
@@ -38,10 +36,10 @@ class FunctionsGLGLX : public FunctionsGL
   private:
     void *loadProcAddress(const std::string &function) override
     {
-        return reinterpret_cast<void*>(mGetProc(reinterpret_cast<const unsigned char*>(function.c_str())));
+        return reinterpret_cast<void*>(mGetProc(function.c_str()));
     }
 
-    PFNGLXGETPROCADDRESSPROC mGetProc;
+    PFNGETPROCPROC mGetProc;
 };
 
 DisplayGLX::DisplayGLX()
@@ -95,7 +93,7 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
         }
     }
 
-    GLXFBConfig contextConfig;
+    glx::FBConfig contextConfig;
     // When glXMakeCurrent is called, the context and the surface must be
     // compatible which in glX-speak means that their config have the same
     // color buffer type, are both RGBA or ColorIndex, and their buffers have
@@ -124,7 +122,7 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
             GLX_CONFIG_CAVEAT, GLX_NONE,
             None
         };
-        GLXFBConfig* candidates = mGLX.chooseFBConfig(attribList, &nConfigs);
+        glx::FBConfig* candidates = mGLX.chooseFBConfig(attribList, &nConfigs);
         if (nConfigs == 0)
         {
             XFree(candidates);
@@ -184,7 +182,7 @@ SurfaceImpl *DisplayGLX::createWindowSurface(const egl::Config *configuration,
                                              const egl::AttributeMap &attribs)
 {
     ASSERT(configIdToGLXConfig.count(configuration->configID) > 0);
-    GLXFBConfig fbConfig = configIdToGLXConfig[configuration->configID];
+    glx::FBConfig fbConfig = configIdToGLXConfig[configuration->configID];
 
     return new WindowSurfaceGLX(mGLX, window, mGLX.getDisplay(), mContext, fbConfig);
 }
@@ -193,7 +191,7 @@ SurfaceImpl *DisplayGLX::createPbufferSurface(const egl::Config *configuration,
                                               const egl::AttributeMap &attribs)
 {
     ASSERT(configIdToGLXConfig.count(configuration->configID) > 0);
-    GLXFBConfig fbConfig = configIdToGLXConfig[configuration->configID];
+    glx::FBConfig fbConfig = configIdToGLXConfig[configuration->configID];
 
     EGLint width = attribs.get(EGL_WIDTH, 0);
     EGLint height = attribs.get(EGL_HEIGHT, 0);
@@ -241,11 +239,11 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
     };
 
     int glxConfigCount;
-    GLXFBConfig *glxConfigs = mGLX.chooseFBConfig(attribList, &glxConfigCount);
+    glx::FBConfig *glxConfigs = mGLX.chooseFBConfig(attribList, &glxConfigCount);
 
     for (int i = 0; i < glxConfigCount; i++)
     {
-        GLXFBConfig glxConfig = glxConfigs[i];
+        glx::FBConfig glxConfig = glxConfigs[i];
         egl::Config config;
 
         // Native stuff
@@ -407,7 +405,7 @@ void DisplayGLX::generateCaps(egl::Caps *outCaps) const
     outCaps->textureNPOT = true;
 }
 
-int DisplayGLX::getGLXFBConfigAttrib(GLXFBConfig config, int attrib) const
+int DisplayGLX::getGLXFBConfigAttrib(glx::FBConfig config, int attrib) const
 {
     int result;
     mGLX.getFBConfigAttrib(config, attrib, &result);
