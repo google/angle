@@ -46,6 +46,30 @@
       "revId": "d35fd1c6440bd0e4edb6a9afc1b08483be5bbf60",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad885137_93de8405",
+        "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-15T11:05:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed2329ea_b63c3643",
+      "range": {
+        "startLine": 244,
+        "startChar": 28,
+        "endLine": 244,
+        "endChar": 32
+      },
+      "revId": "d35fd1c6440bd0e4edb6a9afc1b08483be5bbf60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
