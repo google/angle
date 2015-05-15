@@ -22,6 +22,75 @@
       "revId": "b8e3a568bbd16fca1099a1b54cd82a981cd88a8e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d9a7579_39977049",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-15T06:49:39Z",
+      "side": 1,
+      "message": "With above assert ASSERT(!usesFragColor...) and usesFragColor is just fragmentShader-\u003emUsesFragColor, we expect usesFragColor/fragmentShader-\u003emUsesFragColor to be always false here, so broatcast bool in turn will always be false and can be removed.",
+      "range": {
+        "startLine": 770,
+        "startChar": 4,
+        "endLine": 770,
+        "endChar": 86
+      },
+      "revId": "b8e3a568bbd16fca1099a1b54cd82a981cd88a8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6dbd79c9_c7012ec1",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 771,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-15T06:49:39Z",
+      "side": 1,
+      "message": "broadcast check here will always be false if above comment is true.",
+      "range": {
+        "startLine": 771,
+        "startChar": 43,
+        "endLine": 771,
+        "endChar": 56
+      },
+      "revId": "b8e3a568bbd16fca1099a1b54cd82a981cd88a8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dc2ad55_43d7d076",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 924,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-15T06:49:39Z",
+      "side": 1,
+      "message": "broadcast check here will always be false if above comments are true.",
+      "range": {
+        "startLine": 924,
+        "startChar": 39,
+        "endLine": 924,
+        "endChar": 50
+      },
+      "revId": "b8e3a568bbd16fca1099a1b54cd82a981cd88a8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
