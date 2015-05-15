@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ad885137_50f5f2ff",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-15T06:52:54Z",
+      "side": 1,
+      "message": "Looks like a bug in this patch. I can revert this when I get to the office unless it\u0027s already reverted by then.",
+      "parentUuid": "6dbd79c9_47827ed9",
+      "range": {
+        "startLine": 753,
+        "startChar": 9,
+        "endLine": 753,
+        "endChar": 22
+      },
+      "revId": "b8e3a568bbd16fca1099a1b54cd82a981cd88a8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d9a7579_39977049",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-15T06:49:39Z",
       "side": 1,
       "message": "With above assert ASSERT(!usesFragColor...) and usesFragColor is just fragmentShader-\u003emUsesFragColor, we expect usesFragColor/fragmentShader-\u003emUsesFragColor to be always false here, so broatcast bool in turn will always be false and can be removed.",
+      "range": {
+        "startLine": 770,
+        "startChar": 4,
+        "endLine": 770,
+        "endChar": 86
+      },
+      "revId": "b8e3a568bbd16fca1099a1b54cd82a981cd88a8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d92d967_6ef04f60",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-15T06:52:54Z",
+      "side": 1,
+      "message": "usesFragColor can still be true, as long as usesFragData is false.",
+      "parentUuid": "4d9a7579_39977049",
       "range": {
         "startLine": 770,
         "startChar": 4,
