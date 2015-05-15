@@ -316,6 +316,7 @@ bool Display::getConfigAttrib(const Config *configuration, EGLint attribute, EGL
       case EGL_CONFIG_ID:                 *value = configuration->configID;               break;
       case EGL_LEVEL:                     *value = configuration->level;                  break;
       case EGL_NATIVE_RENDERABLE:         *value = configuration->nativeRenderable;       break;
+      case EGL_NATIVE_VISUAL_ID:          *value = configuration->nativeVisualID;         break;
       case EGL_NATIVE_VISUAL_TYPE:        *value = configuration->nativeVisualType;       break;
       case EGL_SAMPLES:                   *value = configuration->samples;                break;
       case EGL_SAMPLE_BUFFERS:            *value = configuration->sampleBuffers;          break;
