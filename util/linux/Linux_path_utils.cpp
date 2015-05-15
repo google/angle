@@ -19,7 +19,7 @@ std::string GetExecutablePath()
     char path[4096];
 
     ssize_t result = readlink("/proc/self/exe", path, sizeof(path) - 1);
-    if (result < 0 || result >= sizeof(path) - 1)
+    if (result < 0 || static_cast<size_t>(result) >= sizeof(path) - 1)
     {
         return "";
     }

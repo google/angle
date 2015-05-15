@@ -48,7 +48,7 @@ class TexRedefBenchSample : public SampleApplication
   public:
     TexRedefBenchSample()
         : SampleApplication("Microbench", 1280, 1280),
-          mFrameCount(0), mPixelsResize(NULL), mPixelsNewTex(NULL), mTimeFrame(false)
+          mPixelsResize(NULL), mPixelsNewTex(NULL), mTimeFrame(false), mFrameCount(0)
     {
     }
 
@@ -269,8 +269,6 @@ class TexRedefBenchSample : public SampleApplication
     Timer *mNewTexDefineTimer;
     bool mTimeFrame;
     unsigned int mFrameCount;
-    unsigned int mTriTotalTime;
-    unsigned int mFanTotalTime;
 };
 
 int main(int argc, char **argv)

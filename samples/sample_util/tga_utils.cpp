@@ -13,7 +13,7 @@
 #include <string>
 
 TGAImage::TGAImage()
-    : data(0), width(0), height(0)
+    : width(0), height(0), data(0)
 {
 }
 

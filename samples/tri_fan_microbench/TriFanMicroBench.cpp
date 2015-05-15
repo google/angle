@@ -92,11 +92,11 @@ class TriangleFanBenchSample : public SampleApplication
 
         mNumTriVerts = numTriVertices;
 
-        for (int i = 0; i < slices; ++i)
+        for (unsigned int i = 0; i < slices; ++i)
         {
             memcpy(triPointer, fanVertices, 3 * sizeof(GLfloat)); // copy center point as first vertex for this slice
             triPointer += 3;
-            for (int j = 1; j < 3; ++j)
+            for (unsigned int j = 1; j < 3; ++j)
             {
                 GLfloat *vertex = &(fanVertices[(i + j) * 3]); // copy two outer vertices for this point
                 memcpy(triPointer, vertex, 3 * sizeof(GLfloat));
@@ -109,11 +109,11 @@ class TriangleFanBenchSample : public SampleApplication
         xOffset = xMin;
         yOffset = yMin;
 
-        for (int i = 0; i < mNumSquares; ++i)
+        for (unsigned int i = 0; i < mNumSquares; ++i)
         {
             triPointer = triVertices;
             GLfloat tempVerts[triFloats];
-            for (int j = 0; j < numTriVertices; ++j)
+            for (unsigned int j = 0; j < numTriVertices; ++j)
             {
                 tempVerts[j * 3] = triPointer[0] + xOffset;
                 tempVerts[j * 3 + 1] = triPointer[1] + yOffset;
@@ -193,7 +193,7 @@ class TriangleFanBenchSample : public SampleApplication
 
         // Draw using triangle fans, stored in VBO
         mFanTimer->start();
-        for (int i = 0; i < mNumSquares; ++i)
+        for (unsigned i = 0; i < mNumSquares; ++i)
         {
             glBindBuffer(GL_ARRAY_BUFFER, mFanBufId[i]);
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
@@ -208,7 +208,7 @@ class TriangleFanBenchSample : public SampleApplication
         
         // Draw using triangles, stored in VBO
         mTriTimer->start();
-        for (int i = 1; i < mNumSquares; ++i)
+        for (unsigned i = 1; i < mNumSquares; ++i)
         {
             glBindBuffer(GL_ARRAY_BUFFER, mTriBufId[i]);
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);

@@ -44,9 +44,9 @@ EGLPlatformParameters::EGLPlatformParameters(EGLint renderer, EGLint majorVersio
 
 
 EGLWindow::EGLWindow(size_t width, size_t height, EGLint glesMajorVersion, const EGLPlatformParameters &platform)
-    : mSurface(EGL_NO_SURFACE),
+    : mDisplay(EGL_NO_DISPLAY),
+      mSurface(EGL_NO_SURFACE),
       mContext(EGL_NO_CONTEXT),
-      mDisplay(EGL_NO_DISPLAY),
       mClientVersion(glesMajorVersion),
       mPlatform(platform),
       mWidth(width),
