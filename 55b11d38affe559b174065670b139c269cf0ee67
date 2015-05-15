@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6dbd79c9_c2d83cf3",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-05-15T17:39:15Z",
+      "side": 1,
+      "message": "ATOM is currently defined in winwindef.h when WinRT projects are compiled.  There is a scary comment in that file which says that they might remove the typedef of ATOM as it is really for classic desktop.\n\ntypedef WORD ATOM;\n\nIf this does get removed for some reason, WinRT builds will fail as DisplayD3D.h is shared.",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 8
+      },
+      "revId": "55b11d38affe559b174065670b139c269cf0ee67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
