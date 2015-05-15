@@ -11,7 +11,7 @@ deps = {
       "http://googlemock.googlecode.com/svn/trunk@519",
 
   "src/tests/third_party/deqp":
-      "https://android.googlesource.com/platform/external/deqp@d0cd12e34181184fcb63238790f93bda2313195a",
+      "https://android.googlesource.com/platform/external/deqp@9b4161daf7defa4d0ee7e88df886b284d1becf43",
 
   "src/tests/third_party/libpng":
       "https://android.googlesource.com/platform/external/libpng@094e181e79a3d6c23fd005679025058b7df1ad6c",
