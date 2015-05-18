@@ -6,6 +6,35 @@
 
 #include "compiler/translator/IntermNode.h"
 
+void TIntermTraverser::pushParentBlock(TIntermAggregate *node)
+{
+    if (rightToLeft)
+        mParentBlockStack.push_back(ParentBlock(node, node->getSequence()->size() - 1));
+    else
+        mParentBlockStack.push_back(ParentBlock(node, 0));
+}
+
+void TIntermTraverser::incrementParentBlockPos()
+{
+    if (rightToLeft)
+        --mParentBlockStack.back().pos;
+    else
+        ++mParentBlockStack.back().pos;
+}
+
+void TIntermTraverser::popParentBlock()
+{
+    ASSERT(!mParentBlockStack.empty());
+    mParentBlockStack.pop_back();
+}
+
+void TIntermTraverser::insertStatementsInParentBlock(const TIntermSequence &insertions)
+{
+    ASSERT(!mParentBlockStack.empty());
+    NodeInsertMultipleEntry insert(mParentBlockStack.back().node, mParentBlockStack.back().pos, insertions);
+    mInsertions.push_back(insert);
+}
+
 //
 // Traverse the intermediate representation tree, and
 // call a node type specific function for each node.
@@ -119,6 +148,9 @@ void TIntermAggregate::traverse(TIntermTraverser *it)
 
     if (visit)
     {
+        if (mOp == EOpSequence)
+            it->pushParentBlock(this);
+
         it->incrementDepth(this);
 
         if (it->rightToLeft)
@@ -132,6 +164,10 @@ void TIntermAggregate::traverse(TIntermTraverser *it)
                 {
                     if (*sit != mSequence.front())
                         visit = it->visitAggregate(InVisit, this);
+                }
+                if (mOp == EOpSequence)
+                {
+                    it->incrementParentBlockPos();
                 }
             }
         }
@@ -147,10 +183,17 @@ void TIntermAggregate::traverse(TIntermTraverser *it)
                     if (*sit != mSequence.back())
                         visit = it->visitAggregate(InVisit, this);
                 }
+                if (mOp == EOpSequence)
+                {
+                    it->incrementParentBlockPos();
+                }
             }
         }
 
         it->decrementDepth();
+
+        if (mOp == EOpSequence)
+            it->popParentBlock();
     }
 
     if (visit && it->postVisit)

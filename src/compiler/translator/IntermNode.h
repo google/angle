@@ -629,6 +629,10 @@ class TIntermTraverser : angle::NonCopyable
         return mPath.size() == 0 ? NULL : mPath.back();
     }
 
+    void pushParentBlock(TIntermAggregate *node);
+    void incrementParentBlockPos();
+    void popParentBlock();
+
     // Return the original name if hash function pointer is NULL;
     // otherwise return the hashed name.
     static TString hash(const TString& name, ShHashFunction64 hashFunction);
@@ -704,6 +708,28 @@ class TIntermTraverser : angle::NonCopyable
     std::vector<NodeUpdateEntry> mReplacements;
     std::vector<NodeReplaceWithMultipleEntry> mMultiReplacements;
     std::vector<NodeInsertMultipleEntry> mInsertions;
+
+    // Helper to insert statements in the parent block (sequence) of the node currently being traversed.
+    // The statements will be inserted before the node being traversed once updateTree is called.
+    // Should only be called during PreVisit or PostVisit from sequence nodes.
+    // Note that inserting more than one set of nodes to the same parent node on a single updateTree call is not
+    // supported.
+    void insertStatementsInParentBlock(const TIntermSequence &insertions);
+
+  private:
+    struct ParentBlock
+    {
+        ParentBlock(TIntermAggregate *nodeIn, TIntermSequence::size_type posIn)
+            : node(nodeIn),
+              pos(posIn)
+        {
+        }
+
+        TIntermAggregate *node;
+        TIntermSequence::size_type pos;
+    };
+    // All the code blocks from the root to the current node's parent during traversal.
+    std::vector<ParentBlock> mParentBlockStack;
 };
 
 //
