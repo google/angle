@@ -27,6 +27,16 @@
 #include "compiler/translator/blocklayout.h"
 #include "compiler/translator/util.h"
 
+namespace
+{
+
+bool IsSequence(TIntermNode *node)
+{
+    return node->getAsAggregate() != nullptr && node->getAsAggregate()->getOp() == EOpSequence;
+}
+
+} // namespace
+
 namespace sh
 {
 
@@ -1840,10 +1850,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 // Don't output ; after case labels, they're terminated by :
                 // This is needed especially since outputting a ; after a case statement would turn empty
                 // case statements into non-empty case statements, disallowing fall-through from them.
-                // Also no need to output ; after selection (if) statements. This is done just for code clarity.
+                // Also no need to output ; after selection (if) statements or sequences. This is done just
+                // for code clarity.
                 TIntermSelection *asSelection = (*sit)->getAsSelectionNode();
                 ASSERT(asSelection == nullptr || !asSelection->usesTernaryOperator());
-                if ((*sit)->getAsCaseNode() == nullptr && asSelection == nullptr)
+                if ((*sit)->getAsCaseNode() == nullptr && asSelection == nullptr && !IsSequence(*sit))
                     out << ";\n";
             }
 
@@ -2008,17 +2019,21 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 else UNREACHABLE();
             }
 
-            out << ")\n"
-                "{\n";
+            out << ")\n";
 
             if (sequence->size() > 1)
             {
                 mInsideFunction = true;
-                (*sequence)[1]->traverse(this);
+                TIntermNode *body = (*sequence)[1];
+                // The function body node will output braces.
+                ASSERT(IsSequence(body));
+                body->traverse(this);
                 mInsideFunction = false;
             }
-
-            out << "}\n";
+            else
+            {
+                out << "{}\n";
+            }
 
             mCurrentFunctionMetadata = nullptr;
 
@@ -2294,33 +2309,40 @@ void OutputHLSL::writeSelection(TIntermSelection *node)
     out << ")\n";
 
     outputLineDirective(node->getLine().first_line);
-    out << "{\n";
 
     bool discard = false;
 
     if (node->getTrueBlock())
     {
+        // The trueBlock child node will output braces.
+        ASSERT(IsSequence(node->getTrueBlock()));
+
         node->getTrueBlock()->traverse(this);
 
         // Detect true discard
         discard = (discard || FindDiscard::search(node->getTrueBlock()));
     }
+    else
+    {
+        // TODO(oetuaho): Check if the semicolon inside is necessary.
+        // It's there as a result of conservative refactoring of the output.
+        out << "{;}\n";
+    }
 
     outputLineDirective(node->getLine().first_line);
-    out << ";\n}\n";
 
     if (node->getFalseBlock())
     {
         out << "else\n";
 
         outputLineDirective(node->getFalseBlock()->getLine().first_line);
-        out << "{\n";
 
-        outputLineDirective(node->getFalseBlock()->getLine().first_line);
+        // Either this is "else if" or the falseBlock child node will output braces.
+        ASSERT(IsSequence(node->getFalseBlock()) || node->getFalseBlock()->getAsSelectionNode() != nullptr);
+
         node->getFalseBlock()->traverse(this);
 
         outputLineDirective(node->getFalseBlock()->getLine().first_line);
-        out << ";\n}\n";
 
         // Detect false discard
         discard = (discard || FindDiscard::search(node->getFalseBlock()));
@@ -2422,7 +2444,6 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
         out << "{" << unroll << " do\n";
 
         outputLineDirective(node->getLine().first_line);
-        out << "{\n";
     }
     else
     {
@@ -2450,16 +2471,22 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
         out << ")\n";
 
         outputLineDirective(node->getLine().first_line);
-        out << "{\n";
     }
 
     if (node->getBody())
     {
+        // The loop body node will output braces.
+        ASSERT(IsSequence(node->getBody()));
         node->getBody()->traverse(this);
+    }
+    else
+    {
+        // TODO(oetuaho): Check if the semicolon inside is necessary.
+        // It's there as a result of conservative refactoring of the output.
+        out << "{;}\n";
     }
 
     outputLineDirective(node->getLine().first_line);
-    out << ";}\n";
 
     if (node->getType() == ELoopDoWhile)
     {
