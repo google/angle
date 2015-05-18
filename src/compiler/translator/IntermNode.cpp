@@ -141,6 +141,33 @@ TConstantUnion *Vectorize(const TConstantUnion &constant, size_t size)
     return constUnion;
 }
 
+void UndefinedConstantFoldingError(const TSourceLoc &loc, TOperator op, TBasicType basicType,
+                                   TInfoSink &infoSink, TConstantUnion *result)
+{
+    std::stringstream constantFoldingErrorStream;
+    constantFoldingErrorStream << "'" << GetOperatorString(op)
+                               << "' operation result is undefined for the values passed in";
+    infoSink.info.message(EPrefixWarning, loc, constantFoldingErrorStream.str().c_str());
+
+    switch (basicType)
+    {
+      case EbtFloat :
+        result->setFConst(0.0f);
+        break;
+      case EbtInt:
+        result->setIConst(0);
+        break;
+      case EbtUInt:
+        result->setUConst(0u);
+        break;
+      case EbtBool:
+        result->setBConst(false);
+        break;
+      default:
+        break;
+    }
+}
+
 }  // namespace anonymous
 
 
@@ -1493,7 +1520,7 @@ bool TIntermConstantUnion::foldFloatTypeUnary(const TConstantUnion &parameter, F
 }
 
 // static
-TIntermTyped *TIntermConstantUnion::FoldAggregateBuiltIn(TOperator op, TIntermAggregate *aggregate)
+TIntermTyped *TIntermConstantUnion::FoldAggregateBuiltIn(TOperator op, TIntermAggregate *aggregate, TInfoSink &infoSink)
 {
     TIntermSequence *sequence = aggregate->getSequence();
     unsigned int paramsCount = sequence->size();
@@ -1535,6 +1562,68 @@ TIntermTyped *TIntermConstantUnion::FoldAggregateBuiltIn(TOperator op, TIntermAg
         //
         switch (op)
         {
+          case EOpAtan:
+            {
+                if (basicType == EbtFloat)
+                {
+                    tempConstArray = new TConstantUnion[maxObjectSize];
+                    for (size_t i = 0; i < maxObjectSize; i++)
+                    {
+                        float y = unionArrays[0][i].getFConst();
+                        float x = unionArrays[1][i].getFConst();
+                        // Results are undefined if x and y are both 0.
+                        if (x == 0.0f && y == 0.0f)
+                            UndefinedConstantFoldingError(loc, op, basicType, infoSink, &tempConstArray[i]);
+                        else
+                            tempConstArray[i].setFConst(atan2f(y, x));
+                    }
+                }
+                else
+                    UNREACHABLE();
+            }
+            break;
+
+          case EOpPow:
+            {
+                if (basicType == EbtFloat)
+                {
+                    tempConstArray = new TConstantUnion[maxObjectSize];
+                    for (size_t i = 0; i < maxObjectSize; i++)
+                    {
+                        float x = unionArrays[0][i].getFConst();
+                        float y = unionArrays[1][i].getFConst();
+                        // Results are undefined if x < 0.
+                        // Results are undefined if x = 0 and y <= 0.
+                        if (x < 0.0f)
+                            UndefinedConstantFoldingError(loc, op, basicType, infoSink, &tempConstArray[i]);
+                        else if (x == 0.0f && y <= 0.0f)
+                            UndefinedConstantFoldingError(loc, op, basicType, infoSink, &tempConstArray[i]);
+                        else
+                            tempConstArray[i].setFConst(powf(x, y));
+                    }
+                }
+                else
+                    UNREACHABLE();
+            }
+            break;
+
+          case EOpMod:
+            {
+                if (basicType == EbtFloat)
+                {
+                    tempConstArray = new TConstantUnion[maxObjectSize];
+                    for (size_t i = 0; i < maxObjectSize; i++)
+                    {
+                        float x = unionArrays[0][i].getFConst();
+                        float y = unionArrays[1][i].getFConst();
+                        tempConstArray[i].setFConst(x - y * floorf(x / y));
+                    }
+                }
+                else
+                    UNREACHABLE();
+            }
+            break;
+
           case EOpMin:
             {
                 tempConstArray = new TConstantUnion[maxObjectSize];
@@ -1580,6 +1669,19 @@ TIntermTyped *TIntermConstantUnion::FoldAggregateBuiltIn(TOperator op, TIntermAg
                         break;
                     }
                 }
+            }
+            break;
+
+          case EOpStep:
+            {
+                if (basicType == EbtFloat)
+                {
+                    tempConstArray = new TConstantUnion[maxObjectSize];
+                    for (size_t i = 0; i < maxObjectSize; i++)
+                        tempConstArray[i].setFConst(unionArrays[1][i].getFConst() < unionArrays[0][i].getFConst() ? 0.0f : 1.0f);
+                }
+                else
+                    UNREACHABLE();
             }
             break;
 
@@ -1644,6 +1746,67 @@ TIntermTyped *TIntermConstantUnion::FoldAggregateBuiltIn(TOperator op, TIntermAg
                         break;
                     }
                 }
+            }
+            break;
+
+          case EOpMix:
+            {
+                if (basicType == EbtFloat)
+                {
+                    tempConstArray = new TConstantUnion[maxObjectSize];
+                    for (size_t i = 0; i < maxObjectSize; i++)
+                    {
+                        float x = unionArrays[0][i].getFConst();
+                        float y = unionArrays[1][i].getFConst();
+                        TBasicType type = (*sequence)[2]->getAsTyped()->getType().getBasicType();
+                        if (type == EbtFloat)
+                        {
+                            // Returns the linear blend of x and y, i.e., x * (1 - a) + y * a.
+                            float a = unionArrays[2][i].getFConst();
+                            tempConstArray[i].setFConst(x * (1.0f - a) + y * a);
+                        }
+                        else // 3rd parameter is EbtBool
+                        {
+                            ASSERT(type == EbtBool);
+                            // Selects which vector each returned component comes from.
+                            // For a component of a that is false, the corresponding component of x is returned.
+                            // For a component of a that is true, the corresponding component of y is returned.
+                            bool a = unionArrays[2][i].getBConst();
+                            tempConstArray[i].setFConst(a ? y : x);
+                        }
+                    }
+                }
+                else
+                    UNREACHABLE();
+            }
+            break;
+
+          case EOpSmoothStep:
+            {
+                if (basicType == EbtFloat)
+                {
+                    tempConstArray = new TConstantUnion[maxObjectSize];
+                    for (size_t i = 0; i < maxObjectSize; i++)
+                    {
+                        float edge0 = unionArrays[0][i].getFConst();
+                        float edge1 = unionArrays[1][i].getFConst();
+                        float x = unionArrays[2][i].getFConst();
+                        // Results are undefined if edge0 >= edge1.
+                        if (edge0 >= edge1)
+                        {
+                            UndefinedConstantFoldingError(loc, op, basicType, infoSink, &tempConstArray[i]);
+                        }
+                        else
+                        {
+                            // Returns 0.0 if x <= edge0 and 1.0 if x >= edge1 and performs smooth
+                            // Hermite interpolation between 0 and 1 when edge0 < x < edge1.
+                            float t = gl::clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
+                            tempConstArray[i].setFConst(t * t * (3.0f - 2.0f * t));
+                        }
+                    }
+                }
+                else
+                    UNREACHABLE();
             }
             break;
 
