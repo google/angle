@@ -2320,7 +2320,7 @@ void OutputHLSL::writeSelection(TIntermSelection *node)
     }
 
     // ANGLE issue 486: Detect problematic conditional discard
-    if (discard && FindSideEffectRewriting::search(node))
+    if (discard)
     {
         mUsesDiscardRewriting = true;
     }
