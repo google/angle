@@ -407,4 +407,35 @@ void InitBuiltInFunctionEmulatorForHLSL(BuiltInFunctionEmulator *emu)
                             " cof02, cof12, cof22, cof32, cof03, cof13, cof23, cof33 };\n"
         "    return cof / determinant(transpose(m));\n"
         "}\n");
+
+    TType bool1(EbtBool);
+    TType bool2(EbtBool, 2);
+    TType bool3(EbtBool, 3);
+    TType bool4(EbtBool, 4);
+
+    // Emulate ESSL3 variant of mix that takes last argument as boolean vector.
+    // genType mix (genType x, genType y, genBType a): Selects which vector each returned component comes from.
+    // For a component of 'a' that is false, the corresponding component of 'x' is returned.For a component of 'a' that is true,
+    // the corresponding component of 'y' is returned.
+    emu->addEmulatedFunction(EOpMix, float1, float1, bool1,
+        "float webgl_mix_emu(float x, float y, bool a)\n"
+        "{\n"
+        "    return a ? y : x;\n"
+        "}\n");
+    emu->addEmulatedFunction(EOpMix, float2, float2, bool2,
+        "float2 webgl_mix_emu(float2 x, float2 y, bool2 a)\n"
+        "{\n"
+        "    return a ? y : x;\n"
+        "}\n");
+    emu->addEmulatedFunction(EOpMix, float3, float3, bool3,
+        "float3 webgl_mix_emu(float3 x, float3 y, bool3 a)\n"
+        "{\n"
+        "    return a ? y : x;\n"
+        "}\n");
+    emu->addEmulatedFunction(EOpMix, float4, float4, bool4,
+        "float4 webgl_mix_emu(float4 x, float4 y, bool4 a)\n"
+        "{\n"
+        "    return a ? y : x;\n"
+        "}\n");
+
 }

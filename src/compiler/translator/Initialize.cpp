@@ -96,6 +96,7 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpClamp, genUType, "clamp", genUType, genUType, genUType);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMix, genType, "mix", genType, genType, float1);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMix, genType, "mix", genType, genType, genType);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMix, genType, "mix", genType, genType, genBType);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpStep, genType, "step", genType, genType);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpStep, genType, "step", float1, genType);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpSmoothStep, genType, "smoothstep", genType, genType, genType);

@@ -2253,7 +2253,22 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpMin:           outputTriplet(visit, "min(", ", ", ")");           break;
       case EOpMax:           outputTriplet(visit, "max(", ", ", ")");           break;
       case EOpClamp:         outputTriplet(visit, "clamp(", ", ", ")");         break;
-      case EOpMix:           outputTriplet(visit, "lerp(", ", ", ")");          break;
+      case EOpMix:
+        {
+            TIntermTyped *lastParamNode = (*(node->getSequence()))[2]->getAsTyped();
+            if (lastParamNode->getType().getBasicType() == EbtBool)
+            {
+                // There is no HLSL equivalent for ESSL3 built-in "genType mix (genType x, genType y, genBType a)",
+                // so use emulated version.
+                ASSERT(node->getUseEmulatedFunction());
+                writeEmulatedFunctionTriplet(visit, "mix(");
+            }
+            else
+            {
+                outputTriplet(visit, "lerp(", ", ", ")");
+            }
+        }
+        break;
       case EOpStep:          outputTriplet(visit, "step(", ", ", ")");          break;
       case EOpSmoothStep:    outputTriplet(visit, "smoothstep(", ", ", ")");    break;
       case EOpDistance:      outputTriplet(visit, "distance(", ", ", ")");      break;
