@@ -12,9 +12,8 @@ angle_dir = os.path.normpath(os.path.join(script_dir, os.pardir))
 gyp_dir = os.path.join(angle_dir, 'third_party', 'gyp')
 
 gyp_generators = "msvs"
-msvs_version = "2013e"
 
-def generateProjects(generation_dir, build_winphone):
+def generateProjects(generation_dir, build_winphone, msvs_version, app_type_rev):
     gyp_cmd = os.path.join(gyp_dir, 'gyp')
     gyp_cmd += ' --ignore-environment'
     gyp_cmd += ' --depth=.'
@@ -22,8 +21,9 @@ def generateProjects(generation_dir, build_winphone):
     gyp_cmd += ' --generator-output=' + generation_dir
     gyp_cmd += ' --format=' + gyp_generators
     gyp_cmd += ' -G msvs_version=' + msvs_version
-    gyp_cmd += ' -D angle_use_commit_id=0'
+    gyp_cmd += ' -D angle_use_commit_id=1'
     gyp_cmd += ' -D angle_build_winrt=1'
+    gyp_cmd += ' -D angle_build_winrt_app_type_revision=' + app_type_rev
     gyp_cmd += ' -D angle_build_winphone=' + ('1' if build_winphone else '0')
     gyp_cmd += ' -D angle_enable_d3d9=0'
     gyp_cmd += ' -D angle_enable_gl=0'
@@ -37,5 +37,8 @@ def generateProjects(generation_dir, build_winphone):
 
 if __name__ == '__main__':
     # Generate Windows 8.1 projects
-    generateProjects("winrt/8.1/windows", False);
-    generateProjects("winrt/8.1/windowsphone", True);
+    generateProjects("winrt/8.1/windows", False, "2013e", "8.1");
+    generateProjects("winrt/8.1/windowsphone", True, "2013e", "8.1");
+
+    # Generate Windows 10 projects
+    generateProjects("winrt/10", False, "2015", "8.2");

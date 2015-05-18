@@ -219,6 +219,7 @@
                 ['angle_build_winrt==1',
                 {
                     'msvs_enable_winrt' : '1',
+                    'msvs_application_type_revision' : '<(angle_build_winrt_app_type_revision)',
                 }],
                 ['angle_build_winphone==1',
                 {
@@ -258,6 +259,7 @@
                 ['angle_build_winrt==1',
                 {
                     'msvs_enable_winrt' : '1',
+                    'msvs_application_type_revision' : '<(angle_build_winrt_app_type_revision)',
                 }],
                 ['angle_build_winphone==1',
                 {
@@ -308,6 +310,7 @@
                 ['angle_build_winrt==1',
                 {
                     'msvs_enable_winrt' : '1',
+                    'msvs_application_type_revision' : '<(angle_build_winrt_app_type_revision)',
                 }],
                 ['angle_build_winphone==1',
                 {
@@ -347,6 +350,7 @@
                 ['angle_build_winrt==1',
                 {
                     'msvs_enable_winrt' : '1',
+                    'msvs_application_type_revision' : '<(angle_build_winrt_app_type_revision)',
                 }],
                 ['angle_build_winphone==1',
                 {

@@ -9,6 +9,7 @@
         'windows_sdk_path%': 'C:/Program Files (x86)/Windows Kits/8.1',
         'angle_build_winrt%': '0',
         'angle_build_winphone%': '0',
+        'angle_build_winrt_app_type_revision%': '8.1',
     },
     'msvs_disabled_warnings':
     [

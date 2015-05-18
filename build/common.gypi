@@ -9,6 +9,7 @@
         'angle_path%': '<(DEPTH)',
         'angle_build_winrt%': '0',
         'angle_build_winphone%': '0',
+        'angle_build_winrt_app_type_revision%': '8.1',
         # angle_code is set to 1 for the core ANGLE targets defined in src/build_angle.gyp.
         # angle_code is set to 0 for test code, sample code, and third party code.
         # When angle_code is 1, we build with additional warning flags on Mac and Linux.
