@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0d179dd9_9bf98f96",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-19T14:43:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d37016d_a4222c22",
+      "range": {
+        "startLine": 634,
+        "startChar": 38,
+        "endLine": 634,
+        "endChar": 43
+      },
+      "revId": "8b1be1ca972c65024da8ecbcb6f40e0bfbd69313",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d37016d_042e780f",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "2d20e12c_7c56f52f",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-19T14:43:30Z",
+      "side": 1,
+      "message": "Done (and fixed VS setting that made it mess this up when pasting)",
+      "parentUuid": "2d37016d_042e780f",
+      "range": {
+        "startLine": 636,
+        "startChar": 12,
+        "endLine": 636,
+        "endChar": 15
+      },
+      "revId": "8b1be1ca972c65024da8ecbcb6f40e0bfbd69313",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d8cfd85_b06a58e8",
         "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2015-05-19T11:29:24Z",
       "side": 1,
       "message": "also, should this be insertStatementsInParent?",
+      "range": {
+        "startLine": 182,
+        "startChar": 8,
+        "endLine": 182,
+        "endChar": 38
+      },
+      "revId": "8b1be1ca972c65024da8ecbcb6f40e0bfbd69313",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d20e12c_fcb205fa",
+        "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-19T14:43:30Z",
+      "side": 1,
+      "message": "I think we could go with insertStatementsInParentBlock.",
+      "parentUuid": "0d8cfd85_b06a58e8",
       "range": {
         "startLine": 182,
         "startChar": 8,
