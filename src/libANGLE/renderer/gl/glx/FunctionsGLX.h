@@ -12,21 +12,19 @@
 #include <string>
 #include <vector>
 
-#include "common/angleutils.h"
-#include "libANGLE/Error.h"
 #include "libANGLE/renderer/gl/glx/platform_glx.h"
 
 namespace rx
 {
 
-class FunctionsGLX : angle::NonCopyable
+class FunctionsGLX
 {
   public:
     FunctionsGLX();
     ~FunctionsGLX();
 
     // Load data from GLX, can be called multiple times
-    egl::Error initialize(Display *xDisplay, int screen);
+    bool initialize(Display *xDisplay, int screen, std::string *errorString);
     void terminate();
 
     bool hasExtension(const char *extension) const;
@@ -66,6 +64,11 @@ class FunctionsGLX : angle::NonCopyable
     glx::Context createContextAttribsARB(glx::FBConfig config, glx::Context shareContext, Bool direct, const int *attribList) const;
 
   private:
+    // So as to isolate GLX from angle we do not include angleutils.h and cannot
+    // use angle::NonCopyable so we replicated it here instead.
+    FunctionsGLX(const FunctionsGLX&) = delete;
+    void operator=(const FunctionsGLX&) = delete;
+
     struct GLXFunctionTable;
 
     void *mLibHandle;

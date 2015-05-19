@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// renderer11_utils.cpp: Conversion functions and other utility routines
+// renderergl_utils.cpp: Conversion functions and other utility routines
 // specific to the OpenGL renderer.
 
 #include "libANGLE/renderer/gl/renderergl_utils.h"

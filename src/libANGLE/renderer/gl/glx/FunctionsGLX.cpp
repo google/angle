@@ -95,11 +95,11 @@ FunctionsGLX::FunctionsGLX()
 
 FunctionsGLX::~FunctionsGLX()
 {
-    SafeDelete(mFnPtrs);
+    delete mFnPtrs;
     terminate();
 }
 
-egl::Error FunctionsGLX::initialize(Display *xDisplay, int screen)
+bool FunctionsGLX::initialize(Display *xDisplay, int screen, std::string *errorString)
 {
     terminate();
     mXDisplay = xDisplay;
@@ -108,7 +108,8 @@ egl::Error FunctionsGLX::initialize(Display *xDisplay, int screen)
     mLibHandle = dlopen("libGL.so.1", RTLD_NOW);
     if (!mLibHandle)
     {
-        return egl::Error(EGL_NOT_INITIALIZED, "Could not dlopen libGL.so.1: %s", dlerror());
+        *errorString = std::string("Could not dlopen libGL.so.1: ") + dlerror();
+        return false;
     }
 
     getProc = reinterpret_cast<PFNGETPROCPROC>(dlsym(mLibHandle, "glXGetProcAddress"));
@@ -118,13 +119,15 @@ egl::Error FunctionsGLX::initialize(Display *xDisplay, int screen)
     }
     if (!getProc)
     {
-        return egl::Error(EGL_NOT_INITIALIZED, "Could not retrieve glXGetProcAddress");
+        *errorString = "Could not retrieve glXGetProcAddress";
+        return false;
     }
 
 #define GET_PROC_OR_ERROR(MEMBER, NAME) \
     if (!GetProc(getProc, MEMBER, NAME)) \
     { \
-        return egl::Error(EGL_NOT_INITIALIZED, "Could not load GLX entry point " NAME); \
+        *errorString = "Could not load GLX entry point " NAME; \
+        return false; \
     }
 
     // GLX 1.0
@@ -145,24 +148,28 @@ egl::Error FunctionsGLX::initialize(Display *xDisplay, int screen)
         int eventBase;
         if (!queryExtension(&errorBase, &eventBase))
         {
-            return egl::Error(EGL_NOT_INITIALIZED, "GLX is not present.");
+            *errorString = "GLX is not present.";
+            return false;
         }
     }
 
     // Check we have a supported version of GLX
     if (!queryVersion(&majorVersion, &minorVersion))
     {
-        return egl::Error(EGL_NOT_INITIALIZED, "Could not query the GLX version.");
+        *errorString = "Could not query the GLX version.";
+        return false;
     }
     if (majorVersion != 1 || minorVersion < 3)
     {
-        return egl::Error(EGL_NOT_INITIALIZED, "Unsupported GLX version (requires at least 1.3).");
+        *errorString = "Unsupported GLX version (requires at least 1.3).";
+        return false;
     }
 
     const char *extensions = queryExtensionsString();
     if (!extensions)
     {
-        return egl::Error(EGL_NOT_INITIALIZED, "glXQueryExtensionsString returned NULL");
+        *errorString = "glXQueryExtensionsString returned NULL";
+        return false;
     }
     mExtensions = TokenizeExtensionsString(extensions);
 
@@ -189,7 +196,8 @@ egl::Error FunctionsGLX::initialize(Display *xDisplay, int screen)
 
 #undef GET_PROC_OR_ERROR
 
-    return egl::Error(EGL_SUCCESS);
+    *errorString = "";
+    return true;
 }
 
 void FunctionsGLX::terminate()

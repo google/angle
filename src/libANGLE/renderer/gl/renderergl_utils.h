@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// renderer11_utils.h: Conversion functions and other utility routines
+// renderergl_utils.h: Conversion functions and other utility routines
 // specific to the OpenGL renderer.
 
 #ifndef LIBANGLE_RENDERER_GL_RENDERERGLUTILS_H_

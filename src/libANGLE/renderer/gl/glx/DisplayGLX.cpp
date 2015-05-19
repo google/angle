@@ -72,10 +72,10 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
         }
     }
 
-    egl::Error glxInitResult = mGLX.initialize(xDisplay, DefaultScreen(xDisplay));
-    if (glxInitResult.isError())
+    std::string glxInitError;
+    if (!mGLX.initialize(xDisplay, DefaultScreen(xDisplay), &glxInitError))
     {
-        return glxInitResult;
+        return egl::Error(EGL_NOT_INITIALIZED, glxInitError.c_str());
     }
 
     // Check we have the needed extensions
