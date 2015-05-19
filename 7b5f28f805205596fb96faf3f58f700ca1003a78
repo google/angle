@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cd4745eb_beef9980",
+        "filename": "src/tests/gl_tests/SixteenBppTextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-05-19T16:30:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d37016d_641424c7",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "7b5f28f805205596fb96faf3f58f700ca1003a78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d37016d_c40e50b9",
         "filename": "src/tests/gl_tests/SixteenBppTextureTest.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-19T11:09:40Z",
       "side": 1,
       "message": "nit: spacing",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 9
+      },
+      "revId": "7b5f28f805205596fb96faf3f58f700ca1003a78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad4211dc_9da0a31c",
+        "filename": "src/tests/gl_tests/SixteenBppTextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-05-19T16:30:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d37016d_c40e50b9",
       "range": {
         "startLine": 16,
         "startChar": 0,
@@ -129,6 +177,30 @@
       "writtenOn": "2015-05-19T14:34:11Z",
       "side": 1,
       "message": "Can you ES2_OPENGL() and see if it passes too? It\u0027s fine if it doesn\u0027t yet.",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 91
+      },
+      "revId": "7b5f28f805205596fb96faf3f58f700ca1003a78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd4745eb_5e0e95e9",
+        "filename": "src/tests/gl_tests/SixteenBppTextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-05-19T16:30:04Z",
+      "side": 1,
+      "message": "Yep, it runs, but it takes a long time to execute:\n\n----------] 4 tests from SixteenBppTextureTest\n RUN      ] SixteenBppTextureTest.RGB565Validation/0\n       OK ] SixteenBppTextureTest.RGB565Validation/0 (150 ms)\n RUN      ] SixteenBppTextureTest.RGB565Validation/1\n       OK ] SixteenBppTextureTest.RGB565Validation/1 (131 ms)\n RUN      ] SixteenBppTextureTest.RGB565Validation/2\n       OK ] SixteenBppTextureTest.RGB565Validation/2 (131 ms)\n RUN      ] SixteenBppTextureTest.RGB565Validation/3\n       OK ] SixteenBppTextureTest.RGB565Validation/3 (387 ms)",
+      "parentUuid": "2d37016d_87560a2d",
       "range": {
         "startLine": 147,
         "startChar": 0,
