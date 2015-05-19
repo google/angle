@@ -246,6 +246,22 @@ TIntermAggregate *TIntermediate::makeAggregate(
     return aggNode;
 }
 
+// If the input node is nullptr, return nullptr.
+// If the input node is a sequence (block) node, return it.
+// If the input node is not a sequence node, put it inside a sequence node and return that.
+TIntermAggregate *TIntermediate::ensureSequence(TIntermNode *node)
+{
+    if (node == nullptr)
+        return nullptr;
+    TIntermAggregate *aggNode = node->getAsAggregate();
+    if (aggNode != nullptr && aggNode->getOp() == EOpSequence)
+        return aggNode;
+
+    aggNode = makeAggregate(node, node->getLine());
+    aggNode->setOp(EOpSequence);
+    return aggNode;
+}
+
 //
 // For "if" test nodes.  There are three children; a condition,
 // a true path, and a false path.  The two paths are in the
@@ -276,7 +292,7 @@ TIntermNode *TIntermediate::addSelection(
     }
 
     TIntermSelection *node = new TIntermSelection(
-        cond, nodePair.node1, nodePair.node2);
+        cond, ensureSequence(nodePair.node1), ensureSequence(nodePair.node2));
     node->setLine(line);
 
     return node;
@@ -399,7 +415,7 @@ TIntermNode *TIntermediate::addLoop(
     TLoopType type, TIntermNode *init, TIntermTyped *cond, TIntermTyped *expr,
     TIntermNode *body, const TSourceLoc &line)
 {
-    TIntermNode *node = new TIntermLoop(type, init, cond, expr, body);
+    TIntermNode *node = new TIntermLoop(type, init, cond, expr, ensureSequence(body));
     node->setLine(line);
 
     return node;
