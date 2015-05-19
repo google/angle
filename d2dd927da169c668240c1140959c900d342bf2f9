@@ -16,6 +16,24 @@
       "revId": "d2dd927da169c668240c1140959c900d342bf2f9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d3ebd49_094a1188",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2266,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-19T12:06:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d8cfd85_1021e4ca",
+      "revId": "d2dd927da169c668240c1140959c900d342bf2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
