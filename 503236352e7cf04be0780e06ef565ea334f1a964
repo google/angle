@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cd4745eb_1e3d6d8b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-05-19T15:51:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d8cfd85_50276ce1",
+      "range": {
+        "startLine": 107,
+        "startChar": 8,
+        "endLine": 107,
+        "endChar": 20
+      },
+      "revId": "503236352e7cf04be0780e06ef565ea334f1a964",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "adfdb1c1_c8c62f4c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-19T11:16:28Z",
       "side": 1,
       "message": "add a string error message here",
+      "range": {
+        "startLine": 2079,
+        "startChar": 29,
+        "endLine": 2079,
+        "endChar": 45
+      },
+      "revId": "503236352e7cf04be0780e06ef565ea334f1a964",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad4211dc_bd41dffb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2079,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-05-19T15:51:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adfdb1c1_c8c62f4c",
       "range": {
         "startLine": 2079,
         "startChar": 29,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "ad4211dc_5d377b8f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2098,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-05-19T15:51:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d37016d_841128d8",
+      "range": {
+        "startLine": 2098,
+        "startChar": 29,
+        "endLine": 2098,
+        "endChar": 45
+      },
+      "revId": "503236352e7cf04be0780e06ef565ea334f1a964",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "adfdb1c1_a8cbf351",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2015-05-19T11:16:28Z",
       "side": 1,
       "message": "nullptr",
+      "range": {
+        "startLine": 148,
+        "startChar": 11,
+        "endLine": 148,
+        "endChar": 15
+      },
+      "revId": "503236352e7cf04be0780e06ef565ea334f1a964",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed4089d5_5f69ab6a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-05-19T15:51:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adfdb1c1_a8cbf351",
       "range": {
         "startLine": 148,
         "startChar": 11,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "cd4745eb_3e3aa994",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-05-19T15:51:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adfdb1c1_88d037fd",
+      "range": {
+        "startLine": 176,
+        "startChar": 11,
+        "endLine": 176,
+        "endChar": 15
+      },
+      "revId": "503236352e7cf04be0780e06ef565ea334f1a964",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d37016d_241e1ce5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp",
         "patchSetId": 1
@@ -128,6 +248,30 @@
       "writtenOn": "2015-05-19T11:16:28Z",
       "side": 1,
       "message": "place this in the inner scope, and put a comment on the return 96.0f explaining why it\u0027s the default",
+      "range": {
+        "startLine": 172,
+        "startChar": 4,
+        "endLine": 172,
+        "endChar": 22
+      },
+      "revId": "503236352e7cf04be0780e06ef565ea334f1a964",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed4089d5_9fc733e7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-05-19T15:51:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d37016d_241e1ce5",
       "range": {
         "startLine": 172,
         "startChar": 4,
