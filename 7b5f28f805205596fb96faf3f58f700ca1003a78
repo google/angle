@@ -91,6 +91,53 @@
       "revId": "7b5f28f805205596fb96faf3f58f700ca1003a78",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfdb1c1_4840ff13",
+        "filename": "src/tests/gl_tests/SixteenBppTextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-19T14:34:11Z",
+      "side": 1,
+      "message": "Yea, we shouldn\u0027t do a swapBuffers and then a ReadPixels, this only works in D3D because we have the intermediate buffers.",
+      "parentUuid": "adfdb1c1_082447a8",
+      "range": {
+        "startLine": 101,
+        "startChar": 4,
+        "endLine": 101,
+        "endChar": 15
+      },
+      "revId": "7b5f28f805205596fb96faf3f58f700ca1003a78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d37016d_87560a2d",
+        "filename": "src/tests/gl_tests/SixteenBppTextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-19T14:34:11Z",
+      "side": 1,
+      "message": "Can you ES2_OPENGL() and see if it passes too? It\u0027s fine if it doesn\u0027t yet.",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 91
+      },
+      "revId": "7b5f28f805205596fb96faf3f58f700ca1003a78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
