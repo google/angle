@@ -114,6 +114,9 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
             GLX_STENCIL_SIZE, 8,
             // We want RGBA rendering (vs COLOR_INDEX) and doublebuffer
             GLX_RENDER_TYPE, GLX_RGBA_BIT,
+            // Double buffer is not strictly required as a non-doublebuffer
+            // context can work with a doublebuffered surface, but it still
+            // flickers and all applications want doublebuffer anyway.
             GLX_DOUBLEBUFFER, True,
             // All of these must be supported for full EGL support
             GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT | GLX_PBUFFER_BIT | GLX_PIXMAP_BIT,

@@ -110,12 +110,18 @@ buffered like 0x024 which is our GLX context config. The compatible configs are 
 We can see two dimensions, with our without a depth-stencil buffer and with TrueColor
 or DirectColor. The depth-stencil will be useful to expose to application.
 
+More on double buffering
+------------------------
+The tests above show that double-buffered contexts are not compatible with single-
+buffered surfaces; however other tests show that single-buffered contexts are
+compatible with both single and double-buffered surfaces. The problem is that in
+that case, we can see some flickering even with double-buffered surfaces. If we
+can find a trick to avoid that flicker, then we would be able to expose single
+and double-buffered surfaces at the EGL level. Not exposing them isn't too much
+of a problem though as the vast majority of application want double-buffering.
+
 Future investigation
 --------------------
-At that point we don't know if there is a special trick that could allow us to use
-the non-doublebuffered configs but it would be nice to be able to use them so that
-we can expose the non-double buffered ones in an extension.
-
 All the non-conformant configs have a multisampled buffer, so it could be interesting
 to see if we can use them to expose another EGL extension.
 
