@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d8cfd85_1021e4ca",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2266,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-19T11:18:50Z",
+      "side": 1,
+      "message": "nit: use braces for the else",
+      "revId": "d2dd927da169c668240c1140959c900d342bf2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
