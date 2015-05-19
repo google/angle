@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "2d37016d_4760027e",
+        "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-19T19:16:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adfdb1c1_a812d353",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 27
+      },
+      "revId": "2f338a30a959a2fce0e3764dcf25f46b621eb3bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "adfdb1c1_88171744",
         "filename": "src/libANGLE/renderer/gl/glx/platform_glx.h",
         "patchSetId": 1
@@ -59,6 +83,30 @@
       "writtenOn": "2015-05-19T10:55:24Z",
       "side": 1,
       "message": "ANGLE_SKIP_GLX_DEFINES?",
+      "range": {
+        "startLine": 12,
+        "startChar": 13,
+        "endLine": 12,
+        "endChar": 29
+      },
+      "revId": "2f338a30a959a2fce0e3764dcf25f46b621eb3bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d37016d_27637e8d",
+        "filename": "src/libANGLE/renderer/gl/glx/platform_glx.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-19T19:16:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adfdb1c1_88171744",
       "range": {
         "startLine": 12,
         "startChar": 13,
