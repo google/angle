@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "adfdb1c1_1aa92989",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-19T21:33:26Z",
+      "side": 1,
+      "message": "These comments could be a bit clearer I think -- maybe along the lines of \"Release from any previous calls to eglBindTexImage, so we don\u0027t call through to the Impl after\"? At your discretion.",
+      "range": {
+        "startLine": 170,
+        "startChar": 40,
+        "endLine": 170,
+        "endChar": 43
+      },
+      "revId": "8efc862781e87f2d07b513423ab00aaa10223fb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
