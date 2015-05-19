@@ -170,8 +170,6 @@ Error Texture::setImage(GLenum target, size_t level, GLenum internalFormat, cons
     Error error = mTexture->setImage(target, level, internalFormat, size, format, type, unpack, pixels);
     if (error.isError())
     {
-        // May be broken at the impl level
-        clearImageDescs();
         return error;
     }
 
@@ -198,8 +196,6 @@ Error Texture::setCompressedImage(GLenum target, size_t level, GLenum internalFo
     Error error = mTexture->setCompressedImage(target, level, internalFormat, size, unpack, pixels);
     if (error.isError())
     {
-        // May be broken at the impl level
-        clearImageDescs();
         return error;
     }
 
@@ -226,8 +222,6 @@ Error Texture::copyImage(GLenum target, size_t level, const Rectangle &sourceAre
     Error error = mTexture->copyImage(target, level, sourceArea, internalFormat, source);
     if (error.isError())
     {
-        // May be broken at the impl level
-        clearImageDescs();
         return error;
     }
 
@@ -254,8 +248,6 @@ Error Texture::setStorage(GLenum target, size_t levels, GLenum internalFormat, c
     Error error = mTexture->setStorage(target, levels, internalFormat, size);
     if (error.isError())
     {
-        // May be broken at the impl level
-        clearImageDescs();
         return error;
     }
 
@@ -274,8 +266,6 @@ Error Texture::generateMipmaps()
     Error error = mTexture->generateMipmaps(getSamplerState());
     if (error.isError())
     {
-        // May be broken at the impl level
-        clearImageDescs();
         return error;
     }
 

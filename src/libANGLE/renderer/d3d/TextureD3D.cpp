@@ -78,8 +78,7 @@ TextureD3D::TextureD3D(RendererD3D *renderer)
       mUsage(GL_NONE),
       mDirtyImages(true),
       mImmutable(false),
-      mTexStorage(NULL),
-      mTriedToInitIncompleteStorage(false)
+      mTexStorage(NULL)
 {
 }
 
@@ -1074,8 +1073,6 @@ gl::Error TextureD3D_2D::initializeStorage(bool renderTarget)
     // do not attempt to create storage for nonexistant data
     if (!isLevelComplete(0))
     {
-        // TODO(jmadill): remove this debugging code after we fix the bug
-        mTriedToInitIncompleteStorage = true;
         return gl::Error(GL_NO_ERROR);
     }
 
