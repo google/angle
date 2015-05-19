@@ -23,7 +23,7 @@ class WindowSurfaceGLX : public SurfaceGL
     WindowSurfaceGLX(const FunctionsGLX &glx, Window window, Display *display, glx::Context context, glx::FBConfig fbConfig);
     ~WindowSurfaceGLX() override;
 
-    egl::Error initialize();
+    egl::Error initialize() override;
     egl::Error makeCurrent() override;
 
     egl::Error swap() override;

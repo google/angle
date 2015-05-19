@@ -24,7 +24,7 @@ class PbufferSurfaceGLX : public SurfaceGL
                       glx::Context context, glx::FBConfig fbConfig);
     ~PbufferSurfaceGLX() override;
 
-    egl::Error initialize();
+    egl::Error initialize() override;
     egl::Error makeCurrent() override;
 
     egl::Error swap() override;

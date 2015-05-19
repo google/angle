@@ -63,7 +63,7 @@ class EGLQueryContextTest : public testing::TestWithParam<PlatformParameters>
         EXPECT_TRUE(mSurface != EGL_NO_SURFACE);
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
         eglDestroyContext(mDisplay, mContext);

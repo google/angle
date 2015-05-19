@@ -26,7 +26,7 @@ class PbufferSurfaceWGL : public SurfaceGL
                       const FunctionsWGL *functions);
     ~PbufferSurfaceWGL() override;
 
-    egl::Error initialize();
+    egl::Error initialize() override;
     egl::Error makeCurrent() override;
 
     egl::Error swap() override;

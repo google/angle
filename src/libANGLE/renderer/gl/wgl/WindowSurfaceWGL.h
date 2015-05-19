@@ -24,7 +24,7 @@ class WindowSurfaceWGL : public SurfaceGL
     WindowSurfaceWGL(EGLNativeWindowType window, ATOM windowClass, int pixelFormat, HGLRC wglContext, const FunctionsWGL *functions);
     ~WindowSurfaceWGL() override;
 
-    egl::Error initialize();
+    egl::Error initialize() override;
     egl::Error makeCurrent() override;
 
     egl::Error swap() override;

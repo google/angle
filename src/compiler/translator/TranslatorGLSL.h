@@ -17,7 +17,7 @@ class TranslatorGLSL : public TCompiler
   protected:
     void initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu, int compileOptions) override;
 
-    virtual void translate(TIntermNode *root, int compileOptions);
+    void translate(TIntermNode *root, int compileOptions) override;
 
   private:
     void writeVersion(TIntermNode *root);
