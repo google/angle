@@ -53,6 +53,12 @@ class DisplayGLX : public DisplayGL
 
     std::string getVendorString() const override;
 
+    // Synchronizes with the X server, if the display has been opened by ANGLE.
+    // Calling this is required at the end of every functions that does buffered
+    // X calls (not for glX calls) otherwise there might be race conditions
+    // between the application's display and ANGLE's one.
+    void syncXCommands() const;
+
   private:
     const FunctionsGL *getFunctionsGL() const override;
 
@@ -69,6 +75,8 @@ class DisplayGLX : public DisplayGL
     glx::Context mContext;
     // A pbuffer the context is current on during ANGLE initialization
     glx::Pbuffer mDummyPbuffer;
+
+    bool mUsesNewXDisplay;
 
     FunctionsGLX mGLX;
     egl::Display *mEGLDisplay;

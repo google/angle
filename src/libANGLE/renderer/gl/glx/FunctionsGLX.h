@@ -28,7 +28,6 @@ class FunctionsGLX
     void terminate();
 
     bool hasExtension(const char *extension) const;
-
     int majorVersion;
     int minorVersion;
 

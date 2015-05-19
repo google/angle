@@ -15,12 +15,14 @@
 namespace rx
 {
 
+class DisplayGLX;
 class FunctionsGLX;
 
 class WindowSurfaceGLX : public SurfaceGL
 {
   public:
-    WindowSurfaceGLX(const FunctionsGLX &glx, Window window, Display *display, glx::Context context, glx::FBConfig fbConfig);
+    WindowSurfaceGLX(const FunctionsGLX &glx, const DisplayGLX &glxDisplay, Window window, Display *display,
+                     glx::Context context, glx::FBConfig fbConfig);
     ~WindowSurfaceGLX() override;
 
     egl::Error initialize() override;
@@ -38,12 +40,15 @@ class WindowSurfaceGLX : public SurfaceGL
 
     EGLint isPostSubBufferSupported() const override;
   private:
-    const FunctionsGLX &mGLX;
     Window mParent;
+    Window mWindow;
     Display *mDisplay;
+
+    const FunctionsGLX &mGLX;
+    const DisplayGLX &mGLXDisplay;
+
     glx::Context mContext;
     glx::FBConfig mFBConfig;
-    Window mWindow;
     glx::Window mGLXWindow;
 };
 
