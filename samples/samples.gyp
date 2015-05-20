@@ -178,6 +178,14 @@
         },
 
         {
+            'target_name': 'simple_vertex_shader',
+            'type': 'executable',
+            'dependencies': [ 'sample_util' ],
+            'includes': [ '../build/common_defines.gypi', ],
+            'sources': [ 'simple_vertex_shader/SimpleVertexShader.cpp', ],
+        },
+
+        {
             'target_name': 'stencil_operations',
             'type': 'executable',
             'dependencies': [ 'sample_util' ],
