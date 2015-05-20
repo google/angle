@@ -497,7 +497,6 @@ TEST_P(GLSLTest, ElseIfRewriting)
     ASSERT_NE(0u, program);
 
     drawQuad(program, "a_position", 0.5f);
-    swapBuffers();
 
     EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
     EXPECT_PIXEL_EQ(getWindowWidth()-1, 0, 0, 255, 0, 255);

@@ -160,8 +160,6 @@ class InstancingTest : public ANGLETest
         mDrawArraysInstancedANGLE(GL_TRIANGLES, first, count, instanceCount);
 
         ASSERT_GL_NO_ERROR();
-
-        swapBuffers();
     }
 
     virtual void runDrawElementsTest(std::string vs, bool shouldAttribZeroBeInstanced)
@@ -208,7 +206,6 @@ class InstancingTest : public ANGLETest
         // Do the instanced draw
         mDrawElementsInstancedANGLE(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_SHORT, mIndices.data(), mInstances.size() / 3);
 
-        swapBuffers();
         ASSERT_GL_NO_ERROR();
 
         checkQuads();

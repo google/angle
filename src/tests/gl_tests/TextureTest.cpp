@@ -219,7 +219,6 @@ class TextureTest : public ANGLETest
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         drawQuad(m2DProgram, "position", 0.5f);
-        swapBuffers();
 
         int testImageChannels = std::min(sourceImageChannels, destImageChannels);
 
