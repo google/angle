@@ -1078,7 +1078,6 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
     extensions->elementIndexUint = true;
-    extensions->packedDepthStencil = true;
     extensions->getProgramBinary = true;
     extensions->rgb8rgba8 = true;
     extensions->readFormatBGRA = true;

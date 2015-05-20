@@ -73,6 +73,7 @@ struct Extensions
 
     // Set all texture related extension support based on the supported textures.
     // Determines support for:
+    // GL_OES_packed_depth_stencil
     // GL_OES_rgb8_rgba8
     // GL_EXT_texture_format_BGRA8888
     // GL_OES_texture_half_float, GL_OES_texture_half_float_linear

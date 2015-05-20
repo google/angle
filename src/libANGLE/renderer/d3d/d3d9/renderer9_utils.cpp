@@ -478,7 +478,6 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
     extensions->elementIndexUint = deviceCaps.MaxVertexIndex >= (1 << 16);
-    extensions->packedDepthStencil = true;
     extensions->getProgramBinary = true;
     extensions->rgb8rgba8 = true;
     extensions->readFormatBGRA = true;

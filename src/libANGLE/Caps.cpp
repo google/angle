@@ -215,6 +215,15 @@ static bool GetFormatSupport(const TextureCapsMap &textureCaps, const std::vecto
     return true;
 }
 
+// Check for GL_OES_packed_depth_stencil
+static bool DeterminePackedDepthStencilSupport(const TextureCapsMap &textureCaps)
+{
+    std::vector<GLenum> requiredFormats;
+    requiredFormats.push_back(GL_DEPTH24_STENCIL8);
+
+    return GetFormatSupport(textureCaps, requiredFormats, false, false, true);
+}
+
 // Checks for GL_OES_rgb8_rgba8 support
 static bool DetermineRGB8AndRGBA8TextureSupport(const TextureCapsMap &textureCaps)
 {
@@ -364,6 +373,7 @@ static bool DetermineColorBufferFloatSupport(const TextureCapsMap &textureCaps)
 
 void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
 {
+    packedDepthStencil = DeterminePackedDepthStencilSupport(textureCaps);
     rgb8rgba8 = DetermineRGB8AndRGBA8TextureSupport(textureCaps);
     textureFormatBGRA8888 = DetermineBGRA8TextureSupport(textureCaps);
     textureHalfFloat = DetermineHalfFloatTextureSupport(textureCaps);
