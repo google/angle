@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d179dd9_e1933c32",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1550,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-20T14:50:06Z",
+      "side": 1,
+      "message": "The error message would be better if the function name was mentioned. I\u0027d suggest making a helper function which takes the function name as a parameter that outputs the error message, that way code duplication is also avoided.\n\nYou can probably use GetOperatorString from Operator.h to help here too.",
+      "revId": "88e192fcc7dc2e74ba5978468fec778d5abe80e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed19690f_40e304a3",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1605,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-20T14:50:06Z",
+      "side": 1,
+      "message": "fmodf behavior doesn\u0027t match the GLSL spec for negative numbers, possibly also for divide by zero. The easiest way to implement the spec is simply to write out the formula in there, x - y * floor(x/y).",
+      "revId": "88e192fcc7dc2e74ba5978468fec778d5abe80e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed19690f_00f66c5e",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1752,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-20T14:50:06Z",
+      "side": 1,
+      "message": "Put in ASSERT that confirms it is EbtBool?",
+      "revId": "88e192fcc7dc2e74ba5978468fec778d5abe80e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d179dd9_a176a48b",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1786,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-20T14:50:06Z",
+      "side": 1,
+      "message": "It seems like this is missing part of the formula, the spec continues with t * t * (3 - 2 * t).",
+      "revId": "88e192fcc7dc2e74ba5978468fec778d5abe80e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
