@@ -33,7 +33,6 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
                   gl::Extensions *extensions);
 }
 
-std::vector<std::string> TokenizeExtensionsString(const char *extensions);
 }
 
 #endif // LIBANGLE_RENDERER_GL_RENDERERGLUTILS_H_

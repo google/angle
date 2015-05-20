@@ -162,18 +162,4 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
 
 }
 
-std::vector<std::string> TokenizeExtensionsString(const char *extensions)
-{
-    std::vector<std::string> result;
-
-    std::istringstream stream(extensions);
-    std::string extension;
-    while (std::getline(stream, extension, ' '))
-    {
-        result.push_back(extension);
-    }
-
-    return result;
-}
-
 }
