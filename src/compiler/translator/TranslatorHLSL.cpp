@@ -25,8 +25,10 @@ void TranslatorHLSL::translate(TIntermNode *root, int compileOptions)
 
     SeparateDeclarations(root);
 
+    unsigned int temporaryIndex = 0;
+
     // Note that SeparateDeclarations needs to be run before UnfoldShortCircuitToIf.
-    UnfoldShortCircuitToIf(root);
+    UnfoldShortCircuitToIf(root, &temporaryIndex);
 
     // Note that SeparateDeclarations needs to be run before SeparateArrayInitialization.
     SeparateArrayInitialization(root);

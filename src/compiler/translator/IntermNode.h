@@ -594,7 +594,10 @@ class TIntermTraverser : angle::NonCopyable
           postVisit(postVisit),
           rightToLeft(rightToLeft),
           mDepth(0),
-          mMaxDepth(0) {}
+          mMaxDepth(0),
+          mTemporaryIndex(nullptr)
+    {
+    }
     virtual ~TIntermTraverser() {}
 
     virtual void visitSymbol(TIntermSymbol *) {}
@@ -646,6 +649,9 @@ class TIntermTraverser : angle::NonCopyable
     // mReplacements/mMultiReplacements during traversal and the user of the traverser should call
     // this function after traversal to perform them.
     void updateTree();
+
+    // Start creating temporary symbols from the given temporary symbol index + 1.
+    void useTemporaryIndex(unsigned int *temporaryIndex);
 
   protected:
     int mDepth;
@@ -716,6 +722,15 @@ class TIntermTraverser : angle::NonCopyable
     // supported.
     void insertStatementsInParentBlock(const TIntermSequence &insertions);
 
+    // Helper to create a temporary symbol node.
+    TIntermSymbol *createTempSymbol(const TType &type);
+    // Create a node that initializes the current temporary symbol with initializer.
+    TIntermAggregate *createTempInitDeclaration(TIntermTyped *initializer);
+    // Create a node that assigns rightNode to the current temporary symbol.
+    TIntermBinary *createTempAssignment(TIntermTyped *rightNode);
+    // Increment temporary symbol index.
+    void nextTemporaryIndex();
+
   private:
     struct ParentBlock
     {
@@ -730,6 +745,8 @@ class TIntermTraverser : angle::NonCopyable
     };
     // All the code blocks from the root to the current node's parent during traversal.
     std::vector<ParentBlock> mParentBlockStack;
+
+    unsigned int *mTemporaryIndex;
 };
 
 //

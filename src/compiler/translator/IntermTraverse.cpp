@@ -5,6 +5,7 @@
 //
 
 #include "compiler/translator/IntermNode.h"
+#include "compiler/translator/InfoSink.h"
 
 void TIntermTraverser::pushParentBlock(TIntermAggregate *node)
 {
@@ -33,6 +34,56 @@ void TIntermTraverser::insertStatementsInParentBlock(const TIntermSequence &inse
     ASSERT(!mParentBlockStack.empty());
     NodeInsertMultipleEntry insert(mParentBlockStack.back().node, mParentBlockStack.back().pos, insertions);
     mInsertions.push_back(insert);
+}
+
+TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type)
+{
+    // Each traversal uses at most one temporary variable, so the index stays the same within a single traversal.
+    TInfoSinkBase symbolNameOut;
+    ASSERT(mTemporaryIndex != nullptr);
+    symbolNameOut << "s" << (*mTemporaryIndex);
+    TString symbolName = symbolNameOut.c_str();
+
+    TIntermSymbol *node = new TIntermSymbol(0, symbolName, type);
+    node->setInternal(true);
+    node->getTypePointer()->setQualifier(EvqTemporary);
+    return node;
+}
+
+
+TIntermAggregate *TIntermTraverser::createTempInitDeclaration(TIntermTyped *initializer)
+{
+    ASSERT(initializer != nullptr);
+    TIntermSymbol *tempSymbol = createTempSymbol(initializer->getType());
+    TIntermAggregate *tempDeclaration = new TIntermAggregate(EOpDeclaration);
+    TIntermBinary *tempInit = new TIntermBinary(EOpInitialize);
+    tempInit->setLeft(tempSymbol);
+    tempInit->setRight(initializer);
+    tempInit->setType(tempSymbol->getType());
+    tempDeclaration->getSequence()->push_back(tempInit);
+    return tempDeclaration;
+}
+
+TIntermBinary *TIntermTraverser::createTempAssignment(TIntermTyped *rightNode)
+{
+    ASSERT(rightNode != nullptr);
+    TIntermSymbol *tempSymbol = createTempSymbol(rightNode->getType());
+    TIntermBinary *assignment = new TIntermBinary(EOpAssign);
+    assignment->setLeft(tempSymbol);
+    assignment->setRight(rightNode);
+    assignment->setType(tempSymbol->getType());
+    return assignment;
+}
+
+void TIntermTraverser::useTemporaryIndex(unsigned int *temporaryIndex)
+{
+    mTemporaryIndex = temporaryIndex;
+}
+
+void TIntermTraverser::nextTemporaryIndex()
+{
+    ASSERT(mTemporaryIndex != nullptr);
+    ++(*mTemporaryIndex);
 }
 
 //
