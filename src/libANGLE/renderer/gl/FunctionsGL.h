@@ -31,6 +31,7 @@ class FunctionsGL
 
     // Extensions
     std::vector<std::string> extensions;
+    bool hasExtension(const std::string &ext) const;
 
     // Entry Points
     // 1.0

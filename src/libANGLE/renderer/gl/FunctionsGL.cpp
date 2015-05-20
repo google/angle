@@ -1580,4 +1580,9 @@ void FunctionsGL::initialize()
     }
 }
 
+bool FunctionsGL::hasExtension(const std::string &ext) const
+{
+    return std::find(extensions.begin(), extensions.end(), ext) != extensions.end();
+}
+
 }
