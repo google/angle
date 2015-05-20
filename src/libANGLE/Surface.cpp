@@ -32,8 +32,7 @@ Surface::Surface(rx::SurfaceImpl *impl, EGLint surfaceType, const egl::Config *c
       // FIXME: Determine actual pixel aspect ratio
       mPixelAspectRatio(static_cast<EGLint>(1.0 * EGL_DISPLAY_SCALING)),
       mRenderBuffer(EGL_BACK_BUFFER),
-      mSwapBehavior(EGL_BUFFER_PRESERVED),
-      mTexture(NULL)
+      mSwapBehavior(EGL_BUFFER_PRESERVED)
 {
     addRef();
 
@@ -55,14 +54,14 @@ Surface::Surface(rx::SurfaceImpl *impl, EGLint surfaceType, const egl::Config *c
 
 Surface::~Surface()
 {
-    if (mTexture)
+    if (mTexture.get())
     {
         if (mImplementation)
         {
             mImplementation->releaseTexImage(EGL_BACK_BUFFER);
         }
-        mTexture->releaseTexImage();
-        mTexture = NULL;
+        mTexture->releaseTexImageFromSurface();
+        mTexture.set(nullptr);
     }
 
     SafeDelete(mImplementation);
@@ -145,21 +144,26 @@ EGLint Surface::getHeight() const
 
 Error Surface::bindTexImage(gl::Texture *texture, EGLint buffer)
 {
-    ASSERT(!mTexture);
+    ASSERT(!mTexture.get());
 
-    texture->bindTexImage(this);
-    mTexture = texture;
+    texture->bindTexImageFromSurface(this);
+    mTexture.set(texture);
     return mImplementation->bindTexImage(buffer);
 }
 
 Error Surface::releaseTexImage(EGLint buffer)
 {
-    ASSERT(mTexture);
-    gl::Texture *boundTexture = mTexture;
-    mTexture = NULL;
+    ASSERT(mTexture.get());
+    mTexture->releaseTexImageFromSurface();
+    mTexture.set(nullptr);
 
-    boundTexture->releaseTexImage();
     return mImplementation->releaseTexImage(buffer);
+}
+
+void Surface::releaseTexImageFromTexture()
+{
+    ASSERT(mTexture.get());
+    mTexture.set(nullptr);
 }
 
 GLenum Surface::getAttachmentInternalFormat(const gl::FramebufferAttachment::Target &target) const

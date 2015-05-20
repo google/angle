@@ -78,9 +78,6 @@ class Texture final : public FramebufferAttachmentObject
     bool isImmutable() const;
     GLsizei immutableLevelCount();
 
-    void bindTexImage(egl::Surface *surface);
-    void releaseTexImage();
-
     rx::TextureImpl *getImplementation() { return mTexture; }
     const rx::TextureImpl *getImplementation() const { return mTexture; }
 
@@ -92,6 +89,11 @@ class Texture final : public FramebufferAttachmentObject
 
   private:
     rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override { return mTexture; }
+
+    // ANGLE-only method, used internally
+    friend class egl::Surface;
+    void bindTexImageFromSurface(egl::Surface *surface);
+    void releaseTexImageFromSurface();
 
     rx::TextureImpl *mTexture;
 
@@ -123,6 +125,7 @@ class Texture final : public FramebufferAttachmentObject
     void setImageDescChain(size_t levels, Extents baseSize, GLenum sizedInternalFormat);
     void clearImageDesc(GLenum target, size_t level);
     void clearImageDescs();
+    void releaseTexImageInternal();
 
     std::vector<ImageDesc> mImageDescs;
 

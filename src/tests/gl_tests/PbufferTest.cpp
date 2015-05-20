@@ -266,5 +266,68 @@ TEST_P(PbufferTest, TextureSizeReset)
     EXPECT_PIXEL_EQ(0, 0, 0, 0, 0, 255);
 }
 
+// Bind a Pbuffer, redefine the texture, and verify it renders correctly
+TEST_P(PbufferTest, BindTexImageAndRedefineTexture)
+{
+    if (!mSupportsPbuffers)
+    {
+        std::cout << "Test skipped because Pbuffers are not supported." << std::endl;
+        return;
+    }
+
+    if (!mSupportsBindTexImage)
+    {
+        std::cout << "Test skipped because Pbuffer does not support binding to RGBA textures." << std::endl;
+        return;
+    }
+
+    EGLWindow *window = getEGLWindow();
+
+    // Apply the Pbuffer and clear it to purple
+    eglMakeCurrent(window->getDisplay(), mPbuffer, mPbuffer, window->getContext());
+    ASSERT_EGL_SUCCESS();
+
+    glViewport(0, 0, mPbufferSize, mPbufferSize);
+    glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_EQ(mPbufferSize / 2, mPbufferSize / 2, 255, 0, 255, 255);
+
+    // Apply the window surface
+    eglMakeCurrent(window->getDisplay(), window->getSurface(), window->getSurface(), window->getContext());
+
+    // Create a texture and bind the Pbuffer to it
+    GLuint texture = 0;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    EXPECT_GL_NO_ERROR();
+
+    eglBindTexImage(window->getDisplay(), mPbuffer, EGL_BACK_BUFFER);
+    glViewport(0, 0, window->getWidth(), window->getHeight());
+    ASSERT_EGL_SUCCESS();
+
+    // Redefine the texture
+    unsigned int pixelValue = 0xFFFF00FF;
+    std::vector<unsigned int> pixelData(window->getWidth() * window->getHeight(), pixelValue);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, window->getWidth(), window->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, &pixelData[0]);
+
+    // Draw a quad and verify that it is magenta
+    glUseProgram(mTextureProgram);
+    glUniform1i(mTextureUniformLocation, 0);
+
+    drawQuad(mTextureProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that magenta was drawn
+    EXPECT_PIXEL_EQ(window->getWidth() / 2, window->getHeight() / 2, 255, 0, 255, 255);
+
+    glDeleteTextures(1, &texture);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(PbufferTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_D3D11_WARP(), ES2_D3D11_REFERENCE());
