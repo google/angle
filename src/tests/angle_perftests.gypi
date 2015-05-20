@@ -11,6 +11,25 @@
 # target containing a gtest harness in a main.cpp.
 
 {
+    'variables':
+    {
+        'angle_perf_tests_sources':
+        [
+            'perf_tests/ANGLEPerfTest.cpp',
+            'perf_tests/ANGLEPerfTest.h',
+            'perf_tests/BufferSubData.cpp',
+            'perf_tests/DrawCallPerf.cpp',
+            'perf_tests/IndexConversionPerf.cpp',
+            'perf_tests/PointSprites.cpp',
+            'perf_tests/TexSubImage.cpp',
+            'perf_tests/third_party/perf/perf_test.cc',
+            'perf_tests/third_party/perf/perf_test.h',
+        ],
+        'angle_perf_tests_win_sources':
+        [
+            'perf_tests/IndexDataManagerTest.cpp',
+        ]
+    },
     'dependencies':
     [
         '<(angle_path)/src/angle.gyp:angle_common',
@@ -26,15 +45,16 @@
     ],
     'sources':
     [
-        'perf_tests/ANGLEPerfTest.cpp',
-        'perf_tests/ANGLEPerfTest.h',
-        'perf_tests/BufferSubData.cpp',
-        'perf_tests/DrawCallPerf.cpp',
-        'perf_tests/IndexConversionPerf.cpp',
-        'perf_tests/IndexDataManagerTest.cpp',
-        'perf_tests/PointSprites.cpp',
-        'perf_tests/TexSubImage.cpp',
-        'perf_tests/third_party/perf/perf_test.cc',
-        'perf_tests/third_party/perf/perf_test.h',
+        '<@(angle_perf_tests_sources)',
     ],
+    'conditions':
+    [
+        ['OS=="win"',
+        {
+            'sources':
+            [
+                '<@(angle_perf_tests_win_sources)',
+            ],
+        }],
+    ]
 }

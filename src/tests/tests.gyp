@@ -196,29 +196,19 @@
                         'angle_end2end_tests_main.cpp',
                     ],
                 },
-            ],
-            'conditions':
-            [
-                ['OS=="win"',
                 {
-                    'targets':
+                    'target_name': 'angle_perftests',
+                    'type': 'executable',
+                    'includes':
                     [
-
-                        {
-                            'target_name': 'angle_perftests',
-                            'type': 'executable',
-                            'includes':
-                            [
-                                '../../build/common_defines.gypi',
-                                'angle_perftests.gypi',
-                            ],
-                            'sources':
-                            [
-                                'angle_perftests_main.cpp',
-                            ],
-                        },
+                        '../../build/common_defines.gypi',
+                        'angle_perftests.gypi',
                     ],
-                }],
+                    'sources':
+                    [
+                        'angle_perftests_main.cpp',
+                    ],
+                },
             ],
         }],
         ['OS=="win"',
