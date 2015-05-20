@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "ed4089d5_057bd6ee",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-05-20T17:01:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adfdb1c1_e2ea1f72",
+      "range": {
+        "startLine": 326,
+        "startChar": 23,
+        "endLine": 326,
+        "endChar": 25
+      },
+      "revId": "fdf2ec1181bd2fcd3c4bb4ec7db15160f80998c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d7ad934_ae6af7e7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
         "patchSetId": 1
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "ad4211dc_cce997ae",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-05-20T17:01:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d7ad934_ae6af7e7",
+      "range": {
+        "startLine": 344,
+        "startChar": 8,
+        "endLine": 344,
+        "endChar": 22
+      },
+      "revId": "fdf2ec1181bd2fcd3c4bb4ec7db15160f80998c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d37016d_64bc0e48",
         "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
         "patchSetId": 1
@@ -82,6 +130,30 @@
       "writtenOn": "2015-05-20T13:47:42Z",
       "side": 1,
       "message": "if fullSupport is true, and requireFullSupport is false, this returns false. is that desired?",
+      "range": {
+        "startLine": 348,
+        "startChar": 11,
+        "endLine": 349,
+        "endChar": 1
+      },
+      "revId": "fdf2ec1181bd2fcd3c4bb4ec7db15160f80998c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd4745eb_44500230",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-05-20T17:01:59Z",
+      "side": 1,
+      "message": "Yep. I\u0027ve added comments explaining this- hopefully it\u0027s more clear now.",
+      "parentUuid": "2d37016d_64bc0e48",
       "range": {
         "startLine": 348,
         "startChar": 11,
