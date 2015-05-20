@@ -471,6 +471,12 @@ TIntermTyped *TIntermediate::foldAggregateBuiltIn(TOperator op, TIntermAggregate
       case EOpMix:
       case EOpStep:
       case EOpSmoothStep:
+      case EOpLessThan:
+      case EOpLessThanEqual:
+      case EOpGreaterThan:
+      case EOpGreaterThanEqual:
+      case EOpVectorEqual:
+      case EOpVectorNotEqual:
         return TIntermConstantUnion::FoldAggregateBuiltIn(op, aggregate, mInfoSink);
       default:
         // Constant folding not supported for the built-in.
