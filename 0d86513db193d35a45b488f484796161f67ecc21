@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "adfdb1c1_f391d3a2",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-20T18:52:16Z",
+      "side": 1,
+      "message": "I\u0027m not sure why this wasn\u0027t causing problems before",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 23,
+        "endChar": 30
+      },
+      "revId": "0d86513db193d35a45b488f484796161f67ecc21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d6e217b_e963153f",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-20T18:52:16Z",
+      "side": 1,
+      "message": "nit: brace on newline",
+      "range": {
+        "startLine": 40,
+        "startChar": 95,
+        "endLine": 40,
+        "endChar": 96
+      },
+      "revId": "0d86513db193d35a45b488f484796161f67ecc21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfdb1c1_138d8f87",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-20T18:52:16Z",
+      "side": 1,
+      "message": "this is the problem here",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 25
+      },
+      "revId": "0d86513db193d35a45b488f484796161f67ecc21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d7ad934_dac13936",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-20T18:52:16Z",
+      "side": 1,
+      "message": "nit: comment alignment",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 2
+      },
+      "revId": "0d86513db193d35a45b488f484796161f67ecc21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfdb1c1_73af2310",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-20T18:52:16Z",
+      "side": 1,
+      "message": "remove virtual, add override",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 11
+      },
+      "revId": "0d86513db193d35a45b488f484796161f67ecc21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfdb1c1_93b29f76",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-20T18:52:16Z",
+      "side": 1,
+      "message": "nit: formatting",
+      "range": {
+        "startLine": 84,
+        "startChar": 8,
+        "endLine": 84,
+        "endChar": 9
+      },
+      "revId": "0d86513db193d35a45b488f484796161f67ecc21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfdb1c1_33b9ab57",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-20T18:52:16Z",
+      "side": 1,
+      "message": "remove virtual, add override",
+      "range": {
+        "startLine": 86,
+        "startChar": 4,
+        "endLine": 86,
+        "endChar": 11
+      },
+      "revId": "0d86513db193d35a45b488f484796161f67ecc21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
