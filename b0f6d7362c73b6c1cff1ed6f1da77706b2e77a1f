@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ed8ec97f_f81d2565",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1549,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-20T08:18:47Z",
+      "side": 1,
+      "message": "Done.\n\nPlease note that I had to re-introduce third parameter infoSink to TIntermConstantUnion::FoldAggregateBuiltIn for logging these warnings on undefined constant folding results.\n\nAlso we haven\u0027t printed such warnings for the built-ins we handled earlier, I will take it in a separate patch which will add this warning in existing code.",
+      "parentUuid": "adfdb1c1_08bd67a2",
+      "range": {
+        "startLine": 1549,
+        "startChar": 26,
+        "endLine": 1549,
+        "endChar": 62
+      },
+      "revId": "b0f6d7362c73b6c1cff1ed6f1da77706b2e77a1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d8cfd85_301e688c",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-19T11:24:28Z",
       "side": 1,
       "message": "ditto",
+      "range": {
+        "startLine": 1570,
+        "startChar": 23,
+        "endLine": 1573,
+        "endChar": 62
+      },
+      "revId": "b0f6d7362c73b6c1cff1ed6f1da77706b2e77a1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d3ebd49_4f8819f1",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1573,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-20T08:18:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d8cfd85_301e688c",
       "range": {
         "startLine": 1570,
         "startChar": 23,
