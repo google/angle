@@ -274,6 +274,7 @@ TEST_P(SwizzleTest, CompressedDXT_2D)
 {
     if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
     {
+        std::cout << "Test skipped due to missing GL_EXT_texture_compression_dxt1." << std::endl;
         return;
     }
 
@@ -282,6 +283,6 @@ TEST_P(SwizzleTest, CompressedDXT_2D)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_INSTANTIATE_TEST(SwizzleTest, ES3_D3D11());
+ANGLE_INSTANTIATE_TEST(SwizzleTest, ES3_D3D11(), ES3_OPENGL());
 
 } // namespace

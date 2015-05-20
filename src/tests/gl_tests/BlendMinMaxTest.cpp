@@ -36,13 +36,15 @@ class BlendMinMaxTest : public ANGLETest
         return blendMin ? std::min<GLubyte>(curAsUbyte, prevColor) : std::max<GLubyte>(curAsUbyte, prevColor);
     }
 
-    void runTest()
+    void runTest(GLenum colorFormat)
     {
         if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_blend_minmax"))
         {
             std::cout << "Test skipped because ES3 or GL_EXT_blend_minmax is not available." << std::endl;
             return;
         }
+
+        SetUpFramebuffer(colorFormat);
 
         const size_t colorCount = 1024;
         Color colors[colorCount];
@@ -152,8 +154,7 @@ class BlendMinMaxTest : public ANGLETest
 
 TEST_P(BlendMinMaxTest, RGBA8)
 {
-    SetUpFramebuffer(GL_RGBA8);
-    runTest();
+    runTest(GL_RGBA8);
 }
 
 TEST_P(BlendMinMaxTest, RGBA32f)
@@ -164,8 +165,7 @@ TEST_P(BlendMinMaxTest, RGBA32f)
         return;
     }
 
-    SetUpFramebuffer(GL_RGBA32F);
-    runTest();
+    runTest(GL_RGBA32F);
 }
 
 TEST_P(BlendMinMaxTest, RGBA16F)
@@ -176,8 +176,7 @@ TEST_P(BlendMinMaxTest, RGBA16F)
         return;
     }
 
-    SetUpFramebuffer(GL_RGBA16F);
-    runTest();
+    runTest(GL_RGBA16F);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.

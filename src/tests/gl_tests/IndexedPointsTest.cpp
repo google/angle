@@ -216,6 +216,6 @@ TEST_P(IndexedPointsTestUInt, UnsignedIntOffset3)
     runTest(3);
 }
 
-ANGLE_INSTANTIATE_TEST(IndexedPointsTestUByte, ES2_D3D11());
-ANGLE_INSTANTIATE_TEST(IndexedPointsTestUShort, ES2_D3D11());
-ANGLE_INSTANTIATE_TEST(IndexedPointsTestUInt, ES2_D3D11());
+ANGLE_INSTANTIATE_TEST(IndexedPointsTestUByte, ES2_D3D11(), ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(IndexedPointsTestUShort, ES2_D3D11(), ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(IndexedPointsTestUInt, ES2_D3D11(), ES2_OPENGL());
