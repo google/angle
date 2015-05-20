@@ -181,13 +181,14 @@ Error Texture::setImage(GLenum target, size_t level, GLenum internalFormat, cons
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
+    // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
+    releaseTexImageInternal();
+
     Error error = mTexture->setImage(target, level, internalFormat, size, format, type, unpack, pixels);
     if (error.isError())
     {
         return error;
     }
-
-    releaseTexImage();
 
     setImageDesc(target, level, ImageDesc(size, GetSizedInternalFormat(internalFormat, type)));
 
@@ -207,13 +208,14 @@ Error Texture::setCompressedImage(GLenum target, size_t level, GLenum internalFo
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
+    // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
+    releaseTexImageInternal();
+
     Error error = mTexture->setCompressedImage(target, level, internalFormat, size, unpack, pixels);
     if (error.isError())
     {
         return error;
     }
-
-    releaseTexImage();
 
     setImageDesc(target, level, ImageDesc(size, GetSizedInternalFormat(internalFormat, GL_UNSIGNED_BYTE)));
 
@@ -233,13 +235,14 @@ Error Texture::copyImage(GLenum target, size_t level, const Rectangle &sourceAre
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
+    // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
+    releaseTexImageInternal();
+
     Error error = mTexture->copyImage(target, level, sourceArea, internalFormat, source);
     if (error.isError())
     {
         return error;
     }
-
-    releaseTexImage();
 
     setImageDesc(target, level, ImageDesc(Extents(sourceArea.width, sourceArea.height, 1),
                                           GetSizedInternalFormat(internalFormat, GL_UNSIGNED_BYTE)));
@@ -259,13 +262,14 @@ Error Texture::setStorage(GLenum target, size_t levels, GLenum internalFormat, c
 {
     ASSERT(target == mTarget);
 
+    // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
+    releaseTexImageInternal();
+
     Error error = mTexture->setStorage(target, levels, internalFormat, size);
     if (error.isError())
     {
         return error;
     }
-
-    releaseTexImage();
 
     mImmutableLevelCount = levels;
     clearImageDescs();
@@ -277,13 +281,14 @@ Error Texture::setStorage(GLenum target, size_t levels, GLenum internalFormat, c
 
 Error Texture::generateMipmaps()
 {
+    // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
+    releaseTexImageInternal();
+
     Error error = mTexture->generateMipmaps();
     if (error.isError())
     {
         return error;
     }
-
-    releaseTexImage();
 
     const ImageDesc &baseImageInfo = getImageDesc(getBaseImageTarget(), 0);
     size_t mipLevels = log2(std::max(std::max(baseImageInfo.size.width, baseImageInfo.size.height), baseImageInfo.size.depth)) + 1;
@@ -355,11 +360,15 @@ void Texture::clearImageDescs()
     mCompletenessCache.cacheValid = false;
 }
 
-void Texture::bindTexImage(egl::Surface *surface)
+void Texture::bindTexImageFromSurface(egl::Surface *surface)
 {
     ASSERT(surface);
 
-    releaseTexImage();
+    if (mBoundSurface)
+    {
+        releaseTexImageFromSurface();
+    }
+
     mTexture->bindTexImage(surface);
     mBoundSurface = surface;
 
@@ -370,16 +379,26 @@ void Texture::bindTexImage(egl::Surface *surface)
     setImageDesc(mTarget, 0, desc);
 }
 
-void Texture::releaseTexImage()
+void Texture::releaseTexImageFromSurface()
+{
+    ASSERT(mBoundSurface);
+    mBoundSurface = nullptr;
+    mTexture->releaseTexImage();
+
+    // Erase the image info for level 0
+    ASSERT(mTarget == GL_TEXTURE_2D);
+    clearImageDesc(mTarget, 0);
+}
+
+void Texture::releaseTexImageInternal()
 {
     if (mBoundSurface)
     {
-        mBoundSurface = NULL;
-        mTexture->releaseTexImage();
+        // Notify the surface
+        mBoundSurface->releaseTexImageFromTexture();
 
-        // Erase the image info for level 0
-        ASSERT(mTarget == GL_TEXTURE_2D);
-        clearImageDesc(mTarget, 0);
+        // Then, call the same method as from the surface
+        releaseTexImageFromSurface();
     }
 }
 

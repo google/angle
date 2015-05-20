@@ -82,9 +82,6 @@ class Texture final : public RefCountObject
     bool isImmutable() const;
     GLsizei immutableLevelCount();
 
-    void bindTexImage(egl::Surface *surface);
-    void releaseTexImage();
-
     rx::TextureImpl *getImplementation() { return mTexture; }
     const rx::TextureImpl *getImplementation() const { return mTexture; }
 
@@ -92,6 +89,11 @@ class Texture final : public RefCountObject
 
   private:
     static unsigned int issueTextureSerial();
+
+    // ANGLE-only method, used internally
+    friend class egl::Surface;
+    void bindTexImageFromSurface(egl::Surface *surface);
+    void releaseTexImageFromSurface();
 
     rx::TextureImpl *mTexture;
 
@@ -127,6 +129,7 @@ class Texture final : public RefCountObject
     void setImageDescChain(size_t levels, Extents baseSize, GLenum sizedInternalFormat);
     void clearImageDesc(GLenum target, size_t level);
     void clearImageDescs();
+    void releaseTexImageInternal();
 
     std::vector<ImageDesc> mImageDescs;
 
