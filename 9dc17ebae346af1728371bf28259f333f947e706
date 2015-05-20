@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "adfdb1c1_d94155fb",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-20T21:27:32Z",
+      "side": 1,
+      "message": "We should consider using a std::set if we\u0027re going to be doing a lot of lookups in this tokenized extension string.",
+      "range": {
+        "startLine": 73,
+        "startChar": 22,
+        "endLine": 73,
+        "endChar": 32
+      },
+      "revId": "9dc17ebae346af1728371bf28259f333f947e706",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
