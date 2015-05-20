@@ -43,6 +43,8 @@ Error ValidateCreatePbufferSurface(Display *display, Config *config, const Attri
 Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, EGLClientBuffer buffer,
                                             Config *config, const AttributeMap& attributes);
 
+// Other validation
+Error ValidateCompatibleConfigs(const Config *config1, const Config *config2, EGLint surfaceType);
 
 }
 

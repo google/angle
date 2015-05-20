@@ -179,7 +179,7 @@ class Context final : angle::NonCopyable
 
     virtual int getClientVersion() const;
 
-    EGLint getConfigID() const;
+    const egl::Config *getConfig() const;
     EGLenum getClientType() const;
     EGLenum getRenderBuffer() const;
 
@@ -227,7 +227,7 @@ class Context final : angle::NonCopyable
 
     int mClientVersion;
 
-    EGLint mConfigID;
+    const egl::Config *mConfig;
     EGLenum mClientType;
 
     TextureMap mZeroTextures;

@@ -498,4 +498,37 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
     return Error(EGL_SUCCESS);
 }
 
+Error ValidateCompatibleConfigs(const Config *config1, const Config *config2, EGLint surfaceType)
+{
+    // Config compatibility is defined in section 2.2 of the EGL 1.5 spec
+
+    bool colorBufferCompat = config1->colorBufferType == config2->colorBufferType;
+    if (!colorBufferCompat)
+    {
+        return Error(EGL_BAD_MATCH, "Color buffer types are not compatible.");
+    }
+
+    bool colorCompat = config1->redSize == config2->redSize && config1->greenSize == config2->greenSize &&
+                       config1->blueSize == config2->blueSize && config1->alphaSize == config2->alphaSize &&
+                       config1->luminanceSize == config2->luminanceSize;
+    if (!colorCompat)
+    {
+        return Error(EGL_BAD_MATCH, "Color buffer sizes are not compatible.");
+    }
+
+    bool dsCompat = config1->depthSize == config2->depthSize && config1->stencilSize == config2->stencilSize;
+    if (!dsCompat)
+    {
+        return Error(EGL_BAD_MATCH, "Depth-stencil buffer types are not compatible.");
+    }
+
+    bool surfaceTypeCompat = (config1->surfaceType & config2->surfaceType & surfaceType) != 0;
+    if (!surfaceTypeCompat)
+    {
+        return Error(EGL_BAD_MATCH, "Surface types are not compatible.");
+    }
+
+    return Error(EGL_SUCCESS);
+}
+
 }

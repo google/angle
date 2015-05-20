@@ -38,6 +38,7 @@ namespace gl
 
 Context::Context(const egl::Config *config, int clientVersion, const Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess)
     : mRenderer(renderer),
+      mConfig(config),
       mData(clientVersion, mState, mCaps, mTextureCaps, mExtensions, nullptr)
 {
     ASSERT(robustAccess == false);   // Unimplemented
@@ -47,7 +48,6 @@ Context::Context(const egl::Config *config, int clientVersion, const Context *sh
 
     mClientVersion = clientVersion;
 
-    mConfigID = config->configID;
     mClientType = EGL_OPENGL_ES_API;
 
     mFenceNVHandleAllocator.setBaseHandle(0);
@@ -1320,9 +1320,9 @@ int Context::getClientVersion() const
     return mClientVersion;
 }
 
-EGLint Context::getConfigID() const
+const egl::Config *Context::getConfig() const
 {
-    return mConfigID;
+    return mConfig;
 }
 
 EGLenum Context::getClientType() const

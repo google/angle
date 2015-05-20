@@ -519,8 +519,7 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
     }
 
     // EGL 1.5 spec: dpy can be uninitialized if all other parameters are null
-    if (dpy != EGL_NO_DISPLAY && !display->isInitialized() &&
-        (ctx != EGL_NO_CONTEXT || draw != EGL_NO_SURFACE || read != EGL_NO_SURFACE))
+    if (!display->isInitialized() && (ctx != EGL_NO_CONTEXT || draw != EGL_NO_SURFACE || read != EGL_NO_SURFACE))
     {
         SetGlobalError(Error(EGL_NOT_INITIALIZED, "'dpy' not initialized"));
         return EGL_FALSE;
@@ -536,7 +535,7 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
         }
     }
 
-    if (dpy != EGL_NO_DISPLAY && display->isInitialized())
+    if (display->isInitialized())
     {
         if (display->testDeviceLost())
         {
@@ -573,9 +572,29 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
         }
     }
 
+    if (readSurface)
+    {
+        Error readCompatError = ValidateCompatibleConfigs(readSurface->getConfig(), context->getConfig(), readSurface->getType());
+        if (readCompatError.isError())
+        {
+            SetGlobalError(readCompatError);
+            return EGL_FALSE;
+        }
+    }
+
     if (draw != read)
     {
         UNIMPLEMENTED();   // FIXME
+
+        if (drawSurface)
+        {
+            Error drawCompatError = ValidateCompatibleConfigs(drawSurface->getConfig(), context->getConfig(), drawSurface->getType());
+            if (drawCompatError.isError())
+            {
+                SetGlobalError(drawCompatError);
+                return EGL_FALSE;
+            }
+        }
     }
 
     gl::Context *previousContext = GetGlobalContext();
@@ -647,7 +666,7 @@ EGLBoolean EGLAPIENTRY QueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attri
     switch (attribute)
     {
       case EGL_CONFIG_ID:
-        *value = context->getConfigID();
+        *value = context->getConfig()->configID;
         break;
       case EGL_CONTEXT_CLIENT_TYPE:
         *value = context->getClientType();
