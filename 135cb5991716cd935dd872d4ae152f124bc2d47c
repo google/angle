@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d7ad934_0e7a2bb5",
+        "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-20T13:50:10Z",
+      "side": 1,
+      "message": "can you comment here why we explicitly don\u0027t include angleutils.h?",
+      "range": {
+        "startLine": 67,
+        "startChar": 3,
+        "endLine": 68,
+        "endChar": 49
+      },
+      "revId": "135cb5991716cd935dd872d4ae152f124bc2d47c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
