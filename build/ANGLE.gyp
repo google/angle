@@ -6,7 +6,7 @@
     'targets':
     [
         {
-            'target_name': 'all',
+            'target_name': 'All',
             'type': 'none',
             'dependencies':
             [
