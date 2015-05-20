@@ -68,7 +68,13 @@
                 {
                     'VCCLCompilerTool':
                     {
-                        'AdditionalOptions': ['/MP'],
+                        # Control Flow Guard is a security feature in Windows
+                        # 8.1 and higher designed to prevent exploitation of
+                        # indirect calls in executables.
+                        # Control Flow Guard is enabled using the /d2guard4
+                        # compiler setting in combination with the /guard:cf
+                        # linker setting.
+                        'AdditionalOptions': ['/MP', '/d2guard4'],
                         'BufferSecurityCheck': 'true',
                         'DebugInformationFormat': '3',
                         'ExceptionHandling': '0',
@@ -79,6 +85,13 @@
                     },
                     'VCLinkerTool':
                     {
+                        # Control Flow Guard is a security feature in Windows
+                        # 8.1 and higher designed to prevent exploitation of
+                        # indirect calls in executables.
+                        # Control Flow Guard is enabled using the /d2guard4
+                        # compiler setting in combination with the /guard:cf
+                        # linker setting.
+                        'AdditionalOptions': ['/guard:cf'],
                         'FixedBaseAddress': '1',
                         'ImportLibrary': '$(OutDir)\\lib\\$(TargetName).lib',
                         'MapFileName': '$(OutDir)\\$(TargetName).map',
