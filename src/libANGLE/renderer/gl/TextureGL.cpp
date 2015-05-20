@@ -136,27 +136,22 @@ gl::Error TextureGL::setSubImage(GLenum target, size_t level, const gl::Box &are
 }
 
 gl::Error TextureGL::setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
-                                        const gl::PixelUnpackState &unpack, const uint8_t *pixels)
+                                        const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
 {
     ASSERT(CompatibleTextureTarget(mTextureType, target));
 
     SetUnpackStateForTexImage(mStateManager, unpack);
 
-    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
-    size_t depthPitch = internalFormatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, size.width, size.height,
-                                                             unpack.alignment, unpack.rowLength);
-    size_t dataSize = internalFormatInfo.computeBlockSize(GL_UNSIGNED_BYTE, size.width, size.height) * depthPitch;
-
     mStateManager->bindTexture(mTextureType, mTextureID);
     if (UseTexImage2D(mTextureType))
     {
         ASSERT(size.depth == 1);
-        mFunctions->compressedTexImage2D(target, level, internalFormat, size.width, size.height, 0, dataSize, pixels);
+        mFunctions->compressedTexImage2D(target, level, internalFormat, size.width, size.height, 0, imageSize, pixels);
     }
     else if (UseTexImage3D(mTextureType))
     {
         mFunctions->compressedTexImage3D(target, level, internalFormat, size.width, size.height, size.depth, 0,
-                                         dataSize, pixels);
+                                         imageSize, pixels);
     }
     else
     {
@@ -167,28 +162,23 @@ gl::Error TextureGL::setCompressedImage(GLenum target, size_t level, GLenum inte
 }
 
 gl::Error TextureGL::setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
-                                           const gl::PixelUnpackState &unpack, const uint8_t *pixels)
+                                           const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
 {
     ASSERT(CompatibleTextureTarget(mTextureType, target));
 
     SetUnpackStateForTexImage(mStateManager, unpack);
 
-    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(format);
-    size_t depthPitch = internalFormatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, area.width, area.height,
-                                                             unpack.alignment, unpack.rowLength);
-    size_t dataSize = internalFormatInfo.computeBlockSize(GL_UNSIGNED_BYTE, area.width, area.height) * depthPitch;
-
     mStateManager->bindTexture(mTextureType, mTextureID);
     if (UseTexImage2D(mTextureType))
     {
         ASSERT(area.z == 0 && area.depth == 1);
-        mFunctions->compressedTexSubImage2D(target, level, area.x, area.y, area.width, area.height, format, dataSize,
+        mFunctions->compressedTexSubImage2D(target, level, area.x, area.y, area.width, area.height, format, imageSize,
                                             pixels);
     }
     else if (UseTexImage3D(mTextureType))
     {
         mFunctions->compressedTexSubImage3D(target, level, area.x, area.y, area.z, area.width, area.height, area.depth,
-                                            format, dataSize, pixels);
+                                            format, imageSize, pixels);
     }
     else
     {

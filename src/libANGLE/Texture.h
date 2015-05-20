@@ -62,9 +62,9 @@ class Texture final : public FramebufferAttachmentObject
                               const PixelUnpackState &unpack, const uint8_t *pixels);
 
     virtual Error setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const Extents &size,
-                                     const PixelUnpackState &unpack, const uint8_t *pixels);
+                                     const PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels);
     virtual Error setCompressedSubImage(GLenum target, size_t level, const Box &area, GLenum format,
-                                        const PixelUnpackState &unpack, const uint8_t *pixels);
+                                        const PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels);
 
     virtual Error copyImage(GLenum target, size_t level, const Rectangle &sourceArea, GLenum internalFormat,
                             const Framebuffer *source);

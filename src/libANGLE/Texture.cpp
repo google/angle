@@ -190,14 +190,14 @@ Error Texture::setSubImage(GLenum target, size_t level, const Box &area, GLenum 
 }
 
 Error Texture::setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const Extents &size,
-                                  const PixelUnpackState &unpack, const uint8_t *pixels)
+                                  const PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     releaseTexImageInternal();
 
-    Error error = mTexture->setCompressedImage(target, level, internalFormat, size, unpack, pixels);
+    Error error = mTexture->setCompressedImage(target, level, internalFormat, size, unpack, imageSize, pixels);
     if (error.isError())
     {
         return error;
@@ -209,11 +209,11 @@ Error Texture::setCompressedImage(GLenum target, size_t level, GLenum internalFo
 }
 
 Error Texture::setCompressedSubImage(GLenum target, size_t level, const Box &area, GLenum format,
-                                     const PixelUnpackState &unpack, const uint8_t *pixels)
+                                     const PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
-    return mTexture->setCompressedSubImage(target, level, area, format, unpack, pixels);
+    return mTexture->setCompressedSubImage(target, level, area, format, unpack, imageSize, pixels);
 }
 
 Error Texture::copyImage(GLenum target, size_t level, const Rectangle &sourceArea, GLenum internalFormat,

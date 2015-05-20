@@ -772,7 +772,7 @@ gl::Error TextureD3D_2D::setSubImage(GLenum target, size_t level, const gl::Box 
 
 
 gl::Error TextureD3D_2D::setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
-                                            const gl::PixelUnpackState &unpack, const uint8_t *pixels)
+                                            const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
 {
     ASSERT(target == GL_TEXTURE_2D && size.depth == 1);
 
@@ -783,7 +783,7 @@ gl::Error TextureD3D_2D::setCompressedImage(GLenum target, size_t level, GLenum 
 }
 
 gl::Error TextureD3D_2D::setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
-                                               const gl::PixelUnpackState &unpack, const uint8_t *pixels)
+                                               const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
 {
     ASSERT(target == GL_TEXTURE_2D && area.depth == 1 && area.z == 0);
 
@@ -1325,7 +1325,7 @@ gl::Error TextureD3D_Cube::setSubImage(GLenum target, size_t level, const gl::Bo
 }
 
 gl::Error TextureD3D_Cube::setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
-                                              const gl::PixelUnpackState &unpack, const uint8_t *pixels)
+                                              const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
 {
     ASSERT(size.depth == 1);
 
@@ -1339,7 +1339,7 @@ gl::Error TextureD3D_Cube::setCompressedImage(GLenum target, size_t level, GLenu
 }
 
 gl::Error TextureD3D_Cube::setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
-                                                 const gl::PixelUnpackState &unpack, const uint8_t *pixels)
+                                                 const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
 {
     ASSERT(area.depth == 1 && area.z == 0);
 
@@ -1969,7 +1969,7 @@ gl::Error TextureD3D_3D::setSubImage(GLenum target, size_t level, const gl::Box 
 }
 
 gl::Error TextureD3D_3D::setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
-                                            const gl::PixelUnpackState &unpack, const uint8_t *pixels)
+                                            const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
 {
     ASSERT(target == GL_TEXTURE_3D);
 
@@ -1981,7 +1981,7 @@ gl::Error TextureD3D_3D::setCompressedImage(GLenum target, size_t level, GLenum 
 }
 
 gl::Error TextureD3D_3D::setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
-                                               const gl::PixelUnpackState &unpack, const uint8_t *pixels)
+                                               const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
 {
     ASSERT(target == GL_TEXTURE_3D);
 
@@ -2478,7 +2478,7 @@ gl::Error TextureD3D_2DArray::setSubImage(GLenum target, size_t level, const gl:
 }
 
 gl::Error TextureD3D_2DArray::setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
-                                                 const gl::PixelUnpackState &unpack, const uint8_t *pixels)
+                                                 const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
 {
     ASSERT(target == GL_TEXTURE_2D_ARRAY);
 
@@ -2504,7 +2504,7 @@ gl::Error TextureD3D_2DArray::setCompressedImage(GLenum target, size_t level, GL
 }
 
 gl::Error TextureD3D_2DArray::setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
-                                                    const gl::PixelUnpackState &unpack, const uint8_t *pixels)
+                                                    const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
 {
     ASSERT(target == GL_TEXTURE_2D_ARRAY);
 

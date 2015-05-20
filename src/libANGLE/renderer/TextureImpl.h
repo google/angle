@@ -50,9 +50,9 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
                                   const gl::PixelUnpackState &unpack, const uint8_t *pixels) = 0;
 
     virtual gl::Error setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
-                                         const gl::PixelUnpackState &unpack, const uint8_t *pixels) = 0;
+                                         const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels) = 0;
     virtual gl::Error setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
-                                            const gl::PixelUnpackState &unpack, const uint8_t *pixels) = 0;
+                                            const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels) = 0;
 
     virtual gl::Error copyImage(GLenum target, size_t level, const gl::Rectangle &sourceArea, GLenum internalFormat,
                                 const gl::Framebuffer *source) = 0;

@@ -229,7 +229,7 @@ void GL_APIENTRY CompressedTexImage3D(GLenum target, GLint level, GLenum interna
         Extents size(width, height, depth);
         Texture *texture = context->getTargetTexture(target);
         Error error = texture->setCompressedImage(target, level, internalformat, size, context->getState().getUnpackState(),
-                                                  reinterpret_cast<const uint8_t *>(data));
+                                                  imageSize, reinterpret_cast<const uint8_t *>(data));
         if (error.isError())
         {
             context->recordError(error);
@@ -283,7 +283,7 @@ void GL_APIENTRY CompressedTexSubImage3D(GLenum target, GLint level, GLint xoffs
         Box area(xoffset, yoffset, zoffset, width, height, depth);
         Texture *texture = context->getTargetTexture(target);
         Error error = texture->setCompressedSubImage(target, level, area, format, context->getState().getUnpackState(),
-                                                     reinterpret_cast<const uint8_t *>(data));
+                                                     imageSize, reinterpret_cast<const uint8_t *>(data));
         if (error.isError())
         {
             context->recordError(error);
