@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d6e217b_accc4b09",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-20T19:01:01Z",
+      "side": 1,
+      "message": "Why not use GL_DEPTH24_STENCIL8 which is present in GL_ARB_framebuffer_object?",
+      "revId": "81a69925cf9da4e2d4649d1552d689f9541c5fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
