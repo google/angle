@@ -267,15 +267,33 @@ gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFor
 
                 if (mTextureType == GL_TEXTURE_2D)
                 {
-                    mFunctions->texImage2D(target, level, internalFormat, levelSize.width, levelSize.height,
-                                           0, internalFormatInfo.format, internalFormatInfo.type, nullptr);
+                    if (internalFormatInfo.compressed)
+                    {
+                        size_t dataSize = internalFormatInfo.computeBlockSize(GL_UNSIGNED_BYTE, levelSize.width, levelSize.height);
+                        mFunctions->compressedTexImage2D(target, level, internalFormat, levelSize.width, levelSize.height,
+                                                         0, dataSize, nullptr);
+                    }
+                    else
+                    {
+                        mFunctions->texImage2D(target, level, internalFormat, levelSize.width, levelSize.height,
+                                               0, internalFormatInfo.format, internalFormatInfo.type, nullptr);
+                    }
                 }
                 else if (mTextureType == GL_TEXTURE_CUBE_MAP)
                 {
                     for (GLenum face = gl::FirstCubeMapTextureTarget; face <= gl::LastCubeMapTextureTarget; face++)
                     {
-                        mFunctions->texImage2D(face, level, internalFormat, levelSize.width, levelSize.height,
-                                               0, internalFormatInfo.format, internalFormatInfo.type, nullptr);
+                        if (internalFormatInfo.compressed)
+                        {
+                            size_t dataSize = internalFormatInfo.computeBlockSize(GL_UNSIGNED_BYTE, levelSize.width, levelSize.height);
+                            mFunctions->compressedTexImage2D(face, level, internalFormat, levelSize.width, levelSize.height,
+                                                             0, dataSize, nullptr);
+                        }
+                        else
+                        {
+                            mFunctions->texImage2D(face, level, internalFormat, levelSize.width, levelSize.height,
+                                                    0, internalFormatInfo.format, internalFormatInfo.type, nullptr);
+                        }
                     }
                 }
                 else
@@ -307,8 +325,17 @@ gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFor
                                       std::max(size.height >> i, 1),
                                       mTextureType == GL_TEXTURE_3D ? std::max(size.depth >> i, 1) : size.depth);
 
-                mFunctions->texImage3D(target, i, internalFormat, levelSize.width, levelSize.height, levelSize.depth,
-                                       0, internalFormatInfo.format, internalFormatInfo.type, nullptr);
+                if (internalFormatInfo.compressed)
+                {
+                    size_t dataSize = internalFormatInfo.computeBlockSize(GL_UNSIGNED_BYTE, levelSize.width, levelSize.height) * levelSize.depth;
+                    mFunctions->compressedTexImage3D(target, i, internalFormat, levelSize.width, levelSize.height, levelSize.depth,
+                                                     0, dataSize, nullptr);
+                }
+                else
+                {
+                    mFunctions->texImage3D(target, i, internalFormat, levelSize.width, levelSize.height, levelSize.depth,
+                                           0, internalFormatInfo.format, internalFormatInfo.type, nullptr);
+                }
             }
         }
     }
