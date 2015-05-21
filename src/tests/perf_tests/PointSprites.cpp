@@ -217,6 +217,24 @@ PointSpritesParams D3D9Params()
     return params;
 }
 
+PointSpritesParams OpenGLParams()
+{
+    PointSpritesParams params;
+
+    params.glesMajorVersion = 2;
+    params.widowWidth = 1280;
+    params.windowHeight = 720;
+    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
+    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
+
+    params.iterations = 10;
+    params.count = 10;
+    params.size = 3.0f;
+    params.numVaryings = 3;
+
+    return params;
+}
+
 } // namespace
 
 TEST_P(PointSpritesBenchmark, Run)
@@ -225,4 +243,4 @@ TEST_P(PointSpritesBenchmark, Run)
 }
 
 ANGLE_INSTANTIATE_TEST(PointSpritesBenchmark,
-                       D3D11Params(), D3D9Params());
+                       D3D11Params(), D3D9Params(), OpenGLParams());

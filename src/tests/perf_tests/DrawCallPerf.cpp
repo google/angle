@@ -179,7 +179,7 @@ DrawCallPerfParams DrawCallPerfValidationOnly()
     params.glesMajorVersion = 2;
     params.widowWidth = 256;
     params.windowHeight = 256;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
+    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
     params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE;
     params.iterations = 100;
     params.numTris = 0;
@@ -201,12 +201,29 @@ DrawCallPerfParams DrawCallPerfD3D9Params()
     return params;
 }
 
+DrawCallPerfParams DrawCallPerfOpenGLParams()
+{
+    DrawCallPerfParams params;
+    params.glesMajorVersion = 2;
+    params.widowWidth = 256;
+    params.windowHeight = 256;
+    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
+    // TODO(cwallez) we can't require a null device with OpenGL so
+    // the benchmark is unfair for OpenGL.
+    // params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE;
+    params.iterations = 50;
+    params.numTris = 1;
+    params.runTimeSeconds = 10.0;
+    return params;
+}
+
 TEST_P(DrawCallPerfBenchmark, Run)
 {
     run();
 }
 
 ANGLE_INSTANTIATE_TEST(DrawCallPerfBenchmark,
-                       DrawCallPerfD3D11Params(), DrawCallPerfD3D9Params(), DrawCallPerfValidationOnly());
+                       DrawCallPerfD3D11Params(), DrawCallPerfD3D9Params(),
+                       DrawCallPerfOpenGLParams(), DrawCallPerfValidationOnly());
 
 } // namespace

@@ -286,6 +286,25 @@ TexSubImageParams D3D9Params()
     return params;
 }
 
+TexSubImageParams OpenGLParams()
+{
+    TexSubImageParams params;
+
+    params.glesMajorVersion = 2;
+    params.widowWidth = 512;
+    params.windowHeight = 512;
+    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
+    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
+
+    params.imageWidth = 1024;
+    params.imageHeight = 1024;
+    params.subImageWidth = 64;
+    params.subImageHeight = 64;
+    params.iterations = 3;
+
+    return params;
+}
+
 } // namespace
 
 TEST_P(TexSubImageBenchmark, Run)
@@ -294,4 +313,4 @@ TEST_P(TexSubImageBenchmark, Run)
 }
 
 ANGLE_INSTANTIATE_TEST(TexSubImageBenchmark,
-                       D3D11Params(), D3D9Params());
+                       D3D11Params(), D3D9Params(), OpenGLParams());

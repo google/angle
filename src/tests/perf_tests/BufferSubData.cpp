@@ -351,12 +351,31 @@ BufferSubDataParams BufferUpdateD3D9Params()
     return params;
 }
 
+BufferSubDataParams BufferUpdateOpenGLParams()
+{
+    BufferSubDataParams params;
+    params.glesMajorVersion = 2;
+    params.widowWidth = 512;
+    params.windowHeight = 512;
+    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
+    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
+    params.vertexType = GL_FLOAT;
+    params.vertexComponentCount = 4;
+    params.vertexNormalized = GL_FALSE;
+    params.updateSize = 3000;
+    params.bufferSize = 40000000;
+    params.iterations = 2;
+    params.updateRate = 1;
+    return params;
+}
+
 TEST_P(BufferSubDataBenchmark, Run)
 {
     run();
 }
 
 ANGLE_INSTANTIATE_TEST(BufferSubDataBenchmark,
-                       BufferUpdateD3D11Params(), BufferUpdateD3D9Params());
+                       BufferUpdateD3D11Params(), BufferUpdateD3D9Params(),
+                       BufferUpdateOpenGLParams());
 
 } // namespace
