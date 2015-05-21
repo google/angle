@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2d20e12c_ad76958b",
+        "filename": "src/compiler/translator/SeparateExpressionsReturningArrays.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-21T12:38:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d7ad934_c0c382b7",
+      "range": {
+        "startLine": 80,
+        "startChar": 8,
+        "endLine": 80,
+        "endChar": 37
+      },
+      "revId": "02486d3532b6016520249bbc4fc1e86eff5fcd56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d7ad934_a0c676c7",
         "filename": "src/compiler/translator/SeparateExpressionsReturningArrays.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-21T11:55:57Z",
       "side": 1,
       "message": "nit: TOOD(oetuaho)",
+      "range": {
+        "startLine": 84,
+        "startChar": 15,
+        "endLine": 84,
+        "endChar": 19
+      },
+      "revId": "02486d3532b6016520249bbc4fc1e86eff5fcd56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed19690f_6670a0d7",
+        "filename": "src/compiler/translator/SeparateExpressionsReturningArrays.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-21T12:38:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d7ad934_a0c676c7",
       "range": {
         "startLine": 84,
         "startChar": 15,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "2d20e12c_adcbf551",
+        "filename": "src/compiler/translator/SeparateExpressionsReturningArrays.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-21T12:38:58Z",
+      "side": 1,
+      "message": "True, only PreVisit is required here.",
+      "parentUuid": "2d6e217b_f77c436f",
+      "range": {
+        "startLine": 101,
+        "startChar": 8,
+        "endLine": 101,
+        "endChar": 25
+      },
+      "revId": "02486d3532b6016520249bbc4fc1e86eff5fcd56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "adfdb1c1_3c9cd267",
         "filename": "src/compiler/translator/SeparateExpressionsReturningArrays.cpp",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2015-05-21T11:55:57Z",
       "side": 1,
       "message": "maybe updateTree() should be clearing these? is there a use for leaving them in the lists?",
+      "range": {
+        "startLine": 147,
+        "startChar": 1,
+        "endLine": 149,
+        "endChar": 24
+      },
+      "revId": "02486d3532b6016520249bbc4fc1e86eff5fcd56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed19690f_a6da3863",
+        "filename": "src/compiler/translator/SeparateExpressionsReturningArrays.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-21T12:38:58Z",
+      "side": 1,
+      "message": "I agree, that\u0027s a better way to do this. I\u0027ll make this part of the refactoring patch.",
+      "parentUuid": "adfdb1c1_3c9cd267",
       "range": {
         "startLine": 147,
         "startChar": 1,
