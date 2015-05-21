@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d6e217b_49b82126",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T12:05:30Z",
+      "side": 1,
+      "message": "nit: put this at the top of the file, with a title of the file (as per usual style)",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 78
+      },
+      "revId": "552d1d26803d1f6ef915724826ed8f66a6018bb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d7ad934_20fb66f8",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T12:05:30Z",
+      "side": 1,
+      "message": "nullptr (in other places too)",
+      "range": {
+        "startLine": 46,
+        "startChar": 48,
+        "endLine": 46,
+        "endChar": 52
+      },
+      "revId": "552d1d26803d1f6ef915724826ed8f66a6018bb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfdb1c1_1c911651",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T12:05:30Z",
+      "side": 1,
+      "message": "this returns EGLBoolean which is not the same as bool, so ASSERT_TRUE(eglGetConfigs() \u003d\u003d EGL_TRUE) or ASSERT_EQ(EGL_TRUE, ...)",
+      "range": {
+        "startLine": 59,
+        "startChar": 7,
+        "endLine": 59,
+        "endChar": 68
+      },
+      "revId": "552d1d26803d1f6ef915724826ed8f66a6018bb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfdb1c1_fc951a3c",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T12:05:30Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 64,
+        "startChar": 8,
+        "endLine": 64,
+        "endChar": 19
+      },
+      "revId": "552d1d26803d1f6ef915724826ed8f66a6018bb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d6e217b_d77b3f72",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T12:05:30Z",
+      "side": 1,
+      "message": "nit: for style reasons, I think (surfaceType1 \u0026 surfaceBit) !\u003d 0 and another line for surfaceType2 is a bit nicer",
+      "range": {
+        "startLine": 105,
+        "startChar": 16,
+        "endLine": 105,
+        "endChar": 58
+      },
+      "revId": "552d1d26803d1f6ef915724826ed8f66a6018bb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d6e217b_69b5e52c",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T12:05:30Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 138,
+        "startChar": 0,
+        "endLine": 138,
+        "endChar": 1
+      },
+      "revId": "552d1d26803d1f6ef915724826ed8f66a6018bb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d6e217b_378bbbf0",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T12:05:30Z",
+      "side": 1,
+      "message": "you can remove this, I think it\u0027s unused",
+      "range": {
+        "startLine": 194,
+        "startChar": 4,
+        "endLine": 194,
+        "endChar": 61
+      },
+      "revId": "552d1d26803d1f6ef915724826ed8f66a6018bb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfdb1c1_930e1fe7",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T12:05:30Z",
+      "side": 1,
+      "message": "put a short description above every test",
+      "range": {
+        "startLine": 201,
+        "startChar": 0,
+        "endLine": 201,
+        "endChar": 6
+      },
+      "revId": "552d1d26803d1f6ef915724826ed8f66a6018bb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d7ad934_00faeaef",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T12:05:30Z",
+      "side": 1,
+      "message": "(..) \u003d\u003d EGL_WINDOW_BIT (!\u003d 0 is also fine)",
+      "range": {
+        "startLine": 211,
+        "startChar": 11,
+        "endLine": 211,
+        "endChar": 41
+      },
+      "revId": "552d1d26803d1f6ef915724826ed8f66a6018bb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfdb1c1_9c85060d",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T12:05:30Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 228,
+        "startChar": 11,
+        "endLine": 228,
+        "endChar": 42
+      },
+      "revId": "552d1d26803d1f6ef915724826ed8f66a6018bb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
