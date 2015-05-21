@@ -10,7 +10,6 @@
 
 #include <algorithm>
 
-#include "common/string_utils.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
 
 namespace rx
@@ -780,7 +779,7 @@ void FunctionsGL::initialize()
     else
     {
         const char *exts = reinterpret_cast<const char*>(getString(GL_EXTENSIONS));
-        angle::SplitStringAlongWhitespace(std::string(exts), &extensions);
+        extensions = TokenizeExtensionsString(exts);
     }
 
     // 1.0

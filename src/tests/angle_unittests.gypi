@@ -16,7 +16,6 @@
         'angle_unittests_sources':
         [
             '<(angle_path)/src/common/Optional_unittest.cpp',
-            '<(angle_path)/src/common/string_utils_unittest.cpp',
             '<(angle_path)/src/common/utilities_unittest.cpp',
             '<(angle_path)/src/libANGLE/Config_unittest.cpp',
             '<(angle_path)/src/libANGLE/Fence_unittest.cpp',
