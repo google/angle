@@ -73,7 +73,7 @@ bool ReadFileToString(const std::string &path, std::string *stringOut)
     std::string str;
 
     inFile.seekg(0, std::ios::end);
-    str.reserve(inFile.tellg());
+    str.reserve(static_cast<std::string::size_type>(inFile.tellg()));
     inFile.seekg(0, std::ios::beg);
 
     str.assign(std::istreambuf_iterator<char>(inFile), std::istreambuf_iterator<char>());
