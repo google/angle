@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4d343566_b14eea18",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1550,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-21T09:19:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d179dd9_e1933c32",
+      "revId": "88e192fcc7dc2e74ba5978468fec778d5abe80e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed19690f_40e304a3",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2015-05-20T14:50:06Z",
       "side": 1,
       "message": "fmodf behavior doesn\u0027t match the GLSL spec for negative numbers, possibly also for divide by zero. The easiest way to implement the spec is simply to write out the formula in there, x - y * floor(x/y).",
+      "revId": "88e192fcc7dc2e74ba5978468fec778d5abe80e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed8ec97f_7e24bddb",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1605,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-21T09:19:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed19690f_40e304a3",
       "revId": "88e192fcc7dc2e74ba5978468fec778d5abe80e2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "ed8ec97f_de5b6961",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1752,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-21T09:19:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed19690f_00f66c5e",
+      "revId": "88e192fcc7dc2e74ba5978468fec778d5abe80e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d179dd9_a176a48b",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 4
@@ -64,6 +118,24 @@
       "writtenOn": "2015-05-20T14:50:06Z",
       "side": 1,
       "message": "It seems like this is missing part of the formula, the spec continues with t * t * (3 - 2 * t).",
+      "revId": "88e192fcc7dc2e74ba5978468fec778d5abe80e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d343566_f1c79217",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1786,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-21T09:19:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d179dd9_a176a48b",
       "revId": "88e192fcc7dc2e74ba5978468fec778d5abe80e2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
