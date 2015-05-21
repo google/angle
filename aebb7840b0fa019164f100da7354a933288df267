@@ -22,6 +22,30 @@
       "revId": "aebb7840b0fa019164f100da7354a933288df267",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d343566_fc09a964",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1808,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-21T12:18:35Z",
+      "side": 1,
+      "message": "Done, I misread spec earlier. But you are right, below formal should take care of both the conditions.",
+      "parentUuid": "ed19690f_66cc20b8",
+      "range": {
+        "startLine": 1799,
+        "startChar": 23,
+        "endLine": 1808,
+        "endChar": 25
+      },
+      "revId": "aebb7840b0fa019164f100da7354a933288df267",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
