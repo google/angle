@@ -58,7 +58,7 @@ static void PrintEvent(const Event& event)
       case Event::EVENT_GAINED_FOCUS:
         std::cout << "Event: Window Gained Focus" << std::endl;
         break;
-      case Event::TEXT_ENTERED:
+      case Event::EVENT_TEXT_ENTERED:
         // TODO(cwallez) show the character
         std::cout << "Event: Text Entered" << std::endl;
         break;

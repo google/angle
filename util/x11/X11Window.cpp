@@ -336,11 +336,25 @@ void X11Window::processEvent(const XEvent &xEvent)
             }
             if (xEvent.xconfigure.x != mX || xEvent.xconfigure.y != mY)
             {
-                Event event;
-                event.Type = Event::EVENT_MOVED;
-                event.Move.X = xEvent.xconfigure.x;
-                event.Move.Y = xEvent.xconfigure.y;
-                pushEvent(event);
+                // Sometimes, the window manager reparents our window (for example
+                // when resizing) then the X and Y coordinates will be with respect to
+                // the new parent and not what the user wants to know. Use
+                // XTranslateCoordinates to get the coordinates on the screen.
+                int screen = DefaultScreen(mDisplay);
+                Window root = RootWindow(mDisplay, screen);
+
+                int x, y;
+                Window child;
+                XTranslateCoordinates(mDisplay, mWindow, root, 0, 0, &x, &y, &child);
+
+                if (x != mX || y != mY)
+                {
+                    Event event;
+                    event.Type = Event::EVENT_MOVED;
+                    event.Move.X = x;
+                    event.Move.Y = y;
+                    pushEvent(event);
+                }
             }
         }
         break;
