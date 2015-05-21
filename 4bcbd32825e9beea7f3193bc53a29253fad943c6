@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "adfdb1c1_1f70e887",
+        "filename": "build/common.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T15:31:19Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 92,
+        "startChar": 76,
+        "endLine": 92,
+        "endChar": 77
+      },
+      "revId": "4bcbd32825e9beea7f3193bc53a29253fad943c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
