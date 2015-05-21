@@ -236,6 +236,7 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
 
     // GLX_EXT_texture_from_pixmap is required for the "bind to rgb(a)" attributes
     bool hasTextureFromPixmap = mGLX.hasExtension("GLX_EXT_texture_from_pixmap");
+    bool hasSwapControl = mGLX.hasExtension("GLX_EXT_swap_control");
 
     int attribList[] =
     {
@@ -332,9 +333,17 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
             (glxDrawable & GLX_PBUFFER_BIT ? EGL_PBUFFER_BIT : 0) |
             (glxDrawable & GLX_PIXMAP_BIT ? EGL_PIXMAP_BIT : 0);
 
-        // In GLX_EXT_swap_control querying these is done on a GLXWindow so we just set a default value.
-        config.maxSwapInterval = 1;
-        config.minSwapInterval = 1;
+        if (hasSwapControl)
+        {
+            // In GLX_EXT_swap_control querying these is done on a GLXWindow so we just set a default value.
+            config.minSwapInterval = 0;
+            config.maxSwapInterval = 4;
+        }
+        else
+        {
+            config.minSwapInterval = 1;
+            config.maxSwapInterval = 1;
+        }
         // TODO(cwallez) wildly guessing these formats, another TODO says they should be removed anyway
         config.renderTargetFormat = GL_RGBA8;
         config.depthStencilFormat = GL_DEPTH24_STENCIL8;

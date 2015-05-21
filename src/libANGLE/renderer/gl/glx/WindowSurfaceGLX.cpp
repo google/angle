@@ -26,7 +26,8 @@ WindowSurfaceGLX::WindowSurfaceGLX(const FunctionsGLX &glx, const DisplayGLX &gl
       mGLXDisplay(glxDisplay),
       mContext(context),
       mFBConfig(fbConfig),
-      mGLXWindow(0)
+      mGLXWindow(0),
+      mMaxSwapInterval(1)
 {
 }
 
@@ -87,6 +88,11 @@ egl::Error WindowSurfaceGLX::initialize()
                             0, visualInfo->depth, InputOutput, visual, attributeMask, &attributes);
     mGLXWindow = mGLX.createWindow(mFBConfig, mWindow, nullptr);
 
+    if (mGLX.hasExtension("GLX_EXT_swap_control"))
+    {
+        mGLX.queryDrawable(mGLXWindow, GLX_MAX_SWAP_INTERVAL_EXT, &mMaxSwapInterval);
+    }
+
     XMapWindow(mDisplay, mWindow);
     XFlush(mDisplay);
 
@@ -141,7 +147,12 @@ egl::Error WindowSurfaceGLX::releaseTexImage(EGLint buffer)
 
 void WindowSurfaceGLX::setSwapInterval(EGLint interval)
 {
-    // TODO(cwallez) WGL has this, implement it
+    if (mGLX.hasExtension("GLX_EXT_swap_control"))
+    {
+        // TODO(cwallez) error checking?
+        const int realInterval = std::min(interval, static_cast<int>(mMaxSwapInterval));
+        mGLX.swapIntervalEXT(mGLXWindow, realInterval);
+    }
 }
 
 EGLint WindowSurfaceGLX::getWidth() const

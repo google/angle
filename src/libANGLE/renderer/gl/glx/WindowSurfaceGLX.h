@@ -50,6 +50,7 @@ class WindowSurfaceGLX : public SurfaceGL
     glx::Context mContext;
     glx::FBConfig mFBConfig;
     glx::Window mGLXWindow;
+    unsigned int mMaxSwapInterval;
 };
 
 }

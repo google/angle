@@ -62,6 +62,9 @@ class FunctionsGLX
     // GLX_ARB_create_context
     glx::Context createContextAttribsARB(glx::FBConfig config, glx::Context shareContext, Bool direct, const int *attribList) const;
 
+    // GLX_EXT_swap_control
+    void swapIntervalEXT(glx::Drawable drawable, int interval) const;
+
   private:
     // So as to isolate GLX from angle we do not include angleutils.h and cannot
     // use angle::NonCopyable so we replicated it here instead.

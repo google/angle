@@ -145,6 +145,10 @@
 #define GLX_AUX7_EXT 0x20E9
 #define GLX_AUX8_EXT 0x20EA
 #define GLX_AUX9_EXT 0x20EB
+
+// GLX_EXT_swap_control
+#define GLX_SWAP_INTERVAL_EXT 0x20F1
+#define GLX_MAX_SWAP_INTERVAL_EXT 0x20F2
 #endif // !defined(ANGLE_SKIP_GLX_DEFINES)
 
 // GLX typedefs depend on the X headers

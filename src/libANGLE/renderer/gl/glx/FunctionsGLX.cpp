@@ -50,7 +50,8 @@ struct FunctionsGLX::GLXFunctionTable
         createPbufferPtr(nullptr),
         destroyPbufferPtr(nullptr),
         queryDrawablePtr(nullptr),
-        createContextAttribsARBPtr(nullptr)
+        createContextAttribsARBPtr(nullptr),
+        swapIntervalEXTPtr(nullptr)
     {
     }
 
@@ -79,6 +80,9 @@ struct FunctionsGLX::GLXFunctionTable
 
     // GLX_ARB_create_context
     PFNGLXCREATECONTEXTATTRIBSARBPROC createContextAttribsARBPtr;
+
+    // GLX_EXT_swap_control
+    PFNGLXSWAPINTERVALEXTPROC swapIntervalEXTPtr;
 };
 
 FunctionsGLX::FunctionsGLX()
@@ -190,6 +194,14 @@ bool FunctionsGLX::initialize(Display *xDisplay, int screen, std::string *errorS
     else
     {
         mFnPtrs->createContextAttribsARBPtr = nullptr;
+    }
+    if (hasExtension("GLX_EXT_swap_control"))
+    {
+        GET_PROC_OR_ERROR(&mFnPtrs->swapIntervalEXTPtr, "glXSwapIntervalEXT");
+    }
+    else
+    {
+        mFnPtrs->swapIntervalEXTPtr = nullptr;
     }
 
 #undef GET_PROC_OR_ERROR
@@ -313,6 +325,11 @@ glx::Context FunctionsGLX::createContextAttribsARB(glx::FBConfig config, glx::Co
     GLXFBConfig cfg = reinterpret_cast<GLXFBConfig>(config);
     GLXContext ctx = mFnPtrs->createContextAttribsARBPtr(mXDisplay, cfg, shareCtx, direct, attribList);
     return reinterpret_cast<glx::Context>(ctx);
+}
+
+void FunctionsGLX::swapIntervalEXT(glx::Drawable drawable, int intervals) const
+{
+    mFnPtrs->swapIntervalEXTPtr(mXDisplay, drawable, intervals);
 }
 
 }
