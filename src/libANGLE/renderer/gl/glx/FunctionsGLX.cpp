@@ -10,16 +10,14 @@
 #include "libANGLE/renderer/gl/glx/FunctionsGLX.h"
 #undef ANGLE_SKIP_GLX_DEFINES
 
-// HACK(cwallez) this is a horrible hack to prevent glx from including GL/glext.h
-// as it causes a bunch of conflicts (macro redefinition, etc) with GLES2/gl2ext.h
-#define __glext_h_ 1
+// We can only include glx.h in files which do not include ANGLE's GLES
+// headers, to avoid doubly-defined GLenum macros, typedefs, etc.
 #include <GL/glx.h>
-#undef __glext_h_
 
 #include <dlfcn.h>
 #include <algorithm>
 
-#include "libANGLE/renderer/gl/renderergl_utils.h"
+#include "common/string_utils.h"
 #include "libANGLE/renderer/gl/glx/functionsglx_typedefs.h"
 
 namespace rx
@@ -171,7 +169,7 @@ bool FunctionsGLX::initialize(Display *xDisplay, int screen, std::string *errorS
         *errorString = "glXQueryExtensionsString returned NULL";
         return false;
     }
-    mExtensions = TokenizeExtensionsString(extensions);
+    angle::SplitStringAlongWhitespace(extensions, &mExtensions);
 
     // GLX 1.3
     GET_PROC_OR_ERROR(&mFnPtrs->getFBConfigsPtr, "glXGetFBConfigs");

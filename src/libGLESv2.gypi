@@ -18,6 +18,8 @@
             'common/mathutil.cpp',
             'common/mathutil.h',
             'common/platform.h',
+            'common/string_utils.cpp',
+            'common/string_utils.h',
             'common/tls.cpp',
             'common/tls.h',
             'common/utilities.cpp',
