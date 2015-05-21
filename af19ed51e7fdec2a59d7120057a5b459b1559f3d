@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d7ad934_e3db289f",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T15:06:07Z",
+      "side": 1,
+      "message": "do we ever want this? suggest removing it if it\u0027s not currently used.",
+      "range": {
+        "startLine": 79,
+        "startChar": 8,
+        "endLine": 79,
+        "endChar": 70
+      },
+      "revId": "af19ed51e7fdec2a59d7120057a5b459b1559f3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d6e217b_d7233e5e",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T15:06:07Z",
+      "side": 1,
+      "message": "replace with a getRenderer() on the params",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 1
+      },
+      "revId": "af19ed51e7fdec2a59d7120057a5b459b1559f3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfdb1c1_dfb6d0ca",
+        "filename": "src/tests/test_utils/angle_test_configs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T15:06:07Z",
+      "side": 1,
+      "message": "suggest replacing this with a getRenderer method on the two relevant parameters structs",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 1
+      },
+      "revId": "af19ed51e7fdec2a59d7120057a5b459b1559f3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfdb1c1_bfb314da",
+        "filename": "src/tests/test_utils/angle_test_instantiate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T15:06:07Z",
+      "side": 1,
+      "message": "how about \"Adds support for filtering parameterized tests by platform, so we skip unsupported configs.\"",
+      "range": {
+        "startLine": 7,
+        "startChar": 29,
+        "endLine": 8,
+        "endChar": 61
+      },
+      "revId": "af19ed51e7fdec2a59d7120057a5b459b1559f3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d7ad934_8334a458",
+        "filename": "src/tests/test_utils/angle_test_instantiate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T15:06:07Z",
+      "side": 1,
+      "message": "space",
+      "range": {
+        "startLine": 21,
+        "startChar": 7,
+        "endLine": 21,
+        "endChar": 11
+      },
+      "revId": "af19ed51e7fdec2a59d7120057a5b459b1559f3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d7ad934_23d29088",
+        "filename": "src/tests/test_utils/angle_test_instantiate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T15:06:07Z",
+      "side": 1,
+      "message": "params[i].getRenderer()",
+      "range": {
+        "startLine": 28,
+        "startChar": 16,
+        "endLine": 28,
+        "endChar": 48
+      },
+      "revId": "af19ed51e7fdec2a59d7120057a5b459b1559f3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d6e217b_37f65a5f",
+        "filename": "src/tests/test_utils/angle_test_instantiate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T15:06:07Z",
+      "side": 1,
+      "message": "just use auto and save yourself a whole lot of aggrevation",
+      "range": {
+        "startLine": 77,
+        "startChar": 10,
+        "endLine": 77,
+        "endChar": 61
+      },
+      "revId": "af19ed51e7fdec2a59d7120057a5b459b1559f3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
