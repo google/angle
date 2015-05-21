@@ -195,8 +195,7 @@ TEST_P(IndexConversionPerfTest, Run)
     run();
 }
 
-INSTANTIATE_TEST_CASE_P(IndexConversionPerf,
-                        IndexConversionPerfTest,
-                        ::testing::Values(IndexConversionPerfD3D11Params()));
+ANGLE_INSTANTIATE_TEST(IndexConversionPerfTest,
+                       IndexConversionPerfD3D11Params());
 
 } // namespace

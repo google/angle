@@ -224,6 +224,5 @@ TEST_P(PointSpritesBenchmark, Run)
     run();
 }
 
-INSTANTIATE_TEST_CASE_P(Render,
-                        PointSpritesBenchmark,
-                        ::testing::Values(D3D11Params(), D3D9Params()));
+ANGLE_INSTANTIATE_TEST(PointSpritesBenchmark,
+                       D3D11Params(), D3D9Params());

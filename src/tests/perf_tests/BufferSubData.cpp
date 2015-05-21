@@ -356,8 +356,7 @@ TEST_P(BufferSubDataBenchmark, Run)
     run();
 }
 
-INSTANTIATE_TEST_CASE_P(BufferUpdates,
-                        BufferSubDataBenchmark,
-                        ::testing::Values(BufferUpdateD3D11Params(), BufferUpdateD3D9Params()));
+ANGLE_INSTANTIATE_TEST(BufferSubDataBenchmark,
+                       BufferUpdateD3D11Params(), BufferUpdateD3D9Params());
 
 } // namespace

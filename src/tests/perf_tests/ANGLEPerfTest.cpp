@@ -74,8 +74,16 @@ std::string RenderTestParams::suffix() const
     {
         case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE: return "_d3d11";
         case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE: return "_d3d9";
+        case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE: return "_gl";
+        case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE: return "_gles";
+        case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE: return "_default";
         default: assert(0); return "_unk";
     }
+}
+
+EGLint RenderTestParams::getRenderer() const
+{
+    return requestedRenderer;
 }
 
 ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams &testParams)

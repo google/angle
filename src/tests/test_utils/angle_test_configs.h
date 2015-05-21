@@ -10,7 +10,7 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
-#include "common/debug.h"
+#include "angle_test_instantiate.h"
 #include "EGLWindow.h"
 
 namespace angle
@@ -24,6 +24,8 @@ struct PlatformParameters
           mEGLPlatformParameters(eglPlatformParameters)
     {
     }
+
+    EGLint getRenderer() const { return mEGLPlatformParameters.renderer; }
 
     EGLint mClientVersion;
     EGLPlatformParameters mEGLPlatformParameters;
@@ -85,42 +87,6 @@ inline std::ostream &operator<<(std::ostream& stream,
     }
 
     return stream;
-}
-
-inline std::vector<PlatformParameters> FilterPlatforms(const PlatformParameters *platforms, size_t numPlatforms)
-{
-    std::vector<PlatformParameters> filtered;
-
-    for (size_t i = 0; i < numPlatforms; i++)
-    {
-        switch (platforms[i].mEGLPlatformParameters.renderer)
-        {
-          case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
-#if defined(ANGLE_ENABLE_D3D9)
-            filtered.push_back(platforms[i]);
-#endif
-            break;
-
-          case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
-#if defined(ANGLE_ENABLE_D3D11)
-            filtered.push_back(platforms[i]);
-#endif
-            break;
-
-          case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
-          case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
-#if defined(ANGLE_ENABLE_OPENGL)
-            filtered.push_back(platforms[i]);
-#endif
-            break;
-
-          default:
-            UNREACHABLE();
-            break;
-        }
-    }
-
-    return filtered;
 }
 
 inline PlatformParameters ES2_D3D9()
@@ -434,10 +400,6 @@ inline PlatformParameters ES3_OPENGLES()
     EGLPlatformParameters eglParams(EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE);
     return PlatformParameters(3, eglParams);
 }
-
-#define ANGLE_INSTANTIATE_TEST(testName, ...) \
-    const PlatformParameters testName##params[] = {__VA_ARGS__}; \
-    INSTANTIATE_TEST_CASE_P(, testName, testing::ValuesIn(FilterPlatforms(testName##params, ArraySize(testName##params))));
 
 } // namespace angle
 

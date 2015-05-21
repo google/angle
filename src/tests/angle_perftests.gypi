@@ -24,6 +24,7 @@
             'perf_tests/TexSubImage.cpp',
             'perf_tests/third_party/perf/perf_test.cc',
             'perf_tests/third_party/perf/perf_test.h',
+            'test_utils/angle_test_instantiate.h',
         ],
         'angle_perf_tests_win_sources':
         [
@@ -46,6 +47,10 @@
     'sources':
     [
         '<@(angle_perf_tests_sources)',
+    ],
+    'include_dirs':
+    [
+        '<(angle_path)/src/tests'
     ],
     'conditions':
     [

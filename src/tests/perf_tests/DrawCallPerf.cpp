@@ -206,10 +206,7 @@ TEST_P(DrawCallPerfBenchmark, Run)
     run();
 }
 
-INSTANTIATE_TEST_CASE_P(DrawCallPerf,
-                        DrawCallPerfBenchmark,
-                        ::testing::Values(DrawCallPerfD3D11Params(),
-                                          DrawCallPerfD3D9Params(),
-                                          DrawCallPerfValidationOnly()));
+ANGLE_INSTANTIATE_TEST(DrawCallPerfBenchmark,
+                       DrawCallPerfD3D11Params(), DrawCallPerfD3D9Params(), DrawCallPerfValidationOnly());
 
 } // namespace

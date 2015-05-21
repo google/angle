@@ -293,6 +293,5 @@ TEST_P(TexSubImageBenchmark, Run)
     run();
 }
 
-INSTANTIATE_TEST_CASE_P(TextureUpdates,
-                        TexSubImageBenchmark,
-                        ::testing::Values(D3D11Params(), D3D9Params()));
+ANGLE_INSTANTIATE_TEST(TexSubImageBenchmark,
+                       D3D11Params(), D3D9Params());
