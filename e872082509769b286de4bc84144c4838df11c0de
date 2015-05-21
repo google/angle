@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd1ca521_e7f03d65",
+        "filename": "src/tests/perf_tests/DrawCallPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T22:30:46Z",
+      "side": 1,
+      "message": "ah, i see why you added default to the other cl",
+      "range": {
+        "startLine": 182,
+        "startChar": 31,
+        "endLine": 182,
+        "endChar": 68
+      },
+      "revId": "e872082509769b286de4bc84144c4838df11c0de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd1ca521_67dc2de6",
+        "filename": "src/tests/perf_tests/DrawCallPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-21T22:30:46Z",
+      "side": 1,
+      "message": "this has no effect. you should comment here this is not a fair comparison because the gpu is doing work, and leave a TODO",
+      "range": {
+        "startLine": 211,
+        "startChar": 24,
+        "endLine": 211,
+        "endChar": 65
+      },
+      "revId": "e872082509769b286de4bc84144c4838df11c0de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
