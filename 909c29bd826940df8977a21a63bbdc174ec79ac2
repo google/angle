@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "adfdb1c1_f218a3ac",
+        "filename": "src/compiler/translator/IntermTraverse.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-05-21T16:54:53Z",
+      "side": 1,
+      "message": "ASSERT here also?",
+      "range": {
+        "startLine": 85,
+        "startChar": 8,
+        "endLine": 85,
+        "endChar": 23
+      },
+      "revId": "909c29bd826940df8977a21a63bbdc174ec79ac2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
