@@ -23,8 +23,9 @@
 #include "common/mathutil.h"
 #include "common/platform.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/Surface.h"
 #include "libANGLE/Device.h"
+#include "libANGLE/histogram_macros.h"
+#include "libANGLE/Surface.h"
 #include "libANGLE/renderer/DisplayImpl.h"
 #include "third_party/trace_event/trace_event.h"
 
@@ -231,6 +232,8 @@ void Display::setAttributes(rx::DisplayImpl *impl, const AttributeMap &attribMap
 
 Error Display::initialize()
 {
+    double createDeviceBegin = ANGLEPlatformCurrent()->currentTime();
+
     TRACE_EVENT0("gpu.angle", "egl::Display::initialize");
 
     ASSERT(mImplementation != nullptr);
@@ -274,6 +277,11 @@ Error Display::initialize()
     }
 
     mInitialized = true;
+
+    double displayInitializeSec = ANGLEPlatformCurrent()->currentTime() - createDeviceBegin;
+    int displayInitializeMS = static_cast<int>(displayInitializeSec * 1000);
+    ANGLE_HISTOGRAM_TIMES("GPU.ANGLE.DisplayInitializeMS", displayInitializeMS);
+
     return Error(EGL_SUCCESS);
 }
 
