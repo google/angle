@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "adfdb1c1_3f54c4d8",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-21T19:29:26Z",
+      "side": 1,
+      "message": "It is used in the follow up patch for DrawCallPerfValidationOnly",
+      "parentUuid": "6d7ad934_e3db289f",
+      "range": {
+        "startLine": 79,
+        "startChar": 8,
+        "endLine": 79,
+        "endChar": 70
+      },
+      "revId": "af19ed51e7fdec2a59d7120057a5b459b1559f3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d6e217b_d7233e5e",
         "filename": "src/tests/perf_tests/ANGLEPerfTest.h",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-21T15:06:07Z",
       "side": 1,
       "message": "replace with a getRenderer() on the params",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 1
+      },
+      "revId": "af19ed51e7fdec2a59d7120057a5b459b1559f3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfdb1c1_f57bed71",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-21T19:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d6e217b_d7233e5e",
       "range": {
         "startLine": 66,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "adfdb1c1_d5911120",
+        "filename": "src/tests/test_utils/angle_test_configs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-21T19:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adfdb1c1_dfb6d0ca",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 1
+      },
+      "revId": "af19ed51e7fdec2a59d7120057a5b459b1559f3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "adfdb1c1_bfb314da",
         "filename": "src/tests/test_utils/angle_test_instantiate.h",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2015-05-21T15:06:07Z",
       "side": 1,
       "message": "how about \"Adds support for filtering parameterized tests by platform, so we skip unsupported configs.\"",
+      "range": {
+        "startLine": 7,
+        "startChar": 29,
+        "endLine": 8,
+        "endChar": 61
+      },
+      "revId": "af19ed51e7fdec2a59d7120057a5b459b1559f3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfdb1c1_5ff1c065",
+        "filename": "src/tests/test_utils/angle_test_instantiate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-21T19:29:26Z",
+      "side": 1,
+      "message": "Sure",
+      "parentUuid": "adfdb1c1_bfb314da",
       "range": {
         "startLine": 7,
         "startChar": 29,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "6d7ad934_cc90994f",
+        "filename": "src/tests/test_utils/angle_test_instantiate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-21T19:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d7ad934_8334a458",
+      "range": {
+        "startLine": 21,
+        "startChar": 7,
+        "endLine": 21,
+        "endChar": 11
+      },
+      "revId": "af19ed51e7fdec2a59d7120057a5b459b1559f3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d7ad934_23d29088",
         "filename": "src/tests/test_utils/angle_test_instantiate.h",
         "patchSetId": 1
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "2d6e217b_e07f96d6",
+        "filename": "src/tests/test_utils/angle_test_instantiate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-21T19:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d7ad934_23d29088",
+      "range": {
+        "startLine": 28,
+        "startChar": 16,
+        "endLine": 28,
+        "endChar": 48
+      },
+      "revId": "af19ed51e7fdec2a59d7120057a5b459b1559f3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d6e217b_37f65a5f",
         "filename": "src/tests/test_utils/angle_test_instantiate.h",
         "patchSetId": 1
@@ -151,6 +295,30 @@
       "writtenOn": "2015-05-21T15:06:07Z",
       "side": 1,
       "message": "just use auto and save yourself a whole lot of aggrevation",
+      "range": {
+        "startLine": 77,
+        "startChar": 10,
+        "endLine": 77,
+        "endChar": 61
+      },
+      "revId": "af19ed51e7fdec2a59d7120057a5b459b1559f3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfdb1c1_ff4d0c4d",
+        "filename": "src/tests/test_utils/angle_test_instantiate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-21T19:29:26Z",
+      "side": 1,
+      "message": "You cannot use auto in an array declaration.",
+      "parentUuid": "2d6e217b_37f65a5f",
       "range": {
         "startLine": 77,
         "startChar": 10,
