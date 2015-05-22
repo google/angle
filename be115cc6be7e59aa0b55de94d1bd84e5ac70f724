@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2db1c157_11402c13",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1208,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-22T10:59:23Z",
+      "side": 1,
+      "message": "Is there any reason why VectorLogicalNot needs to be in this special case? Since it doesn\u0027t return an object with a different size, couldn\u0027t it be together with the rest of the unary operations?",
+      "revId": "be115cc6be7e59aa0b55de94d1bd84e5ac70f724",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
