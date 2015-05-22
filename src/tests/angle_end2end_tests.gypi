@@ -49,7 +49,6 @@
             '<(angle_path)/src/tests/gl_tests/UnpackRowLength.cpp',
             '<(angle_path)/src/tests/gl_tests/VertexAttributeTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ViewportTest.cpp',
-            '<(angle_path)/src/tests/egl_tests/EGLContextCompatibilityTest.cpp',
             '<(angle_path)/src/tests/egl_tests/EGLQueryContextTest.cpp',
             '<(angle_path)/src/tests/test_utils/ANGLETest.cpp',
             '<(angle_path)/src/tests/test_utils/ANGLETest.h',
