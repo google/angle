@@ -19,7 +19,7 @@ namespace angle
 // internally it T::getRenderer() const that should be implemented for test
 // parameter types.
 template <typename T>
-inline std::vector<T> FilterTestParams(const T *params, size_t numParams)
+std::vector<T> FilterTestParams(const T *params, size_t numParams)
 {
     std::vector<T> filtered;
 
@@ -59,21 +59,10 @@ inline std::vector<T> FilterTestParams(const T *params, size_t numParams)
     return filtered;
 }
 
-namespace detail {
-
-// Used with decltype to get the type of the first argument.
-template <typename T, typename ... Args>
-T ReturnFirst(T first, Args...)
-{
-    return first;
-}
-
-} // namespace detail
-
 // Instantiate the test once for each extra argument. The types of all the
 // arguments must match, and getRenderer must be implemented for that type.
-#define ANGLE_INSTANTIATE_TEST(testName, ...) \
-    const decltype(::angle::detail::ReturnFirst(__VA_ARGS__)) testName##params[] = {__VA_ARGS__}; \
+#define ANGLE_INSTANTIATE_TEST(testName, firstParam, ...) \
+    const decltype(firstParam) testName##params[] = { firstParam, ##__VA_ARGS__ }; \
     INSTANTIATE_TEST_CASE_P(, testName, testing::ValuesIn(::angle::FilterTestParams(testName##params, ArraySize(testName##params))));
 
 } // namespace angle
