@@ -118,7 +118,7 @@ bool ArrayReturnValueToOutParameterTraverser::visitAggregate(Visit visit, TInter
     }
     else if (visit == PostVisit)
     {
-        if (node->getOp() == EOpFunction && node->isArray())
+        if (node->getOp() == EOpFunction)
         {
             mInFunctionWithArrayReturnValue = false;
         }
