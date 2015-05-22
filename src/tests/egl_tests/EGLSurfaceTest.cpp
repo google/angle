@@ -7,12 +7,11 @@
 //   Tests pertaining to egl::Surface.
 //
 
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-#include <GLES2/gl2.h>
+#include <gtest/gtest.h>
+
+#include <vector>
 
 #include "OSWindow.h"
-#include "common/angleutils.h"
 #include "test_utils/ANGLETest.h"
 
 namespace
@@ -189,7 +188,7 @@ TEST_F(EGLSurfaceTest, MessageLoopBug)
     const char *extensionsString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
     if (strstr(extensionsString, "EGL_ANGLE_platform_angle_d3d") == nullptr)
     {
-        std::cout << "D3D Platform not supported in ANGLE";
+        std::cout << "D3D Platform not supported in ANGLE" << std::endl;
         return;
     }
 
@@ -205,7 +204,7 @@ TEST_F(EGLSurfaceTest, MessageLoopBugContext)
     const char *extensionsString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
     if (strstr(extensionsString, "EGL_ANGLE_platform_angle_d3d") == nullptr)
     {
-        std::cout << "D3D Platform not supported in ANGLE";
+        std::cout << "D3D Platform not supported in ANGLE" << std::endl;
         return;
     }
 
@@ -235,7 +234,7 @@ TEST_F(EGLSurfaceTest, ResizeD3DWindow)
     const char *extensionsString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
     if (strstr(extensionsString, "EGL_ANGLE_platform_angle_d3d") == nullptr)
     {
-        std::cout << "D3D Platform not supported in ANGLE";
+        std::cout << "D3D Platform not supported in ANGLE" << std::endl;
         return;
     }
 

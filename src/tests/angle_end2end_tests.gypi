@@ -51,6 +51,7 @@
             '<(angle_path)/src/tests/gl_tests/ViewportTest.cpp',
             '<(angle_path)/src/tests/egl_tests/EGLContextCompatibilityTest.cpp',
             '<(angle_path)/src/tests/egl_tests/EGLQueryContextTest.cpp',
+            '<(angle_path)/src/tests/egl_tests/EGLSurfaceTest.cpp',
             '<(angle_path)/src/tests/test_utils/ANGLETest.cpp',
             '<(angle_path)/src/tests/test_utils/ANGLETest.h',
             '<(angle_path)/src/tests/test_utils/angle_test_configs.h',
@@ -63,8 +64,6 @@
             # TODO(cwallez) for Linux, requires implementation of eglBindTexImage for pbuffers
             '<(angle_path)/src/tests/gl_tests/PbufferTest.cpp',
             '<(angle_path)/src/tests/gl_tests/QueryDisplayAttribTest.cpp',
-            # TODO(cwallez) for Linux, remove the reliance on the ANGLE_platform_angle_d3d extension
-            '<(angle_path)/src/tests/egl_tests/EGLSurfaceTest.cpp',
             # TODO(cwallez) for Linux, requires a portable implementation of threads
             '<(angle_path)/src/tests/egl_tests/EGLThreadTest.cpp',
         ],
