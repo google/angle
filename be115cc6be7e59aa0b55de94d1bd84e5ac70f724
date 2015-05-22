@@ -16,6 +16,24 @@
       "revId": "be115cc6be7e59aa0b55de94d1bd84e5ac70f724",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed05e9c3_fa23c55d",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1208,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-22T11:46:40Z",
+      "side": 1,
+      "message": "I preferred to keep all unary vector relational operators in a group together rather than having two here and then one below just to reuse code. And that way I felt code also looks better. This way I could also reuse some of the that applies to all three. isVector assert, condition !\u003d EbtBool, setting return type, etc.\n\nI can change this if you would prefer to have it the way you suggested, let me know.",
+      "parentUuid": "2db1c157_11402c13",
+      "revId": "be115cc6be7e59aa0b55de94d1bd84e5ac70f724",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
