@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "edba4936_2f806994",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1168,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-22T12:31:17Z",
+      "side": 1,
+      "message": "Could change this to \"Do all/any operations where the return type is different from the operand type\"",
+      "revId": "be115cc6be7e59aa0b55de94d1bd84e5ac70f724",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0db87d3c_f0eac071",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1183,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-22T12:31:17Z",
+      "side": 1,
+      "message": "I think you\u0027re missing tempConstArray-\u003esetBConst(false); here. Also if you move the VectorLogicalNot together with the rest of the unary ops, you can share new TConstantUnion() between EOpAny and EOpAll.",
+      "revId": "be115cc6be7e59aa0b55de94d1bd84e5ac70f724",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2db1c157_11402c13",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 6
@@ -31,6 +65,41 @@
       "side": 1,
       "message": "I preferred to keep all unary vector relational operators in a group together rather than having two here and then one below just to reuse code. And that way I felt code also looks better. This way I could also reuse some of the that applies to all three. isVector assert, condition !\u003d EbtBool, setting return type, etc.\n\nI can change this if you would prefer to have it the way you suggested, let me know.",
       "parentUuid": "2db1c157_11402c13",
+      "revId": "be115cc6be7e59aa0b55de94d1bd84e5ac70f724",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0db87d3c_70fff02c",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1208,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-22T12:31:17Z",
+      "side": 1,
+      "message": "I think I\u0027d prefer to have this together with the rest of the unary operations. You can actually reuse the logic for setting the return type that\u0027s already in there, and I don\u0027t think that the isVector assert is strictly necessary. Also see other comments.",
+      "parentUuid": "ed05e9c3_fa23c55d",
+      "revId": "be115cc6be7e59aa0b55de94d1bd84e5ac70f724",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0db87d3c_50fc6c36",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1221,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-22T12:31:17Z",
+      "side": 1,
+      "message": "Could change this to \"Do unary operations where the return type is the same as operand type\"",
       "revId": "be115cc6be7e59aa0b55de94d1bd84e5ac70f724",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
