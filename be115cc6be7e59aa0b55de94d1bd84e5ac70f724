@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "ed05e9c3_dacc010b",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1183,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-22T13:39:01Z",
+      "side": 1,
+      "message": "Actually, constant union gets initialized to zero in it\u0027s constructor so it could have been OK to not set it to false here. Anyways it now looks looks better with explicit initialization.",
+      "parentUuid": "ed05e9c3_9a59e9e3",
+      "revId": "be115cc6be7e59aa0b55de94d1bd84e5ac70f724",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2db1c157_11402c13",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 6
