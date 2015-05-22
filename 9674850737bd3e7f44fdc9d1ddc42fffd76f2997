@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d031dc0_e42dd813",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 795,
+      "author": {
+        "id": 1001348
+      },
+      "writtenOn": "2015-05-22T21:03:09Z",
+      "side": 1,
+      "message": "I guess here should be \nif (storage \u0026\u0026...",
+      "range": {
+        "startLine": 795,
+        "startChar": 8,
+        "endLine": 795,
+        "endChar": 17
+      },
+      "revId": "9674850737bd3e7f44fdc9d1ddc42fffd76f2997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
