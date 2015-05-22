@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d0995dc_cfea7da4",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-22T14:06:06Z",
+      "side": 1,
+      "message": "Can you reference the spec in the code too?  Source code comments are much easier to find than commit messages.",
+      "revId": "5ca18b54ff0e33230a46509eb64249ee9cffa8d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cda1050e_55c61bca",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-22T14:06:06Z",
+      "side": 1,
+      "message": "Did some spec reading and the logic here looks good but it would be nice to add some error messages.  How about:\n\n  bool colorBufferCompat \u003d ...\n  if (!colorBufferCompat)\n  {\n     return Error(EGL_BAD_MATCH, \"Color buffer types are not compatible.\");\n  }\n  ...",
+      "revId": "5ca18b54ff0e33230a46509eb64249ee9cffa8d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d031dc0_89e6be58",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-22T14:06:06Z",
+      "side": 1,
+      "message": "Check luminance bits too for completeness?",
+      "range": {
+        "startLine": 504,
+        "startChar": 23,
+        "endLine": 505,
+        "endChar": 106
+      },
+      "revId": "5ca18b54ff0e33230a46509eb64249ee9cffa8d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
