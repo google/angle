@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d031dc0_e9a3faff",
+        "filename": "util/x11/X11Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-22T14:08:17Z",
+      "side": 1,
+      "message": "nit: grammar",
+      "range": {
+        "startLine": 339,
+        "startChar": 19,
+        "endLine": 339,
+        "endChar": 67
+      },
+      "revId": "134df3f8e83b187689dfc05fa6151cdad96de35c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
