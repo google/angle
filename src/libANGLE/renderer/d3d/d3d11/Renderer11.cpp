@@ -2479,7 +2479,7 @@ gl::Error Renderer11::copyImage2D(const gl::Framebuffer *framebuffer, const gl::
 
     // Use nearest filtering because source and destination are the same size for the direct
     // copy
-    mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize, NULL, destFormat, GL_NEAREST);
+    error = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize, NULL, destFormat, GL_NEAREST);
     if (error.isError())
     {
         return error;
