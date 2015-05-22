@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d0995dc_a4ef6bfd",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-22T17:22:24Z",
+      "side": 1,
+      "message": "You\u0027ll have to set some kind of limits here, the egl::SwapInterval will clamp the supplied interval to the config\u0027s limits.  Maybe a reasonable upper limit is 4?\n\nI\u0027d suggest only setting the minSwapInterval to 0 if the extension is present too.",
+      "range": {
+        "startLine": 336,
+        "startChar": 8,
+        "endLine": 337,
+        "endChar": 35
+      },
+      "revId": "21af68e70abadc809d6d1e258a1e98a3362b7fa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
