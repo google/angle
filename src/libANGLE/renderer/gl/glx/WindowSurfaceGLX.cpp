@@ -61,8 +61,10 @@ egl::Error WindowSurfaceGLX::initialize()
     }
     Visual* visual = visualInfo->visual;
 
-    XWindowAttributes parentAttribs;
-    XGetWindowAttributes(mDisplay, mParent, &parentAttribs);
+    if (!getWindowDimensions(mParent, &mParentWidth, &mParentHeight))
+    {
+        return egl::Error(EGL_BAD_NATIVE_WINDOW, "Failed to get the parent window's dimensions.");
+    }
 
     // The depth, colormap and visual must match otherwise we get a X error
     // so we specify the colormap attribute. Also we do not want the window
@@ -84,7 +86,7 @@ egl::Error WindowSurfaceGLX::initialize()
     attributes.background_pixel = 0;
 
     //TODO(cwallez) set up our own error handler to see if the call failed
-    mWindow = XCreateWindow(mDisplay, mParent, 0, 0, parentAttribs.width, parentAttribs.height,
+    mWindow = XCreateWindow(mDisplay, mParent, 0, 0, mParentWidth, mParentWidth,
                             0, visualInfo->depth, InputOutput, visual, attributeMask, &attributes);
     mGLXWindow = mGLX.createWindow(mFBConfig, mWindow, nullptr);
 
@@ -115,8 +117,23 @@ egl::Error WindowSurfaceGLX::makeCurrent()
 
 egl::Error WindowSurfaceGLX::swap()
 {
-    //TODO(cwallez) resize support
     //TODO(cwallez) set up our own error handler to see if the call failed
+    unsigned int newParentWidth, newParentHeight;
+    if (!getWindowDimensions(mParent, &newParentWidth, &newParentHeight))
+    {
+        // TODO(cwallez) What error type here?
+        return egl::Error(EGL_BAD_CURRENT_SURFACE, "Failed to retrieve the size of the parent window.");
+    }
+
+    if (mParentWidth != newParentWidth || mParentHeight != newParentHeight)
+    {
+        mParentWidth = newParentWidth;
+        mParentHeight = newParentHeight;
+
+        XResizeWindow(mDisplay, mWindow, mParentWidth, mParentHeight);
+        XSync(mDisplay, False);
+    }
+
     mGLX.swapBuffers(mGLXWindow);
     return egl::Error(EGL_SUCCESS);
 }
@@ -157,32 +174,28 @@ void WindowSurfaceGLX::setSwapInterval(EGLint interval)
 
 EGLint WindowSurfaceGLX::getWidth() const
 {
-    Window root;
-    int x, y;
-    unsigned width, height, border, depth;
-    if (!XGetGeometry(mDisplay, mParent, &root, &x, &y, &width, &height, &border, &depth))
-    {
-        return 0;
-    }
-    return width;
+    // The size of the window is always the same as the cached size of its parent.
+    return mParentWidth;
 }
 
 EGLint WindowSurfaceGLX::getHeight() const
 {
-    Window root;
-    int x, y;
-    unsigned width, height, border, depth;
-    if (!XGetGeometry(mDisplay, mParent, &root, &x, &y, &width, &height, &border, &depth))
-    {
-        return 0;
-    }
-    return height;
+    // The size of the window is always the same as the cached size of its parent.
+    return mParentHeight;
 }
 
 EGLint WindowSurfaceGLX::isPostSubBufferSupported() const
 {
     UNIMPLEMENTED();
     return EGL_FALSE;
+}
+
+bool WindowSurfaceGLX::getWindowDimensions(Window window, unsigned int *width, unsigned int *height) const
+{
+    Window root;
+    int x, y;
+    unsigned int border, depth;
+    return XGetGeometry(mDisplay, window, &root, &x, &y, width, height, &border, &depth) != 0;
 }
 
 }

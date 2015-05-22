@@ -40,7 +40,10 @@ class WindowSurfaceGLX : public SurfaceGL
 
     EGLint isPostSubBufferSupported() const override;
   private:
+    bool getWindowDimensions(Window window, unsigned int *width, unsigned int *height) const;
+
     Window mParent;
+    unsigned int mParentWidth, mParentHeight;
     Window mWindow;
     Display *mDisplay;
 
