@@ -22,6 +22,30 @@
       "revId": "134df3f8e83b187689dfc05fa6151cdad96de35c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d031dc0_0db8f708",
+        "filename": "util/x11/X11Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-22T17:04:27Z",
+      "side": 1,
+      "message": "is that good now?",
+      "parentUuid": "0d031dc0_e9a3faff",
+      "range": {
+        "startLine": 339,
+        "startChar": 19,
+        "endLine": 339,
+        "endChar": 67
+      },
+      "revId": "134df3f8e83b187689dfc05fa6151cdad96de35c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
