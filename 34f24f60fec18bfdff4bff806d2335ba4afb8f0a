@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "adc5b1ce_44a82358",
+        "filename": "util/win32/Win32_system_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-25T15:23:28Z",
+      "side": 1,
+      "message": "nit: this converts from unsigned int to DWORD, would be nice to have a cast",
+      "range": {
+        "startLine": 33,
+        "startChar": 12,
+        "endLine": 33,
+        "endChar": 24
+      },
+      "revId": "34f24f60fec18bfdff4bff806d2335ba4afb8f0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
