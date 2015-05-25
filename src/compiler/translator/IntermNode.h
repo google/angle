@@ -729,6 +729,8 @@ class TIntermTraverser : angle::NonCopyable
 
     // Helper to create a temporary symbol node.
     TIntermSymbol *createTempSymbol(const TType &type);
+    // Create a node that declares but doesn't initialize a temporary symbol.
+    TIntermAggregate *createTempDeclaration(const TType &type);
     // Create a node that initializes the current temporary symbol with initializer.
     TIntermAggregate *createTempInitDeclaration(TIntermTyped *initializer);
     // Create a node that assigns rightNode to the current temporary symbol.

@@ -37,7 +37,7 @@ void TranslatorHLSL::translate(TIntermNode *root, int compileOptions)
 
     // HLSL doesn't support arrays as return values, we'll need to make functions that have an array
     // as a return value to use an out parameter to transfer the array data instead.
-    ArrayReturnValueToOutParameter(root);
+    ArrayReturnValueToOutParameter(root, &temporaryIndex);
 
     sh::OutputHLSL outputHLSL(getShaderType(), getShaderVersion(), getExtensionBehavior(),
         getSourcePath(), getOutputType(), numRenderTargets, getUniforms(), compileOptions);

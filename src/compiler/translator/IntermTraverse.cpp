@@ -50,6 +50,12 @@ TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type)
     return node;
 }
 
+TIntermAggregate *TIntermTraverser::createTempDeclaration(const TType &type)
+{
+    TIntermAggregate *tempDeclaration = new TIntermAggregate(EOpDeclaration);
+    tempDeclaration->getSequence()->push_back(createTempSymbol(type));
+    return tempDeclaration;
+}
 
 TIntermAggregate *TIntermTraverser::createTempInitDeclaration(TIntermTyped *initializer)
 {
