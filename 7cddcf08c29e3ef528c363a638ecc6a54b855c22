@@ -70,6 +70,30 @@
       "revId": "7cddcf08c29e3ef528c363a638ecc6a54b855c22",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adc5b1ce_c45b7361",
+        "filename": "src/libANGLE/renderer/gl/glx/WindowSurfaceGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-25T14:17:21Z",
+      "side": 1,
+      "message": "The EGL man pages are for 1.4 I think, section 3.10.4 of the 1.5 spec lists a couple more.  EGL_CONTEXT_LOST is probably the best 1.4 error though.",
+      "parentUuid": "0d031dc0_bb349658",
+      "range": {
+        "startLine": 125,
+        "startChar": 26,
+        "endLine": 125,
+        "endChar": 42
+      },
+      "revId": "7cddcf08c29e3ef528c363a638ecc6a54b855c22",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
