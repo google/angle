@@ -13,26 +13,46 @@
 #include "compiler/translator/PoolAlloc.h"
 #include "compiler/translator/TranslatorESSL.h"
 
+#include <vector>
+
+template <typename T>
 class ConstantFinder : public TIntermTraverser
 {
   public:
-    ConstantFinder(TConstantUnion constToFind)
-        : mConstToFind(constToFind),
+    ConstantFinder(const std::vector<T> &constantVector)
+        : mConstantVector(constantVector),
+          mFound(false)
+    {}
+
+    ConstantFinder(const T &value)
+        : mConstantVector(std::vector<T>{value}),
           mFound(false)
     {}
 
     virtual void visitConstantUnion(TIntermConstantUnion *node)
     {
-        if (node->getUnionArrayPointer()[0] == mConstToFind)
+        if (node->getType().getObjectSize() == mConstantVector.size())
         {
-            mFound = true;
+            bool found = true;
+            for (size_t i = 0; i < mConstantVector.size(); i++)
+            {
+                if (node->getUnionArrayPointer()[i] != mConstantVector[i])
+                {
+                    found = false;
+                    break;
+                }
+            }
+            if (found)
+            {
+                mFound = found;
+            }
         }
     }
 
     bool found() const { return mFound; }
 
   private:
-    TConstantUnion mConstToFind;
+    std::vector<T> mConstantVector;
     bool mFound;
 };
 
@@ -72,18 +92,20 @@ class ConstantFoldingTest : public testing::Test
         }
     }
 
-    bool constantFoundInAST(TConstantUnion c)
+    template <typename T>
+    bool constantFoundInAST(T constant)
     {
-        ConstantFinder finder(c);
+        ConstantFinder<T> finder(constant);
         mASTRoot->traverse(&finder);
         return finder.found();
     }
 
-    bool constantFoundInAST(int i)
+    template <typename T>
+    bool constantVectorFoundInAST(const std::vector<T> &constantVector)
     {
-        TConstantUnion c;
-        c.setIConst(i);
-        return constantFoundInAST(c);
+        ConstantFinder<T> finder(constantVector);
+        mASTRoot->traverse(&finder);
+        return finder.found();
     }
 
   private:
@@ -172,4 +194,20 @@ TEST_F(ConstantFoldingTest, FoldIntegerModulus)
     ASSERT_FALSE(constantFoundInAST(1124));
     ASSERT_FALSE(constantFoundInAST(5));
     ASSERT_TRUE(constantFoundInAST(4));
+}
+
+TEST_F(ConstantFoldingTest, FoldVectorCrossProduct)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec3 my_Vec3;"
+        "void main() {\n"
+        "   const vec3 v3 = cross(vec3(1.0f, 1.0f, 1.0f), vec3(1.0f, -1.0f, 1.0f));\n"
+        "   my_Vec3 = v3;\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(constantVectorFoundInAST(std::vector<float>{1.0f, 1.0f, 1.0f}));
+    ASSERT_FALSE(constantVectorFoundInAST(std::vector<float>{1.0f, -1.0f, 1.0f}));
+    ASSERT_TRUE(constantVectorFoundInAST(std::vector<float>{2.0f, 0.0f, -2.0f}));
 }
