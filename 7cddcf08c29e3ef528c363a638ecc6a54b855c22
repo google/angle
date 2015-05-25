@@ -46,6 +46,30 @@
       "revId": "7cddcf08c29e3ef528c363a638ecc6a54b855c22",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d031dc0_bb349658",
+        "filename": "src/libANGLE/renderer/gl/glx/WindowSurfaceGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-25T14:15:41Z",
+      "side": 1,
+      "message": "The man page doesn\u0027t seem to have that one either: https://www.khronos.org/registry/egl/sdk/docs/man/html/eglSwapBuffers.xhtml\nEGL_CONTEXT_LOST is the only one that seems non-descript enough in that list.",
+      "parentUuid": "4d0995dc_4e9e6539",
+      "range": {
+        "startLine": 125,
+        "startChar": 26,
+        "endLine": 125,
+        "endChar": 42
+      },
+      "revId": "7cddcf08c29e3ef528c363a638ecc6a54b855c22",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
