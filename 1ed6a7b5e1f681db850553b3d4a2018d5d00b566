@@ -22,6 +22,30 @@
       "revId": "1ed6a7b5e1f681db850553b3d4a2018d5d00b566",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d0995dc_4e494541",
+        "filename": "src/tests/angle_end2end_tests.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-25T15:05:35Z",
+      "side": 1,
+      "message": "Whoops.\nDone",
+      "parentUuid": "0d031dc0_1bd2e287",
+      "range": {
+        "startLine": 58,
+        "startChar": 12,
+        "endLine": 58,
+        "endChar": 67
+      },
+      "revId": "1ed6a7b5e1f681db850553b3d4a2018d5d00b566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
