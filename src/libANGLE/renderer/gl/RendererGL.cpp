@@ -254,11 +254,11 @@ std::string RendererGL::getRendererDescription() const
 
     std::ostringstream rendererString;
     rendererString << nativeVendorString << " " << nativeRendererString << " OpenGL";
-    if (mFunctions->openGLES)
+    if (mFunctions->standard == STANDARD_GL_ES)
     {
         rendererString << " ES";
     }
-    rendererString << " " << mFunctions->majorVersion << "." << mFunctions->minorVersion;
+    rendererString << " " << mFunctions->version.major << "." << mFunctions->version.minor;
 
     return rendererString.str();
 }
