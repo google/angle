@@ -4,11 +4,15 @@
 // found in the LICENSE file.
 //
 
-// Win32_path_utils.cpp: Implementation of OS-specific path functions for Windows
+// Win32_system_utils.cpp: Implementation of OS-specific functions for Windows
 
-#include "path_utils.h"
-#include <array>
+#include "system_utils.h"
+
 #include <windows.h>
+#include <array>
+
+namespace angle
+{
 
 std::string GetExecutablePath()
 {
@@ -23,3 +27,5 @@ std::string GetExecutableDirectory()
     size_t lastPathSepLoc = executablePath.find_last_of("\\/");
     return (lastPathSepLoc != std::string::npos) ? executablePath.substr(0, lastPathSepLoc) : "";
 }
+
+} // namespace angle

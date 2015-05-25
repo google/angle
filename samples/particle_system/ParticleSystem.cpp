@@ -17,8 +17,8 @@
 #include "Vector.h"
 #include "shader_utils.h"
 #include "random_utils.h"
+#include "system_utils.h"
 #include "tga_utils.h"
-#include "path_utils.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -114,7 +114,7 @@ class ParticleSystemSample : public SampleApplication
         mParticleTime = 1.0f;
 
         TGAImage img;
-        if (!LoadTGAImageFromFile(GetExecutableDirectory() + "/smoke.tga", &img))
+        if (!LoadTGAImageFromFile(angle::GetExecutableDirectory() + "/smoke.tga", &img))
         {
             return false;
         }

@@ -10,21 +10,21 @@
             'com_utils.h',
             'keyboard.h',
             'mouse.h',
-            'path_utils.h',
             'random_utils.cpp',
             'random_utils.h',
             'shader_utils.cpp',
             'shader_utils.h',
+            'system_utils.h',
+            'Event.h',
             'EGLWindow.cpp',
             'EGLWindow.h',
-            'Event.h',
             'OSWindow.cpp',
             'OSWindow.h',
             'Timer.h',
         ],
         'util_win32_sources':
         [
-            'win32/Win32_path_utils.cpp',
+            'win32/Win32_system_utils.cpp',
             'win32/Win32Timer.cpp',
             'win32/Win32Timer.h',
             'win32/Win32Window.cpp',
@@ -32,7 +32,7 @@
         ],
         'util_linux_sources':
         [
-            'linux/Linux_path_utils.cpp',
+            'linux/Linux_system_utils.cpp',
             'linux/LinuxTimer.cpp',
             'linux/LinuxTimer.h',
             'x11/X11Window.cpp',

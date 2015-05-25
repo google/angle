@@ -15,7 +15,7 @@
 
 #include "SampleApplication.h"
 #include "shader_utils.h"
-#include "path_utils.h"
+#include "system_utils.h"
 #include "texture_utils.h"
 
 #include <cstring>
@@ -49,15 +49,15 @@ class MultipleDrawBuffersSample : public SampleApplication
             return false;
         }
 
-        mMRTProgram = CompileProgramFromFiles(GetExecutableDirectory() + "/multiple_draw_buffers_vs.glsl",
-                                              GetExecutableDirectory() + "/multiple_draw_buffers_fs.glsl");
+        mMRTProgram = CompileProgramFromFiles(angle::GetExecutableDirectory() + "/multiple_draw_buffers_vs.glsl",
+                                              angle::GetExecutableDirectory() + "/multiple_draw_buffers_fs.glsl");
         if (!mMRTProgram)
         {
             return false;
         }
 
-        mCopyProgram = CompileProgramFromFiles(GetExecutableDirectory() + "/multiple_draw_buffers_vs.glsl",
-                                               GetExecutableDirectory() + "/multiple_draw_buffers_copy_fs.glsl");
+        mCopyProgram = CompileProgramFromFiles(angle::GetExecutableDirectory() + "/multiple_draw_buffers_vs.glsl",
+                                               angle::GetExecutableDirectory() + "/multiple_draw_buffers_copy_fs.glsl");
         if (!mCopyProgram)
         {
             return false;
