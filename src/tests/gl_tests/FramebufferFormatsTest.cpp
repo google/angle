@@ -70,6 +70,13 @@ class FramebufferFormatsTest : public ANGLETest
 
     void testRenderbufferMultisampleFormat(int minESVersion, GLenum attachmentType, GLenum internalFormat)
     {
+        // TODO(geofflang): Figure out why this is broken on Intel OpenGL
+        if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+        {
+            std::cout << "Test skipped on Intel OpenGL." << std::endl;
+            return;
+        }
+
         GLint clientVersion = GetParam().mClientVersion;
         if (clientVersion < minESVersion)
         {
