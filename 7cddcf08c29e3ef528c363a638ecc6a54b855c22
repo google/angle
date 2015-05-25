@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d031dc0_7b115ed5",
+        "filename": "src/libANGLE/renderer/gl/glx/WindowSurfaceGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-25T14:05:48Z",
+      "side": 1,
+      "message": "EGL_BAD_CURRENT_SURFACE seems better.",
+      "range": {
+        "startLine": 125,
+        "startChar": 26,
+        "endLine": 125,
+        "endChar": 42
+      },
+      "revId": "7cddcf08c29e3ef528c363a638ecc6a54b855c22",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
