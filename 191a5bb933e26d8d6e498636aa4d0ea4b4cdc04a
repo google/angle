@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0d031dc0_7becbe3a",
+        "filename": "samples/multi_texture/MultiTexture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-25T14:26:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d0995dc_6edc090d",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 25
+      },
+      "revId": "191a5bb933e26d8d6e498636aa4d0ea4b4cdc04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d0995dc_aed621ea",
         "filename": "util/linux/Linux_system_utils.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-25T14:11:05Z",
       "side": 1,
       "message": "can\u0027t see from reading gerrit, but make sure all files end with a newline",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 20
+      },
+      "revId": "191a5bb933e26d8d6e498636aa4d0ea4b4cdc04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d031dc0_9bef1230",
+        "filename": "util/linux/Linux_system_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-25T14:26:13Z",
+      "side": 1,
+      "message": "Actually you can as there is a 42nd line number appearing ;-)\nIt seems the the default configuration of VIM is to always add a trailing newline.",
+      "parentUuid": "4d0995dc_aed621ea",
       "range": {
         "startLine": 41,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "4d0995dc_4e778589",
+        "filename": "util/util.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-25T14:26:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d0995dc_0e946d19",
+      "range": {
+        "startLine": 13,
+        "startChar": 12,
+        "endLine": 13,
+        "endChar": 29
+      },
+      "revId": "191a5bb933e26d8d6e498636aa4d0ea4b4cdc04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d031dc0_3b288600",
         "filename": "util/win32/Win32_system_utils.cpp",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2015-05-25T14:11:05Z",
       "side": 1,
       "message": "same check",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 20
+      },
+      "revId": "191a5bb933e26d8d6e498636aa4d0ea4b4cdc04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adc5b1ce_84533b3d",
+        "filename": "util/win32/Win32_system_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-25T14:26:13Z",
+      "side": 1,
+      "message": "ditto",
+      "parentUuid": "0d031dc0_3b288600",
       "range": {
         "startLine": 31,
         "startChar": 0,
