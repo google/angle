@@ -22,6 +22,30 @@
       "revId": "9f57e624b4d63143ad46c687d82780ae901b37ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adc5b1ce_447023d7",
+        "filename": "samples/multi_window/MultiWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-05-25T14:20:18Z",
+      "side": 1,
+      "message": "MessageLoop was called in SampleApplication.cpp in run.\nWin32Window::messageLoop dispatches all the messages for the process, regardless of the window so that single messageLoop processed the messages of all the windows.\nDone",
+      "parentUuid": "4d0995dc_8eb6bdc9",
+      "range": {
+        "startLine": 114,
+        "startChar": 12,
+        "endLine": 114,
+        "endChar": 34
+      },
+      "revId": "9f57e624b4d63143ad46c687d82780ae901b37ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
