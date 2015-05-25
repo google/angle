@@ -46,6 +46,30 @@
       "revId": "9f57e624b4d63143ad46c687d82780ae901b37ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adc5b1ce_64771fcd",
+        "filename": "samples/multi_window/MultiWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-25T14:20:52Z",
+      "side": 1,
+      "message": "It works on windows because the messageLoop function will update the message loop of all windows on the current thread.  You\u0027re right, we should be calling messageLoop on all the windows in the step function.",
+      "parentUuid": "4d0995dc_8eb6bdc9",
+      "range": {
+        "startLine": 114,
+        "startChar": 12,
+        "endLine": 114,
+        "endChar": 34
+      },
+      "revId": "9f57e624b4d63143ad46c687d82780ae901b37ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
