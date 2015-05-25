@@ -15,20 +15,20 @@
     {
         'angle_perf_tests_sources':
         [
-            'perf_tests/ANGLEPerfTest.cpp',
-            'perf_tests/ANGLEPerfTest.h',
-            'perf_tests/BufferSubData.cpp',
-            'perf_tests/DrawCallPerf.cpp',
-            'perf_tests/IndexConversionPerf.cpp',
-            'perf_tests/PointSprites.cpp',
-            'perf_tests/TexSubImage.cpp',
-            'perf_tests/third_party/perf/perf_test.cc',
-            'perf_tests/third_party/perf/perf_test.h',
-            'test_utils/angle_test_instantiate.h',
+            '<(angle_path)/src/tests/perf_tests/ANGLEPerfTest.cpp',
+            '<(angle_path)/src/tests/perf_tests/ANGLEPerfTest.h',
+            '<(angle_path)/src/tests/perf_tests/BufferSubData.cpp',
+            '<(angle_path)/src/tests/perf_tests/DrawCallPerf.cpp',
+            '<(angle_path)/src/tests/perf_tests/IndexConversionPerf.cpp',
+            '<(angle_path)/src/tests/perf_tests/PointSprites.cpp',
+            '<(angle_path)/src/tests/perf_tests/TexSubImage.cpp',
+            '<(angle_path)/src/tests/perf_tests/third_party/perf/perf_test.cc',
+            '<(angle_path)/src/tests/perf_tests/third_party/perf/perf_test.h',
+            '<(angle_path)/src/tests/test_utils/angle_test_instantiate.h',
         ],
         'angle_perf_tests_win_sources':
         [
-            'perf_tests/IndexDataManagerTest.cpp',
+            '<(angle_path)/src/tests/perf_tests/IndexDataManagerTest.cpp',
         ]
     },
     'dependencies':
