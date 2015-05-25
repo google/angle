@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "cdf3c519_6dfc2137",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1183,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-25T12:51:56Z",
+      "side": 1,
+      "message": "Reading a different field from an union than what\u0027s been written may result in undefined behavior according to some interpretations of the C++ standard. I don\u0027t know how likely problems are in practice, but it\u0027s still better to avoid this.",
+      "parentUuid": "ed05e9c3_dacc010b",
+      "revId": "be115cc6be7e59aa0b55de94d1bd84e5ac70f724",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2db1c157_11402c13",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 6
