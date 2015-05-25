@@ -28,16 +28,20 @@ class LineLoopTest : public ANGLETest
         const std::string vsSource = SHADER_SOURCE
         (
             attribute highp vec4 position;
+            attribute highp vec4 in_color;
+
+            varying highp vec4 color;
 
             void main(void)
             {
                 gl_Position = position;
+                color = in_color;
             }
         );
 
         const std::string fsSource = SHADER_SOURCE
         (
-            uniform highp vec4 color;
+            varying highp vec4 color;
             void main(void)
             {
                 gl_FragColor = color;
@@ -51,7 +55,7 @@ class LineLoopTest : public ANGLETest
         }
 
         mPositionLocation = glGetAttribLocation(mProgram, "position");
-        mColorLocation = glGetUniformLocation(mProgram, "in_color");
+        mColorLocation = glGetAttribLocation(mProgram, "in_color");
 
         glBlendFunc(GL_ONE, GL_ONE);
         glEnable(GL_BLEND);
@@ -201,4 +205,4 @@ TEST_P(LineLoopTest, LineLoopUIntIndexBuffer)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_INSTANTIATE_TEST(LineLoopTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(LineLoopTest, ES2_D3D9(), ES2_D3D11());

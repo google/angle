@@ -174,15 +174,9 @@ TEST_P(DepthStencilFormatsTestES3, DrawWithDepthStencil)
 
     ASSERT_GL_NO_ERROR();
 
-    GLubyte pixel[4];
-    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &pixel);
-
-    // Only require the red and alpha channels have the correct values, the depth texture extensions
-    // leave the green and blue channels undefined
-    ASSERT_NEAR(255, pixel[0], 2.0);
-    ASSERT_EQ(255, pixel[3]);
+    EXPECT_PIXEL_NEAR(0, 0, 255, 0, 0, 255, 2.0);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_INSTANTIATE_TEST(DepthStencilFormatsTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
-ANGLE_INSTANTIATE_TEST(DepthStencilFormatsTestES3, ES3_D3D11(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(DepthStencilFormatsTest, ES2_D3D9(), ES2_D3D11());
+ANGLE_INSTANTIATE_TEST(DepthStencilFormatsTestES3, ES3_D3D11());

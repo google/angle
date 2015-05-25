@@ -25,46 +25,14 @@ namespace rx
 namespace nativegl_gl
 {
 
-static bool MeetsRequirements(const FunctionsGL *functions, const nativegl::SupportRequirement &requirements)
-{
-    for (const std::string &extension : requirements.requiredExtensions)
-    {
-        if (!functions->hasExtension(extension))
-        {
-            return false;
-        }
-    }
-
-    if (functions->majorVersion > requirements.majorVersion ||
-        (functions->majorVersion == requirements.majorVersion && functions->minorVersion >= requirements.minorVersion))
-    {
-        return true;
-    }
-    else if (!requirements.versionExtensions.empty())
-    {
-        for (const std::string &extension : requirements.versionExtensions)
-        {
-            if (!functions->hasExtension(extension))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
 static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions, GLenum internalFormat)
 {
     gl::TextureCaps textureCaps;
 
-    const nativegl::InternalFormat &formatInfo = nativegl::GetInternalFormatInfo(internalFormat, functions->openGLES);
-    textureCaps.texturable = MeetsRequirements(functions, formatInfo.texture);
-    textureCaps.filterable = textureCaps.texturable && MeetsRequirements(functions, formatInfo.filter);
-    textureCaps.renderable = MeetsRequirements(functions, formatInfo.framebufferAttachment);
+    const nativegl::InternalFormat &formatInfo = nativegl::GetInternalFormatInfo(internalFormat);
+    textureCaps.texturable = formatInfo.textureSupport(functions->majorVersion, functions->minorVersion, functions->extensions);
+    textureCaps.renderable = formatInfo.renderSupport(functions->majorVersion, functions->minorVersion, functions->extensions);
+    textureCaps.filterable = formatInfo.filterSupport(functions->majorVersion, functions->minorVersion, functions->extensions);
 
     // glGetInternalformativ is not available until version 4.2 but may be available through the 3.0
     // extension GL_ARB_internalformat_query
