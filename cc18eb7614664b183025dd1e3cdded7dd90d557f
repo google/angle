@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d031dc0_7b3afe46",
+        "filename": "util/posix/Posix_system_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-25T14:14:33Z",
+      "side": 1,
+      "message": "static_cast\u003cunsigned int\u003e",
+      "range": {
+        "startLine": 27,
+        "startChar": 14,
+        "endLine": 27,
+        "endChar": 21
+      },
+      "revId": "cc18eb7614664b183025dd1e3cdded7dd90d557f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d031dc0_db37ca5b",
+        "filename": "util/win32/Win32_system_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-25T14:14:33Z",
+      "side": 1,
+      "message": "it might make sense for this parameter to be unsigned int",
+      "range": {
+        "startLine": 31,
+        "startChar": 11,
+        "endLine": 31,
+        "endChar": 14
+      },
+      "revId": "cc18eb7614664b183025dd1e3cdded7dd90d557f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d0995dc_6ea5297f",
+        "filename": "util/win32/Win32_system_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-25T14:14:33Z",
+      "side": 1,
+      "message": "static_cast\u003cDWORD\u003e",
+      "range": {
+        "startLine": 33,
+        "startChar": 12,
+        "endLine": 33,
+        "endChar": 19
+      },
+      "revId": "cc18eb7614664b183025dd1e3cdded7dd90d557f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
