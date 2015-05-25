@@ -105,6 +105,8 @@ std::string Diagnostics::message(ID id)
       case PP_VERSION_NOT_FIRST_STATEMENT:
         return "#version directive must occur before anything else, "
                "except for comments and white space";
+      case PP_VERSION_NOT_FIRST_LINE_ESSL3:
+        return "#version directive must occur on the first line of the shader";
       case PP_INVALID_LINE_NUMBER:
         return "invalid line number";
       case PP_INVALID_FILE_NUMBER:

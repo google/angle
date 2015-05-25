@@ -801,6 +801,13 @@ void DirectiveParser::parseVersion(Token *token)
         valid = false;
     }
 
+    if (valid && version >= 300 && token->location.line > 1)
+    {
+        mDiagnostics->report(Diagnostics::PP_VERSION_NOT_FIRST_LINE_ESSL3,
+                             token->location, token->text);
+        valid = false;
+    }
+
     if (valid)
     {
         mDirectiveHandler->handleVersion(token->location, version);

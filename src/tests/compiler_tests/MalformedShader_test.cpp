@@ -562,3 +562,20 @@ TEST_F(MalformedShaderTest, WriteBothFragDataAndFragColor)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Version directive must be on the first line (ESSL 3.00 section 3.3)
+TEST_F(MalformedShaderTest, VersionOnSecondLine)
+{
+    const std::string &shaderString =
+        "\n"
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   my_FragColor = vec4(0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
