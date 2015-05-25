@@ -28,4 +28,9 @@ std::string GetExecutableDirectory()
     return (lastPathSepLoc != std::string::npos) ? executablePath.substr(0, lastPathSepLoc) : "";
 }
 
+void Sleep(unsigned int milliseconds)
+{
+    ::Sleep(static_cast<DWORD>(milliseconds));
+}
+
 } // namespace angle

@@ -17,6 +17,9 @@ namespace angle
 std::string GetExecutablePath();
 std::string GetExecutableDirectory();
 
+// Cross platform equivalent of the Windows Sleep function
+void Sleep(unsigned int milliseconds);
+
 } // namespace angle
 
 #endif // SAMPLE_UTIL_PATH_UTILS_H

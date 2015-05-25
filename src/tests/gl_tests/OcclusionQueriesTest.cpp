@@ -4,10 +4,8 @@
 // found in the LICENSE file.
 //
 
+#include "system_utils.h"
 #include "test_utils/ANGLETest.h"
-
-// Needed for Sleep()
-#include <Windows.h>
 
 using namespace angle;
 
@@ -92,7 +90,7 @@ TEST_P(OcclusionQueriesTest, IsOccluded)
     GLuint ready = GL_FALSE;
     while (ready == GL_FALSE)
     {
-        Sleep(0);
+        angle::Sleep(0);
         glGetQueryObjectuivEXT(query, GL_QUERY_RESULT_AVAILABLE_EXT, &ready);
     }
 
