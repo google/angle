@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d031dc0_bb92d6ce",
+        "filename": "src/compiler/preprocessor/DirectiveParser.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 804,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-25T13:58:48Z",
+      "side": 1,
+      "message": "\u003e\u003d for future-proofing?",
+      "range": {
+        "startLine": 804,
+        "startChar": 25,
+        "endLine": 804,
+        "endChar": 27
+      },
+      "revId": "98ff2f1b676cbc162882ead637f8d9f96674f9fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
