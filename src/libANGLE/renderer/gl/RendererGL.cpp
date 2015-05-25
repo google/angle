@@ -80,6 +80,7 @@ namespace rx
 
 RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &attribMap)
     : Renderer(),
+      mMaxSupportedESVersion(0, 0),
       mFunctions(functions),
       mStateManager(nullptr),
       mSkipDrawCalls(false)
@@ -279,9 +280,17 @@ std::string RendererGL::getRendererDescription() const
     return rendererString.str();
 }
 
+const gl::Version &RendererGL::getMaxSupportedESVersion() const
+{
+    // Force generation of caps
+    getRendererCaps();
+
+    return mMaxSupportedESVersion;
+}
+
 void RendererGL::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureCaps, gl::Extensions *outExtensions) const
 {
-    nativegl_gl::GenerateCaps(mFunctions, outCaps, outTextureCaps, outExtensions);
+    nativegl_gl::GenerateCaps(mFunctions, outCaps, outTextureCaps, outExtensions, &mMaxSupportedESVersion);
 }
 
 Workarounds RendererGL::generateWorkarounds() const

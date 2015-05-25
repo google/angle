@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_GL_RENDERERGL_H_
 #define LIBANGLE_RENDERER_GL_RENDERERGL_H_
 
+#include "libANGLE/Version.h"
 #include "libANGLE/renderer/Renderer.h"
 
 namespace rx
@@ -70,9 +71,13 @@ class RendererGL : public Renderer
     std::string getVendorString() const override;
     std::string getRendererDescription() const override;
 
+    const gl::Version &getMaxSupportedESVersion() const;
+
   private:
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureCaps, gl::Extensions *outExtensions) const override;
     Workarounds generateWorkarounds() const override;
+
+    mutable gl::Version mMaxSupportedESVersion;
 
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;

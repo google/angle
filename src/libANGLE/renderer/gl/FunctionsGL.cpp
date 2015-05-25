@@ -1174,6 +1174,12 @@ void FunctionsGL::initialize()
 
         // Extensions
         AssignGLExtensionEntryPoint(extensions, "GL_ARB_internalformat_query", loadProcAddress("glGetInternalformativ"), &getInternalformativ);
+
+        AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glReleaseShaderCompiler"), &releaseShaderCompiler);
+        AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glShaderBinary"), &shaderBinary);
+        AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glGetShaderPrecisionFormat"), &getShaderPrecisionFormat);
+        AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glDepthRangef"), &depthRangef);
+        AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glClearDepthf"), &clearDepthf);
     }
 
     // 3.1
@@ -1613,6 +1619,16 @@ bool FunctionsGL::isAtLeastGLES(const gl::Version &glesVersion) const
 bool FunctionsGL::hasExtension(const std::string &ext) const
 {
     return std::find(extensions.begin(), extensions.end(), ext) != extensions.end();
+}
+
+bool FunctionsGL::hasGLExtension(const std::string &ext) const
+{
+    return standard == STANDARD_GL_DESKTOP && hasExtension(ext);
+}
+
+bool FunctionsGL::hasGLESExtension(const std::string &ext) const
+{
+    return standard == STANDARD_GL_ES && hasExtension(ext);
 }
 
 }

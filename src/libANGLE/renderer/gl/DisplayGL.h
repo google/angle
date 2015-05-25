@@ -31,6 +31,9 @@ class DisplayGL : public DisplayImpl
 
     egl::Error makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context) override;
 
+  protected:
+    const gl::Version &getMaxSupportedESVersion() const;
+
   private:
     virtual const FunctionsGL *getFunctionsGL() const = 0;
 

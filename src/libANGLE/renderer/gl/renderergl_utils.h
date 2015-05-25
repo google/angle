@@ -20,6 +20,7 @@ namespace gl
 struct Caps;
 class TextureCapsMap;
 struct Extensions;
+struct Version;
 }
 
 namespace rx
@@ -30,7 +31,7 @@ namespace nativegl_gl
 {
 
 void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap,
-                  gl::Extensions *extensions);
+                  gl::Extensions *extensions, gl::Version *maxSupportedESVersion);
 }
 
 }

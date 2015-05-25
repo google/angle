@@ -25,4 +25,9 @@ inline bool operator>=(const Version &a, const Version &b)
     return a.major > b.major || (a.major == b.major && a.minor >= b.minor);
 }
 
+inline bool operator<(const Version &a, const Version &b)
+{
+    return !(a >= b);
+}
+
 }
