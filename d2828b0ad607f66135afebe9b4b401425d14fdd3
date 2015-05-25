@@ -16,6 +16,24 @@
       "revId": "d2828b0ad607f66135afebe9b4b401425d14fdd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dfd4deb_e5a5ec2a",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1552,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-25T14:19:01Z",
+      "side": 1,
+      "message": "Oh, Done!\n\nSorry for that indentation errors, I had it many times specially for switch statements. actually my VS has 4 spaces setting for conditionals and switch in common and I couldn\u0027t yet find how to change it only for switch. Because of this even when I put only two spaces, it auto corrected it to 4 spaces many times.",
+      "parentUuid": "6d11f908_d90ed3b8",
+      "revId": "d2828b0ad607f66135afebe9b4b401425d14fdd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
