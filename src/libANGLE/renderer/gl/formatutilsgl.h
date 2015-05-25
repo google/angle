@@ -14,6 +14,8 @@
 #include <vector>
 
 #include "angle_gl.h"
+#include "libANGLE/Version.h"
+#include "libANGLE/renderer/gl/FunctionsGL.h"
 
 namespace rx
 {
@@ -26,8 +28,7 @@ struct SupportRequirement
     SupportRequirement();
 
     // Version that this format became supported without extensions
-    GLuint majorVersion;
-    GLuint minorVersion;
+    gl::Version version;
 
     // Extensions that are required if the minimum version is not met
     std::vector<std::string> versionExtensions;
@@ -45,7 +46,7 @@ struct InternalFormat
     SupportRequirement renderbuffer;
     SupportRequirement framebufferAttachment;
 };
-const InternalFormat &GetInternalFormatInfo(GLenum internalFormat, bool es);
+const InternalFormat &GetInternalFormatInfo(GLenum internalFormat, StandardGL standard);
 
 }
 
