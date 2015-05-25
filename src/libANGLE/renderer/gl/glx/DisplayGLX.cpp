@@ -234,8 +234,6 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
     egl::ConfigSet configs;
     configIdToGLXConfig.clear();
 
-    // GLX_EXT_texture_from_pixmap is required for the "bind to rgb(a)" attributes
-    bool hasTextureFromPixmap = mGLX.hasExtension("GLX_EXT_texture_from_pixmap");
     bool hasSwapControl = mGLX.hasExtension("GLX_EXT_swap_control");
 
     int attribList[] =
@@ -321,11 +319,6 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
 
         config.bindToTextureRGB = EGL_FALSE;
         config.bindToTextureRGBA = EGL_FALSE;
-        if (hasTextureFromPixmap)
-        {
-            config.bindToTextureRGB = getGLXFBConfigAttrib(glxConfig, GLX_BIND_TO_TEXTURE_RGB_EXT);
-            config.bindToTextureRGBA = getGLXFBConfigAttrib(glxConfig, GLX_BIND_TO_TEXTURE_RGBA_EXT);
-        }
 
         int glxDrawable = getGLXFBConfigAttrib(glxConfig, GLX_DRAWABLE_TYPE);
         config.surfaceType = 0 |
