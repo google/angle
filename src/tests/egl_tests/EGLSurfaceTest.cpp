@@ -39,9 +39,6 @@ class EGLSurfaceTest : public testing::Test
     // Release any resources created in the test body
     void TearDown() override
     {
-        mOSWindow->destroy();
-        SafeDelete(mOSWindow);
-
         if (mDisplay != EGL_NO_DISPLAY)
         {
             eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
@@ -73,6 +70,9 @@ class EGLSurfaceTest : public testing::Test
             eglTerminate(mDisplay);
             mDisplay = EGL_NO_DISPLAY;
         }
+
+        mOSWindow->destroy();
+        SafeDelete(mOSWindow);
 
         ASSERT_TRUE(mWindowSurface == EGL_NO_SURFACE && mContext == EGL_NO_CONTEXT);
     }
