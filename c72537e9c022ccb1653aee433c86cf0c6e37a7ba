@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "adc5b1ce_64a9df88",
+        "filename": "util/system_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-25T14:29:55Z",
+      "side": 1,
+      "message": "On windows Sleep is in milliseconds, use usleep on posix instead?",
+      "range": {
+        "startLine": 21,
+        "startChar": 15,
+        "endLine": 21,
+        "endChar": 22
+      },
+      "revId": "c72537e9c022ccb1653aee433c86cf0c6e37a7ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
