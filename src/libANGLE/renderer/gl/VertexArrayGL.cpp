@@ -209,8 +209,15 @@ gl::Error VertexArrayGL::syncAttributeState(bool attributesNeedStreaming, const 
             if (mAppliedAttributes[idx] != mAttributes[idx])
             {
                 const gl::Buffer *arrayBuffer = mAttributes[idx].buffer.get();
-                const BufferGL *arrayBufferGL = GetImplAs<BufferGL>(arrayBuffer);
-                mStateManager->bindBuffer(GL_ARRAY_BUFFER, arrayBufferGL->getBufferID());
+                if (arrayBuffer != nullptr)
+                {
+                    const BufferGL *arrayBufferGL = GetImplAs<BufferGL>(arrayBuffer);
+                    mStateManager->bindBuffer(GL_ARRAY_BUFFER, arrayBufferGL->getBufferID());
+                }
+                else
+                {
+                    mStateManager->bindBuffer(GL_ARRAY_BUFFER, 0);
+                }
 
                 if (mAttributes[idx].pureInteger)
                 {
