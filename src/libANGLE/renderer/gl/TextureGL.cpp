@@ -69,6 +69,7 @@ TextureGL::TextureGL(GLenum type, const FunctionsGL *functions, StateManagerGL *
     ASSERT(mStateManager);
 
     mFunctions->genTextures(1, &mTextureID);
+    mStateManager->bindTexture(mTextureType, mTextureID);
 }
 
 TextureGL::~TextureGL()
