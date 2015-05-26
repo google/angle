@@ -10,6 +10,14 @@
         'angle_build_winrt%': '0',
         'angle_build_winphone%': '0',
         'angle_build_winrt_app_type_revision%': '8.1',
+        'use_x11%': 0,
+        'conditions':
+        [
+            ['OS=="linux"',
+            {
+                'use_x11%': 1,
+            }],
+        ],
     },
     'msvs_disabled_warnings':
     [

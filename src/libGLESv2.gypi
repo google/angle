@@ -549,6 +549,13 @@
                             'ANGLE_ENABLE_OPENGL',
                         ],
                     }],
+                    ['use_x11==1',
+                    {
+                        'defines':
+                        [
+                            'ANGLE_USE_X11',
+                        ]
+                    }],
                 ],
             },
             'conditions':
@@ -658,7 +665,7 @@
                                 '<@(libangle_gl_wgl_sources)',
                             ],
                         }],
-                        ['OS=="linux"',
+                        ['use_x11==1',
                         {
                             'sources':
                             [
@@ -666,6 +673,13 @@
                             ],
                         }],
                     ],
+                }],
+                ['use_x11==1',
+                {
+                    'defines':
+                    [
+                        'ANGLE_USE_X11',
+                    ]
                 }],
                 ['angle_build_winrt==0 and OS=="win"',
                 {
@@ -749,7 +763,7 @@
                 {
                     'msvs_enable_winphone' : '1',
                 }],
-                ['OS=="linux"',
+                ['use_x11==1',
                 {
                     'link_settings': {
                         'ldflags': [

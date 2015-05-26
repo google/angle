@@ -36,7 +36,7 @@
 #if defined(ANGLE_ENABLE_OPENGL)
 #   if defined(ANGLE_PLATFORM_WINDOWS)
 #       include "libANGLE/renderer/gl/wgl/DisplayWGL.h"
-#   elif defined(ANGLE_PLATFORM_LINUX)
+#   elif defined(ANGLE_USE_X11)
 #       include "libANGLE/renderer/gl/glx/DisplayGLX.h"
 #   else
 #       error Unsupported OpenGL platform.
@@ -110,7 +110,7 @@ rx::DisplayImpl *CreateDisplayImpl(const AttributeMap &attribMap)
 #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
         // Default to D3D displays
         impl = new rx::DisplayD3D();
-#elif defined(ANGLE_PLATFORM_LINUX)
+#elif defined(ANGLE_USE_X11)
         impl = new rx::DisplayGLX();
 #else
         // No display available
@@ -132,7 +132,7 @@ rx::DisplayImpl *CreateDisplayImpl(const AttributeMap &attribMap)
 #if defined(ANGLE_ENABLE_OPENGL)
 #if defined(ANGLE_PLATFORM_WINDOWS)
         impl = new rx::DisplayWGL();
-#elif defined(ANGLE_PLATFORM_LINUX)
+#elif defined(ANGLE_USE_X11)
         impl = new rx::DisplayGLX();
 #else
 #error Unsupported OpenGL platform.

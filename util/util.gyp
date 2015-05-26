@@ -36,9 +36,12 @@
             'linux/LinuxTimer.cpp',
             'linux/LinuxTimer.h',
             'posix/Posix_system_utils.cpp',
+        ],
+        'util_x11_sources':
+        [
             'x11/X11Window.cpp',
             'x11/X11Window.h',
-        ]
+        ],
     },
     'targets':
     [
@@ -88,6 +91,13 @@
                     'sources':
                     [
                         '<@(util_linux_sources)',
+                    ],
+                }],
+                ['use_x11==1',
+                {
+                    'sources':
+                    [
+                        '<@(util_x11_sources)',
                     ],
                     'link_settings': {
                         'ldflags': [

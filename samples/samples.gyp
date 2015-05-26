@@ -47,16 +47,6 @@
                 'sample_util/tga_utils.cpp',
                 'sample_util/tga_utils.h',
             ],
-            'conditions':
-            [
-                ['OS=="linux"',
-                {
-                    'ldflags':
-                    [
-                        '-lX11'
-                    ],
-                }],
-            ],
             'msvs_disabled_warnings': [ 4201 ],
             'direct_dependent_settings':
             {
