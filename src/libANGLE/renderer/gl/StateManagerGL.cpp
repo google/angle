@@ -113,7 +113,7 @@ void StateManagerGL::deleteVertexArray(GLuint vao)
     {
         if (mVAO == vao)
         {
-            bindVertexArray(0);
+            bindVertexArray(0, 0);
         }
 
         mFunctions->deleteVertexArrays(1, &vao);
@@ -194,11 +194,12 @@ void StateManagerGL::useProgram(GLuint program)
     }
 }
 
-void StateManagerGL::bindVertexArray(GLuint vao)
+void StateManagerGL::bindVertexArray(GLuint vao, GLuint elementArrayBuffer)
 {
     if (mVAO != vao)
     {
         mVAO = vao;
+        mBuffers[GL_ELEMENT_ARRAY_BUFFER] = elementArrayBuffer;
         mFunctions->bindVertexArray(vao);
     }
 }
@@ -317,7 +318,7 @@ gl::Error StateManagerGL::setDrawArraysState(const gl::Data &data, GLint first, 
     const gl::VertexArray *vao = state.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
     vaoGL->syncDrawArraysState(first, count);
-    bindVertexArray(vaoGL->getVertexArrayID());
+    bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
 
     return setGenericDrawState(data);
 }
@@ -336,7 +337,7 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::Data &data, GLsizei cou
         return error;
     }
 
-    bindVertexArray(vaoGL->getVertexArrayID());
+    bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
 
     return setGenericDrawState(data);
 }

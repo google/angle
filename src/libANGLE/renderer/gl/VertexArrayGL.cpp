@@ -103,7 +103,7 @@ gl::Error VertexArrayGL::syncDrawElementsState(GLsizei count, GLenum type, const
 
 gl::Error VertexArrayGL::syncDrawState(GLint first, GLsizei count, GLenum type, const GLvoid *indices, const GLvoid **outIndices) const
 {
-    mStateManager->bindVertexArray(mVertexArrayID);
+    mStateManager->bindVertexArray(mVertexArrayID, mAppliedElementArrayBuffer);
 
     // Check if any attributes need to be streamed, determines if the index range needs to be computed
     bool attributesNeedStreaming = doAttributesNeedStreaming();
@@ -402,6 +402,11 @@ gl::Error VertexArrayGL::streamAttributes(size_t streamingDataSize, size_t maxAt
 GLuint VertexArrayGL::getVertexArrayID() const
 {
     return mVertexArrayID;
+}
+
+GLuint VertexArrayGL::getAppliedElementArrayBufferID() const
+{
+    return mAppliedElementArrayBuffer;
 }
 
 }

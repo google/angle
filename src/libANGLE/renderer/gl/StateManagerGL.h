@@ -41,7 +41,7 @@ class StateManagerGL : angle::NonCopyable
     void deleteRenderbuffer(GLuint rbo);
 
     void useProgram(GLuint program);
-    void bindVertexArray(GLuint vao);
+    void bindVertexArray(GLuint vao, GLuint elementArrayBuffer);
     void bindBuffer(GLenum type, GLuint buffer);
     void activeTexture(size_t unit);
     void bindTexture(GLenum type, GLuint texture);

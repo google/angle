@@ -32,6 +32,7 @@ class VertexArrayGL : public VertexArrayImpl
     gl::Error syncDrawElementsState(GLsizei count, GLenum type, const GLvoid *indices, const GLvoid **outIndices) const;
 
     GLuint getVertexArrayID() const;
+    GLuint getAppliedElementArrayBufferID() const;
 
   private:
     gl::Error syncDrawState(GLint first, GLsizei count, GLenum type, const GLvoid *indices, const GLvoid **outIndices) const;
