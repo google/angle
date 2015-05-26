@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d5f9dfa_ba910d21",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-05-26T23:03:24Z",
+      "side": 1,
+      "message": "Is this going to have a user-facing effect? In the following code:\n\n  GLuint texture;\n  glGenTextures(1, \u0026texture);\n  bool res \u003d glIsTexture(texture);\n\n\"res\" must return false. (Other WebGL and presumably OpenGL ES conformance tests will -- or at least should -- fail if this isn\u0027t the case.)",
+      "range": {
+        "startLine": 72,
+        "startChar": 19,
+        "endLine": 72,
+        "endChar": 30
+      },
+      "revId": "5558056b8a2a0933c9db384cc5ce1fbbcde83c15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
