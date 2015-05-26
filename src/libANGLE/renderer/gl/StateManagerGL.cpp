@@ -467,9 +467,9 @@ void StateManagerGL::setAttributeCurrentData(size_t index, const gl::VertexAttri
         mVertexAttribCurrentValues[index] = data;
         switch (mVertexAttribCurrentValues[index].Type)
         {
-          case GL_FLOAT:        mFunctions->vertexAttrib4fv(index,  mVertexAttribCurrentValues[index].FloatValues);
-          case GL_INT:          mFunctions->vertexAttrib4iv(index,  mVertexAttribCurrentValues[index].IntValues);
-          case GL_UNSIGNED_INT: mFunctions->vertexAttrib4uiv(index, mVertexAttribCurrentValues[index].UnsignedIntValues);
+          case GL_FLOAT:        mFunctions->vertexAttrib4fv(index,  mVertexAttribCurrentValues[index].FloatValues);       break;
+          case GL_INT:          mFunctions->vertexAttrib4iv(index,  mVertexAttribCurrentValues[index].IntValues);         break;
+          case GL_UNSIGNED_INT: mFunctions->vertexAttrib4uiv(index, mVertexAttribCurrentValues[index].UnsignedIntValues); break;
           default: UNREACHABLE();
         }
     }
