@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d031dc0_d4b2f876",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-26T14:55:59Z",
+      "side": 1,
+      "message": "it\u0027s worth commenting here when and how the mFunctions\u0027s TType members get freed, and/or discarded. It\u0027s still a little fuzzy to me and could help understand what bug we fixed.",
+      "range": {
+        "startLine": 55,
+        "startChar": 3,
+        "endLine": 78,
+        "endChar": 39
+      },
+      "revId": "699491847c81f1be6ada45f1a87cb1cef7b3ba2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
