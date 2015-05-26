@@ -17,10 +17,10 @@ void InitBuiltInFunctionEmulatorForGLSL(BuiltInFunctionEmulator *emu, sh::GLenum
     // evaluated. This is unlikely to show up in real shaders, but is something to
     // consider.
 
-    TType float1(EbtFloat);
-    TType float2(EbtFloat, 2);
-    TType float3(EbtFloat, 3);
-    TType float4(EbtFloat, 4);
+    TType *float1 = new TType(EbtFloat);
+    TType *float2 = new TType(EbtFloat, 2);
+    TType *float3 = new TType(EbtFloat, 3);
+    TType *float4 = new TType(EbtFloat, 4);
 
     if (shaderType == GL_FRAGMENT_SHADER)
     {
