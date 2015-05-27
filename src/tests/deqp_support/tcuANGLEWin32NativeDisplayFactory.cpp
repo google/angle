@@ -20,17 +20,17 @@
 
 #include "tcuANGLEWin32NativeDisplayFactory.h"
 
-#include "egluDefs.hpp"
-#include "tcuWin32Window.hpp"
-#include "tcuWin32API.h"
-#include "tcuTexture.hpp"
-#include "deMemory.h"
-#include "deThread.h"
-#include "deClock.h"
-#include "eglwLibrary.hpp"
-
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+
+#include "deClock.h"
+#include "deMemory.h"
+#include "deThread.h"
+#include "egluDefs.hpp"
+#include "eglwLibrary.hpp"
+#include "OSWindow.h"
+#include "tcuTexture.hpp"
+#include "tcuWin32API.h"
 
 // Assume no call translation is needed
 DE_STATIC_ASSERT(sizeof(eglw::EGLNativeDisplayType) == sizeof(HDC));
@@ -102,22 +102,22 @@ class NativePixmap : public eglu::NativePixmap
 class NativeWindowFactory : public eglu::NativeWindowFactory
 {
   public:
-    NativeWindowFactory(HINSTANCE instance);
+    NativeWindowFactory(EventState *eventState);
     ~NativeWindowFactory() override {}
 
     eglu::NativeWindow *createWindow(eglu::NativeDisplay *nativeDisplay, const eglu::WindowParams &params) const override;
 
   private:
-    const HINSTANCE mInstance;
+    EventState *mEvents;
 };
 
 class NativeWindow : public eglu::NativeWindow
 {
   public:
-    NativeWindow(ANGLENativeDisplay *nativeDisplay, HINSTANCE instance, const eglu::WindowParams &params);
+    NativeWindow(ANGLENativeDisplay *nativeDisplay, const eglu::WindowParams &params, EventState *eventState);
     ~NativeWindow() override;
 
-    eglw::EGLNativeWindowType getLegacyNative() override { return mWindow.getHandle(); }
+    eglw::EGLNativeWindowType getLegacyNative() override { return mWindow->getNativeWindow(); }
     IVec2 getSurfaceSize() const override;
     IVec2 getScreenSize() const override { return getSurfaceSize(); }
     void processEvents() override;
@@ -126,9 +126,10 @@ class NativeWindow : public eglu::NativeWindow
     void readScreenPixels(tcu::TextureLevel* dst) const override;
 
   private:
-    Win32Window mWindow;
+    OSWindow *mWindow;
     eglu::WindowParams::Visibility mCurVisibility;
     deUint64 mSetVisibleTime;       //!< Time window was set visible.
+    EventState *mEvents;
 };
 
 // ANGLE NativeDisplay
@@ -216,27 +217,31 @@ eglu::NativePixmap *NativePixmapFactory::createPixmap(eglu::NativeDisplay* nativ
 
 // NativeWindowFactory
 
-NativeWindowFactory::NativeWindowFactory(HINSTANCE instance)
+NativeWindowFactory::NativeWindowFactory(EventState *eventState)
     : eglu::NativeWindowFactory("window", "ANGLE Window", WINDOW_CAPABILITIES),
-      mInstance(instance)
+      mEvents(eventState)
 {
 }
 
-eglu::NativeWindow *NativeWindowFactory::createWindow (eglu::NativeDisplay* nativeDisplay, const eglu::WindowParams& params) const
+eglu::NativeWindow *NativeWindowFactory::createWindow(eglu::NativeDisplay* nativeDisplay, const eglu::WindowParams& params) const
 {
-    return new NativeWindow(dynamic_cast<ANGLENativeDisplay*>(nativeDisplay), mInstance, params);
+    return new NativeWindow(dynamic_cast<ANGLENativeDisplay*>(nativeDisplay), params, mEvents);
 }
 
 // NativeWindow
 
-NativeWindow::NativeWindow(ANGLENativeDisplay *nativeDisplay, HINSTANCE instance, const eglu::WindowParams& params)
+NativeWindow::NativeWindow(ANGLENativeDisplay *nativeDisplay, const eglu::WindowParams& params, EventState *eventState)
     : eglu::NativeWindow(WINDOW_CAPABILITIES),
-      mWindow(instance,
-              params.width   == eglu::WindowParams::SIZE_DONT_CARE ? DEFAULT_SURFACE_WIDTH   : params.width,
-              params.height  == eglu::WindowParams::SIZE_DONT_CARE ? DEFAULT_SURFACE_HEIGHT  : params.height),
+      mWindow(CreateOSWindow()),
       mCurVisibility(eglu::WindowParams::VISIBILITY_HIDDEN),
-      mSetVisibleTime(0)
+      mSetVisibleTime(0),
+      mEvents(eventState)
 {
+    bool initialized = mWindow->initialize("dEQP ANGLE Tests",
+                                           params.width == eglu::WindowParams::SIZE_DONT_CARE ? DEFAULT_SURFACE_WIDTH : params.width,
+                                           params.height == eglu::WindowParams::SIZE_DONT_CARE ? DEFAULT_SURFACE_HEIGHT : params.height);
+    TCU_CHECK(initialized);
+
     if (params.visibility != eglu::WindowParams::VISIBILITY_DONT_CARE)
         setVisibility(params.visibility);
 }
@@ -246,14 +251,14 @@ void NativeWindow::setVisibility(eglu::WindowParams::Visibility visibility)
     switch (visibility)
     {
       case eglu::WindowParams::VISIBILITY_HIDDEN:
-        mWindow.setVisible(false);
+        mWindow->setVisible(false);
         mCurVisibility     = visibility;
         break;
 
       case eglu::WindowParams::VISIBILITY_VISIBLE:
       case eglu::WindowParams::VISIBILITY_FULLSCREEN:
         // \todo [2014-03-12 pyry] Implement FULLSCREEN, or at least SW_MAXIMIZE.
-        mWindow.setVisible(true);
+        mWindow->setVisible(true);
         mCurVisibility     = eglu::WindowParams::VISIBILITY_VISIBLE;
         mSetVisibleTime    = deGetMicroseconds();
         break;
@@ -265,21 +270,32 @@ void NativeWindow::setVisibility(eglu::WindowParams::Visibility visibility)
 
 NativeWindow::~NativeWindow()
 {
+    delete mWindow;
 }
 
 IVec2 NativeWindow::getSurfaceSize() const
 {
-    return mWindow.getSize();
+    return IVec2(mWindow->getWidth(), mWindow->getHeight());
 }
 
 void NativeWindow::processEvents()
 {
-    mWindow.processEvents();
+    mWindow->messageLoop();
+
+    // Look for a quit event to forward to the EventState
+    Event event;
+    while (mWindow->popEvent(&event))
+    {
+        if (event.Type == Event::EVENT_CLOSED)
+        {
+            mEvents->signalQuitEvent();
+        }
+    }
 }
 
 void NativeWindow::setSurfaceSize(IVec2 size)
 {
-    mWindow.setSize(size.x(), size.y());
+    mWindow->resize(size.x(), size.y());
 }
 
 void NativeWindow::readScreenPixels(tcu::TextureLevel *dst) const
@@ -301,7 +317,7 @@ void NativeWindow::readScreenPixels(tcu::TextureLevel *dst) const
             deSleep(WAIT_WINDOW_VISIBLE_MS - (deUint32)(timeSinceVisibleUs/1000));
     }
 
-    TCU_CHECK(GetClientRect(mWindow.getHandle(), &rect));
+    TCU_CHECK(GetClientRect(mWindow->getNativeWindow(), &rect));
 
     try
     {
@@ -314,13 +330,13 @@ void NativeWindow::readScreenPixels(tcu::TextureLevel *dst) const
         screenDC = GetDC(DE_NULL);
         TCU_CHECK(screenDC);
 
-        windowDC = GetDC(mWindow.getHandle());
+        windowDC = GetDC(mWindow->getNativeWindow());
         TCU_CHECK(windowDC);
 
         tmpDC = CreateCompatibleDC(screenDC);
         TCU_CHECK(tmpDC != DE_NULL);
 
-        MapWindowPoints(mWindow.getHandle(), DE_NULL, (LPPOINT)&rect, 2);
+        MapWindowPoints(mWindow->getNativeWindow() , DE_NULL, (LPPOINT)&rect, 2);
 
         tmpBitmap = CreateCompatibleBitmap(screenDC, width, height);
         TCU_CHECK(tmpBitmap != DE_NULL);
@@ -352,7 +368,7 @@ void NativeWindow::readScreenPixels(tcu::TextureLevel *dst) const
         ReleaseDC(DE_NULL, screenDC);
         screenDC = DE_NULL;
 
-        ReleaseDC(mWindow.getHandle(), windowDC);
+        ReleaseDC(mWindow->getNativeWindow(), windowDC);
         windowDC = DE_NULL;
 
         DeleteDC(tmpDC);
@@ -364,7 +380,7 @@ void NativeWindow::readScreenPixels(tcu::TextureLevel *dst) const
             ReleaseDC(DE_NULL, screenDC);
 
         if (windowDC)
-            ReleaseDC(mWindow.getHandle(), windowDC);
+            ReleaseDC(mWindow->getNativeWindow(), windowDC);
 
         if (tmpBitmap)
             DeleteObject(tmpBitmap);
@@ -381,12 +397,11 @@ void NativeWindow::readScreenPixels(tcu::TextureLevel *dst) const
 ANGLEWin32NativeDisplayFactory::ANGLEWin32NativeDisplayFactory(const std::string &name,
                                                                const std::string &description,
                                                                const std::vector<eglw::EGLAttrib> &platformAttributes,
-                                                               HINSTANCE instance)
+                                                               EventState *eventState)
     : eglu::NativeDisplayFactory(name, description, DISPLAY_CAPABILITIES, EGL_PLATFORM_ANGLE_ANGLE, "EGL_EXT_platform_base"),
-      mPlatformAttributes(platformAttributes),
-      mInstance(instance)
+      mPlatformAttributes(platformAttributes)
 {
-    m_nativeWindowRegistry.registerFactory(new NativeWindowFactory(mInstance));
+    m_nativeWindowRegistry.registerFactory(new NativeWindowFactory(eventState));
     m_nativePixmapRegistry.registerFactory(new NativePixmapFactory());
 }
 

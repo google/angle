@@ -30,6 +30,8 @@
 #   include "egluPlatform.hpp"
 #endif
 
+#include "tcuANGLEWin32NativeDisplayFactory.h"
+
 namespace tcu
 {
 
@@ -47,7 +49,7 @@ class ANGLEWin32Platform : public tcu::Platform,
     const eglu::Platform &getEGLPlatform() const override { return static_cast<const eglu::Platform&>(*this); }
 
   private:
-    HINSTANCE mInstance;
+    EventState mEvents;
 };
 
 } // tcu
