@@ -22,6 +22,30 @@
       "revId": "5558056b8a2a0933c9db384cc5ce1fbbcde83c15",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad73f192_f54d784d",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-27T13:39:06Z",
+      "side": 1,
+      "message": "No user facing effect here.  Our handle allocator only reserves the handles until they\u0027re bound at which point we create the texture objects.",
+      "parentUuid": "0d5f9dfa_ba910d21",
+      "range": {
+        "startLine": 72,
+        "startChar": 19,
+        "endLine": 72,
+        "endChar": 30
+      },
+      "revId": "5558056b8a2a0933c9db384cc5ce1fbbcde83c15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
