@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ad1771fa_5e3d843c",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1249,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-27T14:19:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd782572_f943b370",
+      "revId": "5b7ec310488bbc7444547687734b68071127d8e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed6169bc_fa1805ad",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 4
@@ -47,6 +65,58 @@
       "writtenOn": "2015-05-27T12:47:48Z",
       "side": 1,
       "message": "I think we should actually handle the case where length is 0 as undefined and print a warning. The result is not undefined according to the spec, but it\u0027s 0 / 0, which is undefined in mathematics.",
+      "revId": "5b7ec310488bbc7444547687734b68071127d8e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed05e9c3_00856755",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1604,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-27T14:19:05Z",
+      "side": 1,
+      "message": "Done. Note I had two options here, printing divide by zero warning and setting result to max or just calling UndefinedConstantFoldingError which prints undefined behaviour warning and sets result to zero, I went with second option here.",
+      "parentUuid": "ed6169bc_3a56fd2e",
+      "revId": "5b7ec310488bbc7444547687734b68071127d8e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dfd4deb_b1ccc23b",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1968,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-27T14:19:05Z",
+      "side": 1,
+      "message": "I just realized that I was actually setting return type twice, once here and once it is getting set in ParseContext.cpp after returning from this function. so I removed this in new patch set. I don\u0027t need to calculate precision, etc again as it is already done in ParseContext.\n\nI have also now figured out that it is possible to move that return type setting code after foldAggregate function call from ParseContext to this foldAggregate function and I will try to make a separate change for this later. I can just use aggregate(2nd parameter of foldAggregate) type for folded node type and set qualifier to EvqConst, will handle it later separately.",
+      "revId": "5b7ec310488bbc7444547687734b68071127d8e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dfd4deb_11d2d6d5",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1983,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-05-27T14:19:05Z",
+      "side": 1,
+      "message": "Removed this as explained above.",
       "revId": "5b7ec310488bbc7444547687734b68071127d8e1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
