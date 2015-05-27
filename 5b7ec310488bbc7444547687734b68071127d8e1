@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd782572_f943b370",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1249,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-27T12:47:48Z",
+      "side": 1,
+      "message": "The formatting is still odd here.",
+      "revId": "5b7ec310488bbc7444547687734b68071127d8e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed6169bc_fa1805ad",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1602,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-27T12:47:48Z",
+      "side": 1,
+      "message": "Nit: indentation",
+      "revId": "5b7ec310488bbc7444547687734b68071127d8e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed6169bc_3a56fd2e",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1604,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-27T12:47:48Z",
+      "side": 1,
+      "message": "I think we should actually handle the case where length is 0 as undefined and print a warning. The result is not undefined according to the spec, but it\u0027s 0 / 0, which is undefined in mathematics.",
+      "revId": "5b7ec310488bbc7444547687734b68071127d8e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
