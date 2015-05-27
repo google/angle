@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd3d85a0_2269766c",
+        "filename": "src/libANGLE/Version.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-27T20:04:27Z",
+      "side": 1,
+      "message": "Is there a prevailing reason to not merge the Spec/Standard into this class? Especially since we might use this for both Desktop and ES versions.",
+      "range": {
+        "startLine": 17,
+        "startChar": 7,
+        "endLine": 17,
+        "endChar": 14
+      },
+      "revId": "3b6e2e3ba663a627543eeea3d5ed23bd86e8b5c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd3d85a0_02d71ac5",
+        "filename": "src/libANGLE/Version.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-27T20:04:27Z",
+      "side": 1,
+      "message": "nit: inline here doesn\u0027t do anything AFAIK\n\nhttps://isocpp.org/wiki/faq/inline-functions#where-to-put-inline-keyword",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 19,
+        "endChar": 10
+      },
+      "revId": "3b6e2e3ba663a627543eeea3d5ed23bd86e8b5c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed56c9ec_cf48dd40",
+        "filename": "src/libANGLE/Version.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-27T20:04:27Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 10
+      },
+      "revId": "3b6e2e3ba663a627543eeea3d5ed23bd86e8b5c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed56c9ec_ef4da14d",
+        "filename": "src/libANGLE/Version.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-27T20:04:27Z",
+      "side": 1,
+      "message": "same for these",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 6
+      },
+      "revId": "3b6e2e3ba663a627543eeea3d5ed23bd86e8b5c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed56c9ec_4fe6adb4",
+        "filename": "src/libANGLE/Version.inl",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-27T20:04:27Z",
+      "side": 1,
+      "message": "inline should go on these, though personally i would rather them just be in Version.h, seems like an odd design",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 4
+      },
+      "revId": "3b6e2e3ba663a627543eeea3d5ed23bd86e8b5c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd3d85a0_e2c76ee5",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-27T20:04:27Z",
+      "side": 1,
+      "message": "seems like merging Version and Spec/Standard/Platform into one and returning it here would make sense.",
+      "range": {
+        "startLine": 19,
+        "startChar": 12,
+        "endLine": 19,
+        "endChar": 24
+      },
+      "revId": "3b6e2e3ba663a627543eeea3d5ed23bd86e8b5c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed56c9ec_8f197534",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-27T20:04:27Z",
+      "side": 1,
+      "message": "STANDARD_OPENGLES, etc, (CAPS style). I would also probably call this GLSpec (GL_SPEC_ES, GL_SPEC_DESKTOP). Or platform.",
+      "range": {
+        "startLine": 22,
+        "startChar": 4,
+        "endLine": 22,
+        "endChar": 21
+      },
+      "revId": "3b6e2e3ba663a627543eeea3d5ed23bd86e8b5c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
