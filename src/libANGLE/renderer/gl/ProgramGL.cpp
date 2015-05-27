@@ -416,8 +416,9 @@ bool ProgramGL::defineUniformBlock(gl::InfoLog &infoLog, const gl::Shader &shade
 
 gl::Error ProgramGL::applyUniforms()
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    //UNIMPLEMENTED();
+    // TODO(geofflang)
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error ProgramGL::applyUniformBuffers(const gl::Data &data, GLuint uniformBlockBindings[])
