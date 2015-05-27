@@ -75,7 +75,7 @@ bool ShaderGL::compile(gl::Compiler *compiler, const std::string &source)
     CompilerGL *compilerGL = GetImplAs<CompilerGL>(compiler);
     ShHandle compilerHandle = compilerGL->getCompilerHandle(mType);
 
-    int compileOptions = (SH_OBJECT_CODE | SH_VARIABLES);
+    int compileOptions = (SH_OBJECT_CODE | SH_VARIABLES | SH_INIT_GL_POSITION);
     const char* sourceCString = source.c_str();
     if (!ShCompile(compilerHandle, &sourceCString, 1, compileOptions))
     {
