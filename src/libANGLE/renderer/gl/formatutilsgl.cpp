@@ -21,7 +21,8 @@ namespace nativegl
 {
 
 SupportRequirement::SupportRequirement()
-    : version(std::numeric_limits<GLuint>::max(), std::numeric_limits<GLuint>::max()),
+    : majorVersion(std::numeric_limits<GLuint>::max()),
+      minorVersion(std::numeric_limits<GLuint>::max()),
       versionExtensions(),
       requiredExtensions()
 {
@@ -38,8 +39,8 @@ InternalFormat::InternalFormat()
 static inline SupportRequirement VersionOrExts(GLuint major, GLuint minor, const std::string &versionExt)
 {
     SupportRequirement requirement;
-    requirement.version.major = major;
-    requirement.version.minor = minor;
+    requirement.majorVersion = major;
+    requirement.minorVersion = minor;
     angle::SplitStringAlongWhitespace(versionExt, &requirement.versionExtensions);
     return requirement;
 }
@@ -47,8 +48,8 @@ static inline SupportRequirement VersionOrExts(GLuint major, GLuint minor, const
 static inline SupportRequirement VersionAndExts(GLuint major, GLuint minor, const std::string &requiredExt)
 {
     SupportRequirement requirement;
-    requirement.version.major = major;
-    requirement.version.minor = minor;
+    requirement.majorVersion = major;
+    requirement.minorVersion = minor;
     angle::SplitStringAlongWhitespace(requiredExt, &requirement.requiredExtensions);
     return requirement;
 }
@@ -56,8 +57,8 @@ static inline SupportRequirement VersionAndExts(GLuint major, GLuint minor, cons
 static inline SupportRequirement VersionOrExtsAndExts(GLuint major, GLuint minor, const std::string &versionExt,
                                                       const std::string &requiredExt)
 {    SupportRequirement requirement;
-    requirement.version.major = major;
-    requirement.version.minor = minor;
+    requirement.majorVersion = major;
+    requirement.minorVersion = minor;
     angle::SplitStringAlongWhitespace(versionExt, &requirement.versionExtensions);
     angle::SplitStringAlongWhitespace(requiredExt, &requirement.requiredExtensions);
     return requirement;
@@ -66,8 +67,8 @@ static inline SupportRequirement VersionOrExtsAndExts(GLuint major, GLuint minor
 static inline SupportRequirement VersionOnly(GLuint major, GLuint minor)
 {
     SupportRequirement requirement;
-    requirement.version.major = major;
-    requirement.version.minor = minor;
+    requirement.majorVersion = major;
+    requirement.minorVersion = minor;
     return requirement;
 }
 
@@ -81,16 +82,16 @@ static inline SupportRequirement ExtsOnly(const std::string &ext)
 static inline SupportRequirement Always()
 {
     SupportRequirement requirement;
-    requirement.version.major = 0;
-    requirement.version.minor = 0;
+    requirement.majorVersion = 0;
+    requirement.minorVersion = 0;
     return requirement;
 }
 
 static inline SupportRequirement Never()
 {
     SupportRequirement requirement;
-    requirement.version.major = std::numeric_limits<GLuint>::max();
-    requirement.version.minor = std::numeric_limits<GLuint>::max();
+    requirement.majorVersion = std::numeric_limits<GLuint>::max();
+    requirement.minorVersion = std::numeric_limits<GLuint>::max();
     return requirement;
 }
 
@@ -233,23 +234,20 @@ static const InternalFormatInfoMap &GetInternalFormatMap()
     return formatMap;
 }
 
-const InternalFormat &GetInternalFormatInfo(GLenum internalFormat, StandardGL standard)
+const InternalFormat &GetInternalFormatInfo(GLenum internalFormat, bool es)
 {
     const InternalFormatInfoMap &formatMap = GetInternalFormatMap();
     InternalFormatInfoMap::const_iterator iter = formatMap.find(internalFormat);
     if (iter != formatMap.end())
     {
         const InternalFormatInfo &info = iter->second;
-        switch (standard)
-        {
-          case STANDARD_GL_ES:      return info.glesInfo;
-          case STANDARD_GL_DESKTOP: return info.glInfo;
-          default: UNREACHABLE();   break;
-        }
+        return es ? info.glesInfo : info.glInfo;
     }
-
-    static const InternalFormat defaultInternalFormat;
-    return defaultInternalFormat;
+    else
+    {
+        static const InternalFormat defaultInternalFormat;
+        return defaultInternalFormat;
+    }
 }
 
 }

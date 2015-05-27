@@ -10,18 +10,11 @@
 #define LIBANGLE_RENDERER_GL_FUNCTIONSGL_H_
 
 #include "common/debug.h"
-#include "libANGLE/Version.h"
 #include "libANGLE/renderer/gl/functionsgl_enums.h"
 #include "libANGLE/renderer/gl/functionsgl_typedefs.h"
 
 namespace rx
 {
-
-enum StandardGL
-{
-    STANDARD_GL_DESKTOP,
-    STANDARD_GL_ES,
-};
 
 class FunctionsGL
 {
@@ -32,10 +25,9 @@ class FunctionsGL
     void initialize();
 
     // Version information
-    gl::Version version;
-    StandardGL standard;
-    bool isAtLeastGL(const gl::Version &glVersion) const;
-    bool isAtLeastGLES(const gl::Version &glesVersion) const;
+    GLuint majorVersion;
+    GLuint minorVersion;
+    bool openGLES;
 
     // Extensions
     std::vector<std::string> extensions;

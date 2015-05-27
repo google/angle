@@ -16,7 +16,8 @@
 namespace rx
 {
 
-static void GetGLVersion(PFNGLGETSTRINGPROC getStringFunction, gl::Version *outVersion, StandardGL *outStandard)
+static void GetGLVersion(PFNGLGETSTRINGPROC getStringFunction, GLuint *outMajorVersion, GLuint *outMinorVersion,
+                         bool *outIsES)
 {
     const std::string version = reinterpret_cast<const char*>(getStringFunction(GL_VERSION));
     if (version.find("OpenGL ES") == std::string::npos)
@@ -26,15 +27,17 @@ static void GetGLVersion(PFNGLGETSTRINGPROC getStringFunction, gl::Version *outV
         // The version number is either of the form major number.minor number or major
         // number.minor number.release number, where the numbers all have one or more
         // digits
-        *outStandard = STANDARD_GL_DESKTOP;
-        *outVersion = gl::Version(version[0] - '0', version[2] - '0');
+        *outIsES = false;
+        *outMajorVersion = version[0] - '0';
+        *outMinorVersion = version[2] - '0';
     }
     else
     {
         // ES spec states that the GL_VERSION string will be in the following format:
         // "OpenGL ES N.M vendor-specific information"
-        *outStandard = STANDARD_GL_ES;
-        *outVersion = gl::Version(version[10] - '0', version[12] - '0');
+        *outIsES = true;
+        *outMajorVersion = version[10] - '0';
+        *outMinorVersion = version[12] - '0';
     }
 }
 
@@ -80,8 +83,9 @@ static void AssignGLExtensionEntryPoint(const std::vector<std::string> &extensio
 }
 
 FunctionsGL::FunctionsGL()
-    : version(),
-      standard(),
+    : majorVersion(0),
+      minorVersion(0),
+      openGLES(false),
       extensions(),
 
       blendFunc(nullptr),
@@ -773,10 +777,10 @@ void FunctionsGL::initialize()
 {
     // Grab the version number
     AssignGLEntryPoint(loadProcAddress("glGetString"), &getString);
-    GetGLVersion(getString, &version, &standard);
+    GetGLVersion(getString, &majorVersion, &minorVersion, &openGLES);
 
     // Grab the GL extensions
-    if (isAtLeastGL(gl::Version(3, 0)))
+    if (majorVersion >= 3)
     {
         AssignGLEntryPoint(loadProcAddress("glGetIntegerv"), &getIntegerv);
         AssignGLEntryPoint(loadProcAddress("glGetStringi"), &getStringi);
@@ -789,7 +793,7 @@ void FunctionsGL::initialize()
     }
 
     // 1.0
-    if (isAtLeastGL(gl::Version(1, 0)))
+    if (majorVersion >= 1)
     {
         AssignGLEntryPoint(loadProcAddress("glBlendFunc"), &blendFunc);
         AssignGLEntryPoint(loadProcAddress("glClear"), &clear);
@@ -842,7 +846,7 @@ void FunctionsGL::initialize()
     }
 
     // 1.1
-    if (isAtLeastGL(gl::Version(1, 1)))
+    if (majorVersion > 1 || (majorVersion == 1 && minorVersion >= 1))
     {
         AssignGLEntryPoint(loadProcAddress("glBindTexture"), &bindTexture);
         AssignGLEntryPoint(loadProcAddress("glCopyTexImage1D"), &copyTexImage1D);
@@ -875,7 +879,7 @@ void FunctionsGL::initialize()
     }
 
     // 1.2
-    if (isAtLeastGL(gl::Version(1, 2)))
+    if (majorVersion > 1 || (majorVersion == 1 && minorVersion >= 2))
     {
         AssignGLEntryPoint(loadProcAddress("glBlendColor"), &blendColor);
         AssignGLEntryPoint(loadProcAddress("glBlendEquation"), &blendEquation);
@@ -902,7 +906,7 @@ void FunctionsGL::initialize()
     }
 
     // 1.3
-    if (isAtLeastGL(gl::Version(1, 3)))
+    if (majorVersion > 1 || (majorVersion == 1 && minorVersion >= 3))
     {
         AssignGLEntryPoint(loadProcAddress("glActiveTexture"), &activeTexture);
         AssignGLEntryPoint(loadProcAddress("glCompressedTexImage1D"), &compressedTexImage1D);
@@ -916,7 +920,7 @@ void FunctionsGL::initialize()
     }
 
     // 1.4
-    if (isAtLeastGL(gl::Version(1, 4)))
+    if (majorVersion > 1 || (majorVersion == 1 && minorVersion >= 4))
     {
         AssignGLEntryPoint(loadProcAddress("glBlendFuncSeparate"), &blendFuncSeparate);
         AssignGLEntryPoint(loadProcAddress("glMultiDrawArrays"), &multiDrawArrays);
@@ -928,7 +932,7 @@ void FunctionsGL::initialize()
     }
 
     // 1.5
-    if (isAtLeastGL(gl::Version(1, 5)))
+    if (majorVersion > 1 || (majorVersion == 1 && minorVersion >= 5))
     {
         AssignGLEntryPoint(loadProcAddress("glBeginQuery"), &beginQuery);
         AssignGLEntryPoint(loadProcAddress("glBindBuffer"), &bindBuffer);
@@ -952,7 +956,7 @@ void FunctionsGL::initialize()
     }
 
     // 2.0
-    if (isAtLeastGL(gl::Version(2, 0)))
+    if (majorVersion >= 2)
     {
         AssignGLEntryPoint(loadProcAddress("glAttachShader"), &attachShader);
         AssignGLEntryPoint(loadProcAddress("glBindAttribLocation"), &bindAttribLocation);
@@ -1050,7 +1054,7 @@ void FunctionsGL::initialize()
     }
 
     // 2.1
-    if (isAtLeastGL(gl::Version(2, 1)))
+    if (majorVersion > 2 || (majorVersion == 2 && minorVersion >= 1))
     {
         AssignGLEntryPoint(loadProcAddress("glUniformMatrix2x3fv"), &uniformMatrix2x3fv);
         AssignGLEntryPoint(loadProcAddress("glUniformMatrix2x4fv"), &uniformMatrix2x4fv);
@@ -1061,7 +1065,7 @@ void FunctionsGL::initialize()
     }
 
     // 3.0
-    if (isAtLeastGL(gl::Version(3, 0)))
+    if (majorVersion >= 3)
     {
         AssignGLEntryPoint(loadProcAddress("glBeginConditionalRender"), &beginConditionalRender);
         AssignGLEntryPoint(loadProcAddress("glBeginTransformFeedback"), &beginTransformFeedback);
@@ -1153,7 +1157,7 @@ void FunctionsGL::initialize()
     }
 
     // 3.1
-    if (isAtLeastGL(gl::Version(3, 1)))
+    if (majorVersion > 3 || (majorVersion == 3 && minorVersion >= 1))
     {
         AssignGLEntryPoint(loadProcAddress("glCopyBufferSubData"), &copyBufferSubData);
         AssignGLEntryPoint(loadProcAddress("glDrawArraysInstanced"), &drawArraysInstanced);
@@ -1180,7 +1184,7 @@ void FunctionsGL::initialize()
     }
 
     // 3.2
-    if (isAtLeastGL(gl::Version(3, 2)))
+    if (majorVersion > 3 || (majorVersion == 3 && minorVersion >= 2))
     {
         AssignGLEntryPoint(loadProcAddress("glClientWaitSync"), &clientWaitSync);
         AssignGLEntryPoint(loadProcAddress("glDeleteSync"), &deleteSync);
@@ -1204,7 +1208,7 @@ void FunctionsGL::initialize()
     }
 
     // 3.3
-    if (isAtLeastGL(gl::Version(3, 3)))
+    if (majorVersion > 3 || (majorVersion == 3 && minorVersion >= 3))
     {
         AssignGLEntryPoint(loadProcAddress("glBindFragDataLocationIndexed"), &bindFragDataLocationIndexed);
         AssignGLEntryPoint(loadProcAddress("glBindSampler"), &bindSampler);
@@ -1237,7 +1241,7 @@ void FunctionsGL::initialize()
     }
 
     // 4.0
-    if (isAtLeastGL(gl::Version(4, 0)))
+    if (majorVersion >= 4)
     {
         AssignGLEntryPoint(loadProcAddress("glBeginQueryIndexed"), &beginQueryIndexed);
         AssignGLEntryPoint(loadProcAddress("glBindTransformFeedback"), &bindTransformFeedback);
@@ -1288,7 +1292,7 @@ void FunctionsGL::initialize()
     }
 
     // 4.1
-    if (isAtLeastGL(gl::Version(4, 1)))
+    if (majorVersion > 4 || (majorVersion == 4 && minorVersion >= 1))
     {
         AssignGLEntryPoint(loadProcAddress("glActiveShaderProgram"), &activeShaderProgram);
         AssignGLEntryPoint(loadProcAddress("glBindProgramPipeline"), &bindProgramPipeline);
@@ -1381,7 +1385,7 @@ void FunctionsGL::initialize()
     }
 
     // 4.2
-    if (isAtLeastGL(gl::Version(4, 2)))
+    if (majorVersion > 4 || (majorVersion == 4 && minorVersion >= 2))
     {
         AssignGLEntryPoint(loadProcAddress("glBindImageTexture"), &bindImageTexture);
         AssignGLEntryPoint(loadProcAddress("glDrawArraysInstancedBaseInstance"), &drawArraysInstancedBaseInstance);
@@ -1398,7 +1402,7 @@ void FunctionsGL::initialize()
     }
 
     // 4.3
-    if (isAtLeastGL(gl::Version(4, 3)))
+    if (majorVersion > 4 || (majorVersion == 4 && minorVersion >= 3))
     {
         AssignGLEntryPoint(loadProcAddress("glBindVertexBuffer"), &bindVertexBuffer);
         AssignGLEntryPoint(loadProcAddress("glClearBufferData"), &clearBufferData);
@@ -1447,7 +1451,7 @@ void FunctionsGL::initialize()
     }
 
     // 4.4
-    if (isAtLeastGL(gl::Version(4, 4)))
+    if (majorVersion > 4 || (majorVersion == 4 && minorVersion >= 4))
     {
         AssignGLEntryPoint(loadProcAddress("glBindBuffersBase"), &bindBuffersBase);
         AssignGLEntryPoint(loadProcAddress("glBindBuffersRange"), &bindBuffersRange);
@@ -1461,7 +1465,7 @@ void FunctionsGL::initialize()
     }
 
     // 4.5
-    if (isAtLeastGL(gl::Version(4, 5)))
+    if (majorVersion > 4 || (majorVersion == 4 && minorVersion >= 5))
     {
         AssignGLEntryPoint(loadProcAddress("glBindTextureUnit"), &bindTextureUnit);
         AssignGLEntryPoint(loadProcAddress("glBlitNamedFramebuffer"), &blitNamedFramebuffer);
@@ -1574,16 +1578,6 @@ void FunctionsGL::initialize()
         AssignGLEntryPoint(loadProcAddress("glVertexArrayVertexBuffer"), &vertexArrayVertexBuffer);
         AssignGLEntryPoint(loadProcAddress("glVertexArrayVertexBuffers"), &vertexArrayVertexBuffers);
     }
-}
-
-bool FunctionsGL::isAtLeastGL(const gl::Version &glVersion) const
-{
-    return standard == STANDARD_GL_DESKTOP && version >= glVersion;
-}
-
-bool FunctionsGL::isAtLeastGLES(const gl::Version &glesVersion) const
-{
-    return standard == STANDARD_GL_ES && version >= glesVersion;
 }
 
 bool FunctionsGL::hasExtension(const std::string &ext) const

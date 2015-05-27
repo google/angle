@@ -35,7 +35,8 @@ static bool MeetsRequirements(const FunctionsGL *functions, const nativegl::Supp
         }
     }
 
-    if (functions->version >= requirements.version)
+    if (functions->majorVersion > requirements.majorVersion ||
+        (functions->majorVersion == requirements.majorVersion && functions->minorVersion >= requirements.minorVersion))
     {
         return true;
     }
@@ -60,7 +61,7 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions, G
 {
     gl::TextureCaps textureCaps;
 
-    const nativegl::InternalFormat &formatInfo = nativegl::GetInternalFormatInfo(internalFormat, functions->standard);
+    const nativegl::InternalFormat &formatInfo = nativegl::GetInternalFormatInfo(internalFormat, functions->openGLES);
     textureCaps.texturable = MeetsRequirements(functions, formatInfo.texture);
     textureCaps.filterable = textureCaps.texturable && MeetsRequirements(functions, formatInfo.filter);
     textureCaps.renderable = MeetsRequirements(functions, formatInfo.framebufferAttachment);

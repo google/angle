@@ -109,8 +109,6 @@
             'libANGLE/TransformFeedback.h',
             'libANGLE/Uniform.cpp',
             'libANGLE/Uniform.h',
-            'libANGLE/Version.h',
-            'libANGLE/Version.inl',
             'libANGLE/VertexArray.cpp',
             'libANGLE/VertexArray.h',
             'libANGLE/VertexAttribute.cpp',
