@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd782572_f6cca00a",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-27T11:31:29Z",
+      "side": 1,
+      "message": "Is unir short for something? I think I\u0027d just use paramArray / paramArraySize as the argument names.",
+      "range": {
+        "startLine": 171,
+        "startChar": 35,
+        "endLine": 171,
+        "endChar": 39
+      },
+      "revId": "1803c371f8a6b01d6cc836801f1f0ccebaea4637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed8889a6_94e352a2",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-27T11:31:29Z",
+      "side": 1,
+      "message": "Same here",
+      "range": {
+        "startLine": 182,
+        "startChar": 39,
+        "endLine": 182,
+        "endChar": 43
+      },
+      "revId": "1803c371f8a6b01d6cc836801f1f0ccebaea4637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed6169bc_97fa84f1",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1595,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-27T11:31:29Z",
+      "side": 1,
+      "message": "Style nit: I\u0027d rather put the first parameters on the same line as the function name, and then align the parameters that go over 120 chars with them on the next line.",
+      "revId": "1803c371f8a6b01d6cc836801f1f0ccebaea4637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd782572_76cdf0df",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2165,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-27T11:31:29Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 2165,
+        "startChar": 26,
+        "endLine": 2165,
+        "endChar": 29
+      },
+      "revId": "1803c371f8a6b01d6cc836801f1f0ccebaea4637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed6169bc_d7f4fc06",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2192,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-27T11:31:29Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 2192,
+        "startChar": 26,
+        "endLine": 2192,
+        "endChar": 29
+      },
+      "revId": "1803c371f8a6b01d6cc836801f1f0ccebaea4637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
