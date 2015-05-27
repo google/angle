@@ -26,6 +26,7 @@ RenderbufferGL::RenderbufferGL(const FunctionsGL *functions, StateManagerGL *sta
       mRenderbufferID(0)
 {
     mFunctions->genRenderbuffers(1, &mRenderbufferID);
+    mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mRenderbufferID);
 }
 
 RenderbufferGL::~RenderbufferGL()
