@@ -17,6 +17,7 @@
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/renderer/gl/formatutilsgl.h"
 
 namespace rx
 {
@@ -92,15 +93,17 @@ gl::Error TextureGL::setImage(GLenum target, size_t level, GLenum internalFormat
 
     SetUnpackStateForTexImage(mStateManager, unpack);
 
+    const nativegl::InternalFormat &nativeInternalFormatInfo = nativegl::GetInternalFormatInfo(internalFormat, mFunctions->standard);
+
     mStateManager->bindTexture(mTextureType, mTextureID);
     if (UseTexImage2D(mTextureType))
     {
         ASSERT(size.depth == 1);
-        mFunctions->texImage2D(target, level, internalFormat, size.width, size.height, 0, format, type, pixels);
+        mFunctions->texImage2D(target, level, nativeInternalFormatInfo.internalFormat, size.width, size.height, 0, format, type, pixels);
     }
     else if (UseTexImage3D(mTextureType))
     {
-        mFunctions->texImage3D(target, level, internalFormat, size.width, size.height, size.depth, 0, format, type, pixels);
+        mFunctions->texImage3D(target, level, nativeInternalFormatInfo.internalFormat, size.width, size.height, size.depth, 0, format, type, pixels);
     }
     else
     {
@@ -143,15 +146,17 @@ gl::Error TextureGL::setCompressedImage(GLenum target, size_t level, GLenum inte
 
     SetUnpackStateForTexImage(mStateManager, unpack);
 
+    const nativegl::InternalFormat &nativeInternalFormatInfo = nativegl::GetInternalFormatInfo(internalFormat, mFunctions->standard);
+
     mStateManager->bindTexture(mTextureType, mTextureID);
     if (UseTexImage2D(mTextureType))
     {
         ASSERT(size.depth == 1);
-        mFunctions->compressedTexImage2D(target, level, internalFormat, size.width, size.height, 0, imageSize, pixels);
+        mFunctions->compressedTexImage2D(target, level, nativeInternalFormatInfo.internalFormat, size.width, size.height, 0, imageSize, pixels);
     }
     else if (UseTexImage3D(mTextureType))
     {
-        mFunctions->compressedTexImage3D(target, level, internalFormat, size.width, size.height, size.depth, 0,
+        mFunctions->compressedTexImage3D(target, level, nativeInternalFormatInfo.internalFormat, size.width, size.height, size.depth, 0,
                                          imageSize, pixels);
     }
     else
@@ -169,17 +174,19 @@ gl::Error TextureGL::setCompressedSubImage(GLenum target, size_t level, const gl
 
     SetUnpackStateForTexImage(mStateManager, unpack);
 
+    const nativegl::InternalFormat &nativeInternalFormatInfo = nativegl::GetInternalFormatInfo(format, mFunctions->standard);
+
     mStateManager->bindTexture(mTextureType, mTextureID);
     if (UseTexImage2D(mTextureType))
     {
         ASSERT(area.z == 0 && area.depth == 1);
-        mFunctions->compressedTexSubImage2D(target, level, area.x, area.y, area.width, area.height, format, imageSize,
+        mFunctions->compressedTexSubImage2D(target, level, area.x, area.y, area.width, area.height, nativeInternalFormatInfo.internalFormat, imageSize,
                                             pixels);
     }
     else if (UseTexImage3D(mTextureType))
     {
         mFunctions->compressedTexSubImage3D(target, level, area.x, area.y, area.z, area.width, area.height, area.depth,
-                                            format, imageSize, pixels);
+                                            nativeInternalFormatInfo.internalFormat, imageSize, pixels);
     }
     else
     {
@@ -192,6 +199,8 @@ gl::Error TextureGL::setCompressedSubImage(GLenum target, size_t level, const gl
 gl::Error TextureGL::copyImage(GLenum target, size_t level, const gl::Rectangle &sourceArea, GLenum internalFormat,
                                const gl::Framebuffer *source)
 {
+    const nativegl::InternalFormat &nativeInternalFormatInfo = nativegl::GetInternalFormatInfo(internalFormat, mFunctions->standard);
+
     const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(source);
 
     mStateManager->bindTexture(mTextureType, mTextureID);
@@ -199,7 +208,7 @@ gl::Error TextureGL::copyImage(GLenum target, size_t level, const gl::Rectangle 
 
     if (UseTexImage2D(mTextureType))
     {
-        mFunctions->copyTexImage2D(target, level, internalFormat, sourceArea.x, sourceArea.y,
+        mFunctions->copyTexImage2D(target, level, nativeInternalFormatInfo.internalFormat, sourceArea.x, sourceArea.y,
                                    sourceArea.width, sourceArea.height, 0);
     }
     else
@@ -242,13 +251,15 @@ gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFor
     // TODO: emulate texture storage with TexImage calls if on GL version <4.2 or the
     // ARB_texture_storage extension is not available.
 
+    const nativegl::InternalFormat &nativeInternalFormatInfo = nativegl::GetInternalFormatInfo(internalFormat, mFunctions->standard);
+
     mStateManager->bindTexture(mTextureType, mTextureID);
     if (UseTexImage2D(mTextureType))
     {
         ASSERT(size.depth == 1);
         if (mFunctions->texStorage2D)
         {
-            mFunctions->texStorage2D(target, levels, internalFormat, size.width, size.height);
+            mFunctions->texStorage2D(target, levels, nativeInternalFormatInfo.internalFormat, size.width, size.height);
         }
         else
         {
@@ -271,12 +282,12 @@ gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFor
                     if (internalFormatInfo.compressed)
                     {
                         size_t dataSize = internalFormatInfo.computeBlockSize(GL_UNSIGNED_BYTE, levelSize.width, levelSize.height);
-                        mFunctions->compressedTexImage2D(target, level, internalFormat, levelSize.width, levelSize.height,
+                        mFunctions->compressedTexImage2D(target, level, nativeInternalFormatInfo.internalFormat, levelSize.width, levelSize.height,
                                                          0, dataSize, nullptr);
                     }
                     else
                     {
-                        mFunctions->texImage2D(target, level, internalFormat, levelSize.width, levelSize.height,
+                        mFunctions->texImage2D(target, level, nativeInternalFormatInfo.internalFormat, levelSize.width, levelSize.height,
                                                0, internalFormatInfo.format, internalFormatInfo.type, nullptr);
                     }
                 }
@@ -287,12 +298,12 @@ gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFor
                         if (internalFormatInfo.compressed)
                         {
                             size_t dataSize = internalFormatInfo.computeBlockSize(GL_UNSIGNED_BYTE, levelSize.width, levelSize.height);
-                            mFunctions->compressedTexImage2D(face, level, internalFormat, levelSize.width, levelSize.height,
+                            mFunctions->compressedTexImage2D(face, level, nativeInternalFormatInfo.internalFormat, levelSize.width, levelSize.height,
                                                              0, dataSize, nullptr);
                         }
                         else
                         {
-                            mFunctions->texImage2D(face, level, internalFormat, levelSize.width, levelSize.height,
+                            mFunctions->texImage2D(face, level, nativeInternalFormatInfo.internalFormat, levelSize.width, levelSize.height,
                                                     0, internalFormatInfo.format, internalFormatInfo.type, nullptr);
                         }
                     }
@@ -308,7 +319,7 @@ gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFor
     {
         if (mFunctions->texStorage3D)
         {
-            mFunctions->texStorage3D(target, levels, internalFormat, size.width, size.height, size.depth);
+            mFunctions->texStorage3D(target, levels, nativeInternalFormatInfo.internalFormat, size.width, size.height, size.depth);
         }
         else
         {
@@ -329,12 +340,12 @@ gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFor
                 if (internalFormatInfo.compressed)
                 {
                     size_t dataSize = internalFormatInfo.computeBlockSize(GL_UNSIGNED_BYTE, levelSize.width, levelSize.height) * levelSize.depth;
-                    mFunctions->compressedTexImage3D(target, i, internalFormat, levelSize.width, levelSize.height, levelSize.depth,
+                    mFunctions->compressedTexImage3D(target, i, nativeInternalFormatInfo.internalFormat, levelSize.width, levelSize.height, levelSize.depth,
                                                      0, dataSize, nullptr);
                 }
                 else
                 {
-                    mFunctions->texImage3D(target, i, internalFormat, levelSize.width, levelSize.height, levelSize.depth,
+                    mFunctions->texImage3D(target, i, nativeInternalFormatInfo.internalFormat, levelSize.width, levelSize.height, levelSize.depth,
                                            0, internalFormatInfo.format, internalFormatInfo.type, nullptr);
                 }
             }

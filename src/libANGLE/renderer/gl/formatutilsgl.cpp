@@ -9,7 +9,6 @@
 
 #include "libANGLE/renderer/gl/formatutilsgl.h"
 
-#include <map>
 #include <limits>
 
 #include "common/string_utils.h"
@@ -19,6 +18,52 @@ namespace rx
 
 namespace nativegl
 {
+
+typedef std::map<GLenum, GLenum> InternalFormatConversionMap;
+
+static InternalFormatConversionMap BuildGLInternalFormatConversionMap()
+{
+    InternalFormatConversionMap map;
+
+    map[GL_BGRA8_EXT] = GL_RGBA8;
+    map[GL_BGRA_EXT] = GL_RGBA;
+
+    return map;
+}
+
+static InternalFormatConversionMap BuildGLESInternalFormatConversionMap()
+{
+    InternalFormatConversionMap map;
+
+    return map;
+}
+
+static const InternalFormatConversionMap &GetInternalFormatConversionMap(StandardGL standard)
+{
+    if (standard == STANDARD_GL_DESKTOP)
+    {
+        static const InternalFormatConversionMap map = BuildGLInternalFormatConversionMap();
+        return map;
+    }
+    else if (standard == STANDARD_GL_ES)
+    {
+        static const InternalFormatConversionMap map = BuildGLESInternalFormatConversionMap();
+        return map;
+    }
+    else
+    {
+        UNREACHABLE();
+        static const InternalFormatConversionMap map;
+        return map;
+    }
+}
+
+static GLenum GetConvertedInternalFormat(GLenum format, StandardGL standard)
+{
+    const InternalFormatConversionMap &map = GetInternalFormatConversionMap(standard);
+    auto iter = map.find(format);
+    return iter != map.end() ? iter->second : format;
+}
 
 SupportRequirement::SupportRequirement()
     : version(std::numeric_limits<GLuint>::max(), std::numeric_limits<GLuint>::max()),
@@ -109,10 +154,12 @@ static inline void InsertFormatMapping(InternalFormatInfoMap *map, GLenum intern
                                        const SupportRequirement &esTexture, const SupportRequirement &esFilter, const SupportRequirement &esRender)
 {
     InternalFormatInfo formatInfo;
+    formatInfo.glInfo.internalFormat = GetConvertedInternalFormat(internalFormat, STANDARD_GL_DESKTOP);
     formatInfo.glInfo.texture = desktopTexture;
     formatInfo.glInfo.filter = desktopFilter;
     formatInfo.glInfo.renderbuffer = desktopRender;
     formatInfo.glInfo.framebufferAttachment = desktopRender;
+    formatInfo.glesInfo.internalFormat = GetConvertedInternalFormat(internalFormat, STANDARD_GL_ES);
     formatInfo.glesInfo.texture = esTexture;
     formatInfo.glesInfo.filter = esTexture;
     formatInfo.glesInfo.renderbuffer = esFilter;
@@ -181,8 +228,8 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     InsertFormatMapping(&map, GL_SRGB_ALPHA,        VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),       Always(), VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),    VersionOrExts(3, 0, "GL_EXT_texture_sRGB"), Always(), VersionOrExts(3, 0, "GL_EXT_texture_sRGB"));
 
     // From GL_EXT_texture_format_BGRA8888
-    InsertFormatMapping(&map, GL_BGRA8_EXT,         Never(),                                          Never(),  Never(),                                       ExtsOnly("GL_EXT_texture_format_BGRA8888"), Always(), ExtsOnly("GL_EXT_texture_format_BGRA8888"));
-    InsertFormatMapping(&map, GL_BGRA_EXT,          Never(),                                          Never(),  Never(),                                       ExtsOnly("GL_EXT_texture_format_BGRA8888"), Always(), ExtsOnly("GL_EXT_texture_format_BGRA8888"));
+    InsertFormatMapping(&map, GL_BGRA8_EXT,         VersionOrExts(1, 2, "GL_EXT_bgra"),               Always(), VersionOrExts(1, 2, "GL_EXT_bgra"),            ExtsOnly("GL_EXT_texture_format_BGRA8888"), Always(), ExtsOnly("GL_EXT_texture_format_BGRA8888"));
+    InsertFormatMapping(&map, GL_BGRA_EXT,          VersionOrExts(1, 2, "GL_EXT_bgra"),               Always(), VersionOrExts(1, 2, "GL_EXT_bgra"),            ExtsOnly("GL_EXT_texture_format_BGRA8888"), Always(), ExtsOnly("GL_EXT_texture_format_BGRA8888"));
 
     // Floating point formats
     //                       | Format              | OpenGL texture support                                       | Filter  | OpenGL render support                                                                            | OpenGL ES texture support                                         | Filter                                                 | OpenGL ES render support                                         |

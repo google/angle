@@ -10,6 +10,7 @@
 #ifndef LIBANGLE_RENDERER_GL_FORMATUTILSGL_H_
 #define LIBANGLE_RENDERER_GL_FORMATUTILSGL_H_
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -40,6 +41,9 @@ struct SupportRequirement
 struct InternalFormat
 {
     InternalFormat();
+
+    // Internal format to use for the native texture
+    GLenum internalFormat;
 
     SupportRequirement texture;
     SupportRequirement filter;

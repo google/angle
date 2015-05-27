@@ -13,6 +13,7 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/renderer/gl/formatutilsgl.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
 
 namespace rx
@@ -38,14 +39,19 @@ RenderbufferGL::~RenderbufferGL()
 gl::Error RenderbufferGL::setStorage(GLenum internalformat, size_t width, size_t height)
 {
     mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mRenderbufferID);
-    mFunctions->renderbufferStorage(GL_RENDERBUFFER, internalformat, width, height);
+
+    const nativegl::InternalFormat &nativeInternalFormatInfo = nativegl::GetInternalFormatInfo(internalformat, mFunctions->standard);
+    mFunctions->renderbufferStorage(GL_RENDERBUFFER, nativeInternalFormatInfo.internalFormat, width, height);
+
     return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error RenderbufferGL::setStorageMultisample(size_t samples, GLenum internalformat, size_t width, size_t height)
 {
     mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mRenderbufferID);
-    mFunctions->renderbufferStorageMultisample(GL_RENDERBUFFER, samples, internalformat, width, height);
+
+    const nativegl::InternalFormat &nativeInternalFormatInfo = nativegl::GetInternalFormatInfo(internalformat, mFunctions->standard);
+    mFunctions->renderbufferStorageMultisample(GL_RENDERBUFFER, samples, nativeInternalFormatInfo.internalFormat, width, height);
 
     const gl::TextureCaps &formatCaps = mTextureCaps.get(internalformat);
     if (samples > formatCaps.getMaxSamples())
