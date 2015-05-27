@@ -33,4 +33,9 @@ void Sleep(unsigned int milliseconds)
     ::Sleep(static_cast<DWORD>(milliseconds));
 }
 
+void SetLowPriorityProcess()
+{
+    SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
+}
+
 } // namespace angle

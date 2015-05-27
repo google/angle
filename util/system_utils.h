@@ -20,6 +20,8 @@ std::string GetExecutableDirectory();
 // Cross platform equivalent of the Windows Sleep function
 void Sleep(unsigned int milliseconds);
 
+void SetLowPriorityProcess();
+
 } // namespace angle
 
 #endif // SAMPLE_UTIL_PATH_UTILS_H

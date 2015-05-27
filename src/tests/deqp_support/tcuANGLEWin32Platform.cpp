@@ -24,6 +24,7 @@
 #include <EGL/eglext.h>
 
 #include "egluGLContextFactory.hpp"
+#include "system_utils.h"
 #include "tcuANGLEWin32NativeDisplayFactory.h"
 #include "tcuNullContextFactory.hpp"
 
@@ -32,9 +33,7 @@ namespace tcu
 
 ANGLEWin32Platform::ANGLEWin32Platform()
 {
-    // Set process priority to lower.
-    // TODO(cwallez): add this to utils
-    SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
+    angle::SetLowPriorityProcess();
 
 #if defined(ANGLE_DEQP_GLES2_TESTS) || defined(ANGLE_DEQP_GLES3_TESTS)
     std::vector<eglw::EGLAttrib> d3d11Attribs;

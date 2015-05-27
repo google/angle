@@ -8,7 +8,10 @@
 
 #include "system_utils.h"
 
+#include <sys/resource.h>
 #include <sys/stat.h>
+#include <sys/time.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <array>
 
@@ -36,6 +39,11 @@ std::string GetExecutableDirectory()
     std::string executablePath = GetExecutablePath();
     size_t lastPathSepLoc = executablePath.find_last_of("/");
     return (lastPathSepLoc != std::string::npos) ? executablePath.substr(0, lastPathSepLoc) : "";
+}
+
+void SetLowPriorityProcess()
+{
+    setpriority(PRIO_PROCESS, getpid(), 10);
 }
 
 } // namespace angle

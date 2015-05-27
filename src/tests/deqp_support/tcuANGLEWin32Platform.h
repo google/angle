@@ -24,7 +24,6 @@
 #include "tcuDefs.hpp"
 #include "tcuPlatform.hpp"
 #include "gluPlatform.hpp"
-#include "tcuWin32API.h"
 
 #ifndef _EGLUPLATFORM_HPP
 #   include "egluPlatform.hpp"
