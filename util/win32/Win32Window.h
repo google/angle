@@ -13,6 +13,7 @@
 #include <string>
 
 #include "OSWindow.h"
+#include "Timer.h"
 
 class Win32Window : public OSWindow
 {
@@ -22,6 +23,8 @@ class Win32Window : public OSWindow
 
     bool initialize(const std::string &name, size_t width, size_t height) override;
     void destroy() override;
+
+    bool takeScreenshot(uint8_t *pixelData) override;
 
     EGLNativeWindowType getNativeWindow() const override;
     EGLNativeDisplayType getNativeDisplay() const override;
@@ -40,6 +43,9 @@ class Win32Window : public OSWindow
   private:
     std::string mParentClassName;
     std::string mChildClassName;
+
+    bool mIsVisible;
+    Timer *mSetVisibleTimer;
 
     EGLNativeWindowType mNativeWindow;
     EGLNativeWindowType mParentWindow;

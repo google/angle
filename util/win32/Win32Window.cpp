@@ -10,6 +10,8 @@
 
 #include <sstream>
 
+#include "common/debug.h"
+
 Key VirtualKeyCodeToKey(WPARAM key, LPARAM flags)
 {
     switch (key)
@@ -374,7 +376,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 Win32Window::Win32Window()
-    : mNativeWindow(0),
+    : mIsVisible(false),
+      mSetVisibleTimer(CreateTimer()),
+      mNativeWindow(0),
       mParentWindow(0),
       mNativeDisplay(0)
 {
@@ -383,6 +387,7 @@ Win32Window::Win32Window()
 Win32Window::~Win32Window()
 {
     destroy();
+    delete mSetVisibleTimer;
 }
 
 bool Win32Window::initialize(const std::string &name, size_t width, size_t height)
@@ -480,6 +485,108 @@ void Win32Window::destroy()
 
     UnregisterClassA(mParentClassName.c_str(), NULL);
     UnregisterClassA(mChildClassName.c_str(), NULL);
+}
+
+bool Win32Window::takeScreenshot(uint8_t *pixelData)
+{
+    if (mIsVisible)
+    {
+        return false;
+    }
+
+    bool error = false;
+
+    // Hack for DWM: There is no way to wait for DWM animations to finish, so we just have to wait
+    // for a while before issuing screenshot if window was just made visible.
+    {
+        static const double WAIT_WINDOW_VISIBLE_MS = 0.5; // Half a second for the animation
+        double timeSinceVisible = mSetVisibleTimer->getElapsedTime();
+
+        if (timeSinceVisible < WAIT_WINDOW_VISIBLE_MS)
+        {
+            Sleep(static_cast<DWORD>((WAIT_WINDOW_VISIBLE_MS - timeSinceVisible) * 1000));
+        }
+    }
+
+    HDC screenDC = nullptr;
+    HDC windowDC = nullptr;
+    HDC tmpDC = nullptr;
+    HBITMAP tmpBitmap = nullptr;
+
+    if (!error)
+    {
+        screenDC = GetDC(nullptr);
+        error = screenDC == nullptr;
+    }
+
+    if (!error)
+    {
+        windowDC = GetDC(mNativeWindow);
+        error = windowDC == nullptr;
+    }
+
+    if (!error)
+    {
+        tmpDC = CreateCompatibleDC(screenDC);
+        error = tmpDC == nullptr;
+    }
+
+    if (!error)
+    {
+        tmpBitmap = CreateCompatibleBitmap(screenDC, mWidth, mHeight);
+        error = tmpBitmap == nullptr;
+    }
+
+    RECT rect = {0, 0, 0, 0};
+    if (!error)
+    {
+        MapWindowPoints(mNativeWindow, nullptr, reinterpret_cast<LPPOINT>(&rect), 0);
+
+        error = SelectObject(tmpDC, tmpBitmap) == nullptr;
+    }
+
+    if (!error)
+    {
+        error = BitBlt(tmpDC, 0, 0, mWidth, mHeight, screenDC, rect.left, rect.top, SRCCOPY) == TRUE;
+    }
+
+    if (!error)
+    {
+        BITMAPINFOHEADER bitmapInfo;
+        bitmapInfo.biSize = sizeof(BITMAPINFOHEADER);
+        bitmapInfo.biWidth = mWidth;
+        bitmapInfo.biHeight = -mHeight;
+        bitmapInfo.biPlanes = 1;
+        bitmapInfo.biBitCount = 32;
+        bitmapInfo.biCompression = BI_RGB;
+        bitmapInfo.biSizeImage = 0;
+        bitmapInfo.biXPelsPerMeter = 0;
+        bitmapInfo.biYPelsPerMeter = 0;
+        bitmapInfo.biClrUsed = 0;
+        bitmapInfo.biClrImportant = 0;
+        int getBitsResult = GetDIBits(screenDC, tmpBitmap, 0, mHeight, pixelData,
+            reinterpret_cast<BITMAPINFO*>(&bitmapInfo), DIB_RGB_COLORS);
+        error = getBitsResult != 0;
+    }
+
+    if (tmpBitmap != nullptr)
+    {
+        DeleteObject(tmpBitmap);
+    }
+    if (tmpDC != nullptr)
+    {
+        DeleteDC(tmpDC);
+    }
+    if (screenDC != nullptr)
+    {
+        ReleaseDC(nullptr, screenDC);
+    }
+    if (windowDC != nullptr)
+    {
+        ReleaseDC(mNativeWindow, windowDC);
+    }
+
+    return !error;
 }
 
 EGLNativeWindowType Win32Window::getNativeWindow() const
@@ -581,6 +688,12 @@ void Win32Window::setVisible(bool isVisible)
 
     ShowWindow(mParentWindow, flag);
     ShowWindow(mNativeWindow, flag);
+
+    if (isVisible)
+    {
+        mSetVisibleTimer->stop();
+        mSetVisibleTimer->start();
+    }
 }
 
 void Win32Window::pushEvent(Event event)

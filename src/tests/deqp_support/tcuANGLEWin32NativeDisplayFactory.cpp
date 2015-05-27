@@ -127,8 +127,6 @@ class NativeWindow : public eglu::NativeWindow
 
   private:
     OSWindow *mWindow;
-    eglu::WindowParams::Visibility mCurVisibility;
-    deUint64 mSetVisibleTime;       //!< Time window was set visible.
     EventState *mEvents;
 };
 
@@ -233,8 +231,6 @@ eglu::NativeWindow *NativeWindowFactory::createWindow(eglu::NativeDisplay* nativ
 NativeWindow::NativeWindow(ANGLENativeDisplay *nativeDisplay, const eglu::WindowParams& params, EventState *eventState)
     : eglu::NativeWindow(WINDOW_CAPABILITIES),
       mWindow(CreateOSWindow()),
-      mCurVisibility(eglu::WindowParams::VISIBILITY_HIDDEN),
-      mSetVisibleTime(0),
       mEvents(eventState)
 {
     bool initialized = mWindow->initialize("dEQP ANGLE Tests",
@@ -252,15 +248,12 @@ void NativeWindow::setVisibility(eglu::WindowParams::Visibility visibility)
     {
       case eglu::WindowParams::VISIBILITY_HIDDEN:
         mWindow->setVisible(false);
-        mCurVisibility     = visibility;
         break;
 
       case eglu::WindowParams::VISIBILITY_VISIBLE:
       case eglu::WindowParams::VISIBILITY_FULLSCREEN:
         // \todo [2014-03-12 pyry] Implement FULLSCREEN, or at least SW_MAXIMIZE.
         mWindow->setVisible(true);
-        mCurVisibility     = eglu::WindowParams::VISIBILITY_VISIBLE;
-        mSetVisibleTime    = deGetMicroseconds();
         break;
 
       default:
@@ -300,96 +293,10 @@ void NativeWindow::setSurfaceSize(IVec2 size)
 
 void NativeWindow::readScreenPixels(tcu::TextureLevel *dst) const
 {
-    HDC         windowDC    = DE_NULL;
-    HDC         screenDC    = DE_NULL;
-    HDC         tmpDC       = DE_NULL;
-    HBITMAP     tmpBitmap   = DE_NULL;
-    RECT        rect;
-
-    TCU_CHECK_INTERNAL(mCurVisibility != eglu::WindowParams::VISIBILITY_HIDDEN);
-
-    // Hack for DWM: There is no way to wait for DWM animations to finish, so we just have to wait
-    // for a while before issuing screenshot if window was just made visible.
-    {
-        const deInt64 timeSinceVisibleUs = (deInt64)(deGetMicroseconds()-mSetVisibleTime);
-
-        if (timeSinceVisibleUs < (deInt64)WAIT_WINDOW_VISIBLE_MS*1000)
-            deSleep(WAIT_WINDOW_VISIBLE_MS - (deUint32)(timeSinceVisibleUs/1000));
-    }
-
-    TCU_CHECK(GetClientRect(mWindow->getNativeWindow(), &rect));
-
-    try
-    {
-        const int           width       = rect.right - rect.left;
-        const int           height      = rect.bottom - rect.top;
-        BITMAPINFOHEADER    bitmapInfo;
-
-        deMemset(&bitmapInfo, 0, sizeof(bitmapInfo));
-
-        screenDC = GetDC(DE_NULL);
-        TCU_CHECK(screenDC);
-
-        windowDC = GetDC(mWindow->getNativeWindow());
-        TCU_CHECK(windowDC);
-
-        tmpDC = CreateCompatibleDC(screenDC);
-        TCU_CHECK(tmpDC != DE_NULL);
-
-        MapWindowPoints(mWindow->getNativeWindow() , DE_NULL, (LPPOINT)&rect, 2);
-
-        tmpBitmap = CreateCompatibleBitmap(screenDC, width, height);
-        TCU_CHECK(tmpBitmap != DE_NULL);
-
-        TCU_CHECK(SelectObject(tmpDC, tmpBitmap) != DE_NULL);
-
-        TCU_CHECK(BitBlt(tmpDC, 0, 0, width, height, screenDC, rect.left, rect.top, SRCCOPY));
-
-
-        bitmapInfo.biSize           = sizeof(BITMAPINFOHEADER);
-        bitmapInfo.biWidth          = width;
-        bitmapInfo.biHeight         = -height;
-        bitmapInfo.biPlanes         = 1;
-        bitmapInfo.biBitCount       = 32;
-        bitmapInfo.biCompression    = BI_RGB;
-        bitmapInfo.biSizeImage      = 0;
-        bitmapInfo.biXPelsPerMeter  = 0;
-        bitmapInfo.biYPelsPerMeter  = 0;
-        bitmapInfo.biClrUsed        = 0;
-        bitmapInfo.biClrImportant   = 0;
-
-        dst->setStorage(TextureFormat(TextureFormat::BGRA, TextureFormat::UNORM_INT8), width, height);
-
-        TCU_CHECK(GetDIBits(screenDC, tmpBitmap, 0, height, dst->getAccess().getDataPtr(), (BITMAPINFO*)&bitmapInfo, DIB_RGB_COLORS));
-
-        DeleteObject(tmpBitmap);
-        tmpBitmap = DE_NULL;
-
-        ReleaseDC(DE_NULL, screenDC);
-        screenDC = DE_NULL;
-
-        ReleaseDC(mWindow->getNativeWindow(), windowDC);
-        windowDC = DE_NULL;
-
-        DeleteDC(tmpDC);
-        tmpDC = DE_NULL;
-    }
-    catch (...)
-    {
-        if (screenDC)
-            ReleaseDC(DE_NULL, screenDC);
-
-        if (windowDC)
-            ReleaseDC(mWindow->getNativeWindow(), windowDC);
-
-        if (tmpBitmap)
-            DeleteObject(tmpBitmap);
-
-        if (tmpDC)
-            DeleteDC(tmpDC);
-
-        throw;
-    }
+    dst->setStorage(TextureFormat(TextureFormat::BGRA, TextureFormat::UNORM_INT8), mWindow->getWidth(), mWindow->getHeight());
+    bool success = mWindow->takeScreenshot(reinterpret_cast<uint8_t*>(dst->getAccess().getDataPtr()));
+    DE_ASSERT(success);
+    DE_UNREF(success);
 }
 
 } // anonymous
