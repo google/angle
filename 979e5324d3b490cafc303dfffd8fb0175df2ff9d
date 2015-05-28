@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "6d42d931_7f507730",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2327,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-28T17:18:23Z",
+      "side": 1,
+      "message": "There\u0027s still more work to do if we want completely clean HLSL output either way, so I\u0027d save the extra effort at this point and just get this conservative version of the change merged. It will take care of the worst issues with code readability.",
+      "parentUuid": "6d42d931_bfe57f25",
+      "range": {
+        "startLine": 2327,
+        "startChar": 15,
+        "endLine": 2327,
+        "endChar": 20
+      },
+      "revId": "979e5324d3b490cafc303dfffd8fb0175df2ff9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d54fde2_adb71a1a",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 2
