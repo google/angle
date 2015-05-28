@@ -529,6 +529,8 @@ egl::Error Renderer11::initialize()
 // to reset the scene status and ensure the default states are reset.
 void Renderer11::initializeDevice()
 {
+    double startTimeSeconds = ANGLEPlatformCurrent()->currentTime();
+
     TRACE_EVENT0("gpu.angle", "Renderer11::initializeDevice");
 
     mStateCache.initialize(mDevice);
@@ -600,6 +602,10 @@ void Renderer11::initializeDevice()
     ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.D3D11FeatureLevel",
                                 angleFeatureLevel,
                                 NUM_ANGLE_FEATURE_LEVELS);
+
+    double elapsedTimeSeconds = ANGLEPlatformCurrent()->currentTime() - startTimeSeconds;
+    int initializeDeviceMS = static_cast<int>(elapsedTimeSeconds * 1000);
+    ANGLE_HISTOGRAM_TIMES("GPU.ANGLE.Renderer11InitializeDeviceMS", initializeDeviceMS);
 }
 
 egl::ConfigSet Renderer11::generateConfigs() const
