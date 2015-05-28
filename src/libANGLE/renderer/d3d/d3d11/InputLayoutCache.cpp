@@ -301,14 +301,14 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
             mCurrentBuffers[i] = buffer;
             mCurrentVertexStrides[i] = vertexStride;
             mCurrentVertexOffsets[i] = vertexOffset;
+        }
 
-            // If a non null ID3D11Buffer is being assigned to mCurrentBuffers,
-            // then the next available index needs to be tracked to ensure 
-            // that any instanced pointsprite emulation buffers will be properly packed.
-            if (buffer)
-            {
-                nextAvailableIndex = i + 1;
-            }
+        // If a non null ID3D11Buffer is being assigned to mCurrentBuffers,
+        // then the next available index needs to be tracked to ensure
+        // that any instanced pointsprite emulation buffers will be properly packed.
+        if (buffer)
+        {
+            nextAvailableIndex = i + 1;
         }
     }
 

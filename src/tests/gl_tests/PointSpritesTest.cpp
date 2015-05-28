@@ -291,6 +291,9 @@ TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
         }
     );
 
+    // The WebGL test is drawn on a 2x2 canvas. Emulate this by setting a 2x2 viewport.
+    glViewport(0, 0, 2, 2);
+
     GLuint program = CompileProgram(vs, fs);
     ASSERT_NE(program, 0u);
     ASSERT_GL_NO_ERROR();
@@ -341,14 +344,14 @@ TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
 
     // Test the pixels around the target Red pixel to ensure
     // they are the expected color values
-    for (GLint y = 178; y < 180; ++y)
+    for (GLint y = 0; y < 2; ++y)
     {
-        for (GLint x = 178; x < 180; ++x)
+        for (GLint x = 0; x < 2; ++x)
         {
-            // 179x179 is expected to be a red pixel
+            // 1x1 is expected to be a red pixel
             // All others are black
             GLubyte expectedColor[4] = { 0, 0, 0, 0 };
-            if (x == 179 && y == 179)
+            if (x == 1 && y == 1)
             {
                 expectedColor[0] = 255;
                 expectedColor[3] = 255;
@@ -356,8 +359,6 @@ TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
             EXPECT_PIXEL_EQ(x, y, expectedColor[0], expectedColor[1], expectedColor[2], expectedColor[3]);
         }
     }
-
-    swapBuffers();
 
     GLfloat pointSizeRange[2] = {};
     glGetFloatv(GL_ALIASED_POINT_SIZE_RANGE, pointSizeRange);
@@ -374,9 +375,9 @@ TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
         ASSERT_GL_NO_ERROR();
 
         // Test the pixels to ensure the target is ALL Red pixels
-        for (GLint y = 178; y < 180; ++y)
+        for (GLint y = 0; y < 2; ++y)
         {
-            for (GLint x = 178; x < 180; ++x)
+            for (GLint x = 0; x < 2; ++x)
             {
                 EXPECT_PIXEL_EQ(x, y, 255, 0, 0, 255);
             }
