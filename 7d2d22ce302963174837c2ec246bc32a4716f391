@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d1bb95b_56ec753a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-28T17:39:31Z",
+      "side": 1,
+      "message": "can you mention what you mean by basic tests? is it some dEQP tests, or ANGLE\u0027s end2end?",
+      "range": {
+        "startLine": 613,
+        "startChar": 2,
+        "endLine": 616,
+        "endChar": 41
+      },
+      "revId": "7d2d22ce302963174837c2ec246bc32a4716f391",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
