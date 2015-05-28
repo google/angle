@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6d42d931_bfe57f25",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2327,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-28T16:47:55Z",
+      "side": 1,
+      "message": "I\u0027m just being conservative with the change, I assumed that there could be some reason why ; was included earlier. Maybe it\u0027s not required though.",
+      "parentUuid": "0d54fde2_9a4a8ab0",
+      "range": {
+        "startLine": 2327,
+        "startChar": 15,
+        "endLine": 2327,
+        "endChar": 20
+      },
+      "revId": "979e5324d3b490cafc303dfffd8fb0175df2ff9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d54fde2_adb71a1a",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 2
