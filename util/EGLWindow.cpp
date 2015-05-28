@@ -115,7 +115,7 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
     }
     displayAttributes.push_back(EGL_NONE);
 
-    mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, osWindow->getNativeDisplay(), displayAttributes.data());
+    mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, osWindow->getNativeDisplay(), &displayAttributes[0]);
     if (mDisplay == EGL_NO_DISPLAY)
     {
         destroyGL();
@@ -123,7 +123,7 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
     }
 
     EGLint majorVersion, minorVersion;
-    if (!eglInitialize(mDisplay, &majorVersion, &minorVersion))
+    if (eglInitialize(mDisplay, &majorVersion, &minorVersion) == EGL_FALSE)
     {
         destroyGL();
         return false;

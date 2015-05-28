@@ -232,6 +232,9 @@ void Display::setAttributes(rx::DisplayImpl *impl, const AttributeMap &attribMap
 
 Error Display::initialize()
 {
+    // Re-initialize default platform if it's needed
+    InitDefaultPlatformImpl();
+
     double createDeviceBegin = ANGLEPlatformCurrent()->currentTime();
 
     TRACE_EVENT0("gpu.angle", "egl::Display::initialize");
