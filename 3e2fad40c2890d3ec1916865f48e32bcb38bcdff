@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d470d3e_e0b76ae7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-05-28T17:51:43Z",
+      "side": 1,
+      "message": "Should this mention D3D11?",
+      "range": {
+        "startLine": 608,
+        "startChar": 37,
+        "endLine": 608,
+        "endChar": 55
+      },
+      "revId": "3e2fad40c2890d3ec1916865f48e32bcb38bcdff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
