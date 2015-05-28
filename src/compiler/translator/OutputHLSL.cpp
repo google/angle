@@ -19,7 +19,6 @@
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/NodeSearch.h"
 #include "compiler/translator/RemoveSwitchFallThrough.h"
-#include "compiler/translator/RewriteElseBlocks.h"
 #include "compiler/translator/SearchSymbol.h"
 #include "compiler/translator/StructureHLSL.h"
 #include "compiler/translator/TranslatorHLSL.h"
@@ -167,13 +166,6 @@ void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
 {
     const std::vector<TIntermTyped*> &flaggedStructs = FlagStd140ValueStructs(treeRoot);
     makeFlaggedStructMaps(flaggedStructs);
-
-    // Work around D3D9 bug that would manifest in vertex shaders with selection blocks which
-    // use a vertex attribute as a condition, and some related computation in the else block.
-    if (mOutputType == SH_HLSL9_OUTPUT && mShaderType == GL_VERTEX_SHADER)
-    {
-        RewriteElseBlocks(treeRoot);
-    }
 
     BuiltInFunctionEmulator builtInFunctionEmulator;
     InitBuiltInFunctionEmulatorForHLSL(&builtInFunctionEmulator);
