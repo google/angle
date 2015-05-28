@@ -274,7 +274,7 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLint maxClientVersion, GLenum 
     if (SUCCEEDED(device->CheckFormatSupport(formatInfo.renderFormat, &formatSupport)) &&
         ((formatSupport & D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET) != 0))
     {
-        for (size_t sampleCount = 1; sampleCount <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; sampleCount++)
+        for (size_t sampleCount = 1; sampleCount <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; sampleCount *= 2)
         {
             UINT qualityCount = 0;
             if (SUCCEEDED(device->CheckMultisampleQualityLevels(formatInfo.renderFormat, sampleCount, &qualityCount)) &&
