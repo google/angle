@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed56c9ec_3a298108",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-05-29T19:07:41Z",
+      "side": 1,
+      "message": "You should make foldBinary() return TIntermTyped, and merge the fold() function into fildBinary, and get rid of the fold() function totally.  Then the code will be more consistent.",
+      "range": {
+        "startLine": 302,
+        "startChar": 20,
+        "endLine": 302,
+        "endChar": 30
+      },
+      "revId": "157b9191fd05f35d3d48735d65b342d2db73c867",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
