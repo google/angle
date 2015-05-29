@@ -299,7 +299,8 @@ class TIntermConstantUnion : public TIntermTyped
     virtual void traverse(TIntermTraverser *);
     virtual bool replaceChildNode(TIntermNode *, TIntermNode *) { return false; }
 
-    TIntermTyped *fold(TOperator op, TIntermConstantUnion *rightNode, TInfoSink &infoSink);
+    TConstantUnion *foldBinary(TOperator op, TIntermConstantUnion *rightNode, TInfoSink &infoSink);
+    TIntermTyped *foldUnary(TOperator op, TInfoSink &infoSink);
 
     static TIntermTyped *FoldAggregateBuiltIn(TOperator op, TIntermAggregate *aggregate, TInfoSink &infoSink);
 
@@ -362,6 +363,7 @@ class TIntermBinary : public TIntermOperator
     TIntermTyped *getLeft() const { return mLeft; }
     TIntermTyped *getRight() const { return mRight; }
     bool promote(TInfoSink &);
+    TIntermTyped *fold(TInfoSink &infoSink);
 
     void setAddIndexClamp() { mAddIndexClamp = true; }
     bool getAddIndexClamp() { return mAddIndexClamp; }
