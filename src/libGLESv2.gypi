@@ -546,13 +546,16 @@
                         [
                             'ANGLE_ENABLE_OPENGL',
                         ],
-                    }],
-                    ['use_x11==1',
-                    {
-                        'defines':
+                        'conditions':
                         [
-                            'ANGLE_USE_X11',
-                        ]
+                            ['use_x11==1',
+                            {
+                                'defines':
+                                [
+                                    'ANGLE_USE_X11',
+                                ]
+                            }],
+                        ],
                     }],
                 ],
             },
@@ -665,19 +668,16 @@
                         }],
                         ['use_x11==1',
                         {
+                            'defines':
+                            [
+                                'ANGLE_USE_X11',
+                            ],
                             'sources':
                             [
                                 '<@(libangle_gl_glx_sources)',
                             ],
                         }],
                     ],
-                }],
-                ['use_x11==1',
-                {
-                    'defines':
-                    [
-                        'ANGLE_USE_X11',
-                    ]
                 }],
                 ['angle_build_winrt==0 and OS=="win"',
                 {

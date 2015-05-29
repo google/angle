@@ -98,11 +98,14 @@
                     [
                         '<@(util_x11_sources)',
                     ],
-                    'link_settings': {
-                        'ldflags': [
+                    'link_settings':
+                    {
+                        'ldflags':
+                        [
                             '<!@(pkg-config --libs-only-L --libs-only-other x11 xi)',
                         ],
-                        'libraries': [
+                        'libraries':
+                        [
                             '<!@(pkg-config --libs-only-l x11 xi)',
                         ],
                     },

@@ -34,6 +34,17 @@
             '-Wno-format-nonliteral',
             '-Wno-deprecated-register',
         ],
+
+        'conditions':
+        [
+            ['OS=="linux"',
+            {
+                'use_x11%': 1,
+            },
+            {
+                'use_x11%': 0,
+            }],
+        ],
     },
     'target_defaults':
     {
