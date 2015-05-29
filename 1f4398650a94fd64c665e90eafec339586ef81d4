@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed56c9ec_8b54e9a8",
+        "filename": "src/libANGLE/HandleAllocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-29T11:52:33Z",
+      "side": 1,
+      "message": "I think it would be better to fix the list to be in sorted order, rather than reverse-sorted, which it is now I think? you should be able to swap these statements.",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 5
+      },
+      "revId": "1f4398650a94fd64c665e90eafec339586ef81d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
