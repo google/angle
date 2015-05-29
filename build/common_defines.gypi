@@ -34,7 +34,9 @@
                 4251, # STL objects do not have DLL interface, needed by ShaderVars.h
             ],
         }],
-        ['angle_build_winrt==0',
+        # Normally the WinRT project should rely on the default SDK header include paths
+        # However, the WinPhone projects also need the Windows SDK path for DXProgrammableCapture.h
+        ['angle_build_winrt==0 or angle_build_winphone==1',
         {
             'msvs_system_include_dirs':
             [
