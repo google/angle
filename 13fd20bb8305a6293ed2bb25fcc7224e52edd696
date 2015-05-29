@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b91fb853_7eee4585",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-29T19:46:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9f6d849_df19d6ab",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 60,
+        "endChar": 42
+      },
+      "revId": "13fd20bb8305a6293ed2bb25fcc7224e52edd696",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d54fde2_9c4d1bcc",
         "filename": "src/common/string_utils.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-05-29T16:58:01Z",
       "side": 1,
       "message": "The operator! would be better here, it covers more error cases.",
+      "range": {
+        "startLine": 79,
+        "startChar": 8,
+        "endLine": 79,
+        "endChar": 21
+      },
+      "revId": "13fd20bb8305a6293ed2bb25fcc7224e52edd696",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b91fb853_150e143d",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-05-29T19:46:03Z",
+      "side": 1,
+      "message": "This is equivalent to calling member fail.\n\nhttp://www.cplusplus.com/reference/ios/ios/operator_not/",
+      "parentUuid": "0d54fde2_9c4d1bcc",
       "range": {
         "startLine": 79,
         "startChar": 8,
