@@ -32,6 +32,17 @@
             '-Wwrite-strings',
             '-Wno-format-nonliteral',
         ],
+
+        'conditions':
+        [
+            ['OS=="linux"',
+            {
+                'use_x11%': 1,
+            },
+            {
+                'use_x11%': 0,
+            }],
+        ],
     },
     'target_defaults':
     {

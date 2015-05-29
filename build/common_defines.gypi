@@ -10,14 +10,6 @@
         'angle_build_winrt%': '0',
         'angle_build_winphone%': '0',
         'angle_build_winrt_app_type_revision%': '8.1',
-        'use_x11%': 0,
-        'conditions':
-        [
-            ['OS=="linux"',
-            {
-                'use_x11%': 1,
-            }],
-        ],
     },
     'msvs_disabled_warnings':
     [
@@ -29,7 +21,7 @@
 
         # TODO: 4702 doesn't fire on xtree in VS2015 (CTP6). We can remove C4702 after moving to VS2015.
         4702, # Unreachable code. Should only fire on system header xtree.
-        
+
         4718, # Recursive call has no side effects. Fires on xtree too.
     ],
     'conditions':
