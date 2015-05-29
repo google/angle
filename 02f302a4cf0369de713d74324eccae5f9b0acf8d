@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "190b6419_989b757a",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 41
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-29T12:12:32Z",
+      "side": 1,
+      "message": "This function could also calculate the expected output value from the input values, so that the output value doesn\u0027t need to be specified manually.",
+      "revId": "02f302a4cf0369de713d74324eccae5f9b0acf8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59115c41_3a20e1a2",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 41
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-05-29T12:12:32Z",
+      "side": 1,
+      "message": "Some of these tests fail on my laptop on the Intel iGPU due to rounding differences. These rounding differences are allowed by the spec, so we need to add at least a little bit of tolerance to the test, or just test with values that are carefully chosen to not be affected by rounding. Probably the best would be to add 1/255 of tolerance to every one of these \"Normal\" tests. You can use EXPECT_PIXEL_NEAR() in CompareBeforeAfter().",
+      "revId": "02f302a4cf0369de713d74324eccae5f9b0acf8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
