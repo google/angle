@@ -135,6 +135,7 @@ Extensions::Extensions()
       translatedShaderSource(false),
       fboRenderMipmap(false),
       discardFramebuffer(false),
+      debugMarker(false),
       colorBufferFloat(false)
 {
 }
@@ -186,6 +187,7 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_ANGLE_translated_shader_source", translatedShaderSource,   &extensionStrings);
     InsertExtensionString("GL_OES_fbo_render_mipmap",          fboRenderMipmap,          &extensionStrings);
     InsertExtensionString("GL_EXT_discard_framebuffer",        discardFramebuffer,       &extensionStrings);
+    InsertExtensionString("GL_EXT_debug_marker",               debugMarker,              &extensionStrings);
     InsertExtensionString("GL_EXT_color_buffer_float",         colorBufferFloat,         &extensionStrings);
 
     return extensionStrings;

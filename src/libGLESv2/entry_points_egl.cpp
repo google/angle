@@ -1163,6 +1163,9 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         { "glMapBufferRangeEXT", (__eglMustCastToProperFunctionPointerType)gl::MapBufferRangeEXT },
         { "glFlushMappedBufferRangeEXT", (__eglMustCastToProperFunctionPointerType)gl::FlushMappedBufferRangeEXT },
         { "glDiscardFramebufferEXT", (__eglMustCastToProperFunctionPointerType)gl::DiscardFramebufferEXT },
+        { "glInsertEventMarkerEXT", (__eglMustCastToProperFunctionPointerType)gl::InsertEventMarkerEXT },
+        { "glPushGroupMarkerEXT", (__eglMustCastToProperFunctionPointerType)gl::PushGroupMarkerEXT },
+        { "glPopGroupMarkerEXT", (__eglMustCastToProperFunctionPointerType)gl::PopGroupMarkerEXT },
         { "", NULL },
     };
 

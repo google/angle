@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_RENDERERD3D_H_
 #define LIBANGLE_RENDERER_D3D_RENDERERD3D_H_
 
+#include "common/debug.h"
 #include "common/MemoryBuffer.h"
 #include "libANGLE/Data.h"
 #include "libANGLE/renderer/Renderer.h"
@@ -28,6 +29,7 @@ namespace gl
 class InfoLog;
 struct LinkedVarying;
 class Texture;
+class DebugAnnotator;
 }
 
 namespace rx
@@ -183,6 +185,11 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     gl::Error getScratchMemoryBuffer(size_t requestedSize, MemoryBuffer **bufferOut);
 
+    // EXT_debug_marker
+    void insertEventMarker(GLsizei length, const char *marker) override;
+    void pushGroupMarker(GLsizei length, const char *marker) override;
+    void popGroupMarker() override;
+
   protected:
     virtual gl::Error drawArrays(const gl::Data &data, GLenum mode, GLsizei count, GLsizei instances, bool usesPointSize) = 0;
     virtual gl::Error drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
@@ -192,11 +199,16 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     void cleanup();
 
+    virtual void createAnnotator() = 0;
+
     // dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
     static const uintptr_t DirtyPointer;
 
     egl::Display *mDisplay;
     bool mDeviceLost;
+
+    gl::DebugAnnotator *mAnnotator;
+
 
   private:
     //FIXME(jmadill): std::array is currently prohibited by Chromium style guide
@@ -217,6 +229,8 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     size_t getBoundFramebufferTextures(const gl::Data &data, FramebufferTextureArray *outTextureArray);
     gl::Texture *getIncompleteTexture(GLenum type);
+
+    gl::DebugAnnotator *getAnnotator();
 
     gl::TextureMap mIncompleteTextures;
     MemoryBuffer mScratchMemoryBuffer;

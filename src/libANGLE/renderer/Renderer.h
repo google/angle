@@ -68,6 +68,10 @@ class Renderer : public ImplFactory
     virtual std::string getVendorString() const = 0;
     virtual std::string getRendererDescription() const = 0;
 
+    virtual void insertEventMarker(GLsizei length, const char *marker) = 0;
+    virtual void pushGroupMarker(GLsizei length, const char *marker) = 0;
+    virtual void popGroupMarker() = 0;
+
     // Renderer capabilities
     const gl::Caps &getRendererCaps() const;
     const gl::TextureCapsMap &getRendererTextureCaps() const;

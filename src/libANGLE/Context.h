@@ -171,6 +171,10 @@ class Context final : angle::NonCopyable
     Error flush();
     Error finish();
 
+    void insertEventMarker(GLsizei length, const char *marker);
+    void pushGroupMarker(GLsizei length, const char *marker);
+    void popGroupMarker();
+
     void recordError(const Error &error);
 
     GLenum getError();

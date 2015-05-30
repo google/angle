@@ -1258,6 +1258,24 @@ Error Context::finish()
     return mRenderer->finish();
 }
 
+void Context::insertEventMarker(GLsizei length, const char *marker)
+{
+    ASSERT(mRenderer);
+    mRenderer->insertEventMarker(length, marker);
+}
+
+void Context::pushGroupMarker(GLsizei length, const char *marker)
+{
+    ASSERT(mRenderer);
+    mRenderer->pushGroupMarker(length, marker);
+}
+
+void Context::popGroupMarker()
+{
+    ASSERT(mRenderer);
+    mRenderer->popGroupMarker();
+}
+
 void Context::recordError(const Error &error)
 {
     if (error.isError())

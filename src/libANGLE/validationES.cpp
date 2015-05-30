@@ -1942,4 +1942,38 @@ bool ValidateDiscardFramebufferBase(Context *context, GLenum target, GLsizei num
     return true;
 }
 
+bool ValidateInsertEventMarkerEXT(Context *context, GLsizei length, const char *marker)
+{
+    // Note that debug marker calls must not set error state
+
+    if (length < 0)
+    {
+        return false;
+    }
+
+    if (marker == nullptr)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidatePushGroupMarkerEXT(Context *context, GLsizei length, const char *marker)
+{
+    // Note that debug marker calls must not set error state
+
+    if (length < 0)
+    {
+        return false;
+    }
+
+    if (length > 0 && marker == nullptr)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 }

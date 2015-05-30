@@ -9,6 +9,7 @@
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 
 #include "common/MemoryBuffer.h"
+#include "common/debug.h"
 #include "common/utilities.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Framebuffer.h"
@@ -37,7 +38,8 @@ const uintptr_t RendererD3D::DirtyPointer = std::numeric_limits<uintptr_t>::max(
 RendererD3D::RendererD3D(egl::Display *display)
     : mDisplay(display),
       mDeviceLost(false),
-      mScratchMemoryBufferResetCounter(0)
+      mScratchMemoryBufferResetCounter(0),
+      mAnnotator(nullptr)
 {
 }
 
@@ -54,6 +56,12 @@ void RendererD3D::cleanup()
         incompleteTexture.second.set(NULL);
     }
     mIncompleteTextures.clear();
+
+    if (mAnnotator != nullptr)
+    {
+        gl::UninitializeDebugAnnotations();
+        SafeDelete(mAnnotator);
+    }
 }
 
 gl::Error RendererD3D::drawElements(const gl::Data &data,
@@ -615,6 +623,46 @@ gl::Error RendererD3D::getScratchMemoryBuffer(size_t requestedSize, MemoryBuffer
 
     *bufferOut = &mScratchMemoryBuffer;
     return gl::Error(GL_NO_ERROR);
+}
+
+void RendererD3D::insertEventMarker(GLsizei length, const char *marker)
+{
+    std::vector<wchar_t> wcstring (length + 1);
+    size_t convertedChars = 0;
+    errno_t err = mbstowcs_s(&convertedChars, wcstring.data(), length + 1, marker, _TRUNCATE);
+    if (err == 0)
+    {
+        getAnnotator()->setMarker(wcstring.data());
+    }
+}
+
+void RendererD3D::pushGroupMarker(GLsizei length, const char *marker)
+{
+    std::vector<wchar_t> wcstring(length + 1);
+    size_t convertedChars = 0;
+    errno_t err = mbstowcs_s(&convertedChars, wcstring.data(), length + 1, marker, _TRUNCATE);
+    if (err == 0)
+    {
+        getAnnotator()->beginEvent(wcstring.data());
+    }
+}
+
+void RendererD3D::popGroupMarker()
+{
+    getAnnotator()->endEvent();
+}
+
+gl::DebugAnnotator *RendererD3D::getAnnotator()
+{
+    if (mAnnotator == nullptr)
+    {
+        createAnnotator();
+        ASSERT(mAnnotator);
+        gl::InitializeDebugAnnotations(mAnnotator);
+    }
+
+    ASSERT(mAnnotator);
+    return mAnnotator;
 }
 
 }

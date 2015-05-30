@@ -1151,6 +1151,7 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     extensions->discardFramebuffer = false; // TODO: enable this once BUG:497445 is fixed (Chrome WebGL video tests fail with this extension active)
     extensions->translatedShaderSource = true;
     extensions->fboRenderMipmap = false;
+    extensions->debugMarker = true;
 }
 
 }

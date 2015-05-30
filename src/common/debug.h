@@ -47,9 +47,9 @@ class DebugAnnotator : angle::NonCopyable
   public:
     DebugAnnotator() { };
     virtual ~DebugAnnotator() { };
-    virtual void beginEvent(const std::wstring &eventName) = 0;
+    virtual void beginEvent(const wchar_t *eventName) = 0;
     virtual void endEvent() = 0;
-    virtual void setMarker(const std::wstring &markerName) = 0;
+    virtual void setMarker(const wchar_t *markerName) = 0;
     virtual bool getStatus() = 0;
 };
 

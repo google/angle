@@ -216,6 +216,9 @@ struct Extensions
     // GL_EXT_discard_framebuffer
     bool discardFramebuffer;
 
+    // EXT_debug_marker
+    bool debugMarker;
+
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float

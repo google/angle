@@ -1416,4 +1416,19 @@ void GL_APIENTRY glFlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLs
     return gl::FlushMappedBufferRangeEXT(target, offset, length);
 }
 
+void GL_APIENTRY glInsertEventMarkerEXT(GLsizei length, const char *marker)
+{
+    return gl::InsertEventMarkerEXT(length, marker);
+}
+
+void GL_APIENTRY glPushGroupMarkerEXT(GLsizei length, const char *marker)
+{
+    return gl::PushGroupMarkerEXT(length, marker);
+}
+
+void GL_APIENTRY glPopGroupMarkerEXT()
+{
+    return gl::PopGroupMarkerEXT();
+}
+
 }

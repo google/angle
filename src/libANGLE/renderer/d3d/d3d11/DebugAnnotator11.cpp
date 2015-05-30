@@ -35,11 +35,11 @@ DebugAnnotator11::~DebugAnnotator11()
     }
 }
 
-void DebugAnnotator11::beginEvent(const std::wstring &eventName)
+void DebugAnnotator11::beginEvent(const wchar_t *eventName)
 {
     initializeDevice();
 
-    mUserDefinedAnnotation->BeginEvent(eventName.c_str());
+    mUserDefinedAnnotation->BeginEvent(eventName);
 }
 
 void DebugAnnotator11::endEvent()
@@ -49,11 +49,11 @@ void DebugAnnotator11::endEvent()
     mUserDefinedAnnotation->EndEvent();
 }
 
-void DebugAnnotator11::setMarker(const std::wstring &markerName)
+void DebugAnnotator11::setMarker(const wchar_t *markerName)
 {
     initializeDevice();
 
-    mUserDefinedAnnotation->SetMarker(markerName.c_str());
+    mUserDefinedAnnotation->SetMarker(markerName);
 }
 
 bool DebugAnnotator11::getStatus()

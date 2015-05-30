@@ -44,10 +44,10 @@ void output(bool traceInDebugOnly, MessageType messageType, DebugTraceOutputType
           case DebugTraceOutputTypeNone:
             break;
           case DebugTraceOutputTypeBeginEvent:
-            g_debugAnnotator->beginEvent(formattedWideMessage);
+            g_debugAnnotator->beginEvent(formattedWideMessage.c_str());
             break;
           case DebugTraceOutputTypeSetMarker:
-            g_debugAnnotator->setMarker(formattedWideMessage);
+            g_debugAnnotator->setMarker(formattedWideMessage.c_str());
             break;
         }
     }

@@ -230,6 +230,21 @@ TransformFeedbackImpl *RendererGL::createTransformFeedback()
     return new TransformFeedbackGL();
 }
 
+void RendererGL::insertEventMarker(GLsizei, const char *)
+{
+    UNREACHABLE();
+}
+
+void RendererGL::pushGroupMarker(GLsizei, const char *)
+{
+    UNREACHABLE();
+}
+
+void RendererGL::popGroupMarker()
+{
+    UNREACHABLE();
+}
+
 void RendererGL::notifyDeviceLost()
 {
     UNIMPLEMENTED();

@@ -610,6 +610,14 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     // Draw
     deviceContext->Draw(4, 0);
 
+    // Rendering to the swapchain is now complete. Now we can call Present().
+    // Before that, we perform any cleanup on the D3D device. We do this before Present() to make sure the
+    // cleanup is caught under the current eglSwapBuffers() PIX/Graphics Diagnostics call rather than the next one.
+    mRenderer->setShaderResource(gl::SAMPLER_PIXEL, 0, NULL);
+
+    mRenderer->unapplyRenderTargets();
+    mRenderer->markAllStateDirty();
+
 #if ANGLE_VSYNC == ANGLE_DISABLED
     result = mSwapChain->Present(0, 0);
 #else
@@ -646,12 +654,6 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     {
         ERR("Present failed with error code 0x%08X", result);
     }
-
-    // Unbind
-    mRenderer->setShaderResource(gl::SAMPLER_PIXEL, 0, NULL);
-
-    mRenderer->unapplyRenderTargets();
-    mRenderer->markAllStateDirty();
 
     return EGL_SUCCESS;
 }

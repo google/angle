@@ -76,6 +76,11 @@ ANGLE_EXPORT void GL_APIENTRY GetBufferPointervOES(GLenum target, GLenum pname, 
 ANGLE_EXPORT void *GL_APIENTRY MapBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
 ANGLE_EXPORT void GL_APIENTRY FlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length);
 
+// GL_EXT_debug_marker
+ANGLE_EXPORT void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const char *marker);
+ANGLE_EXPORT void GL_APIENTRY PushGroupMarkerEXT(GLsizei length, const char *marker);
+ANGLE_EXPORT void GL_APIENTRY PopGroupMarkerEXT();
+
 }
 
 #endif // LIBGLESV2_ENTRYPOINTGLES20EXT_H_

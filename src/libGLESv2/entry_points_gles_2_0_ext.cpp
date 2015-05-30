@@ -1088,4 +1088,83 @@ void GL_APIENTRY FlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLsiz
     }
 }
 
+void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const char *marker)
+{
+    // Don't run an EVENT() macro on the EXT_debug_marker entry points.
+    // It can interfere with the debug events being set by the caller.
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->getExtensions().debugMarker)
+        {
+            // The debug marker calls should not set error state
+            // However, it seems reasonable to set an error state if the extension is not enabled
+            context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+            return;
+        }
+
+        if (!ValidateInsertEventMarkerEXT(context, length, marker))
+        {
+            return;
+        }
+
+        context->insertEventMarker(length, marker);
+    }
+}
+
+void GL_APIENTRY PushGroupMarkerEXT(GLsizei length, const char *marker)
+{
+    // Don't run an EVENT() macro on the EXT_debug_marker entry points.
+    // It can interfere with the debug events being set by the caller.
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->getExtensions().debugMarker)
+        {
+            // The debug marker calls should not set error state
+            // However, it seems reasonable to set an error state if the extension is not enabled
+            context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+            return;
+        }
+
+        if (!ValidatePushGroupMarkerEXT(context, length, marker))
+        {
+            return;
+        }
+
+        if (marker == nullptr)
+        {
+            // From the EXT_debug_marker spec,
+            // "If <marker> is null then an empty string is pushed on the stack."
+            context->pushGroupMarker(length, "");
+        }
+        else
+        {
+            context->pushGroupMarker(length, marker);
+        }
+    }
+}
+
+void GL_APIENTRY PopGroupMarkerEXT()
+{
+    // Don't run an EVENT() macro on the EXT_debug_marker entry points.
+    // It can interfere with the debug events being set by the caller.
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->getExtensions().debugMarker)
+        {
+            // The debug marker calls should not set error state
+            // However, it seems reasonable to set an error state if the extension is not enabled
+            context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+            return;
+        }
+
+        context->popGroupMarker();
+    }
+}
+
 }

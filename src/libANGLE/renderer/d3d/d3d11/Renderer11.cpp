@@ -193,9 +193,6 @@ Renderer11::Renderer11(egl::Display *display)
       mStateCache(this),
       mDebug(nullptr)
 {
-    // Initialize global annotator
-    gl::InitializeDebugAnnotations(&mAnnotator);
-
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
 
@@ -296,8 +293,6 @@ Renderer11::Renderer11(egl::Display *display)
 Renderer11::~Renderer11()
 {
     release();
-
-    gl::UninitializeDebugAnnotations();
 }
 
 #ifndef __d3d11_1_h__
@@ -3705,4 +3700,10 @@ void Renderer11::setShaderResource(gl::SamplerType shaderType, UINT resourceSlot
         }
     }
 }
+
+void Renderer11::createAnnotator()
+{
+    mAnnotator = new DebugAnnotator11();
+}
+
 }

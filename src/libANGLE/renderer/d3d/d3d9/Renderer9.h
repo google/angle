@@ -233,6 +233,9 @@ class Renderer9 : public RendererD3D
 
     D3DDEVTYPE getD3D9DeviceType() const { return mDeviceType; }
 
+  protected:
+    void createAnnotator() override;
+
   private:
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const override;
     Workarounds generateWorkarounds() const override;
@@ -370,8 +373,6 @@ class Renderer9 : public RendererD3D
         gl::FramebufferAttachment *buffer;
     } mNullColorbufferCache[NUM_NULL_COLORBUFFER_CACHE_ENTRIES];
     UINT mMaxNullColorbufferLRU;
-
-    DebugAnnotator9 mAnnotator;
 };
 
 }
