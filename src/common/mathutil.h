@@ -569,7 +569,6 @@ inline bool IsIntegerCastSafe(BigIntT bigValue)
 #if defined(_MSC_VER)
 
 #define ANGLE_ROTL(x,y) _rotl(x,y)
-#define ANGLE_ROTR16(x,y) _rotr16(x,y)
 
 #else
 
@@ -578,13 +577,7 @@ inline uint32_t RotL(uint32_t x, int8_t r)
     return (x << r) | (x >> (32 - r));
 }
 
-inline uint16_t RotR16(uint16_t x, int8_t r)
-{
-    return (x >> r) | (x << (16 - r));
-}
-
 #define ANGLE_ROTL(x,y) RotL(x,y)
-#define ANGLE_ROTR16(x,y) RotR16(x,y)
 
 #endif // namespace rx
 

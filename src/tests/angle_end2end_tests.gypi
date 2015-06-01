@@ -41,7 +41,6 @@
             '<(angle_path)/src/tests/gl_tests/ReadPixelsTest.cpp',
             '<(angle_path)/src/tests/gl_tests/RendererTest.cpp',
             '<(angle_path)/src/tests/gl_tests/SimpleOperationTest.cpp',
-            '<(angle_path)/src/tests/gl_tests/SixteenBppTextureTest.cpp',
             '<(angle_path)/src/tests/gl_tests/SRGBTextureTest.cpp',
             '<(angle_path)/src/tests/gl_tests/SwizzleTest.cpp',
             '<(angle_path)/src/tests/gl_tests/TextureTest.cpp',
