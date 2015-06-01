@@ -285,7 +285,12 @@ void StateManagerGL::setClearState(const gl::State &state, GLbitfield mask)
     setRasterizerDiscardEnabled(rasterizerState.rasterizerDiscard);
     if (!rasterizerState.rasterizerDiscard)
     {
-        setScissor(state.getScissor());
+        setScissorTestEnabled(state.isScissorTestEnabled());
+        if (state.isScissorTestEnabled())
+        {
+            setScissor(state.getScissor());
+        }
+
         setViewport(state.getViewport());
 
         if ((mask & GL_COLOR_BUFFER_BIT) != 0)
