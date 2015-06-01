@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d54fde2_60999e50",
+        "filename": "src/libANGLE/HandleAllocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:35:26Z",
+      "side": 1,
+      "message": "sorry, but why does this have to change? I should write it out on paper but it seems like it was correct before?",
+      "range": {
+        "startLine": 23,
+        "startChar": 15,
+        "endLine": 23,
+        "endChar": 36
+      },
+      "revId": "5c027c71602abf22e93138403b09de9e47364106",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
