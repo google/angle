@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d54fde2_0ce493a8",
+        "filename": "src/compiler/translator/RemovePow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T13:58:48Z",
+      "side": 1,
+      "message": "can we assert here that the sequence is of length at least (or exactly) 2?",
+      "range": {
+        "startLine": 21,
+        "startChar": 1,
+        "endLine": 22,
+        "endChar": 59
+      },
+      "revId": "59d4cf1ff5b70227d3f075c2809c3a75de782208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
