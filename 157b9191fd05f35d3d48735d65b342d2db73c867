@@ -46,6 +46,30 @@
       "revId": "157b9191fd05f35d3d48735d65b342d2db73c867",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b91fb853_f8801795",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-01T17:13:08Z",
+      "side": 1,
+      "message": "I don\u0027t think you necessarily have to merge the two functions. What troubles me is foldBinary/foldUnary functions seems like the same pattern but the semantics are different, and it\u0027s confusing.\n\nThen there is this fold(), which from the name seems to be something above the foldBinary/foldUniary, which originally it was, but now it\u0027s not.\n\nAs far as the structure/naming among these three functions are more balanced, it will be good enough.\n\nDoes it make sense?",
+      "parentUuid": "7919c071_5c1a712d",
+      "range": {
+        "startLine": 302,
+        "startChar": 20,
+        "endLine": 302,
+        "endChar": 30
+      },
+      "revId": "157b9191fd05f35d3d48735d65b342d2db73c867",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
