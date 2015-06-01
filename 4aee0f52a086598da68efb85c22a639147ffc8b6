@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "d929cc86_9430ccf1",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-01T20:13:47Z",
+      "side": 1,
+      "message": "Also, can you make this pure and implement it for both D3D9 and D3D11? I would prefer that to having a default value here.",
+      "parentUuid": "0d54fde2_40665ada",
+      "range": {
+        "startLine": 186,
+        "startChar": 17,
+        "endLine": 186,
+        "endChar": 56
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d929cc86_d1cd46d7",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 3
@@ -255,6 +279,29 @@
     },
     {
       "key": {
+        "uuid": "0d54fde2_80dcc298",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-01T20:13:47Z",
+      "side": 1,
+      "message": "This is repeated a lot, store the device context locally.",
+      "range": {
+        "startLine": 785,
+        "startChar": 9,
+        "endLine": 785,
+        "endChar": 38
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d54fde2_80768253",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
         "patchSetId": 3
@@ -381,6 +428,30 @@
       "writtenOn": "2015-06-01T19:58:40Z",
       "side": 1,
       "message": "!(NDEBUG)",
+      "range": {
+        "startLine": 1139,
+        "startChar": 4,
+        "endLine": 1139,
+        "endChar": 10
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d929cc86_34a5988c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1139,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-01T20:13:47Z",
+      "side": 1,
+      "message": "or #ifndef NDEBUG",
+      "parentUuid": "0d54fde2_60f6fe5f",
       "range": {
         "startLine": 1139,
         "startChar": 4,
