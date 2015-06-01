@@ -10,7 +10,8 @@
 #include "compiler/translator/ParseContext.h"
 
 ValidateOutputs::ValidateOutputs(TInfoSinkBase& sink, int maxDrawBuffers)
-    : mSink(sink),
+    : TIntermTraverser(true, false, false),
+      mSink(sink),
       mMaxDrawBuffers(maxDrawBuffers),
       mNumErrors(0),
       mHasUnspecifiedOutputLocation(false)

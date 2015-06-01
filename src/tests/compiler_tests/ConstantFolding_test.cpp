@@ -20,12 +20,14 @@ class ConstantFinder : public TIntermTraverser
 {
   public:
     ConstantFinder(const std::vector<T> &constantVector)
-        : mConstantVector(constantVector),
+        : TIntermTraverser(true, false, false),
+          mConstantVector(constantVector),
           mFound(false)
     {}
 
     ConstantFinder(const T &value)
-        : mFound(false)
+        : TIntermTraverser(true, false, false),
+          mFound(false)
     {
         mConstantVector.push_back(value);
     }

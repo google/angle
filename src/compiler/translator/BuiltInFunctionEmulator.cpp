@@ -12,7 +12,8 @@ class BuiltInFunctionEmulator::BuiltInFunctionEmulationMarker : public TIntermTr
 {
   public:
     BuiltInFunctionEmulationMarker(BuiltInFunctionEmulator &emulator)
-        : mEmulator(emulator)
+        : TIntermTraverser(true, false, false),
+          mEmulator(emulator)
     {
     }
 

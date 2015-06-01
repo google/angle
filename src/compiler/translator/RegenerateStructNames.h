@@ -17,7 +17,8 @@ class RegenerateStructNames : public TIntermTraverser
   public:
     RegenerateStructNames(const TSymbolTable &symbolTable,
                           int shaderVersion)
-        : mSymbolTable(symbolTable),
+        : TIntermTraverser(true, false, false),
+          mSymbolTable(symbolTable),
           mShaderVersion(shaderVersion),
           mScopeDepth(0) {}
 

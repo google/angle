@@ -26,7 +26,11 @@ class ValidateConstIndexExpr : public TIntermTraverser
 {
   public:
     ValidateConstIndexExpr(TLoopStack& stack)
-        : mValid(true), mLoopStack(stack) {}
+        : TIntermTraverser(true, false, false),
+          mValid(true),
+          mLoopStack(stack)
+    {
+    }
 
     // Returns true if the parsed node represents a constant index expression.
     bool isValid() const { return mValid; }
@@ -51,7 +55,8 @@ class ValidateConstIndexExpr : public TIntermTraverser
 
 ValidateLimitations::ValidateLimitations(sh::GLenum shaderType,
                                          TInfoSinkBase &sink)
-    : mShaderType(shaderType),
+    : TIntermTraverser(true, false, false),
+      mShaderType(shaderType),
       mSink(sink),
       mNumErrors(0)
 {

@@ -587,8 +587,7 @@ class TIntermTraverser : angle::NonCopyable
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
-    // TODO(zmo): remove default values.
-    TIntermTraverser(bool preVisit = true, bool inVisit = false, bool postVisit = false)
+    TIntermTraverser(bool preVisit, bool inVisit, bool postVisit)
         : preVisit(preVisit),
           inVisit(inVisit),
           postVisit(postVisit),

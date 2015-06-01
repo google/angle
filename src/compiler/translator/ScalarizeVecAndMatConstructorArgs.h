@@ -14,7 +14,8 @@ class ScalarizeVecAndMatConstructorArgs : public TIntermTraverser
   public:
     ScalarizeVecAndMatConstructorArgs(sh::GLenum shaderType,
                                       bool fragmentPrecisionHigh)
-        : mTempVarCount(0),
+        : TIntermTraverser(true, false, false),
+          mTempVarCount(0),
           mShaderType(shaderType),
           mFragmentPrecisionHigh(fragmentPrecisionHigh) {}
 

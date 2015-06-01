@@ -32,6 +32,7 @@ static const int GLSL_VERSION_420 = 420;
 TVersionGLSL::TVersionGLSL(sh::GLenum type,
                            const TPragma &pragma,
                            ShShaderOutput output)
+    : TIntermTraverser(true, false, false)
 {
     if (output == SH_GLSL_130_OUTPUT)
     {

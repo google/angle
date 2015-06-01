@@ -22,7 +22,6 @@ class SeparateExpressionsTraverser : public TIntermTraverser
   public:
     SeparateExpressionsTraverser();
 
-    void traverse(TIntermNode *node);
     bool visitBinary(Visit visit, TIntermBinary *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
 

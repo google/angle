@@ -19,7 +19,8 @@ class NodeSearchTraverser : public TIntermTraverser
 {
   public:
     NodeSearchTraverser()
-        : mFound(false)
+        : TIntermTraverser(true, false, false),
+          mFound(false)
     {}
 
     bool found() const { return mFound; }

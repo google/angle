@@ -20,7 +20,10 @@
 class UnfoldShortCircuitAST : public TIntermTraverser
 {
   public:
-    UnfoldShortCircuitAST() { }
+    UnfoldShortCircuitAST()
+        : TIntermTraverser(true, false, false)
+    {
+    }
 
     virtual bool visitBinary(Visit visit, TIntermBinary *);
 };

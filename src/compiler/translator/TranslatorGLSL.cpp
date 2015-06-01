@@ -21,7 +21,8 @@ class TFragmentOutSearcher : public TIntermTraverser
 {
   public:
     TFragmentOutSearcher()
-        : mUsesGlFragColor(false),
+        : TIntermTraverser(true, false, false),
+          mUsesGlFragColor(false),
           mUsesGlFragData(false)
     {
     }

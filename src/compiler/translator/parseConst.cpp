@@ -15,7 +15,8 @@ class TConstTraverser : public TIntermTraverser
   public:
     TConstTraverser(TConstantUnion *cUnion, bool singleConstParam,
                     TOperator constructType, TInfoSink &sink, TType &t)
-        : error(false),
+        : TIntermTraverser(true, false, false),
+          error(false),
           mIndex(0),
           mUnionArray(cUnion),
           mType(t),

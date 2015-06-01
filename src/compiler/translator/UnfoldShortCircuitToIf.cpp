@@ -21,7 +21,6 @@ class UnfoldShortCircuitTraverser : public TIntermTraverser
   public:
     UnfoldShortCircuitTraverser();
 
-    void traverse(TIntermNode *node);
     bool visitBinary(Visit visit, TIntermBinary *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
     bool visitSelection(Visit visit, TIntermSelection *node) override;

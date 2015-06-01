@@ -27,7 +27,10 @@ class TOutputTraverser : public TIntermTraverser
 {
   public:
     TOutputTraverser(TInfoSinkBase &i)
-        : sink(i) { }
+        : TIntermTraverser(true, false, false),
+          sink(i)
+    {
+    }
     TInfoSinkBase& sink;
 
   protected:

@@ -25,7 +25,8 @@ class ForLoopUnrollMarker : public TIntermTraverser
     };
 
     ForLoopUnrollMarker(UnrollCondition condition)
-        : mUnrollCondition(condition),
+        : TIntermTraverser(true, false, false),
+          mUnrollCondition(condition),
           mSamplerArrayIndexIsFloatLoopIndex(false),
           mVisitSamplerArrayIndexNodeInsideLoop(false)
     {
