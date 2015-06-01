@@ -48,7 +48,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 136
+#define ANGLE_SH_VERSION 137
 
 typedef enum {
   SH_GLES2_SPEC = 0x8B40,
@@ -188,6 +188,10 @@ typedef enum {
   // compilation process. Pruning coupled with SH_LIMIT_CALL_STACK_DEPTH
   // helps avoid bad shaders causing stack overflows.
   SH_DONT_PRUNE_UNUSED_FUNCTIONS = 0x100000,
+
+  // This flag works around a bug in NVIDIA 331 series drivers related
+  // to pow(x, y) where y is a constant vector.
+  SH_REMOVE_POW_WITH_CONSTANT_EXPONENT = 0x200000,
 } ShCompileOptions;
 
 // Defines alternate strategies for implementing array index clamping.

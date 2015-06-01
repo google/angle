@@ -84,6 +84,8 @@
             'compiler/translator/QualifierAlive.h',
             'compiler/translator/RegenerateStructNames.cpp',
             'compiler/translator/RegenerateStructNames.h',
+            'compiler/translator/RemovePow.cpp',
+            'compiler/translator/RemovePow.h',
             'compiler/translator/RenameFunction.h',
             'compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp',
             'compiler/translator/ScalarizeVecAndMatConstructorArgs.h',
