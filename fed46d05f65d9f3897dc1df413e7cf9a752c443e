@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7919c071_e273d85d",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-01T14:34:56Z",
+      "side": 1,
+      "message": "This now checks that all the individual components are found in the AST, but it doesn\u0027t make sure that the whole vector would be found in the AST as such. For example, if the AST has the following two vectors:\n\nvec2(0.0, 1.0)\nvec2(2.0, 3.0)\n\nthis function would return true if you passed in std::vector\u003cfloat\u003e{0.0, 3.0}. This is a problem.\n\nI\u0027d change the ConstantFinder class so that it can search for a TIntermConstantUnion array, supplying the array and its size as parameters to ConstantFinder\u0027s constructor, and then use that in these helper functions.",
+      "revId": "fed46d05f65d9f3897dc1df413e7cf9a752c443e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
