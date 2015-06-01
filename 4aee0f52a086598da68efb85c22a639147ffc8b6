@@ -1,0 +1,395 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d54fde2_008c5204",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "nit: no trailing ;",
+      "range": {
+        "startLine": 186,
+        "startChar": 97,
+        "endLine": 186,
+        "endChar": 98
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d54fde2_40665ada",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "can you add a comment here explaining what\u0027s this about? \u0027uses different format for renderable texture\u0027 is ambiguous. uses for what? different how? if it makes sense, i might use the term \u0027renderable format\u0027 if the internalFormat argument corresponds to that. maybe \u0027usesAlternateRenderTargetFormat\u0027 or something, but this is nitpicky.",
+      "range": {
+        "startLine": 186,
+        "startChar": 17,
+        "endLine": 186,
+        "endChar": 56
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d929cc86_d1cd46d7",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "you don\u0027t refresh the images here. is there any possible situation where the texture storage can be out of sync with the images, for an non-render-target storage? I\u0027m thinking like with the \u0027SetData\u0027 workaround.",
+      "range": {
+        "startLine": 570,
+        "startChar": 15,
+        "endLine": 571,
+        "endChar": 59
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f942104b_f253a662",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "nit: can you sort these",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 33
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d929cc86_31fecae4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "prefix with \u0026",
+      "range": {
+        "startLine": 93,
+        "startChar": 35,
+        "endLine": 93,
+        "endChar": 45
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d54fde2_6048be1f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "this is pretty awkward. can you explain why this is necessary (for conversion)",
+      "range": {
+        "startLine": 133,
+        "startChar": 7,
+        "endLine": 136,
+        "endChar": 41
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d929cc86_919c5ebb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "s/NULL/nullptr",
+      "range": {
+        "startLine": 144,
+        "startChar": 59,
+        "endLine": 144,
+        "endChar": 63
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d54fde2_803da271",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "UNREACHABLE",
+      "range": {
+        "startLine": 164,
+        "startChar": 12,
+        "endLine": 164,
+        "endChar": 26
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d54fde2_202f9636",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "is there any way to combine this code with the above? it looks very similar",
+      "range": {
+        "startLine": 215,
+        "startChar": 12,
+        "endLine": 257,
+        "endChar": 17
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d929cc86_74b7a029",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "also UNREACHABLE",
+      "range": {
+        "startLine": 260,
+        "startChar": 20,
+        "endLine": 260,
+        "endChar": 34
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d929cc86_d4c77484",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 782,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "s/ASSERT(false)/UNREACHABLE()",
+      "range": {
+        "startLine": 782,
+        "startChar": 8,
+        "endLine": 782,
+        "endChar": 22
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d54fde2_80768253",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "add short descriptions to every new Error",
+      "range": {
+        "startLine": 788,
+        "startChar": 25,
+        "endLine": 788,
+        "endChar": 41
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f942104b_f54dd08f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 818,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "more nullptr",
+      "range": {
+        "startLine": 818,
+        "startChar": 69,
+        "endLine": 818,
+        "endChar": 73
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d54fde2_80492244",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "nit: can you sort these",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 25
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f942104b_b5d4e832",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "nit: don\u0027t combine virtual with override",
+      "range": {
+        "startLine": 267,
+        "startChar": 4,
+        "endLine": 267,
+        "endChar": 11
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d929cc86_94e8ccf0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "on previous line",
+      "range": {
+        "startLine": 402,
+        "startChar": 11,
+        "endLine": 402,
+        "endChar": 14
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d54fde2_60f6fe5f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1139,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-01T19:58:40Z",
+      "side": 1,
+      "message": "!(NDEBUG)",
+      "range": {
+        "startLine": 1139,
+        "startChar": 4,
+        "endLine": 1139,
+        "endChar": 10
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
