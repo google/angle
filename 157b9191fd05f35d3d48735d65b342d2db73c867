@@ -22,6 +22,30 @@
       "revId": "157b9191fd05f35d3d48735d65b342d2db73c867",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7919c071_5c1a712d",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-01T07:56:40Z",
+      "side": 1,
+      "message": "I disagree with this. The foldBinary function is very long as it is, and I\u0027d say that making the same function responsible for both calculating the folding result and setting the type of the returned node led into the problems that this patch is trying to address. It\u0027s much simpler if foldBinary is responsible only for calculating the result, and the logic that is common for folding all different binary operations is clearly separated from that. If we want to merge some functions together, I\u0027d rather merge TIntermBinary::fold() into TIntermediate::addBinaryMath().\n\nMy intent was to do similar fixes also for the other folding functions after this patch, which would make the code more consistent again.",
+      "parentUuid": "ed56c9ec_3a298108",
+      "range": {
+        "startLine": 302,
+        "startChar": 20,
+        "endLine": 302,
+        "endChar": 30
+      },
+      "revId": "157b9191fd05f35d3d48735d65b342d2db73c867",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
