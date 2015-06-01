@@ -55,9 +55,15 @@ void SplitStringAlongWhitespace(const std::string &input,
 
 bool HexStringToUInt(const std::string &input, unsigned int *uintOut)
 {
+    unsigned int offset = 0;
+
+    if (input.size() >= 2 && input[0] == '0' && input[1] == 'x')
+    {
+        offset = 2u;
+    }
+
     // Simple validity check
-    if (input[0] != '0' || input[1] != 'x' ||
-        input.find_first_not_of("0123456789ABCDEFabcdef", 2) != std::string::npos)
+    if (input.find_first_not_of("0123456789ABCDEFabcdef", offset) != std::string::npos)
     {
         return false;
     }
@@ -70,13 +76,16 @@ bool HexStringToUInt(const std::string &input, unsigned int *uintOut)
 bool ReadFileToString(const std::string &path, std::string *stringOut)
 {
     std::ifstream inFile(path.c_str());
-    std::string str;
+    if (inFile.fail())
+    {
+        return false;
+    }
 
     inFile.seekg(0, std::ios::end);
-    str.reserve(static_cast<std::string::size_type>(inFile.tellg()));
+    stringOut->reserve(static_cast<std::string::size_type>(inFile.tellg()));
     inFile.seekg(0, std::ios::beg);
 
-    str.assign(std::istreambuf_iterator<char>(inFile), std::istreambuf_iterator<char>());
+    stringOut->assign(std::istreambuf_iterator<char>(inFile), std::istreambuf_iterator<char>());
     return !inFile.fail();
 }
 

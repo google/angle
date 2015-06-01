@@ -49,8 +49,12 @@ TEST(StringUtilsTest, SplitStringAlongWhitespaceBasic)
 // Basic functionality tests for HexStringToUInt
 TEST(StringUtilsTest, HexStringToUIntBasic)
 {
-    std::string testStringA("0xBADF00D");
     unsigned int uintValue;
+
+    std::string emptyString;
+    ASSERT_FALSE(HexStringToUInt(emptyString, &uintValue));
+
+    std::string testStringA("0xBADF00D");
     ASSERT_TRUE(HexStringToUInt(testStringA, &uintValue));
     EXPECT_EQ(0xBADF00Du, uintValue);
 
@@ -58,7 +62,11 @@ TEST(StringUtilsTest, HexStringToUIntBasic)
     EXPECT_FALSE(HexStringToUInt(testStringB, &uintValue));
 
     std::string testStringC("BADF00D");
-    EXPECT_FALSE(HexStringToUInt(testStringC, &uintValue));
+    EXPECT_TRUE(HexStringToUInt(testStringC, &uintValue));
+    EXPECT_EQ(0xBADF00Du, uintValue);
+
+    std::string testStringD("0x BADF00D");
+    EXPECT_FALSE(HexStringToUInt(testStringD, &uintValue));
 }
 
 // Note: ReadFileToString is harder to test
