@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9a97860_25ba2e2f",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-02T10:24:38Z",
+      "side": 1,
+      "message": "This still has a bug. Let\u0027s think about a situation where the AST has two TIntermConstantUnion nodes. First one of them matches what\u0027s being looked for, so mFound gets set to true. However, mFound would get set back to false once the traverser processes another TIntermConstantUnion node which doesn\u0027t match, and the traverser can report a wrong result.\n\nYou could fix this by early-returning from visitConstantUnion after mFound has been set to true.\n\nI don\u0027t think that two different finder classes are needed either. The non-vector version is just a special case of the vector version, so you can remove that.",
+      "revId": "6c5e6015ba7fc7977f16b06086a350cf67d1eedc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
