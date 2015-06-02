@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59d23ce8_4735ec63",
+        "filename": "src/tests/compiler_tests/RemovePow_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-02T17:11:05Z",
+      "side": 1,
+      "message": "As beautifully written as this test is, I feel bad to say this, but to me, it\u0027s clearer to just test the translated source output, and see if the exp pattern matches (not the entire translation), I feel that\u0027s a good enough and much easier to understand test.",
+      "range": {
+        "startLine": 133,
+        "startChar": 28,
+        "endLine": 133,
+        "endChar": 35
+      },
+      "revId": "1122fdca2e640123ee3347cb5d16692f3a72ae9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
