@@ -22,6 +22,30 @@
       "revId": "1122fdca2e640123ee3347cb5d16692f3a72ae9a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9a97860_0ed70fec",
+        "filename": "src/tests/compiler_tests/RemovePow_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-02T17:59:56Z",
+      "side": 1,
+      "message": "Adequately testing the nested pow case just by looking at the translated source is quite difficult, that\u0027s why I implemented this using NodeSearch. Then it made sense to use NodeSearch for just looking up pow as well, so that the same test class works for that too. I\u0027d rather not go back and implement these two tests in different ways, or remove the nested pow test since that\u0027s stressing the more complicated part of the code being tested. Maybe we could just simplify this a bit instead by relying less on templates, for example?",
+      "parentUuid": "59d23ce8_4735ec63",
+      "range": {
+        "startLine": 133,
+        "startChar": 28,
+        "endLine": 133,
+        "endChar": 35
+      },
+      "revId": "1122fdca2e640123ee3347cb5d16692f3a72ae9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
