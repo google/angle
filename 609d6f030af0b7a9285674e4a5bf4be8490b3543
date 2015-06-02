@@ -1,0 +1,176 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b97b38ac_c48c880a",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-02T17:30:07Z",
+      "side": 1,
+      "message": "A better name would be VectorNorm or VectorNorm2.\n\nVectorLength is easily confused as the number of elements in a vector.",
+      "range": {
+        "startLine": 171,
+        "startChar": 6,
+        "endLine": 171,
+        "endChar": 18
+      },
+      "revId": "609d6f030af0b7a9285674e4a5bf4be8490b3543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b97b38ac_645014dc",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-02T17:30:07Z",
+      "side": 1,
+      "message": "nit: Google coding style asks for ++i, not i++.\n\nhttp://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Preincrement_and_Predecrement\n\nAt least new code should follow the rules.",
+      "revId": "609d6f030af0b7a9285674e4a5bf4be8490b3543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39d588cf_ddff6ea1",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-02T17:30:07Z",
+      "side": 1,
+      "message": "nit: same here, ++i",
+      "revId": "609d6f030af0b7a9285674e4a5bf4be8490b3543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b97b38ac_641574fb",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1191,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-02T17:30:07Z",
+      "side": 1,
+      "message": "Now you expand to if else if else if, it looks like a switch statement is better.",
+      "range": {
+        "startLine": 1191,
+        "startChar": 15,
+        "endLine": 1191,
+        "endChar": 17
+      },
+      "revId": "609d6f030af0b7a9285674e4a5bf4be8490b3543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39d588cf_1d109655",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1961,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-02T17:30:07Z",
+      "side": 1,
+      "message": "nit: same here, ++i",
+      "range": {
+        "startLine": 1961,
+        "startChar": 59,
+        "endLine": 1961,
+        "endChar": 62
+      },
+      "revId": "609d6f030af0b7a9285674e4a5bf4be8490b3543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39d588cf_1dbe56b1",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2160,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-02T17:30:07Z",
+      "side": 1,
+      "message": "nit: same here, ++i",
+      "range": {
+        "startLine": 2160,
+        "startChar": 59,
+        "endLine": 2160,
+        "endChar": 62
+      },
+      "revId": "609d6f030af0b7a9285674e4a5bf4be8490b3543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39d588cf_7df44284",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2187,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-02T17:30:07Z",
+      "side": 1,
+      "message": "nit: same here, ++i",
+      "range": {
+        "startLine": 2187,
+        "startChar": 59,
+        "endLine": 2187,
+        "endChar": 62
+      },
+      "revId": "609d6f030af0b7a9285674e4a5bf4be8490b3543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59d23ce8_f94da88f",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-02T17:30:07Z",
+      "side": 1,
+      "message": "nit: same here, ++i",
+      "range": {
+        "startLine": 37,
+        "startChar": 60,
+        "endLine": 37,
+        "endChar": 63
+      },
+      "revId": "609d6f030af0b7a9285674e4a5bf4be8490b3543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
