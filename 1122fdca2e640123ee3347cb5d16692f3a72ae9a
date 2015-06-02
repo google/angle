@@ -46,6 +46,30 @@
       "revId": "1122fdca2e640123ee3347cb5d16692f3a72ae9a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39d588cf_f08b79a1",
+        "filename": "src/tests/compiler_tests/RemovePow_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-02T18:08:02Z",
+      "side": 1,
+      "message": "Then maybe a comment in IsPowWorkaround, indicating what it tries to verify?",
+      "parentUuid": "b9a97860_0ed70fec",
+      "range": {
+        "startLine": 133,
+        "startChar": 28,
+        "endLine": 133,
+        "endChar": 35
+      },
+      "revId": "1122fdca2e640123ee3347cb5d16692f3a72ae9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
