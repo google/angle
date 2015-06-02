@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59d23ce8_aceb5fec",
+        "filename": "src/tests/deqp_support/tcuANGLEWin32NativeDisplayFactory.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-02T14:22:14Z",
+      "side": 1,
+      "message": "Use windowDC here instead of querying the OSWindow again. It makes it clearer that we\u0027re releasing this handle instead of the OSWindow\u0027s. (below too)",
+      "range": {
+        "startLine": 371,
+        "startChar": 18,
+        "endLine": 371,
+        "endChar": 44
+      },
+      "revId": "40b56e8b48e12590df7bc5c5d5bfbf920991f010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59d23ce8_8ce3fb18",
+        "filename": "src/tests/deqp_support/tcuANGLEWin32NativeDisplayFactory.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-02T14:22:14Z",
+      "side": 1,
+      "message": "nit:indentation",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 6
+      },
+      "revId": "40b56e8b48e12590df7bc5c5d5bfbf920991f010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
