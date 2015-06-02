@@ -69,7 +69,7 @@ IndexDataManager::~IndexDataManager()
     SafeDelete(mStreamingBufferInt);
 }
 
-gl::Error IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer *buffer, const GLvoid *indices, TranslatedIndexData *translated)
+gl::Error IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer *buffer, const GLvoid *indices, TranslatedIndexData *translated, SourceIndexData *sourceData)
 {
     const gl::Type &typeInfo = gl::GetTypeInfo(type);
 
@@ -222,7 +222,13 @@ gl::Error IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buf
     translated->startIndex = (streamOffset >> destTypeInfo.bytesShift);
     translated->startOffset = streamOffset;
     translated->indexType = destinationIndexType;
-
+    if (sourceData)
+    {
+        // Update pretranslated source index data
+        sourceData->srcIndices = indices;
+        sourceData->srcIndexType = type;
+        sourceData->srcCount = count;
+    }
     if (storage)
     {
         storage->promoteStaticUsage(count << typeInfo.bytesShift);

@@ -27,6 +27,8 @@ class Program;
 namespace rx
 {
 struct TranslatedAttribute;
+struct TranslatedIndexData;
+struct SourceIndexData;
 
 class InputLayoutCache : angle::NonCopyable
 {
@@ -39,7 +41,7 @@ class InputLayoutCache : angle::NonCopyable
     void markDirty();
 
     gl::Error applyVertexBuffers(const std::vector<TranslatedAttribute> &attributes,
-                                 GLenum mode, gl::Program *program);
+                                 GLenum mode, gl::Program *program, SourceIndexData *sourceInfo);
 
   private:
     struct InputLayoutElement
