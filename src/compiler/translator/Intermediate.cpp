@@ -120,10 +120,6 @@ TIntermTyped *TIntermediate::addIndex(
 TIntermTyped *TIntermediate::addUnaryMath(
     TOperator op, TIntermTyped *child, const TSourceLoc &line, const TType *funcReturnType)
 {
-    TIntermConstantUnion *childTempConstant = 0;
-    if (child->getAsConstantUnion())
-        childTempConstant = child->getAsConstantUnion();
-
     //
     // Make a new node for the operator.
     //
@@ -132,13 +128,9 @@ TIntermTyped *TIntermediate::addUnaryMath(
     node->setOperand(child);
     node->promote(funcReturnType);
 
-    if (childTempConstant)
-    {
-        TIntermTyped *newChild = childTempConstant->foldUnary(op, mInfoSink);
-
-        if (newChild)
-            return newChild;
-    }
+    TIntermTyped *foldedNode = node->fold(mInfoSink);
+    if (foldedNode)
+        return foldedNode;
 
     return node;
 }

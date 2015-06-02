@@ -300,7 +300,7 @@ class TIntermConstantUnion : public TIntermTyped
     virtual bool replaceChildNode(TIntermNode *, TIntermNode *) { return false; }
 
     TConstantUnion *foldBinary(TOperator op, TIntermConstantUnion *rightNode, TInfoSink &infoSink);
-    TIntermTyped *foldUnary(TOperator op, TInfoSink &infoSink);
+    TConstantUnion *foldUnary(TOperator op, TInfoSink &infoSink);
 
     static TIntermTyped *FoldAggregateBuiltIn(TOperator op, TIntermAggregate *aggregate, TInfoSink &infoSink);
 
@@ -404,6 +404,7 @@ class TIntermUnary : public TIntermOperator
     void setOperand(TIntermTyped *operand) { mOperand = operand; }
     TIntermTyped *getOperand() { return mOperand; }
     void promote(const TType *funcReturnType);
+    TIntermTyped *fold(TInfoSink &infoSink);
 
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
