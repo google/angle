@@ -16,6 +16,24 @@
       "revId": "6c5e6015ba7fc7977f16b06086a350cf67d1eedc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19dc44fc_f3e4eace",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-02T11:43:47Z",
+      "side": 1,
+      "message": "Done.\nI now have only one constant finder.\nEarly returning couldn\u0027t have actually worked in all cases, So used another boolean local variable now to solve this problem.",
+      "parentUuid": "b9a97860_25ba2e2f",
+      "revId": "6c5e6015ba7fc7977f16b06086a350cf67d1eedc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
