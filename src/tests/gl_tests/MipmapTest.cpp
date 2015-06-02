@@ -94,6 +94,9 @@ class MipmapTest : public ANGLETest
         m2DPositionAttributePosition = glGetAttribLocation(m2DProgram, "aPosition");
         m2DTexCoordAttributePosition = glGetAttribLocation(m2DProgram, "aTexCoord");
 
+        mCubeTextureUniformPosition = glGetUniformLocation(mCubeProgram, "uTexture");
+        mCubePositionAttributePosition = glGetAttribLocation(mCubeProgram, "aPosition");
+
         mLevelZeroBlueInitData = createRGBInitData(getWindowWidth(), getWindowHeight(), 0, 0, 255); // Blue
         mLevelZeroWhiteInitData = createRGBInitData(getWindowWidth(), getWindowHeight(), 255, 255, 255); // White
         mLevelOneInitData = createRGBInitData((getWindowWidth() / 2), (getWindowHeight() / 2), 0, 255, 0);   // Green
@@ -209,6 +212,9 @@ class MipmapTest : public ANGLETest
     GLint m2DTextureUniformPosition;
     GLint m2DPositionAttributePosition;
     GLint m2DTexCoordAttributePosition;
+
+    GLint mCubeTextureUniformPosition;
+    GLint mCubePositionAttributePosition;
 
     GLubyte* mLevelZeroBlueInitData;
     GLubyte* mLevelZeroWhiteInitData;
@@ -645,9 +651,9 @@ TEST_P(MipmapTest, TextureCubeGeneralLevelZero)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, getWindowWidth(), getWindowHeight());
     glUseProgram(mCubeProgram);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertexLocations);
-    glEnableVertexAttribArray(0);
-    glUniform1i(0, 0);
+    glVertexAttribPointer(mCubePositionAttributePosition, 3, GL_FLOAT, GL_FALSE, 0, vertexLocations);
+    glEnableVertexAttribArray(mCubePositionAttributePosition);
+    glUniform1i(mCubeTextureUniformPosition, 0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, mOffscreenTextureCube);
 
@@ -719,9 +725,9 @@ TEST_P(MipmapTest, TextureCubeRenderToLevelZero)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, getWindowWidth(), getWindowHeight());
     glUseProgram(mCubeProgram);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertexLocations);
-    glEnableVertexAttribArray(0);
-    glUniform1i(0, 0);
+    glVertexAttribPointer(mCubePositionAttributePosition, 3, GL_FLOAT, GL_FALSE, 0, vertexLocations);
+    glEnableVertexAttribArray(mCubePositionAttributePosition);
+    glUniform1i(mCubeTextureUniformPosition, 0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, mOffscreenTextureCube);
 
