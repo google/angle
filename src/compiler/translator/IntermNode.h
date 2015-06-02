@@ -302,7 +302,7 @@ class TIntermConstantUnion : public TIntermTyped
     TConstantUnion *foldBinary(TOperator op, TIntermConstantUnion *rightNode, TInfoSink &infoSink);
     TConstantUnion *foldUnary(TOperator op, TInfoSink &infoSink);
 
-    static TIntermTyped *FoldAggregateBuiltIn(TOperator op, TIntermAggregate *aggregate, TInfoSink &infoSink);
+    static TConstantUnion *FoldAggregateBuiltIn(TIntermAggregate *aggregate, TInfoSink &infoSink);
 
   protected:
     TConstantUnion *mUnionArrayPointer;
@@ -443,6 +443,7 @@ class TIntermAggregate : public TIntermOperator
     bool insertChildNodes(TIntermSequence::size_type position, TIntermSequence insertions);
     // Conservatively assume function calls and other aggregate operators have side-effects
     virtual bool hasSideEffects() const { return true; }
+    TIntermTyped *fold(TInfoSink &infoSink);
 
     TIntermSequence *getSequence() { return &mSequence; }
 

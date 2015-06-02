@@ -441,9 +441,9 @@ bool TIntermediate::postProcess(TIntermNode *root)
     return true;
 }
 
-TIntermTyped *TIntermediate::foldAggregateBuiltIn(TOperator op, TIntermAggregate *aggregate)
+TIntermTyped *TIntermediate::foldAggregateBuiltIn(TIntermAggregate *aggregate)
 {
-    switch (op)
+    switch (aggregate->getOp())
     {
       case EOpAtan:
       case EOpPow:
@@ -466,7 +466,7 @@ TIntermTyped *TIntermediate::foldAggregateBuiltIn(TOperator op, TIntermAggregate
       case EOpFaceForward:
       case EOpReflect:
       case EOpRefract:
-        return TIntermConstantUnion::FoldAggregateBuiltIn(op, aggregate, mInfoSink);
+        return aggregate->fold(mInfoSink);
       default:
         // Constant folding not supported for the built-in.
         return nullptr;
