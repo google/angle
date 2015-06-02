@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9a97860_28dc430d",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-02T12:59:14Z",
+      "side": 1,
+      "message": "getObjectSize() might be more fitting here, so that this function could also be used for matrices.",
+      "range": {
+        "startLine": 34,
+        "startChar": 54,
+        "endLine": 34,
+        "endChar": 68
+      },
+      "revId": "12c4481d4d45bf23e273c0dccceec65b8118b214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9ae2c65_2978c96c",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-02T12:59:14Z",
+      "side": 1,
+      "message": "You should check that the 1.0, 1.0, 1.0 vector is not found here instead.",
+      "revId": "12c4481d4d45bf23e273c0dccceec65b8118b214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99a8345d_27dc740d",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-02T12:59:14Z",
+      "side": 1,
+      "message": "This should also check for a vector.",
+      "revId": "12c4481d4d45bf23e273c0dccceec65b8118b214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9ae2c65_89669dcb",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-02T12:59:14Z",
+      "side": 1,
+      "message": "Do you actually need this template parameter here, same as in the other function calls?",
+      "range": {
+        "startLine": 212,
+        "startChar": 40,
+        "endLine": 212,
+        "endChar": 47
+      },
+      "revId": "12c4481d4d45bf23e273c0dccceec65b8118b214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
