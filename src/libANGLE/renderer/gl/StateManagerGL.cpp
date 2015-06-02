@@ -570,7 +570,7 @@ void StateManagerGL::setBlendEquations(GLenum blendEquationRGB, GLenum blendEqua
     if (mBlendEquationRGB != blendEquationRGB || mBlendEquationAlpha != blendEquationAlpha)
     {
         mBlendEquationRGB = blendEquationRGB;
-        mBlendEquationAlpha = mDestBlendAlpha;
+        mBlendEquationAlpha = blendEquationAlpha;
 
         mFunctions->blendEquationSeparate(mBlendEquationRGB, mBlendEquationAlpha);
     }
