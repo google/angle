@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d9ae2c65_ac4a87a2",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-02T18:03:17Z",
+      "side": 1,
+      "message": "In GLSL the function is called length, so I\u0027d prefer something with \"length\" in here. Maybe \"VectorGeometricLength\"?",
+      "parentUuid": "b97b38ac_c48c880a",
+      "range": {
+        "startLine": 171,
+        "startChar": 6,
+        "endLine": 171,
+        "endChar": 18
+      },
+      "revId": "609d6f030af0b7a9285674e4a5bf4be8490b3543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b97b38ac_645014dc",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 11
