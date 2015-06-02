@@ -13,6 +13,7 @@
         'MalformedShader_test.cpp',
         'NV_draw_buffers_test.cpp',
         'PruneUnusedFunctions_test.cpp',
+        'RemovePow_test.cpp',
         'ShaderExtension_test.cpp',
         'ShaderVariable_test.cpp',
         'TypeTracking_test.cpp',

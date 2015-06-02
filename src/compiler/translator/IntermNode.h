@@ -321,6 +321,7 @@ class TIntermOperator : public TIntermTyped
     void setOp(TOperator op) { mOp = op; }
 
     bool isAssignment() const;
+    bool isMultiplication() const;
     bool isConstructor() const;
 
     virtual bool hasSideEffects() const { return isAssignment(); }

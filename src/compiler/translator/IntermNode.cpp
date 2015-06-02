@@ -364,6 +364,22 @@ bool TIntermOperator::isAssignment() const
     }
 }
 
+bool TIntermOperator::isMultiplication() const
+{
+    switch (mOp)
+    {
+      case EOpMul:
+      case EOpMatrixTimesMatrix:
+      case EOpMatrixTimesVector:
+      case EOpMatrixTimesScalar:
+      case EOpVectorTimesMatrix:
+      case EOpVectorTimesScalar:
+        return true;
+      default:
+        return false;
+    }
+}
+
 //
 // returns true if the operator is for one of the constructors
 //

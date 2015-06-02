@@ -37,6 +37,7 @@
             '<(angle_path)/src/tests/compiler_tests/MalformedShader_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/NV_draw_buffers_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/PruneUnusedFunctions_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/RemovePow_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ShaderExtension_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ShaderVariable_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/TypeTracking_test.cpp',
