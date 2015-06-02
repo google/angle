@@ -859,6 +859,24 @@ void FunctionsGL::initialize()
         AssignGLEntryPoint(loadProcAddress("glTexSubImage2D"), &texSubImage2D);
 
         // Extensions
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glIsRenderbufferEXT"), &isRenderbuffer);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glBindRenderbufferEXT"), &bindRenderbuffer);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glDeleteRenderbuffersEXT"), &deleteRenderbuffers);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGenRenderbuffersEXT"), &genRenderbuffers);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glRenderbufferStorageEXT"), &renderbufferStorage);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGetRenderbufferParameterivEXT"), &getRenderbufferParameteriv);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glIsFramebufferEXT"), &isFramebuffer);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glBindFramebufferEXT"), &bindFramebuffer);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glDeleteFramebuffersEXT"), &deleteFramebuffers);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGenFramebuffersEXT"), &genFramebuffers);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glCheckFramebufferStatusEXT"), &checkFramebufferStatus);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glFramebufferTexture1DEXT"), &framebufferTexture1D);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glFramebufferTexture2DEXT"), &framebufferTexture2D);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glFramebufferTexture3DEXT"), &framebufferTexture3D);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glFramebufferRenderbufferEXT"), &framebufferRenderbuffer);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGetFramebufferAttachmentParameterivEXT"), &getFramebufferAttachmentParameteriv);
+        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGenerateMipmapEXT"), &generateMipmap);
+
         AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_blit", loadProcAddress("glBlitFramebufferEXT"), &blitFramebuffer);
 
         AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glDebugMessageControl"), &debugMessageControl);
@@ -1058,6 +1076,12 @@ void FunctionsGL::initialize()
         AssignGLEntryPoint(loadProcAddress("glUniformMatrix3x4fv"), &uniformMatrix3x4fv);
         AssignGLEntryPoint(loadProcAddress("glUniformMatrix4x2fv"), &uniformMatrix4x2fv);
         AssignGLEntryPoint(loadProcAddress("glUniformMatrix4x3fv"), &uniformMatrix4x3fv);
+
+        // Extensions
+        AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_array_object", loadProcAddress("glBindVertexArray"), &bindVertexArray);
+        AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_array_object", loadProcAddress("glDeleteVertexArrays"), &deleteVertexArrays);
+        AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_array_object", loadProcAddress("glGenVertexArrays"), &genVertexArrays);
+        AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_array_object", loadProcAddress("glIsVertexArray"), &isVertexArray);
     }
 
     // 3.0
