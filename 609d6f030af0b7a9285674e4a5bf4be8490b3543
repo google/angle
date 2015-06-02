@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "59d23ce8_fc7b569f",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-02T18:05:33Z",
+      "side": 1,
+      "message": "Ah, I didn\u0027t realize this.  Then the function name is fine as is.",
+      "parentUuid": "d9ae2c65_ac4a87a2",
+      "range": {
+        "startLine": 171,
+        "startChar": 6,
+        "endLine": 171,
+        "endChar": 18
+      },
+      "revId": "609d6f030af0b7a9285674e4a5bf4be8490b3543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b97b38ac_645014dc",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 11
@@ -78,6 +102,24 @@
       "side": 1,
       "message": "I understand pre-increment is better in most of the cases, but shouldn\u0027t really matter for scalar types and that\u0027s the reason I kept it that way.\n\nHere is the line from the link you mentioned:\n\"For simple scalar (non-object) values there is no reason to prefer one form and we allow either.\"\n\nLet me know if you still think pre-increment is better here.",
       "parentUuid": "b97b38ac_645014dc",
+      "revId": "609d6f030af0b7a9285674e4a5bf4be8490b3543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59d23ce8_dc7212c1",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-02T18:05:33Z",
+      "side": 1,
+      "message": "I missed that park.  Then i++ is OK.",
+      "parentUuid": "d9c54c25_148cfc8b",
       "revId": "609d6f030af0b7a9285674e4a5bf4be8490b3543",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
