@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39d588cf_8b7e81db",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-02T14:35:35Z",
+      "side": 1,
+      "message": "nit:quotes instead of anglebrackets",
+      "range": {
+        "startLine": 13,
+        "startChar": 9,
+        "endLine": 13,
+        "endChar": 25
+      },
+      "revId": "7b2222bd91f756ef41e3a3755e3722a0496a466b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59d23ce8_4c399300",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-02T14:35:35Z",
+      "side": 1,
+      "message": "Instead of asserting on all the results, can this return a bool?\n\nWe can assert in the NativeWindow class in DEQP.",
+      "range": {
+        "startLine": 490,
+        "startChar": 0,
+        "endLine": 490,
+        "endChar": 4
+      },
+      "revId": "7b2222bd91f756ef41e3a3755e3722a0496a466b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b97b38ac_c96d81f9",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-02T14:35:35Z",
+      "side": 1,
+      "message": "Please no tadpole operators! (http://blogs.msdn.com/b/oldnewthing/archive/2015/05/25/10616865.aspx)\n\n\"2\" will suffice!",
+      "range": {
+        "startLine": 517,
+        "startChar": 60,
+        "endLine": 517,
+        "endChar": 64
+      },
+      "revId": "7b2222bd91f756ef41e3a3755e3722a0496a466b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59d23ce8_6c533741",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-02T14:35:35Z",
+      "side": 1,
+      "message": "nit: reinterpret_cast",
+      "range": {
+        "startLine": 517,
+        "startChar": 44,
+        "endLine": 517,
+        "endChar": 53
+      },
+      "revId": "7b2222bd91f756ef41e3a3755e3722a0496a466b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b97b38ac_693a2dfb",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-02T14:35:35Z",
+      "side": 1,
+      "message": "nit: static/reinterpret_cast",
+      "range": {
+        "startLine": 540,
+        "startChar": 78,
+        "endLine": 540,
+        "endChar": 91
+      },
+      "revId": "7b2222bd91f756ef41e3a3755e3722a0496a466b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
