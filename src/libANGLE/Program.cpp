@@ -831,8 +831,9 @@ GLint Program::getActiveUniformi(GLuint index, GLenum pname) const
 
 bool Program::isValidUniformLocation(GLint location) const
 {
-    ASSERT(rx::IsIntegerCastSafe<GLint>(mProgram->getUniformIndices().size()));
-    return (location >= 0 && location < static_cast<GLint>(mProgram->getUniformIndices().size()));
+    const auto &uniformIndices = mProgram->getUniformIndices();
+    ASSERT(rx::IsIntegerCastSafe<GLint>(uniformIndices.size()));
+    return (location >= 0 && uniformIndices.find(location) != uniformIndices.end());
 }
 
 LinkedUniform *Program::getUniformByLocation(GLint location) const

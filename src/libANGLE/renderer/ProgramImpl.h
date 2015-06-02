@@ -101,14 +101,14 @@ class ProgramImpl : angle::NonCopyable
                                             unsigned int registerIndex, const gl::Caps &caps) = 0;
 
     const std::vector<gl::LinkedUniform*> &getUniforms() const { return mUniforms; }
-    const std::vector<gl::VariableLocation> &getUniformIndices() const { return mUniformIndex; }
+    const std::map<GLuint, gl::VariableLocation> &getUniformIndices() const { return mUniformIndex; }
     const std::vector<gl::UniformBlock*> &getUniformBlocks() const { return mUniformBlocks; }
     const std::vector<gl::LinkedVarying> &getTransformFeedbackLinkedVaryings() const { return mTransformFeedbackLinkedVaryings; }
     const std::vector<sh::Attribute> getShaderAttributes() { return mShaderAttributes; }
     const SemanticIndexArray &getSemanticIndexes() const { return mSemanticIndex; }
 
     std::vector<gl::LinkedUniform*> &getUniforms() { return mUniforms; }
-    std::vector<gl::VariableLocation> &getUniformIndices() { return mUniformIndex; }
+    std::map<GLuint, gl::VariableLocation> &getUniformIndices() { return mUniformIndex; }
     std::vector<gl::UniformBlock*> &getUniformBlocks() { return mUniformBlocks; }
     std::vector<gl::LinkedVarying> &getTransformFeedbackLinkedVaryings() { return mTransformFeedbackLinkedVaryings; }
     SemanticIndexArray &getSemanticIndexes() { return mSemanticIndex; }
@@ -128,7 +128,10 @@ class ProgramImpl : angle::NonCopyable
 
   protected:
     std::vector<gl::LinkedUniform*> mUniforms;
-    std::vector<gl::VariableLocation> mUniformIndex;
+
+    // TODO: use a hash map
+    std::map<GLuint, gl::VariableLocation> mUniformIndex;
+
     std::vector<gl::UniformBlock*> mUniformBlocks;
     std::vector<gl::LinkedVarying> mTransformFeedbackLinkedVaryings;
 

@@ -529,12 +529,17 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
-    mUniformIndex.resize(uniformIndexCount);
     for (unsigned int uniformIndexIndex = 0; uniformIndexIndex < uniformIndexCount; uniformIndexIndex++)
     {
-        stream->readString(&mUniformIndex[uniformIndexIndex].name);
-        stream->readInt(&mUniformIndex[uniformIndexIndex].element);
-        stream->readInt(&mUniformIndex[uniformIndexIndex].index);
+        GLuint location;
+        stream->readInt(&location);
+
+        gl::VariableLocation variable;
+        stream->readString(&variable.name);
+        stream->readInt(&variable.element);
+        stream->readInt(&variable.index);
+
+        mUniformIndex[location] = variable;
     }
 
     unsigned int uniformBlockCount = stream->readInt<unsigned int>();
@@ -756,11 +761,15 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
     }
 
     stream->writeInt(mUniformIndex.size());
-    for (size_t i = 0; i < mUniformIndex.size(); ++i)
+    for (const auto &uniform : mUniformIndex)
     {
-        stream->writeString(mUniformIndex[i].name);
-        stream->writeInt(mUniformIndex[i].element);
-        stream->writeInt(mUniformIndex[i].index);
+        GLuint location = uniform.first;
+        stream->writeInt(location);
+
+        const gl::VariableLocation &variable = uniform.second;
+        stream->writeString(variable.name);
+        stream->writeInt(variable.element);
+        stream->writeInt(variable.index);
     }
 
     stream->writeInt(mUniformBlocks.size());
@@ -1974,7 +1983,8 @@ bool ProgramD3D::indexUniforms(gl::InfoLog &infoLog, const gl::Caps &caps)
         {
             if (!uniform.isBuiltIn())
             {
-                mUniformIndex.push_back(gl::VariableLocation(uniform.name, arrayIndex, uniformIndex));
+                // Assign in-order uniform locations
+                mUniformIndex[mUniformIndex.size()] = gl::VariableLocation(uniform.name, arrayIndex, uniformIndex);
             }
         }
     }

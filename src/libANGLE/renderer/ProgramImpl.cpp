@@ -27,8 +27,8 @@ ProgramImpl::~ProgramImpl()
 
 gl::LinkedUniform *ProgramImpl::getUniformByLocation(GLint location) const
 {
-    ASSERT(location >= 0 && static_cast<size_t>(location) < mUniformIndex.size());
-    return mUniforms[mUniformIndex[location].index];
+    ASSERT(location >= 0 && mUniformIndex.find(location) != mUniformIndex.end());
+    return mUniforms[mUniformIndex.at(location).index];
 }
 
 gl::LinkedUniform *ProgramImpl::getUniformByName(const std::string &name) const
@@ -55,15 +55,16 @@ GLint ProgramImpl::getUniformLocation(const std::string &name) const
     size_t subscript = GL_INVALID_INDEX;
     std::string baseName = gl::ParseUniformName(name, &subscript);
 
-    unsigned int numUniforms = mUniformIndex.size();
-    for (unsigned int location = 0; location < numUniforms; location++)
+    for (const auto &info : mUniformIndex)
     {
-        if (mUniformIndex[location].name == baseName)
-        {
-            const int index = mUniformIndex[location].index;
-            const bool isArray = mUniforms[index]->isArray();
+        GLuint location = info.first;
+        const gl::VariableLocation &uniform = info.second;
 
-            if ((isArray && mUniformIndex[location].element == subscript) ||
+        if (uniform.name == baseName)
+        {
+            const bool isArray = mUniforms[uniform.index]->isArray();
+
+            if ((isArray && uniform.element == subscript) ||
                 (subscript == GL_INVALID_INDEX))
             {
                 return location;
