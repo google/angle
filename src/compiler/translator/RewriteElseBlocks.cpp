@@ -40,7 +40,7 @@ TIntermUnary *MakeNewUnary(TOperator op, TIntermTyped *operand)
 }
 
 ElseBlockRewriter::ElseBlockRewriter()
-    : TIntermTraverser(true, false, true, false),
+    : TIntermTraverser(true, false, true),
       mTemporaryIndex(0),
       mFunctionType(NULL)
 {}

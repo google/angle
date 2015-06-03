@@ -588,12 +588,10 @@ class TIntermTraverser : angle::NonCopyable
   public:
     POOL_ALLOCATOR_NEW_DELETE();
     // TODO(zmo): remove default values.
-    TIntermTraverser(bool preVisit = true, bool inVisit = false, bool postVisit = false,
-                     bool rightToLeft = false)
+    TIntermTraverser(bool preVisit = true, bool inVisit = false, bool postVisit = false)
         : preVisit(preVisit),
           inVisit(inVisit),
           postVisit(postVisit),
-          rightToLeft(rightToLeft),
           mDepth(0),
           mMaxDepth(0),
           mTemporaryIndex(nullptr)
@@ -649,7 +647,6 @@ class TIntermTraverser : angle::NonCopyable
     const bool preVisit;
     const bool inVisit;
     const bool postVisit;
-    const bool rightToLeft;
 
     // If traversers need to replace nodes, they can add the replacements in
     // mReplacements/mMultiReplacements during traversal and the user of the traverser should call
@@ -766,7 +763,7 @@ class TMaxDepthTraverser : public TIntermTraverser
   public:
     POOL_ALLOCATOR_NEW_DELETE();
     TMaxDepthTraverser(int depthLimit)
-        : TIntermTraverser(true, true, false, false),
+        : TIntermTraverser(true, true, false),
           mDepthLimit(depthLimit) { }
 
     virtual bool visitBinary(Visit, TIntermBinary *) { return depthCheck(); }

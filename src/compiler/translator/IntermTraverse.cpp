@@ -9,18 +9,12 @@
 
 void TIntermTraverser::pushParentBlock(TIntermAggregate *node)
 {
-    if (rightToLeft)
-        mParentBlockStack.push_back(ParentBlock(node, node->getSequence()->size() - 1));
-    else
-        mParentBlockStack.push_back(ParentBlock(node, 0));
+    mParentBlockStack.push_back(ParentBlock(node, 0));
 }
 
 void TIntermTraverser::incrementParentBlockPos()
 {
-    if (rightToLeft)
-        --mParentBlockStack.back().pos;
-    else
-        ++mParentBlockStack.back().pos;
+    ++mParentBlockStack.back().pos;
 }
 
 void TIntermTraverser::popParentBlock()
@@ -102,9 +96,6 @@ void TIntermTraverser::nextTemporaryIndex()
 // if preVisit is turned on and the type specific function
 // returns false.
 //
-// preVisit, postVisit, and rightToLeft control what order
-// nodes are visited in.
-//
 
 //
 // Traversal functions for terminals are straighforward....
@@ -139,28 +130,14 @@ void TIntermBinary::traverse(TIntermTraverser *it)
     {
         it->incrementDepth(this);
 
-        if (it->rightToLeft)
-        {
-            if (mRight)
-                mRight->traverse(it);
+        if (mLeft)
+            mLeft->traverse(it);
 
-            if (it->inVisit)
-                visit = it->visitBinary(InVisit, this);
+        if (it->inVisit)
+            visit = it->visitBinary(InVisit, this);
 
-            if (visit && mLeft)
-                mLeft->traverse(it);
-        }
-        else
-        {
-            if (mLeft)
-                mLeft->traverse(it);
-
-            if (it->inVisit)
-                visit = it->visitBinary(InVisit, this);
-
-            if (visit && mRight)
-                mRight->traverse(it);
-        }
+        if (visit && mRight)
+            mRight->traverse(it);
 
         it->decrementDepth();
     }
@@ -210,40 +187,19 @@ void TIntermAggregate::traverse(TIntermTraverser *it)
 
         it->incrementDepth(this);
 
-        if (it->rightToLeft)
+        for (TIntermSequence::iterator sit = mSequence.begin();
+                sit != mSequence.end(); sit++)
         {
-            for (TIntermSequence::reverse_iterator sit = mSequence.rbegin();
-                 sit != mSequence.rend(); sit++)
-            {
-                (*sit)->traverse(it);
+            (*sit)->traverse(it);
 
-                if (visit && it->inVisit)
-                {
-                    if (*sit != mSequence.front())
-                        visit = it->visitAggregate(InVisit, this);
-                }
-                if (mOp == EOpSequence)
-                {
-                    it->incrementParentBlockPos();
-                }
+            if (visit && it->inVisit)
+            {
+                if (*sit != mSequence.back())
+                    visit = it->visitAggregate(InVisit, this);
             }
-        }
-        else
-        {
-            for (TIntermSequence::iterator sit = mSequence.begin();
-                 sit != mSequence.end(); sit++)
+            if (mOp == EOpSequence)
             {
-                (*sit)->traverse(it);
-
-                if (visit && it->inVisit)
-                {
-                    if (*sit != mSequence.back())
-                        visit = it->visitAggregate(InVisit, this);
-                }
-                if (mOp == EOpSequence)
-                {
-                    it->incrementParentBlockPos();
-                }
+                it->incrementParentBlockPos();
             }
         }
 
@@ -270,22 +226,11 @@ void TIntermSelection::traverse(TIntermTraverser *it)
     if (visit)
     {
         it->incrementDepth(this);
-        if (it->rightToLeft)
-        {
-            if (mFalseBlock)
-                mFalseBlock->traverse(it);
-            if (mTrueBlock)
-                mTrueBlock->traverse(it);
-            mCondition->traverse(it);
-        }
-        else
-        {
-            mCondition->traverse(it);
-            if (mTrueBlock)
-                mTrueBlock->traverse(it);
-            if (mFalseBlock)
-                mFalseBlock->traverse(it);
-        }
+        mCondition->traverse(it);
+        if (mTrueBlock)
+            mTrueBlock->traverse(it);
+        if (mFalseBlock)
+            mFalseBlock->traverse(it);
         it->decrementDepth();
     }
 
@@ -306,23 +251,11 @@ void TIntermSwitch::traverse(TIntermTraverser *it)
     if (visit)
     {
         it->incrementDepth(this);
-        if (it->rightToLeft)
-        {
-            if (mStatementList)
-                mStatementList->traverse(it);
-            if (it->inVisit)
-                visit = it->visitSwitch(InVisit, this);
-            if (visit)
-                mInit->traverse(it);
-        }
-        else
-        {
-            mInit->traverse(it);
-            if (it->inVisit)
-                visit = it->visitSwitch(InVisit, this);
-            if (visit && mStatementList)
-                mStatementList->traverse(it);
-        }
+        mInit->traverse(it);
+        if (it->inVisit)
+            visit = it->visitSwitch(InVisit, this);
+        if (visit && mStatementList)
+            mStatementList->traverse(it);
         it->decrementDepth();
     }
 
@@ -361,34 +294,17 @@ void TIntermLoop::traverse(TIntermTraverser *it)
     {
         it->incrementDepth(this);
 
-        if (it->rightToLeft)
-        {
-            if (mExpr)
-                mExpr->traverse(it);
+        if (mInit)
+            mInit->traverse(it);
 
-            if (mBody)
-                mBody->traverse(it);
+        if (mCond)
+            mCond->traverse(it);
 
-            if (mCond)
-                mCond->traverse(it);
+        if (mBody)
+            mBody->traverse(it);
 
-            if (mInit)
-                mInit->traverse(it);
-        }
-        else
-        {
-            if (mInit)
-                mInit->traverse(it);
-
-            if (mCond)
-                mCond->traverse(it);
-
-            if (mBody)
-                mBody->traverse(it);
-
-            if (mExpr)
-                mExpr->traverse(it);
-        }
+        if (mExpr)
+            mExpr->traverse(it);
 
         it->decrementDepth();
     }
