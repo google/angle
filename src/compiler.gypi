@@ -80,8 +80,6 @@
             'compiler/translator/Pragma.h',
             'compiler/translator/PruneEmptyDeclarations.cpp',
             'compiler/translator/PruneEmptyDeclarations.h',
-            'compiler/translator/QualifierAlive.cpp',
-            'compiler/translator/QualifierAlive.h',
             'compiler/translator/RegenerateStructNames.cpp',
             'compiler/translator/RegenerateStructNames.h',
             'compiler/translator/RemovePow.cpp',
