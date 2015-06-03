@@ -13,46 +13,26 @@
 #include "compiler/translator/PoolAlloc.h"
 #include "compiler/translator/TranslatorESSL.h"
 
-#include <vector>
-
-template <typename T>
 class ConstantFinder : public TIntermTraverser
 {
   public:
-    ConstantFinder(const std::vector<T> &constantVector)
-        : mConstantVector(constantVector),
-          mFound(false)
-    {}
-
-    ConstantFinder(const T &value)
-        : mConstantVector(std::vector<T>{value}),
+    ConstantFinder(TConstantUnion constToFind)
+        : mConstToFind(constToFind),
           mFound(false)
     {}
 
     virtual void visitConstantUnion(TIntermConstantUnion *node)
     {
-        if (node->getType().getObjectSize() == mConstantVector.size())
+        if (node->getUnionArrayPointer()[0] == mConstToFind)
         {
-            bool found = true;
-            for (size_t i = 0; i < mConstantVector.size(); i++)
-            {
-                if (node->getUnionArrayPointer()[i] != mConstantVector[i])
-                {
-                    found = false;
-                    break;
-                }
-            }
-            if (found)
-            {
-                mFound = found;
-            }
+            mFound = true;
         }
     }
 
     bool found() const { return mFound; }
 
   private:
-    std::vector<T> mConstantVector;
+    TConstantUnion mConstToFind;
     bool mFound;
 };
 
@@ -92,20 +72,18 @@ class ConstantFoldingTest : public testing::Test
         }
     }
 
-    template <typename T>
-    bool constantFoundInAST(T constant)
+    bool constantFoundInAST(TConstantUnion c)
     {
-        ConstantFinder<T> finder(constant);
+        ConstantFinder finder(c);
         mASTRoot->traverse(&finder);
         return finder.found();
     }
 
-    template <typename T>
-    bool constantVectorFoundInAST(const std::vector<T> &constantVector)
+    bool constantFoundInAST(int i)
     {
-        ConstantFinder<T> finder(constantVector);
-        mASTRoot->traverse(&finder);
-        return finder.found();
+        TConstantUnion c;
+        c.setIConst(i);
+        return constantFoundInAST(c);
     }
 
   private:
@@ -194,20 +172,4 @@ TEST_F(ConstantFoldingTest, FoldIntegerModulus)
     ASSERT_FALSE(constantFoundInAST(1124));
     ASSERT_FALSE(constantFoundInAST(5));
     ASSERT_TRUE(constantFoundInAST(4));
-}
-
-TEST_F(ConstantFoldingTest, FoldVectorCrossProduct)
-{
-    const std::string &shaderString =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec3 my_Vec3;"
-        "void main() {\n"
-        "   const vec3 v3 = cross(vec3(1.0f, 1.0f, 1.0f), vec3(1.0f, -1.0f, 1.0f));\n"
-        "   my_Vec3 = v3;\n"
-        "}\n";
-    compile(shaderString);
-    ASSERT_FALSE(constantVectorFoundInAST(std::vector<float>{1.0f, 1.0f, 1.0f}));
-    ASSERT_FALSE(constantVectorFoundInAST(std::vector<float>{1.0f, -1.0f, 1.0f}));
-    ASSERT_TRUE(constantVectorFoundInAST(std::vector<float>{2.0f, 0.0f, -2.0f}));
 }
