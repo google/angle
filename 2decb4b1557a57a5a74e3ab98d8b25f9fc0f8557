@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b97b38ac_432065a3",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-03T12:38:50Z",
+      "side": 1,
+      "message": "we aren\u0027t allowed to use c++11 initialization syntax, this breaks mac and android.",
+      "range": {
+        "startLine": 210,
+        "startChar": 0,
+        "endLine": 212,
+        "endChar": 81
+      },
+      "revId": "2decb4b1557a57a5a74e3ab98d8b25f9fc0f8557",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
