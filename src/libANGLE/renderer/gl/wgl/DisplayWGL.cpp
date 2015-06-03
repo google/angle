@@ -238,17 +238,24 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         // TODO: handle robustness
 
         int mask = 0;
-        // Request core profile, TODO: Don't request core if requested GL version is less than 3.0
+        // Request core profile
         mask |= WGL_CONTEXT_CORE_PROFILE_BIT_ARB;
 
         std::vector<int> contextCreationAttibutes;
 
-        // TODO: create a context version based on the requested version and validate the version numbers
-        contextCreationAttibutes.push_back(WGL_CONTEXT_MAJOR_VERSION_ARB);
-        contextCreationAttibutes.push_back(3);
+        // Don't request a specific version unless the user wants one.  WGL will return the highest version
+        // that the driver supports if no version is requested.
+        const egl::AttributeMap &displayAttributes = display->getAttributeMap();
+        EGLint requestedMajorVersion = displayAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE);
+        EGLint requestedMinorVersion = displayAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE);
+        if (requestedMajorVersion != EGL_DONT_CARE && requestedMinorVersion != EGL_DONT_CARE)
+        {
+            contextCreationAttibutes.push_back(WGL_CONTEXT_MAJOR_VERSION_ARB);
+            contextCreationAttibutes.push_back(requestedMajorVersion);
 
-        contextCreationAttibutes.push_back(WGL_CONTEXT_MINOR_VERSION_ARB);
-        contextCreationAttibutes.push_back(1);
+            contextCreationAttibutes.push_back(WGL_CONTEXT_MINOR_VERSION_ARB);
+            contextCreationAttibutes.push_back(requestedMinorVersion);
+        }
 
         // Set the flag attributes
         if (flags != 0)
