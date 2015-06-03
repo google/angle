@@ -16,6 +16,24 @@
       "revId": "562e81bbccd0d6c079810434dd57afa549e0f360",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b967b830_3b265fc3",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-03T18:44:57Z",
+      "side": 1,
+      "message": "Probably not, we\u0027re not masters with gn. If that fixes a build, please feel free to add it.",
+      "parentUuid": "b967b830_fb1987ab",
+      "revId": "562e81bbccd0d6c079810434dd57afa549e0f360",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
