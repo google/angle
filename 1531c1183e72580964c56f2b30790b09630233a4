@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39d588cf_5e37e6eb",
+        "filename": "src/tests/compiler_tests/RemovePow_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-03T17:59:10Z",
+      "side": 1,
+      "message": "nit: use override instead of virtual",
+      "range": {
+        "startLine": 22,
+        "startChar": 4,
+        "endLine": 22,
+        "endChar": 11
+      },
+      "revId": "1531c1183e72580964c56f2b30790b09630233a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b97b38ac_233769ed",
+        "filename": "src/tests/compiler_tests/RemovePow_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-03T17:59:10Z",
+      "side": 1,
+      "message": "nit: use override instead of virtual",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 11
+      },
+      "revId": "1531c1183e72580964c56f2b30790b09630233a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f955b039_970f8436",
+        "filename": "src/tests/compiler_tests/RemovePow_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-03T17:59:10Z",
+      "side": 1,
+      "message": "can you use SafeDelete here?",
+      "range": {
+        "startLine": 34,
+        "startChar": 8,
+        "endLine": 34,
+        "endChar": 14
+      },
+      "revId": "1531c1183e72580964c56f2b30790b09630233a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f955b039_d719fc82",
+        "filename": "src/tests/compiler_tests/RemovePow_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-03T17:59:10Z",
+      "side": 1,
+      "message": "s/NULL/nullptr",
+      "range": {
+        "startLine": 35,
+        "startChar": 31,
+        "endLine": 35,
+        "endChar": 35
+      },
+      "revId": "1531c1183e72580964c56f2b30790b09630233a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
