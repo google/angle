@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9ae2c65_40395200",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-03T08:57:10Z",
+      "side": 1,
+      "message": "You did not address my comment about calculating the expected output values automatically in any way (other than changing the variable name, which doesn\u0027t make sense). Please remember to address all review comments.",
+      "revId": "edfcde31797e07b59d00410fbed964c00f271895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
