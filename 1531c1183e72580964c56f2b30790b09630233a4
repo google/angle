@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "f955b039_d7de1cfa",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-03T17:59:57Z",
+      "side": 1,
+      "message": "just use 477306 here, I\u0027ve seen these patches get ignored by bugdroid with the chromium: prefix.",
+      "range": {
+        "startLine": 13,
+        "startChar": 3,
+        "endLine": 13,
+        "endChar": 19
+      },
+      "revId": "1531c1183e72580964c56f2b30790b09630233a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39d588cf_5e37e6eb",
         "filename": "src/tests/compiler_tests/RemovePow_test.cpp",
         "patchSetId": 2
