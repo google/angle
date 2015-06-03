@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b967b830_fb1987ab",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-06-03T18:37:32Z",
+      "side": 1,
+      "message": "Does this intentionally not have a\n\n   \"//build/config/compiler:no_chromium_code\",\n\n?",
+      "revId": "562e81bbccd0d6c079810434dd57afa549e0f360",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
