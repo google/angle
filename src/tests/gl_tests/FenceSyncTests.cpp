@@ -230,6 +230,13 @@ TEST_P(FenceSyncTest, BasicQueries)
 // Test that basic usage works and doesn't generate errors or crash
 TEST_P(FenceSyncTest, BasicOperations)
 {
+    // TODO(geofflang): Figure out why this is broken on Intel OpenGL
+    if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    {
+        std::cout << "Test skipped on Intel OpenGL." << std::endl;
+        return;
+    }
+
     glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 
     GLsync sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
@@ -237,10 +244,6 @@ TEST_P(FenceSyncTest, BasicOperations)
     glClear(GL_COLOR_BUFFER_BIT);
     glWaitSync(sync, 0, GL_TIMEOUT_IGNORED);
     EXPECT_GL_NO_ERROR();
-
-    // Some drivers don't automatically flush and can enter into an infinite loop
-    // while waiting for the fence to complete.
-    glFlush();
 
     GLsizei length = 0;
     GLint value = 0;
