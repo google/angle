@@ -307,13 +307,21 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams, const gl
 
                 // Check if the actual format has a channel that the internal format does not and set them to the
                 // default values
-                const float clearValues[4] =
+                float clearValues[4] =
                 {
                     ((formatInfo.redBits   == 0 && dxgiFormatInfo.redBits   > 0) ? 0.0f : clearParams.colorFClearValue.red),
                     ((formatInfo.greenBits == 0 && dxgiFormatInfo.greenBits > 0) ? 0.0f : clearParams.colorFClearValue.green),
                     ((formatInfo.blueBits  == 0 && dxgiFormatInfo.blueBits  > 0) ? 0.0f : clearParams.colorFClearValue.blue),
                     ((formatInfo.alphaBits == 0 && dxgiFormatInfo.alphaBits > 0) ? 1.0f : clearParams.colorFClearValue.alpha),
                 };
+
+                if (dxgiFormatInfo.alphaBits == 1)
+                {
+                    // Some drivers do not correctly handle calling Clear() on a format with 1-bit alpha.
+                    // They can incorrectly round all non-zero values up to 1.0f. Note that WARP does not do this.
+                    // We should handle the rounding for them instead.
+                    clearValues[3] = (clearParams.colorFClearValue.alpha >= 0.5f) ? 1.0f : 0.0f;
+                }
 
                 if (needScissoredClear)
                 {
