@@ -119,6 +119,7 @@ static_library("angle_common") {
   configs -= [ "//build/config/compiler:chromium_code" ]
   configs += [
     ":internal_config",
+    "//build/config/compiler:no_chromium_code",
   ]
 }
 
