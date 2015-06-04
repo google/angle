@@ -57,10 +57,19 @@ TIntermTyped *TIntermediate::addBinaryMath(
     if (!node->promote(mInfoSink))
         return NULL;
 
+    //
     // See if we can fold constants.
-    TIntermTyped *foldedNode = node->fold(mInfoSink);
-    if (foldedNode)
-        return foldedNode;
+    //
+    TIntermConstantUnion *leftTempConstant = left->getAsConstantUnion();
+    TIntermConstantUnion *rightTempConstant = right->getAsConstantUnion();
+    if (leftTempConstant && rightTempConstant)
+    {
+        TIntermTyped *typedReturnNode =
+            leftTempConstant->fold(node->getOp(), rightTempConstant, mInfoSink);
+
+        if (typedReturnNode)
+            return typedReturnNode;
+    }
 
     return node;
 }
@@ -134,7 +143,7 @@ TIntermTyped *TIntermediate::addUnaryMath(
 
     if (childTempConstant)
     {
-        TIntermTyped *newChild = childTempConstant->foldUnary(op, mInfoSink);
+        TIntermTyped *newChild = childTempConstant->fold(op, nullptr, mInfoSink);
 
         if (newChild)
             return newChild;
