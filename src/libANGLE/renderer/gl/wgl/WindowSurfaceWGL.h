@@ -21,7 +21,7 @@ class FunctionsWGL;
 class WindowSurfaceWGL : public SurfaceGL
 {
   public:
-    WindowSurfaceWGL(EGLNativeWindowType window, ATOM windowClass, int pixelFormat, HGLRC wglContext, const FunctionsWGL *functions);
+    WindowSurfaceWGL(EGLNativeWindowType window, int pixelFormat, HGLRC wglContext, const FunctionsWGL *functions);
     ~WindowSurfaceWGL() override;
 
     egl::Error initialize() override;
@@ -40,14 +40,12 @@ class WindowSurfaceWGL : public SurfaceGL
     EGLint isPostSubBufferSupported() const override;
 
   private:
-    ATOM mWindowClass;
     int mPixelFormat;
 
-    HGLRC mShareWGLContext;
+    HGLRC mWGLContext;
 
-    HWND mParentWindow;
-    HWND mChildWindow;
-    HDC mChildDeviceContext;
+    HWND mWindow;
+    HDC mDeviceContext;
 
     const FunctionsWGL *mFunctionsWGL;
 };

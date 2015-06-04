@@ -73,26 +73,6 @@ DisplayWGL::~DisplayWGL()
 {
 }
 
-static LRESULT CALLBACK IntermediateWindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    switch (message)
-    {
-      case WM_ERASEBKGND:
-        // Prevent windows from erasing the background.
-        return 1;
-      case WM_PAINT:
-        // Do not paint anything.
-        PAINTSTRUCT paint;
-        if (BeginPaint(window, &paint))
-        {
-            EndPaint(window, &paint);
-        }
-        return 0;
-    }
-
-    return DefWindowProc(window, message, wParam, lParam);
-}
-
 egl::Error DisplayWGL::initialize(egl::Display *display)
 {
     mDisplay = display;
@@ -112,24 +92,26 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     // Work around compile error from not defining "UNICODE" while Chromium does
     const LPSTR idcArrow = MAKEINTRESOURCEA(32512);
 
+    std::string className = FormatString("ANGLE DisplayWGL 0x%0.8p Intermediate Window Class", mDisplay);
+
     WNDCLASSA intermediateClassDesc = { 0 };
     intermediateClassDesc.style = CS_OWNDC;
-    intermediateClassDesc.lpfnWndProc = IntermediateWindowProc;
+    intermediateClassDesc.lpfnWndProc = DefWindowProc;
     intermediateClassDesc.cbClsExtra = 0;
     intermediateClassDesc.cbWndExtra = 0;
-    intermediateClassDesc.hInstance = GetModuleHandle(NULL);
-    intermediateClassDesc.hIcon = NULL;
-    intermediateClassDesc.hCursor = LoadCursorA(NULL, idcArrow);
+    intermediateClassDesc.hInstance = GetModuleHandle(nullptr);
+    intermediateClassDesc.hIcon = nullptr;
+    intermediateClassDesc.hCursor = LoadCursorA(nullptr, idcArrow);
     intermediateClassDesc.hbrBackground = 0;
-    intermediateClassDesc.lpszMenuName = NULL;
-    intermediateClassDesc.lpszClassName = "ANGLE Intermediate Window";
+    intermediateClassDesc.lpszMenuName = nullptr;
+    intermediateClassDesc.lpszClassName = className.c_str();
     mWindowClass = RegisterClassA(&intermediateClassDesc);
     if (!mWindowClass)
     {
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to register intermediate OpenGL window class.");
     }
 
-    HWND dummyWindow = CreateWindowExA(WS_EX_NOPARENTNOTIFY,
+    HWND dummyWindow = CreateWindowExA(0,
                                        reinterpret_cast<const char *>(mWindowClass),
                                        "ANGLE Dummy Window",
                                        WS_OVERLAPPEDWINDOW,
@@ -137,10 +119,10 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
                                        CW_USEDEFAULT,
                                        CW_USEDEFAULT,
                                        CW_USEDEFAULT,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL);
+                                       nullptr,
+                                       nullptr,
+                                       nullptr,
+                                       nullptr);
     if (!dummyWindow)
     {
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to create dummy OpenGL window.");
@@ -188,16 +170,13 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     mFunctionsWGL->initialize(mOpenGLModule, dummyDeviceContext);
 
     // Destroy the dummy window and context
-    mFunctionsWGL->makeCurrent(dummyDeviceContext, NULL);
+    mFunctionsWGL->makeCurrent(dummyDeviceContext, nullptr);
     mFunctionsWGL->deleteContext(dummyWGLContext);
     ReleaseDC(dummyWindow, dummyDeviceContext);
     DestroyWindow(dummyWindow);
 
     // Create the real intermediate context and windows
-    HDC parentHDC = display->getNativeDisplayId();
-    HWND parentWindow = WindowFromDC(parentHDC);
-
-    mWindow = CreateWindowExA(WS_EX_NOPARENTNOTIFY,
+    mWindow = CreateWindowExA(0,
                               reinterpret_cast<const char *>(mWindowClass),
                               "ANGLE Intermediate Window",
                               WS_OVERLAPPEDWINDOW,
@@ -205,10 +184,10 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
                               CW_USEDEFAULT,
                               CW_USEDEFAULT,
                               CW_USEDEFAULT,
-                              parentWindow,
-                              NULL,
-                              NULL,
-                              NULL);
+                              nullptr,
+                              nullptr,
+                              nullptr,
+                              nullptr);
     if (!mWindow)
     {
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to create intermediate OpenGL window.");
@@ -329,7 +308,7 @@ SurfaceImpl *DisplayWGL::createWindowSurface(const egl::Config *configuration,
                                              EGLNativeWindowType window,
                                              const egl::AttributeMap &attribs)
 {
-    return new WindowSurfaceWGL(window, mWindowClass, mPixelFormat, mWGLContext, mFunctionsWGL);
+    return new WindowSurfaceWGL(window, mPixelFormat, mWGLContext, mFunctionsWGL);
 }
 
 SurfaceImpl *DisplayWGL::createPbufferSurface(const egl::Config *configuration,
