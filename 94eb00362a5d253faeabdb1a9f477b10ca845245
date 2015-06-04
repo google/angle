@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f955b039_162a4d31",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-04T14:07:52Z",
+      "side": 1,
+      "message": "everything should go in a namespace { } block",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 1
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f923f0e9_b6439611",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-04T14:07:52Z",
+      "side": 1,
+      "message": "nit: indent two spaces",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 6
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f955b039_96365da1",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-04T14:07:52Z",
+      "side": 1,
+      "message": "nit: same here",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 9
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f955b039_763bc98a",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-04T14:07:52Z",
+      "side": 1,
+      "message": "nit: use override instead of virtual",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 11
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f955b039_d62f3542",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-04T14:07:52Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 11
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f923f0e9_96401206",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-04T14:07:52Z",
+      "side": 1,
+      "message": "use SafeDelete",
+      "range": {
+        "startLine": 33,
+        "startChar": 8,
+        "endLine": 33,
+        "endChar": 14
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f955b039_b62c414f",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-04T14:07:52Z",
+      "side": 1,
+      "message": "add { }",
+      "range": {
+        "startLine": 43,
+        "startChar": 8,
+        "endLine": 43,
+        "endChar": 32
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d96c6c17_2c2d7c21",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-04T14:07:52Z",
+      "side": 1,
+      "message": "two spaces",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 7
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d96c6c17_0c2a4008",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-04T14:07:52Z",
+      "side": 1,
+      "message": "prefix every test with a comment",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 6
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f923f0e9_36c7a60c",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-04T14:07:52Z",
+      "side": 1,
+      "message": "this is a bit too verbose. maybe it would make sense to instead store these strings as static members of the emulation library, and include the header directly here. then you wouldn\u0027t have to replicate these huge strings.",
+      "range": {
+        "startLine": 144,
+        "startChar": 13,
+        "endLine": 166,
+        "endChar": 87
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f923f0e9_b6da76df",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-04T14:07:52Z",
+      "side": 1,
+      "message": "this can all go in a namespace { } block",
+      "range": {
+        "startLine": 14,
+        "startChar": 1,
+        "endLine": 15,
+        "endChar": 1
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
