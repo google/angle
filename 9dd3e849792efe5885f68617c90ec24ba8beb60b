@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d96c6c17_ec49c4e3",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1219,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-04T14:12:13Z",
+      "side": 1,
+      "message": "nit: pointer alignment",
+      "range": {
+        "startLine": 1219,
+        "startChar": 8,
+        "endLine": 1219,
+        "endChar": 22
+      },
+      "revId": "9dd3e849792efe5885f68617c90ec24ba8beb60b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
