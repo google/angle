@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d96c6c17_47e24ec1",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-04T18:27:08Z",
+      "side": 1,
+      "message": "The core profile bit is only valid if the OpenGL version requested is \u003e\u003d 3.1, correct? Should there be another test for that, to make sure we don\u0027t try to send an invalid context creation request to WGL?",
+      "range": {
+        "startLine": 249,
+        "startChar": 12,
+        "endLine": 249,
+        "endChar": 33
+      },
+      "revId": "ebb25aa31fab01ba707cd1edb078e3d084752461",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
