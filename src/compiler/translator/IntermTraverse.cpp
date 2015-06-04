@@ -30,7 +30,7 @@ void TIntermTraverser::insertStatementsInParentBlock(const TIntermSequence &inse
     mInsertions.push_back(insert);
 }
 
-TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type)
+TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type, TQualifier qualifier)
 {
     // Each traversal uses at most one temporary variable, so the index stays the same within a single traversal.
     TInfoSinkBase symbolNameOut;
@@ -40,8 +40,13 @@ TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type)
 
     TIntermSymbol *node = new TIntermSymbol(0, symbolName, type);
     node->setInternal(true);
-    node->getTypePointer()->setQualifier(EvqTemporary);
+    node->getTypePointer()->setQualifier(qualifier);
     return node;
+}
+
+TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type)
+{
+    return createTempSymbol(type, EvqTemporary);
 }
 
 TIntermAggregate *TIntermTraverser::createTempDeclaration(const TType &type)
@@ -51,10 +56,10 @@ TIntermAggregate *TIntermTraverser::createTempDeclaration(const TType &type)
     return tempDeclaration;
 }
 
-TIntermAggregate *TIntermTraverser::createTempInitDeclaration(TIntermTyped *initializer)
+TIntermAggregate *TIntermTraverser::createTempInitDeclaration(TIntermTyped *initializer, TQualifier qualifier)
 {
     ASSERT(initializer != nullptr);
-    TIntermSymbol *tempSymbol = createTempSymbol(initializer->getType());
+    TIntermSymbol *tempSymbol = createTempSymbol(initializer->getType(), qualifier);
     TIntermAggregate *tempDeclaration = new TIntermAggregate(EOpDeclaration);
     TIntermBinary *tempInit = new TIntermBinary(EOpInitialize);
     tempInit->setLeft(tempSymbol);
@@ -62,6 +67,11 @@ TIntermAggregate *TIntermTraverser::createTempInitDeclaration(TIntermTyped *init
     tempInit->setType(tempSymbol->getType());
     tempDeclaration->getSequence()->push_back(tempInit);
     return tempDeclaration;
+}
+
+TIntermAggregate *TIntermTraverser::createTempInitDeclaration(TIntermTyped *initializer)
+{
+    return createTempInitDeclaration(initializer, EvqTemporary);
 }
 
 TIntermBinary *TIntermTraverser::createTempAssignment(TIntermTyped *rightNode)

@@ -295,6 +295,7 @@ bool TIntermAggregate::insertChildNodes(TIntermSequence::size_type position, TIn
 
 void TIntermAggregate::setPrecisionFromChildren()
 {
+    mGotPrecisionFromChildren = true;
     if (getBasicType() == EbtBool)
     {
         mType.setPrecision(EbpUndefined);

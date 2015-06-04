@@ -429,10 +429,16 @@ class TIntermAggregate : public TIntermOperator
     TIntermAggregate()
         : TIntermOperator(EOpNull),
           mUserDefined(false),
-          mUseEmulatedFunction(false) { }
+          mUseEmulatedFunction(false),
+          mGotPrecisionFromChildren(false)
+    {
+    }
     TIntermAggregate(TOperator op)
         : TIntermOperator(op),
-          mUseEmulatedFunction(false) { }
+          mUseEmulatedFunction(false),
+          mGotPrecisionFromChildren(false)
+    {
+    }
     ~TIntermAggregate() { }
 
     virtual TIntermAggregate *getAsAggregate() { return this; }
@@ -467,6 +473,9 @@ class TIntermAggregate : public TIntermOperator
     void setPrecisionFromChildren();
     void setBuiltInFunctionPrecision();
 
+    // Returns true if changing parameter precision may affect the return value.
+    bool gotPrecisionFromChildren() const { return mGotPrecisionFromChildren; }
+
   protected:
     TIntermAggregate(const TIntermAggregate &); // disallow copy constructor
     TIntermAggregate &operator=(const TIntermAggregate &); // disallow assignment operator
@@ -481,6 +490,8 @@ class TIntermAggregate : public TIntermOperator
     // If set to true, replace the built-in function call with an emulated one
     // to work around driver bugs.
     bool mUseEmulatedFunction;
+
+    bool mGotPrecisionFromChildren;
 };
 
 //
@@ -728,10 +739,14 @@ class TIntermTraverser : angle::NonCopyable
     // supported.
     void insertStatementsInParentBlock(const TIntermSequence &insertions);
 
+    // Helper to create a temporary symbol node with the given qualifier.
+    TIntermSymbol *createTempSymbol(const TType &type, TQualifier qualifier);
     // Helper to create a temporary symbol node.
     TIntermSymbol *createTempSymbol(const TType &type);
     // Create a node that declares but doesn't initialize a temporary symbol.
     TIntermAggregate *createTempDeclaration(const TType &type);
+    // Create a node that initializes the current temporary symbol with initializer having the given qualifier.
+    TIntermAggregate *createTempInitDeclaration(TIntermTyped *initializer, TQualifier qualifier);
     // Create a node that initializes the current temporary symbol with initializer.
     TIntermAggregate *createTempInitDeclaration(TIntermTyped *initializer);
     // Create a node that assigns rightNode to the current temporary symbol.

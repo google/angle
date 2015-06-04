@@ -8,6 +8,7 @@
 
 #include "compiler/translator/BuiltInFunctionEmulatorGLSL.h"
 #include "compiler/translator/EmulatePrecision.h"
+#include "compiler/translator/RecordConstantPrecision.h"
 #include "compiler/translator/OutputESSL.h"
 #include "angle_gl.h"
 
@@ -45,6 +46,10 @@ void TranslatorESSL::translate(TIntermNode *root, int) {
         emulatePrecision.updateTree();
         emulatePrecision.writeEmulationHelpers(sink, SH_ESSL_OUTPUT);
     }
+
+    unsigned int temporaryIndex = 0;
+
+    RecordConstantPrecision(root, &temporaryIndex);
 
     // Write emulated built-in functions if needed.
     if (!getBuiltInFunctionEmulator().IsOutputEmpty())
