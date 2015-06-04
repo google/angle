@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d9f1cca3_b7da6adf",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 750,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-04T11:42:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f90a105c_d530ccf2",
+      "revId": "4bf9861003f36837d6ed1a6633e6866812ec7991",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f90a105c_15f9b47b",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2015-06-04T11:19:20Z",
       "side": 1,
       "message": "All this can now be reduced to three lines as we now use paramsCount at only one place, don\u0027t need integer index anywhere and sequence var is needed at only one place:\n\nfor (auto *p : *getSequence())\n    if (!(*p).getAsConstantUnion())\n        return nullptr;",
+      "range": {
+        "startLine": 787,
+        "startChar": 2,
+        "endLine": 795,
+        "endChar": 5
+      },
+      "revId": "4bf9861003f36837d6ed1a6633e6866812ec7991",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9ec18cf_a1ab465d",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 795,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-04T11:42:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f90a105c_15f9b47b",
       "range": {
         "startLine": 787,
         "startChar": 2,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "d9f1cca3_f73d129c",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1621,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-04T11:42:04Z",
+      "side": 1,
+      "message": "I\u0027ll make this into an ASSERT.",
+      "parentUuid": "3901083e_542502b2",
+      "range": {
+        "startLine": 1619,
+        "startChar": 7,
+        "endLine": 1621,
+        "endChar": 27
+      },
+      "revId": "4bf9861003f36837d6ed1a6633e6866812ec7991",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1908c462_b308c2df",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 1
@@ -76,6 +142,30 @@
       "writtenOn": "2015-06-04T11:19:20Z",
       "side": 1,
       "message": "I realized we just need \"\u003e\" here and not \"\u003e\u003d\"",
+      "range": {
+        "startLine": 1630,
+        "startChar": 27,
+        "endLine": 1630,
+        "endChar": 29
+      },
+      "revId": "4bf9861003f36837d6ed1a6633e6866812ec7991",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9ec18cf_81a56a8e",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1630,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-04T11:42:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1908c462_b308c2df",
       "range": {
         "startLine": 1630,
         "startChar": 27,
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "99fbd485_2004721c",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1976,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-04T11:42:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3901083e_34cdde5b",
+      "range": {
+        "startLine": 1976,
+        "startChar": 35,
+        "endLine": 1976,
+        "endChar": 36
+      },
+      "revId": "4bf9861003f36837d6ed1a6633e6866812ec7991",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1908c462_53d6b6be",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 1
@@ -122,6 +236,30 @@
       "writtenOn": "2015-06-04T11:19:20Z",
       "side": 1,
       "message": "we can now rename FoldAggregateBuiltIn to just FoldAggregate to be consistent with other names FoldUnary and foldBinary",
+      "range": {
+        "startLine": 305,
+        "startChar": 27,
+        "endLine": 305,
+        "endChar": 47
+      },
+      "revId": "4bf9861003f36837d6ed1a6633e6866812ec7991",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9ec18cf_418262db",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-04T11:42:04Z",
+      "side": 1,
+      "message": "I think I\u0027d keep this as FoldAggregateBuiltIn for now, since it handles only built-in functions, and not for example constructors.",
+      "parentUuid": "1908c462_53d6b6be",
       "range": {
         "startLine": 305,
         "startChar": 27,
