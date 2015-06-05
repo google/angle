@@ -119,6 +119,8 @@ static inline SupportRequirement VersionOnly(GLuint major, GLuint minor)
 static inline SupportRequirement ExtsOnly(const std::string &ext)
 {
     SupportRequirement requirement;
+    requirement.version.major = 0;
+    requirement.version.minor = 0;
     angle::SplitStringAlongWhitespace(ext, &requirement.requiredExtensions);
     return requirement;
 }
