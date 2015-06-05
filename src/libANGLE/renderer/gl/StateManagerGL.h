@@ -45,7 +45,8 @@ class StateManagerGL : angle::NonCopyable
     void bindBuffer(GLenum type, GLuint buffer);
     void activeTexture(size_t unit);
     void bindTexture(GLenum type, GLuint texture);
-    void setPixelUnpackState(GLint alignment, GLint rowLength);
+    void setPixelUnpackState(GLint alignment, GLint rowLength, GLint skipRows, GLint skipPixels,
+                             GLint imageHeight, GLint skipImages);
     void setPixelPackState(GLint alignment, GLint rowLength, GLint skipRows, GLint skipPixels);
     void bindFramebuffer(GLenum type, GLuint framebuffer);
     void bindRenderbuffer(GLenum type, GLuint renderbuffer);
@@ -116,6 +117,10 @@ class StateManagerGL : angle::NonCopyable
 
     GLint mUnpackAlignment;
     GLint mUnpackRowLength;
+    GLint mUnpackSkipRows;
+    GLint mUnpackSkipPixels;
+    GLint mUnpackImageHeight;
+    GLint mUnpackSkipImages;
 
     GLint mPackAlignment;
     GLint mPackRowLength;

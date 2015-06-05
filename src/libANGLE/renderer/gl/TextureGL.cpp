@@ -29,11 +29,8 @@ static void SetUnpackStateForTexImage(StateManagerGL *stateManager, const gl::Pi
     {
         UNIMPLEMENTED();
     }
-    if (unpack.skipRows != 0 || unpack.skipPixels != 0 || unpack.imageHeight != 0 || unpack.skipImages != 0)
-    {
-        UNIMPLEMENTED();
-    }
-    stateManager->setPixelUnpackState(unpack.alignment, unpack.rowLength);
+    stateManager->setPixelUnpackState(unpack.alignment, unpack.rowLength, unpack.skipRows,
+                                      unpack.skipPixels, unpack.imageHeight, unpack.skipImages);
 }
 
 static bool UseTexImage2D(GLenum textureType)
