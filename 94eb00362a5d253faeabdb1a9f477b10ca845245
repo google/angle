@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b9ec18cf_19e56ea0",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-05T01:03:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f955b039_162a4d31",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 1
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f923f0e9_b6439611",
         "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
         "patchSetId": 43
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-04T14:07:52Z",
       "side": 1,
       "message": "nit: indent two spaces",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 6
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39b828d4_39bccf0b",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-05T01:03:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f923f0e9_b6439611",
       "range": {
         "startLine": 17,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "b9ec18cf_f9e18293",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-05T01:03:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f955b039_96365da1",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 9
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f955b039_763bc98a",
         "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
         "patchSetId": 43
@@ -82,6 +154,30 @@
       "writtenOn": "2015-06-04T14:07:52Z",
       "side": 1,
       "message": "nit: use override instead of virtual",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 11
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39b828d4_59c18372",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-05T01:03:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f955b039_763bc98a",
       "range": {
         "startLine": 21,
         "startChar": 4,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "99fbd485_b6ab855d",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-05T01:03:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f955b039_d62f3542",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 11
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f923f0e9_96401206",
         "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
         "patchSetId": 43
@@ -128,6 +248,30 @@
       "writtenOn": "2015-06-04T14:07:52Z",
       "side": 1,
       "message": "use SafeDelete",
+      "range": {
+        "startLine": 33,
+        "startChar": 8,
+        "endLine": 33,
+        "endChar": 14
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9ec18cf_59eed684",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-05T01:03:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f923f0e9_96401206",
       "range": {
         "startLine": 33,
         "startChar": 8,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "39b828d4_99ca3b8e",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-05T01:03:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f955b039_b62c414f",
+      "range": {
+        "startLine": 43,
+        "startChar": 8,
+        "endLine": 43,
+        "endChar": 32
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d96c6c17_2c2d7c21",
         "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
         "patchSetId": 43
@@ -174,6 +342,30 @@
       "writtenOn": "2015-06-04T14:07:52Z",
       "side": 1,
       "message": "two spaces",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 7
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99fbd485_16b9b9b6",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-05T01:03:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d96c6c17_2c2d7c21",
       "range": {
         "startLine": 52,
         "startChar": 0,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "392ae8bf_a9397de2",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-05T01:03:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d96c6c17_0c2a4008",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 6
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f923f0e9_36c7a60c",
         "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
         "patchSetId": 43
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "19afe490_18538541",
+        "filename": "src/tests/compiler_tests/Pack_Unpack_test.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-05T01:03:29Z",
+      "side": 1,
+      "message": "I think it\u0027s a bit too verbose too. I wrote the test based on observing the test \"DebugShaderPrecision_test.cpp\". Would you please find me an example in the project to do as you said? Or I can just remove most of the lines, but leave a few definition related lines?",
+      "parentUuid": "f923f0e9_36c7a60c",
+      "range": {
+        "startLine": 144,
+        "startChar": 13,
+        "endLine": 166,
+        "endChar": 87
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f923f0e9_b6da76df",
         "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
         "patchSetId": 43
@@ -243,6 +483,30 @@
       "writtenOn": "2015-06-04T14:07:52Z",
       "side": 1,
       "message": "this can all go in a namespace { } block",
+      "range": {
+        "startLine": 14,
+        "startChar": 1,
+        "endLine": 15,
+        "endChar": 1
+      },
+      "revId": "94eb00362a5d253faeabdb1a9f477b10ca845245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99fbd485_76aabd5d",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 43
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-05T01:03:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f923f0e9_b6da76df",
       "range": {
         "startLine": 14,
         "startChar": 1,
