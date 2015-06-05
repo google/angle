@@ -6,6 +6,7 @@
     'sources':
     [
         'API_test.cpp',
+        'BuiltInFunctionEmulator_test.cpp',
         'CollectVariables_test.cpp',
         'ConstantFolding_test.cpp',
         'DebugShaderPrecision_test.cpp',
