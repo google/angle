@@ -22,6 +22,30 @@
       "revId": "ebb25aa31fab01ba707cd1edb078e3d084752461",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9a690c2_4fb54d3d",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-05T16:45:01Z",
+      "side": 1,
+      "message": "The WGL_ARB_create_context extension says that the WGL_CONTEXT_CORE_PROFILE_BIT_ARB flag is ignored if the requested version cannot support the core profile so we\u0027re safe to always request it.",
+      "parentUuid": "d96c6c17_47e24ec1",
+      "range": {
+        "startLine": 249,
+        "startChar": 12,
+        "endLine": 249,
+        "endChar": 33
+      },
+      "revId": "ebb25aa31fab01ba707cd1edb078e3d084752461",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
