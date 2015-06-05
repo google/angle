@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99e914d2_2b2625c3",
+        "filename": "src/libANGLE/renderer/gl/wgl/WindowSurfaceWGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-05T16:53:00Z",
+      "side": 1,
+      "message": "GetPixelFormat returns 0 to both represent an error and when no pixel format has been set on the window, it seems to always calls SetLastError.  I leave it up to the Describe/SetPixelFormat functions to check if there is a real issue in that case.",
+      "range": {
+        "startLine": 44,
+        "startChar": 28,
+        "endLine": 44,
+        "endChar": 42
+      },
+      "revId": "5555ffdf6c7459f936400af5b150b10d0bf3b152",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
