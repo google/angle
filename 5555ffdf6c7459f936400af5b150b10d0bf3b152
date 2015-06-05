@@ -22,6 +22,53 @@
       "revId": "5555ffdf6c7459f936400af5b150b10d0bf3b152",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9a690c2_1e9291ac",
+        "filename": "src/libANGLE/renderer/gl/wgl/WindowSurfaceWGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-05T22:07:35Z",
+      "side": 1,
+      "message": "Yes, that\u0027s a confusing ambiguity.",
+      "parentUuid": "99e914d2_2b2625c3",
+      "range": {
+        "startLine": 44,
+        "startChar": 28,
+        "endLine": 44,
+        "endChar": 42
+      },
+      "revId": "5555ffdf6c7459f936400af5b150b10d0bf3b152",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99e914d2_57b14b82",
+        "filename": "src/libANGLE/renderer/gl/wgl/WindowSurfaceWGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-05T22:07:35Z",
+      "side": 1,
+      "message": "Comment should be removed now.",
+      "range": {
+        "startLine": 80,
+        "startChar": 18,
+        "endLine": 80,
+        "endChar": 23
+      },
+      "revId": "5555ffdf6c7459f936400af5b150b10d0bf3b152",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
