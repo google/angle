@@ -16,6 +16,24 @@
       "revId": "4635dab6e816724998a67cbe4f29c954064d5c37",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "599a3c79_5226d4f1",
+        "filename": "src/tests/gl_tests/SixteenBppTextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-06-05T18:14:29Z",
+      "side": 1,
+      "message": "Ah, sure! Done.",
+      "parentUuid": "99e914d2_5604f41c",
+      "revId": "4635dab6e816724998a67cbe4f29c954064d5c37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
