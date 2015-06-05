@@ -258,13 +258,11 @@ GLenum FramebufferGL::getImplementationColorReadType() const
 gl::Error FramebufferGL::readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const
 {
     const gl::PixelPackState &packState = state.getPackState();
-
-    // TODO: set pack state
-    if (packState.rowLength != 0 || packState.skipRows != 0 || packState.skipPixels != 0)
+    if (packState.pixelBuffer.get() != nullptr)
     {
         UNIMPLEMENTED();
-        return gl::Error(GL_INVALID_OPERATION, "invalid pixel store parameters in readPixels");
     }
+    mStateManager->setPixelPackState(packState.alignment, packState.rowLength, packState.skipRows, packState.skipPixels);
 
     mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, mFramebufferID);
     mFunctions->readPixels(area.x, area.y, area.width, area.height, format, type, pixels);

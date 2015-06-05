@@ -30,6 +30,10 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mTextures(),
       mUnpackAlignment(4),
       mUnpackRowLength(0),
+      mPackAlignment(4),
+      mPackRowLength(0),
+      mPackSkipRows(0),
+      mPackSkipPixels(0),
       mFramebuffers(),
       mRenderbuffer(0),
       mScissorTestEnabled(false),
@@ -243,6 +247,33 @@ void StateManagerGL::setPixelUnpackState(GLint alignment, GLint rowLength)
     {
         mUnpackRowLength = rowLength;
         mFunctions->pixelStorei(GL_UNPACK_ROW_LENGTH, mUnpackRowLength);
+    }
+}
+
+void StateManagerGL::setPixelPackState(GLint alignment, GLint rowLength, GLint skipRows, GLint skipPixels)
+{
+    if (mPackAlignment != alignment)
+    {
+        mPackAlignment = alignment;
+        mFunctions->pixelStorei(GL_PACK_ALIGNMENT, mPackAlignment);
+    }
+
+    if (mPackRowLength != rowLength)
+    {
+        mPackRowLength = rowLength;
+        mFunctions->pixelStorei(GL_PACK_ROW_LENGTH, mPackRowLength);
+    }
+
+    if (mPackSkipRows != skipRows)
+    {
+        mPackSkipRows = rowLength;
+        mFunctions->pixelStorei(GL_PACK_SKIP_ROWS, mPackSkipRows);
+    }
+
+    if (mPackSkipPixels != skipPixels)
+    {
+        mPackSkipPixels = skipPixels;
+        mFunctions->pixelStorei(GL_PACK_SKIP_PIXELS, mPackSkipPixels);
     }
 }
 
