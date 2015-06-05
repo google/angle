@@ -380,9 +380,18 @@ gl::Error StateManagerGL::setDrawArraysState(const gl::Data &data, GLint first, 
 {
     const gl::State &state = *data.state;
 
+    const gl::Program *program = state.getProgram();
+    const ProgramGL *programGL = GetImplAs<ProgramGL>(program);
+
     const gl::VertexArray *vao = state.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
-    vaoGL->syncDrawArraysState(first, count);
+
+    gl::Error error = vaoGL->syncDrawArraysState(programGL->getActiveAttributeLocations(), first, count);
+    if (error.isError())
+    {
+        return error;
+    }
+
     bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
 
     return setGenericDrawState(data);
@@ -393,10 +402,13 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::Data &data, GLsizei cou
 {
     const gl::State &state = *data.state;
 
+    const gl::Program *program = state.getProgram();
+    const ProgramGL *programGL = GetImplAs<ProgramGL>(program);
+
     const gl::VertexArray *vao = state.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
 
-    gl::Error error = vaoGL->syncDrawElementsState(count, type, indices, outIndices);
+    gl::Error error = vaoGL->syncDrawElementsState(programGL->getActiveAttributeLocations(), count, type, indices, outIndices);
     if (error.isError())
     {
         return error;
@@ -411,20 +423,22 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
 {
     const gl::State &state = *data.state;
 
-    const gl::VertexArray *vao = state.getVertexArray();
-    const std::vector<gl::VertexAttribute>& attribs = vao->getVertexAttributes();
-    for (size_t i = 0; i < attribs.size(); i++)
-    {
-        if (!attribs[i].enabled)
-        {
-            // TODO: Don't sync this attribute if it is not used by the program.
-            setAttributeCurrentData(i, state.getVertexAttribCurrentValue(i));
-        }
-    }
-
     const gl::Program *program = state.getProgram();
     const ProgramGL *programGL = GetImplAs<ProgramGL>(program);
     useProgram(programGL->getProgramID());
+
+    const gl::VertexArray *vao = state.getVertexArray();
+    const std::vector<gl::VertexAttribute> &attribs = vao->getVertexAttributes();
+    const std::vector<GLuint> &activeAttribs = programGL->getActiveAttributeLocations();
+
+    for (size_t activeAttribIndex = 0; activeAttribIndex < activeAttribs.size(); activeAttribIndex++)
+    {
+        GLuint location = activeAttribs[activeAttribIndex];
+        if (!attribs[location].enabled)
+        {
+            setAttributeCurrentData(location, state.getVertexAttribCurrentValue(location));
+        }
+    }
 
     const std::vector<SamplerBindingGL> &appliedSamplerUniforms = programGL->getAppliedSamplerUniforms();
     for (const SamplerBindingGL &samplerUniform : appliedSamplerUniforms)

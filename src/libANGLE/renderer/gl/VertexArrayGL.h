@@ -28,21 +28,24 @@ class VertexArrayGL : public VertexArrayImpl
     void setAttributeDivisor(size_t idx, GLuint divisor) override;
     void enableAttribute(size_t idx, bool enabledState) override;
 
-    gl::Error syncDrawArraysState(GLint first, GLsizei count) const;
-    gl::Error syncDrawElementsState(GLsizei count, GLenum type, const GLvoid *indices, const GLvoid **outIndices) const;
+    gl::Error syncDrawArraysState(const std::vector<GLuint> &activeAttribLoations, GLint first, GLsizei count) const;
+    gl::Error syncDrawElementsState(const std::vector<GLuint> &activeAttribLoations, GLsizei count, GLenum type,
+                                    const GLvoid *indices, const GLvoid **outIndices) const;
 
     GLuint getVertexArrayID() const;
     GLuint getAppliedElementArrayBufferID() const;
 
   private:
-    gl::Error syncDrawState(GLint first, GLsizei count, GLenum type, const GLvoid *indices, const GLvoid **outIndices) const;
+    gl::Error syncDrawState(const std::vector<GLuint> &activeAttribLoations, GLint first, GLsizei count,
+                            GLenum type, const GLvoid *indices, const GLvoid **outIndices) const;
 
     // Check if any vertex attributes need to be streamed
-    bool doAttributesNeedStreaming() const;
+    bool doAttributesNeedStreaming(const std::vector<GLuint> &activeAttribLoations) const;
 
     // Apply attribute state, returns the amount of space needed to stream all attributes that need streaming
     // and the data size of the largest attribute
-    gl::Error syncAttributeState(bool attributesNeedStreaming, const gl::RangeUI &indexRange, size_t *outStreamingDataSize,
+    gl::Error syncAttributeState(const std::vector<GLuint> &activeAttribLoations, bool attributesNeedStreaming,
+                                 const gl::RangeUI &indexRange, size_t *outStreamingDataSize,
                                  size_t *outMaxAttributeDataSize) const;
 
     // Apply index data, only sets outIndexRange if attributesNeedStreaming is true
@@ -50,7 +53,8 @@ class VertexArrayGL : public VertexArrayImpl
                             gl::RangeUI *outIndexRange, const GLvoid **outIndices) const;
 
     // Stream attributes that have client data
-    gl::Error streamAttributes(size_t streamingDataSize, size_t maxAttributeDataSize, const gl::RangeUI &indexRange) const;
+    gl::Error streamAttributes(const std::vector<GLuint> &activeAttribLoations, size_t streamingDataSize,
+                               size_t maxAttributeDataSize, const gl::RangeUI &indexRange) const;
 
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
