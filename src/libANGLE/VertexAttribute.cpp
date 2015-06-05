@@ -23,24 +23,6 @@ VertexAttribute::VertexAttribute()
 {
 }
 
-bool operator==(const VertexAttribute &a, const VertexAttribute &b)
-{
-    return a.enabled == b.enabled &&
-           a.type == b.type &&
-           a.size == b.size &&
-           a.normalized == b.normalized &&
-           a.pureInteger == b.pureInteger &&
-           a.stride == b.stride &&
-           a.pointer == b.pointer &&
-           a.buffer.get() == b.buffer.get() &&
-           a.divisor == b.divisor;
-}
-
-bool operator!=(const VertexAttribute &a, const VertexAttribute &b)
-{
-    return !(a == b);
-}
-
 size_t ComputeVertexAttributeTypeSize(const VertexAttribute& attrib)
 {
     GLuint size = attrib.size;

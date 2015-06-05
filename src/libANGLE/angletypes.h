@@ -41,19 +41,10 @@ struct Color
 };
 
 template <typename T>
-bool operator==(const Color<T> &a, const Color<T> &b)
-{
-    return a.red == b.red &&
-           a.green == b.green &&
-           a.blue == b.blue &&
-           a.alpha == b.alpha;
-}
+bool operator==(const Color<T> &a, const Color<T> &b);
 
 template <typename T>
-bool operator!=(const Color<T> &a, const Color<T> &b)
-{
-    return !(a == b);
-}
+bool operator!=(const Color<T> &a, const Color<T> &b);
 
 typedef Color<float> ColorF;
 typedef Color<int> ColorI;
@@ -196,10 +187,10 @@ struct SamplerState
     GLenum swizzleAlpha;
 
     bool swizzleRequired() const;
-
-    bool operator==(const SamplerState &other) const;
-    bool operator!=(const SamplerState &other) const;
 };
+
+bool operator==(const SamplerState &a, const SamplerState &b);
+bool operator!=(const SamplerState &a, const SamplerState &b);
 
 struct PixelUnpackState
 {
@@ -315,5 +306,7 @@ inline const DestT *GetImplAs(const SrcT *src)
 }
 
 }
+
+#include "angletypes.inl"
 
 #endif // LIBANGLE_ANGLETYPES_H_
