@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99e914d2_5604f41c",
+        "filename": "src/tests/gl_tests/SixteenBppTextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-05T17:41:23Z",
+      "side": 1,
+      "message": "This file will likely need skips for the failing tests on Intel.  I didn\u0027t update any drivers on the bots, that\u0027s in progress but probably wont be done for a while.",
+      "revId": "4635dab6e816724998a67cbe4f29c954064d5c37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
