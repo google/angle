@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "399bc88e_50b9bab5",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-08T15:09:50Z",
+      "side": 1,
+      "message": "std::vector?",
+      "range": {
+        "startLine": 626,
+        "startChar": 8,
+        "endLine": 626,
+        "endChar": 52
+      },
+      "revId": "c2d516838539b1de822c75c36e7ba1c26f90e4a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9ab8c9c_2d7ed926",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-08T15:09:50Z",
+      "side": 1,
+      "message": "suggestion: make an abstract createAnnotator() method in RendererD3D, implement it in Renderer11/9. Call it in a new RendererD3D::getAnnotator method to initialize the annotator if it\u0027s nullptr. Then call uninitialize in ~RendererD3D if it\u0027s not nullptr.",
+      "range": {
+        "startLine": 298,
+        "startChar": 1,
+        "endLine": 300,
+        "endChar": 47
+      },
+      "revId": "c2d516838539b1de822c75c36e7ba1c26f90e4a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_f7440869",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-08T15:09:50Z",
+      "side": 1,
+      "message": "mAnnotator should get initialized to null in the constructor",
+      "range": {
+        "startLine": 178,
+        "startChar": 4,
+        "endLine": 178,
+        "endChar": 14
+      },
+      "revId": "c2d516838539b1de822c75c36e7ba1c26f90e4a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_12537241",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-08T15:09:50Z",
+      "side": 1,
+      "message": "nit: probably UNREACHABLE. we don\u0027t really intend to implement this at the moment.",
+      "range": {
+        "startLine": 218,
+        "startChar": 4,
+        "endLine": 218,
+        "endChar": 17
+      },
+      "revId": "c2d516838539b1de822c75c36e7ba1c26f90e4a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "399bc88e_70939e2c",
+        "filename": "src/libGLESv2/libGLESv2.def",
+        "patchSetId": 3
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-08T15:09:50Z",
+      "side": 1,
+      "message": "probably should amend this",
+      "range": {
+        "startLine": 180,
+        "startChar": 6,
+        "endLine": 180,
+        "endChar": 29
+      },
+      "revId": "c2d516838539b1de822c75c36e7ba1c26f90e4a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9ab8c9c_ad48a900",
+        "filename": "src/tests/gl_tests/DebugMarkerTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-08T15:09:50Z",
+      "side": 1,
+      "message": "nit: print a one-liner here explaining why the test is skipped",
+      "range": {
+        "startLine": 36,
+        "startChar": 8,
+        "endLine": 36,
+        "endChar": 14
+      },
+      "revId": "c2d516838539b1de822c75c36e7ba1c26f90e4a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
