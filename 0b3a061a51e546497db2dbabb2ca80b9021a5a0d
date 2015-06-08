@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9d9cc70_a813e794",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/dxgi_support_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-08T20:29:34Z",
+      "side": 1,
+      "message": "thinking about this more, I can probably do better, and use switch statements instead of a map. Feel free to keep looking at this but I\u0027m probably going to upload a new version.",
+      "range": {
+        "startLine": 25,
+        "startChar": 5,
+        "endLine": 25,
+        "endChar": 8
+      },
+      "revId": "0b3a061a51e546497db2dbabb2ca80b9021a5a0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
