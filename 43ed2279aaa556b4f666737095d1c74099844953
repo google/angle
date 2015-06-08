@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9d9cc70_a2db0616",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-08T19:19:01Z",
+      "side": 1,
+      "message": "nit: A more descriptive name, testNameStream?",
+      "range": {
+        "startLine": 80,
+        "startChar": 22,
+        "endLine": 80,
+        "endChar": 28
+      },
+      "revId": "43ed2279aaa556b4f666737095d1c74099844953",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9ab8c9c_26d268fc",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-08T19:19:01Z",
+      "side": 1,
+      "message": "Use a stack buffer or std::vector?",
+      "range": {
+        "startLine": 82,
+        "startChar": 4,
+        "endLine": 82,
+        "endChar": 43
+      },
+      "revId": "43ed2279aaa556b4f666737095d1c74099844953",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9ab8c9c_06d76ceb",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-08T19:19:01Z",
+      "side": 1,
+      "message": "This would be the size of the pointer instead of the buffer size.",
+      "range": {
+        "startLine": 93,
+        "startChar": 34,
+        "endLine": 93,
+        "endChar": 49
+      },
+      "revId": "43ed2279aaa556b4f666737095d1c74099844953",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_6c7cca6b",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-08T19:19:01Z",
+      "side": 1,
+      "message": "Does this need to be declared?",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 126,
+        "endChar": 5
+      },
+      "revId": "43ed2279aaa556b4f666737095d1c74099844953",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
