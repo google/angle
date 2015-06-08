@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9ab8c9c_00307474",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-08T18:48:44Z",
+      "side": 1,
+      "message": "I am wondering if hasExtension should be moved to private?",
+      "range": {
+        "startLine": 42,
+        "startChar": 9,
+        "endLine": 42,
+        "endChar": 21
+      },
+      "revId": "b7a2b86771b4a8614b2d2908a481798ed79a3513",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_d7193639",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-08T18:48:44Z",
+      "side": 1,
+      "message": "There is no need to set a cap to 0 as they should all be initialized to 0 in Caps::Caps() and GenerateCaps should only be called once. Here and a bunch of places below.",
+      "range": {
+        "startLine": 178,
+        "startChar": 14,
+        "endLine": 178,
+        "endChar": 30
+      },
+      "revId": "b7a2b86771b4a8614b2d2908a481798ed79a3513",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_585a697c",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-08T18:48:44Z",
+      "side": 1,
+      "message": "GL_EXT_framebuffer_object doesn\u0027t seem to provide the renderbufferStorageMultisample() function?",
+      "range": {
+        "startLine": 484,
+        "startChar": 80,
+        "endLine": 484,
+        "endChar": 105
+      },
+      "revId": "b7a2b86771b4a8614b2d2908a481798ed79a3513",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
