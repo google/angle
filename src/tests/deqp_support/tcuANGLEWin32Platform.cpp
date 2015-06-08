@@ -19,11 +19,13 @@
  */
 
 #include "tcuANGLEWin32Platform.h"
-#include "tcuANGLEWin32NativeDisplayFactory.h"
-#include "egluGLContextFactory.hpp"
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+
+#include "egluGLContextFactory.hpp"
+#include "tcuANGLEWin32NativeDisplayFactory.h"
+#include "tcuNullContextFactory.hpp"
 
 namespace tcu
 {
@@ -91,6 +93,9 @@ ANGLEWin32Platform::ANGLEWin32Platform()
 #endif
 
     m_contextFactoryRegistry.registerFactory(new eglu::GLContextFactory(m_nativeDisplayFactoryRegistry));
+
+    // Add Null context type for use in generating case lists
+    m_contextFactoryRegistry.registerFactory(new null::NullGLContextFactory());
 }
 
 ANGLEWin32Platform::~ANGLEWin32Platform()

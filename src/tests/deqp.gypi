@@ -47,6 +47,7 @@
             '<(delibs_dir)/destream',
             '<(deqp_dir)/framework/common',
             '<(deqp_dir)/framework/qphelper',
+            '<(deqp_dir)/framework/platform/null',
             # TODO(jmadill): other platforms
             '<(deqp_dir)/framework/platform/win32',
             '<(deqp_dir)/framework/egl',
@@ -956,6 +957,9 @@
                                 '<(deqp_dir)/framework/opengl/wrapper/glwInitES30Direct.cpp',
                                 '<(deqp_dir)/framework/opengl/wrapper/glwInitFunctions.cpp',
                                 '<(deqp_dir)/framework/opengl/wrapper/glwWrapper.cpp',
+                                '<(deqp_dir)/framework/platform/null/tcuNullContextFactory.cpp',
+                                '<(deqp_dir)/framework/platform/null/tcuNullContextFactory.hpp',
+                                '<(deqp_dir)/framework/platform/null/tcuNullRenderContext.cpp',
                                 '<(deqp_dir)/framework/platform/tcuMain.cpp',
                                 # TODO(jmadill): other platforms
                                 '<(deqp_dir)/framework/platform/win32/tcuWin32Window.cpp',
@@ -1034,6 +1038,7 @@
                                 '<(deqp_dir)/modules/glshared/glsVertexArrayTests.cpp',
                                 # TODO(jmadill): other platforms
                                 'deqp_support/tcuANGLEWin32NativeDisplayFactory.cpp',
+                                'deqp_support/tcuANGLEWin32NativeDisplayFactory.h',
                             ],
                         },
 
