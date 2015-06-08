@@ -91,6 +91,52 @@
       "revId": "43ed2279aaa556b4f666737095d1c74099844953",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9d41838_33e2d0c1",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-08T21:10:02Z",
+      "side": 1,
+      "message": "This hardcodes D3D11 in a platform-independent file -- is that a good idea?",
+      "range": {
+        "startLine": 136,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 6
+      },
+      "revId": "43ed2279aaa556b4f666737095d1c74099844953",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_e280c395",
+        "filename": "src/tests/deqp_support/angle_deqp_libtester_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-08T21:10:02Z",
+      "side": 1,
+      "message": "Do we include enough headers to get these preprocessor definitions?",
+      "range": {
+        "startLine": 89,
+        "startChar": 5,
+        "endLine": 89,
+        "endChar": 10
+      },
+      "revId": "43ed2279aaa556b4f666737095d1c74099844953",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
