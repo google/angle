@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d9ab8c9c_2665c83c",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-08T19:33:41Z",
+      "side": 1,
+      "message": "It should be refactored a bit.  There are too many dependencies on it right now though so I\u0027ll do it as a separate patch.",
+      "parentUuid": "d9ab8c9c_00307474",
+      "range": {
+        "startLine": 42,
+        "startChar": 9,
+        "endLine": 42,
+        "endChar": 21
+      },
+      "revId": "b7a2b86771b4a8614b2d2908a481798ed79a3513",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9d9cc70_d7193639",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "d9ab8c9c_c654e44d",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-08T19:33:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9d9cc70_d7193639",
+      "range": {
+        "startLine": 178,
+        "startChar": 14,
+        "endLine": 178,
+        "endChar": 30
+      },
+      "revId": "b7a2b86771b4a8614b2d2908a481798ed79a3513",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "796b8031_585a697c",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 7
@@ -59,6 +107,30 @@
       "writtenOn": "2015-06-08T18:48:44Z",
       "side": 1,
       "message": "GL_EXT_framebuffer_object doesn\u0027t seem to provide the renderbufferStorageMultisample() function?",
+      "range": {
+        "startLine": 484,
+        "startChar": 80,
+        "endLine": 484,
+        "endChar": 105
+      },
+      "revId": "b7a2b86771b4a8614b2d2908a481798ed79a3513",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9ab8c9c_664bd0a9",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-08T19:33:41Z",
+      "side": 1,
+      "message": "Thanks for noticing that, updated (docs too).",
+      "parentUuid": "796b8031_585a697c",
       "range": {
         "startLine": 484,
         "startChar": 80,
