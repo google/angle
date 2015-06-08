@@ -8,7 +8,10 @@
 
 #include "libANGLE/renderer/gl/RendererGL.h"
 
+#include <EGL/eglext.h>
+
 #include "common/debug.h"
+#include "libANGLE/AttributeMap.h"
 #include "libANGLE/Data.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
@@ -75,10 +78,11 @@ static void INTERNAL_GL_APIENTRY LogGLDebugMessage(GLenum source, GLenum type, G
 namespace rx
 {
 
-RendererGL::RendererGL(const FunctionsGL *functions)
+RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &attribMap)
     : Renderer(),
       mFunctions(functions),
-      mStateManager(nullptr)
+      mStateManager(nullptr),
+      mSkipDrawCalls(false)
 {
     ASSERT(mFunctions);
     mStateManager = new StateManagerGL(mFunctions, getRendererCaps());
@@ -94,6 +98,12 @@ RendererGL::RendererGL(const FunctionsGL *functions)
         mFunctions->debugMessageCallback(&LogGLDebugMessage, nullptr);
     }
 #endif
+
+    EGLint deviceType = attribMap.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, EGL_NONE);
+    if (deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE)
+    {
+        mSkipDrawCalls = true;
+    }
 }
 
 RendererGL::~RendererGL()
@@ -122,7 +132,10 @@ gl::Error RendererGL::drawArrays(const gl::Data &data, GLenum mode,
         return error;
     }
 
-    mFunctions->drawArrays(mode, first, count);
+    if (!mSkipDrawCalls)
+    {
+        mFunctions->drawArrays(mode, first, count);
+    }
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -143,7 +156,10 @@ gl::Error RendererGL::drawElements(const gl::Data &data, GLenum mode, GLsizei co
         return error;
     }
 
-    mFunctions->drawElements(mode, count, type, drawIndexPointer);
+    if (!mSkipDrawCalls)
+    {
+        mFunctions->drawElements(mode, count, type, drawIndexPointer);
+    }
 
     return gl::Error(GL_NO_ERROR);
 }

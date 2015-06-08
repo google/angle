@@ -10,6 +10,7 @@
 
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/SurfaceGL.h"
@@ -30,7 +31,7 @@ DisplayGL::~DisplayGL()
 
 egl::Error DisplayGL::initialize(egl::Display *display)
 {
-    mRenderer = new RendererGL(getFunctionsGL());
+    mRenderer = new RendererGL(getFunctionsGL(), display->getAttributeMap());
     return egl::Error(EGL_SUCCESS);
 }
 

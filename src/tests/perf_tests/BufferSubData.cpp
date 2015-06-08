@@ -17,6 +17,18 @@ namespace
 
 struct BufferSubDataParams final : public RenderTestParams
 {
+    BufferSubDataParams()
+    {
+        // Common default values
+        glesMajorVersion = 2;
+        widowWidth = 512;
+        windowHeight = 512;
+        updateSize = 3000;
+        bufferSize = 40000000;
+        iterations = 2;
+        updateRate = 1;
+    }
+
     std::string suffix() const override;
 
     GLboolean vertexNormalized;
@@ -29,6 +41,12 @@ struct BufferSubDataParams final : public RenderTestParams
     GLsizeiptr bufferSize;
     unsigned int iterations;
 };
+
+inline std::ostream &operator<<(std::ostream &os, const BufferSubDataParams &params)
+{
+    os << params.suffix().substr(1);
+    return os;
+}
 
 class BufferSubDataBenchmark : public ANGLERenderTest,
                                public ::testing::WithParamInterface<BufferSubDataParams>
@@ -318,54 +336,33 @@ void BufferSubDataBenchmark::drawBenchmark()
 BufferSubDataParams BufferUpdateD3D11Params()
 {
     BufferSubDataParams params;
-    params.glesMajorVersion = 2;
-    params.widowWidth = 512;
-    params.windowHeight = 512;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
     params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
     params.vertexType = GL_FLOAT;
     params.vertexComponentCount = 4;
     params.vertexNormalized = GL_FALSE;
-    params.updateSize = 3000;
-    params.bufferSize = 40000000;
-    params.iterations = 2;
-    params.updateRate = 1;
     return params;
 }
 
 BufferSubDataParams BufferUpdateD3D9Params()
 {
     BufferSubDataParams params;
-    params.glesMajorVersion = 2;
-    params.widowWidth = 512;
-    params.windowHeight = 512;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
     params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
     params.vertexType = GL_FLOAT;
     params.vertexComponentCount = 4;
     params.vertexNormalized = GL_FALSE;
-    params.updateSize = 3000;
-    params.bufferSize = 40000000;
-    params.iterations = 2;
-    params.updateRate = 1;
     return params;
 }
 
 BufferSubDataParams BufferUpdateOpenGLParams()
 {
     BufferSubDataParams params;
-    params.glesMajorVersion = 2;
-    params.widowWidth = 512;
-    params.windowHeight = 512;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
-    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
+    params.deviceType = EGL_DONT_CARE;
     params.vertexType = GL_FLOAT;
     params.vertexComponentCount = 4;
     params.vertexNormalized = GL_FALSE;
-    params.updateSize = 3000;
-    params.bufferSize = 40000000;
-    params.iterations = 2;
-    params.updateRate = 1;
     return params;
 }
 

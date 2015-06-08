@@ -19,7 +19,7 @@ class StateManagerGL;
 class RendererGL : public Renderer
 {
   public:
-    RendererGL(const FunctionsGL *functions);
+    RendererGL(const FunctionsGL *functions, const egl::AttributeMap &attribMap);
     ~RendererGL() override;
 
     gl::Error flush() override;
@@ -76,6 +76,9 @@ class RendererGL : public Renderer
 
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
+
+    // For performance debugging
+    bool mSkipDrawCalls;
 };
 
 }

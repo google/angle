@@ -19,6 +19,18 @@ namespace
 
 struct PointSpritesParams final : public RenderTestParams
 {
+    PointSpritesParams()
+    {
+        // Common default params
+        glesMajorVersion = 2;
+        widowWidth = 1280;
+        windowHeight = 720;
+        iterations = 10;
+        count = 10;
+        size = 3.0f;
+        numVaryings = 3;
+    }
+
     std::string suffix() const override;
 
     unsigned int count;
@@ -28,6 +40,12 @@ struct PointSpritesParams final : public RenderTestParams
     // static parameters
     unsigned int iterations;
 };
+
+inline std::ostream &operator<<(std::ostream &os, const PointSpritesParams &params)
+{
+    os << params.suffix().substr(1);
+    return os;
+}
 
 class PointSpritesBenchmark : public ANGLERenderTest,
                               public ::testing::WithParamInterface<PointSpritesParams>
@@ -184,54 +202,24 @@ void PointSpritesBenchmark::drawBenchmark()
 PointSpritesParams D3D11Params()
 {
     PointSpritesParams params;
-
-    params.glesMajorVersion = 2;
-    params.widowWidth = 1280;
-    params.windowHeight = 720;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
     params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
-
-    params.iterations = 10;
-    params.count = 10;
-    params.size = 3.0f;
-    params.numVaryings = 3;
-
     return params;
 }
 
 PointSpritesParams D3D9Params()
 {
     PointSpritesParams params;
-
-    params.glesMajorVersion = 2;
-    params.widowWidth = 1280;
-    params.windowHeight = 720;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
     params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
-
-    params.iterations = 10;
-    params.count = 10;
-    params.size = 3.0f;
-    params.numVaryings = 3;
-
     return params;
 }
 
 PointSpritesParams OpenGLParams()
 {
     PointSpritesParams params;
-
-    params.glesMajorVersion = 2;
-    params.widowWidth = 1280;
-    params.windowHeight = 720;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
-    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
-
-    params.iterations = 10;
-    params.count = 10;
-    params.size = 3.0f;
-    params.numVaryings = 3;
-
+    params.deviceType = EGL_DONT_CARE;
     return params;
 }
 

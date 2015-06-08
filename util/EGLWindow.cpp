@@ -22,7 +22,7 @@ EGLPlatformParameters::EGLPlatformParameters()
     : renderer(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE),
       majorVersion(EGL_DONT_CARE),
       minorVersion(EGL_DONT_CARE),
-      deviceType(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE)
+      deviceType(EGL_DONT_CARE)
 {
 }
 
@@ -30,8 +30,13 @@ EGLPlatformParameters::EGLPlatformParameters(EGLint renderer)
     : renderer(renderer),
       majorVersion(EGL_DONT_CARE),
       minorVersion(EGL_DONT_CARE),
-      deviceType(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE)
+      deviceType(EGL_DONT_CARE)
 {
+    if (renderer == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE ||
+        renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    {
+        deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
+    }
 }
 
 EGLPlatformParameters::EGLPlatformParameters(EGLint renderer, EGLint majorVersion, EGLint minorVersion, EGLint useWarp)
@@ -108,7 +113,7 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
     displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE);
     displayAttributes.push_back(mPlatform.minorVersion);
 
-    if (mPlatform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE || mPlatform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    if (mPlatform.deviceType != EGL_DONT_CARE)
     {
         displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
         displayAttributes.push_back(mPlatform.deviceType);

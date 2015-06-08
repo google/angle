@@ -220,7 +220,11 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
                   case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
                   case EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE:
                   case EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE:
+                    deviceTypeSpecified = true;
+                    break;
+
                   case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
+                    // This is a hidden option, accepted by the OpenGL back-end.
                     break;
 
                   default:
@@ -228,7 +232,6 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
                     return EGL_NO_DISPLAY;
                 }
                 deviceType = curAttrib[1];
-                deviceTypeSpecified = true;
                 break;
 
               default:

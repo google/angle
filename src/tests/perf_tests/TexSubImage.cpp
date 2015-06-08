@@ -17,6 +17,20 @@ namespace
 
 struct TexSubImageParams final : public RenderTestParams
 {
+    TexSubImageParams()
+    {
+        // Common default parameters
+        glesMajorVersion = 2;
+        widowWidth = 512;
+        windowHeight = 512;
+
+        imageWidth = 1024;
+        imageHeight = 1024;
+        subImageWidth = 64;
+        subImageHeight = 64;
+        iterations = 3;
+    }
+
     std::string suffix() const override;
 
     // Static parameters
@@ -26,6 +40,12 @@ struct TexSubImageParams final : public RenderTestParams
     int subImageHeight;
     unsigned int iterations;
 };
+
+inline std::ostream &operator<<(std::ostream &os, const TexSubImageParams &params)
+{
+    os << params.suffix().substr(1);
+    return os;
+}
 
 class TexSubImageBenchmark : public ANGLERenderTest,
                              public ::testing::WithParamInterface<TexSubImageParams>
@@ -251,57 +271,24 @@ void TexSubImageBenchmark::drawBenchmark()
 TexSubImageParams D3D11Params()
 {
     TexSubImageParams params;
-
-    params.glesMajorVersion = 2;
-    params.widowWidth = 512;
-    params.windowHeight = 512;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
     params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
-
-    params.imageWidth = 1024;
-    params.imageHeight = 1024;
-    params.subImageWidth = 64;
-    params.subImageHeight = 64;
-    params.iterations = 3;
-
     return params;
 }
 
 TexSubImageParams D3D9Params()
 {
     TexSubImageParams params;
-
-    params.glesMajorVersion = 2;
-    params.widowWidth = 512;
-    params.windowHeight = 512;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
     params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
-
-    params.imageWidth = 1024;
-    params.imageHeight = 1024;
-    params.subImageWidth = 64;
-    params.subImageHeight = 64;
-    params.iterations = 3;
-
     return params;
 }
 
 TexSubImageParams OpenGLParams()
 {
     TexSubImageParams params;
-
-    params.glesMajorVersion = 2;
-    params.widowWidth = 512;
-    params.windowHeight = 512;
     params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
-    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
-
-    params.imageWidth = 1024;
-    params.imageHeight = 1024;
-    params.subImageWidth = 64;
-    params.subImageHeight = 64;
-    params.iterations = 3;
-
+    params.deviceType = EGL_DONT_CARE;
     return params;
 }
 
