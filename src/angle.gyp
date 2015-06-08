@@ -26,7 +26,10 @@
                 'angle_enable_d3d11%': 1,
                 'angle_enable_hlsl%': 1,
             }],
-            ['OS=="linux" and use_x11==1',
+            # Gyp provides no way to make conditions depend on variables defined in the same
+            # variable block. In a standalone build, use_x11 is defined in this variable block
+            # (merged from an include) so we cannot test it, instead we enable GL unconditionnally.
+            ['OS=="linux" and (angle_standalone==1 or use_x11==1)',
             {
                 'angle_enable_gl%': 1,
             }],
