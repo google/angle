@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d9d9cc70_2817f776",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-08T20:31:07Z",
+      "side": 1,
+      "message": "Ack, thanks.",
+      "parentUuid": "796b8031_6f091c34",
+      "revId": "fd039ae3af71a7928500081d726f7be699cfc8ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9d9cc70_3d3e1b98",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2015-06-08T20:08:55Z",
       "side": 1,
       "message": "and here",
+      "revId": "fd039ae3af71a7928500081d726f7be699cfc8ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9d41838_f0255eb6",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-08T20:31:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9d9cc70_3d3e1b98",
       "revId": "fd039ae3af71a7928500081d726f7be699cfc8ca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
