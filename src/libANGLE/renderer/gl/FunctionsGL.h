@@ -34,6 +34,7 @@ class FunctionsGL
     // Version information
     gl::Version version;
     StandardGL standard;
+    GLint profile;
     bool isAtLeastGL(const gl::Version &glVersion) const;
     bool isAtLeastGLES(const gl::Version &glesVersion) const;
 

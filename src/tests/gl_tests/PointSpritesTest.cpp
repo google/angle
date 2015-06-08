@@ -429,4 +429,4 @@ TEST_P(PointSpritesTest, PointSizeDeclaredButUnused)
 // We test on D3D11 9_3 because the existing D3D11 PointSprite implementation
 // uses Geometry Shaders which are not supported for 9_3.
 // D3D9 and D3D11 are also tested to ensure no regressions.
-ANGLE_INSTANTIATE_TEST(PointSpritesTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
+ANGLE_INSTANTIATE_TEST(PointSpritesTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL(), ES3_OPENGL());
