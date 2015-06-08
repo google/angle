@@ -22,6 +22,30 @@
       "revId": "0b3a061a51e546497db2dbabb2ca80b9021a5a0d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_6f83dc54",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/dxgi_support_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-08T20:34:56Z",
+      "side": 1,
+      "message": "Yep, switch statements are perfect for generated sources.",
+      "parentUuid": "d9d9cc70_a813e794",
+      "range": {
+        "startLine": 25,
+        "startChar": 5,
+        "endLine": 25,
+        "endChar": 8
+      },
+      "revId": "0b3a061a51e546497db2dbabb2ca80b9021a5a0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
