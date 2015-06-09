@@ -31,7 +31,7 @@ namespace tcu
 class EventState
 {
   public:
-    EventState::EventState()
+    EventState()
         : mQuit(false)
     {
     }
@@ -42,14 +42,14 @@ class EventState
     bool mQuit;
 };
 
-class ANGLEWin32NativeDisplayFactory : public eglu::NativeDisplayFactory
+class ANGLENativeDisplayFactory : public eglu::NativeDisplayFactory
 {
   public:
-    ANGLEWin32NativeDisplayFactory(const std::string &name,
-                                   const std::string &description,
-                                   const std::vector<eglw::EGLAttrib> &platformAttributes,
-                                   EventState *eventState);
-    ~ANGLEWin32NativeDisplayFactory() override;
+    ANGLENativeDisplayFactory(const std::string &name,
+                              const std::string &description,
+                              const std::vector<eglw::EGLAttrib> &platformAttributes,
+                              EventState *eventState);
+    ~ANGLENativeDisplayFactory() override;
 
     eglu::NativeDisplay *createDisplay(const eglw::EGLAttrib* attribList) const override;
 

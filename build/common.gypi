@@ -330,6 +330,9 @@
                 'cflags':
                 [
                     '-fPIC',
+                ],
+                'cflags_cc':
+                [
                     '-std=c++0x',
                 ],
             },

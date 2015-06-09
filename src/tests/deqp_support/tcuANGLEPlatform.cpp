@@ -18,23 +18,24 @@
  *
  */
 
-#include "tcuANGLEWin32Platform.h"
+#include "tcuANGLEPlatform.h"
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
 #include "egluGLContextFactory.hpp"
 #include "system_utils.h"
-#include "tcuANGLEWin32NativeDisplayFactory.h"
+#include "tcuANGLENativeDisplayFactory.h"
 #include "tcuNullContextFactory.hpp"
 
 namespace tcu
 {
 
-ANGLEWin32Platform::ANGLEWin32Platform()
+ANGLEPlatform::ANGLEPlatform()
 {
     angle::SetLowPriorityProcess();
 
+#if (DE_OS == DE_OS_WIN32)
 #if defined(ANGLE_DEQP_GLES2_TESTS) || defined(ANGLE_DEQP_GLES3_TESTS)
     std::vector<eglw::EGLAttrib> d3d11Attribs;
     d3d11Attribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
@@ -43,10 +44,10 @@ ANGLEWin32Platform::ANGLEWin32Platform()
     d3d11Attribs.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
     d3d11Attribs.push_back(EGL_NONE);
 
-    auto *d3d11Factory = new ANGLEWin32NativeDisplayFactory(
+    auto *d3d11Factory = new ANGLENativeDisplayFactory(
         "angle-d3d11", "ANGLE D3D11 Display", d3d11Attribs, &mEvents);
     m_nativeDisplayFactoryRegistry.registerFactory(d3d11Factory);
-#endif
+#endif // defined(ANGLE_DEQP_GLES2_TESTS) || defined(ANGLE_DEQP_GLES3_TESTS)
 
 #if defined(ANGLE_DEQP_GLES2_TESTS)
     std::vector<eglw::EGLAttrib> d3d9Attribs;
@@ -56,7 +57,7 @@ ANGLEWin32Platform::ANGLEWin32Platform()
     d3d9Attribs.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
     d3d9Attribs.push_back(EGL_NONE);
 
-    auto *d3d9Factory = new ANGLEWin32NativeDisplayFactory(
+    auto *d3d9Factory = new ANGLENativeDisplayFactory(
         "angle-d3d9", "ANGLE D3D9 Display", d3d9Attribs, &mEvents);
     m_nativeDisplayFactoryRegistry.registerFactory(d3d9Factory);
 
@@ -71,19 +72,22 @@ ANGLEWin32Platform::ANGLEWin32Platform()
     d3d1193Attribs.push_back(3);
     d3d1193Attribs.push_back(EGL_NONE);
 
-    auto *d3d1193Factory = new ANGLEWin32NativeDisplayFactory(
+    auto *d3d1193Factory = new ANGLENativeDisplayFactory(
         "angle-d3d11-fl93", "ANGLE D3D11 FL9_3 Display", d3d1193Attribs, &mEvents);
     m_nativeDisplayFactoryRegistry.registerFactory(d3d1193Factory);
+#endif // defined(ANGLE_DEQP_GLES2_TESTS)
+#endif // (DE_OS == DE_OS_WIN32)
 
+#if defined(ANGLE_DEQP_GLES2_TESTS)
     std::vector<eglw::EGLAttrib> glAttribs;
     glAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
     glAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE);
     glAttribs.push_back(EGL_NONE);
 
-    auto *glFactory = new ANGLEWin32NativeDisplayFactory(
+    auto *glFactory = new ANGLENativeDisplayFactory(
         "angle-gl", "ANGLE OpenGL Display", glAttribs, &mEvents);
     m_nativeDisplayFactoryRegistry.registerFactory(glFactory);
-#endif
+#endif // defined(ANGLE_DEQP_GLES2_TESTS)
 
     m_contextFactoryRegistry.registerFactory(new eglu::GLContextFactory(m_nativeDisplayFactoryRegistry));
 
@@ -91,11 +95,11 @@ ANGLEWin32Platform::ANGLEWin32Platform()
     m_contextFactoryRegistry.registerFactory(new null::NullGLContextFactory());
 }
 
-ANGLEWin32Platform::~ANGLEWin32Platform()
+ANGLEPlatform::~ANGLEPlatform()
 {
 }
 
-bool ANGLEWin32Platform::processEvents()
+bool ANGLEPlatform::processEvents()
 {
     return !mEvents.quitSignaled();
 }
@@ -105,5 +109,5 @@ bool ANGLEWin32Platform::processEvents()
 // Create platform
 tcu::Platform *createPlatform()
 {
-    return new tcu::ANGLEWin32Platform();
+    return new tcu::ANGLEPlatform();
 }

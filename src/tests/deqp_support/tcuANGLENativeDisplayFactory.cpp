@@ -18,7 +18,7 @@
  *
  */
 
-#include "tcuANGLEWin32NativeDisplayFactory.h"
+#include "tcuANGLENativeDisplayFactory.h"
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -31,12 +31,14 @@
 #include "OSPixmap.h"
 #include "OSWindow.h"
 #include "tcuTexture.hpp"
-#include "tcuWin32API.h"
 
-// Assume no call translation is needed
-DE_STATIC_ASSERT(sizeof(eglw::EGLNativeDisplayType) == sizeof(HDC));
-DE_STATIC_ASSERT(sizeof(eglw::EGLNativePixmapType) == sizeof(HBITMAP));
-DE_STATIC_ASSERT(sizeof(eglw::EGLNativeWindowType) == sizeof(HWND));
+#if (DE_OS == DE_OS_WIN32)
+    #define ANGLE_EGL_LIBRARY_NAME "libEGL.dll"
+#elif (DE_OS == DE_OS_UNIX)
+    #define ANGLE_EGL_LIBRARY_NAME "libEGL.so"
+#else
+    #error "Unsupported platform"
+#endif
 
 namespace tcu
 {
@@ -70,10 +72,10 @@ class ANGLENativeDisplay : public eglu::NativeDisplay
     const eglw::EGLAttrib *getPlatformAttributes() const override { return &mPlatformAttributes[0]; }
     const eglw::Library &getLibrary() const override { return mLibrary; }
 
-    HDC getDeviceContext() { return mDeviceContext; }
+    EGLNativeDisplayType getDeviceContext() { return mDeviceContext; }
 
   private:
-    HDC mDeviceContext;
+    EGLNativeDisplayType mDeviceContext;
     eglw::DefaultLibrary mLibrary;
     std::vector<eglw::EGLAttrib> mPlatformAttributes;
 };
@@ -118,7 +120,7 @@ class NativeWindow : public eglu::NativeWindow
     NativeWindow(ANGLENativeDisplay *nativeDisplay, const eglu::WindowParams &params, EventState *eventState);
     ~NativeWindow() override;
 
-    eglw::EGLNativeWindowType getLegacyNative() override { return mWindow->getNativeWindow(); }
+    eglw::EGLNativeWindowType getLegacyNative() override;
     IVec2 getSurfaceSize() const override;
     IVec2 getScreenSize() const override { return getSurfaceSize(); }
     void processEvents() override;
@@ -135,8 +137,8 @@ class NativeWindow : public eglu::NativeWindow
 
 ANGLENativeDisplay::ANGLENativeDisplay(const std::vector<EGLAttrib> &attribs)
     : eglu::NativeDisplay(DISPLAY_CAPABILITIES, EGL_PLATFORM_ANGLE_ANGLE, "EGL_EXT_platform_base"),
-      mDeviceContext(static_cast<HDC>(EGL_DEFAULT_DISPLAY)),
-      mLibrary("libEGL.dll"),
+      mDeviceContext(EGL_DEFAULT_DISPLAY),
+      mLibrary(ANGLE_EGL_LIBRARY_NAME),
       mPlatformAttributes(attribs)
 {
 }
@@ -165,7 +167,7 @@ NativePixmap::~NativePixmap()
 
 eglw::EGLNativePixmapType NativePixmap::getLegacyNative()
 {
-    return mPixmap->getNativePixmap();
+    return reinterpret_cast<eglw::EGLNativePixmapType>(mPixmap->getNativePixmap());
 }
 
 // NativePixmapFactory
@@ -256,6 +258,11 @@ NativeWindow::~NativeWindow()
     delete mWindow;
 }
 
+eglw::EGLNativeWindowType NativeWindow::getLegacyNative()
+{
+    return reinterpret_cast<eglw::EGLNativeWindowType>(mWindow->getNativeWindow());
+}
+
 IVec2 NativeWindow::getSurfaceSize() const
 {
     return IVec2(mWindow->getWidth(), mWindow->getHeight());
@@ -291,10 +298,10 @@ void NativeWindow::readScreenPixels(tcu::TextureLevel *dst) const
 
 } // anonymous
 
-ANGLEWin32NativeDisplayFactory::ANGLEWin32NativeDisplayFactory(const std::string &name,
-                                                               const std::string &description,
-                                                               const std::vector<eglw::EGLAttrib> &platformAttributes,
-                                                               EventState *eventState)
+ANGLENativeDisplayFactory::ANGLENativeDisplayFactory(const std::string &name,
+                                                     const std::string &description,
+                                                     const std::vector<eglw::EGLAttrib> &platformAttributes,
+                                                     EventState *eventState)
     : eglu::NativeDisplayFactory(name, description, DISPLAY_CAPABILITIES, EGL_PLATFORM_ANGLE_ANGLE, "EGL_EXT_platform_base"),
       mPlatformAttributes(platformAttributes)
 {
@@ -302,11 +309,11 @@ ANGLEWin32NativeDisplayFactory::ANGLEWin32NativeDisplayFactory(const std::string
     m_nativePixmapRegistry.registerFactory(new NativePixmapFactory());
 }
 
-ANGLEWin32NativeDisplayFactory::~ANGLEWin32NativeDisplayFactory()
+ANGLENativeDisplayFactory::~ANGLENativeDisplayFactory()
 {
 }
 
-eglu::NativeDisplay *ANGLEWin32NativeDisplayFactory::createDisplay(const eglw::EGLAttrib *attribList) const
+eglu::NativeDisplay *ANGLENativeDisplayFactory::createDisplay(const eglw::EGLAttrib *attribList) const
 {
     DE_UNREF(attribList);
     return new ANGLENativeDisplay(mPlatformAttributes);

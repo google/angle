@@ -29,18 +29,18 @@
 #   include "egluPlatform.hpp"
 #endif
 
-#include "tcuANGLEWin32NativeDisplayFactory.h"
+#include "tcuANGLENativeDisplayFactory.h"
 
 namespace tcu
 {
 
-class ANGLEWin32Platform : public tcu::Platform,
-                           private glu::Platform,
-                           private eglu::Platform
+class ANGLEPlatform : public tcu::Platform,
+                      private glu::Platform,
+                      private eglu::Platform
 {
   public:
-    ANGLEWin32Platform();
-    ~ANGLEWin32Platform();
+    ANGLEPlatform();
+    ~ANGLEPlatform();
 
     bool processEvents() override;
 
