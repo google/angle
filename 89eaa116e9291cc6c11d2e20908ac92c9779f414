@@ -46,6 +46,30 @@
       "revId": "89eaa116e9291cc6c11d2e20908ac92c9779f414",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_958ca28e",
+        "filename": "src/tests/deqp_support/tcuANGLEWin32Platform.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T15:46:28Z",
+      "side": 1,
+      "message": "You\u0027re always welcome to clean up style. I\u0027d mildly prefer if you at least placed this new include in the group above, since the #ifdef stuff is supposed to be after the main include block. Are you having trouble rebasing your patches or something like that?",
+      "parentUuid": "99ce74a2_dd6ddfae",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 46
+      },
+      "revId": "89eaa116e9291cc6c11d2e20908ac92c9779f414",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
