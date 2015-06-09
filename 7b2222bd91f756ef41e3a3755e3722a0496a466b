@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "99ce74a2_1a735dc7",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-09T06:31:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39d588cf_8b7e81db",
+      "range": {
+        "startLine": 13,
+        "startChar": 9,
+        "endLine": 13,
+        "endChar": 25
+      },
+      "revId": "7b2222bd91f756ef41e3a3755e3722a0496a466b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59d23ce8_4c399300",
         "filename": "util/win32/Win32Window.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-02T14:35:35Z",
       "side": 1,
       "message": "Instead of asserting on all the results, can this return a bool?\n\nWe can assert in the NativeWindow class in DEQP.",
+      "range": {
+        "startLine": 490,
+        "startChar": 0,
+        "endLine": 490,
+        "endChar": 4
+      },
+      "revId": "7b2222bd91f756ef41e3a3755e3722a0496a466b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99ce74a2_9a0d2d42",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-09T06:31:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59d23ce8_4c399300",
       "range": {
         "startLine": 490,
         "startChar": 0,
@@ -94,6 +142,54 @@
     },
     {
       "key": {
+        "uuid": "79c9c09b_d608229c",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-09T06:31:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59d23ce8_6c533741",
+      "range": {
+        "startLine": 517,
+        "startChar": 44,
+        "endLine": 517,
+        "endChar": 53
+      },
+      "revId": "7b2222bd91f756ef41e3a3755e3722a0496a466b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99ce74a2_fafe617c",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-09T06:31:55Z",
+      "side": 1,
+      "message": "I liked that tadpole train though.",
+      "parentUuid": "b97b38ac_c96d81f9",
+      "range": {
+        "startLine": 517,
+        "startChar": 60,
+        "endLine": 517,
+        "endChar": 64
+      },
+      "revId": "7b2222bd91f756ef41e3a3755e3722a0496a466b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b97b38ac_693a2dfb",
         "filename": "util/win32/Win32Window.cpp",
         "patchSetId": 1
@@ -111,6 +207,47 @@
         "endLine": 540,
         "endChar": 91
       },
+      "revId": "7b2222bd91f756ef41e3a3755e3722a0496a466b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99ce74a2_da03a514",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-09T06:31:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b97b38ac_693a2dfb",
+      "range": {
+        "startLine": 540,
+        "startChar": 78,
+        "endLine": 540,
+        "endChar": 91
+      },
+      "revId": "7b2222bd91f756ef41e3a3755e3722a0496a466b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79c9c09b_b6fda6e8",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-09T06:31:55Z",
+      "side": 1,
+      "message": "I think this ReleaseDC makes sense with mNativeWindow here.",
       "revId": "7b2222bd91f756ef41e3a3755e3722a0496a466b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
