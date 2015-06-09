@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "39c4a87c_8ecba793",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 47
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-09T19:33:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9d9cc70_1a60fa2c",
+      "range": {
+        "startLine": 47,
+        "startChar": 26,
+        "endLine": 47,
+        "endChar": 33
+      },
+      "revId": "f7a885fd69c9919b50f43184c340889c8dddcd12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9d9cc70_fa640e42",
         "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
         "patchSetId": 47
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-09T13:49:27Z",
       "side": 1,
       "message": "nit: halfFS (since it\u0027s local)",
+      "range": {
+        "startLine": 64,
+        "startChar": 26,
+        "endLine": 64,
+        "endChar": 32
+      },
+      "revId": "f7a885fd69c9919b50f43184c340889c8dddcd12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59c15c6b_c1485102",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 47
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-09T19:33:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9d9cc70_fa640e42",
       "range": {
         "startLine": 64,
         "startChar": 26,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "39c4a87c_6ec85396",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 47
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-09T19:33:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9d9cc70_da595288",
+      "range": {
+        "startLine": 116,
+        "startChar": 115,
+        "endLine": 116,
+        "endChar": 119
+      },
+      "revId": "f7a885fd69c9919b50f43184c340889c8dddcd12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9d9cc70_ba5e866c",
         "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
         "patchSetId": 47
@@ -82,6 +154,30 @@
       "writtenOn": "2015-06-09T13:49:27Z",
       "side": 1,
       "message": "does this comment really apply?",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 209,
+        "endChar": 85
+      },
+      "revId": "f7a885fd69c9919b50f43184c340889c8dddcd12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9a6d8d3_72f6fed0",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 47
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-06-09T19:33:54Z",
+      "side": 1,
+      "message": "I copied and pasted this one from MipmapTest.cpp. Deleted already.",
+      "parentUuid": "d9d9cc70_ba5e866c",
       "range": {
         "startLine": 209,
         "startChar": 0,
