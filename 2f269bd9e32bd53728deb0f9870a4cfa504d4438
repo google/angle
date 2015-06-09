@@ -1,0 +1,280 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9d9cc70_3c2613c3",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T15:04:47Z",
+      "side": 1,
+      "message": "what\u0027s this? can you comment?",
+      "range": {
+        "startLine": 37,
+        "startChar": 13,
+        "endLine": 37,
+        "endChar": 26
+      },
+      "revId": "2f269bd9e32bd53728deb0f9870a4cfa504d4438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_b5727e5b",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T15:04:47Z",
+      "side": 1,
+      "message": "comment this.",
+      "range": {
+        "startLine": 628,
+        "startChar": 24,
+        "endLine": 628,
+        "endChar": 37
+      },
+      "revId": "2f269bd9e32bd53728deb0f9870a4cfa504d4438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_d5761a50",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T15:04:47Z",
+      "side": 1,
+      "message": "comment this as well",
+      "range": {
+        "startLine": 688,
+        "startChar": 24,
+        "endLine": 688,
+        "endChar": 37
+      },
+      "revId": "2f269bd9e32bd53728deb0f9870a4cfa504d4438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_fc088b32",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T15:04:47Z",
+      "side": 1,
+      "message": "try merging this into the main deqp lib",
+      "range": {
+        "startLine": 711,
+        "startChar": 36,
+        "endLine": 711,
+        "endChar": 57
+      },
+      "revId": "2f269bd9e32bd53728deb0f9870a4cfa504d4438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_7c76dbb7",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T15:04:47Z",
+      "side": 1,
+      "message": "how come you need this twice?",
+      "range": {
+        "startLine": 727,
+        "startChar": 19,
+        "endLine": 730,
+        "endChar": 22
+      },
+      "revId": "2f269bd9e32bd53728deb0f9870a4cfa504d4438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9d41838_ca0df940",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 761,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T15:04:47Z",
+      "side": 1,
+      "message": "comment here as well - it\u0027s too bad we seem to pick up this flag in Linux",
+      "range": {
+        "startLine": 761,
+        "startChar": 27,
+        "endLine": 761,
+        "endChar": 46
+      },
+      "revId": "2f269bd9e32bd53728deb0f9870a4cfa504d4438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_bc7c4399",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 803,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T15:04:47Z",
+      "side": 1,
+      "message": "comment here explaining why you need a split c lib",
+      "range": {
+        "startLine": 803,
+        "startChar": 24,
+        "endLine": 803,
+        "endChar": 37
+      },
+      "revId": "2f269bd9e32bd53728deb0f9870a4cfa504d4438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_b5499e05",
+        "filename": "src/tests/deqp_support/angle_deqp_tests_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T15:04:47Z",
+      "side": 1,
+      "message": "what\u0027s up with this? doesn\u0027t linux use main?",
+      "range": {
+        "startLine": 22,
+        "startChar": 4,
+        "endLine": 22,
+        "endChar": 10
+      },
+      "revId": "2f269bd9e32bd53728deb0f9870a4cfa504d4438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_5c1aff77",
+        "filename": "src/tests/deqp_support/tcuANGLEPlatform.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T15:04:47Z",
+      "side": 1,
+      "message": "can you group this stuff by Win32(D3D9/D3D11) All(OpenGL)",
+      "range": {
+        "startLine": 54,
+        "startChar": 7,
+        "endLine": 54,
+        "endChar": 13
+      },
+      "revId": "2f269bd9e32bd53728deb0f9870a4cfa504d4438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9d41838_4a3109f4",
+        "filename": "src/tests/deqp_support/tcuANGLEPlatform.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T15:04:47Z",
+      "side": 1,
+      "message": "commenting the #endifs would be good",
+      "range": {
+        "startLine": 80,
+        "startChar": 1,
+        "endLine": 80,
+        "endChar": 6
+      },
+      "revId": "2f269bd9e32bd53728deb0f9870a4cfa504d4438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_d55d3ac2",
+        "filename": "src/tests/deqp_support/tcuANGLEPlatform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T15:04:47Z",
+      "side": 1,
+      "message": "nit: alignment",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 27
+      },
+      "revId": "2f269bd9e32bd53728deb0f9870a4cfa504d4438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_f55a36c7",
+        "filename": "src/tests/tests.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T15:04:47Z",
+      "side": 1,
+      "message": "leave this stuff out, it\u0027s for geoff\u0027s dEQP integration which at some point we\u0027ll remove",
+      "range": {
+        "startLine": 214,
+        "startChar": 10,
+        "endLine": 214,
+        "endChar": 32
+      },
+      "revId": "2f269bd9e32bd53728deb0f9870a4cfa504d4438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
