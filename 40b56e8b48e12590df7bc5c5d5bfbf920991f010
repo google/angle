@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "79c9c09b_f9dc2f92",
+        "filename": "src/tests/deqp_support/tcuANGLEWin32NativeDisplayFactory.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-09T15:39:06Z",
+      "side": 1,
+      "message": "Done in patch 3",
+      "parentUuid": "796b8031_751ac62d",
+      "range": {
+        "startLine": 240,
+        "startChar": 44,
+        "endLine": 240,
+        "endChar": 55
+      },
+      "revId": "40b56e8b48e12590df7bc5c5d5bfbf920991f010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59d23ce8_aceb5fec",
         "filename": "src/tests/deqp_support/tcuANGLEWin32NativeDisplayFactory.cpp",
         "patchSetId": 1
