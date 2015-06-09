@@ -10,7 +10,7 @@
 #include "angle_gl.h"
 #include "gtest/gtest.h"
 #include "GLSLANG/ShaderLang.h"
-#include "compiler/translator/TranslatorESSL.h"
+#include "tests/test_utils/compiler_test.h"
 
 namespace
 {
@@ -21,32 +21,17 @@ class PruneUnusedFunctionsTest : public testing::Test
     PruneUnusedFunctionsTest() {}
 
   protected:
-    void SetUp() override
-    {
-        ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
-        resources.FragmentPrecisionHigh = 1;
-
-        mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_GLES3_SPEC);
-        ASSERT_TRUE(mTranslator->Init(resources));
-    }
-
-    void TearDown() override
-    {
-        SafeDelete(mTranslator);
-    }
-
     void compile(const std::string &shaderString, bool prune)
     {
-        const char *shaderStrings[] = { shaderString.c_str() };
-        int compilationFlags = SH_VARIABLES | SH_OBJECT_CODE | (prune ? 0 : SH_DONT_PRUNE_UNUSED_FUNCTIONS);
-        bool compilationSuccess = mTranslator->compile(shaderStrings, 1, compilationFlags);
-        TInfoSink &infoSink = mTranslator->getInfoSink();
+        int compilationFlags = SH_VARIABLES | (prune ? 0 : SH_DONT_PRUNE_UNUSED_FUNCTIONS);
+
+        std::string infoLog;
+        bool compilationSuccess = compileTestShader(GL_FRAGMENT_SHADER, SH_GLES3_SPEC, SH_ESSL_OUTPUT,
+                                                    shaderString, compilationFlags, &mTranslatedSource, &infoLog);
         if (!compilationSuccess)
         {
-            FAIL() << "Shader compilation failed " << infoSink.info.str();
+            FAIL() << "Shader compilation failed " << infoLog;
         }
-        mTranslatedSource = infoSink.obj.str();
     }
 
     bool kept(const char *functionName, int nOccurences) const
@@ -70,7 +55,6 @@ class PruneUnusedFunctionsTest : public testing::Test
     }
 
   private:
-    TranslatorESSL *mTranslator;
     std::string mTranslatedSource;
 };
 

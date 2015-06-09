@@ -10,8 +10,7 @@
 #include "angle_gl.h"
 #include "gtest/gtest.h"
 #include "GLSLANG/ShaderLang.h"
-#include "compiler/translator/TranslatorESSL.h"
-#include "compiler/translator/TranslatorGLSL.h"
+#include "tests/test_utils/compiler_test.h"
 
 class DebugShaderPrecisionTest : public testing::Test
 {
@@ -19,40 +18,20 @@ class DebugShaderPrecisionTest : public testing::Test
     DebugShaderPrecisionTest() {}
 
   protected:
-    virtual void SetUp()
-    {
-        ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
-        resources.WEBGL_debug_shader_precision = 1;
-
-        mTranslatorESSL = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_GLES2_SPEC);
-        ASSERT_TRUE(mTranslatorESSL->Init(resources));
-        mTranslatorGLSL = new TranslatorGLSL(
-            GL_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_GLSL_COMPATIBILITY_OUTPUT);
-        ASSERT_TRUE(mTranslatorGLSL->Init(resources));
-    }
-
-    virtual void TearDown()
-    {
-        delete mTranslatorESSL;
-        delete mTranslatorGLSL;
-    }
-
     void compile(const std::string& shaderString)
     {
-        const char *shaderStrings[] = { shaderString.c_str() };
-
-        bool compilationSuccess = mTranslatorESSL->compile(shaderStrings, 1, SH_OBJECT_CODE);
-        TInfoSink &infoSink = mTranslatorESSL->getInfoSink();
-        mESSLCode = infoSink.obj.c_str();
+        std::string infoLog;
+        bool compilationSuccess = compileWithSettings(SH_ESSL_OUTPUT, shaderString, &mESSLCode, &infoLog);
         if (!compilationSuccess)
-            FAIL() << "Shader compilation into ESSL failed " << infoSink.info.c_str();
+        {
+            FAIL() << "Shader compilation into ESSL failed " << infoLog;
+        }
 
-        compilationSuccess = mTranslatorGLSL->compile(shaderStrings, 1, SH_OBJECT_CODE);
-        infoSink = mTranslatorGLSL->getInfoSink();
-        mGLSLCode = infoSink.obj.c_str();
+        compilationSuccess = compileWithSettings(SH_GLSL_COMPATIBILITY_OUTPUT, shaderString, &mGLSLCode, &infoLog);
         if (!compilationSuccess)
-            FAIL() << "Shader compilation into GLSL failed " << infoSink.info.c_str();
+        {
+            FAIL() << "Shader compilation into GLSL failed " << infoLog;
+        }
     }
 
     bool foundInESSLCode(const char* stringToFind)
@@ -76,8 +55,16 @@ class DebugShaderPrecisionTest : public testing::Test
     }
 
   private:
-    TranslatorESSL *mTranslatorESSL;
-    TranslatorGLSL *mTranslatorGLSL;
+    bool compileWithSettings(ShShaderOutput output, const std::string &shaderString,
+                             std::string *translatedCode, std::string *infoLog)
+    {
+        ShBuiltInResources resources;
+        ShInitBuiltInResources(&resources);
+        resources.WEBGL_debug_shader_precision = 1;
+        return compileTestShader(GL_FRAGMENT_SHADER, SH_GLES2_SPEC, output, shaderString, &resources,
+                                 translatedCode, infoLog);
+    }
+
     std::string mESSLCode;
     std::string mGLSLCode;
 };
@@ -88,28 +75,10 @@ class NoDebugShaderPrecisionTest : public testing::Test
     NoDebugShaderPrecisionTest() {}
 
   protected:
-    virtual void SetUp()
-    {
-        ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
-
-        mTranslator = new TranslatorGLSL(
-            GL_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_GLSL_COMPATIBILITY_OUTPUT);
-        ASSERT_TRUE(mTranslator->Init(resources));
-    }
-
-    virtual void TearDown()
-    {
-        delete mTranslator;
-    }
-
     bool compile(const std::string& shaderString)
     {
-        const char *shaderStrings[] = { shaderString.c_str() };
-        bool compilationSuccess = mTranslator->compile(shaderStrings, 1, SH_OBJECT_CODE);
-        TInfoSink &infoSink = mTranslator->getInfoSink();
-        mCode = infoSink.obj.c_str();
-        return compilationSuccess;
+        return compileTestShader(GL_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_GLSL_COMPATIBILITY_OUTPUT,
+                                 shaderString, &mCode, nullptr);
     }
 
     bool foundInCode(const char* stringToFind)
@@ -118,7 +87,6 @@ class NoDebugShaderPrecisionTest : public testing::Test
     }
 
   private:
-    TranslatorGLSL *mTranslator;
     std::string mCode;
 };
 

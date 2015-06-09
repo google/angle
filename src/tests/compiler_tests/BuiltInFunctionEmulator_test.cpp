@@ -10,7 +10,7 @@
 #include "angle_gl.h"
 #include "gtest/gtest.h"
 #include "GLSLANG/ShaderLang.h"
-#include "compiler/translator/TranslatorGLSL.h"
+#include "tests/test_utils/compiler_test.h"
 
 namespace
 {
@@ -22,31 +22,19 @@ class EmulateBuiltInFunctionsTest : public testing::Test
     EmulateBuiltInFunctionsTest() {}
 
   protected:
-    void SetUp() override
-    {
-        ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
-
-        mTranslatorGLSL = new TranslatorGLSL(GL_VERTEX_SHADER, SH_GLES2_SPEC, SH_GLSL_COMPATIBILITY_OUTPUT);
-        ASSERT_TRUE(mTranslatorGLSL->Init(resources));
-    }
-
-    void TearDown() override
-    {
-        SafeDelete(mTranslatorGLSL);
-    }
-
     void compile(const std::string &shaderString)
     {
-        const char *shaderStrings[] = { shaderString.c_str() };
-
-        bool compilationSuccess = mTranslatorGLSL->compile(shaderStrings, 1,
-                                                           SH_OBJECT_CODE | SH_EMULATE_BUILT_IN_FUNCTIONS);
-        TInfoSink &infoSink = mTranslatorGLSL->getInfoSink();
-        mGLSLCode = infoSink.obj.c_str();
+        std::string infoLog;
+        bool compilationSuccess = compileTestShader(GL_VERTEX_SHADER,
+                                                    SH_GLES2_SPEC,
+                                                    SH_GLSL_COMPATIBILITY_OUTPUT,
+                                                    shaderString,
+                                                    SH_EMULATE_BUILT_IN_FUNCTIONS,
+                                                    &mGLSLCode,
+                                                    &infoLog);
         if (!compilationSuccess)
         {
-            FAIL() << "Shader compilation into GLSL failed " << infoSink.info.c_str();
+            FAIL() << "Shader compilation into GLSL failed " << infoLog;
         }
     }
 
@@ -56,7 +44,6 @@ class EmulateBuiltInFunctionsTest : public testing::Test
     }
 
   private:
-    TranslatorGLSL *mTranslatorGLSL;
     std::string mGLSLCode;
 };
 

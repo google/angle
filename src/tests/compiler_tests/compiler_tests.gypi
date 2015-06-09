@@ -20,5 +20,7 @@
         'TypeTracking_test.cpp',
         'UnrollFlatten_test.cpp',
         'VariablePacker_test.cpp',
+        '../test_utils/compiler_test.cpp',
+        '../test_utils/compiler_test.h',
     ],
 }
