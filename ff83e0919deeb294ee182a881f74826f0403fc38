@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9d9cc70_f1330c21",
+        "filename": "src/compiler/translator/RecordConstantPrecision.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-09T21:04:29Z",
+      "side": 1,
+      "message": "members should be defined after functions.",
+      "revId": "ff83e0919deeb294ee182a881f74826f0403fc38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_11e3381b",
+        "filename": "src/tests/compiler_tests/RecordConstantPrecision_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-09T21:04:29Z",
+      "side": 1,
+      "message": "nit: No need for an empty SetUp() and TearDown() here.",
+      "revId": "ff83e0919deeb294ee182a881f74826f0403fc38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
