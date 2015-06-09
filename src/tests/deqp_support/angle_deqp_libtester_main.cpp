@@ -54,7 +54,7 @@ ANGLE_LIBTESTER_EXPORT void deqp_libtester_init_platform(int argc, char **argv, 
 
         if (!deSetRoundingMode(DE_ROUNDINGMODE_TO_NEAREST))
         {
-            throw std::exception("Failed to set floating point rounding mode.");
+            throw std::runtime_error("Failed to set floating point rounding mode.");
         }
 
         // TODO(jmadill): filter arguments
