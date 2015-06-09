@@ -1,0 +1,349 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "796b8031_35e20e98",
+        "filename": "util/OSPixmap.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "nit: Copyright 2015",
+      "range": {
+        "startLine": 2,
+        "startChar": 3,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_95e82276",
+        "filename": "util/OSPixmap.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "nit: add a trailing _",
+      "range": {
+        "startLine": 10,
+        "startChar": 8,
+        "endLine": 10,
+        "endChar": 28
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_75f3a66b",
+        "filename": "util/OSPixmap.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "nit: include order (system headers first)",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 23
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9d41838_4a17c975",
+        "filename": "util/OSPixmap.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "nit: no trailing ;",
+      "range": {
+        "startLine": 20,
+        "startChar": 17,
+        "endLine": 20,
+        "endChar": 18
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_55eeaa84",
+        "filename": "util/OSPixmap.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "nit: also no trailing ;",
+      "range": {
+        "startLine": 21,
+        "startChar": 26,
+        "endLine": 21,
+        "endChar": 27
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9d41838_8a4b717a",
+        "filename": "util/win32/Win32Pixmap.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_3c3a93fa",
+        "filename": "util/win32/Win32Pixmap.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "I think we use 4 space indents here",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 2
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_1c3fd7e9",
+        "filename": "util/win32/Win32Pixmap.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "alignment",
+      "range": {
+        "startLine": 46,
+        "startChar": 7,
+        "endLine": 46,
+        "endChar": 9
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_f5feb62f",
+        "filename": "util/win32/Win32Pixmap.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "nit: nullptr",
+      "range": {
+        "startLine": 47,
+        "startChar": 81,
+        "endLine": 47,
+        "endChar": 85
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_5c179f75",
+        "filename": "util/win32/Win32Pixmap.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "nit: Copyright 2015",
+      "range": {
+        "startLine": 2,
+        "startChar": 3,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_3c53b342",
+        "filename": "util/win32/Win32Pixmap.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "trailing _",
+      "range": {
+        "startLine": 9,
+        "startChar": 8,
+        "endLine": 9,
+        "endChar": 27
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_35f92e46",
+        "filename": "util/x11/X11Pixmap.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_fc33eb20",
+        "filename": "util/x11/X11Pixmap.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9d41838_4a458961",
+        "filename": "util/x11/X11Pixmap.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 10,
+        "startChar": 8,
+        "endLine": 10,
+        "endChar": 25
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_15fc3236",
+        "filename": "util/x11/X11Pixmap.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:42:12Z",
+      "side": 1,
+      "message": "nit: stray tab",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 1
+      },
+      "revId": "32aadf0da4621667e3ea63c8da23692b1cd4d627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
