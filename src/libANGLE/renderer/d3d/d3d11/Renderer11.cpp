@@ -300,6 +300,8 @@ Renderer11::~Renderer11()
 
 egl::Error Renderer11::initialize()
 {
+    double loadDLLsBegin = ANGLEPlatformCurrent()->currentTime();
+
     if (!mCompiler.initialize())
     {
         return egl::Error(EGL_NOT_INITIALIZED,
@@ -333,6 +335,10 @@ egl::Error Renderer11::initialize()
         }
     }
 #endif
+
+    double loadDLLsSec = ANGLEPlatformCurrent()->currentTime() - loadDLLsBegin;
+    int loadDLLsMS = static_cast<int>(loadDLLsSec * 1000);
+    ANGLE_HISTOGRAM_TIMES("GPU.ANGLE.Renderer11InitializeDLLsMS", loadDLLsMS);
 
     HRESULT result = S_OK;
 #ifdef _DEBUG
