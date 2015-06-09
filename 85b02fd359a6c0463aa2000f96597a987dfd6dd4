@@ -1,0 +1,135 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9d41838_b820c229",
+        "filename": "src/tests/angle_unittests.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-09T20:49:39Z",
+      "side": 1,
+      "message": "nit: wrong order",
+      "revId": "85b02fd359a6c0463aa2000f96597a987dfd6dd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_b6bfba1c",
+        "filename": "src/tests/compiler_tests/BuiltInFunctionEmulator_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-09T20:49:39Z",
+      "side": 1,
+      "message": "nit: No need for an empty SetUp() and TearDown() here.",
+      "range": {
+        "startLine": 27,
+        "startChar": 9,
+        "endLine": 27,
+        "endChar": 17
+      },
+      "revId": "85b02fd359a6c0463aa2000f96597a987dfd6dd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9d41838_b8a20230",
+        "filename": "src/tests/compiler_tests/DebugShaderPrecision_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-09T20:49:39Z",
+      "side": 1,
+      "message": "nit: No need for an empty SetUp() and TearDown() here.",
+      "revId": "85b02fd359a6c0463aa2000f96597a987dfd6dd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9d41838_98af4619",
+        "filename": "src/tests/compiler_tests/DebugShaderPrecision_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-09T20:49:39Z",
+      "side": 1,
+      "message": "nit: No need for an empty SetUp() and TearDown() here.",
+      "revId": "85b02fd359a6c0463aa2000f96597a987dfd6dd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9d41838_5898befc",
+        "filename": "src/tests/compiler_tests/NV_draw_buffers_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-09T20:49:39Z",
+      "side": 1,
+      "message": "nit: No need for an empty SetUp() and TearDown() here.",
+      "revId": "85b02fd359a6c0463aa2000f96597a987dfd6dd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9d41838_98862697",
+        "filename": "src/tests/compiler_tests/PruneUnusedFunctions_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-09T20:49:39Z",
+      "side": 1,
+      "message": "nit: No need for an empty SetUp() and TearDown() here.",
+      "range": {
+        "startLine": 26,
+        "startChar": 9,
+        "endLine": 26,
+        "endChar": 17
+      },
+      "revId": "85b02fd359a6c0463aa2000f96597a987dfd6dd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9d41838_580f9ebb",
+        "filename": "src/tests/compiler_tests/UnrollFlatten_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-09T20:49:39Z",
+      "side": 1,
+      "message": "nit: No need for an empty SetUp() and TearDown() here.",
+      "revId": "85b02fd359a6c0463aa2000f96597a987dfd6dd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
