@@ -21,6 +21,7 @@
 #include "Timer.h"
 #include "common/angleutils.h"
 #include "common/debug.h"
+#include "test_utils/angle_test_configs.h"
 #include "test_utils/angle_test_instantiate.h"
 
 class Event;
@@ -52,15 +53,10 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     int mNumFrames;
 };
 
-struct RenderTestParams
+struct RenderTestParams : public angle::PlatformParameters
 {
     virtual std::string suffix() const;
 
-    EGLint getRenderer() const;
-
-    EGLint requestedRenderer;
-    EGLint deviceType;
-    EGLint glesMajorVersion;
     EGLint widowWidth;
     EGLint windowHeight;
 };

@@ -33,7 +33,7 @@ TEST_P(RendererTest, RequestedRendererCreated)
     std::string versionString = std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
     std::transform(versionString.begin(), versionString.end(), versionString.begin(), ::tolower);
 
-    const EGLPlatformParameters &platform = GetParam().mEGLPlatformParameters;
+    const EGLPlatformParameters &platform = GetParam().eglParameters;
 
     // Ensure that the renderer string contains D3D11, if we requested a D3D11 renderer.
     if (platform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
@@ -101,7 +101,7 @@ TEST_P(RendererTest, RequestedRendererCreated)
         ASSERT_TRUE(found);
     }
 
-    EGLint glesMajorVersion = GetParam().mClientVersion;
+    EGLint glesMajorVersion = GetParam().majorVersion;
 
     // Ensure that the renderer string contains GL ES 3.0, if we requested a GL ES 3.0
     if (glesMajorVersion == 3)

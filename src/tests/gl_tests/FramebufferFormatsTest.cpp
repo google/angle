@@ -77,7 +77,7 @@ class FramebufferFormatsTest : public ANGLETest
             return;
         }
 
-        GLint clientVersion = GetParam().mClientVersion;
+        int clientVersion = getClientVersion();
         if (clientVersion < minESVersion)
         {
             return;
@@ -220,7 +220,7 @@ TEST_P(FramebufferFormatsTest, RenderbufferMultisample_DEPTH32F_STENCIL8)
 TEST_P(FramebufferFormatsTest, RenderbufferMultisample_STENCIL_INDEX8)
 {
     // TODO(geofflang): Figure out how to support GLSTENCIL_INDEX8 on desktop GL
-    if (GetParam().mEGLPlatformParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test skipped on Desktop OpenGL." << std::endl;
         return;

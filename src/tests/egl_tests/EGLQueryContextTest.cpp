@@ -18,14 +18,14 @@ class EGLQueryContextTest : public testing::TestWithParam<PlatformParameters>
   public:
     void SetUp() override
     {
-        int clientVersion = GetParam().mClientVersion;
+        int clientVersion = GetParam().majorVersion;
 
         PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(eglGetProcAddress("eglGetPlatformDisplayEXT"));
         EXPECT_TRUE(eglGetPlatformDisplayEXT != NULL);
 
         EGLint dispattrs[] =
         {
-            EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().mEGLPlatformParameters.renderer,
+            EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
             EGL_NONE
         };
         mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, dispattrs);
@@ -96,7 +96,7 @@ TEST_P(EGLQueryContextTest, GetClientVersion)
 {
     EGLint clientVersion;
     EXPECT_TRUE(eglQueryContext(mDisplay, mContext, EGL_CONTEXT_CLIENT_VERSION, &clientVersion) != EGL_FALSE);
-    EXPECT_TRUE(clientVersion == GetParam().mClientVersion);
+    EXPECT_TRUE(clientVersion == GetParam().majorVersion);
 }
 
 TEST_P(EGLQueryContextTest, GetRenderBufferNoSurface)

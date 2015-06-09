@@ -12,6 +12,8 @@
 #include "ANGLEPerfTest.h"
 #include "shader_utils.h"
 
+using namespace angle;
+
 namespace
 {
 
@@ -20,7 +22,8 @@ struct TexSubImageParams final : public RenderTestParams
     TexSubImageParams()
     {
         // Common default parameters
-        glesMajorVersion = 2;
+        majorVersion = 2;
+        minorVersion = 0;
         widowWidth = 512;
         windowHeight = 512;
 
@@ -271,24 +274,21 @@ void TexSubImageBenchmark::drawBenchmark()
 TexSubImageParams D3D11Params()
 {
     TexSubImageParams params;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
-    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
+    params.eglParameters = egl_platform::D3D11();
     return params;
 }
 
 TexSubImageParams D3D9Params()
 {
     TexSubImageParams params;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
-    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
+    params.eglParameters = egl_platform::D3D9();
     return params;
 }
 
 TexSubImageParams OpenGLParams()
 {
     TexSubImageParams params;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
-    params.deviceType = EGL_DONT_CARE;
+    params.eglParameters = egl_platform::OPENGL();
     return params;
 }
 

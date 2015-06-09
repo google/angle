@@ -26,7 +26,7 @@ protected:
 
 TEST_P(DiscardFramebufferEXTTest, ExtensionEnabled)
 {
-    EGLPlatformParameters platform = GetParam().mEGLPlatformParameters;
+    EGLPlatformParameters platform = GetParam().eglParameters;
 
     if (platform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
     {

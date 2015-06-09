@@ -70,7 +70,7 @@ void ANGLEPerfTest::TearDown()
 
 std::string RenderTestParams::suffix() const
 {
-    switch (requestedRenderer)
+    switch (getRenderer())
     {
         case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE: return "_d3d11";
         case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE: return "_d3d9";
@@ -79,11 +79,6 @@ std::string RenderTestParams::suffix() const
         case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE: return "_default";
         default: assert(0); return "_unk";
     }
-}
-
-EGLint RenderTestParams::getRenderer() const
-{
-    return requestedRenderer;
 }
 
 ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams &testParams)
@@ -104,16 +99,11 @@ ANGLERenderTest::~ANGLERenderTest()
 
 void ANGLERenderTest::SetUp()
 {
-    EGLPlatformParameters platformParams(mTestParams.requestedRenderer,
-                                         EGL_DONT_CARE,
-                                         EGL_DONT_CARE,
-                                         mTestParams.deviceType);
-
     mOSWindow = CreateOSWindow();
     mEGLWindow = new EGLWindow(mTestParams.widowWidth,
                                mTestParams.windowHeight,
-                               mTestParams.glesMajorVersion,
-                               platformParams);
+                               mTestParams.majorVersion,
+                               mTestParams.eglParameters);
     mEGLWindow->setSwapInterval(0);
 
     if (!mOSWindow->initialize(mName, mEGLWindow->getWidth(), mEGLWindow->getHeight()))

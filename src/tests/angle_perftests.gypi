@@ -25,6 +25,9 @@
             '<(angle_path)/src/tests/perf_tests/TexSubImage.cpp',
             '<(angle_path)/src/tests/perf_tests/third_party/perf/perf_test.cc',
             '<(angle_path)/src/tests/perf_tests/third_party/perf/perf_test.h',
+            '<(angle_path)/src/tests/test_utils/angle_test_configs.cpp',
+            '<(angle_path)/src/tests/test_utils/angle_test_configs.h',
+            '<(angle_path)/src/tests/test_utils/angle_test_instantiate.cpp',
             '<(angle_path)/src/tests/test_utils/angle_test_instantiate.h',
         ],
         'angle_perf_tests_win_sources':

@@ -551,7 +551,7 @@ TEST_P(GLSLTest, InvariantVaryingOut)
 
 TEST_P(GLSLTest, FrontFacingAndVarying)
 {
-    EGLPlatformParameters platform = GetParam().mEGLPlatformParameters;
+    EGLPlatformParameters platform = GetParam().eglParameters;
 
     // Disable this test on D3D11 feature level 9_3, since gl_FrontFacing isn't supported.
     if (platform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)

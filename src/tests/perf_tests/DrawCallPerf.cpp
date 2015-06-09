@@ -12,6 +12,8 @@
 #include "ANGLEPerfTest.h"
 #include "shader_utils.h"
 
+using namespace angle;
+
 namespace
 {
 
@@ -25,7 +27,8 @@ struct DrawCallPerfParams final : public RenderTestParams
     // Common default options
     DrawCallPerfParams()
     {
-        glesMajorVersion = 2;
+        majorVersion = 2;
+        minorVersion = 0;
         widowWidth = 256;
         windowHeight = 256;
         iterations = 50;
@@ -44,7 +47,7 @@ struct DrawCallPerfParams final : public RenderTestParams
             strstr << "_validation_only";
         }
 
-        if (deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE)
+        if (eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE)
         {
             strstr << "_null";
         }
@@ -189,32 +192,28 @@ void DrawCallPerfBenchmark::drawBenchmark()
 DrawCallPerfParams DrawCallPerfD3D11Params(bool useNullDevice)
 {
     DrawCallPerfParams params;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
-    params.deviceType = NullDeviceType(useNullDevice);
+    params.eglParameters = egl_platform::D3D11_NULL();
     return params;
 }
 
 DrawCallPerfParams DrawCallPerfD3D9Params(bool useNullDevice)
 {
     DrawCallPerfParams params;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
-    params.deviceType = NullDeviceType(useNullDevice);
+    params.eglParameters = egl_platform::DEFAULT_NULL();
     return params;
 }
 
 DrawCallPerfParams DrawCallPerfOpenGLParams(bool useNullDevice)
 {
     DrawCallPerfParams params;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
-    params.deviceType = NullDeviceType(useNullDevice);
+    params.eglParameters = egl_platform::D3D9_NULL();
     return params;
 }
 
 DrawCallPerfParams DrawCallPerfValidationOnly()
 {
     DrawCallPerfParams params;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
-    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE;
+    params.eglParameters = egl_platform::OPENGL();
     params.iterations = 100;
     params.numTris = 0;
     params.runTimeSeconds = 5.0;

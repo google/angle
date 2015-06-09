@@ -5,7 +5,7 @@
 ANGLETest::ANGLETest()
     : mEGLWindow(nullptr)
 {
-    mEGLWindow = new EGLWindow(1280, 720, GetParam().mClientVersion, GetParam().mEGLPlatformParameters);
+    mEGLWindow = new EGLWindow(1280, 720, GetParam().majorVersion, GetParam().eglParameters);
 }
 
 ANGLETest::~ANGLETest()

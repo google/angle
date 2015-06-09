@@ -58,7 +58,9 @@
             '<(angle_path)/src/tests/egl_tests/EGLSurfaceTest.cpp',
             '<(angle_path)/src/tests/test_utils/ANGLETest.cpp',
             '<(angle_path)/src/tests/test_utils/ANGLETest.h',
+            '<(angle_path)/src/tests/test_utils/angle_test_configs.cpp',
             '<(angle_path)/src/tests/test_utils/angle_test_configs.h',
+            '<(angle_path)/src/tests/test_utils/angle_test_instantiate.cpp',
             '<(angle_path)/src/tests/test_utils/angle_test_instantiate.h',
         ],
         'angle_end2end_tests_win_sources':

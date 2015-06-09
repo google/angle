@@ -47,6 +47,25 @@ EGLPlatformParameters::EGLPlatformParameters(EGLint renderer, EGLint majorVersio
 {
 }
 
+bool operator<(const EGLPlatformParameters &a, const EGLPlatformParameters &b)
+{
+    if (a.renderer != b.renderer)
+    {
+        return a.renderer < b.renderer;
+    }
+
+    if (a.majorVersion != b.majorVersion)
+    {
+        return a.majorVersion < b.majorVersion;
+    }
+
+    if (a.minorVersion != b.minorVersion)
+    {
+        return a.minorVersion < b.minorVersion;
+    }
+
+    return a.deviceType < b.deviceType;
+}
 
 EGLWindow::EGLWindow(size_t width, size_t height, EGLint glesMajorVersion, const EGLPlatformParameters &platform)
     : mDisplay(EGL_NO_DISPLAY),

@@ -12,6 +12,8 @@
 #include "ANGLEPerfTest.h"
 #include "shader_utils.h"
 
+using namespace angle;
+
 namespace
 {
 
@@ -180,11 +182,11 @@ void IndexConversionPerfTest::drawBenchmark()
 IndexConversionPerfParams IndexConversionPerfD3D11Params()
 {
     IndexConversionPerfParams params;
-    params.glesMajorVersion = 2;
+    params.eglParameters = egl_platform::D3D11_NULL();
+    params.majorVersion = 2;
+    params.minorVersion = 0;
     params.widowWidth = 256;
     params.windowHeight = 256;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
-    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE;
     params.iterations = 15;
     params.numIndexTris = 3000;
     return params;

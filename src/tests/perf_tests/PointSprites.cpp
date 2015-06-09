@@ -14,6 +14,8 @@
 #include "shader_utils.h"
 #include "random_utils.h"
 
+using namespace angle;
+
 namespace
 {
 
@@ -22,7 +24,8 @@ struct PointSpritesParams final : public RenderTestParams
     PointSpritesParams()
     {
         // Common default params
-        glesMajorVersion = 2;
+        majorVersion = 2;
+        minorVersion = 0;
         widowWidth = 1280;
         windowHeight = 720;
         iterations = 10;
@@ -202,24 +205,21 @@ void PointSpritesBenchmark::drawBenchmark()
 PointSpritesParams D3D11Params()
 {
     PointSpritesParams params;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
-    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
+    params.eglParameters = egl_platform::D3D11();
     return params;
 }
 
 PointSpritesParams D3D9Params()
 {
     PointSpritesParams params;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
-    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
+    params.eglParameters = egl_platform::D3D9();
     return params;
 }
 
 PointSpritesParams OpenGLParams()
 {
     PointSpritesParams params;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
-    params.deviceType = EGL_DONT_CARE;
+    params.eglParameters = egl_platform::OPENGL();
     return params;
 }
 

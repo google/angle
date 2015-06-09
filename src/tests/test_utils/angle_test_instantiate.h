@@ -15,9 +15,12 @@
 namespace angle
 {
 
+struct PlatformParameters;
+
+bool IsPlatformAvailable(const PlatformParameters &param);
+
 // This functions is used to filter which tests should be registered,
-// internally it T::getRenderer() const that should be implemented for test
-// parameter types.
+// T must be or inherit from angle::PlatformParameters.
 template <typename T>
 std::vector<T> FilterTestParams(const T *params, size_t numParams)
 {
@@ -25,34 +28,9 @@ std::vector<T> FilterTestParams(const T *params, size_t numParams)
 
     for (size_t i = 0; i < numParams; i++)
     {
-        switch (params[i].getRenderer())
+        if (IsPlatformAvailable(params[i]))
         {
-          case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
             filtered.push_back(params[i]);
-            break;
-
-          case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
-#if defined(ANGLE_ENABLE_D3D9)
-            filtered.push_back(params[i]);
-#endif
-            break;
-
-          case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
-#if defined(ANGLE_ENABLE_D3D11)
-            filtered.push_back(params[i]);
-#endif
-            break;
-
-          case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
-          case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
-#if defined(ANGLE_ENABLE_OPENGL)
-            filtered.push_back(params[i]);
-#endif
-            break;
-
-          default:
-            UNREACHABLE();
-            break;
         }
     }
 

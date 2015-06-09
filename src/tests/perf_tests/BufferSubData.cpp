@@ -12,6 +12,8 @@
 #include "ANGLEPerfTest.h"
 #include "shader_utils.h"
 
+using namespace angle;
+
 namespace
 {
 
@@ -20,7 +22,8 @@ struct BufferSubDataParams final : public RenderTestParams
     BufferSubDataParams()
     {
         // Common default values
-        glesMajorVersion = 2;
+        majorVersion = 2;
+        minorVersion = 0;
         widowWidth = 512;
         windowHeight = 512;
         updateSize = 3000;
@@ -336,8 +339,7 @@ void BufferSubDataBenchmark::drawBenchmark()
 BufferSubDataParams BufferUpdateD3D11Params()
 {
     BufferSubDataParams params;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
-    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
+    params.eglParameters = egl_platform::D3D11();
     params.vertexType = GL_FLOAT;
     params.vertexComponentCount = 4;
     params.vertexNormalized = GL_FALSE;
@@ -347,8 +349,7 @@ BufferSubDataParams BufferUpdateD3D11Params()
 BufferSubDataParams BufferUpdateD3D9Params()
 {
     BufferSubDataParams params;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
-    params.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
+    params.eglParameters = egl_platform::D3D9();
     params.vertexType = GL_FLOAT;
     params.vertexComponentCount = 4;
     params.vertexNormalized = GL_FALSE;
@@ -358,8 +359,7 @@ BufferSubDataParams BufferUpdateD3D9Params()
 BufferSubDataParams BufferUpdateOpenGLParams()
 {
     BufferSubDataParams params;
-    params.requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
-    params.deviceType = EGL_DONT_CARE;
+    params.eglParameters = egl_platform::OPENGL();
     params.vertexType = GL_FLOAT;
     params.vertexComponentCount = 4;
     params.vertexNormalized = GL_FALSE;

@@ -43,6 +43,8 @@ struct EGLPlatformParameters
     EGLPlatformParameters(EGLint renderer, EGLint majorVersion, EGLint minorVersion, EGLint deviceType);
 };
 
+bool operator<(const EGLPlatformParameters &a, const EGLPlatformParameters &b);
+
 class EGLWindow : angle::NonCopyable
 {
   public:

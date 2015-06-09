@@ -46,7 +46,7 @@ class EGLContextCompatibilityTest : public testing::TestWithParam<PlatformParame
 
         EGLint dispattrs[] =
         {
-            EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().mEGLPlatformParameters.renderer,
+            EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
             EGL_NONE
         };
         mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, dispattrs);

@@ -35,7 +35,7 @@ EGLInitializePerfTest::EGLInitializePerfTest()
       mOSWindow(nullptr),
       mDisplay(EGL_NO_DISPLAY)
 {
-    auto platform = GetParam().mEGLPlatformParameters;
+    auto platform = GetParam().eglParameters;
 
     std::vector<EGLint> displayAttributes;
     displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
