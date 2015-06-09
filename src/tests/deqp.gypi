@@ -1039,6 +1039,9 @@
                                 # TODO(jmadill): other platforms
                                 'deqp_support/tcuANGLEWin32NativeDisplayFactory.cpp',
                                 'deqp_support/tcuANGLEWin32NativeDisplayFactory.h',
+                                # TODO(jmadill): integrate with dEQP
+                                'deqp_support/tcuRandomOrderExecutor.cpp',
+                                'deqp_support/tcuRandomOrderExecutor.h',
                             ],
                         },
 
