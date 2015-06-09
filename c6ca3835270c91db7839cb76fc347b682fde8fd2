@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "796b8031_c9da03e1",
+        "filename": "src/tests/deqp_support/tcuANGLEWin32NativeDisplayFactory.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-09T19:42:23Z",
+      "side": 1,
+      "message": "Please make sure that this doesn\u0027t generate an unused local warning in release builds.",
+      "range": {
+        "startLine": 298,
+        "startChar": 4,
+        "endLine": 298,
+        "endChar": 23
+      },
+      "revId": "c6ca3835270c91db7839cb76fc347b682fde8fd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
