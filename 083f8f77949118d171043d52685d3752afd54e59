@@ -22,6 +22,30 @@
       "revId": "083f8f77949118d171043d52685d3752afd54e59",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99ce74a2_dd54bfd0",
+        "filename": "util/OSWindow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-09T15:42:43Z",
+      "side": 1,
+      "message": "Done\nWe do not support it yet but I will implement it, if we decide Linux doesn\u0027t support that caps we will have to make a change in the capability bits in tcuANGLENativeDisplayFactory",
+      "parentUuid": "d9d9cc70_dcaf0f9b",
+      "range": {
+        "startLine": 36,
+        "startChar": 68,
+        "endLine": 36,
+        "endChar": 70
+      },
+      "revId": "083f8f77949118d171043d52685d3752afd54e59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
