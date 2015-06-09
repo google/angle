@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "796b8031_751ac62d",
+        "filename": "src/tests/deqp_support/tcuANGLEWin32NativeDisplayFactory.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:47:38Z",
+      "side": 1,
+      "message": "Maybe \"might as well be (clear/explicit/more verbose)\" etc",
+      "parentUuid": "99ce74a2_5a79d5a6",
+      "range": {
+        "startLine": 240,
+        "startChar": 44,
+        "endLine": 240,
+        "endChar": 55
+      },
+      "revId": "40b56e8b48e12590df7bc5c5d5bfbf920991f010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59d23ce8_aceb5fec",
         "filename": "src/tests/deqp_support/tcuANGLEWin32NativeDisplayFactory.cpp",
         "patchSetId": 1
@@ -131,6 +155,30 @@
       "side": 1,
       "message": "Is it ok if I change it in the follow up CL that moves it in Win32Window?",
       "parentUuid": "59d23ce8_aceb5fec",
+      "range": {
+        "startLine": 371,
+        "startChar": 18,
+        "endLine": 371,
+        "endChar": 44
+      },
+      "revId": "40b56e8b48e12590df7bc5c5d5bfbf920991f010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_7c481b7d",
+        "filename": "src/tests/deqp_support/tcuANGLEWin32NativeDisplayFactory.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:47:38Z",
+      "side": 1,
+      "message": "Very nitpicky, but it\u0027s probably better to do this kind of refactoring in a split patch from code moving, since it\u0027s easier to review and spot mistakes in smaller diffs. Pretty minor stuff.",
+      "parentUuid": "79c9c09b_16d8da94",
       "range": {
         "startLine": 371,
         "startChar": 18,
