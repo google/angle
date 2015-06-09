@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9d41838_f8964acc",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-09T20:47:32Z",
+      "side": 1,
+      "message": "Can this validation be moved to validationES.h? We\u0027re going to implement KHR_no_error soon and it\u0027s much easier to skip validation when it\u0027s centralized.",
+      "range": {
+        "startLine": 1099,
+        "startChar": 8,
+        "endLine": 1115,
+        "endChar": 9
+      },
+      "revId": "f748fe69efe6268c43e614cb7774aeb6c3d10bec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
