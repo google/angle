@@ -22,6 +22,30 @@
       "revId": "2029de606e9f9e812ccc5ced6e0c9d9a2fd61aca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99ce74a2_3a7619b7",
+        "filename": "src/tests/deqp_support/tcuANGLEWin32Platform.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-09T06:00:11Z",
+      "side": 1,
+      "message": "Rebased on top of a patch that does this",
+      "parentUuid": "d9d9cc70_d13a6658",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 25
+      },
+      "revId": "2029de606e9f9e812ccc5ced6e0c9d9a2fd61aca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
