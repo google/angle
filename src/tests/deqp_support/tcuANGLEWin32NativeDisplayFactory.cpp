@@ -28,6 +28,7 @@
 #include "deThread.h"
 #include "egluDefs.hpp"
 #include "eglwLibrary.hpp"
+#include "OSPixmap.h"
 #include "OSWindow.h"
 #include "tcuTexture.hpp"
 #include "tcuWin32API.h"
@@ -90,13 +91,13 @@ class NativePixmapFactory : public eglu::NativePixmapFactory
 class NativePixmap : public eglu::NativePixmap
 {
   public:
-    NativePixmap(ANGLENativeDisplay* nativeDisplay, int width, int height, int bitDepth);
+    NativePixmap(EGLNativeDisplayType display, int width, int height, int bitDepth);
     virtual ~NativePixmap();
 
-    eglw::EGLNativePixmapType getLegacyNative() override { return mBitmap; }
+    eglw::EGLNativePixmapType getLegacyNative() override;
 
   private:
-    HBITMAP mBitmap;
+    OSPixmap *mPixmap;
 };
 
 class NativeWindowFactory : public eglu::NativeWindowFactory
@@ -142,40 +143,29 @@ ANGLENativeDisplay::ANGLENativeDisplay(const std::vector<EGLAttrib> &attribs)
 
 // NativePixmap
 
-NativePixmap::NativePixmap(ANGLENativeDisplay *nativeDisplay, int width, int height, int bitDepth)
+NativePixmap::NativePixmap(EGLNativeDisplayType display, int width, int height, int bitDepth)
     : eglu::NativePixmap(BITMAP_CAPABILITIES),
-      mBitmap(DE_NULL)
+      mPixmap(CreateOSPixmap())
 {
-    const HDC       deviceCtx   = nativeDisplay->getDeviceContext();
-    BITMAPINFO      bitmapInfo;
+    if (!mPixmap)
+    {
+        throw ResourceError("Failed to create pixmap", DE_NULL, __FILE__, __LINE__);
+    }
 
-    memset(&bitmapInfo, 0, sizeof(bitmapInfo));
-
-    if (bitDepth != 24 && bitDepth != 32)
-        throw NotSupportedError("Unsupported pixmap bit depth", DE_NULL, __FILE__, __LINE__);
-
-    bitmapInfo.bmiHeader.biSize             = sizeof(bitmapInfo);
-    bitmapInfo.bmiHeader.biWidth            = width;
-    bitmapInfo.bmiHeader.biHeight           = height;
-    bitmapInfo.bmiHeader.biPlanes           = 1;
-    bitmapInfo.bmiHeader.biBitCount         = bitDepth;
-    bitmapInfo.bmiHeader.biCompression      = BI_RGB;
-    bitmapInfo.bmiHeader.biSizeImage        = 0;
-    bitmapInfo.bmiHeader.biXPelsPerMeter    = 1;
-    bitmapInfo.bmiHeader.biYPelsPerMeter    = 1;
-    bitmapInfo.bmiHeader.biClrUsed          = 0;
-    bitmapInfo.bmiHeader.biClrImportant     = 0;
-
-    void* bitmapPtr = DE_NULL;
-    mBitmap = CreateDIBSection(deviceCtx, &bitmapInfo, DIB_RGB_COLORS, &bitmapPtr, NULL, 0);
-
-    if (!mBitmap)
-        throw ResourceError("Failed to create bitmap", DE_NULL, __FILE__, __LINE__);
+    if (!mPixmap->initialize(display, width, height, bitDepth))
+    {
+        throw ResourceError("Failed to initialize pixmap", DE_NULL, __FILE__, __LINE__);
+    }
 }
 
 NativePixmap::~NativePixmap()
 {
-    DeleteObject(mBitmap);
+    delete mPixmap;
+}
+
+eglw::EGLNativePixmapType NativePixmap::getLegacyNative()
+{
+    return mPixmap->getNativePixmap();
 }
 
 // NativePixmapFactory
@@ -204,13 +194,13 @@ eglu::NativePixmap *NativePixmapFactory::createPixmap (eglu::NativeDisplay* nati
 
     bitSum = redBits+greenBits+blueBits+alphaBits;
 
-    return new NativePixmap(dynamic_cast<ANGLENativeDisplay*>(nativeDisplay), width, height, bitSum);
+    return new NativePixmap(dynamic_cast<ANGLENativeDisplay*>(nativeDisplay)->getDeviceContext(), width, height, bitSum);
 }
 
 eglu::NativePixmap *NativePixmapFactory::createPixmap(eglu::NativeDisplay* nativeDisplay, int width, int height) const
 {
     const int defaultDepth = 32;
-    return new NativePixmap(dynamic_cast<ANGLENativeDisplay*>(nativeDisplay), width, height, defaultDepth);
+    return new NativePixmap(dynamic_cast<ANGLENativeDisplay*>(nativeDisplay)->getDeviceContext(), width, height, defaultDepth);
 }
 
 // NativeWindowFactory

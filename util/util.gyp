@@ -18,6 +18,7 @@
             'Event.h',
             'EGLWindow.cpp',
             'EGLWindow.h',
+            'OSPixmap.h',
             'OSWindow.cpp',
             'OSWindow.h',
             'Timer.h',
@@ -25,6 +26,8 @@
         'util_win32_sources':
         [
             'win32/Win32_system_utils.cpp',
+            'win32/Win32Pixmap.cpp',
+            'win32/Win32Pixmap.h',
             'win32/Win32Timer.cpp',
             'win32/Win32Timer.h',
             'win32/Win32Window.cpp',
@@ -39,6 +42,8 @@
         ],
         'util_x11_sources':
         [
+            'x11/X11Pixmap.cpp',
+            'x11/X11Pixmap.h',
             'x11/X11Window.cpp',
             'x11/X11Window.h',
         ],
