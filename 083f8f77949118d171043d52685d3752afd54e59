@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9d9cc70_dcaf0f9b",
+        "filename": "util/OSWindow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-09T14:50:05Z",
+      "side": 1,
+      "message": "nit: no trailing ;\nAlso how about leaving this as a pure virtual, and defining the LinuxWindow as UNIMPLEMENTED? We shouldn\u0027t be calling this function on Linux if we don\u0027t support the particular caps bits, was my understanding. Please correct me if I\u0027m mistaken.",
+      "range": {
+        "startLine": 36,
+        "startChar": 68,
+        "endLine": 36,
+        "endChar": 70
+      },
+      "revId": "083f8f77949118d171043d52685d3752afd54e59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
