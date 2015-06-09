@@ -9,9 +9,9 @@
 #include <direct.h>
 #include <stdio.h>
 
-__declspec(dllimport) int deqp_libtester_main(int argc, const char* argv[]);
+#include "angle_deqp_libtester.h"
 
-int main(int argc, const char* argv[])
+int main(int argc, const char *argv[])
 {
     const char * data_dir = ANGLE_DEQP_DIR "/data";
     if (_chdir(data_dir) != 0)

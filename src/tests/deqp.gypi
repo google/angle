@@ -781,6 +781,10 @@
                                 [
                                     '<(angle_path)/include',
                                 ],
+                                'defines':
+                                [
+                                    'ANGLE_DEQP_LIBTESTER_IMPLEMENTATION',
+                                ],
                             },
                             'msvs_settings':
                             {
@@ -1122,6 +1126,41 @@
                             'sources':
                             [
                                 'deqp_support/angle_deqp_tests_main.cpp',
+                            ],
+                        },
+
+                        {
+                            'target_name': 'angle_deqp_googletest',
+                            'type': 'executable',
+                            'dependencies':
+                            [
+                                'angle_deqp_libgles2',
+                                'angle_test_support',
+                                'angle_zlib',
+                                '<(angle_path)/src/angle.gyp:angle_common',
+                            ],
+                            'includes':
+                            [
+                                '../../build/common_defines.gypi',
+                            ],
+
+                            'defines':
+                            [
+                                # Hard-code the path to dEQP. This lets the
+                                # app locate the data folder without need
+                                # for a copy. gyp recursive copies are not
+                                # implemented properly on Windows.
+                                'ANGLE_DEQP_DIR="<(DEPTH)/src/tests/<(deqp_dir)"',
+                            ],
+
+                            'include_dirs':
+                            [
+                                'deqp_support',
+                            ],
+
+                            'sources':
+                            [
+                                'deqp_support/angle_deqp_gtest_main.cpp',
                             ],
                         },
                     ], # targets
