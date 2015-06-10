@@ -143,23 +143,39 @@ def do_format(format_data):
 
     for format_name, format_support in sorted(format_data.iteritems()):
 
-        always_supported = []
-        never_supported = []
-        optionally_supported = []
+        always_supported = set()
+        never_supported = set()
+        optionally_supported = set()
+        fl_11_0_supported = set()
 
         for json_flag, support in format_support.iteritems():
 
-            d3d_flag = json_flag_to_d3d[json_flag]
+            d3d_flag = [json_flag_to_d3d[json_flag]]
 
-            # TODO(jmadill): process different support
-            if support != 'check':
+            if support == 'check':
+                optionally_supported.update(d3d_flag)
+            elif support == 'always':
+                always_supported.update(d3d_flag)
+            elif support == 'never':
+                never_supported.update(d3d_flag)
+            elif support == '11_0':
+                fl_11_0_supported.update(d3d_flag)
+            elif support == '11_1':
+                # TODO(jmadill): D3D 11.1 handling
+                never_supported.update(d3d_flag)
+            elif support == 'dxgi1_2':
+                # TODO(jmadill): DXGI 1.2 handling.
+                always_supported.update(d3d_flag)
+            else:
                 print("Data specification error: " + support)
                 sys.exit(1)
 
-            optionally_supported += [d3d_flag]
-
         for feature_level in ['10_0', '10_1', '11_0']:
-            always = ' | '.join(sorted(always_supported))
+            always_for_fl = always_supported
+            if feature_level == '11_0':
+                always_for_fl = fl_11_0_supported.union(always_for_fl)
+
+            always = ' | '.join(sorted(always_for_fl))
             never = ' | '.join(sorted(never_supported))
             optional = ' | '.join(sorted(optionally_supported))
 
