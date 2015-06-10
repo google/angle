@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "99ce74a2_a32444b7",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1329,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-10T12:56:59Z",
+      "side": 1,
+      "message": "Yes, the matrix class can be very simple, it doesn\u0027t need to have methods for these matrix operations for example.\n\nMaybe with enough test coverage this version could also be okay, I\u0027d say adding the tests are higher priority than cleaning up the code itself.",
+      "parentUuid": "9970341a_41cc352e",
+      "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99ce74a2_c3c06072",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 2
