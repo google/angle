@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "9970341a_41cc352e",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1329,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-10T12:23:00Z",
+      "side": 1,
+      "message": "Just double checked this and I also find this code bit hard to understand. I will check how I can simplify this, may be by just having a simplified matrix class that just gives elements in readable way.",
+      "parentUuid": "9970341a_a1432911",
+      "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99ce74a2_c3c06072",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 2
