@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3937486d_9bc8a397",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-10T17:12:14Z",
+      "side": 1,
+      "message": "This is only set in Renderer11 and not referenced.",
+      "range": {
+        "startLine": 55,
+        "startChar": 9,
+        "endLine": 55,
+        "endChar": 26
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d902ac8c_a33aed84",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-10T17:12:14Z",
+      "side": 1,
+      "message": "Can you use a MemoryBuffer for this? It uses RAII and checks for allocation failures.",
+      "range": {
+        "startLine": 547,
+        "startChar": 8,
+        "endLine": 547,
+        "endChar": 62
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99fcb4c6_5889eda8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-10T17:12:14Z",
+      "side": 1,
+      "message": "This isn\u0027t a valid usage, should be either GL_STATIC_DRAW or GL_DYNAMIC_DRAW.  I\u0027d suggest storing the usage from the setData method above and re-using it here.",
+      "range": {
+        "startLine": 583,
+        "startChar": 80,
+        "endLine": 583,
+        "endChar": 106
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5934fc65_11bc760a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-10T17:12:14Z",
+      "side": 1,
+      "message": "This can be removed too.",
+      "range": {
+        "startLine": 353,
+        "startChar": 9,
+        "endLine": 353,
+        "endChar": 26
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99fcb4c6_f8aad9de",
+        "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-10T17:12:14Z",
+      "side": 1,
+      "message": "nit: size_t",
+      "range": {
+        "startLine": 14,
+        "startChar": 10,
+        "endLine": 14,
+        "endChar": 13
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
