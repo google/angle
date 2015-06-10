@@ -17,6 +17,7 @@
             'common/debug.h',
             'common/mathutil.cpp',
             'common/mathutil.h',
+            'common/matrix_utils.h',
             'common/platform.h',
             'common/string_utils.cpp',
             'common/string_utils.h',

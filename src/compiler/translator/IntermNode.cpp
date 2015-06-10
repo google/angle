@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "common/mathutil.h"
+#include "common/matrix_utils.h"
 #include "compiler/translator/HashNames.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/SymbolTable.h"
@@ -197,6 +198,36 @@ TIntermTyped *CreateFoldedNode(TConstantUnion *constArray, const TIntermTyped *o
     folded->getTypePointer()->setQualifier(EvqConst);
     folded->setLine(originalNode->getLine());
     return folded;
+}
+
+angle::Matrix<float> GetMatrix(TConstantUnion *paramArray, const unsigned int &rows, const unsigned int &cols)
+{
+    std::vector<float> elements;
+    for (size_t i = 0; i < rows * cols; i++)
+        elements.push_back(paramArray[i].getFConst());
+    // Transpose is used since the Matrix constructor expects arguments in row-major order,
+    // whereas the paramArray is in column-major order.
+    return angle::Matrix<float>(elements, rows, cols).transpose();
+}
+
+angle::Matrix<float> GetMatrix(TConstantUnion *paramArray, const unsigned int &size)
+{
+    std::vector<float> elements;
+    for (size_t i = 0; i < size * size; i++)
+        elements.push_back(paramArray[i].getFConst());
+    // Transpose is used since the Matrix constructor expects arguments in row-major order,
+    // whereas the paramArray is in column-major order.
+    return angle::Matrix<float>(elements, size).transpose();
+}
+
+void SetUnionArrayFromMatrix(const angle::Matrix<float> &m, TConstantUnion *resultArray)
+{
+    // Transpose is used since the input Matrix is in row-major order,
+    // whereas the actual result should be in column-major order.
+    angle::Matrix<float> result = m.transpose();
+    std::vector<float> resultElements = result.elements();
+    for (size_t i = 0; i < resultElements.size(); i++)
+        resultArray[i].setFConst(resultElements[i]);
 }
 
 }  // namespace anonymous
@@ -1156,7 +1187,8 @@ TConstantUnion *TIntermConstantUnion::foldUnary(TOperator op, TInfoSink &infoSin
 
     size_t objectSize = getType().getObjectSize();
 
-    if (op == EOpAny || op == EOpAll || op == EOpLength)
+    if (op == EOpAny || op == EOpAll || op == EOpLength || op == EOpTranspose || op == EOpDeterminant ||
+        op == EOpInverse)
     {
         // Do operations where the return type has a different number of components compared to the operand type.
         TConstantUnion *resultArray = nullptr;
@@ -1210,6 +1242,52 @@ TConstantUnion *TIntermConstantUnion::foldUnary(TOperator op, TInfoSink &infoSin
             {
                 resultArray = new TConstantUnion();
                 resultArray->setFConst(VectorLength(operandArray, objectSize));
+                break;
+            }
+            else
+            {
+                infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+                return nullptr;
+            }
+
+          case EOpTranspose:
+            if (getType().getBasicType() == EbtFloat)
+            {
+                resultArray = new TConstantUnion[objectSize];
+                angle::Matrix<float> result =
+                    GetMatrix(operandArray, getType().getNominalSize(), getType().getSecondarySize()).transpose();
+                SetUnionArrayFromMatrix(result, resultArray);
+                break;
+            }
+            else
+            {
+                infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+                return nullptr;
+            }
+
+          case EOpDeterminant:
+            if (getType().getBasicType() == EbtFloat)
+            {
+                unsigned int size = getType().getNominalSize();
+                ASSERT(size >= 2 && size <= 4);
+                resultArray = new TConstantUnion();
+                resultArray->setFConst(GetMatrix(operandArray, size).determinant());
+                break;
+            }
+            else
+            {
+                infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+                return nullptr;
+            }
+
+          case EOpInverse:
+            if (getType().getBasicType() == EbtFloat)
+            {
+                unsigned int size = getType().getNominalSize();
+                ASSERT(size >= 2 && size <= 4);
+                resultArray = new TConstantUnion[objectSize];
+                angle::Matrix<float> result = GetMatrix(operandArray, size).inverse();
+                SetUnionArrayFromMatrix(result, resultArray);
                 break;
             }
             else
@@ -1630,9 +1708,12 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
             maxObjectSize = objectSizes[i];
     }
 
-    for (unsigned int i = 0; i < paramsCount; i++)
-        if (objectSizes[i] != maxObjectSize)
-            unionArrays[i] = Vectorize(*unionArrays[i], maxObjectSize);
+    if (!(*sequence)[0]->getAsTyped()->isMatrix())
+    {
+        for (unsigned int i = 0; i < paramsCount; i++)
+            if (objectSizes[i] != maxObjectSize)
+                unionArrays[i] = Vectorize(*unionArrays[i], maxObjectSize);
+    }
 
     TConstantUnion *resultArray = nullptr;
     if (paramsCount == 2)
@@ -1975,6 +2056,35 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
                                    2.0f * dotProduct * unionArrays[1][i].getFConst();
                     resultArray[i].setFConst(result);
                 }
+            }
+            else
+                UNREACHABLE();
+            break;
+
+          case EOpMul:
+            if (basicType == EbtFloat && (*sequence)[0]->getAsTyped()->isMatrix() &&
+                (*sequence)[1]->getAsTyped()->isMatrix())
+            {
+                // Perform component-wise matrix multiplication.
+                resultArray = new TConstantUnion[maxObjectSize];
+                size_t size = (*sequence)[0]->getAsTyped()->getNominalSize();
+                angle::Matrix<float> result =
+                    GetMatrix(unionArrays[0], size).compMult(GetMatrix(unionArrays[1], size));
+                SetUnionArrayFromMatrix(result, resultArray);
+            }
+            else
+                UNREACHABLE();
+            break;
+
+          case EOpOuterProduct:
+            if (basicType == EbtFloat)
+            {
+                size_t numRows = (*sequence)[0]->getAsTyped()->getType().getObjectSize();
+                size_t numCols = (*sequence)[1]->getAsTyped()->getType().getObjectSize();
+                resultArray = new TConstantUnion[numRows * numCols];
+                angle::Matrix<float> result =
+                    GetMatrix(unionArrays[0], 1, numCols).outerProduct(GetMatrix(unionArrays[1], numRows, 1));
+                SetUnionArrayFromMatrix(result, resultArray);
             }
             else
                 UNREACHABLE();

@@ -454,6 +454,8 @@ TIntermTyped *TIntermediate::foldAggregateBuiltIn(TIntermAggregate *aggregate)
       case EOpMix:
       case EOpStep:
       case EOpSmoothStep:
+      case EOpMul:
+      case EOpOuterProduct:
       case EOpLessThan:
       case EOpLessThanEqual:
       case EOpGreaterThan:
