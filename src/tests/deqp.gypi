@@ -1156,11 +1156,28 @@
                             'include_dirs':
                             [
                                 'deqp_support',
+                                'third_party/gpu_test_expectations',
                             ],
 
                             'sources':
                             [
                                 'deqp_support/angle_deqp_gtest_main.cpp',
+                            ],
+
+                            'conditions':
+                            [
+                                ['angle_standalone==1',
+                                {
+                                    'sources':
+                                    [
+                                        'third_party/gpu_test_expectations/gpu_info.cc',
+                                        'third_party/gpu_test_expectations/gpu_info.h',
+                                        'third_party/gpu_test_expectations/gpu_test_config.cc',
+                                        'third_party/gpu_test_expectations/gpu_test_config.h',
+                                        'third_party/gpu_test_expectations/gpu_test_expectations_parser.cc',
+                                        'third_party/gpu_test_expectations/gpu_test_expectations_parser.h',
+                                    ],
+                                }]
                             ],
                         },
                     ], # targets
