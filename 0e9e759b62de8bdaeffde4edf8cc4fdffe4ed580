@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9970341a_e1ca813c",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-10T10:18:21Z",
+      "side": 1,
+      "message": "Sorry, I just realized that, I can reduced some lines of code in folding functions by having MatrixDeterminant as non-templated function taking size as an argument, will upload a new patch set.",
+      "revId": "0e9e759b62de8bdaeffde4edf8cc4fdffe4ed580",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
