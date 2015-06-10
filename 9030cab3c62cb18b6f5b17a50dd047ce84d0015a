@@ -22,6 +22,30 @@
       "revId": "9030cab3c62cb18b6f5b17a50dd047ce84d0015a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99fcb4c6_139c7670",
+        "filename": "src/tests/gl_tests/D3D11FormatTablesTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-10T17:46:05Z",
+      "side": 1,
+      "message": "Done, I also added the other feature levels (was in a later patch)",
+      "parentUuid": "b971781d_d9e103bd",
+      "range": {
+        "startLine": 92,
+        "startChar": 57,
+        "endLine": 92,
+        "endChar": 59
+      },
+      "revId": "9030cab3c62cb18b6f5b17a50dd047ce84d0015a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
