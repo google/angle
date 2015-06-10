@@ -221,6 +221,12 @@ TEST_P(MaxTextureSizeTest, SpecificationTexStorage)
 
 TEST_P(MaxTextureSizeTest, RenderToTexture)
 {
+    if (getClientVersion() < 3 && (!extensionEnabled("GL_ANGLE_framebuffer_blit")))
+    {
+        std::cout << "Test skipped due to missing glBlitFramebuffer[ANGLE] support." << std::endl;
+        return;
+    }
+
     GLuint fbo = 0;
     GLuint textureId = 0;
     // create a 1-level texture at maximum size
@@ -286,4 +292,4 @@ TEST_P(MaxTextureSizeTest, RenderToTexture)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_INSTANTIATE_TEST(MaxTextureSizeTest, ES2_D3D9(), ES2_D3D11());
+ANGLE_INSTANTIATE_TEST(MaxTextureSizeTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
