@@ -34,6 +34,24 @@
       "revId": "e08ac200491e9b97eac3c047d8789467c6ecdb48",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1917e4d9_3b55e394",
+        "filename": "src/tests/gl_tests/D3D11FormatTablesTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-10T19:24:25Z",
+      "side": 1,
+      "message": "No, that\u0027s fine, just wondering.",
+      "parentUuid": "f919300f_d7f35c9b",
+      "revId": "e08ac200491e9b97eac3c047d8789467c6ecdb48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
