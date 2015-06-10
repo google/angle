@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d9762c12_b5f52ac5",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1299,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-10T12:11:35Z",
+      "side": 1,
+      "message": "Ok, I will add it.",
+      "parentUuid": "99ce74a2_03b77829",
+      "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9cfb89d_04530042",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-06-10T11:53:50Z",
       "side": 1,
       "message": "It\u0027s pretty hard to review this since it\u0027s basically a soup of indices. To improve this a bit, you could create a simple matrix class that would be addressable with an at(row, column) function, or just use a two-dimensional array.\n\nThe dEQP tests don\u0027t verify inverse in a constant expression with any complex cases either, they just test diagonal matrices, which leaves the possibility of errors slipping through. Creating additional tests for this would help. For example, you can fill a matrix with prime numbers and check that the inverse of that is as expected (you can get the expected result from any existing matrix math tool).",
+      "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9970341a_a1432911",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1329,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-10T12:11:35Z",
+      "side": 1,
+      "message": "Actually I also thought of having some class that encapsulates this matrix functionality, but then I kept it like this as were using this functions only here.\n\nI Just referred EOpInverse definition in BuiltInFunctionEmulatorHLSL to implement this. It can be used as a reference to review correctness here. inverse of 2x2 and 3x3 shouldn\u0027t be hard to review with this.\nI understand 4x4 matrix implementation is still bit hard to review. \nLet me know if you still think we should have a separate new class that handles matrices.\n\nI agree that there is less test coverage for inverse, I will work on adding unit tests for this.",
+      "parentUuid": "b9cfb89d_04530042",
       "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "9970341a_e16601cc",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1379,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-10T12:11:35Z",
+      "side": 1,
+      "message": "OK, will do.",
+      "parentUuid": "99ce74a2_c3c06072",
+      "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79c9c09b_27b602c6",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2015-06-10T11:53:50Z",
       "side": 1,
       "message": "It would be simpler to just iterate from 0 to objectSize. Could also have an assert that objectSize matches between first and second parameter.",
+      "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b971781d_b4bb6e2f",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2164,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-10T12:11:35Z",
+      "side": 1,
+      "message": "Ok, will check this.",
+      "parentUuid": "79c9c09b_27b602c6",
       "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
