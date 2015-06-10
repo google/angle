@@ -15,7 +15,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -25,7 +25,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0check10_1always",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -35,7 +35,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -45,7 +45,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -55,7 +55,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -65,7 +65,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "11_0check",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -75,7 +75,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -85,7 +85,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -95,7 +95,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -105,7 +105,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -115,7 +115,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -125,7 +125,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -135,7 +135,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -145,7 +145,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -155,7 +155,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -165,7 +165,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0check10_1always",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -175,7 +175,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -185,7 +185,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -195,7 +195,7 @@
       "texture2D": "always",
       "texture3D": "never",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -205,7 +205,7 @@
       "texture2D": "always",
       "texture3D": "never",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -215,7 +215,7 @@
       "texture2D": "always",
       "texture3D": "never",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0check10_1always",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -225,7 +225,7 @@
       "texture2D": "always",
       "texture3D": "never",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -235,7 +235,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -245,7 +245,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -255,7 +255,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -265,7 +265,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -275,7 +275,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -285,7 +285,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -295,7 +295,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -305,7 +305,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -315,7 +315,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -325,7 +325,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -335,7 +335,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -345,7 +345,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -355,7 +355,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -365,7 +365,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -375,7 +375,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -385,7 +385,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -395,7 +395,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -405,7 +405,7 @@
       "texture2D": "always",
       "texture3D": "never",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -415,7 +415,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0check10_1always",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -425,7 +425,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -435,7 +435,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -445,7 +445,7 @@
       "texture2D": "always",
       "texture3D": "never",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -455,7 +455,7 @@
       "texture2D": "always",
       "texture3D": "never",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -465,7 +465,7 @@
       "texture2D": "always",
       "texture3D": "never",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0check10_1always",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -475,7 +475,7 @@
       "texture2D": "always",
       "texture3D": "never",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -485,7 +485,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -495,7 +495,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -505,7 +505,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -515,7 +515,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -525,7 +525,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -535,7 +535,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -545,7 +545,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -555,7 +555,7 @@
       "texture2D": "always",
       "texture3D": "never",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -565,7 +565,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -575,7 +575,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -585,7 +585,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -595,7 +595,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -605,7 +605,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -615,7 +615,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -625,7 +625,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -635,7 +635,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -645,7 +645,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -655,7 +655,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -665,7 +665,7 @@
       "texture2D": "always",
       "texture3D": "11_0",
       "textureCube": "11_0",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -675,7 +675,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -685,7 +685,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -695,7 +695,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -705,7 +705,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -715,7 +715,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -725,7 +725,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -735,7 +735,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -745,7 +745,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -755,7 +755,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -765,7 +765,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -775,7 +775,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -785,7 +785,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -795,7 +795,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -805,7 +805,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -815,7 +815,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -825,7 +825,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -835,7 +835,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -845,7 +845,7 @@
       "texture2D": "always",
       "texture3D": "always",
       "textureCube": "always",
-      "shaderSample": "check",
+      "shaderSample": "10_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -855,7 +855,7 @@
       "texture2D": "dxgi1_2",
       "texture3D": "dxgi1_2",
       "textureCube": "dxgi1_2",
-      "shaderSample": "check",
+      "shaderSample": "dxgi1_2",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -865,7 +865,7 @@
       "texture2D": "dxgi1_2",
       "texture3D": "dxgi1_2",
       "textureCube": "dxgi1_2",
-      "shaderSample": "check",
+      "shaderSample": "dxgi1_2",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -875,7 +875,7 @@
       "texture2D": "check",
       "texture3D": "check",
       "textureCube": "check",
-      "shaderSample": "check",
+      "shaderSample": "10_0check11_0always",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -885,7 +885,7 @@
       "texture2D": "check",
       "texture3D": "check",
       "textureCube": "check",
-      "shaderSample": "check",
+      "shaderSample": "10_0check11_0always",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -895,7 +895,7 @@
       "texture2D": "check",
       "texture3D": "check",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -905,7 +905,7 @@
       "texture2D": "check",
       "texture3D": "check",
       "textureCube": "check",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -915,7 +915,7 @@
       "texture2D": "check",
       "texture3D": "check",
       "textureCube": "check",
-      "shaderSample": "check",
+      "shaderSample": "10_0check11_0always",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -925,7 +925,7 @@
       "texture2D": "check",
       "texture3D": "check",
       "textureCube": "check",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -935,7 +935,7 @@
       "texture2D": "check",
       "texture3D": "check",
       "textureCube": "check",
-      "shaderSample": "check",
+      "shaderSample": "10_0check11_0always",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -945,7 +945,7 @@
       "texture2D": "11_0",
       "texture3D": "11_0",
       "textureCube": "11_0",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -955,7 +955,7 @@
       "texture2D": "11_0",
       "texture3D": "11_0",
       "textureCube": "11_0",
-      "shaderSample": "check",
+      "shaderSample": "11_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -965,7 +965,7 @@
       "texture2D": "11_0",
       "texture3D": "11_0",
       "textureCube": "11_0",
-      "shaderSample": "check",
+      "shaderSample": "11_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -975,7 +975,7 @@
       "texture2D": "11_0",
       "texture3D": "11_0",
       "textureCube": "11_0",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -985,7 +985,7 @@
       "texture2D": "11_0",
       "texture3D": "11_0",
       "textureCube": "11_0",
-      "shaderSample": "check",
+      "shaderSample": "11_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -995,7 +995,7 @@
       "texture2D": "11_0",
       "texture3D": "11_0",
       "textureCube": "11_0",
-      "shaderSample": "check",
+      "shaderSample": "11_0",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1005,7 +1005,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "11_1",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1015,7 +1015,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "11_1",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1025,7 +1025,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "11_1",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1035,7 +1035,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "11_1",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1045,7 +1045,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "11_1",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1055,7 +1055,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "11_1",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1065,7 +1065,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1075,7 +1075,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "11_1",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1085,7 +1085,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "11_1",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1095,7 +1095,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "11_1",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1105,7 +1105,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "11_1",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1115,7 +1115,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1125,7 +1125,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1135,7 +1135,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1145,7 +1145,7 @@
       "texture2D": "11_1",
       "texture3D": "never",
       "textureCube": "never",
-      "shaderSample": "check",
+      "shaderSample": "never",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
@@ -1155,7 +1155,7 @@
       "texture2D": "dxgi1_2",
       "texture3D": "dxgi1_2",
       "textureCube": "dxgi1_2",
-      "shaderSample": "check",
+      "shaderSample": "dxgi1_2",
       "renderTarget": "check",
       "multisampleRT": "check",
       "depthStencil": "check"
