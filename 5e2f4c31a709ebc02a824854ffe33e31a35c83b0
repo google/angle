@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "193e044a_ef0ecdbe",
+        "filename": "src/compiler/translator/RecordConstantPrecision.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-10T17:13:41Z",
+      "side": 1,
+      "message": "const?",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 17
+      },
+      "revId": "5e2f4c31a709ebc02a824854ffe33e31a35c83b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "193e044a_6f8cfdba",
+        "filename": "src/compiler/translator/RecordConstantPrecision.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-10T17:13:41Z",
+      "side": 1,
+      "message": "I\u0027m a little fuzzy on the details of assignments. A normal assignment doesn\u0027t affect the precision but addassign/etc do because they reference the previous value?",
+      "range": {
+        "startLine": 56,
+        "startChar": 15,
+        "endLine": 56,
+        "endChar": 24
+      },
+      "revId": "5e2f4c31a709ebc02a824854ffe33e31a35c83b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99fcb4c6_b88b4175",
+        "filename": "src/compiler/translator/RecordConstantPrecision.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-10T17:13:41Z",
+      "side": 1,
+      "message": "can this be const",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 66,
+        "endChar": 20
+      },
+      "revId": "5e2f4c31a709ebc02a824854ffe33e31a35c83b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d902ac8c_03042184",
+        "filename": "src/compiler/translator/RecordConstantPrecision.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-10T17:13:41Z",
+      "side": 1,
+      "message": "const?",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 20
+      },
+      "revId": "5e2f4c31a709ebc02a824854ffe33e31a35c83b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d902ac8c_83d13176",
+        "filename": "src/compiler/translator/RecordConstantPrecision.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-10T17:13:41Z",
+      "side": 1,
+      "message": "can this be const",
+      "range": {
+        "startLine": 101,
+        "startChar": 12,
+        "endLine": 101,
+        "endChar": 24
+      },
+      "revId": "5e2f4c31a709ebc02a824854ffe33e31a35c83b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
