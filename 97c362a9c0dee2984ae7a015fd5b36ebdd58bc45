@@ -46,6 +46,30 @@
       "revId": "97c362a9c0dee2984ae7a015fd5b36ebdd58bc45",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d902ac8c_5cfc3a36",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-10T19:32:29Z",
+      "side": 1,
+      "message": "Yes, sorry about going back on this, but it seems fine to move the copy of Chromium\u0027s GPU test expectations back into a differently named directory under ANGLE\u0027s third_party directory. It\u0027s unfortunate to duplicate that code but not the end of the world.\n\nIt\u0027d still be best to split off main() into its own file so that Chromium can override it with its test launcher.",
+      "parentUuid": "193e044a_2fc915b9",
+      "range": {
+        "startLine": 20,
+        "startChar": 1,
+        "endLine": 20,
+        "endChar": 8
+      },
+      "revId": "97c362a9c0dee2984ae7a015fd5b36ebdd58bc45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
