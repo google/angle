@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b9cfb89d_0f88b929",
+        "filename": "src/compiler/translator/RecordConstantPrecision.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-10T17:29:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "193e044a_ef0ecdbe",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 17
+      },
+      "revId": "5e2f4c31a709ebc02a824854ffe33e31a35c83b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "193e044a_6f8cfdba",
         "filename": "src/compiler/translator/RecordConstantPrecision.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-10T17:13:41Z",
       "side": 1,
       "message": "I\u0027m a little fuzzy on the details of assignments. A normal assignment doesn\u0027t affect the precision but addassign/etc do because they reference the previous value?",
+      "range": {
+        "startLine": 56,
+        "startChar": 15,
+        "endLine": 56,
+        "endChar": 24
+      },
+      "revId": "5e2f4c31a709ebc02a824854ffe33e31a35c83b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99ce74a2_4eec7704",
+        "filename": "src/compiler/translator/RecordConstantPrecision.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-10T17:29:36Z",
+      "side": 1,
+      "message": "Basically yes. Let\u0027s say m is mediump and h is highp. Now:\n\nm \u003d h; // it doesn\u0027t matter that h is highp\nm -\u003d h; // subtraction should get evaluated at highp, though the result is then demoted to mediump. The precision could have an effect if m is 4096.0 and h is 4096.5 for example.",
+      "parentUuid": "193e044a_6f8cfdba",
       "range": {
         "startLine": 56,
         "startChar": 15,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "b9cfb89d_afaf859b",
+        "filename": "src/compiler/translator/RecordConstantPrecision.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-10T17:29:36Z",
+      "side": 1,
+      "message": "No, because getAsConstantUnion() is called on it.",
+      "parentUuid": "99fcb4c6_b88b4175",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 66,
+        "endChar": 20
+      },
+      "revId": "5e2f4c31a709ebc02a824854ffe33e31a35c83b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d902ac8c_03042184",
         "filename": "src/compiler/translator/RecordConstantPrecision.cpp",
         "patchSetId": 4
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "99ce74a2_ae130b95",
+        "filename": "src/compiler/translator/RecordConstantPrecision.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-10T17:29:36Z",
+      "side": 1,
+      "message": "No, since getSequence() is called on it.",
+      "parentUuid": "d902ac8c_03042184",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 20
+      },
+      "revId": "5e2f4c31a709ebc02a824854ffe33e31a35c83b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d902ac8c_83d13176",
         "filename": "src/compiler/translator/RecordConstantPrecision.cpp",
         "patchSetId": 4
@@ -105,6 +201,30 @@
       "writtenOn": "2015-06-10T17:13:41Z",
       "side": 1,
       "message": "can this be const",
+      "range": {
+        "startLine": 101,
+        "startChar": 12,
+        "endLine": 101,
+        "endChar": 24
+      },
+      "revId": "5e2f4c31a709ebc02a824854ffe33e31a35c83b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99ce74a2_8ef96fc3",
+        "filename": "src/compiler/translator/RecordConstantPrecision.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-10T17:29:36Z",
+      "side": 1,
+      "message": "Yes!",
+      "parentUuid": "d902ac8c_83d13176",
       "range": {
         "startLine": 101,
         "startChar": 12,
