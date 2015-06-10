@@ -65,7 +65,6 @@
         ],
         'angle_end2end_tests_win_sources':
         [
-            '<(angle_path)/src/tests/gl_tests/D3D11FormatTablesTest.cpp',
             '<(angle_path)/src/tests/gl_tests/QueryDisplayAttribTest.cpp',
             # TODO(cwallez) for Linux, requires a portable implementation of threads
             '<(angle_path)/src/tests/egl_tests/EGLThreadTest.cpp',

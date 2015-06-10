@@ -8,19 +8,18 @@
 // specific to the D3D11 renderer.
 
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
-
-#include <algorithm>
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
+#include "libANGLE/renderer/d3d/FramebufferD3D.h"
+#include "libANGLE/renderer/Workarounds.h"
+#include "libANGLE/formatutils.h"
+#include "libANGLE/Program.h"
+#include "libANGLE/Framebuffer.h"
 
 #include "common/debug.h"
-#include "libANGLE/Framebuffer.h"
-#include "libANGLE/Program.h"
-#include "libANGLE/formatutils.h"
-#include "libANGLE/renderer/Workarounds.h"
-#include "libANGLE/renderer/d3d/FramebufferD3D.h"
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
-#include "libANGLE/renderer/d3d/d3d11/dxgi_support_table.h"
-#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+
+#include <algorithm>
 
 namespace rx
 {
@@ -230,52 +229,6 @@ D3D11_QUERY ConvertQueryType(GLenum queryType)
 namespace d3d11_gl
 {
 
-namespace
-{
-
-// Helper functor for querying DXGI support. Saves passing the parameters repeatedly.
-class DXGISupportHelper : angle::NonCopyable
-{
-  public:
-    DXGISupportHelper(ID3D11Device *device, D3D_FEATURE_LEVEL featureLevel)
-        : mDevice(device),
-          mFeatureLevel(featureLevel)
-    {
-    }
-
-    bool query(DXGI_FORMAT dxgiFormat, UINT supportMask)
-    {
-        if (dxgiFormat == DXGI_FORMAT_UNKNOWN)
-            return false;
-
-        auto dxgiSupport = d3d11::GetDXGISupport(dxgiFormat, mFeatureLevel);
-
-        UINT supportedBits = dxgiSupport.alwaysSupportedFlags;
-
-        if ((dxgiSupport.optionallySupportedFlags & supportMask) != 0)
-        {
-            UINT formatSupport;
-            if (SUCCEEDED(mDevice->CheckFormatSupport(dxgiFormat, &formatSupport)))
-            {
-                supportedBits |= (formatSupport & supportMask);
-            }
-            else
-            {
-                // TODO(jmadill): find out why we fail this call sometimes in FL9_3
-                // ERR("Error checking format support for format 0x%x", dxgiFormat);
-            }
-        }
-
-        return ((supportedBits & supportMask) == supportMask);
-    }
-
-  private:
-    ID3D11Device *mDevice;
-    D3D_FEATURE_LEVEL mFeatureLevel;
-};
-
-} // anonymous namespace
-
 GLint GetMaximumClientVersion(D3D_FEATURE_LEVEL featureLevel)
 {
     switch (featureLevel)
@@ -297,28 +250,29 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLint maxClientVersion, GLenum 
 {
     gl::TextureCaps textureCaps;
 
-    DXGISupportHelper support(device, renderer11DeviceCaps.featureLevel);
-    const d3d11::TextureFormat &formatInfo =
-        d3d11::GetTextureFormatInfo(internalFormat, renderer11DeviceCaps);
+    const d3d11::TextureFormat &formatInfo = d3d11::GetTextureFormatInfo(internalFormat, renderer11DeviceCaps);
 
-    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
-
-    UINT texSupportMask = D3D11_FORMAT_SUPPORT_TEXTURE2D;
-    if (internalFormatInfo.depthBits == 0 && internalFormatInfo.stencilBits == 0)
+    UINT formatSupport;
+    if (SUCCEEDED(device->CheckFormatSupport(formatInfo.texFormat, &formatSupport)))
     {
-        texSupportMask |= D3D11_FORMAT_SUPPORT_TEXTURECUBE;
-        if (maxClientVersion > 2)
+        const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
+        if (internalFormatInfo.depthBits > 0 || internalFormatInfo.stencilBits > 0)
         {
-            texSupportMask |= D3D11_FORMAT_SUPPORT_TEXTURE3D;
+            textureCaps.texturable = ((formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D) != 0);
+        }
+        else
+        {
+            UINT formatSupportMask = D3D11_FORMAT_SUPPORT_TEXTURE2D | D3D11_FORMAT_SUPPORT_TEXTURECUBE;
+            if (maxClientVersion > 2)
+            {
+                formatSupportMask |= D3D11_FORMAT_SUPPORT_TEXTURE3D;
+            }
+            textureCaps.texturable = ((formatSupport & formatSupportMask) == formatSupportMask);
         }
     }
 
-    textureCaps.texturable = support.query(formatInfo.texFormat, texSupportMask);
-    textureCaps.filterable = support.query(formatInfo.srvFormat, D3D11_FORMAT_SUPPORT_SHADER_SAMPLE);
-    textureCaps.renderable = (support.query(formatInfo.rtvFormat, D3D11_FORMAT_SUPPORT_RENDER_TARGET)) ||
-                             (support.query(formatInfo.dsvFormat, D3D11_FORMAT_SUPPORT_DEPTH_STENCIL));
-
-    if (support.query(formatInfo.renderFormat, D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET))
+    if (SUCCEEDED(device->CheckFormatSupport(formatInfo.renderFormat, &formatSupport)) &&
+        ((formatSupport & D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET) != 0))
     {
         for (size_t sampleCount = 1; sampleCount <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; sampleCount *= 2)
         {
@@ -330,6 +284,13 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLint maxClientVersion, GLenum 
             }
         }
     }
+
+    textureCaps.filterable = SUCCEEDED(device->CheckFormatSupport(formatInfo.srvFormat, &formatSupport)) &&
+                             ((formatSupport & D3D11_FORMAT_SUPPORT_SHADER_SAMPLE)) != 0;
+    textureCaps.renderable = (SUCCEEDED(device->CheckFormatSupport(formatInfo.rtvFormat, &formatSupport)) &&
+                              ((formatSupport & D3D11_FORMAT_SUPPORT_RENDER_TARGET)) != 0) ||
+                             (SUCCEEDED(device->CheckFormatSupport(formatInfo.dsvFormat, &formatSupport)) &&
+                              ((formatSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL) != 0));
 
     return textureCaps;
 }
