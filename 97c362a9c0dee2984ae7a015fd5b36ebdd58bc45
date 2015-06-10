@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "193e044a_ef032d7d",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-10T17:18:39Z",
+      "side": 1,
+      "message": "Thinking about this more -- it would be better to make this path explicit as \"third_party/gpu_test_expectations/gpu/config/...\". It\u0027s not allowed to introduce dependencies on Chromium from third_party libraries like ANGLE to avoid problems with circular dependencies, so if/when we try to build this target from the Chromium side, we will probably have to duplicate the main .cpp file like we had to in angle_end2end_tests_main.cc and angle_unittest_main.cc in Chromium\u0027s src/gpu/.",
+      "range": {
+        "startLine": 20,
+        "startChar": 1,
+        "endLine": 20,
+        "endChar": 8
+      },
+      "revId": "97c362a9c0dee2984ae7a015fd5b36ebdd58bc45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
