@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99ce74a2_03b77829",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1299,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-10T11:53:50Z",
+      "side": 1,
+      "message": "Could add an assert that numRowsAndCols is between 2 and 4.",
+      "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9cfb89d_04530042",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1329,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-10T11:53:50Z",
+      "side": 1,
+      "message": "It\u0027s pretty hard to review this since it\u0027s basically a soup of indices. To improve this a bit, you could create a simple matrix class that would be addressable with an at(row, column) function, or just use a two-dimensional array.\n\nThe dEQP tests don\u0027t verify inverse in a constant expression with any complex cases either, they just test diagonal matrices, which leaves the possibility of errors slipping through. Creating additional tests for this would help. For example, you can fill a matrix with prime numbers and check that the inverse of that is as expected (you can get the expected result from any existing matrix math tool).",
+      "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99ce74a2_c3c06072",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1379,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-10T11:53:50Z",
+      "side": 1,
+      "message": "The matrix determinant can be 0.0 (matrix is singular). A warning should be issued in this case and all the matrix values can be set to 0.",
+      "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79c9c09b_27b602c6",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2164,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-10T11:53:50Z",
+      "side": 1,
+      "message": "It would be simpler to just iterate from 0 to objectSize. Could also have an assert that objectSize matches between first and second parameter.",
+      "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
