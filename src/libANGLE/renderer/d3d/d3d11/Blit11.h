@@ -12,6 +12,7 @@
 #include "common/angleutils.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 #include <map>
 
@@ -121,15 +122,24 @@ class Blit11 : angle::NonCopyable
         ID3D11PixelShader *mPixelShader;
     };
 
-    void add2DBlitShaderToMap(BlitShaderType blitShaderType, ID3D11PixelShader *ps);
-    void add3DBlitShaderToMap(BlitShaderType blitShaderType, ID3D11PixelShader *ps);
+    struct CommonShaders
+    {
+        ID3D11VertexShader *vertexShader2D;
+        ID3D11VertexShader *vertexShader3D;
+        ID3D11GeometryShader *geometryShader3D;
+    };
+
+    void add2DBlitShaderToMap(BlitShaderType blitShaderType, const CommonShaders &commonShaders, ID3D11PixelShader *ps);
+    void add3DBlitShaderToMap(BlitShaderType blitShaderType, const CommonShaders &commonShaders, ID3D11PixelShader *ps);
 
     gl::Error getBlitShader(GLenum destFormat, bool isSigned, bool is3D, const Shader **shaderOut);
     gl::Error getSwizzleShader(GLenum type, D3D11_SRV_DIMENSION viewDimension, const Shader **shaderOut);
 
-    void addSwizzleShaderToMap(SwizzleShaderType swizzleShaderType, bool is2D, ID3D11PixelShader *ps);
+    void addSwizzleShaderToMap(SwizzleShaderType swizzleShaderType, bool is2D, const CommonShaders &commonShaders, ID3D11PixelShader *ps);
 
     void clearShaderMap();
+
+    gl::Error getCommonShaders(CommonShaders *commonShadersOut, bool get3D);
 
     Renderer11 *mRenderer;
 
@@ -144,12 +154,12 @@ class Blit11 : angle::NonCopyable
     ID3D11DepthStencilState *mDepthStencilState;
 
     ID3D11InputLayout *mQuad2DIL;
-    ID3D11VertexShader *mQuad2DVS;
-    ID3D11PixelShader *mDepthPS;
+    d3d11::DeferredShader<ID3D11VertexShader> mQuad2DVS;
+    d3d11::DeferredShader<ID3D11PixelShader> mDepthPS;
 
     ID3D11InputLayout *mQuad3DIL;
-    ID3D11VertexShader *mQuad3DVS;
-    ID3D11GeometryShader *mQuad3DGS;
+    d3d11::DeferredShader<ID3D11VertexShader> mQuad3DVS;
+    d3d11::DeferredShader<ID3D11GeometryShader> mQuad3DGS;
 
     ID3D11Buffer *mSwizzleCB;
 };
