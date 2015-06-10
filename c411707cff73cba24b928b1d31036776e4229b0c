@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d902ac8c_30ac0523",
+        "filename": "src/tests/test_utils/angle_test_configs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-10T13:50:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d902ac8c_d07b7172",
+      "range": {
+        "startLine": 47,
+        "startChar": 44,
+        "endLine": 47,
+        "endChar": 70
+      },
+      "revId": "c411707cff73cba24b928b1d31036776e4229b0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3937486d_750930e2",
         "filename": "src/tests/test_utils/angle_test_configs.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-10T12:39:54Z",
       "side": 1,
       "message": "having D3D9 as a symbol, in the same namespace as ESx_D3D9, etc, seems a bit odd. Maybe separate them in a namespace, eg namespace angle::EGLPlatform, and call using namespace to resolve them",
+      "range": {
+        "startLine": 102,
+        "startChar": 22,
+        "endLine": 102,
+        "endChar": 29
+      },
+      "revId": "c411707cff73cba24b928b1d31036776e4229b0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "193e044a_d434bc6a",
+        "filename": "src/tests/test_utils/angle_test_configs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-10T13:50:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3937486d_750930e2",
       "range": {
         "startLine": 102,
         "startChar": 22,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "193e044a_143b045e",
+        "filename": "src/tests/test_utils/angle_test_configs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-10T13:50:09Z",
+      "side": 1,
+      "message": "It\u0027s a viable option but I think I prefer to keep the configs immutable.  We also may want to be able to support sorting them for other uses eventually.",
+      "parentUuid": "5934fc65_abe759a3",
+      "range": {
+        "startLine": 36,
+        "startChar": 22,
+        "endLine": 36,
+        "endChar": 29
+      },
+      "revId": "c411707cff73cba24b928b1d31036776e4229b0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5934fc65_8bfff52b",
         "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2015-06-10T12:39:54Z",
       "side": 1,
       "message": "print out a warning on false here",
+      "range": {
+        "startLine": 75,
+        "startChar": 7,
+        "endLine": 75,
+        "endChar": 47
+      },
+      "revId": "c411707cff73cba24b928b1d31036776e4229b0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d902ac8c_70a27d33",
+        "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-10T13:50:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5934fc65_8bfff52b",
       "range": {
         "startLine": 75,
         "startChar": 7,
