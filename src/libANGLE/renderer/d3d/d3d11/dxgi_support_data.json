@@ -17,7 +17,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_R32G32B32A32_FLOAT":
@@ -57,7 +57,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_R32G32B32_FLOAT":
@@ -97,7 +97,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_R16G16B16A16_FLOAT":
@@ -157,7 +157,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_R32G32_FLOAT":
@@ -197,7 +197,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_D32_FLOAT_S8X24_UINT":
@@ -217,7 +217,7 @@
       "textureCube": "always",
       "shaderSample": "10_0check10_1always",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_X32_TYPELESS_G8X24_UINT":
@@ -227,7 +227,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_R10G10B10A2_TYPELESS":
@@ -237,7 +237,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_R10G10B10A2_UNORM":
@@ -277,7 +277,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_R8G8B8A8_UNORM":
@@ -337,7 +337,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_R16G16_FLOAT":
@@ -397,7 +397,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_D32_FLOAT":
@@ -447,7 +447,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_D24_UNORM_S8_UINT":
@@ -467,7 +467,7 @@
       "textureCube": "always",
       "shaderSample": "10_0check10_1always",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_X24_TYPELESS_G8_UINT":
@@ -477,7 +477,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_R8G8_TYPELESS":
@@ -487,7 +487,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_R8G8_UNORM":
@@ -537,7 +537,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_R16_FLOAT":
@@ -607,7 +607,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_R8_UNORM":
@@ -667,7 +667,7 @@
       "textureCube": "11_0",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_R9G9B9E5_SHAREDEXP":
@@ -677,7 +677,7 @@
       "textureCube": "always",
       "shaderSample": "10_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_R8G8_B8G8_UNORM":
@@ -687,7 +687,7 @@
       "textureCube": "always",
       "shaderSample": "10_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_G8R8_G8B8_UNORM":
@@ -697,7 +697,7 @@
       "textureCube": "always",
       "shaderSample": "10_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC1_TYPELESS":
@@ -707,7 +707,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC1_UNORM":
@@ -717,7 +717,7 @@
       "textureCube": "always",
       "shaderSample": "10_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC1_UNORM_SRGB":
@@ -727,7 +727,7 @@
       "textureCube": "always",
       "shaderSample": "10_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC2_TYPELESS":
@@ -737,7 +737,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC2_UNORM":
@@ -747,7 +747,7 @@
       "textureCube": "always",
       "shaderSample": "10_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC2_UNORM_SRGB":
@@ -757,7 +757,7 @@
       "textureCube": "always",
       "shaderSample": "10_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC3_TYPELESS":
@@ -767,7 +767,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC3_UNORM":
@@ -777,7 +777,7 @@
       "textureCube": "always",
       "shaderSample": "10_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC3_UNORM_SRGB":
@@ -787,7 +787,7 @@
       "textureCube": "always",
       "shaderSample": "10_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC4_TYPELESS":
@@ -797,7 +797,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC4_UNORM":
@@ -807,7 +807,7 @@
       "textureCube": "always",
       "shaderSample": "10_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC4_SNORM":
@@ -817,7 +817,7 @@
       "textureCube": "always",
       "shaderSample": "10_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC5_TYPELESS":
@@ -827,7 +827,7 @@
       "textureCube": "always",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC5_UNORM":
@@ -837,7 +837,7 @@
       "textureCube": "always",
       "shaderSample": "10_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC5_SNORM":
@@ -847,7 +847,7 @@
       "textureCube": "always",
       "shaderSample": "10_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_B5G6R5_UNORM":
@@ -897,7 +897,7 @@
       "textureCube": "never",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_B8G8R8A8_TYPELESS":
@@ -907,7 +907,7 @@
       "textureCube": "check",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_B8G8R8A8_UNORM_SRGB":
@@ -927,7 +927,7 @@
       "textureCube": "check",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_B8G8R8X8_UNORM_SRGB":
@@ -947,7 +947,7 @@
       "textureCube": "11_0",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC6H_UF16":
@@ -957,7 +957,7 @@
       "textureCube": "11_0",
       "shaderSample": "11_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC6H_SF16":
@@ -967,7 +967,7 @@
       "textureCube": "11_0",
       "shaderSample": "11_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC7_TYPELESS":
@@ -977,7 +977,7 @@
       "textureCube": "11_0",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC7_UNORM":
@@ -987,7 +987,7 @@
       "textureCube": "11_0",
       "shaderSample": "11_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_BC7_UNORM_SRGB":
@@ -997,7 +997,7 @@
       "textureCube": "11_0",
       "shaderSample": "11_0",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_AYUV":
@@ -1017,7 +1017,7 @@
       "textureCube": "never",
       "shaderSample": "11_1",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_Y416":
@@ -1027,7 +1027,7 @@
       "textureCube": "never",
       "shaderSample": "11_1",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_NV12":
@@ -1067,7 +1067,7 @@
       "textureCube": "never",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_YUY2":
@@ -1077,7 +1077,7 @@
       "textureCube": "never",
       "shaderSample": "11_1",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_Y210":
@@ -1087,7 +1087,7 @@
       "textureCube": "never",
       "shaderSample": "11_1",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_Y216":
@@ -1097,7 +1097,7 @@
       "textureCube": "never",
       "shaderSample": "11_1",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_NV11":
@@ -1117,7 +1117,7 @@
       "textureCube": "never",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_IA44":
@@ -1127,7 +1127,7 @@
       "textureCube": "never",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_P8":
@@ -1137,7 +1137,7 @@
       "textureCube": "never",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_A8P8":
@@ -1147,7 +1147,7 @@
       "textureCube": "never",
       "shaderSample": "never",
       "renderTarget": "never",
-      "multisampleRT": "check",
+      "multisampleRT": "never",
       "depthStencil": "never"
     },
     "DXGI_FORMAT_B4G4R4A4_UNORM":

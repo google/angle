@@ -58,7 +58,7 @@ GLuint TextureCaps::getNearestSamples(GLuint requestedSamples) const
 
 void TextureCapsMap::insert(GLenum internalFormat, const TextureCaps &caps)
 {
-    mCapsMap.insert(std::make_pair(internalFormat, caps));
+    mCapsMap[internalFormat] = caps;
 }
 
 void TextureCapsMap::remove(GLenum internalFormat)

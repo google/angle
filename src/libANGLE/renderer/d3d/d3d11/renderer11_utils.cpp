@@ -320,12 +320,19 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLint maxClientVersion, GLenum 
 
     if (support.query(formatInfo.renderFormat, D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET))
     {
-        for (size_t sampleCount = 1; sampleCount <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; sampleCount *= 2)
+        // Assume 1x
+        textureCaps.sampleCounts.insert(1);
+
+        for (size_t sampleCount = 2; sampleCount <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; sampleCount *= 2)
         {
             UINT qualityCount = 0;
-            if (SUCCEEDED(device->CheckMultisampleQualityLevels(formatInfo.renderFormat, sampleCount, &qualityCount)) &&
-                qualityCount > 0)
+            if (SUCCEEDED(device->CheckMultisampleQualityLevels(formatInfo.renderFormat, sampleCount, &qualityCount)))
             {
+                // Assume we always support lower sample counts
+                if (qualityCount == 0)
+                {
+                    break;
+                }
                 textureCaps.sampleCounts.insert(sampleCount);
             }
         }
