@@ -22,6 +22,30 @@
       "revId": "97c362a9c0dee2984ae7a015fd5b36ebdd58bc45",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "193e044a_2fc915b9",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-10T17:24:54Z",
+      "side": 1,
+      "message": "Hum. I\u0027m not eager about duplicating this main file, it might be a better idea to instead just duplicate the entry point itself and use the ANGLE code instead of the chromium code. Maybe I should just remove the gpu/config dirs and have it the way I did before.",
+      "parentUuid": "193e044a_ef032d7d",
+      "range": {
+        "startLine": 20,
+        "startChar": 1,
+        "endLine": 20,
+        "endChar": 8
+      },
+      "revId": "97c362a9c0dee2984ae7a015fd5b36ebdd58bc45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
