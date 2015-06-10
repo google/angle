@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "99fcb4c6_d8e15d4a",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 1159,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-10T17:06:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d902ac8c_a6356697",
+      "range": {
+        "startLine": 1159,
+        "startChar": 33,
+        "endLine": 1159,
+        "endChar": 45
+      },
+      "revId": "a3f5072bbce9ddc02b17b07d40ad0437930c1083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3937486d_01f98a7b",
         "filename": "src/tests/deqp.gypi",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-09T22:09:05Z",
       "side": 1,
       "message": "Could you put the new gpu sources into a block conditional on \u0027angle_standalone\u003d\u003d1\u0027 (src/tests/tests.gyp)? That way if we want to build this target from the Chromium side, the sources from that workspace can be pulled in instead.",
+      "range": {
+        "startLine": 1165,
+        "startChar": 0,
+        "endLine": 1165,
+        "endChar": 32
+      },
+      "revId": "a3f5072bbce9ddc02b17b07d40ad0437930c1083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99fcb4c6_b8e6a15e",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 1165,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-10T17:06:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3937486d_01f98a7b",
       "range": {
         "startLine": 1165,
         "startChar": 0,
