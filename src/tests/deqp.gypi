@@ -1129,55 +1129,67 @@
                             ],
                         },
 
+                        # Helper target for synching our implementation with chrome's
                         {
-                            'target_name': 'angle_deqp_googletest',
-                            'type': 'executable',
+                            'target_name': 'angle_deqp_gtest_support',
+                            'type': 'none',
                             'dependencies':
                             [
                                 'angle_deqp_libgles2',
                                 'angle_test_support',
                                 'angle_zlib',
+                                'angle_deqp_decpp',
                                 '<(angle_path)/src/angle.gyp:angle_common',
                             ],
-                            'includes':
+                            'export_dependent_settings':
                             [
-                                '../../build/common_defines.gypi',
+                                'angle_test_support',
+                                'angle_zlib',
+                                'angle_deqp_decpp',
+                                '<(angle_path)/src/angle.gyp:angle_common',
                             ],
 
-                            'defines':
-                            [
-                                # Hard-code the path to dEQP. This lets the
-                                # app locate the data folder without need
-                                # for a copy. gyp recursive copies are not
-                                # implemented properly on Windows.
-                                'ANGLE_DEQP_DIR="<(DEPTH)/src/tests/<(deqp_dir)"',
-                            ],
+                            'direct_dependent_settings':
+                            {
+                                'defines':
+                                [
+                                    # Hard-code the path to dEQP. This lets the
+                                    # app locate the data folder without need
+                                    # for a copy. gyp recursive copies are not
+                                    # implemented properly on Windows.
+                                    'ANGLE_DEQP_DIR="<(DEPTH)/src/tests/<(deqp_dir)"',
+                                ],
+                                'include_dirs':
+                                [
+                                    'deqp_support',
+                                ],
+                                'sources':
+                                [
+                                    'deqp_support/angle_deqp_gtest.cpp',
+                                ],
+                            },
+                        },
 
+                        {
+                            'target_name': 'angle_deqp_googletest',
+                            'type': 'executable',
+                            'dependencies':
+                            [
+                                'angle_deqp_gtest_support',
+                            ],
                             'include_dirs':
                             [
-                                'deqp_support',
                                 'third_party/gpu_test_expectations',
                             ],
-
                             'sources':
                             [
                                 'deqp_support/angle_deqp_gtest_main.cpp',
-                            ],
-
-                            'conditions':
-                            [
-                                ['angle_standalone==1',
-                                {
-                                    'sources':
-                                    [
-                                        'third_party/gpu_test_expectations/gpu_info.cc',
-                                        'third_party/gpu_test_expectations/gpu_info.h',
-                                        'third_party/gpu_test_expectations/gpu_test_config.cc',
-                                        'third_party/gpu_test_expectations/gpu_test_config.h',
-                                        'third_party/gpu_test_expectations/gpu_test_expectations_parser.cc',
-                                        'third_party/gpu_test_expectations/gpu_test_expectations_parser.h',
-                                    ],
-                                }]
+                                'third_party/gpu_test_expectations/gpu_info.cc',
+                                'third_party/gpu_test_expectations/gpu_info.h',
+                                'third_party/gpu_test_expectations/gpu_test_config.cc',
+                                'third_party/gpu_test_expectations/gpu_test_config.h',
+                                'third_party/gpu_test_expectations/gpu_test_expectations_parser.cc',
+                                'third_party/gpu_test_expectations/gpu_test_expectations_parser.h',
                             ],
                         },
                     ], # targets
