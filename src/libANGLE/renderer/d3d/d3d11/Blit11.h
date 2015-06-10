@@ -141,6 +141,9 @@ class Blit11 : angle::NonCopyable
 
     gl::Error getCommonShaders(CommonShaders *commonShadersOut, bool get3D);
 
+    ID3D11InputLayout *getQuad2DIL();
+    ID3D11InputLayout *getQuad3DIL();
+
     Renderer11 *mRenderer;
 
     std::map<BlitShaderType, Shader> mBlitShaderMap;

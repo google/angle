@@ -312,30 +312,6 @@ Blit11::Blit11(Renderer11 *renderer)
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mDepthStencilState, "Blit11 depth stencil state");
 
-    D3D11_INPUT_ELEMENT_DESC quad2DLayout[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
-
-    result = device->CreateInputLayout(quad2DLayout, ArraySize(quad2DLayout), g_VS_Passthrough2D, ArraySize(g_VS_Passthrough2D), &mQuad2DIL);
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mQuad2DIL, "Blit11 2D input layout");
-
-    if (renderer->isES3Capable())
-    {
-        D3D11_INPUT_ELEMENT_DESC quad3DLayout[] =
-        {
-            { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "LAYER",    0, DXGI_FORMAT_R32_UINT,        0,  8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        };
-
-        result = device->CreateInputLayout(quad3DLayout, ArraySize(quad3DLayout), g_VS_Passthrough3D, ArraySize(g_VS_Passthrough3D), &mQuad3DIL);
-        ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mQuad3DIL, "Blit11 3D input layout");
-    }
-
     D3D11_BUFFER_DESC swizzleBufferDesc;
     swizzleBufferDesc.ByteWidth = sizeof(unsigned int) * 4;
     swizzleBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -815,7 +791,7 @@ gl::Error Blit11::copyDepth(ID3D11ShaderResourceView *source, const gl::Box &sou
     }
 
     // Apply shaders
-    deviceContext->IASetInputLayout(mQuad2DIL);
+    deviceContext->IASetInputLayout(getQuad2DIL());
     deviceContext->IASetPrimitiveTopology(topology);
     deviceContext->VSSetShader(quad2DVS, nullptr, 0);
 
@@ -1012,7 +988,7 @@ void Blit11::add2DBlitShaderToMap(BlitShaderType blitShaderType, const CommonSha
 
     Shader shader;
     shader.mVertexWriteFunction = Write2DVertices;
-    shader.mInputLayout = mQuad2DIL;
+    shader.mInputLayout = getQuad2DIL();
     shader.mVertexShader = commonShaders.vertexShader2D;
     shader.mGeometryShader = nullptr;
     shader.mPixelShader = ps;
@@ -1027,7 +1003,7 @@ void Blit11::add3DBlitShaderToMap(BlitShaderType blitShaderType, const CommonSha
 
     Shader shader;
     shader.mVertexWriteFunction = Write3DVertices;
-    shader.mInputLayout = mQuad3DIL;
+    shader.mInputLayout = getQuad3DIL();
     shader.mVertexShader = commonShaders.vertexShader3D;
     shader.mGeometryShader = commonShaders.geometryShader3D;
     shader.mPixelShader = ps;
@@ -1044,14 +1020,14 @@ void Blit11::addSwizzleShaderToMap(SwizzleShaderType swizzleShaderType, bool is2
     if (is2D)
     {
         shader.mVertexWriteFunction = Write2DVertices;
-        shader.mInputLayout = mQuad2DIL;
+        shader.mInputLayout = getQuad2DIL();
         shader.mVertexShader = commonShaders.vertexShader2D;
         shader.mGeometryShader = nullptr;
     }
     else
     {
         shader.mVertexWriteFunction = Write3DVertices;
-        shader.mInputLayout = mQuad3DIL;
+        shader.mInputLayout = getQuad3DIL();
         shader.mVertexShader = commonShaders.vertexShader3D;
         shader.mGeometryShader = commonShaders.geometryShader3D;
     }
@@ -1302,6 +1278,49 @@ gl::Error Blit11::getCommonShaders(CommonShaders *commonShadersOut, bool get3D)
     }
 
     return gl::Error(GL_NO_ERROR);
+}
+
+ID3D11InputLayout *Blit11::getQuad2DIL()
+{
+    if (mQuad2DIL == nullptr)
+    {
+        D3D11_INPUT_ELEMENT_DESC quad2DLayout[] =
+        {
+            { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        };
+
+        ID3D11Device *device = mRenderer->getDevice();
+        HRESULT result = device->CreateInputLayout(quad2DLayout, ArraySize(quad2DLayout), g_VS_Passthrough2D, ArraySize(g_VS_Passthrough2D), &mQuad2DIL);
+        ASSERT(SUCCEEDED(result));
+        UNUSED_ASSERTION_VARIABLE(result);
+        d3d11::SetDebugName(mQuad2DIL, "Blit11 2D input layout");
+    }
+
+    return mQuad2DIL;
+}
+
+ID3D11InputLayout *Blit11::getQuad3DIL()
+{
+    ASSERT(mRenderer->isES3Capable());
+
+    if (mQuad3DIL == nullptr)
+    {
+        D3D11_INPUT_ELEMENT_DESC quad3DLayout[] =
+        {
+            { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "LAYER",    0, DXGI_FORMAT_R32_UINT,        0,  8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        };
+
+        ID3D11Device *device = mRenderer->getDevice();
+        HRESULT result = device->CreateInputLayout(quad3DLayout, ArraySize(quad3DLayout), g_VS_Passthrough3D, ArraySize(g_VS_Passthrough3D), &mQuad3DIL);
+        ASSERT(SUCCEEDED(result));
+        UNUSED_ASSERTION_VARIABLE(result);
+        d3d11::SetDebugName(mQuad3DIL, "Blit11 3D input layout");
+    }
+
+    return mQuad3DIL;
 }
 
 }
