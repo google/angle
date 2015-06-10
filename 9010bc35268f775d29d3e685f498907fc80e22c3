@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "39858859_b1bfc04d",
+        "filename": "src/tests/test_utils/angle_test_configs.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-10T21:10:52Z",
+      "side": 1,
+      "message": "Sure, I\u0027ll look into moving that struct into a common location.",
+      "parentUuid": "f98e907f_cfddfd55",
+      "revId": "9010bc35268f775d29d3e685f498907fc80e22c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f98e907f_2fd28946",
         "filename": "src/tests/test_utils/angle_test_configs.h",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-06-10T21:08:18Z",
       "side": 1,
       "message": "so that\u0027s the convention for multi word namespace, good to know",
+      "revId": "9010bc35268f775d29d3e685f498907fc80e22c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79254042_b3bfd84d",
+        "filename": "src/tests/test_utils/angle_test_configs.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-10T21:10:52Z",
+      "side": 1,
+      "message": "Yea.....",
+      "parentUuid": "f98e907f_2fd28946",
       "revId": "9010bc35268f775d29d3e685f498907fc80e22c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
