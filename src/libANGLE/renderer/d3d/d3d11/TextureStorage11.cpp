@@ -698,7 +698,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, SwapChain11 *swap
     mTextureHeight = texDesc.Height;
     mTextureDepth = 1;
 
-    mInternalFormat = swapchain->GetBackBufferInternalFormat();
+    mInternalFormat = swapchain->GetRenderTargetInternalFormat();
 
     ID3D11ShaderResourceView *srv = swapchain->getRenderTargetShaderResource();
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;

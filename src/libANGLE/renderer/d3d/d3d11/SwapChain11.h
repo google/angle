@@ -48,6 +48,7 @@ class SwapChain11 : public SwapChainD3D
     void initPassThroughResources();
     void releaseOffscreenTexture();
     EGLint resetOffscreenTexture(int backbufferWidth, int backbufferHeight);
+    DXGI_FORMAT getSwapChainNativeFormat() const;
 
     Renderer11 *mRenderer;
     EGLint mHeight;

@@ -111,7 +111,7 @@ GLsizei SurfaceRenderTarget9::getDepth() const
 
 GLenum SurfaceRenderTarget9::getInternalFormat() const
 {
-    return (mDepth ? mSwapChain->GetDepthBufferInternalFormat() : mSwapChain->GetBackBufferInternalFormat());
+    return (mDepth ? mSwapChain->GetDepthBufferInternalFormat() : mSwapChain->GetRenderTargetInternalFormat());
 }
 
 GLsizei SurfaceRenderTarget9::getSamples() const

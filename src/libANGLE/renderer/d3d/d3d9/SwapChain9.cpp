@@ -104,7 +104,7 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
         pShareHandle = &mShareHandle;
     }
 
-    const d3d9::TextureFormat &backBufferd3dFormatInfo = d3d9::GetTextureFormatInfo(mBackBufferFormat);
+    const d3d9::TextureFormat &backBufferd3dFormatInfo = d3d9::GetTextureFormatInfo(mOffscreenRenderTargetFormat);
     result = device->CreateTexture(backbufferWidth, backbufferHeight, 1, D3DUSAGE_RENDERTARGET,
                                    backBufferd3dFormatInfo.texFormat, D3DPOOL_DEFAULT, &mOffscreenTexture,
                                    pShareHandle);

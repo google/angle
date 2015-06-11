@@ -31,7 +31,7 @@ class SwapChainD3D : angle::NonCopyable
 {
   public:
     SwapChainD3D(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
-        : mNativeWindow(nativeWindow), mBackBufferFormat(backBufferFormat), mDepthBufferFormat(depthBufferFormat), mShareHandle(shareHandle)
+        : mNativeWindow(nativeWindow), mOffscreenRenderTargetFormat(backBufferFormat), mDepthBufferFormat(depthBufferFormat), mShareHandle(shareHandle)
     {
     }
 
@@ -45,14 +45,14 @@ class SwapChainD3D : angle::NonCopyable
     virtual RenderTargetD3D *getColorRenderTarget() = 0;
     virtual RenderTargetD3D *getDepthStencilRenderTarget() = 0;
 
-    GLenum GetBackBufferInternalFormat() const { return mBackBufferFormat; }
+    GLenum GetRenderTargetInternalFormat() const { return mOffscreenRenderTargetFormat; }
     GLenum GetDepthBufferInternalFormat() const { return mDepthBufferFormat; }
 
     HANDLE getShareHandle() { return mShareHandle; }
 
   protected:
     rx::NativeWindow mNativeWindow;  // Handler for the Window that the surface is created for.
-    const GLenum mBackBufferFormat;
+    const GLenum mOffscreenRenderTargetFormat;
     const GLenum mDepthBufferFormat;
 
     HANDLE mShareHandle;

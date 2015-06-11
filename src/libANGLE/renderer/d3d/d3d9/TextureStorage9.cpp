@@ -105,7 +105,7 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, SwapChain9 *swapchai
     mTexture = surfaceTexture;
     mMipLevels = surfaceTexture->GetLevelCount();
 
-    mInternalFormat = swapchain->GetBackBufferInternalFormat();
+    mInternalFormat = swapchain->GetRenderTargetInternalFormat();
 
     D3DSURFACE_DESC surfaceDesc;
     surfaceTexture->GetLevelDesc(0, &surfaceDesc);

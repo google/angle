@@ -65,6 +65,8 @@ class EGLWindow : angle::NonCopyable
     void setMultisample(bool multisample) { mMultisample = multisample; }
     void setSwapInterval(EGLint swapInterval) { mSwapInterval = swapInterval; }
 
+    static EGLBoolean FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *config);
+
     void swap();
 
     EGLint getClientVersion() const { return mClientVersion; }

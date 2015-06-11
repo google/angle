@@ -263,3 +263,36 @@ bool EGLWindow::isGLInitialized() const
            mContext != EGL_NO_CONTEXT &&
            mDisplay != EGL_NO_DISPLAY;
 }
+
+// Find an EGLConfig that is an exact match for the specified attributes. EGL_FALSE is returned if
+// the EGLConfig is found.  This indicates that the EGLConfig is not supported.
+EGLBoolean EGLWindow::FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *config)
+{
+    EGLint numConfigs = 0;
+    eglGetConfigs(dpy, nullptr, 0, &numConfigs);
+    std::vector<EGLConfig> allConfigs(numConfigs);
+    eglGetConfigs(dpy, allConfigs.data(), allConfigs.size(), &numConfigs);
+
+    for (size_t i = 0; i < allConfigs.size(); i++)
+    {
+        bool matchFound = true;
+        for (const EGLint *curAttrib = attrib_list; curAttrib[0] != EGL_NONE; curAttrib += 2)
+        {
+            EGLint actualValue = EGL_DONT_CARE;
+            eglGetConfigAttrib(dpy, allConfigs[i], curAttrib[0], &actualValue);
+            if (curAttrib[1] != actualValue)
+            {
+                matchFound = false;
+                break;
+            }
+        }
+
+        if (matchFound)
+        {
+            *config = allConfigs[i];
+            return EGL_TRUE;
+        }
+    }
+
+    return EGL_FALSE;
+}
