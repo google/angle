@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b95978ea_e57d76e0",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-11T15:56:55Z",
+      "side": 1,
+      "message": "This is referenced in buffer11 to ensure that changed indices list are re-generated if requested again.",
+      "parentUuid": "3937486d_9bc8a397",
+      "range": {
+        "startLine": 55,
+        "startChar": 9,
+        "endLine": 55,
+        "endChar": 26
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d902ac8c_a33aed84",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-10T17:12:14Z",
       "side": 1,
       "message": "Can you use a MemoryBuffer for this? It uses RAII and checks for allocation failures.",
+      "range": {
+        "startLine": 547,
+        "startChar": 8,
+        "endLine": 547,
+        "endChar": 62
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d95e2ccf_0fd54d2d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-11T15:56:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d902ac8c_a33aed84",
       "range": {
         "startLine": 547,
         "startChar": 8,
@@ -105,6 +153,30 @@
       "writtenOn": "2015-06-10T17:12:14Z",
       "side": 1,
       "message": "nit: size_t",
+      "range": {
+        "startLine": 14,
+        "startChar": 10,
+        "endLine": 14,
+        "endChar": 13
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "795380ca_06fc5c35",
+        "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-11T15:56:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99fcb4c6_f8aad9de",
       "range": {
         "startLine": 14,
         "startChar": 10,
