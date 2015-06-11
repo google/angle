@@ -17,11 +17,6 @@ using namespace angle;
 namespace
 {
 
-EGLint NullDeviceType(bool useNullDevice)
-{
-    return useNullDevice ? EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE : EGL_DONT_CARE;
-}
-
 struct DrawCallPerfParams final : public RenderTestParams
 {
     // Common default options
@@ -189,31 +184,33 @@ void DrawCallPerfBenchmark::drawBenchmark()
     ASSERT_GL_NO_ERROR();
 }
 
+using namespace egl_platform;
+
 DrawCallPerfParams DrawCallPerfD3D11Params(bool useNullDevice)
 {
     DrawCallPerfParams params;
-    params.eglParameters = egl_platform::D3D11_NULL();
+    params.eglParameters = useNullDevice ? D3D11_NULL() : D3D11();
     return params;
 }
 
 DrawCallPerfParams DrawCallPerfD3D9Params(bool useNullDevice)
 {
     DrawCallPerfParams params;
-    params.eglParameters = egl_platform::DEFAULT_NULL();
+    params.eglParameters = useNullDevice ? D3D9_NULL() : D3D9();
     return params;
 }
 
 DrawCallPerfParams DrawCallPerfOpenGLParams(bool useNullDevice)
 {
     DrawCallPerfParams params;
-    params.eglParameters = egl_platform::D3D9_NULL();
+    params.eglParameters = useNullDevice ? OPENGL_NULL() : OPENGL();
     return params;
 }
 
 DrawCallPerfParams DrawCallPerfValidationOnly()
 {
     DrawCallPerfParams params;
-    params.eglParameters = egl_platform::OPENGL();
+    params.eglParameters = DEFAULT();
     params.iterations = 100;
     params.numTris = 0;
     params.runTimeSeconds = 5.0;

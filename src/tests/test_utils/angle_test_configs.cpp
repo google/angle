@@ -64,6 +64,9 @@ std::ostream &operator<<(std::ostream& stream, const PlatformParameters &pp)
       case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
         stream << "GLES";
         break;
+      case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
+        stream << "DEFAULT";
+        break;
       default:
         UNREACHABLE();
         break;
@@ -108,10 +111,7 @@ namespace egl_platform
 
 EGLPlatformParameters DEFAULT()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE,
-        EGL_DONT_CARE, EGL_DONT_CARE,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
 }
 
 EGLPlatformParameters DEFAULT_NULL()
@@ -301,6 +301,14 @@ EGLPlatformParameters D3D11_FL9_3_REFERENCE()
 EGLPlatformParameters OPENGL()
 {
     return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE);
+}
+
+EGLPlatformParameters OPENGL_NULL()
+{
+    return EGLPlatformParameters(
+        EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE,
+        0, 0,
+        EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
 }
 
 EGLPlatformParameters OPENGLES()

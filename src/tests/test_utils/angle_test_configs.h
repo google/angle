@@ -67,6 +67,7 @@ EGLPlatformParameters D3D11_FL10_0_REFERENCE();
 EGLPlatformParameters D3D11_FL9_3_REFERENCE();
 
 EGLPlatformParameters OPENGL();
+EGLPlatformParameters OPENGL_NULL();
 
 EGLPlatformParameters OPENGLES();
 
