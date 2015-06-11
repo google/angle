@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "59e07c3c_e5db3015",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-11T14:43:39Z",
+      "side": 1,
+      "message": "this is already in a standalone block, I had forgotten.",
+      "range": {
+        "startLine": 1169,
+        "startChar": 34,
+        "endLine": 1169,
+        "endChar": 50
+      },
+      "revId": "97c362a9c0dee2984ae7a015fd5b36ebdd58bc45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "193e044a_ef032d7d",
         "filename": "src/tests/deqp_support/angle_deqp_gtest_main.cpp",
         "patchSetId": 4
@@ -61,6 +84,30 @@
       "side": 1,
       "message": "Yes, sorry about going back on this, but it seems fine to move the copy of Chromium\u0027s GPU test expectations back into a differently named directory under ANGLE\u0027s third_party directory. It\u0027s unfortunate to duplicate that code but not the end of the world.\n\nIt\u0027d still be best to split off main() into its own file so that Chromium can override it with its test launcher.",
       "parentUuid": "193e044a_2fc915b9",
+      "range": {
+        "startLine": 20,
+        "startChar": 1,
+        "endLine": 20,
+        "endChar": 8
+      },
+      "revId": "97c362a9c0dee2984ae7a015fd5b36ebdd58bc45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b92b3816_7ed10073",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-11T14:43:39Z",
+      "side": 1,
+      "message": "Split this into a separate main and test file.",
+      "parentUuid": "d902ac8c_5cfc3a36",
       "range": {
         "startLine": 20,
         "startChar": 1,
