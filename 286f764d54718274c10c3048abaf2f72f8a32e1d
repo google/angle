@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79254042_021af42c",
+        "filename": "src/tests/deqp_support/deqp_test_expectations.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-11T14:43:39Z",
+      "side": 1,
+      "message": "marked these tests as skip",
+      "range": {
+        "startLine": 295,
+        "startChar": 0,
+        "endLine": 297,
+        "endChar": 36
+      },
+      "revId": "286f764d54718274c10c3048abaf2f72f8a32e1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
