@@ -10,7 +10,7 @@
 #include "angle_gl.h"
 #include "gtest/gtest.h"
 #include "GLSLANG/ShaderLang.h"
-#include "compiler/translator/TranslatorGLSL.h"
+#include "tests/test_utils/compiler_test.h"
 
 namespace
 {
@@ -21,31 +21,15 @@ class PackUnpackTest : public testing::Test
     PackUnpackTest() {}
 
   protected:
-    void SetUp() override
-    {
-        ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
-
-        mTranslator = new TranslatorGLSL(
-        GL_FRAGMENT_SHADER, SH_GLES3_SPEC, SH_GLSL_410_CORE_OUTPUT);
-        ASSERT_TRUE(mTranslator->Init(resources));
-    }
-
-    void TearDown() override
-    {
-        SafeDelete(mTranslator);
-    }
-
     void compile(const std::string& shaderString)
     {
-        const char *shaderStrings[] = { shaderString.c_str() };
-
-        bool compilationSuccess = mTranslator->compile(shaderStrings, 1, SH_OBJECT_CODE);
-        TInfoSink &infoSink = mTranslator->getInfoSink();
-        mGLSLCode = infoSink.obj.c_str();
+        std::string infoLog;
+        bool compilationSuccess = compileTestShader(GL_FRAGMENT_SHADER, SH_GLES3_SPEC,
+                                                    SH_GLSL_410_CORE_OUTPUT,
+                                                    shaderString, &mGLSLCode, &infoLog);
         if (!compilationSuccess)
         {
-            FAIL() << "Shader compilation into GLSL 4.1 failed " << infoSink.info.c_str();
+            FAIL() << "Shader compilation into GLSL 4.1 failed " << infoLog;
         }
     }
 
@@ -55,7 +39,6 @@ class PackUnpackTest : public testing::Test
     }
 
   private:
-    TranslatorGLSL *mTranslator;
     std::string mGLSLCode;
 };
 
@@ -123,4 +106,4 @@ TEST_F(PackUnpackTest, UnpackHalf2x16Emulation)
     ASSERT_TRUE(foundInGLSLCode("vec2 webgl_unpackHalf2x16_emu(uint u)"));
 }
 
-}
+} // namespace
