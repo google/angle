@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "396e687b_52020ac8",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 794,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-11T22:34:19Z",
+      "side": 1,
+      "message": "If this were moved to the end of this function, then the getIntegerv function pointer would already be initialized.",
+      "range": {
+        "startLine": 794,
+        "startChar": 8,
+        "endLine": 794,
+        "endChar": 26
+      },
+      "revId": "8fd2f5cd8807ea03b86b11966bd38b12f14d46e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "997f5421_201db26e",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-11T22:34:19Z",
+      "side": 1,
+      "message": "typo: deprecated",
+      "range": {
+        "startLine": 101,
+        "startChar": 31,
+        "endLine": 101,
+        "endChar": 41
+      },
+      "revId": "8fd2f5cd8807ea03b86b11966bd38b12f14d46e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "997f5421_401a3e78",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-11T22:34:19Z",
+      "side": 1,
+      "message": "typo: as though",
+      "range": {
+        "startLine": 102,
+        "startChar": 11,
+        "endLine": 102,
+        "endChar": 19
+      },
+      "revId": "8fd2f5cd8807ea03b86b11966bd38b12f14d46e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
