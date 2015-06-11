@@ -148,12 +148,18 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     // glXMakeCurrent requires a GLXDrawable so we create a temporary Pbuffer
     // (of size 0, 0) for the duration of these calls.
 
-    // TODO(cwallez) error checking here
-    // TODO(cwallez) during the initialization of ANGLE we need a gl context current
     // to query things like limits. Ideally we would want to unset the current context
     // and destroy the pbuffer before going back to the application but this is TODO
     mDummyPbuffer = mGLX.createPbuffer(contextConfig, nullptr);
-    mGLX.makeCurrent(mDummyPbuffer, mContext);
+    if (!mDummyPbuffer)
+    {
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not create the dummy pbuffer.");
+    }
+
+    if (!mGLX.makeCurrent(mDummyPbuffer, mContext))
+    {
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not make the dummy pbuffer current.");
+    }
 
     mFunctionsGL = new FunctionsGLGLX(mGLX.getProc);
     mFunctionsGL->initialize();
