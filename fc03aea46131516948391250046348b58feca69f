@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59095cdc_fda46391",
+        "filename": "src/tests/gl_tests/DrawBuffersTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-12T16:39:19Z",
+      "side": 1,
+      "message": "initialize mMaxDrawBuffers here (technically we should initialize every value in the constructor to something non-random, but we don\u0027t do that in many places in the tests)",
+      "range": {
+        "startLine": 14,
+        "startChar": 4,
+        "endLine": 14,
+        "endChar": 19
+      },
+      "revId": "fc03aea46131516948391250046348b58feca69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79254042_c6e727a3",
+        "filename": "src/tests/gl_tests/DrawBuffersTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-12T16:39:19Z",
+      "side": 1,
+      "message": "add a comment before your new tests",
+      "range": {
+        "startLine": 207,
+        "startChar": 0,
+        "endLine": 207,
+        "endChar": 6
+      },
+      "revId": "fc03aea46131516948391250046348b58feca69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
