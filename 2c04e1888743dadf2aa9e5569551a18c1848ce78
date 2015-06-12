@@ -16,6 +16,24 @@
       "revId": "2c04e1888743dadf2aa9e5569551a18c1848ce78",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59095cdc_7d4e93ba",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-12T17:31:52Z",
+      "side": 1,
+      "message": "Done. It\u0027s a (very severe) programming error if this situation happens, so I elected for the first.",
+      "parentUuid": "992af412_8f77064c",
+      "revId": "2c04e1888743dadf2aa9e5569551a18c1848ce78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
