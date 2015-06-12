@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59095cdc_3d96db1c",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-12T16:48:34Z",
+      "side": 1,
+      "message": "ASSERT(mAnnotator) for safety",
+      "range": {
+        "startLine": 662,
+        "startChar": 11,
+        "endLine": 662,
+        "endChar": 21
+      },
+      "revId": "01b5f9a0d0ebd958c17574d3671a9775e58a50f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59095cdc_3d5d3bf9",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-12T16:48:34Z",
+      "side": 1,
+      "message": "this is pretty nitpicky but I would probably make this createAnnotator and initialize in getAnnotator. This reduces the replicated code slightly. Also, if you can, can you make these protected/private? Seems like they only get called internally?",
+      "range": {
+        "startLine": 194,
+        "startChar": 17,
+        "endLine": 194,
+        "endChar": 39
+      },
+      "revId": "01b5f9a0d0ebd958c17574d3671a9775e58a50f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
