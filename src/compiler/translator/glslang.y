@@ -664,57 +664,7 @@ declaration
 
 function_prototype
     : function_declarator RIGHT_PAREN  {
-        //
-        // Multiple declarations of the same function are allowed.
-        //
-        // If this is a definition, the definition production code will check for redefinitions
-        // (we don't know at this point if it's a definition or not).
-        //
-        // Redeclarations are allowed.  But, return types and parameter qualifiers must match.
-        //
-        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find($1->getMangledName(), context->getShaderVersion()));
-        if (prevDec) {
-            if (prevDec->getReturnType() != $1->getReturnType()) {
-                context->error(@2, "overloaded functions must have the same return type", $1->getReturnType().getBasicString());
-                context->recover();
-            }
-            for (size_t i = 0; i < prevDec->getParamCount(); ++i) {
-                if (prevDec->getParam(i).type->getQualifier() != $1->getParam(i).type->getQualifier()) {
-                    context->error(@2, "overloaded functions must have the same parameter qualifiers", $1->getParam(i).type->getQualifierString());
-                    context->recover();
-                }
-            }
-        }
-
-        //
-        // Check for previously declared variables using the same name.
-        //
-        TSymbol *prevSym = context->symbolTable.find($1->getName(), context->getShaderVersion());
-        if (prevSym)
-        {
-            if (!prevSym->isFunction())
-            {
-                context->error(@2, "redefinition", $1->getName().c_str(), "function");
-                context->recover();
-            }
-        }
-        else
-        {
-            // Insert the unmangled name to detect potential future redefinition as a variable.
-            TFunction *function = new TFunction(NewPoolTString($1->getName().c_str()), &$1->getReturnType());
-            context->symbolTable.getOuterLevel()->insertUnmangled(function);
-        }
-
-        //
-        // If this is a redeclaration, it could also be a definition,
-        // in which case, we want to use the variable names from this one, and not the one that's
-        // being redeclared.  So, pass back up this declaration, not the one in the symbol table.
-        //
-        $$.function = $1;
-
-        // We're at the inner scope level of the function's arguments and body statement.
-        // Add the function prototype to the surrounding scope instead.
-        context->symbolTable.getOuterLevel()->insert($$.function);
+        $$.function = context->parseFunctionDeclarator(@2, $1);
     }
     ;
 
@@ -1665,95 +1615,7 @@ external_declaration
 
 function_definition
     : function_prototype {
-        TFunction* function = $1.function;
-        
-        const TSymbol *builtIn = context->symbolTable.findBuiltIn(function->getMangledName(), context->getShaderVersion());
-        
-        if (builtIn)
-        {
-            context->error(@1, "built-in functions cannot be redefined", function->getName().c_str());
-            context->recover();
-        }
-        
-        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find(function->getMangledName(), context->getShaderVersion()));
-        //
-        // Note:  'prevDec' could be 'function' if this is the first time we've seen function
-        // as it would have just been put in the symbol table.  Otherwise, we're looking up
-        // an earlier occurance.
-        //
-        if (prevDec->isDefined()) {
-            //
-            // Then this function already has a body.
-            //
-            context->error(@1, "function already has a body", function->getName().c_str());
-            context->recover();
-        }
-        prevDec->setDefined();
-        //
-        // Overload the unique ID of the definition to be the same unique ID as the declaration.
-        // Eventually we will probably want to have only a single definition and just swap the
-        // arguments to be the definition's arguments.
-        //
-        function->setUniqueId(prevDec->getUniqueId());
-
-        //
-        // Raise error message if main function takes any parameters or return anything other than void
-        //
-        if (function->getName() == "main") {
-            if (function->getParamCount() > 0) {
-                context->error(@1, "function cannot take any parameter(s)", function->getName().c_str());
-                context->recover();
-            }
-            if (function->getReturnType().getBasicType() != EbtVoid) {
-                context->error(@1, "", function->getReturnType().getBasicString(), "main function cannot return a value");
-                context->recover();
-            }
-        }
-
-        //
-        // Remember the return type for later checking for RETURN statements.
-        //
-        context->setCurrentFunctionType(&(prevDec->getReturnType()));
-        context->setFunctionReturnsValue(false);
-
-        //
-        // Insert parameters into the symbol table.
-        // If the parameter has no name, it's not an error, just don't insert it
-        // (could be used for unused args).
-        //
-        // Also, accumulate the list of parameters into the HIL, so lower level code
-        // knows where to find parameters.
-        //
-        TIntermAggregate* paramNodes = new TIntermAggregate;
-        for (size_t i = 0; i < function->getParamCount(); i++) {
-            const TConstParameter& param = function->getParam(i);
-            if (param.name != 0) {
-                TVariable *variable = new TVariable(param.name, *param.type);
-                //
-                // Insert the parameters with name in the symbol table.
-                //
-                if (! context->symbolTable.declare(variable)) {
-                    context->error(@1, "redefinition", variable->getName().c_str());
-                    context->recover();
-                    delete variable;
-                }
-
-                //
-                // Add the parameter to the HIL
-                //
-                paramNodes = context->intermediate.growAggregate(
-                                               paramNodes,
-                                               context->intermediate.addSymbol(variable->getUniqueId(),
-                                                                       variable->getName(),
-                                                                       variable->getType(), @1),
-                                               @1);
-            } else {
-                paramNodes = context->intermediate.growAggregate(paramNodes, context->intermediate.addSymbol(0, "", *param.type, @1), @1);
-            }
-        }
-        context->intermediate.setAggregateOperator(paramNodes, EOpParameters, @1);
-        $1.intermAggregate = paramNodes;
-        context->setLoopNestingLevel(0);
+        context->parseFunctionPrototype(@1, $1.function, &$1.intermAggregate);
     }
     compound_statement_no_new_scope {
         //?? Check that all paths return a value if return type != void ?
