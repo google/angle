@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "992af412_8f77064c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2015-06-12T17:00:23Z",
+      "side": 1,
+      "message": "Small complaint: If I call getShader(device1) followed by getShader(device2) it will return the same shader object in both cases, which is wrong. I suggest tracking the device used to compile the shader and either:\n\n - assert if you attempt to get the shader with a device other than the first one passed or\n - If a new device is passed clear the cached shader and recompile with the new device.",
+      "revId": "2c04e1888743dadf2aa9e5569551a18c1848ce78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
