@@ -28,6 +28,8 @@
 // TODO(jmadill): triage these into temporary and permananet suppressions
 989 WIN : dEQP-GLES2.functional.shaders.preprocessor.basic.identifier_with_double_underscore_vertex = FAIL
 989 WIN : dEQP-GLES2.functional.shaders.preprocessor.basic.identifier_with_double_underscore_fragment = FAIL
+989 WIN : dEQP-GLES2.functional.shaders.preprocessor.pragmas.invalid_pragma_invalid_* = FAIL
+989 WIN : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_unrecognized_* = FAIL
 989 WIN : dEQP-GLES2.functional.shaders.preprocessor.predefined_macros.line_2_vertex = FAIL
 989 WIN : dEQP-GLES2.functional.shaders.preprocessor.predefined_macros.line_2_fragment = FAIL
 989 WIN : dEQP-GLES2.functional.shaders.preprocessor.conditional_inclusion.basic_2_vertex = FAIL

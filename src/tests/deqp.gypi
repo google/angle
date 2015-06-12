@@ -105,6 +105,8 @@
             '<(deqp_dir)/modules/gles2/functional/es2fClippingTests.hpp',
             '<(deqp_dir)/modules/gles2/functional/es2fColorClearTest.cpp',
             '<(deqp_dir)/modules/gles2/functional/es2fColorClearTest.hpp',
+            '<(deqp_dir)/modules/gles2/functional/es2fDebugMarkerTests.cpp',
+            '<(deqp_dir)/modules/gles2/functional/es2fDebugMarkerTests.hpp',
             '<(deqp_dir)/modules/gles2/functional/es2fDefaultVertexAttributeTests.cpp',
             '<(deqp_dir)/modules/gles2/functional/es2fDefaultVertexAttributeTests.hpp',
             '<(deqp_dir)/modules/gles2/functional/es2fDepthRangeTests.cpp',
