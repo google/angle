@@ -33,6 +33,7 @@
                 ['angle_build_winrt==1',
                 {
                     'msvs_enable_winrt' : '1',
+                    'msvs_application_type_revision' : '<(angle_build_winrt_app_type_revision)',
                     'msvs_requires_importlibrary' : 'true',
                     'msvs_settings':
                     {
