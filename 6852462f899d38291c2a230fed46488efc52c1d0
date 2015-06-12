@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "795380ca_69be41b2",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1299,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-12T06:23:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9762c12_b5f52ac5",
+      "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9cfb89d_04530042",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 2
@@ -108,6 +126,24 @@
     },
     {
       "key": {
+        "uuid": "b95978ea_086787c9",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1329,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-12T06:23:49Z",
+      "side": 1,
+      "message": "Done, I now have a utility class. Having functions inside a class is actually making it simple and reducing size of fold functions.\nI also have unit tests for inverse and determinant with latest patch set.",
+      "parentUuid": "99ce74a2_a32444b7",
+      "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99ce74a2_c3c06072",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 2
@@ -143,6 +179,24 @@
     },
     {
       "key": {
+        "uuid": "f967709d_cdfe5d7d",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1379,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-12T06:23:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9970341a_e16601cc",
+      "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79c9c09b_27b602c6",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 2
@@ -172,6 +226,24 @@
       "side": 1,
       "message": "Ok, will check this.",
       "parentUuid": "79c9c09b_27b602c6",
+      "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f967709d_8d086532",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2164,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-12T06:23:49Z",
+      "side": 1,
+      "message": "With utility class, it has now become simpler.",
+      "parentUuid": "b971781d_b4bb6e2f",
       "revId": "6852462f899d38291c2a230fed46488efc52c1d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
