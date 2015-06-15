@@ -44,6 +44,7 @@ struct EGLPlatformParameters
 };
 
 bool operator<(const EGLPlatformParameters &a, const EGLPlatformParameters &b);
+bool operator==(const EGLPlatformParameters &a, const EGLPlatformParameters &b);
 
 class EGLWindow : angle::NonCopyable
 {

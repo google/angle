@@ -30,6 +30,7 @@ struct PlatformParameters
 };
 
 bool operator<(const PlatformParameters &a, const PlatformParameters &b);
+bool operator==(const PlatformParameters &a, const PlatformParameters &b);
 std::ostream &operator<<(std::ostream& stream, const PlatformParameters &pp);
 
 // EGL platforms

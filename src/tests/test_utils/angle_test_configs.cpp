@@ -42,6 +42,13 @@ bool operator<(const PlatformParameters &a, const PlatformParameters &b)
     return a.eglParameters < b.eglParameters;
 }
 
+bool operator==(const PlatformParameters &a, const PlatformParameters &b)
+{
+    return (a.majorVersion == b.majorVersion) &&
+           (a.minorVersion == b.minorVersion) &&
+           (a.eglParameters == b.eglParameters);
+}
+
 std::ostream &operator<<(std::ostream& stream, const PlatformParameters &pp)
 {
     stream << "ES" << pp.majorVersion << "_" ;

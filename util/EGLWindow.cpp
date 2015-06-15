@@ -67,6 +67,14 @@ bool operator<(const EGLPlatformParameters &a, const EGLPlatformParameters &b)
     return a.deviceType < b.deviceType;
 }
 
+bool operator==(const EGLPlatformParameters &a, const EGLPlatformParameters &b)
+{
+    return (a.renderer == b.renderer) &&
+           (a.majorVersion == b.majorVersion) &&
+           (a.minorVersion == b.minorVersion) &&
+           (a.deviceType == b.deviceType);
+}
+
 EGLWindow::EGLWindow(size_t width, size_t height, EGLint glesMajorVersion, const EGLPlatformParameters &platform)
     : mDisplay(EGL_NO_DISPLAY),
       mSurface(EGL_NO_SURFACE),

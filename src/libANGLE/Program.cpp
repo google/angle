@@ -1291,7 +1291,7 @@ bool Program::linkAttributes(const Data &data,
     GLuint maxAttribs = data.caps->maxVertexAttributes;
 
     // TODO(jmadill): handle aliasing robustly
-    if (shaderAttributes.size() >= maxAttribs)
+    if (shaderAttributes.size() > maxAttribs)
     {
         infoLog << "Too many vertex attributes.";
         return false;
