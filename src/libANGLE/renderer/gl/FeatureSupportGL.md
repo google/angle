@@ -1,7 +1,7 @@
-#ANGLE RendererGL feature support
+# ANGLE RendererGL feature support
 Documentation of OpenGL ES and EGL features, caps and formats and required extensions.
 
-##OpenGL ES Feature Support
+## OpenGL ES Feature Support
 |Feature|OpenGL version|OpenGL extension|OpenGL ES version|OpenGL ES extension|Notes|
 |---|---|---|---|---|---|
 |Framebuffer/renderbuffer objects|3.0|[GL_EXT_framebuffer_object](https://www.opengl.org/registry/specs/EXT/framebuffer_object.txt)|2.0|--|Can potentially be emulated with Pbuffers but realistically this extension is always required.|
@@ -24,7 +24,7 @@ Documentation of OpenGL ES and EGL features, caps and formats and required exten
 |Vertex array object|3.0|[GL_ARB_vertex_array_object](https://www.opengl.org/registry/specs/ARB/vertex_array_object.txt)|3.0|[GL_OES_vertex_array_object](https://www.khronos.org/registry/gles/extensions/OES/OES_vertex_array_object.txt)|Can be emulated but costsmany extra API calls.  Virtualized contexts also require some kind of emulation of the default attribute state.|
 |Anisotropic filtering|--|[GL_EXT_texture_filter_anisotropic](https://www.opengl.org/registry/specs/EXT/texture_filter_anisotropic.txt)|--|[GL_EXT_texture_filter_anisotropic](https://www.opengl.org/registry/specs/EXT/texture_filter_anisotropic.txt)|Ubiquitous extension.|
 
-##OpenGL ES Caps
+## OpenGL ES Caps
 |Cap(s)|OpenGL version|OpenGL extension|OpenGL ES version|OpenGL ES extension|Notes|
 |---|---|---|---|---|---|
 |GL_MAX_ELEMENT_INDEX|4.3|[GL_ARB_ES3_compatibility](https://www.opengl.org/registry/specs/ARB/ES3_compatibility.txt)|3.0|--|Seems pretty safe to use an arbitrary limit, all implementations tested return 0xFFFFFFFF.|
@@ -64,7 +64,41 @@ Documentation of OpenGL ES and EGL features, caps and formats and required exten
 |---|---|---|---|---|---|
 |GL_RGBA8<br>GL_RGB8 |1.0|--|3.0|[GL_OES_rgb8_rgba8](https://www.khronos.org/registry/gles/extensions/OES/OES_rgb8_rgba8.txt)||
 
-##EGL Feature Support (TODO)
+## ESSL Features (TODO)
+|Feature|GLSL version|Notes|
+|---|---|---|
+|Unsigned integers|1.30||
+|Pack layout std140|1.40||
+
+
+## ESSL3 Builtins
+Builtins that are added going from ESSL1 to ESSL3.
+|Function|GLSL version|Extension|Notes|
+|---|---|---|---|
+|sinh<br>cosh<br>tanh<br>asinh<br>acosh|1.30|||
+|atanh|1.10|||
+|abs (genIType)|1.30|[GL_EXT_gpu_shader4](https://www.opengl.org/registry/specs/EXT/gpu_shader4.txt)||
+|sign (genIType)|1.50|[GL_EXT_gpu_shader4](https://www.opengl.org/registry/specs/EXT/gpu_shader4.txt)|Can be emulated easily.|
+|trunc|1.30|||
+|round<br>roundEven|1.30|||
+|min (genIType, genUType)<br>max (genIType, genUType)<br>clamp (genIType, genUType)|1.30||
+|mix (genBType)|4.50|[GL_EXT_shader_integer_mix](https://www.opengl.org/registry/specs/EXT/shader_integer_mix.txt)|Should be possible to emulate with a ternery operation.|
+|modf|1.30|||
+|isnan|1.30|||
+|isinf|1.10|||
+|floatBitsToInt<br>floatBitsToUint<br>intBitsToFloat<br>uintBitsToFloat|3.30|[GL_ARB_shader_bit_encoding](https://www.opengl.org/registry/specs/ARB/shader_bit_encoding.txt) or [ARB_gpu_shader5](https://www.opengl.org/registry/specs/ARB/gpu_shader5.txt)||
+|packSnorm2x16<br>packHalf2x16<br>unpackSnorm2x16<br>unpackHalf2x16<br>|4.20|[GL_ARB_shading_language_packing](https://www.opengl.org/registry/specs/ARB/shading_language_packing.txt)|Pack/unpack functions can be emulated with simple builtins.|
+|packUnorm2x16<br>unpackUnorm2x16|4.10|[GL_ARB_shading_language_packing](https://www.opengl.org/registry/specs/ARB/shading_language_packing.txt)||
+|matrixCompMult (NxM matrices)|1.10|||
+|outerProduct|1.20|||
+|transpose|1.20|||
+|determinant|1.50||Can be emulated.|
+|inverse|1.40||Can be emulated.|
+|lessThan (uvec)<br>lessThanEqual (uvec)<br>greaterThan (uvec)<br>greaterThanEqual (uvec)<br>equal (uvec)<br>notEqual (uvec)|1.30|||
+|texture<br>textureProj<br>textureLod<br>textureOffset<br>textureProjOffset<br>textureLodOffset<br>textureProjLod<br>textureProjLodOffset<br>texelFetch<br>texelFetchOffset<br>textureGrad<br>textureGradOffset<br>textureProjGrad<br>textureProjGradOffset<br>textureSize|1.30||Equivalent to texture2D, textureCube, etc|
+|dFdx<br>dFdy<br>fwidth|1.10||
+
+## EGL Feature Support (TODO)
 |Feature|EGL version|EGL extension|WGL core|WGL extension|GLX version|GLX extensions|Notes|
 |---|---|---|---|---|---|---|---|
 |Pbuffers|||No|[WGL_ARB_pbuffer](https://www.opengl.org/registry/specs/ARB/wgl_pbuffer.txt)||||
