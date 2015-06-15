@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b98a589d_c657f829",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 794,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-15T16:14:38Z",
+      "side": 1,
+      "message": "I like keeping all the version logic together so I updated it to always load glGetInteger first.",
+      "parentUuid": "396e687b_52020ac8",
+      "range": {
+        "startLine": 794,
+        "startChar": 8,
+        "endLine": 794,
+        "endChar": 26
+      },
+      "revId": "8fd2f5cd8807ea03b86b11966bd38b12f14d46e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "997f5421_201db26e",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "594a3c43_525814cf",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-15T16:14:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "997f5421_201db26e",
+      "range": {
+        "startLine": 101,
+        "startChar": 31,
+        "endLine": 101,
+        "endChar": 41
+      },
+      "revId": "8fd2f5cd8807ea03b86b11966bd38b12f14d46e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "997f5421_401a3e78",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2015-06-11T22:34:19Z",
       "side": 1,
       "message": "typo: as though",
+      "range": {
+        "startLine": 102,
+        "startChar": 11,
+        "endLine": 102,
+        "endChar": 19
+      },
+      "revId": "8fd2f5cd8807ea03b86b11966bd38b12f14d46e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "597cfc56_484773cd",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-15T16:14:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "997f5421_401a3e78",
       "range": {
         "startLine": 102,
         "startChar": 11,
