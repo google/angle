@@ -168,6 +168,30 @@
     },
     {
       "key": {
+        "uuid": "796d40b3_9c4f093b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-15T21:12:46Z",
+      "side": 1,
+      "message": "I\u0027m not sure if it\u0027s a deal breaker, but I\u0027d feel hesitant about taking it when it could potentially be cleaner and not break the style of our code. This change is fairly big, so it\u0027s worth digging in to see if we can reduce it\u0027s impact on maintainability.",
+      "parentUuid": "99abd4ef_7281b097",
+      "range": {
+        "startLine": 518,
+        "startChar": 37,
+        "endLine": 518,
+        "endChar": 45
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39858859_60441c1a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 2
@@ -343,6 +367,30 @@
       "side": 1,
       "message": "If I remove this, then dEPQ tests for indexed points fail.",
       "parentUuid": "992af412_08cc572c",
+      "range": {
+        "startLine": 295,
+        "startChar": 15,
+        "endLine": 296,
+        "endChar": 67
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b98a589d_376d282b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-15T21:12:46Z",
+      "side": 1,
+      "message": "did you try:\n\n if (bufferStorage \u003d\u003d nullptr)\n {\n  buffer \u003d vertexBuffer-\u003egetBuffer();\n }\n else if (indexedPointSpriteEmulation)\n {\n  buffer \u003d bufferStorage-\u003egetEmulated(...);\n }\n else\n {\n  buffer \u003d bufferStorage-\u003egetBuffer(...);\n }",
+      "parentUuid": "b99c18d9_d6021a77",
       "range": {
         "startLine": 295,
         "startChar": 15,
