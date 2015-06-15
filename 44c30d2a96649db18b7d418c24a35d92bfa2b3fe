@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "796d40b3_96cc4a60",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-15T16:52:04Z",
+      "side": 1,
+      "message": "Ah, thanks, visual studio code search didn\u0027t find that.",
+      "parentUuid": "b95978ea_e57d76e0",
+      "range": {
+        "startLine": 55,
+        "startChar": 9,
+        "endLine": 55,
+        "endChar": 26
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d902ac8c_a33aed84",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 2
