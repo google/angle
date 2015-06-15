@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5965dcc2_0e0e5b3c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3717,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-15T21:12:48Z",
+      "side": 1,
+      "message": "This static variable will prevent correct multithreaded usage of EGL contexts in ANGLE. Is that desirable? (Or is this pattern used elsewhere already?)",
+      "range": {
+        "startLine": 3717,
+        "startChar": 8,
+        "endLine": 3717,
+        "endChar": 13
+      },
+      "revId": "0cac92263d53d76f1e19116b247b5d162c163754",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
