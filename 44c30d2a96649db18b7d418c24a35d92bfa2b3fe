@@ -73,6 +73,76 @@
     },
     {
       "key": {
+        "uuid": "79254042_a7e6b25e",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-15T17:17:09Z",
+      "side": 1,
+      "message": "Yes, and a follow up:\nDo you need any of the other fields in this struct in Buffer11? Why not make a new struct, something like SourceIndexData, and pass this instead of TranslatedIndexData? Seems like you just need some values taken from the ELEMENT_ARRAY_BUFFER, plus the argument indices from the draw call.",
+      "parentUuid": "3937486d_9bc8a397",
+      "range": {
+        "startLine": 55,
+        "startChar": 9,
+        "endLine": 55,
+        "endChar": 26
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b92b3816_8afff72b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-15T17:17:09Z",
+      "side": 1,
+      "message": "Rather than use a nested Buffer11 here, I would implement this as a new BufferStorage, similar to NativeStorage. Implement the map and unmap operations, and store the data in a cpu MemoryBuffer. On unmap, expand the data and write it to the ID3D11Buffer. It\u0027ll take a fair bit of testing to cover the edge cases and a bit of reworking, but would fit far better with the rest of the code.",
+      "range": {
+        "startLine": 518,
+        "startChar": 37,
+        "endLine": 518,
+        "endChar": 45
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39858859_60441c1a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-15T17:17:09Z",
+      "side": 1,
+      "message": "for rendering the same?",
+      "range": {
+        "startLine": 539,
+        "startChar": 68,
+        "endLine": 539,
+        "endChar": 115
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d902ac8c_a33aed84",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 2
@@ -120,6 +190,29 @@
     },
     {
       "key": {
+        "uuid": "b92b3816_ca3acf86",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 559,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-15T17:17:09Z",
+      "side": 1,
+      "message": "angle style says to avoid c-style casts (also other places in the cl)",
+      "range": {
+        "startLine": 559,
+        "startChar": 23,
+        "endLine": 559,
+        "endChar": 33
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99fcb4c6_5889eda8",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 2
@@ -136,6 +229,144 @@
         "startChar": 80,
         "endLine": 583,
         "endChar": 106
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "992af412_08cc572c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-15T17:17:09Z",
+      "side": 1,
+      "message": "pull the !bufferStorage case out of these ifs",
+      "range": {
+        "startLine": 295,
+        "startChar": 15,
+        "endLine": 296,
+        "endChar": 67
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9caacdd_095acd00",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1442,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-15T17:17:09Z",
+      "side": 1,
+      "message": "I\u0027m confused as to why this has to be packaged with the indexInfo struct, unless it\u0027s to reduce the parameter count (which could be a good goal - but you might want a new helper struct, as I described before)",
+      "range": {
+        "startLine": 1442,
+        "startChar": 7,
+        "endLine": 1442,
+        "endChar": 36
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39858859_8041000b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1650,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-15T17:17:09Z",
+      "side": 1,
+      "message": "we",
+      "range": {
+        "startLine": 1650,
+        "startChar": 68,
+        "endLine": 1650,
+        "endChar": 85
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b92b3816_eac6ab0d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1650,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-15T17:17:09Z",
+      "side": 1,
+      "message": "\u0027the shader writes to gl_PointSize\u0027 is clearer, since it defines who \u0027it\u0027 is and how they use PS",
+      "range": {
+        "startLine": 1650,
+        "startChar": 11,
+        "endLine": 1650,
+        "endChar": 34
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59e07c3c_2206aed1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1650,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-15T17:17:09Z",
+      "side": 1,
+      "message": "the draw call specifies GL_POINTS, same reason",
+      "range": {
+        "startLine": 1650,
+        "startChar": 39,
+        "endLine": 1650,
+        "endChar": 48
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39858859_403b18a7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1651,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-15T17:17:09Z",
+      "side": 1,
+      "message": "If we are emulating instanced point sprites on FL9_3",
+      "range": {
+        "startLine": 1651,
+        "startChar": 11,
+        "endLine": 1651,
+        "endChar": 59
       },
       "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
