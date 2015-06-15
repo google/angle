@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5965dcc2_801a3a75",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-15T16:52:04Z",
+      "side": 1,
+      "message": "resize is being called twice.",
+      "range": {
+        "startLine": 550,
+        "startChar": 8,
+        "endLine": 550,
+        "endChar": 46
+      },
+      "revId": "c6df4ce1e2642f1c677d6851eb6c7e6b41393637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
