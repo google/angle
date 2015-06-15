@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "b99c18d9_b6aaeedd",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-06-15T21:06:13Z",
+      "side": 1,
+      "message": "Hmm no, I\u0027m not. In fact, I\u0027m not convinced that the SetData workaround works correctly with the image recovery on ToT ANGLE (i.e. without this latest change). I\u0027ll set aside some time to investigate that further.\n\nIn the meantime, I\u0027ve disabled the SetData workaround for textures that use this new renderable/non-renderable format switching. That should force the renderer to always use the Images to update the TextureStorages, which should guarantee that the Images will be refreshed by the TextureStorage\u0027s destructor.",
+      "parentUuid": "796b8031_92f76204",
+      "range": {
+        "startLine": 570,
+        "startChar": 15,
+        "endLine": 571,
+        "endChar": 59
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f942104b_f253a662",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
         "patchSetId": 3
@@ -932,6 +956,30 @@
       "side": 1,
       "message": "I got this correction in Chromium once. I believe it\u0027s because NDEBUG is more standardized, but I don\u0027t know the exact qualification.",
       "parentUuid": "79f6209f_6bab0192",
+      "range": {
+        "startLine": 1139,
+        "startChar": 4,
+        "endLine": 1139,
+        "endChar": 10
+      },
+      "revId": "4aee0f52a086598da68efb85c22a639147ffc8b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9ba1036_15ff742d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1139,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-06-15T21:06:13Z",
+      "side": 1,
+      "message": "Ah, thanks!",
+      "parentUuid": "d9ab8c9c_737962a7",
       "range": {
         "startLine": 1139,
         "startChar": 4,
