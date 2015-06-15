@@ -163,6 +163,29 @@
     },
     {
       "key": {
+        "uuid": "799460c1_bb8cc73e",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-15T08:20:45Z",
+      "side": 1,
+      "message": "There\u0027s nothing that\u0027s being shared between the tests for different matrix sizes, so I think this should be split into separate test functions for each matrix size.",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 46
+      },
+      "revId": "4b7e60f024317c98754705cc87f54c2928de6823",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "992af412_2f7ef2dc",
         "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
         "patchSetId": 5
@@ -174,6 +197,30 @@
       "writtenOn": "2015-06-12T17:29:40Z",
       "side": 1,
       "message": "same here",
+      "range": {
+        "startLine": 313,
+        "startChar": 0,
+        "endLine": 313,
+        "endChar": 6
+      },
+      "revId": "4b7e60f024317c98754705cc87f54c2928de6823",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79bf0033_433146f4",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-15T08:20:45Z",
+      "side": 1,
+      "message": "Also split this one.",
+      "parentUuid": "992af412_2f7ef2dc",
       "range": {
         "startLine": 313,
         "startChar": 0,
