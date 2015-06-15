@@ -310,6 +310,15 @@ EGLPlatformParameters OPENGL()
     return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE);
 }
 
+
+EGLPlatformParameters OPENGL(EGLint major, EGLint minor)
+{
+    return EGLPlatformParameters(
+        EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE,
+        major, minor,
+        EGL_DONT_CARE);
+}
+
 EGLPlatformParameters OPENGL_NULL()
 {
     return EGLPlatformParameters(
@@ -501,9 +510,19 @@ PlatformParameters ES2_OPENGL()
     return PlatformParameters(2, 0, egl_platform::OPENGL());
 }
 
+PlatformParameters ES2_OPENGL(EGLint major, EGLint minor)
+{
+    return PlatformParameters(2, 0, egl_platform::OPENGL(major, minor));
+}
+
 PlatformParameters ES3_OPENGL()
 {
     return PlatformParameters(3, 0, egl_platform::OPENGL());
+}
+
+PlatformParameters ES3_OPENGL(EGLint major, EGLint minor)
+{
+    return PlatformParameters(3, 0, egl_platform::OPENGL(major, minor));
 }
 
 } // namespace angle

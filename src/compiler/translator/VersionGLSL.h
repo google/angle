@@ -14,8 +14,15 @@
 static const int GLSL_VERSION_110 = 110;
 static const int GLSL_VERSION_120 = 120;
 static const int GLSL_VERSION_130 = 130;
+static const int GLSL_VERSION_140 = 140;
+static const int GLSL_VERSION_150 = 150;
+static const int GLSL_VERSION_330 = 330;
+static const int GLSL_VERSION_400 = 400;
 static const int GLSL_VERSION_410 = 410;
 static const int GLSL_VERSION_420 = 420;
+static const int GLSL_VERSION_430 = 430;
+static const int GLSL_VERSION_440 = 440;
+static const int GLSL_VERSION_450 = 450;
 
 int ShaderOutputTypeToGLSLVersion(ShShaderOutput output);
 

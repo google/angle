@@ -21,10 +21,12 @@ struct Data;
 namespace rx
 {
 
+class FunctionsGL;
+
 class CompilerGL : public CompilerImpl
 {
   public:
-    CompilerGL(const gl::Data &data);
+    CompilerGL(const gl::Data &data, const FunctionsGL *functions);
     ~CompilerGL() override;
 
     gl::Error release() override;

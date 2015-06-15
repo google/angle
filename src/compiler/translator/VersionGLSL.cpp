@@ -11,8 +11,15 @@ int ShaderOutputTypeToGLSLVersion(ShShaderOutput output)
     switch (output)
     {
       case SH_GLSL_130_OUTPUT:           return GLSL_VERSION_130;
+      case SH_GLSL_140_OUTPUT:           return GLSL_VERSION_140;
+      case SH_GLSL_150_CORE_OUTPUT:      return GLSL_VERSION_150;
+      case SH_GLSL_330_CORE_OUTPUT:      return GLSL_VERSION_330;
+      case SH_GLSL_400_CORE_OUTPUT:      return GLSL_VERSION_400;
       case SH_GLSL_410_CORE_OUTPUT:      return GLSL_VERSION_410;
       case SH_GLSL_420_CORE_OUTPUT:      return GLSL_VERSION_420;
+      case SH_GLSL_430_CORE_OUTPUT:      return GLSL_VERSION_430;
+      case SH_GLSL_440_CORE_OUTPUT:      return GLSL_VERSION_440;
+      case SH_GLSL_450_CORE_OUTPUT:      return GLSL_VERSION_450;
       case SH_GLSL_COMPATIBILITY_OUTPUT: return GLSL_VERSION_110;
       default: UNREACHABLE();            return 0;
     }

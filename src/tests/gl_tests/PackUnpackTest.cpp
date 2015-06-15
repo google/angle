@@ -218,6 +218,7 @@ TEST_P(PackUnpackTest, PackUnpackHalfOverflow)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_INSTANTIATE_TEST(PackUnpackTest, ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(PackUnpackTest, ES3_OPENGL(3, 3), ES3_OPENGL(4, 0), ES3_OPENGL(4, 1), ES3_OPENGL(4, 2),
+                                       ES3_OPENGL(4, 3), ES3_OPENGL(4, 4), ES3_OPENGL(4, 5));
 
 }

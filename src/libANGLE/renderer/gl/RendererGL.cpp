@@ -167,7 +167,7 @@ gl::Error RendererGL::drawElements(const gl::Data &data, GLenum mode, GLsizei co
 
 CompilerImpl *RendererGL::createCompiler(const gl::Data &data)
 {
-    return new CompilerGL(data);
+    return new CompilerGL(data, mFunctions);
 }
 
 ShaderImpl *RendererGL::createShader(GLenum type)

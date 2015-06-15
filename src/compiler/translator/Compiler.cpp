@@ -38,8 +38,15 @@ bool IsWebGLBasedSpec(ShShaderSpec spec)
 bool IsGLSL130OrNewer(ShShaderOutput output)
 {
     return (output == SH_GLSL_130_OUTPUT ||
+            output == SH_GLSL_140_OUTPUT ||
+            output == SH_GLSL_150_CORE_OUTPUT ||
+            output == SH_GLSL_330_CORE_OUTPUT ||
+            output == SH_GLSL_400_CORE_OUTPUT ||
             output == SH_GLSL_410_CORE_OUTPUT ||
-            output == SH_GLSL_420_CORE_OUTPUT);
+            output == SH_GLSL_420_CORE_OUTPUT ||
+            output == SH_GLSL_430_CORE_OUTPUT ||
+            output == SH_GLSL_440_CORE_OUTPUT ||
+            output == SH_GLSL_450_CORE_OUTPUT);
 }
 
 size_t GetGlobalMaxTokenSize(ShShaderSpec spec)

@@ -11,6 +11,7 @@
 #include "common/debug.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Data.h"
+#include "libANGLE/renderer/gl/FunctionsGL.h"
 
 namespace rx
 {
@@ -18,10 +19,74 @@ namespace rx
 // Global count of active shader compiler handles. Needed to know when to call ShInitialize and ShFinalize.
 static size_t activeCompilerHandles = 0;
 
-CompilerGL::CompilerGL(const gl::Data &data)
+static ShShaderOutput GetShaderOutputType(const FunctionsGL *functions)
+{
+    ASSERT(functions);
+
+    if (functions->standard == STANDARD_GL_DESKTOP)
+    {
+        // GLSL outputs
+        if (functions->isAtLeastGL(gl::Version(4, 5)))
+        {
+            return SH_GLSL_450_CORE_OUTPUT;
+        }
+        else if (functions->isAtLeastGL(gl::Version(4, 4)))
+        {
+            return SH_GLSL_440_CORE_OUTPUT;
+        }
+        else if (functions->isAtLeastGL(gl::Version(4, 3)))
+        {
+            return SH_GLSL_430_CORE_OUTPUT;
+        }
+        else if (functions->isAtLeastGL(gl::Version(4, 2)))
+        {
+            return SH_GLSL_420_CORE_OUTPUT;
+        }
+        else if (functions->isAtLeastGL(gl::Version(4, 1)))
+        {
+            return SH_GLSL_410_CORE_OUTPUT;
+        }
+        else if (functions->isAtLeastGL(gl::Version(4, 0)))
+        {
+            return SH_GLSL_400_CORE_OUTPUT;
+        }
+        else if (functions->isAtLeastGL(gl::Version(3, 3)))
+        {
+            return SH_GLSL_330_CORE_OUTPUT;
+        }
+        else if (functions->isAtLeastGL(gl::Version(3, 2)))
+        {
+            return SH_GLSL_150_CORE_OUTPUT;
+        }
+        else if (functions->isAtLeastGL(gl::Version(3, 1)))
+        {
+            return SH_GLSL_140_OUTPUT;
+        }
+        else if (functions->isAtLeastGL(gl::Version(3, 0)))
+        {
+            return SH_GLSL_130_OUTPUT;
+        }
+        else
+        {
+            return SH_GLSL_COMPATIBILITY_OUTPUT;
+        }
+    }
+    else if (functions->standard == STANDARD_GL_ES)
+    {
+        // ESSL outputs
+        return SH_ESSL_OUTPUT;
+    }
+    else
+    {
+        UNREACHABLE();
+        return ShShaderOutput(0);
+    }
+}
+
+CompilerGL::CompilerGL(const gl::Data &data, const FunctionsGL *functions)
     : CompilerImpl(),
       mSpec(data.clientVersion > 2 ? SH_GLES3_SPEC : SH_GLES2_SPEC),
-      mOutputType(data.clientVersion > 2 ? SH_GLSL_410_CORE_OUTPUT : SH_GLSL_OUTPUT),
+      mOutputType(GetShaderOutputType(functions)),
       mResources(),
       mFragmentCompiler(nullptr),
       mVertexCompiler(nullptr)

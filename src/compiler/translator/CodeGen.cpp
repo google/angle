@@ -22,8 +22,15 @@ TCompiler* ConstructCompiler(
       case SH_ESSL_OUTPUT:
         return new TranslatorESSL(type, spec);
       case SH_GLSL_130_OUTPUT:
+      case SH_GLSL_140_OUTPUT:
+      case SH_GLSL_150_CORE_OUTPUT:
+      case SH_GLSL_330_CORE_OUTPUT:
+      case SH_GLSL_400_CORE_OUTPUT:
       case SH_GLSL_410_CORE_OUTPUT:
       case SH_GLSL_420_CORE_OUTPUT:
+      case SH_GLSL_430_CORE_OUTPUT:
+      case SH_GLSL_440_CORE_OUTPUT:
+      case SH_GLSL_450_CORE_OUTPUT:
       case SH_GLSL_COMPATIBILITY_OUTPUT:
         return new TranslatorGLSL(type, spec, output);
       case SH_HLSL9_OUTPUT:
