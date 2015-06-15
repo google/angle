@@ -11,6 +11,14 @@
 
 #include "compiler/translator/Pragma.h"
 
+static const int GLSL_VERSION_110 = 110;
+static const int GLSL_VERSION_120 = 120;
+static const int GLSL_VERSION_130 = 130;
+static const int GLSL_VERSION_410 = 410;
+static const int GLSL_VERSION_420 = 420;
+
+int ShaderOutputTypeToGLSLVersion(ShShaderOutput output);
+
 // Traverses the intermediate tree to return the minimum GLSL version
 // required to legally access all built-in features used in the shader.
 // GLSL 1.1 which is mandated by OpenGL 2.0 provides:
@@ -39,15 +47,14 @@ class TVersionGLSL : public TIntermTraverser
     //   - matrix/matrix constructors
     //   - array "out" parameters
     //   Else 110 is returned.
-    int getVersion() { return mVersion; }
+    int getVersion() const { return mVersion; }
 
     virtual void visitSymbol(TIntermSymbol *);
     virtual bool visitAggregate(Visit, TIntermAggregate *);
 
-  protected:
-    void updateVersion(int version);
-
   private:
+    void ensureVersionIsAtLeast(int version);
+
     int mVersion;
 };
 

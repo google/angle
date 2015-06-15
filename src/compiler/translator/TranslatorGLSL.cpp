@@ -66,9 +66,12 @@ TranslatorGLSL::TranslatorGLSL(sh::GLenum type,
 void TranslatorGLSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu, int compileOptions)
 {
     if (compileOptions & SH_EMULATE_BUILT_IN_FUNCTIONS)
-        InitBuiltInFunctionEmulatorForGLSL(emu, getShaderType());
-    if (getOutputType() == SH_GLSL_410_CORE_OUTPUT)
-        InitBuiltInFunctionEmulatorForGLSL4_1(emu, getShaderType());
+    {
+        InitBuiltInFunctionEmulatorForGLSLWorkarounds(emu, getShaderType());
+    }
+
+    int targetGLSLVersion = ShaderOutputTypeToGLSLVersion(getOutputType());
+    InitBuiltInFunctionEmulatorForGLSLMissingFunctions(emu, getShaderType(), targetGLSLVersion);
 }
 
 void TranslatorGLSL::translate(TIntermNode *root, int) {

@@ -20,7 +20,9 @@ TranslatorESSL::TranslatorESSL(sh::GLenum type, ShShaderSpec spec)
 void TranslatorESSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu, int compileOptions)
 {
     if (compileOptions & SH_EMULATE_BUILT_IN_FUNCTIONS)
-        InitBuiltInFunctionEmulatorForGLSL(emu, getShaderType());
+    {
+        InitBuiltInFunctionEmulatorForGLSLWorkarounds(emu, getShaderType());
+    }
 }
 
 void TranslatorESSL::translate(TIntermNode *root, int) {

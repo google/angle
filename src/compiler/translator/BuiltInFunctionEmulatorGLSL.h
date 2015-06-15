@@ -14,11 +14,12 @@ class BuiltInFunctionEmulator;
 //
 // This is only a workaround for OpenGL driver bugs, and isn't needed in general.
 //
-void InitBuiltInFunctionEmulatorForGLSL(BuiltInFunctionEmulator *emu, sh::GLenum shaderType);
+void InitBuiltInFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator *emu, sh::GLenum shaderType);
 
 //
-// This function is emulating built-in functions missing from OpenGL 4.1.
+// This function is emulating built-in functions missing from GLSL 1.30 and higher.
 //
-void InitBuiltInFunctionEmulatorForGLSL4_1(BuiltInFunctionEmulator *emu, sh::GLenum shaderType);
+void InitBuiltInFunctionEmulatorForGLSLMissingFunctions(BuiltInFunctionEmulator *emu, sh::GLenum shaderType,
+                                                        int targetGLSLVersion);
 
 #endif  // COMPILER_TRANSLATOR_BUILTINFUNCTIONEMULATORGLSL_H_
