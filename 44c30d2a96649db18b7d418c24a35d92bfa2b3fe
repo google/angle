@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "39b10858_542aa209",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-15T20:59:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79254042_a7e6b25e",
+      "range": {
+        "startLine": 55,
+        "startChar": 9,
+        "endLine": 55,
+        "endChar": 26
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b92b3816_8afff72b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 2
@@ -120,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "99abd4ef_7281b097",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-15T20:59:35Z",
+      "side": 1,
+      "message": "Is making this additional storage change a deal breaker for this patch?  I have tested the contained Buffer11 object and it works really well.",
+      "parentUuid": "b92b3816_8afff72b",
+      "range": {
+        "startLine": 518,
+        "startChar": 37,
+        "endLine": 518,
+        "endChar": 45
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39858859_60441c1a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 2
@@ -131,6 +179,30 @@
       "writtenOn": "2015-06-15T17:17:09Z",
       "side": 1,
       "message": "for rendering the same?",
+      "range": {
+        "startLine": 539,
+        "startChar": 68,
+        "endLine": 539,
+        "endChar": 115
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99abd4ef_f26c8082",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-15T20:59:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39858859_60441c1a",
       "range": {
         "startLine": 539,
         "startChar": 68,
@@ -259,6 +331,30 @@
     },
     {
       "key": {
+        "uuid": "b99c18d9_d6021a77",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-15T20:59:35Z",
+      "side": 1,
+      "message": "If I remove this, then dEPQ tests for indexed points fail.",
+      "parentUuid": "992af412_08cc572c",
+      "range": {
+        "startLine": 295,
+        "startChar": 15,
+        "endLine": 296,
+        "endChar": 67
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9caacdd_095acd00",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -270,6 +366,30 @@
       "writtenOn": "2015-06-15T17:17:09Z",
       "side": 1,
       "message": "I\u0027m confused as to why this has to be packaged with the indexInfo struct, unless it\u0027s to reduce the parameter count (which could be a good goal - but you might want a new helper struct, as I described before)",
+      "range": {
+        "startLine": 1442,
+        "startChar": 7,
+        "endLine": 1442,
+        "endChar": 36
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b99c18d9_f6fd96e7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1442,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-15T20:59:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9caacdd_095acd00",
       "range": {
         "startLine": 1442,
         "startChar": 7,
@@ -351,6 +471,30 @@
     },
     {
       "key": {
+        "uuid": "b99c18d9_9608929b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1650,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-15T20:59:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b92b3816_eac6ab0d",
+      "range": {
+        "startLine": 1650,
+        "startChar": 11,
+        "endLine": 1650,
+        "endChar": 34
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39858859_403b18a7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -362,6 +506,30 @@
       "writtenOn": "2015-06-15T17:17:09Z",
       "side": 1,
       "message": "If we are emulating instanced point sprites on FL9_3",
+      "range": {
+        "startLine": 1651,
+        "startChar": 11,
+        "endLine": 1651,
+        "endChar": 59
+      },
+      "revId": "44c30d2a96649db18b7d418c24a35d92bfa2b3fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9ba1036_55e29c98",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1651,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-15T20:59:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39858859_403b18a7",
       "range": {
         "startLine": 1651,
         "startChar": 11,
