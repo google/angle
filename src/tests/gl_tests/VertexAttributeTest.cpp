@@ -129,51 +129,6 @@ class VertexAttributeTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
-    GLuint compileMultiAttribProgram(GLint attribCount)
-    {
-        std::stringstream shaderStream;
-
-        shaderStream << "attribute highp vec4 position;" << std::endl;
-        for (GLint attribIndex = 0; attribIndex < attribCount; ++attribIndex)
-        {
-            shaderStream << "attribute float a" << attribIndex << ";" << std::endl;
-        }
-        shaderStream << "varying highp float color;" << std::endl
-                     << "void main() {" << std::endl
-                     << "  gl_Position = position;" << std::endl
-                     << "  color = 0.0;" << std::endl;
-        for (GLint attribIndex = 0; attribIndex < attribCount; ++attribIndex)
-        {
-            shaderStream << "  color += a" << attribIndex << ";" << std::endl;
-        }
-        shaderStream << "}" << std::endl;
-
-        const std::string testFragmentShaderSource = SHADER_SOURCE
-        (
-            varying highp float color;
-            void main(void)
-            {
-                gl_FragColor = vec4(color, 0.0, 0.0, 1.0);
-            }
-        );
-
-        return CompileProgram(shaderStream.str(), testFragmentShaderSource);
-    }
-
-    void setupMultiAttribs(GLuint program, GLint attribCount, GLfloat value)
-    {
-        glUseProgram(program);
-        for (GLint attribIndex = 0; attribIndex < attribCount; ++attribIndex)
-        {
-            std::stringstream attribStream;
-            attribStream << "a" << attribIndex;
-            GLint location = glGetAttribLocation(program, attribStream.str().c_str());
-            ASSERT_NE(-1, location);
-            glVertexAttrib1f(location, value);
-            glDisableVertexAttribArray(location);
-        }
-    }
-
     static const size_t mVertexCount = 24;
 
     GLuint mProgram;
@@ -283,40 +238,6 @@ TEST_P(VertexAttributeTest, ShortNormalized)
 
     TestData data = { GL_SHORT, GL_TRUE, inputData, expectedData };
     runTest(data);
-}
-
-// Validate that we can support GL_MAX_ATTRIBS attribs
-TEST_P(VertexAttributeTest, MaxAttribs)
-{
-    GLint maxAttribs;
-    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxAttribs);
-    ASSERT_GL_NO_ERROR();
-
-    // Reserve one attrib for position
-    GLint drawAttribs = maxAttribs - 1;
-
-    GLuint program = compileMultiAttribProgram(drawAttribs);
-    ASSERT_NE(0u, program);
-
-    setupMultiAttribs(program, drawAttribs, 0.5f / static_cast<float>(drawAttribs));
-    drawQuad(program, "position", 0.5f);
-
-    EXPECT_GL_NO_ERROR();
-    EXPECT_PIXEL_NEAR(0, 0, 128, 0, 0, 255, 1);
-}
-
-// Validate that we cannot support GL_MAX_ATTRIBS+1 attribs
-TEST_P(VertexAttributeTest, MaxAttribsPlusOne)
-{
-    GLint maxAttribs;
-    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxAttribs);
-    ASSERT_GL_NO_ERROR();
-
-    // Exceed attrib count by one (counting position)
-    GLint drawAttribs = maxAttribs;
-
-    GLuint program = compileMultiAttribProgram(drawAttribs);
-    ASSERT_EQ(0u, program);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
