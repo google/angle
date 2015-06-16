@@ -1,6 +1,6 @@
 deps = {
   "third_party/gyp":
-      "http://chromium.googlesource.com/external/gyp@9f594095c5b14f8bc518081a660e77890c294861",
+      "http://chromium.googlesource.com/external/gyp@b4781fc38236b0fb1238969c918a75a200cfffdb",
 
   # TODO(kbr): figure out how to better stay in sync with Chromium's
   # versions of googletest and googlemock.
