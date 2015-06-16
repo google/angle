@@ -179,11 +179,50 @@ const char *getFloatTypeStr(const TType& type)
       case 1:
         return "float";
       case 2:
-        return type.getSecondarySize() > 1 ? "mat2" : "vec2";
+        switch(type.getSecondarySize())
+        {
+          case 1:
+            return "vec2";
+          case 2:
+            return "mat2";
+          case 3:
+            return "mat2x3";
+          case 4:
+            return "mat2x4";
+          default:
+            UNREACHABLE();
+            return NULL;
+        }
       case 3:
-        return type.getSecondarySize() > 1 ? "mat3" : "vec3";
+        switch(type.getSecondarySize())
+        {
+          case 1:
+            return "vec3";
+          case 2:
+            return "mat3x2";
+          case 3:
+            return "mat3";
+          case 4:
+            return "mat3x4";
+          default:
+            UNREACHABLE();
+            return NULL;
+        }
       case 4:
-        return type.getSecondarySize() > 1 ? "mat4" : "vec4";
+        switch(type.getSecondarySize())
+        {
+          case 1:
+            return "vec4";
+          case 2:
+            return "mat4x2";
+          case 3:
+            return "mat4x3";
+          case 4:
+            return "mat4";
+          default:
+            UNREACHABLE();
+            return NULL;
+        }
       default:
         UNREACHABLE();
         return NULL;

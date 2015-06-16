@@ -192,7 +192,13 @@ enum TOperator
     EOpConstructUVec3,
     EOpConstructUVec4,
     EOpConstructMat2,
+    EOpConstructMat2x3,
+    EOpConstructMat2x4,
+    EOpConstructMat3x2,
     EOpConstructMat3,
+    EOpConstructMat3x4,
+    EOpConstructMat4x2,
+    EOpConstructMat4x3,
     EOpConstructMat4,
     EOpConstructStruct,
 

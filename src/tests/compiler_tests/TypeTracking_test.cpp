@@ -124,6 +124,32 @@ TEST_F(TypeTrackingTest, BuiltInVecFunctionResultTypeAndPrecision)
     ASSERT_TRUE(foundInIntermediateTree("distance (mediump float)"));
 }
 
+TEST_F(TypeTrackingTest, BuiltInMatFunctionResultTypeAndPrecision)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "uniform mat4 m;\n"
+        "void main() {\n"
+        "   mat3x2 tmp32 = mat3x2(m);\n"
+        "   mat2x3 tmp23 = mat2x3(m);\n"
+        "   mat4x2 tmp42 = mat4x2(m);\n"
+        "   mat2x4 tmp24 = mat2x4(m);\n"
+        "   mat4x3 tmp43 = mat4x3(m);\n"
+        "   mat3x4 tmp34 = mat3x4(m);\n"
+        "   my_FragColor = vec4(tmp32[2][1] * tmp23[1][2], tmp42[3][1] * tmp24[1][3], tmp43[3][2] * tmp34[2][3], 1.0);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("Construct mat2x3 (mediump 2X3 matrix of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("Construct mat3x2 (mediump 3X2 matrix of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("Construct mat2x4 (mediump 2X4 matrix of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("Construct mat4x2 (mediump 4X2 matrix of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("Construct mat3x4 (mediump 3X4 matrix of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("Construct mat4x3 (mediump 4X3 matrix of float)"));
+}
+
 TEST_F(TypeTrackingTest, BuiltInFunctionChoosesHigherPrecision)
 {
     const std::string &shaderString =
