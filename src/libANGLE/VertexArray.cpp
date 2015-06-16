@@ -44,13 +44,15 @@ void VertexArray::detachBuffer(GLuint bufferName)
     {
         if (mVertexAttributes[attribute].buffer.id() == bufferName)
         {
-            mVertexAttributes[attribute].buffer.set(NULL);
+            mVertexAttributes[attribute].buffer.set(nullptr);
+            mVertexArray->setAttribute(attribute, mVertexAttributes[attribute]);
         }
     }
 
     if (mElementArrayBuffer.id() == bufferName)
     {
-        mElementArrayBuffer.set(NULL);
+        mElementArrayBuffer.set(nullptr);
+        mVertexArray->setElementArrayBuffer(nullptr);
     }
 }
 

@@ -74,6 +74,13 @@ VertexArrayGL::~VertexArrayGL()
 void VertexArrayGL::setElementArrayBuffer(const gl::Buffer *buffer)
 {
     mElementArrayBuffer.set(buffer);
+
+    // If the buffer is being unbound/deleted, reset the currently applied buffer ID
+    // so that even if a new buffer is generated with the same ID, it will be re-bound.
+    if (buffer == nullptr && mAppliedElementArrayBuffer != mStreamingElementArrayBuffer)
+    {
+        mAppliedElementArrayBuffer = 0;
+    }
 }
 
 void VertexArrayGL::setAttribute(size_t idx, const gl::VertexAttribute &attr)
