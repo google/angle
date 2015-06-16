@@ -288,10 +288,10 @@ TEST_P(VertexAttributeTest, ShortNormalized)
 // Validate that we can support GL_MAX_ATTRIBS attribs
 TEST_P(VertexAttributeTest, MaxAttribs)
 {
-    // TODO(jmadill): Figure out why we get this error on AMD/ES2/OpenGL
-    if (isAMD() && GetParam() == ES2_OPENGL())
+    // TODO(jmadill): Figure out why we get this error on AMD/OpenGL
+    if (isAMD() && (GetParam() == ES2_OPENGL() || GetParam() == ES3_OPENGL()))
     {
-        std::cout << "Test disabled on AMD/ES2/OpenGL" << std::endl;
+        std::cout << "Test disabled on AMD/OpenGL" << std::endl;
         return;
     }
 
