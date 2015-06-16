@@ -61,6 +61,22 @@
                     '<(angle_path)/src',
                     '<(angle_path)/include',
                 ],
+                'conditions':
+                [
+                    ['OS=="win"',
+                    {
+                        'configurations':
+                        {
+                            'Debug_Base':
+                            {
+                                'defines':
+                                [
+                                    'ANGLE_ENABLE_DEBUG_ANNOTATIONS'
+                                ],
+                            },
+                        },
+                    }],
+                ],
             },
             'conditions':
             [
@@ -72,6 +88,19 @@
                 ['angle_build_winphone==1',
                 {
                     'msvs_enable_winphone' : '1',
+                }],
+                ['OS=="win"',
+                {
+                    'configurations':
+                    {
+                        'Debug_Base':
+                        {
+                            'defines':
+                            [
+                                'ANGLE_ENABLE_DEBUG_ANNOTATIONS'
+                            ],
+                        },
+                    },
                 }],
             ],
         },

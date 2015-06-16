@@ -648,15 +648,15 @@ void RendererD3D::popGroupMarker()
     getAnnotator()->endEvent();
 }
 
+void RendererD3D::initializeDebugAnnotator()
+{
+    createAnnotator();
+    ASSERT(mAnnotator);
+    gl::InitializeDebugAnnotations(mAnnotator);
+}
+
 gl::DebugAnnotator *RendererD3D::getAnnotator()
 {
-    if (mAnnotator == nullptr)
-    {
-        createAnnotator();
-        ASSERT(mAnnotator);
-        gl::InitializeDebugAnnotations(mAnnotator);
-    }
-
     ASSERT(mAnnotator);
     return mAnnotator;
 }

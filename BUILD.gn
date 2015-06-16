@@ -114,11 +114,21 @@ config("translator_static_config") {
   defines = [ "ANGLE_TRANSLATOR_STATIC" ]
 }
 
+config("debug_annotations_config") {
+  if (is_debug) {
+    defines = [
+      "ANGLE_ENABLE_DEBUG_ANNOTATIONS",
+    ]
+  }
+}
+
 static_library("angle_common") {
   sources = rebase_path(gles_gypi.libangle_common_sources, ".", "src")
+
   configs -= [ "//build/config/compiler:chromium_code" ]
   configs += [
     ":internal_config",
+    ":debug_annotations_config",
     "//build/config/compiler:no_chromium_code",
   ]
 }
@@ -260,13 +270,13 @@ static_library("libANGLE") {
   if (is_debug) {
     defines += [
       "ANGLE_GENERATE_SHADER_DEBUG_INFO",
-      "ANGLE_ENABLE_DEBUG_ANNOTATIONS",
     ]
   }
 
   configs -= [ "//build/config/compiler:chromium_code" ]
   configs += [
     ":commit_id_config",
+    ":debug_annotations_config",
     ":libANGLE_config",
     ":internal_config",
     "//build/config/compiler:no_chromium_code",
@@ -296,6 +306,7 @@ shared_library("libGLESv2") {
   configs += [
     ":internal_config",
     ":commit_id_config",
+    ":debug_annotations_config",
     ":libANGLE_config",
     "//build/config/compiler:no_chromium_code",
   ]

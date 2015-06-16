@@ -722,27 +722,12 @@
                 {
                     'msvs_enable_winphone' : '1',
                 }],
-                ['OS=="win"',
-                {
-                    'configurations':
-                    {
-                        'Debug_Base':
-                        {
-                            'abstract': 1,
-                            'defines':
-                            [
-                                'ANGLE_ENABLE_DEBUG_ANNOTATIONS',
-                                'ANGLE_GENERATE_SHADER_DEBUG_INFO'
-                            ],
-                        },
-                    },
-                }],
             ],
         },
         {
             'target_name': 'libGLESv2',
             'type': 'shared_library',
-            'dependencies': [ 'libANGLE' ],
+            'dependencies': [ 'libANGLE', 'angle_common' ],
             'includes': [ '../build/common_defines.gypi', ],
             'sources':
             [

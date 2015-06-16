@@ -51,6 +51,14 @@
 #include "libANGLE/renderer/d3d/d3d11/dxgi_support_table.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+
+// Include the D3D9 debug annotator header for use by the desktop D3D11 renderer
+// because the D3D11 interface method ID3DUserDefinedAnnotation::GetStatus
+// doesn't work with the Graphics Diagnostics tools in Visual Studio 2013.
+#ifdef ANGLE_ENABLE_D3D9
+#include "libANGLE/renderer/d3d/d3d9/DebugAnnotator9.h"
+#endif
+
 #include "third_party/trace_event/trace_event.h"
 
 // Enable ANGLE_SKIP_DXGI_1_2_CHECK if there is not a possibility of using cross-process
@@ -328,6 +336,8 @@ Renderer11::Renderer11(egl::Display *display)
       default:
         UNREACHABLE();
     }
+
+    initializeDebugAnnotator();
 }
 
 Renderer11::~Renderer11()
@@ -3772,7 +3782,16 @@ void Renderer11::setShaderResource(gl::SamplerType shaderType, UINT resourceSlot
 
 void Renderer11::createAnnotator()
 {
+    // The D3D11 renderer must choose the D3D9 debug annotator because the D3D11 interface
+    // method ID3DUserDefinedAnnotation::GetStatus on desktop builds doesn't work with the Graphics
+    // Diagnostics tools in Visual Studio 2013.
+    // The D3D9 annotator works properly for both D3D11 and D3D9.
+    // Incorrect status reporting can cause ANGLE to log unnecessary debug events.
+#ifdef ANGLE_ENABLE_D3D9
+    mAnnotator = new DebugAnnotator9();
+#else
     mAnnotator = new DebugAnnotator11();
+#endif
 }
 
 gl::Error Renderer11::clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd)
