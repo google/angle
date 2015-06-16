@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "594a3c43_bc910eaa",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-06-16T22:43:24Z",
+      "side": 1,
+      "message": "second line of the comment is not super clear\n\n\"so that even buffers reusing previously deleted IDs are rebound\" ?",
+      "revId": "8eb3e81c4225d022953d1d6300d88c534729f401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
