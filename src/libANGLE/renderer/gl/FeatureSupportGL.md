@@ -70,9 +70,9 @@ Documentation of OpenGL ES and EGL features, caps and formats and required exten
 |Unsigned integers|1.30||
 |Pack layout std140|1.40||
 
-
 ## ESSL3 Builtins
 Builtins that are added going from ESSL1 to ESSL3.
+
 |Function|GLSL version|Extension|Notes|
 |---|---|---|---|
 |sinh<br>cosh<br>tanh<br>asinh<br>acosh|1.30|||
@@ -87,8 +87,8 @@ Builtins that are added going from ESSL1 to ESSL3.
 |isnan|1.30|||
 |isinf|1.10|||
 |floatBitsToInt<br>floatBitsToUint<br>intBitsToFloat<br>uintBitsToFloat|3.30|[GL_ARB_shader_bit_encoding](https://www.opengl.org/registry/specs/ARB/shader_bit_encoding.txt) or [ARB_gpu_shader5](https://www.opengl.org/registry/specs/ARB/gpu_shader5.txt)||
-|packSnorm2x16<br>packHalf2x16<br>unpackSnorm2x16<br>unpackHalf2x16<br>|4.20|[GL_ARB_shading_language_packing](https://www.opengl.org/registry/specs/ARB/shading_language_packing.txt)|Pack/unpack functions can be emulated with simple builtins.|
-|packUnorm2x16<br>unpackUnorm2x16|4.10|[GL_ARB_shading_language_packing](https://www.opengl.org/registry/specs/ARB/shading_language_packing.txt)||
+|packSnorm2x16<br>packHalf2x16<br>unpackSnorm2x16<br>unpackHalf2x16|4.20|[GL_ARB_shading_language_packing](https://www.opengl.org/registry/specs/ARB/shading_language_packing.txt)|Can be emulated using bit casting functions.|
+|packUnorm2x16<br>unpackUnorm2x16|4.10|[GL_ARB_shading_language_packing](https://www.opengl.org/registry/specs/ARB/shading_language_packing.txt)|Can be emulated using bit casting functions.|
 |matrixCompMult (NxM matrices)|1.10|||
 |outerProduct|1.20|||
 |transpose|1.20|||
