@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "594a3c43_ed967e9e",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-17T17:22:17Z",
+      "side": 1,
+      "message": "I\u0027m sorry to ask for a change when you already went through and changed all these manually. I had a local patch which added a method ASSERT_GLENUM_EQ which did the static casts for us - you should be able to use a specialized find/replace if the first argument contains the static_cast. This would help us when we add new GLenum checks, because we\u0027d always know to use the GLenum test versions.",
+      "range": {
+        "startLine": 134,
+        "startChar": 8,
+        "endLine": 134,
+        "endChar": 17
+      },
+      "revId": "1972b1c03607bb2cf8430408a0e3e322f48620f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "796d40b3_f0cbb914",
         "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
         "patchSetId": 1
@@ -19,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "796d40b3_106d957c",
+        "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-17T17:22:17Z",
+      "side": 1,
+      "message": "yes",
+      "parentUuid": "796d40b3_f0cbb914",
+      "revId": "1972b1c03607bb2cf8430408a0e3e322f48620f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "597cfc56_8d5ed4bb",
         "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
         "patchSetId": 1
@@ -30,6 +71,30 @@
       "writtenOn": "2015-06-17T17:08:07Z",
       "side": 1,
       "message": "Should switch order of arguments to (expected, actual).",
+      "range": {
+        "startLine": 121,
+        "startChar": 14,
+        "endLine": 121,
+        "endChar": 31
+      },
+      "revId": "1972b1c03607bb2cf8430408a0e3e322f48620f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "597cfc56_edd84098",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-17T17:22:17Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "597cfc56_8d5ed4bb",
       "range": {
         "startLine": 121,
         "startChar": 14,
