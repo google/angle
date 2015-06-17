@@ -44,7 +44,8 @@ struct Workarounds
         : mrtPerfWorkaround(false),
           setDataFasterThanImageUpload(false),
           zeroMaxLodWorkaround(false),
-          useInstancedPointSpriteEmulation(false)
+          useInstancedPointSpriteEmulation(false),
+          finishBeforeReadPixels(false)
     {}
 
     // On some systems, having extra rendertargets than necessary slows down the shader.
@@ -67,6 +68,12 @@ struct Workarounds
     // To work around this, D3D11 FL9_3 has to use a different pointsprite
     // emulation that is implemented using instanced quads.
     bool useInstancedPointSpriteEmulation;
+
+    // On some GPUs, race conditions have been observed during ReadPixels where GPU rendering is
+    // completing at the same time that the pixels are being mapped. This workaround governs whether
+    // a renderer finish is performed just before the readback operation. For performance reasons,
+    // it must not be done when using a pixel pack buffer.
+    bool finishBeforeReadPixels;
 };
 
 }

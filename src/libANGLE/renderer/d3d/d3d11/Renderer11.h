@@ -260,7 +260,7 @@ class Renderer11 : public RendererD3D
                                    bool colorBlit, bool depthBlit, bool stencilBlit);
 
     bool isES3Capable() const;
-    const Renderer11DeviceCaps &getRenderer11DeviceCaps() { return mRenderer11DeviceCaps; };
+    const Renderer11DeviceCaps &getRenderer11DeviceCaps() const { return mRenderer11DeviceCaps; }
 
     RendererClass getRendererClass() const override { return RENDERER_D3D11; }
 

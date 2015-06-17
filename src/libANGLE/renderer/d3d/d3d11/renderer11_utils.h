@@ -24,6 +24,7 @@ class FramebufferAttachment;
 
 namespace rx
 {
+class Renderer11;
 class RenderTarget11;
 struct Workarounds;
 struct Renderer11DeviceCaps;
@@ -278,7 +279,7 @@ void SetBufferData(ID3D11DeviceContext *context, ID3D11Buffer *constantBuffer, c
     }
 }
 
-Workarounds GenerateWorkarounds(D3D_FEATURE_LEVEL featureLevel);
+Workarounds GenerateWorkarounds(const Renderer11 *renderer);
 
 }
 
