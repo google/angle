@@ -17,6 +17,24 @@
         'angle_enable_d3d11%': 0,
         'angle_enable_gl%': 0,
         'angle_enable_hlsl%': 0,
+        # This nested dictionary hack comes from Chromium's build/common.gypi
+        # and is needed so we can both set a default value for this variable and
+        # test it in the same file.
+        'variables':
+        {
+            'conditions':
+            [
+                ['OS=="linux"',
+                {
+                    'use_x11%': 1,
+                },
+                {
+                    'use_x11%': 0,
+                }],
+            ],
+        },
+        # Copy conditionally-set variables out one scope.
+        'use_x11%': '<(use_x11)',
         'conditions':
         [
             ['OS=="win"',
