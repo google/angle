@@ -34,6 +34,24 @@
       "revId": "158745622c1aa65fcb94ee22a00ba57088642915",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7942a031_0e302ba3",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-17T18:25:57Z",
+      "side": 1,
+      "message": "I think it is a valid assumption we are called with a non-empty string (a quick grep confirms that). back() wouldn\u0027t help either as it is undefined for an empty string.",
+      "parentUuid": "192d2477_48ecdf04",
+      "revId": "158745622c1aa65fcb94ee22a00ba57088642915",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
