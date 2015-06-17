@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "791b805b_23e50ac9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-17T21:50:04Z",
+      "side": 1,
+      "message": "nit: this parameter is redundant, the function always returns this usage, you can remove it from the args.",
+      "range": {
+        "startLine": 299,
+        "startChar": 65,
+        "endLine": 299,
+        "endChar": 101
+      },
+      "revId": "7a661ebc972d0841fe345e956fbf48e80d50c7ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
