@@ -68,6 +68,30 @@
       "revId": "d2ee8c9d69348b60e69482dc11fea24baff73d3e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f95690ec_e45ce050",
+        "filename": "util/osx/OSX_system_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-17T17:55:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7942a031_8b0ecdbd",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 38
+      },
+      "revId": "d2ee8c9d69348b60e69482dc11fea24baff73d3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
