@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "192d2477_48ecdf04",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-06-17T18:08:15Z",
+      "side": 1,
+      "message": "Is it guaranteed that str has at least 1 character? (if so, use str.back() instead of size() - 1)",
+      "revId": "158745622c1aa65fcb94ee22a00ba57088642915",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
