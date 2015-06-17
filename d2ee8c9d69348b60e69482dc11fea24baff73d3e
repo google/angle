@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "796d40b3_708969a9",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-17T17:30:50Z",
+      "side": 1,
+      "message": "Can you pull this into a separate CL for issue 1046?",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 41
+      },
+      "revId": "d2ee8c9d69348b60e69482dc11fea24baff73d3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7942a031_8b0ecdbd",
+        "filename": "util/osx/OSX_system_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-17T17:30:50Z",
+      "side": 1,
+      "message": "Could use a std::vector and just return wherever needed.",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 38
+      },
+      "revId": "d2ee8c9d69348b60e69482dc11fea24baff73d3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
