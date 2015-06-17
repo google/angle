@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "393668c8_6910c505",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-17T18:48:48Z",
+      "side": 1,
+      "message": "nit: include order (c includes first)",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 18
+      },
+      "revId": "01d6722f9e6b176b59eea9049c3b503bd898f456",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99203484_44ecce04",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-17T18:48:48Z",
+      "side": 1,
+      "message": "assert(!str.empty() \u0026\u0026 (str.back() \u003d\u003d \u0027f\u0027 || str.back() \u003d\u003d \u0027F\u0027))",
+      "range": {
+        "startLine": 66,
+        "startChar": 3,
+        "endLine": 66,
+        "endChar": 25
+      },
+      "revId": "01d6722f9e6b176b59eea9049c3b503bd898f456",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "192d2477_a8d1dbf8",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-17T18:48:48Z",
+      "side": 1,
+      "message": "return numeric_lex_float(str.subsr(), value). also update the comment to mention the assumption",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 47
+      },
+      "revId": "01d6722f9e6b176b59eea9049c3b503bd898f456",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9262c9c_a603c614",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-17T18:48:48Z",
+      "side": 1,
+      "message": "add atof_clamp_suffix and call the _suffix version from the .l. See the wiki or ask me if you need help re-genning the lex.",
+      "range": {
+        "startLine": 15,
+        "startChar": 5,
+        "endLine": 15,
+        "endChar": 15
+      },
+      "revId": "01d6722f9e6b176b59eea9049c3b503bd898f456",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
