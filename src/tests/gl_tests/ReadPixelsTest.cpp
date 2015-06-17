@@ -116,10 +116,10 @@ TEST_P(ReadPixelsTest, OutOfBounds)
             unsigned int a = static_cast<unsigned int>(pixel[3]);
 
             // Expect that all pixels which fell within the framebuffer are red
-            EXPECT_EQ(255, r);
-            EXPECT_EQ(0,   g);
-            EXPECT_EQ(0,   b);
-            EXPECT_EQ(255, a);
+            EXPECT_EQ(255u, r);
+            EXPECT_EQ(0u,   g);
+            EXPECT_EQ(0u,   b);
+            EXPECT_EQ(255u, a);
         }
     }
 }

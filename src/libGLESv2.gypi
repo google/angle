@@ -510,10 +510,6 @@
             ],
             'defines':
             [
-                'GL_APICALL=',
-                'GL_GLEXT_PROTOTYPES=',
-                'EGLAPI=',
-                'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ "d3dcompiler_47.dll", "d3dcompiler_46.dll", "d3dcompiler_43.dll" }',
                 'LIBANGLE_IMPLEMENTATION',
             ],
             'direct_dependent_settings':
@@ -525,13 +521,24 @@
                 ],
                 'defines':
                 [
-                    'GL_APICALL=',
                     'GL_GLEXT_PROTOTYPES=',
-                    'EGLAPI=',
                     'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ "d3dcompiler_47.dll", "d3dcompiler_46.dll", "d3dcompiler_43.dll" }',
                 ],
                 'conditions':
                 [
+                    ['OS=="win"', {
+                        'defines':
+                        [
+                            'GL_APICALL=',
+                            'EGLAPI=',
+                        ],
+                    }, {
+                        'defines':
+                        [
+                            'GL_APICALL=__attribute__((visibility("default")))',
+                            'EGLAPI=__attribute__((visibility("default")))',
+                        ],
+                    }],
                     ['angle_enable_d3d9==1',
                     {
                         'defines':
@@ -736,15 +743,16 @@
             'type': 'shared_library',
             'dependencies': [ 'libANGLE' ],
             'includes': [ '../build/common_defines.gypi', ],
+            'export_dependent_settings':
+            [
+                'libANGLE',
+            ],
             'sources':
             [
                 '<@(libglesv2_sources)',
             ],
             'defines':
             [
-                'GL_APICALL=',
-                'GL_GLEXT_PROTOTYPES=',
-                'EGLAPI=',
                 'LIBGLESV2_IMPLEMENTATION',
             ],
             'conditions':

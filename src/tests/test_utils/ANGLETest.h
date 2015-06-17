@@ -15,10 +15,10 @@
 #include "common/angleutils.h"
 #include "shader_utils.h"
 
-#define EXPECT_GL_ERROR(err) EXPECT_EQ((err), glGetError())
+#define EXPECT_GL_ERROR(err) EXPECT_EQ(static_cast<GLenum>(err), glGetError())
 #define EXPECT_GL_NO_ERROR() EXPECT_GL_ERROR(GL_NO_ERROR)
 
-#define ASSERT_GL_ERROR(err) ASSERT_EQ((err), glGetError())
+#define ASSERT_GL_ERROR(err) ASSERT_EQ(static_cast<GLenum>(err), glGetError())
 #define ASSERT_GL_NO_ERROR() ASSERT_GL_ERROR(GL_NO_ERROR)
 
 #define EXPECT_EGL_ERROR(err) EXPECT_EQ((err), eglGetError())
@@ -26,6 +26,9 @@
 
 #define ASSERT_EGL_ERROR(err) ASSERT_EQ((err), eglGetError())
 #define ASSERT_EGL_SUCCESS() ASSERT_EGL_ERROR(EGL_SUCCESS)
+
+#define ASSERT_GLENUM_EQ(expected, actual) ASSERT_EQ(static_cast<GLenum>(expected), static_cast<GLenum>(actual))
+#define EXPECT_GLENUM_EQ(expected, actual) EXPECT_EQ(static_cast<GLenum>(expected), static_cast<GLenum>(actual))
 
 #define EXPECT_PIXEL_EQ(x, y, r, g, b, a) \
 { \

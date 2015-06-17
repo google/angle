@@ -53,7 +53,7 @@ static const InternalFormatConversionMap &GetInternalFormatConversionMap(Standar
     else
     {
         UNREACHABLE();
-        static const InternalFormatConversionMap map;
+        static const InternalFormatConversionMap map = InternalFormatConversionMap();;
         return map;
     }
 }

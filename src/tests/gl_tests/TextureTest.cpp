@@ -372,7 +372,7 @@ TEST_P(TextureTest, CubeMapFBO)
     glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, mTextureCube, 0);
 
-    EXPECT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
     glDeleteFramebuffers(1, &fbo);
 

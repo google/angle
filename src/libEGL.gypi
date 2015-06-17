@@ -21,13 +21,6 @@
             [
                 '<@(libegl_sources)',
             ],
-            'defines':
-            [
-                'GL_APICALL=',
-                'GL_GLEXT_PROTOTYPES=',
-                'EGLAPI=',
-                'LIBEGL_IMPLEMENTATION',
-            ],
             'conditions':
             [
                 ['angle_build_winrt==1',

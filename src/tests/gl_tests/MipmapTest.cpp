@@ -114,7 +114,7 @@ class MipmapTest : public ANGLETest
         // Bind the texture2D to the offscreen framebuffer's color buffer.
         glBindFramebuffer(GL_FRAMEBUFFER, mOffscreenFramebuffer);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mOffscreenTexture2D, 0);
-        ASSERT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
         // Create a non-mipped texture cube. Set the negative-Y face to be blue.
         glGenTextures(1, &mOffscreenTextureCube);
@@ -596,7 +596,7 @@ TEST_P(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
 
     // Now tell GL to use the generated mips.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-    EXPECT_EQ(glGetError(), GL_NONE);
+    EXPECT_GL_NO_ERROR();
 
     // Now render the textured quad again. It should be still be blue.
     ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
@@ -679,7 +679,7 @@ TEST_P(MipmapTest, TextureCubeGeneralLevelZero)
     // Now clear the negative-Y face of the cube to red.
     glBindFramebuffer(GL_FRAMEBUFFER, mOffscreenFramebuffer);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, mOffscreenTextureCube, 0);
-    ASSERT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -739,7 +739,7 @@ TEST_P(MipmapTest, TextureCubeRenderToLevelZero)
     // Now clear the negative-Y face of the cube to red.
     glBindFramebuffer(GL_FRAMEBUFFER, mOffscreenFramebuffer);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, mOffscreenTextureCube, 0);
-    ASSERT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 

@@ -93,11 +93,11 @@ TEST_P(FenceNVTest, Errors)
     GLint result = 30;
     glGetFenceivNV(10, GL_FENCE_STATUS_NV, &result);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-    EXPECT_EQ(30u, result);
+    EXPECT_EQ(30, result);
 
     glGetFenceivNV(fence, GL_FENCE_STATUS_NV, &result);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-    EXPECT_EQ(30u, result);
+    EXPECT_EQ(30, result);
 
     // glSetFenceNV should generate an error for any condition that is not ALL_COMPLETED_NV
     glSetFenceNV(fence, 0);
@@ -173,11 +173,11 @@ TEST_P(FenceSyncTest, Errors)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 
     // glClientWaitSync generates GL_INVALID_VALUE and returns GL_WAIT_FAILED if flags contains more than just GL_SYNC_FLUSH_COMMANDS_BIT
-    EXPECT_EQ(GL_WAIT_FAILED, glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT | 0x2, 0));
+    EXPECT_GLENUM_EQ(GL_WAIT_FAILED, glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT | 0x2, 0));
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 
     // glClientWaitSync generates GL_INVALID_VALUE and returns GL_WAIT_FAILED if the sync object is not valid
-    EXPECT_EQ(GL_WAIT_FAILED, glClientWaitSync(reinterpret_cast<GLsync>(30), GL_SYNC_FLUSH_COMMANDS_BIT, 0));
+    EXPECT_GLENUM_EQ(GL_WAIT_FAILED, glClientWaitSync(reinterpret_cast<GLsync>(30), GL_SYNC_FLUSH_COMMANDS_BIT, 0));
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 
     // glWaitSync generates GL_INVALID_VALUE if flags is non-zero

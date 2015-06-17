@@ -131,7 +131,7 @@ class BlitFramebufferANGLETest : public ANGLETest
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mUserDepthStencilBuffer);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, mUserDepthStencilBuffer);
 
-        ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
         ASSERT_GL_NO_ERROR();
 
         glGenFramebuffers(1, &mSmallFBO);
@@ -146,7 +146,7 @@ class BlitFramebufferANGLETest : public ANGLETest
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mSmallDepthStencilBuffer);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, mSmallDepthStencilBuffer);
 
-        ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
         ASSERT_GL_NO_ERROR();
 
         glGenFramebuffers(1, &mColorOnlyFBO);
@@ -156,7 +156,7 @@ class BlitFramebufferANGLETest : public ANGLETest
         glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, getWindowWidth(), getWindowHeight());
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorOnlyColorBuffer, 0);
 
-        ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
         ASSERT_GL_NO_ERROR();
 
         glGenFramebuffers(1, &mDiffFormatFBO);
@@ -166,7 +166,7 @@ class BlitFramebufferANGLETest : public ANGLETest
         glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGB565, getWindowWidth(), getWindowHeight());
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mDiffFormatColorBuffer, 0);
 
-        ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
         ASSERT_GL_NO_ERROR();
 
         glGenFramebuffers(1, &mDiffSizeFBO);
@@ -176,7 +176,7 @@ class BlitFramebufferANGLETest : public ANGLETest
         glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, getWindowWidth()*2, getWindowHeight()*2);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mDiffSizeColorBuffer, 0);
 
-        ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
         ASSERT_GL_NO_ERROR();
 
         if (extensionEnabled("GL_EXT_draw_buffers"))
@@ -192,7 +192,7 @@ class BlitFramebufferANGLETest : public ANGLETest
             glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, getWindowWidth(), getWindowHeight());
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_2D, mMRTColorBuffer1, 0);
 
-            ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+            ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
             ASSERT_GL_NO_ERROR();
         }
 
@@ -208,7 +208,7 @@ class BlitFramebufferANGLETest : public ANGLETest
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mRGBAColorbuffer, 0);
 
             ASSERT_GL_NO_ERROR();
-            ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+            ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
             glGenRenderbuffers(1, &mBGRAMultisampledRenderbuffer);
             glBindRenderbuffer(GL_RENDERBUFFER, mBGRAMultisampledRenderbuffer);
@@ -219,7 +219,7 @@ class BlitFramebufferANGLETest : public ANGLETest
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mBGRAMultisampledRenderbuffer);
 
             ASSERT_GL_NO_ERROR();
-            ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+            ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);

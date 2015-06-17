@@ -201,7 +201,7 @@ TEST_P(BufferDataTest, DISABLED_HugeSetDataShouldNotCrash)
     }
     else
     {
-        EXPECT_EQ(GL_OUT_OF_MEMORY, error);
+        EXPECT_GLENUM_EQ(GL_OUT_OF_MEMORY, error);
     }
 
     delete[] data;

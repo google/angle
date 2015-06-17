@@ -101,7 +101,7 @@ TEST_P(OcclusionQueriesTest, IsOccluded)
 
     glDeleteQueriesEXT(1, &query);
 
-    EXPECT_EQ(result, GL_FALSE);
+    EXPECT_GLENUM_EQ(GL_FALSE, result);
 }
 
 TEST_P(OcclusionQueriesTest, IsNotOccluded)
@@ -128,7 +128,7 @@ TEST_P(OcclusionQueriesTest, IsNotOccluded)
 
     glDeleteQueriesEXT(1, &query);
 
-    EXPECT_EQ(result, GL_TRUE);
+    EXPECT_GLENUM_EQ(GL_TRUE, result);
 }
 
 TEST_P(OcclusionQueriesTest, Errors)
@@ -164,7 +164,7 @@ TEST_P(OcclusionQueriesTest, Errors)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT, query2); // have to call genqueries first
-    EXPECT_EQ(glGetError(), GL_INVALID_OPERATION);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     glGenQueriesEXT(1, &query2);
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT, query2); // should be ok now
