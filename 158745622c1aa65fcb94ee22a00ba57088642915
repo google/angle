@@ -16,6 +16,24 @@
       "revId": "158745622c1aa65fcb94ee22a00ba57088642915",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9947543e_6c7e1b28",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-17T18:15:17Z",
+      "side": 1,
+      "message": "I think I like Steven\u0027s suggestion better. Add numeric_lex_float_suffix and have it call numeric_lex_float(str.substr)",
+      "parentUuid": "192d2477_48ecdf04",
+      "revId": "158745622c1aa65fcb94ee22a00ba57088642915",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
