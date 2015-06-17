@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "796d40b3_30353165",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-17T17:35:39Z",
+      "side": 1,
+      "message": "you\u0027re comparing a bool to a character here, is that even what you want to be doing? and yes, split patch for this. it\u0027s not just MacOS. stephen\u0027s idea of using a different lexer rule seems okay as well. (one could just call the other with substr)",
+      "range": {
+        "startLine": 55,
+        "startChar": 28,
+        "endLine": 55,
+        "endChar": 60
+      },
+      "revId": "d2ee8c9d69348b60e69482dc11fea24baff73d3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "796d40b3_708969a9",
         "filename": "src/compiler/preprocessor/numeric_lex.h",
         "patchSetId": 1
