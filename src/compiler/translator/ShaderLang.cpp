@@ -240,6 +240,13 @@ bool ShCompile(
     return compiler->compile(shaderStrings, numStrings, compileOptions);
 }
 
+void ShClearResults(const ShHandle handle)
+{
+    TCompiler *compiler = GetCompilerFromHandle(handle);
+    ASSERT(compiler);
+    compiler->clearResults();
+}
+
 int ShGetShaderVersion(const ShHandle handle)
 {
     TCompiler* compiler = GetCompilerFromHandle(handle);

@@ -48,7 +48,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 137
+#define ANGLE_SH_VERSION 138
 
 typedef enum {
   SH_GLES2_SPEC = 0x8B40,
@@ -353,6 +353,9 @@ COMPILER_EXPORT bool ShCompile(
     const char * const shaderStrings[],
     size_t numStrings,
     int compileOptions);
+
+// Clears the results from the previous compilation.
+COMPILER_EXPORT void ShClearResults(const ShHandle handle);
 
 // Return the version of the shader language.
 COMPILER_EXPORT int ShGetShaderVersion(const ShHandle handle);

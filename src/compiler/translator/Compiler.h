@@ -85,6 +85,9 @@ class TCompiler : public TShHandleBase
     int getShaderVersion() const { return shaderVersion; }
     TInfoSink& getInfoSink() { return infoSink; }
 
+    // Clears the results from the previous compilation.
+    void clearResults();
+
     const std::vector<sh::Attribute> &getAttributes() const { return attributes; }
     const std::vector<sh::Attribute> &getOutputVariables() const { return outputVariables; }
     const std::vector<sh::Uniform> &getUniforms() const { return uniforms; }
@@ -107,8 +110,6 @@ class TCompiler : public TShHandleBase
     bool InitBuiltInSymbolTable(const ShBuiltInResources& resources);
     // Compute the string representation of the built-in resources
     void setResourceString();
-    // Clears the results from the previous compilation.
-    void clearResults();
     // Return false if the call depth is exceeded.
     bool checkCallDepth();
     // Returns true if a program has no conflicting or missing fragment outputs
