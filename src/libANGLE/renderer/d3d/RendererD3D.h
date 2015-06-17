@@ -51,6 +51,15 @@ enum ShaderType
     SHADER_GEOMETRY
 };
 
+struct DeviceIdentifier
+{
+    UINT VendorId;
+    UINT DeviceId;
+    UINT SubSysId;
+    UINT Revision;
+    UINT FeatureLevel;
+};
+
 enum RendererClass
 {
     RENDERER_D3D11,
@@ -98,7 +107,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     virtual std::string getShaderModelSuffix() const = 0;
 
     // Direct3D Specific methods
-    virtual GUID getAdapterIdentifier() const = 0;
+    virtual DeviceIdentifier getAdapterIdentifier() const = 0;
 
     virtual SwapChainD3D *createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat) = 0;
 

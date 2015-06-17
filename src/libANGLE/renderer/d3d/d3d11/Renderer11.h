@@ -150,7 +150,7 @@ class Renderer11 : public RendererD3D
 
     VendorID getVendorId() const override;
     std::string getRendererDescription() const override;
-    GUID getAdapterIdentifier() const override;
+    DeviceIdentifier getAdapterIdentifier() const override;
 
     virtual unsigned int getReservedVertexUniformVectors() const;
     virtual unsigned int getReservedFragmentUniformVectors() const;

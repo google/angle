@@ -436,6 +436,16 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
 
 LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 {
+    DeviceIdentifier binaryDeviceIdentifier = { 0 };
+    stream->readBytes(reinterpret_cast<unsigned char*>(&binaryDeviceIdentifier), sizeof(DeviceIdentifier));
+
+    DeviceIdentifier identifier = mRenderer->getAdapterIdentifier();
+    if (memcmp(&identifier, &binaryDeviceIdentifier, sizeof(DeviceIdentifier)) != 0)
+    {
+        infoLog << "Invalid program binary, device configuration has changed.";
+        return LinkResult(false, gl::Error(GL_NO_ERROR));
+    }
+
     int compileFlags = stream->readInt<int>();
     if (compileFlags != ANGLE_COMPILE_OPTIMIZATION_LEVEL)
     {
@@ -678,16 +688,6 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
         stream->skip(geometryShaderSize);
     }
 
-    GUID binaryIdentifier = {0};
-    stream->readBytes(reinterpret_cast<unsigned char*>(&binaryIdentifier), sizeof(GUID));
-
-    GUID identifier = mRenderer->getAdapterIdentifier();
-    if (memcmp(&identifier, &binaryIdentifier, sizeof(GUID)) != 0)
-    {
-        infoLog << "Invalid program binary.";
-        return LinkResult(false, gl::Error(GL_NO_ERROR));
-    }
-
     initializeUniformStorage();
     initAttributesByLayout();
 
@@ -696,6 +696,11 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 
 gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
 {
+    // Output the DeviceIdentifier before we output any shader code
+    // When we load the binary again later, we can validate the device identifier before trying to compile any HLSL
+    DeviceIdentifier binaryIdentifier = mRenderer->getAdapterIdentifier();
+    stream->writeBytes(reinterpret_cast<unsigned char*>(&binaryIdentifier), sizeof(DeviceIdentifier));
+
     stream->writeInt(ANGLE_COMPILE_OPTIMIZATION_LEVEL);
 
     stream->writeInt(mShaderVersion);
@@ -848,9 +853,6 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
         const uint8_t *geometryBlob = mGeometryExecutable->getFunction();
         stream->writeBytes(geometryBlob, geometryShaderSize);
     }
-
-    GUID binaryIdentifier = mRenderer->getAdapterIdentifier();
-    stream->writeBytes(reinterpret_cast<unsigned char*>(&binaryIdentifier), sizeof(GUID));
 
     return gl::Error(GL_NO_ERROR);
 }

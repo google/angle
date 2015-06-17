@@ -2445,14 +2445,17 @@ std::string Renderer11::getRendererDescription() const
     return rendererString.str();
 }
 
-GUID Renderer11::getAdapterIdentifier() const
+DeviceIdentifier Renderer11::getAdapterIdentifier() const
 {
-    // Use the adapter LUID as our adapter ID
-    // This number is local to a machine is only guaranteed to be unique between restarts
-    static_assert(sizeof(LUID) <= sizeof(GUID), "Size of GUID must be at least as large as LUID.");
-    GUID adapterId = {0};
-    memcpy(&adapterId, &mAdapterDescription.AdapterLuid, sizeof(LUID));
-    return adapterId;
+    // Don't use the AdapterLuid here, since that doesn't persist across reboot.
+    DeviceIdentifier deviceIdentifier = { 0 };
+    deviceIdentifier.VendorId = mAdapterDescription.VendorId;
+    deviceIdentifier.DeviceId = mAdapterDescription.DeviceId;
+    deviceIdentifier.SubSysId = mAdapterDescription.SubSysId;
+    deviceIdentifier.Revision = mAdapterDescription.Revision;
+    deviceIdentifier.FeatureLevel = static_cast<UINT>(mRenderer11DeviceCaps.featureLevel);
+
+    return deviceIdentifier;
 }
 
 unsigned int Renderer11::getReservedVertexUniformVectors() const

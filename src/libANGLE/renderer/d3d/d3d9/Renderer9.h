@@ -131,7 +131,7 @@ class Renderer9 : public RendererD3D
 
     VendorID getVendorId() const override;
     std::string getRendererDescription() const override;
-    GUID getAdapterIdentifier() const override;
+    DeviceIdentifier getAdapterIdentifier() const override;
 
     IDirect3DDevice9 *getDevice() { return mDevice; }
     void *getD3DDevice() override;

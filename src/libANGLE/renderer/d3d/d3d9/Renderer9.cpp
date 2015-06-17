@@ -2461,9 +2461,16 @@ std::string Renderer9::getRendererDescription() const
     return rendererString.str();
 }
 
-GUID Renderer9::getAdapterIdentifier() const
+DeviceIdentifier Renderer9::getAdapterIdentifier() const
 {
-    return mAdapterIdentifier.DeviceIdentifier;
+    DeviceIdentifier deviceIdentifier = { 0 };
+    deviceIdentifier.VendorId = static_cast<UINT>(mAdapterIdentifier.VendorId);
+    deviceIdentifier.DeviceId = static_cast<UINT>(mAdapterIdentifier.DeviceId);
+    deviceIdentifier.SubSysId = static_cast<UINT>(mAdapterIdentifier.SubSysId);
+    deviceIdentifier.Revision = static_cast<UINT>(mAdapterIdentifier.Revision);
+    deviceIdentifier.FeatureLevel = 0;
+
+    return deviceIdentifier;
 }
 
 unsigned int Renderer9::getReservedVertexUniformVectors() const
