@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39b10858_dab9993b",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-17T04:45:02Z",
+      "side": 1,
+      "message": "increment the SH_VERSION",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 24
+      },
+      "revId": "d59fe544d3fa65931d7f71a98a6337236a972811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99abd4ef_fb7bbb71",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-17T04:45:02Z",
+      "side": 1,
+      "message": "nit: angle style breaks before all braces ({} on a newline)",
+      "range": {
+        "startLine": 243,
+        "startChar": 43,
+        "endLine": 243,
+        "endChar": 44
+      },
+      "revId": "d59fe544d3fa65931d7f71a98a6337236a972811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
