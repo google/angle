@@ -258,15 +258,6 @@ gl::Error FramebufferD3D::readPixels(const gl::State &state, const gl::Rectangle
         return gl::Error(GL_INVALID_OPERATION, "invalid pixel store parameters in readPixels");
     }
 
-    if (!packState.pixelBuffer.get() && mRenderer->getWorkarounds().finishBeforeReadPixels)
-    {
-        gl::Error error = mRenderer->finish();
-        if (error.isError())
-        {
-            return error;
-        }
-    }
-
     GLenum sizedInternalFormat = gl::GetSizedInternalFormat(format, type);
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(sizedInternalFormat);
     GLuint outputPitch = sizedFormatInfo.computeRowPitch(type, area.width, packState.alignment, 0);

@@ -581,9 +581,6 @@ Workarounds GenerateWorkarounds()
     workarounds.mrtPerfWorkaround = true;
     workarounds.setDataFasterThanImageUpload = false;
     workarounds.useInstancedPointSpriteEmulation = false;
-    // Flakiness has been observed in WebGL conformance tests using
-    // ReadPixels on all vendors' GPUs with the D3D9 backend.
-    workarounds.finishBeforeReadPixels = true;
     return workarounds;
 }
 

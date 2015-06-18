@@ -1236,15 +1236,13 @@ HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
 #endif
 }
 
-Workarounds GenerateWorkarounds(const Renderer11 *renderer)
+Workarounds GenerateWorkarounds(D3D_FEATURE_LEVEL featureLevel)
 {
-    D3D_FEATURE_LEVEL featureLevel = renderer->getRenderer11DeviceCaps().featureLevel;
     Workarounds workarounds;
     workarounds.mrtPerfWorkaround = true;
     workarounds.setDataFasterThanImageUpload = true;
     workarounds.zeroMaxLodWorkaround = (featureLevel <= D3D_FEATURE_LEVEL_9_3);
     workarounds.useInstancedPointSpriteEmulation = (featureLevel <= D3D_FEATURE_LEVEL_9_3);
-    workarounds.finishBeforeReadPixels = renderer->getVendorId() == VENDOR_ID_AMD;
     return workarounds;
 }
 

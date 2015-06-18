@@ -3667,7 +3667,7 @@ void Renderer11::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureC
 
 Workarounds Renderer11::generateWorkarounds() const
 {
-    return d3d11::GenerateWorkarounds(this);
+    return d3d11::GenerateWorkarounds(mRenderer11DeviceCaps.featureLevel);
 }
 
 void Renderer11::setShaderResource(gl::SamplerType shaderType, UINT resourceSlot, ID3D11ShaderResourceView *srv)
