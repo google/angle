@@ -311,17 +311,13 @@ bool TIntermAggregate::replaceChildNodeWithMultiple(TIntermNode *original, TInte
 
 bool TIntermAggregate::insertChildNodes(TIntermSequence::size_type position, TIntermSequence insertions)
 {
-    TIntermSequence::size_type itPosition = 0;
-    for (auto it = mSequence.begin(); it < mSequence.end(); ++it)
+    if (position > mSequence.size())
     {
-        if (itPosition == position)
-        {
-            mSequence.insert(it, insertions.begin(), insertions.end());
-            return true;
-        }
-        ++itPosition;
+        return false;
     }
-    return false;
+    auto it = mSequence.begin() + position;
+    mSequence.insert(it, insertions.begin(), insertions.end());
+    return true;
 }
 
 void TIntermAggregate::setPrecisionFromChildren()
@@ -2548,9 +2544,20 @@ void TIntermTraverser::updateTree()
     {
         const NodeInsertMultipleEntry &insertion = mInsertions[ii];
         ASSERT(insertion.parent);
-        bool inserted = insertion.parent->insertChildNodes(insertion.position, insertion.insertions);
-        ASSERT(inserted);
-        UNUSED_ASSERTION_VARIABLE(inserted);
+        if (!insertion.insertionsAfter.empty())
+        {
+            bool inserted = insertion.parent->insertChildNodes(insertion.position + 1,
+                                                               insertion.insertionsAfter);
+            ASSERT(inserted);
+            UNUSED_ASSERTION_VARIABLE(inserted);
+        }
+        if (!insertion.insertionsBefore.empty())
+        {
+            bool inserted =
+                insertion.parent->insertChildNodes(insertion.position, insertion.insertionsBefore);
+            ASSERT(inserted);
+            UNUSED_ASSERTION_VARIABLE(inserted);
+        }
     }
     for (size_t ii = 0; ii < mReplacements.size(); ++ii)
     {
