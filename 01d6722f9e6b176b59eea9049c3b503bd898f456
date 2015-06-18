@@ -91,6 +91,30 @@
       "revId": "01d6722f9e6b176b59eea9049c3b503bd898f456",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7eca863a_2b2c39ce",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-18T05:55:10Z",
+      "side": 1,
+      "message": "+1 for having atof_clamp_suffix and calling it from glslang.l.\nI think we can get rid of suffixes in atof_clamp_suffix itself and don\u0027t need to have numeric_lex_float_suffix.\nThat way comment in numeric_lex.h still remains true (\"These functions assume that the string is of the correct form.\"), we should update that comment otherwise.",
+      "parentUuid": "d9262c9c_a603c614",
+      "range": {
+        "startLine": 15,
+        "startChar": 5,
+        "endLine": 15,
+        "endChar": 15
+      },
+      "revId": "01d6722f9e6b176b59eea9049c3b503bd898f456",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
