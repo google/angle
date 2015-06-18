@@ -59,20 +59,32 @@ void DebugAnnotator11::setMarker(const wchar_t *markerName)
 bool DebugAnnotator11::getStatus()
 {
     // ID3DUserDefinedAnnotation::GetStatus doesn't work with the Graphics Diagnostics tools in Visual Studio 2013.
+    static bool underCapture = true;
 
 #if defined(_DEBUG) && defined(ANGLE_ENABLE_WINDOWS_STORE)
     // In the Windows Store, we can use IDXGraphicsAnalysis. The call to GetDebugInterface1 only succeeds if the app is under capture.
     // This should only be called in DEBUG mode.
     // If an app links against DXGIGetDebugInterface1 in release mode then it will fail Windows Store ingestion checks.
-    IDXGraphicsAnalysis *graphicsAnalysis;
-    DXGIGetDebugInterface1(0, IID_PPV_ARGS(&graphicsAnalysis));
-    bool underCapture = (graphicsAnalysis != nullptr);
-    SafeRelease(graphicsAnalysis);
-    return underCapture;
+
+    // Cache the result to reduce the number of calls to DXGIGetDebugInterface1
+    static bool triedIDXGraphicsAnalysis = false;
+
+    if (!triedIDXGraphicsAnalysis)
+    {
+        IDXGraphicsAnalysis *graphicsAnalysis = nullptr;
+
+        HRESULT result = DXGIGetDebugInterface1(0, IID_PPV_ARGS(&graphicsAnalysis));
+        if (SUCCEEDED(result))
+        {
+            underCapture = (graphicsAnalysis != nullptr);
+        }
+
+        SafeRelease(graphicsAnalysis);
+        triedIDXGraphicsAnalysis = true;
+    }
 #endif // _DEBUG && !ANGLE_ENABLE_WINDOWS_STORE
 
-    // Otherwise, we have to return true here.
-    return true;
+    return underCapture;
 }
 
 void DebugAnnotator11::initializeDevice()
