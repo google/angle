@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7e9c462a_24d0d8c1",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-18T18:54:31Z",
+      "side": 1,
+      "message": "Fixed the name of this function to be more descriptive.",
+      "parentUuid": "9e7adaa8_f7905a59",
+      "revId": "b91542938386febd80310d9418c1e7b88bff8afa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1e67ca0f_5e2da5cc",
         "filename": "src/compiler/translator/VersionGLSL.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-06-18T17:19:40Z",
       "side": 1,
       "message": "This is not strictly equivalent to the previous code, is stdgl.invariantAll only set to true on SH_GLSL_COMPATIBILITY_OUTPUT/",
+      "revId": "b91542938386febd80310d9418c1e7b88bff8afa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e67ca0f_ccd02f40",
+        "filename": "src/compiler/translator/VersionGLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-18T18:54:31Z",
+      "side": 1,
+      "message": "In this case, it ends up being equivalent because updateVersion takes the max of the current version and the one provided.",
+      "parentUuid": "1e67ca0f_5e2da5cc",
       "revId": "b91542938386febd80310d9418c1e7b88bff8afa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
