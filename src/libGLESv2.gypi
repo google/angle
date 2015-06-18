@@ -743,10 +743,6 @@
             'type': 'shared_library',
             'dependencies': [ 'libANGLE' ],
             'includes': [ '../build/common_defines.gypi', ],
-            'export_dependent_settings':
-            [
-                'libANGLE',
-            ],
             'sources':
             [
                 '<@(libglesv2_sources)',

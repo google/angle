@@ -10,8 +10,15 @@
         {
             'target_name': 'libEGL',
             'type': 'shared_library',
-            'dependencies': [ 'libGLESv2', ],
-            'includes': [ '../build/common_defines.gypi', ],
+            'dependencies':
+            [
+                'libANGLE',
+                'libGLESv2',
+            ],
+            'includes':
+            [
+                '../build/common_defines.gypi',
+            ],
             'include_dirs':
             [
                 '.',
