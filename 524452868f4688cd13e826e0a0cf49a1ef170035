@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9e7adaa8_05ca758e",
+        "filename": "src/common/debug.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-19T23:24:43Z",
+      "side": 0,
+      "message": "I think the original macro is better.  Because now if you add a line ASSERT(x) without the \";\", the compiler won\u0027t complain.",
+      "range": {
+        "startLine": 108,
+        "startChar": 11,
+        "endLine": 108,
+        "endChar": 12
+      },
+      "revId": "524452868f4688cd13e826e0a0cf49a1ef170035",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
