@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9e7adaa8_85df654c",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 985,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-19T23:31:59Z",
+      "side": 1,
+      "message": "Do all of this need to be exported to dependents? I\u0027m not sure about CharacterSet for example, also it seems we are linking the Win32 libs several time (for this target and its dependents)",
+      "revId": "eeba6c5b6df175041033dcc05dc79f66c117cfce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
