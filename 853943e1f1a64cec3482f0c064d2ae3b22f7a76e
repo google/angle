@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7e7526b8_59cce35d",
+        "filename": "src/compiler/translator/util.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-19T22:35:03Z",
+      "side": 1,
+      "message": "Whoops, Done",
+      "parentUuid": "7e9c462a_5c35a705",
+      "range": {
+        "startLine": 21,
+        "startChar": 25,
+        "endLine": 21,
+        "endChar": 44
+      },
+      "revId": "853943e1f1a64cec3482f0c064d2ae3b22f7a76e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7e9c462a_1c4f1f88",
         "filename": "src/compiler/translator/util.h",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-19T21:24:28Z",
       "side": 1,
       "message": "drop extern here too to be consistent",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 6
+      },
+      "revId": "853943e1f1a64cec3482f0c064d2ae3b22f7a76e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ed222e8_35b9fa38",
+        "filename": "src/compiler/translator/util.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-19T22:35:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e9c462a_1c4f1f88",
       "range": {
         "startLine": 25,
         "startChar": 0,
