@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7eca863a_8ec77ba5",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-19T18:07:44Z",
+      "side": 1,
+      "message": "Note: maybe exponent \u003c\u003c 10u would force it to be an uint here?",
+      "revId": "e5e09def266d6eb34b2369c8f6c6aa1343bd5260",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
