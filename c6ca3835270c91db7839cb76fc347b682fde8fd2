@@ -46,6 +46,30 @@
       "revId": "c6ca3835270c91db7839cb76fc347b682fde8fd2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ebe4e91_9201e23a",
+        "filename": "src/tests/deqp_support/tcuANGLEWin32NativeDisplayFactory.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-19T18:11:29Z",
+      "side": 1,
+      "message": "Actually it did but only in Release build on Windows, Done",
+      "parentUuid": "99ce74a2_a838a3fe",
+      "range": {
+        "startLine": 298,
+        "startChar": 4,
+        "endLine": 298,
+        "endChar": 23
+      },
+      "revId": "c6ca3835270c91db7839cb76fc347b682fde8fd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
