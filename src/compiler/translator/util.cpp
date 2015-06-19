@@ -12,7 +12,7 @@
 #include "compiler/translator/SymbolTable.h"
 #include "common/utilities.h"
 
-bool atof_clamp(const char *str, float *value)
+bool strtof_clamp(const std::string &str, float *value)
 {
     bool success = pp::numeric_lex_float(str, value);
     if (!success)

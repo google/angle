@@ -14,15 +14,15 @@
 
 #include "compiler/translator/Types.h"
 
-// atof_clamp is like atof but
+// strtof_clamp is like strtof but
 //   1. it forces C locale, i.e. forcing '.' as decimal point.
 //   2. it clamps the value to -FLT_MAX or FLT_MAX if overflow happens.
 // Return false if overflow happens.
-extern bool atof_clamp(const char *str, float *value);
+bool strtof_clamp(const std::string &str, float *value);
 
 // If overflow happens, clamp the value to INT_MIN or INT_MAX.
 // Return false if overflow happens.
-extern bool atoi_clamp(const char *str, int *value);
+bool atoi_clamp(const char *str, int *value);
 
 class TSymbolTable;
 

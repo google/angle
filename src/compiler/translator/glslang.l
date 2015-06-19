@@ -504,7 +504,9 @@ int floatsuffix_check(TParseContext* context)
         return 0;
     }
 
-    if (!atof_clamp(yytext, &(yylval->lex.f)))
+    std::string text = yytext;
+    text.resize(text.size() - 1);
+    if (!strtof_clamp(text, &(yylval->lex.f)))
         yyextra->warning(*yylloc, "Float overflow", yytext, "");
 
     return(FLOATCONSTANT);
@@ -526,7 +528,7 @@ int int_constant(yyscan_t yyscanner) {
 int float_constant(yyscan_t yyscanner) {
     struct yyguts_t* yyg = (struct yyguts_t*) yyscanner;
 
-    if (!atof_clamp(yytext, &(yylval->lex.f)))
+    if (!strtof_clamp(yytext, &(yylval->lex.f)))
         yyextra->warning(*yylloc, "Float overflow", yytext, "");
     return FLOATCONSTANT;
 }
