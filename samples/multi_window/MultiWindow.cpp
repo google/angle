@@ -10,9 +10,9 @@
 #include <algorithm>
 #include <vector>
 
+#include "Matrix.h"
 #include "random_utils.h"
 #include "shader_utils.h"
-#include "Matrix.h"
 
 class MultiWindowSample : public SampleApplication
 {

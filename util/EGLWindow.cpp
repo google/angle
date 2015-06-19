@@ -12,12 +12,6 @@
 #include "OSWindow.h"
 #include "common/debug.h"
 
-#ifdef _WIN32
-#elif __linux__
-#else
-#error unsupported OS.
-#endif
-
 EGLPlatformParameters::EGLPlatformParameters()
     : renderer(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE),
       majorVersion(EGL_DONT_CARE),

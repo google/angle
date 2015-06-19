@@ -13,7 +13,6 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <array>
 
 namespace angle
 {
