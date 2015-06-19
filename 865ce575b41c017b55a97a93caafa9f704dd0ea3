@@ -22,6 +22,30 @@
       "revId": "865ce575b41c017b55a97a93caafa9f704dd0ea3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e67ca0f_ea1aa99d",
+        "filename": "src/tests/deqp_support/tcuANGLEWin32NativeDisplayFactory.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-19T18:24:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e7adaa8_71ef6f7f",
+      "range": {
+        "startLine": 299,
+        "startChar": 3,
+        "endLine": 300,
+        "endChar": 39
+      },
+      "revId": "865ce575b41c017b55a97a93caafa9f704dd0ea3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
