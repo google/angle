@@ -4,13 +4,15 @@
 // found in the LICENSE file.
 //
 
-#include "Matrix.h"
 #include "SampleApplication.h"
+
+#include <cmath>
+#include <algorithm>
+#include <vector>
+
 #include "random_utils.h"
 #include "shader_utils.h"
-
-#include <vector>
-#include <algorithm>
+#include "Matrix.h"
 
 class MultiWindowSample : public SampleApplication
 {

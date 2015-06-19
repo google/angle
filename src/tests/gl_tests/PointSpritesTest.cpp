@@ -8,6 +8,8 @@
 
 #include "test_utils/ANGLETest.h"
 
+#include <cmath>
+
 using namespace angle;
 
 class PointSpritesTest : public ANGLETest

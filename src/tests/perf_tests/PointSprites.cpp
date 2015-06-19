@@ -6,11 +6,12 @@
 // PointSpritesBenchmark:
 //   Performance test for ANGLE point sprites.
 //
-
-#include <sstream>
-#include <iostream>
-
+//
 #include "ANGLEPerfTest.h"
+
+#include <iostream>
+#include <sstream>
+
 #include "shader_utils.h"
 #include "random_utils.h"
 
