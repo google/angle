@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "7e9c462a_397d4829",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-20T02:27:58Z",
+      "side": 1,
+      "message": "Any thoughts on how to make it easier to maintain this list of tests?",
+      "range": {
+        "startLine": 86,
+        "startChar": 15,
+        "endLine": 86,
+        "endChar": 24
+      },
+      "revId": "eeba6c5b6df175041033dcc05dc79f66c117cfce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9e7adaa8_85df654c",
         "filename": "src/tests/deqp.gypi",
         "patchSetId": 2
