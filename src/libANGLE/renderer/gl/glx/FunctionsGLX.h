@@ -73,7 +73,7 @@ class FunctionsGLX
 
     struct GLXFunctionTable;
 
-    void *mLibHandle;
+    static void *sLibHandle;
     Display *mXDisplay;
     int mXScreen;
 
