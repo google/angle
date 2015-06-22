@@ -33,9 +33,10 @@
             '-Wno-format-nonliteral',
         ],
 
+        'chromeos%': 0,
         'conditions':
         [
-            ['OS=="linux"',
+            ['OS=="linux" and chromeos==0',
             {
                 'use_x11%': 1,
             },
