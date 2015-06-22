@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "7ef6069f_0bcb5d16",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-22T16:30:32Z",
+      "side": 1,
+      "message": "We need a way to filter these tests to only run on supported platforms like ANGLE_INSTANTIATE_TEST does.  I think you\u0027ll have to make a new struct that inherits from angle::PlatformParameters with another PlatformParameters member for the load platform and use ANGLE_INSTANTIATE_TEST .  It will only make sure that the first platform is available but that should be sufficient.\n\nLet me know if that doesn\u0027t make sense.",
+      "range": {
+        "startLine": 410,
+        "startChar": 0,
+        "endLine": 410,
+        "endChar": 23
+      },
+      "revId": "fce0f5c0f74f967b9c6293fb012be04c6cc0f7b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7eca863a_ae3117f7",
         "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
         "patchSetId": 2
@@ -13,6 +36,30 @@
       "writtenOn": "2015-06-18T19:24:50Z",
       "side": 1,
       "message": "Should this work?",
+      "range": {
+        "startLine": 421,
+        "startChar": 42,
+        "endLine": 423,
+        "endChar": 124
+      },
+      "revId": "fce0f5c0f74f967b9c6293fb012be04c6cc0f7b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e2782f4_0a887bf7",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-22T16:30:32Z",
+      "side": 1,
+      "message": "I believe that it should not work.",
+      "parentUuid": "7eca863a_ae3117f7",
       "range": {
         "startLine": 421,
         "startChar": 42,
