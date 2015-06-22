@@ -1,0 +1,366 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e2acebf_8968f919",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "nit: clip this to 65 characters and put the rest of the description in a paragraph below (also clipped but to 71 chars)",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 94
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5efea270_e773a0c4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "nit: two spaces -\u003e 1",
+      "range": {
+        "startLine": 135,
+        "startChar": 57,
+        "endLine": 135,
+        "endChar": 59
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5efea270_67afb09c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "nit: cut this extra space",
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5efea270_8783b40c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "I don\u0027t see this referenced from anywhere, can you nuke it?",
+      "range": {
+        "startLine": 255,
+        "startChar": 4,
+        "endLine": 255,
+        "endChar": 10
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ef6069f_f1c7e0a3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "s/NULL/nullptr",
+      "range": {
+        "startLine": 524,
+        "startChar": 15,
+        "endLine": 524,
+        "endChar": 19
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5efea270_47feec7d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1070,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "use c++ style casts (also in other places below)",
+      "range": {
+        "startLine": 1070,
+        "startChar": 23,
+        "endLine": 1070,
+        "endChar": 33
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e2acebf_2ca0fbad",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1080,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "instead of using an inner switch, store the stride outside the loop and increment the pointer accordingly.",
+      "range": {
+        "startLine": 1080,
+        "startChar": 12,
+        "endLine": 1080,
+        "endChar": 44
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e7adaa8_ef9dd36e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "log an ERR here",
+      "range": {
+        "startLine": 1109,
+        "startChar": 19,
+        "endLine": 1109,
+        "endChar": 26
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ef6069f_91f5bcfe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "you can remove this",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 27
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5efea270_27a5a8be",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "nit: alphabetize",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 23
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e7adaa8_8f61bf09",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "nit: it isn\u0027t actually necessary to forward-declare this one",
+      "range": {
+        "startLine": 85,
+        "startChar": 4,
+        "endLine": 85,
+        "endChar": 33
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e2acebf_8cf487c9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "see other comment",
+      "range": {
+        "startLine": 89,
+        "startChar": 3,
+        "endLine": 89,
+        "endChar": 18
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ef6069f_94c64a89",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1696,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "I\u0027m not a grammar expert but I think \u0027must be used\u0027 is passive infinitive tense. Try using something more active in your comments, to be clearer, like\n\nIf instanced pointsprite emulation is enabled, we assume our topology is TRIANGLEIST, and call DrawIndexedInstanced below.\n\nYou can generalize this suggestion to some of your other descriptive comments.",
+      "range": {
+        "startLine": 1696,
+        "startChar": 72,
+        "endLine": 1696,
+        "endChar": 84
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e2782f4_be7c1199",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1700,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "nit: double space",
+      "range": {
+        "startLine": 1700,
+        "startChar": 30,
+        "endLine": 1700,
+        "endChar": 32
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e2acebf_acbfcbab",
+        "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "nit: place this in a private block below the protected",
+      "range": {
+        "startLine": 14,
+        "startChar": 4,
+        "endLine": 14,
+        "endChar": 57
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e2acebf_ace86ba2",
+        "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:18:44Z",
+      "side": 1,
+      "message": "does ASSERT_NE(0u, mVertexWithColorBufferProgram) not work? I think the previous code might just be outdated.",
+      "range": {
+        "startLine": 96,
+        "startChar": 8,
+        "endLine": 96,
+        "endChar": 47
+      },
+      "revId": "9646bf48e525c5ab8aee8b60767dc9ef852a5446",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
