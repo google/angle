@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "feb756b3_36dee64e",
+        "filename": "src/angle.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-22T20:24:04Z",
+      "side": 1,
+      "message": "Yes.  angle_common builds debug.h/debug.cpp which require this define to be set. If it is not set, the ANGLE_TRACE_ENABLED will not be enabled causing the MACROs used for debugging to noop and be compiled out.",
+      "parentUuid": "1e67ca0f_a5eb7726",
+      "range": {
+        "startLine": 94,
+        "startChar": 16,
+        "endLine": 107,
+        "endChar": 19
+      },
+      "revId": "81476a44d441faca4bb89986c476668c65b43637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5efea270_41fedc7d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-22T17:01:38Z",
       "side": 1,
       "message": "Is there any documentation/bug report for this?",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 74
+      },
+      "revId": "81476a44d441faca4bb89986c476668c65b43637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "feb756b3_96ec7205",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-22T20:24:04Z",
+      "side": 1,
+      "message": "There is not a bug or issue I can point to but it has been fixed in Windows 10.",
+      "parentUuid": "5efea270_41fedc7d",
       "range": {
         "startLine": 55,
         "startChar": 0,
