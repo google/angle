@@ -524,17 +524,6 @@ struct Range
             return start < other.end;
         }
     }
-
-    void extend(T value)
-    {
-        start = value > start ? value : start;
-        end = value < end ? value : end;
-    }
-
-    bool empty() const
-    {
-        return end <= start;
-    }
 };
 
 typedef Range<int> RangeI;

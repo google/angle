@@ -188,45 +188,6 @@ ANGLEFeatureLevel GetANGLEFeatureLevel(D3D_FEATURE_LEVEL d3dFeatureLevel)
 
 }
 
-void Renderer11::SRVCache::update(size_t resourceIndex, ID3D11ShaderResourceView *srv)
-{
-    ASSERT(resourceIndex < mCurrentSRVs.size());
-    SRVRecord *record = &mCurrentSRVs[resourceIndex];
-
-    record->srv = reinterpret_cast<uintptr_t>(srv);
-    if (srv)
-    {
-        record->resource = reinterpret_cast<uintptr_t>(GetViewResource(srv));
-        srv->GetDesc(&record->desc);
-        mHighestUsedSRV = std::max(resourceIndex + 1, mHighestUsedSRV);
-    }
-    else
-    {
-        record->resource = 0;
-
-        if (resourceIndex + 1 == mHighestUsedSRV)
-        {
-            do
-            {
-                --mHighestUsedSRV;
-            }
-            while (mHighestUsedSRV > 0 &&
-                   mCurrentSRVs[mHighestUsedSRV].srv == 0);
-        }
-    }
-}
-
-void Renderer11::SRVCache::clear()
-{
-    if (mCurrentSRVs.empty())
-    {
-        return;
-    }
-
-    memset(&mCurrentSRVs[0], 0, sizeof(SRVRecord) * mCurrentSRVs.size());
-    mHighestUsedSRV = 0;
-}
-
 Renderer11::Renderer11(egl::Display *display)
     : RendererD3D(display),
       mStateCache(this),
@@ -625,8 +586,8 @@ void Renderer11::initializeDevice()
     mForceSetPixelSamplerStates.resize(rendererCaps.maxTextureImageUnits);
     mCurPixelSamplerStates.resize(rendererCaps.maxTextureImageUnits);
 
-    mCurVertexSRVs.initialize(rendererCaps.maxVertexTextureImageUnits);
-    mCurPixelSRVs.initialize(rendererCaps.maxTextureImageUnits);
+    mCurVertexSRVs.resize(rendererCaps.maxVertexTextureImageUnits);
+    mCurPixelSRVs.resize(rendererCaps.maxTextureImageUnits);
 
     markAllStateDirty();
 
@@ -643,9 +604,6 @@ void Renderer11::initializeDevice()
     {
         angleFeatureLevel = ANGLE_FEATURE_LEVEL_11_1;
     }
-
-    // Initialize cached NULL SRV block
-    mNullSRVs.resize(getRendererCaps().maxTextureImageUnits, nullptr);
 
     ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.D3D11FeatureLevel",
                                 angleFeatureLevel,
@@ -2226,8 +2184,8 @@ void Renderer11::markAllStateDirty()
     // We reset the current SRV data because it might not be in sync with D3D's state
     // anymore. For example when a currently used SRV is used as an RTV, D3D silently
     // remove it from its state.
-    mCurVertexSRVs.clear();
-    mCurPixelSRVs.clear();
+    memset(mCurVertexSRVs.data(), 0, sizeof(SRVRecord) * mCurVertexSRVs.size());
+    memset(mCurPixelSRVs.data(), 0, sizeof(SRVRecord) * mCurPixelSRVs.size());
 
     ASSERT(mForceSetVertexSamplerStates.size() == mCurVertexSRVs.size());
     for (size_t vsamplerId = 0; vsamplerId < mForceSetVertexSamplerStates.size(); ++vsamplerId)
@@ -3717,7 +3675,7 @@ void Renderer11::setShaderResource(gl::SamplerType shaderType, UINT resourceSlot
     auto &currentSRVs = (shaderType == gl::SAMPLER_VERTEX ? mCurVertexSRVs : mCurPixelSRVs);
 
     ASSERT(static_cast<size_t>(resourceSlot) < currentSRVs.size());
-    const SRVRecord &record = currentSRVs[resourceSlot];
+    auto &record = currentSRVs[resourceSlot];
 
     if (record.srv != reinterpret_cast<uintptr_t>(srv))
     {
@@ -3730,47 +3688,22 @@ void Renderer11::setShaderResource(gl::SamplerType shaderType, UINT resourceSlot
             mDeviceContext->PSSetShaderResources(resourceSlot, 1, &srv);
         }
 
-        currentSRVs.update(resourceSlot, srv);
+        record.srv = reinterpret_cast<uintptr_t>(srv);
+        if (srv)
+        {
+            record.resource = reinterpret_cast<uintptr_t>(GetViewResource(srv));
+            srv->GetDesc(&record.desc);
+        }
+        else
+        {
+            record.resource = 0;
+        }
     }
 }
 
 void Renderer11::createAnnotator()
 {
     mAnnotator = new DebugAnnotator11();
-}
-
-gl::Error Renderer11::clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd)
-{
-    if (rangeStart == rangeEnd)
-    {
-        return;
-    }
-
-    auto &currentSRVs = (samplerType == gl::SAMPLER_VERTEX ? mCurVertexSRVs : mCurPixelSRVs);
-
-    gl::Range<size_t> clearRange(rangeStart, rangeStart);
-    clearRange.extend(std::min(rangeEnd, currentSRVs.highestUsed()));
-
-    if (clearRange.empty())
-    {
-        return;
-    }
-
-    if (samplerType == gl::SAMPLER_VERTEX)
-    {
-        mDeviceContext->VSSetShaderResources(rangeStart, rangeEnd - rangeStart, &mNullSRVs[0]);
-    }
-    else
-    {
-        mDeviceContext->PSSetShaderResources(rangeStart, rangeEnd - rangeStart, &mNullSRVs[0]);
-    }
-
-    for (size_t samplerIndex = rangeStart; samplerIndex < rangeEnd; ++samplerIndex)
-    {
-        currentSRVs.update(samplerIndex, nullptr);
-    }
-
-    return gl::Error(GL_NO_ERROR);
 }
 
 }

@@ -235,7 +235,6 @@ class Renderer9 : public RendererD3D
 
   protected:
     void createAnnotator() override;
-    gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
 
   private:
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const override;
