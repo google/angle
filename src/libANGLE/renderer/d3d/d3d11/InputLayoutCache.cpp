@@ -22,20 +22,25 @@
 namespace rx
 {
 
-static void GetInputLayout(const TranslatedAttribute translatedAttributes[gl::MAX_VERTEX_ATTRIBS],
-                           gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS])
+namespace
+{
+
+void GetInputLayout(const TranslatedAttribute *translatedAttributes[gl::MAX_VERTEX_ATTRIBS],
+                    gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS])
 {
     for (unsigned int attributeIndex = 0; attributeIndex < gl::MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
-        const TranslatedAttribute &translatedAttribute = translatedAttributes[attributeIndex];
+        const TranslatedAttribute *translatedAttribute = translatedAttributes[attributeIndex];
 
-        if (translatedAttributes[attributeIndex].active)
+        if (translatedAttributes[attributeIndex]->active)
         {
-            inputLayout[attributeIndex] = gl::VertexFormat(*translatedAttribute.attribute,
-                                                           translatedAttribute.currentValueType);
+            inputLayout[attributeIndex] = gl::VertexFormat(*translatedAttribute->attribute,
+                                                           translatedAttribute->currentValueType);
         }
     }
 }
+
+} // anonymous namespace
 
 const unsigned int InputLayoutCache::kMaxInputLayouts = 1024;
 
@@ -91,13 +96,14 @@ void InputLayoutCache::markDirty()
     }
 }
 
-gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS],
+gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute unsortedAttributes[gl::MAX_VERTEX_ATTRIBS],
                                                GLenum mode, gl::Program *program)
 {
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
 
     int sortedSemanticIndices[gl::MAX_VERTEX_ATTRIBS];
-    programD3D->sortAttributesByLayout(attributes, sortedSemanticIndices);
+    const TranslatedAttribute *sortedAttributes[gl::MAX_VERTEX_ATTRIBS] = { nullptr };
+    programD3D->sortAttributesByLayout(unsortedAttributes, sortedSemanticIndices, sortedAttributes);
     bool programUsesInstancedPointSprites = programD3D->usesPointSize() && programD3D->usesInstancedPointSpriteEmulation();
     bool instancedPointSpritesActive = programUsesInstancedPointSprites && (mode == GL_POINTS);
 
@@ -116,13 +122,13 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
 
     for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        if (attributes[i].active)
+        if (sortedAttributes[i]->active)
         {
-            D3D11_INPUT_CLASSIFICATION inputClass = attributes[i].divisor > 0 ? D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA;
+            D3D11_INPUT_CLASSIFICATION inputClass = sortedAttributes[i]->divisor > 0 ? D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA;
             // If rendering points and instanced pointsprite emulation is being used, the inputClass is required to be configured as per instance data
             inputClass = instancedPointSpritesActive ? D3D11_INPUT_PER_INSTANCE_DATA : inputClass;
 
-            gl::VertexFormat vertexFormat(*attributes[i].attribute, attributes[i].currentValueType);
+            gl::VertexFormat vertexFormat(*sortedAttributes[i]->attribute, sortedAttributes[i]->currentValueType);
             const d3d11::VertexFormat &vertexFormatInfo = d3d11::GetVertexFormatInfo(vertexFormat, mFeatureLevel);
 
             // Record the type of the associated vertex shader vector in our key
@@ -136,7 +142,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
             ilKey.elements[ilKey.elementCount].desc.InputSlot = i;
             ilKey.elements[ilKey.elementCount].desc.AlignedByteOffset = 0;
             ilKey.elements[ilKey.elementCount].desc.InputSlotClass = inputClass;
-            ilKey.elements[ilKey.elementCount].desc.InstanceDataStepRate = instancedPointSpritesActive ? 1 : attributes[i].divisor;
+            ilKey.elements[ilKey.elementCount].desc.InstanceDataStepRate = instancedPointSpritesActive ? 1 : sortedAttributes[i]->divisor;
 
             if (inputClass == D3D11_INPUT_PER_VERTEX_DATA && firstIndexedElement == gl::MAX_VERTEX_ATTRIBS)
             {
@@ -217,7 +223,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
     else
     {
         gl::VertexFormat shaderInputLayout[gl::MAX_VERTEX_ATTRIBS];
-        GetInputLayout(attributes, shaderInputLayout);
+        GetInputLayout(sortedAttributes, shaderInputLayout);
 
         ShaderExecutableD3D *shader = NULL;
         gl::Error error = programD3D->getVertexExecutableForInputLayout(shaderInputLayout, &shader, nullptr);
@@ -279,17 +285,17 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
     {
         ID3D11Buffer *buffer = NULL;
 
-        if (attributes[i].active)
+        if (sortedAttributes[i]->active)
         {
-            VertexBuffer11 *vertexBuffer = GetAs<VertexBuffer11>(attributes[i].vertexBuffer);
-            Buffer11 *bufferStorage = attributes[i].storage ? GetAs<Buffer11>(attributes[i].storage) : NULL;
+            VertexBuffer11 *vertexBuffer = GetAs<VertexBuffer11>(sortedAttributes[i]->vertexBuffer);
+            Buffer11 *bufferStorage = sortedAttributes[i]->storage ? GetAs<Buffer11>(sortedAttributes[i]->storage) : NULL;
 
             buffer = bufferStorage ? bufferStorage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK)
                                    : vertexBuffer->getBuffer();
         }
 
-        UINT vertexStride = attributes[i].stride;
-        UINT vertexOffset = attributes[i].offset;
+        UINT vertexStride = sortedAttributes[i]->stride;
+        UINT vertexOffset = sortedAttributes[i]->offset;
 
         if (buffer != mCurrentBuffers[i] || vertexStride != mCurrentVertexStrides[i] ||
             vertexOffset != mCurrentVertexOffsets[i])
