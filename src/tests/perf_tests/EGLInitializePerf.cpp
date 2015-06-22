@@ -149,9 +149,9 @@ void EGLInitializePerfTest::step(float dt, double totalTime)
 void EGLInitializePerfTest::TearDown()
 {
     ANGLEPerfTest::TearDown();
-    printResult("LoadDLLs", mCapturePlatform.getLoadDLLsMS(), "ms", true);
-    printResult("D3D11CreateDevice", mCapturePlatform.getCreateDeviceMS(), "ms", true);
-    printResult("InitResources", mCapturePlatform.getInitResourcesMS(), "ms", true);
+    printResult("LoadDLLs", normalizedTime(mCapturePlatform.getLoadDLLsMS()), "ms", true);
+    printResult("D3D11CreateDevice", normalizedTime(mCapturePlatform.getCreateDeviceMS()), "ms", true);
+    printResult("InitResources", normalizedTime(mCapturePlatform.getInitResourcesMS()), "ms", true);
 
     ANGLEPlatformShutdown();
 }

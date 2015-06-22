@@ -45,6 +45,9 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     void SetUp() override;
     void TearDown() override;
 
+    // Normalize a time value according to the number of test loop iterations (mFrameCount)
+    double normalizedTime(size_t value) const;
+
     std::string mName;
     std::string mSuffix;
 

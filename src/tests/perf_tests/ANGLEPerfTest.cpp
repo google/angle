@@ -68,6 +68,11 @@ void ANGLEPerfTest::TearDown()
     printResult("score", static_cast<size_t>(mNumFrames), "score", true);
 }
 
+double ANGLEPerfTest::normalizedTime(size_t value) const
+{
+    return static_cast<double>(value) / static_cast<double>(mNumFrames);
+}
+
 std::string RenderTestParams::suffix() const
 {
     switch (getRenderer())
