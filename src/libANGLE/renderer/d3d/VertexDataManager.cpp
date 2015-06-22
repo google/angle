@@ -83,6 +83,10 @@ VertexDataManager::VertexDataManager(BufferFactoryD3D *factory)
     {
         ERR("Failed to allocate the streaming vertex buffer.");
     }
+
+    // TODO(jmadill): use context caps
+    mActiveEnabledAttributes.reserve(gl::MAX_VERTEX_ATTRIBS);
+    mActiveDisabledAttributes.reserve(gl::MAX_VERTEX_ATTRIBS);
 }
 
 VertexDataManager::~VertexDataManager()
@@ -94,19 +98,15 @@ void VertexDataManager::hintUnmapAllResources(const std::vector<gl::VertexAttrib
 {
     mStreamingBuffer->getVertexBuffer()->hintUnmapResource();
 
-    for (size_t i = 0; i < vertexAttributes.size(); i++)
+    for (const TranslatedAttribute *translated : mActiveEnabledAttributes)
     {
-        const gl::VertexAttribute &attrib = vertexAttributes[i];
-        if (attrib.enabled)
-        {
-            gl::Buffer *buffer = attrib.buffer.get();
-            BufferD3D *storage = buffer ? GetImplAs<BufferD3D>(buffer) : NULL;
-            StaticVertexBufferInterface *staticBuffer = storage ? storage->getStaticVertexBuffer() : NULL;
+        gl::Buffer *buffer = translated->attribute->buffer.get();
+        BufferD3D *storage = buffer ? GetImplAs<BufferD3D>(buffer) : nullptr;
+        StaticVertexBufferInterface *staticBuffer = storage ? storage->getStaticVertexBuffer() : nullptr;
 
-            if (staticBuffer)
-            {
-                staticBuffer->getVertexBuffer()->hintUnmapResource();
-            }
+        if (staticBuffer)
+        {
+            staticBuffer->getVertexBuffer()->hintUnmapResource();
         }
     }
 
@@ -127,8 +127,13 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
         return gl::Error(GL_OUT_OF_MEMORY, "Internal streaming vertex buffer is unexpectedly NULL.");
     }
 
+    // Compute active enabled and active disable attributes, for speed.
+    // TODO(jmadill): don't recompute if there was no state change
     const gl::VertexArray *vertexArray = state.getVertexArray();
     const std::vector<gl::VertexAttribute> &vertexAttributes = vertexArray->getVertexAttributes();
+
+    mActiveEnabledAttributes.clear();
+    mActiveDisabledAttributes.clear();
 
     for (size_t attribIndex = 0; attribIndex < vertexAttributes.size(); ++attribIndex)
     {
@@ -142,75 +147,70 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
 
             if (vertexAttributes[attribIndex].enabled)
             {
+                mActiveEnabledAttributes.push_back(&translated[attribIndex]);
+
                 // Also invalidate static buffers that don't contain matching attributes
                 invalidateMatchingStaticData(vertexAttributes[attribIndex],
                                              state.getVertexAttribCurrentValue(attribIndex));
+            }
+            else
+            {
+                mActiveDisabledAttributes.push_back(attribIndex);
             }
         }
     }
 
     // Reserve the required space in the buffers
-    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    for (const TranslatedAttribute *translated : mActiveEnabledAttributes)
     {
-        if (translated[i].active && translated[i].attribute->enabled)
+        gl::Error error = reserveSpaceForAttrib(*translated, count, instances);
+        if (error.isError())
         {
-            gl::Error error = reserveSpaceForAttrib(translated[i], count, instances);
-            if (error.isError())
-            {
-                return error;
-            }
+            return error;
         }
     }
 
     // Perform the vertex data translations
-    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    for (TranslatedAttribute *translated : mActiveEnabledAttributes)
     {
-        if (translated[i].active)
+        gl::Error error = storeAttribute(translated, start, count, instances);
+
+        if (error.isError())
         {
-            if (translated[i].attribute->enabled)
-            {
-                gl::Error error = storeAttribute(&translated[i], start, count, instances);
+            hintUnmapAllResources(vertexAttributes);
+            return error;
+        }
+    }
 
-                if (error.isError())
-                {
-                    hintUnmapAllResources(vertexAttributes);
-                    return error;
-                }
-            }
-            else
-            {
-                if (mCurrentValueCache[i].buffer == nullptr)
-                {
-                    mCurrentValueCache[i].buffer = new StreamingVertexBufferInterface(mFactory, CONSTANT_VERTEX_BUFFER_SIZE);
-                }
+    for (size_t attribIndex : mActiveDisabledAttributes)
+    {
+        if (mCurrentValueCache[attribIndex].buffer == nullptr)
+        {
+            mCurrentValueCache[attribIndex].buffer = new StreamingVertexBufferInterface(mFactory, CONSTANT_VERTEX_BUFFER_SIZE);
+        }
 
-                gl::Error error = storeCurrentValue(state.getVertexAttribCurrentValue(i),
-                                                    &translated[i],
-                                                    &mCurrentValueCache[i]);
-                if (error.isError())
-                {
-                    hintUnmapAllResources(vertexAttributes);
-                    return error;
-                }
-            }
+        gl::Error error = storeCurrentValue(state.getVertexAttribCurrentValue(attribIndex),
+                                            &translated[attribIndex],
+                                            &mCurrentValueCache[attribIndex]);
+        if (error.isError())
+        {
+            hintUnmapAllResources(vertexAttributes);
+            return error;
         }
     }
 
     // Hint to unmap all the resources
     hintUnmapAllResources(vertexAttributes);
 
-    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    for (const TranslatedAttribute *translated : mActiveEnabledAttributes)
     {
-        const gl::VertexAttribute &curAttrib = vertexAttributes[i];
-        if (translated[i].active && curAttrib.enabled)
-        {
-            gl::Buffer *buffer = curAttrib.buffer.get();
+        gl::Buffer *buffer = translated->attribute->buffer.get();
 
-            if (buffer)
-            {
-                BufferD3D *bufferImpl = GetImplAs<BufferD3D>(buffer);
-                bufferImpl->promoteStaticUsage(count * ComputeVertexAttributeTypeSize(curAttrib));
-            }
+        if (buffer)
+        {
+            BufferD3D *bufferD3D = GetImplAs<BufferD3D>(buffer);
+            size_t typeSize = ComputeVertexAttributeTypeSize(*translated->attribute);
+            bufferD3D->promoteStaticUsage(count * typeSize);
         }
     }
 
@@ -401,6 +401,7 @@ gl::Error VertexDataManager::storeCurrentValue(const gl::VertexAttribCurrentValu
     if (cachedState->data != currentValue)
     {
         const gl::VertexAttribute &attrib = *translated->attribute;
+
         gl::Error error = cachedState->buffer->reserveVertexSpace(attrib, 1, 0);
         if (error.isError())
         {

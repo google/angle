@@ -88,6 +88,10 @@ class VertexDataManager : angle::NonCopyable
 
     StreamingVertexBufferInterface *mStreamingBuffer;
     std::vector<CurrentValueState> mCurrentValueCache;
+
+    // Cache variables
+    std::vector<TranslatedAttribute *> mActiveEnabledAttributes;
+    std::vector<size_t> mActiveDisabledAttributes;
 };
 
 }
