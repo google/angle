@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1e67ca0f_2584478f",
+        "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-22T16:53:57Z",
+      "side": 1,
+      "message": "It looks like the library handle is only used in the initialize function.   How about DisplayGLX opens and closes the handle in it\u0027s initialize and terminate methods and then passes the handle into FunctionsGLX::initialize?\n\nDisplayGLX::terminate should happen only after all windows are destroyed.",
+      "range": {
+        "startLine": 76,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 28
+      },
+      "revId": "aed5cb4d6e2a74e8d2c3ff2796439e2a6c072306",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
