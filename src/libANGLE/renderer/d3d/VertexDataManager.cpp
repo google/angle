@@ -130,22 +130,29 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
     const gl::VertexArray *vertexArray = state.getVertexArray();
     const std::vector<gl::VertexAttribute> &vertexAttributes = vertexArray->getVertexAttributes();
 
-    // Invalidate static buffers that don't contain matching attributes
-    for (int attributeIndex = 0; attributeIndex < gl::MAX_VERTEX_ATTRIBS; attributeIndex++)
+    for (size_t attribIndex = 0; attribIndex < vertexAttributes.size(); ++attribIndex)
     {
-        translated[attributeIndex].active = (state.getProgram()->getSemanticIndex(attributeIndex) != -1);
-        if (translated[attributeIndex].active && vertexAttributes[attributeIndex].enabled)
+        translated[attribIndex].active = (state.getProgram()->getSemanticIndex(attribIndex) != -1);
+        if (translated[attribIndex].active)
         {
-            invalidateMatchingStaticData(vertexAttributes[attributeIndex], state.getVertexAttribCurrentValue(attributeIndex));
+            // Record the attribute now
+            translated[attribIndex].attribute = &vertexAttributes[attribIndex];
+
+            if (vertexAttributes[attribIndex].enabled)
+            {
+                // Also invalidate static buffers that don't contain matching attributes
+                invalidateMatchingStaticData(vertexAttributes[attribIndex],
+                                             state.getVertexAttribCurrentValue(attribIndex));
+            }
         }
     }
 
     // Reserve the required space in the buffers
     for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        if (translated[i].active && vertexAttributes[i].enabled)
+        if (translated[i].active && translated[i].attribute->enabled)
         {
-            gl::Error error = reserveSpaceForAttrib(vertexAttributes[i], state.getVertexAttribCurrentValue(i), count, instances);
+            gl::Error error = reserveSpaceForAttrib(*translated[i].attribute, state.getVertexAttribCurrentValue(i), count, instances);
             if (error.isError())
             {
                 return error;
@@ -156,13 +163,15 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
     // Perform the vertex data translations
     for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        const gl::VertexAttribute &curAttrib = vertexAttributes[i];
         if (translated[i].active)
         {
-            if (curAttrib.enabled)
+            if (translated[i].attribute->enabled)
             {
-                gl::Error error = storeAttribute(curAttrib, state.getVertexAttribCurrentValue(i),
-                                                 &translated[i], start, count, instances);
+                gl::Error error = storeAttribute(state.getVertexAttribCurrentValue(i),
+                                                 &translated[i],
+                                                 start,
+                                                 count,
+                                                 instances);
 
                 if (error.isError())
                 {
@@ -177,8 +186,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
                     mCurrentValueCache[i].buffer = new StreamingVertexBufferInterface(mFactory, CONSTANT_VERTEX_BUFFER_SIZE);
                 }
 
-                gl::Error error = storeCurrentValue(curAttrib,
-                                                    state.getVertexAttribCurrentValue(i),
+                gl::Error error = storeCurrentValue(state.getVertexAttribCurrentValue(i),
                                                     &translated[i],
                                                     &mCurrentValueCache[i]);
                 if (error.isError())
@@ -271,13 +279,14 @@ gl::Error VertexDataManager::reserveSpaceForAttrib(const gl::VertexAttribute &at
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribute &attrib,
-                                            const gl::VertexAttribCurrentValueData &currentValue,
+gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribCurrentValueData &currentValue,
                                             TranslatedAttribute *translated,
                                             GLint start,
                                             GLsizei count,
                                             GLsizei instances)
 {
+    const gl::VertexAttribute &attrib = *translated->attribute;
+
     gl::Buffer *buffer = attrib.buffer.get();
     ASSERT(buffer || attrib.pointer);
 
@@ -350,7 +359,6 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribute &attrib,
     translated->serial = directStorage ? storage->getSerial() : vertexBuffer->getSerial();
     translated->divisor = attrib.divisor;
 
-    translated->attribute = &attrib;
     translated->currentValueType = currentValue.Type;
     translated->stride = outputElementSize;
     translated->offset = streamOffset;
@@ -358,13 +366,13 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribute &attrib,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error VertexDataManager::storeCurrentValue(const gl::VertexAttribute &attrib,
-                                               const gl::VertexAttribCurrentValueData &currentValue,
+gl::Error VertexDataManager::storeCurrentValue(const gl::VertexAttribCurrentValueData &currentValue,
                                                TranslatedAttribute *translated,
                                                CurrentValueState *cachedState)
 {
     if (cachedState->data != currentValue)
     {
+        const gl::VertexAttribute &attrib = *translated->attribute;
         gl::Error error = cachedState->buffer->reserveVertexSpace(attrib, 1, 0);
         if (error.isError())
         {
@@ -387,7 +395,6 @@ gl::Error VertexDataManager::storeCurrentValue(const gl::VertexAttribute &attrib
     translated->serial = cachedState->buffer->getSerial();
     translated->divisor = 0;
 
-    translated->attribute = &attrib;
     translated->currentValueType = currentValue.Type;
     translated->stride = 0;
     translated->offset = cachedState->offset;

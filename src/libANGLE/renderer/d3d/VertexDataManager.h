@@ -74,15 +74,13 @@ class VertexDataManager : angle::NonCopyable
     void invalidateMatchingStaticData(const gl::VertexAttribute &attrib,
                                       const gl::VertexAttribCurrentValueData &currentValue) const;
 
-    gl::Error storeAttribute(const gl::VertexAttribute &attrib,
-                             const gl::VertexAttribCurrentValueData &currentValue,
+    gl::Error storeAttribute(const gl::VertexAttribCurrentValueData &currentValue,
                              TranslatedAttribute *translated,
                              GLint start,
                              GLsizei count,
                              GLsizei instances);
 
-    gl::Error storeCurrentValue(const gl::VertexAttribute &attrib,
-                                const gl::VertexAttribCurrentValueData &currentValue,
+    gl::Error storeCurrentValue(const gl::VertexAttribCurrentValueData &currentValue,
                                 TranslatedAttribute *translated,
                                 CurrentValueState *cachedState);
 
