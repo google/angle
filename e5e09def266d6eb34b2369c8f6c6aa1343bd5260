@@ -16,6 +16,24 @@
       "revId": "e5e09def266d6eb34b2369c8f6c6aa1343bd5260",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e7adaa8_e9e2b3c0",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-22T17:13:34Z",
+      "side": 1,
+      "message": "Shifting with an int vs uint shouldn\u0027t change the result type.",
+      "parentUuid": "7eca863a_8ec77ba5",
+      "revId": "e5e09def266d6eb34b2369c8f6c6aa1343bd5260",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
