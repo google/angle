@@ -241,6 +241,9 @@ class ProgramD3D : public ProgramImpl
 
     Optional<bool> mCachedValidateSamplersResult;
 
+    std::vector<GLint> mVertexUBOCache;
+    std::vector<GLint> mFragmentUBOCache;
+
     static unsigned int issueSerial();
     static unsigned int mCurrentSerial;
 };

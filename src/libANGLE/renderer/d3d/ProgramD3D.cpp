@@ -1143,18 +1143,8 @@ gl::Error ProgramD3D::applyUniforms()
 
 gl::Error ProgramD3D::applyUniformBuffers(const gl::Data &data, GLuint uniformBlockBindings[])
 {
-    GLint vertexUniformBuffers[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
-    GLint fragmentUniformBuffers[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
-
-    for (unsigned int registerIndex = 0; registerIndex < gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS; ++registerIndex)
-    {
-        vertexUniformBuffers[registerIndex] = -1;
-    }
-
-    for (unsigned int registerIndex = 0; registerIndex < gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS; ++registerIndex)
-    {
-        fragmentUniformBuffers[registerIndex] = -1;
-    }
+    mVertexUBOCache.clear();
+    mFragmentUBOCache.clear();
 
     const unsigned int reservedBuffersInVS = mRenderer->getReservedVertexUniformBuffers();
     const unsigned int reservedBuffersInFS = mRenderer->getReservedFragmentUniformBuffers();
@@ -1175,21 +1165,33 @@ gl::Error ProgramD3D::applyUniformBuffers(const gl::Data &data, GLuint uniformBl
         if (uniformBlock->isReferencedByVertexShader())
         {
             unsigned int registerIndex = uniformBlock->vsRegisterIndex - reservedBuffersInVS;
-            ASSERT(vertexUniformBuffers[registerIndex] == -1);
             ASSERT(registerIndex < data.caps->maxVertexUniformBlocks);
-            vertexUniformBuffers[registerIndex] = blockBinding;
+
+            if (mFragmentUBOCache.size() <= registerIndex)
+            {
+                mVertexUBOCache.resize(registerIndex + 1, -1);
+            }
+
+            ASSERT(mVertexUBOCache[registerIndex] == -1);
+            mVertexUBOCache[registerIndex] = blockBinding;
         }
 
         if (uniformBlock->isReferencedByFragmentShader())
         {
             unsigned int registerIndex = uniformBlock->psRegisterIndex - reservedBuffersInFS;
-            ASSERT(fragmentUniformBuffers[registerIndex] == -1);
             ASSERT(registerIndex < data.caps->maxFragmentUniformBlocks);
-            fragmentUniformBuffers[registerIndex] = blockBinding;
+
+            if (mFragmentUBOCache.size() <= registerIndex)
+            {
+                mFragmentUBOCache.resize(registerIndex + 1, -1);
+            }
+
+            ASSERT(mFragmentUBOCache[registerIndex] == -1);
+            mFragmentUBOCache[registerIndex] = blockBinding;
         }
     }
 
-    return mRenderer->setUniformBuffers(data, vertexUniformBuffers, fragmentUniformBuffers);
+    return mRenderer->setUniformBuffers(data, mVertexUBOCache, mFragmentUBOCache);
 }
 
 bool ProgramD3D::assignUniformBlockRegister(gl::InfoLog &infoLog, gl::UniformBlock *uniformBlock, GLenum shader,

@@ -857,8 +857,8 @@ gl::Error Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *te
 }
 
 gl::Error Renderer9::setUniformBuffers(const gl::Data &/*data*/,
-                                       const GLint /*vertexUniformBuffers*/[],
-                                       const GLint /*fragmentUniformBuffers*/[])
+                                       const std::vector<GLint> &/*vertexUniformBuffers*/,
+                                       const std::vector<GLint> &/*fragmentUniformBuffers*/)
 {
     // No effect in ES2/D3D9
     return gl::Error(GL_NO_ERROR);

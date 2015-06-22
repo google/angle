@@ -981,10 +981,10 @@ gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *t
 }
 
 gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
-                                        const GLint vertexUniformBuffers[],
-                                        const GLint fragmentUniformBuffers[])
+                                        const std::vector<GLint> &vertexUniformBuffers,
+                                        const std::vector<GLint> &fragmentUniformBuffers)
 {
-    for (unsigned int uniformBufferIndex = 0; uniformBufferIndex < data.caps->maxVertexUniformBlocks; uniformBufferIndex++)
+    for (size_t uniformBufferIndex = 0; uniformBufferIndex < vertexUniformBuffers.size(); uniformBufferIndex++)
     {
         GLint binding = vertexUniformBuffers[uniformBufferIndex];
 
@@ -1040,7 +1040,7 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
         }
     }
 
-    for (unsigned int uniformBufferIndex = 0; uniformBufferIndex < data.caps->maxFragmentUniformBlocks; uniformBufferIndex++)
+    for (size_t uniformBufferIndex = 0; uniformBufferIndex < fragmentUniformBuffers.size(); uniformBufferIndex++)
     {
         GLint binding = fragmentUniformBuffers[uniformBufferIndex];
 

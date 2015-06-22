@@ -116,8 +116,8 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     virtual gl::Error setTexture(gl::SamplerType type, int index, gl::Texture *texture) = 0;
 
     virtual gl::Error setUniformBuffers(const gl::Data &data,
-                                        const GLint vertexUniformBuffers[],
-                                        const GLint fragmentUniformBuffers[]) = 0;
+                                        const std::vector<GLint> &vertexUniformBuffers,
+                                        const std::vector<GLint> &fragmentUniformBuffers) = 0;
 
     virtual gl::Error setRasterizerState(const gl::RasterizerState &rasterState) = 0;
     virtual gl::Error setBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
