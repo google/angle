@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1eb50aac_37dee24e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-22T20:20:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ef6069f_b121d830",
+      "range": {
+        "startLine": 7,
+        "startChar": 1,
+        "endLine": 7,
+        "endChar": 72
+      },
+      "revId": "cdfa1a8f7152b41703d0ddaf1ab310bb1931e72a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9e7adaa8_2ff8abba",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "7eca863a_f1a0602b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1536,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-22T20:20:46Z",
+      "side": 1,
+      "message": "Where were you thinking these () would go?  I don\u0027t see any other #if statements which include ( )s.",
+      "parentUuid": "9e7adaa8_2ff8abba",
+      "range": {
+        "startLine": 1536,
+        "startChar": 4,
+        "endLine": 1536,
+        "endChar": 66
+      },
+      "revId": "cdfa1a8f7152b41703d0ddaf1ab310bb1931e72a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ef6069f_511d14f0",
         "filename": "src/libANGLE/features.h",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2015-06-22T19:57:17Z",
       "side": 1,
       "message": "comment here on the justification for the change - ie, some non-conformant devs requested this feature (because they\u0027re too lazy to change their shaders ;)",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 53
+      },
+      "revId": "cdfa1a8f7152b41703d0ddaf1ab310bb1931e72a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "feb756b3_162722ef",
+        "filename": "src/libANGLE/features.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-22T20:20:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ef6069f_511d14f0",
       "range": {
         "startLine": 40,
         "startChar": 0,
