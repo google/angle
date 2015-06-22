@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1eb50aac_f71daa97",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-22T21:13:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ef6069f_8b790da9",
+      "range": {
+        "startLine": 623,
+        "startChar": 0,
+        "endLine": 625,
+        "endChar": 18
+      },
+      "revId": "be0f1dd04fc22e5d1662d1c9891f5c74068a8210",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9e7adaa8_06d7dc67",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-22T15:24:12Z",
       "side": 1,
       "message": "So the swap chain is always 32 bits?  Maybe link to an MSDN doc about valid swap chain formats if one exists.",
+      "range": {
+        "startLine": 390,
+        "startChar": 4,
+        "endLine": 391,
+        "endChar": 49
+      },
+      "revId": "be0f1dd04fc22e5d1662d1c9891f5c74068a8210",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ebe4e91_63057e82",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-22T21:13:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e7adaa8_06d7dc67",
       "range": {
         "startLine": 390,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "1eb50aac_5752763e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-22T21:13:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ef6069f_4b0d653e",
+      "range": {
+        "startLine": 428,
+        "startChar": 8,
+        "endLine": 428,
+        "endChar": 167
+      },
+      "revId": "be0f1dd04fc22e5d1662d1c9891f5c74068a8210",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5e2782f4_6a35b706",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.h",
         "patchSetId": 1
@@ -88,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "feb756b3_1635e206",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-22T21:13:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e2782f4_6a35b706",
+      "revId": "be0f1dd04fc22e5d1662d1c9891f5c74068a8210",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ef6069f_ab3a09d2",
         "filename": "util/EGLWindow.cpp",
         "patchSetId": 1
@@ -99,6 +189,30 @@
       "writtenOn": "2015-06-22T15:24:12Z",
       "side": 1,
       "message": "eglChooseConfig should already do this, what is different?",
+      "range": {
+        "startLine": 268,
+        "startChar": 0,
+        "endLine": 297,
+        "endChar": 21
+      },
+      "revId": "be0f1dd04fc22e5d1662d1c9891f5c74068a8210",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1eb50aac_f7628a09",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-22T21:13:45Z",
+      "side": 1,
+      "message": "The test code always called eglChooseConfig takes the first config returned.  Most of the values passed in the test cases were EGL_DONT_CARE in addition to the requested attribs.  I wanted a slightly more selective call that didn\u0027t have the weighting of \u0027best config\u0027 in it.  This simulates what an app might do by manually enumerating configs and looking for a more specific EGLConfig to use.\n\nelgChooseConfig kept returning EGLConfigs that were better than what I wanted to test test to use.",
+      "parentUuid": "7ef6069f_ab3a09d2",
       "range": {
         "startLine": 268,
         "startChar": 0,
