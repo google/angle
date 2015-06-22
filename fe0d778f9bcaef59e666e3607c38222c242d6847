@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ef6069f_74aabe8d",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:35:02Z",
+      "side": 1,
+      "message": "the name is a bit confusing - 1.30 is not a core version. can you clarify or rename?",
+      "range": {
+        "startLine": 22,
+        "startChar": 5,
+        "endLine": 22,
+        "endChar": 43
+      },
+      "revId": "fe0d778f9bcaef59e666e3607c38222c242d6847",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e7adaa8_4f42c70f",
+        "filename": "src/compiler/translator/VersionGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:35:02Z",
+      "side": 1,
+      "message": "this seems like it should also have \"\u0026\u0026 COMPATIBILITY) .. otherwise it\u0027ll override core profiles which already support invariant all",
+      "range": {
+        "startLine": 44,
+        "startChar": 3,
+        "endLine": 46,
+        "endChar": 40
+      },
+      "revId": "fe0d778f9bcaef59e666e3607c38222c242d6847",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ef6069f_94900a59",
+        "filename": "src/compiler/translator/VersionGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:35:02Z",
+      "side": 1,
+      "message": "using a static const int in a header seems a bit odd, though possibly safe. might be worth checking in clang.",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 40
+      },
+      "revId": "fe0d778f9bcaef59e666e3607c38222c242d6847",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
