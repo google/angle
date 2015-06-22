@@ -1,8 +1,8 @@
-diff --git a/angle_config.h b/angle_config.h
+diff --git a/src/tests/third_party/gpu_test_expectations/angle_config.h b/src/tests/third_party/gpu_test_expectations/angle_config.h
 new file mode 100644
-index 0000000..0d43371
+index 0000000..7643346
 --- /dev/null
-+++ b/angle_config.h
++++ b/src/tests/third_party/gpu_test_expectations/angle_config.h
 @@ -0,0 +1,39 @@
 +//
 +// Copyright 2015 The ANGLE Project Authors. All rights reserved.
@@ -25,7 +25,7 @@ index 0000000..0d43371
 +
 +#define DCHECK_EQ(A,B) ASSERT((A) == (B))
 +#define DCHECK_NE(A,B) ASSERT((A) != (B))
-+#define DCHECK ASSERT
++#define DCHECK(X) ASSERT(X)
 +#define LOG(X) std::cerr
 +#define StringPrintf FormatString
 +
@@ -43,23 +43,23 @@ index 0000000..0d43371
 +#define OS_WIN
 +
 +#endif
-diff --git a/gpu_info.cc b/gpu_info.cc
+diff --git a/src/tests/third_party/gpu_test_expectations/gpu_info.cc b/src/tests/third_party/gpu_test_expectations/gpu_info.cc
 index 85d26fb..c8e2988 100644
---- a/gpu_info.cc
-+++ b/gpu_info.cc
+--- a/src/tests/third_party/gpu_test_expectations/gpu_info.cc
++++ b/src/tests/third_party/gpu_test_expectations/gpu_info.cc
 @@ -2,7 +2,7 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
-
+ 
 -#include "gpu/config/gpu_info.h"
 +#include "gpu_info.h"
-
+ 
  namespace {
-
+ 
 @@ -17,31 +17,6 @@ void EnumerateGPUDevice(const gpu::GPUInfo::GPUDevice& device,
    enumerator->EndGPUDevice();
  }
-
+ 
 -void EnumerateVideoDecodeAcceleratorSupportedProfile(
 -    const gpu::VideoDecodeAcceleratorSupportedProfile& profile,
 -    gpu::GPUInfo::Enumerator* enumerator) {
@@ -86,7 +86,7 @@ index 85d26fb..c8e2988 100644
 -}
 -
  }  // namespace
-
+ 
  namespace gpu {
 @@ -66,23 +41,16 @@ GPUInfo::GPUInfo()
        sandboxed(false),
@@ -99,9 +99,9 @@ index 85d26fb..c8e2988 100644
        context_info_state(kCollectInfoNone) {
 -#endif
  }
-
+ 
  GPUInfo::~GPUInfo() { }
-
+ 
  void GPUInfo::EnumerateFields(Enumerator* enumerator) const {
    struct GPUInfoKnownFields {
 -    base::TimeDelta initialization_time;
@@ -125,11 +125,11 @@ index 85d26fb..c8e2988 100644
 -    VideoEncodeAcceleratorSupportedProfiles
 -        video_encode_accelerator_supported_profiles;
    };
-
+ 
    // If this assert fails then most likely something below needs to be updated.
 @@ -134,15 +94,9 @@ void GPUInfo::EnumerateFields(Enumerator* enumerator) const {
      EnumerateGPUDevice(secondary_gpu, enumerator);
-
+ 
    enumerator->BeginAuxAttributes();
 -  enumerator->AddTimeDeltaInSecondsF("initializationTime",
 -                                     initialization_time);
@@ -157,15 +157,15 @@ index 85d26fb..c8e2988 100644
 -    EnumerateVideoEncodeAcceleratorSupportedProfile(profile, enumerator);
    enumerator->EndAuxAttributes();
  }
-
-diff --git a/gpu_info.h b/gpu_info.h
+ 
+diff --git a/src/tests/third_party/gpu_test_expectations/gpu_info.h b/src/tests/third_party/gpu_test_expectations/gpu_info.h
 index f377698..35e791e 100644
---- a/gpu_info.h
-+++ b/gpu_info.h
+--- a/src/tests/third_party/gpu_test_expectations/gpu_info.h
++++ b/src/tests/third_party/gpu_test_expectations/gpu_info.h
 @@ -11,13 +11,7 @@
  #include <string>
  #include <vector>
-
+ 
 -#include "base/basictypes.h"
 -#include "base/time/time.h"
 -#include "base/version.h"
@@ -174,13 +174,13 @@ index f377698..35e791e 100644
 -#include "gpu/gpu_export.h"
 -#include "ui/gfx/geometry/size.h"
 +#include "angle_config.h"
-
+ 
  namespace gpu {
-
+ 
 @@ -54,25 +48,6 @@ enum VideoCodecProfile {
    VIDEO_CODEC_PROFILE_MAX = VP9PROFILE_ANY,
  };
-
+ 
 -// Specification of a decoding profile supported by a hardware decoder.
 -struct GPU_EXPORT VideoDecodeAcceleratorSupportedProfile {
 -  VideoCodecProfile profile;
@@ -206,25 +206,25 @@ index f377698..35e791e 100644
 @@ -104,10 +79,6 @@ struct GPU_EXPORT GPUInfo {
      return !can_lose_context && !software_rendering;
    }
-
+ 
 -  // The amount of time taken to get from the process starting to the message
 -  // loop being pumped.
 -  base::TimeDelta initialization_time;
 -
    // Computer has NVIDIA Optimus
    bool optimus;
-
+ 
 @@ -117,10 +88,6 @@ struct GPU_EXPORT GPUInfo {
    // Lenovo dCute is installed. http://crbug.com/181665.
    bool lenovo_dcute;
-
+ 
 -  // Version of DisplayLink driver installed. Zero if not installed.
 -  // http://crbug.com/177611.
 -  Version display_link_version;
 -
    // Primary GPU, for exmaple, the discrete GPU in a dual GPU machine.
    GPUDevice gpu;
-
+ 
 @@ -210,17 +177,7 @@ struct GPU_EXPORT GPUInfo {
    // if the collection fails or not.
    CollectInfoResult basic_info_state;
@@ -235,34 +235,34 @@ index f377698..35e791e 100644
 -  // The information returned by the DirectX Diagnostics Tool.
 -  DxDiagNode dx_diagnostics;
 -#endif
-
+ 
 -  VideoDecodeAcceleratorSupportedProfiles
 -      video_decode_accelerator_supported_profiles;
 -  VideoEncodeAcceleratorSupportedProfiles
 -      video_encode_accelerator_supported_profiles;
    // Note: when adding new members, please remember to update EnumerateFields
    // in gpu_info.cc.
-
+ 
 @@ -238,8 +195,6 @@ struct GPU_EXPORT GPUInfo {
      virtual void AddInt(const char* name, int value) = 0;
      virtual void AddString(const char* name, const std::string& value) = 0;
      virtual void AddBool(const char* name, bool value) = 0;
 -    virtual void AddTimeDeltaInSecondsF(const char* name,
 -                                        const base::TimeDelta& value) = 0;
-
+ 
      // Markers indicating that a GPUDevice is being described.
      virtual void BeginGPUDevice() = 0;
-diff --git a/gpu_test_config.cc b/gpu_test_config.cc
-index c062c4d..d2c6b5a 100644
---- a/gpu_test_config.cc
-+++ b/gpu_test_config.cc
+diff --git a/src/tests/third_party/gpu_test_expectations/gpu_test_config.cc b/src/tests/third_party/gpu_test_expectations/gpu_test_config.cc
+index c062c4d..d9b0da2 100644
+--- a/src/tests/third_party/gpu_test_expectations/gpu_test_config.cc
++++ b/src/tests/third_party/gpu_test_expectations/gpu_test_config.cc
 @@ -2,24 +2,73 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
-
+ 
 -#include "gpu/config/gpu_test_config.h"
 +#include "gpu_test_config.h"
-
+ 
 -#include "base/logging.h"
 -#include "base/sys_info.h"
 -#include "gpu/config/gpu_info.h"
@@ -270,7 +270,7 @@ index c062c4d..d2c6b5a 100644
 -#include "gpu/config/gpu_test_expectations_parser.h"
 +#include "gpu_info.h"
 +#include "gpu_test_expectations_parser.h"
-
+ 
 -#if defined(OS_MACOSX)
 -#include "base/mac/mac_util.h"
 -#elif defined(OS_WIN)
@@ -296,11 +296,11 @@ index c062c4d..d2c6b5a 100644
 +  *minor_version = version_info.dwMinorVersion;
 +  *bugfix_version = version_info.dwBuildNumber;
 +}
-
+ 
  namespace gpu {
-
+ 
  namespace {
-
+ 
 +void DeviceIDToVendorAndDevice(const std::string& id,
 +                               uint32* vendor_id,
 +                               uint32* device_id) {
@@ -320,10 +320,10 @@ index c062c4d..d2c6b5a 100644
 +  *device_id = 0;
 +
 +  // Taken from http://developer.nvidia.com/object/device_ids.html
-+  DISPLAY_DEVICE dd;
-+  dd.cb = sizeof(DISPLAY_DEVICE);
++  DISPLAY_DEVICEA dd;
++  dd.cb = sizeof(DISPLAY_DEVICEA);
 +  std::string id;
-+  for (int i = 0; EnumDisplayDevices(NULL, i, &dd, 0); ++i) {
++  for (int i = 0; EnumDisplayDevicesA(NULL, i, &dd, 0); ++i) {
 +    if (dd.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE) {
 +      id = dd.DeviceID;
 +      break;
@@ -344,7 +344,7 @@ index c062c4d..d2c6b5a 100644
 @@ -282,21 +331,5 @@ bool GPUTestBotConfig::CurrentConfigMatches(
    return false;
  }
-
+ 
 -// static
 -bool GPUTestBotConfig::GpuBlacklistedOnBot() {
 -#if defined(OS_MACOSX)
@@ -362,22 +362,22 @@ index c062c4d..d2c6b5a 100644
 -}
 -
  }  // namespace gpu
-
-diff --git a/gpu_test_config.h b/gpu_test_config.h
+ 
+diff --git a/src/tests/third_party/gpu_test_expectations/gpu_test_config.h b/src/tests/third_party/gpu_test_expectations/gpu_test_config.h
 index 8b184d3..e628886 100644
---- a/gpu_test_config.h
-+++ b/gpu_test_config.h
+--- a/src/tests/third_party/gpu_test_expectations/gpu_test_config.h
++++ b/src/tests/third_party/gpu_test_expectations/gpu_test_config.h
 @@ -8,9 +8,7 @@
  #include <string>
  #include <vector>
-
+ 
 -#include "base/basictypes.h"
 -#include "base/compiler_specific.h"
 -#include "gpu/gpu_export.h"
 +#include "angle_config.h"
-
+ 
  namespace gpu {
-
+ 
 @@ -118,9 +116,6 @@ class GPU_EXPORT GPUTestBotConfig : public GPUTestConfig {
    // Check if this bot's config matches |config_data| or any of the |configs|.
    static bool CurrentConfigMatches(const std::string& config_data);
@@ -386,19 +386,19 @@ index 8b184d3..e628886 100644
 -  // Check if the bot has blacklisted all GPU features.
 -  static bool GpuBlacklistedOnBot();
  };
-
+ 
  }  // namespace gpu
-diff --git a/gpu_test_expectations_parser.cc b/gpu_test_expectations_parser.cc
-index 8b3584a..092cf9b 100644
---- a/gpu_test_expectations_parser.cc
-+++ b/gpu_test_expectations_parser.cc
+diff --git a/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.cc b/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.cc
+index 8b3584a..d6ba5c3 100644
+--- a/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.cc
++++ b/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.cc
 @@ -2,14 +2,35 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
-
+ 
 -#include "gpu/config/gpu_test_expectations_parser.h"
 +#include "gpu_test_expectations_parser.h"
-
+ 
 -#include "base/files/file_util.h"
 -#include "base/logging.h"
 -#include "base/strings/string_number_conversions.h"
@@ -432,43 +432,76 @@ index 8b3584a..092cf9b 100644
 +bool LowerCaseEqualsASCII(const std::string& a, const char* b) {
 +  return DoLowerCaseEqualsASCII(a.begin(), a.end(), b);
 +}
-
+ 
  namespace gpu {
-
+ 
+@@ -161,10 +182,10 @@ bool NamesMatching(const std::string& ref, const std::string& test_name) {
+ 
+ GPUTestExpectationsParser::GPUTestExpectationsParser() {
+   // Some sanity check.
+-  DCHECK_EQ(static_cast<unsigned int>(kNumberOfExactMatchTokens),
+-            sizeof(kTokenData) / sizeof(kTokenData[0]));
+-  DCHECK_EQ(static_cast<unsigned int>(kNumberOfErrors),
+-            sizeof(kErrorMessage) / sizeof(kErrorMessage[0]));
++  static_assert(static_cast<unsigned int>(kNumberOfExactMatchTokens) ==
++                sizeof(kTokenData) / sizeof(kTokenData[0]), "sanity check");
++  static_assert(static_cast<unsigned int>(kNumberOfErrors) ==
++                sizeof(kErrorMessage) / sizeof(kErrorMessage[0]), "sanity check");
+ }
+ 
+ GPUTestExpectationsParser::~GPUTestExpectationsParser() {
 @@ -189,8 +210,8 @@ bool GPUTestExpectationsParser::LoadTestExpectations(const std::string& data) {
    return rt;
  }
-
+ 
 -bool GPUTestExpectationsParser::LoadTestExpectations(
 -    const base::FilePath& path) {
 +bool GPUTestExpectationsParser::LoadTestExpectationsFromFile(
 +    const std::string& path) {
    entries_.clear();
    error_messages_.clear();
-
-diff --git a/gpu_test_expectations_parser.h b/gpu_test_expectations_parser.h
+ 
+@@ -370,7 +391,7 @@ bool GPUTestExpectationsParser::ParseLine(
+           stage++;
+         break;
+       default:
+-        DCHECK(false);
++        UNREACHABLE();
+         break;
+     }
+   }
+@@ -446,7 +467,7 @@ bool GPUTestExpectationsParser::UpdateTestConfig(
+           config->build_type() | kTokenData[token].flag);
+       break;
+     default:
+-      DCHECK(false);
++      UNREACHABLE();
+       break;
+   }
+   return true;
+diff --git a/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.h b/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.h
 index a69f7e9..a112700 100644
---- a/gpu_test_expectations_parser.h
-+++ b/gpu_test_expectations_parser.h
+--- a/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.h
++++ b/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.h
 @@ -8,10 +8,8 @@
  #include <string>
  #include <vector>
-
+ 
 -#include "base/basictypes.h"
 -#include "base/files/file_path.h"
 -#include "gpu/config/gpu_test_config.h"
 -#include "gpu/gpu_export.h"
 +#include "angle_config.h"
 +#include "gpu_test_config.h"
-
+ 
  namespace gpu {
-
+ 
 @@ -32,7 +30,7 @@ class GPU_EXPORT GPUTestExpectationsParser {
    // save all the entries. Otherwise, generate error messages.
    // Return true if parsing succeeds.
    bool LoadTestExpectations(const std::string& data);
 -  bool LoadTestExpectations(const base::FilePath& path);
 +  bool LoadTestExpectationsFromFile(const std::string& path);
-
+ 
    // Query error messages from the last LoadTestExpectations() call.
    const std::vector<std::string>& GetErrorMessages() const;
