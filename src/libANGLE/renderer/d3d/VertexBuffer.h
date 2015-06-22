@@ -38,7 +38,7 @@ class VertexBuffer : angle::NonCopyable
     virtual gl::Error initialize(unsigned int size, bool dynamicUsage) = 0;
 
     virtual gl::Error storeVertexAttributes(const gl::VertexAttribute &attrib,
-                                            const gl::VertexAttribCurrentValueData &currentValue,
+                                            GLenum currentValueType,
                                             GLint start,
                                             GLsizei count,
                                             GLsizei instances,
@@ -77,7 +77,7 @@ class VertexBufferInterface : angle::NonCopyable
     unsigned int getSerial() const;
 
     virtual gl::Error storeVertexAttributes(const gl::VertexAttribute &attrib,
-                                            const gl::VertexAttribCurrentValueData &currentValue,
+                                            GLenum currentValueType,
                                             GLint start,
                                             GLsizei count,
                                             GLsizei instances,
@@ -85,7 +85,7 @@ class VertexBufferInterface : angle::NonCopyable
                                             const uint8_t *sourceData);
 
     bool directStoragePossible(const gl::VertexAttribute &attrib,
-                               const gl::VertexAttribCurrentValueData &currentValue) const;
+                               GLenum currentValueType) const;
 
     VertexBuffer* getVertexBuffer() const;
 
@@ -126,7 +126,7 @@ class StaticVertexBufferInterface : public VertexBufferInterface
     ~StaticVertexBufferInterface();
 
     gl::Error storeVertexAttributes(const gl::VertexAttribute &attrib,
-                                    const gl::VertexAttribCurrentValueData &currentValue,
+                                    GLenum currentValueType,
                                     GLint start,
                                     GLsizei count,
                                     GLsizei instances,

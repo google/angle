@@ -137,6 +137,8 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
         {
             // Record the attribute now
             translated[attribIndex].attribute = &vertexAttributes[attribIndex];
+            translated[attribIndex].currentValueType = state.getVertexAttribCurrentValue(attribIndex).Type;
+            translated[attribIndex].divisor = vertexAttributes[attribIndex].divisor;
 
             if (vertexAttributes[attribIndex].enabled)
             {
@@ -152,7 +154,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
     {
         if (translated[i].active && translated[i].attribute->enabled)
         {
-            gl::Error error = reserveSpaceForAttrib(*translated[i].attribute, state.getVertexAttribCurrentValue(i), count, instances);
+            gl::Error error = reserveSpaceForAttrib(translated[i], count, instances);
             if (error.isError())
             {
                 return error;
@@ -167,11 +169,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
         {
             if (translated[i].attribute->enabled)
             {
-                gl::Error error = storeAttribute(state.getVertexAttribCurrentValue(i),
-                                                 &translated[i],
-                                                 start,
-                                                 count,
-                                                 instances);
+                gl::Error error = storeAttribute(&translated[i], start, count, instances);
 
                 if (error.isError())
                 {
@@ -232,24 +230,24 @@ void VertexDataManager::invalidateMatchingStaticData(const gl::VertexAttribute &
         if (staticBuffer &&
             staticBuffer->getBufferSize() > 0 &&
             !staticBuffer->lookupAttribute(attrib, NULL) &&
-            !staticBuffer->directStoragePossible(attrib, currentValue))
+            !staticBuffer->directStoragePossible(attrib, currentValue.Type))
         {
             bufferImpl->invalidateStaticData();
         }
     }
 }
 
-gl::Error VertexDataManager::reserveSpaceForAttrib(const gl::VertexAttribute &attrib,
-                                                   const gl::VertexAttribCurrentValueData &currentValue,
+gl::Error VertexDataManager::reserveSpaceForAttrib(const TranslatedAttribute &translatedAttrib,
                                                    GLsizei count,
                                                    GLsizei instances) const
 {
+    const gl::VertexAttribute &attrib = *translatedAttrib.attribute;
     gl::Buffer *buffer = attrib.buffer.get();
     BufferD3D *bufferImpl = buffer ? GetImplAs<BufferD3D>(buffer) : NULL;
     StaticVertexBufferInterface *staticBuffer = bufferImpl ? bufferImpl->getStaticVertexBuffer() : NULL;
     VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
-    if (!vertexBuffer->directStoragePossible(attrib, currentValue))
+    if (!vertexBuffer->directStoragePossible(attrib, translatedAttrib.currentValueType))
     {
         if (staticBuffer)
         {
@@ -279,8 +277,7 @@ gl::Error VertexDataManager::reserveSpaceForAttrib(const gl::VertexAttribute &at
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribCurrentValueData &currentValue,
-                                            TranslatedAttribute *translated,
+gl::Error VertexDataManager::storeAttribute(TranslatedAttribute *translated,
                                             GLint start,
                                             GLsizei count,
                                             GLsizei instances)
@@ -294,7 +291,7 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribCurrentValueDa
     BufferD3D *storage = buffer ? GetImplAs<BufferD3D>(buffer) : NULL;
     StaticVertexBufferInterface *staticBuffer = storage ? storage->getStaticVertexBuffer() : NULL;
     VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
-    bool directStorage = vertexBuffer->directStoragePossible(attrib, currentValue);
+    bool directStorage = vertexBuffer->directStoragePossible(attrib, translated->currentValueType);
 
     // Instanced vertices do not apply the 'start' offset
     GLint firstVertexIndex = (instances > 0 && attrib.divisor > 0 ? 0 : start);
@@ -305,9 +302,6 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribCurrentValueDa
     {
         translated->storage = storage;
         translated->serial = storage->getSerial();
-        translated->divisor = attrib.divisor;
-
-        translated->currentValueType = currentValue.Type;
         translated->stride = ComputeVertexAttributeStride(attrib);
         translated->offset = static_cast<unsigned int>(attrib.offset + translated->stride * firstVertexIndex);
 
@@ -349,7 +343,7 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribCurrentValueDa
             int startIndex = attrib.offset / ComputeVertexAttributeStride(attrib);
 
             error = staticBuffer->storeVertexAttributes(attrib,
-                                                        currentValue,
+                                                        translated->currentValueType,
                                                         -startIndex,
                                                         totalCount,
                                                         0,
@@ -380,7 +374,7 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribCurrentValueDa
         }
 
         error = mStreamingBuffer->storeVertexAttributes(attrib,
-                                                        currentValue,
+                                                        translated->currentValueType,
                                                         firstVertexIndex,
                                                         totalCount,
                                                         instances,
@@ -394,9 +388,6 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribCurrentValueDa
 
     translated->storage = nullptr;
     translated->serial = vertexBuffer->getSerial();
-    translated->divisor = attrib.divisor;
-
-    translated->currentValueType = currentValue.Type;
     translated->stride = outputElementSize;
     translated->offset = streamOffset;
 
@@ -418,7 +409,7 @@ gl::Error VertexDataManager::storeCurrentValue(const gl::VertexAttribCurrentValu
 
         const uint8_t *sourceData = reinterpret_cast<const uint8_t*>(currentValue.FloatValues);
         unsigned int streamOffset;
-        error = cachedState->buffer->storeVertexAttributes(attrib, currentValue, 0, 1, 0, &streamOffset, sourceData);
+        error = cachedState->buffer->storeVertexAttributes(attrib, currentValue.Type, 0, 1, 0, &streamOffset, sourceData);
         if (error.isError())
         {
             return error;
@@ -433,7 +424,6 @@ gl::Error VertexDataManager::storeCurrentValue(const gl::VertexAttribCurrentValu
     translated->serial = cachedState->buffer->getSerial();
     translated->divisor = 0;
 
-    translated->currentValueType = currentValue.Type;
     translated->stride = 0;
     translated->offset = cachedState->offset;
 

@@ -104,7 +104,7 @@ void VertexBuffer11::hintUnmapResource()
 }
 
 gl::Error VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib,
-                                                const gl::VertexAttribCurrentValueData &currentValue,
+                                                GLenum currentValueType,
                                                 GLint start,
                                                 GLsizei count,
                                                 GLsizei instances,
@@ -134,7 +134,7 @@ gl::Error VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attri
         input += inputStride * start;
     }
 
-    gl::VertexFormat vertexFormat(attrib, currentValue.Type);
+    gl::VertexFormat vertexFormat(attrib, currentValueType);
     const D3D_FEATURE_LEVEL featureLevel = mRenderer->getRenderer11DeviceCaps().featureLevel;
     const d3d11::VertexFormat &vertexFormatInfo = d3d11::GetVertexFormatInfo(vertexFormat, featureLevel);
     ASSERT(vertexFormatInfo.copyFunction != NULL);

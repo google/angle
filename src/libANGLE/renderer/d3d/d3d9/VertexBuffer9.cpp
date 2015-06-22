@@ -57,7 +57,7 @@ gl::Error VertexBuffer9::initialize(unsigned int size, bool dynamicUsage)
 }
 
 gl::Error VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib,
-                                               const gl::VertexAttribCurrentValueData &currentValue,
+                                               GLenum currentValueType,
                                                GLint start,
                                                GLsizei count,
                                                GLsizei instances,
@@ -96,7 +96,7 @@ gl::Error VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib
         input += inputStride * start;
     }
 
-    gl::VertexFormat vertexFormat(attrib, currentValue.Type);
+    gl::VertexFormat vertexFormat(attrib, currentValueType);
     const d3d9::VertexFormat &d3dVertexInfo = d3d9::GetVertexFormatInfo(mRenderer->getCapsDeclTypes(), vertexFormat);
     bool needsConversion = (d3dVertexInfo.conversionType & VERTEX_CONVERT_CPU) > 0;
 

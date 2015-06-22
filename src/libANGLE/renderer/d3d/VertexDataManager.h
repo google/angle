@@ -66,16 +66,14 @@ class VertexDataManager : angle::NonCopyable
         size_t offset;
     };
 
-    gl::Error reserveSpaceForAttrib(const gl::VertexAttribute &attrib,
-                                    const gl::VertexAttribCurrentValueData &currentValue,
+    gl::Error reserveSpaceForAttrib(const TranslatedAttribute &translatedAttrib,
                                     GLsizei count,
                                     GLsizei instances) const;
 
     void invalidateMatchingStaticData(const gl::VertexAttribute &attrib,
                                       const gl::VertexAttribCurrentValueData &currentValue) const;
 
-    gl::Error storeAttribute(const gl::VertexAttribCurrentValueData &currentValue,
-                             TranslatedAttribute *translated,
+    gl::Error storeAttribute(TranslatedAttribute *translated,
                              GLint start,
                              GLsizei count,
                              GLsizei instances);
