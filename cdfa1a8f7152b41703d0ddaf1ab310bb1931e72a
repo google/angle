@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "7ef6069f_14325a30",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1536,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T20:23:53Z",
+      "side": 1,
+      "message": "it\u0027s a pretty minor quibble, I was thinking\n\n #if (ANGLE_PROGRAM_LINK_VALIDATE_UNIFORM_PRECISION \u003d\u003d ANGLE_ENABLED)\n\nBut you\u0027re right, we don\u0027t use that style. I don\u0027t think we have an official rule.",
+      "parentUuid": "7eca863a_f1a0602b",
+      "range": {
+        "startLine": 1536,
+        "startChar": 4,
+        "endLine": 1536,
+        "endChar": 66
+      },
+      "revId": "cdfa1a8f7152b41703d0ddaf1ab310bb1931e72a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ef6069f_511d14f0",
         "filename": "src/libANGLE/features.h",
         "patchSetId": 1
