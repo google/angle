@@ -444,14 +444,7 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shade
     // Set all the remaining textures to NULL
     size_t samplerCount = (shaderType == gl::SAMPLER_PIXEL) ? data.caps->maxTextureImageUnits
                                                             : data.caps->maxVertexTextureImageUnits;
-    for (size_t samplerIndex = samplerRange; samplerIndex < samplerCount; samplerIndex++)
-    {
-        gl::Error error = setTexture(shaderType, samplerIndex, NULL);
-        if (error.isError())
-        {
-            return error;
-        }
-    }
+    clearTextures(shaderType, samplerRange, samplerCount);
 
     return gl::Error(GL_NO_ERROR);
 }

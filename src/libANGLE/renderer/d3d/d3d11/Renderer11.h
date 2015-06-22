@@ -266,6 +266,7 @@ class Renderer11 : public RendererD3D
 
   protected:
     void createAnnotator() override;
+    gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
 
   private:
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const override;
@@ -320,8 +321,41 @@ class Renderer11 : public RendererD3D
         uintptr_t resource;
         D3D11_SHADER_RESOURCE_VIEW_DESC desc;
     };
-    std::vector<SRVRecord> mCurVertexSRVs;
-    std::vector<SRVRecord> mCurPixelSRVs;
+
+    // A cache of current SRVs that also tracks the highest 'used' (non-NULL) SRV
+    // We might want to investigate a more robust approach that is also fast when there's
+    // a large gap between used SRVs (e.g. if SRV 0 and 7 are non-NULL, this approach will
+    // waste time on SRVs 1-6.)
+    class SRVCache : angle::NonCopyable
+    {
+      public:
+        SRVCache()
+            : mHighestUsedSRV(0)
+        {
+        }
+
+        void initialize(size_t size)
+        {
+            mCurrentSRVs.resize(size);
+        }
+
+        size_t size() const { return mCurrentSRVs.size(); }
+        size_t highestUsed() const { return mHighestUsedSRV; }
+
+        const SRVRecord &operator[](size_t index) const { return mCurrentSRVs[index]; }
+        void clear();
+        void update(size_t resourceIndex, ID3D11ShaderResourceView *srv);
+
+      private:
+        std::vector<SRVRecord> mCurrentSRVs;
+        size_t mHighestUsedSRV;
+    };
+
+    SRVCache mCurVertexSRVs;
+    SRVCache mCurPixelSRVs;
+
+    // A block of NULL pointers, cached so we don't re-allocate every draw call
+    std::vector<ID3D11ShaderResourceView*> mNullSRVs;
 
     // Currently applied blend state
     bool mForceSetBlendState;
