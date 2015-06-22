@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "9e7adaa8_49596709",
+        "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T17:21:55Z",
+      "side": 1,
+      "message": "nit: formatting (break before {)",
+      "range": {
+        "startLine": 112,
+        "startChar": 21,
+        "endLine": 112,
+        "endChar": 22
+      },
+      "revId": "aed5cb4d6e2a74e8d2c3ff2796439e2a6c072306",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1e67ca0f_2584478f",
         "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.h",
         "patchSetId": 1
