@@ -22,6 +22,30 @@
       "revId": "0cac92263d53d76f1e19116b247b5d162c163754",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e2782f4_8a1d8b99",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3717,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-22T14:52:55Z",
+      "side": 1,
+      "message": "This is not desirable, will fix. I think we do use this pattern elsewhere, which would be a problem when/if we support multithreading.",
+      "parentUuid": "5965dcc2_0e0e5b3c",
+      "range": {
+        "startLine": 3717,
+        "startChar": 8,
+        "endLine": 3717,
+        "endChar": 13
+      },
+      "revId": "0cac92263d53d76f1e19116b247b5d162c163754",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
