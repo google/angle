@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1e67ca0f_25e1a793",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-22T16:45:05Z",
+      "side": 1,
+      "message": "can be const",
+      "revId": "8739fefb9b50d7270ac6522e693105203eb9789b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e7adaa8_c957b72b",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-22T16:45:05Z",
+      "side": 1,
+      "message": "This should probably return an error if setTexture does.  Renderer11\u0027s perf wont be affected because it will just return NO_ERROR but Renderer9 should check.",
+      "range": {
+        "startLine": 194,
+        "startChar": 12,
+        "endLine": 194,
+        "endChar": 16
+      },
+      "revId": "8739fefb9b50d7270ac6522e693105203eb9789b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
