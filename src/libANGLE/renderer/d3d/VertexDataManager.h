@@ -56,6 +56,16 @@ class VertexDataManager : angle::NonCopyable
                                 TranslatedAttribute *outAttribs, GLsizei instances);
 
   private:
+    struct CurrentValueState
+    {
+        CurrentValueState();
+        ~CurrentValueState();
+
+        StreamingVertexBufferInterface *buffer;
+        gl::VertexAttribCurrentValueData data;
+        size_t offset;
+    };
+
     gl::Error reserveSpaceForAttrib(const gl::VertexAttribute &attrib,
                                     const gl::VertexAttribCurrentValueData &currentValue,
                                     GLsizei count,
@@ -74,20 +84,14 @@ class VertexDataManager : angle::NonCopyable
     gl::Error storeCurrentValue(const gl::VertexAttribute &attrib,
                                 const gl::VertexAttribCurrentValueData &currentValue,
                                 TranslatedAttribute *translated,
-                                gl::VertexAttribCurrentValueData *cachedValue,
-                                size_t *cachedOffset,
-                                StreamingVertexBufferInterface *buffer);
+                                CurrentValueState *cachedState);
 
     void hintUnmapAllResources(const std::vector<gl::VertexAttribute> &vertexAttributes);
 
     BufferFactoryD3D *const mFactory;
 
     StreamingVertexBufferInterface *mStreamingBuffer;
-
-    gl::VertexAttribCurrentValueData mCurrentValue[gl::MAX_VERTEX_ATTRIBS];
-
-    StreamingVertexBufferInterface *mCurrentValueBuffer[gl::MAX_VERTEX_ATTRIBS];
-    std::size_t mCurrentValueOffsets[gl::MAX_VERTEX_ATTRIBS];
+    std::vector<CurrentValueState> mCurrentValueCache;
 };
 
 }

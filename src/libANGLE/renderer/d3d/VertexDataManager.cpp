@@ -55,20 +55,28 @@ static int StreamingBufferElementCount(const gl::VertexAttribute &attrib, int ve
     return vertexDrawCount;
 }
 
-VertexDataManager::VertexDataManager(BufferFactoryD3D *factory)
-    : mFactory(factory)
+VertexDataManager::CurrentValueState::CurrentValueState()
+    : buffer(nullptr),
+      offset(0)
 {
-    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
-    {
-        mCurrentValue[i].FloatValues[0] = std::numeric_limits<float>::quiet_NaN();
-        mCurrentValue[i].FloatValues[1] = std::numeric_limits<float>::quiet_NaN();
-        mCurrentValue[i].FloatValues[2] = std::numeric_limits<float>::quiet_NaN();
-        mCurrentValue[i].FloatValues[3] = std::numeric_limits<float>::quiet_NaN();
-        mCurrentValue[i].Type = GL_FLOAT;
-        mCurrentValueBuffer[i] = NULL;
-        mCurrentValueOffsets[i] = 0;
-    }
+    data.FloatValues[0] = std::numeric_limits<float>::quiet_NaN();
+    data.FloatValues[1] = std::numeric_limits<float>::quiet_NaN();
+    data.FloatValues[2] = std::numeric_limits<float>::quiet_NaN();
+    data.FloatValues[3] = std::numeric_limits<float>::quiet_NaN();
+    data.Type = GL_FLOAT;
+}
 
+VertexDataManager::CurrentValueState::~CurrentValueState()
+{
+    SafeDelete(buffer);
+}
+
+VertexDataManager::VertexDataManager(BufferFactoryD3D *factory)
+    : mFactory(factory),
+      mStreamingBuffer(nullptr),
+      // TODO(jmadill): use context caps
+      mCurrentValueCache(gl::MAX_VERTEX_ATTRIBS)
+{
     mStreamingBuffer = new StreamingVertexBufferInterface(factory, INITIAL_STREAM_BUFFER_SIZE);
 
     if (!mStreamingBuffer)
@@ -79,12 +87,7 @@ VertexDataManager::VertexDataManager(BufferFactoryD3D *factory)
 
 VertexDataManager::~VertexDataManager()
 {
-    delete mStreamingBuffer;
-
-    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
-    {
-        delete mCurrentValueBuffer[i];
-    }
+    SafeDelete(mStreamingBuffer);
 }
 
 void VertexDataManager::hintUnmapAllResources(const std::vector<gl::VertexAttribute> &vertexAttributes)
@@ -107,11 +110,11 @@ void VertexDataManager::hintUnmapAllResources(const std::vector<gl::VertexAttrib
         }
     }
 
-    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    for (auto &currentValue : mCurrentValueCache)
     {
-        if (mCurrentValueBuffer[i] != NULL)
+        if (currentValue.buffer != nullptr)
         {
-            mCurrentValueBuffer[i]->getVertexBuffer()->hintUnmapResource();
+            currentValue.buffer->getVertexBuffer()->hintUnmapResource();
         }
     }
 }
@@ -169,14 +172,15 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
             }
             else
             {
-                if (!mCurrentValueBuffer[i])
+                if (mCurrentValueCache[i].buffer == nullptr)
                 {
-                    mCurrentValueBuffer[i] = new StreamingVertexBufferInterface(mFactory, CONSTANT_VERTEX_BUFFER_SIZE);
+                    mCurrentValueCache[i].buffer = new StreamingVertexBufferInterface(mFactory, CONSTANT_VERTEX_BUFFER_SIZE);
                 }
 
-                gl::Error error = storeCurrentValue(curAttrib, state.getVertexAttribCurrentValue(i), &translated[i],
-                                                    &mCurrentValue[i], &mCurrentValueOffsets[i],
-                                                    mCurrentValueBuffer[i]);
+                gl::Error error = storeCurrentValue(curAttrib,
+                                                    state.getVertexAttribCurrentValue(i),
+                                                    &translated[i],
+                                                    &mCurrentValueCache[i]);
                 if (error.isError())
                 {
                     hintUnmapAllResources(vertexAttributes);
@@ -357,38 +361,36 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribute &attrib,
 gl::Error VertexDataManager::storeCurrentValue(const gl::VertexAttribute &attrib,
                                                const gl::VertexAttribCurrentValueData &currentValue,
                                                TranslatedAttribute *translated,
-                                               gl::VertexAttribCurrentValueData *cachedValue,
-                                               size_t *cachedOffset,
-                                               StreamingVertexBufferInterface *buffer)
+                                               CurrentValueState *cachedState)
 {
-    if (*cachedValue != currentValue)
+    if (cachedState->data != currentValue)
     {
-        gl::Error error = buffer->reserveVertexSpace(attrib, 1, 0);
+        gl::Error error = cachedState->buffer->reserveVertexSpace(attrib, 1, 0);
         if (error.isError())
         {
             return error;
         }
 
         unsigned int streamOffset;
-        error = buffer->storeVertexAttributes(attrib, currentValue, 0, 1, 0, &streamOffset);
+        error = cachedState->buffer->storeVertexAttributes(attrib, currentValue, 0, 1, 0, &streamOffset);
         if (error.isError())
         {
             return error;
         }
 
-        *cachedValue = currentValue;
-        *cachedOffset = streamOffset;
+        cachedState->data = currentValue;
+        cachedState->offset = streamOffset;
     }
 
     translated->storage = NULL;
-    translated->vertexBuffer = buffer->getVertexBuffer();
-    translated->serial = buffer->getSerial();
+    translated->vertexBuffer = cachedState->buffer->getVertexBuffer();
+    translated->serial = cachedState->buffer->getSerial();
     translated->divisor = 0;
 
     translated->attribute = &attrib;
     translated->currentValueType = currentValue.Type;
     translated->stride = 0;
-    translated->offset = *cachedOffset;
+    translated->offset = cachedState->offset;
 
     return gl::Error(GL_NO_ERROR);
 }
