@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "feb756b3_76577e2d",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-06-22T20:40:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ef6069f_0bcb5d16",
+      "range": {
+        "startLine": 410,
+        "startChar": 0,
+        "endLine": 410,
+        "endChar": 23
+      },
+      "revId": "fce0f5c0f74f967b9c6293fb012be04c6cc0f7b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7eca863a_ae3117f7",
         "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
         "patchSetId": 2
@@ -60,6 +84,30 @@
       "side": 1,
       "message": "I believe that it should not work.",
       "parentUuid": "7eca863a_ae3117f7",
+      "range": {
+        "startLine": 421,
+        "startChar": 42,
+        "endLine": 423,
+        "endChar": 124
+      },
+      "revId": "fce0f5c0f74f967b9c6293fb012be04c6cc0f7b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "feb756b3_56527a3e",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-06-22T20:40:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e2782f4_0a887bf7",
       "range": {
         "startLine": 421,
         "startChar": 42,
