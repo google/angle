@@ -90,8 +90,13 @@ gl::Error VertexBufferInterface::discard()
     return mVertexBuffer->discard();
 }
 
-gl::Error VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
-                                                       GLint start, GLsizei count, GLsizei instances, unsigned int *outStreamOffset)
+gl::Error VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attrib,
+                                                       const gl::VertexAttribCurrentValueData &currentValue,
+                                                       GLint start,
+                                                       GLsizei count,
+                                                       GLsizei instances,
+                                                       unsigned int *outStreamOffset,
+                                                       const uint8_t *sourceData)
 {
     gl::Error error(GL_NO_ERROR);
 
@@ -114,7 +119,7 @@ gl::Error VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute
     }
     mReservedSpace = 0;
 
-    error = mVertexBuffer->storeVertexAttributes(attrib, currentValue, start, count, instances, mWritePosition);
+    error = mVertexBuffer->storeVertexAttributes(attrib, currentValue, start, count, instances, mWritePosition, sourceData);
     if (error.isError())
     {
         return error;
@@ -286,11 +291,16 @@ gl::Error StaticVertexBufferInterface::reserveSpace(unsigned int size)
     }
 }
 
-gl::Error StaticVertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
-                                                             GLint start, GLsizei count, GLsizei instances, unsigned int *outStreamOffset)
+gl::Error StaticVertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attrib,
+                                                             const gl::VertexAttribCurrentValueData &currentValue,
+                                                             GLint start,
+                                                             GLsizei count,
+                                                             GLsizei instances,
+                                                             unsigned int *outStreamOffset,
+                                                             const uint8_t *sourceData)
 {
     unsigned int streamOffset;
-    gl::Error error = VertexBufferInterface::storeVertexAttributes(attrib, currentValue, start, count, instances, &streamOffset);
+    gl::Error error = VertexBufferInterface::storeVertexAttributes(attrib, currentValue, start, count, instances, &streamOffset, sourceData);
     if (error.isError())
     {
         return error;

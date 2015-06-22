@@ -16,6 +16,7 @@
 #include <GLES2/gl2.h>
 
 #include <cstddef>
+#include <cstdint>
 #include <vector>
 
 namespace gl
@@ -36,8 +37,13 @@ class VertexBuffer : angle::NonCopyable
 
     virtual gl::Error initialize(unsigned int size, bool dynamicUsage) = 0;
 
-    virtual gl::Error storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
-                                            GLint start, GLsizei count, GLsizei instances, unsigned int offset) = 0;
+    virtual gl::Error storeVertexAttributes(const gl::VertexAttribute &attrib,
+                                            const gl::VertexAttribCurrentValueData &currentValue,
+                                            GLint start,
+                                            GLsizei count,
+                                            GLsizei instances,
+                                            unsigned int offset,
+                                            const uint8_t *sourceData) = 0;
     virtual gl::Error getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count, GLsizei instances,
                                        unsigned int *outSpaceRequired) const = 0;
 
@@ -70,8 +76,13 @@ class VertexBufferInterface : angle::NonCopyable
 
     unsigned int getSerial() const;
 
-    virtual gl::Error storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
-                                            GLint start, GLsizei count, GLsizei instances, unsigned int *outStreamOffset);
+    virtual gl::Error storeVertexAttributes(const gl::VertexAttribute &attrib,
+                                            const gl::VertexAttribCurrentValueData &currentValue,
+                                            GLint start,
+                                            GLsizei count,
+                                            GLsizei instances,
+                                            unsigned int *outStreamOffset,
+                                            const uint8_t *sourceData);
 
     bool directStoragePossible(const gl::VertexAttribute &attrib,
                                const gl::VertexAttribCurrentValueData &currentValue) const;
@@ -114,8 +125,13 @@ class StaticVertexBufferInterface : public VertexBufferInterface
     explicit StaticVertexBufferInterface(BufferFactoryD3D *factory);
     ~StaticVertexBufferInterface();
 
-    gl::Error storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
-                                    GLint start, GLsizei count, GLsizei instances, unsigned int *outStreamOffset);
+    gl::Error storeVertexAttributes(const gl::VertexAttribute &attrib,
+                                    const gl::VertexAttribCurrentValueData &currentValue,
+                                    GLint start,
+                                    GLsizei count,
+                                    GLsizei instances,
+                                    unsigned int *outStreamOffset,
+                                    const uint8_t *sourceData) override;
 
     bool lookupAttribute(const gl::VertexAttribute &attribute, unsigned int* outStreamFffset);
 

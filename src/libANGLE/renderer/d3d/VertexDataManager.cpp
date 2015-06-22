@@ -289,24 +289,52 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribCurrentValueDa
 
     gl::Buffer *buffer = attrib.buffer.get();
     ASSERT(buffer || attrib.pointer);
+    ASSERT(attrib.enabled);
 
     BufferD3D *storage = buffer ? GetImplAs<BufferD3D>(buffer) : NULL;
     StaticVertexBufferInterface *staticBuffer = storage ? storage->getStaticVertexBuffer() : NULL;
     VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
     bool directStorage = vertexBuffer->directStoragePossible(attrib, currentValue);
 
-    unsigned int streamOffset = 0;
-    unsigned int outputElementSize = 0;
-
     // Instanced vertices do not apply the 'start' offset
     GLint firstVertexIndex = (instances > 0 && attrib.divisor > 0 ? 0 : start);
 
+    translated->vertexBuffer = vertexBuffer->getVertexBuffer();
+
     if (directStorage)
     {
-        outputElementSize = ComputeVertexAttributeStride(attrib);
-        streamOffset = static_cast<unsigned int>(attrib.offset + outputElementSize * firstVertexIndex);
+        translated->storage = storage;
+        translated->serial = storage->getSerial();
+        translated->divisor = attrib.divisor;
+
+        translated->currentValueType = currentValue.Type;
+        translated->stride = ComputeVertexAttributeStride(attrib);
+        translated->offset = static_cast<unsigned int>(attrib.offset + translated->stride * firstVertexIndex);
+
+        return gl::Error(GL_NO_ERROR);
     }
-    else if (staticBuffer)
+
+    // Compute source data pointer
+    const uint8_t *sourceData = nullptr;
+
+    if (buffer)
+    {
+        gl::Error error = storage->getData(&sourceData);
+        if (error.isError())
+        {
+            return error;
+        }
+        sourceData += static_cast<int>(attrib.offset);
+    }
+    else
+    {
+        sourceData = static_cast<const uint8_t*>(attrib.pointer);
+    }
+
+    unsigned int streamOffset = 0;
+    unsigned int outputElementSize = 0;
+
+    if (staticBuffer)
     {
         gl::Error error = staticBuffer->getVertexBuffer()->getSpaceRequired(attrib, 1, 0, &outputElementSize);
         if (error.isError())
@@ -320,8 +348,13 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribCurrentValueDa
             int totalCount = ElementsInBuffer(attrib, storage->getSize());
             int startIndex = attrib.offset / ComputeVertexAttributeStride(attrib);
 
-            error = staticBuffer->storeVertexAttributes(attrib, currentValue, -startIndex, totalCount,
-                                                        0, &streamOffset);
+            error = staticBuffer->storeVertexAttributes(attrib,
+                                                        currentValue,
+                                                        -startIndex,
+                                                        totalCount,
+                                                        0,
+                                                        &streamOffset,
+                                                        sourceData);
             if (error.isError())
             {
                 return error;
@@ -346,17 +379,21 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribCurrentValueDa
             return error;
         }
 
-        error = mStreamingBuffer->storeVertexAttributes(attrib, currentValue, firstVertexIndex,
-                                                        totalCount, instances, &streamOffset);
+        error = mStreamingBuffer->storeVertexAttributes(attrib,
+                                                        currentValue,
+                                                        firstVertexIndex,
+                                                        totalCount,
+                                                        instances,
+                                                        &streamOffset,
+                                                        sourceData);
         if (error.isError())
         {
             return error;
         }
     }
 
-    translated->storage = directStorage ? storage : NULL;
-    translated->vertexBuffer = vertexBuffer->getVertexBuffer();
-    translated->serial = directStorage ? storage->getSerial() : vertexBuffer->getSerial();
+    translated->storage = nullptr;
+    translated->serial = vertexBuffer->getSerial();
     translated->divisor = attrib.divisor;
 
     translated->currentValueType = currentValue.Type;
@@ -379,8 +416,9 @@ gl::Error VertexDataManager::storeCurrentValue(const gl::VertexAttribCurrentValu
             return error;
         }
 
+        const uint8_t *sourceData = reinterpret_cast<const uint8_t*>(currentValue.FloatValues);
         unsigned int streamOffset;
-        error = cachedState->buffer->storeVertexAttributes(attrib, currentValue, 0, 1, 0, &streamOffset);
+        error = cachedState->buffer->storeVertexAttributes(attrib, currentValue, 0, 1, 0, &streamOffset, sourceData);
         if (error.isError())
         {
             return error;
