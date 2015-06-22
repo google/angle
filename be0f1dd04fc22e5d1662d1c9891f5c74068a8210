@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ef6069f_8b790da9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-22T15:24:12Z",
+      "side": 1,
+      "message": "Can you put these after the 32-bit formats? A lot of applications simply select the first config without looking and I don\u0027t want to change that behaviour.",
+      "range": {
+        "startLine": 623,
+        "startChar": 0,
+        "endLine": 625,
+        "endChar": 18
+      },
+      "revId": "be0f1dd04fc22e5d1662d1c9891f5c74068a8210",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e7adaa8_06d7dc67",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-22T15:24:12Z",
+      "side": 1,
+      "message": "So the swap chain is always 32 bits?  Maybe link to an MSDN doc about valid swap chain formats if one exists.",
+      "range": {
+        "startLine": 390,
+        "startChar": 4,
+        "endLine": 391,
+        "endChar": 49
+      },
+      "revId": "be0f1dd04fc22e5d1662d1c9891f5c74068a8210",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ef6069f_4b0d653e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-22T15:24:12Z",
+      "side": 1,
+      "message": "nit: should probably keep the multi-line formatting.",
+      "range": {
+        "startLine": 428,
+        "startChar": 8,
+        "endLine": 428,
+        "endChar": 167
+      },
+      "revId": "be0f1dd04fc22e5d1662d1c9891f5c74068a8210",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e2782f4_6a35b706",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-22T15:24:12Z",
+      "side": 1,
+      "message": "This can be const.",
+      "revId": "be0f1dd04fc22e5d1662d1c9891f5c74068a8210",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ef6069f_ab3a09d2",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-22T15:24:12Z",
+      "side": 1,
+      "message": "eglChooseConfig should already do this, what is different?",
+      "range": {
+        "startLine": 268,
+        "startChar": 0,
+        "endLine": 297,
+        "endChar": 21
+      },
+      "revId": "be0f1dd04fc22e5d1662d1c9891f5c74068a8210",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
