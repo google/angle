@@ -189,7 +189,7 @@ class Program : angle::NonCopyable
     void getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders);
 
     GLuint getAttributeLocation(const std::string &name);
-    int getSemanticIndex(int attributeIndex);
+    int getSemanticIndex(int attributeIndex) const;
     const int *getSemanticIndexes() const;
 
     void getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);

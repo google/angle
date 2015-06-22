@@ -594,7 +594,7 @@ const int *Program::getSemanticIndexes() const
     return mProgram->getSemanticIndexes();
 }
 
-int Program::getSemanticIndex(int attributeIndex)
+int Program::getSemanticIndex(int attributeIndex) const
 {
     ASSERT(attributeIndex >= 0 && attributeIndex < MAX_VERTEX_ATTRIBS);
 
