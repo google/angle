@@ -2603,7 +2603,7 @@ yyreduce:
     {
         if (context->reservedErrorCheck((yylsp[0]), *(yyvsp[0].lex).string))
             context->recover();
-        TType type(EbtVoid, EbpUndefined);
+        const TType *type = new TType(EbtVoid, EbpUndefined);
         TFunction *function = new TFunction((yyvsp[0].lex).string, type);
         (yyval.interm.function) = function;
     }
@@ -2615,7 +2615,7 @@ yyreduce:
     {
         if (context->reservedErrorCheck((yylsp[0]), *(yyvsp[0].lex).string))
             context->recover();
-        TType type(EbtVoid, EbpUndefined);
+        const TType *type = new TType(EbtVoid, EbpUndefined);
         TFunction *function = new TFunction((yyvsp[0].lex).string, type);
         (yyval.interm.function) = function;
     }
@@ -3199,7 +3199,7 @@ yyreduce:
         else
         {
             // Insert the unmangled name to detect potential future redefinition as a variable.
-            TFunction *function = new TFunction(NewPoolTString((yyvsp[-1].interm.function)->getName().c_str()), (yyvsp[-1].interm.function)->getReturnType());
+            TFunction *function = new TFunction(NewPoolTString((yyvsp[-1].interm.function)->getName().c_str()), &(yyvsp[-1].interm.function)->getReturnType());
             context->symbolTable.getOuterLevel()->insertUnmangled(function);
         }
 
@@ -3282,7 +3282,7 @@ yyreduce:
 
         // Add the function as a prototype after parsing it (we do not support recursion)
         TFunction *function;
-        TType type((yyvsp[-2].interm.type));
+        const TType *type = new TType((yyvsp[-2].interm.type));
         function = new TFunction((yyvsp[-1].lex).string, type);
         (yyval.interm.function) = function;
         

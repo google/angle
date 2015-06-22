@@ -369,14 +369,14 @@ function_identifier
     | IDENTIFIER {
         if (context->reservedErrorCheck(@1, *$1.string))
             context->recover();
-        TType type(EbtVoid, EbpUndefined);
+        const TType *type = new TType(EbtVoid, EbpUndefined);
         TFunction *function = new TFunction($1.string, type);
         $$ = function;
     }
     | FIELD_SELECTION {
         if (context->reservedErrorCheck(@1, *$1.string))
             context->recover();
-        TType type(EbtVoid, EbpUndefined);
+        const TType *type = new TType(EbtVoid, EbpUndefined);
         TFunction *function = new TFunction($1.string, type);
         $$ = function;
     }
@@ -700,7 +700,7 @@ function_prototype
         else
         {
             // Insert the unmangled name to detect potential future redefinition as a variable.
-            TFunction *function = new TFunction(NewPoolTString($1->getName().c_str()), $1->getReturnType());
+            TFunction *function = new TFunction(NewPoolTString($1->getName().c_str()), &$1->getReturnType());
             context->symbolTable.getOuterLevel()->insertUnmangled(function);
         }
 
@@ -768,7 +768,7 @@ function_header
 
         // Add the function as a prototype after parsing it (we do not support recursion)
         TFunction *function;
-        TType type($1);
+        const TType *type = new TType($1);
         function = new TFunction($2.string, type);
         $$ = function;
         

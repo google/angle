@@ -1877,7 +1877,7 @@ TFunction *TParseContext::addConstructorFunc(const TPublicType &publicTypeIn)
     }
 
     TString tempString;
-    TType type(publicType);
+    const TType *type = new TType(publicType);
     return new TFunction(&tempString, type, op);
 }
 
