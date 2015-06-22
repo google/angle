@@ -557,7 +557,7 @@ bool TParseContext::constructorErrorCheck(const TSourceLoc &line, TIntermNode *n
     bool arrayArg = false;
     for (size_t i = 0; i < function.getParamCount(); ++i)
     {
-        const TParameter &param = function.getParam(i);
+        const TConstParameter &param = function.getParam(i);
         size += param.type->getObjectSize();
 
         if (constructingMatrix && param.type->isMatrix())

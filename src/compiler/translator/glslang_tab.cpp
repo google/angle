@@ -2560,8 +2560,8 @@ yyreduce:
   case 25:
 
     {
-        TParameter param = { 0, new TType((yyvsp[0].interm.intermTypedNode)->getType()) };
-        (yyvsp[-1].interm.function)->addParameter(param);
+        const TType *type = new TType((yyvsp[0].interm.intermTypedNode)->getType());
+        (yyvsp[-1].interm.function)->addParameter(TConstParameter(type));
         (yyval.interm).function = (yyvsp[-1].interm.function);
         (yyval.interm).nodePair.node1 = (yyvsp[0].interm.intermTypedNode);
     }
@@ -2571,8 +2571,8 @@ yyreduce:
   case 26:
 
     {
-        TParameter param = { 0, new TType((yyvsp[0].interm.intermTypedNode)->getType()) };
-        (yyvsp[-2].interm).function->addParameter(param);
+        const TType *type = new TType((yyvsp[0].interm.intermTypedNode)->getType());
+        (yyvsp[-2].interm).function->addParameter(TConstParameter(type));
         (yyval.interm).function = (yyvsp[-2].interm).function;
         (yyval.interm).nodePair.node1 = context->intermediate.growAggregate((yyvsp[-2].interm).intermNode, (yyvsp[0].interm.intermTypedNode), (yylsp[-1]));
     }
@@ -3075,7 +3075,7 @@ yyreduce:
         
         for (size_t i = 0; i < function.getParamCount(); i++)
         {
-            const TParameter &param = function.getParam(i);
+            const TConstParameter &param = function.getParam(i);
             if (param.name != 0)
             {
                 TVariable variable(param.name, *param.type);
@@ -3239,7 +3239,7 @@ yyreduce:
         // Add the parameter
         (yyval.interm.function) = (yyvsp[-1].interm.function);
         if ((yyvsp[0].interm).param.type->getBasicType() != EbtVoid)
-            (yyvsp[-1].interm.function)->addParameter((yyvsp[0].interm).param);
+            (yyvsp[-1].interm.function)->addParameter((yyvsp[0].interm).param.turnToConst());
         else
             delete (yyvsp[0].interm).param.type;
     }
@@ -3263,7 +3263,7 @@ yyreduce:
         } else {
             // Add the parameter
             (yyval.interm.function) = (yyvsp[-2].interm.function);
-            (yyvsp[-2].interm.function)->addParameter((yyvsp[0].interm).param);
+            (yyvsp[-2].interm.function)->addParameter((yyvsp[0].interm).param.turnToConst());
         }
     }
 
@@ -4957,7 +4957,7 @@ yyreduce:
         //
         TIntermAggregate* paramNodes = new TIntermAggregate;
         for (size_t i = 0; i < function->getParamCount(); i++) {
-            const TParameter& param = function->getParam(i);
+            const TConstParameter& param = function->getParam(i);
             if (param.name != 0) {
                 TVariable *variable = new TVariable(param.name, *param.type);
                 //

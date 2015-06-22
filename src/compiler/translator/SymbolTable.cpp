@@ -139,7 +139,7 @@ bool IsVecType(const TType *type)
     return false;
 }
 
-TType *SpecificType(TType *type, int size)
+const TType *SpecificType(const TType *type, int size)
 {
     ASSERT(size >= 1 && size <= 4);
 
@@ -160,7 +160,7 @@ TType *SpecificType(TType *type, int size)
     }
 }
 
-TType *VectorType(TType *type, int size)
+const TType *VectorType(const TType *type, int size)
 {
     ASSERT(size >= 2 && size <= 4);
 
@@ -181,8 +181,8 @@ TType *VectorType(TType *type, int size)
     }
 }
 
-void TSymbolTable::insertBuiltIn(ESymbolLevel level, TOperator op, const char *ext, TType *rvalue, const char *name,
-                                 TType *ptype1, TType *ptype2, TType *ptype3, TType *ptype4, TType *ptype5)
+void TSymbolTable::insertBuiltIn(ESymbolLevel level, TOperator op, const char *ext, const TType *rvalue, const char *name,
+                                 const TType *ptype1, const TType *ptype2, const TType *ptype3, const TType *ptype4, const TType *ptype5)
 {
     if (ptype1->getBasicType() == EbtGSampler2D)
     {
@@ -231,31 +231,26 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level, TOperator op, const char *e
     {
         TFunction *function = new TFunction(NewPoolTString(name), *rvalue, op, ext);
 
-        TParameter param1 = {0, ptype1};
-        function->addParameter(param1);
+        function->addParameter(TConstParameter(ptype1));
 
         if (ptype2)
         {
-            TParameter param2 = {0, ptype2};
-            function->addParameter(param2);
+            function->addParameter(TConstParameter(ptype2));
         }
 
         if (ptype3)
         {
-            TParameter param3 = {0, ptype3};
-            function->addParameter(param3);
+            function->addParameter(TConstParameter(ptype3));
         }
 
         if (ptype4)
         {
-            TParameter param4 = {0, ptype4};
-            function->addParameter(param4);
+            function->addParameter(TConstParameter(ptype4));
         }
 
         if (ptype5)
         {
-            TParameter param5 = {0, ptype5};
-            function->addParameter(param5);
+            function->addParameter(TConstParameter(ptype5));
         }
 
         insert(level, function);

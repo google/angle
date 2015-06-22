@@ -401,7 +401,7 @@ class TType
         structure = s;
     }
 
-    const TString &getMangledName()
+    const TString &getMangledName() const
     {
         if (mangled.empty())
         {

@@ -163,10 +163,55 @@ class TVariable : public TSymbol
     TConstantUnion *unionArray;
 };
 
+// Immutable version of TParameter.
+struct TConstParameter
+{
+    TConstParameter()
+        : name(nullptr),
+          type(nullptr)
+    {
+    }
+    explicit TConstParameter(const TString *n)
+        : name(n),
+          type(nullptr)
+    {
+    }
+    explicit TConstParameter(const TType *t)
+        : name(nullptr),
+          type(t)
+    {
+    }
+    TConstParameter(const TString *n, const TType *t)
+        : name(n),
+          type(t)
+    {
+    }
+
+    // Both constructor arguments must be const.
+    TConstParameter(TString *n, TType *t) = delete;
+    TConstParameter(const TString *n, TType *t) = delete;
+    TConstParameter(TString *n, const TType *t) = delete;
+
+    const TString *name;
+    const TType *type;
+};
+
 // The function sub-class of symbols and the parser will need to
 // share this definition of a function parameter.
 struct TParameter
 {
+    // Destructively converts to TConstParameter.
+    // This method resets name and type to nullptrs to make sure
+    // their content cannot be modified after the call.
+    TConstParameter turnToConst()
+    {
+        const TString *constName = name;
+        const TType *constType = type;
+        name = nullptr;
+        type = nullptr;
+        return TConstParameter(constName, constType);
+    }
+
     TString *name;
     TType *type;
 };
@@ -206,7 +251,7 @@ class TFunction : public TSymbol
         return TString(mangledName.c_str(), mangledName.find_first_of('('));
     }
 
-    void addParameter(TParameter &p)
+    void addParameter(const TConstParameter &p)
     { 
         parameters.push_back(p);
         mangledName = mangledName + p.type->getMangledName();
@@ -239,13 +284,13 @@ class TFunction : public TSymbol
     {
         return parameters.size();
     }
-    const TParameter &getParam(size_t i) const
+    const TConstParameter &getParam(size_t i) const
     {
         return parameters[i];
     }
 
   private:
-    typedef TVector<TParameter> TParamList;
+    typedef TVector<TConstParameter> TParamList;
     TParamList parameters;
     TType returnType;
     TString mangledName;
@@ -368,23 +413,23 @@ class TSymbolTable : angle::NonCopyable
         return insert(level, constant);
     }
 
-    void insertBuiltIn(ESymbolLevel level, TOperator op, const char *ext, TType *rvalue, const char *name,
-                       TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0, TType *ptype5 = 0);
+    void insertBuiltIn(ESymbolLevel level, TOperator op, const char *ext, const TType *rvalue, const char *name,
+                       const TType *ptype1, const TType *ptype2 = 0, const TType *ptype3 = 0, const TType *ptype4 = 0, const TType *ptype5 = 0);
 
-    void insertBuiltIn(ESymbolLevel level, TType *rvalue, const char *name,
-                       TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0, TType *ptype5 = 0)
+    void insertBuiltIn(ESymbolLevel level, const TType *rvalue, const char *name,
+                       const TType *ptype1, const TType *ptype2 = 0, const TType *ptype3 = 0, const TType *ptype4 = 0, const TType *ptype5 = 0)
     {
         insertBuiltIn(level, EOpNull, "", rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
     }
 
-    void insertBuiltIn(ESymbolLevel level, const char *ext, TType *rvalue, const char *name,
-                       TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0, TType *ptype5 = 0)
+    void insertBuiltIn(ESymbolLevel level, const char *ext, const TType *rvalue, const char *name,
+                       const TType *ptype1, const TType *ptype2 = 0, const TType *ptype3 = 0, const TType *ptype4 = 0, const TType *ptype5 = 0)
     {
         insertBuiltIn(level, EOpNull, ext, rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
     }
 
-    void insertBuiltIn(ESymbolLevel level, TOperator op, TType *rvalue, const char *name,
-                       TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0, TType *ptype5 = 0)
+    void insertBuiltIn(ESymbolLevel level, TOperator op, const TType *rvalue, const char *name,
+                       const TType *ptype1, const TType *ptype2 = 0, const TType *ptype3 = 0, const TType *ptype4 = 0, const TType *ptype5 = 0)
     {
         insertBuiltIn(level, op, "", rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
     }
