@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1e67ca0f_a5eb7726",
+        "filename": "src/angle.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-22T17:01:38Z",
+      "side": 1,
+      "message": "Any reason for the gyp file changes? The ANGLE_ENABLE_DEBUG_ANNOTATIONS should only be used by the renderer code which shouldn\u0027t be visible outside of libANGLE.",
+      "range": {
+        "startLine": 94,
+        "startChar": 16,
+        "endLine": 107,
+        "endChar": 19
+      },
+      "revId": "81476a44d441faca4bb89986c476668c65b43637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5efea270_41fedc7d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-22T17:01:38Z",
+      "side": 1,
+      "message": "Is there any documentation/bug report for this?",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 74
+      },
+      "revId": "81476a44d441faca4bb89986c476668c65b43637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
