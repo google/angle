@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "7e0fe678_b23a7ed2",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-23T21:11:46Z",
+      "side": 1,
+      "message": "With \u0027const TParameter*\u0027 you wont be able to modify TParameter\u0027 values, but you will still be able to call non-const methods on them, for example ((const TParameter *)param)-\u003etype-\u003esetFoo() will compile.",
+      "parentUuid": "5ecce27c_a58c28bb",
+      "range": {
+        "startLine": 175,
+        "startChar": 7,
+        "endLine": 175,
+        "endChar": 22
+      },
+      "revId": "09b714ad160a6408681c71871453b60f5519a26e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5e2782f4_7b68dd9d",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 1
@@ -76,6 +100,30 @@
       "writtenOn": "2015-06-23T14:16:45Z",
       "side": 1,
       "message": "is there a lot of implicit conversion going on? Is it possible to mark this explicit and make the implicit conversions explicit?",
+      "range": {
+        "startLine": 185,
+        "startChar": 4,
+        "endLine": 185,
+        "endChar": 19
+      },
+      "revId": "09b714ad160a6408681c71871453b60f5519a26e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ecce27c_0bfa4539",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-23T21:11:46Z",
+      "side": 1,
+      "message": "You are right! Anything that constructs TConstParameter from non-const pointers is wrong, because we are not enforcing constness of the arguments. So I\u0027ll remove this constructor and instead make sure TConstParameter cannot be constructed from non-const type/name.",
+      "parentUuid": "3e2acebf_b22d614b",
       "range": {
         "startLine": 185,
         "startChar": 4,
