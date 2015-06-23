@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7ef6069f_e03b88a3",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 939,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-23T15:50:22Z",
+      "side": 1,
+      "message": "Ok, that makes sense, thanks!",
+      "parentUuid": "5e2782f4_3b2ca523",
+      "range": {
+        "startLine": 937,
+        "startChar": 7,
+        "endLine": 939,
+        "endChar": 22
+      },
+      "revId": "568ac2f4e996df803e6335803236c0e1c17ec6b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e2acebf_325051ab",
         "filename": "src/tests/deqp.gypi",
         "patchSetId": 2
