@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e2782f4_5b6d19ac",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-23T14:16:45Z",
+      "side": 1,
+      "message": "can you mark this as BUG\u003d###### to associate these with the crbug",
+      "revId": "09b714ad160a6408681c71871453b60f5519a26e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e2782f4_7b68dd9d",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-23T14:16:45Z",
+      "side": 1,
+      "message": "new code should follow the angle style, with * and \u0026 being right-aligned",
+      "range": {
+        "startLine": 180,
+        "startChar": 20,
+        "endLine": 180,
+        "endChar": 52
+      },
+      "revId": "09b714ad160a6408681c71871453b60f5519a26e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e2acebf_b22d614b",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-23T14:16:45Z",
+      "side": 1,
+      "message": "is there a lot of implicit conversion going on? Is it possible to mark this explicit and make the implicit conversions explicit?",
+      "range": {
+        "startLine": 185,
+        "startChar": 4,
+        "endLine": 185,
+        "endChar": 19
+      },
+      "revId": "09b714ad160a6408681c71871453b60f5519a26e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
