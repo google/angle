@@ -36,17 +36,23 @@
             '-Wno-format-nonliteral',
         ],
 
-        'chromeos%': 0,
-        'conditions':
-        [
-            ['OS=="linux" and chromeos==0',
-            {
-                'use_x11%': 1,
-            },
-            {
-                'use_x11%': 0,
-            }],
-        ],
+        # Nested dictionnary hack to allow setting a default value for
+        # a variable and test it in the dict (merged in angle.gyp).
+        'variables':
+        {
+            'conditions':
+            [
+                ['OS=="linux"',
+                {
+                    'use_x11': 1,
+                },
+                {
+                    'use_x11': 0,
+                }],
+            ],
+        },
+        # Copy conditionally-set variables out one scope.
+        'use_x11%': '<(use_x11)',
     },
     'target_defaults':
     {
