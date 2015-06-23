@@ -116,6 +116,30 @@
       "revId": "fe0d778f9bcaef59e666e3607c38222c242d6847",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ef6069f_40fedc7d",
+        "filename": "src/compiler/translator/VersionGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-23T14:42:08Z",
+      "side": 1,
+      "message": "Yeah, static const or extern is good, the second part was just some trivia :)",
+      "parentUuid": "5e2782f4_db41090b",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 40
+      },
+      "revId": "fe0d778f9bcaef59e666e3607c38222c242d6847",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
