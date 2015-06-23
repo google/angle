@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5e2782f4_bbaa558a",
+        "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-23T05:48:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e7adaa8_49596709",
+      "range": {
+        "startLine": 112,
+        "startChar": 21,
+        "endLine": 112,
+        "endChar": 22
+      },
+      "revId": "aed5cb4d6e2a74e8d2c3ff2796439e2a6c072306",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1e67ca0f_2584478f",
         "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.h",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-22T16:53:57Z",
       "side": 1,
       "message": "It looks like the library handle is only used in the initialize function.   How about DisplayGLX opens and closes the handle in it\u0027s initialize and terminate methods and then passes the handle into FunctionsGLX::initialize?\n\nDisplayGLX::terminate should happen only after all windows are destroyed.",
+      "range": {
+        "startLine": 76,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 28
+      },
+      "revId": "aed5cb4d6e2a74e8d2c3ff2796439e2a6c072306",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ef6069f_20091065",
+        "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-23T05:48:33Z",
+      "side": 1,
+      "message": "I just tried this and it doesn\u0027t work. IsPlatformAvailable in angle_test_instantiate.cpp creates and destroys an EGLWindow instance, and EGLWindow::~EGLWindow calls eglTerminate, which ends up calling DisplayGLX::terminate, leading to the same crash.\n\nI tried a few things and it would work if we refactored things enough to make it possible to do the work in this order in angle_test_instantiate.cpp:\n\n            eglWindow-\u003edestroyGL();\n            osWindow-\u003edestroy();\n            eglWindow-\u003eterminate();\n            osWindow-\u003ecloseDisplay();\n\nwhere EGLWindow::terminate calls eglTerminate and X11Window::closeDisplay calls XCloseDisplay. (eglTerminate can not be called after the display connection is closed, since it does GLX work which requires the connection.)\n\nHowever, I think we should just go with my fix as it stands. It enables applications to close their (X11) windows after calling eglTerminate rather than requiring them to be closed beforehand, which is probably a desirable property of ANGLE\u0027s EGL implementation.",
+      "parentUuid": "1e67ca0f_2584478f",
       "range": {
         "startLine": 76,
         "startChar": 4,
