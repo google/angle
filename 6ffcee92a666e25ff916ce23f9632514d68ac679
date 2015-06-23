@@ -16,6 +16,24 @@
       "revId": "6ffcee92a666e25ff916ce23f9632514d68ac679",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de1a92b3_4fee0581",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 5
+      },
+      "lineNbr": 972,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-23T17:23:23Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "5efea270_2d02a63d",
+      "revId": "6ffcee92a666e25ff916ce23f9632514d68ac679",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
