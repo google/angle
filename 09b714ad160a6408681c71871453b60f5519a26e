@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "5ecce27c_a58c28bb",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-23T18:45:09Z",
+      "side": 1,
+      "message": "Is this really necessary? Will \"const TParameter\" suffice?",
+      "range": {
+        "startLine": 175,
+        "startChar": 7,
+        "endLine": 175,
+        "endChar": 22
+      },
+      "revId": "09b714ad160a6408681c71871453b60f5519a26e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5e2782f4_7b68dd9d",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 1
