@@ -68,6 +68,30 @@
       "revId": "fe0d778f9bcaef59e666e3607c38222c242d6847",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e2acebf_723c8981",
+        "filename": "src/compiler/translator/VersionGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-06-23T14:06:27Z",
+      "side": 1,
+      "message": "static const in a header works on all compilers, however you the constants may or may not get duplicated in all files including the header.\n\nHowever this problem doesn\u0027t appear with templated statics and (IIRC) constexpr.",
+      "parentUuid": "7ef6069f_94900a59",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 40
+      },
+      "revId": "fe0d778f9bcaef59e666e3607c38222c242d6847",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
