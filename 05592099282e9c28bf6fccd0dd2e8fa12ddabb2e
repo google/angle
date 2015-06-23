@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7e0fe678_2362ca8f",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-23T17:16:25Z",
+      "side": 1,
+      "message": "I added them because in later patches, I add emulated functions and #extension declarations based on the target GLSL version from on my findings in https://github.com/google/angle/blob/master/src/libANGLE/renderer/gl/FeatureSupportGL.md#essl3-builtins",
+      "parentUuid": "fe23d6e9_279ada4c",
+      "range": {
+        "startLine": 96,
+        "startChar": 2,
+        "endLine": 96,
+        "endChar": 25
+      },
+      "revId": "05592099282e9c28bf6fccd0dd2e8fa12ddabb2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5ecce27c_8261da09",
         "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
         "patchSetId": 4
@@ -36,6 +60,24 @@
       "writtenOn": "2015-06-23T16:54:49Z",
       "side": 1,
       "message": "It is great to be able to specify configurations with that granularity, but we are starting to have a lot of them and it gets verbose. We should think of a way to make it clearer at some point.",
+      "revId": "05592099282e9c28bf6fccd0dd2e8fa12ddabb2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de1a92b3_4f77257f",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-23T17:16:25Z",
+      "side": 1,
+      "message": "Hopefully only this test and others testing emulated functions will need this many configurations.  I want to make sure that the emulated functions are properly used in the versions they are needed in.",
+      "parentUuid": "5ecce27c_8261da09",
       "revId": "05592099282e9c28bf6fccd0dd2e8fa12ddabb2e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
