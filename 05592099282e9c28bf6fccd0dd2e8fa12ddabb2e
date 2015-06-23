@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "fe23d6e9_279ada4c",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-23T16:57:42Z",
+      "side": 1,
+      "message": "Do we need to expose different versions to anyone outside ANGLE?  It seems to be the version difference is only meaningful for internal impl.",
+      "range": {
+        "startLine": 96,
+        "startChar": 2,
+        "endLine": 96,
+        "endChar": 25
+      },
+      "revId": "05592099282e9c28bf6fccd0dd2e8fa12ddabb2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5ecce27c_8261da09",
         "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
         "patchSetId": 4
