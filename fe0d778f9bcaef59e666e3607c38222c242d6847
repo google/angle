@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7ef6069f_a00ea037",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-23T14:50:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ef6069f_74aabe8d",
+      "range": {
+        "startLine": 22,
+        "startChar": 5,
+        "endLine": 22,
+        "endChar": 43
+      },
+      "revId": "fe0d778f9bcaef59e666e3607c38222c242d6847",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9e7adaa8_4f42c70f",
         "filename": "src/compiler/translator/VersionGLSL.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-22T20:35:02Z",
       "side": 1,
       "message": "this seems like it should also have \"\u0026\u0026 COMPATIBILITY) .. otherwise it\u0027ll override core profiles which already support invariant all",
+      "range": {
+        "startLine": 44,
+        "startChar": 3,
+        "endLine": 46,
+        "endChar": 40
+      },
+      "revId": "fe0d778f9bcaef59e666e3607c38222c242d6847",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e2acebf_122c2d23",
+        "filename": "src/compiler/translator/VersionGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-23T14:50:12Z",
+      "side": 1,
+      "message": "Doing the check this way is more in line with the way it works in the rest of the file because updateVersion just calls max on the current version and the one provided.  The name is really bad though so I updated it.",
+      "parentUuid": "9e7adaa8_4f42c70f",
       "range": {
         "startLine": 44,
         "startChar": 3,
@@ -131,6 +179,30 @@
       "side": 1,
       "message": "Yeah, static const or extern is good, the second part was just some trivia :)",
       "parentUuid": "5e2782f4_db41090b",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 40
+      },
+      "revId": "fe0d778f9bcaef59e666e3607c38222c242d6847",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e2acebf_f2287910",
+        "filename": "src/compiler/translator/VersionGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-23T14:50:12Z",
+      "side": 1,
+      "message": "I stuck with static const because I\u0027d prefer not to have to define each constant in the .h and .cpp.",
+      "parentUuid": "7ef6069f_40fedc7d",
       "range": {
         "startLine": 14,
         "startChar": 0,
