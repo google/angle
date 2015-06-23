@@ -9,6 +9,8 @@
 
 #include "test_utils/ANGLETest.h"
 
+#include <cmath>
+
 using namespace angle;
 
 namespace
@@ -54,8 +56,6 @@ class PackUnpackTest : public ANGLETest
             {
                 uint u = packSnorm2x16(v);
                 vec2 r = unpackSnorm2x16(u);
-                if (r.x < 0.0) r.x = 1.0 + r.x;
-                if (r.y < 0.0) r.y = 1.0 + r.y;
                 fragColor = vec4(r, 0.0, 1.0);
             }
         );
@@ -71,8 +71,6 @@ class PackUnpackTest : public ANGLETest
              {
                  uint u = packHalf2x16(v);
                  vec2 r = unpackHalf2x16(u);
-                 if (r.x < 0.0) r.x = 1.0 + r.x;
-                 if (r.y < 0.0) r.y = 1.0 + r.y;
                  fragColor = vec4(r, 0.0, 1.0);
              }
         );
@@ -84,8 +82,18 @@ class PackUnpackTest : public ANGLETest
             FAIL() << "shader compilation failed.";
         }
 
-        glGenFramebuffers(1, &mOffscreenFramebuffer);
         glGenTextures(1, &mOffscreenTexture2D);
+        glBindTexture(GL_TEXTURE_2D, mOffscreenTexture2D);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RG32F, getWindowWidth(), getWindowHeight());
+
+        glGenFramebuffers(1, &mOffscreenFramebuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, mOffscreenFramebuffer);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mOffscreenTexture2D, 0);
+
+        glViewport(0, 0, 16, 16);
+
+        const GLfloat color[] = { 1.0f, 1.0f, 0.0f, 1.0f };
+        glClearBufferfv(GL_COLOR, 0, color);
     }
 
     void TearDown() override
@@ -98,51 +106,47 @@ class PackUnpackTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
-    double computeOutput(float input)
-    {
-        if (input <= -1.0)
-            return 0;
-        else if (input >= 1.0)
-            return 255;
-        else if (input < -6.10E-05 && input > -1.0)
-            return 255 * (1.0 + input);
-        else
-            return 255 * input;
-    }
-
     void compareBeforeAfter(GLuint program, float input1, float input2)
     {
-        glBindTexture(GL_TEXTURE_2D, mOffscreenTexture2D);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        compareBeforeAfter(program, input1, input2, input1, input2);
+    }
 
-        glBindFramebuffer(GL_FRAMEBUFFER, mOffscreenFramebuffer);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mOffscreenTexture2D, 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, mOffscreenFramebuffer);
-        glViewport(0, 0, 16, 16);
-        const GLfloat color[] = { 1.0f, 1.0f, 0.0f, 1.0f };
-        glClearBufferfv(GL_COLOR, 0, color);
-
-        GLfloat vertexLocations[] =
-        {
-            -1.0f, 1.0f, 0.0f,
-            -1.0f, -1.0f, 0.0f,
-            1.0f, 1.0f, 0.0f,
-            1.0f, -1.0f, 0.0f,
-        };
-
-        GLint positionLocation = glGetAttribLocation(program, "position");
+    void compareBeforeAfter(GLuint program, float input1, float input2, float expect1, float expect2)
+    {
         GLint vec2Location = glGetUniformLocation(program, "v");
+
         glUseProgram(program);
         glUniform2f(vec2Location, input1, input2);
-        glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertexLocations);
-        glEnableVertexAttribArray(positionLocation);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        glUseProgram(0);
+
+        drawQuad(program, "position", 0.5f);
 
         ASSERT_GL_NO_ERROR();
-        EXPECT_PIXEL_NEAR(8, 8, computeOutput(input1), computeOutput(input2), 0, 255, 1.0);
+
+        GLfloat p[2] = { 0 };
+        glReadPixels(8, 8, 1, 1, GL_RG, GL_FLOAT, p);
+
+        ASSERT_GL_NO_ERROR();
+
+        static const double epsilon = 0.0005;
+
+        // Compare infinite numbers exactly
+        if (isinf(expect1))
+        {
+            EXPECT_EQ(p[0], expect1);
+        }
+        else
+        {
+            EXPECT_NEAR(p[0], expect1, epsilon);
+        }
+
+        if (isinf(expect2))
+        {
+            EXPECT_EQ(p[1], expect2);
+        }
+        else
+        {
+            EXPECT_NEAR(p[1], expect2, epsilon);
+        }
     }
 
     GLuint mSNormProgram;
@@ -154,6 +158,7 @@ class PackUnpackTest : public ANGLETest
 // Test the correctness of packSnorm2x16 and unpackSnorm2x16 functions calculating normal floating numbers.
 TEST_P(PackUnpackTest, PackUnpackSnormNormal)
 {
+    // Expect the shader to output the same value as the input
     compareBeforeAfter(mSNormProgram, 0.5f, -0.2f);
     compareBeforeAfter(mSNormProgram, -0.35f, 0.75f);
     compareBeforeAfter(mSNormProgram, 0.00392f, -0.99215f);
@@ -163,6 +168,7 @@ TEST_P(PackUnpackTest, PackUnpackSnormNormal)
 // Test the correctness of packHalf2x16 and unpackHalf2x16 functions calculating normal floating numbers.
 TEST_P(PackUnpackTest, PackUnpackHalfNormal)
 {
+    // Expect the shader to output the same value as the input
     compareBeforeAfter(mHalfProgram, 0.5f, -0.2f);
     compareBeforeAfter(mHalfProgram, -0.35f, 0.75f);
     compareBeforeAfter(mHalfProgram, 0.00392f, -0.99215f);
@@ -172,37 +178,43 @@ TEST_P(PackUnpackTest, PackUnpackHalfNormal)
 // Test the correctness of packSnorm2x16 and unpackSnorm2x16 functions calculating subnormal floating numbers.
 TEST_P(PackUnpackTest, PackUnpackSnormSubnormal)
 {
+    // Expect the shader to output the same value as the input
     compareBeforeAfter(mSNormProgram, 0.00001f, -0.00001f);
 }
 
 // Test the correctness of packHalf2x16 and unpackHalf2x16 functions calculating subnormal floating numbers.
 TEST_P(PackUnpackTest, PackUnpackHalfSubnormal)
 {
+    // Expect the shader to output the same value as the input
     compareBeforeAfter(mHalfProgram, 0.00001f, -0.00001f);
 }
 
 // Test the correctness of packSnorm2x16 and unpackSnorm2x16 functions calculating zero floating numbers.
 TEST_P(PackUnpackTest, PackUnpackSnormZero)
 {
+    // Expect the shader to output the same value as the input
     compareBeforeAfter(mSNormProgram, 0.00000f, -0.00000f);
 }
 
 // Test the correctness of packHalf2x16 and unpackHalf2x16 functions calculating zero floating numbers.
 TEST_P(PackUnpackTest, PackUnpackHalfZero)
 {
+    // Expect the shader to output the same value as the input
     compareBeforeAfter(mHalfProgram, 0.00000f, -0.00000f);
 }
 
 // Test the correctness of packSnorm2x16 and unpackSnorm2x16 functions calculating overflow floating numbers.
 TEST_P(PackUnpackTest, PackUnpackSnormOverflow)
 {
-    compareBeforeAfter(mHalfProgram, 67000.0f, -67000.0f);
+    // Expect the shader to clamp the input to [-1, 1]
+    compareBeforeAfter(mSNormProgram, 67000.0f, -67000.0f, 1.0f, -1.0f);
 }
 
 // Test the correctness of packHalf2x16 and unpackHalf2x16 functions calculating overflow floating numbers.
 TEST_P(PackUnpackTest, PackUnpackHalfOverflow)
 {
-    compareBeforeAfter(mHalfProgram, 67000.0f, -67000.0f);
+    // Expect the shader return inf when the numbers are not representable as 16-bit floats.
+    compareBeforeAfter(mHalfProgram, 67000.0f, -67000.0f, std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
