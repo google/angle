@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe23d6e9_87ff462b",
+        "filename": "build/common.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-23T17:11:22Z",
+      "side": 1,
+      "message": "dictionary",
+      "range": {
+        "startLine": 36,
+        "startChar": 17,
+        "endLine": 36,
+        "endChar": 28
+      },
+      "revId": "175f40a33243d00f587ad5e7c7e1f783404d8f5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe23d6e9_c7f93e46",
+        "filename": "build/common.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-23T17:11:22Z",
+      "side": 1,
+      "message": "why not just hard-define this here?",
+      "range": {
+        "startLine": 38,
+        "startChar": 8,
+        "endLine": 42,
+        "endChar": 35
+      },
+      "revId": "175f40a33243d00f587ad5e7c7e1f783404d8f5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e149a89_64efaaad",
+        "filename": "src/angle.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-23T17:11:22Z",
+      "side": 1,
+      "message": "if it\u0027s in common.gypi, that should be enough, no?",
+      "range": {
+        "startLine": 25,
+        "startChar": 12,
+        "endLine": 29,
+        "endChar": 39
+      },
+      "revId": "175f40a33243d00f587ad5e7c7e1f783404d8f5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
