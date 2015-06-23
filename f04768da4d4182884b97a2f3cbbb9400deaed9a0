@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9e149a89_0a035f17",
+        "filename": "build/common.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-23T19:34:07Z",
+      "side": 1,
+      "message": "remove the %",
+      "range": {
+        "startLine": 44,
+        "startChar": 21,
+        "endLine": 44,
+        "endChar": 28
+      },
+      "revId": "f04768da4d4182884b97a2f3cbbb9400deaed9a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de1a92b3_b5542a4e",
+        "filename": "build/common.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-23T19:34:07Z",
+      "side": 1,
+      "message": "remove the % again, I would think. I have a feeling the % is the source of all your problems with this.",
+      "range": {
+        "startLine": 52,
+        "startChar": 9,
+        "endLine": 52,
+        "endChar": 16
+      },
+      "revId": "f04768da4d4182884b97a2f3cbbb9400deaed9a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
