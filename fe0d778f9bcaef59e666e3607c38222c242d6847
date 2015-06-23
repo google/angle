@@ -92,6 +92,30 @@
       "revId": "fe0d778f9bcaef59e666e3607c38222c242d6847",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e2782f4_db41090b",
+        "filename": "src/compiler/translator/VersionGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-23T14:40:50Z",
+      "side": 1,
+      "message": "I think they will get duplicated, which is fine. (IE it would be like defining these as static const int in every file which includes the header - we could use extern if we want to be optimal on space).\n\nconstexpr is not supported in VS yet. Not sure about templated statics, though templates seem like overkill.",
+      "parentUuid": "3e2acebf_723c8981",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 40
+      },
+      "revId": "fe0d778f9bcaef59e666e3607c38222c242d6847",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
