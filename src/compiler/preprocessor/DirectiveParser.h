@@ -77,6 +77,7 @@ class DirectiveParser : public Lexer
     MacroSet *mMacroSet;
     Diagnostics *mDiagnostics;
     DirectiveHandler *mDirectiveHandler;
+    int mShaderVersion;
 };
 
 }  // namespace pp

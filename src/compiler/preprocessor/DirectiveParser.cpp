@@ -215,7 +215,8 @@ DirectiveParser::DirectiveParser(Tokenizer *tokenizer,
       mTokenizer(tokenizer),
       mMacroSet(macroSet),
       mDiagnostics(diagnostics),
-      mDirectiveHandler(directiveHandler)
+      mDirectiveHandler(directiveHandler),
+      mShaderVersion(100)
 {
 }
 
@@ -722,8 +723,17 @@ void DirectiveParser::parseExtension(Token *token)
     }
     if (valid && mSeenNonPreprocessorToken)
     {
-        mDiagnostics->report(Diagnostics::PP_NON_PP_TOKEN_BEFORE_EXTENSION,
-                             token->location, token->text);
+        if (mShaderVersion >= 300)
+        {
+            mDiagnostics->report(Diagnostics::PP_NON_PP_TOKEN_BEFORE_EXTENSION_ESSL3,
+                                 token->location, token->text);
+            valid = false;
+        }
+        else
+        {
+            mDiagnostics->report(Diagnostics::PP_NON_PP_TOKEN_BEFORE_EXTENSION_ESSL1,
+                                 token->location, token->text);
+        }
     }
     if (valid)
         mDirectiveHandler->handleExtension(token->location, name, behavior);
@@ -811,6 +821,7 @@ void DirectiveParser::parseVersion(Token *token)
     if (valid)
     {
         mDirectiveHandler->handleVersion(token->location, version);
+        mShaderVersion = version;
     }
 }
 

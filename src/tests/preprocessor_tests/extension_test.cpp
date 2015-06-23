@@ -66,6 +66,39 @@ TEST_F(ExtensionTest, MissingNewline)
     preprocess(str, expected);
 }
 
+TEST_F(ExtensionTest, ExtensionAfterNonPreProcessorTokenESSL1)
+{
+    const char *str = "int baz = 1;\n"
+                      "#extension foo : bar\n";
+    const char *expected = "int baz = 1;\n\n";
+
+    using testing::_;
+    // Directive successfully parsed.
+    EXPECT_CALL(mDirectiveHandler,
+        handleExtension(pp::SourceLocation(0, 2), "foo", "bar"));
+    // Expect a warning about extension pragmas after non-preprocessor tokens.
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_NON_PP_TOKEN_BEFORE_EXTENSION_ESSL1, _, _));
+
+    preprocess(str, expected);
+}
+
+TEST_F(ExtensionTest, ExtensionAfterNonPreProcessorTokenESSL3)
+{
+    const char *str = "#version 300 es\n"
+                      "int baz = 1;\n"
+                      "#extension foo : bar\n";
+    const char *expected = "\nint baz = 1;\n\n";
+
+    using testing::_;
+    // Directive successfully parsed.
+    EXPECT_CALL(mDirectiveHandler,
+        handleVersion(pp::SourceLocation(0, 1), 300));
+    // Expect a error about extension pragmas after non-preprocessor tokens.
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_NON_PP_TOKEN_BEFORE_EXTENSION_ESSL3, _, _));
+
+    preprocess(str, expected);
+}
+
 struct ExtensionTestParam
 {
     const char* str;
