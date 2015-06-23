@@ -16,6 +16,24 @@
       "revId": "81ae69cfdf70052a1ed05ee62e6478b90409ed18",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e149a89_0a199f36",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-23T20:13:53Z",
+      "side": 1,
+      "message": "This file is here intentionally to test the emulated functions against multiple versions of GLSL.",
+      "parentUuid": "9e149a89_aa020bc5",
+      "revId": "81ae69cfdf70052a1ed05ee62e6478b90409ed18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
