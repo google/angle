@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e2acebf_325051ab",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 1212,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-23T14:25:26Z",
+      "side": 1,
+      "message": "I think I should change this to be inside a bug OS\u003d\u003d\"win\" block - we definitely don\u0027t want these on Linux (yet)",
+      "range": {
+        "startLine": 1212,
+        "startChar": 10,
+        "endLine": 1212,
+        "endChar": 26
+      },
+      "revId": "568ac2f4e996df803e6335803236c0e1c17ec6b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
