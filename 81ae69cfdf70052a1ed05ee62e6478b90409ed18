@@ -52,6 +52,24 @@
       "revId": "81ae69cfdf70052a1ed05ee62e6478b90409ed18",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de1a92b3_00e4daa3",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-23T20:16:02Z",
+      "side": 1,
+      "message": "Ah, yea, if there are changes in the tree between patchsets then it is reflected in those diffs.",
+      "parentUuid": "9e149a89_8a046fcb",
+      "revId": "81ae69cfdf70052a1ed05ee62e6478b90409ed18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
