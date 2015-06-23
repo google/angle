@@ -5,7 +5,10 @@
 {
     'variables':
     {
-        'delibs_path': '<(deqp_path)/framework/delibs',
+        'deqp_path': 'third_party/deqp',
+        'delibs_path': 'third_party/deqp/framework/delibs',
+        'libpng_path': 'third_party/libpng',
+        'zlib_path': 'third_party/zlib',
         'deqp_msvs_disabled_warnings':
         [
             '4100',
@@ -31,18 +34,11 @@
             'DEQP_GLES3_RUNTIME_LOAD=1',
             'DEQP_GLES2_RUNTIME_LOAD=1',
             'QP_SUPPORT_PNG=1',
-            '_HAS_EXCEPTIONS=1',
-        ],
-        'deqp_undefines':
-        [
-            'WIN32_LEAN_AND_MEAN',
-            'NOMINMAX',
-            '_HAS_EXCEPTIONS=0',
         ],
         'deqp_include_dirs':
         [
-            '<(libpng_path)',
-            '<(zlib_path)',
+            'third_party/libpng',
+            'third_party/zlib',
             '<(delibs_path)/debase',
             '<(delibs_path)/decpp',
             '<(delibs_path)/depool',
@@ -814,11 +810,11 @@
             '<(deqp_path)/modules/glshared/glsUniformBlockCase.cpp',
             '<(deqp_path)/modules/glshared/glsVertexArrayTests.cpp',
             # TODO(jmadill): other platforms
-            '<(angle_path)/src/tests/deqp_support/tcuANGLEWin32NativeDisplayFactory.cpp',
-            '<(angle_path)/src/tests/deqp_support/tcuANGLEWin32NativeDisplayFactory.h',
+            'deqp_support/tcuANGLEWin32NativeDisplayFactory.cpp',
+            'deqp_support/tcuANGLEWin32NativeDisplayFactory.h',
             # TODO(jmadill): integrate with dEQP
-            '<(angle_path)/src/tests/deqp_support/tcuRandomOrderExecutor.cpp',
-            '<(angle_path)/src/tests/deqp_support/tcuRandomOrderExecutor.h',
+            'deqp_support/tcuRandomOrderExecutor.cpp',
+            'deqp_support/tcuRandomOrderExecutor.h',
         ],
     },
 
@@ -938,55 +934,53 @@
                         },
 
                         {
-                            'target_name': 'angle_deqp_support',
-                            'type': 'none',
+                            'target_name': 'angle_deqp_decpp',
+                            'type': 'static_library',
+                            'msvs_disabled_warnings':
+                            [
+                                '<@(deqp_msvs_disabled_warnings)',
+                            ],
+                            'msvs_settings':
+                            {
+                                'VCCLCompilerTool':
+                                {
+                                    'AdditionalOptions':
+                                    [
+                                        '/EHsc',   # dEQP requires exceptions
+                                    ],
+                                },
+                            },
+                            'defines': ['<@(deqp_defines)'],
+                            'include_dirs': ['<@(deqp_include_dirs)'],
                             'direct_dependent_settings':
                             {
-                                'configurations':
-                                {
-                                    'Common_Base':
-                                    {
-                                        'msvs_configuration_attributes':
-                                        {
-                                            # dEQP requires ASCII
-                                            'CharacterSet': '0',
-                                        },
-                                        'msvs_settings':
-                                        {
-                                            'VCCLCompilerTool':
-                                            {
-                                                # dEQP requires exceptions and RTTI
-                                                'ExceptionHandling': 1,
-                                                'RuntimeTypeInfo': 'true',
-                                            },
-                                            'VCLinkerTool':
-                                            {
-                                                'AdditionalDependencies':
-                                                [
-                                                    'dbghelp.lib',
-                                                    'gdi32.lib',
-                                                    'user32.lib',
-                                                    'ws2_32.lib',
-                                                ],
-                                            },
-                                        },
-                                    },
-                                },
                                 'msvs_disabled_warnings':
                                 [
                                     '<@(deqp_msvs_disabled_warnings)',
                                 ],
+                                'msvs_settings':
+                                {
+                                    'VCCLCompilerTool':
+                                    {
+                                        'AdditionalOptions':
+                                        [
+                                            '/EHsc',   # dEQP requires exceptions
+                                        ],
+                                    },
+                                    'VCLinkerTool':
+                                    {
+                                        'AdditionalDependencies':
+                                        [
+                                            'dbghelp.lib',
+                                            'gdi32.lib',
+                                            'user32.lib',
+                                            'ws2_32.lib',
+                                        ],
+                                    },
+                                },
                                 'include_dirs': ['<@(deqp_include_dirs)'],
                                 'defines': ['<@(deqp_defines)'],
-                                'defines!': [ '<@(deqp_undefines)' ],
                             },
-                        },
-
-                        {
-                            'target_name': 'angle_deqp_decpp',
-                            'type': 'static_library',
-                            'dependencies': [ 'angle_deqp_support' ],
-                            'export_dependent_settings': [ 'angle_deqp_support' ],
                             'sources':
                             [
                                 '<(deqp_path)/framework/delibs/decpp/deArrayBuffer.cpp',
@@ -1021,12 +1015,8 @@
                             'dependencies':
                             [
                                 'angle_deqp_decpp',
+                                'angle_libpng',
                                 '<(angle_path)/src/angle.gyp:libEGL',
-                                '<(angle_path)/util/util.gyp:angle_util',
-                            ],
-                            'export_dependent_settings':
-                            [
-                                'angle_deqp_decpp',
                                 '<(angle_path)/util/util.gyp:angle_util',
                             ],
                             'include_dirs':
@@ -1054,19 +1044,13 @@
                                     ],
                                 },
                             },
+                            'export_dependent_settings':
+                            [
+                                'angle_deqp_decpp',
+                            ],
                             'sources':
                             [
                                 '<@(deqp_libtester_sources)',
-                            ],
-                            'conditions':
-                            [
-                                ['angle_standalone==1',
-                                {
-                                    'dependencies': [ 'angle_libpng' ],
-                                },
-                                { # angle_standalone!=1
-                                    'dependencies': [ '<(DEPTH)/third_party/libpng/libpng.gyp:libpng' ],
-                                }],
                             ],
                         },
 
@@ -1076,6 +1060,7 @@
                             'dependencies':
                             [
                                 'angle_deqp_libtester',
+                                '<(angle_path)/util/util.gyp:angle_util',
                             ],
                             'defines':
                             [
@@ -1095,6 +1080,7 @@
                             'dependencies':
                             [
                                 'angle_deqp_libtester',
+                                '<(angle_path)/util/util.gyp:angle_util',
                             ],
                             'defines':
                             [
@@ -1117,7 +1103,7 @@
                                 # app locate the data folder without need
                                 # for a copy. gyp recursive copies are not
                                 # implemented properly on Windows.
-                                'ANGLE_DEQP_DIR="<(deqp_path)"',
+                                'ANGLE_DEQP_DIR="<(DEPTH)/src/tests/<(deqp_path)"',
                             ],
                             'dependencies':
                             [
@@ -1138,7 +1124,7 @@
                                 # app locate the data folder without need
                                 # for a copy. gyp recursive copies are not
                                 # implemented properly on Windows.
-                                'ANGLE_DEQP_DIR="<(deqp_path)"',
+                                'ANGLE_DEQP_DIR="<(DEPTH)/src/tests/<(deqp_path)"',
                             ],
                             'dependencies':
                             [
@@ -1158,88 +1144,59 @@
                             [
                                 'angle_deqp_libgles2',
                                 'angle_test_support',
-                                '<(angle_path)/util/util.gyp:angle_util',
+                                'angle_zlib',
+                                'angle_deqp_decpp',
+                                '<(angle_path)/src/angle.gyp:angle_common',
                             ],
                             'export_dependent_settings':
                             [
                                 'angle_test_support',
-                                '<(angle_path)/util/util.gyp:angle_util',
+                                'angle_zlib',
+                                'angle_deqp_decpp',
+                                '<(angle_path)/src/angle.gyp:angle_common',
                             ],
 
                             'direct_dependent_settings':
                             {
+                                'defines':
+                                [
+                                    # Hard-code the path to dEQP. This lets the
+                                    # app locate the data folder without need
+                                    # for a copy. gyp recursive copies are not
+                                    # implemented properly on Windows.
+                                    'ANGLE_DEQP_DIR="<(DEPTH)/src/tests/<(deqp_path)"',
+                                ],
                                 'include_dirs':
                                 [
                                     'deqp_support',
-                                    'third_party/gpu_test_expectations',
                                 ],
                                 'sources':
                                 [
                                     'deqp_support/angle_deqp_gtest.cpp',
-                                    'third_party/gpu_test_expectations/gpu_info.cc',
-                                    'third_party/gpu_test_expectations/gpu_info.h',
-                                    'third_party/gpu_test_expectations/gpu_test_config.cc',
-                                    'third_party/gpu_test_expectations/gpu_test_config.h',
-                                    'third_party/gpu_test_expectations/gpu_test_expectations_parser.cc',
-                                    'third_party/gpu_test_expectations/gpu_test_expectations_parser.h',
                                 ],
-
-                                'defines':
-                                [
-                                    # Re-define the missing Windows macros
-                                    '<@(deqp_undefines)',
-                                ],
-
-                                'copies':
-                                [
-                                    {
-                                        'destination': '<(PRODUCT_DIR)/deqp_support',
-                                        'files':
-                                        [
-                                            'deqp_support/dEQP-GLES2-cases.txt.gz',
-                                            'deqp_support/dEQP-GLES3-cases.txt.gz',
-                                            'deqp_support/deqp_test_expectations.txt',
-                                        ],
-                                    },
-                                ],
-
-                                'msvs_settings':
-                                {
-                                    'VCLinkerTool':
-                                    {
-                                        'AdditionalDependencies':
-                                        [
-                                            'user32.lib',
-                                        ],
-                                    },
-                                },
                             },
-
-                            'conditions':
-                            [
-                                ['angle_standalone==1',
-                                {
-                                    'dependencies': [ 'angle_zlib' ],
-                                    'export_dependent_settings': [ 'angle_zlib' ],
-                                },
-                                { # angle_standalone!=1
-                                    'dependencies': [ '<(zlib_path)/zlib.gyp:zlib' ],
-                                    'export_dependent_settings': [ '<(zlib_path)/zlib.gyp:zlib' ],
-                                }],
-                            ],
                         },
 
                         {
                             'target_name': 'angle_deqp_googletest',
                             'type': 'executable',
-                            'includes': [ '../../build/common_defines.gypi', ],
                             'dependencies':
                             [
                                 'angle_deqp_gtest_support',
                             ],
+                            'include_dirs':
+                            [
+                                'third_party/gpu_test_expectations',
+                            ],
                             'sources':
                             [
                                 'deqp_support/angle_deqp_gtest_main.cpp',
+                                'third_party/gpu_test_expectations/gpu_info.cc',
+                                'third_party/gpu_test_expectations/gpu_info.h',
+                                'third_party/gpu_test_expectations/gpu_test_config.cc',
+                                'third_party/gpu_test_expectations/gpu_test_config.h',
+                                'third_party/gpu_test_expectations/gpu_test_expectations_parser.cc',
+                                'third_party/gpu_test_expectations/gpu_test_expectations_parser.h',
                             ],
                         },
                     ], # targets

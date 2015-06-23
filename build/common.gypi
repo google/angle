@@ -6,10 +6,7 @@
     'includes': [ 'common_defines.gypi', ],
     'variables':
     {
-        'angle_path': '<(DEPTH)',
-        'deqp_path': '<(angle_path)/src/tests/third_party/deqp',
-        'libpng_path': '<(angle_path)/src/tests/third_party/libpng',
-        'zlib_path': '<(angle_path)/src/tests/third_party/zlib',
+        'angle_path%': '<(DEPTH)',
         'angle_build_winrt%': '0',
         'angle_build_winphone%': '0',
         'angle_build_winrt_app_type_revision%': '8.1',

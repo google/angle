@@ -12,6 +12,7 @@
 
 int main(int argc, char **argv)
 {
+    deqp_libtester_init_platform(argc, argv, ANGLE_DEQP_DIR "/data");
     testing::InitGoogleTest(&argc, argv);
     int rt = RUN_ALL_TESTS();
     deqp_libtester_shutdown_platform();

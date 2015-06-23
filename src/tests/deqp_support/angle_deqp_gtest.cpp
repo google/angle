@@ -7,16 +7,17 @@
 //   dEQP and GoogleTest integration logic. Calls through to the random
 //   order executor.
 
+#include <gtest/gtest.h>
 #include <stdint.h>
 #include <zlib.h>
 
-#include <gtest/gtest.h>
+#include <algorithm>
+#include <fstream>
 
 #include "angle_deqp_libtester.h"
 #include "common/angleutils.h"
 #include "common/debug.h"
 #include "gpu_test_expectations_parser.h"
-#include "system_utils.h"
 
 namespace
 {
@@ -24,7 +25,7 @@ namespace
 class dEQPCaseList
 {
   public:
-    dEQPCaseList(const std::string &caseListPath, const std::string &testExpectationsPath);
+    dEQPCaseList(const char *caseListPath, const char *testExpectationsPath);
 
     struct CaseInfo
     {
@@ -72,10 +73,8 @@ dEQPCaseList *dEQPCaseList::GetInstance()
 {
     if (mInstance == nullptr)
     {
-        std::string exeDir = angle::GetExecutableDirectory();
-        std::string caseListPath = exeDir + "/deqp_support/dEQP-GLES2-cases.txt.gz";
-        std::string testExpectationsPath = exeDir + "/deqp_support/deqp_test_expectations.txt";
-        mInstance = new dEQPCaseList(caseListPath, testExpectationsPath);
+        mInstance = new dEQPCaseList("deqp_support/dEQP-GLES2-cases.txt.gz",
+                                     "deqp_support/deqp_test_expectations.txt");
     }
     return mInstance;
 }
@@ -87,9 +86,9 @@ void dEQPCaseList::FreeInstance()
     SafeDelete(mInstance);
 }
 
-dEQPCaseList::dEQPCaseList(const std::string &caseListPath, const std::string &testExpectationsPath)
+dEQPCaseList::dEQPCaseList(const char *caseListPath, const char *testExpectationsPath)
 {
-    if (!mTestExpectationsParser.LoadTestExpectationsFromFile(testExpectationsPath))
+    if (!mTestExpectationsParser.LoadTestExpectationsFromFile(std::string(testExpectationsPath)))
     {
         std::cerr << "Failed to load test expectations." << std::endl;
         for (const auto &message : mTestExpectationsParser.GetErrorMessages())
@@ -108,7 +107,7 @@ dEQPCaseList::dEQPCaseList(const std::string &caseListPath, const std::string &t
     std::stringstream caseListStream;
 
     std::vector<char> buf(1024 * 1024 * 16);
-    gzFile *fi = static_cast<gzFile *>(gzopen(caseListPath.c_str(), "rb"));
+    gzFile *fi = static_cast<gzFile *>(gzopen(caseListPath, "rb"));
 
     if (fi == nullptr)
     {

@@ -9,7 +9,6 @@
 #include <iostream>
 
 #include "angle_deqp_libtester.h"
-#include "common/angleutils.h"
 #include "deMath.h"
 #include "deUniquePtr.hpp"
 #include "tcuApp.hpp"
@@ -19,10 +18,6 @@
 #include "tcuRandomOrderExecutor.h"
 #include "tcuResource.hpp"
 #include "tcuTestLog.hpp"
-
-#if (DE_OS == DE_OS_WIN32)
-#include <Windows.h>
-#endif
 
 // Located in tcuMain.cc in dEQP's sources.
 int main(int argc, const char* argv[]);
@@ -39,48 +34,15 @@ tcu::TestContext *g_testCtx = nullptr;
 tcu::TestPackageRoot *g_root = nullptr;
 tcu::RandomOrderExecutor *g_executor = nullptr;
 
-const char *g_dEQPDataSearchDirs[] =
-{
-    "data",
-    "third_party/deqp/data",
-    "../third_party/deqp/src/data",
-    "deqp_support/data",
-    "third_party/deqp/src/data",
-    "../../third_party/deqp/src/data"
-};
-
-// TODO(jmadill): upstream to dEQP?
-#if (DE_OS == DE_OS_WIN32)
-deBool deIsDir(const char *filename)
-{
-    DWORD attribs = GetFileAttributesA(filename);
-    return (attribs != INVALID_FILE_ATTRIBUTES) &&
-           ((attribs & FILE_ATTRIBUTE_DIRECTORY) > 0);
-}
-#else
-#error TODO(jmadill): support other platforms
-//deBool deIsDir(const char *filename)
-//{
-//    struct stat st;
-//    int result = stat(filename, &st);
-//    return result == 0 && ((st.st_mode & S_IFDIR) == S_IFDIR);
-//}
-#endif
-
-const char *FindDataDir()
-{
-    for (size_t dirIndex = 0; dirIndex < ArraySize(g_dEQPDataSearchDirs); ++dirIndex)
-    {
-        if (deIsDir(g_dEQPDataSearchDirs[dirIndex]))
-        {
-            return g_dEQPDataSearchDirs[dirIndex];
-        }
-    }
-
-    return nullptr;
 }
 
-bool InitPlatform()
+// Exported to the tester app.
+ANGLE_LIBTESTER_EXPORT int deqp_libtester_main(int argc, const char *argv[])
+{
+    return main(argc, argv);
+}
+
+ANGLE_LIBTESTER_EXPORT void deqp_libtester_init_platform(int argc, char **argv, const char *deqpDataDir)
 {
     try
     {
@@ -92,21 +54,11 @@ bool InitPlatform()
 
         if (!deSetRoundingMode(DE_ROUNDINGMODE_TO_NEAREST))
         {
-            std::cout << "Failed to set floating point rounding mode." << std::endl;
-            return false;
-        }
-
-        const char *deqpDataDir = FindDataDir();
-
-        if (deqpDataDir == nullptr)
-        {
-            std::cout << "Failed to find dEQP data directory." << std::endl;
-            return false;
+            throw std::runtime_error("Failed to set floating point rounding mode.");
         }
 
         // TODO(jmadill): filter arguments
-        const char *emptyString = "";
-        g_cmdLine = new tcu::CommandLine(1, &emptyString);
+        g_cmdLine = new tcu::CommandLine(1, argv);
         g_archive = new tcu::DirArchive(deqpDataDir);
         g_log = new tcu::TestLog(g_cmdLine->getLogFileName(), g_cmdLine->getLogFlags());
         g_testCtx = new tcu::TestContext(*g_platform, *g_archive, *g_log, *g_cmdLine, DE_NULL);
@@ -116,18 +68,7 @@ bool InitPlatform()
     catch (const std::exception& e)
     {
         tcu::die("%s", e.what());
-        return false;
     }
-
-    return true;
-}
-
-} // anonymous namespace
-
-// Exported to the tester app.
-ANGLE_LIBTESTER_EXPORT int deqp_libtester_main(int argc, const char *argv[])
-{
-    return main(argc, argv);
 }
 
 ANGLE_LIBTESTER_EXPORT void deqp_libtester_shutdown_platform()
@@ -143,9 +84,9 @@ ANGLE_LIBTESTER_EXPORT void deqp_libtester_shutdown_platform()
 
 ANGLE_LIBTESTER_EXPORT bool deqp_libtester_run(const char *caseName)
 {
-    if (g_platform == nullptr && !InitPlatform())
+    if (!g_platform)
     {
-        tcu::die("Failed to initialize platform.");
+        return false;
     }
 
     try

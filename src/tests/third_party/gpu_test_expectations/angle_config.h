@@ -19,7 +19,7 @@
 
 #define DCHECK_EQ(A,B) ASSERT((A) == (B))
 #define DCHECK_NE(A,B) ASSERT((A) != (B))
-#define DCHECK(X) ASSERT(X)
+#define DCHECK ASSERT
 #define LOG(X) std::cerr
 #define StringPrintf FormatString
 

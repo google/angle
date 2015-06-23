@@ -51,10 +51,10 @@ CollectInfoResult CollectGpuID(uint32* vendor_id, uint32* device_id) {
   *device_id = 0;
 
   // Taken from http://developer.nvidia.com/object/device_ids.html
-  DISPLAY_DEVICEA dd;
-  dd.cb = sizeof(DISPLAY_DEVICEA);
+  DISPLAY_DEVICE dd;
+  dd.cb = sizeof(DISPLAY_DEVICE);
   std::string id;
-  for (int i = 0; EnumDisplayDevicesA(NULL, i, &dd, 0); ++i) {
+  for (int i = 0; EnumDisplayDevices(NULL, i, &dd, 0); ++i) {
     if (dd.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE) {
       id = dd.DeviceID;
       break;
