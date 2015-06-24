@@ -11,25 +11,26 @@
 //
 
 #include "compiler/translator/Initialize.h"
+#include "compiler/translator/Cache.h"
 
 #include "compiler/translator/IntermNode.h"
 #include "angle_gl.h"
 
 void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInResources &resources, TSymbolTable &symbolTable)
 {
-    TType *float1 = new TType(EbtFloat);
-    TType *float2 = new TType(EbtFloat, 2);
-    TType *float3 = new TType(EbtFloat, 3);
-    TType *float4 = new TType(EbtFloat, 4);
-    TType *int1 = new TType(EbtInt);
-    TType *int2 = new TType(EbtInt, 2);
-    TType *int3 = new TType(EbtInt, 3);
-    TType *uint1 = new TType(EbtUInt);
-    TType *bool1 = new TType(EbtBool);
-    TType *genType = new TType(EbtGenType);
-    TType *genIType = new TType(EbtGenIType);
-    TType *genUType = new TType(EbtGenUType);
-    TType *genBType = new TType(EbtGenBType);
+    const TType *float1 = TCache::getType(EbtFloat);
+    const TType *float2 = TCache::getType(EbtFloat, 2);
+    const TType *float3 = TCache::getType(EbtFloat, 3);
+    const TType *float4 = TCache::getType(EbtFloat, 4);
+    const TType *int1 = TCache::getType(EbtInt);
+    const TType *int2 = TCache::getType(EbtInt, 2);
+    const TType *int3 = TCache::getType(EbtInt, 3);
+    const TType *uint1 = TCache::getType(EbtUInt);
+    const TType *bool1 = TCache::getType(EbtBool);
+    const TType *genType = TCache::getType(EbtGenType);
+    const TType *genIType = TCache::getType(EbtGenIType);
+    const TType *genUType = TCache::getType(EbtGenUType);
+    const TType *genBType = TCache::getType(EbtGenBType);
 
     //
     // Angle and Trigonometric Functions.
@@ -102,14 +103,10 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpSmoothStep, genType, "smoothstep", genType, genType, genType);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpSmoothStep, genType, "smoothstep", float1, float1, genType);
 
-    TType *outFloat1 = new TType(EbtFloat);
-    TType *outFloat2 = new TType(EbtFloat, 2);
-    TType *outFloat3 = new TType(EbtFloat, 3);
-    TType *outFloat4 = new TType(EbtFloat, 4);
-    outFloat1->setQualifier(EvqOut);
-    outFloat2->setQualifier(EvqOut);
-    outFloat3->setQualifier(EvqOut);
-    outFloat4->setQualifier(EvqOut);
+    const TType *outFloat1 = TCache::getType(EbtFloat, EvqOut);
+    const TType *outFloat2 = TCache::getType(EbtFloat, EvqOut, 2);
+    const TType *outFloat3 = TCache::getType(EbtFloat, EvqOut, 3);
+    const TType *outFloat4 = TCache::getType(EbtFloat, EvqOut, 4);
 
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpModf, float1, "modf", float1, outFloat1);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpModf, float2, "modf", float2, outFloat2);
@@ -142,15 +139,15 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpReflect, genType, "reflect", genType, genType);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpRefract, genType, "refract", genType, genType, float1);
 
-    TType *mat2 = new TType(EbtFloat, 2, 2);
-    TType *mat3 = new TType(EbtFloat, 3, 3);
-    TType *mat4 = new TType(EbtFloat, 4, 4);
-    TType *mat2x3 = new TType(EbtFloat, 2, 3);
-    TType *mat3x2 = new TType(EbtFloat, 3, 2);
-    TType *mat2x4 = new TType(EbtFloat, 2, 4);
-    TType *mat4x2 = new TType(EbtFloat, 4, 2);
-    TType *mat3x4 = new TType(EbtFloat, 3, 4);
-    TType *mat4x3 = new TType(EbtFloat, 4, 3);
+    const TType *mat2 = TCache::getType(EbtFloat, 2, 2);
+    const TType *mat3 = TCache::getType(EbtFloat, 3, 3);
+    const TType *mat4 = TCache::getType(EbtFloat, 4, 4);
+    const TType *mat2x3 = TCache::getType(EbtFloat, 2, 3);
+    const TType *mat3x2 = TCache::getType(EbtFloat, 3, 2);
+    const TType *mat2x4 = TCache::getType(EbtFloat, 2, 4);
+    const TType *mat4x2 = TCache::getType(EbtFloat, 4, 2);
+    const TType *mat3x4 = TCache::getType(EbtFloat, 3, 4);
+    const TType *mat4x3 = TCache::getType(EbtFloat, 4, 3);
 
     //
     // Matrix Functions.
@@ -193,10 +190,10 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpInverse, mat3, "inverse", mat3);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpInverse, mat4, "inverse", mat4);
 
-    TType *vec = new TType(EbtVec);
-    TType *ivec = new TType(EbtIVec);
-    TType *uvec = new TType(EbtUVec);
-    TType *bvec = new TType(EbtBVec);
+    const TType *vec = TCache::getType(EbtVec);
+    const TType *ivec = TCache::getType(EbtIVec);
+    const TType *uvec = TCache::getType(EbtUVec);
+    const TType *bvec = TCache::getType(EbtBVec);
 
     //
     // Vector relational functions.
@@ -225,8 +222,8 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpAll, bool1, "all", bvec);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpVectorLogicalNot, bvec, "not", bvec);
 
-    TType *sampler2D = new TType(EbtSampler2D);
-    TType *samplerCube = new TType(EbtSamplerCube);
+    const TType *sampler2D = TCache::getType(EbtSampler2D);
+    const TType *samplerCube = TCache::getType(EbtSamplerCube);
 
     //
     // Texture Functions for GLSL ES 1.0
@@ -238,7 +235,7 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
 
     if (resources.OES_EGL_image_external)
     {
-        TType *samplerExternalOES = new TType(EbtSamplerExternalOES);
+        const TType *samplerExternalOES = TCache::getType(EbtSamplerExternalOES);
 
         symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2D", samplerExternalOES, float2);
         symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DProj", samplerExternalOES, float3);
@@ -247,7 +244,7 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
 
     if (resources.ARB_texture_rectangle)
     {
-        TType *sampler2DRect = new TType(EbtSampler2DRect);
+        const TType *sampler2DRect = TCache::getType(EbtSampler2DRect);
 
         symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DRect", sampler2DRect, float2);
         symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DRectProj", sampler2DRect, float3);
@@ -296,12 +293,12 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
         symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "textureCubeLod", samplerCube, float3, float1);
     }
 
-    TType *gvec4 = new TType(EbtGVec4);
+    const TType *gvec4 = TCache::getType(EbtGVec4);
 
-    TType *gsampler2D = new TType(EbtGSampler2D);
-    TType *gsamplerCube = new TType(EbtGSamplerCube);
-    TType *gsampler3D = new TType(EbtGSampler3D);
-    TType *gsampler2DArray = new TType(EbtGSampler2DArray);
+    const TType *gsampler2D = TCache::getType(EbtGSampler2D);
+    const TType *gsamplerCube = TCache::getType(EbtGSamplerCube);
+    const TType *gsampler3D = TCache::getType(EbtGSampler3D);
+    const TType *gsampler2DArray = TCache::getType(EbtGSampler2DArray);
 
     //
     // Texture Functions for GLSL ES 3.0
@@ -329,9 +326,9 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
         symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureProj", gsampler3D, float4, float1);
     }
 
-    TType *sampler2DShadow = new TType(EbtSampler2DShadow);
-    TType *samplerCubeShadow = new TType(EbtSamplerCubeShadow);
-    TType *sampler2DArrayShadow = new TType(EbtSampler2DArrayShadow);
+    const TType *sampler2DShadow = TCache::getType(EbtSampler2DShadow);
+    const TType *samplerCubeShadow = TCache::getType(EbtSamplerCubeShadow);
+    const TType *sampler2DArrayShadow = TCache::getType(EbtSampler2DArrayShadow);
 
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "texture", sampler2DShadow, float3);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "texture", samplerCubeShadow, float4);
