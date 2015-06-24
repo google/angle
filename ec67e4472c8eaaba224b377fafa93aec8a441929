@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e9bae8e_0189aa2d",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-24T09:27:13Z",
+      "side": 1,
+      "message": "Instead of specifying all of these, you could implement a version of compareBeforeAfter which would take just the input values and call compareBeforeAfter with the expected output values set to the input values. Then all the four parameters would need to be specified only when the expected values are different from the input values.",
+      "revId": "ec67e4472c8eaaba224b377fafa93aec8a441929",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
