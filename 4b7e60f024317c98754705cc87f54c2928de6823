@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7ec9a69b_33ae481d",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-24T11:42:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59095cdc_7df21314",
+      "range": {
+        "startLine": 204,
+        "startChar": 6,
+        "endLine": 204,
+        "endChar": 12
+      },
+      "revId": "4b7e60f024317c98754705cc87f54c2928de6823",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "390ca8ed_1c4b197c",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-12T17:29:40Z",
       "side": 1,
       "message": "Assert 2 \u003c\u003d rows \u003c\u003d 4, same for cols",
+      "range": {
+        "startLine": 211,
+        "startChar": 3,
+        "endLine": 211,
+        "endChar": 6
+      },
+      "revId": "4b7e60f024317c98754705cc87f54c2928de6823",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "febd96e6_b7cfe81f",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-24T11:42:04Z",
+      "side": 1,
+      "message": "Done, actually this restriction is only for few matrix operations like inverse() and determinant(), I have put this asserts there instead.",
+      "parentUuid": "390ca8ed_1c4b197c",
       "range": {
         "startLine": 211,
         "startChar": 3,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "9ee3ba1e_8c3ba789",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-24T11:42:04Z",
+      "side": 1,
+      "message": "Done, as explained above.",
+      "parentUuid": "59e07c3c_ec25d4b6",
+      "range": {
+        "startLine": 217,
+        "startChar": 4,
+        "endLine": 217,
+        "endChar": 6
+      },
+      "revId": "4b7e60f024317c98754705cc87f54c2928de6823",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "390ca8ed_5c459161",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 5
@@ -82,6 +154,30 @@
       "writtenOn": "2015-06-12T17:29:40Z",
       "side": 1,
       "message": "ditto",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 222,
+        "endChar": 5
+      },
+      "revId": "4b7e60f024317c98754705cc87f54c2928de6823",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ee9eefa_377760b5",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-24T11:42:04Z",
+      "side": 1,
+      "message": "Done, as explained above.",
+      "parentUuid": "390ca8ed_5c459161",
       "range": {
         "startLine": 222,
         "startChar": 4,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "7ec9a69b_13ab4c0d",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-24T11:42:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "390ca8ed_9ca569bf",
+      "range": {
+        "startLine": 494,
+        "startChar": 1,
+        "endLine": 494,
+        "endChar": 8
+      },
+      "revId": "4b7e60f024317c98754705cc87f54c2928de6823",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59095cdc_5d9d8fb4",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 5
@@ -128,6 +248,30 @@
       "writtenOn": "2015-06-12T17:29:40Z",
       "side": 1,
       "message": "I feel like this code could be a helper function",
+      "range": {
+        "startLine": 1524,
+        "startChar": 16,
+        "endLine": 1528,
+        "endChar": 102
+      },
+      "revId": "4b7e60f024317c98754705cc87f54c2928de6823",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ec48e7c_dc028112",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1528,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-24T11:42:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59095cdc_5d9d8fb4",
       "range": {
         "startLine": 1524,
         "startChar": 16,
@@ -174,6 +318,54 @@
       "writtenOn": "2015-06-15T08:20:45Z",
       "side": 1,
       "message": "There\u0027s nothing that\u0027s being shared between the tests for different matrix sizes, so I think this should be split into separate test functions for each matrix size.",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 46
+      },
+      "revId": "4b7e60f024317c98754705cc87f54c2928de6823",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ec9a69b_f398d0fd",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-24T11:42:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "390ca8ed_dcafe19a",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 6
+      },
+      "revId": "4b7e60f024317c98754705cc87f54c2928de6823",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ec48e7c_bc07cd20",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-24T11:42:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "799460c1_bb8cc73e",
       "range": {
         "startLine": 227,
         "startChar": 0,
@@ -233,6 +425,54 @@
     },
     {
       "key": {
+        "uuid": "7ec9a69b_d39dd4eb",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-24T11:42:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "992af412_2f7ef2dc",
+      "range": {
+        "startLine": 313,
+        "startChar": 0,
+        "endLine": 313,
+        "endChar": 6
+      },
+      "revId": "4b7e60f024317c98754705cc87f54c2928de6823",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ee3ba1e_6c319ba8",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-24T11:42:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79bf0033_433146f4",
+      "range": {
+        "startLine": 313,
+        "startChar": 0,
+        "endLine": 313,
+        "endChar": 6
+      },
+      "revId": "4b7e60f024317c98754705cc87f54c2928de6823",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59e07c3c_8c31a8f7",
         "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
         "patchSetId": 5
@@ -244,6 +484,30 @@
       "writtenOn": "2015-06-12T17:29:40Z",
       "side": 1,
       "message": "ensure there\u0027s a newline after this (gerrit doesn\u0027t show it)",
+      "range": {
+        "startLine": 376,
+        "startChar": 0,
+        "endLine": 376,
+        "endChar": 1
+      },
+      "revId": "4b7e60f024317c98754705cc87f54c2928de6823",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "febd96e6_97d4e4b6",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-24T11:42:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59e07c3c_8c31a8f7",
       "range": {
         "startLine": 376,
         "startChar": 0,
