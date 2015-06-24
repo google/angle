@@ -14,6 +14,7 @@
 #endif
 
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/Cache.h"
 
 #include <stdio.h>
 #include <algorithm>
@@ -152,10 +153,10 @@ const TType *SpecificType(const TType *type, int size)
 
     switch(type->getBasicType())
     {
-      case EbtGenType:  return new TType(EbtFloat, static_cast<unsigned char>(size));
-      case EbtGenIType: return new TType(EbtInt, static_cast<unsigned char>(size));
-      case EbtGenUType: return new TType(EbtUInt, static_cast<unsigned char>(size));
-      case EbtGenBType: return new TType(EbtBool, static_cast<unsigned char>(size));
+      case EbtGenType:  return TCache::getType(EbtFloat, static_cast<unsigned char>(size));
+      case EbtGenIType: return TCache::getType(EbtInt, static_cast<unsigned char>(size));
+      case EbtGenUType: return TCache::getType(EbtUInt, static_cast<unsigned char>(size));
+      case EbtGenBType: return TCache::getType(EbtBool, static_cast<unsigned char>(size));
       default: return type;
     }
 }
@@ -173,10 +174,10 @@ const TType *VectorType(const TType *type, int size)
 
     switch(type->getBasicType())
     {
-      case EbtVec:  return new TType(EbtFloat, static_cast<unsigned char>(size));
-      case EbtIVec: return new TType(EbtInt, static_cast<unsigned char>(size));
-      case EbtUVec: return new TType(EbtUInt, static_cast<unsigned char>(size));
-      case EbtBVec: return new TType(EbtBool, static_cast<unsigned char>(size));
+      case EbtVec:  return TCache::getType(EbtFloat, static_cast<unsigned char>(size));
+      case EbtIVec: return TCache::getType(EbtInt, static_cast<unsigned char>(size));
+      case EbtUVec: return TCache::getType(EbtUInt, static_cast<unsigned char>(size));
+      case EbtBVec: return TCache::getType(EbtBool, static_cast<unsigned char>(size));
       default: return type;
     }
 }
@@ -187,30 +188,30 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level, TOperator op, const char *e
     if (ptype1->getBasicType() == EbtGSampler2D)
     {
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
-        insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSampler2D), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISampler2D), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSampler2D), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name, TCache::getType(EbtSampler2D), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name, TCache::getType(EbtISampler2D), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtUInt, 4) : rvalue, name, TCache::getType(EbtUSampler2D), ptype2, ptype3, ptype4, ptype5);
     }
     else if (ptype1->getBasicType() == EbtGSampler3D)
     {
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
-        insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSampler3D), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISampler3D), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSampler3D), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name, TCache::getType(EbtSampler3D), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name, TCache::getType(EbtISampler3D), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtUInt, 4) : rvalue, name, TCache::getType(EbtUSampler3D), ptype2, ptype3, ptype4, ptype5);
     }
     else if (ptype1->getBasicType() == EbtGSamplerCube)
     {
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
-        insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSamplerCube), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISamplerCube), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSamplerCube), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name, TCache::getType(EbtSamplerCube), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name, TCache::getType(EbtISamplerCube), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtUInt, 4) : rvalue, name, TCache::getType(EbtUSamplerCube), ptype2, ptype3, ptype4, ptype5);
     }
     else if (ptype1->getBasicType() == EbtGSampler2DArray)
     {
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
-        insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSampler2DArray), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISampler2DArray), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSampler2DArray), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name, TCache::getType(EbtSampler2DArray), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name, TCache::getType(EbtISampler2DArray), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtUInt, 4) : rvalue, name, TCache::getType(EbtUSampler2DArray), ptype2, ptype3, ptype4, ptype5);
     }
     else if (IsGenType(rvalue) || IsGenType(ptype1) || IsGenType(ptype2) || IsGenType(ptype3))
     {
