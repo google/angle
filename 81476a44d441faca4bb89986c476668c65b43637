@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "beeebe34_4cc0471f",
+        "filename": "src/angle.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-25T17:19:26Z",
+      "side": 1,
+      "message": "Remove the define from libGLESv2.gypi. Also you\u0027ll need to fix and test with BUILD.gn.",
+      "parentUuid": "feb756b3_36dee64e",
+      "range": {
+        "startLine": 94,
+        "startChar": 16,
+        "endLine": 107,
+        "endChar": 19
+      },
+      "revId": "81476a44d441faca4bb89986c476668c65b43637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5efea270_41fedc7d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
