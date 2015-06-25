@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "beeebe34_cc88d72c",
+        "filename": "util/osx/OSXTimer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-25T17:15:05Z",
+      "side": 1,
+      "message": "nit: \u003d { 0 } if it will let you",
+      "range": {
+        "startLine": 39,
+        "startChar": 37,
+        "endLine": 39,
+        "endChar": 49
+      },
+      "revId": "4ce87ebd511e3eb2415ffa63318ec77d96cbb0c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9efd7aeb_3059d00b",
+        "filename": "util/osx/OSXTimer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-25T17:15:05Z",
+      "side": 1,
+      "message": "nit: formatting",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 43,
+        "endChar": 5
+      },
+      "revId": "4ce87ebd511e3eb2415ffa63318ec77d96cbb0c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9efd7aeb_1072d48f",
+        "filename": "util/osx/OSXTimer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-25T17:15:05Z",
+      "side": 1,
+      "message": "nit: add trailing _",
+      "range": {
+        "startLine": 9,
+        "startChar": 8,
+        "endLine": 9,
+        "endChar": 24
+      },
+      "revId": "4ce87ebd511e3eb2415ffa63318ec77d96cbb0c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "feecb63d_d38234db",
+        "filename": "util/osx/OSXWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-25T17:15:05Z",
+      "side": 1,
+      "message": "TODO(cwallez):",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 1
+      },
+      "revId": "4ce87ebd511e3eb2415ffa63318ec77d96cbb0c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1eea6a20_ba6ca1b1",
+        "filename": "util/osx/OSXWindow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-25T17:15:05Z",
+      "side": 1,
+      "message": "nit: add trailing _",
+      "range": {
+        "startLine": 9,
+        "startChar": 8,
+        "endLine": 9,
+        "endChar": 25
+      },
+      "revId": "4ce87ebd511e3eb2415ffa63318ec77d96cbb0c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1eea6a20_fa762981",
+        "filename": "util/osx/OSXWindow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-25T17:15:05Z",
+      "side": 1,
+      "message": "nit: add TODO(cwallez): blah",
+      "range": {
+        "startLine": 12,
+        "startChar": 10,
+        "endLine": 12,
+        "endChar": 18
+      },
+      "revId": "4ce87ebd511e3eb2415ffa63318ec77d96cbb0c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
