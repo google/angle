@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "de8ff2ab_0188ec25",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-25T22:07:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "feecb63d_a86c5fb1",
+      "range": {
+        "startLine": 10,
+        "startChar": 13,
+        "endLine": 10,
+        "endChar": 14
+      },
+      "revId": "7b7651429ee06b2e1ccae1bbf5b539cd98e6a498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe0596c3_77123011",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-25T22:07:19Z",
+      "side": 1,
+      "message": "I have plans to add at least string caching (const TString *getString(const char *)). However, if the gain from that is small, I\u0027ll rename/refactor this class.",
+      "parentUuid": "1eea6a20_4ff839bc",
+      "range": {
+        "startLine": 10,
+        "startChar": 6,
+        "endLine": 10,
+        "endChar": 12
+      },
+      "revId": "7b7651429ee06b2e1ccae1bbf5b539cd98e6a498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9efd7aeb_c588b02c",
         "filename": "src/compiler/translator/Cache.h",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2015-06-25T13:29:14Z",
       "side": 1,
       "message": "We can\u0027t use c++11 STL types yet, this will have to be a struct.",
+      "range": {
+        "startLine": 48,
+        "startChar": 17,
+        "endLine": 48,
+        "endChar": 22
+      },
+      "revId": "7b7651429ee06b2e1ccae1bbf5b539cd98e6a498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe6116bc_57f38c17",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-25T22:07:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9efd7aeb_c588b02c",
       "range": {
         "startLine": 48,
         "startChar": 17,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "9e99fafb_bc09219f",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-25T22:07:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "beeebe34_f1877016",
+      "range": {
+        "startLine": 56,
+        "startChar": 17,
+        "endLine": 56,
+        "endChar": 30
+      },
+      "revId": "7b7651429ee06b2e1ccae1bbf5b539cd98e6a498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1eea6a20_2ff5f5c3",
         "filename": "src/compiler/translator/Types.h",
         "patchSetId": 2
@@ -105,6 +201,24 @@
       "writtenOn": "2015-06-25T13:29:14Z",
       "side": 1,
       "message": "Can be const.",
+      "revId": "7b7651429ee06b2e1ccae1bbf5b539cd98e6a498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe6116bc_17f914f8",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-25T22:07:19Z",
+      "side": 1,
+      "message": "Yes, but generally it doesn\u0027t need to. The contract is that realize() should mutate object so that calls to const members don\u0027t allocate anything. It just happened that the only way  to initialize mangledName is to call const method.",
+      "parentUuid": "1eea6a20_2ff5f5c3",
       "revId": "7b7651429ee06b2e1ccae1bbf5b539cd98e6a498",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
