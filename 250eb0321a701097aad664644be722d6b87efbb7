@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "beeebe34_4c45e715",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-25T17:29:15Z",
+      "side": 1,
+      "message": "whoops, I didn\u0027t notice you needed to dereference this pointer according to the index stride. Could you break up this code into a local template helper function to avoid the second memcpy? Sorry I missed that. (You\u0027ll still need the switch to pick the right template parameter)",
+      "range": {
+        "startLine": 1083,
+        "startChar": 12,
+        "endLine": 1083,
+        "endChar": 63
+      },
+      "revId": "250eb0321a701097aad664644be722d6b87efbb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "beeebe34_0cd0ffc1",
+        "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-25T17:29:15Z",
+      "side": 1,
+      "message": "nit: indentation",
+      "range": {
+        "startLine": 207,
+        "startChar": 0,
+        "endLine": 207,
+        "endChar": 7
+      },
+      "revId": "250eb0321a701097aad664644be722d6b87efbb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
