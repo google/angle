@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e6e4e7b_0c80f793",
+        "filename": "src/common/matrix_utils.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-25T17:57:21Z",
+      "side": 1,
+      "message": "You could still assert that 1 \u003c\u003d rows \u003c\u003d 4 and same for columns.",
+      "revId": "b5aff4bb8a6f7e11a2f99060d8fb997e727473f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e856e59_5431a2a7",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-25T17:57:21Z",
+      "side": 1,
+      "message": "It would be more logical if fault tolerance would work for integer types as well, even if it is not used currently.",
+      "revId": "b5aff4bb8a6f7e11a2f99060d8fb997e727473f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e856e59_7405c6c4",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-25T17:57:21Z",
+      "side": 1,
+      "message": "Typo: Should be Tolerance",
+      "revId": "b5aff4bb8a6f7e11a2f99060d8fb997e727473f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e6e4e7b_4c76ef52",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-25T17:57:21Z",
+      "side": 1,
+      "message": "Ditto",
+      "revId": "b5aff4bb8a6f7e11a2f99060d8fb997e727473f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
