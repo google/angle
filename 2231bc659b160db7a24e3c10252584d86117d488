@@ -22,6 +22,30 @@
       "revId": "2231bc659b160db7a24e3c10252584d86117d488",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe0596c3_77da3090",
+        "filename": "src/tests/perf_tests/EGLInitializePerf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-25T17:31:11Z",
+      "side": 1,
+      "message": "I\u0027m calling initialization and de-initialization once per \"frame\", or probably more accurately, test loop iteration. I could rename all that if you think it\u0027s confusing.",
+      "parentUuid": "feecb63d_137dbc65",
+      "range": {
+        "startLine": 152,
+        "startChar": 28,
+        "endLine": 152,
+        "endChar": 42
+      },
+      "revId": "2231bc659b160db7a24e3c10252584d86117d488",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
