@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "feecb63d_d3c51404",
+        "filename": "src/tests/gl_tests/FenceSyncTests.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-25T17:20:37Z",
+      "side": 1,
+      "message": "ASSERT_GLENUM_EQ(GL_SIGNALED, value);",
+      "range": {
+        "startLine": 263,
+        "startChar": 3,
+        "endLine": 263,
+        "endChar": 29
+      },
+      "revId": "4dade8208ca942a784c511c8bc32c0093eac2de6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
