@@ -99,6 +99,12 @@ typedef struct ANativeWindow*           EGLNativeWindowType;
 typedef struct egl_native_pixmap_t*     EGLNativePixmapType;
 typedef void*                           EGLNativeDisplayType;
 
+#elif defined(USE_OZONE)
+
+typedef intptr_t EGLNativeDisplayType;
+typedef intptr_t EGLNativeWindowType;
+typedef intptr_t EGLNativePixmapType;
+
 #elif defined(__unix__)
 
 /* X11 (tentative)  */
