@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "9efd7aeb_6bea4de9",
+        "filename": "src/common/matrix_utils_unittest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-25T17:58:18Z",
+      "side": 1,
+      "message": "ensure there\u0027s a trailing newline here (and in every new file - I won\u0027t repeat this for the new header)",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 1
+      },
+      "revId": "b5aff4bb8a6f7e11a2f99060d8fb997e727473f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e856e59_5431a2a7",
         "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
         "patchSetId": 11
@@ -30,6 +53,29 @@
       "writtenOn": "2015-06-25T17:57:21Z",
       "side": 1,
       "message": "It would be more logical if fault tolerance would work for integer types as well, even if it is not used currently.",
+      "revId": "b5aff4bb8a6f7e11a2f99060d8fb997e727473f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "feecb63d_2ef057db",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-25T17:58:18Z",
+      "side": 1,
+      "message": "nit: short (one line) comment before each and every TEST_F",
+      "range": {
+        "startLine": 284,
+        "startChar": 0,
+        "endLine": 284,
+        "endChar": 6
+      },
       "revId": "b5aff4bb8a6f7e11a2f99060d8fb997e727473f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
