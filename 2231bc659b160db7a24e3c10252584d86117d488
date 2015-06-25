@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "feecb63d_137dbc65",
+        "filename": "src/tests/perf_tests/EGLInitializePerf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-25T17:13:59Z",
+      "side": 1,
+      "message": "Can you explain a bit?  I am confused, these three merits are all initialization time.  Why are they correlated with frames?",
+      "range": {
+        "startLine": 152,
+        "startChar": 28,
+        "endLine": 152,
+        "endChar": 42
+      },
+      "revId": "2231bc659b160db7a24e3c10252584d86117d488",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
