@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7ef8c6fa_1b94bb12",
+        "filename": "src/common/matrix_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-25T06:45:25Z",
+      "side": 1,
+      "message": "One more reason I had not put ASSERTS here was that for outerproduct input is actually Mx1 and 1xN matrix.\n\nI can put assert in constructor by changing that outerproduct function to static one and passing arguments as vectors and not matrix. But with this I will also not be able to utililse common functions in IntermNode that gives me matrix when provided with union array.\n\nIf you still think it is not OK to have asserts in the restricted functions itself, I will change the code as mentioned above.\n\nI have  asserts in only those functions which are supporting limited dimension where as other functions can work well with any other dimensions. May be I should have put the comment at the top instead of saying it support one 2, 3,4 dimensions.",
+      "parentUuid": "de761212_c6ada221",
+      "revId": "6ea8dc386179a3c9826097db1037d61a2d670f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "de761212_06997aff",
         "filename": "src/common/matrix_utils.h",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2015-06-24T13:21:28Z",
       "side": 1,
       "message": "These asserts don\u0027t add much value, since other checks in this function already fire in the same cases.",
+      "revId": "6ea8dc386179a3c9826097db1037d61a2d670f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e5366ca_23638abe",
+        "filename": "src/common/matrix_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-25T06:45:25Z",
+      "side": 1,
+      "message": "I still feel, it\u0027s better to catch it earlier and report instead of relying on other checks at the bottom.\n\nAnyways, I will remove this check if we decide to add checks in constructor itself.",
+      "parentUuid": "de761212_06997aff",
       "revId": "6ea8dc386179a3c9826097db1037d61a2d670f59",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
