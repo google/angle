@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "def37219_67d1e041",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-25T13:17:34Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 300,
+        "startChar": 98,
+        "endLine": 300,
+        "endChar": 99
+      },
+      "revId": "0599e2fe1ea98ba0e7b418a62fbf4ccdd46991a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
