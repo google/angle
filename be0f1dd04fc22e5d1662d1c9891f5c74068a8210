@@ -222,6 +222,30 @@
       "revId": "be0f1dd04fc22e5d1662d1c9891f5c74068a8210",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "feecb63d_88919b25",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-25T13:09:52Z",
+      "side": 1,
+      "message": "Ah, I see.  eglChooseConfig will return configs with bit counts greater than or equal to the requested count.  Could you add a short comment about that?",
+      "parentUuid": "1eb50aac_f7628a09",
+      "range": {
+        "startLine": 268,
+        "startChar": 0,
+        "endLine": 297,
+        "endChar": 21
+      },
+      "revId": "be0f1dd04fc22e5d1662d1c9891f5c74068a8210",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
