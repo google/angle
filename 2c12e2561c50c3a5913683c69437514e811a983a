@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "beeebe34_b1a4c8c2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-06-25T13:09:52Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 399,
+        "startChar": 91,
+        "endLine": 399,
+        "endChar": 92
+      },
+      "revId": "2c12e2561c50c3a5913683c69437514e811a983a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
