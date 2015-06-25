@@ -561,7 +561,7 @@
                         ],
                         'conditions':
                         [
-                            ['use_x11==1',
+                            ['angle_use_glx==1',
                             {
                                 'defines':
                                 [
@@ -679,7 +679,7 @@
                                 '<@(libangle_gl_wgl_sources)',
                             ],
                         }],
-                        ['use_x11==1',
+                        ['angle_use_glx==1',
                         {
                             'defines':
                             [
@@ -771,7 +771,7 @@
                 {
                     'msvs_enable_winphone' : '1',
                 }],
-                ['use_x11==1',
+                ['angle_use_glx==1',
                 {
                     'link_settings': {
                         'ldflags': [

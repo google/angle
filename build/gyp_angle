@@ -26,6 +26,10 @@ if __name__ == '__main__':
     # correct directory. This only has an effect on Linux.
     args.append('--depth');
     args.append('.');
+    # Add standalone.gypi to the include path to set required
+    # variables that are otherwise picked up from Chromium's gyp
+    # files.
+    args.append('-I' + os.path.join(script_dir, 'standalone.gypi'))
     # Add common.gypi to the include path.
     args.append('-I' + os.path.join(script_dir, 'common.gypi'))
     args.append('--no-parallel')
