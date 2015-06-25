@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1eea6a20_c9de0950",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-25T00:30:29Z",
+      "side": 1,
+      "message": "With standalone.gypi included by gyp_angle, all of the variables tested here are defined both in the ANGLE build in Chromium as well as the standalone build.",
+      "range": {
+        "startLine": 15,
+        "startChar": 19,
+        "endLine": 15,
+        "endChar": 24
+      },
+      "revId": "c2e1e261d352f24c23837bee2e61b1f521a28b5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9efd7aeb_1f1f87e8",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-06-25T00:30:29Z",
+      "side": 1,
+      "message": "Note that this #define is a misnomer now but we can rename it in another CL.",
+      "range": {
+        "startLine": 568,
+        "startChar": 37,
+        "endLine": 568,
+        "endChar": 50
+      },
+      "revId": "c2e1e261d352f24c23837bee2e61b1f521a28b5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
