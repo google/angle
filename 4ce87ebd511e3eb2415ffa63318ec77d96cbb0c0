@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "9efd7aeb_36526861",
+        "filename": "util/osx/OSXTimer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-25T20:36:56Z",
+      "side": 1,
+      "message": "OK, you\u0027re right. LGTM with or without.",
+      "parentUuid": "1eea6a20_ea9818fe",
+      "range": {
+        "startLine": 39,
+        "startChar": 37,
+        "endLine": 39,
+        "endChar": 49
+      },
+      "revId": "4ce87ebd511e3eb2415ffa63318ec77d96cbb0c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9efd7aeb_3059d00b",
         "filename": "util/osx/OSXTimer.cpp",
         "patchSetId": 3
