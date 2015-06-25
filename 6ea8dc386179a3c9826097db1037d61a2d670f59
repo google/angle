@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "3e0c8eed_1cbdd9b2",
+        "filename": "src/common/matrix_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-06-25T17:57:21Z",
+      "side": 1,
+      "message": "I didn\u0027t realize that this class is also being used to store 1xN and Nx1 matrices earlier. With that I think it\u0027s reasonable to keep these asserts.",
+      "parentUuid": "7e5366ca_23638abe",
+      "revId": "6ea8dc386179a3c9826097db1037d61a2d670f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "deab729c_feaf811c",
         "filename": "src/common/matrix_utils_unittest.cpp",
         "patchSetId": 8
