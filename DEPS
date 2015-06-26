@@ -10,13 +10,13 @@ deps = {
   "src/tests/third_party/googlemock":
       "http://chromium.googlesource.com/external/googlemock.git@b2cb211e49d872101d991201362d7b97d7d69910",
 
-  "src/tests/third_party/deqp":
+  "third_party/deqp/src":
       "https://android.googlesource.com/platform/external/deqp@554adf152573fb579d0cbc68d3c1395e5ee94391",
 
-  "src/tests/third_party/libpng":
+  "third_party/libpng":
       "https://android.googlesource.com/platform/external/libpng@094e181e79a3d6c23fd005679025058b7df1ad6c",
 
-  "src/tests/third_party/zlib":
+  "third_party/zlib":
       "https://chromium.googlesource.com/chromium/src/third_party/zlib@afd8c4593c010c045902f6c0501718f1823064a3",
 }
 

@@ -24,9 +24,9 @@ debug.txt
 /third_party
 /src/tests/third_party/googlemock
 /src/tests/third_party/googletest
-/src/tests/third_party/libpng
-/src/tests/third_party/zlib
-/src/tests/third_party/deqp
+/third_party/libpng
+/third_party/zlib
+/third_party/deqp/src
 /src/tests/third_party/gles_conformance_tests
 out
 lib/*

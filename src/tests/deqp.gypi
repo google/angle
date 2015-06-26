@@ -5,10 +5,11 @@
 {
     'variables':
     {
-        'deqp_path': 'third_party/deqp',
-        'delibs_path': 'third_party/deqp/framework/delibs',
-        'libpng_path': 'third_party/libpng',
-        'zlib_path': 'third_party/zlib',
+        'deqp_path': '<(DEPTH)/third_party/deqp/src',
+        'delibs_path': '<(deqp_path)/framework/delibs',
+        'libpng_path': '<(DEPTH)/third_party/libpng',
+        'zlib_path': '<(DEPTH)/third_party/zlib',
+
         'deqp_msvs_disabled_warnings':
         [
             '4100',
@@ -37,8 +38,8 @@
         ],
         'deqp_include_dirs':
         [
-            'third_party/libpng',
-            'third_party/zlib',
+            '<(libpng_path)',
+            '<(zlib_path)',
             '<(delibs_path)/debase',
             '<(delibs_path)/decpp',
             '<(delibs_path)/depool',
