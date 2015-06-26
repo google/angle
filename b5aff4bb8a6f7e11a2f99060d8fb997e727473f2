@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5e4a2243_b5e3ea19",
+        "filename": "src/common/matrix_utils.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-26T06:55:29Z",
+      "side": 1,
+      "message": "Done. I have also removed these asserts from inverse() and determinant() and put \"ASSERT(rows() \u003d\u003d columns())\" there instead.",
+      "parentUuid": "3e6e4e7b_0c80f793",
+      "revId": "b5aff4bb8a6f7e11a2f99060d8fb997e727473f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9efd7aeb_6bea4de9",
         "filename": "src/common/matrix_utils_unittest.cpp",
         "patchSetId": 11
@@ -30,6 +48,30 @@
       "writtenOn": "2015-06-25T17:58:18Z",
       "side": 1,
       "message": "ensure there\u0027s a trailing newline here (and in every new file - I won\u0027t repeat this for the new header)",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 1
+      },
+      "revId": "b5aff4bb8a6f7e11a2f99060d8fb997e727473f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e4d6e5a_b1d060f5",
+        "filename": "src/common/matrix_utils_unittest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-26T06:55:29Z",
+      "side": 1,
+      "message": "I did have new lines at the end, I don\u0027t know why gerrit is now showing it.",
+      "parentUuid": "9efd7aeb_6bea4de9",
       "range": {
         "startLine": 183,
         "startChar": 0,
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "3e4d6e5a_b1f9407d",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-26T06:55:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e856e59_5431a2a7",
+      "revId": "b5aff4bb8a6f7e11a2f99060d8fb997e727473f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "feecb63d_2ef057db",
         "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
         "patchSetId": 11
@@ -70,6 +130,30 @@
       "writtenOn": "2015-06-25T17:58:18Z",
       "side": 1,
       "message": "nit: short (one line) comment before each and every TEST_F",
+      "range": {
+        "startLine": 284,
+        "startChar": 0,
+        "endLine": 284,
+        "endChar": 6
+      },
+      "revId": "b5aff4bb8a6f7e11a2f99060d8fb997e727473f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe5676ec_ef03e17a",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-26T06:55:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "feecb63d_2ef057db",
       "range": {
         "startLine": 284,
         "startChar": 0,
@@ -99,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "1e542ae3_b09e983d",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-26T06:55:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e856e59_7405c6c4",
+      "revId": "b5aff4bb8a6f7e11a2f99060d8fb997e727473f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e6e4e7b_4c76ef52",
         "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
         "patchSetId": 11
@@ -110,6 +212,24 @@
       "writtenOn": "2015-06-25T17:57:21Z",
       "side": 1,
       "message": "Ditto",
+      "revId": "b5aff4bb8a6f7e11a2f99060d8fb997e727473f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e6d26b3_1355ac48",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-26T06:55:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e6e4e7b_4c76ef52",
       "revId": "b5aff4bb8a6f7e11a2f99060d8fb997e727473f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
