@@ -86,7 +86,7 @@ egl::Error WindowSurfaceGLX::initialize()
     attributes.background_pixel = 0;
 
     //TODO(cwallez) set up our own error handler to see if the call failed
-    mWindow = XCreateWindow(mDisplay, mParent, 0, 0, mParentWidth, mParentWidth,
+    mWindow = XCreateWindow(mDisplay, mParent, 0, 0, mParentWidth, mParentHeight,
                             0, visualInfo->depth, InputOutput, visual, attributeMask, &attributes);
     mGLXWindow = mGLX.createWindow(mFBConfig, mWindow, nullptr);
 
