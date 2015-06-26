@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "be731e93_64fd3431",
+        "filename": "src/tests/deqp_support/angle_deqp_tests_main.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:10:49Z",
+      "side": 1,
+      "message": "Whoops, meant to delete this comment but missed it, ignore",
+      "parentUuid": "7e0fe678_d8e0f991",
+      "range": {
+        "startLine": 9,
+        "startChar": 7,
+        "endLine": 9,
+        "endChar": 13
+      },
+      "revId": "8780597803564df1b4962b309504acd38a6ddd5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fe23d6e9_db83d386",
         "filename": "src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp",
         "patchSetId": 11
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-26T18:09:53Z",
       "side": 1,
       "message": "same comment as below about style, put this just below the includes, and call this ANGLE_DEQP_LIBRARY_NAME",
+      "range": {
+        "startLine": 130,
+        "startChar": 7,
+        "endLine": 130,
+        "endChar": 13
+      },
+      "revId": "8780597803564df1b4962b309504acd38a6ddd5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be731e93_84fa5038",
+        "filename": "src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:10:49Z",
+      "side": 1,
+      "message": "ignore this, meant to delete",
+      "parentUuid": "fe23d6e9_db83d386",
       "range": {
         "startLine": 130,
         "startChar": 7,
