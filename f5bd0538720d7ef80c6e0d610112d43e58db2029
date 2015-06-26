@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9e99fafb_10367472",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 12
+      },
+      "lineNbr": 833,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:09:53Z",
+      "side": 1,
+      "message": "ozone concerns?",
+      "range": {
+        "startLine": 833,
+        "startChar": 30,
+        "endLine": 833,
+        "endChar": 37
+      },
+      "revId": "f5bd0538720d7ef80c6e0d610112d43e58db2029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e99fafb_f0302879",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 12
+      },
+      "lineNbr": 850,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:09:53Z",
+      "side": 1,
+      "message": "implicitly",
+      "range": {
+        "startLine": 850,
+        "startChar": 71,
+        "endLine": 850,
+        "endChar": 82
+      },
+      "revId": "f5bd0538720d7ef80c6e0d610112d43e58db2029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e65c2c2_c99e1d3f",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 12
+      },
+      "lineNbr": 958,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:09:53Z",
+      "side": 1,
+      "message": "use cflags_cc for this flag instead, then you won\u0027t need to filter it out for c files",
+      "range": {
+        "startLine": 954,
+        "startChar": 20,
+        "endLine": 958,
+        "endChar": 22
+      },
+      "revId": "f5bd0538720d7ef80c6e0d610112d43e58db2029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de8ff2ab_1e0da23e",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 12
+      },
+      "lineNbr": 1036,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:09:53Z",
+      "side": 1,
+      "message": "nice comment",
+      "range": {
+        "startLine": 1033,
+        "startChar": 16,
+        "endLine": 1036,
+        "endChar": 74
+      },
+      "revId": "f5bd0538720d7ef80c6e0d610112d43e58db2029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe6116bc_7102583f",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 12
+      },
+      "lineNbr": 1079,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:09:53Z",
+      "side": 1,
+      "message": "shouldn\u0027t need this with the above",
+      "range": {
+        "startLine": 1079,
+        "startChar": 23,
+        "endLine": 1079,
+        "endChar": 37
+      },
+      "revId": "f5bd0538720d7ef80c6e0d610112d43e58db2029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e65c2c2_a982c9d9",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 12
+      },
+      "lineNbr": 1080,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:09:53Z",
+      "side": 1,
+      "message": "shouldn\u0027t need this b/c of the deqp_support target",
+      "range": {
+        "startLine": 1080,
+        "startChar": 24,
+        "endLine": 1080,
+        "endChar": 42
+      },
+      "revId": "f5bd0538720d7ef80c6e0d610112d43e58db2029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e65c2c2_c987fde8",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 12
+      },
+      "lineNbr": 1122,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:09:53Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 1121,
+        "startChar": 22,
+        "endLine": 1122,
+        "endChar": 22
+      },
+      "revId": "f5bd0538720d7ef80c6e0d610112d43e58db2029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e99fafb_909e04b0",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 12
+      },
+      "lineNbr": 1269,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:09:53Z",
+      "side": 1,
+      "message": "you\u0027re missing the condition here to enable the test targets",
+      "range": {
+        "startLine": 1269,
+        "startChar": 8,
+        "endLine": 1269,
+        "endChar": 25
+      },
+      "revId": "f5bd0538720d7ef80c6e0d610112d43e58db2029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e99fafb_f0fe68e1",
+        "filename": "src/tests/deqp_support/angle_deqp_tests_main.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:09:53Z",
+      "side": 1,
+      "message": "conditional includes (in #ifdefs) go after non-conditional. Also instead can you implement a deCwd (deChDir, deSetCurrentDir) similar to how I implemented deIsDir and use the DE_OS defines to implement it? with a TODO to ping Pyry if we can get it up-streamed",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 6
+      },
+      "revId": "f5bd0538720d7ef80c6e0d610112d43e58db2029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de8ff2ab_3eaede6e",
+        "filename": "src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:09:53Z",
+      "side": 1,
+      "message": "use the DE_OS defines, and call it ANGLE_EGL_LIBRARY_NAME",
+      "range": {
+        "startLine": 129,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 6
+      },
+      "revId": "f5bd0538720d7ef80c6e0d610112d43e58db2029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be731e93_e4cf841e",
+        "filename": "src/tests/deqp_support/tcuANGLEPlatform.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:09:53Z",
+      "side": 1,
+      "message": "use the DE_OS defines for these",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 19
+      },
+      "revId": "f5bd0538720d7ef80c6e0d610112d43e58db2029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
