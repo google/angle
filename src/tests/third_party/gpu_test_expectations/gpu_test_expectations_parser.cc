@@ -182,10 +182,10 @@ bool NamesMatching(const std::string& ref, const std::string& test_name) {
 
 GPUTestExpectationsParser::GPUTestExpectationsParser() {
   // Some sanity check.
-  DCHECK_EQ(static_cast<unsigned int>(kNumberOfExactMatchTokens),
-            sizeof(kTokenData) / sizeof(kTokenData[0]));
-  DCHECK_EQ(static_cast<unsigned int>(kNumberOfErrors),
-            sizeof(kErrorMessage) / sizeof(kErrorMessage[0]));
+  static_assert(static_cast<unsigned int>(kNumberOfExactMatchTokens) ==
+                sizeof(kTokenData) / sizeof(kTokenData[0]), "sanity check");
+  static_assert(static_cast<unsigned int>(kNumberOfErrors) ==
+                sizeof(kErrorMessage) / sizeof(kErrorMessage[0]), "sanity check");
 }
 
 GPUTestExpectationsParser::~GPUTestExpectationsParser() {
@@ -391,7 +391,7 @@ bool GPUTestExpectationsParser::ParseLine(
           stage++;
         break;
       default:
-        DCHECK(false);
+        UNREACHABLE();
         break;
     }
   }
@@ -467,7 +467,7 @@ bool GPUTestExpectationsParser::UpdateTestConfig(
           config->build_type() | kTokenData[token].flag);
       break;
     default:
-      DCHECK(false);
+      UNREACHABLE();
       break;
   }
   return true;
