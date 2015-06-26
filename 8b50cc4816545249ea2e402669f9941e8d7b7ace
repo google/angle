@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de8ff2ab_d83b555a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 713,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T15:05:47Z",
+      "side": 1,
+      "message": "is there a patch somewhere that addresses this TODO? if not, we should address it here.",
+      "range": {
+        "startLine": 701,
+        "startChar": 1,
+        "endLine": 713,
+        "endChar": 5
+      },
+      "revId": "8b50cc4816545249ea2e402669f9941e8d7b7ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe6116bc_2baeb16e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T15:05:47Z",
+      "side": 1,
+      "message": "nit: on previous line",
+      "range": {
+        "startLine": 394,
+        "startChar": 22,
+        "endLine": 394,
+        "endChar": 25
+      },
+      "revId": "8b50cc4816545249ea2e402669f9941e8d7b7ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
