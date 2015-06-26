@@ -22,6 +22,30 @@
       "revId": "695fccf2d0d59313019e7b0dac9b5d39f253b3c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de8ff2ab_fb8c888d",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T17:44:28Z",
+      "side": 1,
+      "message": "Yeah, the idea would be to update the lists only when the vertex attribute state changes, and update only the necessary bits. This lets us skip re-creating the lists on each draw call entirely.",
+      "parentUuid": "9eabbaef_af9f356b",
+      "range": {
+        "startLine": 131,
+        "startChar": 21,
+        "endLine": 131,
+        "endChar": 22
+      },
+      "revId": "695fccf2d0d59313019e7b0dac9b5d39f253b3c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
