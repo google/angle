@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7e0fe678_d8e0f991",
+        "filename": "src/tests/deqp_support/angle_deqp_tests_main.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:09:53Z",
+      "side": 1,
+      "message": "same comment about style, and if possible, conditional includes below non-conditional. Also I\u0027m beginning to dislike how I built this chdir business. Can you try modifying deqp_libtester_main to take a third parameter \u003cTODO\u003e",
+      "range": {
+        "startLine": 9,
+        "startChar": 7,
+        "endLine": 9,
+        "endChar": 13
+      },
+      "revId": "8780597803564df1b4962b309504acd38a6ddd5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe23d6e9_db83d386",
+        "filename": "src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:09:53Z",
+      "side": 1,
+      "message": "same comment as below about style, put this just below the includes, and call this ANGLE_DEQP_LIBRARY_NAME",
+      "range": {
+        "startLine": 130,
+        "startChar": 7,
+        "endLine": 130,
+        "endChar": 13
+      },
+      "revId": "8780597803564df1b4962b309504acd38a6ddd5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e0fe678_9841610c",
+        "filename": "src/tests/deqp_support/tcuANGLEPlatform.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-26T18:09:53Z",
+      "side": 1,
+      "message": "might as well use DE style: #if (DE_OS \u003d\u003d DE_OS_WIN32)",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 19
+      },
+      "revId": "8780597803564df1b4962b309504acd38a6ddd5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
