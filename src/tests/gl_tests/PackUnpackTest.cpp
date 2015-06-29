@@ -9,8 +9,6 @@
 
 #include "test_utils/ANGLETest.h"
 
-#include <cmath>
-
 using namespace angle;
 
 namespace
@@ -128,25 +126,8 @@ class PackUnpackTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
 
         static const double epsilon = 0.0005;
-
-        // Compare infinite numbers exactly
-        if (isinf(expect1))
-        {
-            EXPECT_EQ(p[0], expect1);
-        }
-        else
-        {
-            EXPECT_NEAR(p[0], expect1, epsilon);
-        }
-
-        if (isinf(expect2))
-        {
-            EXPECT_EQ(p[1], expect2);
-        }
-        else
-        {
-            EXPECT_NEAR(p[1], expect2, epsilon);
-        }
+        EXPECT_NEAR(p[0], expect1, epsilon);
+        EXPECT_NEAR(p[1], expect2, epsilon);
     }
 
     GLuint mSNormProgram;
@@ -208,13 +189,6 @@ TEST_P(PackUnpackTest, PackUnpackSnormOverflow)
 {
     // Expect the shader to clamp the input to [-1, 1]
     compareBeforeAfter(mSNormProgram, 67000.0f, -67000.0f, 1.0f, -1.0f);
-}
-
-// Test the correctness of packHalf2x16 and unpackHalf2x16 functions calculating overflow floating numbers.
-TEST_P(PackUnpackTest, PackUnpackHalfOverflow)
-{
-    // Expect the shader return inf when the numbers are not representable as 16-bit floats.
-    compareBeforeAfter(mHalfProgram, 67000.0f, -67000.0f, std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
