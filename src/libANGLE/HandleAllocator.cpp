@@ -26,7 +26,7 @@ struct HandleAllocator::HandleRangeComparator
 
 HandleAllocator::HandleAllocator() : mBaseValue(1), mNextValue(1)
 {
-    mUnallocatedList.push_back(HandleRange(1, std::numeric_limits<GLuint>::max() - 1));
+    mUnallocatedList.push_back(HandleRange(1, std::numeric_limits<GLuint>::max()));
 }
 
 HandleAllocator::HandleAllocator(GLuint maximumHandleValue) : mBaseValue(1), mNextValue(1)
