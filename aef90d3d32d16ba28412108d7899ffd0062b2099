@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "934c958c_0bfa7eeb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-29T15:50:11Z",
+      "side": 1,
+      "message": "new anglebug please",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 20
+      },
+      "revId": "aef90d3d32d16ba28412108d7899ffd0062b2099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93a1f560_8b29b995",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 14
+      },
+      "lineNbr": 1062,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-29T15:50:11Z",
+      "side": 1,
+      "message": "do you need the separate c target still, now that we fixed the cc flags?",
+      "range": {
+        "startLine": 1062,
+        "startChar": 36,
+        "endLine": 1062,
+        "endChar": 58
+      },
+      "revId": "aef90d3d32d16ba28412108d7899ffd0062b2099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f390710b_74244ebc",
+        "filename": "src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-29T15:50:11Z",
+      "side": 1,
+      "message": "nit: put this at the top under the includes section",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 6
+      },
+      "revId": "aef90d3d32d16ba28412108d7899ffd0062b2099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "934c958c_4b007671",
+        "filename": "src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-29T15:50:11Z",
+      "side": 1,
+      "message": "nit: alignment with below",
+      "range": {
+        "startLine": 301,
+        "startChar": 53,
+        "endLine": 301,
+        "endChar": 77
+      },
+      "revId": "aef90d3d32d16ba28412108d7899ffd0062b2099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93a1f560_ab1a7573",
+        "filename": "src/tests/deqp_support/tcuANGLENativeDisplayFactory.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-29T15:50:11Z",
+      "side": 1,
+      "message": "nit: alignment",
+      "range": {
+        "startLine": 48,
+        "startChar": 29,
+        "endLine": 51,
+        "endChar": 52
+      },
+      "revId": "aef90d3d32d16ba28412108d7899ffd0062b2099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5384ddcb_718a2227",
+        "filename": "src/tests/deqp_support/tcuANGLEPlatform.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-29T15:50:11Z",
+      "side": 1,
+      "message": "nit: update comment",
+      "range": {
+        "startLine": 79,
+        "startChar": 18,
+        "endLine": 79,
+        "endChar": 24
+      },
+      "revId": "aef90d3d32d16ba28412108d7899ffd0062b2099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93a1f560_abe355c5",
+        "filename": "src/tests/deqp_support/tcuMainProxy.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-29T15:50:11Z",
+      "side": 1,
+      "message": "I tried compiling this on my ubiquity instance without tcuMainProxy.cpp and it worked fine. Can you test again without it, and show me if you still get multiply defined errors?",
+      "revId": "aef90d3d32d16ba28412108d7899ffd0062b2099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
