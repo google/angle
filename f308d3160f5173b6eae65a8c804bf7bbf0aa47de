@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "93a1f560_f1bcea28",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-29T19:48:48Z",
+      "side": 1,
+      "message": "Is this necessary? Binaries are tied to specific git revisions already, see Program::loadBinary.",
+      "range": {
+        "startLine": 25,
+        "startChar": 8,
+        "endLine": 25,
+        "endChar": 40
+      },
+      "revId": "f308d3160f5173b6eae65a8c804bf7bbf0aa47de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93a1f560_b178a2e9",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-29T19:48:48Z",
+      "side": 1,
+      "message": "we don\u0027t have an official style for this, but I\u0027ve been calling the parameters loadParamsIn and expectedLinkResultIn, so you wouldn\u0027t need the this-\u003e",
+      "range": {
+        "startLine": 179,
+        "startChar": 8,
+        "endLine": 179,
+        "endChar": 24
+      },
+      "revId": "f308d3160f5173b6eae65a8c804bf7bbf0aa47de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "138ee5ef_c7680d9d",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-29T19:48:48Z",
+      "side": 1,
+      "message": "only static methods should be Capitalized (and override methods from google test)",
+      "range": {
+        "startLine": 201,
+        "startChar": 15,
+        "endLine": 201,
+        "endChar": 37
+      },
+      "revId": "f308d3160f5173b6eae65a8c804bf7bbf0aa47de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
