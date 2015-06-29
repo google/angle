@@ -629,7 +629,7 @@ OSWindow *CreateOSWindow()
 
 bool Win32Window::setPosition(int x, int y)
 {
-    if (mX == x && mY == mY)
+    if (mX == x && mY == y)
     {
         return true;
     }
