@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "332a09c0_efcc155d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-29T22:04:19Z",
+      "side": 1,
+      "message": "open an angle bug to track this",
+      "range": {
+        "startLine": 7,
+        "startChar": 14,
+        "endLine": 7,
+        "endChar": 29
+      },
+      "revId": "308e42415694390db990e722078b45e89b9dd923",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53277df4_8d1da5f0",
+        "filename": "src/libANGLE/HandleAllocator_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-29T22:04:19Z",
+      "side": 1,
+      "message": "add a comment here explaining the nature of the test. also please add a link to http://anglebug.com/### with the ID of the anglebug",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 4
+      },
+      "revId": "308e42415694390db990e722078b45e89b9dd923",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
