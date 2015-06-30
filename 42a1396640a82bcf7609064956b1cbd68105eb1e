@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "33b849d4_393dafee",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1190,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-06-30T13:14:59Z",
+      "side": 1,
+      "message": "This \u0027if\u0027 is getting longer and I am not happy with it. If reviewers agree, I will further refactor foldUnary after this patch to foldUnaryWithSameReturnType and FoldUnaryWithDifferentReturnType so that code looks better and also keeps size of this functions smaller. So with this all the code inside \u0027if\u0027 will be in FoldUnaryWithDifferentReturnType.",
+      "range": {
+        "startLine": 1190,
+        "startChar": 3,
+        "endLine": 1190,
+        "endChar": 18
+      },
+      "revId": "42a1396640a82bcf7609064956b1cbd68105eb1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
