@@ -3,7 +3,6 @@ https://www.khronos.org/registry/webgl/sdk/tests/webgl-conformance-tests.html
 
 conformance/glsl/bugs/pow-of-small-constant-in-user-defined-function.html: 1 tests failed
 conformance/glsl/bugs/sampler-struct-function-arg.html: 1 tests failed
-conformance/glsl/misc/const-variable-initialization.html: 27 tests failed
 conformance/misc/expando-loss.html: 4 tests failed
 deqp/data/gles2/shaders/constants.html: 34 tests failed
 deqp/data/gles2/shaders/functions.html: 8 tests failed
