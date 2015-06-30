@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5383fd1c_c4f752c8",
+        "filename": "src/compiler/translator/Cache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-30T23:08:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53ccdd7c_a8315fa7",
+      "revId": "3570ba535e6002287b469916d90960bf3b385e9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "53277df4_6426867b",
         "filename": "src/compiler/translator/Cache.cpp",
         "patchSetId": 3
@@ -30,6 +48,30 @@
       "writtenOn": "2015-06-30T17:26:36Z",
       "side": 1,
       "message": "SafeDelete",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 10
+      },
+      "revId": "3570ba535e6002287b469916d90960bf3b385e9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "339be98e_4ab7c7c0",
+        "filename": "src/compiler/translator/Cache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-30T23:08:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53277df4_6426867b",
       "range": {
         "startLine": 38,
         "startChar": 4,
@@ -112,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "339be98e_0a809fd2",
+        "filename": "src/compiler/translator/Cache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-30T23:08:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53277df4_8438da8d",
+      "range": {
+        "startLine": 55,
+        "startChar": 3,
+        "endLine": 56,
+        "endChar": 5
+      },
+      "revId": "3570ba535e6002287b469916d90960bf3b385e9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "53277df4_e411d607",
         "filename": "src/compiler/translator/Cache.cpp",
         "patchSetId": 3
@@ -135,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "5383fd1c_242e6ece",
+        "filename": "src/compiler/translator/Cache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-30T23:08:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53277df4_e411d607",
+      "range": {
+        "startLine": 62,
+        "startChar": 28,
+        "endLine": 62,
+        "endChar": 39
+      },
+      "revId": "3570ba535e6002287b469916d90960bf3b385e9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73f6419f_80d60433",
         "filename": "src/compiler/translator/Cache.h",
         "patchSetId": 3
@@ -146,6 +236,24 @@
       "writtenOn": "2015-06-30T17:26:36Z",
       "side": 1,
       "message": "same comments about license and description",
+      "revId": "3570ba535e6002287b469916d90960bf3b385e9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3d44d30_5f3547df",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-30T23:08:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "73f6419f_80d60433",
       "revId": "3570ba535e6002287b469916d90960bf3b385e9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -246,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "b3a6f9d3_26e15cbd",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-30T23:08:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53ccdd7c_2861cf8b",
+      "range": {
+        "startLine": 61,
+        "startChar": 12,
+        "endLine": 61,
+        "endChar": 17
+      },
+      "revId": "3570ba535e6002287b469916d90960bf3b385e9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "53277df4_24cace14",
         "filename": "src/compiler/translator/Cache.h",
         "patchSetId": 3
@@ -257,6 +389,30 @@
       "writtenOn": "2015-06-30T17:26:36Z",
       "side": 1,
       "message": "mAllocator",
+      "range": {
+        "startLine": 62,
+        "startChar": 19,
+        "endLine": 62,
+        "endChar": 28
+      },
+      "revId": "3570ba535e6002287b469916d90960bf3b385e9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3a6f9d3_0699c056",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-30T23:08:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53277df4_24cace14",
       "range": {
         "startLine": 62,
         "startChar": 19,
@@ -292,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "d3d44d30_3f328bf9",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-30T23:08:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "73f6419f_25676249",
+      "range": {
+        "startLine": 64,
+        "startChar": 19,
+        "endLine": 64,
+        "endChar": 24
+      },
+      "revId": "3570ba535e6002287b469916d90960bf3b385e9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "53ccdd7c_e841a7ba",
         "filename": "src/compiler/translator/InitializeDll.cpp",
         "patchSetId": 3
@@ -303,6 +483,30 @@
       "writtenOn": "2015-06-30T17:26:36Z",
       "side": 1,
       "message": "nit: include order",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 38
+      },
+      "revId": "3570ba535e6002287b469916d90960bf3b385e9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33c4c97c_4dcd9955",
+        "filename": "src/compiler/translator/InitializeDll.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-30T23:08:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53ccdd7c_e841a7ba",
       "range": {
         "startLine": 6,
         "startChar": 0,
