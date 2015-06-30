@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53ccdd7c_85eba471",
+        "filename": "src/tests/deqp_support/angle_deqp_libtester_main.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-30T15:52:44Z",
+      "side": 1,
+      "message": "tabs",
+      "range": {
+        "startLine": 140,
+        "startChar": 0,
+        "endLine": 140,
+        "endChar": 2
+      },
+      "revId": "170078c7ae8a8e422c7da1c51cde71cf4aabcf36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93fbb585_b671c556",
+        "filename": "src/tests/deqp_support/angle_deqp_libtester_main.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-30T15:52:44Z",
+      "side": 1,
+      "message": "nit: space",
+      "range": {
+        "startLine": 140,
+        "startChar": 29,
+        "endLine": 140,
+        "endChar": 30
+      },
+      "revId": "170078c7ae8a8e422c7da1c51cde71cf4aabcf36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
