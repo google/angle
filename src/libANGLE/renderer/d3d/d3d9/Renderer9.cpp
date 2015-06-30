@@ -369,6 +369,9 @@ void Renderer9::initializeDevice()
     ASSERT(!mVertexDataManager && !mIndexDataManager);
     mVertexDataManager = new VertexDataManager(this);
     mIndexDataManager = new IndexDataManager(this, getRendererClass());
+
+    // TODO(jmadill): use context caps, and place in common D3D location
+    mTranslatedAttribCache.resize(getRendererCaps().maxVertexAttributes);
 }
 
 D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()
@@ -1415,14 +1418,13 @@ gl::Error Renderer9::applyRenderTarget(const gl::Framebuffer *framebuffer)
 
 gl::Error Renderer9::applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances)
 {
-    TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS];
-    gl::Error error = mVertexDataManager->prepareVertexData(state, first, count, attributes, instances);
+    gl::Error error = mVertexDataManager->prepareVertexData(state, first, count, &mTranslatedAttribCache, instances);
     if (error.isError())
     {
         return error;
     }
 
-    return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, state.getProgram(), instances, &mRepeatDraw);
+    return mVertexDeclarationCache.applyDeclaration(mDevice, mTranslatedAttribCache, state.getProgram(), instances, &mRepeatDraw);
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device

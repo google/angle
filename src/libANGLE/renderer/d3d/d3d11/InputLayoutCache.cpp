@@ -26,9 +26,10 @@ namespace
 {
 
 void GetInputLayout(const TranslatedAttribute *translatedAttributes[gl::MAX_VERTEX_ATTRIBS],
+                    size_t attributeCount,
                     gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS])
 {
-    for (unsigned int attributeIndex = 0; attributeIndex < gl::MAX_VERTEX_ATTRIBS; attributeIndex++)
+    for (size_t attributeIndex = 0; attributeIndex < attributeCount; ++attributeIndex)
     {
         const TranslatedAttribute *translatedAttribute = translatedAttributes[attributeIndex];
 
@@ -96,7 +97,7 @@ void InputLayoutCache::markDirty()
     }
 }
 
-gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute unsortedAttributes[gl::MAX_VERTEX_ATTRIBS],
+gl::Error InputLayoutCache::applyVertexBuffers(const std::vector<TranslatedAttribute> &unsortedAttributes,
                                                GLenum mode, gl::Program *program)
 {
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
@@ -120,7 +121,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute unsortedAttri
     unsigned int firstInstancedElement = gl::MAX_VERTEX_ATTRIBS;
     unsigned int nextAvailableInputSlot = 0;
 
-    for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    for (unsigned int i = 0; i < unsortedAttributes.size(); i++)
     {
         if (sortedAttributes[i]->active)
         {
@@ -223,7 +224,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute unsortedAttri
     else
     {
         gl::VertexFormat shaderInputLayout[gl::MAX_VERTEX_ATTRIBS];
-        GetInputLayout(sortedAttributes, shaderInputLayout);
+        GetInputLayout(sortedAttributes, unsortedAttributes.size(), shaderInputLayout);
 
         ShaderExecutableD3D *shader = NULL;
         gl::Error error = programD3D->getVertexExecutableForInputLayout(shaderInputLayout, &shader, nullptr);
@@ -284,18 +285,20 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute unsortedAttri
     for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
         ID3D11Buffer *buffer = NULL;
+        UINT vertexStride = 0;
+        UINT vertexOffset = 0;
 
-        if (sortedAttributes[i]->active)
+        if (i < unsortedAttributes.size() && sortedAttributes[i]->active)
         {
             VertexBuffer11 *vertexBuffer = GetAs<VertexBuffer11>(sortedAttributes[i]->vertexBuffer);
             Buffer11 *bufferStorage = sortedAttributes[i]->storage ? GetAs<Buffer11>(sortedAttributes[i]->storage) : NULL;
 
             buffer = bufferStorage ? bufferStorage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK)
                                    : vertexBuffer->getBuffer();
-        }
 
-        UINT vertexStride = sortedAttributes[i]->stride;
-        UINT vertexOffset = sortedAttributes[i]->offset;
+            vertexStride = sortedAttributes[i]->stride;
+            vertexOffset = sortedAttributes[i]->offset;
+        }
 
         if (buffer != mCurrentBuffers[i] || vertexStride != mCurrentVertexStrides[i] ||
             vertexOffset != mCurrentVertexOffsets[i])

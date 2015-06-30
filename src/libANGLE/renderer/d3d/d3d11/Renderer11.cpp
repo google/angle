@@ -651,6 +651,9 @@ void Renderer11::initializeDevice()
                                 angleFeatureLevel,
                                 NUM_ANGLE_FEATURE_LEVELS);
 
+    // TODO(jmadill): use context caps, and place in common D3D location
+    mTranslatedAttribCache.resize(getRendererCaps().maxVertexAttributes);
+
     double elapsedTimeSeconds = ANGLEPlatformCurrent()->currentTime() - startTimeSeconds;
     int initializeDeviceMS = static_cast<int>(elapsedTimeSeconds * 1000);
     ANGLE_HISTOGRAM_TIMES("GPU.ANGLE.Renderer11InitializeDeviceMS", initializeDeviceMS);
@@ -1514,14 +1517,13 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
 
 gl::Error Renderer11::applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances)
 {
-    TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS];
-    gl::Error error = mVertexDataManager->prepareVertexData(state, first, count, attributes, instances);
+    gl::Error error = mVertexDataManager->prepareVertexData(state, first, count, &mTranslatedAttribCache, instances);
     if (error.isError())
     {
         return error;
     }
 
-    return mInputLayoutCache.applyVertexBuffers(attributes, mode, state.getProgram());
+    return mInputLayoutCache.applyVertexBuffers(mTranslatedAttribCache, mode, state.getProgram());
 }
 
 gl::Error Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)

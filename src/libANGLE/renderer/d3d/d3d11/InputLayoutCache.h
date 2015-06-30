@@ -38,7 +38,7 @@ class InputLayoutCache : angle::NonCopyable
     void clear();
     void markDirty();
 
-    gl::Error applyVertexBuffers(TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS],
+    gl::Error applyVertexBuffers(const std::vector<TranslatedAttribute> &attributes,
                                  GLenum mode, gl::Program *program);
 
   private:

@@ -30,9 +30,18 @@ class VertexBuffer;
 
 struct TranslatedAttribute
 {
-    TranslatedAttribute() : active(false), attribute(NULL), currentValueType(GL_NONE),
-                            offset(0), stride(0), vertexBuffer(NULL), storage(NULL),
-                            serial(0), divisor(0) {};
+    TranslatedAttribute()
+        : active(false),
+          attribute(NULL),
+          currentValueType(GL_NONE),
+          offset(0),
+          stride(0),
+          vertexBuffer(NULL),
+          storage(NULL),
+          serial(0),
+          divisor(0)
+    {}
+
     bool active;
 
     const gl::VertexAttribute *attribute;
@@ -52,8 +61,11 @@ class VertexDataManager : angle::NonCopyable
     VertexDataManager(BufferFactoryD3D *factory);
     virtual ~VertexDataManager();
 
-    gl::Error prepareVertexData(const gl::State &state, GLint start, GLsizei count,
-                                TranslatedAttribute *outAttribs, GLsizei instances);
+    gl::Error prepareVertexData(const gl::State &state,
+                                GLint start,
+                                GLsizei count,
+                                std::vector<TranslatedAttribute> *translatedAttribs,
+                                GLsizei instances);
 
   private:
     struct CurrentValueState

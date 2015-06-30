@@ -119,8 +119,11 @@ void VertexDataManager::hintUnmapAllResources(const std::vector<gl::VertexAttrib
     }
 }
 
-gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint start, GLsizei count,
-                                               TranslatedAttribute *translated, GLsizei instances)
+gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
+                                               GLint start,
+                                               GLsizei count,
+                                               std::vector<TranslatedAttribute> *translatedAttribs,
+                                               GLsizei instances)
 {
     if (!mStreamingBuffer)
     {
@@ -135,20 +138,26 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
 
     mActiveEnabledAttributes.clear();
     mActiveDisabledAttributes.clear();
+    translatedAttribs->clear();
 
     for (size_t attribIndex = 0; attribIndex < vertexAttributes.size(); ++attribIndex)
     {
-        translated[attribIndex].active = (semanticIndexes[attribIndex] != -1);
-        if (translated[attribIndex].active)
+        if (semanticIndexes[attribIndex] != -1)
         {
+            // Resize automatically puts in empty attribs
+            translatedAttribs->resize(attribIndex + 1);
+
+            TranslatedAttribute *translated = &(*translatedAttribs)[attribIndex];
+
             // Record the attribute now
-            translated[attribIndex].attribute = &vertexAttributes[attribIndex];
-            translated[attribIndex].currentValueType = state.getVertexAttribCurrentValue(attribIndex).Type;
-            translated[attribIndex].divisor = vertexAttributes[attribIndex].divisor;
+            translated->active = true;
+            translated->attribute = &vertexAttributes[attribIndex];
+            translated->currentValueType = state.getVertexAttribCurrentValue(attribIndex).Type;
+            translated->divisor = vertexAttributes[attribIndex].divisor;
 
             if (vertexAttributes[attribIndex].enabled)
             {
-                mActiveEnabledAttributes.push_back(&translated[attribIndex]);
+                mActiveEnabledAttributes.push_back(translated);
 
                 // Also invalidate static buffers that don't contain matching attributes
                 invalidateMatchingStaticData(vertexAttributes[attribIndex],
@@ -191,7 +200,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
         }
 
         gl::Error error = storeCurrentValue(state.getVertexAttribCurrentValue(attribIndex),
-                                            &translated[attribIndex],
+                                            &(*translatedAttribs)[attribIndex],
                                             &mCurrentValueCache[attribIndex]);
         if (error.isError())
         {

@@ -127,7 +127,7 @@ class ProgramD3D : public ProgramImpl
     unsigned int getSerial() const;
 
     void initAttributesByLayout();
-    void sortAttributesByLayout(const rx::TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS],
+    void sortAttributesByLayout(const std::vector<TranslatedAttribute> &unsortedAttributes,
                                 int sortedSemanticIndicesOut[gl::MAX_VERTEX_ATTRIBS],
                                 const rx::TranslatedAttribute *sortedAttributesOut[gl::MAX_VERTEX_ATTRIBS]) const;
 

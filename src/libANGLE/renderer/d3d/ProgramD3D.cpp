@@ -2018,15 +2018,15 @@ void ProgramD3D::initAttributesByLayout()
     std::sort(&mAttributesByLayout[0], &mAttributesByLayout[gl::MAX_VERTEX_ATTRIBS], AttributeSorter(mSemanticIndex));
 }
 
-void ProgramD3D::sortAttributesByLayout(const rx::TranslatedAttribute unsortedAttributes[gl::MAX_VERTEX_ATTRIBS],
+void ProgramD3D::sortAttributesByLayout(const std::vector<TranslatedAttribute> &unsortedAttributes,
                                         int sortedSemanticIndicesOut[gl::MAX_VERTEX_ATTRIBS],
                                         const rx::TranslatedAttribute *sortedAttributesOut[gl::MAX_VERTEX_ATTRIBS]) const
 {
-    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    for (size_t attribIndex = 0; attribIndex < unsortedAttributes.size(); ++attribIndex)
     {
-        int oldIndex = mAttributesByLayout[i];
-        sortedSemanticIndicesOut[i] = mSemanticIndex[oldIndex];
-        sortedAttributesOut[i] = &unsortedAttributes[oldIndex];
+        int oldIndex = mAttributesByLayout[attribIndex];
+        sortedSemanticIndicesOut[attribIndex] = mSemanticIndex[oldIndex];
+        sortedAttributesOut[attribIndex] = &unsortedAttributes[oldIndex];
     }
 }
 
