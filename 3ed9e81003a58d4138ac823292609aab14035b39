@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7e0fe678_b8a6dd0d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-30T20:19:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e7adaa8_7b98a1f8",
+      "revId": "3ed9e81003a58d4138ac823292609aab14035b39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9e7adaa8_5b9365df",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 1
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "7e0fe678_98a321fe",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-30T20:19:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e7adaa8_5b9365df",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 205,
+        "endChar": 5
+      },
+      "revId": "3ed9e81003a58d4138ac823292609aab14035b39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9e7adaa8_fbaa7106",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 1
@@ -53,6 +95,30 @@
       "writtenOn": "2015-06-23T14:23:04Z",
       "side": 1,
       "message": "right-align *",
+      "range": {
+        "startLine": 271,
+        "startChar": 3,
+        "endLine": 271,
+        "endChar": 28
+      },
+      "revId": "3ed9e81003a58d4138ac823292609aab14035b39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e149a89_183c5552",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-30T20:19:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e7adaa8_fbaa7106",
       "range": {
         "startLine": 271,
         "startChar": 3,
