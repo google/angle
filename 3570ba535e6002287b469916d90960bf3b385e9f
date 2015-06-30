@@ -199,6 +199,30 @@
     },
     {
       "key": {
+        "uuid": "d3d44d30_366f58f5",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-30T19:31:59Z",
+      "side": 1,
+      "message": "Adding a max enum value to these and doing a debug assert seems like a good option here, and I think that\u0027s what I\u0027d suggest. I find it implausible that we\u0027d have more than 30 or 40 enums in any of these categories, so 255 values should be enough. The assert would be for peace of mind. What\u0027d you also get with a single int is faster comparisons for the map, which is relevant.",
+      "parentUuid": "b3a6f9d3_bdac5fab",
+      "range": {
+        "startLine": 56,
+        "startChar": 8,
+        "endLine": 56,
+        "endChar": 11
+      },
+      "revId": "3570ba535e6002287b469916d90960bf3b385e9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "53ccdd7c_2861cf8b",
         "filename": "src/compiler/translator/Cache.h",
         "patchSetId": 3
