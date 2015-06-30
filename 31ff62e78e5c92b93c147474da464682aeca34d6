@@ -22,6 +22,30 @@
       "revId": "31ff62e78e5c92b93c147474da464682aeca34d6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73f6419f_2033d032",
+        "filename": "src/tests/third_party/gpu_test_expectations/angle-mods.patch",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-06-30T17:27:46Z",
+      "side": 1,
+      "message": "Interesting, I had deleted it before so it means diff takes files in order and does a write at least at the end of each file comparison.\n\nFixed and edited instructions accordingly",
+      "parentUuid": "53277df4_c493f228",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 52,
+        "endChar": 78
+      },
+      "revId": "31ff62e78e5c92b93c147474da464682aeca34d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
