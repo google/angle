@@ -16,6 +16,7 @@
         'angle_unittests_sources':
         [
             '<(angle_path)/src/common/Optional_unittest.cpp',
+            '<(angle_path)/src/common/mathutil_unittest.cpp',
             '<(angle_path)/src/common/matrix_utils_unittest.cpp',
             '<(angle_path)/src/common/string_utils_unittest.cpp',
             '<(angle_path)/src/common/utilities_unittest.cpp',

@@ -1188,7 +1188,8 @@ TConstantUnion *TIntermConstantUnion::foldUnary(TOperator op, TInfoSink &infoSin
     size_t objectSize = getType().getObjectSize();
 
     if (op == EOpAny || op == EOpAll || op == EOpLength || op == EOpTranspose || op == EOpDeterminant ||
-        op == EOpInverse)
+        op == EOpInverse || op == EOpPackSnorm2x16 || op == EOpUnpackSnorm2x16 || op == EOpPackUnorm2x16 ||
+        op == EOpUnpackUnorm2x16 || op == EOpPackHalf2x16 || op == EOpUnpackHalf2x16)
     {
         // Do operations where the return type has a different number of components compared to the operand type.
         TConstantUnion *resultArray = nullptr;
@@ -1295,6 +1296,97 @@ TConstantUnion *TIntermConstantUnion::foldUnary(TOperator op, TInfoSink &infoSin
                 infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
                 return nullptr;
             }
+
+          case EOpPackSnorm2x16:
+            if (getType().getBasicType() == EbtFloat)
+            {
+                ASSERT(getType().getNominalSize() == 2);
+                resultArray = new TConstantUnion();
+                resultArray->setUConst(gl::packSnorm2x16(operandArray[0].getFConst(), operandArray[1].getFConst()));
+                break;
+            }
+            else
+            {
+                infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+                return nullptr;
+            }
+
+          case EOpUnpackSnorm2x16:
+            if (getType().getBasicType() == EbtUInt)
+            {
+                resultArray = new TConstantUnion[2];
+                float f1, f2;
+                gl::unpackSnorm2x16(operandArray[0].getUConst(), &f1, &f2);
+                resultArray[0].setFConst(f1);
+                resultArray[1].setFConst(f2);
+                break;
+            }
+            else
+            {
+                infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+                return nullptr;
+            }
+
+          case EOpPackUnorm2x16:
+            if (getType().getBasicType() == EbtFloat)
+            {
+                ASSERT(getType().getNominalSize() == 2);
+                resultArray = new TConstantUnion();
+                resultArray->setUConst(gl::packUnorm2x16(operandArray[0].getFConst(), operandArray[1].getFConst()));
+                break;
+            }
+            else
+            {
+                infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+                return nullptr;
+            }
+
+          case EOpUnpackUnorm2x16:
+            if (getType().getBasicType() == EbtUInt)
+            {
+                resultArray = new TConstantUnion[2];
+                float f1, f2;
+                gl::unpackUnorm2x16(operandArray[0].getUConst(), &f1, &f2);
+                resultArray[0].setFConst(f1);
+                resultArray[1].setFConst(f2);
+                break;
+            }
+            else
+            {
+                infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+                return nullptr;
+            }
+
+          case EOpPackHalf2x16:
+            if (getType().getBasicType() == EbtFloat)
+            {
+                ASSERT(getType().getNominalSize() == 2);
+                resultArray = new TConstantUnion();
+                resultArray->setUConst(gl::packHalf2x16(operandArray[0].getFConst(), operandArray[1].getFConst()));
+                break;
+            }
+            else
+            {
+                infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+                return nullptr;
+            }
+
+          case EOpUnpackHalf2x16:
+            if (getType().getBasicType() == EbtUInt)
+            {
+                resultArray = new TConstantUnion[2];
+                float f1, f2;
+                gl::unpackHalf2x16(operandArray[0].getUConst(), &f1, &f2);
+                resultArray[0].setFConst(f1);
+                resultArray[1].setFConst(f2);
+                break;
+            }
+            else
+            {
+                infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+                return nullptr;
+            }
+            break;
 
           default:
             break;
