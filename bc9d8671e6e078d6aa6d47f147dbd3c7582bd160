@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "339be98e_213dce97",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 572,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-30T19:49:19Z",
+      "side": 1,
+      "message": "nit: no need to initialize these three var here because right below in both paths all of them gets assigned values.",
+      "revId": "bc9d8671e6e078d6aa6d47f147dbd3c7582bd160",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33c4c97c_b9a23f85",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-30T19:49:19Z",
+      "side": 1,
+      "message": "nit: same here, no need to initialize.",
+      "revId": "bc9d8671e6e078d6aa6d47f147dbd3c7582bd160",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3a6f9d3_7dd937ea",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-30T19:49:19Z",
+      "side": 1,
+      "message": "It\u0027s better to define a enum { 2D, 3D } here. Also in the getBlitShader() above.  Passing true of false at calling side isn\u0027t good for readability.",
+      "range": {
+        "startLine": 129,
+        "startChar": 73,
+        "endLine": 129,
+        "endChar": 77
+      },
+      "revId": "bc9d8671e6e078d6aa6d47f147dbd3c7582bd160",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3d44d30_36cd1857",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-06-30T19:49:19Z",
+      "side": 1,
+      "message": "I think here it\u0027s also better using 2D / 3D enums.  You can define 2D as 2 and 3D as 3, so you can use the value also.",
+      "range": {
+        "startLine": 145,
+        "startChar": 27,
+        "endLine": 145,
+        "endChar": 28
+      },
+      "revId": "bc9d8671e6e078d6aa6d47f147dbd3c7582bd160",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
