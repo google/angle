@@ -65,6 +65,30 @@
     },
     {
       "key": {
+        "uuid": "d3d44d30_f6068057",
+        "filename": "src/compiler/translator/Cache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-30T19:25:12Z",
+      "side": 1,
+      "message": "Constructor will look ugly, it will basically assign parameters into fixed indexes. It won\u0027t give us much safety or readability since this function is the only place where it will be used.\n\nThe only reason I went with values[5] is because I wanted to simplify the key. The proper way is to create a struct with all properly typed members and implement operator\u003c by comparing them.\n\nActually, I think I\u0027ll do that and we\u0027ll see how it looks.",
+      "parentUuid": "73f6419f_00ea14eb",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 47
+      },
+      "revId": "3570ba535e6002287b469916d90960bf3b385e9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "53277df4_8438da8d",
         "filename": "src/compiler/translator/Cache.cpp",
         "patchSetId": 3
@@ -139,6 +163,30 @@
       "writtenOn": "2015-06-30T17:26:36Z",
       "side": 1,
       "message": "personally I\u0027d suggest doing a union of 5 uint8_t (+3 padding) and a uint64_t here, then you don\u0027t need memcmp. Also it makes the padding explicit, whereas in your current code you are assigning unsigned char to int. Open to your thoughts on this.",
+      "range": {
+        "startLine": 56,
+        "startChar": 8,
+        "endLine": 56,
+        "endChar": 11
+      },
+      "revId": "3570ba535e6002287b469916d90960bf3b385e9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3a6f9d3_bdac5fab",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-06-30T19:25:12Z",
+      "side": 1,
+      "message": "What I like about ints is that they will always work - no matter which values are in those enums they will fit into int. We can pack enums into bytes, but that will require us to maintain (and check) \u0027max\u0027 enum values. Another possibility, which requires C++11 is to specify enum size, so we can be sure all values fit into certain type.",
+      "parentUuid": "93fbb585_290bba99",
       "range": {
         "startLine": 56,
         "startChar": 8,
