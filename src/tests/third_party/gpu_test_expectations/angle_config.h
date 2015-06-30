@@ -34,6 +34,12 @@ typedef uint64_t uint64;
 using namespace angle;
 
 // TODO(jmadill): other platforms
-#define OS_WIN
+#if defined(_WIN32) || defined(_WIN64)
+#    define OS_WIN
+#elif defined(__linux__)
+#    define OS_LINUX
+#else
+#    error "Unsupported platform"
+#endif
 
 #endif

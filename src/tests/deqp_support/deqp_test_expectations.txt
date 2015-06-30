@@ -25,7 +25,9 @@
 //  91531 MAC WIN LINUX : conformance_more_* = SKIP
 //  91532 MAC NVIDIA 0x0640 : tex_image_and_sub_image_2d_with_video = PASS FAIL
 
-// TODO(jmadill): triage these into temporary and permananet suppressions
+// TODO(cwallez): make suppression for Linux
+
+// TODO(jmadill): triage these into temporary and permanent suppressions
 989 WIN : dEQP-GLES2.functional.shaders.preprocessor.basic.identifier_with_double_underscore_vertex = FAIL
 989 WIN : dEQP-GLES2.functional.shaders.preprocessor.basic.identifier_with_double_underscore_fragment = FAIL
 989 WIN : dEQP-GLES2.functional.shaders.preprocessor.pragmas.invalid_pragma_invalid_* = FAIL
@@ -295,8 +297,8 @@
 1034 WIN : dEQP-GLES2.functional.flush_finish.finish_wait = FAIL
 
 // Don't run these tests for faster turnover
-998 WIN : dEQP-GLES2.performance.* = SKIP
-998 WIN : dEQP-GLES2.stress.* = SKIP
+998 WIN LINUX : dEQP-GLES2.performance.* = SKIP
+998 WIN LINUX : dEQP-GLES2.stress.* = SKIP
 
 ////////////////////////////////////////////////////////////////////////////////
 //

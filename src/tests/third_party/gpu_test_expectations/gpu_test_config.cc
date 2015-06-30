@@ -7,6 +7,15 @@
 #include "gpu_info.h"
 #include "gpu_test_expectations_parser.h"
 
+#if defined(OS_LINUX)
+extern "C" {
+#   include <pci/pci.h>
+}
+#endif
+
+using namespace gpu;
+
+#if defined(OS_WIN)
 // Disable the deprecated function warning for GetVersionEx
 #pragma warning(disable: 4996)
 
@@ -27,10 +36,6 @@ void SysInfo::OperatingSystemVersionNumbers(
   *minor_version = version_info.dwMinorVersion;
   *bugfix_version = version_info.dwBuildNumber;
 }
-
-namespace gpu {
-
-namespace {
 
 void DeviceIDToVendorAndDevice(const std::string& id,
                                uint32* vendor_id,
@@ -68,6 +73,97 @@ CollectInfoResult CollectGpuID(uint32* vendor_id, uint32* device_id) {
   }
   return kCollectInfoNonFatalFailure;
 }
+
+#endif // defined(OS_WIN)
+
+#if defined(OS_LINUX)
+
+const uint32 kVendorIDIntel = 0x8086;
+const uint32 kVendorIDNVidia = 0x10de;
+const uint32 kVendorIDAMD = 0x1002;
+
+CollectInfoResult CollectPCIVideoCardInfo(GPUInfo* gpu_info) {
+  DCHECK(gpu_info);
+
+  struct pci_access* access = pci_alloc();
+  DCHECK(access != NULL);
+  pci_init(access);
+  pci_scan_bus(access);
+
+  bool primary_gpu_identified = false;
+  for (pci_dev* device = access->devices;
+       device != NULL; device = device->next) {
+    pci_fill_info(device, 33);
+    bool is_gpu = false;
+    switch (device->device_class) {
+      case PCI_CLASS_DISPLAY_VGA:
+      case PCI_CLASS_DISPLAY_XGA:
+      case PCI_CLASS_DISPLAY_3D:
+        is_gpu = true;
+        break;
+      case PCI_CLASS_DISPLAY_OTHER:
+      default:
+        break;
+    }
+    if (!is_gpu)
+      continue;
+    if (device->vendor_id == 0 || device->device_id == 0)
+      continue;
+
+    GPUInfo::GPUDevice gpu;
+    gpu.vendor_id = device->vendor_id;
+    gpu.device_id = device->device_id;
+
+    if (!primary_gpu_identified) {
+      primary_gpu_identified = true;
+      gpu_info->gpu = gpu;
+    } else {
+      // TODO(zmo): if there are multiple GPUs, we assume the non Intel
+      // one is primary. Revisit this logic because we actually don't know
+      // which GPU we are using at this point.
+      if (gpu_info->gpu.vendor_id == kVendorIDIntel &&
+          gpu.vendor_id != kVendorIDIntel) {
+        gpu_info->secondary_gpus.push_back(gpu_info->gpu);
+        gpu_info->gpu = gpu;
+      } else {
+        gpu_info->secondary_gpus.push_back(gpu);
+      }
+    }
+  }
+
+  // Detect Optimus or AMD Switchable GPU.
+  if (gpu_info->secondary_gpus.size() == 1 &&
+      gpu_info->secondary_gpus[0].vendor_id == kVendorIDIntel) {
+    if (gpu_info->gpu.vendor_id == kVendorIDNVidia)
+      gpu_info->optimus = true;
+    if (gpu_info->gpu.vendor_id == kVendorIDAMD)
+      gpu_info->amd_switchable = true;
+  }
+
+  pci_cleanup(access);
+  if (!primary_gpu_identified)
+    return kCollectInfoNonFatalFailure;
+  return kCollectInfoSuccess;
+}
+
+CollectInfoResult CollectGpuID(uint32* vendor_id, uint32* device_id) {
+  DCHECK(vendor_id && device_id);
+  *vendor_id = 0;
+  *device_id = 0;
+
+  GPUInfo gpu_info;
+  CollectInfoResult result = CollectPCIVideoCardInfo(&gpu_info);
+  if (result == kCollectInfoSuccess) {
+    *vendor_id = gpu_info.gpu.vendor_id;
+    *device_id = gpu_info.gpu.device_id;
+  }
+  return result;
+}
+#endif // defined(OS_LINUX)
+
+namespace gpu {
+
+namespace {
 
 GPUTestConfig::OS GetCurrentOS() {
 #if defined(OS_CHROMEOS)
