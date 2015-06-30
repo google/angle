@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "53305d12_e5cf309d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-30T23:45:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "beeebe34_4c45e715",
+      "range": {
+        "startLine": 1083,
+        "startChar": 12,
+        "endLine": 1083,
+        "endChar": 63
+      },
+      "revId": "250eb0321a701097aad664644be722d6b87efbb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "beeebe34_0cd0ffc1",
         "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
         "patchSetId": 11
@@ -36,6 +60,30 @@
       "writtenOn": "2015-06-25T17:29:15Z",
       "side": 1,
       "message": "nit: indentation",
+      "range": {
+        "startLine": 207,
+        "startChar": 0,
+        "endLine": 207,
+        "endChar": 7
+      },
+      "revId": "250eb0321a701097aad664644be722d6b87efbb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53305d12_45dc1c57",
+        "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-30T23:45:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "beeebe34_0cd0ffc1",
       "range": {
         "startLine": 207,
         "startChar": 0,
