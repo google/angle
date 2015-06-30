@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f3d8713c_bffc3737",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-30T23:28:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53ccdd7c_2552d8e2",
+      "range": {
+        "startLine": 361,
+        "startChar": 92,
+        "endLine": 361,
+        "endChar": 115
+      },
+      "revId": "4fc3e7dcf64e49336d2c0f7fb7ef932bf8579d34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "53ccdd7c_053dd497",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "13d6e50c_20fd6a7f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-30T23:28:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53ccdd7c_053dd497",
+      "range": {
+        "startLine": 397,
+        "startChar": 68,
+        "endLine": 397,
+        "endChar": 112
+      },
+      "revId": "4fc3e7dcf64e49336d2c0f7fb7ef932bf8579d34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73f6419f_85073622",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2015-06-30T15:50:48Z",
       "side": 1,
       "message": "try to not use this (infinitive?) passive voice: \"must be chosen\"\n\ninstead use present tense, \"If so, use a compatible 32-bit format instead\"",
+      "range": {
+        "startLine": 398,
+        "startChar": 7,
+        "endLine": 398,
+        "endChar": 49
+      },
+      "revId": "4fc3e7dcf64e49336d2c0f7fb7ef932bf8579d34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f3d8713c_3f43c7f8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-06-30T23:28:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "73f6419f_85073622",
       "range": {
         "startLine": 398,
         "startChar": 7,
