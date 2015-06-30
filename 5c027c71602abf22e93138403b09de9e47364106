@@ -22,6 +22,30 @@
       "revId": "5c027c71602abf22e93138403b09de9e47364106",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3760d12_c604c24c",
+        "filename": "src/libANGLE/HandleAllocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2015-06-30T20:23:13Z",
+      "side": 1,
+      "message": "The original one makes it in reverse order.",
+      "parentUuid": "0d54fde2_60999e50",
+      "range": {
+        "startLine": 23,
+        "startChar": 15,
+        "endLine": 23,
+        "endChar": 36
+      },
+      "revId": "5c027c71602abf22e93138403b09de9e47364106",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
