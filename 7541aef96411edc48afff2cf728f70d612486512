@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "53ccdd7c_8537240b",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-30T14:16:07Z",
+      "side": 1,
+      "message": "we can use \u0026 for non-const parameters? left as is for now.",
+      "parentUuid": "53ccdd7c_852d64d0",
+      "range": {
+        "startLine": 67,
+        "startChar": 64,
+        "endLine": 67,
+        "endChar": 66
+      },
+      "revId": "7541aef96411edc48afff2cf728f70d612486512",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "132185e2_ddb3c7d1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "132185e2_fd8deb07",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-30T14:16:07Z",
+      "side": 1,
+      "message": "True.",
+      "parentUuid": "132185e2_ddb3c7d1",
+      "range": {
+        "startLine": 654,
+        "startChar": 4,
+        "endLine": 655,
+        "endChar": 73
+      },
+      "revId": "7541aef96411edc48afff2cf728f70d612486512",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "132185e2_3d8023d3",
         "filename": "src/libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.cpp",
         "patchSetId": 6
@@ -59,6 +107,24 @@
       "writtenOn": "2015-06-30T13:22:37Z",
       "side": 1,
       "message": "nit: add an assert that gl::MAX_VERTEX_ATTRIBS is \u003e\u003d the attrib vector\u0027s size.",
+      "revId": "7541aef96411edc48afff2cf728f70d612486512",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53277df4_79cf5324",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-06-30T14:16:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "132185e2_3d8023d3",
       "revId": "7541aef96411edc48afff2cf728f70d612486512",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
