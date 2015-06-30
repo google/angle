@@ -31,7 +31,7 @@ class SwapChainD3D : angle::NonCopyable
 {
   public:
     SwapChainD3D(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
-        : mNativeWindow(nativeWindow), mShareHandle(shareHandle), mBackBufferFormat(backBufferFormat), mDepthBufferFormat(depthBufferFormat)
+        : mNativeWindow(nativeWindow), mBackBufferFormat(backBufferFormat), mDepthBufferFormat(depthBufferFormat), mShareHandle(shareHandle)
     {
     }
 

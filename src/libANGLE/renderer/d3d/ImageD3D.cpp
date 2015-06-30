@@ -23,8 +23,8 @@ ImageD3D::ImageD3D()
       mHeight(0),
       mDepth(0),
       mInternalFormat(GL_NONE),
-      mTarget(GL_NONE),
       mRenderable(false),
+      mTarget(GL_NONE),
       mDirty(false)
 {
 }

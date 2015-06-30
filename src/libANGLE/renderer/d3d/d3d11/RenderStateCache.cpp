@@ -42,12 +42,12 @@ const unsigned int RenderStateCache::kMaxSamplerStates = 4096;
 
 RenderStateCache::RenderStateCache(Renderer11 *renderer)
     : mRenderer(renderer),
-      mDevice(NULL),
       mCounter(0),
       mBlendStateCache(kMaxBlendStates, hashBlendState, compareBlendStates),
       mRasterizerStateCache(kMaxRasterizerStates, hashRasterizerState, compareRasterizerStates),
       mDepthStencilStateCache(kMaxDepthStencilStates, hashDepthStencilState, compareDepthStencilStates),
-      mSamplerStateCache(kMaxSamplerStates, hashSamplerState, compareSamplerStates)
+      mSamplerStateCache(kMaxSamplerStates, hashSamplerState, compareSamplerStates),
+      mDevice(NULL)
 {
 }
 

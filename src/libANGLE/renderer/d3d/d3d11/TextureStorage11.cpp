@@ -62,8 +62,6 @@ bool TextureStorage11::SRVKey::operator<(const SRVKey &rhs) const
 
 TextureStorage11::TextureStorage11(Renderer11 *renderer, UINT bindFlags, UINT miscFlags)
     : mRenderer(renderer),
-      mBindFlags(bindFlags),
-      mMiscFlags(miscFlags),
       mTopLevel(0),
       mMipLevels(0),
       mInternalFormat(GL_NONE),
@@ -73,7 +71,9 @@ TextureStorage11::TextureStorage11(Renderer11 *renderer, UINT bindFlags, UINT mi
       mDepthStencilFormat(DXGI_FORMAT_UNKNOWN),
       mTextureWidth(0),
       mTextureHeight(0),
-      mTextureDepth(0)
+      mTextureDepth(0),
+      mBindFlags(bindFlags),
+      mMiscFlags(miscFlags)
 {
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
@@ -676,10 +676,10 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index, ImageD3D *image
 TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, SwapChain11 *swapchain)
     : TextureStorage11(renderer, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE, 0),
       mTexture(swapchain->getOffscreenTexture()),
-      mSwizzleTexture(NULL),
       mLevelZeroTexture(NULL),
       mLevelZeroRenderTarget(NULL),
-      mUseLevelZeroTexture(false)
+      mUseLevelZeroTexture(false),
+      mSwizzleTexture(NULL)
 {
     mTexture->AddRef();
 
@@ -726,10 +726,10 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, GLenum internalfo
                        GetTextureBindFlags(internalformat, renderer->getRenderer11DeviceCaps(), renderTarget),
                        GetTextureMiscFlags(internalformat, renderer->getRenderer11DeviceCaps(), renderTarget, levels)),
       mTexture(NULL),
-      mSwizzleTexture(NULL),
       mLevelZeroTexture(NULL),
       mLevelZeroRenderTarget(NULL),
-      mUseLevelZeroTexture(false)
+      mUseLevelZeroTexture(false),
+      mSwizzleTexture(NULL)
 {
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {

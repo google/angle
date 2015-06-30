@@ -115,8 +115,8 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType, int shaderVersion,
       mExtensionBehavior(extensionBehavior),
       mSourcePath(sourcePath),
       mOutputType(outputType),
-      mNumRenderTargets(numRenderTargets),
       mCompileOptions(compileOptions),
+      mNumRenderTargets(numRenderTargets),
       mCurrentFunctionMetadata(nullptr)
 {
     mInsideFunction = false;

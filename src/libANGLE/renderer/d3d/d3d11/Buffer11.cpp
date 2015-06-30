@@ -758,8 +758,8 @@ bool Buffer11::supportsDirectBinding() const
 
 Buffer11::BufferStorage::BufferStorage(Renderer11 *renderer, BufferUsage usage)
     : mRenderer(renderer),
-      mUsage(usage),
       mRevision(0),
+      mUsage(usage),
       mBufferSize(0)
 {
 }

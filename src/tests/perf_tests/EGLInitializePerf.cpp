@@ -23,10 +23,10 @@ class CapturePlatform : public angle::Platform
 {
   public:
     CapturePlatform()
-        : mLoadDLLsMS(0),
+        : mTimer(CreateTimer()),
+          mLoadDLLsMS(0),
           mCreateDeviceMS(0),
-          mInitResourcesMS(0),
-          mTimer(CreateTimer())
+          mInitResourcesMS(0)
     {
         mTimer->start();
     }

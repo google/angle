@@ -86,9 +86,9 @@ ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
 
 FramebufferD3D::FramebufferD3D(const gl::Framebuffer::Data &data, RendererD3D *renderer)
     : FramebufferImpl(data),
-      mRenderer(renderer),
       mColorAttachmentsForRender(mData.getColorAttachments().size(), nullptr),
-      mInvalidateColorAttachmentCache(true)
+      mInvalidateColorAttachmentCache(true),
+      mRenderer(renderer)
 {
     ASSERT(mRenderer != nullptr);
 }

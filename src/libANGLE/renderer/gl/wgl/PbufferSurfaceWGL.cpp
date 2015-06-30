@@ -25,8 +25,8 @@ PbufferSurfaceWGL::PbufferSurfaceWGL(EGLint width, EGLint height, EGLenum textur
       mTextureFormat(textureFormat),
       mTextureTarget(textureTarget),
       mPixelFormat(pixelFormat),
-      mParentDeviceContext(deviceContext),
       mShareWGLContext(wglContext),
+      mParentDeviceContext(deviceContext),
       mPbuffer(nullptr),
       mPbufferDeviceContext(nullptr),
       mFunctionsWGL(functions)
