@@ -192,8 +192,32 @@ ID3D11PixelShader *CompilePS(ID3D11Device *device, const BYTE (&byteCode)[N], co
     return CompilePS(device, byteCode, N, name);
 }
 
+template <typename ResourceType>
+class LazyResource : public angle::NonCopyable
+{
+  public:
+    LazyResource() : mResource(nullptr), mAssociatedDevice(nullptr) {}
+    virtual ~LazyResource() { release(); }
+
+    virtual ResourceType *resolve(ID3D11Device *device) = 0;
+    void release() { SafeRelease(mResource); }
+
+  protected:
+    void checkAssociatedDevice(ID3D11Device *device);
+
+    ResourceType *mResource;
+    ID3D11Device *mAssociatedDevice;
+};
+
+template <typename ResourceType>
+void LazyResource<ResourceType>::checkAssociatedDevice(ID3D11Device *device)
+{
+    ASSERT(mAssociatedDevice == nullptr || device == mAssociatedDevice);
+    mAssociatedDevice = device;
+}
+
 template <typename D3D11ShaderType>
-class LazyShader final : public angle::NonCopyable
+class LazyShader final : public LazyResource<D3D11ShaderType>
 {
   public:
     // All parameters must be constexpr. Not supported in VS2013.
@@ -202,65 +226,97 @@ class LazyShader final : public angle::NonCopyable
                const char *name)
         : mByteCode(byteCode),
           mByteCodeSize(byteCodeSize),
-          mName(name),
-          mShader(nullptr),
-          mAssociatedDevice(nullptr)
+          mName(name)
     {
     }
 
-    ~LazyShader() { release(); }
-
-    D3D11ShaderType *resolve(ID3D11Device *device);
-    void release() { SafeRelease(mShader); }
+    D3D11ShaderType *resolve(ID3D11Device *device) override;
 
   private:
-    void checkAssociatedDevice(ID3D11Device *device);
-
     const BYTE *mByteCode;
     size_t mByteCodeSize;
     const char *mName;
-    D3D11ShaderType *mShader;
-    ID3D11Device *mAssociatedDevice;
 };
-
-template <typename D3D11ShaderType>
-void LazyShader<D3D11ShaderType>::checkAssociatedDevice(ID3D11Device *device)
-{
-    ASSERT(mAssociatedDevice == nullptr || device == mAssociatedDevice);
-    mAssociatedDevice = device;
-}
 
 template <>
 inline ID3D11VertexShader *LazyShader<ID3D11VertexShader>::resolve(ID3D11Device *device)
 {
     checkAssociatedDevice(device);
-    if (mShader == nullptr)
+    if (mResource == nullptr)
     {
-        mShader = CompileVS(device, mByteCode, mByteCodeSize, mName);
+        mResource = CompileVS(device, mByteCode, mByteCodeSize, mName);
     }
-    return mShader;
+    return mResource;
 }
 
 template <>
 inline ID3D11GeometryShader *LazyShader<ID3D11GeometryShader>::resolve(ID3D11Device *device)
 {
     checkAssociatedDevice(device);
-    if (mShader == nullptr)
+    if (mResource == nullptr)
     {
-        mShader = CompileGS(device, mByteCode, mByteCodeSize, mName);
+        mResource = CompileGS(device, mByteCode, mByteCodeSize, mName);
     }
-    return mShader;
+    return mResource;
 }
 
 template <>
 inline ID3D11PixelShader *LazyShader<ID3D11PixelShader>::resolve(ID3D11Device *device)
 {
     checkAssociatedDevice(device);
-    if (mShader == nullptr)
+    if (mResource == nullptr)
     {
-        mShader = CompilePS(device, mByteCode, mByteCodeSize, mName);
+        mResource = CompilePS(device, mByteCode, mByteCodeSize, mName);
     }
-    return mShader;
+    return mResource;
+}
+
+class LazyInputLayout final : public LazyResource<ID3D11InputLayout>
+{
+  public:
+    LazyInputLayout(const D3D11_INPUT_ELEMENT_DESC *inputDesc,
+                    size_t inputDescLen,
+                    const BYTE *byteCode,
+                    size_t byteCodeLen,
+                    const char *debugName);
+
+    ID3D11InputLayout *resolve(ID3D11Device *device) override;
+
+  private:
+    std::vector<D3D11_INPUT_ELEMENT_DESC> mInputDesc;
+    size_t mByteCodeLen;
+    const BYTE *mByteCode;
+    const char *mDebugName;
+};
+
+inline LazyInputLayout::LazyInputLayout(
+    const D3D11_INPUT_ELEMENT_DESC *inputDesc,
+    size_t inputDescLen,
+    const BYTE *byteCode,
+    size_t byteCodeLen,
+    const char *debugName)
+    : mInputDesc(inputDescLen),
+      mByteCodeLen(byteCodeLen),
+      mByteCode(byteCode),
+      mDebugName(debugName)
+{
+    memcpy(&mInputDesc[0], inputDesc, sizeof(D3D11_INPUT_ELEMENT_DESC) * inputDescLen);
+}
+
+inline ID3D11InputLayout *LazyInputLayout::resolve(ID3D11Device *device)
+{
+    checkAssociatedDevice(device);
+
+    if (mResource == nullptr)
+    {
+        HRESULT result = device->CreateInputLayout(
+            &mInputDesc[0], static_cast<UINT>(mInputDesc.size()), mByteCode, mByteCodeLen, &mResource);
+        ASSERT(SUCCEEDED(result));
+        UNUSED_ASSERTION_VARIABLE(result);
+        d3d11::SetDebugName(mResource, mDebugName);
+    }
+
+    return mResource;
 }
 
 // Copy data to small D3D11 buffers, such as for small constant buffers, which use one struct to

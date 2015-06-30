@@ -83,8 +83,6 @@ class Blit11 : angle::NonCopyable
         BLITSHADER_3D_LUMAALPHA,
     };
 
-    static BlitShaderType GetBlitShaderType(GLenum destinationFormat, bool isSigned, bool is3D);
-
     enum SwizzleShaderType
     {
         SWIZZLESHADER_INVALID,
@@ -102,47 +100,48 @@ class Blit11 : angle::NonCopyable
         SWIZZLESHADER_ARRAY_INT,
     };
 
+    typedef void (*WriteVertexFunction)(const gl::Box &sourceArea, const gl::Extents &sourceSize,
+                                        const gl::Box &destArea, const gl::Extents &destSize,
+                                        void *outVertices, unsigned int *outStride, unsigned int *outVertexCount,
+                                        D3D11_PRIMITIVE_TOPOLOGY *outTopology);
+
+    enum ShaderDimension
+    {
+        SHADER_2D,
+        SHADER_3D,
+    };
+
+    struct Shader
+    {
+        ShaderDimension dimension;
+        ID3D11PixelShader *pixelShader;
+    };
+
+    struct ShaderSupport
+    {
+        ID3D11InputLayout *inputLayout;
+        ID3D11VertexShader *vertexShader;
+        ID3D11GeometryShader *geometryShader;
+        WriteVertexFunction vertexWriteFunction;
+    };
+
+    ShaderSupport getShaderSupport(const Shader &shader);
+
+    static BlitShaderType GetBlitShaderType(GLenum destinationFormat, bool isSigned, ShaderDimension dimension);
     static SwizzleShaderType GetSwizzleShaderType(GLenum type, D3D11_SRV_DIMENSION dimensionality);
 
     gl::Error copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
                                ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
                                const gl::Rectangle *scissor, bool stencilOnly);
 
-    typedef void (*WriteVertexFunction)(const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                                        const gl::Box &destArea, const gl::Extents &destSize,
-                                        void *outVertices, unsigned int *outStride, unsigned int *outVertexCount,
-                                        D3D11_PRIMITIVE_TOPOLOGY *outTopology);
+    void addBlitShaderToMap(BlitShaderType blitShaderType, ShaderDimension dimension, ID3D11PixelShader *ps);
 
-    struct Shader
-    {
-        WriteVertexFunction mVertexWriteFunction;
-        ID3D11InputLayout *mInputLayout;
-        ID3D11VertexShader *mVertexShader;
-        ID3D11GeometryShader *mGeometryShader;
-        ID3D11PixelShader *mPixelShader;
-    };
-
-    struct CommonShaders
-    {
-        ID3D11VertexShader *vertexShader2D;
-        ID3D11VertexShader *vertexShader3D;
-        ID3D11GeometryShader *geometryShader3D;
-    };
-
-    void add2DBlitShaderToMap(BlitShaderType blitShaderType, const CommonShaders &commonShaders, ID3D11PixelShader *ps);
-    void add3DBlitShaderToMap(BlitShaderType blitShaderType, const CommonShaders &commonShaders, ID3D11PixelShader *ps);
-
-    gl::Error getBlitShader(GLenum destFormat, bool isSigned, bool is3D, const Shader **shaderOut);
+    gl::Error getBlitShader(GLenum destFormat, bool isSigned, ShaderDimension dimension, const Shader **shaderOut);
     gl::Error getSwizzleShader(GLenum type, D3D11_SRV_DIMENSION viewDimension, const Shader **shaderOut);
 
-    void addSwizzleShaderToMap(SwizzleShaderType swizzleShaderType, bool is2D, const CommonShaders &commonShaders, ID3D11PixelShader *ps);
+    void addSwizzleShaderToMap(SwizzleShaderType swizzleShaderType, ShaderDimension dimension, ID3D11PixelShader *ps);
 
     void clearShaderMap();
-
-    gl::Error getCommonShaders(CommonShaders *commonShadersOut, bool get3D);
-
-    ID3D11InputLayout *getQuad2DIL();
-    ID3D11InputLayout *getQuad3DIL();
 
     Renderer11 *mRenderer;
 
@@ -156,11 +155,11 @@ class Blit11 : angle::NonCopyable
     ID3D11RasterizerState *mScissorDisabledRasterizerState;
     ID3D11DepthStencilState *mDepthStencilState;
 
-    ID3D11InputLayout *mQuad2DIL;
+    d3d11::LazyInputLayout mQuad2DIL;
     d3d11::LazyShader<ID3D11VertexShader> mQuad2DVS;
     d3d11::LazyShader<ID3D11PixelShader> mDepthPS;
 
-    ID3D11InputLayout *mQuad3DIL;
+    d3d11::LazyInputLayout mQuad3DIL;
     d3d11::LazyShader<ID3D11VertexShader> mQuad3DVS;
     d3d11::LazyShader<ID3D11GeometryShader> mQuad3DGS;
 
