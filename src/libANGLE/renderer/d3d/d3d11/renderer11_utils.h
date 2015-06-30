@@ -193,13 +193,13 @@ ID3D11PixelShader *CompilePS(ID3D11Device *device, const BYTE (&byteCode)[N], co
 }
 
 template <typename D3D11ShaderType>
-class DeferredShader final : public angle::NonCopyable
+class LazyShader final : public angle::NonCopyable
 {
   public:
     // All parameters must be constexpr. Not supported in VS2013.
-    DeferredShader(const BYTE *byteCode,
-                   size_t byteCodeSize,
-                   const char *name)
+    LazyShader(const BYTE *byteCode,
+               size_t byteCodeSize,
+               const char *name)
         : mByteCode(byteCode),
           mByteCodeSize(byteCodeSize),
           mName(name),
@@ -208,10 +208,10 @@ class DeferredShader final : public angle::NonCopyable
     {
     }
 
-    ~DeferredShader() { releaseShader(); }
-    void releaseShader() { SafeRelease(mShader); }
+    ~LazyShader() { release(); }
 
-    D3D11ShaderType *getShader(ID3D11Device *device);
+    D3D11ShaderType *resolve(ID3D11Device *device);
+    void release() { SafeRelease(mShader); }
 
   private:
     void checkAssociatedDevice(ID3D11Device *device);
@@ -224,14 +224,14 @@ class DeferredShader final : public angle::NonCopyable
 };
 
 template <typename D3D11ShaderType>
-void DeferredShader<D3D11ShaderType>::checkAssociatedDevice(ID3D11Device *device)
+void LazyShader<D3D11ShaderType>::checkAssociatedDevice(ID3D11Device *device)
 {
     ASSERT(mAssociatedDevice == nullptr || device == mAssociatedDevice);
     mAssociatedDevice = device;
 }
 
 template <>
-inline ID3D11VertexShader *DeferredShader<ID3D11VertexShader>::getShader(ID3D11Device *device)
+inline ID3D11VertexShader *LazyShader<ID3D11VertexShader>::resolve(ID3D11Device *device)
 {
     checkAssociatedDevice(device);
     if (mShader == nullptr)
@@ -242,7 +242,7 @@ inline ID3D11VertexShader *DeferredShader<ID3D11VertexShader>::getShader(ID3D11D
 }
 
 template <>
-inline ID3D11GeometryShader *DeferredShader<ID3D11GeometryShader>::getShader(ID3D11Device *device)
+inline ID3D11GeometryShader *LazyShader<ID3D11GeometryShader>::resolve(ID3D11Device *device)
 {
     checkAssociatedDevice(device);
     if (mShader == nullptr)
@@ -253,7 +253,7 @@ inline ID3D11GeometryShader *DeferredShader<ID3D11GeometryShader>::getShader(ID3
 }
 
 template <>
-inline ID3D11PixelShader *DeferredShader<ID3D11PixelShader>::getShader(ID3D11Device *device)
+inline ID3D11PixelShader *LazyShader<ID3D11PixelShader>::resolve(ID3D11Device *device)
 {
     checkAssociatedDevice(device);
     if (mShader == nullptr)

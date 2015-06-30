@@ -157,12 +157,12 @@ class Blit11 : angle::NonCopyable
     ID3D11DepthStencilState *mDepthStencilState;
 
     ID3D11InputLayout *mQuad2DIL;
-    d3d11::DeferredShader<ID3D11VertexShader> mQuad2DVS;
-    d3d11::DeferredShader<ID3D11PixelShader> mDepthPS;
+    d3d11::LazyShader<ID3D11VertexShader> mQuad2DVS;
+    d3d11::LazyShader<ID3D11PixelShader> mDepthPS;
 
     ID3D11InputLayout *mQuad3DIL;
-    d3d11::DeferredShader<ID3D11VertexShader> mQuad3DVS;
-    d3d11::DeferredShader<ID3D11GeometryShader> mQuad3DGS;
+    d3d11::LazyShader<ID3D11VertexShader> mQuad3DVS;
+    d3d11::LazyShader<ID3D11GeometryShader> mQuad3DGS;
 
     ID3D11Buffer *mSwizzleCB;
 };

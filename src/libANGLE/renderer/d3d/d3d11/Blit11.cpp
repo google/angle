@@ -335,12 +335,12 @@ Blit11::~Blit11()
     SafeRelease(mDepthStencilState);
 
     SafeRelease(mQuad2DIL);
-    mQuad2DVS.releaseShader();
-    mDepthPS.releaseShader();
+    mQuad2DVS.release();
+    mDepthPS.release();
 
     SafeRelease(mQuad3DIL);
-    mQuad3DVS.releaseShader();
-    mQuad3DGS.releaseShader();
+    mQuad3DVS.release();
+    mQuad3DGS.release();
 
     SafeRelease(mSwizzleCB);
 
@@ -784,7 +784,7 @@ gl::Error Blit11::copyDepth(ID3D11ShaderResourceView *source, const gl::Box &sou
     }
 
     ID3D11Device *device = mRenderer->getDevice();
-    ID3D11VertexShader *quad2DVS = mQuad2DVS.getShader(device);
+    ID3D11VertexShader *quad2DVS = mQuad2DVS.resolve(device);
     if (quad2DVS == nullptr)
     {
         return gl::Error(GL_INVALID_OPERATION, "Error compiling internal 2D blit vertex shader");
@@ -795,7 +795,7 @@ gl::Error Blit11::copyDepth(ID3D11ShaderResourceView *source, const gl::Box &sou
     deviceContext->IASetPrimitiveTopology(topology);
     deviceContext->VSSetShader(quad2DVS, nullptr, 0);
 
-    deviceContext->PSSetShader(mDepthPS.getShader(device), nullptr, 0);
+    deviceContext->PSSetShader(mDepthPS.resolve(device), nullptr, 0);
     deviceContext->GSSetShader(nullptr, nullptr, 0);
 
     // Unset the currently bound shader resource to avoid conflicts
@@ -1260,7 +1260,7 @@ gl::Error Blit11::getCommonShaders(CommonShaders *commonShadersOut, bool get3D)
 {
     ID3D11Device *device = mRenderer->getDevice();
 
-    commonShadersOut->vertexShader2D = mQuad2DVS.getShader(device);
+    commonShadersOut->vertexShader2D = mQuad2DVS.resolve(device);
     if (commonShadersOut->vertexShader2D == nullptr)
     {
         return gl::Error(GL_INVALID_OPERATION, "Error compiling internal blit 2d vertex shader");
@@ -1268,8 +1268,8 @@ gl::Error Blit11::getCommonShaders(CommonShaders *commonShadersOut, bool get3D)
 
     if (get3D)
     {
-        commonShadersOut->vertexShader3D = mQuad3DVS.getShader(device);
-        commonShadersOut->geometryShader3D = mQuad3DGS.getShader(device);
+        commonShadersOut->vertexShader3D = mQuad3DVS.resolve(device);
+        commonShadersOut->geometryShader3D = mQuad3DGS.resolve(device);
 
         if (commonShadersOut->vertexShader3D == nullptr || commonShadersOut->geometryShader3D == nullptr)
         {
