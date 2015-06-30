@@ -27,7 +27,8 @@ SwapChain11::SwapChain11(Renderer11 *renderer, NativeWindow nativeWindow, HANDLE
     : SwapChainD3D(nativeWindow, shareHandle, backBufferFormat, depthBufferFormat),
       mRenderer(renderer),
       mColorRenderTarget(this, renderer, false),
-      mDepthStencilRenderTarget(this, renderer, true)
+      mDepthStencilRenderTarget(this, renderer, true),
+      mPassThroughResourcesInit(false)
 {
     mSwapChain = NULL;
     mSwapChain1 = nullptr;
@@ -48,7 +49,6 @@ SwapChain11::SwapChain11(Renderer11 *renderer, NativeWindow nativeWindow, HANDLE
     mHeight = -1;
     mSwapInterval = 0;
     mAppCreatedShareHandle = mShareHandle != NULL;
-    mPassThroughResourcesInit = false;
 }
 
 SwapChain11::~SwapChain11()
@@ -465,18 +465,16 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         d3d11::SetDebugName(mBackBufferRTView, "Back buffer render target");
     }
 
-    // If we are resizing the swap chain, we don't wish to recreate all the static resources
-    if (!mPassThroughResourcesInit)
-    {
-        mPassThroughResourcesInit = true;
-        initPassThroughResources();
-    }
-
     return resetOffscreenTexture(backbufferWidth, backbufferHeight);
 }
 
 void SwapChain11::initPassThroughResources()
 {
+    if (mPassThroughResourcesInit)
+    {
+        return;
+    }
+
     TRACE_EVENT0("gpu.angle", "SwapChain11::initPassThroughResources");
     ID3D11Device *device = mRenderer->getDevice();
 
@@ -534,6 +532,8 @@ void SwapChain11::initPassThroughResources()
     result = device->CreatePixelShader(g_PS_PassthroughRGBA2D, sizeof(g_PS_PassthroughRGBA2D), NULL, &mPassThroughPS);
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mPassThroughPS, "Swap chain pass through pixel shader");
+
+    mPassThroughResourcesInit = true;
 }
 
 // parameters should be validated/clamped by caller
@@ -543,6 +543,8 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     {
         return EGL_SUCCESS;
     }
+
+    initPassThroughResources();
 
     ID3D11Device *device = mRenderer->getDevice();
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
