@@ -38,7 +38,6 @@ class Buffer9 : public BufferD3D
     virtual void markTransformFeedbackUsage();
 
   private:
-    Renderer9 *mRenderer;
     MemoryBuffer mMemory;
     size_t mSize;
 };

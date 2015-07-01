@@ -14,7 +14,6 @@ namespace rx
 
 Buffer9::Buffer9(Renderer9 *renderer)
     : BufferD3D(renderer),
-      mRenderer(renderer),
       mSize(0)
 {}
 

@@ -31,9 +31,6 @@ class RenderTarget11 : public RenderTargetD3D
     virtual unsigned int getSubresourceIndex() const = 0;
 
     virtual DXGI_FORMAT getDXGIFormat() const = 0;
-
-  private:
-    D3D_FEATURE_LEVEL mFeatureLevel;
 };
 
 class TextureRenderTarget11 : public RenderTarget11

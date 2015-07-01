@@ -26,7 +26,6 @@ class ElseBlockRewriter : public TIntermTraverser
     bool visitAggregate(Visit visit, TIntermAggregate *aggregate);
 
   private:
-    int mTemporaryIndex;
     const TType *mFunctionType;
 
     TIntermNode *rewriteSelection(TIntermSelection *selection);
@@ -41,7 +40,6 @@ TIntermUnary *MakeNewUnary(TOperator op, TIntermTyped *operand)
 
 ElseBlockRewriter::ElseBlockRewriter()
     : TIntermTraverser(true, false, true),
-      mTemporaryIndex(0),
       mFunctionType(NULL)
 {}
 
