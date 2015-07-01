@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "13a265bf_e03c82f3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-07-01T08:23:52Z",
+      "side": 1,
+      "message": "Don\u0027t add any unnecessary filler to the commit message header. You can just say \"Implement non-square matrix constructor\".\n\nOn the other hand, it\u0027s good to explain the commit in the commit message. Think of potential issues the patch might have and explain why the patch is needed and why it is correct. For example \"This patch doesn\u0027t affect the parsing of ESSL1 because...\"",
+      "revId": "71442c44b0a6caaa06eb62f84ec508932afeb5dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13bb45f3_9836550e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-07-01T08:23:52Z",
+      "side": 1,
+      "message": "Mention the tests that you used to verify this change, see Arun\u0027s commit 7fa3355f8a for an example.",
+      "revId": "71442c44b0a6caaa06eb62f84ec508932afeb5dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13bb45f3_f837910c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1823,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-07-01T08:23:52Z",
+      "side": 1,
+      "message": "Clean this up.",
+      "revId": "71442c44b0a6caaa06eb62f84ec508932afeb5dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3ab6d9c_7e2251de",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1834,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-07-01T08:23:52Z",
+      "side": 1,
+      "message": "These could all be \"else if\"",
+      "revId": "71442c44b0a6caaa06eb62f84ec508932afeb5dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13bb45f3_18436563",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1850,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-07-01T08:23:52Z",
+      "side": 1,
+      "message": "In the ESSL spec, mat3x2 is a matrix with 3 columns and 2 rows. Here it seems like mat3x2 is a matrix with 2 columns and 3 rows. Looks like all the getRows/getColumns should be swapped.",
+      "revId": "71442c44b0a6caaa06eb62f84ec508932afeb5dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
