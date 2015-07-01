@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f34071d5_3f6ce7fc",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1128439
+      },
+      "writtenOn": "2015-07-01T18:41:45Z",
+      "side": 1,
+      "message": "The /analyze builder warns that this variable declaration (and two others with the same name further down in this function) shadow the function parameter of the same name. This can lead to confusion and should probably be avoided.",
+      "revId": "27c0891718e79b8510948ba3c1bf6d2815d5a1e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
