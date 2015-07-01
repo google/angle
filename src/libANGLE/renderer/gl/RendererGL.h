@@ -79,7 +79,10 @@ class RendererGL : public Renderer
     const gl::Version &getMaxSupportedESVersion() const;
 
   private:
-    void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureCaps, gl::Extensions *outExtensions) const override;
+    void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureCaps,
+                      gl::Extensions *outExtensions,
+                      gl::Limitations *outLimitations) const override;
+
     Workarounds generateWorkarounds() const override;
 
     mutable gl::Version mMaxSupportedESVersion;

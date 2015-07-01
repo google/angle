@@ -553,15 +553,6 @@ TEST_P(GLSLTest, FrontFacingAndVarying)
 {
     EGLPlatformParameters platform = GetParam().eglParameters;
 
-    // Disable this test on D3D11 feature level 9_3, since gl_FrontFacing isn't supported.
-    if (platform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-    {
-        if (platform.majorVersion == 9 && platform.minorVersion == 3)
-        {
-            return;
-        }
-    }
-
     const std::string vertexShaderSource = SHADER_SOURCE
     (
         attribute vec4 a_position;
@@ -594,6 +585,18 @@ TEST_P(GLSLTest, FrontFacingAndVarying)
     );
 
     GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+
+    // Compilation should fail on D3D11 feature level 9_3, since gl_FrontFacing isn't supported.
+    if (platform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    {
+        if (platform.majorVersion == 9 && platform.minorVersion == 3)
+        {
+            EXPECT_EQ(0u, program);
+            return;
+        }
+    }
+
+    // Otherwise, compilation should succeed
     EXPECT_NE(0u, program);
 }
 

@@ -190,6 +190,7 @@ class Context final : angle::NonCopyable
     const Caps &getCaps() const;
     const TextureCapsMap &getTextureCaps() const;
     const Extensions &getExtensions() const;
+    const Limitations &getLimitations() const;
 
     const std::string &getRendererString() const;
 
@@ -222,6 +223,7 @@ class Context final : angle::NonCopyable
     Caps mCaps;
     TextureCapsMap mTextureCaps;
     Extensions mExtensions;
+    Limitations mLimitations;
 
     // Shader compiler
     Compiler *mCompiler;

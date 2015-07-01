@@ -1389,6 +1389,11 @@ const Extensions &Context::getExtensions() const
     return mExtensions;
 }
 
+const Limitations &Context::getLimitations() const
+{
+    return mLimitations;
+}
+
 void Context::detachTexture(GLuint texture)
 {
     // Simple pass-through to State's detachTexture method, as textures do not require
@@ -1604,6 +1609,8 @@ void Context::initCaps(GLuint clientVersion)
     mCaps = mRenderer->getRendererCaps();
 
     mExtensions = mRenderer->getRendererExtensions();
+
+    mLimitations = mRenderer->getRendererLimitations();
 
     if (clientVersion < 3)
     {

@@ -43,6 +43,7 @@ class ShaderD3D : public ShaderImpl
     bool usesDepthRange() const { return mUsesDepthRange; }
     bool usesPointSize() const { return mUsesPointSize; }
     bool usesDeferredInit() const { return mUsesDeferredInit; }
+    bool usesFrontFacing() const { return mUsesFrontFacing; }
 
     GLenum getShaderType() const;
     ShShaderOutput getCompilerOutputType() const;

@@ -1264,6 +1264,20 @@ void GL_APIENTRY Enable(GLenum cap)
             return;
         }
 
+        if (context->getLimitations().noSampleAlphaToCoverageSupport)
+        {
+            if (cap == GL_SAMPLE_ALPHA_TO_COVERAGE)
+            {
+                const char *errorMessage = "Current renderer doesn't support alpha-to-coverage";
+                context->recordError(Error(GL_INVALID_OPERATION, errorMessage));
+
+                // We also output an error message to the debugger window if tracing is active, so that developers can see the error message.
+                ERR("%s", errorMessage);
+
+                return;
+            }
+        }
+
         context->getState().setEnableFeature(cap, true);
     }
 }

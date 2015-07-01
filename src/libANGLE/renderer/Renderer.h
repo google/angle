@@ -77,16 +77,21 @@ class Renderer : public ImplFactory
     const gl::Caps &getRendererCaps() const;
     const gl::TextureCapsMap &getRendererTextureCaps() const;
     const gl::Extensions &getRendererExtensions() const;
+    const gl::Limitations &getRendererLimitations() const;
     const Workarounds &getWorkarounds() const;
 
   private:
-    virtual void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureCaps, gl::Extensions *outExtensions) const = 0;
+    void ensureCapsInitialized() const;
+    virtual void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureCaps,
+                              gl::Extensions *outExtensions,
+                              gl::Limitations *outLimitations) const = 0;
     virtual Workarounds generateWorkarounds() const = 0;
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mCaps;
     mutable gl::TextureCapsMap mTextureCaps;
     mutable gl::Extensions mExtensions;
+    mutable gl::Limitations mLimitations;
 
     mutable bool mWorkaroundsInitialized;
     mutable Workarounds mWorkarounds;

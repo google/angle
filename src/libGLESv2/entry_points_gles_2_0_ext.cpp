@@ -644,6 +644,21 @@ void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
             return;
         }
 
+        if (context->getLimitations().attributeZeroRequiresZeroDivisorInEXT)
+        {
+            if (index == 0 && divisor != 0)
+            {
+                const char *errorMessage = "The current context doesn't support setting a non-zero divisor on the attribute with index zero. "
+                                           "Please reorder the attributes in your vertex shader so that attribute zero can have a zero divisor.";
+                context->recordError(Error(GL_INVALID_OPERATION, errorMessage));
+
+                // We also output an error message to the debugger window if tracing is active, so that developers can see the error message.
+                ERR("%s", errorMessage);
+
+                return;
+            }
+        }
+
         context->setVertexAttribDivisor(index, divisor);
     }
 }

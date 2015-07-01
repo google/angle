@@ -1067,6 +1067,15 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
     vertexShaderD3D->generateWorkarounds(&mVertexWorkarounds);
     mShaderVersion = vertexShaderD3D->getShaderVersion();
 
+    if (mRenderer->getRendererLimitations().noFrontFacingSupport)
+    {
+        if (fragmentShaderD3D->usesFrontFacing())
+        {
+            infoLog << "The current renderer doesn't support gl_FrontFacing";
+            return LinkResult(false, gl::Error(GL_NO_ERROR));
+        }
+    }
+
     // Map the varyings to the register file
     VaryingPacking packing = {};
     *registers = mDynamicHLSL->packVaryings(infoLog, packing, fragmentShaderD3D, vertexShaderD3D, transformFeedbackVaryings);

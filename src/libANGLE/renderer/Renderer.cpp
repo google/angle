@@ -25,37 +25,41 @@ Renderer::~Renderer()
 {
 }
 
-const gl::Caps &Renderer::getRendererCaps() const
+void Renderer::ensureCapsInitialized() const
 {
     if (!mCapsInitialized)
     {
-        generateCaps(&mCaps, &mTextureCaps, &mExtensions);
+        generateCaps(&mCaps, &mTextureCaps, &mExtensions, &mLimitations);
         mCapsInitialized = true;
     }
+}
+
+const gl::Caps &Renderer::getRendererCaps() const
+{
+    ensureCapsInitialized();
 
     return mCaps;
 }
 
 const gl::TextureCapsMap &Renderer::getRendererTextureCaps() const
 {
-    if (!mCapsInitialized)
-    {
-        generateCaps(&mCaps, &mTextureCaps, &mExtensions);
-        mCapsInitialized = true;
-    }
+    ensureCapsInitialized();
 
     return mTextureCaps;
 }
 
 const gl::Extensions &Renderer::getRendererExtensions() const
 {
-    if (!mCapsInitialized)
-    {
-        generateCaps(&mCaps, &mTextureCaps, &mExtensions);
-        mCapsInitialized = true;
-    }
+    ensureCapsInitialized();
 
     return mExtensions;
+}
+
+const gl::Limitations &Renderer::getRendererLimitations() const
+{
+    ensureCapsInitialized();
+
+    return mLimitations;
 }
 
 const Workarounds &Renderer::getWorkarounds() const

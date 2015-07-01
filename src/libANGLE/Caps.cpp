@@ -193,6 +193,13 @@ std::vector<std::string> Extensions::getStrings() const
     return extensionStrings;
 }
 
+Limitations::Limitations()
+    : noFrontFacingSupport(false),
+      noSampleAlphaToCoverageSupport(false),
+      attributeZeroRequiresZeroDivisorInEXT(false)
+{
+}
+
 static bool GetFormatSupport(const TextureCapsMap &textureCaps, const std::vector<GLenum> &requiredFormats,
                              bool requiresTexturing, bool requiresFiltering, bool requiresRendering)
 {
