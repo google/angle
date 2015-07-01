@@ -8,6 +8,7 @@
         # These file lists are shared with the GN build.
         'libangle_common_sources':
         [
+            'common/Float16ToFloat32.cpp',
             'common/MemoryBuffer.cpp',
             'common/MemoryBuffer.h',
             'common/Optional.h',
@@ -74,7 +75,6 @@
             'libANGLE/Error.inl',
             'libANGLE/Fence.cpp',
             'libANGLE/Fence.h',
-            'libANGLE/Float16ToFloat32.cpp',
             'libANGLE/Framebuffer.cpp',
             'libANGLE/Framebuffer.h',
             'libANGLE/FramebufferAttachment.cpp',
