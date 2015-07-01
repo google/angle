@@ -1061,7 +1061,7 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
     mShaderVersion = vertexShaderD3D->getShaderVersion();
 
     // Map the varyings to the register file
-    VaryingPacking packing = { NULL };
+    VaryingPacking packing = {};
     *registers = mDynamicHLSL->packVaryings(infoLog, packing, fragmentShaderD3D, vertexShaderD3D, transformFeedbackVaryings);
 
     if (*registers < 0)

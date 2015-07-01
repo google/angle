@@ -488,7 +488,7 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
     // textureRG is emulated and not performant.
     extensions->textureRG = false;
 
-    D3DADAPTER_IDENTIFIER9 adapterId = { 0 };
+    D3DADAPTER_IDENTIFIER9 adapterId = {};
     if (SUCCEEDED(d3d9->GetAdapterIdentifier(adapter, 0, &adapterId)))
     {
         // ATI cards on XP have problems with non-power-of-two textures.

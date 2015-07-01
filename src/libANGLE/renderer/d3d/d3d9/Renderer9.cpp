@@ -1168,8 +1168,8 @@ void Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zF
         mCurFar = actualZFar;
         mCurDepthFront = depthFront;
 
-        dx_VertexConstants vc = {0};
-        dx_PixelConstants pc = {0};
+        dx_VertexConstants vc = {};
+        dx_PixelConstants pc = {};
 
         vc.viewAdjust[0] = (float)((actualViewport.width - (int)dxViewport.Width) + 2 * (actualViewport.x - (int)dxViewport.X) - 1) / dxViewport.Width;
         vc.viewAdjust[1] = (float)((actualViewport.height - (int)dxViewport.Height) + 2 * (actualViewport.y - (int)dxViewport.Y) - 1) / dxViewport.Height;

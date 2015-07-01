@@ -509,7 +509,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams, const gl
 
 ID3D11BlendState *Clear11::getBlendState(const std::vector<MaskedRenderTarget>& rts)
 {
-    ClearBlendInfo blendKey = { 0 };
+    ClearBlendInfo blendKey = {};
     for (unsigned int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
     {
         if (i < rts.size())

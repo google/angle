@@ -502,7 +502,7 @@ egl::Error Renderer11::initialize()
         // If DXGI1.2 is available then IDXGIAdapter2::GetDesc2 can be used to get the actual hardware values.
         if (mRenderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3 && dxgiAdapter2 != NULL)
         {
-            DXGI_ADAPTER_DESC2 adapterDesc2 = { 0 };
+            DXGI_ADAPTER_DESC2 adapterDesc2 = {};
             result = dxgiAdapter2->GetDesc2(&adapterDesc2);
             if (SUCCEEDED(result))
             {

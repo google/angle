@@ -97,7 +97,7 @@ gl::Error RenderStateCache::getBlendState(const gl::Framebuffer *framebuffer, co
     const FramebufferD3D *framebufferD3D = GetImplAs<FramebufferD3D>(framebuffer);
     const gl::AttachmentList &colorbuffers = framebufferD3D->getColorAttachmentsForRender(mRenderer->getWorkarounds());
 
-    BlendStateKey key = { 0 };
+    BlendStateKey key = {};
     key.blendState = blendState;
     for (size_t colorAttachment = 0; colorAttachment < colorbuffers.size(); ++colorAttachment)
     {
@@ -209,7 +209,7 @@ gl::Error RenderStateCache::getRasterizerState(const gl::RasterizerState &raster
         return gl::Error(GL_OUT_OF_MEMORY, "Internal error, RenderStateCache is not initialized.");
     }
 
-    RasterizerStateKey key = { 0 };
+    RasterizerStateKey key = {};
     key.rasterizerState = rasterState;
     key.scissorEnabled = scissorEnabled;
 
