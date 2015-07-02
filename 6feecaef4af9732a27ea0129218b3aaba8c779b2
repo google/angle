@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "33b12958_94e36a53",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1054,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-02T16:18:42Z",
+      "side": 1,
+      "message": "these go at the top, no need for the inline keyword afaik",
+      "range": {
+        "startLine": 1049,
+        "startChar": 0,
+        "endLine": 1054,
+        "endChar": 76
+      },
+      "revId": "6feecaef4af9732a27ea0129218b3aaba8c779b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7311e108_b6996601",
+        "filename": "src/tests/gl_tests/D3D11EmulatedIndexedBufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-02T16:18:42Z",
+      "side": 1,
+      "message": "do you need to cover the various FLs past 10_0, or can we just use ES2_D3D11?",
+      "range": {
+        "startLine": 176,
+        "startChar": 22,
+        "endLine": 178,
+        "endChar": 43
+      },
+      "revId": "6feecaef4af9732a27ea0129218b3aaba8c779b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
