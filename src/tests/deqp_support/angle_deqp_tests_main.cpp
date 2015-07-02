@@ -6,24 +6,9 @@
 
 // angle_deqp_tests_main.cpp: Entry point for ANGLE's dEQP tests.
 
-#include <cstdio>
-
 #include "angle_deqp_libtester.h"
-
-#ifdef _WIN32
-    #include <direct.h>
-    #define chdir _chdir
-#else
-    #include <unistd.h>
-#endif
 
 int main(int argc, const char *argv[])
 {
-    const char * data_dir = ANGLE_DEQP_DIR "/data";
-    if (chdir(data_dir) != 0)
-    {
-        printf("Error setting working directory to %s\n", data_dir);
-    }
-
     return deqp_libtester_main(argc, argv);
 }

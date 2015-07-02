@@ -1239,14 +1239,6 @@
                 {
                     'target_name': 'angle_deqp_gles2_tests',
                     'type': 'executable',
-                    'defines':
-                    [
-                        # Hard-code the path to dEQP. This lets the
-                        # app locate the data folder without need
-                        # for a copy. gyp recursive copies are not
-                        # implemented properly on Windows.
-                        'ANGLE_DEQP_DIR="<(deqp_path)"',
-                    ],
                     'dependencies':
                     [
                         'angle_deqp_libgles2',
@@ -1260,14 +1252,6 @@
                 {
                     'target_name': 'angle_deqp_gles3_tests',
                     'type': 'executable',
-                    'defines':
-                    [
-                        # Hard-code the path to dEQP. This lets the
-                        # app locate the data folder without need
-                        # for a copy. gyp recursive copies are not
-                        # implemented properly on Windows.
-                        'ANGLE_DEQP_DIR="<(deqp_path)"',
-                    ],
                     'dependencies':
                     [
                         'angle_deqp_libgles3',
