@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "130345c0_18432515",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-07-02T16:59:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d31c4d21_d9b7f741",
+      "range": {
+        "startLine": 11,
+        "startChar": 1,
+        "endLine": 14,
+        "endChar": 1
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f305d1c3_eb0bf92c",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-07-02T16:22:29Z",
       "side": 1,
       "message": "can you add a TODO here about separate stencil mask/ref values? this is a great place to locate the flag for the extra validation we do on D3D.",
+      "range": {
+        "startLine": 240,
+        "startChar": 0,
+        "endLine": 240,
+        "endChar": 2
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3eef934_5d2f5b92",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-07-02T16:59:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f305d1c3_eb0bf92c",
       "range": {
         "startLine": 240,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "53ae9dfa_f24be82d",
+        "filename": "src/libANGLE/renderer/Renderer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-07-02T16:59:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f305d1c3_4b114559",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 5
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f305d1c3_6b12490d",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2015-07-02T16:22:29Z",
       "side": 1,
       "message": "do we want to place this check at a higher level? I\u0027m not sure, but the limitations exist at the Renderer level, shared between all implementations.",
+      "range": {
+        "startLine": 1063,
+        "startChar": 0,
+        "endLine": 1070,
+        "endChar": 5
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3eef934_bdce5f57",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1070,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-07-02T16:59:28Z",
+      "side": 1,
+      "message": "Yeah I looked into that, but it became complicated. It would have required more plumbing, and I wanted to minimise churn related to this since I think it will only affect D3D11 FL9_3.\n\nThe main problem with doing it at a higher level is that classes higher than ShaderD3D aren\u0027t aware of gl_FrontFacing usage. Only ShaderD3D is.",
+      "parentUuid": "f305d1c3_6b12490d",
       "range": {
         "startLine": 1063,
         "startChar": 0,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "53093ddc_1ad03d6c",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-07-02T16:59:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3ba3136_b2331e82",
+      "range": {
+        "startLine": 306,
+        "startChar": 115,
+        "endLine": 306,
+        "endChar": 126
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f305d1c3_cb3d5580",
         "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
         "patchSetId": 2
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "53093ddc_7addf983",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1271,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-07-02T16:59:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f305d1c3_cb3d5580",
+      "range": {
+        "startLine": 1271,
+        "startChar": 22,
+        "endLine": 1271,
+        "endChar": 33
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "33b12958_f4e8f630",
         "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
         "patchSetId": 2
@@ -151,6 +295,30 @@
       "writtenOn": "2015-07-02T16:22:29Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 651,
+        "startChar": 22,
+        "endLine": 651,
+        "endChar": 36
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53ae9dfa_9256dcd3",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 651,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-07-02T16:59:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "33b12958_f4e8f630",
       "range": {
         "startLine": 651,
         "startChar": 22,
