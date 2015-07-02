@@ -135,7 +135,7 @@ gl::Error Blit9::setShader(ShaderId source, const char *profile,
 {
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
-    D3DShaderType *shader;
+    D3DShaderType *shader = nullptr;
 
     if (mCompiledShaders[source] != NULL)
     {

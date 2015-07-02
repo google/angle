@@ -171,9 +171,9 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
     }
 
     // Reserve the required space in the buffers
-    for (const TranslatedAttribute *translated : mActiveEnabledAttributes)
+    for (const TranslatedAttribute *activeAttrib : mActiveEnabledAttributes)
     {
-        gl::Error error = reserveSpaceForAttrib(*translated, count, instances);
+        gl::Error error = reserveSpaceForAttrib(*activeAttrib, count, instances);
         if (error.isError())
         {
             return error;
@@ -181,9 +181,9 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
     }
 
     // Perform the vertex data translations
-    for (TranslatedAttribute *translated : mActiveEnabledAttributes)
+    for (TranslatedAttribute *activeAttrib : mActiveEnabledAttributes)
     {
-        gl::Error error = storeAttribute(translated, start, count, instances);
+        gl::Error error = storeAttribute(activeAttrib, start, count, instances);
 
         if (error.isError())
         {
@@ -212,14 +212,14 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
     // Hint to unmap all the resources
     hintUnmapAllResources(vertexAttributes);
 
-    for (const TranslatedAttribute *translated : mActiveEnabledAttributes)
+    for (const TranslatedAttribute *activeAttrib : mActiveEnabledAttributes)
     {
-        gl::Buffer *buffer = translated->attribute->buffer.get();
+        gl::Buffer *buffer = activeAttrib->attribute->buffer.get();
 
         if (buffer)
         {
             BufferD3D *bufferD3D = GetImplAs<BufferD3D>(buffer);
-            size_t typeSize = ComputeVertexAttributeTypeSize(*translated->attribute);
+            size_t typeSize = ComputeVertexAttributeTypeSize(*activeAttrib->attribute);
             bufferD3D->promoteStaticUsage(count * typeSize);
         }
     }

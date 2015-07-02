@@ -66,7 +66,10 @@ HRESULT NativeWindow::createSwapChain(ID3D11Device* device, DXGIFactory* factory
         swapChainDesc.Flags = 0;
         IDXGISwapChain1 *swapChain1 = nullptr;
         HRESULT result = factory2->CreateSwapChainForHwnd(device, mWindow, &swapChainDesc, nullptr, nullptr, &swapChain1);
-        *swapChain = static_cast<DXGISwapChain*>(swapChain1);
+        if (SUCCEEDED(result))
+        {
+            *swapChain = static_cast<DXGISwapChain*>(swapChain1);
+        }
         SafeRelease(factory2);
         return result;
     }
