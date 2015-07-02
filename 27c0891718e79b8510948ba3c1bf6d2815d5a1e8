@@ -16,6 +16,24 @@
       "revId": "27c0891718e79b8510948ba3c1bf6d2815d5a1e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f305d1c3_ab8e2136",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-02T11:30:42Z",
+      "side": 1,
+      "message": "Dang. Thanks for the heads up, I\u0027ll fix that.",
+      "parentUuid": "f34071d5_3f6ce7fc",
+      "revId": "27c0891718e79b8510948ba3c1bf6d2815d5a1e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
