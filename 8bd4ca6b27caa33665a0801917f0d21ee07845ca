@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7311e108_368ef6b5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-02T16:42:30Z",
+      "side": 1,
+      "message": "ah yes, forgot, these go in a namespace {} anonymous block, since they\u0027re local",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 76
+      },
+      "revId": "8bd4ca6b27caa33665a0801917f0d21ee07845ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
