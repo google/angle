@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f305d1c3_eb0bf92c",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-02T16:22:29Z",
+      "side": 1,
+      "message": "can you add a TODO here about separate stencil mask/ref values? this is a great place to locate the flag for the extra validation we do on D3D.",
+      "range": {
+        "startLine": 240,
+        "startChar": 0,
+        "endLine": 240,
+        "endChar": 2
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f305d1c3_4b114559",
+        "filename": "src/libANGLE/renderer/Renderer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-02T16:22:29Z",
+      "side": 1,
+      "message": "can you block all these into a helper function, like ensureCapsInitialized",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 5
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f305d1c3_6b12490d",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1070,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-02T16:22:29Z",
+      "side": 1,
+      "message": "do we want to place this check at a higher level? I\u0027m not sure, but the limitations exist at the Renderer level, shared between all implementations.",
+      "range": {
+        "startLine": 1063,
+        "startChar": 0,
+        "endLine": 1070,
+        "endChar": 5
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f3ba3136_b2331e82",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-02T16:22:29Z",
+      "side": 1,
+      "message": "be careful about excessively long lines. try to clamp at 100 chars. when you clamp, like up according to the first (",
+      "range": {
+        "startLine": 306,
+        "startChar": 115,
+        "endLine": 306,
+        "endChar": 126
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f305d1c3_cb3d5580",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1271,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-02T16:22:29Z",
+      "side": 1,
+      "message": "might as well just use const char * here",
+      "range": {
+        "startLine": 1271,
+        "startChar": 22,
+        "endLine": 1271,
+        "endChar": 33
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33b12958_f4e8f630",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 651,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-02T16:22:29Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 651,
+        "startChar": 22,
+        "endLine": 651,
+        "endChar": 36
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
