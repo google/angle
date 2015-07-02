@@ -564,6 +564,7 @@ void Display::destroySurface(Surface *surface)
         }
 
         ASSERT(surfaceRemoved);
+        UNUSED_ASSERTION_VARIABLE(surfaceRemoved);
     }
 
     mImplementation->destroySurface(surface);
