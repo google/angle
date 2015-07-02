@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d31c4d21_19ba0f2b",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-02T16:26:56Z",
+      "side": 1,
+      "message": "hm, that\u0027s not quite what I was imaginging. I was more thinking \n\n union TypeKey\n {\n     struct\n     {\n        uint8_t basicType;\n        uint8_t precision;\n        uint8_t qualifier;\n        uint8_t primarySize;\n        uint8_t secondarySize;\n        uint8_t padding[3];\n     } values;\n     uint64_t packed;\n };\n\nYou could also use bit packing to pack the 5 into a uint32_t and still use the union.",
+      "range": {
+        "startLine": 57,
+        "startChar": 3,
+        "endLine": 57,
+        "endChar": 29
+      },
+      "revId": "6b13924e9f55b6eeb24ca1987ffd0a764832f13c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
