@@ -83,7 +83,7 @@ const char *FindDataDir()
     return nullptr;
 }
 
-bool InitPlatform()
+bool InitPlatform(int argc, const char *argv[])
 {
     try
     {
@@ -107,9 +107,7 @@ bool InitPlatform()
             return false;
         }
 
-        // TODO(jmadill): filter arguments
-        const char *emptyString = "";
-        g_cmdLine = new tcu::CommandLine(1, &emptyString);
+        g_cmdLine = new tcu::CommandLine(argc, argv);
         g_archive = new tcu::DirArchive(deqpDataDir);
         g_log = new tcu::TestLog(g_cmdLine->getLogFileName(), g_cmdLine->getLogFlags());
         g_testCtx = new tcu::TestContext(*g_platform, *g_archive, *g_log, *g_cmdLine, DE_NULL);
@@ -130,7 +128,10 @@ bool InitPlatform()
 // Exported to the tester app.
 ANGLE_LIBTESTER_EXPORT int deqp_libtester_main(int argc, const char *argv[])
 {
-    InitPlatform();
+    if (!InitPlatform(argc, argv))
+    {
+        tcu::die("Could not initialize the dEQP platform");
+    }
 
     try
     {
@@ -166,7 +167,8 @@ ANGLE_LIBTESTER_EXPORT void deqp_libtester_shutdown_platform()
 
 ANGLE_LIBTESTER_EXPORT bool deqp_libtester_run(const char *caseName)
 {
-    if (g_platform == nullptr && !InitPlatform())
+    const char *emptyString = "";
+    if (g_platform == nullptr && !InitPlatform(1, &emptyString))
     {
         tcu::die("Failed to initialize platform.");
     }
