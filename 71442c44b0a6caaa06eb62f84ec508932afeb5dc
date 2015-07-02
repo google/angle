@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "53093ddc_da2c05d4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-07-02T00:07:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "13a265bf_e03c82f3",
+      "revId": "71442c44b0a6caaa06eb62f84ec508932afeb5dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "13bb45f3_9836550e",
         "filename": "/COMMIT_MSG",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2015-07-01T08:23:52Z",
       "side": 1,
       "message": "Mention the tests that you used to verify this change, see Arun\u0027s commit 7fa3355f8a for an example.",
+      "revId": "71442c44b0a6caaa06eb62f84ec508932afeb5dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73f801fb_1b94bb47",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-07-02T00:07:11Z",
+      "side": 1,
+      "message": "I tried to run deqp test but it seems something changed. \nI need to unzip the dEQP-GLES3-cases.zip then create a path: ..\\angle\\src\\tests\\third_party\\deqp\\src\\data, \n\nI used the command:\n\n\\angle\\src\\tests\\Debug_Win32\u003eangle_deqp_gles3_tests.exe --deqp-\ncase\u003ddEQP-GLES3.functional.shaders.constant_expressions.builtin_functions.matrix.*\n\nBut the test starts to run from the beginning of the list.\n\nSo what is the new rule to run deqp tests?",
+      "parentUuid": "13bb45f3_9836550e",
       "revId": "71442c44b0a6caaa06eb62f84ec508932afeb5dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "b3eef934_5de75b21",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1823,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-07-02T00:07:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "13bb45f3_f837910c",
+      "revId": "71442c44b0a6caaa06eb62f84ec508932afeb5dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3ab6d9c_7e2251de",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 5
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "53ae9dfa_32c9f09d",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1834,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-07-02T00:07:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3ab6d9c_7e2251de",
+      "revId": "71442c44b0a6caaa06eb62f84ec508932afeb5dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "13bb45f3_18436563",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 5
@@ -81,6 +153,24 @@
       "writtenOn": "2015-07-01T08:23:52Z",
       "side": 1,
       "message": "In the ESSL spec, mat3x2 is a matrix with 3 columns and 2 rows. Here it seems like mat3x2 is a matrix with 2 columns and 3 rows. Looks like all the getRows/getColumns should be swapped.",
+      "revId": "71442c44b0a6caaa06eb62f84ec508932afeb5dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73f801fb_db36d30e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1850,
+      "author": {
+        "id": 1125074
+      },
+      "writtenOn": "2015-07-02T00:07:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "13bb45f3_18436563",
       "revId": "71442c44b0a6caaa06eb62f84ec508932afeb5dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
