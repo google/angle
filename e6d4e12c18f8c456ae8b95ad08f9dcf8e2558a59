@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d31c4d21_dc36c50e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Trim11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-02T23:35:10Z",
+      "side": 0,
+      "message": "It looks like this is used in Trim11.cpp behind #if defined (ANGLE_ENABLE_WINDOWS_STORE).  You\u0027ll need to put the member behind those too.",
+      "range": {
+        "startLine": 34,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 59
+      },
+      "revId": "e6d4e12c18f8c456ae8b95ad08f9dcf8e2558a59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
