@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "f305d1c3_b99dd243",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1070,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-02T17:57:40Z",
+      "side": 1,
+      "message": "OK, SGTM",
+      "parentUuid": "b3eef934_bdce5f57",
+      "range": {
+        "startLine": 1063,
+        "startChar": 0,
+        "endLine": 1070,
+        "endChar": 5
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f3ba3136_b2331e82",
         "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
         "patchSetId": 2
