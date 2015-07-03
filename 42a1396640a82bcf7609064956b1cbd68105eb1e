@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "d3a1ad0d_f4a2b085",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1190,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-03T14:53:26Z",
+      "side": 1,
+      "message": "Ok, will do once this patch is merged.",
+      "parentUuid": "93973554_eccfeb9c",
+      "range": {
+        "startLine": 1190,
+        "startChar": 3,
+        "endLine": 1190,
+        "endChar": 18
+      },
+      "revId": "42a1396640a82bcf7609064956b1cbd68105eb1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7392c167_6bdbe15c",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 1
@@ -60,6 +84,24 @@
       "writtenOn": "2015-06-30T14:30:37Z",
       "side": 1,
       "message": "I think you should cast mostSignificantBits and leastSignificantBits to unsigned int before doing operations to them here to guarantee correct results. Or just store them as unsigned int in the first place.",
+      "revId": "42a1396640a82bcf7609064956b1cbd68105eb1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3a1ad0d_b4982854",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1317,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-03T14:53:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7392c167_6bdbe15c",
       "revId": "42a1396640a82bcf7609064956b1cbd68105eb1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -83,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "d3a1ad0d_949d2c44",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1333,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-03T14:53:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3a6b1c2_8f7d7595",
+      "revId": "42a1396640a82bcf7609064956b1cbd68105eb1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d38d2d46_8e4bbb7c",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 1
@@ -94,6 +154,24 @@
       "writtenOn": "2015-06-30T14:30:37Z",
       "side": 1,
       "message": "Same as with packSnorm.",
+      "revId": "42a1396640a82bcf7609064956b1cbd68105eb1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53d77d7e_b97f8b5e",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1366,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-03T14:53:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d38d2d46_8e4bbb7c",
       "revId": "42a1396640a82bcf7609064956b1cbd68105eb1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -117,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "53d77d7e_998447e8",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1382,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-03T14:53:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d38d2d46_ae487780",
+      "revId": "42a1396640a82bcf7609064956b1cbd68105eb1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7392c167_cbe935f8",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 1
@@ -134,6 +230,24 @@
     },
     {
       "key": {
+        "uuid": "73a64129_4ee7b321",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1410,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-03T14:53:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7392c167_cbe935f8",
+      "revId": "42a1396640a82bcf7609064956b1cbd68105eb1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f3a6b1c2_cf777daf",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 1
@@ -145,6 +259,24 @@
       "writtenOn": "2015-06-30T14:30:37Z",
       "side": 1,
       "message": "Ditto.",
+      "revId": "42a1396640a82bcf7609064956b1cbd68105eb1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33da09aa_2c119b5a",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1426,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-03T14:53:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3a6b1c2_cf777daf",
       "revId": "42a1396640a82bcf7609064956b1cbd68105eb1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
