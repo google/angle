@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "931655ff_bafca983",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-07-03T15:07:11Z",
+      "side": 1,
+      "message": "There\u0027s no need to pass single values of a fundamental type as a reference - the reference takes just as much space as the value itself.",
+      "range": {
+        "startLine": 550,
+        "startChar": 46,
+        "endLine": 550,
+        "endChar": 47
+      },
+      "revId": "f07862b6374aa14f5f4d8b2d689756ad4b9bf2b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93abb5ef_2fd3457c",
+        "filename": "src/common/mathutil_unittest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-07-03T15:07:11Z",
+      "side": 1,
+      "message": "Can you add a few more corner cases to each test, like infinity?",
+      "revId": "f07862b6374aa14f5f4d8b2d689756ad4b9bf2b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
