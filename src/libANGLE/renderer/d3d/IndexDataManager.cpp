@@ -8,6 +8,7 @@
 // runs the Buffer translation process for index buffers.
 
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
+
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexBuffer.h"
 #include "libANGLE/Buffer.h"
@@ -16,7 +17,8 @@
 namespace rx
 {
 
-static void ConvertIndices(GLenum sourceType, GLenum destinationType, const void *input, GLsizei count, void *output)
+static void ConvertIndices(GLenum sourceType, GLenum destinationType, const void *input,
+                           GLsizei count, void *output)
 {
     if (sourceType == GL_UNSIGNED_BYTE)
     {
@@ -55,6 +57,44 @@ static void ConvertIndices(GLenum sourceType, GLenum destinationType, const void
     else UNREACHABLE();
 }
 
+static gl::Error StreamInIndexBuffer(IndexBufferInterface *buffer, const GLvoid *data,
+                                     unsigned int count, GLenum srcType, GLenum dstType,
+                                     unsigned int *offset)
+{
+    const gl::Type &dstTypeInfo = gl::GetTypeInfo(dstType);
+
+    if (count > (std::numeric_limits<unsigned int>::max() >> dstTypeInfo.bytesShift))
+    {
+        return gl::Error(GL_OUT_OF_MEMORY,
+                        "Reserving %u indices of %u bytes each exceeds the maximum buffer size.",
+                        count, dstTypeInfo.bytes);
+    }
+
+    unsigned int bufferSizeRequired = count << dstTypeInfo.bytesShift;
+    gl::Error error = buffer->reserveBufferSpace(bufferSizeRequired, dstType);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    void *output = nullptr;
+    error = buffer->mapBuffer(bufferSizeRequired, &output, offset);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    ConvertIndices(srcType, dstType, data, count, output);
+
+    error = buffer->unmapBuffer();
+    if (error.isError())
+    {
+        return error;
+    }
+
+    return gl::Error(GL_NO_ERROR);
+}
+
 IndexDataManager::IndexDataManager(BufferFactoryD3D *factory, RendererClass rendererClass)
     : mFactory(factory),
       mRendererClass(rendererClass),
@@ -69,175 +109,165 @@ IndexDataManager::~IndexDataManager()
     SafeDelete(mStreamingBufferInt);
 }
 
-gl::Error IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer *buffer, const GLvoid *indices, TranslatedIndexData *translated, SourceIndexData *sourceData)
+// This function translates a GL-style indices into DX-style indices, with their description
+// returned in translated.
+// GL can specify vertex data in immediate mode (pointer to CPU array of indices), which is not
+// possible in DX and requires streaming (Case 1). If the GL indices are specified with a buffer
+// (Case 2), in a format supported by DX (subcase a) then all is good.
+// When we have a buffer with an unsupported format (subcase b) then we need to do some translation:
+// we will start by falling back to streaming, and after a while will start using a static translated
+// copy of the index buffer.
+gl::Error IndexDataManager::prepareIndexData(GLenum srcType, GLsizei count, gl::Buffer *glBuffer,
+                                             const GLvoid *indices, TranslatedIndexData *translated,
+                                             SourceIndexData *sourceData)
 {
-    const gl::Type &typeInfo = gl::GetTypeInfo(type);
-
-    GLenum destinationIndexType = (type == GL_UNSIGNED_INT) ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT;
-
-    unsigned int offset = 0;
-    bool alignedOffset = false;
-
-    BufferD3D *storage = NULL;
-
-    if (buffer != NULL)
-    {
-        offset = static_cast<unsigned int>(reinterpret_cast<uintptr_t>(indices));
-
-        storage = GetImplAs<BufferD3D>(buffer);
-
-        // We'll trust that the compiler will optimize the % below:
-        // the operands are unsigned and the divisor is a constant.
-        switch (type)
-        {
-          case GL_UNSIGNED_BYTE:  alignedOffset = (offset % sizeof(GLubyte) == 0);  break;
-          case GL_UNSIGNED_SHORT: alignedOffset = (offset % sizeof(GLushort) == 0); break;
-          case GL_UNSIGNED_INT:   alignedOffset = (offset % sizeof(GLuint) == 0);   break;
-          default: UNREACHABLE(); alignedOffset = false;
-        }
-
-        ASSERT(typeInfo.bytes * static_cast<unsigned int>(count) + offset <= storage->getSize());
-
-        const uint8_t *bufferData = NULL;
-        gl::Error error = storage->getData(&bufferData);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        indices = bufferData + offset;
-    }
-
-    StaticIndexBufferInterface *staticBuffer = storage ? storage->getStaticIndexBuffer() : NULL;
-    IndexBufferInterface *indexBuffer = NULL;
-    bool directStorage = alignedOffset && storage && storage->supportsDirectBinding() &&
-                         destinationIndexType == type;
-    unsigned int streamOffset = 0;
-
     // Avoid D3D11's primitive restart index value
     // see http://msdn.microsoft.com/en-us/library/windows/desktop/bb205124(v=vs.85).aspx
     bool primitiveRestartWorkaround = mRendererClass == RENDERER_D3D11 &&
-                                      translated->indexRange.end == 0xFFFF &&
-                                      type == GL_UNSIGNED_SHORT;
+        translated->indexRange.end == 0xFFFF &&
+        srcType == GL_UNSIGNED_SHORT;
 
-    if (primitiveRestartWorkaround)
+    const GLenum dstType = (srcType == GL_UNSIGNED_INT || primitiveRestartWorkaround) ?
+                           GL_UNSIGNED_INT : GL_UNSIGNED_SHORT;
+
+    const gl::Type &srcTypeInfo = gl::GetTypeInfo(srcType);
+    const gl::Type &dstTypeInfo = gl::GetTypeInfo(dstType);
+
+    translated->indexType = dstType;
+    if (sourceData)
     {
-        destinationIndexType = GL_UNSIGNED_INT;
-        directStorage = false;
+        sourceData->srcIndexType = srcType;
+        sourceData->srcCount = count;
     }
 
-    const gl::Type &destTypeInfo = gl::GetTypeInfo(destinationIndexType);
-
-    if (directStorage)
+    // Case 1: the indices are passed by pointer, which forces the streaming of index data
+    if (glBuffer == nullptr)
     {
-        streamOffset = offset;
-    }
-    else if (staticBuffer &&
-             staticBuffer->getBufferSize() != 0 &&
-             alignedOffset &&
-             staticBuffer->getIndexType() == destinationIndexType)
-    {
-        indexBuffer = staticBuffer;
-
-        // Using bit-shift here is faster than using division.
-        streamOffset = (offset >> typeInfo.bytesShift) << destTypeInfo.bytesShift;
+        translated->storage = nullptr;
+        if (sourceData)
+        {
+            sourceData->srcIndices = indices;
+        }
+        return streamIndexData(indices, count, srcType, dstType, translated);
     }
 
-    if (!directStorage && !indexBuffer)
+    // Case 2: the indices are already in a buffer
+    BufferD3D *buffer = GetImplAs<BufferD3D>(glBuffer);
+
+    unsigned int offset = static_cast<unsigned int>(reinterpret_cast<uintptr_t>(indices));
+    ASSERT(srcTypeInfo.bytes * static_cast<unsigned int>(count) + offset <= buffer->getSize());
+
+    bool offsetAligned;
+    switch (srcType)
     {
-        gl::Error error = getStreamingIndexBuffer(destinationIndexType, &indexBuffer);
+      case GL_UNSIGNED_BYTE:  offsetAligned = (offset % sizeof(GLubyte) == 0);  break;
+      case GL_UNSIGNED_SHORT: offsetAligned = (offset % sizeof(GLushort) == 0); break;
+      case GL_UNSIGNED_INT:   offsetAligned = (offset % sizeof(GLuint) == 0);   break;
+      default: UNREACHABLE(); offsetAligned = false;
+    }
+
+    // TODO(cwallez) avoid doing this in all cases as it prevents optimizations
+    // of the sysmem buffer copy
+    const uint8_t *bufferData = nullptr;
+    gl::Error error = buffer->getData(&bufferData);
+    if (error.isError())
+    {
+        return error;
+    }
+    ASSERT(bufferData != nullptr);
+
+    if (sourceData)
+    {
+        sourceData->srcIndices = bufferData + offset;
+    }
+
+    // Case 2a: the buffer can be used directly
+    if (offsetAligned && buffer->supportsDirectBinding() &&
+        dstType == srcType && !primitiveRestartWorkaround)
+    {
+        translated->storage = buffer;
+        translated->indexBuffer = nullptr;
+        translated->serial = buffer->getSerial();
+        translated->startIndex = (offset >> srcTypeInfo.bytesShift);
+        translated->startOffset = offset;
+        buffer->promoteStaticUsage(count << srcTypeInfo.bytesShift);
+        return gl::Error(GL_NO_ERROR);
+    }
+    else
+    {
+        translated->storage = nullptr;
+    }
+
+    // Case 2b: use a static translated copy or fall back to streaming
+    StaticIndexBufferInterface *staticBuffer = buffer->getStaticIndexBuffer();
+
+    bool staticBufferInitialized = staticBuffer && staticBuffer->getBufferSize() != 0;
+    bool staticBufferUsable = staticBuffer &&
+                              offsetAligned && staticBuffer->getIndexType() == dstType;
+
+    if (staticBufferInitialized && !staticBufferUsable)
+    {
+        buffer->invalidateStaticData();
+        staticBuffer = nullptr;
+    }
+
+    if (staticBuffer == nullptr || !offsetAligned)
+    {
+        gl::Error error = streamIndexData(bufferData, count, srcType, dstType, translated);
         if (error.isError())
         {
             return error;
         }
-
-        unsigned int convertCount = count;
-
-        if (staticBuffer)
+    }
+    else
+    {
+        if (!staticBufferInitialized)
         {
-            if (staticBuffer->getBufferSize() == 0 && alignedOffset)
-            {
-                indexBuffer = staticBuffer;
-                // Using bit-shift here is faster than using division.
-                convertCount = storage->getSize() >> typeInfo.bytesShift;
-            }
-            else
-            {
-                storage->invalidateStaticData();
-                staticBuffer = NULL;
-            }
-        }
-
-        ASSERT(indexBuffer);
-
-        // Using bit-shift here is faster than using division.
-        if (convertCount > (std::numeric_limits<unsigned int>::max() >> destTypeInfo.bytesShift))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY, "Reserving %u indices of %u bytes each exceeds the maximum buffer size.",
-                             convertCount, destTypeInfo.bytes);
-        }
-
-        unsigned int bufferSizeRequired = convertCount << destTypeInfo.bytesShift;
-        error = indexBuffer->reserveBufferSpace(bufferSizeRequired, destinationIndexType);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        void* output = NULL;
-        error = indexBuffer->mapBuffer(bufferSizeRequired, &output, &streamOffset);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        const uint8_t *dataPointer = reinterpret_cast<const uint8_t*>(indices);
-        if (staticBuffer)
-        {
-            error = storage->getData(&dataPointer);
+            unsigned int convertCount = buffer->getSize() >> srcTypeInfo.bytesShift;
+            gl::Error error = StreamInIndexBuffer(staticBuffer, bufferData, convertCount,
+                                                  srcType, dstType, nullptr);
             if (error.isError())
             {
                 return error;
             }
         }
-        ConvertIndices(type, destinationIndexType, dataPointer, convertCount, output);
+        ASSERT(offsetAligned && staticBuffer->getIndexType() == dstType);
 
-        error = indexBuffer->unmapBuffer();
-        if (error.isError())
-        {
-            return error;
-        }
-
-        if (staticBuffer)
-        {
-            // Using bit-shift here is faster than using division.
-            streamOffset = (offset >> typeInfo.bytesShift) << destTypeInfo.bytesShift;
-        }
-    }
-
-    translated->storage = directStorage ? storage : NULL;
-    translated->indexBuffer = indexBuffer ? indexBuffer->getIndexBuffer() : NULL;
-    translated->serial = directStorage ? storage->getSerial() : indexBuffer->getSerial();
-    // Using bit-shift here is faster than using division.
-    translated->startIndex = (streamOffset >> destTypeInfo.bytesShift);
-    translated->startOffset = streamOffset;
-    translated->indexType = destinationIndexType;
-    if (sourceData)
-    {
-        // Update pretranslated source index data
-        sourceData->srcIndices = indices;
-        sourceData->srcIndexType = type;
-        sourceData->srcCount = count;
-    }
-    if (storage)
-    {
-        storage->promoteStaticUsage(count << typeInfo.bytesShift);
+        translated->indexBuffer = staticBuffer->getIndexBuffer();
+        translated->serial = staticBuffer->getSerial();
+        translated->startIndex = (offset >> srcTypeInfo.bytesShift);
+        translated->startOffset = (offset >> srcTypeInfo.bytesShift) << dstTypeInfo.bytesShift;
     }
 
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error IndexDataManager::getStreamingIndexBuffer(GLenum destinationIndexType, IndexBufferInterface **outBuffer)
+gl::Error IndexDataManager::streamIndexData(const GLvoid *data, unsigned int count, GLenum srcType,
+                                            GLenum dstType, TranslatedIndexData *translated)
+{
+    const gl::Type &dstTypeInfo = gl::GetTypeInfo(dstType);
+
+    IndexBufferInterface *indexBuffer = nullptr;
+    gl::Error error = getStreamingIndexBuffer(dstType, &indexBuffer);
+    if (error.isError())
+    {
+        return error;
+    }
+    ASSERT(indexBuffer != nullptr);
+
+    unsigned int offset;
+    StreamInIndexBuffer(indexBuffer, data, count, srcType, dstType, &offset);
+
+    translated->indexBuffer = indexBuffer->getIndexBuffer();
+    translated->serial = indexBuffer->getSerial();
+    translated->startIndex = (offset >> dstTypeInfo.bytesShift);
+    translated->startOffset = offset;
+
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error IndexDataManager::getStreamingIndexBuffer(GLenum destinationIndexType,
+                                                    IndexBufferInterface **outBuffer)
 {
     ASSERT(outBuffer);
     if (destinationIndexType == GL_UNSIGNED_INT)
@@ -245,7 +275,8 @@ gl::Error IndexDataManager::getStreamingIndexBuffer(GLenum destinationIndexType,
         if (!mStreamingBufferInt)
         {
             mStreamingBufferInt = new StreamingIndexBufferInterface(mFactory);
-            gl::Error error = mStreamingBufferInt->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT);
+            gl::Error error = mStreamingBufferInt->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE,
+                                                                      GL_UNSIGNED_INT);
             if (error.isError())
             {
                 SafeDelete(mStreamingBufferInt);
@@ -263,7 +294,8 @@ gl::Error IndexDataManager::getStreamingIndexBuffer(GLenum destinationIndexType,
         if (!mStreamingBufferShort)
         {
             mStreamingBufferShort = new StreamingIndexBufferInterface(mFactory);
-            gl::Error error = mStreamingBufferShort->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_SHORT);
+            gl::Error error = mStreamingBufferShort->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE,
+                                                                        GL_UNSIGNED_SHORT);
             if (error.isError())
             {
                 SafeDelete(mStreamingBufferShort);
