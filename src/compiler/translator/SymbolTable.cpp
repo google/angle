@@ -29,6 +29,18 @@ TFunction::~TFunction()
         delete (*i).type;
 }
 
+const TString *TFunction::buildMangledName() const
+{
+    std::string mangledName = mangleName(getName()).c_str();
+
+    for (const auto &p : parameters)
+    {
+        mangledName += p.type->getMangledName().c_str();
+    }
+
+    return NewPoolTString(mangledName.c_str());
+}
+
 //
 // Symbol table levels are a map of pointers to symbols that have to be deleted.
 //

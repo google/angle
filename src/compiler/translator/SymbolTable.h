@@ -223,7 +223,7 @@ class TFunction : public TSymbol
     TFunction(const TString *name, const TType *retType, TOperator tOp = EOpNull, const char *ext = "")
         : TSymbol(name),
           returnType(retType),
-          mangledName(TFunction::mangleName(*name)),
+          mangledName(nullptr),
           op(tOp),
           defined(false)
     {
@@ -245,14 +245,18 @@ class TFunction : public TSymbol
     }
 
     void addParameter(const TConstParameter &p)
-    { 
+    {
         parameters.push_back(p);
-        mangledName = mangledName + p.type->getMangledName();
+        mangledName = nullptr;
     }
 
     const TString &getMangledName() const
     {
-        return mangledName;
+        if (mangledName == nullptr)
+        {
+            mangledName = buildMangledName();
+        }
+        return *mangledName;
     }
     const TType &getReturnType() const
     {
@@ -283,10 +287,12 @@ class TFunction : public TSymbol
     }
 
   private:
+    const TString *buildMangledName() const;
+
     typedef TVector<TConstParameter> TParamList;
     TParamList parameters;
     const TType *returnType;
-    TString mangledName;
+    mutable const TString *mangledName;
     TOperator op;
     bool defined;
 };
