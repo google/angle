@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "33b12958_806960a1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-06T17:25:05Z",
+      "side": 1,
+      "message": "see reply in Buffer11.h",
+      "parentUuid": "f36151bc_fd363f0e",
+      "range": {
+        "startLine": 241,
+        "startChar": 4,
+        "endLine": 244,
+        "endChar": 5
+      },
+      "revId": "233b55e4c157b76651ed8c25dab94a44941c91ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f3ba3136_836faef2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-07-06T16:42:45Z",
       "side": 1,
       "message": "can you range-for with std::vector",
+      "range": {
+        "startLine": 249,
+        "startChar": 0,
+        "endLine": 252,
+        "endChar": 5
+      },
+      "revId": "233b55e4c157b76651ed8c25dab94a44941c91ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33b12958_6066fcce",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-06T17:25:05Z",
+      "side": 1,
+      "message": "Yes you can but see reply in Buffer11.h",
+      "parentUuid": "f3ba3136_836faef2",
       "range": {
         "startLine": 249,
         "startChar": 0,
@@ -94,6 +142,54 @@
     },
     {
       "key": {
+        "uuid": "135425e3_30c6288c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-06T17:25:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f36151bc_7d430f62",
+      "range": {
+        "startLine": 495,
+        "startChar": 4,
+        "endLine": 495,
+        "endChar": 31
+      },
+      "revId": "233b55e4c157b76651ed8c25dab94a44941c91ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "736d61b3_f336700e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-06T17:25:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3ba3136_636c4afe",
+      "range": {
+        "startLine": 495,
+        "startChar": 17,
+        "endLine": 495,
+        "endChar": 18
+      },
+      "revId": "233b55e4c157b76651ed8c25dab94a44941c91ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f3ba3136_6343aa62",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 2
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "33b12958_a05624d3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-06T17:25:05Z",
+      "side": 1,
+      "message": "Since it is not an enum class, there are occasion where an int can get converted silently though.\nDone",
+      "parentUuid": "f3ba3136_6343aa62",
+      "range": {
+        "startLine": 636,
+        "startChar": 4,
+        "endLine": 636,
+        "endChar": 53
+      },
+      "revId": "233b55e4c157b76651ed8c25dab94a44941c91ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d31c4d21_aa8457e7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 2
@@ -128,6 +248,30 @@
       "writtenOn": "2015-07-06T16:42:45Z",
       "side": 1,
       "message": "you can use range-for here again with std::vector",
+      "range": {
+        "startLine": 771,
+        "startChar": 4,
+        "endLine": 771,
+        "endChar": 60
+      },
+      "revId": "233b55e4c157b76651ed8c25dab94a44941c91ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f3ba3136_838e8e01",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 771,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-06T17:25:05Z",
+      "side": 1,
+      "message": "see reply in Buffer11.h",
+      "parentUuid": "d31c4d21_aa8457e7",
       "range": {
         "startLine": 771,
         "startChar": 4,
@@ -174,6 +318,54 @@
       "writtenOn": "2015-07-06T16:42:45Z",
       "side": 1,
       "message": "nit: suggest using a std::vector, for convenience",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 55
+      },
+      "revId": "233b55e4c157b76651ed8c25dab94a44941c91ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "534a1d43_d2bec400",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-06T17:25:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f305d1c3_f2c91c21",
+      "range": {
+        "startLine": 93,
+        "startChar": 17,
+        "endLine": 93,
+        "endChar": 18
+      },
+      "revId": "233b55e4c157b76651ed8c25dab94a44941c91ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "736d61b3_13fbecb8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-06T17:25:05Z",
+      "side": 1,
+      "message": "std::array\u003cstd::unique_ptr\u003cBufferStorage\u003e\u003e is what we want here but we have neither, in this case I think an array is superior to a vector as it requires no allocation and no double dereference to access an element. Esp. since some of the functions here are in the callgraph of draws.",
+      "parentUuid": "f3ba3136_2362420c",
       "range": {
         "startLine": 93,
         "startChar": 4,
