@@ -508,6 +508,23 @@ TEST_F(MalformedShaderTest, AssignUniformToGlobalESSL1)
     }
 }
 
+// Global variable initializers need to be constant expressions (ESSL 1.00 section 4.3)
+// Initializing with an user-defined function call should be an error.
+TEST_F(MalformedShaderTest, AssignFunctionCallToGlobal)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "float foo() { return 1.0; }\n"
+        "float b = foo();\n"
+        "void main() {\n"
+        "   gl_FragColor = vec4(b);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
 // Global variable initializers need to be constant expressions (ESSL 3.00 section 4.3)
 // Initializing with a non-constant global should be an error.
 TEST_F(MalformedShaderTest, AssignNonConstGlobalToGlobal)

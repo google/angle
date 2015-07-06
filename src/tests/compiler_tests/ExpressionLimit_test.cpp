@@ -405,12 +405,9 @@ TEST_F(ExpressionLimitTest, Recursion)
             return vec3(float(r) / 255.0, float(g) / 255.0, float(b) / 255.0);
         }
 
-        // these external calls used to incorrectly trigger
-        // recursion detection.
-        vec3 hairColor0 = rgb(151, 200, 234);
-        vec3 faceColor2 = rgb(183, 148, 133);
-
         void main() {
+            vec3 hairColor0 = rgb(151, 200, 234);
+            vec3 faceColor2 = rgb(183, 148, 133);
             gl_FragColor = u_color + vec4(hairColor0 + faceColor2, 0);
         }
     );
