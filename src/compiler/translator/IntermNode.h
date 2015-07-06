@@ -300,7 +300,8 @@ class TIntermConstantUnion : public TIntermTyped
     virtual bool replaceChildNode(TIntermNode *, TIntermNode *) { return false; }
 
     TConstantUnion *foldBinary(TOperator op, TIntermConstantUnion *rightNode, TInfoSink &infoSink);
-    TConstantUnion *foldUnary(TOperator op, TInfoSink &infoSink);
+    TConstantUnion *foldUnaryWithDifferentReturnType(TOperator op, TInfoSink &infoSink);
+    TConstantUnion *foldUnaryWithSameReturnType(TOperator op, TInfoSink &infoSink);
 
     static TConstantUnion *FoldAggregateBuiltIn(TIntermAggregate *aggregate, TInfoSink &infoSink);
 
