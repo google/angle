@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f3ba3136_a39d9243",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2015-07-06T17:08:54Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand why this is a template. It seems simpler/cleaner to just pass the input count into the constructor.",
+      "range": {
+        "startLine": 274,
+        "startChar": 0,
+        "endLine": 274,
+        "endChar": 8
+      },
+      "revId": "5e9c8aa3413f5f871dc6643fe78daa95dfb6006e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
