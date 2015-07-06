@@ -10,6 +10,7 @@
 
 #include "libANGLE/Buffer.h"
 #include "libANGLE/VertexAttribute.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
@@ -134,9 +135,9 @@ gl::Error VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attri
         input += inputStride * start;
     }
 
-    gl::VertexFormat vertexFormat(attrib, currentValueType);
+    gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib, currentValueType);
     const D3D_FEATURE_LEVEL featureLevel = mRenderer->getRenderer11DeviceCaps().featureLevel;
-    const d3d11::VertexFormat &vertexFormatInfo = d3d11::GetVertexFormatInfo(vertexFormat, featureLevel);
+    const d3d11::VertexFormat &vertexFormatInfo = d3d11::GetVertexFormatInfo(vertexFormatType, featureLevel);
     ASSERT(vertexFormatInfo.copyFunction != NULL);
     vertexFormatInfo.copyFunction(input, inputStride, count, output);
 
@@ -159,9 +160,9 @@ gl::Error VertexBuffer11::getSpaceRequired(const gl::VertexAttribute &attrib, GL
             elementCount = UnsignedCeilDivide(static_cast<unsigned int>(instances), attrib.divisor);
         }
 
-        gl::VertexFormat vertexFormat(attrib);
+        gl::VertexFormatType formatType = gl::GetVertexFormatType(attrib);
         const D3D_FEATURE_LEVEL featureLevel = mRenderer->getRenderer11DeviceCaps().featureLevel;
-        const d3d11::VertexFormat &vertexFormatInfo = d3d11::GetVertexFormatInfo(vertexFormat, featureLevel);
+        const d3d11::VertexFormat &vertexFormatInfo = d3d11::GetVertexFormatInfo(formatType, featureLevel);
         const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(vertexFormatInfo.nativeFormat);
         unsigned int elementSize = dxgiFormatInfo.pixelBytes;
         if (elementSize <= std::numeric_limits<unsigned int>::max() / elementCount)

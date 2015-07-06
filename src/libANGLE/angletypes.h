@@ -256,27 +256,6 @@ struct PixelPackState
     {}
 };
 
-struct VertexFormat
-{
-    GLenum      mType;
-    GLboolean   mNormalized;
-    GLuint      mComponents;
-    bool        mPureInteger;
-
-    VertexFormat();
-    VertexFormat(GLenum type, GLboolean normalized, GLuint components, bool pureInteger);
-    explicit VertexFormat(const VertexAttribute &attribute);
-    VertexFormat(const VertexAttribute &attribute, GLenum currentValueType);
-
-    static void GetInputLayout(VertexFormat *inputLayout,
-                               Program *program,
-                               const State& currentValues);
-
-    bool operator==(const VertexFormat &other) const;
-    bool operator!=(const VertexFormat &other) const;
-    bool operator<(const VertexFormat& other) const;
-};
-
 }
 
 namespace rx

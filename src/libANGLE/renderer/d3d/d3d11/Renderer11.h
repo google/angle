@@ -130,8 +130,10 @@ class Renderer11 : public RendererD3D
 
     virtual bool applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize);
     gl::Error applyRenderTarget(const gl::Framebuffer *frameBuffer) override;
-    virtual gl::Error applyShaders(gl::Program *program, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
-                                   bool rasterizerDiscard, bool transformFeedbackActive);
+    gl::Error applyShaders(gl::Program *program,
+                           const gl::Framebuffer *framebuffer,
+                           bool rasterizerDiscard,
+                           bool transformFeedbackActive) override;
 
     virtual gl::Error applyUniforms(const ProgramImpl &program, const std::vector<gl::LinkedUniform*> &uniformArray);
     virtual gl::Error applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances, SourceIndexData *sourceIndexInfo);
@@ -248,8 +250,8 @@ class Renderer11 : public RendererD3D
     gl::Error packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams &params, uint8_t *pixelsOut);
 
     bool getLUID(LUID *adapterLuid) const override;
-    virtual VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const;
-    virtual GLenum getVertexComponentType(const gl::VertexFormat &vertexFormat) const;
+    VertexConversionType getVertexConversionType(gl::VertexFormatType vertexFormatType) const override;
+    GLenum getVertexComponentType(gl::VertexFormatType vertexFormatType) const override;
 
     gl::Error readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,
                               GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels);

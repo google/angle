@@ -21,6 +21,7 @@
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/DisplayD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
+#include "libANGLE/renderer/d3d/ProgramD3D.h"
 
 namespace rx
 {
@@ -31,6 +32,7 @@ namespace
 // release and recreate the scratch buffer. This ensures we don't have a
 // degenerate case where we are stuck hogging memory.
 const int ScratchMemoryBufferLifetime = 1000;
+
 }
 
 const uintptr_t RendererD3D::DirtyPointer = std::numeric_limits<uintptr_t>::max();
@@ -366,13 +368,11 @@ gl::Error RendererD3D::applyState(const gl::Data &data, GLenum drawMode)
 gl::Error RendererD3D::applyShaders(const gl::Data &data)
 {
     gl::Program *program = data.state->getProgram();
-
-    gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS];
-    gl::VertexFormat::GetInputLayout(inputLayout, program, *data.state);
+    GetImplAs<ProgramD3D>(program)->updateCachedInputLayout(program, *data.state);
 
     const gl::Framebuffer *fbo = data.state->getDrawFramebuffer();
 
-    gl::Error error = applyShaders(program, inputLayout, fbo, data.state->getRasterizerState().rasterizerDiscard, data.state->isTransformFeedbackActiveUnpaused());
+    gl::Error error = applyShaders(program, fbo, data.state->getRasterizerState().rasterizerDiscard, data.state->isTransformFeedbackActiveUnpaused());
     if (error.isError())
     {
         return error;

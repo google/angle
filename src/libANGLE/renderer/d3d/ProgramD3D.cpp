@@ -12,6 +12,7 @@
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/VertexArray.h"
 #include "libANGLE/features.h"
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
@@ -56,27 +57,26 @@ GLenum GetTextureType(GLenum samplerType)
     return GL_TEXTURE_2D;
 }
 
-void GetDefaultInputLayoutFromShader(const std::vector<sh::Attribute> &shaderAttributes, gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS])
+void GetDefaultInputLayoutFromShader(const std::vector<sh::Attribute> &shaderAttributes,
+                                     gl::InputLayout *inputLayoutOut)
 {
-    size_t layoutIndex = 0;
-    for (size_t attributeIndex = 0; attributeIndex < shaderAttributes.size(); attributeIndex++)
+    for (const sh::Attribute &shaderAttr : shaderAttributes)
     {
-        ASSERT(layoutIndex < gl::MAX_VERTEX_ATTRIBS);
-
-        const sh::Attribute &shaderAttr = shaderAttributes[attributeIndex];
-
         if (shaderAttr.type != GL_NONE)
         {
             GLenum transposedType = gl::TransposeMatrixType(shaderAttr.type);
 
-            for (size_t rowIndex = 0; static_cast<int>(rowIndex) < gl::VariableRowCount(transposedType); rowIndex++, layoutIndex++)
+            for (size_t rowIndex = 0;
+                 static_cast<int>(rowIndex) < gl::VariableRowCount(transposedType);
+                 ++rowIndex)
             {
-                gl::VertexFormat *defaultFormat = &inputLayout[layoutIndex];
+                GLenum componentType = gl::VariableComponentType(transposedType);
+                GLuint components = static_cast<GLuint>(gl::VariableColumnCount(transposedType));
+                bool pureInt = (componentType != GL_FLOAT);
+                gl::VertexFormatType defaultType = gl::GetVertexFormatType(
+                    componentType, GL_FALSE, components, pureInt);
 
-                defaultFormat->mType = gl::VariableComponentType(transposedType);
-                defaultFormat->mNormalized = false;
-                defaultFormat->mPureInteger = (defaultFormat->mType != GL_FLOAT); // note: inputs can not be bool
-                defaultFormat->mComponents = gl::VariableColumnCount(transposedType);
+                inputLayoutOut->push_back(defaultType);
             }
         }
     }
@@ -126,16 +126,13 @@ struct AttributeSorter
 
 }
 
-ProgramD3D::VertexExecutable::VertexExecutable(const gl::VertexFormat inputLayout[],
-                                               const GLenum signature[],
+ProgramD3D::VertexExecutable::VertexExecutable(const gl::InputLayout &inputLayout,
+                                               const Signature &signature,
                                                ShaderExecutableD3D *shaderExecutable)
-    : mShaderExecutable(shaderExecutable)
+    : mInputs(inputLayout),
+      mSignature(signature),
+      mShaderExecutable(shaderExecutable)
 {
-    for (size_t attributeIndex = 0; attributeIndex < gl::MAX_VERTEX_ATTRIBS; attributeIndex++)
-    {
-        mInputs[attributeIndex] = inputLayout[attributeIndex];
-        mSignature[attributeIndex] = signature[attributeIndex];
-    }
 }
 
 ProgramD3D::VertexExecutable::~VertexExecutable()
@@ -143,20 +140,35 @@ ProgramD3D::VertexExecutable::~VertexExecutable()
     SafeDelete(mShaderExecutable);
 }
 
-bool ProgramD3D::VertexExecutable::matchesSignature(const GLenum signature[]) const
+// static
+void ProgramD3D::VertexExecutable::getSignature(RendererD3D *renderer,
+                                                const gl::InputLayout &inputLayout,
+                                                Signature *signatureOut)
 {
-    for (size_t attributeIndex = 0; attributeIndex < gl::MAX_VERTEX_ATTRIBS; attributeIndex++)
+    signatureOut->resize(inputLayout.size(), gl::VERTEX_FORMAT_INVALID);
+
+    for (size_t index = 0; index < inputLayout.size(); ++index)
     {
-        if (mSignature[attributeIndex] != signature[attributeIndex])
+        gl::VertexFormatType vertexFormatType = inputLayout[index];
+        if (vertexFormatType == gl::VERTEX_FORMAT_INVALID)
         {
-            return false;
+            (*signatureOut)[index] = GL_NONE;
+        }
+        else
+        {
+            bool gpuConverted = ((renderer->getVertexConversionType(vertexFormatType) & VERTEX_CONVERT_GPU) != 0);
+            (*signatureOut)[index] = (gpuConverted ? GL_TRUE : GL_FALSE);
         }
     }
-
-    return true;
 }
 
-ProgramD3D::PixelExecutable::PixelExecutable(const std::vector<GLenum> &outputSignature, ShaderExecutableD3D *shaderExecutable)
+bool ProgramD3D::VertexExecutable::matchesSignature(const Signature &signature) const
+{
+    return mSignature == signature;
+}
+
+ProgramD3D::PixelExecutable::PixelExecutable(const std::vector<GLenum> &outputSignature,
+                                             ShaderExecutableD3D *shaderExecutable)
     : mOutputSignature(outputSignature),
       mShaderExecutable(shaderExecutable)
 {
@@ -591,15 +603,12 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     const unsigned int vertexShaderCount = stream->readInt<unsigned int>();
     for (unsigned int vertexShaderIndex = 0; vertexShaderIndex < vertexShaderCount; vertexShaderIndex++)
     {
-        gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS];
+        size_t inputLayoutSize = stream->readInt<size_t>();
+        gl::InputLayout inputLayout;
 
-        for (size_t inputIndex = 0; inputIndex < gl::MAX_VERTEX_ATTRIBS; inputIndex++)
+        for (size_t inputIndex = 0; inputIndex < inputLayoutSize; inputIndex++)
         {
-            gl::VertexFormat *vertexInput = &inputLayout[inputIndex];
-            stream->readInt(&vertexInput->mType);
-            stream->readInt(&vertexInput->mNormalized);
-            stream->readInt(&vertexInput->mComponents);
-            stream->readBool(&vertexInput->mPureInteger);
+            inputLayout.push_back(stream->readInt<gl::VertexFormatType>());
         }
 
         unsigned int vertexShaderSize = stream->readInt<unsigned int>();
@@ -623,8 +632,8 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
         }
 
         // generated converted input layout
-        GLenum signature[gl::MAX_VERTEX_ATTRIBS];
-        getInputLayoutSignature(inputLayout, signature);
+        VertexExecutable::Signature signature;
+        VertexExecutable::getSignature(mRenderer, inputLayout, &signature);
 
         // add new binary
         mVertexExecutables.push_back(new VertexExecutable(inputLayout, signature, shaderExecutable));
@@ -810,13 +819,12 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
     {
         VertexExecutable *vertexExecutable = mVertexExecutables[vertexExecutableIndex];
 
-        for (size_t inputIndex = 0; inputIndex < gl::MAX_VERTEX_ATTRIBS; inputIndex++)
+        const auto &inputLayout = vertexExecutable->inputs();
+        stream->writeInt(inputLayout.size());
+
+        for (size_t inputIndex = 0; inputIndex < inputLayout.size(); inputIndex++)
         {
-            const gl::VertexFormat &vertexInput = vertexExecutable->inputs()[inputIndex];
-            stream->writeInt(vertexInput.mType);
-            stream->writeInt(vertexInput.mNormalized);
-            stream->writeInt(vertexInput.mComponents);
-            stream->writeInt(vertexInput.mPureInteger);
+            stream->writeInt(inputLayout[inputIndex]);
         }
 
         size_t vertexShaderSize = vertexExecutable->shaderExecutable()->getLength();
@@ -927,16 +935,15 @@ gl::Error ProgramD3D::getPixelExecutableForOutputLayout(const std::vector<GLenum
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS],
+gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &inputLayout,
                                                         ShaderExecutableD3D **outExectuable,
                                                         gl::InfoLog *infoLog)
 {
-    GLenum signature[gl::MAX_VERTEX_ATTRIBS];
-    getInputLayoutSignature(inputLayout, signature);
+    VertexExecutable::getSignature(mRenderer, inputLayout, &mCachedVertexSignature);
 
     for (size_t executableIndex = 0; executableIndex < mVertexExecutables.size(); executableIndex++)
     {
-        if (mVertexExecutables[executableIndex]->matchesSignature(signature))
+        if (mVertexExecutables[executableIndex]->matchesSignature(mCachedVertexSignature))
         {
             *outExectuable = mVertexExecutables[executableIndex]->shaderExecutable();
             return gl::Error(GL_NO_ERROR);
@@ -963,7 +970,7 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::VertexFormat i
 
     if (vertexExecutable)
     {
-        mVertexExecutables.push_back(new VertexExecutable(inputLayout, signature, vertexExecutable));
+        mVertexExecutables.push_back(new VertexExecutable(inputLayout, mCachedVertexSignature, vertexExecutable));
     }
     else if (!infoLog)
     {
@@ -982,8 +989,8 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::Shade
     ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(vertexShader);
     ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(fragmentShader);
 
-    gl::VertexFormat defaultInputLayout[gl::MAX_VERTEX_ATTRIBS];
-    GetDefaultInputLayoutFromShader(vertexShader->getActiveAttributes(), defaultInputLayout);
+    gl::InputLayout defaultInputLayout;
+    GetDefaultInputLayoutFromShader(vertexShader->getActiveAttributes(), &defaultInputLayout);
     ShaderExecutableD3D *defaultVertexExecutable = NULL;
     gl::Error error = getVertexExecutableForInputLayout(defaultInputLayout, &defaultVertexExecutable, &infoLog);
     if (error.isError())
@@ -1090,11 +1097,6 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
 
 void ProgramD3D::bindAttributeLocation(GLuint index, const std::string &name)
 {
-}
-
-void ProgramD3D::getInputLayoutSignature(const gl::VertexFormat inputLayout[], GLenum signature[]) const
-{
-    mDynamicHLSL->getInputLayoutSignature(inputLayout, signature);
 }
 
 void ProgramD3D::initializeUniformStorage()
@@ -1796,7 +1798,9 @@ void ProgramD3D::defineUniformBlockMembers(const std::vector<VarT> &fields, cons
     }
 }
 
-bool ProgramD3D::defineUniformBlock(gl::InfoLog &infoLog, const gl::Shader &shader, const sh::InterfaceBlock &interfaceBlock,
+bool ProgramD3D::defineUniformBlock(gl::InfoLog &infoLog,
+                                    const gl::Shader &shader,
+                                    const sh::InterfaceBlock &interfaceBlock,
                                     const gl::Caps &caps)
 {
     const ShaderD3D* shaderD3D = GetImplAs<ShaderD3D>(&shader);
@@ -1869,10 +1873,10 @@ bool ProgramD3D::defineUniformBlock(gl::InfoLog &infoLog, const gl::Shader &shad
 }
 
 bool ProgramD3D::assignSamplers(unsigned int startSamplerIndex,
-                                   GLenum samplerType,
-                                   unsigned int samplerCount,
-                                   std::vector<Sampler> &outSamplers,
-                                   GLuint *outUsedRange)
+                                GLenum samplerType,
+                                unsigned int samplerCount,
+                                std::vector<Sampler> &outSamplers,
+                                GLuint *outUsedRange)
 {
     unsigned int samplerIndex = startSamplerIndex;
 
@@ -2031,6 +2035,25 @@ void ProgramD3D::sortAttributesByLayout(const std::vector<TranslatedAttribute> &
         int oldIndex = mAttributesByLayout[attribIndex];
         sortedSemanticIndicesOut[attribIndex] = mSemanticIndex[oldIndex];
         sortedAttributesOut[attribIndex] = &unsortedAttributes[oldIndex];
+    }
+}
+
+void ProgramD3D::updateCachedInputLayout(const gl::Program *program, const gl::State &state)
+{
+    mCachedInputLayout.resize(gl::MAX_VERTEX_ATTRIBS, gl::VERTEX_FORMAT_INVALID);
+    const int *semanticIndexes = program->getSemanticIndexes();
+
+    const auto &vertexAttributes = state.getVertexArray()->getVertexAttributes();
+    for (unsigned int attributeIndex = 0; attributeIndex < vertexAttributes.size(); attributeIndex++)
+    {
+        int semanticIndex = semanticIndexes[attributeIndex];
+
+        if (semanticIndex != -1)
+        {
+            mCachedInputLayout[semanticIndex] =
+                GetVertexFormatType(vertexAttributes[attributeIndex],
+                                    state.getVertexAttribCurrentValue(attributeIndex).Type);
+        }
     }
 }
 

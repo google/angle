@@ -7,10 +7,12 @@
 // VertexDeclarationCache.cpp: Implements a helper class to construct and cache vertex declarations.
 
 #include "libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.h"
-#include "libANGLE/renderer/d3d/d3d9/VertexBuffer9.h"
-#include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
+
 #include "libANGLE/Program.h"
 #include "libANGLE/VertexAttribute.h"
+#include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/d3d/d3d9/VertexBuffer9.h"
+#include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
 
 namespace rx
 {
@@ -154,8 +156,8 @@ gl::Error VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device,
                 mAppliedVBs[stream].offset = attributes[i].offset;
             }
 
-            gl::VertexFormat vertexFormat(*attributes[i].attribute, GL_FLOAT);
-            const d3d9::VertexFormat &d3d9VertexInfo = d3d9::GetVertexFormatInfo(caps.DeclTypes, vertexFormat);
+            gl::VertexFormatType vertexformatType = gl::GetVertexFormatType(*attributes[i].attribute, GL_FLOAT);
+            const d3d9::VertexFormat &d3d9VertexInfo = d3d9::GetVertexFormatInfo(caps.DeclTypes, vertexformatType);
 
             element->Stream = static_cast<WORD>(stream);
             element->Offset = 0;

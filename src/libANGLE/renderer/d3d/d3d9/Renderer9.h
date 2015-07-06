@@ -106,8 +106,10 @@ class Renderer9 : public RendererD3D
     gl::Error applyRenderTarget(const gl::Framebuffer *frameBuffer) override;
     gl::Error applyRenderTarget(const gl::FramebufferAttachment *colorAttachment,
                                 const gl::FramebufferAttachment *depthStencilAttachment);
-    virtual gl::Error applyShaders(gl::Program *program, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
-                                   bool rasterizerDiscard, bool transformFeedbackActive);
+    gl::Error applyShaders(gl::Program *program,
+                           const gl::Framebuffer *framebuffer,
+                           bool rasterizerDiscard,
+                           bool transformFeedbackActive) override;
     virtual gl::Error applyUniforms(const ProgramImpl &program, const std::vector<gl::LinkedUniform*> &uniformArray);
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize);
     virtual gl::Error applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances, SourceIndexData *sourceInfo);
@@ -225,8 +227,8 @@ class Renderer9 : public RendererD3D
     D3DPOOL getTexturePool(DWORD usage) const;
 
     bool getLUID(LUID *adapterLuid) const override;
-    virtual VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const;
-    virtual GLenum getVertexComponentType(const gl::VertexFormat &vertexFormat) const;
+    VertexConversionType getVertexConversionType(gl::VertexFormatType vertexFormatType) const override;
+    GLenum getVertexComponentType(gl::VertexFormatType vertexFormatType) const override;
 
     gl::Error copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
 

@@ -555,7 +555,7 @@ static inline unsigned int ComputeTypeIndex(GLenum type)
     }
 }
 
-const VertexFormat &GetVertexFormatInfo(DWORD supportedDeclTypes, const gl::VertexFormat &vertexFormat)
+const VertexFormat &GetVertexFormatInfo(DWORD supportedDeclTypes, gl::VertexFormatType vertexFormatType)
 {
     static bool initialized = false;
     static DWORD initializedDeclTypes = 0;
@@ -592,9 +592,11 @@ const VertexFormat &GetVertexFormatInfo(DWORD supportedDeclTypes, const gl::Vert
         initializedDeclTypes = supportedDeclTypes;
     }
 
+    const gl::VertexFormat &vertexFormat = gl::GetVertexFormatFromType(vertexFormatType);
+
     // Pure integer attributes only supported in ES3.0
-    ASSERT(!vertexFormat.mPureInteger);
-    return formatConverters[ComputeTypeIndex(vertexFormat.mType)][vertexFormat.mNormalized][vertexFormat.mComponents - 1];
+    ASSERT(!vertexFormat.pureInteger);
+    return formatConverters[ComputeTypeIndex(vertexFormat.type)][vertexFormat.normalized][vertexFormat.components - 1];
 }
 
 }

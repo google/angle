@@ -1824,13 +1824,16 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::applyShaders(gl::Program *program, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
-                                  bool rasterizerDiscard, bool transformFeedbackActive)
+gl::Error Renderer9::applyShaders(gl::Program *program,
+                                  const gl::Framebuffer *framebuffer,
+                                  bool rasterizerDiscard,
+                                  bool transformFeedbackActive)
 {
     ASSERT(!transformFeedbackActive);
     ASSERT(!rasterizerDiscard);
 
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
+    const auto &inputLayout = programD3D->getCachedInputLayout();
 
     ShaderExecutableD3D *vertexExe = NULL;
     gl::Error error = programD3D->getVertexExecutableForInputLayout(inputLayout, &vertexExe, nullptr);
@@ -2927,14 +2930,14 @@ bool Renderer9::getLUID(LUID *adapterLuid) const
     return false;
 }
 
-VertexConversionType Renderer9::getVertexConversionType(const gl::VertexFormat &vertexFormat) const
+VertexConversionType Renderer9::getVertexConversionType(gl::VertexFormatType vertexFormatType) const
 {
-    return d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormat).conversionType;
+    return d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormatType).conversionType;
 }
 
-GLenum Renderer9::getVertexComponentType(const gl::VertexFormat &vertexFormat) const
+GLenum Renderer9::getVertexComponentType(gl::VertexFormatType vertexFormatType) const
 {
-    return d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormat).componentType;
+    return d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormatType).componentType;
 }
 
 void Renderer9::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const

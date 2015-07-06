@@ -188,14 +188,14 @@ bool VertexBufferInterface::directStoragePossible(const gl::VertexAttribute &att
 
     if (attrib.type != GL_FLOAT)
     {
-        gl::VertexFormat vertexFormat(attrib, currentValueType);
+        gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib, currentValueType);
 
         unsigned int outputElementSize;
         getVertexBuffer()->getSpaceRequired(attrib, 1, 0, &outputElementSize);
         alignment = std::min<size_t>(outputElementSize, 4);
 
         // TODO(jmadill): add VertexFormatCaps
-        requiresConversion = (mFactory->getVertexConversionType(vertexFormat) & VERTEX_CONVERT_CPU) != 0;
+        requiresConversion = (mFactory->getVertexConversionType(vertexFormatType) & VERTEX_CONVERT_CPU) != 0;
     }
 
     bool isAligned = (static_cast<size_t>(ComputeVertexAttributeStride(attrib)) % alignment == 0) &&

@@ -380,7 +380,7 @@ std::string DynamicHLSL::generateVaryingHLSL(const ShaderD3D *shader) const
 }
 
 std::string DynamicHLSL::generateVertexShaderForInputLayout(const std::string &sourceShader,
-                                                            const VertexFormat inputLayout[],
+                                                            const InputLayout &inputLayout,
                                                             const std::vector<sh::Attribute> &shaderAttributes) const
 {
     std::string structHLSL, initHLSL;
@@ -414,7 +414,7 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(const std::string &s
         if (!shaderAttribute.name.empty())
         {
             ASSERT(inputIndex < MAX_VERTEX_ATTRIBS);
-            const VertexFormat &vertexFormat = inputLayout[inputIndex];
+            VertexFormatType vertexFormatType = inputLayout[inputIndex];
 
             // HLSL code for input structure
             if (IsMatrixType(shaderAttribute.type))
@@ -424,7 +424,7 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(const std::string &s
             }
             else
             {
-                GLenum componentType = mRenderer->getVertexComponentType(vertexFormat);
+                GLenum componentType = mRenderer->getVertexComponentType(vertexFormatType);
 
                 if (shaderAttribute.name == "gl_InstanceID")
                 {
@@ -458,9 +458,9 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(const std::string &s
             // data reinterpretation (eg for pure integer->float, float->pure integer)
             // TODO: issue warning with gl debug info extension, when supported
             if (IsMatrixType(shaderAttribute.type) ||
-                (mRenderer->getVertexConversionType(vertexFormat) & VERTEX_CONVERT_GPU) != 0)
+                (mRenderer->getVertexConversionType(vertexFormatType) & VERTEX_CONVERT_GPU) != 0)
             {
-                initHLSL += generateAttributeConversionHLSL(vertexFormat, shaderAttribute);
+                initHLSL += generateAttributeConversionHLSL(vertexFormatType, shaderAttribute);
             }
             else
             {
@@ -1214,8 +1214,10 @@ std::string DynamicHLSL::decorateVariable(const std::string &name)
     return name;
 }
 
-std::string DynamicHLSL::generateAttributeConversionHLSL(const VertexFormat &vertexFormat, const sh::ShaderVariable &shaderAttrib) const
+std::string DynamicHLSL::generateAttributeConversionHLSL(gl::VertexFormatType vertexFormatType,
+                                                         const sh::ShaderVariable &shaderAttrib) const
 {
+    const gl::VertexFormat &vertexFormat = gl::GetVertexFormatFromType(vertexFormatType);
     std::string attribString = "input." + decorateVariable(shaderAttrib.name);
 
     // Matrix
@@ -1228,35 +1230,17 @@ std::string DynamicHLSL::generateAttributeConversionHLSL(const VertexFormat &ver
     int shaderComponentCount = VariableComponentCount(shaderAttrib.type);
 
     // Perform integer to float conversion (if necessary)
-    bool requiresTypeConversion = (shaderComponentType == GL_FLOAT && vertexFormat.mType != GL_FLOAT);
+    bool requiresTypeConversion = (shaderComponentType == GL_FLOAT && vertexFormat.type != GL_FLOAT);
 
     if (requiresTypeConversion)
     {
         // TODO: normalization for 32-bit integer formats
-        ASSERT(!vertexFormat.mNormalized && !vertexFormat.mPureInteger);
+        ASSERT(!vertexFormat.normalized && !vertexFormat.pureInteger);
         return "float" + Str(shaderComponentCount) + "(" + attribString + ")";
     }
 
     // No conversion necessary
     return attribString;
-}
-
-void DynamicHLSL::getInputLayoutSignature(const VertexFormat inputLayout[], GLenum signature[]) const
-{
-    for (size_t inputIndex = 0; inputIndex < MAX_VERTEX_ATTRIBS; inputIndex++)
-    {
-        const VertexFormat &vertexFormat = inputLayout[inputIndex];
-
-        if (vertexFormat.mType == GL_NONE)
-        {
-            signature[inputIndex] = GL_NONE;
-        }
-        else
-        {
-            bool gpuConverted = ((mRenderer->getVertexConversionType(vertexFormat) & VERTEX_CONVERT_GPU) != 0);
-            signature[inputIndex] = (gpuConverted ? GL_TRUE : GL_FALSE);
-        }
-    }
 }
 
 }

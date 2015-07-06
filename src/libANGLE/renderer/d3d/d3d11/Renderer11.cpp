@@ -2000,10 +2000,13 @@ gl::Error Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::applyShaders(gl::Program *program, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
-                                   bool rasterizerDiscard, bool transformFeedbackActive)
+gl::Error Renderer11::applyShaders(gl::Program *program,
+                                   const gl::Framebuffer *framebuffer,
+                                   bool rasterizerDiscard,
+                                   bool transformFeedbackActive)
 {
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
+    const auto &inputLayout = programD3D->getCachedInputLayout();
 
     ShaderExecutableD3D *vertexExe = NULL;
     gl::Error error = programD3D->getVertexExecutableForInputLayout(inputLayout, &vertexExe, nullptr);
@@ -3732,14 +3735,14 @@ bool Renderer11::getLUID(LUID *adapterLuid) const
     return true;
 }
 
-VertexConversionType Renderer11::getVertexConversionType(const gl::VertexFormat &vertexFormat) const
+VertexConversionType Renderer11::getVertexConversionType(gl::VertexFormatType vertexFormatType) const
 {
-    return d3d11::GetVertexFormatInfo(vertexFormat, mRenderer11DeviceCaps.featureLevel).conversionType;
+    return d3d11::GetVertexFormatInfo(vertexFormatType, mRenderer11DeviceCaps.featureLevel).conversionType;
 }
 
-GLenum Renderer11::getVertexComponentType(const gl::VertexFormat &vertexFormat) const
+GLenum Renderer11::getVertexComponentType(gl::VertexFormatType vertexFormatType) const
 {
-    return d3d11::GetDXGIFormatInfo(d3d11::GetVertexFormatInfo(vertexFormat, mRenderer11DeviceCaps.featureLevel).nativeFormat).componentType;
+    return d3d11::GetDXGIFormatInfo(d3d11::GetVertexFormatInfo(vertexFormatType, mRenderer11DeviceCaps.featureLevel).nativeFormat).componentType;
 }
 
 void Renderer11::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const

@@ -9,15 +9,16 @@
 #ifndef LIBANGLE_RENDERER_D3D_PROGRAMD3D_H_
 #define LIBANGLE_RENDERER_D3D_PROGRAMD3D_H_
 
+#include <string>
+#include <vector>
+
 #include "common/Optional.h"
 #include "compiler/translator/blocklayoutHLSL.h"
 #include "libANGLE/Constants.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/Workarounds.h"
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
-
-#include <string>
-#include <vector>
 
 namespace gl
 {
@@ -65,7 +66,7 @@ class ProgramD3D : public ProgramImpl
 
     gl::Error getPixelExecutableForFramebuffer(const gl::Framebuffer *fbo, ShaderExecutableD3D **outExectuable);
     gl::Error getPixelExecutableForOutputLayout(const std::vector<GLenum> &outputLayout, ShaderExecutableD3D **outExectuable, gl::InfoLog *infoLog);
-    gl::Error getVertexExecutableForInputLayout(const gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS], ShaderExecutableD3D **outExectuable, gl::InfoLog *infoLog);
+    gl::Error getVertexExecutableForInputLayout(const gl::InputLayout &inputLayout, ShaderExecutableD3D **outExectuable, gl::InfoLog *infoLog);
     ShaderExecutableD3D *getGeometryExecutable() const { return mGeometryExecutable; }
 
     LinkResult compileProgramExecutables(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
@@ -79,8 +80,6 @@ class ProgramD3D : public ProgramImpl
                     std::map<int, gl::VariableLocation> *outputVariables);
 
     void bindAttributeLocation(GLuint index, const std::string &name) override;
-
-    void getInputLayoutSignature(const gl::VertexFormat inputLayout[], GLenum signature[]) const;
 
     void initializeUniformStorage();
     gl::Error applyUniforms();
@@ -131,24 +130,32 @@ class ProgramD3D : public ProgramImpl
                                 int sortedSemanticIndicesOut[gl::MAX_VERTEX_ATTRIBS],
                                 const rx::TranslatedAttribute *sortedAttributesOut[gl::MAX_VERTEX_ATTRIBS]) const;
 
+    void updateCachedInputLayout(const gl::Program *program, const gl::State &state);
+    const gl::InputLayout &getCachedInputLayout() const { return mCachedInputLayout; }
+
   private:
     class VertexExecutable
     {
       public:
-        VertexExecutable(const gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS],
-                         const GLenum signature[gl::MAX_VERTEX_ATTRIBS],
+        typedef std::vector<GLenum> Signature;
+
+        VertexExecutable(const gl::InputLayout &inputLayout,
+                         const Signature &signature,
                          ShaderExecutableD3D *shaderExecutable);
         ~VertexExecutable();
 
-        bool matchesSignature(const GLenum convertedLayout[gl::MAX_VERTEX_ATTRIBS]) const;
+        bool matchesSignature(const Signature &signature) const;
+        static void getSignature(RendererD3D *renderer,
+                                 const gl::InputLayout &inputLayout,
+                                 Signature *signatureOut);
 
-        const gl::VertexFormat *inputs() const { return mInputs; }
-        const GLenum *signature() const { return mSignature; }
+        const gl::InputLayout &inputs() const { return mInputs; }
+        const Signature &signature() const { return mSignature; }
         ShaderExecutableD3D *shaderExecutable() const { return mShaderExecutable; }
 
       private:
-        gl::VertexFormat mInputs[gl::MAX_VERTEX_ATTRIBS];
-        GLenum mSignature[gl::MAX_VERTEX_ATTRIBS];
+        gl::InputLayout mInputs;
+        Signature mSignature;
         ShaderExecutableD3D *mShaderExecutable;
     };
 
@@ -243,6 +250,8 @@ class ProgramD3D : public ProgramImpl
 
     std::vector<GLint> mVertexUBOCache;
     std::vector<GLint> mFragmentUBOCache;
+    VertexExecutable::Signature mCachedVertexSignature;
+    gl::InputLayout mCachedInputLayout;
 
     static unsigned int issueSerial();
     static unsigned int mCurrentSerial;

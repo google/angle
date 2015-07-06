@@ -1099,8 +1099,8 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat, const Renderer1
     return defaultInfo;
 }
 
-typedef std::map<gl::VertexFormat, VertexFormat> D3D11VertexFormatInfoMap;
-typedef std::pair<gl::VertexFormat, VertexFormat> D3D11VertexFormatPair;
+typedef std::map<gl::VertexFormatType, VertexFormat> D3D11VertexFormatInfoMap;
+typedef std::pair<gl::VertexFormatType, VertexFormat> D3D11VertexFormatPair;
 
 VertexFormat::VertexFormat()
     : conversionType(VERTEX_CONVERT_NONE),
@@ -1109,30 +1109,39 @@ VertexFormat::VertexFormat()
 {
 }
 
-static void AddVertexFormatInfo(D3D11VertexFormatInfoMap *map, GLenum inputType, GLboolean normalized, GLuint componentCount,
-                                VertexConversionType conversionType, DXGI_FORMAT nativeFormat, VertexCopyFunction copyFunction)
+static void AddVertexFormatInfo(D3D11VertexFormatInfoMap *map,
+                                GLenum inputType,
+                                GLboolean normalized,
+                                GLuint componentCount,
+                                VertexConversionType conversionType,
+                                DXGI_FORMAT nativeFormat,
+                                VertexCopyFunction copyFunction)
 {
-    gl::VertexFormat inputFormat(inputType, normalized, componentCount, false);
+    gl::VertexFormatType formatType = gl::GetVertexFormatType(inputType, normalized, componentCount, false);
 
     VertexFormat info;
     info.conversionType = conversionType;
     info.nativeFormat = nativeFormat;
     info.copyFunction = copyFunction;
 
-    map->insert(D3D11VertexFormatPair(inputFormat, info));
+    map->insert(D3D11VertexFormatPair(formatType, info));
 }
 
-static void AddIntegerVertexFormatInfo(D3D11VertexFormatInfoMap *map, GLenum inputType, GLuint componentCount,
-                                       VertexConversionType conversionType, DXGI_FORMAT nativeFormat, VertexCopyFunction copyFunction)
+static void AddIntegerVertexFormatInfo(D3D11VertexFormatInfoMap *map,
+                                       GLenum inputType,
+                                       GLuint componentCount,
+                                       VertexConversionType conversionType,
+                                       DXGI_FORMAT nativeFormat,
+                                       VertexCopyFunction copyFunction)
 {
-    gl::VertexFormat inputFormat(inputType, GL_FALSE, componentCount, true);
+    gl::VertexFormatType formatType = gl::GetVertexFormatType(inputType, GL_FALSE, componentCount, true);
 
     VertexFormat info;
     info.conversionType = conversionType;
     info.nativeFormat = nativeFormat;
     info.copyFunction = copyFunction;
 
-    map->insert(D3D11VertexFormatPair(inputFormat, info));
+    map->insert(D3D11VertexFormatPair(formatType, info));
 }
 
 static D3D11VertexFormatInfoMap BuildD3D11_FL9_3VertexFormatInfoOverrideMap()
@@ -1354,7 +1363,7 @@ static D3D11VertexFormatInfoMap BuildD3D11VertexFormatInfoMap()
     return map;
 }
 
-const VertexFormat &GetVertexFormatInfo(const gl::VertexFormat &vertexFormat, D3D_FEATURE_LEVEL featureLevel)
+const VertexFormat &GetVertexFormatInfo(gl::VertexFormatType vertexFormatType, D3D_FEATURE_LEVEL featureLevel)
 {
     static const D3D11VertexFormatInfoMap vertexFormatMap = BuildD3D11VertexFormatInfoMap();
     static const D3D11VertexFormatInfoMap vertexFormatMapFL9_3Override = BuildD3D11_FL9_3VertexFormatInfoOverrideMap();
@@ -1362,14 +1371,14 @@ const VertexFormat &GetVertexFormatInfo(const gl::VertexFormat &vertexFormat, D3
     if (featureLevel == D3D_FEATURE_LEVEL_9_3)
     {
         // First see if the format has a special mapping for FL9_3
-        D3D11VertexFormatInfoMap::const_iterator iter = vertexFormatMapFL9_3Override.find(vertexFormat);
+        D3D11VertexFormatInfoMap::const_iterator iter = vertexFormatMapFL9_3Override.find(vertexFormatType);
         if (iter != vertexFormatMapFL9_3Override.end())
         {
             return iter->second;
         }
     }
 
-    D3D11VertexFormatInfoMap::const_iterator iter = vertexFormatMap.find(vertexFormat);
+    D3D11VertexFormatInfoMap::const_iterator iter = vertexFormatMap.find(vertexFormatType);
     if (iter != vertexFormatMap.end())
     {
         return iter->second;
