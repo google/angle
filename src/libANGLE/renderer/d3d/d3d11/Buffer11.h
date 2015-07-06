@@ -121,7 +121,7 @@ class Buffer11 : public BufferD3D
     BufferStorage *getBufferStorage(BufferUsage usage);
     BufferStorage *getLatestBufferStorage() const;
 
-    BufferStorage *getContantBufferRangeStorage(GLintptr offset, GLsizeiptr size);
+    BufferStorage *getConstantBufferRangeStorage(GLintptr offset, GLsizeiptr size);
 
     void invalidateEmulatedIndexedBuffer();
 };

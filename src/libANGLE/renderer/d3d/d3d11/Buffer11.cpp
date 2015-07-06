@@ -553,7 +553,7 @@ ID3D11Buffer *Buffer11::getConstantBufferRange(GLintptr offset, GLsizeiptr size)
     }
     else
     {
-        bufferStorage = getContantBufferRangeStorage(offset, size);
+        bufferStorage = getConstantBufferRangeStorage(offset, size);
     }
 
     if (!bufferStorage)
@@ -678,7 +678,7 @@ Buffer11::BufferStorage *Buffer11::getBufferStorage(BufferUsage usage)
     return newStorage;
 }
 
-Buffer11::BufferStorage *Buffer11::getContantBufferRangeStorage(GLintptr offset, GLsizeiptr size)
+Buffer11::BufferStorage *Buffer11::getConstantBufferRangeStorage(GLintptr offset, GLsizeiptr size)
 {
     BufferStorage *newStorage;
 
