@@ -22,6 +22,30 @@
       "revId": "6b13924e9f55b6eeb24ca1987ffd0a764832f13c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "130345c0_3b5f03f1",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-07-06T16:25:22Z",
+      "side": 1,
+      "message": "Well, I think overall we have two choices: either we want efficiency, or  we want clearness. If we want efficiency, then my solution is the best we can do, because it packs everything into uint32_t. If we want clearness, then we need to have dead simple struct with all the fields and proper operator \u003c.\n\nUnion with uint8_ts is something in between. It\u0027s not as efficient, and it\u0027s not that clear (it\u0027s union to begin with, then all fields are uint8_t, padding, etc.). And asserting that a given enum fits uint8_t (or rather, the type of the corresponding field) will be as messy as it is currently. Furthermore, if we ever need to add member greater than uint8_t, we will have to pay attention to the point we are inserting it, or it can inflate \u0027values\u0027 past uint64_t.",
+      "parentUuid": "d31c4d21_19ba0f2b",
+      "range": {
+        "startLine": 57,
+        "startChar": 3,
+        "endLine": 57,
+        "endChar": 29
+      },
+      "revId": "6b13924e9f55b6eeb24ca1987ffd0a764832f13c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
