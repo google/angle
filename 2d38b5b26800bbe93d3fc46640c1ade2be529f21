@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f305d1c3_f242bcf2",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-06T16:44:50Z",
+      "side": 1,
+      "message": "FYI, when we switch to the auto-formatter, it would place each parameter on its own line. not necessary to fix this, just for your information.",
+      "range": {
+        "startLine": 65,
+        "startChar": 30,
+        "endLine": 67,
+        "endChar": 60
+      },
+      "revId": "2d38b5b26800bbe93d3fc46640c1ade2be529f21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
