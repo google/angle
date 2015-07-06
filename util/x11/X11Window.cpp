@@ -15,6 +15,135 @@ Bool WaitForMapNotify(Display *dpy, XEvent *event, XPointer window)
     return event->type == MapNotify && event->xmap.window == reinterpret_cast<Window>(window);
 }
 
+static Key X11CodeToKey(Display *display, unsigned int scancode)
+{
+    int temp;
+    KeySym *keySymbols;
+    keySymbols = XGetKeyboardMapping(display, scancode, 1, &temp);
+
+    unsigned int keySymbol = keySymbols[0];
+    XFree(keySymbols);
+
+    switch (keySymbol)
+    {
+      case XK_Shift_L:     return KEY_LSHIFT;
+      case XK_Shift_R:     return KEY_RSHIFT;
+      case XK_Alt_L:       return KEY_LALT;
+      case XK_Alt_R:       return KEY_RALT;
+      case XK_Control_L:   return KEY_LCONTROL;
+      case XK_Control_R:   return KEY_RCONTROL;
+      case XK_Super_L:     return KEY_LSYSTEM;
+      case XK_Super_R:     return KEY_RSYSTEM;
+      case XK_Menu:        return KEY_MENU;
+
+      case XK_semicolon:   return KEY_SEMICOLON;
+      case XK_slash:       return KEY_SLASH;
+      case XK_equal:       return KEY_EQUAL;
+      case XK_minus:       return KEY_DASH;
+      case XK_bracketleft: return KEY_LBRACKET;
+      case XK_bracketright:return KEY_RBRACKET;
+      case XK_comma:       return KEY_COMMA;
+      case XK_period:      return KEY_PERIOD;
+      case XK_backslash:   return KEY_BACKSLASH;
+      case XK_asciitilde:  return KEY_TILDE;
+      case XK_Escape:      return KEY_ESCAPE;
+      case XK_space:       return KEY_SPACE;
+      case XK_Return:      return KEY_RETURN;
+      case XK_BackSpace:   return KEY_BACK;
+      case XK_Tab:         return KEY_TAB;
+      case XK_Page_Up:     return KEY_PAGEUP;
+      case XK_Page_Down:   return KEY_PAGEDOWN;
+      case XK_End:         return KEY_END;
+      case XK_Home:        return KEY_HOME;
+      case XK_Insert:      return KEY_INSERT;
+      case XK_Delete:      return KEY_DELETE;
+      case XK_KP_Add:      return KEY_ADD;
+      case XK_KP_Subtract: return KEY_SUBTRACT;
+      case XK_KP_Multiply: return KEY_MULTIPLY;
+      case XK_KP_Divide:   return KEY_DIVIDE;
+      case XK_Pause:       return KEY_PAUSE;
+
+      case XK_F1:          return KEY_F1;
+      case XK_F2:          return KEY_F2;
+      case XK_F3:          return KEY_F3;
+      case XK_F4:          return KEY_F4;
+      case XK_F5:          return KEY_F5;
+      case XK_F6:          return KEY_F6;
+      case XK_F7:          return KEY_F7;
+      case XK_F8:          return KEY_F8;
+      case XK_F9:          return KEY_F9;
+      case XK_F10:         return KEY_F10;
+      case XK_F11:         return KEY_F11;
+      case XK_F12:         return KEY_F12;
+      case XK_F13:         return KEY_F13;
+      case XK_F14:         return KEY_F14;
+      case XK_F15:         return KEY_F15;
+
+      case XK_Left:        return KEY_LEFT;
+      case XK_Right:       return KEY_RIGHT;
+      case XK_Down:        return KEY_DOWN;
+      case XK_Up:          return KEY_UP;
+
+      case XK_KP_Insert:   return KEY_NUMPAD0;
+      case XK_KP_End:      return KEY_NUMPAD1;
+      case XK_KP_Down:     return KEY_NUMPAD2;
+      case XK_KP_Page_Down:return KEY_NUMPAD3;
+      case XK_KP_Left:     return KEY_NUMPAD4;
+      case XK_KP_Right:    return KEY_NUMPAD6;
+      case XK_KP_Home:     return KEY_NUMPAD7;
+      case XK_KP_Up:       return KEY_NUMPAD8;
+      case XK_KP_Page_Up:  return KEY_NUMPAD9;
+
+      case XK_a:           return KEY_A;
+      case XK_b:           return KEY_B;
+      case XK_c:           return KEY_C;
+      case XK_d:           return KEY_D;
+      case XK_e:           return KEY_E;
+      case XK_f:           return KEY_F;
+      case XK_g:           return KEY_G;
+      case XK_h:           return KEY_H;
+      case XK_i:           return KEY_I;
+      case XK_j:           return KEY_J;
+      case XK_k:           return KEY_K;
+      case XK_l:           return KEY_L;
+      case XK_m:           return KEY_M;
+      case XK_n:           return KEY_N;
+      case XK_o:           return KEY_O;
+      case XK_p:           return KEY_P;
+      case XK_q:           return KEY_Q;
+      case XK_r:           return KEY_R;
+      case XK_s:           return KEY_S;
+      case XK_t:           return KEY_T;
+      case XK_u:           return KEY_U;
+      case XK_v:           return KEY_V;
+      case XK_w:           return KEY_W;
+      case XK_x:           return KEY_X;
+      case XK_y:           return KEY_Y;
+      case XK_z:           return KEY_Z;
+
+      case XK_1:           return KEY_NUM1;
+      case XK_2:           return KEY_NUM2;
+      case XK_3:           return KEY_NUM3;
+      case XK_4:           return KEY_NUM4;
+      case XK_5:           return KEY_NUM5;
+      case XK_6:           return KEY_NUM6;
+      case XK_7:           return KEY_NUM7;
+      case XK_8:           return KEY_NUM8;
+      case XK_9:           return KEY_NUM9;
+      case XK_0:           return KEY_NUM0;
+    }
+
+    return Key(0);
+}
+
+static void AddX11KeyStateToEvent(Event *event, unsigned int state)
+{
+    event->Key.Shift = state & ShiftMask;
+    event->Key.Control = state & ControlMask;
+    event->Key.Alt = state & Mod1Mask;
+    event->Key.System = state & Mod4Mask;
+}
+
 }
 
 X11Window::X11Window()
@@ -52,7 +181,7 @@ bool X11Window::initialize(const std::string &name, size_t width, size_t height)
 
         attributes.event_mask = StructureNotifyMask | PointerMotionMask | ButtonPressMask |
                                 ButtonReleaseMask | FocusChangeMask | EnterWindowMask |
-                                LeaveWindowMask;
+                                LeaveWindowMask | KeyPressMask | KeyReleaseMask;
         attributes.border_pixel = 0;
         attributes.colormap = colormap;
 
@@ -196,7 +325,7 @@ void X11Window::signalTestEvent()
 
 void X11Window::processEvent(const XEvent &xEvent)
 {
-    // TODO(cwallez) handle key presses and text events
+    // TODO(cwallez) text events
     switch (xEvent.type)
     {
       case ButtonPress:
@@ -295,6 +424,26 @@ void X11Window::processEvent(const XEvent &xEvent)
                 event.MouseButton.Y = xEvent.xbutton.y;
                 pushEvent(event);
             }
+        }
+        break;
+
+      case KeyPress:
+        {
+            Event event;
+            event.Type = Event::EVENT_KEY_PRESSED;
+            event.Key.Code = X11CodeToKey(mDisplay, xEvent.xkey.keycode);
+            AddX11KeyStateToEvent(&event, xEvent.xkey.state);
+            pushEvent(event);
+        }
+        break;
+
+      case KeyRelease:
+        {
+            Event event;
+            event.Type = Event::EVENT_KEY_RELEASED;
+            event.Key.Code = X11CodeToKey(mDisplay, xEvent.xkey.keycode);
+            AddX11KeyStateToEvent(&event, xEvent.xkey.state);
+            pushEvent(event);
         }
         break;
 
