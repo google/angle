@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "33b12958_e0794c71",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2015-07-06T17:12:41Z",
+      "side": 1,
+      "message": "I had a question about using a template for N in a related CL. LGTM assuming that gets resolved and this code gets updated if necessary.",
+      "revId": "30ebff98a2f2e4e9982b637f4031be8f120af2d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
