@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f3ba3136_587c912b",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-06T15:01:00Z",
+      "side": 1,
+      "message": "probably should use uint16_t",
+      "range": {
+        "startLine": 552,
+        "startChar": 54,
+        "endLine": 552,
+        "endChar": 68
+      },
+      "revId": "e3b9322b9809da7d5e0e1b7e8543fe5504cde206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f305d1c3_92fb80b7",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-06T15:01:00Z",
+      "side": 1,
+      "message": "and uint32_t. don\u0027t some obscure platforms have 64-bit int?",
+      "range": {
+        "startLine": 554,
+        "startChar": 23,
+        "endLine": 554,
+        "endChar": 35
+      },
+      "revId": "e3b9322b9809da7d5e0e1b7e8543fe5504cde206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f36151bc_5a5651a1",
+        "filename": "src/common/mathutil_unittest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-06T15:01:00Z",
+      "side": 1,
+      "message": "nit: file name is _unittest (no s)",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 21
+      },
+      "revId": "e3b9322b9809da7d5e0e1b7e8543fe5504cde206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
