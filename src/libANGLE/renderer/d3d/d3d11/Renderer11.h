@@ -264,6 +264,7 @@ class Renderer11 : public RendererD3D
     const Renderer11DeviceCaps &getRenderer11DeviceCaps() { return mRenderer11DeviceCaps; };
 
     RendererClass getRendererClass() const override { return RENDERER_D3D11; }
+    InputLayoutCache *getInputLayoutCache() { return &mInputLayoutCache; }
 
   protected:
     void createAnnotator() override;
