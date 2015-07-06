@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f3ba3136_98b71975",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-06T15:09:18Z",
+      "side": 1,
+      "message": "nit: use c++ style comments - we consistently use c++ style in ANGLE (I checked style guide on this)",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 2
+      },
+      "revId": "265b43b5f50beaea5313929f9734e751516008dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d31c4d21_2ac6878b",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-06T15:09:18Z",
+      "side": 1,
+      "message": "indexes into DX-style indexes, with their description returned in translated. (it does more than make a definition)",
+      "range": {
+        "startLine": 109,
+        "startChar": 39,
+        "endLine": 110,
+        "endChar": 29
+      },
+      "revId": "265b43b5f50beaea5313929f9734e751516008dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f36151bc_5ab1f17a",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-06T15:09:18Z",
+      "side": 1,
+      "message": "watch out for long lines - if longer than 100, clip and line each parameter up next to the (",
+      "range": {
+        "startLine": 118,
+        "startChar": 45,
+        "endLine": 118,
+        "endChar": 95
+      },
+      "revId": "265b43b5f50beaea5313929f9734e751516008dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
