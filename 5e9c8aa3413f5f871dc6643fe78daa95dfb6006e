@@ -22,6 +22,30 @@
       "revId": "5e9c8aa3413f5f871dc6643fe78daa95dfb6006e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "135425e3_b0e05810",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-06T17:39:17Z",
+      "side": 1,
+      "message": "Done. I was hoping to avoid the cost of a dynamic allocation, since they don\u0027t really need to be dynamic. I changed them to use std::vector.",
+      "parentUuid": "f3ba3136_a39d9243",
+      "range": {
+        "startLine": 274,
+        "startChar": 0,
+        "endLine": 274,
+        "endChar": 8
+      },
+      "revId": "5e9c8aa3413f5f871dc6643fe78daa95dfb6006e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
