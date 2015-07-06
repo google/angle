@@ -237,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "736d61b3_333548e1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-06T17:42:13Z",
+      "side": 1,
+      "message": "That\u0027s okay, we don\u0027t practice these kind of checks in other places in ANGLE and it would be a lot of work to do so.",
+      "parentUuid": "33b12958_a05624d3",
+      "range": {
+        "startLine": 636,
+        "startChar": 4,
+        "endLine": 636,
+        "endChar": 53
+      },
+      "revId": "233b55e4c157b76651ed8c25dab94a44941c91ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d31c4d21_aa8457e7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 2
@@ -366,6 +390,30 @@
       "side": 1,
       "message": "std::array\u003cstd::unique_ptr\u003cBufferStorage\u003e\u003e is what we want here but we have neither, in this case I think an array is superior to a vector as it requires no allocation and no double dereference to access an element. Esp. since some of the functions here are in the callgraph of draws.",
       "parentUuid": "f3ba3136_2362420c",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 55
+      },
+      "revId": "233b55e4c157b76651ed8c25dab94a44941c91ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "334da95a_d127a4ec",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-06T17:42:13Z",
+      "side": 1,
+      "message": "You\u0027re right it saves an allocation per buffer. I\u0027m not sure if operator[] is all that slow for std::vector. I think I have a mild preference for std::vector with a TODO to use std::array when it\u0027s available. Not sure about what you mean about \u0027some callgraphs of draws\u0027",
+      "parentUuid": "736d61b3_13fbecb8",
       "range": {
         "startLine": 93,
         "startChar": 4,
