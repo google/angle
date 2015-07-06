@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "534a1d43_55e47ecd",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-07-06T22:21:46Z",
+      "side": 1,
+      "message": "Have you measured the startup time and shown that these lazily-taken case statements actually defer the initialization costs of these static objects?",
+      "range": {
+        "startLine": 925,
+        "startChar": 12,
+        "endLine": 925,
+        "endChar": 18
+      },
+      "revId": "670ef26e0870d5322b240050f84e2f66bc01c8f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "135425e3_739b5ac1",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-07-06T22:21:46Z",
+      "side": 1,
+      "message": "Is the call to the new updateCachedInputLayout cheaper than the previous code calling GetInputLayout and passing it to applyShaders?\n\nIs there a possibility of short-circuiting any of the work if the state of all of the used vertex attributes is the same as the last time the program was used?",
+      "range": {
+        "startLine": 371,
+        "startChar": 26,
+        "endLine": 371,
+        "endChar": 33
+      },
+      "revId": "670ef26e0870d5322b240050f84e2f66bc01c8f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
