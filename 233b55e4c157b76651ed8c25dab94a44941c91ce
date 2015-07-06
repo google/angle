@@ -423,6 +423,30 @@
       "revId": "233b55e4c157b76651ed8c25dab94a44941c91ce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f356b1ec_af32b92b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-06T17:48:44Z",
+      "side": 1,
+      "message": "vector::operator[] adds one dereference that will be in the code executed by glDrawArray and glDrawElements. If you really don\u0027t like plain arrays, I can code an angle::Array so we don\u0027t have to wait for the stl version to be approved for use.",
+      "parentUuid": "334da95a_d127a4ec",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 55
+      },
+      "revId": "233b55e4c157b76651ed8c25dab94a44941c91ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
