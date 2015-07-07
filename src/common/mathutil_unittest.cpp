@@ -142,5 +142,31 @@ TEST(MathUtilTest, packAndUnpackHalf2x16)
     }
 }
 
+// Test the correctness of gl::isNaN function.
+TEST(MathUtilTest, isNaN)
+{
+    EXPECT_TRUE(isNaN(bitCast<float>(0xffu << 23 | 1u)));
+    EXPECT_TRUE(isNaN(bitCast<float>(1u << 31 | 0xffu << 23 | 1u)));
+    EXPECT_TRUE(isNaN(bitCast<float>(1u << 31 | 0xffu << 23 | 0x400000u)));
+    EXPECT_TRUE(isNaN(bitCast<float>(1u << 31 | 0xffu << 23 | 0x7fffffu)));
+    EXPECT_FALSE(isNaN(0.0f));
+    EXPECT_FALSE(isNaN(bitCast<float>(1u << 31 | 0xffu << 23)));
+    EXPECT_FALSE(isNaN(bitCast<float>(0xffu << 23)));
+}
+
+// Test the correctness of gl::isInf function.
+TEST(MathUtilTest, isInf)
+{
+    EXPECT_TRUE(isInf(bitCast<float>(0xffu << 23)));
+    EXPECT_TRUE(isInf(bitCast<float>(1u << 31 | 0xffu << 23)));
+    EXPECT_FALSE(isInf(0.0f));
+    EXPECT_FALSE(isInf(bitCast<float>(0xffu << 23 | 1u)));
+    EXPECT_FALSE(isInf(bitCast<float>(1u << 31 | 0xffu << 23 | 1u)));
+    EXPECT_FALSE(isInf(bitCast<float>(1u << 31 | 0xffu << 23 | 0x400000u)));
+    EXPECT_FALSE(isInf(bitCast<float>(1u << 31 | 0xffu << 23 | 0x7fffffu)));
+    EXPECT_FALSE(isInf(bitCast<float>(0xfeu << 23 | 0x7fffffu)));
+    EXPECT_FALSE(isInf(bitCast<float>(1u << 31 | 0xfeu << 23 | 0x7fffffu)));
+}
+
 }
 

@@ -622,6 +622,24 @@ inline void unpackHalf2x16(uint32_t u, float *f1, float *f2)
     *f2 = float16ToFloat32(mostSignificantBits);
 }
 
+// Returns whether the argument is Not a Number.
+// IEEE 754 single precision NaN representation: Exponent(8 bits) - 255, Mantissa(23 bits) - non-zero.
+inline bool isNaN(float f)
+{
+    // Exponent mask: ((1u << 8) - 1u) << 23 = 0x7f800000u
+    // Mantissa mask: ((1u << 23) - 1u) = 0x7fffffu
+    return ((bitCast<uint32_t>(f) & 0x7f800000u) == 0x7f800000u) && (bitCast<uint32_t>(f) & 0x7fffffu);
+}
+
+// Returns whether the argument is infinity.
+// IEEE 754 single precision infinity representation: Exponent(8 bits) - 255, Mantissa(23 bits) - zero.
+inline bool isInf(float f)
+{
+    // Exponent mask: ((1u << 8) - 1u) << 23 = 0x7f800000u
+    // Mantissa mask: ((1u << 23) - 1u) = 0x7fffffu
+    return ((bitCast<uint32_t>(f) & 0x7f800000u) == 0x7f800000u) && !(bitCast<uint32_t>(f) & 0x7fffffu);
+}
+
 }
 
 namespace rx

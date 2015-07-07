@@ -1698,6 +1698,60 @@ TConstantUnion *TIntermConstantUnion::foldUnaryWithSameReturnType(TOperator op, 
                 "Unary operation not folded into constant");
             return nullptr;
 
+          case EOpIsNan:
+            if (getType().getBasicType() == EbtFloat)
+            {
+                resultArray[i].setBConst(gl::isNaN(operandArray[0].getFConst()));
+                break;
+            }
+            infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+            return nullptr;
+
+          case EOpIsInf:
+            if (getType().getBasicType() == EbtFloat)
+            {
+                resultArray[i].setBConst(gl::isInf(operandArray[0].getFConst()));
+                break;
+            }
+            infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+            return nullptr;
+
+          case EOpFloatBitsToInt:
+            if (getType().getBasicType() == EbtFloat)
+            {
+                resultArray[i].setIConst(gl::bitCast<int32_t>(operandArray[0].getFConst()));
+                break;
+            }
+            infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+            return nullptr;
+
+          case EOpFloatBitsToUint:
+            if (getType().getBasicType() == EbtFloat)
+            {
+                resultArray[i].setUConst(gl::bitCast<uint32_t>(operandArray[0].getFConst()));
+                break;
+            }
+            infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+            return nullptr;
+
+          case EOpIntBitsToFloat:
+            if (getType().getBasicType() == EbtInt)
+            {
+                resultArray[i].setFConst(gl::bitCast<float>(operandArray[0].getIConst()));
+                break;
+            }
+            infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+            return nullptr;
+
+          case EOpUintBitsToFloat:
+            if (getType().getBasicType() == EbtUInt)
+            {
+                resultArray[i].setFConst(gl::bitCast<float>(operandArray[0].getUConst()));
+                break;
+            }
+            infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+            return nullptr;
+
           case EOpExp:
             if (!foldFloatTypeUnary(operandArray[i], &expf, infoSink, &resultArray[i]))
               return nullptr;
