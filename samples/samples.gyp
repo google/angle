@@ -206,5 +206,13 @@
             'includes': [ '../build/common_defines.gypi', ],
             'sources': [ 'tri_fan_microbench/TriFanMicroBench.cpp', ],
         },
+
+        {
+            'target_name': 'window_test',
+            'type': 'executable',
+            'dependencies': [ 'sample_util' ],
+            'includes': [ '../build/common_defines.gypi', ],
+            'sources': [ 'WindowTest/WindowTest.cpp', ],
+        },
     ],
 }
