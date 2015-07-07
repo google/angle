@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d8fb8a32_7ec41109",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-07-07T12:39:03Z",
+      "side": 1,
+      "message": "Still unsigned int here",
+      "range": {
+        "startLine": 551,
+        "startChar": 7,
+        "endLine": 551,
+        "endChar": 19
+      },
+      "revId": "6241a11abda031ac49b402da0e68ee8efaa8eb0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1840c241_7060d088",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 564,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-07-07T12:39:03Z",
+      "side": 1,
+      "message": "Same here and also below.",
+      "range": {
+        "startLine": 564,
+        "startChar": 28,
+        "endLine": 564,
+        "endChar": 40
+      },
+      "revId": "6241a11abda031ac49b402da0e68ee8efaa8eb0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
