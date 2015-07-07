@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "135425e3_2ad953eb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T20:33:22Z",
+      "side": 1,
+      "message": "nit: no \u0027 \u0027",
+      "range": {
+        "startLine": 491,
+        "startChar": 15,
+        "endLine": 491,
+        "endChar": 16
+      },
+      "revId": "c2da95d8f7498a5ac0c10d2f90e726b8d45ac214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "135425e3_aaeb8374",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T20:33:22Z",
+      "side": 1,
+      "message": "make this a local constant at the top, kRunDiscardFrequency",
+      "range": {
+        "startLine": 494,
+        "startChar": 22,
+        "endLine": 494,
+        "endChar": 24
+      },
+      "revId": "c2da95d8f7498a5ac0c10d2f90e726b8d45ac214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f356b1ec_bee02510",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T20:33:22Z",
+      "side": 1,
+      "message": "put this at the top with kDiscardFrequency, kDiscardUsageLimit",
+      "range": {
+        "startLine": 523,
+        "startChar": 4,
+        "endLine": 523,
+        "endChar": 39
+      },
+      "revId": "c2da95d8f7498a5ac0c10d2f90e726b8d45ac214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "534a1d43_e64b062e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T20:33:22Z",
+      "side": 1,
+      "message": "this isn\u0027t really garbage collection so much as discadable memory. I would say discardStaleBuffers would be more accurate.",
+      "range": {
+        "startLine": 66,
+        "startChar": 9,
+        "endLine": 66,
+        "endChar": 14
+      },
+      "revId": "c2da95d8f7498a5ac0c10d2f90e726b8d45ac214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f356b1ec_fe154d77",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3842,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T20:33:22Z",
+      "side": 1,
+      "message": "this seems pretty messy, with all the hard-coded constants and magical values. is this solely to clean up buffers that are sitting in the background not being used? It seems like your \"GC\" in Buffer11 should clean up all buffers that are being used for rendering.",
+      "range": {
+        "startLine": 3823,
+        "startChar": 0,
+        "endLine": 3842,
+        "endChar": 1
+      },
+      "revId": "c2da95d8f7498a5ac0c10d2f90e726b8d45ac214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
