@@ -525,6 +525,40 @@ TEST_F(MalformedShaderTest, AssignFunctionCallToGlobal)
     }
 }
 
+// Global variable initializers need to be constant expressions (ESSL 1.00 section 4.3)
+// Initializing with an assignment to another global should be an error.
+TEST_F(MalformedShaderTest, AssignAssignmentToGlobal)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "float c = 1.0;\n"
+        "float b = (c = 0.0);\n"
+        "void main() {\n"
+        "   gl_FragColor = vec4(b);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Global variable initializers need to be constant expressions (ESSL 1.00 section 4.3)
+// Initializing with incrementing another global should be an error.
+TEST_F(MalformedShaderTest, AssignIncrementToGlobal)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "float c = 1.0;\n"
+        "float b = (c++);\n"
+        "void main() {\n"
+        "   gl_FragColor = vec4(b);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
 // Global variable initializers need to be constant expressions (ESSL 3.00 section 4.3)
 // Initializing with a non-constant global should be an error.
 TEST_F(MalformedShaderTest, AssignNonConstGlobalToGlobal)

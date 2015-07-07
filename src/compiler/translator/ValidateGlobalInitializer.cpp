@@ -18,6 +18,8 @@ class ValidateGlobalInitializerTraverser : public TIntermTraverser
 
     void visitSymbol(TIntermSymbol *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
+    bool visitBinary(Visit visit, TIntermBinary *node) override;
+    bool visitUnary(Visit visit, TIntermUnary *node) override;
 
     bool isValid() const { return mIsValid; }
     bool issueWarning() const { return mIssueWarning; }
@@ -64,6 +66,24 @@ bool ValidateGlobalInitializerTraverser::visitAggregate(Visit visit, TIntermAggr
 {
     // Disallow calls to user-defined functions in global variable initializers.
     if (node->getOp() == EOpFunctionCall && node->isUserDefined())
+    {
+        mIsValid = false;
+    }
+    return true;
+}
+
+bool ValidateGlobalInitializerTraverser::visitBinary(Visit visit, TIntermBinary *node)
+{
+    if (node->isAssignment())
+    {
+        mIsValid = false;
+    }
+    return true;
+}
+
+bool ValidateGlobalInitializerTraverser::visitUnary(Visit visit, TIntermUnary *node)
+{
+    if (node->isAssignment())
     {
         mIsValid = false;
     }
