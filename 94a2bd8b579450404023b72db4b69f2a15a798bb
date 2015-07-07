@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f80dae2c_20155078",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T20:20:08Z",
+      "side": 1,
+      "message": "to make this a little more readable, can you make this a local ptrdiff_t offset?",
+      "range": {
+        "startLine": 372,
+        "startChar": 57,
+        "endLine": 372,
+        "endChar": 110
+      },
+      "revId": "94a2bd8b579450404023b72db4b69f2a15a798bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
