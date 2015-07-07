@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "f80dae2c_bd2ce74e",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-07-07T18:49:38Z",
+      "side": 1,
+      "message": "Actually, static won\u0027t work because we should use current TPoolAllocator, and with static we will use the one that was current when static instance was initialized.\n\nI understand that .c_str() calls look ugly - we can actually make it better by altering TString declaration, but that is outside of the scope of this review.",
+      "parentUuid": "f80dae2c_5d44abff",
+      "range": {
+        "startLine": 34,
+        "startChar": 9,
+        "endLine": 34,
+        "endChar": 15
+      },
+      "revId": "6dd74cefd9dc0c285ba925db70bc476b25609094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "534a1d43_7876d9fc",
         "filename": "src/compiler/translator/SymbolTable.cpp",
         "patchSetId": 1
