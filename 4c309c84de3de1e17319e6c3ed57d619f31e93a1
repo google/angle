@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "58e87a65_025daabd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow_unittest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-07-07T00:55:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f36151bc_f75f403e",
+      "range": {
+        "startLine": 258,
+        "startChar": 28,
+        "endLine": 259,
+        "endChar": 86
+      },
+      "revId": "4c309c84de3de1e17319e6c3ed57d619f31e93a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f305d1c3_5211e88a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow_unittest.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-07-06T14:54:18Z",
       "side": 1,
       "message": "same here",
+      "range": {
+        "startLine": 310,
+        "startChar": 28,
+        "endLine": 311,
+        "endChar": 93
+      },
+      "revId": "4c309c84de3de1e17319e6c3ed57d619f31e93a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58e87a65_e259a6d1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow_unittest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-07-07T00:55:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f305d1c3_5211e88a",
       "range": {
         "startLine": 310,
         "startChar": 28,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d3260d9c_26499684",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-07-07T00:55:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3ba3136_d86fe174",
+      "range": {
+        "startLine": 210,
+        "startChar": 114,
+        "endLine": 210,
+        "endChar": 115
+      },
+      "revId": "4c309c84de3de1e17319e6c3ed57d619f31e93a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d31c4d21_5f4d87bc",
         "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.cpp",
         "patchSetId": 2
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "d3260d9c_46469273",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-07-07T00:55:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d31c4d21_5f4d87bc",
+      "range": {
+        "startLine": 213,
+        "startChar": 81,
+        "endLine": 213,
+        "endChar": 82
+      },
+      "revId": "4c309c84de3de1e17319e6c3ed57d619f31e93a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "33b12958_05758273",
         "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h",
         "patchSetId": 2
@@ -105,6 +201,30 @@
       "writtenOn": "2015-07-06T14:54:18Z",
       "side": 1,
       "message": "nit: can you fix this style",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 9
+      },
+      "revId": "4c309c84de3de1e17319e6c3ed57d619f31e93a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58e87a65_22d30ece",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-07-07T00:55:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "33b12958_05758273",
       "range": {
         "startLine": 91,
         "startChar": 0,
