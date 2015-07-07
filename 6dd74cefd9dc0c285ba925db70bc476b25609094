@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "534a1d43_7b4df3bc",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-07-07T18:43:36Z",
+      "side": 1,
+      "message": "But you can declare a static TString here, so little memory impact, but at the same time avoid all these conversions.",
+      "parentUuid": "f80dae2c_1d0bd32e",
+      "range": {
+        "startLine": 34,
+        "startChar": 9,
+        "endLine": 34,
+        "endChar": 15
+      },
+      "revId": "6dd74cefd9dc0c285ba925db70bc476b25609094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "534a1d43_7876d9fc",
         "filename": "src/compiler/translator/SymbolTable.cpp",
         "patchSetId": 1
