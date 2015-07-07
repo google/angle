@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "736d61b3_28222fdd",
+        "filename": "util/OSWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-07T15:44:34Z",
+      "side": 1,
+      "message": "I am doing this because I don\u0027t want to have an extra space at the end. Even if I was using a stringstream I would have to do that overwriting or introduce some state tracking in the form\nbool wroteSomething \u003d false;\nif (event.Control)\n{\n    if (wroteSomething)\n    {\n        result +\u003d \" \"; // (or \u003c\u003c, whatever)\n    }\n    result +\u003d \"System\";\n    wroteSomething \u003d true;\n}\nwhich is really heavy for what I want to do here.",
+      "parentUuid": "f80dae2c_9ae129c0",
+      "range": {
+        "startLine": 154,
+        "startChar": 8,
+        "endLine": 154,
+        "endChar": 20
+      },
+      "revId": "a0eaad3cee6eb4b14c5dc2de955843900a4bbb90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "135425e3_a4165a04",
         "filename": "util/OSWindow.cpp",
         "patchSetId": 1
