@@ -12,5 +12,13 @@
         ],
       },
     }],
+    ['OS=="linux"', {
+      'variables': {
+        'files': [
+          '<(PRODUCT_DIR)/lib/libEGL.so',
+          '<(PRODUCT_DIR)/lib/libGLESv2.so',
+        ],
+      },
+    }],
   ],
 }
