@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f80dae2c_7a91b5a5",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-07T17:45:35Z",
+      "side": 1,
+      "message": "nit: calls to the default constructor are redundant in initializer lists.",
+      "revId": "feaac23479d0b3cd73b0b7427e2a9c720795b7c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "135425e3_dfefa7ad",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-07T17:45:35Z",
+      "side": 1,
+      "message": "Note: this isn\u0027t strictly equivalent, but I think it might fix a corner case so +1.",
+      "revId": "feaac23479d0b3cd73b0b7427e2a9c720795b7c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
