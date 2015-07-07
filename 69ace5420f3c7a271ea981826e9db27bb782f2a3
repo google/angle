@@ -282,6 +282,24 @@
       "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "135425e3_0a472ff2",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-07-07T20:32:52Z",
+      "side": 1,
+      "message": "Can you provide strings for the following types used with TCache::getType() and missing from buildMangledName()?\n\nEbtBVec\nEbtGenBType\nEbtGenIType\nEbtGenType\nEbtGenUType\nEbtGSampler2D\nEbtGSampler2DArray\nEbtGSampler3D\nEbtGSamplerCube\nEbtGVec4\nEbtIVec\nEbtUVec\nEbtVec\nEbtVoid\n\nI think my hack is good enough though, because previously TType::buildMangledName was not called with those types, so no one actually cares about mangledName being correct in those cases.",
+      "parentUuid": "f356b1ec_6379caec",
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
