@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 //
 
-#include "compiler/translator/Cache.h"
 #include "compiler/translator/InitializeDll.h"
 #include "compiler/translator/InitializeGlobals.h"
 #include "compiler/translator/InitializeParseContext.h"
@@ -25,8 +24,6 @@ bool InitProcess()
         return false;
     }
 
-    TCache::initialize();
-
     return true;
 }
 
@@ -34,5 +31,4 @@ void DetachProcess()
 {
     FreeParseContextIndex();
     FreePoolIndex();
-    TCache::destroy();
 }

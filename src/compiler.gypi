@@ -26,8 +26,6 @@
             'compiler/translator/BuiltInFunctionEmulator.h',
             'compiler/translator/BuiltInFunctionEmulatorGLSL.cpp',
             'compiler/translator/BuiltInFunctionEmulatorGLSL.h',
-            'compiler/translator/Cache.cpp',
-            'compiler/translator/Cache.h',
             'compiler/translator/CallDAG.cpp',
             'compiler/translator/CallDAG.h',
             'compiler/translator/CodeGen.cpp',

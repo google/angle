@@ -87,7 +87,6 @@
 #endif
 
 #include "angle_gl.h"
-#include "compiler/translator/Cache.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/ParseContext.h"
 #include "GLSLANG/ShaderLang.h"
@@ -2604,7 +2603,7 @@ yyreduce:
     {
         if (context->reservedErrorCheck((yylsp[0]), *(yyvsp[0].lex).string))
             context->recover();
-        const TType *type = TCache::getType(EbtVoid, EbpUndefined);
+        const TType *type = new TType(EbtVoid, EbpUndefined);
         TFunction *function = new TFunction((yyvsp[0].lex).string, type);
         (yyval.interm.function) = function;
     }
@@ -2616,7 +2615,7 @@ yyreduce:
     {
         if (context->reservedErrorCheck((yylsp[0]), *(yyvsp[0].lex).string))
             context->recover();
-        const TType *type = TCache::getType(EbtVoid, EbpUndefined);
+        const TType *type = new TType(EbtVoid, EbpUndefined);
         TFunction *function = new TFunction((yyvsp[0].lex).string, type);
         (yyval.interm.function) = function;
     }
