@@ -22,6 +22,30 @@
       "revId": "25a56596846da66372ad59b649529bd8090f4658",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "534a1d43_5b058f44",
+        "filename": "samples/WindowTest/WindowTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-07T16:00:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f356b1ec_98b29985",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "25a56596846da66372ad59b649529bd8090f4658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
