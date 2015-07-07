@@ -300,6 +300,24 @@
       "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f356b1ec_7e023d3f",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T20:37:41Z",
+      "side": 1,
+      "message": "Yeah, it would be more for the security of the ASSERT catching the unwanted values. I honestly don\u0027t recall where this stuff is used, so you can leave this as you had it.",
+      "parentUuid": "135425e3_0a472ff2",
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
