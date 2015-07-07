@@ -125,7 +125,7 @@ class D3D11EmulatedIndexedBufferTest : public ANGLETest
 // into a valid emulated indexed buffer.
 TEST_P(D3D11EmulatedIndexedBufferTest, TestNativeToExpandedUsingGLubyteIndices)
 {
-    rx::SourceIndexData srcData = {mubyteIndices.data(), mubyteIndices.size(), GL_UNSIGNED_BYTE, false};
+    rx::SourceIndexData srcData = {nullptr, mubyteIndices.data(), mubyteIndices.size(), GL_UNSIGNED_BYTE, false};
     emulateAndCompare(&srcData);
 }
 
@@ -133,7 +133,7 @@ TEST_P(D3D11EmulatedIndexedBufferTest, TestNativeToExpandedUsingGLubyteIndices)
 // into a valid emulated indexed buffer.
 TEST_P(D3D11EmulatedIndexedBufferTest, TestNativeToExpandedUsingGLushortIndices)
 {
-    rx::SourceIndexData srcData = {mushortIndices.data(), mushortIndices.size(), GL_UNSIGNED_SHORT, false};
+    rx::SourceIndexData srcData = {nullptr, mushortIndices.data(), mushortIndices.size(), GL_UNSIGNED_SHORT, false };
     emulateAndCompare(&srcData);
 }
 
@@ -141,7 +141,7 @@ TEST_P(D3D11EmulatedIndexedBufferTest, TestNativeToExpandedUsingGLushortIndices)
 // into a valid emulated indexed buffer.
 TEST_P(D3D11EmulatedIndexedBufferTest, TestNativeToExpandedUsingGLuintIndices)
 {
-    rx::SourceIndexData srcData = {muintIndices.data(), muintIndices.size(), GL_UNSIGNED_INT, false};
+    rx::SourceIndexData srcData = {nullptr, muintIndices.data(), muintIndices.size(), GL_UNSIGNED_INT, false };
     emulateAndCompare(&srcData);
 }
 
@@ -153,7 +153,7 @@ TEST_P(D3D11EmulatedIndexedBufferTest, TestSourceBufferRemainsUntouchedAfterExpa
     cleanSourceBuffer->copySubData(mSourceBuffer, 0, 0, mSourceBuffer->getSize());
 
     // Do a basic exanded and compare test.
-    rx::SourceIndexData srcData = {muintIndices.data(), muintIndices.size(), GL_UNSIGNED_INT, false};
+    rx::SourceIndexData srcData = {nullptr, muintIndices.data(), muintIndices.size(), GL_UNSIGNED_INT, false };
     emulateAndCompare(&srcData);
 
     const uint8_t *sourceBufferMem = nullptr;

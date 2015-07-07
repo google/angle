@@ -133,9 +133,13 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType, GLsizei count, gl::
     const gl::Type &srcTypeInfo = gl::GetTypeInfo(srcType);
     const gl::Type &dstTypeInfo = gl::GetTypeInfo(dstType);
 
+    BufferD3D *buffer = glBuffer ? GetImplAs<BufferD3D>(glBuffer) : nullptr;
+
     translated->indexType = dstType;
     if (sourceData)
     {
+        sourceData->srcBuffer = buffer;
+        sourceData->srcIndices = indices;
         sourceData->srcIndexType = srcType;
         sourceData->srcCount = count;
     }
@@ -144,16 +148,10 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType, GLsizei count, gl::
     if (glBuffer == nullptr)
     {
         translated->storage = nullptr;
-        if (sourceData)
-        {
-            sourceData->srcIndices = indices;
-        }
         return streamIndexData(indices, count, srcType, dstType, translated);
     }
 
     // Case 2: the indices are already in a buffer
-    BufferD3D *buffer = GetImplAs<BufferD3D>(glBuffer);
-
     unsigned int offset = static_cast<unsigned int>(reinterpret_cast<uintptr_t>(indices));
     ASSERT(srcTypeInfo.bytes * static_cast<unsigned int>(count) + offset <= buffer->getSize());
 
@@ -164,21 +162,6 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType, GLsizei count, gl::
       case GL_UNSIGNED_SHORT: offsetAligned = (offset % sizeof(GLushort) == 0); break;
       case GL_UNSIGNED_INT:   offsetAligned = (offset % sizeof(GLuint) == 0);   break;
       default: UNREACHABLE(); offsetAligned = false;
-    }
-
-    // TODO(cwallez) avoid doing this in all cases as it prevents optimizations
-    // of the sysmem buffer copy
-    const uint8_t *bufferData = nullptr;
-    gl::Error error = buffer->getData(&bufferData);
-    if (error.isError())
-    {
-        return error;
-    }
-    ASSERT(bufferData != nullptr);
-
-    if (sourceData)
-    {
-        sourceData->srcIndices = bufferData + offset;
     }
 
     // Case 2a: the buffer can be used directly
@@ -213,7 +196,15 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType, GLsizei count, gl::
 
     if (staticBuffer == nullptr || !offsetAligned)
     {
-        gl::Error error = streamIndexData(bufferData, count, srcType, dstType, translated);
+        const uint8_t *bufferData = nullptr;
+        gl::Error error = buffer->getData(&bufferData);
+        if (error.isError())
+        {
+            return error;
+        }
+        ASSERT(bufferData != nullptr);
+
+        error = streamIndexData(bufferData, count, srcType, dstType, translated);
         if (error.isError())
         {
             return error;
@@ -223,9 +214,17 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType, GLsizei count, gl::
     {
         if (!staticBufferInitialized)
         {
+            const uint8_t *bufferData = nullptr;
+            gl::Error error = buffer->getData(&bufferData);
+            if (error.isError())
+            {
+                return error;
+            }
+            ASSERT(bufferData != nullptr);
+
             unsigned int convertCount = buffer->getSize() >> srcTypeInfo.bytesShift;
-            gl::Error error = StreamInIndexBuffer(staticBuffer, bufferData, convertCount,
-                                                  srcType, dstType, nullptr);
+            error = StreamInIndexBuffer(staticBuffer, bufferData, convertCount,
+                                        srcType, dstType, nullptr);
             if (error.isError())
             {
                 return error;

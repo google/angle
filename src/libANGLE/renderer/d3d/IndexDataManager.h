@@ -50,6 +50,7 @@ struct TranslatedIndexData
 
 struct SourceIndexData
 {
+    BufferD3D *srcBuffer;
     const GLvoid *srcIndices;
     unsigned int srcCount;
     GLenum srcIndexType;
