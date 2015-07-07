@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "f356b1ec_d816e1d3",
+        "filename": "util/OSWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-07T15:50:29Z",
+      "side": 1,
+      "message": "You don\u0027t get spaces between the different modifiers.",
+      "parentUuid": "534a1d43_fb156377",
+      "range": {
+        "startLine": 154,
+        "startChar": 8,
+        "endLine": 154,
+        "endChar": 20
+      },
+      "revId": "a0eaad3cee6eb4b14c5dc2de955843900a4bbb90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "135425e3_a4165a04",
         "filename": "util/OSWindow.cpp",
         "patchSetId": 1
