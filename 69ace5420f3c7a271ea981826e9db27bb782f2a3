@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f356b1ec_1856a952",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T17:13:59Z",
+      "side": 1,
+      "message": "Right, SGTM.",
+      "parentUuid": "93201584_27a194f7",
+      "range": {
+        "startLine": 72,
+        "startChar": 12,
+        "endLine": 72,
+        "endChar": 40
+      },
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "93201584_47505054",
         "filename": "src/compiler/translator/PoolAlloc.h",
         "patchSetId": 6
@@ -89,6 +113,47 @@
     },
     {
       "key": {
+        "uuid": "f80dae2c_ba42adbd",
+        "filename": "src/compiler/translator/PoolAlloc.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T17:13:59Z",
+      "side": 1,
+      "message": "I\u0027m pretty fuzzy on what\u0027s going on here. What\u0027s a pool_allolcator vs a TPoolAllocator? Does removing the stored variable change any behaviour?",
+      "parentUuid": "93201584_47505054",
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "736d61b3_280b0fdf",
+        "filename": "src/compiler/translator/PoolAlloc.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T17:13:59Z",
+      "side": 1,
+      "message": "do we even need these anymore? where do we use them?",
+      "range": {
+        "startLine": 282,
+        "startChar": 0,
+        "endLine": 283,
+        "endChar": 70
+      },
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3260d9c_8616ca04",
         "filename": "src/compiler/translator/Types.cpp",
         "patchSetId": 6
@@ -100,6 +165,24 @@
       "writtenOn": "2015-07-07T16:58:49Z",
       "side": 1,
       "message": "Have you noted this change? Without this debug build asserts, because TType::realize() indirectly calls this function for the mentioned types. I wasn\u0027t sure what was the right thing to do, and this change was the simplest I could come up with (and besides it mimics what happens in release).",
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "135425e3_bf3ca3f2",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T17:13:59Z",
+      "side": 1,
+      "message": "Which values hit the default case now? I\u0027m actually not sure.",
+      "parentUuid": "d3260d9c_8616ca04",
       "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
