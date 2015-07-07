@@ -149,6 +149,24 @@
     },
     {
       "key": {
+        "uuid": "736d61b3_df56ced4",
+        "filename": "src/compiler/translator/PoolAlloc.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T20:15:35Z",
+      "side": 1,
+      "message": "It we never used the local variable for anything significant LGTM",
+      "parentUuid": "d3260d9c_6612ae0d",
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "736d61b3_280b0fdf",
         "filename": "src/compiler/translator/PoolAlloc.h",
         "patchSetId": 6
@@ -243,6 +261,24 @@
       "side": 1,
       "message": "For me it asserted on EbtVoid and EbtGVec4. But most of the types are covered in that switch, except for non-types and EbtVoid, EbtAddress.",
       "parentUuid": "135425e3_bf3ca3f2",
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f356b1ec_6379caec",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T20:15:35Z",
+      "side": 1,
+      "message": "I\u0027d probably just put in some strings for EbtVoid and GVec. They seem simple enough. Kind of annoying that\u0027s a side effect of this change.",
+      "parentUuid": "731ba15b_e625c06d",
       "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
