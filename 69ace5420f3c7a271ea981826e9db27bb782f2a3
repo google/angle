@@ -45,6 +45,64 @@
       "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93201584_27a194f7",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-07-07T16:58:49Z",
+      "side": 1,
+      "message": "Instead of padding I set \u0027value\u0027 to 0 before setting components in TypeKey constructor, so any unused space is initialized to 0. I feel like having to manually calculate padding negates advantage union gives us.",
+      "parentUuid": "f80dae2c_ba198d81",
+      "range": {
+        "startLine": 72,
+        "startChar": 12,
+        "endLine": 72,
+        "endChar": 40
+      },
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93201584_47505054",
+        "filename": "src/compiler/translator/PoolAlloc.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-07-07T16:58:49Z",
+      "side": 1,
+      "message": "Change in pool_allocator is also something I found in the last minute. Without this change pool_allocator was copying TPoolAllocator it was created with, and that was causing cache allocator to spread through copies. For example, copying cached TString also copied cache allocator. This is bad because cache allocator is not pushed/poped as compiler ones, so essentially without this change every time we copy cached string (getName() from cached TType for example) we leak memory.\n\nBut there is actually no point in storing TPoolAllocator inside pool_allocator anyway, since by design we don\u0027t deallocate, and compiler\u0027s allocator is the one global allocator we use. Also, \u0027operator new\u0027 in some types rely on the global allocator already.",
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3260d9c_8616ca04",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-07-07T16:58:49Z",
+      "side": 1,
+      "message": "Have you noted this change? Without this debug build asserts, because TType::realize() indirectly calls this function for the mentioned types. I wasn\u0027t sure what was the right thing to do, and this change was the simplest I could come up with (and besides it mimics what happens in release).",
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
