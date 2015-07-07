@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f356b1ec_f83c8581",
+        "filename": "src/compiler/translator/Cache.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T14:07:31Z",
+      "side": 1,
+      "message": "nit: alignment",
+      "range": {
+        "startLine": 47,
+        "startChar": 18,
+        "endLine": 47,
+        "endChar": 20
+      },
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f80dae2c_ba198d81",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-07T14:07:31Z",
+      "side": 1,
+      "message": "I\u0027m not 100% sure if it\u0027s necessary, but it might be wise to add padding, and zero-initialize the padding at the end of the struct. In some implementation it might be junk, and mess up the comparator.",
+      "range": {
+        "startLine": 72,
+        "startChar": 12,
+        "endLine": 72,
+        "endChar": 40
+      },
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
