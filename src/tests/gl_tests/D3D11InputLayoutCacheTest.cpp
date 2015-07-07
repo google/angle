@@ -22,6 +22,13 @@ namespace
 class D3D11InputLayoutCacheTest : public ANGLETest
 {
   protected:
+    D3D11InputLayoutCacheTest()
+    {
+        setWindowWidth(64);
+        setWindowHeight(64);
+        setConfigRedBits(8);
+    }
+
     GLuint makeProgramWithAttribCount(unsigned int attribCount)
     {
         std::stringstream strstr;
