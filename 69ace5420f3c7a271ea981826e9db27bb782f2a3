@@ -131,6 +131,24 @@
     },
     {
       "key": {
+        "uuid": "d3260d9c_6612ae0d",
+        "filename": "src/compiler/translator/PoolAlloc.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-07-07T17:35:38Z",
+      "side": 1,
+      "message": "pool_allocator is std::allocator-compatible allocator for use in std containers. For example, TString is std::basic_string\u003cchar, pool_allocator\u003cchar\u003e\u003e. pool_allocator makes sure std containers allocate from TPoolAllocator instead of the heap. All containers store allocator by value and copy it when they are copied.\n\nPreviously pool_allocator was saving global TPoolAllocator pointer in the constructor, and was copying it in the copy-constructor and the assignment operator. All allocations done by pool_allocator were routed to the saved TPoolAllocator pointer. That was causing issues with cached objects which live in their own \u0027cache\u0027 allocator, because when those objects were copied they were also copying cache allocator. So we ended up with TStrings which were using cache allocator outside of TCache class.\n\nHowever, pool_allocator doesn\u0027t actually need to store TPoolAllocator pointer. It should just use current global allocator, as \u0027operator new\u0027 in several types does (see POOL_ALLOCATOR_NEW_DELETE).",
+      "parentUuid": "f80dae2c_ba42adbd",
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "736d61b3_280b0fdf",
         "filename": "src/compiler/translator/PoolAlloc.h",
         "patchSetId": 6
@@ -142,6 +160,30 @@
       "writtenOn": "2015-07-07T17:13:59Z",
       "side": 1,
       "message": "do we even need these anymore? where do we use them?",
+      "range": {
+        "startLine": 282,
+        "startChar": 0,
+        "endLine": 283,
+        "endChar": 70
+      },
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93201584_ea2ca3d3",
+        "filename": "src/compiler/translator/PoolAlloc.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-07-07T17:35:38Z",
+      "side": 1,
+      "message": "Yes, they are actually required. For example std::string in libc++ uses operator !\u003d.",
+      "parentUuid": "736d61b3_280b0fdf",
       "range": {
         "startLine": 282,
         "startChar": 0,
@@ -183,6 +225,24 @@
       "side": 1,
       "message": "Which values hit the default case now? I\u0027m actually not sure.",
       "parentUuid": "d3260d9c_8616ca04",
+      "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "731ba15b_e625c06d",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-07-07T17:35:38Z",
+      "side": 1,
+      "message": "For me it asserted on EbtVoid and EbtGVec4. But most of the types are covered in that switch, except for non-types and EbtVoid, EbtAddress.",
+      "parentUuid": "135425e3_bf3ca3f2",
       "revId": "69ace5420f3c7a271ea981826e9db27bb782f2a3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
