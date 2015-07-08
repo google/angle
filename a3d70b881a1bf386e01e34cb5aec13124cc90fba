@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "534a1d43_595914d1",
+        "filename": "src/tests/gl_tests/D3D11InputLayoutCacheTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-08T15:17:52Z",
+      "side": 1,
+      "message": "Unless the test only needs the red channel to have 8 bits, we should probably add all the needed channels here to be future-proof.",
+      "range": {
+        "startLine": 29,
+        "startChar": 8,
+        "endLine": 29,
+        "endChar": 28
+      },
+      "revId": "a3d70b881a1bf386e01e34cb5aec13124cc90fba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
