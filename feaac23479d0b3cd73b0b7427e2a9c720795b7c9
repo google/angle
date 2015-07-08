@@ -69,6 +69,24 @@
       "revId": "feaac23479d0b3cd73b0b7427e2a9c720795b7c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "135425e3_c1cee558",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-08T18:11:36Z",
+      "side": 1,
+      "message": "If we were using the streaming buffer, that call would still set the buffer id of the applied element array, which is not what want. The combination of this with how getAppliedElementArrayBufferID() fixes it, if it ever happened.",
+      "parentUuid": "534a1d43_39461025",
+      "revId": "feaac23479d0b3cd73b0b7427e2a9c720795b7c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
