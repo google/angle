@@ -49,6 +49,29 @@
     },
     {
       "key": {
+        "uuid": "f80dae2c_ace157bf",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-08T14:36:24Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s a good idea to have the D3D-specific limitations stored at the GL level because we end up doing extra validation for all renderers instead of targeting the specific ones and push all the platform-specific issues to the top level.  I would prefer to keep the GL layer free of as much platform-specifics as possible.\n\nIt would be fine to keep this in RendererD3D and perform the extra validation steps in the RendererD3D::draw calls.  This is the one situation where it is valid to return non-OOM from renderer methods, FramebufferD3D already does this to indicate that it is not complete when the depth and stencil buffers are separate.",
+      "range": {
+        "startLine": 228,
+        "startChar": 7,
+        "endLine": 228,
+        "endChar": 18
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f305d1c3_eb0bf92c",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 2
