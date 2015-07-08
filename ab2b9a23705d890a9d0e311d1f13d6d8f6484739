@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f356b1ec_dba7b6c5",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-08T15:15:55Z",
+      "side": 0,
+      "message": "We still need this event to be able to deal with re-used GL buffer IDs.  This was leading to crashes in DEQP which has a lot of buffer churn.",
+      "range": {
+        "startLine": 78,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 5
+      },
+      "revId": "ab2b9a23705d890a9d0e311d1f13d6d8f6484739",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

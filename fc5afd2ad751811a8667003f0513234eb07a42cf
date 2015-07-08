@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f80dae2c_4c7bdb70",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-08T15:15:55Z",
+      "side": 1,
+      "message": "Can we just return the binding pointer here instead?",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 90
+      },
+      "revId": "fc5afd2ad751811a8667003f0513234eb07a42cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "135425e3_ab8b82f1",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-08T15:15:55Z",
+      "side": 1,
+      "message": "I don\u0027t see this implemented anywhere.",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 66,
+        "endChar": 51
+      },
+      "revId": "fc5afd2ad751811a8667003f0513234eb07a42cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "736d61b3_dfb24186",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-08T15:15:55Z",
+      "side": 1,
+      "message": "nit: size_t?",
+      "range": {
+        "startLine": 78,
+        "startChar": 9,
+        "endLine": 78,
+        "endChar": 20
+      },
+      "revId": "fc5afd2ad751811a8667003f0513234eb07a42cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f80dae2c_4c74fb78",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-08T15:15:55Z",
+      "side": 1,
+      "message": "This can\u0027t be changed to a binding pointer.  Sometimes a local streaming buffer is applied instead of a gl::Buffer.",
+      "range": {
+        "startLine": 55,
+        "startChar": 4,
+        "endLine": 55,
+        "endChar": 66
+      },
+      "revId": "fc5afd2ad751811a8667003f0513234eb07a42cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
