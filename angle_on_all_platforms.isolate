@@ -2,16 +2,18 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-# This isolate expresses the Chromium project's default runtime
-# dependencies.
+# This isolate expresses ANGLE's runtime dependencies on all platforms
+# on which it can currently compile.
 {
+  'includes': [
+    'angle.isolate',
+  ],
   'conditions': [
-    ['OS=="win"', {
+    ['OS=="linux"', {
       'variables': {
         'files': [
-          '<(PRODUCT_DIR)/d3dcompiler_47.dll',
-          '<(PRODUCT_DIR)/libEGL.dll',
-          '<(PRODUCT_DIR)/libGLESv2.dll',
+          '<(PRODUCT_DIR)/lib/libEGL.so',
+          '<(PRODUCT_DIR)/lib/libGLESv2.so',
         ],
       },
     }],
