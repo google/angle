@@ -22,6 +22,30 @@
       "revId": "a3d70b881a1bf386e01e34cb5aec13124cc90fba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f356b1ec_dbfa566e",
+        "filename": "src/tests/gl_tests/D3D11InputLayoutCacheTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-08T15:52:33Z",
+      "side": 1,
+      "message": "Correct, the test only needs the red channel to have 8 bits.",
+      "parentUuid": "534a1d43_595914d1",
+      "range": {
+        "startLine": 29,
+        "startChar": 8,
+        "endLine": 29,
+        "endChar": 28
+      },
+      "revId": "a3d70b881a1bf386e01e34cb5aec13124cc90fba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
