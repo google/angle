@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "135425e3_9c9e0267",
+        "filename": "src/tests/compiler_tests/TypeTracking_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-08T18:51:26Z",
+      "side": 1,
+      "message": "we normally ask for a comment before each test, but since this file is already uncommented and the test is obvious LGTM",
+      "range": {
+        "startLine": 127,
+        "startChar": 0,
+        "endLine": 127,
+        "endChar": 6
+      },
+      "revId": "9e4bc8fadde2989d9dae561703cd0185ddec81b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
