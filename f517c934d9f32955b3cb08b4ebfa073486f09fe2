@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b81fb653_f792735d",
+        "filename": "angle_on_all_platforms.isolate",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000295
+      },
+      "writtenOn": "2015-07-08T23:41:08Z",
+      "side": 1,
+      "message": "do you need \u0026\u0026 use_x11\u003d1 \u0026\u0026 chromeos\u003d0, or does it not matter for angle itself, only the test?",
+      "revId": "f517c934d9f32955b3cb08b4ebfa073486f09fe2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
