@@ -559,6 +559,23 @@ TEST_F(MalformedShaderTest, AssignIncrementToGlobal)
     }
 }
 
+// Global variable initializers need to be constant expressions (ESSL 1.00 section 4.3)
+// Initializing with a texture lookup function call should be an error.
+TEST_F(MalformedShaderTest, AssignTexture2DToGlobal)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform mediump sampler2D s;\n"
+        "float b = texture2D(s, vec2(0.5, 0.5)).x;\n"
+        "void main() {\n"
+        "   gl_FragColor = vec4(b);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
 // Global variable initializers need to be constant expressions (ESSL 3.00 section 4.3)
 // Initializing with a non-constant global should be an error.
 TEST_F(MalformedShaderTest, AssignNonConstGlobalToGlobal)

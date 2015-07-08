@@ -64,8 +64,9 @@ void ValidateGlobalInitializerTraverser::visitSymbol(TIntermSymbol *node)
 
 bool ValidateGlobalInitializerTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
 {
-    // Disallow calls to user-defined functions in global variable initializers.
-    if (node->getOp() == EOpFunctionCall && node->isUserDefined())
+    // Disallow calls to user-defined functions and texture lookup functions in global variable initializers.
+    // This is done simply by disabling all function calls - built-in math functions don't use EOpFunctionCall.
+    if (node->getOp() == EOpFunctionCall)
     {
         mIsValid = false;
     }
