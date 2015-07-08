@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "534a1d43_1c8a1a6b",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-08T18:01:09Z",
+      "side": 1,
+      "message": "How about we go with this design for now and if the extra one or two if statements per draw call become a concern we can push it down to D3D after the fact? This design is clean, and lets us contain all the validation in one place. Regardless on the namespace, it makes sense to know about Limitations for a Renderer at the top level of our code, if we\u0027re asking it to perform certain calls. Also if we want to skip validation entirely on certain platforms it becomes much nicer this way.\nI advise we accept this change as it makes our lives easier as well with the stencil mask stuff.",
+      "parentUuid": "f80dae2c_ace157bf",
+      "range": {
+        "startLine": 228,
+        "startChar": 7,
+        "endLine": 228,
+        "endChar": 18
+      },
+      "revId": "3df030d85e2bb7e0cdf48d87a5facc3a6da31029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f305d1c3_eb0bf92c",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 2
