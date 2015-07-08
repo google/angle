@@ -71,6 +71,23 @@
     },
     {
       "key": {
+        "uuid": "135425e3_217fb15d",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-08T18:11:36Z",
+      "side": 1,
+      "message": "The place where we could confuse a buffer with another that used the same ID is here. Since the class doesn\u0027t get notified of all the changes anymore, I\u0027m not sure how we could detect it.\nSomething like https://chromium-review.googlesource.com/#/c/276292/ could work but it is heavier.",
+      "revId": "fc5afd2ad751811a8667003f0513234eb07a42cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f80dae2c_4c74fb78",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.h",
         "patchSetId": 2
