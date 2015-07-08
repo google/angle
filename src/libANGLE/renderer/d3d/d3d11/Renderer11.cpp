@@ -560,7 +560,7 @@ egl::Error Renderer11::initialize()
                 D3D11_MESSAGE_ID_DEVICE_DRAW_RENDERTARGETVIEW_NOT_SET
             };
 
-            D3D11_INFO_QUEUE_FILTER filter = { 0 };
+            D3D11_INFO_QUEUE_FILTER filter = {};
             filter.DenyList.NumIDs = ArraySize(hideMessages);
             filter.DenyList.pIDList = hideMessages;
 
