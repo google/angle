@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f356b1ec_8e75eea8",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-08T19:24:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f80dae2c_4c7bdb70",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 90
+      },
+      "revId": "fc5afd2ad751811a8667003f0513234eb07a42cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "135425e3_ab8b82f1",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-07-08T15:15:55Z",
       "side": 1,
       "message": "I don\u0027t see this implemented anywhere.",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 66,
+        "endChar": 51
+      },
+      "revId": "fc5afd2ad751811a8667003f0513234eb07a42cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "534a1d43_dcd332fc",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-08T19:24:56Z",
+      "side": 1,
+      "message": "Whoops, done.",
+      "parentUuid": "135425e3_ab8b82f1",
       "range": {
         "startLine": 66,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "f356b1ec_db941697",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-08T19:24:56Z",
+      "side": 1,
+      "message": "Changed a lot more stuff to size_t, hopefully no warnings. \n(Tried in Debug 32-bit)",
+      "parentUuid": "736d61b3_dfb24186",
+      "range": {
+        "startLine": 78,
+        "startChar": 9,
+        "endLine": 78,
+        "endChar": 20
+      },
+      "revId": "fc5afd2ad751811a8667003f0513234eb07a42cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "135425e3_217fb15d",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 2
@@ -88,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "534a1d43_12c4c183",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-08T19:24:56Z",
+      "side": 1,
+      "message": "OK, I think I might understand. We might need serials in that case, or direct notification.\n(allocate 4 -\u003e apply 4 -\u003e delete 4 -\u003e re-allocate 4 -\u003e 4 still bound, but different. the same can happen with direct pointer values)\n\nI think serials would help as they would allow us to preserve the deferred update paradigm. I\u0027ll have to think of a test for this.",
+      "parentUuid": "135425e3_217fb15d",
+      "revId": "fc5afd2ad751811a8667003f0513234eb07a42cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f80dae2c_4c74fb78",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.h",
         "patchSetId": 2
@@ -99,6 +189,30 @@
       "writtenOn": "2015-07-08T15:15:55Z",
       "side": 1,
       "message": "This can\u0027t be changed to a binding pointer.  Sometimes a local streaming buffer is applied instead of a gl::Buffer.",
+      "range": {
+        "startLine": 55,
+        "startChar": 4,
+        "endLine": 55,
+        "endChar": 66
+      },
+      "revId": "fc5afd2ad751811a8667003f0513234eb07a42cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "534a1d43_594594c5",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-08T19:24:56Z",
+      "side": 1,
+      "message": "Well, the local streaming buffer is applied \"iff\" the bindingpointer is nullptr. So I use the nullptr check. Tested with the WebGL tests with the GL back-end you mentioned as failing on your fixing CL.",
+      "parentUuid": "f80dae2c_4c74fb78",
       "range": {
         "startLine": 55,
         "startChar": 4,

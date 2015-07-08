@@ -22,6 +22,30 @@
       "revId": "ab2b9a23705d890a9d0e311d1f13d6d8f6484739",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "736d61b3_6ec42085",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-08T19:24:56Z",
+      "side": 0,
+      "message": "Hrm. That\u0027s unfortunate. How to repro the dEQP crashes? Maybe it\u0027s fixed for the same reason as above?\n\nI ran the dEQP-GLES2 tests several times, I saw one flaky crash in dEQP-GLES2.functional.state_query.integers.element_array_buffer_binding_getboolean - which is suspicious, otherwise I saw no crashes throughout 3-4 runs of the full test suite. We should figure out a repro case for this.",
+      "parentUuid": "f356b1ec_dba7b6c5",
+      "range": {
+        "startLine": 78,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 5
+      },
+      "revId": "ab2b9a23705d890a9d0e311d1f13d6d8f6484739",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
