@@ -217,6 +217,30 @@
     },
     {
       "key": {
+        "uuid": "736d61b3_f1b491bc",
+        "filename": "util/OSWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-08T17:58:51Z",
+      "side": 1,
+      "message": "Ah ^^, I don\u0027t feel strongly about the spaces so I\u0027ll commit as is.",
+      "parentUuid": "736d61b3_b17bf99d",
+      "range": {
+        "startLine": 154,
+        "startChar": 8,
+        "endLine": 154,
+        "endChar": 20
+      },
+      "revId": "a0eaad3cee6eb4b14c5dc2de955843900a4bbb90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "135425e3_a4165a04",
         "filename": "util/OSWindow.cpp",
         "patchSetId": 1
