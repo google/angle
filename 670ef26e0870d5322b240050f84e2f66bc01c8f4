@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "736d61b3_7ac69b8c",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-08T15:59:15Z",
+      "side": 1,
+      "message": "I think in any case you would want to make a copy, you should use a pointer or reference to the returned value from the query, since they\u0027re immutable and static (essentially constexpr)",
+      "parentUuid": "534a1d43_d94264f3",
+      "range": {
+        "startLine": 176,
+        "startChar": 22,
+        "endLine": 176,
+        "endChar": 40
+      },
+      "revId": "670ef26e0870d5322b240050f84e2f66bc01c8f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f356b1ec_5b62e60c",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 8
@@ -95,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "135425e3_6b451ac6",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2053,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-08T15:59:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f356b1ec_5b62e60c",
+      "range": {
+        "startLine": 2053,
+        "startChar": 16,
+        "endLine": 2053,
+        "endChar": 72
+      },
+      "revId": "670ef26e0870d5322b240050f84e2f66bc01c8f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f80dae2c_2ca78798",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
         "patchSetId": 8
@@ -106,6 +154,30 @@
       "writtenOn": "2015-07-08T14:50:30Z",
       "side": 1,
       "message": "nit: rename to signatureOut to match implementation.",
+      "range": {
+        "startLine": 150,
+        "startChar": 44,
+        "endLine": 150,
+        "endChar": 53
+      },
+      "revId": "670ef26e0870d5322b240050f84e2f66bc01c8f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "135425e3_4b4856e1",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-08T15:59:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f80dae2c_2ca78798",
       "range": {
         "startLine": 150,
         "startChar": 44,
