@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f8f4ce42_05ac9676",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-08T20:23:49Z",
+      "side": 1,
+      "message": "wouldn\u0027t there be the same potential bug with these gl::VertexAttributes?",
+      "range": {
+        "startLine": 56,
+        "startChar": 28,
+        "endLine": 56,
+        "endChar": 43
+      },
+      "revId": "ffa9fd083a11983a84ae15f06b08839236bc8e7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
