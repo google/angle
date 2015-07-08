@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d8fb8a32_41017475",
+        "filename": "src/common/mathutil_unittest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-07-08T12:57:45Z",
+      "side": 1,
+      "message": "I\u0027d like to see a few more corner cases here, like the largest possible non-Inf number and its negative counterpart.",
+      "revId": "ff7859d55df0574d51f94e255bf1e1e2425c87e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f8f4ce42_22c1d0c5",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-07-08T12:57:45Z",
+      "side": 1,
+      "message": "These new operations don\u0027t actually have a different number of components than the operand type. I think they\u0027d be a better fit to the other unary folding function.",
+      "revId": "ff7859d55df0574d51f94e255bf1e1e2425c87e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
