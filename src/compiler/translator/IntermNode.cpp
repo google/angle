@@ -1827,6 +1827,18 @@ TConstantUnion *TIntermConstantUnion::foldUnaryWithSameReturnType(TOperator op, 
             infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
             return nullptr;
 
+          case EOpDFdx:
+          case EOpDFdy:
+          case EOpFwidth:
+            if (getType().getBasicType() == EbtFloat)
+            {
+                // Derivatives of constant arguments should be 0.
+                resultArray[i].setFConst(0.0f);
+                break;
+            }
+            infoSink.info.message(EPrefixInternalError, getLine(), "Unary operation not folded into constant");
+            return nullptr;
+
           default:
             return nullptr;
         }
