@@ -49,6 +49,75 @@
     },
     {
       "key": {
+        "uuid": "534a1d43_d94264f3",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-08T14:50:30Z",
+      "side": 1,
+      "message": "This is here as a sanity check? It may be useful to copy them eventually, we could cache the struct in the attribute when it is set instead of looking it up often.",
+      "range": {
+        "startLine": 176,
+        "startChar": 22,
+        "endLine": 176,
+        "endChar": 40
+      },
+      "revId": "670ef26e0870d5322b240050f84e2f66bc01c8f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f356b1ec_5b62e60c",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2053,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-08T14:50:30Z",
+      "side": 1,
+      "message": "nit: this formatting seems off.",
+      "range": {
+        "startLine": 2053,
+        "startChar": 16,
+        "endLine": 2053,
+        "endChar": 72
+      },
+      "revId": "670ef26e0870d5322b240050f84e2f66bc01c8f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f80dae2c_2ca78798",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-08T14:50:30Z",
+      "side": 1,
+      "message": "nit: rename to signatureOut to match implementation.",
+      "range": {
+        "startLine": 150,
+        "startChar": 44,
+        "endLine": 150,
+        "endChar": 53
+      },
+      "revId": "670ef26e0870d5322b240050f84e2f66bc01c8f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "135425e3_739b5ac1",
         "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
         "patchSetId": 8
