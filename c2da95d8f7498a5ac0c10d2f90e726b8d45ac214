@@ -48,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "135425e3_eb9d8a42",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-08T15:00:03Z",
+      "side": 1,
+      "message": "Why iterate backwards here? The loop always covers the same range.",
+      "range": {
+        "startLine": 508,
+        "startChar": 4,
+        "endLine": 508,
+        "endChar": 54
+      },
+      "revId": "c2da95d8f7498a5ac0c10d2f90e726b8d45ac214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f356b1ec_bee02510",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 5
@@ -110,6 +133,53 @@
         "startChar": 0,
         "endLine": 3842,
         "endChar": 1
+      },
+      "revId": "c2da95d8f7498a5ac0c10d2f90e726b8d45ac214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "135425e3_abb462bb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3842,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-08T15:00:03Z",
+      "side": 1,
+      "message": "We do want to be able to clean up buffers that aren\u0027t being used anymore.  Unreferenced buffers would keep any extra copies of their data forever otherwise.\n\nAgreed that this needs to be cleaned up, the constants should have names and descriptions.",
+      "parentUuid": "f356b1ec_fe154d77",
+      "range": {
+        "startLine": 3823,
+        "startChar": 0,
+        "endLine": 3842,
+        "endChar": 1
+      },
+      "revId": "c2da95d8f7498a5ac0c10d2f90e726b8d45ac214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "135425e3_cb7fe65d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-08T15:00:03Z",
+      "side": 1,
+      "message": "It looks like this is not called from anywhere.",
+      "range": {
+        "startLine": 273,
+        "startChar": 4,
+        "endLine": 273,
+        "endChar": 49
       },
       "revId": "c2da95d8f7498a5ac0c10d2f90e726b8d45ac214",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
