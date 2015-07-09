@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58115a41_bade26ce",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-09T15:34:26Z",
+      "side": 1,
+      "message": "also fixed the placement here, should be below the addAttributeData call.",
+      "range": {
+        "startLine": 200,
+        "startChar": 12,
+        "endLine": 201,
+        "endChar": 43
+      },
+      "revId": "a6027fa6a59e5e3fa80a0bf37b9b41dea89a866c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b81fb653_e3199180",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-09T15:34:26Z",
+      "side": 1,
+      "message": "packed the attribute into an enum type, so I no longer need the padding variable.",
+      "range": {
+        "startLine": 87,
+        "startChar": 12,
+        "endLine": 87,
+        "endChar": 72
+      },
+      "revId": "a6027fa6a59e5e3fa80a0bf37b9b41dea89a866c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
