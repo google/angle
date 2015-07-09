@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b3219987_743fb640",
+        "filename": "src/compiler/translator/Cache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1129096
+      },
+      "writtenOn": "2015-07-09T17:05:02Z",
+      "side": 1,
+      "message": "OMG, I checked that with 2 different online MSVC compilers. I\u0027ll change it to numeric_limits::max() and ASSERT().",
+      "parentUuid": "586ddaeb_7a2af988",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 46
+      },
+      "revId": "a37b6eec8fd43938a2297c5ebc5a831fc4267e8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d8970a01_1e396d8f",
         "filename": "src/compiler/translator/Cache.cpp",
         "patchSetId": 2
