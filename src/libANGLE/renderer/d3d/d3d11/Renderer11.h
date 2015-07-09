@@ -33,6 +33,7 @@ class VertexDataManager;
 class IndexDataManager;
 class StreamingIndexBufferInterface;
 class Blit11;
+class Buffer11;
 class Clear11;
 class PixelTransfer11;
 class RenderTarget11;
@@ -268,6 +269,9 @@ class Renderer11 : public RendererD3D
     RendererClass getRendererClass() const override { return RENDERER_D3D11; }
     InputLayoutCache *getInputLayoutCache() { return &mInputLayoutCache; }
 
+    void onSwap();
+    void onBufferDelete(const Buffer11 *deleted);
+
   protected:
     void createAnnotator() override;
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
@@ -286,6 +290,8 @@ class Renderer11 : public RendererD3D
     void unsetConflictingSRVs(gl::SamplerType shaderType, uintptr_t resource, const gl::ImageIndex &index);
 
     void populateRenderer11DeviceCaps();
+
+    void updateHistograms();
 
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;
@@ -454,6 +460,11 @@ class Renderer11 : public RendererD3D
 
     // Sync query
     ID3D11Query *mSyncQuery;
+
+    // Created objects state tracking
+    std::set<const Buffer11*> mAliveBuffers;
+
+    double mLastHistogramUpdateTime;
 
     ID3D11Device *mDevice;
     Renderer11DeviceCaps mRenderer11DeviceCaps;

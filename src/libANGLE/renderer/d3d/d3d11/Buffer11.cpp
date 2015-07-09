@@ -252,6 +252,8 @@ Buffer11::~Buffer11()
     {
         SafeDelete(p.second.storage);
     }
+
+    mRenderer->onBufferDelete(this);
 }
 
 gl::Error Buffer11::setData(const void *data, size_t size, GLenum usage)
@@ -625,6 +627,19 @@ gl::Error Buffer11::packPixels(ID3D11Texture2D *srcTexture, UINT srcSubresource,
     }
 
     return gl::Error(GL_NO_ERROR);
+}
+
+size_t Buffer11::getTotalCPUBufferMemoryBytes() const
+{
+    size_t allocationSize = 0;
+
+    BufferStorage *staging = mBufferStorages[BUFFER_USAGE_STAGING];
+    allocationSize += staging ? staging->getSize() : 0;
+
+    BufferStorage *sysMem = mBufferStorages[BUFFER_USAGE_SYSTEM_MEMORY];
+    allocationSize += sysMem ? sysMem->getSize() : 0;
+
+    return allocationSize;
 }
 
 Buffer11::BufferStorage *Buffer11::getBufferStorage(BufferUsage usage)
