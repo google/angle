@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "18f28255_49ce3928",
+        "filename": "src/common/mathutil_unittest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-07-09T09:28:20Z",
+      "side": 1,
+      "message": "Isn\u0027t the largest possible non-Inf number\u0027s exponent 0xfeu \u003c\u003c 23?",
+      "revId": "429f97b6372923448724085ad7edfac7a5676c55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
