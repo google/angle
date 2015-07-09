@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "586ddaeb_7a2af988",
+        "filename": "src/compiler/translator/Cache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-09T14:08:16Z",
+      "side": 1,
+      "message": "this produces a warning in MSVS: \n\n \u0027initializing\u0027 : conversion from \u0027int\u0027 to \u0027const  TCache::TypeKey::EnumComponentType\u0027, signed/unsigned mismatch.\n\nUsing 0u produces:\n\n \u0027initializing\u0027 : truncation from \u0027unsigned int\u0027 to \u0027const TCache::TypeKey::EnumComponentType\u0027\n \u0027initializing\u0027 : truncation of constant value\n\nMy suggestion: use numeric_limits, and change the static_assert to ASSERT, with a TODO to use constexpr when possible.",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 46
+      },
+      "revId": "a37b6eec8fd43938a2297c5ebc5a831fc4267e8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d8970a01_1e396d8f",
+        "filename": "src/compiler/translator/Cache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-09T14:08:16Z",
+      "side": 1,
+      "message": "nit: use c++-style casts",
+      "range": {
+        "startLine": 53,
+        "startChar": 28,
+        "endLine": 53,
+        "endChar": 45
+      },
+      "revId": "a37b6eec8fd43938a2297c5ebc5a831fc4267e8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
