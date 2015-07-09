@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3219987_df4b232e",
+        "filename": "src/libANGLE/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-07-09T21:21:15Z",
+      "side": 1,
+      "message": "Should set mInitialized to false.",
+      "range": {
+        "startLine": 184,
+        "startChar": 8,
+        "endLine": 184,
+        "endChar": 27
+      },
+      "revId": "e3c4c0b54bcac53a8dea8e824072129208f96b96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
