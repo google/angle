@@ -10,15 +10,16 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_INPUTLAYOUTCACHE_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_INPUTLAYOUTCACHE_H_
 
-#include "libANGLE/Constants.h"
-#include "libANGLE/Error.h"
-#include "common/angleutils.h"
-
 #include <GLES2/gl2.h>
 
 #include <cstddef>
 #include <map>
 #include <unordered_map>
+
+#include "common/angleutils.h"
+#include "libANGLE/Constants.h"
+#include "libANGLE/Error.h"
+#include "libANGLE/formatutils.h"
 
 namespace gl
 {
@@ -80,22 +81,38 @@ class InputLayoutCache : angle::NonCopyable
 
         void addAttributeData(GLenum glType,
                               UINT semanticIndex,
-                              DXGI_FORMAT dxgiFormat,
+                              gl::VertexFormatType vertexFormatType,
                               unsigned int divisor)
         {
-            attributeData[numAttributes].glType = glType;
-            attributeData[numAttributes].semanticIndex = semanticIndex;
-            attributeData[numAttributes].dxgiFormat = dxgiFormat;
-            attributeData[numAttributes].divisor = divisor;
+            gl::AttributeType attribType = gl::GetAttributeType(glType);
+
+            uint8_t packedType = static_cast<uint8_t>(attribType);
+            uint8_t packedSemantic = static_cast<uint8_t>(semanticIndex);
+            uint8_t packedFormatType = static_cast<uint8_t>(vertexFormatType);
+            uint8_t packedDivisor = static_cast<uint8_t>(divisor);
+
+            ASSERT(static_cast<gl::AttributeType>(packedType) == attribType);
+            ASSERT(static_cast<UINT>(packedSemantic) == semanticIndex);
+            ASSERT(static_cast<gl::VertexFormatType>(packedFormatType) == vertexFormatType);
+            ASSERT(static_cast<unsigned int>(packedDivisor) == divisor);
+
+            attributeData[numAttributes].values.attribType = packedType;
+            attributeData[numAttributes].values.semanticIndex = packedSemantic;
+            attributeData[numAttributes].values.vertexFormatType = packedFormatType;
+            attributeData[numAttributes].values.divisor = packedDivisor;
             ++numAttributes;
         }
 
-        struct PackedAttribute
+        union PackedAttribute
         {
-            GLenum glType;
-            UINT semanticIndex;
-            DXGI_FORMAT dxgiFormat;
-            unsigned int divisor;
+            struct
+            {
+                uint8_t attribType;
+                uint8_t semanticIndex;
+                uint8_t vertexFormatType;
+                uint8_t divisor;
+            } values;
+            uint32_t pack;
         };
 
         enum Flags
