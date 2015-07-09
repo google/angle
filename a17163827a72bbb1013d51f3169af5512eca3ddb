@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "98a11261_65b49c23",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-09T18:22:51Z",
+      "side": 1,
+      "message": "removed this TODO",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 52
+      },
+      "revId": "a17163827a72bbb1013d51f3169af5512eca3ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
