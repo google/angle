@@ -84,6 +84,9 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat, const Renderer1
 struct VertexFormat
 {
     VertexFormat();
+    VertexFormat(VertexConversionType conversionType,
+                 DXGI_FORMAT nativeFormat,
+                 VertexCopyFunction copyFunction);
 
     VertexConversionType conversionType;
     DXGI_FORMAT nativeFormat;
