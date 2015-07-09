@@ -22,6 +22,30 @@
       "revId": "048036b8f8a3268109508595cae0a591cdd1d6a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58e87a65_f6a84864",
+        "filename": "BUILD.gn",
+        "patchSetId": 6
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-07-09T23:13:14Z",
+      "side": 1,
+      "message": "I don\u0027t fully understand inheriting of configs and their usage.  I see things like config -\u003d [\"some value\"] which looks like it removed a config and appended it back again later.  So Config order matters?\n\nWithout being able to fully validate this I might need your help to reduce the round trip and error prone changes I may introduce attempting this.",
+      "parentUuid": "586ddaeb_03c5947f",
+      "range": {
+        "startLine": 122,
+        "startChar": 1,
+        "endLine": 126,
+        "endChar": 3
+      },
+      "revId": "048036b8f8a3268109508595cae0a591cdd1d6a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
