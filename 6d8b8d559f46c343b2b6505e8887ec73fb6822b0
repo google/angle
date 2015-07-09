@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "586ddaeb_a08e1e01",
+        "filename": "BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-09T18:34:03Z",
+      "side": 1,
+      "message": "you need to make defines \u003d [] first to get +\u003d to work",
+      "range": {
+        "startLine": 121,
+        "startChar": 4,
+        "endLine": 121,
+        "endChar": 11
+      },
+      "revId": "6d8b8d559f46c343b2b6505e8887ec73fb6822b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "586ddaeb_606a469a",
+        "filename": "BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-09T18:34:03Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 303,
+        "startChar": 4,
+        "endLine": 303,
+        "endChar": 11
+      },
+      "revId": "6d8b8d559f46c343b2b6505e8887ec73fb6822b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
