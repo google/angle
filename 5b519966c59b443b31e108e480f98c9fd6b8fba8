@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58e87a65_d6eae4e9",
+        "filename": "src/compiler/translator/ValidateGlobalInitializer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-07-09T17:25:33Z",
+      "side": 1,
+      "message": "Maybe also copy over the comment from the CL description here about build-in functions, because it is confusing.",
+      "revId": "5b519966c59b443b31e108e480f98c9fd6b8fba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
