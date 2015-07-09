@@ -141,6 +141,29 @@
       "revId": "81476a44d441faca4bb89986c476668c65b43637",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "387026c3_9ff49bfe",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-09T19:38:37Z",
+      "side": 1,
+      "message": "can you make this a part of angle_common and also carry the define to direct_dependent_settings? that way maybe you don\u0027t have to replicate it here and in angle.gyp.",
+      "range": {
+        "startLine": 784,
+        "startChar": 11,
+        "endLine": 797,
+        "endChar": 19
+      },
+      "revId": "81476a44d441faca4bb89986c476668c65b43637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
