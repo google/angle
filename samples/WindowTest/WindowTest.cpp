@@ -6,6 +6,7 @@
 
 // WindowTest.cpp: Sample used to test various function of OSWindow
 
+#include <algorithm>
 #include <iostream>
 
 #include "OSWindow.h"
