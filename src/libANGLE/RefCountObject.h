@@ -38,7 +38,7 @@ class RefCountObject : angle::NonCopyable
 template <class ObjectType>
 class BindingPointer
 {
-public:
+  public:
     BindingPointer()
         : mObject(nullptr)
     {

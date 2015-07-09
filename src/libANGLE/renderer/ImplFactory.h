@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_IMPLFACTORY_H_
 
 #include "libANGLE/Framebuffer.h"
+#include "libANGLE/VertexArray.h"
 
 namespace rx
 {
@@ -52,7 +53,7 @@ class ImplFactory : angle::NonCopyable
     virtual BufferImpl *createBuffer() = 0;
 
     // Vertex Array creation
-    virtual VertexArrayImpl *createVertexArray() = 0;
+    virtual VertexArrayImpl *createVertexArray(const gl::VertexArray::Data &data) = 0;
 
     // Query and Fence creation
     virtual QueryImpl *createQuery(GLenum type) = 0;

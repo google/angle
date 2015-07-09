@@ -19,8 +19,8 @@ class Renderer9;
 class VertexArray9 : public VertexArrayImpl
 {
   public:
-    VertexArray9(Renderer9 *renderer)
-        : VertexArrayImpl()
+    VertexArray9(const gl::VertexArray::Data &data)
+        : VertexArrayImpl(data)
     {
     }
 

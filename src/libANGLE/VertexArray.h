@@ -21,6 +21,7 @@
 
 namespace rx
 {
+class ImplFactory;
 class VertexArrayImpl;
 }
 
@@ -31,37 +32,54 @@ class Buffer;
 class VertexArray
 {
   public:
-    VertexArray(rx::VertexArrayImpl *impl, GLuint id, size_t maxAttribs);
+    VertexArray(rx::ImplFactory *factory, GLuint id, size_t maxAttribs);
     ~VertexArray();
 
     GLuint id() const;
 
-    const VertexAttribute& getVertexAttribute(size_t attributeIndex) const;
-    const std::vector<VertexAttribute> &getVertexAttributes() const;
+    const VertexAttribute &getVertexAttribute(size_t attributeIndex) const;
 
     void detachBuffer(GLuint bufferName);
-    void setVertexAttribDivisor(GLuint index, GLuint divisor);
-    void enableAttribute(unsigned int attributeIndex, bool enabledState);
-    void setAttributeState(unsigned int attributeIndex, gl::Buffer *boundBuffer, GLint size, GLenum type,
+    void setVertexAttribDivisor(size_t index, GLuint divisor);
+    void enableAttribute(size_t attributeIndex, bool enabledState);
+    void setAttributeState(size_t attributeIndex, gl::Buffer *boundBuffer, GLint size, GLenum type,
                            bool normalized, bool pureInteger, GLsizei stride, const void *pointer);
 
-    Buffer *getElementArrayBuffer() const { return mElementArrayBuffer.get(); }
     void setElementArrayBuffer(Buffer *buffer);
-    GLuint getElementArrayBufferId() const { return mElementArrayBuffer.id(); }
-    size_t getMaxAttribs() const { return mVertexAttributes.size(); }
+
+    const BindingPointer<Buffer> &getElementArrayBuffer() const { return mData.getElementArrayBuffer(); }
+    size_t getMaxAttribs() const { return mData.getVertexAttributes().size(); }
+    const std::vector<VertexAttribute> &getVertexAttributes() const { return mData.getVertexAttributes(); }
 
     rx::VertexArrayImpl *getImplementation() { return mVertexArray; }
     const rx::VertexArrayImpl *getImplementation() const { return mVertexArray; }
 
-    unsigned int getMaxEnabledAttribute() const { return mMaxEnabledAttribute; }
+    size_t getMaxEnabledAttribute() const { return mData.getMaxEnabledAttribute(); }
+
+    class Data final : public angle::NonCopyable
+    {
+      public:
+        explicit Data(size_t maxAttribs);
+        ~Data();
+
+        const BindingPointer<Buffer> &getElementArrayBuffer() const { return mElementArrayBuffer; }
+        size_t getMaxAttribs() const { return mVertexAttributes.size(); }
+        size_t getMaxEnabledAttribute() const { return mMaxEnabledAttribute; }
+        const std::vector<VertexAttribute> &getVertexAttributes() const { return mVertexAttributes; }
+
+      private:
+        friend class VertexArray;
+        std::vector<VertexAttribute> mVertexAttributes;
+        BindingPointer<Buffer> mElementArrayBuffer;
+        size_t mMaxEnabledAttribute;
+    };
 
   private:
     GLuint mId;
 
     rx::VertexArrayImpl *mVertexArray;
-    std::vector<VertexAttribute> mVertexAttributes;
-    BindingPointer<Buffer> mElementArrayBuffer;
-    unsigned int mMaxEnabledAttribute;
+
+    Data mData;
 };
 
 }

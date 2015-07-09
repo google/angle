@@ -39,7 +39,7 @@ class NullFactory : public ImplFactory
     BufferImpl *createBuffer() override { return nullptr; }
 
     // Vertex Array creation
-    VertexArrayImpl *createVertexArray() override { return nullptr; }
+    VertexArrayImpl *createVertexArray(const gl::VertexArray::Data &data) override { return nullptr; }
 
     // Query and Fence creation
     QueryImpl *createQuery(GLenum type) override { return nullptr; }

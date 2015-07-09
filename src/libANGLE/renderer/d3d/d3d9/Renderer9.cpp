@@ -714,9 +714,9 @@ BufferImpl *Renderer9::createBuffer()
     return new Buffer9(this);
 }
 
-VertexArrayImpl *Renderer9::createVertexArray()
+VertexArrayImpl *Renderer9::createVertexArray(const gl::VertexArray::Data &data)
 {
-    return new VertexArray9(this);
+    return new VertexArray9(data);
 }
 
 QueryImpl *Renderer9::createQuery(GLenum type)

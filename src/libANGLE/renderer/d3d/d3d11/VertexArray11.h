@@ -19,8 +19,8 @@ class Renderer11;
 class VertexArray11 : public VertexArrayImpl
 {
   public:
-    VertexArray11(Renderer11 *renderer)
-        : VertexArrayImpl()
+    VertexArray11(const gl::VertexArray::Data &data)
+        : VertexArrayImpl(data)
     {
     }
     virtual ~VertexArray11() { }

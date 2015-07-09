@@ -111,7 +111,7 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
 
     SourceIndexData sourceIndexInfo;
 
-    error = applyIndexBuffer(indices, vao->getElementArrayBuffer(), count, mode, type, &indexInfo, &sourceIndexInfo);
+    error = applyIndexBuffer(indices, vao->getElementArrayBuffer().get(), count, mode, type, &indexInfo, &sourceIndexInfo);
     if (error.isError())
     {
         return error;
@@ -149,7 +149,7 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
 
     if (!skipDraw(data, mode))
     {
-        error = drawElements(mode, count, type, indices, vao->getElementArrayBuffer(), indexInfo, instances, program->usesPointSize());
+        error = drawElements(mode, count, type, indices, vao->getElementArrayBuffer().get(), indexInfo, instances, program->usesPointSize());
         if (error.isError())
         {
             return error;

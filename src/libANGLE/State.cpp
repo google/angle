@@ -982,7 +982,7 @@ Buffer *State::getTargetBuffer(GLenum target) const
       case GL_ARRAY_BUFFER:              return mArrayBuffer.get();
       case GL_COPY_READ_BUFFER:          return mCopyReadBuffer.get();
       case GL_COPY_WRITE_BUFFER:         return mCopyWriteBuffer.get();
-      case GL_ELEMENT_ARRAY_BUFFER:      return getVertexArray()->getElementArrayBuffer();
+      case GL_ELEMENT_ARRAY_BUFFER:      return getVertexArray()->getElementArrayBuffer().get();
       case GL_PIXEL_PACK_BUFFER:         return mPack.pixelBuffer.get();
       case GL_PIXEL_UNPACK_BUFFER:       return mUnpack.pixelBuffer.get();
       case GL_TRANSFORM_FEEDBACK_BUFFER: return mTransformFeedback->getGenericBuffer().get();
@@ -1174,7 +1174,7 @@ void State::getIntegerv(const gl::Data &data, GLenum pname, GLint *params)
     switch (pname)
     {
       case GL_ARRAY_BUFFER_BINDING:                     *params = mArrayBuffer.id();                              break;
-      case GL_ELEMENT_ARRAY_BUFFER_BINDING:             *params = getVertexArray()->getElementArrayBufferId();    break;
+      case GL_ELEMENT_ARRAY_BUFFER_BINDING:             *params = getVertexArray()->getElementArrayBuffer().id(); break;
         //case GL_FRAMEBUFFER_BINDING:                    // now equivalent to GL_DRAW_FRAMEBUFFER_BINDING_ANGLE
       case GL_DRAW_FRAMEBUFFER_BINDING_ANGLE:           *params = mDrawFramebuffer->id();                         break;
       case GL_READ_FRAMEBUFFER_BINDING_ANGLE:           *params = mReadFramebuffer->id();                         break;
@@ -1413,7 +1413,7 @@ bool State::hasMappedBuffer(GLenum target) const
     {
         const VertexArray *vao = getVertexArray();
         const auto &vertexAttribs = vao->getVertexAttributes();
-        unsigned int maxEnabledAttrib = vao->getMaxEnabledAttribute();
+        size_t maxEnabledAttrib = vao->getMaxEnabledAttribute();
         for (size_t attribIndex = 0; attribIndex < maxEnabledAttrib; attribIndex++)
         {
             const gl::VertexAttribute &vertexAttrib = vertexAttribs[attribIndex];
