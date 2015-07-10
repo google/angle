@@ -18,7 +18,10 @@ enum TPrecision
     EbpUndefined,
     EbpLow,
     EbpMedium,
-    EbpHigh
+    EbpHigh,
+
+    // end of list
+    EbpLast
 };
 
 inline const char* getPrecisionString(TPrecision p)
@@ -77,6 +80,9 @@ enum TBasicType
     EbtStruct,
     EbtInterfaceBlock,
     EbtAddress,            // should be deprecated??
+
+    // end of list
+    EbtLast
 };
 
 const char* getBasicString(TBasicType t);
