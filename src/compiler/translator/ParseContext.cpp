@@ -1352,15 +1352,15 @@ TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, bool inva
     returnType.invariant = invariant;
     returnType.layoutQualifier = layoutQualifier;
 
-    if (typeSpecifier.array)
-    {
-        error(typeSpecifier.line, "not supported", "first-class array");
-        recover();
-        returnType.clearArrayness();
-    }
-
     if (mShaderVersion < 300)
     {
+        if (typeSpecifier.array)
+        {
+            error(typeSpecifier.line, "not supported", "first-class array");
+            recover();
+            returnType.clearArrayness();
+        }
+
         if (qualifier == EvqAttribute && (typeSpecifier.type == EbtBool || typeSpecifier.type == EbtInt))
         {
             error(typeSpecifier.line, "cannot be bool or int", getQualifierString(qualifier));

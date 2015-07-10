@@ -688,3 +688,20 @@ TEST_F(MalformedShaderTest, LayoutQualifierInFunctionReturnType)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Uniforms can be arrays (ESSL 3.00 section 4.3.5)
+TEST_F(MalformedShaderTest, UniformArray)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "uniform vec4[2] u;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "    my_FragColor = u[0];\n"
+        "}\n";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
+    }
+}
