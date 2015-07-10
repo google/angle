@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "987af2a8_bd1963a8",
+        "filename": "src/tests/angle_end2end_tests.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-10T19:12:00Z",
+      "side": 1,
+      "message": "does this need to be win only? You seem to be running it okay on the GL renderer.",
+      "range": {
+        "startLine": 70,
+        "startChar": 13,
+        "endLine": 70,
+        "endChar": 80
+      },
+      "revId": "42f0ed74be98de6dd14173ef95daa446b8c50464",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
