@@ -26,29 +26,34 @@ SwapChain11::SwapChain11(Renderer11 *renderer, NativeWindow nativeWindow, HANDLE
                          GLenum backBufferFormat, GLenum depthBufferFormat)
     : SwapChainD3D(nativeWindow, shareHandle, backBufferFormat, depthBufferFormat),
       mRenderer(renderer),
+      mPassThroughResourcesInit(false),
       mColorRenderTarget(this, renderer, false),
-      mDepthStencilRenderTarget(this, renderer, true),
-      mPassThroughResourcesInit(false)
+      mDepthStencilRenderTarget(this, renderer, true)
 {
+    mHeight = -1;
+    mWidth = -1;
+    mAppCreatedShareHandle = mShareHandle != NULL;
+    mSwapInterval = 0;
+
     mSwapChain = NULL;
     mSwapChain1 = nullptr;
+
     mBackBufferTexture = NULL;
     mBackBufferRTView = NULL;
+
     mOffscreenTexture = NULL;
     mOffscreenRTView = NULL;
     mOffscreenSRView = NULL;
+
     mDepthStencilTexture = NULL;
     mDepthStencilDSView = NULL;
     mDepthStencilSRView = NULL;
+
     mQuadVB = NULL;
     mPassThroughSampler = NULL;
     mPassThroughIL = NULL;
     mPassThroughVS = NULL;
     mPassThroughPS = NULL;
-    mWidth = -1;
-    mHeight = -1;
-    mSwapInterval = 0;
-    mAppCreatedShareHandle = mShareHandle != NULL;
 }
 
 SwapChain11::~SwapChain11()
