@@ -6,13 +6,12 @@
     'includes':
     [
         'deqp.gypi',
+        '../../build/common_defines.gypi',
     ],
     'variables':
     {
         'angle_build_conformance_tests%': '0',
         'angle_build_deqp_tests%': '0',
-        # build/gyp_angle sets this to 1.
-        'angle_standalone%': 0,
 
         'rapidjson_include_dir': 'third_party/rapidjson/include',
         'rapidjson_headers':
