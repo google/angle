@@ -140,6 +140,9 @@ class TParseContext : angle::NonCopyable
     bool layoutLocationErrorCheck(const TSourceLoc &location, const TLayoutQualifier &layoutQualifier);
     bool functionCallLValueErrorCheck(const TFunction *fnCandidate, TIntermAggregate *);
     void es3InvariantErrorCheck(const TQualifier qualifier, const TSourceLoc &invariantLocation);
+    void es3InputOutputTypeCheck(const TQualifier qualifier,
+                                 const TPublicType &type,
+                                 const TSourceLoc &qualifierLocation);
 
     const TPragma &pragma() const { return mDirectiveHandler.pragma(); }
     const TExtensionBehavior &extensionBehavior() const { return mDirectiveHandler.extensionBehavior(); }

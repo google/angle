@@ -880,6 +880,15 @@ bool TParseContext::arrayTypeErrorCheck(const TSourceLoc &line, const TPublicTyp
         error(line, "cannot declare arrays of arrays", TType(type).getCompleteString().c_str());
         return true;
     }
+    // In ESSL1.00 shaders, structs cannot be varying (section 4.3.5). This is checked elsewhere.
+    // In ESSL3.00 shaders, struct inputs/outputs are allowed but not arrays of structs (section
+    // 4.3.4).
+    if (mShaderVersion >= 300 && type.type == EbtStruct && sh::IsVarying(type.qualifier))
+    {
+        error(line, "cannot declare arrays of structs of this qualifier",
+              TType(type).getCompleteString().c_str());
+        return true;
+    }
 
     return false;
 }
@@ -1447,44 +1456,93 @@ TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier,
                 recover();
             }
         }
-        switch (qualifier)
+        if (sh::IsVarying(qualifier) || qualifier == EvqVertexIn || qualifier == EvqFragmentOut)
         {
-            case EvqSmoothIn:
-            case EvqSmoothOut:
-            case EvqVertexOut:
-            case EvqFragmentIn:
-            case EvqCentroidOut:
-            case EvqCentroidIn:
-                if (typeSpecifier.type == EbtBool)
-                {
-                    error(typeSpecifier.line, "cannot be bool", getQualifierString(qualifier));
-                    recover();
-                }
-                if (typeSpecifier.type == EbtInt || typeSpecifier.type == EbtUInt)
-                {
-                    error(typeSpecifier.line, "must use 'flat' interpolation here",
-                          getQualifierString(qualifier));
-                    recover();
-                }
-                break;
-
-            case EvqVertexIn:
-            case EvqFragmentOut:
-            case EvqFlatIn:
-            case EvqFlatOut:
-                if (typeSpecifier.type == EbtBool)
-                {
-                    error(typeSpecifier.line, "cannot be bool", getQualifierString(qualifier));
-                    recover();
-                }
-                break;
-
-            default:
-                break;
+            es3InputOutputTypeCheck(qualifier, typeSpecifier, typeSpecifier.line);
         }
     }
 
     return returnType;
+}
+
+void TParseContext::es3InputOutputTypeCheck(const TQualifier qualifier,
+                                            const TPublicType &type,
+                                            const TSourceLoc &qualifierLocation)
+{
+    // An input/output variable can never be bool or a sampler. Samplers are checked elsewhere.
+    if (type.type == EbtBool)
+    {
+        error(qualifierLocation, "cannot be bool", getQualifierString(qualifier));
+        recover();
+    }
+
+    // Specific restrictions apply for vertex shader inputs and fragment shader outputs.
+    switch (qualifier)
+    {
+        case EvqVertexIn:
+            // ESSL 3.00 section 4.3.4
+            if (type.array)
+            {
+                error(qualifierLocation, "cannot be array", getQualifierString(qualifier));
+                recover();
+            }
+            // Vertex inputs with a struct type are disallowed in singleDeclarationErrorCheck
+            return;
+        case EvqFragmentOut:
+            // ESSL 3.00 section 4.3.6
+            if (type.isMatrix())
+            {
+                error(qualifierLocation, "cannot be matrix", getQualifierString(qualifier));
+                recover();
+            }
+            // Fragment outputs with a struct type are disallowed in singleDeclarationErrorCheck
+            return;
+        default:
+            break;
+    }
+
+    // Vertex shader outputs / fragment shader inputs have a different, slightly more lenient set of
+    // restrictions.
+    bool typeContainsIntegers =
+        (type.type == EbtInt || type.type == EbtUInt || type.isStructureContainingType(EbtInt) ||
+         type.isStructureContainingType(EbtUInt));
+    if (typeContainsIntegers && qualifier != EvqFlatIn && qualifier != EvqFlatOut)
+    {
+        error(qualifierLocation, "must use 'flat' interpolation here",
+              getQualifierString(qualifier));
+        recover();
+    }
+
+    if (type.type == EbtStruct)
+    {
+        // ESSL 3.00 sections 4.3.4 and 4.3.6.
+        // These restrictions are only implied by the ESSL 3.00 spec, but
+        // the ESSL 3.10 spec lists these restrictions explicitly.
+        if (type.array)
+        {
+            error(qualifierLocation, "cannot be an array of structures",
+                  getQualifierString(qualifier));
+            recover();
+        }
+        if (type.isStructureContainingArrays())
+        {
+            error(qualifierLocation, "cannot be a structure containing an array",
+                  getQualifierString(qualifier));
+            recover();
+        }
+        if (type.isStructureContainingType(EbtStruct))
+        {
+            error(qualifierLocation, "cannot be a structure containing a structure",
+                  getQualifierString(qualifier));
+            recover();
+        }
+        if (type.isStructureContainingType(EbtBool))
+        {
+            error(qualifierLocation, "cannot be a structure containing a bool",
+                  getQualifierString(qualifier));
+            recover();
+        }
+    }
 }
 
 TIntermAggregate *TParseContext::parseSingleDeclaration(TPublicType &publicType,
