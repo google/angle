@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "987af2a8_7afc3169",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-07-10T18:00:29Z",
+      "side": 0,
+      "message": "Yes, but we don\u0027t have a way to know if we are on AMD before this line (unless we integrate gpu_expectations), that\u0027s why I disable the whole test.",
+      "parentUuid": "38d586cf_7111d8dc",
+      "revId": "237c4ed6f7287791b63e62f249aea5ec1ec07a81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "78753eb8_b33f583f",
         "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
         "patchSetId": 1
