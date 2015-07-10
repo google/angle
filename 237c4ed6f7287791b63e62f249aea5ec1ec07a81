@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "18dc42fc_5035ac65",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-10T18:05:11Z",
+      "side": 0,
+      "message": "That\u0027s fine, thanks. I was just wanting to know where the failure was. We can come back to this when we have support for gpu test exepectations.",
+      "parentUuid": "987af2a8_7afc3169",
+      "revId": "237c4ed6f7287791b63e62f249aea5ec1ec07a81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "78753eb8_b33f583f",
         "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
         "patchSetId": 1
