@@ -53,13 +53,6 @@
                 '<(windows_sdk_path)/Include/um',
             ],
         }],
-        ['angle_standalone==1',
-        {
-            'defines':
-            [
-                'ANGLE_STANDALONE_BUILD',
-            ],
-        }],
     ],
     'msvs_settings':
     {
