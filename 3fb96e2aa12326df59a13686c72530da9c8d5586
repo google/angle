@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "987af2a8_f7ce1ad3",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-10T16:59:23Z",
+      "side": 1,
+      "message": "Could you update this to use our UNUSED_ASSERTION_VARIABLE  macro instead? I would prefer that to all the if-defs.  The changes to the other files are good though.",
+      "revId": "3fb96e2aa12326df59a13686c72530da9c8d5586",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
