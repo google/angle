@@ -105,6 +105,7 @@ class PullGradient : public TIntermTraverser
                 {
                     size_t calleeIndex = mDag.findIndex(node);
                     ASSERT(calleeIndex != CallDAG::InvalidIndex && calleeIndex < mIndex);
+                    UNUSED_ASSERTION_VARIABLE(mIndex);
 
                     if ((*mMetadataList)[calleeIndex].mUsesGradient) {
                         onGradient();
@@ -271,6 +272,7 @@ class PullComputeDiscontinuousLoops : public TIntermTraverser
             {
                 size_t calleeIndex = mDag.findIndex(node);
                 ASSERT(calleeIndex != CallDAG::InvalidIndex && calleeIndex < mIndex);
+                UNUSED_ASSERTION_VARIABLE(mIndex);
 
                 if ((*mMetadataList)[calleeIndex].mHasDiscontinuousLoopInCallGraph)
                 {
@@ -351,6 +353,7 @@ class PushDiscontinuousLoops : public TIntermTraverser
             {
                 size_t calleeIndex = mDag.findIndex(node);
                 ASSERT(calleeIndex != CallDAG::InvalidIndex && calleeIndex < mIndex);
+                UNUSED_ASSERTION_VARIABLE(mIndex);
 
                 (*mMetadataList)[calleeIndex].mCalledInDiscontinuousLoop = true;
             }
