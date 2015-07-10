@@ -142,8 +142,7 @@ TString TType::buildMangledName() const
         mangledName += interfaceBlock->mangledName();
         break;
       default:
-        // EbtVoid, EbtAddress and non types
-        break;
+        UNREACHABLE();
     }
 
     if (isMatrix())

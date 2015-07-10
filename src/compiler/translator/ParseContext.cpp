@@ -10,7 +10,6 @@
 #include <stdio.h>
 
 #include "compiler/preprocessor/SourceLocation.h"
-#include "compiler/translator/Cache.h"
 #include "compiler/translator/glslang.h"
 #include "compiler/translator/ValidateSwitch.h"
 #include "compiler/translator/ValidateGlobalInitializer.h"

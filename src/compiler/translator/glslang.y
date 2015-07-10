@@ -37,7 +37,6 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
 #endif
 
 #include "angle_gl.h"
-#include "compiler/translator/Cache.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/ParseContext.h"
 #include "GLSLANG/ShaderLang.h"
@@ -370,14 +369,14 @@ function_identifier
     | IDENTIFIER {
         if (context->reservedErrorCheck(@1, *$1.string))
             context->recover();
-        const TType *type = TCache::getType(EbtVoid, EbpUndefined);
+        const TType *type = new TType(EbtVoid, EbpUndefined);
         TFunction *function = new TFunction($1.string, type);
         $$ = function;
     }
     | FIELD_SELECTION {
         if (context->reservedErrorCheck(@1, *$1.string))
             context->recover();
-        const TType *type = TCache::getType(EbtVoid, EbpUndefined);
+        const TType *type = new TType(EbtVoid, EbpUndefined);
         TFunction *function = new TFunction($1.string, type);
         $$ = function;
     }

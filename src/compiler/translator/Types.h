@@ -491,15 +491,10 @@ class TType
         return structure ? structure->containsSamplers() : false;
     }
 
-    // Initializes all lazily-initialized members.
-    void realize()
-    {
-        getMangledName();
-    }
-
   protected:
     TString buildMangledName() const;
     size_t getStructSize() const;
+    void computeDeepestStructNesting();
 
     TBasicType type;
     TPrecision precision;

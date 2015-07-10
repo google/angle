@@ -247,13 +247,18 @@ public:
     pointer address(reference x) const { return &x; }
     const_pointer address(const_reference x) const { return &x; }
 
-    pool_allocator() { }
-
-    template<class Other>
-    pool_allocator(const pool_allocator<Other>& p) { }
+    pool_allocator() : allocator(GetGlobalPoolAllocator()) { }
+    pool_allocator(TPoolAllocator& a) : allocator(&a) { }
+    pool_allocator(const pool_allocator<T>& p) : allocator(p.allocator) { }
 
     template <class Other>
-    pool_allocator<T>& operator=(const pool_allocator<Other>& p) { return *this; }
+    pool_allocator<T>& operator=(const pool_allocator<Other>& p) {
+      allocator = p.allocator;
+      return *this;
+    }
+
+    template<class Other>
+    pool_allocator(const pool_allocator<Other>& p) : allocator(&p.getAllocator()) { }
 
 #if defined(__SUNPRO_CC) && !defined(_RWSTD_ALLOCATOR)
     // libCStd on some platforms have a different allocate/deallocate interface.
@@ -279,13 +284,17 @@ public:
     void construct(pointer p, const T& val) { new ((void *)p) T(val); }
     void destroy(pointer p) { p->T::~T(); }
 
-    bool operator==(const pool_allocator& rhs) const { return true; }
-    bool operator!=(const pool_allocator& rhs) const { return false; }
+    bool operator==(const pool_allocator& rhs) const { return &getAllocator() == &rhs.getAllocator(); }
+    bool operator!=(const pool_allocator& rhs) const { return &getAllocator() != &rhs.getAllocator(); }
 
     size_type max_size() const { return static_cast<size_type>(-1) / sizeof(T); }
     size_type max_size(int size) const { return static_cast<size_type>(-1) / size; }
 
-    TPoolAllocator& getAllocator() const { return *GetGlobalPoolAllocator(); }
+    void setAllocator(TPoolAllocator* a) { allocator = a; }
+    TPoolAllocator& getAllocator() const { return *allocator; }
+
+protected:
+    TPoolAllocator* allocator;
 };
 
 #endif // COMPILER_TRANSLATOR_POOLALLOC_H_
