@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "38d586cf_51605488",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-10T17:27:36Z",
+      "side": 1,
+      "message": "I think the idea is you define MAYBE_Blah as Blah or DISABLED_Blah depending on the ifdefs at the top",
+      "range": {
+        "startLine": 204,
+        "startChar": 36,
+        "endLine": 204,
+        "endChar": 58
+      },
+      "revId": "b7a72728a0a912c4af84c202953fe5641142558b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
