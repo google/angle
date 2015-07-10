@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "18dc42fc_b053b8af",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-10T17:43:01Z",
+      "side": 0,
+      "message": "Due to the bug in entry_point_egl fixed in the other CL of the stack, a failure of DisplayGLX::makeCurrent wouldn\u0027t be propagated. This caused two thing:\n - Context::MakeCurrent didn\u0027t get called (it is done after the call to DisplayGLX::makeCurrent in Display::makeCurrent) and Context::mRenderer stays to its default value of \"\"\n - in entry_point_egl, SetGlobalContext(newContext) gets called even though we errored.\n\nThen in isAMD, in glGetString, we call Context::getRendererString that return \"\" and doesn\u0027t match \"AMD\" or \"ATI\", causing the condition to be false.",
+      "revId": "237c4ed6f7287791b63e62f249aea5ec1ec07a81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "78753eb8_b33f583f",
         "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
         "patchSetId": 1
@@ -13,6 +30,30 @@
       "writtenOn": "2015-07-10T17:27:36Z",
       "side": 0,
       "message": "would this MakeCurrent generate an unexpected error on AMD?",
+      "range": {
+        "startLine": 182,
+        "startChar": 12,
+        "endLine": 182,
+        "endChar": 26
+      },
+      "revId": "237c4ed6f7287791b63e62f249aea5ec1ec07a81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "18dc42fc_704eb011",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-10T17:43:01Z",
+      "side": 0,
+      "message": "I don\u0027t know: the code never went to this line, see above for an explanation.",
+      "parentUuid": "78753eb8_b33f583f",
       "range": {
         "startLine": 182,
         "startChar": 12,
