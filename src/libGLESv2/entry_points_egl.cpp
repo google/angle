@@ -597,14 +597,19 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
         }
     }
 
+    Error makeCurrentError = display->makeCurrent(drawSurface, readSurface, context);
+    if (makeCurrentError.isError())
+    {
+        SetGlobalError(makeCurrentError);
+        return EGL_FALSE;
+    }
+
     gl::Context *previousContext = GetGlobalContext();
 
     SetGlobalDisplay(display);
     SetGlobalDrawSurface(drawSurface);
     SetGlobalReadSurface(readSurface);
     SetGlobalContext(context);
-
-    display->makeCurrent(drawSurface, readSurface, context);
 
     // Release the surface from the previously-current context, to allow
     // destroyed surfaces to delete themselves.
