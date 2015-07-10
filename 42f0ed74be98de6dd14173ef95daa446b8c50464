@@ -22,6 +22,30 @@
       "revId": "42f0ed74be98de6dd14173ef95daa446b8c50464",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b8c09616_4d60b988",
+        "filename": "src/tests/angle_end2end_tests.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-07-10T19:20:28Z",
+      "side": 1,
+      "message": "The test pulls in a file from the D3D renderer (libANGLE/renderer/d3d/imageformats.h). It made me nervous to enable this test on other non-D3D platforms in case it breaks (e.g. if a D3D header #include is added to imageformats.h)\n\nI\u0027m happy to add this test to other platforms if you\u0027re not concerned about this.",
+      "parentUuid": "987af2a8_bd1963a8",
+      "range": {
+        "startLine": 70,
+        "startChar": 13,
+        "endLine": 70,
+        "endChar": 80
+      },
+      "revId": "42f0ed74be98de6dd14173ef95daa446b8c50464",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
