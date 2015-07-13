@@ -22,6 +22,30 @@
       "revId": "fc7a8a6e144b442202170c40507666ec29028066",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d8762a12_46d7f231",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-13T20:02:43Z",
+      "side": 1,
+      "message": "Yeah, with further applications down the road if we want to avoid using GLenums in our code.",
+      "parentUuid": "58987a8f_82c81a99",
+      "range": {
+        "startLine": 85,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 21
+      },
+      "revId": "fc7a8a6e144b442202170c40507666ec29028066",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
