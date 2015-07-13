@@ -68,6 +68,7 @@ solutions = [
 You then have full control over your ANGLE workspace and are responsible for running all git commands (pull, rebase, etc.) for managing your branches.
 
 If you decide you need to go back to the DEPS version of ANGLE:
+
   * Comment out the `src/third_party/angle` line in your `custom_deps`.
   * Go into your ANGLE workspace and switch back to the master branch (ensure there are no modified or new files).
   * `gclient sync` your Chromium workspace.
