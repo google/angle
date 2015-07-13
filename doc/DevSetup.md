@@ -18,6 +18,7 @@ ANGLE uses git for version control. If you are not familiar with git, helpful do
 
 ### Getting the source
 Set the following environment variables as needed:
+
  * `GYP_GENERATORS` to `msvs` (other options include `ninja` and `make`)
  * `GYP_DEFINES` to `windows_sdk_path=YOUR_WIN_SDK_INSTALL_DIR` if you did not install the Windows 8.1 SDK in the default location.
  * `GYP_MSVS_VERSION` to `2013` (or `2013e` for Express editions of MSVS)
@@ -47,6 +48,7 @@ ANGLE can use either a backing renderer which uses D3D11 on systems where it is 
 ANGLE provides an EGL extension called `EGL_ANGLE_platform_angle` which allows uers to select which renderer to use at EGL initialization time by calling eglGetPlatformDisplayEXT with special enums. Details of the extension can be found in it's specification in `extensions/ANGLE_platform_angle.txt` and `extensions/ANGLE_platform_angle_d3d.txt` and examples of it's use can be seen in the ANGLE samples and tests, particularly `util/EGLWindow.cpp`.
 
 By default, ANGLE will use a D3D11 renderer. To change the default:
+
  1. Open `src/libANGLE/renderer/d3d/DisplayD3D.cpp`
  2. Locate the definition of `ANGLE_DEFAULT_D3D11` near the head of the file, and set it to your preference.
 
@@ -56,12 +58,12 @@ By default, ANGLE will use a D3D11 renderer. To change the default:
      * Right-click your project in the _Solution Explorer_, and select _Properties_.
      * Under the _Configuration Properties_ branch, click _C/C++_.
      * Add the relative path to the Khronos EGL and GLES2 header files to _Additional Include Directories_.
- 2. Configure your build environment to have access to `libEGL.lib` and `libGLESv2.lib` found in the build output directory (see [DevSetup#Building_ANGLE]).
+ 2. Configure your build environment to have access to `libEGL.lib` and `libGLESv2.lib` found in the build output directory (see [Building-ANGLE](Building ANGLE)).
    * For Visual C++
      * Right-click your project in the _Solution Explorer_, and select _Properties_.
      * Under the _Configuration Properties_ branch, open the _Linker_ branch and click _Input_.
      * Add the relative paths to both the `libEGL.lib` file and `libGLESv2.lib` file to _Additional Dependencies_, separated by a semicolon.
- 3. Copy `libEGL.dll` and `libGLESv2.dll` from the build output directory (see [Building ANGLE](Building ANGLE)) into your application folder.
+ 3. Copy `libEGL.dll` and `libGLESv2.dll` from the build output directory (see [Building-ANGLE](Building ANGLE)) into your application folder.
  4. Code your application to the Khronos [OpenGL ES 2.0](http://www.khronos.org/registry/gles/) and [EGL 1.4](http://www.khronos.org/registry/egl/) APIs.
 
 ## GLSL ES to GLSL Translator
@@ -72,6 +74,7 @@ The translator code is fully independent of the rest of ANGLE code and resides i
 
 ### Usage
 The basic usage is shown in `essl_to_glsl` sample under `samples/translator`. To translate a GLSL ES shader, following functions need to be called in the same order:
+
  * `ShInitialize()` initializes the translator library and must be called only once from each process using the translator.
  * `ShContructCompiler()` creates a translator object for vertex or fragment shader.
  * `ShCompile()` translates the given shader.
