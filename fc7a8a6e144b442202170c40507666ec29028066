@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58987a8f_82c81a99",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-13T20:01:26Z",
+      "side": 1,
+      "message": "The purpose of this is mostly to be able to convert the GLenums into consecutive integers, right?",
+      "range": {
+        "startLine": 85,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 21
+      },
+      "revId": "fc7a8a6e144b442202170c40507666ec29028066",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
