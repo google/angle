@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f305d1c3_721fcc8e",
+        "filename": "src/libANGLE/HandleAllocator_unittest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-13T16:41:56Z",
+      "side": 1,
+      "message": "nit: please add a description to the test",
+      "range": {
+        "startLine": 106,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 4
+      },
+      "revId": "731ebbc3370c52a5250075e65381b8b5af1e9aed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
