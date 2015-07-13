@@ -343,13 +343,6 @@ egl::Error Renderer11::initialize()
 {
     double loadDLLsBegin = ANGLEPlatformCurrent()->currentTime();
 
-    if (!mCompiler.initialize())
-    {
-        return egl::Error(EGL_NOT_INITIALIZED,
-                          D3D11_INIT_COMPILER_ERROR,
-                          "Failed to initialize compiler.");
-    }
-
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
     PFN_D3D11_CREATE_DEVICE D3D11CreateDevice = nullptr;
     {

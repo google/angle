@@ -171,13 +171,6 @@ void Renderer9::release()
 
 egl::Error Renderer9::initialize()
 {
-    if (!mCompiler.initialize())
-    {
-        return egl::Error(EGL_NOT_INITIALIZED,
-                          D3D9_INIT_COMPILER_ERROR,
-                          "Compiler failed to initialize.");
-    }
-
     TRACE_EVENT0("gpu.angle", "GetModuleHandle_d3d9");
     mD3d9Module = GetModuleHandle(TEXT("d3d9.dll"));
 
