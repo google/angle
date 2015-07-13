@@ -759,8 +759,14 @@ function_header_with_parameters
 
 function_header
     : fully_specified_type IDENTIFIER LEFT_PAREN {
-        if ($1.qualifier != EvqGlobal && $1.qualifier != EvqTemporary) {
+        if ($1.qualifier != EvqGlobal && $1.qualifier != EvqTemporary)
+        {
             context->error(@2, "no qualifiers allowed for function return", getQualifierString($1.qualifier));
+            context->recover();
+        }
+        if (!$1.layoutQualifier.isEmpty())
+        {
+            context->error(@2, "no qualifiers allowed for function return", "layout");
             context->recover();
         }
         // make sure a sampler is not involved as well...

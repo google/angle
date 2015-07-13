@@ -647,3 +647,44 @@ TEST_F(MalformedShaderTest, VersionOnSecondLine)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Layout qualifier can only appear in global scope (ESSL 3.00 section 4.3.8)
+TEST_F(MalformedShaderTest, LayoutQualifierInCondition)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "uniform vec4 u;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "    int i = 0;\n"
+        "    for (int j = 0; layout(location = 0) bool b = false; ++j) {\n"
+        "        ++i;\n"
+        "    }\n"
+        "    my_FragColor = u;\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Layout qualifier can only appear where specified (ESSL 3.00 section 4.3.8)
+TEST_F(MalformedShaderTest, LayoutQualifierInFunctionReturnType)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "uniform vec4 u;\n"
+        "out vec4 my_FragColor;\n"
+        "layout(location = 0) vec4 foo() {\n"
+        "    return u;\n"
+        "}\n"
+        "void main() {\n"
+        "    my_FragColor = foo();\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

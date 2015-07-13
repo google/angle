@@ -1376,6 +1376,13 @@ TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, bool inva
     }
     else
     {
+        if (!layoutQualifier.isEmpty())
+        {
+            if (globalErrorCheck(typeSpecifier.line, symbolTable.atGlobalLevel(), "layout"))
+            {
+                recover();
+            }
+        }
         switch (qualifier)
         {
           case EvqSmoothIn:
