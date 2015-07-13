@@ -51,13 +51,11 @@ class LineLoopTest : public ANGLETest
         }
 
         mPositionLocation = glGetAttribLocation(mProgram, "position");
-        mColorLocation = glGetUniformLocation(mProgram, "in_color");
+        mColorLocation = glGetUniformLocation(mProgram, "color");
 
         glBlendFunc(GL_ONE, GL_ONE);
         glEnable(GL_BLEND);
-
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
 
         ASSERT_GL_NO_ERROR();
     }
@@ -71,6 +69,8 @@ class LineLoopTest : public ANGLETest
 
     void runTest(GLenum indexType, GLuint indexBuffer, const GLvoid *indexPtr)
     {
+        glClear(GL_COLOR_BUFFER_BIT);
+
         static const GLfloat loopPositions[] =
         {
              0.0f,  0.0f,
@@ -94,7 +94,7 @@ class LineLoopTest : public ANGLETest
         };
         static const GLubyte stripIndices[] =
         {
-            2, 0, 3, 1, 2
+            1, 0, 3, 2, 1
         };
 
         glUseProgram(mProgram);
@@ -111,6 +111,8 @@ class LineLoopTest : public ANGLETest
 
         std::vector<GLubyte> pixels(getWindowWidth() * getWindowHeight() * 4);
         glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
+
+        ASSERT_GL_NO_ERROR();
 
         for (int y = 0; y < getWindowHeight(); y++)
         {
