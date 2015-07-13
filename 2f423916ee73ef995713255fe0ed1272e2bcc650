@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9870321a_64c30a7f",
+        "filename": "util/x11/X11Window.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-07-13T19:59:50Z",
+      "side": 1,
+      "message": "This is a pretty major hack and likely to introduce flakiness. If you absolutely need something like this then can you try to verify at this point that the driver\u0027s framebuffer is actually ready? Is there some other call that would reliably indicate that?",
+      "range": {
+        "startLine": 313,
+        "startChar": 15,
+        "endLine": 313,
+        "endChar": 20
+      },
+      "revId": "2f423916ee73ef995713255fe0ed1272e2bcc650",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
