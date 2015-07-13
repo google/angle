@@ -22,6 +22,30 @@
       "revId": "731ebbc3370c52a5250075e65381b8b5af1e9aed",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3801063e_74f12690",
+        "filename": "src/libANGLE/HandleAllocator_unittest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2015-07-13T17:25:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f305d1c3_721fcc8e",
+      "range": {
+        "startLine": 106,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 4
+      },
+      "revId": "731ebbc3370c52a5250075e65381b8b5af1e9aed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
