@@ -647,6 +647,58 @@ const FormatSet &GetAllSizedInternalFormats()
     return formatSet;
 }
 
+AttributeType GetAttributeType(GLenum enumValue)
+{
+    switch (enumValue)
+    {
+        case GL_FLOAT:
+            return ATTRIBUTE_FLOAT;
+        case GL_FLOAT_VEC2:
+            return ATTRIBUTE_VEC2;
+        case GL_FLOAT_VEC3:
+            return ATTRIBUTE_VEC3;
+        case GL_FLOAT_VEC4:
+            return ATTRIBUTE_VEC4;
+        case GL_INT:
+            return ATTRIBUTE_INT;
+        case GL_INT_VEC2:
+            return ATTRIBUTE_IVEC2;
+        case GL_INT_VEC3:
+            return ATTRIBUTE_IVEC3;
+        case GL_INT_VEC4:
+            return ATTRIBUTE_IVEC4;
+        case GL_UNSIGNED_INT:
+            return ATTRIBUTE_UINT;
+        case GL_UNSIGNED_INT_VEC2:
+            return ATTRIBUTE_UVEC2;
+        case GL_UNSIGNED_INT_VEC3:
+            return ATTRIBUTE_UVEC3;
+        case GL_UNSIGNED_INT_VEC4:
+            return ATTRIBUTE_UVEC4;
+        case GL_FLOAT_MAT2:
+            return ATTRIBUTE_MAT2;
+        case GL_FLOAT_MAT3:
+            return ATTRIBUTE_MAT3;
+        case GL_FLOAT_MAT4:
+            return ATTRIBUTE_MAT4;
+        case GL_FLOAT_MAT2x3:
+            return ATTRIBUTE_MAT2x3;
+        case GL_FLOAT_MAT2x4:
+            return ATTRIBUTE_MAT2x4;
+        case GL_FLOAT_MAT3x2:
+            return ATTRIBUTE_MAT3x2;
+        case GL_FLOAT_MAT3x4:
+            return ATTRIBUTE_MAT3x4;
+        case GL_FLOAT_MAT4x2:
+            return ATTRIBUTE_MAT4x2;
+        case GL_FLOAT_MAT4x3:
+            return ATTRIBUTE_MAT4x3;
+        default:
+            UNREACHABLE();
+            return ATTRIBUTE_FLOAT;
+    }
+}
+
 VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint components, bool pureInteger)
 {
     switch (type)

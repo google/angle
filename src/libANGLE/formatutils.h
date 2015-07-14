@@ -76,6 +76,37 @@ GLenum GetSizedInternalFormat(GLenum internalFormat, GLenum type);
 typedef std::set<GLenum> FormatSet;
 const FormatSet &GetAllSizedInternalFormats();
 
+// From the ESSL 3.00.4 spec:
+// Vertex shader inputs can only be float, floating-point vectors, matrices, signed and unsigned
+// integers and integer vectors. Vertex shader inputs cannot be arrays or structures.
+
+enum AttributeType
+{
+    ATTRIBUTE_FLOAT,
+    ATTRIBUTE_VEC2,
+    ATTRIBUTE_VEC3,
+    ATTRIBUTE_VEC4,
+    ATTRIBUTE_INT,
+    ATTRIBUTE_IVEC2,
+    ATTRIBUTE_IVEC3,
+    ATTRIBUTE_IVEC4,
+    ATTRIBUTE_UINT,
+    ATTRIBUTE_UVEC2,
+    ATTRIBUTE_UVEC3,
+    ATTRIBUTE_UVEC4,
+    ATTRIBUTE_MAT2,
+    ATTRIBUTE_MAT3,
+    ATTRIBUTE_MAT4,
+    ATTRIBUTE_MAT2x3,
+    ATTRIBUTE_MAT2x4,
+    ATTRIBUTE_MAT3x2,
+    ATTRIBUTE_MAT3x4,
+    ATTRIBUTE_MAT4x2,
+    ATTRIBUTE_MAT4x3,
+};
+
+AttributeType GetAttributeType(GLenum enumValue);
+
 enum VertexFormatType
 {
     VERTEX_FORMAT_INVALID,

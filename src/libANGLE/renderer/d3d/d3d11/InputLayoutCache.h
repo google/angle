@@ -10,15 +10,16 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_INPUTLAYOUTCACHE_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_INPUTLAYOUTCACHE_H_
 
-#include "libANGLE/Constants.h"
-#include "libANGLE/Error.h"
-#include "common/angleutils.h"
-
 #include <GLES2/gl2.h>
 
 #include <cstddef>
 #include <map>
 #include <unordered_map>
+
+#include "common/angleutils.h"
+#include "libANGLE/Constants.h"
+#include "libANGLE/Error.h"
+#include "libANGLE/formatutils.h"
 
 namespace gl
 {
@@ -48,28 +49,6 @@ class InputLayoutCache : angle::NonCopyable
     void setCacheSize(unsigned int cacheSize) { mCacheSize = cacheSize; }
 
   private:
-    struct InputLayoutElement
-    {
-        D3D11_INPUT_ELEMENT_DESC desc;
-        GLenum glslElementType;
-    };
-
-    struct InputLayoutKey
-    {
-        unsigned int elementCount;
-        InputLayoutElement elements[gl::MAX_VERTEX_ATTRIBS];
-
-        const char *begin() const
-        {
-            return reinterpret_cast<const char*>(&elementCount);
-        }
-
-        const char *end() const
-        {
-            return reinterpret_cast<const char*>(&elements[elementCount]);
-        }
-    };
-
     struct PackedAttributeLayout
     {
         PackedAttributeLayout()
@@ -80,23 +59,10 @@ class InputLayoutCache : angle::NonCopyable
 
         void addAttributeData(GLenum glType,
                               UINT semanticIndex,
-                              DXGI_FORMAT dxgiFormat,
-                              unsigned int divisor)
-        {
-            attributeData[numAttributes].glType = glType;
-            attributeData[numAttributes].semanticIndex = semanticIndex;
-            attributeData[numAttributes].dxgiFormat = dxgiFormat;
-            attributeData[numAttributes].divisor = divisor;
-            ++numAttributes;
-        }
+                              gl::VertexFormatType vertexFormatType,
+                              unsigned int divisor);
 
-        struct PackedAttribute
-        {
-            GLenum glType;
-            UINT semanticIndex;
-            DXGI_FORMAT dxgiFormat;
-            unsigned int divisor;
-        };
+        bool operator<(const PackedAttributeLayout &other) const;
 
         enum Flags
         {
@@ -107,15 +73,10 @@ class InputLayoutCache : angle::NonCopyable
 
         size_t numAttributes;
         unsigned int flags;
-        PackedAttribute attributeData[gl::MAX_VERTEX_ATTRIBS];
+        uint32_t attributeData[gl::MAX_VERTEX_ATTRIBS];
     };
 
-    struct PackedAttributeComparator
-    {
-        bool operator()(const PackedAttributeLayout &a, const PackedAttributeLayout &b) const;
-    };
-
-    std::map<PackedAttributeLayout, ID3D11InputLayout *, PackedAttributeComparator> mLayoutMap;
+    std::map<PackedAttributeLayout, ID3D11InputLayout *> mLayoutMap;
 
     ID3D11InputLayout *mCurrentIL;
     ID3D11Buffer *mCurrentBuffers[gl::MAX_VERTEX_ATTRIBS];

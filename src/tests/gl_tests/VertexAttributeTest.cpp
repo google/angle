@@ -333,6 +333,22 @@ TEST_P(VertexAttributeTest, MaxAttribsPlusOne)
     ASSERT_EQ(0u, program);
 }
 
+// Simple test for when we use glBindAttribLocation
+TEST_P(VertexAttributeTest, SimpleBindAttribLocation)
+{
+    // Re-use the multi-attrib program, binding attribute 0
+    GLuint program = compileMultiAttribProgram(1);
+    glBindAttribLocation(program, 2, "position");
+    glBindAttribLocation(program, 3, "a0");
+    glLinkProgram(program);
+
+    // Setup and draw the quad
+    setupMultiAttribs(program, 1, 0.5f);
+    drawQuad(program, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_NEAR(0, 0, 128, 0, 0, 255, 1);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // D3D11 Feature Level 9_3 uses different D3D formats for vertex attribs compared to Feature Levels 10_0+, so we should test them separately.
 ANGLE_INSTANTIATE_TEST(VertexAttributeTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL(), ES3_OPENGL());
