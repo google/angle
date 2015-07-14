@@ -83,10 +83,8 @@ class TextureTest : public ANGLETest
 
         m2DProgram = CompileProgram(vertexShaderSource, fragmentShaderSource2D);
         mCubeProgram = CompileProgram(vertexShaderSource, fragmentShaderSourceCube);
-        if (m2DProgram == 0 || mCubeProgram == 0)
-        {
-            FAIL() << "shader compilation failed.";
-        }
+        ASSERT_NE(0u, m2DProgram);
+        ASSERT_NE(0u, mCubeProgram);
 
         mTexture2DUniformLocation = glGetUniformLocation(m2DProgram, "tex");
         ASSERT_NE(-1, mTexture2DUniformLocation);
@@ -246,6 +244,67 @@ class TextureTest : public ANGLETest
     GLuint mCubeProgram;
     GLint mTexture2DUniformLocation;
     GLint mTextureScaleUniformLocation;
+};
+
+class TextureTestES3 : public ANGLETest
+{
+  protected:
+    TextureTestES3()
+        : m2DArrayTexture(0),
+          m2DArrayProgram(0),
+          mTextureArrayLocation(-1)
+    {
+        setWindowWidth(128);
+        setWindowHeight(128);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+    }
+
+    void SetUp() override
+    {
+        ANGLETest::SetUp();
+
+        const std::string vertexShaderSource =
+            "#version 300 es\n"
+            "out vec2 texcoord;\n"
+            "in vec4 position;\n"
+            "void main() {\n"
+            "   gl_Position = vec4(position.xy, 0.0, 1.0);\n"
+            "   texcoord = (position.xy * 0.5) + 0.5;\n"
+            "}";
+
+        const std::string fragmentShaderSource2DArray =
+            "#version 300 es\n"
+            "precision highp float;\n"
+            "uniform sampler2DArray tex2DArray;\n"
+            "in vec2 texcoord;\n"
+            "out vec4 fragColor;\n"
+            "void main()\n"
+            "{\n"
+            "    fragColor = texture(tex2DArray, vec3(texcoord.x, texcoord.y, 0.0));\n"
+            "}\n";
+
+        m2DArrayProgram = CompileProgram(vertexShaderSource, fragmentShaderSource2DArray);
+        ASSERT_NE(0u, m2DArrayProgram);
+
+        mTextureArrayLocation = glGetUniformLocation(m2DArrayProgram, "tex2DArray");
+        ASSERT_NE(-1, mTextureArrayLocation);
+
+        glGenTextures(1, &m2DArrayTexture);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void TearDown() override
+    {
+        glDeleteTextures(1, &m2DArrayTexture);
+        glDeleteProgram(m2DArrayProgram);
+    }
+
+    GLuint m2DArrayTexture;
+    GLuint m2DArrayProgram;
+    GLint mTextureArrayLocation;
 };
 
 TEST_P(TextureTest, NegativeAPISubImage)
@@ -609,7 +668,43 @@ TEST_P(TextureTest, TextureNPOT_GL_ALPHA_UBYTE)
     EXPECT_GL_NO_ERROR();
 }
 
+// In the D3D11 renderer, we need to initialize some texture formats, to fill empty channels. EG RBA->RGBA8, with 1.0
+// in the alpha channel. This test covers a bug where redefining array textures with these formats does not work as
+// expected.
+TEST_P(TextureTestES3, RedefineInittableArray)
+{
+    std::vector<GLubyte> pixelData;
+    for (size_t count = 0; count < 5000; count++)
+    {
+        pixelData.push_back(0u);
+        pixelData.push_back(255u);
+        pixelData.push_back(0u);
+    }
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+    glUseProgram(m2DArrayProgram);
+    glUniform1i(mTextureArrayLocation, 0);
+
+    // The first draw worked correctly.
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, 4, 4, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, &pixelData[0]);
+
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    drawQuad(m2DArrayProgram, "position", 1.0f);
+    EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+
+    // The dimension of the respecification must match the original exactly to trigger the bug.
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, 4, 4, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, &pixelData[0]);
+    drawQuad(m2DArrayProgram, "position", 1.0f);
+    EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(TextureTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3()); // TODO(geofflang): Figure out why this test fails on Intel OpenGL
+ANGLE_INSTANTIATE_TEST(TextureTestES3, ES3_D3D11(), ES3_OPENGL());
 
 } // namespace

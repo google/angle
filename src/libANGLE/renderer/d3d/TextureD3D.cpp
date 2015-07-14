@@ -2881,21 +2881,30 @@ void TextureD3D_2DArray::redefineImage(GLint level, GLenum internalformat, const
     const int storageDepth = getLayerCount(0);
     const GLenum storageFormat = getBaseLevelInternalFormat();
 
-    for (int layer = 0; layer < mLayerCounts[level]; layer++)
+    // Only reallocate the layers if the size doesn't match
+    if (size.depth != mLayerCounts[level])
     {
-        delete mImageArray[level][layer];
+        for (int layer = 0; layer < mLayerCounts[level]; layer++)
+        {
+            SafeDelete(mImageArray[level][layer]);
+        }
+        SafeDeleteArray(mImageArray[level]);
+        mLayerCounts[level] = size.depth;
+
+        if (size.depth > 0)
+        {
+            mImageArray[level] = new ImageD3D*[size.depth];
+            for (int layer = 0; layer < mLayerCounts[level]; layer++)
+            {
+                mImageArray[level][layer] = mRenderer->createImage();
+            }
+        }
     }
-    delete[] mImageArray[level];
-    mImageArray[level] = NULL;
-    mLayerCounts[level] = size.depth;
 
     if (size.depth > 0)
     {
-        mImageArray[level] = new ImageD3D*[size.depth]();
-
         for (int layer = 0; layer < mLayerCounts[level]; layer++)
         {
-            mImageArray[level][layer] = mRenderer->createImage();
             mImageArray[level][layer]->redefine(GL_TEXTURE_2D_ARRAY, internalformat,
                                                 gl::Extents(size.width, size.height, 1), false);
         }
