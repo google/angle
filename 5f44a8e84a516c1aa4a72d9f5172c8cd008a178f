@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "78b0de09_5e44311b",
+        "filename": "util/x11/X11Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-07-14T02:03:37Z",
+      "side": 1,
+      "message": "Maybe explicitly write out the event fetch and dispatch loop (like your original patch did)? It looks like Chromium does this:\n\nhttps://code.google.com/p/chromium/codesearch#chromium/src/ui/aura/window_tree_host_x11.cc\u0026ct\u003drc\u0026cd\u003d4\u0026q\u003dXMapWindow\u0026sq\u003dpackage:chromium\u0026l\u003d474\u0026dr\u003dC\n\nhttps://code.google.com/p/chromium/codesearch#chromium/src/ui/platform_window/x11/x11_window.cc\u0026ct\u003drc\u0026cd\u003d2\u0026q\u003dXMapWindow\u0026sq\u003dpackage:chromium\u0026l\u003d204\u0026dr\u003dC\n\nMaybe study those and look at the GLX code in Chromium\u0027s src/ui/gl/ to see if there\u0027s anything there?\n\nWould the example code in https://www.opengl.org/sdk/docs/man2/xhtml/glXIntro.xml work reliably when put in a loop?",
+      "range": {
+        "startLine": 326,
+        "startChar": 11,
+        "endLine": 326,
+        "endChar": 26
+      },
+      "revId": "5f44a8e84a516c1aa4a72d9f5172c8cd008a178f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
