@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "78b0de09_4f6ebdf7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1446,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-07-14T21:30:56Z",
+      "side": 1,
+      "message": "nit: { should be in the next line",
+      "range": {
+        "startLine": 1446,
+        "startChar": 32,
+        "endLine": 1446,
+        "endChar": 33
+      },
+      "revId": "f4f3738c8601cf999284b42e9085345c8e2063e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9870321a_1360d687",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-07-14T21:30:56Z",
+      "side": 1,
+      "message": "Should we check the case where the field is a struct that contains type?",
+      "range": {
+        "startLine": 209,
+        "startChar": 23,
+        "endLine": 209,
+        "endChar": 35
+      },
+      "revId": "f4f3738c8601cf999284b42e9085345c8e2063e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
