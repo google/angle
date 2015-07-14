@@ -195,7 +195,6 @@ class Program : angle::NonCopyable
     void getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
     GLint getActiveAttributeCount();
     GLint getActiveAttributeMaxLength();
-    const sh::Attribute *getLinkedAttributes() const { return mLinkedAttribute; }
 
     GLint getSamplerMapping(SamplerType type, unsigned int samplerIndex, const Caps &caps);
     GLenum getSamplerTextureType(SamplerType type, unsigned int samplerIndex);

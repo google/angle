@@ -8,17 +8,16 @@
 // D3D11 input layouts.
 
 #include "libANGLE/renderer/d3d/d3d11/InputLayoutCache.h"
-
-#include "common/utilities.h"
-#include "libANGLE/Program.h"
-#include "libANGLE/VertexAttribute.h"
-#include "libANGLE/renderer/d3d/IndexDataManager.h"
-#include "libANGLE/renderer/d3d/ProgramD3D.h"
-#include "libANGLE/renderer/d3d/VertexDataManager.h"
+#include "libANGLE/renderer/d3d/d3d11/VertexBuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/ShaderExecutable11.h"
-#include "libANGLE/renderer/d3d/d3d11/VertexBuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "libANGLE/renderer/d3d/ProgramD3D.h"
+#include "libANGLE/renderer/d3d/VertexDataManager.h"
+#include "libANGLE/renderer/d3d/IndexDataManager.h"
+#include "libANGLE/Program.h"
+#include "libANGLE/VertexAttribute.h"
+
 #include "third_party/murmurhash/MurmurHash3.h"
 
 namespace rx
@@ -49,74 +48,40 @@ void GetInputLayout(const TranslatedAttribute *translatedAttributes[gl::MAX_VERT
     }
 }
 
-GLenum GetNextGLSLAttributeType(const sh::Attribute *linkedAttributes, int index)
-{
-    // Count matrices differently
-    int subIndex = 0;
-    for (int attribIndex = 0; attribIndex < gl::MAX_VERTEX_ATTRIBS; ++attribIndex)
-    {
-        GLenum attribType = linkedAttributes[attribIndex].type;
-        GLenum transposedType = gl::TransposeMatrixType(attribType);
-        subIndex += gl::VariableRowCount(transposedType);
-        if (subIndex >= index)
-        {
-            return transposedType;
-        }
-    }
-
-    UNREACHABLE();
-    return GL_NONE;
-}
-
 const unsigned int kDefaultCacheSize = 1024;
-
-struct PackedAttribute
-{
-    uint8_t attribType;
-    uint8_t semanticIndex;
-    uint8_t vertexFormatType;
-    uint8_t divisor;
-};
 
 } // anonymous namespace
 
-void InputLayoutCache::PackedAttributeLayout::addAttributeData(
-    GLenum glType,
-    UINT semanticIndex,
-    gl::VertexFormatType vertexFormatType,
-    unsigned int divisor)
+bool InputLayoutCache::PackedAttributeComparator::operator()(const PackedAttributeLayout &a,
+                                                             const PackedAttributeLayout &b) const
 {
-    gl::AttributeType attribType = gl::GetAttributeType(glType);
-
-    PackedAttribute packedAttrib;
-    packedAttrib.attribType = static_cast<uint8_t>(attribType);
-    packedAttrib.semanticIndex = static_cast<uint8_t>(semanticIndex);
-    packedAttrib.vertexFormatType = static_cast<uint8_t>(vertexFormatType);
-    packedAttrib.divisor = static_cast<uint8_t>(divisor);
-
-    ASSERT(static_cast<gl::AttributeType>(packedAttrib.attribType) == attribType);
-    ASSERT(static_cast<UINT>(packedAttrib.semanticIndex) == semanticIndex);
-    ASSERT(static_cast<gl::VertexFormatType>(packedAttrib.vertexFormatType) == vertexFormatType);
-    ASSERT(static_cast<unsigned int>(packedAttrib.divisor) == divisor);
-
-    static_assert(sizeof(uint32_t) == sizeof(PackedAttribute), "PackedAttributes must be 32-bits exactly.");
-
-    attributeData[numAttributes++] = gl::bitCast<uint32_t>(packedAttrib);
-}
-
-bool InputLayoutCache::PackedAttributeLayout::operator<(const PackedAttributeLayout &other) const
-{
-    if (numAttributes != other.numAttributes)
+    if (a.numAttributes != b.numAttributes)
     {
-        return numAttributes < other.numAttributes;
+        return a.numAttributes < b.numAttributes;
     }
 
-    if (flags != other.flags)
+    if (a.flags != b.flags)
     {
-        return flags < other.flags;
+        return a.flags < b.flags;
     }
 
-    return memcmp(attributeData, other.attributeData, sizeof(uint32_t) * numAttributes) < 0;
+    for (size_t attribIndex = 0; attribIndex < a.numAttributes; attribIndex++)
+    {
+        const auto &attribA = a.attributeData[attribIndex];
+        const auto &attribB = b.attributeData[attribIndex];
+
+        if (attribA.glType != attribB.glType)
+            return attribA.glType < attribB.glType;
+        if (attribA.semanticIndex != attribB.semanticIndex)
+            return attribA.semanticIndex < attribB.semanticIndex;
+        if (attribA.dxgiFormat != attribB.dxgiFormat)
+            return attribA.dxgiFormat < attribB.dxgiFormat;
+        if (attribA.divisor != attribB.divisor)
+            return attribA.divisor < attribB.divisor;
+    }
+
+    // Equal
+    return false;
 }
 
 InputLayoutCache::InputLayoutCache()
@@ -189,8 +154,9 @@ gl::Error InputLayoutCache::applyVertexBuffers(const std::vector<TranslatedAttri
         return gl::Error(GL_OUT_OF_MEMORY, "Internal input layout cache is not initialized.");
     }
 
-    unsigned int inputElementCount = 0;
-    D3D11_INPUT_ELEMENT_DESC inputElements[gl::MAX_VERTEX_ATTRIBS];
+    InputLayoutKey ilKey;
+    ilKey.elementCount = 0;
+
     PackedAttributeLayout layout;
 
     static const char* semanticName = "TEXCOORD";
@@ -198,8 +164,6 @@ gl::Error InputLayoutCache::applyVertexBuffers(const std::vector<TranslatedAttri
     unsigned int firstIndexedElement = gl::MAX_VERTEX_ATTRIBS;
     unsigned int firstInstancedElement = gl::MAX_VERTEX_ATTRIBS;
     unsigned int nextAvailableInputSlot = 0;
-
-    const sh::Attribute *linkedAttributes = program->getLinkedAttributes();
 
     for (unsigned int i = 0; i < unsortedAttributes.size(); i++)
     {
@@ -212,34 +176,35 @@ gl::Error InputLayoutCache::applyVertexBuffers(const std::vector<TranslatedAttri
             gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(*sortedAttributes[i]->attribute, sortedAttributes[i]->currentValueType);
             const d3d11::VertexFormat &vertexFormatInfo = d3d11::GetVertexFormatInfo(vertexFormatType, mFeatureLevel);
 
-            inputElements[inputElementCount].SemanticName = semanticName;
-            inputElements[inputElementCount].SemanticIndex = sortedSemanticIndices[i];
-            inputElements[inputElementCount].Format = vertexFormatInfo.nativeFormat;
-            inputElements[inputElementCount].InputSlot = i;
-            inputElements[inputElementCount].AlignedByteOffset = 0;
-            inputElements[inputElementCount].InputSlotClass = inputClass;
-            inputElements[inputElementCount].InstanceDataStepRate = instancedPointSpritesActive ? 1 : sortedAttributes[i]->divisor;
+            // Record the type of the associated vertex shader vector in our key
+            // This will prevent mismatched vertex shaders from using the same input layout
+            GLint attributeSize;
+            program->getActiveAttribute(ilKey.elementCount, 0, NULL, &attributeSize, &ilKey.elements[ilKey.elementCount].glslElementType, NULL);
+
+            ilKey.elements[ilKey.elementCount].desc.SemanticName = semanticName;
+            ilKey.elements[ilKey.elementCount].desc.SemanticIndex = sortedSemanticIndices[i];
+            ilKey.elements[ilKey.elementCount].desc.Format = vertexFormatInfo.nativeFormat;
+            ilKey.elements[ilKey.elementCount].desc.InputSlot = i;
+            ilKey.elements[ilKey.elementCount].desc.AlignedByteOffset = 0;
+            ilKey.elements[ilKey.elementCount].desc.InputSlotClass = inputClass;
+            ilKey.elements[ilKey.elementCount].desc.InstanceDataStepRate = instancedPointSpritesActive ? 1 : sortedAttributes[i]->divisor;
 
             if (inputClass == D3D11_INPUT_PER_VERTEX_DATA && firstIndexedElement == gl::MAX_VERTEX_ATTRIBS)
             {
-                firstIndexedElement = inputElementCount;
+                firstIndexedElement = ilKey.elementCount;
             }
             else if (inputClass == D3D11_INPUT_PER_INSTANCE_DATA && firstInstancedElement == gl::MAX_VERTEX_ATTRIBS)
             {
-                firstInstancedElement = inputElementCount;
+                firstInstancedElement = ilKey.elementCount;
             }
 
-            // Record the type of the associated vertex shader vector in our key
-            // This will prevent mismatched vertex shaders from using the same input layout
-            GLenum glslElementType = GetNextGLSLAttributeType(linkedAttributes, inputElementCount);
-
-            layout.addAttributeData(glslElementType,
-                                    sortedSemanticIndices[i],
-                                    vertexFormatType,
-                                    sortedAttributes[i]->divisor);
-
-            inputElementCount++;
+            ilKey.elementCount++;
             nextAvailableInputSlot = i + 1;
+
+            layout.addAttributeData(ilKey.elements[ilKey.elementCount].glslElementType,
+                                    sortedSemanticIndices[i],
+                                    vertexFormatInfo.nativeFormat,
+                                    sortedAttributes[i]->divisor);
         }
     }
 
@@ -248,33 +213,33 @@ gl::Error InputLayoutCache::applyVertexBuffers(const std::vector<TranslatedAttri
     // We do this even if mode != GL_POINTS, since the shader signature has these inputs, and the input layout must match the shader
     if (programUsesInstancedPointSprites)
     {
-        inputElements[inputElementCount].SemanticName = "SPRITEPOSITION";
-        inputElements[inputElementCount].SemanticIndex = 0;
-        inputElements[inputElementCount].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-        inputElements[inputElementCount].InputSlot = nextAvailableInputSlot;
-        inputElements[inputElementCount].AlignedByteOffset = 0;
-        inputElements[inputElementCount].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-        inputElements[inputElementCount].InstanceDataStepRate = 0;
+        ilKey.elements[ilKey.elementCount].desc.SemanticName = "SPRITEPOSITION";
+        ilKey.elements[ilKey.elementCount].desc.SemanticIndex = 0;
+        ilKey.elements[ilKey.elementCount].desc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+        ilKey.elements[ilKey.elementCount].desc.InputSlot = nextAvailableInputSlot;
+        ilKey.elements[ilKey.elementCount].desc.AlignedByteOffset = 0;
+        ilKey.elements[ilKey.elementCount].desc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+        ilKey.elements[ilKey.elementCount].desc.InstanceDataStepRate = 0;
 
         // The new elements are D3D11_INPUT_PER_VERTEX_DATA data so the indexed element
         // tracking must be applied.  This ensures that the instancing specific
         // buffer swapping logic continues to work.
         if (firstIndexedElement == gl::MAX_VERTEX_ATTRIBS)
         {
-            firstIndexedElement = inputElementCount;
+            firstIndexedElement = ilKey.elementCount;
         }
 
-        inputElementCount++;
+        ilKey.elementCount++;
 
-        inputElements[inputElementCount].SemanticName = "SPRITETEXCOORD";
-        inputElements[inputElementCount].SemanticIndex = 0;
-        inputElements[inputElementCount].Format = DXGI_FORMAT_R32G32_FLOAT;
-        inputElements[inputElementCount].InputSlot = nextAvailableInputSlot;
-        inputElements[inputElementCount].AlignedByteOffset = sizeof(float) * 3;
-        inputElements[inputElementCount].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-        inputElements[inputElementCount].InstanceDataStepRate = 0;
+        ilKey.elements[ilKey.elementCount].desc.SemanticName = "SPRITETEXCOORD";
+        ilKey.elements[ilKey.elementCount].desc.SemanticIndex = 0;
+        ilKey.elements[ilKey.elementCount].desc.Format = DXGI_FORMAT_R32G32_FLOAT;
+        ilKey.elements[ilKey.elementCount].desc.InputSlot = nextAvailableInputSlot;
+        ilKey.elements[ilKey.elementCount].desc.AlignedByteOffset = sizeof(float) * 3;
+        ilKey.elements[ilKey.elementCount].desc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+        ilKey.elements[ilKey.elementCount].desc.InstanceDataStepRate = 0;
 
-        inputElementCount++;
+        ilKey.elementCount++;
     }
 
     // On 9_3, we must ensure that slot 0 contains non-instanced data.
@@ -286,14 +251,14 @@ gl::Error InputLayoutCache::applyVertexBuffers(const std::vector<TranslatedAttri
 
     if (moveFirstIndexedIntoSlotZero)
     {
-        inputElements[firstInstancedElement].InputSlot = inputElements[firstIndexedElement].InputSlot;
-        inputElements[firstIndexedElement].InputSlot = 0;
+        ilKey.elements[firstInstancedElement].desc.InputSlot = ilKey.elements[firstIndexedElement].desc.InputSlot;
+        ilKey.elements[firstIndexedElement].desc.InputSlot = 0;
 
         // Instanced PointSprite emulation uses multiple layout entries across a single vertex buffer.
         // If an index swap is performed, we need to ensure that all elements get the proper InputSlot.
         if (programUsesInstancedPointSprites)
         {
-            inputElements[firstIndexedElement + 1].InputSlot = 0;
+            ilKey.elements[firstIndexedElement + 1].desc.InputSlot = 0;
         }
     }
 
@@ -334,12 +299,12 @@ gl::Error InputLayoutCache::applyVertexBuffers(const std::vector<TranslatedAttri
         ShaderExecutableD3D *shader11 = GetAs<ShaderExecutable11>(shader);
 
         D3D11_INPUT_ELEMENT_DESC descs[gl::MAX_VERTEX_ATTRIBS];
-        for (unsigned int j = 0; j < inputElementCount; ++j)
+        for (unsigned int j = 0; j < ilKey.elementCount; ++j)
         {
-            descs[j] = inputElements[j];
+            descs[j] = ilKey.elements[j].desc;
         }
 
-        HRESULT result = mDevice->CreateInputLayout(descs, inputElementCount, shader11->getFunction(), shader11->getLength(), &inputLayout);
+        HRESULT result = mDevice->CreateInputLayout(descs, ilKey.elementCount, shader11->getFunction(), shader11->getLength(), &inputLayout);
         if (FAILED(result))
         {
             return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal input layout, HRESULT: 0x%08x", result);
