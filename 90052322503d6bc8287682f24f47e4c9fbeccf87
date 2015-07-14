@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "78b0de09_af14217c",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2885,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-14T21:19:18Z",
+      "side": 1,
+      "message": "Could you explain why this is needed?  Don\u0027t we want to clear all the texture\u0027s images when we redefine it regardless of the new size?",
+      "range": {
+        "startLine": 2885,
+        "startChar": 4,
+        "endLine": 2885,
+        "endChar": 42
+      },
+      "revId": "90052322503d6bc8287682f24f47e4c9fbeccf87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
