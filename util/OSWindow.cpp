@@ -153,7 +153,7 @@ static std::string KeyState(const Event::KeyEvent &event)
     if (event.Shift || event.Control || event.Alt || event.System)
     {
         std::ostringstream buffer;
-        buffer <<" [";
+        buffer << " [";
 
         if (event.Shift)
         {
@@ -172,6 +172,7 @@ static std::string KeyState(const Event::KeyEvent &event)
             buffer << "System";
         }
 
+        buffer << "]";
         return buffer.str();
     }
     return "";
