@@ -22,6 +22,30 @@
       "revId": "90052322503d6bc8287682f24f47e4c9fbeccf87",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5834fa65_624df68e",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2885,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-15T12:31:32Z",
+      "side": 1,
+      "message": "Sure. 2D array textures are the only case where we don\u0027t use a static block of image array textures, since we don\u0027t want to allocate the upper bound. if we delete them unnecessarily, they\u0027ll get re-initted with mDirty \u003d true if it\u0027s a 3 channel texture like RGB8, to init the alpha channel.\nThe error case is when we call TexImage with exactly the same dimensions as the current TexImage. then, if we a texture storage, we\u0027ll ASSERT on SetData (and have other issues) because mDirty is true, and in fact the images are not dirty, and the storage does not need to be re-created. Does this make sense?",
+      "parentUuid": "78b0de09_af14217c",
+      "range": {
+        "startLine": 2885,
+        "startChar": 4,
+        "endLine": 2885,
+        "endChar": 42
+      },
+      "revId": "90052322503d6bc8287682f24f47e4c9fbeccf87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
