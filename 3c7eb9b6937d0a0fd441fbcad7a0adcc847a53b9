@@ -22,6 +22,30 @@
       "revId": "3c7eb9b6937d0a0fd441fbcad7a0adcc847a53b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "183e024a_234374c5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3704,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-15T21:44:25Z",
+      "side": 1,
+      "message": "No problem, firing every 30 minutes makes a lot of sense. I will update the for that, however expect a longer roundtrip as it will take at least an hour for the testing.",
+      "parentUuid": "5834fa65_45d9dc95",
+      "range": {
+        "startLine": 3689,
+        "startChar": 0,
+        "endLine": 3704,
+        "endChar": 5
+      },
+      "revId": "3c7eb9b6937d0a0fd441fbcad7a0adcc847a53b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
