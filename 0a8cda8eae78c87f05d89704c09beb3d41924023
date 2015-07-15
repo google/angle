@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f8404ed5_65ac2278",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-15T21:36:48Z",
+      "side": 1,
+      "message": "I wasn\u0027t happy with the name either, this is much better!\nDone",
+      "parentUuid": "18dc42fc_1043a4e8",
+      "range": {
+        "startLine": 66,
+        "startChar": 11,
+        "endLine": 66,
+        "endChar": 38
+      },
+      "revId": "0a8cda8eae78c87f05d89704c09beb3d41924023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "78753eb8_b34d18bf",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-07-10T17:45:14Z",
       "side": 1,
       "message": "lets ping Alexei Svitkine (asvitkine) about this.. histograms.xml mentions that there\u0027s such a thing as an UMA ping for memory histograms. Maybe we can sync up with that.",
+      "range": {
+        "startLine": 3684,
+        "startChar": 1,
+        "endLine": 3697,
+        "endChar": 5
+      },
+      "revId": "0a8cda8eae78c87f05d89704c09beb3d41924023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5834fa65_85cfe4ce",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3697,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-15T21:36:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "78753eb8_b34d18bf",
       "range": {
         "startLine": 3684,
         "startChar": 1,
