@@ -540,6 +540,13 @@
                             'EGLAPI=__attribute__((visibility("default")))',
                         ],
                     }],
+                    ['OS == "mac"',
+                    {
+                        'xcode_settings':
+                        {
+                            'DYLIB_INSTALL_NAME_BASE': '@rpath',
+                        },
+                    }],
                     ['angle_enable_d3d9==1',
                     {
                         'defines':
@@ -768,6 +775,15 @@
                         ],
                     },
                 }],
+                ['OS == "mac"',
+                {
+                    'all_dependent_settings':
+                    {
+                        'xcode_settings': {
+                            'LD_RUNPATH_SEARCH_PATHS': ['@executable_path/.'],
+                        },
+                    }
+                }]
             ],
         },
     ],

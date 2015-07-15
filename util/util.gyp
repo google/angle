@@ -52,7 +52,7 @@
             'osx/OSX_system_utils.cpp',
             'osx/OSXTimer.cpp',
             'osx/OSXTimer.h',
-            'osx/OSXWindow.cpp',
+            'osx/OSXWindow.mm',
             'osx/OSXWindow.h',
             'posix/Posix_system_utils.cpp',
         ],
@@ -131,6 +131,13 @@
                     [
                         '<@(util_osx_sources)',
                     ],
+                    'link_settings':
+                    {
+                        'libraries':
+                        [
+                            '-framework AppKit',
+                        ],
+                    },
                 }],
             ],
         },
