@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5834fa65_45d9dc95",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3704,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-15T21:41:43Z",
+      "side": 1,
+      "message": "this is fine and I don\u0027t want to hold back the CL, but what I was thinking is that you place the memory recording in a function \u0027updateHistograms\u0027 (mirroring Chrome), and then you call this function at most every N seconds, repeatedly, by recording the last time you fired the updateHistograms method. again this mirrors Chrome, and all we\u0027d theoretically have to do to sync up is change the trigger activation.",
+      "range": {
+        "startLine": 3689,
+        "startChar": 0,
+        "endLine": 3704,
+        "endChar": 5
+      },
+      "revId": "3c7eb9b6937d0a0fd441fbcad7a0adcc847a53b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
