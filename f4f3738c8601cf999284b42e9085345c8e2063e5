@@ -45,6 +45,53 @@
       "revId": "f4f3738c8601cf999284b42e9085345c8e2063e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5834fa65_42447269",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-15T14:26:56Z",
+      "side": 1,
+      "message": "Seems like a valid Q. The validation filters the nested structs case for these variables but someone looking at this function might assume it handles nested structs for some other purpose.",
+      "parentUuid": "9870321a_1360d687",
+      "range": {
+        "startLine": 209,
+        "startChar": 23,
+        "endLine": 209,
+        "endChar": 35
+      },
+      "revId": "f4f3738c8601cf999284b42e9085345c8e2063e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "183e024a_804a7676",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-15T14:26:56Z",
+      "side": 1,
+      "message": "nit: override instead of virtual",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 61,
+        "endChar": 11
+      },
+      "revId": "f4f3738c8601cf999284b42e9085345c8e2063e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
