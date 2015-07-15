@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f8404ed5_a21540ca",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-15T20:19:23Z",
+      "side": 1,
+      "message": "nit: on next line (below too)",
+      "range": {
+        "startLine": 545,
+        "startChar": 41,
+        "endLine": 545,
+        "endChar": 43
+      },
+      "revId": "d42eb9c4925b69d3393c2f1f8dee1bc73037a334",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3837466d_442a4033",
+        "filename": "util/osx/OSXWindow.mm",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-15T20:19:23Z",
+      "side": 1,
+      "message": "nit: needs update",
+      "range": {
+        "startLine": 7,
+        "startChar": 13,
+        "endLine": 7,
+        "endChar": 16
+      },
+      "revId": "d42eb9c4925b69d3393c2f1f8dee1bc73037a334",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
