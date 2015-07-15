@@ -89,6 +89,7 @@ static Key X11CodeToKey(Display *display, unsigned int scancode)
       case XK_KP_Down:     return KEY_NUMPAD2;
       case XK_KP_Page_Down:return KEY_NUMPAD3;
       case XK_KP_Left:     return KEY_NUMPAD4;
+      case XK_KP_5:        return KEY_NUMPAD5;
       case XK_KP_Right:    return KEY_NUMPAD6;
       case XK_KP_Home:     return KEY_NUMPAD7;
       case XK_KP_Up:       return KEY_NUMPAD8;
