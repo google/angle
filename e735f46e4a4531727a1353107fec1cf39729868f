@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3837466d_247e1c25",
+        "filename": "src/libANGLE/VertexAttribute.inl",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-15T20:20:13Z",
+      "side": 1,
+      "message": "Idk how convenient it would be, but if comparisons are done that often, it could be good to keep a hash of all the VA data for faster compares.\n\nWhere do the comparison mostly come from?",
+      "revId": "e735f46e4a4531727a1353107fec1cf39729868f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "183e024a_a3f0e48d",
+        "filename": "src/libANGLE/VertexAttribute.inl",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-15T20:20:13Z",
+      "side": 1,
+      "message": "If the compiler isn\u0027t inlining the memset here, you might want to do it yourself.",
+      "revId": "e735f46e4a4531727a1353107fec1cf39729868f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "78f7fee1_cf94f0c6",
+        "filename": "src/libANGLE/angletypes.inl",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-15T20:20:13Z",
+      "side": 1,
+      "message": "same argument for the hashing here.",
+      "revId": "e735f46e4a4531727a1353107fec1cf39729868f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
