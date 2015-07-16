@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "18ea8220_a0547a26",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3710,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-16T22:11:10Z",
+      "side": 1,
+      "message": "Good catch, I tend to make the error a lot since in french they are both pronounced the same (at least I do pronounce them the same).",
+      "parentUuid": "f8404ed5_3341800b",
+      "range": {
+        "startLine": 3710,
+        "startChar": 18,
+        "endLine": 3710,
+        "endChar": 29
+      },
+      "revId": "7926b0709574edd44b7f4c9902535e9901708591",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "982af212_14479470",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-07-16T14:40:59Z",
       "side": 1,
       "message": "nit: call this GPU.ANGLE.Buffer11CPUMemorySize (or MB) to mirror the internal use",
+      "range": {
+        "startLine": 3711,
+        "startChar": 35,
+        "endLine": 3711,
+        "endChar": 66
+      },
+      "revId": "7926b0709574edd44b7f4c9902535e9901708591",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "18ea8220_c04ffe92",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3711,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-16T22:11:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "982af212_14479470",
       "range": {
         "startLine": 3711,
         "startChar": 35,
