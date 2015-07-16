@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "982af212_94d724e9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-16T15:51:47Z",
+      "side": 1,
+      "message": "you should rename the methods to staging textures in this patch, instead of the subsequent one",
+      "range": {
+        "startLine": 67,
+        "startChar": 14,
+        "endLine": 67,
+        "endChar": 52
+      },
+      "revId": "eebb1ad0db3ae87e7bb4e2b4f6556969739a5403",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "982af212_b4dca00b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-16T15:51:47Z",
+      "side": 1,
+      "message": "comment here as to your expectations: ie \"We expect this to only be enabled on WinRT devices\" or \"We expect this to be enabled on low-spec desktop devices as well\". (Not sure which if either is true)",
+      "range": {
+        "startLine": 387,
+        "startChar": 4,
+        "endLine": 389,
+        "endChar": 69
+      },
+      "revId": "eebb1ad0db3ae87e7bb4e2b4f6556969739a5403",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
