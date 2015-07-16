@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "183e024a_f490e0a4",
+        "filename": "src/libANGLE/VertexAttribute.inl",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-16T16:51:58Z",
+      "side": 1,
+      "message": "Yea, that could certainly be a further optimization. Since it hurts readability and just inlining brought this operator out of the hot spots, I\u0027ll defer it until it\u0027s needed.\n\nThis operator ends up getting called when syncing the attribute state before a draw.  It will be called less after the next patch that only syncs active attributes.",
+      "parentUuid": "3837466d_247e1c25",
+      "revId": "e735f46e4a4531727a1353107fec1cf39729868f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "183e024a_a3f0e48d",
         "filename": "src/libANGLE/VertexAttribute.inl",
         "patchSetId": 5
@@ -30,6 +48,47 @@
       "writtenOn": "2015-07-15T20:20:13Z",
       "side": 1,
       "message": "If the compiler isn\u0027t inlining the memset here, you might want to do it yourself.",
+      "revId": "e735f46e4a4531727a1353107fec1cf39729868f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "183e024a_f4a78017",
+        "filename": "src/libANGLE/VertexAttribute.inl",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-16T16:51:58Z",
+      "side": 1,
+      "message": "This one isn\u0027t called that often but since it was already inlined in the header, I moved it here.",
+      "parentUuid": "183e024a_a3f0e48d",
+      "revId": "e735f46e4a4531727a1353107fec1cf39729868f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "183e024a_c0895e2e",
+        "filename": "src/libANGLE/angletypes.inl",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-16T16:51:58Z",
+      "side": 1,
+      "message": "This ended up speeding up the sampler completeness check for all textures but our draw call overhead test doesn\u0027t cover that.",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 68
+      },
       "revId": "e735f46e4a4531727a1353107fec1cf39729868f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
