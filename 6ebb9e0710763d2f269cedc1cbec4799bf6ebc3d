@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "183e024a_cf5e6943",
+        "filename": "src/compiler/translator/ValidateOutputs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-07-16T17:11:30Z",
+      "side": 1,
+      "message": "The current logic is correct, but a bit confusing.  I suggest instead of a boolean mHasUnspecifiedOutputLocation, we have an unsigned mUnspecifiedOutputLocationCount.  So you can just +1 if location \u003d\u003d -1, and here the condition can be simply if (mUnspecifiedOutputLocationCount \u003e 1).  Much easier to understand.",
+      "range": {
+        "startLine": 38,
+        "startChar": 12,
+        "endLine": 38,
+        "endChar": 30
+      },
+      "revId": "6ebb9e0710763d2f269cedc1cbec4799bf6ebc3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
