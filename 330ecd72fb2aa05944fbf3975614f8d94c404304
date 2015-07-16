@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f8404ed5_1396bc9e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 834,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-16T16:42:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5834fa65_c2d2c2c8",
+      "range": {
+        "startLine": 834,
+        "startChar": 40,
+        "endLine": 834,
+        "endChar": 69
+      },
+      "revId": "330ecd72fb2aa05944fbf3975614f8d94c404304",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3837466d_41547297",
         "filename": "src/libANGLE/renderer/ProgramImpl.h",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-07-15T16:42:25Z",
       "side": 1,
       "message": "nit: can you add a comment here to replace this with a hash map when we have an implementation we can use? it seems this is what chromium uses for variables, and it should be faster.",
+      "range": {
+        "startLine": 131,
+        "startChar": 4,
+        "endLine": 131,
+        "endChar": 57
+      },
+      "revId": "330ecd72fb2aa05944fbf3975614f8d94c404304",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "183e024a_74a6104b",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-16T16:42:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3837466d_41547297",
       "range": {
         "startLine": 131,
         "startChar": 4,
