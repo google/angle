@@ -117,8 +117,6 @@ egl::Error WindowSurfaceGLX::makeCurrent()
 
 egl::Error WindowSurfaceGLX::swap()
 {
-    mGLX.swapBuffers(mGLXWindow);
-
     //TODO(cwallez) set up our own error handler to see if the call failed
     unsigned int newParentWidth, newParentHeight;
     if (!getWindowDimensions(mParent, &newParentWidth, &newParentHeight))
@@ -136,6 +134,8 @@ egl::Error WindowSurfaceGLX::swap()
         XResizeWindow(mDisplay, mWindow, mParentWidth, mParentHeight);
         mGLX.waitX();
     }
+
+    mGLX.swapBuffers(mGLXWindow);
 
     return egl::Error(EGL_SUCCESS);
 }
