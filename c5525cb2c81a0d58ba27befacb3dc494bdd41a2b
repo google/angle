@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "787a9e34_ab2d09ce",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-07-16T20:51:08Z",
+      "side": 1,
+      "message": "Will this work if/when we upgrade to the desktop core profile?",
+      "range": {
+        "startLine": 466,
+        "startChar": 35,
+        "endLine": 466,
+        "endChar": 44
+      },
+      "revId": "c5525cb2c81a0d58ba27befacb3dc494bdd41a2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "586b1a6a_ca388300",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-07-16T20:51:08Z",
+      "side": 1,
+      "message": "Same question here and for all of the tests of STANDARD_GL_DESKTOP.",
+      "range": {
+        "startLine": 474,
+        "startChar": 53,
+        "endLine": 474,
+        "endChar": 72
+      },
+      "revId": "c5525cb2c81a0d58ba27befacb3dc494bdd41a2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b8709650_ed3d65ed",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-07-16T20:51:08Z",
+      "side": 1,
+      "message": "Maybe rename this to nvFence for now? Or should we consider supporting e.g. GL_APPLE_fence too? The reason I ask is that Chromium considers fences to be available if GL_ARB_sync is supported, too. See src/ui/gl/gl_fence.cc in Chromium and talk with dyen@ about recent issues exposing fences.",
+      "range": {
+        "startLine": 481,
+        "startChar": 16,
+        "endLine": 481,
+        "endChar": 21
+      },
+      "revId": "c5525cb2c81a0d58ba27befacb3dc494bdd41a2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
