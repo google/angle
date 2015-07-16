@@ -24,6 +24,11 @@ void ANGLETest::SetUp()
     {
         FAIL() << "egl context creation failed.";
     }
+
+    // Swap the buffers so that the default framebuffer picks up the resize
+    // which will allow follow-up test code to assume the framebuffer covers
+    // the whole window.
+    swapBuffers();
 }
 
 void ANGLETest::TearDown()
