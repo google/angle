@@ -96,6 +96,7 @@ class CollectVariablesTest : public testing::Test
 
     // For use in tests for output varibles.
     void validateOutputVariableForShader(const std::string &shaderString,
+                                         unsigned int varIndex,
                                          const char *varName,
                                          const sh::Attribute **outResult)
     {
@@ -104,8 +105,8 @@ class CollectVariablesTest : public testing::Test
             << mTranslator->getInfoSink().info.str();
 
         const std::vector<sh::Attribute> &outputVariables = mTranslator->getOutputVariables();
-        ASSERT_LT(0u, outputVariables.size());
-        const sh::Attribute &outputVariable = outputVariables[0];
+        ASSERT_LT(varIndex, outputVariables.size());
+        const sh::Attribute &outputVariable = outputVariables[varIndex];
         EXPECT_EQ(-1, outputVariable.location);
         EXPECT_TRUE(outputVariable.staticUse);
         EXPECT_EQ(varName, outputVariable.name);
@@ -478,7 +479,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragColor)
         "}\n";
 
     const sh::Attribute *outputVariable = nullptr;
-    validateOutputVariableForShader(fragColorShader, "gl_FragColor", &outputVariable);
+    validateOutputVariableForShader(fragColorShader, 0u, "gl_FragColor", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
     EXPECT_EQ(0u, outputVariable->arraySize);
     EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
@@ -504,7 +505,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragData)
     initTranslator(resources);
 
     const sh::Attribute *outputVariable = nullptr;
-    validateOutputVariableForShader(fragDataShader, "gl_FragData", &outputVariable);
+    validateOutputVariableForShader(fragDataShader, 0u, "gl_FragData", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
     EXPECT_EQ(kMaxDrawBuffers, outputVariable->arraySize);
     EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
@@ -527,7 +528,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragDepthMediump)
     initTranslator(resources);
 
     const sh::Attribute *outputVariable = nullptr;
-    validateOutputVariableForShader(fragDepthShader, "gl_FragDepthEXT", &outputVariable);
+    validateOutputVariableForShader(fragDepthShader, 0u, "gl_FragDepthEXT", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
     EXPECT_EQ(0u, outputVariable->arraySize);
     EXPECT_GLENUM_EQ(GL_FLOAT, outputVariable->type);
@@ -550,9 +551,82 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragDepthHighp)
     initTranslator(resources);
 
     const sh::Attribute *outputVariable = nullptr;
-    validateOutputVariableForShader(fragDepthHighShader, "gl_FragDepthEXT", &outputVariable);
+    validateOutputVariableForShader(fragDepthHighShader, 0u, "gl_FragDepthEXT", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
     EXPECT_EQ(0u, outputVariable->arraySize);
     EXPECT_GLENUM_EQ(GL_FLOAT, outputVariable->type);
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, outputVariable->precision);
+}
+// Test that gl_SecondaryFragColorEXT built-in usage in ESSL1 fragment shader is reflected in the
+// output variables list.
+TEST_F(CollectFragmentVariablesTest, OutputVarESSL1EXTBlendFuncExtendedSecondaryFragColor)
+{
+    const char *secondaryFragColorShader =
+        "#extension GL_EXT_blend_func_extended : require\n"
+        "precision mediump float;\n"
+        "void main() {\n"
+        "   gl_FragColor = vec4(1.0);\n"
+        "   gl_SecondaryFragColorEXT = vec4(1.0);\n"
+        "}\n";
+
+    const unsigned int kMaxDrawBuffers = 3u;
+    ShBuiltInResources resources       = mTranslator->getResources();
+    resources.EXT_blend_func_extended  = 1;
+    resources.EXT_draw_buffers         = 1;
+    resources.MaxDrawBuffers           = kMaxDrawBuffers;
+    resources.MaxDualSourceDrawBuffers = resources.MaxDrawBuffers;
+    initTranslator(resources);
+
+    const sh::Attribute *outputVariable = nullptr;
+    validateOutputVariableForShader(secondaryFragColorShader, 0u, "gl_FragColor", &outputVariable);
+    ASSERT_NE(outputVariable, nullptr);
+    EXPECT_EQ(0u, outputVariable->arraySize);
+    EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
+    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
+
+    outputVariable = nullptr;
+    validateOutputVariableForShader(secondaryFragColorShader, 1u, "gl_SecondaryFragColorEXT",
+                                    &outputVariable);
+    ASSERT_NE(outputVariable, nullptr);
+    EXPECT_EQ(0u, outputVariable->arraySize);
+    EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
+    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
+}
+
+// Test that gl_SecondaryFragDataEXT built-in usage in ESSL1 fragment shader is reflected in the
+// output variables list.
+TEST_F(CollectFragmentVariablesTest, OutputVarESSL1EXTBlendFuncExtendedSecondaryFragData)
+{
+    const char *secondaryFragDataShader =
+        "#extension GL_EXT_blend_func_extended : require\n"
+        "#extension GL_EXT_draw_buffers : require\n"
+        "precision mediump float;\n"
+        "void main() {\n"
+        "   gl_FragData[0] = vec4(1.0);\n"
+        "   gl_FragData[1] = vec4(0.5);\n"
+        "   gl_SecondaryFragDataEXT[0] = vec4(1.0);\n"
+        "   gl_SecondaryFragDataEXT[1] = vec4(0.8);\n"
+        "}\n";
+    const unsigned int kMaxDrawBuffers = 3u;
+    ShBuiltInResources resources       = mTranslator->getResources();
+    resources.EXT_blend_func_extended  = 1;
+    resources.EXT_draw_buffers         = 1;
+    resources.MaxDrawBuffers           = kMaxDrawBuffers;
+    resources.MaxDualSourceDrawBuffers = resources.MaxDrawBuffers;
+    initTranslator(resources);
+
+    const sh::Attribute *outputVariable = nullptr;
+    validateOutputVariableForShader(secondaryFragDataShader, 0u, "gl_FragData", &outputVariable);
+    ASSERT_NE(outputVariable, nullptr);
+    EXPECT_EQ(kMaxDrawBuffers, outputVariable->arraySize);
+    EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
+    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
+
+    outputVariable = nullptr;
+    validateOutputVariableForShader(secondaryFragDataShader, 1u, "gl_SecondaryFragDataEXT",
+                                    &outputVariable);
+    ASSERT_NE(outputVariable, nullptr);
+    EXPECT_EQ(kMaxDrawBuffers, outputVariable->arraySize);
+    EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
+    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
 }

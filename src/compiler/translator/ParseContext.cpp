@@ -1143,15 +1143,7 @@ bool TParseContext::supportsExtension(const char *extension)
 
 bool TParseContext::isExtensionEnabled(const char *extension) const
 {
-    const TExtensionBehavior &extbehavior   = extensionBehavior();
-    TExtensionBehavior::const_iterator iter = extbehavior.find(extension);
-
-    if (iter == extbehavior.end())
-    {
-        return false;
-    }
-
-    return (iter->second == EBhEnable || iter->second == EBhRequire);
+    return ::IsExtensionEnabled(extensionBehavior(), extension);
 }
 
 void TParseContext::handleExtensionDirective(const TSourceLoc &loc,
@@ -1210,13 +1202,17 @@ const TVariable *TParseContext::getNamedVariable(const TSourceLoc &location,
 
         // Reject shaders using both gl_FragData and gl_FragColor
         TQualifier qualifier = variable->getType().getQualifier();
-        if (qualifier == EvqFragData)
+        if (qualifier == EvqFragData || qualifier == EvqSecondaryFragDataEXT)
         {
             mUsesFragData = true;
         }
-        else if (qualifier == EvqFragColor)
+        else if (qualifier == EvqFragColor || qualifier == EvqSecondaryFragColorEXT)
         {
             mUsesFragColor = true;
+        }
+        if (qualifier == EvqSecondaryFragDataEXT || qualifier == EvqSecondaryFragColorEXT)
+        {
+            mUsesSecondaryOutputs = true;
         }
 
         // This validation is not quite correct - it's only an error to write to
@@ -1225,7 +1221,14 @@ const TVariable *TParseContext::getNamedVariable(const TSourceLoc &location,
         // if they are both referenced, rather than assigned.
         if (mUsesFragData && mUsesFragColor)
         {
-            error(location, "cannot use both gl_FragData and gl_FragColor", name->c_str());
+            const char *errorMessage = "cannot use both gl_FragData and gl_FragColor";
+            if (mUsesSecondaryOutputs)
+            {
+                errorMessage =
+                    "cannot use both output variable sets (gl_FragData, gl_SecondaryFragDataEXT)"
+                    " and (gl_FragColor, gl_SecondaryFragColorEXT)";
+            }
+            error(location, errorMessage, name->c_str());
             recover();
         }
     }

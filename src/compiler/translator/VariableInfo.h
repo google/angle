@@ -59,6 +59,8 @@ class CollectVariables : public TIntermTraverser
     bool mFragColorAdded;
     bool mFragDataAdded;
     bool mFragDepthAdded;
+    bool mSecondaryFragColorEXTAdded;
+    bool mSecondaryFragDataEXTAdded;
 
     ShHashFunction64 mHashFunction;
 

@@ -154,6 +154,7 @@ void ShInitBuiltInResources(ShBuiltInResources* resources)
     resources->OES_standard_derivatives = 0;
     resources->OES_EGL_image_external = 0;
     resources->ARB_texture_rectangle = 0;
+    resources->EXT_blend_func_extended      = 0;
     resources->EXT_draw_buffers = 0;
     resources->EXT_frag_depth = 0;
     resources->EXT_shader_texture_lod = 0;
@@ -172,6 +173,9 @@ void ShInitBuiltInResources(ShBuiltInResources* resources)
     resources->MaxFragmentInputVectors = 15;
     resources->MinProgramTexelOffset = -8;
     resources->MaxProgramTexelOffset = 7;
+
+    // Extensions constants.
+    resources->MaxDualSourceDrawBuffers = 0;
 
     // Disable name hashing by default.
     resources->HashFunction = NULL;

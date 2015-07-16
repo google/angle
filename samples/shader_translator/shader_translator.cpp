@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sstream>
 #include <vector>
 #include "angle_gl.h"
 
@@ -39,7 +40,8 @@ typedef std::vector<char *> ShaderSource;
 static bool ReadShaderSource(const char *fileName, ShaderSource &source);
 static void FreeShaderSource(ShaderSource &source);
 
-static bool ParseGLSLOutputVersion(const char *num, ShShaderOutput *outResult);
+static bool ParseGLSLOutputVersion(const std::string &, ShShaderOutput *outResult);
+static bool ParseIntValue(const std::string &, int emptyDefault, int *outValue);
 
 //
 // Set up the per compile resources
@@ -56,6 +58,7 @@ void GenerateResources(ShBuiltInResources *resources)
     resources->MaxTextureImageUnits = 8;
     resources->MaxFragmentUniformVectors = 16;
     resources->MaxDrawBuffers = 1;
+    resources->MaxDualSourceDrawBuffers     = 1;
 
     resources->OES_standard_derivatives = 0;
     resources->OES_EGL_image_external = 0;
@@ -165,6 +168,31 @@ int main(int argc, char *argv[])
                       case 'i': resources.OES_EGL_image_external = 1; break;
                       case 'd': resources.OES_standard_derivatives = 1; break;
                       case 'r': resources.ARB_texture_rectangle = 1; break;
+                      case 'b':
+                          if (ParseIntValue(&argv[0][sizeof("-x=b") - 1], 1,
+                                            &resources.MaxDualSourceDrawBuffers))
+                          {
+                              resources.EXT_blend_func_extended = 1;
+                          }
+                          else
+                          {
+                              failCode = EFailUsage;
+                          }
+                          break;
+                      case 'w':
+                          if (ParseIntValue(&argv[0][sizeof("-x=w") - 1], 1,
+                                            &resources.MaxDrawBuffers))
+                          {
+                              resources.EXT_draw_buffers = 1;
+                          }
+                          else
+                          {
+                              failCode = EFailUsage;
+                          }
+                          break;
+                      case 'g':
+                          resources.EXT_frag_depth = 1;
+                          break;
                       case 'l': resources.EXT_shader_texture_lod = 1; break;
                       case 'f': resources.EXT_shader_framebuffer_fetch = 1; break;
                       case 'n': resources.NV_shader_framebuffer_fetch = 1; break;
@@ -283,6 +311,8 @@ void usage()
         "       -x=i     : enable GL_OES_EGL_image_external\n"
         "       -x=d     : enable GL_OES_EGL_standard_derivatives\n"
         "       -x=r     : enable ARB_texture_rectangle\n"
+        "       -x=b[NUM]: enable EXT_blend_func_extended (NUM default 1)\n"
+        "       -x=w[NUM]: enable EXT_draw_buffers (NUM default 1)\n"
         "       -x=l     : enable EXT_shader_texture_lod\n"
         "       -x=f     : enable EXT_shader_framebuffer_fetch\n"
         "       -x=n     : enable NV_shader_framebuffer_fetch\n"
@@ -477,14 +507,20 @@ static void FreeShaderSource(ShaderSource &source)
     source.clear();
 }
 
-static bool ParseGLSLOutputVersion(const char *num, ShShaderOutput *outResult)
+static bool ParseGLSLOutputVersion(const std::string &num, ShShaderOutput *outResult)
 {
-    if (*num == '\0')
+    if (num.length() == 0)
     {
         *outResult = SH_GLSL_COMPATIBILITY_OUTPUT;
         return true;
     }
-    long value = strtol(num, NULL, 10);
+    std::istringstream input(num);
+    int value;
+    if (!(input >> value && input.eof()))
+    {
+        return false;
+    }
+
     switch (value)
     {
         case 130:
@@ -521,4 +557,22 @@ static bool ParseGLSLOutputVersion(const char *num, ShShaderOutput *outResult)
             break;
     }
     return false;
+}
+
+static bool ParseIntValue(const std::string &num, int emptyDefault, int *outValue)
+{
+    if (num.length() == 0)
+    {
+        *outValue = emptyDefault;
+        return true;
+    }
+
+    std::istringstream input(num);
+    int value;
+    if (!(input >> value && input.eof()))
+    {
+        return false;
+    }
+    *outValue = value;
+    return true;
 }
