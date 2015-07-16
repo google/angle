@@ -83,7 +83,7 @@ egl::Error WindowSurfaceGLX::initialize()
         return egl::Error(EGL_BAD_NATIVE_WINDOW, "Failed to create the Colormap for the child window.");
     }
     attributes.colormap = colormap;
-    attributes.background_pixel = 0;
+    attributes.border_pixel = 0;
 
     //TODO(cwallez) set up our own error handler to see if the call failed
     mWindow = XCreateWindow(mDisplay, mParent, 0, 0, mParentWidth, mParentHeight,
