@@ -20,8 +20,8 @@ namespace rx
 class RenderbufferImpl : public FramebufferAttachmentObjectImpl
 {
   public:
-    RenderbufferImpl();
-    virtual ~RenderbufferImpl() = 0;
+    RenderbufferImpl() {}
+    virtual ~RenderbufferImpl() {}
 
     virtual gl::Error setStorage(GLenum internalformat, size_t width, size_t height) = 0;
     virtual gl::Error setStorageMultisample(size_t samples, GLenum internalformat, size_t width, size_t height) = 0;

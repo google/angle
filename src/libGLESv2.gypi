@@ -140,7 +140,6 @@
             'libANGLE/renderer/ProgramImpl.h',
             'libANGLE/renderer/QueryImpl.h',
             'libANGLE/renderer/RenderbufferImpl.h',
-            'libANGLE/renderer/RenderbufferImpl.cpp',
             'libANGLE/renderer/Renderer.cpp',
             'libANGLE/renderer/Renderer.h',
             'libANGLE/renderer/ShaderImpl.h',
