@@ -140,6 +140,23 @@
       "revId": "8809622be1d59bce290783514a7d123d463a120d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "18ea8220_232074d3",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-17T19:23:27Z",
+      "side": 1,
+      "message": "Nice workaround !",
+      "revId": "8809622be1d59bce290783514a7d123d463a120d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
