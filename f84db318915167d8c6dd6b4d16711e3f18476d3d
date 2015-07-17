@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f805aec3_5a7631b5",
+        "filename": "src/libANGLE/renderer/RenderbufferImpl_mock.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-17T19:36:49Z",
+      "side": 1,
+      "message": "What is the rational for adding this when a CL removes RenderbufferImpl? It has more methods but I don\u0027t see any CL that adds back a RenderbufferImpl.",
+      "revId": "f84db318915167d8c6dd6b4d16711e3f18476d3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f805aec3_fa846518",
+        "filename": "src/libANGLE/renderer/RenderbufferImpl_mock.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-17T19:36:49Z",
+      "side": 1,
+      "message": "Aren\u0027t these missing a height argument?",
+      "revId": "f84db318915167d8c6dd6b4d16711e3f18476d3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
