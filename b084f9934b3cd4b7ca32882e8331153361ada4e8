@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "38e3c64b_a1391e63",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-17T19:12:24Z",
+      "side": 1,
+      "message": "ok, sgtm",
+      "parentUuid": "18ea8220_c3dc2858",
+      "range": {
+        "startLine": 33,
+        "startChar": 6,
+        "endLine": 33,
+        "endChar": 84
+      },
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "98fd92eb_7c57b99d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 3
@@ -389,6 +413,30 @@
       "side": 1,
       "message": "Unfortunately this would be more a linter warning. I know g3 has these kinds of presubmit warnings but I don\u0027t know if there\u0027s a client side lib for this kind of thing. We might ask someone about Skia or Blink\u0027s presubmit warnings.",
       "parentUuid": "18ea8220_8051765b",
+      "range": {
+        "startLine": 582,
+        "startChar": 32,
+        "endLine": 582,
+        "endChar": 36
+      },
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98fd92eb_5cd91d96",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-17T19:12:24Z",
+      "side": 1,
+      "message": "Alright.  Might be as simple as a python script to search for strings in a git diff.",
+      "parentUuid": "d8f38a19_be34996b",
       "range": {
         "startLine": 582,
         "startChar": 32,
