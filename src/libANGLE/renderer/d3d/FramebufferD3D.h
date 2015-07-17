@@ -100,8 +100,6 @@ class FramebufferD3D : public FramebufferImpl
     virtual GLenum getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const = 0;
 };
 
-unsigned int GetAttachmentSerial(const gl::FramebufferAttachment *attachment);
-
 }
 
 #endif // LIBANGLE_RENDERER_D3D_FRAMBUFFERD3D_H_

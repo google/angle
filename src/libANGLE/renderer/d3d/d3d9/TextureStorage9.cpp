@@ -114,8 +114,6 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, SwapChain9 *swapchai
     mTextureFormat = surfaceDesc.Format;
 
     mRenderTarget = NULL;
-
-    initializeSerials(1, 1);
 }
 
 TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels)
@@ -133,8 +131,6 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, GLenum internalforma
     mTextureWidth = width;
     mTextureHeight = height;
     mMipLevels = mTopLevel + levels;
-
-    initializeSerials(getLevelCount(), 1);
 }
 
 TextureStorage9_2D::~TextureStorage9_2D()
@@ -298,8 +294,6 @@ TextureStorage9_Cube::TextureStorage9_Cube(Renderer9 *renderer, GLenum internalf
     mTextureWidth = size;
     mTextureHeight = size;
     mMipLevels = mTopLevel + levels;
-
-    initializeSerials(getLevelCount() * CUBE_FACE_COUNT, CUBE_FACE_COUNT);
 }
 
 TextureStorage9_Cube::~TextureStorage9_Cube()

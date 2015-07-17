@@ -50,7 +50,6 @@ class TextureD3D : public TextureImpl
     bool isImmutable() const { return mImmutable; }
 
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) = 0;
-    virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index) = 0;
 
     // Returns an iterator over all "Images" for this particular Texture.
     virtual gl::ImageIndexIterator imageIterator() const = 0;
@@ -149,7 +148,6 @@ class TextureD3D_2D : public TextureD3D
     virtual void releaseTexImage();
 
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
-    virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
     virtual gl::ImageIndexIterator imageIterator() const;
     virtual gl::ImageIndex getImageIndex(GLint mip, GLint layer) const;
@@ -212,7 +210,6 @@ class TextureD3D_Cube : public TextureD3D
     virtual void releaseTexImage();
 
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
-    virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
     virtual gl::ImageIndexIterator imageIterator() const;
     virtual gl::ImageIndex getImageIndex(GLint mip, GLint layer) const;
@@ -274,7 +271,6 @@ class TextureD3D_3D : public TextureD3D
     virtual void releaseTexImage();
 
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
-    virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
     virtual gl::ImageIndexIterator imageIterator() const;
     virtual gl::ImageIndex getImageIndex(GLint mip, GLint layer) const;
@@ -334,7 +330,6 @@ class TextureD3D_2DArray : public TextureD3D
     virtual void releaseTexImage();
 
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
-    virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
     virtual gl::ImageIndexIterator imageIterator() const;
     virtual gl::ImageIndex getImageIndex(GLint mip, GLint layer) const;

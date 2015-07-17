@@ -1319,19 +1319,19 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorAtt
     size_t renderTargetHeight = 0;
     D3DFORMAT renderTargetFormat = D3DFMT_UNKNOWN;
 
+    RenderTarget9 *renderTarget = nullptr;
+    gl::Error error = renderAttachment->getRenderTarget(&renderTarget);
+    if (error.isError())
+    {
+        return error;
+    }
+    ASSERT(renderTarget);
+
     bool renderTargetChanged = false;
-    unsigned int renderTargetSerial = GetAttachmentSerial(renderAttachment);
+    unsigned int renderTargetSerial = renderTarget->getSerial();
     if (renderTargetSerial != mAppliedRenderTargetSerial)
     {
         // Apply the render target on the device
-        RenderTarget9 *renderTarget = nullptr;
-        gl::Error error = renderAttachment->getRenderTarget(&renderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
-        ASSERT(renderTarget);
-
         IDirect3DSurface9 *renderTargetSurface = renderTarget->getSurface();
         ASSERT(renderTargetSurface);
 
@@ -1346,24 +1346,29 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorAtt
         renderTargetChanged = true;
     }
 
-    unsigned int depthStencilSerial = (depthStencilAttachment != nullptr) ?
-                                       GetAttachmentSerial(depthStencilAttachment) : 0;
+    RenderTarget9 *depthStencilRenderTarget = nullptr;
+    unsigned int depthStencilSerial = 0;
+
+    if (depthStencilAttachment != nullptr)
+    {
+        gl::Error error = depthStencilAttachment->getRenderTarget(&depthStencilRenderTarget);
+        if (error.isError())
+        {
+            return error;
+        }
+        ASSERT(depthStencilRenderTarget);
+
+        depthStencilSerial = depthStencilRenderTarget->getSerial();
+    }
+
     if (depthStencilSerial != mAppliedDepthStencilSerial || !mDepthStencilInitialized)
     {
         unsigned int depthSize = 0;
         unsigned int stencilSize = 0;
 
         // Apply the depth stencil on the device
-        if (depthStencilAttachment)
+        if (depthStencilRenderTarget)
         {
-            RenderTarget9 *depthStencilRenderTarget = nullptr;
-            gl::Error error = depthStencilAttachment->getRenderTarget(&depthStencilRenderTarget);
-            if (error.isError())
-            {
-                return error;
-            }
-            ASSERT(depthStencilRenderTarget);
-
             IDirect3DSurface9 *depthStencilSurface = depthStencilRenderTarget->getSurface();
             ASSERT(depthStencilSurface);
 

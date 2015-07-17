@@ -211,7 +211,6 @@
             'libANGLE/renderer/d3d/SwapChainD3D.h',
             'libANGLE/renderer/d3d/TextureD3D.cpp',
             'libANGLE/renderer/d3d/TextureD3D.h',
-            'libANGLE/renderer/d3d/TextureStorage.cpp',
             'libANGLE/renderer/d3d/TextureStorage.h',
             'libANGLE/renderer/d3d/TransformFeedbackD3D.cpp',
             'libANGLE/renderer/d3d/TransformFeedbackD3D.h',

@@ -981,12 +981,6 @@ void TextureD3D_2D::initMipmapsImages()
     }
 }
 
-unsigned int TextureD3D_2D::getRenderTargetSerial(const gl::ImageIndex &index)
-{
-    ASSERT(!index.hasLayer());
-    return (!ensureRenderTarget().isError() ? mTexStorage->getRenderTargetSerial(index) : 0);
-}
-
 gl::Error TextureD3D_2D::getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT)
 {
     ASSERT(!index.hasLayer());
@@ -1549,11 +1543,6 @@ void TextureD3D_Cube::initMipmapsImages()
     }
 }
 
-unsigned int TextureD3D_Cube::getRenderTargetSerial(const gl::ImageIndex &index)
-{
-    return (!ensureRenderTarget().isError() ? mTexStorage->getRenderTargetSerial(index) : 0);
-}
-
 gl::Error TextureD3D_Cube::getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT)
 {
     ASSERT(gl::IsCubeMapTextureTarget(index.type));
@@ -2112,11 +2101,6 @@ void TextureD3D_3D::initMipmapsImages()
     }
 }
 
-unsigned int TextureD3D_3D::getRenderTargetSerial(const gl::ImageIndex &index)
-{
-    return (!ensureRenderTarget().isError() ? mTexStorage->getRenderTargetSerial(index) : 0);
-}
-
 gl::Error TextureD3D_3D::getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT)
 {
     // ensure the underlying texture is created
@@ -2664,11 +2648,6 @@ void TextureD3D_2DArray::initMipmapsImages()
                                    baseDepth);
         redefineImage(level, baseFormat, levelLayerSize);
     }
-}
-
-unsigned int TextureD3D_2DArray::getRenderTargetSerial(const gl::ImageIndex &index)
-{
-    return (!ensureRenderTarget().isError() ? mTexStorage->getRenderTargetSerial(index) : 0);
 }
 
 gl::Error TextureD3D_2DArray::getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT)
