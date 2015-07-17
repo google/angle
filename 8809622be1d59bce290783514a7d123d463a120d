@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "18ea8220_8304e04b",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-17T18:55:36Z",
+      "side": 1,
+      "message": "we should probably initialize these to some constructor default value",
+      "range": {
+        "startLine": 347,
+        "startChar": 4,
+        "endLine": 347,
+        "endChar": 27
+      },
+      "revId": "8809622be1d59bce290783514a7d123d463a120d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f805aec3_9a544927",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 766,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-17T18:55:36Z",
+      "side": 1,
+      "message": "it\u0027s worth noting getNativeTexture can be a \u0027heavy\u0027 call, and this moves it out of the if statement body.",
+      "range": {
+        "startLine": 766,
+        "startChar": 34,
+        "endLine": 766,
+        "endChar": 61
+      },
+      "revId": "8809622be1d59bce290783514a7d123d463a120d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98fd92eb_bcddc18b",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2239,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-17T18:55:36Z",
+      "side": 1,
+      "message": "do you want to clear baseLevel here as well?",
+      "range": {
+        "startLine": 2239,
+        "startChar": 8,
+        "endLine": 2239,
+        "endChar": 26
+      },
+      "revId": "8809622be1d59bce290783514a7d123d463a120d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
