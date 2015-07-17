@@ -29,6 +29,8 @@ class RefCountObject : angle::NonCopyable
 
     GLuint id() const { return mId; }
 
+    size_t getRefCount() const { return mRefCount; }
+
   private:
     GLuint mId;
 
