@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f805aec3_97954494",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-17T17:57:15Z",
+      "side": 1,
+      "message": "Possible to force these to be on separate lines?",
+      "range": {
+        "startLine": 33,
+        "startChar": 6,
+        "endLine": 33,
+        "endChar": 84
+      },
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98fd92eb_7c57b99d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-17T17:57:15Z",
+      "side": 1,
+      "message": "I wouldn\u0027t mind it putting multiple args on each line. Either is fine.",
+      "range": {
+        "startLine": 37,
+        "startChar": 35,
+        "endLine": 42,
+        "endChar": 53
+      },
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98fd92eb_dcc08dc4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 614,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-17T17:57:15Z",
+      "side": 1,
+      "message": "Talked in person about this but to document:\nThis is a bit awkward because the format script can\u0027t really determine if these were meant to be together without some deep analysis. I think it\u0027s better than the alternative (not aligning anything) and we can always add newlines if it is too much.",
+      "range": {
+        "startLine": 613,
+        "startChar": 4,
+        "endLine": 614,
+        "endChar": 50
+      },
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58e07a3c_65cf209e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-17T17:57:15Z",
+      "side": 1,
+      "message": "To work around this ugliness, we\u0027ll have to declare the lambdas on a previous line.",
+      "range": {
+        "startLine": 736,
+        "startChar": 41,
+        "endLine": 740,
+        "endChar": 42
+      },
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "38e3c64b_e1c046c4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 759,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-17T17:57:15Z",
+      "side": 1,
+      "message": "We\u0027re going to have to watch out for this.  It\u0027s smart enough to continue the comment to the next line but not smart enough to merge it with the next comment.",
+      "range": {
+        "startLine": 759,
+        "startChar": 8,
+        "endLine": 759,
+        "endChar": 22
+      },
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "180362c0_f82e3119",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1065,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-17T17:57:15Z",
+      "side": 1,
+      "message": "Looks like a bug in the formatter that this is not on multiple lines.  It probably does the assignment alignment after the line length limit checks.",
+      "range": {
+        "startLine": 1065,
+        "startChar": 4,
+        "endLine": 1065,
+        "endChar": 112
+      },
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f805aec3_f783e055",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-17T17:57:15Z",
+      "side": 1,
+      "message": "Another example of the line limit issue.",
+      "range": {
+        "startLine": 266,
+        "startChar": 4,
+        "endLine": 266,
+        "endChar": 109
+      },
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "18ea8220_40576e4f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-17T17:57:15Z",
+      "side": 1,
+      "message": "It seems that when the original line is too long, the assignment alignment falls apart.",
+      "range": {
+        "startLine": 474,
+        "startChar": 8,
+        "endLine": 477,
+        "endChar": 97
+      },
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "18ea8220_8051765b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-17T17:57:15Z",
+      "side": 1,
+      "message": "Does clang-format add any ability to check for certain patterns and issue warnings? Would be cool to get a warning about using NULL instead of nullptr.",
+      "range": {
+        "startLine": 582,
+        "startChar": 32,
+        "endLine": 582,
+        "endChar": 36
+      },
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
