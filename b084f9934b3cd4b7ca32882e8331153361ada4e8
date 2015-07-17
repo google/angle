@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "d81c6a21_99fbbf71",
+        "filename": ".clang-format",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-17T21:25:51Z",
+      "side": 1,
+      "message": "I\u0027d personally keep it on as it is helps keep the code vertical size down when using a switch as a lookup table. (we can enforce the all or none manually)",
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f805aec3_97954494",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 3
