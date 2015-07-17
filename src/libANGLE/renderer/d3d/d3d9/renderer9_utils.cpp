@@ -208,7 +208,8 @@ D3DTEXTUREFILTERTYPE ConvertMagFilter(GLenum magFilter, float maxAnisotropy)
     return d3dMagFilter;
 }
 
-void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DTEXTUREFILTERTYPE *d3dMipFilter, float maxAnisotropy)
+void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DTEXTUREFILTERTYPE *d3dMipFilter,
+                      float *d3dLodBias, float maxAnisotropy, size_t baseLevel)
 {
     switch (minFilter)
     {
@@ -240,6 +241,20 @@ void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DT
         *d3dMinFilter = D3DTEXF_POINT;
         *d3dMipFilter = D3DTEXF_NONE;
         UNREACHABLE();
+    }
+
+    // Disabling mipmapping will always sample from level 0 of the texture. It is possible to work
+    // around this by modifying D3DSAMP_MAXMIPLEVEL to force a specific mip level to become the
+    // lowest sampled mip level and using a large negative value for D3DSAMP_MIPMAPLODBIAS to
+    // ensure that only the base mip level is sampled.
+    if (baseLevel > 0 && *d3dMipFilter == D3DTEXF_NONE)
+    {
+        *d3dMipFilter = D3DTEXF_POINT;
+        *d3dLodBias = -static_cast<float>(gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
+    }
+    else
+    {
+        *d3dLodBias = 0.0f;
     }
 
     if (maxAnisotropy > 1.0f)

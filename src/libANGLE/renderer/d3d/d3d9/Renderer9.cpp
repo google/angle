@@ -344,10 +344,7 @@ void Renderer9::initializeDevice()
 
     const gl::Caps &rendererCaps = getRendererCaps();
 
-    mForceSetVertexSamplerStates.resize(rendererCaps.maxVertexTextureImageUnits);
     mCurVertexSamplerStates.resize(rendererCaps.maxVertexTextureImageUnits);
-
-    mForceSetPixelSamplerStates.resize(rendererCaps.maxTextureImageUnits);
     mCurPixelSamplerStates.resize(rendererCaps.maxTextureImageUnits);
 
     mCurVertexTextures.resize(rendererCaps.maxVertexTextureImageUnits);
@@ -759,46 +756,52 @@ gl::Error Renderer9::generateSwizzle(gl::Texture *texture)
 
 gl::Error Renderer9::setSamplerState(gl::SamplerType type, int index, gl::Texture *texture, const gl::SamplerState &samplerState)
 {
-    std::vector<bool> &forceSetSamplers = (type == gl::SAMPLER_PIXEL) ? mForceSetPixelSamplerStates : mForceSetVertexSamplerStates;
-    std::vector<gl::SamplerState> &appliedSamplers = (type == gl::SAMPLER_PIXEL) ? mCurPixelSamplerStates: mCurVertexSamplerStates;
+    CurSamplerState &appliedSampler = (type == gl::SAMPLER_PIXEL) ? mCurPixelSamplerStates[index]
+                                                                  : mCurVertexSamplerStates[index];
 
-    if (forceSetSamplers[index] || memcmp(&samplerState, &appliedSamplers[index], sizeof(gl::SamplerState)) != 0)
+    // Make sure to add the level offset for our tiny compressed texture workaround
+    TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
+
+    TextureStorage *storage = nullptr;
+    gl::Error error = textureD3D->getNativeTexture(&storage);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    // Storage should exist, texture should be complete
+    ASSERT(storage);
+
+    DWORD baseLevel = samplerState.baseLevel + storage->getTopLevel();
+
+    if (appliedSampler.forceSet || appliedSampler.baseLevel != baseLevel ||
+        memcmp(&samplerState, &appliedSampler, sizeof(gl::SamplerState)) != 0)
     {
         int d3dSamplerOffset = (type == gl::SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
         int d3dSampler = index + d3dSamplerOffset;
-
-        // Make sure to add the level offset for our tiny compressed texture workaround
-        TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
-
-        TextureStorage *storage = nullptr;
-        gl::Error error = textureD3D->getNativeTexture(&storage);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        // Storage should exist, texture should be complete
-        ASSERT(storage);
-
-        DWORD baseLevel = samplerState.baseLevel + storage->getTopLevel();
 
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSU, gl_d3d9::ConvertTextureWrap(samplerState.wrapS));
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSV, gl_d3d9::ConvertTextureWrap(samplerState.wrapT));
 
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAGFILTER, gl_d3d9::ConvertMagFilter(samplerState.magFilter, samplerState.maxAnisotropy));
+
         D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
-        gl_d3d9::ConvertMinFilter(samplerState.minFilter, &d3dMinFilter, &d3dMipFilter, samplerState.maxAnisotropy);
+        float lodBias;
+        gl_d3d9::ConvertMinFilter(samplerState.minFilter, &d3dMinFilter, &d3dMipFilter, &lodBias,
+                                  samplerState.maxAnisotropy, baseLevel);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MINFILTER, d3dMinFilter);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXMIPLEVEL, baseLevel);
+        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPMAPLODBIAS, static_cast<DWORD>(lodBias));
         if (getRendererExtensions().textureFilterAnisotropic)
         {
             mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXANISOTROPY, (DWORD)samplerState.maxAnisotropy);
         }
     }
 
-    forceSetSamplers[index] = false;
-    appliedSamplers[index] = samplerState;
+    appliedSampler.forceSet = false;
+    appliedSampler.samplerState = samplerState;
+    appliedSampler.baseLevel = baseLevel;
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -2229,17 +2232,17 @@ void Renderer9::markAllStateDirty()
     mForceSetViewport = true;
     mForceSetBlendState = true;
 
-    ASSERT(mForceSetVertexSamplerStates.size() == mCurVertexTextures.size());
-    for (unsigned int i = 0; i < mForceSetVertexSamplerStates.size(); i++)
+    ASSERT(mCurVertexSamplerStates.size() == mCurVertexTextures.size());
+    for (unsigned int i = 0; i < mCurVertexTextures.size(); i++)
     {
-        mForceSetVertexSamplerStates[i] = true;
+        mCurVertexSamplerStates[i].forceSet = true;
         mCurVertexTextures[i] = DirtyPointer;
     }
 
-    ASSERT(mForceSetPixelSamplerStates.size() == mCurPixelTextures.size());
-    for (unsigned int i = 0; i < mForceSetPixelSamplerStates.size(); i++)
+    ASSERT(mCurPixelSamplerStates.size() == mCurPixelTextures.size());
+    for (unsigned int i = 0; i < mCurPixelSamplerStates.size(); i++)
     {
-        mForceSetPixelSamplerStates[i] = true;
+        mCurPixelSamplerStates[i].forceSet = true;
         mCurPixelTextures[i] = DirtyPointer;
     }
 
@@ -2966,6 +2969,13 @@ gl::Error Renderer9::clearTextures(gl::SamplerType samplerType, size_t rangeStar
     }
 
     return gl::Error(GL_NO_ERROR);
+}
+
+Renderer9::CurSamplerState::CurSamplerState()
+    : forceSet(true),
+      baseLevel(std::numeric_limits<size_t>::max()),
+      samplerState()
+{
 }
 
 }
