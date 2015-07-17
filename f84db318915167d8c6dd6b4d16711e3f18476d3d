@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "78f8defa_41c2d62a",
+        "filename": "src/libANGLE/renderer/RenderbufferImpl_mock.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-17T19:39:11Z",
+      "side": 1,
+      "message": "It just removes the .cpp file which had an empty constructor in it.",
+      "parentUuid": "f805aec3_5a7631b5",
+      "revId": "f84db318915167d8c6dd6b4d16711e3f18476d3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f805aec3_fa846518",
         "filename": "src/libANGLE/renderer/RenderbufferImpl_mock.h",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-07-17T19:36:49Z",
       "side": 1,
       "message": "Aren\u0027t these missing a height argument?",
+      "revId": "f84db318915167d8c6dd6b4d16711e3f18476d3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "180362c0_98957594",
+        "filename": "src/libANGLE/renderer/RenderbufferImpl_mock.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-17T19:39:11Z",
+      "side": 1,
+      "message": "Nope, the GLenum\u003dformat, size_t1\u003dwidth, size_t2\u003dheight",
+      "parentUuid": "f805aec3_fa846518",
       "revId": "f84db318915167d8c6dd6b4d16711e3f18476d3d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
