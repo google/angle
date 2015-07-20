@@ -66,6 +66,7 @@ We use the [Gerrit](http://code.google.com/p/gerrit) open source code review too
     * Save.
     * Close the text editor.
     * Use `git commit --amend` to update your CL with new changes.
+    * Use `git cl format` to amend the style of your CL. This saves both your time and the reviewers'!
  2. Upload the change list
     * `git cl upload`
     * The change list and modified files will be uploaded to Gerrit.
