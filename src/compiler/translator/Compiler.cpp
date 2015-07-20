@@ -649,7 +649,11 @@ bool TCompiler::pruneUnusedFunctions(TIntermNode *root)
 
     UnusedPredicate isUnused(&mCallDag, &functionMetadata);
     TIntermSequence *sequence = rootNode->getSequence();
-    sequence->erase(std::remove_if(sequence->begin(), sequence->end(), isUnused), sequence->end());
+
+    if (!sequence->empty())
+    {
+        sequence->erase(std::remove_if(sequence->begin(), sequence->end(), isUnused), sequence->end());
+    }
 
     return true;
 }
