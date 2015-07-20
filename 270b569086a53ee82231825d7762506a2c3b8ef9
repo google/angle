@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58e07a3c_28a32f3a",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-20T15:23:35Z",
+      "side": 1,
+      "message": "Maybe this should go in the validation code instead?",
+      "range": {
+        "startLine": 202,
+        "startChar": 4,
+        "endLine": 206,
+        "endChar": 5
+      },
+      "revId": "270b569086a53ee82231825d7762506a2c3b8ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
