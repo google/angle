@@ -238,8 +238,8 @@ void Renderer11::SRVCache::clear()
 Renderer11::Renderer11(egl::Display *display)
     : RendererD3D(display),
       mStateCache(this),
-      mDebug(nullptr),
-      mLastHistogramUpdateTime(ANGLEPlatformCurrent()->monotonicallyIncreasingTime())
+      mLastHistogramUpdateTime(ANGLEPlatformCurrent()->monotonicallyIncreasingTime()),
+      mDebug(nullptr)
 {
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
