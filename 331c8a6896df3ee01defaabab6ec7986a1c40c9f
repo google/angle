@@ -34,6 +34,24 @@
       "revId": "331c8a6896df3ee01defaabab6ec7986a1c40c9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "78429e31_2bf879f0",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 794,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-20T20:58:23Z",
+      "side": 1,
+      "message": "Ok, the man pages must have a slight issue which shows in docs.gl.",
+      "parentUuid": "f8568eec_4f7ead25",
+      "revId": "331c8a6896df3ee01defaabab6ec7986a1c40c9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
