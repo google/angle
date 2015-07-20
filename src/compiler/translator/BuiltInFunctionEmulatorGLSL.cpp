@@ -7,6 +7,7 @@
 #include "angle_gl.h"
 #include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/BuiltInFunctionEmulatorGLSL.h"
+#include "compiler/translator/Cache.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/VersionGLSL.h"
 
@@ -18,10 +19,10 @@ void InitBuiltInFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator *emu,
     // evaluated. This is unlikely to show up in real shaders, but is something to
     // consider.
 
-    TType *float1 = new TType(EbtFloat);
-    TType *float2 = new TType(EbtFloat, 2);
-    TType *float3 = new TType(EbtFloat, 3);
-    TType *float4 = new TType(EbtFloat, 4);
+    const TType *float1 = TCache::getType(EbtFloat);
+    const TType *float2 = TCache::getType(EbtFloat, 2);
+    const TType *float3 = TCache::getType(EbtFloat, 3);
+    const TType *float4 = TCache::getType(EbtFloat, 4);
 
     if (shaderType == GL_FRAGMENT_SHADER)
     {
@@ -44,8 +45,8 @@ void InitBuiltInFunctionEmulatorForGLSLMissingFunctions(BuiltInFunctionEmulator 
     // Emulate packUnorm2x16 and unpackUnorm2x16 (GLSL 4.10)
     if (targetGLSLVersion < GLSL_VERSION_410)
     {
-        TType *float2 = new TType(EbtFloat, 2);
-        TType *uint1 = new TType(EbtUInt);
+        const TType *float2 = TCache::getType(EbtFloat, 2);
+        const TType *uint1 = TCache::getType(EbtUInt);
 
         emu->addEmulatedFunction(EOpPackUnorm2x16, float2,
             "uint webgl_packUnorm2x16_emu(vec2 v)\n"
@@ -68,8 +69,8 @@ void InitBuiltInFunctionEmulatorForGLSLMissingFunctions(BuiltInFunctionEmulator 
     // by using floatBitsToInt, floatBitsToUint, intBitsToFloat, and uintBitsToFloat (GLSL 3.30).
     if (targetGLSLVersion >= GLSL_VERSION_330 && targetGLSLVersion < GLSL_VERSION_420)
     {
-        TType *float2 = new TType(EbtFloat, 2);
-        TType *uint1 = new TType(EbtUInt);
+        const TType *float2 = TCache::getType(EbtFloat, 2);
+        const TType *uint1 = TCache::getType(EbtUInt);
 
         emu->addEmulatedFunction(EOpPackSnorm2x16, float2,
             "uint webgl_packSnorm2x16_emu(vec2 v)\n"
