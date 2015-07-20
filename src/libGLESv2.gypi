@@ -729,6 +729,20 @@
                 {
                     'msvs_enable_winphone' : '1',
                 }],
+                ['angle_link_glx==1',
+                {
+                    'link_settings':
+                    {
+                        'libraries':
+                        [
+                            '-lGL',
+                        ],
+                    },
+                    'defines':
+                    [
+                        'ANGLE_LINK_GLX',
+                    ],
+                }],
             ],
         },
         {
