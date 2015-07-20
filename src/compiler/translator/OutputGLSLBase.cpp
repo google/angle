@@ -921,6 +921,18 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpConstructIVec4:
         writeConstructorTriplet(visit, node->getType(), "ivec4");
         break;
+      case EOpConstructUInt:
+        writeConstructorTriplet(visit, node->getType(), "uint");
+        break;
+      case EOpConstructUVec2:
+        writeConstructorTriplet(visit, node->getType(), "uvec2");
+        break;
+      case EOpConstructUVec3:
+        writeConstructorTriplet(visit, node->getType(), "uvec3");
+        break;
+      case EOpConstructUVec4:
+        writeConstructorTriplet(visit, node->getType(), "uvec4");
+        break;
       case EOpConstructMat2:
         writeConstructorTriplet(visit, node->getType(), "mat2");
         break;
@@ -1184,6 +1196,9 @@ TString TOutputGLSLBase::getTypeName(const TType &type)
             break;
           case EbtBool:
             out << "bvec";
+            break;
+          case EbtUInt:
+            out << "uvec";
             break;
           default:
             UNREACHABLE();
