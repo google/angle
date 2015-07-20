@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "185442e3_531ad675",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 794,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-20T20:47:43Z",
+      "side": 1,
+      "message": "I don\u0027t see this enum value being handled in glGet: http://docs.gl/gl4/glGet",
+      "revId": "331c8a6896df3ee01defaabab6ec7986a1c40c9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
