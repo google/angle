@@ -29,6 +29,11 @@ void ANGLETest::SetUp()
     // which will allow follow-up test code to assume the framebuffer covers
     // the whole window.
     swapBuffers();
+
+    // This Viewport command is not strictly necessary but we add it so that programs
+    // taking OpenGL traces can guess the size of the default framebuffer and show it
+    // in their UIs
+    glViewport(0, 0, mEGLWindow->getWidth(), mEGLWindow->getHeight());
 }
 
 void ANGLETest::TearDown()
