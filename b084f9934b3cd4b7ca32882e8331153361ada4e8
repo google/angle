@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "d81c6a21_bfb13b85",
+        "filename": ".clang-format",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-20T18:35:09Z",
+      "side": 1,
+      "message": "Not sure. We need to decide on setting it to false or true presently. I think there\u0027s some consensus for keeping it false at the moment, is that ok?",
+      "parentUuid": "387f464e_24c89c97",
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f805aec3_97954494",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 3
