@@ -1187,7 +1187,7 @@ gl::Error ProgramD3D::applyUniformBuffers(const gl::Data &data, GLuint uniformBl
             unsigned int registerIndex = uniformBlock->vsRegisterIndex - reservedBuffersInVS;
             ASSERT(registerIndex < data.caps->maxVertexUniformBlocks);
 
-            if (mFragmentUBOCache.size() <= registerIndex)
+            if (mVertexUBOCache.size() <= registerIndex)
             {
                 mVertexUBOCache.resize(registerIndex + 1, -1);
             }
