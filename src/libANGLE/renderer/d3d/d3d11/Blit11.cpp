@@ -372,7 +372,7 @@ Blit11::BlitShaderType Blit11::GetBlitShaderType(GLenum destinationFormat, bool 
               case GL_RGBA_INTEGER: return BLITSHADER_3D_RGBAI;
               case GL_RGB_INTEGER:  return BLITSHADER_3D_RGBI;
               case GL_RG_INTEGER:   return BLITSHADER_3D_RGI;
-              case GL_RED:          return BLITSHADER_3D_RI;
+              case GL_RED_INTEGER:  return BLITSHADER_3D_RI;
               default:
                 UNREACHABLE();
                 return BLITSHADER_INVALID;
@@ -407,7 +407,7 @@ Blit11::BlitShaderType Blit11::GetBlitShaderType(GLenum destinationFormat, bool 
           case GL_RGBA_INTEGER: return BLITSHADER_2D_RGBAI;
           case GL_RGB_INTEGER:  return BLITSHADER_2D_RGBI;
           case GL_RG_INTEGER:   return BLITSHADER_2D_RGI;
-          case GL_RED:          return BLITSHADER_2D_RI;
+          case GL_RED_INTEGER:  return BLITSHADER_2D_RI;
           default:
             UNREACHABLE();
             return BLITSHADER_INVALID;
