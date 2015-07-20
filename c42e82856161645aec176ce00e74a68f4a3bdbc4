@@ -16,6 +16,24 @@
       "revId": "c42e82856161645aec176ce00e74a68f4a3bdbc4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d81c6a21_dcc085c4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-20T15:25:49Z",
+      "side": 1,
+      "message": "To sample from a depth texture in D3D11, you use different formats for its texture, SRV and RTV..\n\nThe Texture would be R32_TYPELESS, the SRV would be R32_UNORM and the RTV would be D32_UNORM.",
+      "parentUuid": "180362c0_ded235c8",
+      "revId": "c42e82856161645aec176ce00e74a68f4a3bdbc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
