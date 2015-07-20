@@ -798,6 +798,88 @@ void FunctionsGL::initialize()
         profile = 0;
     }
 
+    // Load extensions
+    // Even though extensions are written against specific versions of GL, many drivers expose the extensions
+    // in even older versions.  Always try loading the extensions regardless of GL version.
+
+    // GL_NV_fence
+    AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glDeleteFencesNV"), &deleteFencesNV);
+    AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glGenFencesNV"), &genFencesNV);
+    AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glIsFenceNV"), &isFenceNV);
+    AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glTestFenceNV"), &testFenceNV);
+    AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glGetFenceivNV"), &getFenceivNV);
+    AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glFinishFenceNV"), &finishFenceNV);
+    AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glSetFenceNV"), &setFenceNV);
+
+    // GL_EXT_texture_storage
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage", loadProcAddress("glTexStorage1DEXT"), &texStorage1D);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage", loadProcAddress("glTexStorage2DEXT"), &texStorage2D);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage GL_EXT_texture3D", loadProcAddress("glTexStorage3DEXT"), &texStorage3D);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage GL_EXT_direct_state_access", loadProcAddress("glTextureStorage1DEXT"), &textureStorage1D);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage GL_EXT_direct_state_access", loadProcAddress("glTextureStorage2DEXT"), &textureStorage2D);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage GL_EXT_direct_state_access GL_EXT_texture3D", loadProcAddress("glTextureStorage3DEXT"), &textureStorage3D);
+
+    // GL_ARB_vertex_array_object
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_array_object", loadProcAddress("glBindVertexArray"), &bindVertexArray);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_array_object", loadProcAddress("glDeleteVertexArrays"), &deleteVertexArrays);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_array_object", loadProcAddress("glGenVertexArrays"), &genVertexArrays);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_array_object", loadProcAddress("glIsVertexArray"), &isVertexArray);
+
+    // GL_ARB_sync
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glClientWaitSync"), &clientWaitSync);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glDeleteSync"), &deleteSync);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glFenceSync"), &fenceSync);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glGetInteger64i_v"), &getInteger64i_v);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glGetInteger64v"), &getInteger64v);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glGetSynciv"), &getSynciv);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glIsSync"), &isSync);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glWaitSync"), &waitSync);
+
+    // GL_EXT_framebuffer_object
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glIsRenderbufferEXT"), &isRenderbuffer);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glBindRenderbufferEXT"), &bindRenderbuffer);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glDeleteRenderbuffersEXT"), &deleteRenderbuffers);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGenRenderbuffersEXT"), &genRenderbuffers);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glRenderbufferStorageEXT"), &renderbufferStorage);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGetRenderbufferParameterivEXT"), &getRenderbufferParameteriv);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glIsFramebufferEXT"), &isFramebuffer);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glBindFramebufferEXT"), &bindFramebuffer);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glDeleteFramebuffersEXT"), &deleteFramebuffers);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGenFramebuffersEXT"), &genFramebuffers);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glCheckFramebufferStatusEXT"), &checkFramebufferStatus);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glFramebufferTexture1DEXT"), &framebufferTexture1D);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glFramebufferTexture2DEXT"), &framebufferTexture2D);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glFramebufferTexture3DEXT"), &framebufferTexture3D);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glFramebufferRenderbufferEXT"), &framebufferRenderbuffer);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGetFramebufferAttachmentParameterivEXT"), &getFramebufferAttachmentParameteriv);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGenerateMipmapEXT"), &generateMipmap);
+
+    // GL_EXT_framebuffer_blit
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_blit", loadProcAddress("glBlitFramebufferEXT"), &blitFramebuffer);
+
+    // GL_KHR_debug
+    AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glDebugMessageControl"), &debugMessageControl);
+    AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glDebugMessageInsert"), &debugMessageInsert);
+    AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glDebugMessageCallback"), &debugMessageCallback);
+    AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glGetDebugMessageLog"), &getDebugMessageLog);
+    AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glGetPointerv"), &getPointerv);
+    AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glPushDebugGroup"), &pushDebugGroup);
+    AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glPopDebugGroup"), &popDebugGroup);
+    AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glObjectLabel"), &objectLabel);
+    AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glGetObjectLabel"), &getObjectLabel);
+    AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glObjectPtrLabel"), &objectPtrLabel);
+    AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glGetObjectPtrLabel"), &getObjectPtrLabel);
+
+    // GL_ARB_internalformat_query
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_internalformat_query", loadProcAddress("glGetInternalformativ"), &getInternalformativ);
+
+    // GL_ARB_ES2_compatibility
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glReleaseShaderCompiler"), &releaseShaderCompiler);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glShaderBinary"), &shaderBinary);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glGetShaderPrecisionFormat"), &getShaderPrecisionFormat);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glDepthRangef"), &depthRangef);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glClearDepthf"), &clearDepthf);
+
     // 1.0
     if (isAtLeastGL(gl::Version(1, 0)))
     {
@@ -867,39 +949,6 @@ void FunctionsGL::initialize()
         AssignGLEntryPoint(loadProcAddress("glPolygonOffset"), &polygonOffset);
         AssignGLEntryPoint(loadProcAddress("glTexSubImage1D"), &texSubImage1D);
         AssignGLEntryPoint(loadProcAddress("glTexSubImage2D"), &texSubImage2D);
-
-        // Extensions
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glIsRenderbufferEXT"), &isRenderbuffer);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glBindRenderbufferEXT"), &bindRenderbuffer);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glDeleteRenderbuffersEXT"), &deleteRenderbuffers);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGenRenderbuffersEXT"), &genRenderbuffers);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glRenderbufferStorageEXT"), &renderbufferStorage);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGetRenderbufferParameterivEXT"), &getRenderbufferParameteriv);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glIsFramebufferEXT"), &isFramebuffer);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glBindFramebufferEXT"), &bindFramebuffer);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glDeleteFramebuffersEXT"), &deleteFramebuffers);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGenFramebuffersEXT"), &genFramebuffers);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glCheckFramebufferStatusEXT"), &checkFramebufferStatus);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glFramebufferTexture1DEXT"), &framebufferTexture1D);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glFramebufferTexture2DEXT"), &framebufferTexture2D);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glFramebufferTexture3DEXT"), &framebufferTexture3D);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glFramebufferRenderbufferEXT"), &framebufferRenderbuffer);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGetFramebufferAttachmentParameterivEXT"), &getFramebufferAttachmentParameteriv);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_object", loadProcAddress("glGenerateMipmapEXT"), &generateMipmap);
-
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_framebuffer_blit", loadProcAddress("glBlitFramebufferEXT"), &blitFramebuffer);
-
-        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glDebugMessageControl"), &debugMessageControl);
-        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glDebugMessageInsert"), &debugMessageInsert);
-        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glDebugMessageCallback"), &debugMessageCallback);
-        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glGetDebugMessageLog"), &getDebugMessageLog);
-        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glGetPointerv"), &getPointerv);
-        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glPushDebugGroup"), &pushDebugGroup);
-        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glPopDebugGroup"), &popDebugGroup);
-        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glObjectLabel"), &objectLabel);
-        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glGetObjectLabel"), &getObjectLabel);
-        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glObjectPtrLabel"), &objectPtrLabel);
-        AssignGLExtensionEntryPoint(extensions, "GL_KHR_debug", loadProcAddress("glGetObjectPtrLabel"), &getObjectPtrLabel);
     }
 
     // 1.2
@@ -911,22 +960,6 @@ void FunctionsGL::initialize()
         AssignGLEntryPoint(loadProcAddress("glDrawRangeElements"), &drawRangeElements);
         AssignGLEntryPoint(loadProcAddress("glTexImage3D"), &texImage3D);
         AssignGLEntryPoint(loadProcAddress("glTexSubImage3D"), &texSubImage3D);
-
-        // Extensions
-        AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glDeleteFencesNV"), &deleteFencesNV);
-        AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glGenFencesNV"), &genFencesNV);
-        AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glIsFenceNV"), &isFenceNV);
-        AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glTestFenceNV"), &testFenceNV);
-        AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glGetFenceivNV"), &getFenceivNV);
-        AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glFinishFenceNV"), &finishFenceNV);
-        AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glSetFenceNV"), &setFenceNV);
-
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage", loadProcAddress("glTexStorage1DEXT"), &texStorage1D);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage", loadProcAddress("glTexStorage2DEXT"), &texStorage2D);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage GL_EXT_texture3D", loadProcAddress("glTexStorage3DEXT"), &texStorage3D);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage GL_EXT_direct_state_access", loadProcAddress("glTextureStorage1DEXT"), &textureStorage1D);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage GL_EXT_direct_state_access", loadProcAddress("glTextureStorage2DEXT"), &textureStorage2D);
-        AssignGLExtensionEntryPoint(extensions, "GL_EXT_texture_storage GL_EXT_direct_state_access GL_EXT_texture3D", loadProcAddress("glTextureStorage3DEXT"), &textureStorage3D);
     }
 
     // 1.3
@@ -1086,12 +1119,6 @@ void FunctionsGL::initialize()
         AssignGLEntryPoint(loadProcAddress("glUniformMatrix3x4fv"), &uniformMatrix3x4fv);
         AssignGLEntryPoint(loadProcAddress("glUniformMatrix4x2fv"), &uniformMatrix4x2fv);
         AssignGLEntryPoint(loadProcAddress("glUniformMatrix4x3fv"), &uniformMatrix4x3fv);
-
-        // Extensions
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_array_object", loadProcAddress("glBindVertexArray"), &bindVertexArray);
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_array_object", loadProcAddress("glDeleteVertexArrays"), &deleteVertexArrays);
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_array_object", loadProcAddress("glGenVertexArrays"), &genVertexArrays);
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_array_object", loadProcAddress("glIsVertexArray"), &isVertexArray);
     }
 
     // 3.0
@@ -1181,15 +1208,6 @@ void FunctionsGL::initialize()
         AssignGLEntryPoint(loadProcAddress("glVertexAttribI4uiv"), &vertexAttribI4uiv);
         AssignGLEntryPoint(loadProcAddress("glVertexAttribI4usv"), &vertexAttribI4usv);
         AssignGLEntryPoint(loadProcAddress("glVertexAttribIPointer"), &vertexAttribIPointer);
-
-        // Extensions
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_internalformat_query", loadProcAddress("glGetInternalformativ"), &getInternalformativ);
-
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glReleaseShaderCompiler"), &releaseShaderCompiler);
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glShaderBinary"), &shaderBinary);
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glGetShaderPrecisionFormat"), &getShaderPrecisionFormat);
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glDepthRangef"), &depthRangef);
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_ES2_compatibility", loadProcAddress("glClearDepthf"), &clearDepthf);
     }
 
     // 3.1
@@ -1207,16 +1225,6 @@ void FunctionsGL::initialize()
         AssignGLEntryPoint(loadProcAddress("glPrimitiveRestartIndex"), &primitiveRestartIndex);
         AssignGLEntryPoint(loadProcAddress("glTexBuffer"), &texBuffer);
         AssignGLEntryPoint(loadProcAddress("glUniformBlockBinding"), &uniformBlockBinding);
-
-        // Extensions
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glClientWaitSync"), &clientWaitSync);
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glDeleteSync"), &deleteSync);
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glFenceSync"), &fenceSync);
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glGetInteger64i_v"), &getInteger64i_v);
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glGetInteger64v"), &getInteger64v);
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glGetSynciv"), &getSynciv);
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glIsSync"), &isSync);
-        AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glWaitSync"), &waitSync);
     }
 
     // 3.2
