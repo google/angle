@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d83d4aa0_ce1f0317",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-20T20:29:35Z",
+      "side": 1,
+      "message": "Maybe it should be +1 on the other side to prevent potential underflows. I\u0027m not sure if we know that mMaxEnabledAttribute is greater than 0 until after this check.",
+      "range": {
+        "startLine": 92,
+        "startChar": 40,
+        "endLine": 92,
+        "endChar": 44
+      },
+      "revId": "72e33986a51e054804e67d31131d88f6225891a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
