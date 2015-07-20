@@ -22,6 +22,30 @@
       "revId": "72e33986a51e054804e67d31131d88f6225891a1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "383666c8_89489905",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-20T20:40:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d83d4aa0_ce1f0317",
+      "range": {
+        "startLine": 92,
+        "startChar": 40,
+        "endLine": 92,
+        "endChar": 44
+      },
+      "revId": "72e33986a51e054804e67d31131d88f6225891a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
