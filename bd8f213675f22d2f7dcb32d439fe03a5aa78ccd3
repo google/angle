@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "185442e3_73651ac1",
+        "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-20T21:05:01Z",
+      "side": 1,
+      "message": "why not just make this an #else case of !defined(ANGLE_LINK_GLX) and use one macro? Is there some weird string macro substitution problem that I\u0027m not understanding?",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 149,
+        "endChar": 6
+      },
+      "revId": "bd8f213675f22d2f7dcb32d439fe03a5aa78ccd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "786d3eb3_33b9c835",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 736,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-20T21:05:01Z",
+      "side": 1,
+      "message": "I know this is internal test-only code, but if there\u0027s a way to avoid \u0027all_dependent_settings\u0027 we should avoid it. I had some conversations with a gyp guy who told me this. direct_dependent_settings + export_dependent_settings, or putting it in the config if we must.",
+      "range": {
+        "startLine": 736,
+        "startChar": 21,
+        "endLine": 736,
+        "endChar": 43
+      },
+      "revId": "bd8f213675f22d2f7dcb32d439fe03a5aa78ccd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
