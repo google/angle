@@ -14,7 +14,7 @@ ValidateOutputs::ValidateOutputs(TInfoSinkBase& sink, int maxDrawBuffers)
       mSink(sink),
       mMaxDrawBuffers(maxDrawBuffers),
       mNumErrors(0),
-      mUnspecifiedOutputLocationCount(0)
+      mHasUnspecifiedOutputLocation(false)
 {
 }
 
@@ -32,15 +32,14 @@ void ValidateOutputs::visitSymbol(TIntermSymbol *symbol)
     {
         const TType &type = symbol->getType();
         const int location = type.getLayoutQualifier().location;
-        const bool isUnspecifiedOutputLocation = location == -1;
 
-        if (mUnspecifiedOutputLocationCount > 0 || (isUnspecifiedOutputLocation && !mOutputMap.empty()))
+        if (mHasUnspecifiedOutputLocation)
         {
             error(symbol->getLine(), "must explicitly specify all locations when using multiple fragment outputs", name.c_str());
         }
-        else if (isUnspecifiedOutputLocation)
+        else if (location == -1)
         {
-            ++mUnspecifiedOutputLocationCount;
+            mHasUnspecifiedOutputLocation = true;
         }
         else
         {

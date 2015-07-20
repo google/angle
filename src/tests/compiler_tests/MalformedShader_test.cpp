@@ -689,64 +689,6 @@ TEST_F(MalformedShaderTest, LayoutQualifierInFunctionReturnType)
     }
 }
 
-// If there is more than one output, the location must be specified for all outputs.
-// (ESSL 3.00.04 section 4.3.8.2)
-TEST_F(MalformedShaderTest, TwoOutputsNoLayoutQualifiers)
-{
-    const std::string &shaderString =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "uniform vec4 u;\n"
-        "out vec4 my_FragColor;\n"
-        "out vec4 my_SecondaryFragColor;\n"
-        "void main() {\n"
-        "    my_FragColor = vec4(1.0);\n"
-        "    my_SecondaryFragColor = vec4(0.5);\n"
-        "}\n";
-    if (compile(shaderString))
-    {
-        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
-    }
-}
-
-// (ESSL 3.00.04 section 4.3.8.2)
-TEST_F(MalformedShaderTest, TwoOutputsFirstLayoutQualifier)
-{
-    const std::string &shaderString =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "uniform vec4 u;\n"
-        "layout(location = 0) out vec4 my_FragColor;\n"
-        "out vec4 my_SecondaryFragColor;\n"
-        "void main() {\n"
-        "    my_FragColor = vec4(1.0);\n"
-        "    my_SecondaryFragColor = vec4(0.5);\n"
-        "}\n";
-    if (compile(shaderString))
-    {
-        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
-    }
-}
-
-// (ESSL 3.00.04 section 4.3.8.2)
-TEST_F(MalformedShaderTest, TwoOutputsSecondLayoutQualifier)
-{
-    const std::string &shaderString =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "uniform vec4 u;\n"
-        "out vec4 my_FragColor;\n"
-        "layout(location = 0) out vec4 my_SecondaryFragColor;\n"
-        "void main() {\n"
-        "    my_FragColor = vec4(1.0);\n"
-        "    my_SecondaryFragColor = vec4(0.5);\n"
-        "}\n";
-    if (compile(shaderString))
-    {
-        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
-    }
-}
-
 // Uniforms can be arrays (ESSL 3.00 section 4.3.5)
 TEST_F(MalformedShaderTest, UniformArray)
 {

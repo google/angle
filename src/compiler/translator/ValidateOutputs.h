@@ -26,7 +26,7 @@ class ValidateOutputs : public TIntermTraverser
     TInfoSinkBase& mSink;
     int mMaxDrawBuffers;
     int mNumErrors;
-    bool mUnspecifiedOutputLocationCount;
+    bool mHasUnspecifiedOutputLocation;
 
     typedef std::map<int, TIntermSymbol*> OutputMap;
     OutputMap mOutputMap;
