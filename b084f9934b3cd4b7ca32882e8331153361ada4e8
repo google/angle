@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "78f8defa_6f44196a",
+        "filename": ".clang-format",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-20T14:23:53Z",
+      "side": 1,
+      "message": "I did try this and it sometimes sucks. For instance:\n\n switch (a)\n {\n   case GL_RED: return ENUM_RED;\n   case GL_DOESNT_FIT:\n     if (thing)\n     {\n       do();\n     }\n     break;\n   case GL_RED_INTEGER: return ENUM_RED_INTEGER;\n   case GL_EVEN_LONGER_ENUM_NAME_RED_INTEGER: return ENUM_EVEN_LONGER_ENUM_NAME_RED_INTEGER;\n }\n\nThe ugly part is that libFormat doesn\u0027t currently have an option for lining up the return statements or break statements. It looks nice for some switch statements and inconsistently bad in others.\n\nManually doesn\u0027t work so well with git cl format.. anything not marked as \"don\u0027t format anything in here\" is automatic. (Generally you would want as much as possible to be automatic)",
+      "parentUuid": "d81c6a21_99fbbf71",
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f805aec3_97954494",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 3
