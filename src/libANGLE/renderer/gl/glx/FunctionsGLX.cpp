@@ -108,6 +108,7 @@ bool FunctionsGLX::initialize(Display *xDisplay, int screen, std::string *errorS
     mXDisplay = xDisplay;
     mXScreen = screen;
 
+#if !defined(ANGLE_LINK_GLX)
     // Some OpenGL implementations can't handle having this library
     // handle closed while there's any X window still open against
     // which a GLXWindow was ever created.
@@ -131,25 +132,33 @@ bool FunctionsGLX::initialize(Display *xDisplay, int screen, std::string *errorS
         *errorString = "Could not retrieve glXGetProcAddress";
         return false;
     }
+#else
+    getProc = reinterpret_cast<PFNGETPROCPROC>(glXGetProcAddress);
+#endif
 
 #define GET_PROC_OR_ERROR(MEMBER, NAME) \
-    if (!GetProc(getProc, MEMBER, NAME)) \
+    if (!GetProc(getProc, MEMBER, #NAME)) \
     { \
-        *errorString = "Could not load GLX entry point " NAME; \
+        *errorString = "Could not load GLX entry point " #NAME; \
         return false; \
     }
+#if !defined(ANGLE_LINK_GLX)
+#define GET_FNPTR_OR_ERROR(MEMBER, NAME) GET_PROC_OR_ERROR(MEMBER, NAME)
+#else
+#define GET_FNPTR_OR_ERROR(MEMBER, NAME) *MEMBER = NAME;
+#endif
 
     // GLX 1.0
-    GET_PROC_OR_ERROR(&mFnPtrs->destroyContextPtr, "glXDestroyContext");
-    GET_PROC_OR_ERROR(&mFnPtrs->makeCurrentPtr, "glXMakeCurrent");
-    GET_PROC_OR_ERROR(&mFnPtrs->swapBuffersPtr, "glXSwapBuffers");
-    GET_PROC_OR_ERROR(&mFnPtrs->queryExtensionPtr, "glXQueryExtension");
-    GET_PROC_OR_ERROR(&mFnPtrs->queryVersionPtr, "glXQueryVersion");
-    GET_PROC_OR_ERROR(&mFnPtrs->waitXPtr, "glXWaitX");
-    GET_PROC_OR_ERROR(&mFnPtrs->waitGLPtr, "glXWaitGL");
+    GET_FNPTR_OR_ERROR(&mFnPtrs->destroyContextPtr, glXDestroyContext);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->makeCurrentPtr, glXMakeCurrent);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->swapBuffersPtr, glXSwapBuffers);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->queryExtensionPtr, glXQueryExtension);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->queryVersionPtr, glXQueryVersion);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->waitXPtr, glXWaitX);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->waitGLPtr, glXWaitGL);
 
     // GLX 1.1
-    GET_PROC_OR_ERROR(&mFnPtrs->queryExtensionsStringPtr, "glXQueryExtensionsString");
+    GET_FNPTR_OR_ERROR(&mFnPtrs->queryExtensionsStringPtr, glXQueryExtensionsString);
 
     // Check we have a working GLX
     {
@@ -183,20 +192,20 @@ bool FunctionsGLX::initialize(Display *xDisplay, int screen, std::string *errorS
     angle::SplitStringAlongWhitespace(extensions, &mExtensions);
 
     // GLX 1.3
-    GET_PROC_OR_ERROR(&mFnPtrs->getFBConfigsPtr, "glXGetFBConfigs");
-    GET_PROC_OR_ERROR(&mFnPtrs->chooseFBConfigPtr, "glXChooseFBConfig");
-    GET_PROC_OR_ERROR(&mFnPtrs->getFBConfigAttribPtr, "glXGetFBConfigAttrib");
-    GET_PROC_OR_ERROR(&mFnPtrs->getVisualFromFBConfigPtr, "glXGetVisualFromFBConfig");
-    GET_PROC_OR_ERROR(&mFnPtrs->createWindowPtr, "glXCreateWindow");
-    GET_PROC_OR_ERROR(&mFnPtrs->destroyWindowPtr, "glXDestroyWindow");
-    GET_PROC_OR_ERROR(&mFnPtrs->createPbufferPtr, "glXCreatePbuffer");
-    GET_PROC_OR_ERROR(&mFnPtrs->destroyPbufferPtr, "glXDestroyPbuffer");
-    GET_PROC_OR_ERROR(&mFnPtrs->queryDrawablePtr, "glXQueryDrawable");
+    GET_FNPTR_OR_ERROR(&mFnPtrs->getFBConfigsPtr, glXGetFBConfigs);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->chooseFBConfigPtr, glXChooseFBConfig);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->getFBConfigAttribPtr, glXGetFBConfigAttrib);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->getVisualFromFBConfigPtr, glXGetVisualFromFBConfig);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->createWindowPtr, glXCreateWindow);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->destroyWindowPtr, glXDestroyWindow);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->createPbufferPtr, glXCreatePbuffer);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->destroyPbufferPtr, glXDestroyPbuffer);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->queryDrawablePtr, glXQueryDrawable);
 
     // Extensions
     if (hasExtension("GLX_ARB_create_context"))
     {
-        GET_PROC_OR_ERROR(&mFnPtrs->createContextAttribsARBPtr, "glXCreateContextAttribsARB");
+        GET_PROC_OR_ERROR(&mFnPtrs->createContextAttribsARBPtr, glXCreateContextAttribsARB);
     }
     else
     {
@@ -204,13 +213,14 @@ bool FunctionsGLX::initialize(Display *xDisplay, int screen, std::string *errorS
     }
     if (hasExtension("GLX_EXT_swap_control"))
     {
-        GET_PROC_OR_ERROR(&mFnPtrs->swapIntervalEXTPtr, "glXSwapIntervalEXT");
+        GET_PROC_OR_ERROR(&mFnPtrs->swapIntervalEXTPtr, glXSwapIntervalEXT);
     }
     else
     {
         mFnPtrs->swapIntervalEXTPtr = nullptr;
     }
 
+#undef GET_FNPTR_OR_ERROR
 #undef GET_PROC_OR_ERROR
 
     *errorString = "";
