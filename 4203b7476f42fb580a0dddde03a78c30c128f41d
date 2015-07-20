@@ -22,6 +22,30 @@
       "revId": "4203b7476f42fb580a0dddde03a78c30c128f41d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58e07a3c_c89a83f2",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-20T18:41:13Z",
+      "side": 1,
+      "message": "OK, removed TODOs",
+      "parentUuid": "d81c6a21_bcb14985",
+      "range": {
+        "startLine": 137,
+        "startChar": 4,
+        "endLine": 137,
+        "endChar": 48
+      },
+      "revId": "4203b7476f42fb580a0dddde03a78c30c128f41d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
