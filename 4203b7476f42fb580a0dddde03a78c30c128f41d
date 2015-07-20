@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d81c6a21_bcb14985",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-20T15:21:33Z",
+      "side": 1,
+      "message": "You shouldn\u0027t need to worry about these, the base internal format should still be checked against the extension.",
+      "range": {
+        "startLine": 137,
+        "startChar": 4,
+        "endLine": 137,
+        "endChar": 48
+      },
+      "revId": "4203b7476f42fb580a0dddde03a78c30c128f41d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
