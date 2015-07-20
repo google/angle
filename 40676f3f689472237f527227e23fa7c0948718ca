@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "384d865a_f423b6b0",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1291,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-20T21:01:35Z",
+      "side": 1,
+      "message": "This condition block should probably be moved in angle_deqp_gtest_support.\n\nActually I should have done that when I first added Linux support, sorry about that.",
+      "revId": "40676f3f689472237f527227e23fa7c0948718ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
