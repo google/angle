@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "387f464e_24c89c97",
+        "filename": ".clang-format",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-20T17:03:36Z",
+      "side": 1,
+      "message": "Ok makes sense, this case would be ugly. Can we wait for a feature request to be merged / accepted before turning this switch on?",
+      "parentUuid": "78f8defa_4f8f9db0",
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f805aec3_97954494",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 3
