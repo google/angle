@@ -416,9 +416,14 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     {
         caps->maxVaryingComponents = QuerySingleGLInt(functions, GL_MAX_VARYING_COMPONENTS);
     }
+    else if (functions->isAtLeastGL(gl::Version(2, 0)))
+    {
+        caps->maxVaryingComponents = QuerySingleGLInt(functions, GL_MAX_VARYING_FLOATS);
+        LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
+    }
     else
     {
-        LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
+        LimitVersion(maxSupportedESVersion, gl::Version(0, 0));
     }
 
     if (functions->isAtLeastGL(gl::Version(4, 1)) || functions->hasGLExtension("GL_ARB_ES2_compatibility") ||
