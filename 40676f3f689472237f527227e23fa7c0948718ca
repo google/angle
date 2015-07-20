@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "f8568eec_4fdced87",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1130,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-07-20T21:20:26Z",
+      "side": 1,
+      "message": "I don\u0027t think this will work. It relies on angle_deqp_gtest.cpp being rebuilt with a different #define for the two different targets. Consider the case where those two targets are being built simultaneously; the generation of the .obj file, and linking, will race.\n\nThe best way to resolve this would be to have two top-level .cpp files, one for the ES2 and one for the ES3 tests.",
+      "range": {
+        "startLine": 1130,
+        "startChar": 29,
+        "endLine": 1130,
+        "endChar": 51
+      },
+      "revId": "40676f3f689472237f527227e23fa7c0948718ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "384d865a_f423b6b0",
         "filename": "src/tests/deqp.gypi",
         "patchSetId": 1
