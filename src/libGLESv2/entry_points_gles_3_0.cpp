@@ -1873,6 +1873,12 @@ void GL_APIENTRY ClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, G
         Framebuffer *framebufferObject = context->getState().getDrawFramebuffer();
         ASSERT(framebufferObject);
 
+        // If a buffer is not present, the clear has no effect
+        if (framebufferObject->getDepthbuffer() == nullptr && framebufferObject->getStencilbuffer() == nullptr)
+        {
+            return;
+        }
+
         Error error = framebufferObject->clearBufferfi(context->getState(), buffer, drawbuffer, depth, stencil);
         if (error.isError())
         {
