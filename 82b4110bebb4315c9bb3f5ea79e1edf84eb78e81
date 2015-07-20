@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "387f464e_21016ec5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-20T14:16:19Z",
+      "side": 1,
+      "message": "nit: Avoid an undefined call with std::erase-remove_if (just to clarify what an UB is.. uniform block?)",
+      "range": {
+        "startLine": 7,
+        "startChar": 10,
+        "endLine": 7,
+        "endChar": 21
+      },
+      "revId": "82b4110bebb4315c9bb3f5ea79e1edf84eb78e81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
