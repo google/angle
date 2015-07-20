@@ -131,6 +131,15 @@ ES3FormatCombinationSet BuildES3FormatSet()
     InsertES3FormatCombo(&set, GL_ALPHA,              GL_ALPHA,           GL_UNSIGNED_BYTE                 );
     InsertES3FormatCombo(&set, GL_SRGB_ALPHA_EXT,     GL_SRGB_ALPHA_EXT,  GL_UNSIGNED_BYTE                 );
     InsertES3FormatCombo(&set, GL_SRGB_EXT,           GL_SRGB_EXT,        GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_RG,                 GL_RG,              GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_RG,                 GL_RG,              GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_RG,                 GL_RG,              GL_HALF_FLOAT                    );
+    InsertES3FormatCombo(&set, GL_RG,                 GL_RG,              GL_HALF_FLOAT_OES                );
+    InsertES3FormatCombo(&set, GL_RED,                GL_RED,             GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_RED,                GL_RED,             GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_RED,                GL_RED,             GL_HALF_FLOAT                    );
+    InsertES3FormatCombo(&set, GL_RED,                GL_RED,             GL_HALF_FLOAT_OES                );
+    InsertES3FormatCombo(&set, GL_DEPTH_STENCIL,      GL_DEPTH_STENCIL,   GL_UNSIGNED_INT_24_8             );
 
     // Depth stencil formats
     InsertES3FormatCombo(&set, GL_DEPTH_COMPONENT16,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT                );
