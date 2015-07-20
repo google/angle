@@ -156,6 +156,7 @@ unsigned int HLSLVariableRegisterCount(const Varying &variable, bool transposeMa
 unsigned int HLSLVariableRegisterCount(const Uniform &variable, ShShaderOutput outputType)
 {
     HLSLBlockEncoder encoder(HLSLBlockEncoder::GetStrategyFor(outputType));
+    encoder.setTransposeMatrices(true);
     HLSLVariableRegisterCount(variable, &encoder);
 
     const size_t registerBytes = (encoder.BytesPerComponent * encoder.ComponentsPerRegister);
