@@ -109,6 +109,24 @@
     },
     {
       "key": {
+        "uuid": "384d865a_f114a87d",
+        "filename": ".clang-format",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-20T18:44:34Z",
+      "side": 1,
+      "message": "There are a few switch statements we may want to format manually. For these we can use the // clang-format on and // clang-format off hints. Maybe that\u0027ll do the trick?\nSee http://clang.llvm.org/docs/ClangFormatStyleOptions.html#disabling-formatting-on-a-piece-of-code",
+      "parentUuid": "f8884ea6_02d38ccd",
+      "revId": "b084f9934b3cd4b7ca32882e8331153361ada4e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f805aec3_97954494",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 3
