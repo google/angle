@@ -25,8 +25,6 @@
 //  91531 MAC WIN LINUX : conformance_more_* = SKIP
 //  91532 MAC NVIDIA 0x0640 : tex_image_and_sub_image_2d_with_video = PASS FAIL
 
-// TODO(jmadill): remove this file, and leave the gles2 test expectations.
-
 // TODO(cwallez): make suppression for Linux
 
 // TODO(jmadill): triage these into temporary and permanent suppressions
