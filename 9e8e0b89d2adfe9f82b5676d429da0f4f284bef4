@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd4d8a87_c877cf46",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-21T17:50:24Z",
+      "side": 1,
+      "message": "(BTW: you should at some point make a new bug for stuff :)",
+      "range": {
+        "startLine": 13,
+        "startChar": 4,
+        "endLine": 13,
+        "endChar": 20
+      },
+      "revId": "9e8e0b89d2adfe9f82b5676d429da0f4f284bef4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
