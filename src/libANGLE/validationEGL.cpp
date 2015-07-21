@@ -22,12 +22,17 @@ Error ValidateDisplay(const Display *display)
 {
     if (display == EGL_NO_DISPLAY)
     {
-        return Error(EGL_BAD_DISPLAY);
+        return Error(EGL_BAD_DISPLAY, "display is EGL_NO_DISPLAY.");
+    }
+
+    if (!Display::isValidDisplay(display))
+    {
+        return Error(EGL_BAD_DISPLAY, "display is not a valid display.");
     }
 
     if (!display->isInitialized())
     {
-        return Error(EGL_NOT_INITIALIZED);
+        return Error(EGL_NOT_INITIALIZED, "display is not initialized.");
     }
 
     return Error(EGL_SUCCESS);

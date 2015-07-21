@@ -713,6 +713,20 @@ bool Display::isValidNativeWindow(EGLNativeWindowType window) const
     return mImplementation->isValidNativeWindow(window);
 }
 
+bool Display::isValidDisplay(const egl::Display *display)
+{
+    const DisplayMap *displayMap = GetDisplayMap();
+    for (const auto &displayPair : *displayMap)
+    {
+        if (displayPair.second == display)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool Display::isValidNativeDisplay(EGLNativeDisplayType display)
 {
     // TODO(jmadill): handle this properly

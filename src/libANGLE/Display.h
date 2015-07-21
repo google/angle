@@ -81,6 +81,7 @@ class Display final : angle::NonCopyable
     bool isValidSurface(egl::Surface *surface) const;
     bool isValidNativeWindow(EGLNativeWindowType window) const;
 
+    static bool isValidDisplay(const egl::Display *display);
     static bool isValidNativeDisplay(EGLNativeDisplayType display);
     static bool hasExistingWindowSurface(EGLNativeWindowType window);
 
