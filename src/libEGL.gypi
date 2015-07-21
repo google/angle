@@ -9,7 +9,7 @@
     [
         {
             'target_name': 'libEGL',
-            'type': 'shared_library',
+            'type': '<(angle_gl_library_type)',
             'dependencies':
             [
                 'libANGLE',

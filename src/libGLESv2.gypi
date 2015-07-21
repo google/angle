@@ -747,7 +747,7 @@
         },
         {
             'target_name': 'libGLESv2',
-            'type': 'shared_library',
+            'type': '<(angle_gl_library_type)',
             'dependencies': [ 'libANGLE', 'angle_common' ],
             'includes': [ '../build/common_defines.gypi', ],
             'sources':
