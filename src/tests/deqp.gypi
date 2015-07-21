@@ -1123,6 +1123,13 @@
                     [
                         'ANGLE_DEQP_GLES2_TESTS',
                     ],
+                    'direct_dependent_settings':
+                    {
+                        'defines':
+                        [
+                            'ANGLE_DEQP_GLES2_TESTS',
+                        ],
+                    },
                     'sources':
                     [
                         '<@(deqp_gles2_sources)',
@@ -1143,6 +1150,13 @@
                     [
                         'ANGLE_DEQP_GLES3_TESTS',
                     ],
+                    'direct_dependent_settings':
+                    {
+                        'defines':
+                        [
+                            'ANGLE_DEQP_GLES3_TESTS',
+                        ],
+                    },
                     'sources':
                     [
                         '<@(deqp_gles3_sources)',
@@ -1158,7 +1172,6 @@
                     'type': 'none',
                     'dependencies':
                     [
-                        'angle_deqp_libgles2',
                         'angle_test_support',
                         '<(angle_path)/util/util.gyp:angle_util',
                     ],
@@ -1216,6 +1229,21 @@
                                 ],
                             },
                         },
+
+                        'conditions':
+                        [
+                            ['OS=="linux"',
+                            {
+                                'ldflags':
+                                [
+                                    '<!@(pkg-config --libs-only-L --libs-only-other libpci)',
+                                ],
+                                'libraries':
+                                [
+                                    '<!@(pkg-config --libs-only-l libpci)',
+                                ],
+                            }],
+                        ],
                     },
 
                     'conditions':
@@ -1264,30 +1292,32 @@
                 },
 
                 {
-                    'target_name': 'angle_deqp_googletest',
+                    'target_name': 'angle_deqp_gtest_gles2_tests',
                     'type': 'executable',
                     'includes': [ '../../build/common_defines.gypi', ],
                     'dependencies':
                     [
                         'angle_deqp_gtest_support',
+                        'angle_deqp_libgles2',
                     ],
                     'sources':
                     [
                         'deqp_support/angle_deqp_gtest_main.cpp',
                     ],
-                    'conditions':
+                },
+
+                {
+                    'target_name': 'angle_deqp_gtest_gles3_tests',
+                    'type': 'executable',
+                    'includes': [ '../../build/common_defines.gypi', ],
+                    'dependencies':
                     [
-                        ['OS=="linux"',
-                        {
-                            'ldflags':
-                            [
-                                '<!@(pkg-config --libs-only-L --libs-only-other libpci)',
-                            ],
-                            'libraries':
-                            [
-                                '<!@(pkg-config --libs-only-l libpci)',
-                            ],
-                        }],
+                        'angle_deqp_gtest_support',
+                        'angle_deqp_libgles3',
+                    ],
+                    'sources':
+                    [
+                        'deqp_support/angle_deqp_gtest_main.cpp',
                     ],
                 },
             ], # targets

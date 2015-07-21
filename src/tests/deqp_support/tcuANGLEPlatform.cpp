@@ -36,7 +36,6 @@ ANGLEPlatform::ANGLEPlatform()
     angle::SetLowPriorityProcess();
 
 #if (DE_OS == DE_OS_WIN32)
-#if defined(ANGLE_DEQP_GLES2_TESTS) || defined(ANGLE_DEQP_GLES3_TESTS)
     std::vector<eglw::EGLAttrib> d3d11Attribs;
     d3d11Attribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
     d3d11Attribs.push_back(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
@@ -47,9 +46,7 @@ ANGLEPlatform::ANGLEPlatform()
     auto *d3d11Factory = new ANGLENativeDisplayFactory(
         "angle-d3d11", "ANGLE D3D11 Display", d3d11Attribs, &mEvents);
     m_nativeDisplayFactoryRegistry.registerFactory(d3d11Factory);
-#endif // defined(ANGLE_DEQP_GLES2_TESTS) || defined(ANGLE_DEQP_GLES3_TESTS)
 
-#if defined(ANGLE_DEQP_GLES2_TESTS)
     std::vector<eglw::EGLAttrib> d3d9Attribs;
     d3d9Attribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
     d3d9Attribs.push_back(EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE);
@@ -75,10 +72,8 @@ ANGLEPlatform::ANGLEPlatform()
     auto *d3d1193Factory = new ANGLENativeDisplayFactory(
         "angle-d3d11-fl93", "ANGLE D3D11 FL9_3 Display", d3d1193Attribs, &mEvents);
     m_nativeDisplayFactoryRegistry.registerFactory(d3d1193Factory);
-#endif // defined(ANGLE_DEQP_GLES2_TESTS)
 #endif // (DE_OS == DE_OS_WIN32)
 
-#if defined(ANGLE_DEQP_GLES2_TESTS)
     std::vector<eglw::EGLAttrib> glAttribs;
     glAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
     glAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE);
@@ -87,7 +82,6 @@ ANGLEPlatform::ANGLEPlatform()
     auto *glFactory = new ANGLENativeDisplayFactory(
         "angle-gl", "ANGLE OpenGL Display", glAttribs, &mEvents);
     m_nativeDisplayFactoryRegistry.registerFactory(glFactory);
-#endif // defined(ANGLE_DEQP_GLES2_TESTS)
 
     m_contextFactoryRegistry.registerFactory(new eglu::GLContextFactory(m_nativeDisplayFactoryRegistry));
 
