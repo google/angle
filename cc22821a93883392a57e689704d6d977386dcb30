@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d83d4aa0_a2a1e6b6",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-21T14:21:12Z",
+      "side": 1,
+      "message": "please comment here as to why you\u0027re adding the viewport set (to help curious people digging through git logs)",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 70
+      },
+      "revId": "cc22821a93883392a57e689704d6d977386dcb30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
