@@ -42,6 +42,8 @@ EXPORTS
     eglQueryDisplayAttribEXT         @48
     eglQueryDeviceAttribEXT          @49
     eglQueryDeviceStringEXT          @50
+    eglCreateImageKHR                @51
+    eglDestroyImageKHR               @52
 
     ; 1.5 entry points
     eglCreateSync                    @38

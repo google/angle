@@ -2001,4 +2001,21 @@ bool ValidatePushGroupMarkerEXT(Context *context, GLsizei length, const char *ma
     return true;
 }
 
+bool ValidateEGLImageTargetTexture2DOES(Context *context,
+                                        egl::Display *display,
+                                        GLenum target,
+                                        egl::Image *image)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
+                                                  egl::Display *display,
+                                                  GLenum target,
+                                                  egl::Image *image)
+{
+    UNIMPLEMENTED();
+    return true;
+}
 }

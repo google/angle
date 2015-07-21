@@ -485,6 +485,27 @@ Error Display::createPixmapSurface(const Config *configuration, NativePixmapType
     return Error(EGL_SUCCESS);
 }
 
+Error Display::createImage(gl::Context *context,
+                           EGLenum target,
+                           EGLClientBuffer buffer,
+                           const AttributeMap &attribs,
+                           Image **outImage)
+{
+    ASSERT(isInitialized());
+
+    if (mImplementation->testDeviceLost())
+    {
+        Error error = restoreLostDevice();
+        if (error.isError())
+        {
+            return error;
+        }
+    }
+
+    UNIMPLEMENTED();
+    return Error(EGL_SUCCESS);
+}
+
 Error Display::createContext(const Config *configuration, gl::Context *shareContext, const AttributeMap &attribs,
                              gl::Context **outContext)
 {
@@ -568,6 +589,11 @@ void Display::destroySurface(Surface *surface)
     }
 
     mImplementation->destroySurface(surface);
+}
+
+void Display::destroyImage(egl::Image *image)
+{
+    UNIMPLEMENTED();
 }
 
 void Display::destroyContext(gl::Context *context)

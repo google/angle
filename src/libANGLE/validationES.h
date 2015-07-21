@@ -14,6 +14,12 @@
 #include <GLES2/gl2.h>
 #include <GLES3/gl3.h>
 
+namespace egl
+{
+class Display;
+class Image;
+}
+
 namespace gl
 {
 
@@ -94,6 +100,15 @@ bool ValidateDiscardFramebufferBase(Context *context, GLenum target, GLsizei num
 
 bool ValidateInsertEventMarkerEXT(Context *context, GLsizei length, const char *marker);
 bool ValidatePushGroupMarkerEXT(Context *context, GLsizei length, const char *marker);
+
+bool ValidateEGLImageTargetTexture2DOES(Context *context,
+                                        egl::Display *display,
+                                        GLenum target,
+                                        egl::Image *image);
+bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
+                                                  egl::Display *display,
+                                                  GLenum target,
+                                                  egl::Image *image);
 }
 
 #endif // LIBANGLE_VALIDATION_ES_H_

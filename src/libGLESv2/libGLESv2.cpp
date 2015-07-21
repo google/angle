@@ -1431,4 +1431,13 @@ void GL_APIENTRY glPopGroupMarkerEXT()
     return gl::PopGroupMarkerEXT();
 }
 
+void GL_APIENTRY glEGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
+{
+    return gl::EGLImageTargetTexture2DOES(target, image);
+}
+
+void GL_APIENTRY glEGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageOES image)
+{
+    return gl::EGLImageTargetRenderbufferStorageOES(target, image);
+}
 }

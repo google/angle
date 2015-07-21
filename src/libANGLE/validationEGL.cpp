@@ -531,4 +531,19 @@ Error ValidateCompatibleConfigs(const Config *config1, const Config *config2, EG
     return Error(EGL_SUCCESS);
 }
 
+Error ValidateCreateImageKHR(const Display *display,
+                             gl::Context *context,
+                             EGLenum target,
+                             EGLClientBuffer buffer,
+                             const AttributeMap &attributes)
+{
+    UNIMPLEMENTED();
+    return Error(EGL_SUCCESS);
+}
+
+Error ValidateDestroyImageKHR(const Display *display, const Image *image)
+{
+    UNIMPLEMENTED();
+    return Error(EGL_SUCCESS);
+}
 }

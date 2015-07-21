@@ -24,6 +24,7 @@ class AttributeMap;
 class Display;
 struct Config;
 class Surface;
+class ImageSibling;
 }
 
 namespace gl
@@ -34,6 +35,7 @@ class Context;
 namespace rx
 {
 class SurfaceImpl;
+class ImageImpl;
 struct ConfigDesc;
 class DeviceImpl;
 
@@ -57,6 +59,11 @@ class DisplayImpl : angle::NonCopyable
     virtual SurfaceImpl *createPixmapSurface(const egl::Config *configuration,
                                              NativePixmapType nativePixmap,
                                              const egl::AttributeMap &attribs) = 0;
+
+    virtual ImageImpl *createImage(EGLenum target,
+                                   egl::ImageSibling *buffer,
+                                   const egl::AttributeMap &attribs) = 0;
+
     virtual egl::Error createContext(const egl::Config *config, const gl::Context *shareContext, const egl::AttributeMap &attribs,
                                      gl::Context **outContext) = 0;
 

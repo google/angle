@@ -386,4 +386,55 @@ EGLBoolean EGLAPIENTRY QueryDisplayAttribEXT(EGLDisplay dpy, EGLint attribute, E
     return (error.isError() ? EGL_FALSE : EGL_TRUE);
 }
 
+ANGLE_EXPORT EGLImageKHR EGLAPIENTRY CreateImageKHR(EGLDisplay dpy,
+                                                    EGLContext ctx,
+                                                    EGLenum target,
+                                                    EGLClientBuffer buffer,
+                                                    const EGLint *attrib_list)
+{
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLContext ctx = 0x%0.8p, EGLenum target = 0x%X, "
+        "EGLClientBuffer buffer = 0x%0.8p, const EGLAttrib *attrib_list = 0x%0.8p)",
+        dpy, ctx, target, buffer, attrib_list);
+
+    Display *display     = static_cast<Display *>(dpy);
+    gl::Context *context = static_cast<gl::Context *>(ctx);
+    AttributeMap attributes(attrib_list);
+
+    Error error = ValidateCreateImageKHR(display, context, target, buffer, attributes);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_NO_IMAGE;
+    }
+
+    Image *image = nullptr;
+    error = display->createImage(context, target, buffer, attributes, &image);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_NO_IMAGE;
+    }
+
+    return static_cast<EGLImage>(image);
+}
+
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY DestroyImageKHR(EGLDisplay dpy, EGLImageKHR image)
+{
+    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLImage image = 0x%0.8p)", dpy, image);
+
+    Display *display = static_cast<Display *>(dpy);
+    Image *img       = static_cast<Image *>(image);
+
+    Error error = ValidateDestroyImageKHR(display, img);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+
+    display->destroyImage(img);
+
+    return EGL_TRUE;
+}
 }

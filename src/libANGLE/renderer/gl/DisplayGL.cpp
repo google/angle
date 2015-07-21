@@ -47,6 +47,14 @@ void DisplayGL::terminate()
     SafeDelete(mRenderer);
 }
 
+ImageImpl *DisplayGL::createImage(EGLenum target,
+                                  egl::ImageSibling *buffer,
+                                  const egl::AttributeMap &attribs)
+{
+    UNIMPLEMENTED();
+    return nullptr;
+}
+
 egl::Error DisplayGL::createContext(const egl::Config *config, const gl::Context *shareContext, const egl::AttributeMap &attribs, gl::Context **outContext)
 {
     ASSERT(mRenderer != nullptr);

@@ -257,6 +257,20 @@ const char * EGLAPIENTRY eglQueryDeviceStringEXT(EGLDeviceEXT device, EGLint nam
     return egl::QueryDeviceStringEXT(device, name);
 }
 
+EGLImageKHR EGLAPIENTRY eglCreateImageKHR(EGLDisplay dpy,
+                                          EGLContext ctx,
+                                          EGLenum target,
+                                          EGLClientBuffer buffer,
+                                          const EGLint *attrib_list)
+{
+    return egl::CreateImageKHR(dpy, ctx, target, buffer, attrib_list);
+}
+
+EGLBoolean EGLAPIENTRY eglDestroyImageKHR(EGLDisplay dpy, EGLImageKHR image)
+{
+    return egl::DestroyImageKHR(dpy, image);
+}
+
 __eglMustCastToProperFunctionPointerType EGLAPIENTRY eglGetProcAddress(const char *procname)
 {
     return egl::GetProcAddress(procname);

@@ -181,6 +181,8 @@ EXPORTS
     glInsertEventMarkerEXT          @294
     glPushGroupMarkerEXT            @295
     glPopGroupMarkerEXT             @296
+    glEGLImageTargetTexture2DOES    @297
+    glEGLImageTargetRenderbufferStorageOES @298
 
     ; GLES 3.0 Functions
     glReadBuffer                    @180

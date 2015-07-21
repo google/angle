@@ -1182,4 +1182,40 @@ void GL_APIENTRY PopGroupMarkerEXT()
     }
 }
 
+ANGLE_EXPORT void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
+{
+    EVENT("(GLenum target = 0x%X, GLeglImageOES image = 0x%0.8p)", target, image);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        egl::Display *display   = egl::GetGlobalDisplay();
+        egl::Image *imageObject = reinterpret_cast<egl::Image *>(image);
+        if (!ValidateEGLImageTargetTexture2DOES(context, display, target, imageObject))
+        {
+            return;
+        }
+
+        UNIMPLEMENTED();
+    }
+}
+
+ANGLE_EXPORT void GL_APIENTRY EGLImageTargetRenderbufferStorageOES(GLenum target,
+                                                                   GLeglImageOES image)
+{
+    EVENT("(GLenum target = 0x%X, GLeglImageOES image = 0x%0.8p)", target, image);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        egl::Display *display   = egl::GetGlobalDisplay();
+        egl::Image *imageObject = reinterpret_cast<egl::Image *>(image);
+        if (!ValidateEGLImageTargetRenderbufferStorageOES(context, display, target, imageObject))
+        {
+            return;
+        }
+
+        UNIMPLEMENTED();
+    }
+}
 }

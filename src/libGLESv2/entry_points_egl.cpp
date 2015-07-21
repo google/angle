@@ -1126,6 +1126,7 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         __eglMustCastToProperFunctionPointerType address;
     };
 
+    // clang-format off
     static const Extension extensions[] =
     {
         { "eglQueryDeviceAttribEXT", (__eglMustCastToProperFunctionPointerType)QueryDeviceAttribEXT },
@@ -1134,6 +1135,8 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         { "eglQuerySurfacePointerANGLE", (__eglMustCastToProperFunctionPointerType)QuerySurfacePointerANGLE },
         { "eglPostSubBufferNV", (__eglMustCastToProperFunctionPointerType)PostSubBufferNV },
         { "eglGetPlatformDisplayEXT", (__eglMustCastToProperFunctionPointerType)GetPlatformDisplayEXT },
+        { "eglCreateImageKHR", (__eglMustCastToProperFunctionPointerType)CreateImageKHR },
+        { "eglDestroyImageKHR", (__eglMustCastToProperFunctionPointerType)DestroyImageKHR },
         { "glBlitFramebufferANGLE", (__eglMustCastToProperFunctionPointerType)gl::BlitFramebufferANGLE },
         { "glRenderbufferStorageMultisampleANGLE", (__eglMustCastToProperFunctionPointerType)gl::RenderbufferStorageMultisampleANGLE },
         { "glDeleteFencesNV", (__eglMustCastToProperFunctionPointerType)gl::DeleteFencesNV },
@@ -1171,8 +1174,11 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         { "glInsertEventMarkerEXT", (__eglMustCastToProperFunctionPointerType)gl::InsertEventMarkerEXT },
         { "glPushGroupMarkerEXT", (__eglMustCastToProperFunctionPointerType)gl::PushGroupMarkerEXT },
         { "glPopGroupMarkerEXT", (__eglMustCastToProperFunctionPointerType)gl::PopGroupMarkerEXT },
+        { "glEGLImageTargetTexture2DOES", (__eglMustCastToProperFunctionPointerType)gl::EGLImageTargetTexture2DOES },
+        { "glEGLImageTargetRenderbufferStorageOES", (__eglMustCastToProperFunctionPointerType)gl::EGLImageTargetRenderbufferStorageOES },
         { "", NULL },
     };
+    // clang-format on
 
     for (const Extension *extension = &extensions[0]; extension->address != nullptr; extension++)
     {

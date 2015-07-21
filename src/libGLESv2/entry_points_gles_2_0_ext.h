@@ -81,6 +81,10 @@ ANGLE_EXPORT void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const char *m
 ANGLE_EXPORT void GL_APIENTRY PushGroupMarkerEXT(GLsizei length, const char *marker);
 ANGLE_EXPORT void GL_APIENTRY PopGroupMarkerEXT();
 
+// GL_OES_EGL_image
+ANGLE_EXPORT void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image);
+ANGLE_EXPORT void GL_APIENTRY EGLImageTargetRenderbufferStorageOES(GLenum target,
+                                                                   GLeglImageOES image);
 }
 
 #endif // LIBGLESV2_ENTRYPOINTGLES20EXT_H_

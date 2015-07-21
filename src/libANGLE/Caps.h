@@ -219,6 +219,15 @@ struct Extensions
     // EXT_debug_marker
     bool debugMarker;
 
+    // GL_OES_EGL_image
+    bool eglImage;
+
+    // GL_OES_EGL_image_external
+    bool eglImageExternal;
+
+    // GL_OES_EGL_image_external_essl3
+    bool eglImageExternalEssl3;
+
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float
@@ -376,6 +385,27 @@ struct DisplayExtensions
 
     // EGL_EXT_device_query
     bool deviceQuery;
+
+    // EGL_KHR_image
+    bool image;
+
+    // EGL_KHR_image_base
+    bool imageBase;
+
+    // EGL_KHR_image_pixmap
+    bool imagePixmap;
+
+    // EGL_KHR_gl_texture_2D_image
+    bool glTexture2DImage;
+
+    // EGL_KHR_gl_texture_cubemap_image
+    bool glTextureCubemapImage;
+
+    // EGL_KHR_gl_texture_3D_image
+    bool glTexture3DImage;
+
+    // EGL_KHR_gl_renderbuffer_image
+    bool glRenderbufferImage;
 };
 
 struct DeviceExtensions
