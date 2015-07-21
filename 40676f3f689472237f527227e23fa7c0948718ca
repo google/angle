@@ -39,6 +39,23 @@
       "revId": "40676f3f689472237f527227e23fa7c0948718ca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b83896b1_b654ce26",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-21T01:08:04Z",
+      "side": 1,
+      "message": "I think you could remove the need for templates by doing the following changes:\n - Keep dEQPCaseList as before, but without the singleton thing\n - Adding a virutal const dEQPCaseList \u0026getCaseList() const to dEQPTest\n - In the right ifdef adding a static const dEQPCaselist GLES2CaseList(\"dEQP-GLES2...\")\n - Implementing the virtual function for dEQP_GLES2 by returning GLES2CaseList",
+      "revId": "40676f3f689472237f527227e23fa7c0948718ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
