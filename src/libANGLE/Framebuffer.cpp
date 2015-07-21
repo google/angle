@@ -601,19 +601,21 @@ void Framebuffer::setAttachment(GLenum type,
     if (binding == GL_DEPTH_STENCIL || binding == GL_DEPTH_STENCIL_ATTACHMENT)
     {
         // ensure this is a legitimate depth+stencil format
-        FramebufferAttachment::Target target(binding, textureIndex);
-        GLenum internalFormat = resource->getAttachmentInternalFormat(target);
-        const InternalFormat &formatInfo = GetInternalFormatInfo(internalFormat);
-        if (resource && formatInfo.depthBits > 0 && formatInfo.stencilBits > 0)
+        FramebufferAttachmentObject *attachmentObj = resource;
+        if (resource)
         {
-            mData.mDepthAttachment.attach(type, binding, textureIndex, resource);
-            mData.mStencilAttachment.attach(type, binding, textureIndex, resource);
+            FramebufferAttachment::Target target(binding, textureIndex);
+            GLenum internalFormat            = resource->getAttachmentInternalFormat(target);
+            const InternalFormat &formatInfo = GetInternalFormatInfo(internalFormat);
+            if (formatInfo.depthBits == 0 || formatInfo.stencilBits == 0)
+            {
+                // Attaching nullptr detaches the current attachment.
+                attachmentObj = nullptr;
+            }
         }
-        else
-        {
-            mData.mDepthAttachment.detach();
-            mData.mStencilAttachment.detach();
-        }
+
+        mData.mDepthAttachment.attach(type, binding, textureIndex, attachmentObj);
+        mData.mStencilAttachment.attach(type, binding, textureIndex, attachmentObj);
         mImpl->onUpdateDepthStencilAttachment();
     }
     else
