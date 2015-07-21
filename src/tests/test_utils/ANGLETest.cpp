@@ -121,10 +121,25 @@ GLuint ANGLETest::compileShader(GLenum type, const std::string &source)
     return shader;
 }
 
+static bool checkExtensionExists(const char *allExtensions, const std::string &extName)
+{
+    return strstr(allExtensions, extName.c_str()) != nullptr;
+}
+
 bool ANGLETest::extensionEnabled(const std::string &extName)
 {
-    const char* extString = reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));
-    return strstr(extString, extName.c_str()) != NULL;
+    return checkExtensionExists(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)),
+                                extName);
+}
+
+bool ANGLETest::eglDisplayExtensionEnabled(EGLDisplay display, const std::string &extName)
+{
+    return checkExtensionExists(eglQueryString(display, EGL_EXTENSIONS), extName);
+}
+
+bool ANGLETest::eglClientExtensionEnabled(const std::string &extName)
+{
+    return checkExtensionExists(eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS), extName);
 }
 
 void ANGLETest::setWindowWidth(int width)
