@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd4d8a87_65afe6ec",
+        "filename": "src/angle.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-21T15:32:00Z",
+      "side": 1,
+      "message": "Could you make this a string variable instead?\n\n   \u0027angle_library_type%\u0027: \u0027shared_library\u0027,",
+      "range": {
+        "startLine": 21,
+        "startChar": 9,
+        "endLine": 21,
+        "endChar": 36
+      },
+      "revId": "9bf1ed50c993e41cea1e96a8664ced55ff5660ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
