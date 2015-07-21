@@ -22,6 +22,30 @@
       "revId": "9bf1ed50c993e41cea1e96a8664ced55ff5660ab",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "78429e31_7f4eb7ba",
+        "filename": "src/angle.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-21T15:34:17Z",
+      "side": 1,
+      "message": "+1, also make it clear in the name it applies only to libEGL and libGLESv2, something like \"angle_gl_library_type\"",
+      "parentUuid": "cd4d8a87_65afe6ec",
+      "range": {
+        "startLine": 21,
+        "startChar": 9,
+        "endLine": 21,
+        "endChar": 36
+      },
+      "revId": "9bf1ed50c993e41cea1e96a8664ced55ff5660ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
