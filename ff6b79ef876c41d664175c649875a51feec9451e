@@ -16,6 +16,24 @@
       "revId": "ff6b79ef876c41d664175c649875a51feec9451e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "78429e31_e0d68834",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1129,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-21T20:19:58Z",
+      "side": 1,
+      "message": "Yea, good call.  I\u0027ll look into it.  I also want to support EGL_KHR_get_all_proc_addresses soon so that will go together with cleaning this up.",
+      "parentUuid": "2d670610_78b8c113",
+      "revId": "ff6b79ef876c41d664175c649875a51feec9451e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
