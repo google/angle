@@ -148,6 +148,9 @@ CollectVariables::CollectVariables(std::vector<sh::Attribute> *attribs,
       mPositionAdded(false),
       mPointSizeAdded(false),
       mLastFragDataAdded(false),
+      mFragColorAdded(false),
+      mFragDataAdded(false),
+      mFragDepthAdded(false),
       mHashFunction(hashFunction),
       mSymbolTable(symbolTable)
 {
@@ -366,6 +369,57 @@ void CollectVariables::visitSymbol(TIntermSymbol *symbol)
                 mLastFragDataAdded = true;
             }
             return;
+          case EvqFragColor:
+              if (!mFragColorAdded)
+              {
+                  Attribute info;
+                  const char kName[] = "gl_FragColor";
+                  info.name          = kName;
+                  info.mappedName    = kName;
+                  info.type          = GL_FLOAT_VEC4;
+                  info.arraySize     = 0;
+                  info.precision     = GL_MEDIUM_FLOAT;  // Defined by spec.
+                  info.staticUse = true;
+                  mOutputVariables->push_back(info);
+                  mFragColorAdded = true;
+              }
+              return;
+          case EvqFragData:
+              if (!mFragDataAdded)
+              {
+                  Attribute info;
+                  const char kName[] = "gl_FragData";
+                  info.name          = kName;
+                  info.mappedName    = kName;
+                  info.type          = GL_FLOAT_VEC4;
+                  info.arraySize = static_cast<const TVariable *>(
+                                       mSymbolTable.findBuiltIn("gl_MaxDrawBuffers", 100))
+                                       ->getConstPointer()
+                                       ->getIConst();
+                  info.precision = GL_MEDIUM_FLOAT;  // Defined by spec.
+                  info.staticUse = true;
+                  mOutputVariables->push_back(info);
+                  mFragDataAdded = true;
+              }
+              return;
+          case EvqFragDepth:
+              if (!mFragDepthAdded)
+              {
+                  Attribute info;
+                  const char kName[] = "gl_FragDepthEXT";
+                  info.name          = kName;
+                  info.mappedName    = kName;
+                  info.type          = GL_FLOAT;
+                  info.arraySize = 0;
+                  info.precision =
+                      GLVariablePrecision(static_cast<const TVariable *>(
+                                              mSymbolTable.findBuiltIn("gl_FragDepthEXT", 100))
+                                              ->getType());
+                  info.staticUse = true;
+                  mOutputVariables->push_back(info);
+                  mFragDepthAdded = true;
+              }
+              return;
           default:
             break;
         }

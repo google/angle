@@ -12,51 +12,6 @@
 #include "compiler/translator/OutputGLSL.h"
 #include "compiler/translator/VersionGLSL.h"
 
-namespace
-{
-
-// To search for what output variables are used in a fragment shader.
-// We handle gl_FragColor and gl_FragData at the moment.
-class TFragmentOutSearcher : public TIntermTraverser
-{
-  public:
-    TFragmentOutSearcher()
-        : TIntermTraverser(true, false, false),
-          mUsesGlFragColor(false),
-          mUsesGlFragData(false)
-    {
-    }
-
-    bool usesGlFragColor() const
-    {
-        return mUsesGlFragColor;
-    }
-
-    bool usesGlFragData() const
-    {
-        return mUsesGlFragData;
-    }
-
-  protected:
-    virtual void visitSymbol(TIntermSymbol *node) override
-    {
-        if (node->getSymbol() == "gl_FragColor")
-        {
-            mUsesGlFragColor = true;
-        }
-        else if (node->getSymbol() == "gl_FragData")
-        {
-            mUsesGlFragData = true;
-        }
-    }
-
-  private:
-    bool mUsesGlFragColor;
-    bool mUsesGlFragData;
-};
-
-}  // namespace anonymous
-
 TranslatorGLSL::TranslatorGLSL(sh::GLenum type,
                                ShShaderSpec spec,
                                ShShaderOutput output)
@@ -111,14 +66,25 @@ void TranslatorGLSL::translate(TIntermNode *root, int) {
     // if it's core profile shaders and they are used.
     if (getShaderType() == GL_FRAGMENT_SHADER && IsGLSL130OrNewer(getOutputType()))
     {
-        TFragmentOutSearcher searcher;
-        root->traverse(&searcher);
-        ASSERT(!(searcher.usesGlFragData() && searcher.usesGlFragColor()));
-        if (searcher.usesGlFragColor())
+        bool usesGLFragColor = false;
+        bool usesGLFragData = false;
+        for (auto outputVar : outputVariables)
+        {
+            if (outputVar.name == "gl_FragColor")
+            {
+                usesGLFragColor = true;
+            }
+            else if (outputVar.name == "gl_FragData")
+            {
+                usesGLFragData = true;
+            }
+        }
+        ASSERT(!(usesGLFragColor && usesGLFragData));
+        if (usesGLFragColor)
         {
             sink << "out vec4 webgl_FragColor;\n";
         }
-        if (searcher.usesGlFragData())
+        if (usesGLFragData)
         {
             sink << "out vec4 webgl_FragData[gl_MaxDrawBuffers];\n";
         }

@@ -94,6 +94,24 @@ class CollectVariablesTest : public testing::Test
         EXPECT_TRUE(foundNear && foundFar && foundDiff);
     }
 
+    // For use in tests for output varibles.
+    void validateOutputVariableForShader(const std::string &shaderString,
+                                         const char *varName,
+                                         const sh::Attribute **outResult)
+    {
+        const char *shaderStrings[] = {shaderString.c_str()};
+        ASSERT_TRUE(mTranslator->compile(shaderStrings, 1, SH_VARIABLES))
+            << mTranslator->getInfoSink().info.str();
+
+        const std::vector<sh::Attribute> &outputVariables = mTranslator->getOutputVariables();
+        ASSERT_LT(0u, outputVariables.size());
+        const sh::Attribute &outputVariable = outputVariables[0];
+        EXPECT_EQ(-1, outputVariable.location);
+        EXPECT_TRUE(outputVariable.staticUse);
+        EXPECT_EQ(varName, outputVariable.name);
+        *outResult = &outputVariable;
+    }
+
     GLenum mShaderType;
     TranslatorGLSL *mTranslator;
 };
@@ -447,4 +465,94 @@ TEST_F(CollectFragmentVariablesTest, DepthRange)
         "}\n";
 
     validateDepthRangeShader(shaderString);
+}
+
+// Test that gl_FragColor built-in usage in ESSL1 fragment shader is reflected in the output
+// variables list.
+TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragColor)
+{
+    const std::string &fragColorShader =
+        "precision mediump float;\n"
+        "void main() {\n"
+        "   gl_FragColor = vec4(1.0);\n"
+        "}\n";
+
+    const sh::Attribute *outputVariable = nullptr;
+    validateOutputVariableForShader(fragColorShader, "gl_FragColor", &outputVariable);
+    ASSERT_NE(outputVariable, nullptr);
+    EXPECT_EQ(0u, outputVariable->arraySize);
+    EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
+    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
+}
+
+// Test that gl_FragData built-in usage in ESSL1 fragment shader is reflected in the output
+// variables list.
+TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragData)
+{
+    const std::string &fragDataShader =
+        "#extension GL_EXT_draw_buffers : require\n"
+        "precision mediump float;\n"
+        "void main() {\n"
+        "   gl_FragData[0] = vec4(1.0);\n"
+        "   gl_FragData[1] = vec4(0.5);\n"
+        "}\n";
+
+    ShBuiltInResources resources       = mTranslator->getResources();
+    resources.EXT_draw_buffers         = 1;
+    const unsigned int kMaxDrawBuffers = 3u;
+    resources.MaxDrawBuffers = kMaxDrawBuffers;
+    initTranslator(resources);
+
+    const sh::Attribute *outputVariable = nullptr;
+    validateOutputVariableForShader(fragDataShader, "gl_FragData", &outputVariable);
+    ASSERT_NE(outputVariable, nullptr);
+    EXPECT_EQ(kMaxDrawBuffers, outputVariable->arraySize);
+    EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
+    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
+}
+
+// Test that gl_FragDataEXT built-in usage in ESSL1 fragment shader is reflected in the output
+// variables list. Also test that the precision is mediump.
+TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragDepthMediump)
+{
+    const std::string &fragDepthShader =
+        "#extension GL_EXT_frag_depth : require\n"
+        "precision mediump float;\n"
+        "void main() {\n"
+        "   gl_FragDepthEXT = 0.7;"
+        "}\n";
+
+    ShBuiltInResources resources = mTranslator->getResources();
+    resources.EXT_frag_depth = 1;
+    initTranslator(resources);
+
+    const sh::Attribute *outputVariable = nullptr;
+    validateOutputVariableForShader(fragDepthShader, "gl_FragDepthEXT", &outputVariable);
+    ASSERT_NE(outputVariable, nullptr);
+    EXPECT_EQ(0u, outputVariable->arraySize);
+    EXPECT_GLENUM_EQ(GL_FLOAT, outputVariable->type);
+    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
+}
+
+// Test that gl_FragDataEXT built-in usage in ESSL1 fragment shader is reflected in the output
+// variables list. Also test that the precision is highp if user requests it.
+TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragDepthHighp)
+{
+    const std::string &fragDepthHighShader =
+        "#extension GL_EXT_frag_depth : require\n"
+        "void main() {\n"
+        "   gl_FragDepthEXT = 0.7;"
+        "}\n";
+
+    ShBuiltInResources resources    = mTranslator->getResources();
+    resources.EXT_frag_depth        = 1;
+    resources.FragmentPrecisionHigh = 1;
+    initTranslator(resources);
+
+    const sh::Attribute *outputVariable = nullptr;
+    validateOutputVariableForShader(fragDepthHighShader, "gl_FragDepthEXT", &outputVariable);
+    ASSERT_NE(outputVariable, nullptr);
+    EXPECT_EQ(0u, outputVariable->arraySize);
+    EXPECT_GLENUM_EQ(GL_FLOAT, outputVariable->type);
+    EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, outputVariable->precision);
 }
