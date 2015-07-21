@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d670610_78b8c113",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1129,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-21T20:17:56Z",
+      "side": 1,
+      "message": "Maybe we should disable clang format here or use a macro.",
+      "revId": "ff6b79ef876c41d664175c649875a51feec9451e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
