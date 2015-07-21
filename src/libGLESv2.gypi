@@ -453,6 +453,13 @@
             'libANGLE/renderer/gl/glx/functionsglx_typedefs.h',
             'libANGLE/renderer/gl/glx/platform_glx.h',
         ],
+        'libangle_gl_nsgl_sources':
+        [
+            'libANGLE/renderer/gl/nsgl/DisplayNSGL.mm',
+            'libANGLE/renderer/gl/nsgl/DisplayNSGL.h',
+            'libANGLE/renderer/gl/nsgl/WindowSurfaceNSGL.mm',
+            'libANGLE/renderer/gl/nsgl/WindowSurfaceNSGL.h',
+        ],
         'libglesv2_sources':
         [
             'common/angleutils.h',
@@ -696,6 +703,13 @@
                             'sources':
                             [
                                 '<@(libangle_gl_glx_sources)',
+                            ],
+                        }],
+                        ['OS=="mac"',
+                        {
+                            'sources':
+                            [
+                                '<@(libangle_gl_nsgl_sources)',
                             ],
                         }],
                     ],

@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// WindowSurfaceGLX.h: GLX implementation of egl::Surface
+// WindowSurfaceGLX.h: GLX implementation of egl::Surface for windows
 
 #ifndef LIBANGLE_RENDERER_GL_GLX_WINDOWSURFACEGLX_H_
 #define LIBANGLE_RENDERER_GL_GLX_WINDOWSURFACEGLX_H_

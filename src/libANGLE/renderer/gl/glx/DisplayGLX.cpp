@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// DisplayGLX.h: GLX implementation of egl::Display
+// DisplayGLX.cpp: GLX implementation of egl::Display
 
 #include "libANGLE/renderer/gl/glx/DisplayGLX.h"
 

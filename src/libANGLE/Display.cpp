@@ -38,6 +38,8 @@
 #       include "libANGLE/renderer/gl/wgl/DisplayWGL.h"
 #   elif defined(ANGLE_USE_X11)
 #       include "libANGLE/renderer/gl/glx/DisplayGLX.h"
+#   elif defined(ANGLE_PLATFORM_APPLE)
+#       include "libANGLE/renderer/gl/nsgl/DisplayNSGL.h"
 #   else
 #       error Unsupported OpenGL platform.
 #   endif
@@ -112,6 +114,8 @@ rx::DisplayImpl *CreateDisplayImpl(const AttributeMap &attribMap)
         impl = new rx::DisplayD3D();
 #elif defined(ANGLE_USE_X11)
         impl = new rx::DisplayGLX();
+#elif defined(ANGLE_PLATFORM_APPLE)
+        impl = new rx::DisplayNSGL();
 #else
         // No display available
         UNREACHABLE();
@@ -134,6 +138,8 @@ rx::DisplayImpl *CreateDisplayImpl(const AttributeMap &attribMap)
         impl = new rx::DisplayWGL();
 #elif defined(ANGLE_USE_X11)
         impl = new rx::DisplayGLX();
+#elif defined(ANGLE_PLATFORM_APPLE)
+        impl = new rx::DisplayNSGL();
 #else
 #error Unsupported OpenGL platform.
 #endif
