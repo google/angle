@@ -158,6 +158,30 @@
       "revId": "bd8f213675f22d2f7dcb32d439fe03a5aa78ccd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b83896b1_217fb68b",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 736,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-21T14:40:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d83d4aa0_6247fe6f",
+      "range": {
+        "startLine": 736,
+        "startChar": 21,
+        "endLine": 736,
+        "endChar": 43
+      },
+      "revId": "bd8f213675f22d2f7dcb32d439fe03a5aa78ccd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
