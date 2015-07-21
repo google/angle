@@ -87,11 +87,12 @@ void VertexArray::enableAttribute(size_t attributeIndex, bool enabledState)
     // Update state cache
     if (enabledState)
     {
-        mData.mMaxEnabledAttribute = std::max(attributeIndex, mData.mMaxEnabledAttribute);
+        mData.mMaxEnabledAttribute = std::max(attributeIndex + 1, mData.mMaxEnabledAttribute);
     }
-    else if (mData.mMaxEnabledAttribute == attributeIndex)
+    else if (mData.mMaxEnabledAttribute == attributeIndex + 1)
     {
-        while (mData.mMaxEnabledAttribute > 0 && !mData.mVertexAttributes[mData.mMaxEnabledAttribute].enabled)
+        while (mData.mMaxEnabledAttribute > 0 &&
+               !mData.mVertexAttributes[mData.mMaxEnabledAttribute - 1].enabled)
         {
             --mData.mMaxEnabledAttribute;
         }
