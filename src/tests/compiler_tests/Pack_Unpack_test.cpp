@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 // Pack_Unpack_test.cpp:
-//   Tests for the emulating pack_unpack functions for GLSL 4.1.
+//   Tests for the emulating pack_unpack functions for GLSL.
 //
 
 #include "angle_gl.h"
@@ -18,10 +18,10 @@ namespace
 class PackUnpackTest : public MatchOutputCodeTest
 {
   public:
-    PackUnpackTest() : MatchOutputCodeTest(GL_FRAGMENT_SHADER, 0, SH_GLSL_410_CORE_OUTPUT) {}
+    PackUnpackTest() : MatchOutputCodeTest(GL_FRAGMENT_SHADER, 0, SH_GLSL_400_CORE_OUTPUT) {}
 };
 
-//Check if PackSnorm2x16 Emulation for GLSL 4.1 compile correctly.
+// Check if PackSnorm2x16 Emulation for GLSL < 4.2 compile correctly.
 TEST_F(PackUnpackTest, PackSnorm2x16Emulation)
 {
     const std::string &shaderString =
@@ -37,7 +37,7 @@ TEST_F(PackUnpackTest, PackSnorm2x16Emulation)
     ASSERT_TRUE(foundInCode("uint webgl_packSnorm2x16_emu(vec2 v)"));
 }
 
-//Check if UnpackSnorm2x16 Emulation for GLSL 4.1 compile correctly.
+// Check if UnpackSnorm2x16 Emulation for GLSL < 4.2 compile correctly.
 TEST_F(PackUnpackTest, UnpackSnorm2x16Emulation)
 {
     const std::string &shaderString =
@@ -53,7 +53,39 @@ TEST_F(PackUnpackTest, UnpackSnorm2x16Emulation)
     ASSERT_TRUE(foundInCode("vec2 webgl_unpackSnorm2x16_emu(uint u)"));
 }
 
-//Check if PackHalf2x16 Emulation for GLSL 4.1 compile correctly.
+// Check if PackUnorm2x16 Emulation for GLSL < 4.1 compiles correctly.
+TEST_F(PackUnpackTest, PackUnorm2x16Emulation)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "layout(location = 0) out mediump vec4 fragColor;"
+        "void main() {\n"
+        "   vec2 v;\n"
+        "   uint u = packUnorm2x16(v);\n"
+        "   fragColor = vec4(0.0);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(foundInCode("uint webgl_packUnorm2x16_emu(vec2 v)"));
+}
+
+// Check if UnpackSnorm2x16 Emulation for GLSL < 4.1 compiles correctly.
+TEST_F(PackUnpackTest, UnpackUnorm2x16Emulation)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "layout(location = 0) out mediump vec4 fragColor;"
+        "void main() {\n"
+        "   uint u;\n"
+        "   vec2 v=unpackUnorm2x16(u);\n"
+        "   fragColor = vec4(0.0);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(foundInCode("vec2 webgl_unpackUnorm2x16_emu(uint u)"));
+}
+
+// Check if PackHalf2x16 Emulation for GLSL < 4.2 compiles correctly.
 TEST_F(PackUnpackTest, PackHalf2x16Emulation)
 {
     const std::string &shaderString =
@@ -69,7 +101,7 @@ TEST_F(PackUnpackTest, PackHalf2x16Emulation)
     ASSERT_TRUE(foundInCode("uint webgl_packHalf2x16_emu(vec2 v)"));
 }
 
-//Check if UnpackHalf2x16 Emulation for GLSL 4.1 compile correctly.
+// Check if UnpackHalf2x16 Emulation for GLSL < 4.2 compiles correctly.
 TEST_F(PackUnpackTest, UnpackHalf2x16Emulation)
 {
     const std::string &shaderString =

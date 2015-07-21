@@ -104,6 +104,11 @@ bool MatchOutputCodeTest::foundInCode(ShShaderOutput output, const char *stringT
 {
     const auto code = mOutputCode.find(output);
     EXPECT_NE(mOutputCode.end(), code);
+    if (code == mOutputCode.end())
+    {
+        return false;
+    }
+
     return code->second.find(stringToFind) != std::string::npos;
 }
 
@@ -113,6 +118,11 @@ bool MatchOutputCodeTest::foundInCode(ShShaderOutput output,
 {
     const auto code = mOutputCode.find(output);
     EXPECT_NE(mOutputCode.end(), code);
+    if (code == mOutputCode.end())
+    {
+        return false;
+    }
+
     size_t currentPos  = 0;
     int occurencesLeft = expectedOccurrences;
     while (occurencesLeft-- > 0)
