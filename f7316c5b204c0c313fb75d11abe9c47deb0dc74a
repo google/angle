@@ -2,6 +2,69 @@
   "comments": [
     {
       "key": {
+        "uuid": "cda90a60_a5cdbea9",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "Could this get rephrased a little less informally? Possibly something like \"There are tools and strategies available for debugging ANGLE across the various platforms it supports. Our tips for using them can be found below.\" (On that note it would be cool to include, e.g. Geoff\u0027s walkthrough for debugging with MSVC\u0027s graphics debugging tools, and possibly the tips we got from the MS folks on how to attach to a running process for graphics debugging.)",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0db882a5_27c23a7c",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "ANGLE exposes the same symbols as ANGLE-- one of these ANGLEs should probably be an apitrace? Also the \"flow\" description is a little confusing-- could you just state that apitrace intercepts the entry point calls intended for ANGLE? And this is me being pretty nitty, but the use of \"we\" seems a little pedagogic-- would prefer just something along the lines of \"To avoid this call interception:\" or \"To avoid this, use the following steps.\"",
+      "range": {
+        "startLine": 9,
+        "startChar": 17,
+        "endLine": 9,
+        "endChar": 67
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "edaece64_26c2367c",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "I\u0027m not sure if this is the same markdown format I\u0027m used to dealing with, but if this isn\u0027t an ordered list, could you please make it one? Also, you should give the exact command to be entered on the command line for clarity.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 3
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "edc5ee24_4ec3d302",
         "filename": "doc/DebuggingTips.md",
         "patchSetId": 1
@@ -18,6 +81,328 @@
         "startChar": 19,
         "endLine": 11,
         "endChar": 30
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ada8565c_44b3ae38",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "You can just show the command on its own line with a prompt. I believe this style is used elsewhere, like the DevSetup article-- copy the style there for consistency.",
+      "range": {
+        "startLine": 11,
+        "startChar": 203,
+        "endLine": 11,
+        "endChar": 213
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adcf7646_6cdfbb51",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "explicitly",
+      "range": {
+        "startLine": 11,
+        "startChar": 19,
+        "endLine": 11,
+        "endChar": 30
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dcab237_8bd0cd42",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "Semicolon or period/full stop required here.",
+      "range": {
+        "startLine": 11,
+        "startChar": 93,
+        "endLine": 11,
+        "endChar": 94
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dcab237_abcd89a9",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "Comma splice. Should be semicolon or period.",
+      "range": {
+        "startLine": 12,
+        "startChar": 70,
+        "endLine": 12,
+        "endChar": 72
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cda90a60_a5e4de17",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "This phrasing makes it sound like the argument should get followed by a noun, e.g. \"the \u0027-D angle_link_glx\u003d1\u0027 argument.\" It should probably just get shown explicitly as menioned for the other define argument above.",
+      "range": {
+        "startLine": 12,
+        "startChar": 162,
+        "endLine": 12,
+        "endChar": 187
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0db882a5_c7c6be8e",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "This should technically be future conditional tense (won\u0027t).",
+      "range": {
+        "startLine": 12,
+        "startChar": 88,
+        "endLine": 12,
+        "endChar": 95
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0db882a5_e7c3c27b",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "by",
+      "range": {
+        "startLine": 12,
+        "startChar": 150,
+        "endLine": 12,
+        "endChar": 154
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ada8565c_24c2327c",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "missing \"is\"",
+      "range": {
+        "startLine": 14,
+        "startChar": 130,
+        "endLine": 14,
+        "endChar": 131
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "edaece64_e6c3be7b",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "Comma required. Ideally, I\u0027d change \"Using all this\" to \"If you have followed this steps.\" If you make that change, you\u0027ll also need to change \"apitrace works\" to \"apitrace will work\" or \"apitrace should work.\"",
+      "range": {
+        "startLine": 14,
+        "startChar": 14,
+        "endLine": 14,
+        "endChar": 15
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ada8565c_04bdb602",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "aside from",
+      "range": {
+        "startLine": 14,
+        "startChar": 40,
+        "endLine": 14,
+        "endChar": 45
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dcab237_4bdae562",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "\"that\" unnecessary",
+      "range": {
+        "startLine": 16,
+        "startChar": 98,
+        "endLine": 16,
+        "endChar": 102
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0db882a5_a7cdcaa9",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "Would be better phrased as \"For example, to trace a run of...\"",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 29
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0db882a5_47dace62",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "I\u0027d use $PATH for clarity.",
+      "range": {
+        "startLine": 16,
+        "startChar": 135,
+        "endLine": 16,
+        "endChar": 143
+      },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6dbbbea0_0ad4db30",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-21T23:30:21Z",
+      "side": 1,
+      "message": "comma needed",
+      "range": {
+        "startLine": 16,
+        "startChar": 46,
+        "endLine": 16,
+        "endChar": 47
       },
       "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
