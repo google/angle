@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d83d4aa0_42fe822e",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-21T17:08:09Z",
+      "side": 1,
+      "message": "Ken, AFAIK this works fine, since the objs are built to separate paths both in ANGLE and Chromium. I checked with the full Chromium build and they get names like \"angle_deqp_gles2_tests.angle_deqp_gtest.obj\" and \"angle_deqp_gles3_tests.angle_deqp_gtest.obj\"",
+      "parentUuid": "f8568eec_4fdced87",
+      "range": {
+        "startLine": 1130,
+        "startChar": 29,
+        "endLine": 1130,
+        "endChar": 51
+      },
+      "revId": "40676f3f689472237f527227e23fa7c0948718ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "384d865a_f423b6b0",
         "filename": "src/tests/deqp.gypi",
         "patchSetId": 1
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "f8568eec_180149c5",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1291,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-21T17:08:09Z",
+      "side": 1,
+      "message": "Done, put in the direct_dependent_settings block.",
+      "parentUuid": "384d865a_f423b6b0",
+      "revId": "40676f3f689472237f527227e23fa7c0948718ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b83896b1_b654ce26",
         "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
         "patchSetId": 1
@@ -53,6 +95,24 @@
       "writtenOn": "2015-07-21T01:08:04Z",
       "side": 1,
       "message": "I think you could remove the need for templates by doing the following changes:\n - Keep dEQPCaseList as before, but without the singleton thing\n - Adding a virutal const dEQPCaseList \u0026getCaseList() const to dEQPTest\n - In the right ifdef adding a static const dEQPCaselist GLES2CaseList(\"dEQP-GLES2...\")\n - Implementing the virtual function for dEQP_GLES2 by returning GLES2CaseList",
+      "revId": "40676f3f689472237f527227e23fa7c0948718ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d471267_2648d803",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-21T17:08:09Z",
+      "side": 1,
+      "message": "I\u0027m not sure it\u0027s possible to avoid templates 100%, because of the need to return the range of valid tests to the INSTANTIATE macro, which relies on static polymorphism, and virtual AFAIK isn\u0027t enough. I cleaned up the template-ness a bit, PTAL, maybe it\u0027s ok now?",
+      "parentUuid": "b83896b1_b654ce26",
       "revId": "40676f3f689472237f527227e23fa7c0948718ca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
