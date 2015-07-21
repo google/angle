@@ -16,6 +16,24 @@
       "revId": "9e99d994df009c61dfb49d6749a73a1f161385d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed97ae00_448ba228",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-21T20:04:59Z",
+      "side": 1,
+      "message": "Yea, think we\u0027re safe.  Otherwise we\u0027d have to check that there is a leading or trailing space with special cases for the first or last element.",
+      "parentUuid": "ad4cd68b_aabc8ba3",
+      "revId": "9e99d994df009c61dfb49d6749a73a1f161385d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
