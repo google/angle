@@ -39,6 +39,8 @@ typedef std::vector<char *> ShaderSource;
 static bool ReadShaderSource(const char *fileName, ShaderSource &source);
 static void FreeShaderSource(ShaderSource &source);
 
+static bool ParseGLSLOutputVersion(const char *num, ShShaderOutput *outResult);
+
 //
 // Set up the per compile resources
 //
@@ -131,7 +133,12 @@ int main(int argc, char *argv[])
                     switch (argv[0][3])
                     {
                       case 'e': output = SH_ESSL_OUTPUT; break;
-                      case 'g': output = SH_GLSL_OUTPUT; break;
+                      case 'g':
+                          if (!ParseGLSLOutputVersion(&argv[0][sizeof("-b=g") - 1], &output))
+                          {
+                              failCode = EFailUsage;
+                          }
+                          break;
                       case 'h':
                         if (argv[0][4] == '1' && argv[0][5] == '1')
                         {
@@ -251,7 +258,8 @@ int main(int argc, char *argv[])
 //
 void usage()
 {
-    printf("Usage: translate [-i -o -u -l -e -t -d -p -b=e -b=g -b=h9 -x=i -x=d] file1 file2 ...\n"
+    printf(
+        "Usage: translate [-i -o -u -l -e -t -d -p -b=e -b=g -b=h9 -x=i -x=d] file1 file2 ...\n"
         "Where: filename : filename ending in .frag or .vert\n"
         "       -i       : print intermediate tree\n"
         "       -o       : print translated code\n"
@@ -267,7 +275,9 @@ void usage()
         "       -s=w2    : use WebGL 2 spec (in development)\n"
         "       -s=c     : use CSS Shaders spec\n"
         "       -b=e     : output GLSL ES code (this is by default)\n"
-        "       -b=g     : output GLSL code\n"
+        "       -b=g     : output GLSL code (compatibility profile)\n"
+        "       -b=g[NUM]: output GLSL code (NUM can be 130, 140, 150, 330, 400, 410, 420, 430, "
+        "440, 450)\n"
         "       -b=h9    : output HLSL9 code\n"
         "       -b=h11   : output HLSL11 code\n"
         "       -x=i     : enable GL_OES_EGL_image_external\n"
@@ -457,3 +467,48 @@ static void FreeShaderSource(ShaderSource &source)
     source.clear();
 }
 
+static bool ParseGLSLOutputVersion(const char *num, ShShaderOutput *outResult)
+{
+    if (*num == '\0')
+    {
+        *outResult = SH_GLSL_COMPATIBILITY_OUTPUT;
+        return true;
+    }
+    long value = strtol(num, NULL, 10);
+    switch (value)
+    {
+        case 130:
+            *outResult = SH_GLSL_130_OUTPUT;
+            return true;
+        case 140:
+            *outResult = SH_GLSL_140_OUTPUT;
+            return true;
+        case 150:
+            *outResult = SH_GLSL_150_CORE_OUTPUT;
+            return true;
+        case 330:
+            *outResult = SH_GLSL_330_CORE_OUTPUT;
+            return true;
+        case 400:
+            *outResult = SH_GLSL_400_CORE_OUTPUT;
+            return true;
+        case 410:
+            *outResult = SH_GLSL_410_CORE_OUTPUT;
+            return true;
+        case 420:
+            *outResult = SH_GLSL_420_CORE_OUTPUT;
+            return true;
+        case 430:
+            *outResult = SH_GLSL_430_CORE_OUTPUT;
+            return true;
+        case 440:
+            *outResult = SH_GLSL_440_CORE_OUTPUT;
+            return true;
+        case 450:
+            *outResult = SH_GLSL_450_CORE_OUTPUT;
+            return true;
+        default:
+            break;
+    }
+    return false;
+}
