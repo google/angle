@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d83d4aa0_424a0279",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-21T14:16:17Z",
+      "side": 1,
+      "message": "use git cl format to correct the style of this code.",
+      "range": {
+        "startLine": 69,
+        "startChar": 6,
+        "endLine": 78,
+        "endChar": 53
+      },
+      "revId": "ad55fd76ffe057c84e9fe780ecd3c9b1a6b551b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad4cd68b_27869421",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-21T14:16:17Z",
+      "side": 1,
+      "message": "I think we\u0027ll need to output gl_FragDepthEXT and gl_FragDepth separately for ESSL3. For now, maybe we can use the shader version in this if statement?",
+      "range": {
+        "startLine": 406,
+        "startChar": 38,
+        "endLine": 406,
+        "endChar": 53
+      },
+      "revId": "ad55fd76ffe057c84e9fe780ecd3c9b1a6b551b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
