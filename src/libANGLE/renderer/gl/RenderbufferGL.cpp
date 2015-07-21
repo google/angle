@@ -81,6 +81,12 @@ gl::Error RenderbufferGL::setStorageMultisample(size_t samples, GLenum internalf
     return gl::Error(GL_NO_ERROR);
 }
 
+gl::Error RenderbufferGL::setStorageEGLImageTarget(egl::Image *image)
+{
+    UNIMPLEMENTED();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
 GLuint RenderbufferGL::getRenderbufferID() const
 {
     return mRenderbufferID;

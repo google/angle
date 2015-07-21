@@ -65,6 +65,12 @@ gl::Error RenderbufferD3D::setStorageMultisample(size_t samples, GLenum internal
     return gl::Error(GL_NO_ERROR);
 }
 
+gl::Error RenderbufferD3D::setStorageEGLImageTarget(egl::Image *image)
+{
+    UNIMPLEMENTED();
+    return gl::Error(GL_NO_ERROR);
+}
+
 RenderTargetD3D *RenderbufferD3D::getRenderTarget()
 {
     return mRenderTarget;

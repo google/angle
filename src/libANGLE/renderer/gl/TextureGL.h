@@ -52,6 +52,8 @@ class TextureGL : public TextureImpl
     void bindTexImage(egl::Surface *surface) override;
     void releaseTexImage() override;
 
+    gl::Error setEGLImageTarget(GLenum target, egl::Image *image) override;
+
     void syncSamplerState(const gl::SamplerState &samplerState) const;
     GLuint getTextureID() const;
 

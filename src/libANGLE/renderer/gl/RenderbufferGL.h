@@ -34,6 +34,7 @@ class RenderbufferGL : public RenderbufferImpl
 
     virtual gl::Error setStorage(GLenum internalformat, size_t width, size_t height) override;
     virtual gl::Error setStorageMultisample(size_t samples, GLenum internalformat, size_t width, size_t height) override;
+    virtual gl::Error setStorageEGLImageTarget(egl::Image *image) override;
 
     GLuint getRenderbufferID() const;
 

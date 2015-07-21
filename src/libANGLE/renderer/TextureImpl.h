@@ -20,6 +20,7 @@
 namespace egl
 {
 class Surface;
+class Image;
 }
 
 namespace gl
@@ -60,6 +61,8 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
                                    const gl::Framebuffer *source) = 0;
 
     virtual gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) = 0;
+
+    virtual gl::Error setEGLImageTarget(GLenum target, egl::Image *image) = 0;
 
     virtual gl::Error generateMipmaps(const gl::SamplerState &samplerState) = 0;
 
