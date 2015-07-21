@@ -45,6 +45,29 @@
       "revId": "ad55fd76ffe057c84e9fe780ecd3c9b1a6b551b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d849ecc_02782a36",
+        "filename": "src/tests/compiler_tests/CollectVariables_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-21T14:17:06Z",
+      "side": 1,
+      "message": "you should split this into separate test cases, with a helper function/helper member function. also comment each case, and use git cl format to reformat the code",
+      "range": {
+        "startLine": 165,
+        "startChar": 37,
+        "endLine": 165,
+        "endChar": 58
+      },
+      "revId": "ad55fd76ffe057c84e9fe780ecd3c9b1a6b551b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
