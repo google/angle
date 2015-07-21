@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "78429e31_9fa7e318",
+        "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-21T14:18:57Z",
+      "side": 1,
+      "message": "OK, thanks.",
+      "parentUuid": "0d0ec228_5aaa718b",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 149,
+        "endChar": 6
+      },
+      "revId": "bd8f213675f22d2f7dcb32d439fe03a5aa78ccd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d00f2f0_5e37116c",
         "filename": "src/libANGLE/renderer/gl/glx/FunctionsGLX.cpp",
         "patchSetId": 1
@@ -101,6 +125,30 @@
       "side": 1,
       "message": "Ok, I\u0027ll try to narrow it down.",
       "parentUuid": "786d3eb3_33b9c835",
+      "range": {
+        "startLine": 736,
+        "startChar": 21,
+        "endLine": 736,
+        "endChar": 43
+      },
+      "revId": "bd8f213675f22d2f7dcb32d439fe03a5aa78ccd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d83d4aa0_6247fe6f",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 736,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-21T14:18:57Z",
+      "side": 1,
+      "message": "k. it\u0027s not critical, so don\u0027t struggle too much, but if you can find something simple, yeah.",
+      "parentUuid": "6d11fe41_1d951795",
       "range": {
         "startLine": 736,
         "startChar": 21,
