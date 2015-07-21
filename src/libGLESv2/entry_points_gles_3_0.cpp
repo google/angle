@@ -206,22 +206,8 @@ void GL_APIENTRY CompressedTexImage3D(GLenum target, GLint level, GLenum interna
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
-        if (imageSize < 0 || static_cast<GLuint>(imageSize) != formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
-        {
-            context->recordError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        // validateES3TexImageFormat sets the error code if there is an error
-        if (!ValidateES3TexImageParameters(context, target, level, internalformat, true, false,
-                                           0, 0, 0, width, height, depth, border, GL_NONE, GL_NONE, data))
+        if (!gl::ValidateCompressedTexImage3D(context, target, level, internalformat, width, height,
+                                              depth, border, imageSize, data))
         {
             return;
         }

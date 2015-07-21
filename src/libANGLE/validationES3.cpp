@@ -1249,4 +1249,47 @@ bool ValidateReadBuffer(Context *context, GLenum src)
     return true;
 }
 
+bool ValidateCompressedTexImage3D(Context *context,
+                                  GLenum target,
+                                  GLint level,
+                                  GLenum internalformat,
+                                  GLsizei width,
+                                  GLsizei height,
+                                  GLsizei depth,
+                                  GLint border,
+                                  GLsizei imageSize,
+                                  const GLvoid *data)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
+    if (imageSize < 0 ||
+        static_cast<GLuint>(imageSize) !=
+            formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
+    {
+        context->recordError(Error(GL_INVALID_VALUE));
+        return false;
+    }
+
+    // 3D texture target validation
+    if (target != GL_TEXTURE_3D && target != GL_TEXTURE_2D_ARRAY)
+    {
+        context->recordError(
+            Error(GL_INVALID_ENUM, "Must specify a valid 3D texture destination target"));
+        return false;
+    }
+
+    // validateES3TexImageFormat sets the error code if there is an error
+    if (!ValidateES3TexImageParameters(context, target, level, internalformat, true, false, 0, 0, 0,
+                                       width, height, depth, border, GL_NONE, GL_NONE, data))
+    {
+        return false;
+    }
+
+    return true;
+}
 }

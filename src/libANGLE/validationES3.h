@@ -44,6 +44,16 @@ bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLu
 
 bool ValidateReadBuffer(Context *context, GLenum mode);
 
+bool ValidateCompressedTexImage3D(Context *context,
+                                  GLenum target,
+                                  GLint level,
+                                  GLenum internalformat,
+                                  GLsizei width,
+                                  GLsizei height,
+                                  GLsizei depth,
+                                  GLint border,
+                                  GLsizei imageSize,
+                                  const GLvoid *data);
 }
 
 #endif // LIBANGLE_VALIDATION_ES3_H_
