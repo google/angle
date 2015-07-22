@@ -22,6 +22,30 @@
       "revId": "9a4e92a5e9a4aa4fa362acecc59ea02d9e557f5c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed808ec6_9f2fbf8d",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-22T18:09:53Z",
+      "side": 1,
+      "message": "I agree it\u0027s not ideal, however in debug this will ASSERT, causing a pop-up. The problem is that if we return a GL error here, dEQP explodes during its state reset call, and never gets back to a clean state.",
+      "parentUuid": "ad7a16a8_08293739",
+      "range": {
+        "startLine": 169,
+        "startChar": 19,
+        "endLine": 169,
+        "endChar": 24
+      },
+      "revId": "9a4e92a5e9a4aa4fa362acecc59ea02d9e557f5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
