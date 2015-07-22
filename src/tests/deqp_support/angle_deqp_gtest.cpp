@@ -29,8 +29,8 @@ const char *g_CaseListFiles[] =
 
 const char *g_TestExpectationsFiles[] =
 {
-    "deqp_test_expectations.txt",
-    "deqp_test_expectations.txt",
+    "deqp_gles2_test_expectations.txt",
+    "deqp_gles3_test_expectations.txt",
 };
 
 class dEQPCaseList
