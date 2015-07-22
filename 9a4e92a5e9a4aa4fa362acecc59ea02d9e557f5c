@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad7a16a8_08293739",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-07-22T18:07:28Z",
+      "side": 1,
+      "message": "This one change gives me some pause. I don\u0027t think we should leave this in a state where a broken code path silently succeeds.",
+      "range": {
+        "startLine": 169,
+        "startChar": 19,
+        "endLine": 169,
+        "endChar": 24
+      },
+      "revId": "9a4e92a5e9a4aa4fa362acecc59ea02d9e557f5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
