@@ -11,6 +11,7 @@
         'ConstantFolding_test.cpp',
         'DebugShaderPrecision_test.cpp',
         'ExpressionLimit_test.cpp',
+        'FragDepth_test.cpp',
         'MalformedShader_test.cpp',
         'NV_draw_buffers_test.cpp',
         'Pack_Unpack_test.cpp',
