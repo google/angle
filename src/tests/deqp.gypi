@@ -1191,8 +1191,6 @@
                                 'deqp_support/dEQP-GLES3-cases.txt.gz',
                                 'deqp_support/deqp_gles2_test_expectations.txt',
                                 'deqp_support/deqp_gles3_test_expectations.txt',
-                                # TODO(jmadill): remove this once we roll ANGLE to Chrome
-                                'deqp_support/deqp_test_expectations.txt',
                             ],
                         },
                     ],
