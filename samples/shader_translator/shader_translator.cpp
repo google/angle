@@ -164,6 +164,7 @@ int main(int argc, char *argv[])
               case 'x':
                 if (argv[0][2] == '=')
                 {
+                    // clang-format off
                     switch (argv[0][3])
                     {
                       case 'i': resources.OES_EGL_image_external = 1; break;
@@ -191,15 +192,14 @@ int main(int argc, char *argv[])
                               failCode = EFailUsage;
                           }
                           break;
-                      case 'g':
-                          resources.EXT_frag_depth = 1;
-                          break;
+                      case 'g': resources.EXT_frag_depth = 1; break;
                       case 'l': resources.EXT_shader_texture_lod = 1; break;
                       case 'f': resources.EXT_shader_framebuffer_fetch = 1; break;
                       case 'n': resources.NV_shader_framebuffer_fetch = 1; break;
                       case 'a': resources.ARM_shader_framebuffer_fetch = 1; break;
                       default: failCode = EFailUsage;
                     }
+                    // clang-format on
                 }
                 else
                 {
@@ -287,6 +287,7 @@ int main(int argc, char *argv[])
 //
 void usage()
 {
+    // clang-format off
     printf(
         "Usage: translate [-i -o -u -l -e -t -d -p -b=e -b=g -b=h9 -x=i -x=d] file1 file2 ...\n"
         "Where: filename : filename ending in .frag or .vert\n"
@@ -314,10 +315,12 @@ void usage()
         "       -x=r     : enable ARB_texture_rectangle\n"
         "       -x=b[NUM]: enable EXT_blend_func_extended (NUM default 1)\n"
         "       -x=w[NUM]: enable EXT_draw_buffers (NUM default 1)\n"
+        "       -x=g     : enable EXT_frag_depth\n"
         "       -x=l     : enable EXT_shader_texture_lod\n"
         "       -x=f     : enable EXT_shader_framebuffer_fetch\n"
         "       -x=n     : enable NV_shader_framebuffer_fetch\n"
         "       -x=a     : enable ARM_shader_framebuffer_fetch\n");
+    // clang-format on
 }
 
 //
