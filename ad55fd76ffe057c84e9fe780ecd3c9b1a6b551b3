@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4d335a20_014cca93",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1108349
+      },
+      "writtenOn": "2015-07-22T11:39:06Z",
+      "side": 1,
+      "message": "Done. Sorry about the various formatting errors.",
+      "parentUuid": "d83d4aa0_424a0279",
+      "range": {
+        "startLine": 69,
+        "startChar": 6,
+        "endLine": 78,
+        "endChar": 53
+      },
+      "revId": "ad55fd76ffe057c84e9fe780ecd3c9b1a6b551b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad4cd68b_27869421",
         "filename": "src/compiler/translator/VariableInfo.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "ed432e7f_1e91cd5a",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1108349
+      },
+      "writtenOn": "2015-07-22T11:39:06Z",
+      "side": 1,
+      "message": "Maybe you could elaborate?\nI\u0027m not sure I understand what needs to be separated? Also, do you mean input ESSL3 or output ESSL3?\n\nCurrently es2 FragDepthEXT input goes to es2 FragDepthEXT output. \n\nI would imagine, es3 FragDepth would go to es3 FragDepth. I\u0027ve imagined this in the follow-up patch as a discussion vehicle. I would imagine FragDepthEXT would be error in this case. If it was not an error, probably it would still go to FragDepth (as currently kind-of did).\n\nes2 FragDepthEXT would go to es3 FragDepth. I would imagine in this scenario, the \"getOutputVariables\" should return \"FragDepthEXT\", as I imagine the variables referring to the input shader world, not output shader world?",
+      "parentUuid": "ad4cd68b_27869421",
+      "range": {
+        "startLine": 406,
+        "startChar": 38,
+        "endLine": 406,
+        "endChar": 53
+      },
+      "revId": "ad55fd76ffe057c84e9fe780ecd3c9b1a6b551b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d849ecc_02782a36",
         "filename": "src/tests/compiler_tests/CollectVariables_test.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2015-07-21T14:17:06Z",
       "side": 1,
       "message": "you should split this into separate test cases, with a helper function/helper member function. also comment each case, and use git cl format to reformat the code",
+      "range": {
+        "startLine": 165,
+        "startChar": 37,
+        "endLine": 165,
+        "endChar": 58
+      },
+      "revId": "ad55fd76ffe057c84e9fe780ecd3c9b1a6b551b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8da3927f_e395f24b",
+        "filename": "src/tests/compiler_tests/CollectVariables_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1108349
+      },
+      "writtenOn": "2015-07-22T11:39:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d849ecc_02782a36",
       "range": {
         "startLine": 165,
         "startChar": 37,
