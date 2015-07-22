@@ -67,7 +67,6 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
   public:
     static bool InitTestWindow();
     static bool DestroyTestWindow();
-    static bool ResizeWindow(int width, int height);
     static void SetWindowVisible(bool isVisible);
 
   protected:
