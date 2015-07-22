@@ -24,7 +24,7 @@ struct BufferSubDataParams final : public RenderTestParams
         // Common default values
         majorVersion = 2;
         minorVersion = 0;
-        widowWidth = 512;
+        windowWidth = 512;
         windowHeight = 512;
         updateSize = 3000;
         bufferSize = 40000000;

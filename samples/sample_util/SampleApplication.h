@@ -48,6 +48,8 @@ class SampleApplication
 
   private:
     std::string mName;
+    size_t mWidth;
+    size_t mHeight;
     bool mRunning;
 
     std::unique_ptr<Timer> mTimer;

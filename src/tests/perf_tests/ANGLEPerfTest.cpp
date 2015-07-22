@@ -105,13 +105,10 @@ ANGLERenderTest::~ANGLERenderTest()
 void ANGLERenderTest::SetUp()
 {
     mOSWindow = CreateOSWindow();
-    mEGLWindow = new EGLWindow(mTestParams.widowWidth,
-                               mTestParams.windowHeight,
-                               mTestParams.majorVersion,
-                               mTestParams.eglParameters);
+    mEGLWindow = new EGLWindow(mTestParams.majorVersion, mTestParams.eglParameters);
     mEGLWindow->setSwapInterval(0);
 
-    if (!mOSWindow->initialize(mName, mEGLWindow->getWidth(), mEGLWindow->getHeight()))
+    if (!mOSWindow->initialize(mName, mTestParams.windowWidth, mTestParams.windowHeight))
     {
         FAIL() << "Failed initializing OSWindow";
         return;

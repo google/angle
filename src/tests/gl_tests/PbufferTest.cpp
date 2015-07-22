@@ -130,7 +130,7 @@ TEST_P(PbufferTest, Clearing)
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     ASSERT_GL_NO_ERROR();
-    EXPECT_PIXEL_EQ(window->getWidth() / 2, window->getHeight() / 2, 0, 0, 255, 255);
+    EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 255, 255);
 
     // Apply the Pbuffer and clear it to purple and verify
     eglMakeCurrent(window->getDisplay(), mPbuffer, mPbuffer, window->getContext());
@@ -145,7 +145,7 @@ TEST_P(PbufferTest, Clearing)
     // Rebind the window surface and verify that it is still blue
     eglMakeCurrent(window->getDisplay(), window->getSurface(), window->getSurface(), window->getContext());
     ASSERT_EGL_SUCCESS();
-    EXPECT_PIXEL_EQ(window->getWidth() / 2, window->getHeight() / 2, 0, 0, 255, 255);
+    EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 255, 255);
 }
 
 // Bind the Pbuffer to a texture and verify it renders correctly
@@ -190,7 +190,7 @@ TEST_P(PbufferTest, BindTexImage)
     EXPECT_GL_NO_ERROR();
 
     eglBindTexImage(window->getDisplay(), mPbuffer, EGL_BACK_BUFFER);
-    glViewport(0, 0, window->getWidth(), window->getHeight());
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
     ASSERT_EGL_SUCCESS();
 
     // Draw a quad and verify that it is purple
@@ -205,7 +205,7 @@ TEST_P(PbufferTest, BindTexImage)
     ASSERT_EGL_SUCCESS();
 
     // Verify that purple was drawn
-    EXPECT_PIXEL_EQ(window->getWidth() / 2, window->getHeight() / 2, 255, 0, 255, 255);
+    EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 255, 0, 255, 255);
 
     glDeleteTextures(1, &texture);
 }
@@ -308,13 +308,13 @@ TEST_P(PbufferTest, BindTexImageAndRedefineTexture)
     EXPECT_GL_NO_ERROR();
 
     eglBindTexImage(window->getDisplay(), mPbuffer, EGL_BACK_BUFFER);
-    glViewport(0, 0, window->getWidth(), window->getHeight());
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
     ASSERT_EGL_SUCCESS();
 
     // Redefine the texture
     unsigned int pixelValue = 0xFFFF00FF;
-    std::vector<unsigned int> pixelData(window->getWidth() * window->getHeight(), pixelValue);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, window->getWidth(), window->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, &pixelData[0]);
+    std::vector<unsigned int> pixelData(getWindowWidth() * getWindowHeight(), pixelValue);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, &pixelData[0]);
 
     // Draw a quad and verify that it is magenta
     glUseProgram(mTextureProgram);
@@ -324,7 +324,7 @@ TEST_P(PbufferTest, BindTexImageAndRedefineTexture)
     EXPECT_GL_NO_ERROR();
 
     // Verify that magenta was drawn
-    EXPECT_PIXEL_EQ(window->getWidth() / 2, window->getHeight() / 2, 255, 0, 255, 255);
+    EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 255, 0, 255, 255);
 
     glDeleteTextures(1, &texture);
 }

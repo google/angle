@@ -3,9 +3,11 @@
 #include "OSWindow.h"
 
 ANGLETest::ANGLETest()
-    : mEGLWindow(nullptr)
+    : mEGLWindow(nullptr),
+      mWidth(0),
+      mHeight(0)
 {
-    mEGLWindow = new EGLWindow(1280, 720, GetParam().majorVersion, GetParam().eglParameters);
+    mEGLWindow = new EGLWindow(GetParam().majorVersion, GetParam().eglParameters);
 }
 
 ANGLETest::~ANGLETest()
@@ -15,7 +17,7 @@ ANGLETest::~ANGLETest()
 
 void ANGLETest::SetUp()
 {
-    if (!ResizeWindow(mEGLWindow->getWidth(), mEGLWindow->getHeight()))
+    if (!ResizeWindow(mWidth, mHeight))
     {
         FAIL() << "Failed to resize ANGLE test window.";
     }
@@ -33,7 +35,7 @@ void ANGLETest::SetUp()
     // This Viewport command is not strictly necessary but we add it so that programs
     // taking OpenGL traces can guess the size of the default framebuffer and show it
     // in their UIs
-    glViewport(0, 0, mEGLWindow->getWidth(), mEGLWindow->getHeight());
+    glViewport(0, 0, mWidth, mHeight);
 }
 
 void ANGLETest::TearDown()
@@ -144,12 +146,12 @@ bool ANGLETest::eglClientExtensionEnabled(const std::string &extName)
 
 void ANGLETest::setWindowWidth(int width)
 {
-    mEGLWindow->setWidth(width);
+    mWidth = width;
 }
 
 void ANGLETest::setWindowHeight(int height)
 {
-    mEGLWindow->setHeight(height);
+    mHeight = height;
 }
 
 void ANGLETest::setConfigRedBits(int bits)
@@ -199,12 +201,12 @@ EGLWindow *ANGLETest::getEGLWindow() const
 
 int ANGLETest::getWindowWidth() const
 {
-    return mEGLWindow->getWidth();
+    return mWidth;
 }
 
 int ANGLETest::getWindowHeight() const
 {
-    return mEGLWindow->getHeight();
+    return mHeight;
 }
 
 bool ANGLETest::isMultisampleEnabled() const

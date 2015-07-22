@@ -27,7 +27,7 @@ struct PointSpritesParams final : public RenderTestParams
         // Common default params
         majorVersion = 2;
         minorVersion = 0;
-        widowWidth = 1280;
+        windowWidth = 1280;
         windowHeight = 720;
         iterations = 10;
         count = 10;

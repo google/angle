@@ -24,7 +24,7 @@ struct DrawCallPerfParams final : public RenderTestParams
     {
         majorVersion = 2;
         minorVersion = 0;
-        widowWidth = 256;
+        windowWidth = 256;
         windowHeight = 256;
         iterations = 50;
         numTris = 1;

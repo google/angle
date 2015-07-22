@@ -185,7 +185,7 @@ IndexConversionPerfParams IndexConversionPerfD3D11Params()
     params.eglParameters = egl_platform::D3D11_NULL();
     params.majorVersion = 2;
     params.minorVersion = 0;
-    params.widowWidth = 256;
+    params.windowWidth = 256;
     params.windowHeight = 256;
     params.iterations = 15;
     params.numIndexTris = 3000;

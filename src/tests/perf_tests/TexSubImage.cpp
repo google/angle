@@ -24,7 +24,7 @@ struct TexSubImageParams final : public RenderTestParams
         // Common default parameters
         majorVersion = 2;
         minorVersion = 0;
-        widowWidth = 512;
+        windowWidth = 512;
         windowHeight = 512;
 
         imageWidth = 1024;

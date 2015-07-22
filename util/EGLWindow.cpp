@@ -69,14 +69,12 @@ bool operator==(const EGLPlatformParameters &a, const EGLPlatformParameters &b)
            (a.deviceType == b.deviceType);
 }
 
-EGLWindow::EGLWindow(size_t width, size_t height, EGLint glesMajorVersion, const EGLPlatformParameters &platform)
+EGLWindow::EGLWindow(EGLint glesMajorVersion, const EGLPlatformParameters &platform)
     : mDisplay(EGL_NO_DISPLAY),
       mSurface(EGL_NO_SURFACE),
       mContext(EGL_NO_CONTEXT),
       mClientVersion(glesMajorVersion),
       mPlatform(platform),
-      mWidth(width),
-      mHeight(height),
       mRedBits(-1),
       mGreenBits(-1),
       mBlueBits(-1),

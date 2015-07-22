@@ -60,7 +60,7 @@ struct RenderTestParams : public angle::PlatformParameters
 {
     virtual std::string suffix() const;
 
-    EGLint widowWidth;
+    EGLint windowWidth;
     EGLint windowHeight;
 };
 
