@@ -204,7 +204,7 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType, GLsizei count, gl::
         }
         ASSERT(bufferData != nullptr);
 
-        error = streamIndexData(bufferData, count, srcType, dstType, translated);
+        error = streamIndexData(bufferData + offset, count, srcType, dstType, translated);
         if (error.isError())
         {
             return error;
