@@ -17,9 +17,16 @@ ANGLETest::~ANGLETest()
 
 void ANGLETest::SetUp()
 {
-    if (!ResizeWindow(mWidth, mHeight))
+    // Resize the window before creating the context so that the first make current
+    // sets the viewport and scissor box to the right size.
+    bool needSwap = false;
+    if (mOSWindow->getWidth() != mWidth || mOSWindow->getHeight() != mHeight)
     {
-        FAIL() << "Failed to resize ANGLE test window.";
+        if (!mOSWindow->resize(mWidth, mHeight))
+        {
+            FAIL() << "Failed to resize ANGLE test window.";
+        }
+        needSwap = true;
     }
 
     if (!createEGLContext())
@@ -27,10 +34,13 @@ void ANGLETest::SetUp()
         FAIL() << "egl context creation failed.";
     }
 
-    // Swap the buffers so that the default framebuffer picks up the resize
-    // which will allow follow-up test code to assume the framebuffer covers
-    // the whole window.
-    swapBuffers();
+    if (needSwap)
+    {
+        // Swap the buffers so that the default framebuffer picks up the resize
+        // which will allow follow-up test code to assume the framebuffer covers
+        // the whole window.
+        swapBuffers();
+    }
 
     // This Viewport command is not strictly necessary but we add it so that programs
     // taking OpenGL traces can guess the size of the default framebuffer and show it
@@ -248,11 +258,6 @@ bool ANGLETest::DestroyTestWindow()
     }
 
     return true;
-}
-
-bool ANGLETest::ResizeWindow(int width, int height)
-{
-    return mOSWindow->resize(width, height);
 }
 
 void ANGLETest::SetWindowVisible(bool isVisible)
