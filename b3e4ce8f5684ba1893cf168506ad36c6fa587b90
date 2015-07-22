@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6dd2dee8_9841fd0d",
+        "filename": "src/libANGLE/renderer/d3d/EGLImageD3D.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-22T17:56:24Z",
+      "side": 1,
+      "message": "note: use helpers (same as Image constructor)",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 52,
+        "endChar": 38
+      },
+      "revId": "b3e4ce8f5684ba1893cf168506ad36c6fa587b90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd7bcaab_443dd8e8",
+        "filename": "src/libANGLE/renderer/d3d/EGLImageD3D.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-22T17:56:24Z",
+      "side": 1,
+      "message": "note: delete mRenderTarget.",
+      "revId": "b3e4ce8f5684ba1893cf168506ad36c6fa587b90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
