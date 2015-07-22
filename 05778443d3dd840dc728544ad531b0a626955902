@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d7552bb_077da68f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-22T18:20:02Z",
+      "side": 1,
+      "message": "nit: remove redundant line",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 39
+      },
+      "revId": "05778443d3dd840dc728544ad531b0a626955902",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6dd2dee8_d5a98edb",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-22T18:20:02Z",
+      "side": 1,
+      "message": "can you mark this case with\n\nswitch ()\n{ // clang-format off\n} // clang-format on\n\nand manually align the return and break?",
+      "range": {
+        "startLine": 417,
+        "startChar": 16,
+        "endLine": 417,
+        "endChar": 25
+      },
+      "revId": "05778443d3dd840dc728544ad531b0a626955902",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cdc02a18_1c1c2172",
+        "filename": "src/tests/compiler_tests/CollectVariables_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 581,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-22T18:20:02Z",
+      "side": 1,
+      "message": "make sure you place a newline at the end of every file (it\u0027s not visible in gerrit sadly)",
+      "range": {
+        "startLine": 581,
+        "startChar": 0,
+        "endLine": 581,
+        "endChar": 1
+      },
+      "revId": "05778443d3dd840dc728544ad531b0a626955902",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ddfa2f3_155e3474",
+        "filename": "src/tests/compiler_tests/FragDepth_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-22T18:20:02Z",
+      "side": 1,
+      "message": "static is redundant for these",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 6
+      },
+      "revId": "05778443d3dd840dc728544ad531b0a626955902",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd7bcaab_a4bceca3",
+        "filename": "src/tests/compiler_tests/FragDepth_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-22T18:20:02Z",
+      "side": 1,
+      "message": "nit: override instead of virtual",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 11
+      },
+      "revId": "05778443d3dd840dc728544ad531b0a626955902",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd7bcaab_c4b9e8b2",
+        "filename": "src/tests/compiler_tests/FragDepth_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-22T18:20:02Z",
+      "side": 1,
+      "message": "nit: s/NULL/nullptr",
+      "range": {
+        "startLine": 27,
+        "startChar": 36,
+        "endLine": 27,
+        "endChar": 40
+      },
+      "revId": "05778443d3dd840dc728544ad531b0a626955902",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad7a16a8_e88f1bb2",
+        "filename": "src/tests/compiler_tests/FragDepth_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-22T18:20:02Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 11
+      },
+      "revId": "05778443d3dd840dc728544ad531b0a626955902",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4dd51ace_e4c3b729",
+        "filename": "src/tests/compiler_tests/FragDepth_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-22T18:20:02Z",
+      "side": 1,
+      "message": "nit: place a comment before each TEST_P",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 6
+      },
+      "revId": "05778443d3dd840dc728544ad531b0a626955902",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
