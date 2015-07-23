@@ -2117,7 +2117,16 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     //
     TFunction *prevDec =
         static_cast<TFunction *>(symbolTable.find(function->getMangledName(), getShaderVersion()));
-    if (prevDec)
+
+    if (getShaderVersion() >= 300 && symbolTable.hasUnmangledBuiltIn(function->getName().c_str()))
+    {
+        // With ESSL 3.00, names of built-in functions cannot be redeclared as functions.
+        // Therefore overloading or redefining builtin functions is an error.
+        error(location, "Name of a built-in function cannot be redeclared as function",
+              function->getName().c_str());
+        recover();
+    }
+    else if (prevDec)
     {
         if (prevDec->getReturnType() != function->getReturnType())
         {
