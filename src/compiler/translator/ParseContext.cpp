@@ -930,8 +930,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line, const TString &ident
     if (!symbolTable.declare(*variable))
     {
         error(line, "redefinition", identifier.c_str());
-        delete (*variable);
-        (*variable) = nullptr;
+        *variable = nullptr;
         return false;
     }
 
@@ -1884,10 +1883,13 @@ void TParseContext::parseFunctionPrototype(const TSourceLoc &location,
             //
             // Insert the parameters with name in the symbol table.
             //
-            if (!symbolTable.declare(variable)) {
+            if (!symbolTable.declare(variable))
+            {
                 error(location, "redefinition", variable->getName().c_str());
                 recover();
-                delete variable;
+                paramNodes = intermediate.growAggregate(
+                    paramNodes, intermediate.addSymbol(0, "", *param.type, location), location);
+                continue;
             }
 
             //
@@ -3758,7 +3760,6 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall, TIntermN
             recover();
         }
     }
-    delete fnCall;
     return callNode;
 }
 
