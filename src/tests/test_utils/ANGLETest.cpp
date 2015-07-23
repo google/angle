@@ -17,28 +17,25 @@ ANGLETest::~ANGLETest()
 
 void ANGLETest::SetUp()
 {
+    if (!ResizeWindow(mWidth, mHeight))
+    {
+        FAIL() << "Failed to resize ANGLE test window.";
+    }
+
     if (!createEGLContext())
     {
         FAIL() << "egl context creation failed.";
     }
 
-    if (mOSWindow->getWidth() != mWidth || mOSWindow->getHeight() != mHeight)
-    {
-        if (!mOSWindow->resize(mWidth, mHeight))
-        {
-            FAIL() << "Failed to resize ANGLE test window.";
-        }
+    // Swap the buffers so that the default framebuffer picks up the resize
+    // which will allow follow-up test code to assume the framebuffer covers
+    // the whole window.
+    swapBuffers();
 
-        // Swap the buffers so that the default framebuffer picks up the resize
-        // which will allow follow-up test code to assume the framebuffer covers
-        // the whole window.
-        swapBuffers();
-
-        // This Viewport command is not strictly necessary but we add it so that programs
-        // taking OpenGL traces can guess the size of the default framebuffer and show it
-        // in their UIs
-        glViewport(0, 0, mWidth, mHeight);
-    }
+    // This Viewport command is not strictly necessary but we add it so that programs
+    // taking OpenGL traces can guess the size of the default framebuffer and show it
+    // in their UIs
+    glViewport(0, 0, mWidth, mHeight);
 }
 
 void ANGLETest::TearDown()
@@ -251,6 +248,11 @@ bool ANGLETest::DestroyTestWindow()
     }
 
     return true;
+}
+
+bool ANGLETest::ResizeWindow(int width, int height)
+{
+    return mOSWindow->resize(width, height);
 }
 
 void ANGLETest::SetWindowVisible(bool isVisible)
