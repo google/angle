@@ -2009,18 +2009,26 @@ void TParseContext::parseFunctionPrototype(const TSourceLoc &location,
 
 TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TFunction *function)
 {
-    //
-    // Multiple declarations of the same function are allowed.
-    //
-    // If this is a definition, the definition production code will check for redefinitions
-    // (we don't know at this point if it's a definition or not).
-    //
-    // Redeclarations are allowed.  But, return types and parameter qualifiers must match.
-    //
-    TFunction *prevDec =
-        static_cast<TFunction *>(symbolTable.find(function->getMangledName(), getShaderVersion()));
-    if (prevDec)
+    TFunction *prevDec = static_cast<TFunction*>(symbolTable.find(function->getMangledName(), getShaderVersion()));
+    bool builtIn;
+    TSymbol *prevSym = symbolTable.find(function->getName(), getShaderVersion(), &builtIn);
+    if (getShaderVersion() >= 300 && prevSym && builtIn)
     {
+        // With ESSL 3.00, names of built-in functions cannot be redeclared as functions.
+        // Therefore overloading or redefining builtin functions is an error.
+        error(location, "Name of a built-in function cannot be redeclared as function", function->getName().c_str());
+        recover();
+    }
+    else if (prevDec)
+    {
+        //
+        // Multiple declarations of the same function are allowed.
+        //
+        // If this is a definition, the definition production code will check for redefinitions
+        // (we don't know at this point if it's a definition or not).
+        //
+        // Redeclarations are allowed.  But, return types and parameter qualifiers must match.
+        //
         if (prevDec->getReturnType() != function->getReturnType())
         {
             error(location, "overloaded functions must have the same return type",
@@ -2042,7 +2050,6 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     //
     // Check for previously declared variables using the same name.
     //
-    TSymbol *prevSym = symbolTable.find(function->getName(), getShaderVersion());
     if (prevSym)
     {
         if (!prevSym->isFunction())

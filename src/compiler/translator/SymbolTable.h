@@ -418,18 +418,21 @@ class TSymbolTable : angle::NonCopyable
     void insertBuiltIn(ESymbolLevel level, const TType *rvalue, const char *name,
                        const TType *ptype1, const TType *ptype2 = 0, const TType *ptype3 = 0, const TType *ptype4 = 0, const TType *ptype5 = 0)
     {
+        insertUnmangled(level, name);
         insertBuiltIn(level, EOpNull, "", rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
     }
 
     void insertBuiltIn(ESymbolLevel level, const char *ext, const TType *rvalue, const char *name,
                        const TType *ptype1, const TType *ptype2 = 0, const TType *ptype3 = 0, const TType *ptype4 = 0, const TType *ptype5 = 0)
     {
+        insertUnmangled(level, name);
         insertBuiltIn(level, EOpNull, ext, rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
     }
 
     void insertBuiltIn(ESymbolLevel level, TOperator op, const TType *rvalue, const char *name,
                        const TType *ptype1, const TType *ptype2 = 0, const TType *ptype3 = 0, const TType *ptype4 = 0, const TType *ptype5 = 0)
     {
+        insertUnmangled(level, name);
         insertBuiltIn(level, op, "", rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
     }
 
@@ -489,6 +492,12 @@ class TSymbolTable : angle::NonCopyable
     ESymbolLevel currentLevel() const
     {
         return static_cast<ESymbolLevel>(table.size() - 1);
+    }
+
+    // Used to insert unmangled functions to check redeclaration of built-ins later for ESSL 3.00.
+    bool insertUnmangled(ESymbolLevel level, const char *name)
+    {
+        return table[level]->insertUnmangled(new TFunction(NewPoolTString(name), new TType()));
     }
 
     std::vector<TSymbolTableLevel *> table;
