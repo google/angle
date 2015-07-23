@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ddfa2f3_04292439",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1890,
+      "author": {
+        "id": 1128439
+      },
+      "writtenOn": "2015-07-23T17:45:37Z",
+      "side": 1,
+      "message": "Danger! This line of code deletes \u0027variable\u0027 and then falls through to a line of code that dereferences it! Missing continue perhaps?",
+      "revId": "185fb403782fe55b9cc66168c3fe6eeda4f68be4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
