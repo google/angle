@@ -150,7 +150,6 @@ CollectVariables::CollectVariables(std::vector<sh::Attribute> *attribs,
       mLastFragDataAdded(false),
       mFragColorAdded(false),
       mFragDataAdded(false),
-      mFragDepthEXTAdded(false),
       mFragDepthAdded(false),
       mHashFunction(hashFunction),
       mSymbolTable(symbolTable)
@@ -403,8 +402,8 @@ void CollectVariables::visitSymbol(TIntermSymbol *symbol)
                   mFragDataAdded = true;
               }
               return;
-          case EvqFragDepthEXT:
-              if (!mFragDepthEXTAdded)
+          case EvqFragDepth:
+              if (!mFragDepthAdded)
               {
                   Attribute info;
                   const char kName[] = "gl_FragDepthEXT";
@@ -418,25 +417,9 @@ void CollectVariables::visitSymbol(TIntermSymbol *symbol)
                                               ->getType());
                   info.staticUse = true;
                   mOutputVariables->push_back(info);
-                  mFragDepthEXTAdded = true;
-              }
-              return;
-          case EvqFragDepth:
-              if (!mFragDepthAdded)
-              {
-                  Attribute info;
-                  const char kName[] = "gl_FragDepth";
-                  info.name          = kName;
-                  info.mappedName    = kName;
-                  info.type          = GL_FLOAT;
-                  info.arraySize     = 0;
-                  info.precision     = GL_HIGH_FLOAT;
-                  info.staticUse = true;
-                  mOutputVariables->push_back(info);
                   mFragDepthAdded = true;
               }
               return;
-
           default:
             break;
         }
