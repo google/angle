@@ -16,6 +16,24 @@
       "revId": "185fb403782fe55b9cc66168c3fe6eeda4f68be4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd7bcaab_327d7990",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1890,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-23T17:51:19Z",
+      "side": 1,
+      "message": "Hum...thanks for catching this. Wonder why we didn\u0027t pick it up from the _tab.cpp file previously.",
+      "parentUuid": "0ddfa2f3_04292439",
+      "revId": "185fb403782fe55b9cc66168c3fe6eeda4f68be4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
