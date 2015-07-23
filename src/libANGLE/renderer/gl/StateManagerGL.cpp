@@ -291,7 +291,7 @@ void StateManagerGL::setPixelUnpackState(GLint alignment,
 
     if (mUnpackSkipRows != skipRows)
     {
-        mUnpackSkipRows = rowLength;
+        mUnpackSkipRows = skipRows;
         mFunctions->pixelStorei(GL_UNPACK_SKIP_ROWS, mUnpackSkipRows);
 
         // TODO: set dirty bit once one exists
@@ -359,7 +359,7 @@ void StateManagerGL::setPixelPackState(GLint alignment,
 
     if (mPackSkipRows != skipRows)
     {
-        mPackSkipRows = rowLength;
+        mPackSkipRows = skipRows;
         mFunctions->pixelStorei(GL_PACK_SKIP_ROWS, mPackSkipRows);
 
         // TODO: set dirty bit once one exists
