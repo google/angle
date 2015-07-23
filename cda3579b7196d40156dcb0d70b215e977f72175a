@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad14d688_2422d2aa",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1890,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-07-23T22:02:52Z",
+      "side": 1,
+      "message": "This fix is fine as is. Or a simpler way, just not delete variable here (since it\u0027s a T-type). But you decide.",
+      "range": {
+        "startLine": 1890,
+        "startChar": 16,
+        "endLine": 1890,
+        "endChar": 26
+      },
+      "revId": "cda3579b7196d40156dcb0d70b215e977f72175a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
