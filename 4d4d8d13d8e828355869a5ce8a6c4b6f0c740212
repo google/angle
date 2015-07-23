@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d21c6e2_e8c6d33b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1128439
+      },
+      "writtenOn": "2015-07-23T22:34:42Z",
+      "side": 1,
+      "message": "I have no idea why this isn\u0027t a leak (T-type?) so I have nothing to say.",
+      "revId": "4d4d8d13d8e828355869a5ce8a6c4b6f0c740212",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
