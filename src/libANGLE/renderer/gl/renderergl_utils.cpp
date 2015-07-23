@@ -22,6 +22,27 @@
 
 namespace rx
 {
+static VendorID GetVendorID(const FunctionsGL *functions)
+{
+    std::string nativeVendorString(reinterpret_cast<const char *>(functions->getString(GL_VENDOR)));
+    if (nativeVendorString.find("Intel") != std::string::npos)
+    {
+        return VENDOR_ID_INTEL;
+    }
+    else if (nativeVendorString.find("NVIDIA") != std::string::npos)
+    {
+        return VENDOR_ID_NVIDIA;
+    }
+    else if (nativeVendorString.find("ATI") != std::string::npos ||
+             nativeVendorString.find("AMD") != std::string::npos)
+    {
+        return VENDOR_ID_AMD;
+    }
+    else
+    {
+        return VENDOR_ID_UNKNOWN;
+    }
+}
 
 namespace nativegl_gl
 {
@@ -514,7 +535,12 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)
 {
-    *workarounds = WorkaroundsGL();
+    VendorID vendor = GetVendorID(functions);
+
+    // Don't use 1-bit alpha formats on desktop GL with AMD or Intel drivers.
+    workarounds->avoid1BitAlphaTextureFormats =
+        functions->standard == STANDARD_GL_DESKTOP &&
+        (vendor == VENDOR_ID_AMD || vendor == VENDOR_ID_INTEL);
 }
 
 }

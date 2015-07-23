@@ -15,10 +15,18 @@ namespace rx
 struct WorkaroundsGL
 {
     WorkaroundsGL()
+        : avoid1BitAlphaTextureFormats(false)
     {
     }
 
-    // TODO(geofflang): workarounds!
+    // When writing a float to a normalized integer framebuffer, desktop OpenGL is allowed to write
+    // one of the two closest normalized integer representations (although round to nearest is
+    // preferred) (see section 2.3.5.2 of the GL 4.5 core specification). OpenGL ES requires that
+    // round-to-nearest is used (see "Conversion from Floating-Point to Framebuffer Fixed-Point" in
+    // section 2.1.2 of the OpenGL ES 2.0.25 spec).  This issue only shows up on Intel and AMD
+    // drivers on framebuffer formats that have 1-bit alpha, work around this by using higher
+    // precision formats instead.
+    bool avoid1BitAlphaTextureFormats;
 };
 }
 

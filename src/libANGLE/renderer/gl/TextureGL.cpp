@@ -17,6 +17,7 @@
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/renderer/gl/WorkaroundsGL.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
 
 namespace rx
@@ -55,10 +56,40 @@ static bool CompatibleTextureTarget(GLenum textureType, GLenum textureTarget)
     }
 }
 
-TextureGL::TextureGL(GLenum type, const FunctionsGL *functions, StateManagerGL *stateManager)
+static const nativegl::InternalFormat &GetNativeInternalFormat(const FunctionsGL *functions,
+                                                               const WorkaroundsGL &workarounds,
+                                                               GLenum internalFormat,
+                                                               GLenum type)
+{
+    GLenum sizedFormat                   = gl::GetSizedInternalFormat(internalFormat, type);
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(sizedFormat);
+
+    bool use1BitAlphaWorkaround = workarounds.avoid1BitAlphaTextureFormats &&
+                                  functions->standard == STANDARD_GL_DESKTOP &&
+                                  formatInfo.alphaBits == 1;
+    if (!use1BitAlphaWorkaround &&
+        (functions->standard == STANDARD_GL_DESKTOP || functions->isAtLeastGLES(gl::Version(3, 0))))
+    {
+        // Use sized internal formats whenever possible to guarantee the requested precision.
+        // On Desktop GL, passing an internal format of GL_RGBA will generate a GL_RGBA8 texture
+        // even if the provided type is GL_FLOAT.
+        return nativegl::GetInternalFormatInfo(sizedFormat, functions->standard);
+    }
+    else
+    {
+        // Use the original unsized format when the workaround is required or on top of ES2.
+        return nativegl::GetInternalFormatInfo(formatInfo.format, functions->standard);
+    }
+}
+
+TextureGL::TextureGL(GLenum type,
+                     const FunctionsGL *functions,
+                     const WorkaroundsGL &workarounds,
+                     StateManagerGL *stateManager)
     : TextureImpl(),
       mTextureType(type),
       mFunctions(functions),
+      mWorkarounds(workarounds),
       mStateManager(stateManager),
       mAppliedSamplerState(),
       mTextureID(0)
@@ -90,7 +121,8 @@ gl::Error TextureGL::setImage(GLenum target, size_t level, GLenum internalFormat
 
     SetUnpackStateForTexImage(mStateManager, unpack);
 
-    const nativegl::InternalFormat &nativeInternalFormatInfo = nativegl::GetInternalFormatInfo(internalFormat, mFunctions->standard);
+    const nativegl::InternalFormat &nativeInternalFormatInfo =
+        GetNativeInternalFormat(mFunctions, mWorkarounds, internalFormat, type);
 
     mStateManager->bindTexture(mTextureType, mTextureID);
     if (UseTexImage2D(mTextureType))
@@ -143,7 +175,8 @@ gl::Error TextureGL::setCompressedImage(GLenum target, size_t level, GLenum inte
 
     SetUnpackStateForTexImage(mStateManager, unpack);
 
-    const nativegl::InternalFormat &nativeInternalFormatInfo = nativegl::GetInternalFormatInfo(internalFormat, mFunctions->standard);
+    const nativegl::InternalFormat &nativeInternalFormatInfo =
+        GetNativeInternalFormat(mFunctions, mWorkarounds, internalFormat, GL_UNSIGNED_BYTE);
 
     mStateManager->bindTexture(mTextureType, mTextureID);
     if (UseTexImage2D(mTextureType))
@@ -171,19 +204,17 @@ gl::Error TextureGL::setCompressedSubImage(GLenum target, size_t level, const gl
 
     SetUnpackStateForTexImage(mStateManager, unpack);
 
-    const nativegl::InternalFormat &nativeInternalFormatInfo = nativegl::GetInternalFormatInfo(format, mFunctions->standard);
-
     mStateManager->bindTexture(mTextureType, mTextureID);
     if (UseTexImage2D(mTextureType))
     {
         ASSERT(area.z == 0 && area.depth == 1);
-        mFunctions->compressedTexSubImage2D(target, level, area.x, area.y, area.width, area.height, nativeInternalFormatInfo.internalFormat, imageSize,
-                                            pixels);
+        mFunctions->compressedTexSubImage2D(target, level, area.x, area.y, area.width, area.height,
+                                            format, imageSize, pixels);
     }
     else if (UseTexImage3D(mTextureType))
     {
-        mFunctions->compressedTexSubImage3D(target, level, area.x, area.y, area.z, area.width, area.height, area.depth,
-                                            nativeInternalFormatInfo.internalFormat, imageSize, pixels);
+        mFunctions->compressedTexSubImage3D(target, level, area.x, area.y, area.z, area.width,
+                                            area.height, area.depth, format, imageSize, pixels);
     }
     else
     {
@@ -196,7 +227,8 @@ gl::Error TextureGL::setCompressedSubImage(GLenum target, size_t level, const gl
 gl::Error TextureGL::copyImage(GLenum target, size_t level, const gl::Rectangle &sourceArea, GLenum internalFormat,
                                const gl::Framebuffer *source)
 {
-    const nativegl::InternalFormat &nativeInternalFormatInfo = nativegl::GetInternalFormatInfo(internalFormat, mFunctions->standard);
+    const nativegl::InternalFormat &nativeInternalFormatInfo = GetNativeInternalFormat(
+        mFunctions, mWorkarounds, internalFormat, source->getImplementationColorReadType());
 
     const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(source);
 

@@ -17,11 +17,15 @@ namespace rx
 
 class FunctionsGL;
 class StateManagerGL;
+struct WorkaroundsGL;
 
 class TextureGL : public TextureImpl
 {
   public:
-    TextureGL(GLenum type, const FunctionsGL *functions, StateManagerGL *stateManager);
+    TextureGL(GLenum type,
+              const FunctionsGL *functions,
+              const WorkaroundsGL &workarounds,
+              StateManagerGL *stateManager);
     ~TextureGL() override;
 
     void setUsage(GLenum usage) override;
@@ -61,6 +65,7 @@ class TextureGL : public TextureImpl
     GLenum mTextureType;
 
     const FunctionsGL *mFunctions;
+    const WorkaroundsGL &mWorkarounds;
     StateManagerGL *mStateManager;
 
     mutable gl::SamplerState mAppliedSamplerState;
