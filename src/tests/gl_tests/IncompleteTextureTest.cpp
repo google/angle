@@ -86,15 +86,6 @@ class IncompleteTextureTest : public ANGLETest
 
 TEST_P(IncompleteTextureTest, IncompleteTexture2D)
 {
-    // TODO(cwallez): figure out why this is broken on Linux/NVIDIA.
-#ifdef ANGLE_PLATFORM_LINUX
-    if (isNVidia() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
-    {
-        std::cout << "Test skipped on Linux NVIDIA on OpenGL." << std::endl;
-        return;
-    }
-#endif
-
     GLuint tex;
     glGenTextures(1, &tex);
     glActiveTexture(GL_TEXTURE0);
