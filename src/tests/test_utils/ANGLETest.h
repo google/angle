@@ -108,8 +108,8 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     bool destroyEGLContext();
 
     EGLWindow *mEGLWindow;
-    size_t mWidth;
-    size_t mHeight;
+    int mWidth;
+    int mHeight;
 
     static OSWindow *mOSWindow;
 };
