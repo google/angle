@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "6dfe5e71_9844bd1e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-23T19:03:17Z",
+      "side": 1,
+      "message": "Whoops, you\u0027re right. Shouldn\u0027t have been checking that extension at all, removed.",
+      "parentUuid": "6dd2dee8_b8f4014a",
+      "range": {
+        "startLine": 470,
+        "startChar": 16,
+        "endLine": 470,
+        "endChar": 25
+      },
+      "revId": "c5525cb2c81a0d58ba27befacb3dc494bdd41a2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "586b1a6a_ca388300",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 4
