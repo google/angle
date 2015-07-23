@@ -100,20 +100,6 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
 
     mFramebuffers[GL_READ_FRAMEBUFFER] = 0;
     mFramebuffers[GL_DRAW_FRAMEBUFFER] = 0;
-
-    // Initialize point sprite state for desktop GL
-    if (mFunctions->standard == STANDARD_GL_DESKTOP)
-    {
-        mFunctions->enable(GL_PROGRAM_POINT_SIZE);
-
-        // GL_POINT_SPRITE was deprecated in the core profile. Point rasterization is always
-        // performed
-        // as though POINT_SPRITE were enabled.
-        if ((mFunctions->profile & GL_CONTEXT_CORE_PROFILE_BIT) == 0)
-        {
-            mFunctions->enable(GL_POINT_SPRITE);
-        }
-    }
 }
 
 void StateManagerGL::deleteProgram(GLuint program)
