@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d0b2262_4fd28dce",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-07-23T20:14:25Z",
+      "side": 1,
+      "message": "Would it be more forward-looking to do this on all implementations except ES 2.0? That would handle desktop GL, the core profile, and ES 3.0.",
+      "range": {
+        "startLine": 65,
+        "startChar": 24,
+        "endLine": 65,
+        "endChar": 32
+      },
+      "revId": "b50428435d4828853cec3936d2351ac1350b03e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
