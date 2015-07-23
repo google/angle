@@ -184,6 +184,8 @@ GPUTestConfig::OS GetCurrentOS() {
     return GPUTestConfig::kOsWin7;
   if (major_version == 6 && (minor_version == 2 || minor_version == 3))
     return GPUTestConfig::kOsWin8;
+  if (major_version == 10)
+    return GPUTestConfig::kOsWin10;
 #elif defined(OS_MACOSX)
   int32 major_version = 0;
   int32 minor_version = 0;
@@ -218,8 +220,8 @@ GPUTestConfig::GPUTestConfig()
     : validate_gpu_info_(true),
       os_(kOsUnknown),
       gpu_device_id_(0),
-      build_type_(kBuildTypeUnknown) {
-}
+      build_type_(kBuildTypeUnknown),
+      api_(kAPIUnknown) {}
 
 GPUTestConfig::~GPUTestConfig() {
 }
@@ -243,6 +245,11 @@ void GPUTestConfig::set_gpu_device_id(uint32 id) {
 void GPUTestConfig::set_build_type(int32 build_type) {
   DCHECK_EQ(0, build_type & ~(kBuildTypeRelease | kBuildTypeDebug));
   build_type_ = build_type;
+}
+
+void GPUTestConfig::set_api(int32 api) {
+  DCHECK_EQ(0, api & ~(kAPID3D9 | kAPID3D11 | kAPIGLDesktop | kAPIGLES));
+  api_ = api;
 }
 
 bool GPUTestConfig::IsValid() const {
@@ -314,6 +321,7 @@ bool GPUTestBotConfig::IsValid() const {
     case kOsWinVista:
     case kOsWin7:
     case kOsWin8:
+    case kOsWin10:
     case kOsMacLeopard:
     case kOsMacSnowLeopard:
     case kOsMacLion:
@@ -364,6 +372,8 @@ bool GPUTestBotConfig::Matches(const GPUTestConfig& config) const {
     return false;
   if (config.build_type() != kBuildTypeUnknown &&
       (build_type() & config.build_type()) == 0)
+    return false;
+  if (config.api() != 0 && (api() & config.api()) == 0)
     return false;
   return true;
 }
