@@ -22,6 +22,30 @@
       "revId": "cda3579b7196d40156dcb0d70b215e977f72175a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d21c6e2_a80e9b3d",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1890,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-23T22:32:04Z",
+      "side": 1,
+      "message": "Yeah, I think that\u0027s better. Done. This TPoolAllocator thing is confusing at times. Also note that the delete operator should be \"{}\" so the use-after-delete might even have been \"not dangerous\".",
+      "parentUuid": "ad14d688_2422d2aa",
+      "range": {
+        "startLine": 1890,
+        "startChar": 16,
+        "endLine": 1890,
+        "endChar": 26
+      },
+      "revId": "cda3579b7196d40156dcb0d70b215e977f72175a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
