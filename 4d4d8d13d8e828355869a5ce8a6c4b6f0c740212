@@ -16,6 +16,24 @@
       "revId": "4d4d8d13d8e828355869a5ce8a6c4b6f0c740212",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d9d1a6f_31b4f03e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-24T12:08:07Z",
+      "side": 1,
+      "message": "Yeah, sorry, it\u0027s very non-obvious. Any type starting with \"T\" in this project uses TPoolAllocator for new/delete. The pool allocator allocates everything in blocks, and overrides delete to do nothing. It then frees the blocks all at once when the TPoolAllocator is deleted after the compile is finished.",
+      "parentUuid": "2d21c6e2_e8c6d33b",
+      "revId": "4d4d8d13d8e828355869a5ce8a6c4b6f0c740212",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
