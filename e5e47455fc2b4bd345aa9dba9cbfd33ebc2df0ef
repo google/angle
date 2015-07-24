@@ -16,6 +16,24 @@
       "revId": "e5e47455fc2b4bd345aa9dba9cbfd33ebc2df0ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2da466b9_76e82828",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-24T18:59:30Z",
+      "side": 1,
+      "message": "That\u0027s reasonable. I think in this case it\u0027s also okay to have a sparse switch, because of the style of event handlers (might handle 2-3 possible enums out of many)",
+      "parentUuid": "4d9d1a6f_3716a00c",
+      "revId": "e5e47455fc2b4bd345aa9dba9cbfd33ebc2df0ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
