@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d9d1a6f_3716a00c",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-07-24T18:55:50Z",
+      "side": 1,
+      "message": "If this only cares about a single event out of 15, maybe an if is more appropriate?\n\n(I tend to prefer to explicitly list all cases in switches over adding a default, so that if I add another element to the enum, the compiler can help me audit all places that switch over the enum.)",
+      "revId": "e5e47455fc2b4bd345aa9dba9cbfd33ebc2df0ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
