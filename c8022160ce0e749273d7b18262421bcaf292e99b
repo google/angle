@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2da466b9_d3a3a6f6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-24T17:46:09Z",
+      "side": 1,
+      "message": "can you open an issue for this on the tracker? it\u0027s possible it might incur discussion after this lands.",
+      "range": {
+        "startLine": 7,
+        "startChar": 16,
+        "endLine": 7,
+        "endChar": 47
+      },
+      "revId": "c8022160ce0e749273d7b18262421bcaf292e99b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd882a39_33b87013",
+        "filename": "extensions/EGL_ANGLE_keyed_mutex.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-24T17:46:09Z",
+      "side": 1,
+      "message": "we can use this enum value? shannon can you confirm? (Sorry if this was in the old discussion)",
+      "range": {
+        "startLine": 54,
+        "startChar": 57,
+        "endLine": 54,
+        "endChar": 63
+      },
+      "revId": "c8022160ce0e749273d7b18262421bcaf292e99b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad977653_52cdf42b",
+        "filename": "src/libANGLE/renderer/d3d/SwapChainD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-24T17:46:09Z",
+      "side": 1,
+      "message": "no trailing ;",
+      "range": {
+        "startLine": 52,
+        "startChar": 49,
+        "endLine": 52,
+        "endChar": 51
+      },
+      "revId": "c8022160ce0e749273d7b18262421bcaf292e99b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0da7a2c0_7276764f",
+        "filename": "src/libANGLE/renderer/d3d/SwapChainD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-24T17:46:09Z",
+      "side": 1,
+      "message": "override instead of virtual",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 52,
+        "endChar": 11
+      },
+      "revId": "c8022160ce0e749273d7b18262421bcaf292e99b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d83be1d_33ba3a5d",
+        "filename": "src/libANGLE/renderer/d3d/SwapChainD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-24T17:46:09Z",
+      "side": 1,
+      "message": "UNREACHABLE(); - probably put this as a pure virtual function with the dummy implementation in SwapChain9",
+      "range": {
+        "startLine": 52,
+        "startChar": 35,
+        "endLine": 52,
+        "endChar": 36
+      },
+      "revId": "c8022160ce0e749273d7b18262421bcaf292e99b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d9d1a6f_f43c164c",
+        "filename": "src/libANGLE/renderer/d3d/SwapChainD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-24T17:46:09Z",
+      "side": 1,
+      "message": "nullptr",
+      "range": {
+        "startLine": 52,
+        "startChar": 43,
+        "endLine": 52,
+        "endChar": 47
+      },
+      "revId": "c8022160ce0e749273d7b18262421bcaf292e99b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d86fa2e_6f63e533",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-24T17:46:09Z",
+      "side": 1,
+      "message": "override instead of virtual",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 11
+      },
+      "revId": "c8022160ce0e749273d7b18262421bcaf292e99b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2da466b9_539096a5",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2512,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-24T17:46:09Z",
+      "side": 1,
+      "message": "did you test compile? seems like you need this in RendererGL as well",
+      "range": {
+        "startLine": 2509,
+        "startChar": 0,
+        "endLine": 2512,
+        "endChar": 1
+      },
+      "revId": "c8022160ce0e749273d7b18262421bcaf292e99b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad977653_32ef887c",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-24T17:46:09Z",
+      "side": 1,
+      "message": "override instead of virtual in new code",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 147,
+        "endChar": 11
+      },
+      "revId": "c8022160ce0e749273d7b18262421bcaf292e99b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
