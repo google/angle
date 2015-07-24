@@ -705,6 +705,8 @@ void Win32Window::pushEvent(Event event)
       case Event::EVENT_RESIZED:
         MoveWindow(mNativeWindow, 0, 0, mWidth, mHeight, FALSE);
         break;
+      default:
+        break;
     }
 }
 
