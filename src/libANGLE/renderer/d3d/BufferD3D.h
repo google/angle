@@ -20,6 +20,12 @@ class BufferFactoryD3D;
 class StaticIndexBufferInterface;
 class StaticVertexBufferInterface;
 
+enum D3DBufferUsage
+{
+    D3D_BUFFER_USAGE_STATIC,
+    D3D_BUFFER_USAGE_DYNAMIC,
+};
+
 class BufferD3D : public BufferImpl
 {
   public:
@@ -44,6 +50,7 @@ class BufferD3D : public BufferImpl
 
   protected:
     void updateSerial();
+    void updateD3DBufferUsage(GLenum usage);
 
     BufferFactoryD3D *mFactory;
     unsigned int mSerial;
@@ -52,6 +59,7 @@ class BufferD3D : public BufferImpl
     StaticVertexBufferInterface *mStaticVertexBuffer;
     StaticIndexBufferInterface *mStaticIndexBuffer;
     unsigned int mUnmodifiedDataUse;
+    D3DBufferUsage mUsage;
 };
 
 }

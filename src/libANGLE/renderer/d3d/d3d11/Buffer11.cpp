@@ -275,11 +275,7 @@ gl::Error Buffer11::setData(const void *data, size_t size, GLenum usage)
         return error;
     }
 
-    if (usage == GL_STATIC_DRAW)
-    {
-        initializeStaticData();
-    }
-
+    updateD3DBufferUsage(usage);
     return error;
 }
 
