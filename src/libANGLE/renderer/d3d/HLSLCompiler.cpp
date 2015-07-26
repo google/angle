@@ -16,6 +16,8 @@
 namespace
 {
 
+#if ANGLE_SHADER_DEBUG_INFO == ANGLE_ENABLED
+
 #ifdef CREATE_COMPILER_FLAG_INFO
     #undef CREATE_COMPILER_FLAG_INFO
 #endif
@@ -77,16 +79,7 @@ bool IsCompilerFlagSet(UINT mask, UINT flag)
     }
 }
 
-const char *GetCompilerFlagName(UINT mask, size_t flagIx)
-{
-    const CompilerFlagInfo &flagInfo = CompilerFlagInfos[flagIx];
-    if (IsCompilerFlagSet(mask, flagInfo.mFlag))
-    {
-        return flagInfo.mName;
-    }
-
-    return nullptr;
-}
+#endif
 
 }
 
@@ -259,10 +252,9 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
             (*outDebugInfo) += "// Compiler configuration: " + configs[i].name + "\n// Flags:\n";
             for (size_t fIx = 0; fIx < ArraySize(CompilerFlagInfos); ++fIx)
             {
-                const char *flagName = GetCompilerFlagName(configs[i].flags, fIx);
-                if (flagName != nullptr)
+                if (IsCompilerFlagSet(configs[i].flags, CompilerFlagInfos[fIx].mFlag))
                 {
-                    (*outDebugInfo) += std::string("// ") + flagName + "\n";
+                    (*outDebugInfo) += std::string("// ") + CompilerFlagInfos[fIx].mName + "\n";
                 }
             }
 
