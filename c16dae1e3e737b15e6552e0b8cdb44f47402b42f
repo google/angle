@@ -1,0 +1,293 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ddc66fc_7f2d1bc9",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 624,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "This assert is already done in egl::CubeMapTextureTargetToLayerIndex",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed8dee45_7cde3b8e",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "Should probably be UNREACHABLE but since we only support Framebuffer and Textures, if (isTexture) {} else {ASSERT(isFramebuffer)} would be even better in my opinion.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd882a39_1c9f0143",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "The comment relates to the insert, not the AddRef.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad977653_8621dea4",
+        "filename": "src/libANGLE/Image.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "A sibling can only be a source xor a target so if (mTarget) {ASSERT(!mSource)} else { if (source) {}} would be closer to the condition we know should be true.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d9ade79_2fb55e6c",
+        "filename": "src/libANGLE/Image.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "No need to add default-initializable member variables in the initialization list.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d9d1a6f_0026b03f",
+        "filename": "src/libANGLE/Image.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "Like in Display.cpp, if (isTexture) {} else {ASSERT(isRenderbuffer)}",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0da7a2c0_63ea2a9b",
+        "filename": "src/libANGLE/Image.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "This is the only place where mTargets is used to read information from it. Are follow up CLs going to use it? If not I\u0027d suggest removing mTargets.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd882a39_3ca4bd8c",
+        "filename": "src/libANGLE/Image.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "ditto, can only be a source xor a target, this comment is voided if mTargets is removed.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0da7a2c0_43f5267a",
+        "filename": "src/libANGLE/Image.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "Image has a BindingPointer to ImageSibling but ImageSibling doesn\u0027t inherit from RefCounted. I\u0027d suggest adding some enable_if or static_assert in BindingPointer to make sure the object inherits from RefCounted.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad977653_661cf273",
+        "filename": "src/libANGLE/Image.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "From my interpretation of the spec, a sibling, source or target, cannot be used to create another image, or as the target of another image. This would make mSources a single pointer to an Image and causes a bunch of changes in the implementation of Image and ImageSibling.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed8dee45_9ce3e74b",
+        "filename": "src/libANGLE/Image.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "mTarget and mSources are confusing names as we don\u0027t know if the sibling is the source of, or sources from. Maybe use mSourceOf and mSourceFrom? (I\u0027m being very uninspired here)",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d83be1d_872719e7",
+        "filename": "src/libANGLE/Image.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "ditto on the confusing naming.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d86fa2e_9e992953",
+        "filename": "src/libANGLE/Image_unittest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "nit: missing file description",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dbd52cc_a2f420c5",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "The specification says that generating mipmaps doesn\u0027t always orphan.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d9ade79_4fbaa25d",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "This function doesn\u0027t check if the buffer is already a sibling of an image",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dbd52cc_c2f11cd4",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2033,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "The spec says that an image cannot be multisampled in the first place. (maybe remove getSamples and mSamples from Image as well?)",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2da466b9_ca1be7fe",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-26T13:45:23Z",
+      "side": 1,
+      "message": "ImageTest",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
