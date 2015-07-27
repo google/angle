@@ -155,6 +155,24 @@
     },
     {
       "key": {
+        "uuid": "ed76ce11_891bbda8",
+        "filename": "src/libANGLE/Image.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "Actually in BindingPointer\u0027s implementation, a static cast instead of a reinterpret_cast would probably do.",
+      "parentUuid": "0da7a2c0_43f5267a",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad977653_661cf273",
         "filename": "src/libANGLE/Image.h",
         "patchSetId": 3
@@ -274,6 +292,23 @@
     },
     {
       "key": {
+        "uuid": "2d7d46ed_2b91e55a",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "Most of the tests will fail for now, maybe we could not instantiate them in this CL and wait for the backends to be implemented before adding the instantiation for that backend.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2da466b9_ca1be7fe",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 3
@@ -285,6 +320,346 @@
       "writtenOn": "2015-07-26T13:45:23Z",
       "side": 1,
       "message": "ImageTest",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d808212_2af55f7b",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "clang-format and SHADER_SOURCE don\u0027t seem to work well together, the biggest problem being the variable list put on a single line.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd710a1d_28ef237c",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "GL_TEXTURE_CUBE_MAP. IIRC nearest is the default.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d6b9230_8370fe00",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d7d46ed_4b861922",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2df0e6db_b01478d2",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd710a1d_48e45f9c",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "Create a source renderbuffer",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dc9d29e_f6ff9edb",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "source renderbuffer",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d808212_4aea939a",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "EXPECT_GL_ERROR is already called in EXPECT_PIXEL_EQ",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed76ce11_a91879ac",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "I\u0027m not sure, but isn\u0027t there something like READ and DRAW buffers in ES?",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d6b9230_a36dfa27",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d808212_6aef57a9",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "nit: could have another variable to hold reinterpret_cast\u003cEGLClientBuffer\u003e(texture2D)",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d6b9230_c37af6de",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "The spec of EGL_OES_image_base says that EGL_NO_CONTEXT might work, but it is all of the other extensions that say it is not valid. Maybe put a comment here why we check the inverse of what the quote above says.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d808212_8ae3abc1",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "A TODO here would be nice",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2df0e6db_9019740c",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "The texture level selected should be 2",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d981e90_c5d3cc49",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "Maybe we could check if it fails when all but one level are specified.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd710a1d_68e91b73",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "Aren\u0027t we testing the range-check on that parameter here? If yes it would be good to test both \"2\" and \"-1\".",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d6b9230_03640e3d",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "We should do this check even when we have the EGL_KHR_gl_texture_3D_image extension.\n\nWe should still check that when we don\u0027t have the extension, trying to create an image from it produces an error.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d981e90_a5d8c866",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "Likewise, we should do the \"else\" check.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d7d46ed_8b7f3189",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "It would be even better if we bound a valid cubemap before this call.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2df0e6db_501c2cf7",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1142,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T02:01:56Z",
+      "side": 1,
+      "message": "Why is this commented out?",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
