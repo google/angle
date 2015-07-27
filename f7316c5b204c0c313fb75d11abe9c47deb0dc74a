@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6d9ade79_2d91e624",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Adding more tips would be great indeed, that\u0027s why I choose the generic name \"DebuggingTips\" so other people could chip in and make a debugging documentation.\nDone",
+      "parentUuid": "cda90a60_a5cdbea9",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0db882a5_27c23a7c",
         "filename": "doc/DebuggingTips.md",
         "patchSetId": 1
@@ -42,6 +60,24 @@
     },
     {
       "key": {
+        "uuid": "ad977653_81ae286b",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0db882a5_27c23a7c",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "edaece64_26c2367c",
         "filename": "doc/DebuggingTips.md",
         "patchSetId": 1
@@ -59,6 +95,24 @@
         "endLine": 10,
         "endChar": 3
       },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd882a39_c21bd0fe",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "I confused it with the mediawiki syntax.\nDone",
+      "parentUuid": "edaece64_26c2367c",
       "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -157,6 +211,78 @@
     },
     {
       "key": {
+        "uuid": "ad977653_218654f3",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "I show the exact command lines later in the section so I will leave this as is.",
+      "parentUuid": "ada8565c_44b3ae38",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed8dee45_050cf644",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "edc5ee24_4ec3d302",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0da7a2c0_fe9f8d68",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8dcab237_8bd0cd42",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad977653_418b60fa",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adcf7646_6cdfbb51",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8dcab237_abcd89a9",
         "filename": "doc/DebuggingTips.md",
         "patchSetId": 1
@@ -249,6 +375,60 @@
     },
     {
       "key": {
+        "uuid": "4d9d1a6f_6605d41b",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0db882a5_e7c3c27b",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2da466b9_77eadf9a",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8dcab237_abcd89a9",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d83be1d_0a4fb0b9",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cda90a60_a5e4de17",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ada8565c_24c2327c",
         "filename": "doc/DebuggingTips.md",
         "patchSetId": 1
@@ -312,6 +492,60 @@
         "endLine": 14,
         "endChar": 45
       },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d86fa2e_157277d5",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ada8565c_04bdb602",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd882a39_82e8e828",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "edaece64_e6c3be7b",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed8dee45_a5d32201",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ada8565c_24c2327c",
       "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -404,6 +638,78 @@
         "endLine": 16,
         "endChar": 47
       },
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2da466b9_77801fd4",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8dcab237_4bdae562",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd882a39_c2c910cf",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6dbbbea0_0ad4db30",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed8dee45_25c7323a",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0db882a5_a7cdcaa9",
+      "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad977653_a16084ae",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0db882a5_47dace62",
       "revId": "f7316c5b204c0c313fb75d11abe9c47deb0dc74a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
