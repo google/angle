@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2da466b9_05a080a1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T14:27:25Z",
+      "side": 1,
+      "message": "tag this with the BUG\u003d",
+      "revId": "5820c69ef93a00fcbb4b0b1ee5e7019fa9b0ee81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2da466b9_258ca442",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T14:27:25Z",
+      "side": 1,
+      "message": "git cl format this up!",
+      "range": {
+        "startLine": 43,
+        "startChar": 1,
+        "endLine": 63,
+        "endChar": 5
+      },
+      "revId": "5820c69ef93a00fcbb4b0b1ee5e7019fa9b0ee81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dbd52cc_2222d0aa",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T14:27:25Z",
+      "side": 1,
+      "message": "use an enum here, maybe call it BUFFER_GL_USAGE_STATIC, BUFFER_GL_USAGE_DYNAMIC.. or rename BUFFER_USAGE in D3D11",
+      "range": {
+        "startLine": 56,
+        "startChar": 9,
+        "endLine": 56,
+        "endChar": 24
+      },
+      "revId": "5820c69ef93a00fcbb4b0b1ee5e7019fa9b0ee81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
