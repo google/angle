@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cd42eadd_fdde8753",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:40:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cdfd8ac1_05e55212",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 68,
+        "endChar": 11
+      },
+      "revId": "bad51608dbe627500e39d33ce24bb87cde759abe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cdfd8ac1_25e84eec",
         "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
         "patchSetId": 4
@@ -36,6 +60,24 @@
       "writtenOn": "2015-07-27T18:24:57Z",
       "side": 1,
       "message": "We should still check for the extension or the UINT indicies won\u0027t be tested on D3D9.",
+      "revId": "bad51608dbe627500e39d33ce24bb87cde759abe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d3e264a_a021bad5",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T18:40:09Z",
+      "side": 1,
+      "message": "Sorry, I hadn\u0027t read which extension it was.\nDone",
+      "parentUuid": "cdfd8ac1_25e84eec",
       "revId": "bad51608dbe627500e39d33ce24bb87cde759abe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
