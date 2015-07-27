@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d4162d7_9f041321",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T19:21:10Z",
+      "side": 1,
+      "message": "Nit: \"Reland of..\"",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 6
+      },
+      "revId": "79d950d10a38b50c790df652c7899b68b90d7047",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfcd6c5_24bdf29e",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T19:21:10Z",
+      "side": 1,
+      "message": "I feel like this bit is redundant, since you already check the standard when you set workarounds.avoid...",
+      "range": {
+        "startLine": 68,
+        "startChar": 34,
+        "endLine": 68,
+        "endChar": 76
+      },
+      "revId": "79d950d10a38b50c790df652c7899b68b90d7047",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
