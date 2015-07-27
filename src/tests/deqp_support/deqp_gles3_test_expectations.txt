@@ -29,6 +29,9 @@
 998 WIN LINUX : dEQP-GLES3.performance.* = SKIP
 998 WIN LINUX : dEQP-GLES3.stress.* = SKIP
 
+// TODO(jmadill): Figure out why this fails on the bots, but not locally.
+1108 WIN : dEQP-GLES3.functional.shaders.struct.local.dynamic_loop_struct_array_fragment = FAIL
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 //  Temprory entries: they should be removed once the bugs are fixed.
