@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d83be1d_65ce9d5c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T18:31:10Z",
+      "side": 1,
+      "message": "This follow any specific chain? Maybe open an issue to tag with what you\u0027re working on?",
+      "revId": "8cab5393166bb39e4b50e1f3339c1bf901823fdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d86fa2e_95d8271f",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T18:31:10Z",
+      "side": 1,
+      "message": "nit: sort",
+      "range": {
+        "startLine": 20,
+        "startChar": 32,
+        "endLine": 20,
+        "endChar": 46
+      },
+      "revId": "8cab5393166bb39e4b50e1f3339c1bf901823fdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cdfd8ac1_0513128f",
+        "filename": "src/libANGLE/renderer/d3d/ShaderD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T18:31:10Z",
+      "side": 1,
+      "message": "nit: sort",
+      "range": {
+        "startLine": 12,
+        "startChar": 32,
+        "endLine": 12,
+        "endChar": 46
+      },
+      "revId": "8cab5393166bb39e4b50e1f3339c1bf901823fdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d37da6b_61f5f6be",
+        "filename": "src/libANGLE/renderer/d3d/WorkaroundsD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T18:31:10Z",
+      "side": 1,
+      "message": "can we not leave this as noncopyable? we technically according to the style guide must make copy and assignment operators if we do not - this was an intentional choice.",
+      "range": {
+        "startLine": 18,
+        "startChar": 7,
+        "endLine": 18,
+        "endChar": 29
+      },
+      "revId": "8cab5393166bb39e4b50e1f3339c1bf901823fdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed47aeea_deb2a534",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T18:31:10Z",
+      "side": 1,
+      "message": "nit: can you sort these",
+      "range": {
+        "startLine": 13,
+        "startChar": 32,
+        "endLine": 13,
+        "endChar": 46
+      },
+      "revId": "8cab5393166bb39e4b50e1f3339c1bf901823fdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
