@@ -16,6 +16,24 @@
       "revId": "986ee4e03caad3f57f4ff457affd9a92bf31d546",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfcd6c5_a4bc4207",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-27T18:20:51Z",
+      "side": 1,
+      "message": "Agreed, a separate constant would be good.",
+      "parentUuid": "6d9ade79_6df5ae7a",
+      "revId": "986ee4e03caad3f57f4ff457affd9a92bf31d546",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
