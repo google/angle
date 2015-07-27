@@ -390,6 +390,75 @@
       "revId": "d1f51a28ab48027e7408ffdbdf2e19912cc3c089",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d4c7215_7b191faf",
+        "filename": "src/tests/compiler_tests/EXT_blend_func_extended_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T18:50:33Z",
+      "side": 1,
+      "message": "nit: all these uses of \u0027static\u0027 are redundant within the namespace block, can remove them.",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 6
+      },
+      "revId": "d1f51a28ab48027e7408ffdbdf2e19912cc3c089",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cdfd8ac1_0591d224",
+        "filename": "src/tests/compiler_tests/EXT_blend_func_extended_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T18:50:33Z",
+      "side": 1,
+      "message": "nit: comment before every TEST_P and TEST_F",
+      "range": {
+        "startLine": 173,
+        "startChar": 0,
+        "endLine": 173,
+        "endChar": 6
+      },
+      "revId": "d1f51a28ab48027e7408ffdbdf2e19912cc3c089",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d3e264a_60809202",
+        "filename": "src/tests/compiler_tests/EXT_blend_func_extended_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T18:50:33Z",
+      "side": 1,
+      "message": "pretty sure everything can go within the namespace {} block",
+      "range": {
+        "startLine": 273,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 23
+      },
+      "revId": "d1f51a28ab48027e7408ffdbdf2e19912cc3c089",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
