@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "cdfd8ac1_05e55212",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T18:26:16Z",
+      "side": 1,
+      "message": "nit: override instead of virtual",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 68,
+        "endChar": 11
+      },
+      "revId": "bad51608dbe627500e39d33ce24bb87cde759abe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cdfd8ac1_25e84eec",
         "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
         "patchSetId": 4
