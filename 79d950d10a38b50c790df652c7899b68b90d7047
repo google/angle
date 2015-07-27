@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4d37da6b_a12bfe04",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-27T19:55:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d4162d7_9f041321",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 6
+      },
+      "revId": "79d950d10a38b50c790df652c7899b68b90d7047",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "adfcd6c5_24bdf29e",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2015-07-27T19:21:10Z",
       "side": 1,
       "message": "I feel like this bit is redundant, since you already check the standard when you set workarounds.avoid...",
+      "range": {
+        "startLine": 68,
+        "startChar": 34,
+        "endLine": 68,
+        "endChar": 76
+      },
+      "revId": "79d950d10a38b50c790df652c7899b68b90d7047",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d4162d7_5fbd2baf",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-27T19:55:23Z",
+      "side": 1,
+      "message": "Yea, I wanted to be extra-explicit that the workaround is only for desktop GL in this case.",
+      "parentUuid": "adfcd6c5_24bdf29e",
       "range": {
         "startLine": 68,
         "startChar": 34,
