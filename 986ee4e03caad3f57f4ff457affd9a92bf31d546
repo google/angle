@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d9ade79_6df5ae7a",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T17:58:07Z",
+      "side": 1,
+      "message": "Nit: maybe we could introduce a FrameBufferBindingMaxSingleBinding or something like that to use instead of \"2\" in StateManagerGL",
+      "revId": "986ee4e03caad3f57f4ff457affd9a92bf31d546",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
