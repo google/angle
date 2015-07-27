@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d6b9230_06c97c52",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-27T19:19:04Z",
+      "side": 1,
+      "message": "Should be \"dependent\" (I think that the word can very occasionally be spelled that way in British English, but only when used as a noun. Not sure if this is one of the places Canadian English follows American English in spelling or not, but it\u0027s an adjective either way, so should get an \u0027e\u0027 instead of an \u0027a\u0027).",
+      "range": {
+        "startLine": 3,
+        "startChar": 61,
+        "endLine": 3,
+        "endChar": 70
+      },
+      "revId": "20f97f44878707c3667b266be5d4a7f2c0a4a85f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d7d46ed_aba6b507",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-27T19:19:04Z",
+      "side": 1,
+      "message": "Very nitty: second use of a variant of \"allow\" in the sentence, consider changing one of them.",
+      "range": {
+        "startLine": 7,
+        "startChar": 102,
+        "endLine": 7,
+        "endChar": 110
+      },
+      "revId": "20f97f44878707c3667b266be5d4a7f2c0a4a85f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d7d46ed_cba3e9f6",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-27T19:19:04Z",
+      "side": 1,
+      "message": "Very nitty: I\u0027d probably use present tense (translates) here, although a case can be made for past tense.",
+      "range": {
+        "startLine": 7,
+        "startChar": 131,
+        "endLine": 7,
+        "endChar": 141
+      },
+      "revId": "20f97f44878707c3667b266be5d4a7f2c0a4a85f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d808212_cad6836e",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-27T19:19:04Z",
+      "side": 1,
+      "message": "Very nitty: I think technically \"entry point\" is two words, but I have a personal tendency to mash technical terms together into novel compound words, so I don\u0027t mind it at all.",
+      "range": {
+        "startLine": 11,
+        "startChar": 160,
+        "endLine": 11,
+        "endChar": 170
+      },
+      "revId": "20f97f44878707c3667b266be5d4a7f2c0a4a85f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2df0e6db_b3e922a7",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-27T19:19:04Z",
+      "side": 1,
+      "message": "from",
+      "range": {
+        "startLine": 14,
+        "startChar": 62,
+        "endLine": 14,
+        "endChar": 66
+      },
+      "revId": "20f97f44878707c3667b266be5d4a7f2c0a4a85f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
