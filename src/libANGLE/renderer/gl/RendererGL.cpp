@@ -87,6 +87,7 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
 {
     ASSERT(mFunctions);
     mStateManager = new StateManagerGL(mFunctions, getRendererCaps());
+    nativegl_gl::GenerateWorkarounds(mFunctions, &mWorkarounds);
 
 #ifndef NDEBUG
     if (mFunctions->debugMessageControl && mFunctions->debugMessageCallback)
