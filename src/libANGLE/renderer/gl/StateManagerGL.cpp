@@ -19,7 +19,6 @@
 
 namespace rx
 {
-
 StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &rendererCaps)
     : mFunctions(functions),
       mProgram(0),
@@ -38,7 +37,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mPackRowLength(0),
       mPackSkipRows(0),
       mPackSkipPixels(0),
-      mFramebuffers(),
+      mFramebuffers(angle::FramebufferBindingSingletonMax, 0),
       mRenderbuffer(0),
       mScissorTestEnabled(false),
       mScissor(0, 0, 0, 0),
@@ -97,9 +96,6 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
     mTextures[GL_TEXTURE_CUBE_MAP].resize(rendererCaps.maxCombinedTextureImageUnits);
     mTextures[GL_TEXTURE_2D_ARRAY].resize(rendererCaps.maxCombinedTextureImageUnits);
     mTextures[GL_TEXTURE_3D].resize(rendererCaps.maxCombinedTextureImageUnits);
-
-    mFramebuffers[GL_READ_FRAMEBUFFER] = 0;
-    mFramebuffers[GL_DRAW_FRAMEBUFFER] = 0;
 
     // Initialize point sprite state for desktop GL
     if (mFunctions->standard == STANDARD_GL_DESKTOP)
@@ -182,13 +178,14 @@ void StateManagerGL::deleteFramebuffer(GLuint fbo)
 {
     if (fbo != 0)
     {
-        for (auto fboTypeIter : mFramebuffers)
+        for (size_t binding = 0; binding < mFramebuffers.size(); ++binding)
         {
-            if (fboTypeIter.second == fbo)
+            if (mFramebuffers[binding] == fbo)
             {
-                bindFramebuffer(fboTypeIter.first, 0);
+                GLenum enumValue = angle::FramebufferBindingToEnum(
+                    static_cast<angle::FramebufferBinding>(binding));
+                bindFramebuffer(enumValue, 0);
             }
-
             mFunctions->deleteFramebuffers(1, &fbo);
         }
     }
@@ -324,19 +321,21 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
 {
     if (type == GL_FRAMEBUFFER)
     {
-        if (mFramebuffers[GL_READ_FRAMEBUFFER] != framebuffer ||
-            mFramebuffers[GL_DRAW_FRAMEBUFFER] != framebuffer)
+        if (mFramebuffers[angle::FramebufferBindingRead] != framebuffer ||
+            mFramebuffers[angle::FramebufferBindingDraw] != framebuffer)
         {
-            mFramebuffers[GL_READ_FRAMEBUFFER] = framebuffer;
-            mFramebuffers[GL_DRAW_FRAMEBUFFER] = framebuffer;
+            mFramebuffers[angle::FramebufferBindingRead] = framebuffer;
+            mFramebuffers[angle::FramebufferBindingDraw] = framebuffer;
             mFunctions->bindFramebuffer(GL_FRAMEBUFFER, framebuffer);
         }
     }
     else
     {
-        if (mFramebuffers[type] != framebuffer)
+        angle::FramebufferBinding binding = angle::EnumToFramebufferBinding(type);
+
+        if (mFramebuffers[binding] != framebuffer)
         {
-            mFramebuffers[type] = framebuffer;
+            mFramebuffers[binding] = framebuffer;
             mFunctions->bindFramebuffer(type, framebuffer);
         }
     }

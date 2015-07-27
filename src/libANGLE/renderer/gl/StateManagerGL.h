@@ -127,7 +127,8 @@ class StateManagerGL : angle::NonCopyable
     GLint mPackSkipRows;
     GLint mPackSkipPixels;
 
-    std::map<GLenum, GLuint> mFramebuffers;
+    // TODO(jmadill): Convert to std::array when available
+    std::vector<GLenum> mFramebuffers;
     GLuint mRenderbuffer;
 
     bool mScissorTestEnabled;

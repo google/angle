@@ -309,4 +309,50 @@ inline const DestT *GetImplAs(const SrcT *src)
 
 #include "angletypes.inl"
 
+namespace angle
+{
+// Zero-based for better array indexing
+enum FramebufferBinding
+{
+    FramebufferBindingRead = 0,
+    FramebufferBindingDraw,
+    FramebufferBindingSingletonMax,
+    FramebufferBindingBoth = FramebufferBindingSingletonMax,
+    FramebufferBindingMax,
+    FramebufferBindingUnknown = FramebufferBindingMax,
+};
+
+inline FramebufferBinding EnumToFramebufferBinding(GLenum enumValue)
+{
+    switch (enumValue)
+    {
+        case GL_READ_FRAMEBUFFER:
+            return FramebufferBindingRead;
+        case GL_DRAW_FRAMEBUFFER:
+            return FramebufferBindingDraw;
+        case GL_FRAMEBUFFER:
+            return FramebufferBindingBoth;
+        default:
+            UNREACHABLE();
+            return FramebufferBindingUnknown;
+    }
+}
+
+inline GLenum FramebufferBindingToEnum(FramebufferBinding binding)
+{
+    switch (binding)
+    {
+        case FramebufferBindingRead:
+            return GL_READ_FRAMEBUFFER;
+        case FramebufferBindingDraw:
+            return GL_DRAW_FRAMEBUFFER;
+        case FramebufferBindingBoth:
+            return GL_FRAMEBUFFER;
+        default:
+            UNREACHABLE();
+            return GL_NONE;
+    }
+}
+}
+
 #endif // LIBANGLE_ANGLETYPES_H_
