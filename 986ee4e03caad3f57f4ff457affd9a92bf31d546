@@ -34,6 +34,29 @@
       "revId": "986ee4e03caad3f57f4ff457affd9a92bf31d546",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd882a39_c2a67009",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-27T18:22:21Z",
+      "side": 1,
+      "message": "Could you iterate over the size of the vector instead?",
+      "range": {
+        "startLine": 183,
+        "startChar": 13,
+        "endLine": 183,
+        "endChar": 61
+      },
+      "revId": "986ee4e03caad3f57f4ff457affd9a92bf31d546",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
