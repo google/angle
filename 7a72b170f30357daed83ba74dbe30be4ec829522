@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8dbd52cc_22c9f052",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T15:16:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2da466b9_4591a859",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "7a72b170f30357daed83ba74dbe30be4ec829522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd882a39_7c9ba5fa",
         "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-07-27T14:29:53Z",
       "side": 1,
       "message": "git cl format this up!",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 6
+      },
+      "revId": "7a72b170f30357daed83ba74dbe30be4ec829522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d86fa2e_b26aa1dd",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T15:16:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd882a39_7c9ba5fa",
       "range": {
         "startLine": 15,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "6d83be1d_874d5916",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T15:16:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d9ade79_5200890c",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 11
+      },
+      "revId": "7a72b170f30357daed83ba74dbe30be4ec829522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d86fa2e_322871ba",
         "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2015-07-27T14:29:53Z",
       "side": 1,
       "message": "you\u0027ll need to manually correct the formatting here",
+      "range": {
+        "startLine": 58,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 9
+      },
+      "revId": "7a72b170f30357daed83ba74dbe30be4ec829522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad977653_a68fbab2",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T15:16:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d86fa2e_322871ba",
       "range": {
         "startLine": 58,
         "startChar": 8,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "0da7a2c0_c35e76c0",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T15:16:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d86fa2e_522de5c8",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 6
+      },
+      "revId": "7a72b170f30357daed83ba74dbe30be4ec829522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed8dee45_1f528962",
         "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
         "patchSetId": 1
@@ -128,6 +248,30 @@
       "writtenOn": "2015-07-27T14:29:53Z",
       "side": 1,
       "message": "\u003e +3? This is an odd test, since we don\u0027t support ES4 ;)",
+      "range": {
+        "startLine": 145,
+        "startChar": 34,
+        "endLine": 145,
+        "endChar": 36
+      },
+      "revId": "7a72b170f30357daed83ba74dbe30be4ec829522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad977653_c68cc6c0",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-27T15:16:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed8dee45_1f528962",
       "range": {
         "startLine": 145,
         "startChar": 34,
