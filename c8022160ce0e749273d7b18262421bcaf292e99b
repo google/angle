@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "ad2a1612_744fe88a",
+        "filename": "extensions/EGL_ANGLE_keyed_mutex.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-07-27T21:48:04Z",
+      "side": 1,
+      "message": "No, we can\u0027t use this value. It\u0027s in use in EGL_ANGLE_platform_angle_d3d-- we\u0027ve used a number of enums since the last update to this value. We\u0027ve fully exhausted the 0x3200-0x320F range; our new range is 0x33A0-0x33AF, and it looks like the first unused enum value, from a quick grep of our extensions directory, is 0x33A2.",
+      "parentUuid": "cd882a39_33b87013",
+      "range": {
+        "startLine": 54,
+        "startChar": 57,
+        "endLine": 54,
+        "endChar": 63
+      },
+      "revId": "c8022160ce0e749273d7b18262421bcaf292e99b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad977653_52cdf42b",
         "filename": "src/libANGLE/renderer/d3d/SwapChainD3D.h",
         "patchSetId": 10
