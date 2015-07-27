@@ -574,6 +574,9 @@
 998 WIN LINUX : dEQP-GLES2.performance.* = SKIP
 998 WIN LINUX : dEQP-GLES2.stress.* = SKIP
 
+// This test can time out on the GPU bots
+1107 WIN dEQP-GLES2.functional.flush_finish.finish_wait = SKIP
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 //  Temprory entries: they should be removed once the bugs are fixed.
