@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed8dee45_a2bdd804",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2555,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T14:40:38Z",
+      "side": 1,
+      "message": "shouldn\u0027t this keep the ENABLE guards? if not enabled, this will advertise the extension, but the share resource type is share handle.",
+      "range": {
+        "startLine": 2555,
+        "startChar": 5,
+        "endLine": 2555,
+        "endChar": 15
+      },
+      "revId": "37adcd096be409fb53ef7fb05f32c81d86666206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad977653_269caaf4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2559,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T14:40:38Z",
+      "side": 1,
+      "message": "nit: remove extra space",
+      "revId": "37adcd096be409fb53ef7fb05f32c81d86666206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d9ade79_322225ab",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T14:40:38Z",
+      "side": 1,
+      "message": "nit: nullptr in new code",
+      "range": {
+        "startLine": 47,
+        "startChar": 18,
+        "endLine": 47,
+        "endChar": 22
+      },
+      "revId": "37adcd096be409fb53ef7fb05f32c81d86666206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0da7a2c0_c3775646",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T14:40:38Z",
+      "side": 1,
+      "message": "nit: remove extra ;",
+      "range": {
+        "startLine": 45,
+        "startChar": 58,
+        "endLine": 45,
+        "endChar": 59
+      },
+      "revId": "37adcd096be409fb53ef7fb05f32c81d86666206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dbd52cc_8221e4a4",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/SwapChain9.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T14:40:38Z",
+      "side": 1,
+      "message": "nit: remove virtual, place body in cpp, add UNREACHABLE()",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 11
+      },
+      "revId": "37adcd096be409fb53ef7fb05f32c81d86666206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
