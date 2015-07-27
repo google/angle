@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d37da6b_81ba7ab7",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T18:51:15Z",
+      "side": 1,
+      "message": "nit: extra space (sorry, last thing)",
+      "range": {
+        "startLine": 53,
+        "startChar": 9,
+        "endLine": 53,
+        "endChar": 10
+      },
+      "revId": "f544f1e1d5abc111b56f3782553f69577855024f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
