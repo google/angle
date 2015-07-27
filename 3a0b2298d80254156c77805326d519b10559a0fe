@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d9ade79_f2189d84",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T14:37:01Z",
+      "side": 1,
+      "message": "because this code runs on startup for quite a few builtin vars, it\u0027s worth trying to optimize. Right now we\u0027re doing an insert, then a find, and another insert. The find/insertUnmangled can be combined into a single method which calls through to operator[]. How about adding updateUnmangled?",
+      "range": {
+        "startLine": 271,
+        "startChar": 0,
+        "endLine": 276,
+        "endChar": 9
+      },
+      "revId": "3a0b2298d80254156c77805326d519b10559a0fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed8dee45_82b8dc14",
+        "filename": "src/tests/angle_unittests.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T14:37:01Z",
+      "side": 1,
+      "message": "nit: alphebatize",
+      "range": {
+        "startLine": 41,
+        "startChar": 52,
+        "endLine": 41,
+        "endChar": 75
+      },
+      "revId": "3a0b2298d80254156c77805326d519b10559a0fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2da466b9_a50ed43d",
+        "filename": "src/tests/compiler_tests/ParseESSLFunctions_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T14:37:01Z",
+      "side": 1,
+      "message": "override instead of virtual",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 11
+      },
+      "revId": "3a0b2298d80254156c77805326d519b10559a0fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad977653_06b08e73",
+        "filename": "src/tests/compiler_tests/ParseESSLFunctions_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T14:37:01Z",
+      "side": 1,
+      "message": "s/NULL/nullptr",
+      "range": {
+        "startLine": 46,
+        "startChar": 91,
+        "endLine": 46,
+        "endChar": 95
+      },
+      "revId": "3a0b2298d80254156c77805326d519b10559a0fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d83be1d_a7fdfd32",
+        "filename": "src/tests/compiler_tests/ParseESSLFunctions_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T14:37:01Z",
+      "side": 1,
+      "message": "mAllocator",
+      "range": {
+        "startLine": 51,
+        "startChar": 19,
+        "endLine": 51,
+        "endChar": 28
+      },
+      "revId": "3a0b2298d80254156c77805326d519b10559a0fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d9ade79_12160156",
+        "filename": "src/tests/compiler_tests/compiler_tests.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-27T14:37:01Z",
+      "side": 1,
+      "message": "nit: alphabetic order",
+      "range": {
+        "startLine": 13,
+        "startChar": 9,
+        "endLine": 13,
+        "endChar": 32
+      },
+      "revId": "3a0b2298d80254156c77805326d519b10559a0fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
