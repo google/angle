@@ -16,6 +16,7 @@
 #include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
+#include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
 
 //FIXME(jmadill): std::array is currently prohibited by Chromium style guide
@@ -152,6 +153,8 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     virtual int getMajorShaderModel() const = 0;
 
+    const WorkaroundsD3D &getWorkarounds() const;
+
     // Pixel operations
     virtual gl::Error copyImage2D(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                                  const gl::Offset &destOffset, TextureStorage *storage, GLint level) = 0;
@@ -251,9 +254,14 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     gl::DebugAnnotator *getAnnotator();
 
+    virtual WorkaroundsD3D generateWorkarounds() const = 0;
+
     gl::TextureMap mIncompleteTextures;
     MemoryBuffer mScratchMemoryBuffer;
     unsigned int mScratchMemoryBufferResetCounter;
+
+    mutable bool mWorkaroundsInitialized;
+    mutable WorkaroundsD3D mWorkarounds;
 };
 
 struct dx_VertexConstants

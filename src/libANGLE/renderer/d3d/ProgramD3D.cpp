@@ -2003,11 +2003,11 @@ void ProgramD3D::reset()
     mTransformFeedbackBufferMode = GL_NONE;
 
     mVertexHLSL.clear();
-    mVertexWorkarounds.reset();
+    mVertexWorkarounds = D3DCompilerWorkarounds();
     mShaderVersion = 100;
 
     mPixelHLSL.clear();
-    mPixelWorkarounds.reset();
+    mPixelWorkarounds = D3DCompilerWorkarounds();
     mUsesFragDepth = false;
     mPixelShaderKey.clear();
     mUsesPointSize = false;

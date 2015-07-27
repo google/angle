@@ -323,10 +323,4 @@ void RendererGL::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureC
     nativegl_gl::GenerateCaps(mFunctions, outCaps, outTextureCaps, outExtensions, &mMaxSupportedESVersion);
 }
 
-Workarounds RendererGL::generateWorkarounds() const
-{
-    Workarounds workarounds;
-    return workarounds;
-}
-
 }

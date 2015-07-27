@@ -23,7 +23,6 @@ namespace rx
 class ImplFactory;
 class FramebufferImpl;
 class RenderbufferImpl;
-struct Workarounds;
 }
 
 namespace egl

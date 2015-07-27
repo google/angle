@@ -22,7 +22,7 @@ class FramebufferAttachment;
 namespace rx
 {
 class RenderTarget9;
-struct Workarounds;
+struct WorkaroundsD3D;
 
 namespace gl_d3d9
 {
@@ -77,8 +77,7 @@ inline bool isDeviceLostError(HRESULT errorCode)
     }
 }
 
-Workarounds GenerateWorkarounds();
-
+WorkaroundsD3D GenerateWorkarounds();
 }
 
 }

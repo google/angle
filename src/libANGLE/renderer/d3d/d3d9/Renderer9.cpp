@@ -2951,7 +2951,7 @@ void Renderer9::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCa
                           outTextureCaps, outExtensions);
 }
 
-Workarounds Renderer9::generateWorkarounds() const
+WorkaroundsD3D Renderer9::generateWorkarounds() const
 {
     return d3d9::GenerateWorkarounds();
 }

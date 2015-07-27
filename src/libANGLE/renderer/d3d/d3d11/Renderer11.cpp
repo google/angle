@@ -2594,6 +2594,17 @@ std::string Renderer11::getShaderModelSuffix() const
     }
 }
 
+const WorkaroundsD3D &RendererD3D::getWorkarounds() const
+{
+    if (!mWorkaroundsInitialized)
+    {
+        mWorkarounds            = generateWorkarounds();
+        mWorkaroundsInitialized = true;
+    }
+
+    return mWorkarounds;
+}
+
 gl::Error Renderer11::copyImage2D(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                                   const gl::Offset &destOffset, TextureStorage *storage, GLint level)
 {
@@ -3792,7 +3803,7 @@ void Renderer11::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureC
                            outExtensions, outLimitations);
 }
 
-Workarounds Renderer11::generateWorkarounds() const
+WorkaroundsD3D Renderer11::generateWorkarounds() const
 {
     return d3d11::GenerateWorkarounds(mRenderer11DeviceCaps.featureLevel);
 }

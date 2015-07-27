@@ -83,8 +83,6 @@ class RendererGL : public Renderer
                       gl::Extensions *outExtensions,
                       gl::Limitations *outLimitations) const override;
 
-    Workarounds generateWorkarounds() const override;
-
     mutable gl::Version mMaxSupportedESVersion;
 
     const FunctionsGL *mFunctions;

@@ -245,7 +245,7 @@ class Renderer9 : public RendererD3D
                       gl::Extensions *outExtensions,
                       gl::Limitations *outLimitations) const override;
 
-    Workarounds generateWorkarounds() const override;
+    WorkaroundsD3D generateWorkarounds() const override;
 
     void release();
 

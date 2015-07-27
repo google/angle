@@ -8,15 +8,16 @@
 // specific to the D3D9 renderer.
 
 #include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
-#include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
-#include "libANGLE/renderer/d3d/FramebufferD3D.h"
-#include "libANGLE/renderer/Workarounds.h"
-#include "libANGLE/formatutils.h"
-#include "libANGLE/Framebuffer.h"
-#include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
 
 #include "common/mathutil.h"
 #include "common/debug.h"
+
+#include "libANGLE/formatutils.h"
+#include "libANGLE/Framebuffer.h"
+#include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
+#include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
+#include "libANGLE/renderer/d3d/FramebufferD3D.h"
+#include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
 
 #include "third_party/systeminfo/SystemInfo.h"
 
@@ -590,9 +591,9 @@ void MakeValidSize(bool isImage, D3DFORMAT format, GLsizei *requestWidth, GLsize
     *levelOffset = upsampleCount;
 }
 
-Workarounds GenerateWorkarounds()
+WorkaroundsD3D GenerateWorkarounds()
 {
-    Workarounds workarounds;
+    WorkaroundsD3D workarounds;
     workarounds.mrtPerfWorkaround = true;
     workarounds.setDataFasterThanImageUpload = false;
     workarounds.useInstancedPointSpriteEmulation = false;

@@ -15,7 +15,7 @@
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/formatutils.h"
-#include "libANGLE/renderer/Workarounds.h"
+#include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
@@ -1251,9 +1251,9 @@ HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
 #endif
 }
 
-Workarounds GenerateWorkarounds(D3D_FEATURE_LEVEL featureLevel)
+WorkaroundsD3D GenerateWorkarounds(D3D_FEATURE_LEVEL featureLevel)
 {
-    Workarounds workarounds;
+    WorkaroundsD3D workarounds;
     workarounds.mrtPerfWorkaround = true;
     workarounds.setDataFasterThanImageUpload = true;
     workarounds.zeroMaxLodWorkaround = (featureLevel <= D3D_FEATURE_LEVEL_9_3);

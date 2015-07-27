@@ -20,7 +20,6 @@
 #include "libANGLE/renderer/FramebufferImpl.h"
 #include "libANGLE/renderer/ImplFactory.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
-#include "libANGLE/renderer/Workarounds.h"
 
 namespace gl
 {
