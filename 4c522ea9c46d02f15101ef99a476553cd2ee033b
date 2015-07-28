@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eda16e0d_37f43afb",
+        "filename": "src/libANGLE/renderer/gl/glx/FBConfigCompatibility.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-07-28T20:52:51Z",
+      "side": 1,
+      "message": "conformat context -\u003e conformant contexts",
+      "range": {
+        "startLine": 125,
+        "startChar": 45,
+        "endLine": 125,
+        "endChar": 54
+      },
+      "revId": "4c522ea9c46d02f15101ef99a476553cd2ee033b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
