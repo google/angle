@@ -21,11 +21,15 @@ namespace rx
 
 class FunctionsGL;
 class StateManagerGL;
+struct WorkaroundsGL;
 
 class RenderbufferGL : public RenderbufferImpl
 {
   public:
-    RenderbufferGL(const FunctionsGL *functions, StateManagerGL *stateManager, const gl::TextureCapsMap &textureCaps);
+    RenderbufferGL(const FunctionsGL *functions,
+                   const WorkaroundsGL &workarounds,
+                   StateManagerGL *stateManager,
+                   const gl::TextureCapsMap &textureCaps);
     ~RenderbufferGL() override;
 
     virtual gl::Error setStorage(GLenum internalformat, size_t width, size_t height) override;
@@ -41,6 +45,7 @@ class RenderbufferGL : public RenderbufferImpl
 
   private:
     const FunctionsGL *mFunctions;
+    const WorkaroundsGL &mWorkarounds;
     StateManagerGL *mStateManager;
     const gl::TextureCapsMap &mTextureCaps;
 

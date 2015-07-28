@@ -15,7 +15,7 @@ namespace rx
 struct WorkaroundsGL
 {
     WorkaroundsGL()
-        : avoid1BitAlphaTextureFormats(false)
+        : avoid1BitAlphaTextureFormats(false), rgba4IsNotSupportedForColorRendering(false)
     {
     }
 
@@ -27,6 +27,11 @@ struct WorkaroundsGL
     // drivers on framebuffer formats that have 1-bit alpha, work around this by using higher
     // precision formats instead.
     bool avoid1BitAlphaTextureFormats;
+
+    // On some older Intel drivers, GL_RGBA4 is not color renderable, glCheckFramebufferStatus
+    // returns GL_FRAMEBUFFER_UNSUPPORTED. Work around this by using a known color-renderable
+    // format.
+    bool rgba4IsNotSupportedForColorRendering;
 };
 }
 

@@ -541,6 +541,9 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     workarounds->avoid1BitAlphaTextureFormats =
         functions->standard == STANDARD_GL_DESKTOP &&
         (vendor == VENDOR_ID_AMD || vendor == VENDOR_ID_INTEL);
+
+    workarounds->rgba4IsNotSupportedForColorRendering =
+        functions->standard == STANDARD_GL_DESKTOP && vendor == VENDOR_ID_INTEL;
 }
 
 }

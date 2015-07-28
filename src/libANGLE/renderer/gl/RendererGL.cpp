@@ -198,7 +198,7 @@ TextureImpl *RendererGL::createTexture(GLenum target)
 
 RenderbufferImpl *RendererGL::createRenderbuffer()
 {
-    return new RenderbufferGL(mFunctions, mStateManager, getRendererTextureCaps());
+    return new RenderbufferGL(mFunctions, mWorkarounds, mStateManager, getRendererTextureCaps());
 }
 
 BufferImpl *RendererGL::createBuffer()
