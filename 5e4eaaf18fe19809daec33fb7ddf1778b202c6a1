@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ed1c0e21_dc0fe56a",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-28T17:38:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad1696fe_d78a1e24",
+      "range": {
+        "startLine": 129,
+        "startChar": 14,
+        "endLine": 129,
+        "endChar": 31
+      },
+      "revId": "5e4eaaf18fe19809daec33fb7ddf1778b202c6a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6dae5efb_32cd70db",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 2
