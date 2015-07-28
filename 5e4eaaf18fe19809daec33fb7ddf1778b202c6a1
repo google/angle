@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "ad1696fe_d78a1e24",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-28T17:32:34Z",
+      "side": 1,
+      "message": "perf warning: subImage (or even teximage) is something the app can call in tight loops with draw calls. Struct copies are undesirable. You should mark this with a TODO to replace this with an enum value, that we can use to look up a const \u0026, or return a const \u0026.",
+      "range": {
+        "startLine": 129,
+        "startChar": 14,
+        "endLine": 129,
+        "endChar": 31
+      },
+      "revId": "5e4eaaf18fe19809daec33fb7ddf1778b202c6a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6dae5efb_32cd70db",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-28T17:32:34Z",
+      "side": 1,
+      "message": "same for the res of these",
+      "range": {
+        "startLine": 160,
+        "startChar": 14,
+        "endLine": 160,
+        "endChar": 38
+      },
+      "revId": "5e4eaaf18fe19809daec33fb7ddf1778b202c6a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad1696fe_f760fa01",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.h",
         "patchSetId": 2
