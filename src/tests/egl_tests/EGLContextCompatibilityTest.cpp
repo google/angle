@@ -192,9 +192,6 @@ class EGLContextCompatibilityTest : public ANGLETest
     }
 };
 
-// TODO(cwallez) makeCurrent fails for some config on Linux/AMD
-#if !defined(ANGLE_PLATFORM_LINUX) || defined(ANGLE_STANDALONE_BUILD)
-
 // The test is split in several subtest so that simple cases
 // are tested separately. Also each surface types are not tested
 // together.
@@ -284,7 +281,5 @@ TEST_P(EGLContextCompatibilityTest, PbufferDifferentConfig)
         }
     }
 }
-
-#endif // !defined(ANGLE_PLATFORM_LINUX) || defined(ANGLE_STANDALONE_BUILD)
 
 ANGLE_INSTANTIATE_TEST(EGLContextCompatibilityTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
