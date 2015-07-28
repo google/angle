@@ -1126,7 +1126,7 @@ static bool ValidateUniformCommonBase(gl::Context *context, GLenum targetUniform
     LinkedUniform *uniform = program->getUniformByLocation(location);
 
     // attempting to write an array to a non-array uniform is an INVALID_OPERATION
-    if (uniform->elementCount() == 1 && count > 1)
+    if (!uniform->isArray() && count > 1)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
         return false;

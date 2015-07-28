@@ -134,12 +134,15 @@ LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog,
         GLenum uniformType = GL_NONE;
         mFunctions->getActiveUniform(mProgramID, i, uniformNameBuffer.size(), &uniformNameLength, &uniformSize, &uniformType, &uniformNameBuffer[0]);
 
-        std::string uniformName = gl::ParseUniformName(std::string(&uniformNameBuffer[0], uniformNameLength), nullptr);
+        size_t subscript = 0;
+        std::string uniformName = gl::ParseUniformName(std::string(&uniformNameBuffer[0], uniformNameLength), &subscript);
+
+        bool isArray = uniformSize > 1 || subscript != GL_INVALID_INDEX;
 
         for (size_t arrayIndex = 0; arrayIndex < static_cast<size_t>(uniformSize); arrayIndex++)
         {
             std::string locationName = uniformName;
-            if (uniformSize > 1)
+            if (isArray)
             {
                 locationName += "[" + Str(arrayIndex) + "]";
             }
@@ -161,7 +164,7 @@ LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog,
         }
 
         // ANGLE uses 0 to identify an non-array uniform.
-        unsigned int arraySize = (uniformSize > 1) ? static_cast<unsigned int>(uniformSize) : 0;
+        unsigned int arraySize = isArray ? static_cast<unsigned int>(uniformSize) : 0;
 
         // TODO: determine uniform precision
         mUniforms.push_back(new gl::LinkedUniform(uniformType, GL_NONE, uniformName, arraySize, -1, sh::BlockMemberInfo::getDefaultBlockInfo()));
