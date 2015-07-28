@@ -176,9 +176,9 @@ bool X11Window::initialize(const std::string &name, size_t width, size_t height)
         int screen = DefaultScreen(mDisplay);
         Window root = RootWindow(mDisplay, screen);
 
-        Colormap colormap = XCreateColormap(mDisplay, root, DefaultVisual(mDisplay, screen), AllocNone);
-        int depth = DefaultDepth(mDisplay, screen);
         Visual *visual = DefaultVisual(mDisplay, screen);
+        int depth = DefaultDepth(mDisplay, screen);
+        Colormap colormap = XCreateColormap(mDisplay, root, visual, AllocNone);
 
         XSetWindowAttributes attributes;
         unsigned long attributeMask = CWBorderPixel | CWColormap | CWEventMask;
