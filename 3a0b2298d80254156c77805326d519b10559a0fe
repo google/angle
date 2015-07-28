@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8da63226_ab2729e9",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-28T08:48:34Z",
+      "side": 1,
+      "message": "I have optimized it further with below changes:\n1. Number of function calls to inserUnmangled have now reduced 3/4 times with latest patch set.\n\n2. I realized that symbols are stored in std::map with function name string as a key so we don\u0027t need to call find() first to check if symbol is already there. Inert will automatically just ignore it if the entry with same key is already there.",
+      "parentUuid": "6d9ade79_f2189d84",
+      "range": {
+        "startLine": 271,
+        "startChar": 0,
+        "endLine": 276,
+        "endChar": 9
+      },
+      "revId": "3a0b2298d80254156c77805326d519b10559a0fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed8dee45_82b8dc14",
         "filename": "src/tests/angle_unittests.gypi",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-07-27T14:37:01Z",
       "side": 1,
       "message": "nit: alphebatize",
+      "range": {
+        "startLine": 41,
+        "startChar": 52,
+        "endLine": 41,
+        "endChar": 75
+      },
+      "revId": "3a0b2298d80254156c77805326d519b10559a0fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4dda7aaa_e9377508",
+        "filename": "src/tests/angle_unittests.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-28T08:48:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed8dee45_82b8dc14",
       "range": {
         "startLine": 41,
         "startChar": 52,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "6dd73e7f_6a16d77f",
+        "filename": "src/tests/compiler_tests/ParseESSLFunctions_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-28T08:48:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2da466b9_a50ed43d",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 11
+      },
+      "revId": "3a0b2298d80254156c77805326d519b10559a0fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad977653_06b08e73",
         "filename": "src/tests/compiler_tests/ParseESSLFunctions_test.cpp",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2015-07-27T14:37:01Z",
       "side": 1,
       "message": "s/NULL/nullptr",
+      "range": {
+        "startLine": 46,
+        "startChar": 91,
+        "endLine": 46,
+        "endChar": 95
+      },
+      "revId": "3a0b2298d80254156c77805326d519b10559a0fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cdc58ace_a5a47ebe",
+        "filename": "src/tests/compiler_tests/ParseESSLFunctions_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-28T08:48:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad977653_06b08e73",
       "range": {
         "startLine": 46,
         "startChar": 91,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "2dd1c68c_c826efea",
+        "filename": "src/tests/compiler_tests/ParseESSLFunctions_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-28T08:48:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d83be1d_a7fdfd32",
+      "range": {
+        "startLine": 51,
+        "startChar": 19,
+        "endLine": 51,
+        "endChar": 28
+      },
+      "revId": "3a0b2298d80254156c77805326d519b10559a0fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d9ade79_12160156",
         "filename": "src/tests/compiler_tests/compiler_tests.gypi",
         "patchSetId": 4
@@ -128,6 +248,30 @@
       "writtenOn": "2015-07-27T14:37:01Z",
       "side": 1,
       "message": "nit: alphabetic order",
+      "range": {
+        "startLine": 13,
+        "startChar": 9,
+        "endLine": 13,
+        "endChar": 32
+      },
+      "revId": "3a0b2298d80254156c77805326d519b10559a0fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cdc58ace_45a02aa3",
+        "filename": "src/tests/compiler_tests/compiler_tests.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-28T08:48:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d9ade79_12160156",
       "range": {
         "startLine": 13,
         "startChar": 9,
