@@ -255,6 +255,11 @@ Error Display::initialize()
     Error error = mImplementation->initialize(this);
     if (error.isError())
     {
+        // Log extended error message here
+        std::stringstream errorStream;
+        errorStream << "ANGLE Display::initialize error " << error.getID() << ": "
+                    << error.getMessage();
+        ANGLEPlatformCurrent()->logError(errorStream.str().c_str());
         return error;
     }
 
