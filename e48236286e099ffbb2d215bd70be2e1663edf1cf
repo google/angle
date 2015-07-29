@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d06c2cf_6b8249a1",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-29T13:49:01Z",
+      "side": 1,
+      "message": "can you add and ASSERT() here that the unmangled name is present in the map?",
+      "range": {
+        "startLine": 275,
+        "startChar": 8,
+        "endLine": 275,
+        "endChar": 14
+      },
+      "revId": "e48236286e099ffbb2d215bd70be2e1663edf1cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4db19a56_2b7df58f",
+        "filename": "src/tests/compiler_tests/compiler_tests.gypi",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-29T13:49:01Z",
+      "side": 1,
+      "message": "I don\u0027t think this file is used anywhere in ANGLE or chrome. You can leave it unmodified and I\u0027ll make a CL to delete it.",
+      "revId": "e48236286e099ffbb2d215bd70be2e1663edf1cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
