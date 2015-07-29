@@ -568,7 +568,9 @@
 1032 WIN LINUX : dEQP-GLES2.functional.state_query.shader.program_attached_shaders = FAIL
 1034 WIN LINUX : dEQP-GLES2.functional.flush_finish.flush = FAIL
 1034 WIN LINUX : dEQP-GLES2.functional.flush_finish.finish = FAIL
-1034 WIN LINUX : dEQP-GLES2.functional.flush_finish.finish_wait = FAIL
+
+// Skip this test on Windows due to timeouts
+1034 WIN LINUX : dEQP-GLES2.functional.flush_finish.finish_wait = SKIP
 
 // Don't run these tests for faster turnover
 998 WIN LINUX : dEQP-GLES2.performance.* = SKIP

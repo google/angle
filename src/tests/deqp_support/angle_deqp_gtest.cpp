@@ -54,14 +54,18 @@ class dEQPCaseList
         int mExpectation;
     };
 
+    void initialize();
+
     const CaseInfo &getCaseInfo(size_t caseIndex) const
     {
+        ASSERT(mInitialized);
         ASSERT(caseIndex < mCaseInfoList.size());
         return mCaseInfoList[caseIndex];
     }
 
     size_t numCases() const
     {
+        ASSERT(mInitialized);
         return mCaseInfoList.size();
     }
 
@@ -69,35 +73,50 @@ class dEQPCaseList
     std::vector<CaseInfo> mCaseInfoList;
     gpu::GPUTestExpectationsParser mTestExpectationsParser;
     gpu::GPUTestBotConfig mTestConfig;
+    size_t mTestModuleIndex;
+    bool mInitialized;
 };
 
 dEQPCaseList::dEQPCaseList(size_t testModuleIndex)
+    : mTestModuleIndex(testModuleIndex),
+      mInitialized(false)
 {
+}
+
+void dEQPCaseList::initialize()
+{
+    if (mInitialized)
+    {
+        return;
+    }
+
+    mInitialized = true;
+
     std::string exeDir = angle::GetExecutableDirectory();
 
     std::stringstream caseListPathStr;
-    caseListPathStr << exeDir << "/deqp_support/" << g_CaseListFiles[testModuleIndex];
+    caseListPathStr << exeDir << "/deqp_support/" << g_CaseListFiles[mTestModuleIndex];
     std::string caseListPath = caseListPathStr.str();
 
     std::stringstream testExpectationsPathStr;
     testExpectationsPathStr << exeDir << "/deqp_support/"
-                            << g_TestExpectationsFiles[testModuleIndex];
+                            << g_TestExpectationsFiles[mTestModuleIndex];
     std::string testExpectationsPath = testExpectationsPathStr.str();
 
     if (!mTestExpectationsParser.LoadTestExpectationsFromFile(testExpectationsPath))
     {
-        std::cerr << "Failed to load test expectations." << std::endl;
+        std::stringstream errorMsgStream;
         for (const auto &message : mTestExpectationsParser.GetErrorMessages())
         {
-            std::cerr << " " << message << std::endl;
+            errorMsgStream << std::endl << " " << message;
         }
-        return;
+
+        FAIL() << "Failed to load test expectations." << errorMsgStream.str();
     }
 
     if (!mTestConfig.LoadCurrentConfig(nullptr))
     {
-        std::cerr << "Failed to load test configuration." << std::endl;
-        return;
+        FAIL() << "Failed to load test configuration.";
     }
 
     std::stringstream caseListStream;
@@ -107,7 +126,7 @@ dEQPCaseList::dEQPCaseList(size_t testModuleIndex)
 
     if (fi == nullptr)
     {
-        return;
+        FAIL() << "Failed to read gzipped test information.";
     }
 
     gzrewind(fi);
@@ -154,6 +173,7 @@ class dEQPTest : public testing::TestWithParam<size_t>
     static const dEQPCaseList &GetCaseList()
     {
         static dEQPCaseList sCaseList(TestModuleIndex);
+        sCaseList.initialize();
         return sCaseList;
     }
 
