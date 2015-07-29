@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4d4d1a59_b1f4e07f",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-29T14:32:22Z",
+      "side": 1,
+      "message": "Done.\n\nActually this ASSERT helped to track one bug. Unmangled versions of some functions were not getting added, fixed it by adding insertUnmangled call at appropriate places in SymbolTable.h",
+      "parentUuid": "0d06c2cf_6b8249a1",
+      "range": {
+        "startLine": 275,
+        "startChar": 8,
+        "endLine": 275,
+        "endChar": 14
+      },
+      "revId": "e48236286e099ffbb2d215bd70be2e1663edf1cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4db19a56_2b7df58f",
         "filename": "src/tests/compiler_tests/compiler_tests.gypi",
         "patchSetId": 6
@@ -36,6 +60,24 @@
       "writtenOn": "2015-07-29T13:49:01Z",
       "side": 1,
       "message": "I don\u0027t think this file is used anywhere in ANGLE or chrome. You can leave it unmodified and I\u0027ll make a CL to delete it.",
+      "revId": "e48236286e099ffbb2d215bd70be2e1663edf1cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed3dee9f_4ebdd39d",
+        "filename": "src/tests/compiler_tests/compiler_tests.gypi",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-29T14:32:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4db19a56_2b7df58f",
       "revId": "e48236286e099ffbb2d215bd70be2e1663edf1cf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
