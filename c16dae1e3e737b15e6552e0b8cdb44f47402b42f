@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4aeb4063_a1239e57",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 624,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "No real downside to extra assertions!",
+      "parentUuid": "2ddc66fc_7f2d1bc9",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed8dee45_7cde3b8e",
         "filename": "src/libANGLE/Display.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-07-26T13:45:23Z",
       "side": 1,
       "message": "Should probably be UNREACHABLE but since we only support Framebuffer and Textures, if (isTexture) {} else {ASSERT(isFramebuffer)} would be even better in my opinion.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eafb1432_be3059ef",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Made it UNREACHABLE.  I usually have a small preference to do it this way instead of the else ASSERT style because this makes it easier to add more cases later.",
+      "parentUuid": "ed8dee45_7cde3b8e",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "4a142033_f936f7ec",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Updated the comment.",
+      "parentUuid": "cd882a39_1c9f0143",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad977653_8621dea4",
         "filename": "src/libANGLE/Image.cpp",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2015-07-26T13:45:23Z",
       "side": 1,
       "message": "A sibling can only be a source xor a target so if (mTarget) {ASSERT(!mSource)} else { if (source) {}} would be closer to the condition we know should be true.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea24f4a5_36d23800",
+        "filename": "src/libANGLE/Image.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad977653_8621dea4",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "ea24f4a5_f6bba0ba",
+        "filename": "src/libANGLE/Image.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "I usually just do it for completeness.  Makes adding new members that don\u0027t trigger the initialization order warnings easier.",
+      "parentUuid": "6d9ade79_2fb55e6c",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d9d1a6f_0026b03f",
         "filename": "src/libANGLE/Image.cpp",
         "patchSetId": 3
@@ -98,6 +188,24 @@
       "writtenOn": "2015-07-26T13:45:23Z",
       "side": 1,
       "message": "Like in Display.cpp, if (isTexture) {} else {ASSERT(isRenderbuffer)}",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a11e441_ba699199",
+        "filename": "src/libANGLE/Image.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d9d1a6f_0026b03f",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "caf6504b_1dd753f0",
+        "filename": "src/libANGLE/Image.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Yea, the implementation of Images for the GL renderer will need to know about targets and some validation will need to use it.",
+      "parentUuid": "0da7a2c0_63ea2a9b",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd882a39_3ca4bd8c",
         "filename": "src/libANGLE/Image.cpp",
         "patchSetId": 3
@@ -132,6 +258,24 @@
       "writtenOn": "2015-07-26T13:45:23Z",
       "side": 1,
       "message": "ditto, can only be a source xor a target, this comment is voided if mTargets is removed.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a0ea828_f79a8043",
+        "filename": "src/libANGLE/Image.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd882a39_3ca4bd8c",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -241,6 +385,24 @@
     },
     {
       "key": {
+        "uuid": "8a00d8f0_5bf0435b",
+        "filename": "src/libANGLE/Image_unittest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d86fa2e_9e992953",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8dbd52cc_a2f420c5",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 3
@@ -252,6 +414,24 @@
       "writtenOn": "2015-07-26T13:45:23Z",
       "side": 1,
       "message": "The specification says that generating mipmaps doesn\u0027t always orphan.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eafb1432_5e8cb510",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "I think this comment is in the wrong place.  Fixed though.",
+      "parentUuid": "8dbd52cc_a2f420c5",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -275,6 +455,24 @@
     },
     {
       "key": {
+        "uuid": "8a00d8f0_de7d6190",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Thanks, added a TODO.",
+      "parentUuid": "6d9ade79_4fbaa25d",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8dbd52cc_c2f11cd4",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 3
@@ -286,6 +484,24 @@
       "writtenOn": "2015-07-26T13:45:23Z",
       "side": 1,
       "message": "The spec says that an image cannot be multisampled in the first place. (maybe remove getSamples and mSamples from Image as well?)",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea24f4a5_39d58b2f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2033,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "It disallows creation of an image from a multisampled renderbuffer and texture but the extension to create renderbuffers from images (OES_EGL_image) mentions that the image may be multisampled.  I kept it for that reason, if we support images from multisampled surfaces or something, it will be useful to have the validation in place.",
+      "parentUuid": "8dbd52cc_c2f11cd4",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -309,6 +525,24 @@
     },
     {
       "key": {
+        "uuid": "2af28c55_43ae189e",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "All of the tests should check for the extensions they need and skip tests when the extensions aren\u0027t available.  They should all pass.",
+      "parentUuid": "2d7d46ed_2b91e55a",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2da466b9_ca1be7fe",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 3
@@ -320,6 +554,24 @@
       "writtenOn": "2015-07-26T13:45:23Z",
       "side": 1,
       "message": "ImageTest",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2af28c55_03981082",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2da466b9_ca1be7fe",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -343,6 +595,24 @@
     },
     {
       "key": {
+        "uuid": "0a0ea828_3a0a1d5d",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Yea.. gross.. turned it into a string literal.",
+      "parentUuid": "0d808212_2af55f7b",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd710a1d_28ef237c",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 3
@@ -354,6 +624,24 @@
       "writtenOn": "2015-07-27T02:01:56Z",
       "side": 1,
       "message": "GL_TEXTURE_CUBE_MAP. IIRC nearest is the default.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a142033_1cdab95d",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Fixed cube map enum but default GL_TEXTUREMIN_FILTER is GL_NEAREST_MIPMAP_LINEAR.",
+      "parentUuid": "cd710a1d_28ef237c",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -377,6 +665,24 @@
     },
     {
       "key": {
+        "uuid": "2a0b6c19_fbd5cbb5",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d6b9230_8370fe00",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d7d46ed_4b861922",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 3
@@ -388,6 +694,24 @@
       "writtenOn": "2015-07-27T02:01:56Z",
       "side": 1,
       "message": "ditto",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a0ea828_fa970554",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d7d46ed_4b861922",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -411,6 +735,24 @@
     },
     {
       "key": {
+        "uuid": "eafb1432_81009c3f",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Default GL_TEXTURE_MAG_FILTER is GL_LINEAR.",
+      "parentUuid": "2df0e6db_b01478d2",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd710a1d_48e45f9c",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 3
@@ -422,6 +764,24 @@
       "writtenOn": "2015-07-27T02:01:56Z",
       "side": 1,
       "message": "Create a source renderbuffer",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eafb1432_410a945d",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd710a1d_48e45f9c",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -445,6 +805,24 @@
     },
     {
       "key": {
+        "uuid": "4a142033_fc6945ea",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8dc9d29e_f6ff9edb",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d808212_4aea939a",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 3
@@ -456,6 +834,24 @@
       "writtenOn": "2015-07-27T02:01:56Z",
       "side": 1,
       "message": "EXPECT_GL_ERROR is already called in EXPECT_PIXEL_EQ",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a0b6c19_3beb439e",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d808212_4aea939a",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -479,6 +875,24 @@
     },
     {
       "key": {
+        "uuid": "2a0b6c19_dbe1e7ba",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "There is with extensions but the GL_FRAMEBUFFER binds to both at once.",
+      "parentUuid": "ed76ce11_a91879ac",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d6b9230_a36dfa27",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 3
@@ -490,6 +904,24 @@
       "writtenOn": "2015-07-27T02:01:56Z",
       "side": 1,
       "message": "ditto",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a142033_dceb21e8",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d6b9230_a36dfa27",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -530,6 +962,24 @@
     },
     {
       "key": {
+        "uuid": "caf6504b_60922c62",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Thanks for mentioning that, fixed.",
+      "parentUuid": "8d6b9230_c37af6de",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d808212_8ae3abc1",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 3
@@ -541,6 +991,24 @@
       "writtenOn": "2015-07-27T02:01:56Z",
       "side": 1,
       "message": "A TODO here would be nice",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a0ea828_5a2ef1c6",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done, thanks, I missed this one.",
+      "parentUuid": "0d808212_8ae3abc1",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -564,6 +1032,24 @@
     },
     {
       "key": {
+        "uuid": "ea24f4a5_f91cb3a1",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2df0e6db_9019740c",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d981e90_c5d3cc49",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 3
@@ -575,6 +1061,24 @@
       "writtenOn": "2015-07-27T02:01:56Z",
       "side": 1,
       "message": "Maybe we could check if it fails when all but one level are specified.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4aeb4063_247b1c67",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d981e90_c5d3cc49",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -598,6 +1102,24 @@
     },
     {
       "key": {
+        "uuid": "eafb1432_c1fd84a7",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Whoops, done.",
+      "parentUuid": "cd710a1d_68e91b73",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d6b9230_03640e3d",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 3
@@ -609,6 +1131,24 @@
       "writtenOn": "2015-07-27T02:01:56Z",
       "side": 1,
       "message": "We should do this check even when we have the EGL_KHR_gl_texture_3D_image extension.\n\nWe should still check that when we don\u0027t have the extension, trying to create an image from it produces an error.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2af28c55_836c20af",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d6b9230_03640e3d",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -632,6 +1172,24 @@
     },
     {
       "key": {
+        "uuid": "8a00d8f0_de45611b",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d981e90_a5d8c866",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d7d46ed_8b7f3189",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 3
@@ -649,6 +1207,24 @@
     },
     {
       "key": {
+        "uuid": "2af28c55_c330e8f0",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "The default cube map should be valid (defined to be 1x1 on all faces)",
+      "parentUuid": "2d7d46ed_8b7f3189",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2df0e6db_501c2cf7",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 3
@@ -660,6 +1236,24 @@
       "writtenOn": "2015-07-27T02:01:56Z",
       "side": 1,
       "message": "Why is this commented out?",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a0b6c19_3bcc632f",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1142,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:24:43Z",
+      "side": 1,
+      "message": "Whoops, fixed.",
+      "parentUuid": "2df0e6db_501c2cf7",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
