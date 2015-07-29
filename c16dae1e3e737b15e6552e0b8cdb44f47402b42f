@@ -317,6 +317,24 @@
     },
     {
       "key": {
+        "uuid": "4aeb4063_e429b439",
+        "filename": "src/libANGLE/Image.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:30:35Z",
+      "side": 1,
+      "message": "ImageSibling inherits from gl::FramebufferAttachmentObject which inherits from RefCountObject.",
+      "parentUuid": "0da7a2c0_43f5267a",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad977653_661cf273",
         "filename": "src/libANGLE/Image.h",
         "patchSetId": 3
@@ -328,6 +346,24 @@
       "writtenOn": "2015-07-26T13:45:23Z",
       "side": 1,
       "message": "From my interpretation of the spec, a sibling, source or target, cannot be used to create another image, or as the target of another image. This would make mSources a single pointer to an Image and causes a bunch of changes in the implementation of Image and ImageSibling.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea24f4a5_99c25f27",
+        "filename": "src/libANGLE/Image.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:30:35Z",
+      "side": 1,
+      "message": "We talked about this in person but to reiterate for Jamie: This is possible but it cannot create an image from the same mip level/zoffset but it is valid to create multiple EGL images from different faces from a cube map, for example.",
+      "parentUuid": "ad977653_661cf273",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -351,6 +387,24 @@
     },
     {
       "key": {
+        "uuid": "eafb1432_2109c836",
+        "filename": "src/libANGLE/Image.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:30:35Z",
+      "side": 1,
+      "message": "Thanks I\u0027ll try to think of a better name.",
+      "parentUuid": "ed8dee45_9ce3e74b",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d83be1d_872719e7",
         "filename": "src/libANGLE/Image.h",
         "patchSetId": 3
@@ -362,6 +416,24 @@
       "writtenOn": "2015-07-26T13:45:23Z",
       "side": 1,
       "message": "ditto on the confusing naming.",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a11e441_1d751742",
+        "filename": "src/libANGLE/Image.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-29T19:30:35Z",
+      "side": 1,
+      "message": "I think the naming makes sense on this one but could be updated for the Sibling.",
+      "parentUuid": "6d83be1d_872719e7",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
