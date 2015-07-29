@@ -255,6 +255,7 @@ gl::Error Blit9::copy2D(const gl::Framebuffer *framebuffer, const RECT &sourceRe
     error = storage9->getSurfaceLevel(level, true, &destSurface);
     if (error.isError())
     {
+        SafeRelease(source);
         return error;
     }
     ASSERT(destSurface);
@@ -294,6 +295,7 @@ gl::Error Blit9::copyCube(const gl::Framebuffer *framebuffer, const RECT &source
     error = storage9->getCubeMapSurface(target, level, true, &destSurface);
     if (error.isError())
     {
+        SafeRelease(source);
         return error;
     }
     ASSERT(destSurface);
