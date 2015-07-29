@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4aeb4063_c4dfd0d1",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-29T19:12:53Z",
+      "side": 1,
+      "message": "this syntax is not correct. the bot currently is skipping all tests because",
+      "range": {
+        "startLine": 578,
+        "startChar": 2,
+        "endLine": 578,
+        "endChar": 15
+      },
+      "revId": "e8c8de2da7907579dd25273bbb422143586e79b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
