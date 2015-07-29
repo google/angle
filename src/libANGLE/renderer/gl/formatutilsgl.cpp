@@ -302,7 +302,7 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
         }
 
         if (sizedInternalFormat == GL_RGB565 && !functions->isAtLeastGL(gl::Version(4, 1)) &&
-            functions->hasGLExtension("GL_ARB_ES2_compatibility"))
+            !functions->hasGLExtension("GL_ARB_ES2_compatibility"))
         {
             // GL_RGB565 is required for basic ES2 functionality but was not added to desktop GL
             // until 4.1.
