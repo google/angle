@@ -440,6 +440,24 @@
     },
     {
       "key": {
+        "uuid": "2a0b6c19_dbbe871b",
+        "filename": "src/libANGLE/Image.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-29T20:00:48Z",
+      "side": 1,
+      "message": "+1 in retrospect",
+      "parentUuid": "6a11e441_1d751742",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d86fa2e_9e992953",
         "filename": "src/libANGLE/Image_unittest.cpp",
         "patchSetId": 3
@@ -504,6 +522,24 @@
       "side": 1,
       "message": "I think this comment is in the wrong place.  Fixed though.",
       "parentUuid": "8dbd52cc_a2f420c5",
+      "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a11e441_bd406bb9",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-29T20:00:48Z",
+      "side": 1,
+      "message": "Whoops :)",
+      "parentUuid": "eafb1432_5e8cb510",
       "revId": "c16dae1e3e737b15e6552e0b8cdb44f47402b42f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
