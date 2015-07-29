@@ -237,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "6dae5efb_8675fabf",
+        "filename": "src/compiler/translator/ExtensionBehavior.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-29T14:03:04Z",
+      "side": 1,
+      "message": "Hm, true. Still better to use correct style here I think.",
+      "parentUuid": "cd8aea9e_1dfe932d",
+      "range": {
+        "startLine": 37,
+        "startChar": 12,
+        "endLine": 37,
+        "endChar": 30
+      },
+      "revId": "d1f51a28ab48027e7408ffdbdf2e19912cc3c089",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2da466b9_d7954b4c",
         "filename": "src/compiler/translator/ExtensionBehavior.h",
         "patchSetId": 1
@@ -436,6 +460,30 @@
       "writtenOn": "2015-07-29T06:16:58Z",
       "side": 1,
       "message": "changed this to a reference in order to prevent copying",
+      "range": {
+        "startLine": 78,
+        "startChar": 18,
+        "endLine": 78,
+        "endChar": 27
+      },
+      "revId": "d1f51a28ab48027e7408ffdbdf2e19912cc3c089",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d06c2cf_2b5fb1bd",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-29T14:03:04Z",
+      "side": 1,
+      "message": "Thanks.",
+      "parentUuid": "cd8aea9e_5df81b3f",
       "range": {
         "startLine": 78,
         "startChar": 18,
@@ -718,6 +766,30 @@
       "side": 1,
       "message": "Done (though makes it inconsistent with the code above).",
       "parentUuid": "ad5136aa_5cf53dbe",
+      "range": {
+        "startLine": 465,
+        "startChar": 22,
+        "endLine": 468,
+        "endChar": 40
+      },
+      "revId": "d1f51a28ab48027e7408ffdbdf2e19912cc3c089",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6dae5efb_46803202",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-29T14:03:04Z",
+      "side": 1,
+      "message": "Ah yes. I like this better, you can leave the code above as is, though if you feel like fixing it I wouldn\u0027t stop you.",
+      "parentUuid": "4d68ba9e_99b47b71",
       "range": {
         "startLine": 465,
         "startChar": 22,
