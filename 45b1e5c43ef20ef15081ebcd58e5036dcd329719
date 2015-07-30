@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d4d1a59_94c8aa50",
+        "filename": "src/common/IterableBitSet.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-07-30T17:55:53Z",
+      "side": 1,
+      "message": "Instead of inheriting from the bitset class, it would be possible to just add the new iterator type and then add\n\n    template \u003csize_t N\u003e\n    BitSetIterator\u003cN\u003e begin(const std::bitset\u003cN\u003e \u0026bitset)\n    {\n        return BitSetIterator\u003cN\u003e(\u0026bitset);\n    }\n\n    template \u003csize_t N\u003e\n    BitSetIterator\u003cN\u003e end(const std::bitset\u003cN\u003e \u0026bitset)\n    {\n        return BitSetIterator\u003cN\u003e(nullptr);\n    }\n\nand all the regular constructs should still work:\n\n    for (auto bit : bitset)\n    {\n        ...\n    }\n\n    for (auto iter \u003d begin(bitset); iter !\u003d end(bitset); iter++)\n    {\n        ...\n    }",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 2
+      },
+      "revId": "45b1e5c43ef20ef15081ebcd58e5036dcd329719",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
