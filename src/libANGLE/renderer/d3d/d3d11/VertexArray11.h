@@ -23,7 +23,12 @@ class VertexArray11 : public VertexArrayImpl
         : VertexArrayImpl(data)
     {
     }
-    virtual ~VertexArray11() {}
+    virtual ~VertexArray11() { }
+
+    virtual void setElementArrayBuffer(const gl::Buffer *buffer) { }
+    virtual void setAttribute(size_t idx, const gl::VertexAttribute &attr) { }
+    virtual void setAttributeDivisor(size_t idx, GLuint divisor) { }
+    virtual void enableAttribute(size_t idx, bool enabledState) { }
 };
 
 }
