@@ -216,9 +216,14 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
     {
         ID3DBlob *errorMessage = nullptr;
         ID3DBlob *binary = nullptr;
+        HRESULT result         = S_OK;
 
-        HRESULT result = mD3DCompileFunc(hlsl.c_str(), hlsl.length(), gl::g_fakepath, macros, nullptr, "main", profile.c_str(),
-                                         configs[i].flags, 0, &binary, &errorMessage);
+        {
+            TRACE_EVENT0("gpu.angle", "D3DCompile");
+            result = mD3DCompileFunc(hlsl.c_str(), hlsl.length(), gl::g_fakepath, macros, nullptr,
+                                     "main", profile.c_str(), configs[i].flags, 0, &binary,
+                                     &errorMessage);
+        }
 
         if (errorMessage)
         {
