@@ -4,55 +4,55 @@
 // found in the LICENSE file.
 //
 
-// DisplayNSGL.mm: NSOpenGL implementation of egl::Display
+// DisplayCGL.mm: CGL implementation of egl::Display
 
-#include "libANGLE/renderer/gl/nsgl/DisplayNSGL.h"
+#include "libANGLE/renderer/gl/CGL/DisplayCGL.h"
 
 #include "common/debug.h"
-#include "libANGLE/renderer/gl/nsgl/WindowSurfaceNSGL.h"
+#include "libANGLE/renderer/gl/CGL/WindowSurfaceCGL.h"
 
 namespace rx
 {
 
-DisplayNSGL::DisplayNSGL()
+DisplayCGL::DisplayCGL()
     : DisplayGL(),
       mEGLDisplay(nullptr)
 {
 }
 
-DisplayNSGL::~DisplayNSGL()
+DisplayCGL::~DisplayCGL()
 {
 }
 
-egl::Error DisplayNSGL::initialize(egl::Display *display)
+egl::Error DisplayCGL::initialize(egl::Display *display)
 {
     UNIMPLEMENTED();
     mEGLDisplay = display;
     return DisplayGL::initialize(display);
 }
 
-void DisplayNSGL::terminate()
+void DisplayCGL::terminate()
 {
     UNIMPLEMENTED();
     DisplayGL::terminate();
 }
 
-SurfaceImpl *DisplayNSGL::createWindowSurface(const egl::Config *configuration,
+SurfaceImpl *DisplayCGL::createWindowSurface(const egl::Config *configuration,
                                              EGLNativeWindowType window,
                                              const egl::AttributeMap &attribs)
 {
     UNIMPLEMENTED();
-    return new WindowSurfaceNSGL();
+    return new WindowSurfaceCGL();
 }
 
-SurfaceImpl *DisplayNSGL::createPbufferSurface(const egl::Config *configuration,
+SurfaceImpl *DisplayCGL::createPbufferSurface(const egl::Config *configuration,
                                               const egl::AttributeMap &attribs)
 {
     UNIMPLEMENTED();
     return nullptr;
 }
 
-SurfaceImpl* DisplayNSGL::createPbufferFromClientBuffer(const egl::Config *configuration,
+SurfaceImpl* DisplayCGL::createPbufferFromClientBuffer(const egl::Config *configuration,
                                                        EGLClientBuffer shareHandle,
                                                        const egl::AttributeMap &attribs)
 {
@@ -60,7 +60,7 @@ SurfaceImpl* DisplayNSGL::createPbufferFromClientBuffer(const egl::Config *confi
     return nullptr;
 }
 
-SurfaceImpl *DisplayNSGL::createPixmapSurface(const egl::Config *configuration,
+SurfaceImpl *DisplayCGL::createPixmapSurface(const egl::Config *configuration,
                                              NativePixmapType nativePixmap,
                                              const egl::AttributeMap &attribs)
 {
@@ -68,61 +68,61 @@ SurfaceImpl *DisplayNSGL::createPixmapSurface(const egl::Config *configuration,
     return nullptr;
 }
 
-egl::Error DisplayNSGL::getDevice(DeviceImpl **device)
+egl::Error DisplayCGL::getDevice(DeviceImpl **device)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_BAD_DISPLAY);
 }
 
-egl::ConfigSet DisplayNSGL::generateConfigs() const
+egl::ConfigSet DisplayCGL::generateConfigs() const
 {
     UNIMPLEMENTED();
     egl::ConfigSet configs;
     return configs;
 }
 
-bool DisplayNSGL::isDeviceLost() const
+bool DisplayCGL::isDeviceLost() const
 {
     UNIMPLEMENTED();
     return false;
 }
 
-bool DisplayNSGL::testDeviceLost()
+bool DisplayCGL::testDeviceLost()
 {
     UNIMPLEMENTED();
     return false;
 }
 
-egl::Error DisplayNSGL::restoreLostDevice()
+egl::Error DisplayCGL::restoreLostDevice()
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_BAD_DISPLAY);
 }
 
-bool DisplayNSGL::isValidNativeWindow(EGLNativeWindowType window) const
+bool DisplayCGL::isValidNativeWindow(EGLNativeWindowType window) const
 {
     UNIMPLEMENTED();
     return true;
 }
 
-std::string DisplayNSGL::getVendorString() const
+std::string DisplayCGL::getVendorString() const
 {
     UNIMPLEMENTED();
     return "";
 }
 
-const FunctionsGL *DisplayNSGL::getFunctionsGL() const
+const FunctionsGL *DisplayCGL::getFunctionsGL() const
 {
     UNIMPLEMENTED();
     return nullptr;
 }
 
-void DisplayNSGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
+void DisplayCGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
     UNIMPLEMENTED();
 }
 
-void DisplayNSGL::generateCaps(egl::Caps *outCaps) const
+void DisplayCGL::generateCaps(egl::Caps *outCaps) const
 {
     UNIMPLEMENTED();
 }

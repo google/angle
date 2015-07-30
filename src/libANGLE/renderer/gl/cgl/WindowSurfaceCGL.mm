@@ -4,84 +4,84 @@
 // found in the LICENSE file.
 //
 
-// WindowSurfaceNSGL.cpp: NSGL implementation of egl::Surface for windows
+// WindowSurfaceCGL.cpp: CGL implementation of egl::Surface for windows
 
-#include "libANGLE/renderer/gl/nsgl/WindowSurfaceNSGL.h"
+#include "libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h"
 
 #include "common/debug.h"
 
 namespace rx
 {
 
-WindowSurfaceNSGL::WindowSurfaceNSGL()
+WindowSurfaceCGL::WindowSurfaceCGL()
     : SurfaceGL()
 {
 }
 
-WindowSurfaceNSGL::~WindowSurfaceNSGL()
+WindowSurfaceCGL::~WindowSurfaceCGL()
 {
 }
 
-egl::Error WindowSurfaceNSGL::initialize()
-{
-    UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
-}
-
-egl::Error WindowSurfaceNSGL::makeCurrent()
+egl::Error WindowSurfaceCGL::initialize()
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceNSGL::swap()
+egl::Error WindowSurfaceCGL::makeCurrent()
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceNSGL::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
+egl::Error WindowSurfaceCGL::swap()
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceNSGL::querySurfacePointerANGLE(EGLint attribute, void **value)
+egl::Error WindowSurfaceCGL::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceNSGL::bindTexImage(EGLint buffer)
+egl::Error WindowSurfaceCGL::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceNSGL::releaseTexImage(EGLint buffer)
+egl::Error WindowSurfaceCGL::bindTexImage(EGLint buffer)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-void WindowSurfaceNSGL::setSwapInterval(EGLint interval)
+egl::Error WindowSurfaceCGL::releaseTexImage(EGLint buffer)
+{
+    UNIMPLEMENTED();
+    return egl::Error(EGL_SUCCESS);
+}
+
+void WindowSurfaceCGL::setSwapInterval(EGLint interval)
 {
     UNIMPLEMENTED();
 }
 
-EGLint WindowSurfaceNSGL::getWidth() const
+EGLint WindowSurfaceCGL::getWidth() const
 {
     UNIMPLEMENTED();
     return 0;
 }
 
-EGLint WindowSurfaceNSGL::getHeight() const
+EGLint WindowSurfaceCGL::getHeight() const
 {
     UNIMPLEMENTED();
     return 0;
 }
 
-EGLint WindowSurfaceNSGL::isPostSubBufferSupported() const
+EGLint WindowSurfaceCGL::isPostSubBufferSupported() const
 {
     UNIMPLEMENTED();
     return EGL_FALSE;

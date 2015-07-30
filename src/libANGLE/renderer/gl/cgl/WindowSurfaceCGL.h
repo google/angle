@@ -4,21 +4,21 @@
 // found in the LICENSE file.
 //
 
-// WindowSurfaceNSGL.h: NSOpenGL implementation of egl::Surface for windows
+// WindowSurfaceCGL.h: CGL implementation of egl::Surface for windows
 
-#ifndef LIBANGLE_RENDERER_GL_NSGL_WINDOWSURFACENSGL_H_
-#define LIBANGLE_RENDERER_GL_NSGL_WINDOWSURFACENSGL_H_
+#ifndef LIBANGLE_RENDERER_GL_CGL_WINDOWSURFACECGL_H_
+#define LIBANGLE_RENDERER_GL_CGL_WINDOWSURFACECGL_H_
 
 #include "libANGLE/renderer/gl/SurfaceGL.h"
 
 namespace rx
 {
 
-class WindowSurfaceNSGL : public SurfaceGL
+class WindowSurfaceCGL : public SurfaceGL
 {
   public:
-    WindowSurfaceNSGL();
-    ~WindowSurfaceNSGL() override;
+    WindowSurfaceCGL();
+    ~WindowSurfaceCGL() override;
 
     egl::Error initialize() override;
     egl::Error makeCurrent() override;
@@ -38,4 +38,4 @@ class WindowSurfaceNSGL : public SurfaceGL
 
 }
 
-#endif // LIBANGLE_RENDERER_GL_NSGL_WINDOWSURFACENSGL_H_
+#endif // LIBANGLE_RENDERER_GL_CGL_WINDOWSURFACECGL_H_

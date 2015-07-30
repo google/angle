@@ -454,12 +454,12 @@
             'libANGLE/renderer/gl/glx/functionsglx_typedefs.h',
             'libANGLE/renderer/gl/glx/platform_glx.h',
         ],
-        'libangle_gl_nsgl_sources':
+        'libangle_gl_cgl_sources':
         [
-            'libANGLE/renderer/gl/nsgl/DisplayNSGL.mm',
-            'libANGLE/renderer/gl/nsgl/DisplayNSGL.h',
-            'libANGLE/renderer/gl/nsgl/WindowSurfaceNSGL.mm',
-            'libANGLE/renderer/gl/nsgl/WindowSurfaceNSGL.h',
+            'libANGLE/renderer/gl/cgl/DisplayCGL.mm',
+            'libANGLE/renderer/gl/cgl/DisplayCGL.h',
+            'libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm',
+            'libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h',
         ],
         'libglesv2_sources':
         [
@@ -710,7 +710,7 @@
                         {
                             'sources':
                             [
-                                '<@(libangle_gl_nsgl_sources)',
+                                '<@(libangle_gl_cgl_sources)',
                             ],
                         }],
                     ],
