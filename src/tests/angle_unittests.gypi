@@ -42,7 +42,6 @@
             '<(angle_path)/src/tests/compiler_tests/MalformedShader_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/NV_draw_buffers_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/Pack_Unpack_test.cpp',
-            '<(angle_path)/src/tests/compiler_tests/ParseESSLFunctions_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/PruneUnusedFunctions_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/RecordConstantPrecision_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/RemovePow_test.cpp',

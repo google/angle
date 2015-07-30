@@ -199,7 +199,6 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level, TOperator op, const char *e
 {
     if (ptype1->getBasicType() == EbtGSampler2D)
     {
-        insertUnmangled(level, name);
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
         insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name, TCache::getType(EbtSampler2D), ptype2, ptype3, ptype4, ptype5);
         insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name, TCache::getType(EbtISampler2D), ptype2, ptype3, ptype4, ptype5);
@@ -207,7 +206,6 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level, TOperator op, const char *e
     }
     else if (ptype1->getBasicType() == EbtGSampler3D)
     {
-        insertUnmangled(level, name);
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
         insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name, TCache::getType(EbtSampler3D), ptype2, ptype3, ptype4, ptype5);
         insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name, TCache::getType(EbtISampler3D), ptype2, ptype3, ptype4, ptype5);
@@ -215,7 +213,6 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level, TOperator op, const char *e
     }
     else if (ptype1->getBasicType() == EbtGSamplerCube)
     {
-        insertUnmangled(level, name);
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
         insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name, TCache::getType(EbtSamplerCube), ptype2, ptype3, ptype4, ptype5);
         insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name, TCache::getType(EbtISamplerCube), ptype2, ptype3, ptype4, ptype5);
@@ -223,7 +220,6 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level, TOperator op, const char *e
     }
     else if (ptype1->getBasicType() == EbtGSampler2DArray)
     {
-        insertUnmangled(level, name);
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
         insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name, TCache::getType(EbtSampler2DArray), ptype2, ptype3, ptype4, ptype5);
         insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name, TCache::getType(EbtISampler2DArray), ptype2, ptype3, ptype4, ptype5);
@@ -232,7 +228,6 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level, TOperator op, const char *e
     else if (IsGenType(rvalue) || IsGenType(ptype1) || IsGenType(ptype2) || IsGenType(ptype3))
     {
         ASSERT(!ptype4 && !ptype5);
-        insertUnmangled(level, name);
         insertBuiltIn(level, op, ext, SpecificType(rvalue, 1), name, SpecificType(ptype1, 1), SpecificType(ptype2, 1), SpecificType(ptype3, 1));
         insertBuiltIn(level, op, ext, SpecificType(rvalue, 2), name, SpecificType(ptype1, 2), SpecificType(ptype2, 2), SpecificType(ptype3, 2));
         insertBuiltIn(level, op, ext, SpecificType(rvalue, 3), name, SpecificType(ptype1, 3), SpecificType(ptype2, 3), SpecificType(ptype3, 3));
@@ -241,7 +236,6 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level, TOperator op, const char *e
     else if (IsVecType(rvalue) || IsVecType(ptype1) || IsVecType(ptype2) || IsVecType(ptype3))
     {
         ASSERT(!ptype4 && !ptype5);
-        insertUnmangled(level, name);
         insertBuiltIn(level, op, ext, VectorType(rvalue, 2), name, VectorType(ptype1, 2), VectorType(ptype2, 2), VectorType(ptype3, 2));
         insertBuiltIn(level, op, ext, VectorType(rvalue, 3), name, VectorType(ptype1, 3), VectorType(ptype2, 3), VectorType(ptype3, 3));
         insertBuiltIn(level, op, ext, VectorType(rvalue, 4), name, VectorType(ptype1, 4), VectorType(ptype2, 4), VectorType(ptype3, 4));
@@ -272,7 +266,6 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level, TOperator op, const char *e
             function->addParameter(TConstParameter(ptype5));
         }
 
-        ASSERT(table[level]->find(name));
         insert(level, function);
     }
 }
