@@ -117,4 +117,9 @@ EGLint PbufferSurfaceGLX::isPostSubBufferSupported() const
     return EGL_FALSE;
 }
 
+EGLint PbufferSurfaceGLX::getSwapBehavior() const
+{
+    return EGL_BUFFER_PRESERVED;
+}
+
 }

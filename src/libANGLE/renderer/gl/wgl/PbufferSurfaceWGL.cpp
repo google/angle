@@ -179,4 +179,9 @@ EGLint PbufferSurfaceWGL::isPostSubBufferSupported() const
     return EGL_FALSE;
 }
 
+EGLint PbufferSurfaceWGL::getSwapBehavior() const
+{
+    return EGL_BUFFER_PRESERVED;
+}
+
 }

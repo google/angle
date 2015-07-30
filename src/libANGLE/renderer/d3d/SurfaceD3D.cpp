@@ -295,6 +295,11 @@ EGLint SurfaceD3D::isPostSubBufferSupported() const
     return EGL_TRUE;
 }
 
+EGLint SurfaceD3D::getSwapBehavior() const
+{
+    return EGL_BUFFER_PRESERVED;
+}
+
 egl::Error SurfaceD3D::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
     if (attribute == EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE)

@@ -87,4 +87,9 @@ EGLint WindowSurfaceCGL::isPostSubBufferSupported() const
     return EGL_FALSE;
 }
 
+EGLint WindowSurfaceCGL::getSwapBehavior() const
+{
+    return EGL_BUFFER_DESTROYED;
+}
+
 }

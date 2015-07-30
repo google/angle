@@ -45,6 +45,7 @@ class SurfaceD3D : public SurfaceImpl
     EGLint getHeight() const override;
 
     EGLint isPostSubBufferSupported() const override;
+    EGLint getSwapBehavior() const override;
 
     // D3D implementations
     SwapChainD3D *getSwapChain() const;

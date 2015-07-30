@@ -34,6 +34,7 @@ class WindowSurfaceCGL : public SurfaceGL
     EGLint getHeight() const override;
 
     EGLint isPostSubBufferSupported() const override;
+    EGLint getSwapBehavior() const override;
 };
 
 }

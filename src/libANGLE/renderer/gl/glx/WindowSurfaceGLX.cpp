@@ -192,6 +192,11 @@ EGLint WindowSurfaceGLX::isPostSubBufferSupported() const
     return EGL_FALSE;
 }
 
+EGLint WindowSurfaceGLX::getSwapBehavior() const
+{
+    return EGL_BUFFER_PRESERVED;
+}
+
 bool WindowSurfaceGLX::getWindowDimensions(Window window, unsigned int *width, unsigned int *height) const
 {
     Window root;

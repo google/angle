@@ -41,6 +41,7 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
     virtual EGLint getHeight() const = 0;
 
     virtual EGLint isPostSubBufferSupported() const = 0;
+    virtual EGLint getSwapBehavior() const = 0;
 };
 
 }

@@ -32,7 +32,7 @@ Surface::Surface(rx::SurfaceImpl *impl, EGLint surfaceType, const egl::Config *c
       // FIXME: Determine actual pixel aspect ratio
       mPixelAspectRatio(static_cast<EGLint>(1.0 * EGL_DISPLAY_SCALING)),
       mRenderBuffer(EGL_BACK_BUFFER),
-      mSwapBehavior(EGL_BUFFER_PRESERVED)
+      mSwapBehavior(impl->getSwapBehavior())
 {
     addRef();
 
