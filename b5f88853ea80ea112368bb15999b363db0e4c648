@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a3980cf_54b94265",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-30T14:19:11Z",
+      "side": 1,
+      "message": "I think the problem with this patch is we\u0027re inserting the unmangled names in ESSL1, when they\u0027re allowed to be redeclared - this will confound uses of abs in ESSL1.",
+      "range": {
+        "startLine": 202,
+        "startChar": 8,
+        "endLine": 202,
+        "endChar": 23
+      },
+      "revId": "b5f88853ea80ea112368bb15999b363db0e4c648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
