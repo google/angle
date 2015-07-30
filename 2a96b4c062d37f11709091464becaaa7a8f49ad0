@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a3980cf_d4a77205",
+        "filename": "src/common/IterableBitSet.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-30T15:23:40Z",
+      "side": 1,
+      "message": "updated to angle",
+      "range": {
+        "startLine": 89,
+        "startChar": 6,
+        "endLine": 89,
+        "endChar": 8
+      },
+      "revId": "2a96b4c062d37f11709091464becaaa7a8f49ad0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
