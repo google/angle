@@ -405,9 +405,9 @@ egl::Error Renderer11::initialize()
     if (!mDevice || FAILED(result))
 #endif
     {
-        double createDeviceBegin = ANGLEPlatformCurrent()->currentTime();
-
+        SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.D3D11CreateDeviceMS");
         TRACE_EVENT0("gpu.angle", "D3D11CreateDevice");
+
         result = D3D11CreateDevice(NULL,
                                    mDriverType,
                                    NULL,
@@ -427,10 +427,6 @@ egl::Error Renderer11::initialize()
                               D3D11_INIT_CREATEDEVICE_ERROR,
                               "Could not create D3D11 device.");
         }
-
-        double createDeviceSec = ANGLEPlatformCurrent()->currentTime() - createDeviceBegin;
-        int createDeviceMS = static_cast<int>(createDeviceSec * 1000);
-        ANGLE_HISTOGRAM_TIMES("GPU.ANGLE.D3D11CreateDeviceMS", createDeviceMS);
     }
 
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
@@ -584,8 +580,7 @@ egl::Error Renderer11::initialize()
 // to reset the scene status and ensure the default states are reset.
 void Renderer11::initializeDevice()
 {
-    double startTimeSeconds = ANGLEPlatformCurrent()->currentTime();
-
+    SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.Renderer11InitializeDeviceMS");
     TRACE_EVENT0("gpu.angle", "Renderer11::initializeDevice");
 
     populateRenderer11DeviceCaps();
@@ -654,10 +649,6 @@ void Renderer11::initializeDevice()
 
     // TODO(jmadill): use context caps, and place in common D3D location
     mTranslatedAttribCache.resize(getRendererCaps().maxVertexAttributes);
-
-    double elapsedTimeSeconds = ANGLEPlatformCurrent()->currentTime() - startTimeSeconds;
-    int initializeDeviceMS = static_cast<int>(elapsedTimeSeconds * 1000);
-    ANGLE_HISTOGRAM_TIMES("GPU.ANGLE.Renderer11InitializeDeviceMS", initializeDeviceMS);
 }
 
 void Renderer11::populateRenderer11DeviceCaps()
