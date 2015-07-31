@@ -16,6 +16,24 @@
       "revId": "222750ab1b49bf05ae9cfdfbcfd5d945e84d1d5c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea523422_20655610",
+        "filename": "src/libANGLE/histogram_macros.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-31T21:16:17Z",
+      "side": 1,
+      "message": "Is the __COUNTER__ thing a blocking issue? Seems like it avoids needing to store extra data, which could be a thing in a tight loop.\n\nCode based on Chromium:\n\nhttps://code.google.com/p/chromium/codesearch#chromium/src/base/metrics/histogram_macros.h\u0026q\u003dhistogram_macros.h\u0026sq\u003dpackage:chromium\u0026l\u003d248",
+      "parentUuid": "6a5f2428_5e44b571",
+      "revId": "222750ab1b49bf05ae9cfdfbcfd5d945e84d1d5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
