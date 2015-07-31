@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa33dcf3_5b54cfa3",
+        "filename": "src/libANGLE/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-31T21:16:42Z",
+      "side": 1,
+      "message": "How expensive are histograms like this? This function seems to be called often.",
+      "revId": "40c07c7523499ba330186bd281b731d0f874e095",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
