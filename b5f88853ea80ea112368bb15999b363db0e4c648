@@ -22,6 +22,30 @@
       "revId": "b5f88853ea80ea112368bb15999b363db0e4c648",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d4d1a59_3478de37",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1121008
+      },
+      "writtenOn": "2015-07-31T07:55:29Z",
+      "side": 1,
+      "message": "Jamie, We are inserting but we check for redeclaration only in case of ESSL 300 and above. There is a check added in ParseContext.cpp also I have added a unit tests in this change to make sure overloading  of built-ins is still supported in ESSL 100, redefinition is not supported in ESSL 100 as well.",
+      "parentUuid": "4a3980cf_54b94265",
+      "range": {
+        "startLine": 202,
+        "startChar": 8,
+        "endLine": 202,
+        "endChar": 23
+      },
+      "revId": "b5f88853ea80ea112368bb15999b363db0e4c648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
