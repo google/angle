@@ -22,6 +22,30 @@
       "revId": "4ba75cb95df91a1f61c079dad9957d2c671dab79",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad9936fb_8577a8ac",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1133169
+      },
+      "writtenOn": "2015-07-31T11:01:48Z",
+      "side": 1,
+      "message": "Yes, I used \"gn format\" on this file.",
+      "parentUuid": "4a3980cf_d48d32ba",
+      "range": {
+        "startLine": 8,
+        "startChar": 35,
+        "endLine": 8,
+        "endChar": 54
+      },
+      "revId": "4ba75cb95df91a1f61c079dad9957d2c671dab79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
