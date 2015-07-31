@@ -241,8 +241,7 @@ Error Display::initialize()
     // Re-initialize default platform if it's needed
     InitDefaultPlatformImpl();
 
-    double createDeviceBegin = ANGLEPlatformCurrent()->currentTime();
-
+    SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.DisplayInitializeMS");
     TRACE_EVENT0("gpu.angle", "egl::Display::initialize");
 
     ASSERT(mImplementation != nullptr);
@@ -291,10 +290,6 @@ Error Display::initialize()
     }
 
     mInitialized = true;
-
-    double displayInitializeSec = ANGLEPlatformCurrent()->currentTime() - createDeviceBegin;
-    int displayInitializeMS = static_cast<int>(displayInitializeSec * 1000);
-    ANGLE_HISTOGRAM_TIMES("GPU.ANGLE.DisplayInitializeMS", displayInitializeMS);
 
     return Error(EGL_SUCCESS);
 }
