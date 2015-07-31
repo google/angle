@@ -5,11 +5,11 @@
 //
 
 #include "libANGLE/renderer/d3d/HLSLCompiler.h"
-#include "libANGLE/Program.h"
-#include "libANGLE/features.h"
 
 #include "common/utilities.h"
-
+#include "libANGLE/Program.h"
+#include "libANGLE/features.h"
+#include "libANGLE/histogram_macros.h"
 #include "third_party/trace_event/trace_event.h"
 
 // Definitions local to the translation unit
@@ -198,9 +198,14 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
     {
         ID3DBlob *errorMessage = NULL;
         ID3DBlob *binary = NULL;
+        HRESULT result = S_OK;
 
-        HRESULT result = mD3DCompileFunc(hlsl.c_str(), hlsl.length(), gl::g_fakepath, macros, NULL, "main", profile.c_str(),
-                                         configs[i].flags, 0, &binary, &errorMessage);
+        {
+            result = mD3DCompileFunc(hlsl.c_str(), hlsl.length(), gl::g_fakepath, macros, NULL,
+                                     "main", profile.c_str(), configs[i].flags, 0, &binary,
+                                     &errorMessage);
+            SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.D3DCompileMS");
+        }
 
         if (errorMessage)
         {
