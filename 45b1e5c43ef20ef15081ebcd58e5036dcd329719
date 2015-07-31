@@ -22,6 +22,30 @@
       "revId": "45b1e5c43ef20ef15081ebcd58e5036dcd329719",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a6260ef_b2240139",
+        "filename": "src/common/IterableBitSet.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-07-31T19:58:50Z",
+      "side": 1,
+      "message": "New solution : use a helper class with begin and end, which supports range-for and doesn\u0027t need to inherit from a std:: class.",
+      "parentUuid": "4d4d1a59_94c8aa50",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 2
+      },
+      "revId": "45b1e5c43ef20ef15081ebcd58e5036dcd329719",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
