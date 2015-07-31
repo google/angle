@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a5f2428_5e44b571",
+        "filename": "src/libANGLE/histogram_macros.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-07-31T21:13:15Z",
+      "side": 1,
+      "message": "Why can\u0027t we have a single ScopetHistogramTimer class that takes a const char* in its constructor? This would avoid the need for __COUNTER__.",
+      "revId": "222750ab1b49bf05ae9cfdfbcfd5d945e84d1d5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
