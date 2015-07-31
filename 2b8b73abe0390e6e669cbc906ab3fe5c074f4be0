@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a6260ef_e855e64c",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1281,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-07-31T23:35:42Z",
+      "side": 1,
+      "message": "please also hash this name.",
+      "revId": "2b8b73abe0390e6e669cbc906ab3fe5c074f4be0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
