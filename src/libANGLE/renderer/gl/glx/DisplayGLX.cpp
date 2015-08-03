@@ -314,6 +314,9 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
             continue;
         }
 
+        config.samples = samples;
+        config.sampleBuffers = sampleBuffers;
+
         // Transparency
         if (getGLXFBConfigAttrib(glxConfig, GLX_TRANSPARENT_TYPE) == GLX_TRANSPARENT_RGB)
         {
@@ -346,8 +349,6 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
         }
 
         // Misc
-        config.sampleBuffers = getGLXFBConfigAttrib(glxConfig, GLX_SAMPLE_BUFFERS);
-        config.samples = getGLXFBConfigAttrib(glxConfig, GLX_SAMPLES);
         config.level = getGLXFBConfigAttrib(glxConfig, GLX_LEVEL);
 
         config.bindToTextureRGB = EGL_FALSE;
