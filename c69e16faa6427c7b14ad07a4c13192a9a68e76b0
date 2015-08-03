@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ca673030_d5a1fcf0",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-03T14:49:51Z",
+      "side": 1,
+      "message": "nit: you could call setAllDirtyBits",
+      "revId": "c69e16faa6427c7b14ad07a4c13192a9a68e76b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
