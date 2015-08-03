@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6d657ec3_a3c82850",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1446,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-03T12:25:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "78b0de09_4f6ebdf7",
+      "range": {
+        "startLine": 1446,
+        "startChar": 32,
+        "endLine": 1446,
+        "endChar": 33
+      },
+      "revId": "f4f3738c8601cf999284b42e9085345c8e2063e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9870321a_1360d687",
         "filename": "src/compiler/translator/Types.cpp",
         "patchSetId": 1
@@ -96,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "4d7fda4c_2a62237f",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-03T12:25:48Z",
+      "side": 1,
+      "message": "I think it makes the most sense to recursively check structure fields, leaving it as is with comments/asserts just seems to introduce an entirely avoidable and unnecessary \"gotcha\" for the users of the function.",
+      "parentUuid": "183e024a_4011ce06",
+      "range": {
+        "startLine": 209,
+        "startChar": 23,
+        "endLine": 209,
+        "endChar": 35
+      },
+      "revId": "f4f3738c8601cf999284b42e9085345c8e2063e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "183e024a_804a7676",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 1
@@ -107,6 +155,30 @@
       "writtenOn": "2015-07-15T14:26:56Z",
       "side": 1,
       "message": "nit: override instead of virtual",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 61,
+        "endChar": 11
+      },
+      "revId": "f4f3738c8601cf999284b42e9085345c8e2063e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed8faeab_a7102811",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-03T12:25:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "183e024a_804a7676",
       "range": {
         "startLine": 61,
         "startChar": 4,
