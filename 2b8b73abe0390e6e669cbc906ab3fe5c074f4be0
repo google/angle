@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "4a5c2064_1c927960",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1277,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-03T12:43:54Z",
+      "side": 1,
+      "message": "You\u0027ll also need to add the uniform block instance name. Basic structure is\n\nuniform \u003cblock name (API visible)\u003e {\n  \u003cmembers\u003e\n} \u003cinstance name\u003e[optional array size];\n\nSee the spec on pg 38, 4.3.7 Interface Blocks. \n\nAlso, do you know where the uniform keyword gets added? We\u0027ll need to add the layout qualifiers before \u0027uniform\u0027.\n\nFor testing, I\u0027m not sure if the GL back-end of ANGLE supports GLES3 contexts yet. When/if it does, you can use the angle_deqp_gles3_tests target with the command line arguments --deqp-egl-native-display-type\u003dangle-gl, and --deqp-case\u003ddEQP-GLES3.functional.ubo.*. We should try to get this going ASAP if we\u0027re going to be adding ES3 features.\n\nANGLE\u0027s dEQP Wiki: https://chromium.googlesource.com/angle/angle/+/master/doc/dEQP.md",
+      "range": {
+        "startLine": 1277,
+        "startChar": 22,
+        "endLine": 1277,
+        "endChar": 43
+      },
+      "revId": "2b8b73abe0390e6e669cbc906ab3fe5c074f4be0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a6260ef_e855e64c",
         "filename": "src/compiler/translator/OutputGLSLBase.cpp",
         "patchSetId": 2
@@ -13,6 +36,24 @@
       "writtenOn": "2015-07-31T23:35:42Z",
       "side": 1,
       "message": "please also hash this name.",
+      "revId": "2b8b73abe0390e6e669cbc906ab3fe5c074f4be0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca673030_954304c6",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1281,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-03T12:43:54Z",
+      "side": 1,
+      "message": "+1, and the instance name",
+      "parentUuid": "4a6260ef_e855e64c",
       "revId": "2b8b73abe0390e6e669cbc906ab3fe5c074f4be0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
