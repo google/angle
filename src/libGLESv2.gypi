@@ -8,6 +8,7 @@
         # These file lists are shared with the GN build.
         'libangle_common_sources':
         [
+            'common/BitSetIterator.h',
             'common/Float16ToFloat32.cpp',
             'common/MemoryBuffer.cpp',
             'common/MemoryBuffer.h',
