@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a24e8f1_07287687",
+        "filename": "src/common/BitSetIterator.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-03T19:02:42Z",
+      "side": 1,
+      "message": "changed this to POSIX, since it\u0027s a catch-all for GCC and Clang",
+      "range": {
+        "startLine": 108,
+        "startChar": 14,
+        "endLine": 108,
+        "endChar": 34
+      },
+      "revId": "c8eecf1f22a24ff9c14ca6b2c71f7e90d39e2919",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
