@@ -26,9 +26,10 @@ FramebufferGL::FramebufferGL(const gl::Framebuffer::Data &data, const FunctionsG
     : FramebufferImpl(data),
       mFunctions(functions),
       mStateManager(stateManager),
-      mFramebufferID(0)
+      mFramebufferID(0),
+      mIsDefault(isDefault)
 {
-    if (!isDefault)
+    if (!mIsDefault)
     {
         mFunctions->genFramebuffers(1, &mFramebufferID);
     }
@@ -92,7 +93,7 @@ static void BindFramebufferAttachment(const FunctionsGL *functions, GLenum attac
 
 void FramebufferGL::onUpdateColorAttachment(size_t index)
 {
-    if (mFramebufferID != 0)
+    if (!mIsDefault)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
         BindFramebufferAttachment(mFunctions,
@@ -103,7 +104,7 @@ void FramebufferGL::onUpdateColorAttachment(size_t index)
 
 void FramebufferGL::onUpdateDepthAttachment()
 {
-    if (mFramebufferID != 0)
+    if (!mIsDefault)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
         BindFramebufferAttachment(mFunctions,
@@ -114,7 +115,7 @@ void FramebufferGL::onUpdateDepthAttachment()
 
 void FramebufferGL::onUpdateStencilAttachment()
 {
-    if (mFramebufferID != 0)
+    if (!mIsDefault)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
         BindFramebufferAttachment(mFunctions,
@@ -125,7 +126,7 @@ void FramebufferGL::onUpdateStencilAttachment()
 
 void FramebufferGL::onUpdateDepthStencilAttachment()
 {
-    if (mFramebufferID != 0)
+    if (!mIsDefault)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
         BindFramebufferAttachment(mFunctions,
@@ -136,7 +137,7 @@ void FramebufferGL::onUpdateDepthStencilAttachment()
 
 void FramebufferGL::setDrawBuffers(size_t count, const GLenum *buffers)
 {
-    if (mFramebufferID != 0)
+    if (!mIsDefault)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
         mFunctions->drawBuffers(count, buffers);
@@ -145,7 +146,7 @@ void FramebufferGL::setDrawBuffers(size_t count, const GLenum *buffers)
 
 void FramebufferGL::setReadBuffer(GLenum buffer)
 {
-    if (mFramebufferID != 0)
+    if (!mIsDefault)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
         mFunctions->readBuffer(buffer);

@@ -57,6 +57,7 @@ class FramebufferGL : public FramebufferImpl
     StateManagerGL *mStateManager;
 
     GLuint mFramebufferID;
+    bool mIsDefault;
 };
 
 }
