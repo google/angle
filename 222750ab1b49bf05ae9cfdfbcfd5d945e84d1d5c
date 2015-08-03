@@ -34,6 +34,24 @@
       "revId": "222750ab1b49bf05ae9cfdfbcfd5d945e84d1d5c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a56a845_fa16a57e",
+        "filename": "src/libANGLE/histogram_macros.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-03T15:01:07Z",
+      "side": 1,
+      "message": "We\u0027ll have to watch out for issues with this, __COUNTER__ may not be available in all the compilers that our clients build with.",
+      "parentUuid": "ea523422_20655610",
+      "revId": "222750ab1b49bf05ae9cfdfbcfd5d945e84d1d5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
