@@ -242,7 +242,7 @@ TIntermNode *TCompiler::compileTreeImpl(const char* const shaderStrings[],
         }
 
         root = parseContext.getTreeRoot();
-        success = intermediate.postProcess(root);
+        root = intermediate.postProcess(root);
 
         // Disallow expressions deemed too complex.
         if (success && (compileOptions & SH_LIMIT_EXPRESSION_COMPLEXITY))
