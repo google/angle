@@ -22,6 +22,30 @@
       "revId": "c2091760e0b0b76fd052b5d24be29c69ae387fdd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cadad034_f1427010",
+        "filename": "codereview.settings",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-04T17:55:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ad9483e_53dde48d",
+      "range": {
+        "startLine": 1,
+        "startChar": 23,
+        "endLine": 1,
+        "endChar": 26
+      },
+      "revId": "c2091760e0b0b76fd052b5d24be29c69ae387fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
