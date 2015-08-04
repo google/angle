@@ -96,6 +96,28 @@ void TIntermTraverser::nextTemporaryIndex()
     ++(*mTemporaryIndex);
 }
 
+void TIntermTraverser::addToFunctionMap(const TString &name, TIntermSequence *paramSequence)
+{
+    mFunctionMap[name] = paramSequence;
+}
+
+bool TIntermTraverser::isInFunctionMap(const TIntermAggregate *callNode) const
+{
+    ASSERT(callNode->getOp() == EOpFunctionCall || callNode->getOp() == EOpInternalFunctionCall);
+    return (mFunctionMap.find(callNode->getName()) != mFunctionMap.end());
+}
+
+TIntermSequence *TIntermTraverser::getFunctionParameters(const TIntermAggregate *callNode)
+{
+    ASSERT(isInFunctionMap(callNode));
+    return mFunctionMap[callNode->getName()];
+}
+
+void TIntermTraverser::setInFunctionCallOutParameter(bool inOutParameter)
+{
+    mInFunctionCallOutParameter = inOutParameter;
+}
+
 //
 // Traverse the intermediate representation tree, and
 // call a node type specific function for each node.
@@ -140,11 +162,22 @@ void TIntermBinary::traverse(TIntermTraverser *it)
     {
         it->incrementDepth(this);
 
+        if (isAssignment())
+        {
+            // Some binary operations like indexing can be inside an l-value.
+            // TODO(oetuaho@nvidia.com): Now the code doesn't unset operatorRequiresLValue for the
+            // index, fix this.
+            it->setOperatorRequiresLValue(true);
+        }
+
         if (mLeft)
             mLeft->traverse(it);
 
         if (it->inVisit)
             visit = it->visitBinary(InVisit, this);
+
+        if (isAssignment())
+            it->setOperatorRequiresLValue(false);
 
         if (visit && mRight)
             mRight->traverse(it);
@@ -170,9 +203,26 @@ void TIntermUnary::traverse(TIntermTraverser *it)
     if (it->preVisit)
         visit = it->visitUnary(PreVisit, this);
 
-    if (visit) {
+    if (visit)
+    {
         it->incrementDepth(this);
+
+        switch (getOp())
+        {
+            case EOpPostIncrement:
+            case EOpPostDecrement:
+            case EOpPreIncrement:
+            case EOpPreDecrement:
+                it->setOperatorRequiresLValue(true);
+                break;
+            default:
+                break;
+        }
+
         mOperand->traverse(it);
+
+        it->setOperatorRequiresLValue(false);
+
         it->decrementDepth();
     }
 
@@ -187,36 +237,87 @@ void TIntermAggregate::traverse(TIntermTraverser *it)
 {
     bool visit = true;
 
+    switch (mOp)
+    {
+        case EOpFunction:
+        {
+            TIntermAggregate *params = mSequence.front()->getAsAggregate();
+            ASSERT(params != nullptr);
+            ASSERT(params->getOp() == EOpParameters);
+            it->addToFunctionMap(mName, params->getSequence());
+            break;
+        }
+        case EOpPrototype:
+            it->addToFunctionMap(mName, &mSequence);
+            break;
+        default:
+            break;
+    }
+
     if (it->preVisit)
         visit = it->visitAggregate(PreVisit, this);
 
     if (visit)
     {
-        if (mOp == EOpSequence)
-            it->pushParentBlock(this);
-
-        it->incrementDepth(this);
-
-        for (TIntermSequence::iterator sit = mSequence.begin();
-                sit != mSequence.end(); sit++)
+        bool inFunctionMap = false;
+        if (mOp == EOpFunctionCall)
         {
-            (*sit)->traverse(it);
-
-            if (visit && it->inVisit)
+            inFunctionMap = it->isInFunctionMap(this);
+            if (!inFunctionMap)
             {
-                if (*sit != mSequence.back())
-                    visit = it->visitAggregate(InVisit, this);
-            }
-            if (mOp == EOpSequence)
-            {
-                it->incrementParentBlockPos();
+                // The function is not user-defined - it is likely built-in texture function.
+                // Assume that those do not have out parameters.
+                it->setInFunctionCallOutParameter(false);
             }
         }
 
-        it->decrementDepth();
+        it->incrementDepth(this);
 
-        if (mOp == EOpSequence)
-            it->popParentBlock();
+        if (inFunctionMap)
+        {
+            TIntermSequence *params             = it->getFunctionParameters(this);
+            TIntermSequence::iterator paramIter = params->begin();
+            for (auto *child : mSequence)
+            {
+                ASSERT(paramIter != params->end());
+                TQualifier qualifier = (*paramIter)->getAsTyped()->getQualifier();
+                it->setInFunctionCallOutParameter(qualifier == EvqOut || qualifier == EvqInOut);
+
+                child->traverse(it);
+                if (visit && it->inVisit)
+                {
+                    if (child != mSequence.back())
+                        visit = it->visitAggregate(InVisit, this);
+                }
+
+                ++paramIter;
+            }
+
+            it->setInFunctionCallOutParameter(false);
+        }
+        else
+        {
+            if (mOp == EOpSequence)
+                it->pushParentBlock(this);
+
+            for (auto *child : mSequence)
+            {
+                child->traverse(it);
+                if (visit && it->inVisit)
+                {
+                    if (child != mSequence.back())
+                        visit = it->visitAggregate(InVisit, this);
+                }
+
+                if (mOp == EOpSequence)
+                    it->incrementParentBlockPos();
+            }
+
+            if (mOp == EOpSequence)
+                it->popParentBlock();
+        }
+
+        it->decrementDepth();
     }
 
     if (visit && it->postVisit)

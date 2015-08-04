@@ -56,20 +56,7 @@ class EmulatePrecision : public TIntermTraverser
     EmulationSet mEmulateCompoundMul;
     EmulationSet mEmulateCompoundDiv;
 
-    // Stack of function call parameter iterators
-    std::vector<TIntermSequence::const_iterator> mSeqIterStack;
-
     bool mDeclaringVariables;
-    bool mInLValue;
-    bool mInFunctionCallOutParameter;
-
-    struct TStringComparator
-    {
-        bool operator() (const TString& a, const TString& b) const { return a.compare(b) < 0; }
-    };
-
-    // Map from function names to their parameter sequences
-    std::map<TString, TIntermSequence*, TStringComparator> mFunctionMap;
 };
 
 #endif  // COMPILER_TRANSLATOR_EMULATE_PRECISION_H_

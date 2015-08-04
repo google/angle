@@ -609,7 +609,9 @@ class TIntermTraverser : angle::NonCopyable
           postVisit(postVisit),
           mDepth(0),
           mMaxDepth(0),
-          mTemporaryIndex(nullptr)
+          mTemporaryIndex(nullptr),
+          mOperatorRequiresLValue(false),
+          mInFunctionCallOutParameter(false)
     {
     }
     virtual ~TIntermTraverser() {}
@@ -670,6 +672,35 @@ class TIntermTraverser : angle::NonCopyable
 
     // Start creating temporary symbols from the given temporary symbol index + 1.
     void useTemporaryIndex(unsigned int *temporaryIndex);
+
+    // Track whether an l-value is required in the node that is currently being traversed.
+    // These functions are intended to be called only from traversal functions, not from subclasses
+    // of TIntermTraverser.
+    // Use isLValueRequiredHere instead to check all conditions which require an l-value.
+    void setOperatorRequiresLValue(bool lValueRequired)
+    {
+        mOperatorRequiresLValue = lValueRequired;
+    }
+    bool operatorRequiresLValue() const { return mOperatorRequiresLValue; }
+
+    // Add a function encountered during traversal to the function map. Intended to be called only
+    // from traversal functions, not from subclasses of TIntermTraverser.
+    void addToFunctionMap(const TString &name, TIntermSequence *paramSequence);
+
+    // Return true if the prototype or definition of the function being called has been encountered
+    // during traversal.
+    bool isInFunctionMap(const TIntermAggregate *callNode) const;
+    // Return the parameters sequence from the function definition or prototype.
+    TIntermSequence *getFunctionParameters(const TIntermAggregate *callNode);
+
+    // Track whether an l-value is required inside a function call.
+    // This function is intended to be called only from traversal functions, not from traverers.
+    void setInFunctionCallOutParameter(bool inOutParameter);
+
+    bool isLValueRequiredHere() const
+    {
+        return mOperatorRequiresLValue || mInFunctionCallOutParameter;
+    }
 
   protected:
     int mDepth;
@@ -771,6 +802,17 @@ class TIntermTraverser : angle::NonCopyable
     std::vector<ParentBlock> mParentBlockStack;
 
     unsigned int *mTemporaryIndex;
+
+    bool mOperatorRequiresLValue;
+    bool mInFunctionCallOutParameter;
+
+    struct TStringComparator
+    {
+        bool operator()(const TString &a, const TString &b) const { return a.compare(b) < 0; }
+    };
+
+    // Map from mangled function names to their parameter sequences
+    TMap<TString, TIntermSequence *, TStringComparator> mFunctionMap;
 };
 
 //
