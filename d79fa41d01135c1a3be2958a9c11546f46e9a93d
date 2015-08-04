@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cadad034_66bea450",
+        "filename": "src/common/BitSetIterator.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-04T15:09:54Z",
+      "side": 1,
+      "message": "fixed a warning in Release",
+      "range": {
+        "startLine": 107,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 29
+      },
+      "revId": "d79fa41d01135c1a3be2958a9c11546f46e9a93d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
