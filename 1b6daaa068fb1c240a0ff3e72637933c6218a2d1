@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4acfc072_b5c53885",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-04T14:03:50Z",
+      "side": 1,
+      "message": "nit: if there aren\u0027t more enums specced out I might be tempted to just make this a simple \"if\" (ignore if this changes later)",
+      "range": {
+        "startLine": 609,
+        "startChar": 4,
+        "endLine": 616,
+        "endChar": 5
+      },
+      "revId": "1b6daaa068fb1c240a0ff3e72637933c6218a2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca157084_4e9c47f1",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-04T14:03:50Z",
+      "side": 1,
+      "message": "this is a bit unfortunate. is there no other way?",
+      "range": {
+        "startLine": 706,
+        "startChar": 26,
+        "endLine": 706,
+        "endChar": 36
+      },
+      "revId": "1b6daaa068fb1c240a0ff3e72637933c6218a2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa14bc88_eeb890ae",
+        "filename": "src/libANGLE/Image.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-04T14:03:50Z",
+      "side": 1,
+      "message": "I\u0027m sorry to jump in so late to the party, but I might call this something like \"egl::ImageObject\" to mirror gl::FramebufferAttachmentObject. \u0027Sibling\u0027 often has specific meaning in inheritance, implying virtual inheritance (which sounds scary).",
+      "range": {
+        "startLine": 29,
+        "startChar": 6,
+        "endLine": 29,
+        "endChar": 18
+      },
+      "revId": "1b6daaa068fb1c240a0ff3e72637933c6218a2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6acc847d_0b24055f",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-04T14:03:50Z",
+      "side": 1,
+      "message": "nit: cache something to prettify this quirky alignment",
+      "range": {
+        "startLine": 166,
+        "startChar": 8,
+        "endLine": 168,
+        "endChar": 17
+      },
+      "revId": "1b6daaa068fb1c240a0ff3e72637933c6218a2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ad9483e_682d9717",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-04T14:03:50Z",
+      "side": 1,
+      "message": "nit: statics should go at the top of the file",
+      "range": {
+        "startLine": 557,
+        "startChar": 0,
+        "endLine": 557,
+        "endChar": 6
+      },
+      "revId": "1b6daaa068fb1c240a0ff3e72637933c6218a2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6acc847d_eb260169",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1225,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-04T14:03:50Z",
+      "side": 1,
+      "message": "I would probably mirror the function name \"setEGLImageTargetStorage\", but this is a minor quibble",
+      "range": {
+        "startLine": 1225,
+        "startChar": 36,
+        "endLine": 1225,
+        "endChar": 54
+      },
+      "revId": "1b6daaa068fb1c240a0ff3e72637933c6218a2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
