@@ -16,6 +16,24 @@
       "revId": "cb32524edb055a8262b015116dd06c09f1893066",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ade1859_2bd01942",
+        "filename": "src/libANGLE/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-05T20:37:31Z",
+      "side": 1,
+      "message": "ugh, damnit. this is awful, I need to do another, this was a result of an automerge.",
+      "parentUuid": "0a0ce8be_c7b61e28",
+      "revId": "cb32524edb055a8262b015116dd06c09f1893066",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
