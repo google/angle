@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4d68ba9e_5c8571a6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1108349
+      },
+      "writtenOn": "2015-08-05T11:28:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad1696fe_03b9f836",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 11
+      },
+      "revId": "49fc97ffbbe1b28b8eae5665645c448b3e107861",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eda16e0d_551c5ba0",
         "filename": "samples/shader_translator/shader_translator.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-07-29T14:03:04Z",
       "side": 1,
       "message": "nit: c++ includes go after c\n\nhttps://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Names_and_Order_of_Includes",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 18
+      },
+      "revId": "49fc97ffbbe1b28b8eae5665645c448b3e107861",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a2724f5_2d3f59e6",
+        "filename": "samples/shader_translator/shader_translator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1108349
+      },
+      "writtenOn": "2015-08-05T11:28:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eda16e0d_551c5ba0",
       "range": {
         "startLine": 10,
         "startChar": 0,
