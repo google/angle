@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0af308eb_ef28e1bb",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-05T20:35:23Z",
+      "side": 1,
+      "message": "It would be nice to build this into the call instead of having to call it explicitly before each operation but I\u0027m also not keen on piping everything through the Context object..",
+      "range": {
+        "startLine": 745,
+        "startChar": 8,
+        "endLine": 745,
+        "endChar": 37
+      },
+      "revId": "b3aefac4fe022db3bd164c3b86c5971f51cf8796",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cad49039_8d64c114",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 790,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-05T20:35:23Z",
+      "side": 1,
+      "message": "I wonder if it might be better to let the texture continue to sync it\u0027s own state here just because it only needs to sync a small subset of the context state (same for readpixels and clears). StateManagerGL tries to sync the minimal state for each operation which may end up being less.\n\nNot a blocker but it may be reasonable to consider having categories of dirty bits for different operations.",
+      "range": {
+        "startLine": 790,
+        "startChar": 8,
+        "endLine": 790,
+        "endChar": 37
+      },
+      "revId": "b3aefac4fe022db3bd164c3b86c5971f51cf8796",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
