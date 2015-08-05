@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a9ac479_b2e1c0bb",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-08-05T17:59:07Z",
+      "side": 1,
+      "message": "Should we use TMap here?",
+      "range": {
+        "startLine": 809,
+        "startChar": 9,
+        "endLine": 809,
+        "endChar": 12
+      },
+      "revId": "5fefe70e1f55fe8cd84a47eae1fcd33d728b8a78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
