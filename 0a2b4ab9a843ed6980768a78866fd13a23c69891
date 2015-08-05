@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4ac4207d_39d06f42",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1002358
+      },
+      "writtenOn": "2015-08-05T19:13:56Z",
+      "side": 1,
+      "message": "s/to/two",
+      "range": {
+        "startLine": 64,
+        "startChar": 14,
+        "endLine": 64,
+        "endChar": 16
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cac3b058_29563536",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1002358
+      },
+      "writtenOn": "2015-08-05T19:13:56Z",
+      "side": 1,
+      "message": "These attributes aren\u0027t necessary (sorry, I included them in my example for no good reason).",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 51
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0aa5c8c6_3f7ba79c",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1002358
+      },
+      "writtenOn": "2015-08-05T19:13:56Z",
+      "side": 1,
+      "message": "This will be functional, but may have some smoothness issues. See the currently-in-review patch at\nhttps://codereview.chromium.org/1273563002/\nfor some details.",
+      "range": {
+        "startLine": 134,
+        "startChar": 0,
+        "endLine": 140,
+        "endChar": 64
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ac1e46b_5af1d5d2",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1002358
+      },
+      "writtenOn": "2015-08-05T19:13:56Z",
+      "side": 1,
+      "message": "We use GL_APPLE_fence to accomplish this. Lock/Unlock is going to page the IOSurface\u0027s data to system memory, at a dear cost.\n\nIn terms of correctness, I think it\u0027s okay to avoid this entirely.",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 5
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
