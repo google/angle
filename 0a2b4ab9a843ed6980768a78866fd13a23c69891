@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ca71f01c_e5f53647",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-05T20:25:12Z",
+      "side": 1,
+      "message": "Done locally",
+      "parentUuid": "4ac4207d_39d06f42",
+      "range": {
+        "startLine": 64,
+        "startChar": 14,
+        "endLine": 64,
+        "endChar": 16
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cac3b058_29563536",
         "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-08-05T19:13:56Z",
       "side": 1,
       "message": "These attributes aren\u0027t necessary (sorry, I included them in my example for no good reason).",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 51
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca71f01c_0510920f",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-05T20:25:12Z",
+      "side": 1,
+      "message": "No problem, there is also a pixelFormat variable that is nover used, in case you want to update it.\nDone locally",
+      "parentUuid": "cac3b058_29563536",
       "range": {
         "startLine": 83,
         "startChar": 0,
@@ -82,6 +130,30 @@
       "writtenOn": "2015-08-05T19:13:56Z",
       "side": 1,
       "message": "We use GL_APPLE_fence to accomplish this. Lock/Unlock is going to page the IOSurface\u0027s data to system memory, at a dear cost.\n\nIn terms of correctness, I think it\u0027s okay to avoid this entirely.",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 5
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2af0ccdb_f0ffa0a2",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-05T20:25:12Z",
+      "side": 1,
+      "message": "Merging answers to both this comment and the one with CATransaction.\n\nANGLE -\u003e Compositor synchronization\n--------------------------------\n\nFrom what I understand (from the CGLTexIOSurface2D documentation) adding a glFlush is enough to ensure that the previous GL commands are seen by the compositor; your CL seems to be using Fences so that Chrome knows the frame is 100% ready before sending it to the compositor, allowing to time it more precisely, just before the VSync (in order to avoid tearing?).\n\nThis approach will induce 1 frame of latency in the worst case compared to using just glFlush, for example for an instant rendering, finishing just after the half-frame window. So I feel I am missing something.\n\nWith that said, I can change the CL to use GL_APPLE_fences but, at least for now, there is no way to time the call to -[CALayer: setContent] to be at half a frame as ANGLE doesn\u0027t have a task manager like Chrome. It will be possible later by exposing PostDelayedTask to in ANGLE\u0027s Platform.\n\nCompositor -\u003e ANGLE synchronization\n-----------------------------------\n\nI was using the locking of the surface in order to make sure the compositor was done with the surface and avoid drawing to it while the compositor was rendering itself. DO we have such synchronization in Chrome? A quick search didn\u0027t show anything. I didn\u0027t know lock would cause a readback and that\u0027s indeed pretty bad so we\u0027d have to find another way to synchronize.",
+      "parentUuid": "6ac1e46b_5af1d5d2",
       "range": {
         "startLine": 142,
         "startChar": 0,
