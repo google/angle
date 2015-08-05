@@ -771,3 +771,35 @@ TEST_F(DebugShaderPrecisionTest, NestedFunctionCalls)
     // Test nested calls
     ASSERT_TRUE(foundInCode("v2 = add(compound_add(v, angle_frm(u2)), angle_frm(fract(angle_frm(u3))))"));
 }
+
+// Test that code inside an index of a function out parameter gets processed.
+TEST_F(DebugShaderPrecisionTest, OpInIndexOfFunctionOutParameter)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "void foo(out vec4 f) { f.x = 0.0; }\n"
+        "uniform float u2;\n"
+        "void main() {\n"
+        "   vec4 v[2];\n"
+        "   foo(v[int(exp2(u2))]);\n"
+        "   gl_FragColor = v[0];\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(foundInCode("angle_frm(exp2(angle_frm(u2)))"));
+}
+
+// Test that code inside an index of an l-value gets processed.
+TEST_F(DebugShaderPrecisionTest, OpInIndexOfLValue)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform vec4 u1;\n"
+        "uniform float u2;\n"
+        "void main() {\n"
+        "   vec4 v[2];\n"
+        "   v[int(exp2(u2))] = u1;\n"
+        "   gl_FragColor = v[0];\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(foundInCode("angle_frm(exp2(angle_frm(u2)))"));
+}

@@ -118,6 +118,11 @@ void TIntermTraverser::setInFunctionCallOutParameter(bool inOutParameter)
     mInFunctionCallOutParameter = inOutParameter;
 }
 
+bool TIntermTraverser::isInFunctionCallOutParameter() const
+{
+    return mInFunctionCallOutParameter;
+}
+
 //
 // Traverse the intermediate representation tree, and
 // call a node type specific function for each node.
@@ -162,11 +167,13 @@ void TIntermBinary::traverse(TIntermTraverser *it)
     {
         it->incrementDepth(this);
 
+        // Some binary operations like indexing can be inside an expression which must be an
+        // l-value.
+        bool parentOperatorRequiresLValue     = it->operatorRequiresLValue();
+        bool parentInFunctionCallOutParameter = it->isInFunctionCallOutParameter();
         if (isAssignment())
         {
-            // Some binary operations like indexing can be inside an l-value.
-            // TODO(oetuaho@nvidia.com): Now the code doesn't unset operatorRequiresLValue for the
-            // index, fix this.
+            ASSERT(!it->isLValueRequiredHere());
             it->setOperatorRequiresLValue(true);
         }
 
@@ -179,8 +186,20 @@ void TIntermBinary::traverse(TIntermTraverser *it)
         if (isAssignment())
             it->setOperatorRequiresLValue(false);
 
+        // Index is not required to be an l-value even when the surrounding expression is required
+        // to be an l-value.
+        if (mOp == EOpIndexDirect || mOp == EOpIndexDirectInterfaceBlock ||
+            mOp == EOpIndexDirectStruct || mOp == EOpIndexIndirect)
+        {
+            it->setOperatorRequiresLValue(false);
+            it->setInFunctionCallOutParameter(false);
+        }
+
         if (visit && mRight)
             mRight->traverse(it);
+
+        it->setOperatorRequiresLValue(parentOperatorRequiresLValue);
+        it->setInFunctionCallOutParameter(parentInFunctionCallOutParameter);
 
         it->decrementDepth();
     }
@@ -207,6 +226,7 @@ void TIntermUnary::traverse(TIntermTraverser *it)
     {
         it->incrementDepth(this);
 
+        ASSERT(!it->operatorRequiresLValue());
         switch (getOp())
         {
             case EOpPostIncrement:

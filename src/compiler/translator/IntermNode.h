@@ -694,8 +694,9 @@ class TIntermTraverser : angle::NonCopyable
     TIntermSequence *getFunctionParameters(const TIntermAggregate *callNode);
 
     // Track whether an l-value is required inside a function call.
-    // This function is intended to be called only from traversal functions, not from traverers.
+    // These functions are intended to be called only from traversal functions, not from traverers.
     void setInFunctionCallOutParameter(bool inOutParameter);
+    bool isInFunctionCallOutParameter() const;
 
     bool isLValueRequiredHere() const
     {
