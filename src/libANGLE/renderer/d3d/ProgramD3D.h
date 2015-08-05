@@ -137,7 +137,7 @@ class ProgramD3D : public ProgramImpl
     class VertexExecutable
     {
       public:
-        typedef std::vector<GLenum> Signature;
+        typedef std::vector<bool> Signature;
 
         VertexExecutable(const gl::InputLayout &inputLayout,
                          const Signature &signature,

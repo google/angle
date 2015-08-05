@@ -57,11 +57,14 @@ GLenum GetTextureType(GLenum samplerType)
     return GL_TEXTURE_2D;
 }
 
-void GetDefaultInputLayoutFromShader(const std::vector<sh::Attribute> &shaderAttributes,
-                                     gl::InputLayout *inputLayoutOut)
+gl::InputLayout GetDefaultInputLayoutFromShader(const gl::Shader *vertexShader)
 {
-    for (const sh::Attribute &shaderAttr : shaderAttributes)
+    gl::InputLayout defaultLayout(gl::MAX_VERTEX_ATTRIBS, gl::VERTEX_FORMAT_INVALID);
+    const auto &shaderAttributes = vertexShader->getActiveAttributes();
+    size_t layoutIndex = 0;
+    for (size_t attribIndex = 0; attribIndex < shaderAttributes.size(); ++attribIndex)
     {
+        const sh::Attribute &shaderAttr = shaderAttributes[attribIndex];
         if (shaderAttr.type != GL_NONE)
         {
             GLenum transposedType = gl::TransposeMatrixType(shaderAttr.type);
@@ -76,10 +79,12 @@ void GetDefaultInputLayoutFromShader(const std::vector<sh::Attribute> &shaderAtt
                 gl::VertexFormatType defaultType = gl::GetVertexFormatType(
                     componentType, GL_FALSE, components, pureInt);
 
-                inputLayoutOut->push_back(defaultType);
+                defaultLayout[layoutIndex++] = defaultType;
             }
         }
     }
+
+    return defaultLayout;
 }
 
 std::vector<GLenum> GetDefaultOutputLayoutFromShader(const std::vector<PixelShaderOutputVariable> &shaderOutputVars)
@@ -145,19 +150,16 @@ void ProgramD3D::VertexExecutable::getSignature(RendererD3D *renderer,
                                                 const gl::InputLayout &inputLayout,
                                                 Signature *signatureOut)
 {
-    signatureOut->resize(inputLayout.size(), gl::VERTEX_FORMAT_INVALID);
+    signatureOut->assign(inputLayout.size(), false);
 
     for (size_t index = 0; index < inputLayout.size(); ++index)
     {
         gl::VertexFormatType vertexFormatType = inputLayout[index];
-        if (vertexFormatType == gl::VERTEX_FORMAT_INVALID)
+        if (vertexFormatType != gl::VERTEX_FORMAT_INVALID)
         {
-            (*signatureOut)[index] = GL_NONE;
-        }
-        else
-        {
-            bool gpuConverted = ((renderer->getVertexConversionType(vertexFormatType) & VERTEX_CONVERT_GPU) != 0);
-            (*signatureOut)[index] = (gpuConverted ? GL_TRUE : GL_FALSE);
+            VertexConversionType conversionType =
+                renderer->getVertexConversionType(vertexFormatType);
+            (*signatureOut)[index] = ((conversionType & VERTEX_CONVERT_GPU) != 0);
         }
     }
 }
@@ -609,11 +611,11 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     for (unsigned int vertexShaderIndex = 0; vertexShaderIndex < vertexShaderCount; vertexShaderIndex++)
     {
         size_t inputLayoutSize = stream->readInt<size_t>();
-        gl::InputLayout inputLayout;
+        gl::InputLayout inputLayout(inputLayoutSize, gl::VERTEX_FORMAT_INVALID);
 
         for (size_t inputIndex = 0; inputIndex < inputLayoutSize; inputIndex++)
         {
-            inputLayout.push_back(stream->readInt<gl::VertexFormatType>());
+            inputLayout[inputIndex] = stream->readInt<gl::VertexFormatType>();
         }
 
         unsigned int vertexShaderSize = stream->readInt<unsigned int>();
@@ -998,8 +1000,7 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::Shade
     ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(vertexShader);
     ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(fragmentShader);
 
-    gl::InputLayout defaultInputLayout;
-    GetDefaultInputLayoutFromShader(vertexShader->getActiveAttributes(), &defaultInputLayout);
+    const gl::InputLayout &defaultInputLayout    = GetDefaultInputLayoutFromShader(vertexShader);
     ShaderExecutableD3D *defaultVertexExecutable = NULL;
     gl::Error error = getVertexExecutableForInputLayout(defaultInputLayout, &defaultVertexExecutable, &infoLog);
     if (error.isError())
@@ -2059,10 +2060,11 @@ void ProgramD3D::sortAttributesByLayout(const std::vector<TranslatedAttribute> &
 
 void ProgramD3D::updateCachedInputLayout(const gl::Program *program, const gl::State &state)
 {
-    mCachedInputLayout.resize(gl::MAX_VERTEX_ATTRIBS, gl::VERTEX_FORMAT_INVALID);
+    mCachedInputLayout.assign(gl::MAX_VERTEX_ATTRIBS, gl::VERTEX_FORMAT_INVALID);
     const int *semanticIndexes = program->getSemanticIndexes();
 
     const auto &vertexAttributes = state.getVertexArray()->getVertexAttributes();
+
     for (unsigned int attributeIndex = 0; attributeIndex < vertexAttributes.size(); attributeIndex++)
     {
         int semanticIndex = semanticIndexes[attributeIndex];

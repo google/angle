@@ -414,7 +414,8 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(const std::string &s
         if (!shaderAttribute.name.empty())
         {
             ASSERT(inputIndex < MAX_VERTEX_ATTRIBS);
-            VertexFormatType vertexFormatType = inputLayout[inputIndex];
+            VertexFormatType vertexFormatType =
+                inputIndex < inputLayout.size() ? inputLayout[inputIndex] : VERTEX_FORMAT_INVALID;
 
             // HLSL code for input structure
             if (IsMatrixType(shaderAttribute.type))

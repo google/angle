@@ -27,10 +27,11 @@ namespace rx
 namespace
 {
 
-void GetInputLayout(const TranslatedAttribute *translatedAttributes[gl::MAX_VERTEX_ATTRIBS],
-                    size_t attributeCount,
-                    gl::InputLayout *inputLayout)
+gl::InputLayout GetInputLayout(
+    const TranslatedAttribute *translatedAttributes[gl::MAX_VERTEX_ATTRIBS],
+    size_t attributeCount)
 {
+    gl::InputLayout inputLayout(gl::MAX_VERTEX_ATTRIBS, gl::VERTEX_FORMAT_INVALID);
     for (size_t attributeIndex = 0; attributeIndex < attributeCount; ++attributeIndex)
     {
         const TranslatedAttribute *translatedAttribute = translatedAttributes[attributeIndex];
@@ -40,13 +41,10 @@ void GetInputLayout(const TranslatedAttribute *translatedAttributes[gl::MAX_VERT
             gl::VertexFormatType vertexFormatType =
                 gl::GetVertexFormatType(*translatedAttribute->attribute,
                 translatedAttribute->currentValueType);
-            inputLayout->push_back(vertexFormatType);
-        }
-        else
-        {
-            inputLayout->push_back(gl::VERTEX_FORMAT_INVALID);
+            inputLayout[attributeIndex] = vertexFormatType;
         }
     }
+    return inputLayout;
 }
 
 GLenum GetNextGLSLAttributeType(const sh::Attribute *linkedAttributes, int index)
@@ -327,8 +325,8 @@ gl::Error InputLayoutCache::applyVertexBuffers(const std::vector<TranslatedAttri
     }
     else
     {
-        gl::InputLayout shaderInputLayout;
-        GetInputLayout(sortedAttributes, unsortedAttributes.size(), &shaderInputLayout);
+        const gl::InputLayout &shaderInputLayout =
+            GetInputLayout(sortedAttributes, unsortedAttributes.size());
 
         ShaderExecutableD3D *shader = nullptr;
         gl::Error error = programD3D->getVertexExecutableForInputLayout(shaderInputLayout, &shader, nullptr);
