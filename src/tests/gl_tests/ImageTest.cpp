@@ -391,18 +391,18 @@ TEST_P(ImageTest, ValidationImageBase)
     // If <dpy> is not the handle of a valid EGLDisplay object, the error EGL_BAD_DISPLAY is
     // generated.
     result = eglDestroyImageKHR(reinterpret_cast<EGLDisplay>(0xBAADF00D), image);
-    EXPECT_EQ(result, EGL_FALSE);
+    EXPECT_EQ(result, static_cast<EGLBoolean>(EGL_FALSE));
     EXPECT_EGL_ERROR(EGL_BAD_DISPLAY);
 
     // If <image> is not a valid EGLImageKHR object created with respect to <dpy>, the error
     // EGL_BAD_PARAMETER is generated.
     result = eglDestroyImageKHR(display, reinterpret_cast<EGLImageKHR>(0xBAADF00D));
-    EXPECT_EQ(result, EGL_FALSE);
+    EXPECT_EQ(result, static_cast<EGLBoolean>(EGL_FALSE));
     EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
 
     // Clean up and validate image is destroyed
     result = eglDestroyImageKHR(display, image);
-    EXPECT_EQ(result, EGL_TRUE);
+    EXPECT_EQ(result, static_cast<EGLBoolean>(EGL_TRUE));
     EXPECT_EGL_SUCCESS();
 
     glDeleteTextures(1, &glTexture2D);
