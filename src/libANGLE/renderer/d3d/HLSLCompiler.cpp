@@ -201,10 +201,10 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
         HRESULT result = S_OK;
 
         {
+            SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.D3DCompileMS");
             result = mD3DCompileFunc(hlsl.c_str(), hlsl.length(), gl::g_fakepath, macros, NULL,
                                      "main", profile.c_str(), configs[i].flags, 0, &binary,
                                      &errorMessage);
-            SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.D3DCompileMS");
         }
 
         if (errorMessage)
