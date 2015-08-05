@@ -42,6 +42,8 @@ class TInfoSink;
 class TInfoSinkBase;
 class TIntermRaw;
 
+class TSymbolTable;
+
 //
 // Base class for the tree nodes
 //
@@ -797,10 +799,16 @@ class TIntermTraverser : angle::NonCopyable
 class TLValueTrackingTraverser : public TIntermTraverser
 {
   public:
-    TLValueTrackingTraverser(bool preVisit, bool inVisit, bool postVisit)
+    TLValueTrackingTraverser(bool preVisit,
+                             bool inVisit,
+                             bool postVisit,
+                             const TSymbolTable &symbolTable,
+                             int shaderVersion)
         : TIntermTraverser(preVisit, inVisit, postVisit),
           mOperatorRequiresLValue(false),
-          mInFunctionCallOutParameter(false)
+          mInFunctionCallOutParameter(false),
+          mSymbolTable(symbolTable),
+          mShaderVersion(shaderVersion)
     {
     }
     virtual ~TLValueTrackingTraverser() {}
@@ -849,6 +857,9 @@ class TLValueTrackingTraverser : public TIntermTraverser
 
     // Map from mangled function names to their parameter sequences
     TMap<TString, TIntermSequence *, TStringComparator> mFunctionMap;
+
+    const TSymbolTable &mSymbolTable;
+    const int mShaderVersion;
 };
 
 //

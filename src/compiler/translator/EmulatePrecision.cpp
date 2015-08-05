@@ -291,8 +291,9 @@ bool parentUsesResult(TIntermNode* parent, TIntermNode* node)
 
 }  // namespace anonymous
 
-EmulatePrecision::EmulatePrecision()
-    : TLValueTrackingTraverser(true, true, true), mDeclaringVariables(false)
+EmulatePrecision::EmulatePrecision(const TSymbolTable &symbolTable, int shaderVersion)
+    : TLValueTrackingTraverser(true, true, true, symbolTable, shaderVersion),
+      mDeclaringVariables(false)
 {}
 
 void EmulatePrecision::visitSymbol(TIntermSymbol *node)

@@ -6,6 +6,7 @@
 
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/InfoSink.h"
+#include "compiler/translator/SymbolTable.h"
 
 void TIntermSymbol::traverse(TIntermTraverser *it)
 {
@@ -473,9 +474,41 @@ void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
             if (node->getOp() == EOpSequence)
                 pushParentBlock(node);
 
+            // Find the built-in function corresponding to this op so that we can determine the
+            // in/out qualifiers of its parameters.
+            TFunction *builtInFunc = nullptr;
+            TString opString = GetOperatorString(node->getOp());
+            if (!node->isConstructor() && !opString.empty())
+            {
+                // The return type doesn't affect the mangled name of the function, which is used
+                // to look it up from the symbol table.
+                TType dummyReturnType;
+                TFunction call(&opString, &dummyReturnType, node->getOp());
+                for (auto *child : *sequence)
+                {
+                    TType *paramType = child->getAsTyped()->getTypePointer();
+                    TConstParameter p(paramType);
+                    call.addParameter(p);
+                }
+
+                TSymbol *sym = mSymbolTable.findBuiltIn(call.getMangledName(), mShaderVersion);
+                if (sym != nullptr && sym->isFunction())
+                {
+                    builtInFunc = static_cast<TFunction *>(sym);
+                    ASSERT(builtInFunc->getParamCount() == sequence->size());
+                }
+            }
+
+            size_t paramIndex = 0;
+
             for (auto *child : *sequence)
             {
+                TQualifier qualifier = EvqIn;
+                if (builtInFunc != nullptr)
+                    qualifier = builtInFunc->getParam(paramIndex).type->getQualifier();
+                setInFunctionCallOutParameter(qualifier == EvqOut || qualifier == EvqInOut);
                 child->traverse(this);
+
                 if (visit && inVisit)
                 {
                     if (child != sequence->back())
@@ -484,7 +517,11 @@ void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
 
                 if (node->getOp() == EOpSequence)
                     incrementParentBlockPos();
+
+                ++paramIndex;
             }
+
+            setInFunctionCallOutParameter(false);
 
             if (node->getOp() == EOpSequence)
                 popParentBlock();
