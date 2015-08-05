@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ca71f01c_a5fb3e3a",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-05T20:11:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4acfc072_b5c53885",
+      "range": {
+        "startLine": 609,
+        "startChar": 4,
+        "endLine": 616,
+        "endChar": 5
+      },
+      "revId": "1b6daaa068fb1c240a0ff3e72637933c6218a2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ca157084_4e9c47f1",
         "filename": "src/libANGLE/Display.cpp",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2015-08-04T14:03:50Z",
       "side": 1,
       "message": "this is a bit unfortunate. is there no other way?",
+      "range": {
+        "startLine": 706,
+        "startChar": 26,
+        "endLine": 706,
+        "endChar": 36
+      },
+      "revId": "1b6daaa068fb1c240a0ff3e72637933c6218a2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0af308eb_8fc03575",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-05T20:11:11Z",
+      "side": 1,
+      "message": "Not unless I write a replacement for the find function.  It\u0027s needed because it\u0027s unable to compare the non-const Image pointers with the const argument... pretty lame.\n\nIMO, it\u0027s not too terrible because it\u0027s not being mutated and the non-const Image isn\u0027t being passed anywhere else.",
+      "parentUuid": "ca157084_4e9c47f1",
       "range": {
         "startLine": 706,
         "startChar": 26,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "ead95470_eeb1ff31",
+        "filename": "src/libANGLE/Image.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-05T20:11:11Z",
+      "side": 1,
+      "message": "hmm, I\u0027d like to keep the Sibling in the name somewhere just because it has a formal definition in the extension spec.  I\u0027m open to names that include it somehow though but ImageSiblingObject sounds awkward.",
+      "parentUuid": "aa14bc88_eeb890ae",
+      "range": {
+        "startLine": 29,
+        "startChar": 6,
+        "endLine": 29,
+        "endChar": 18
+      },
+      "revId": "1b6daaa068fb1c240a0ff3e72637933c6218a2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6acc847d_0b24055f",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 8
@@ -82,6 +154,30 @@
       "writtenOn": "2015-08-04T14:03:50Z",
       "side": 1,
       "message": "nit: cache something to prettify this quirky alignment",
+      "range": {
+        "startLine": 166,
+        "startChar": 8,
+        "endLine": 168,
+        "endChar": 17
+      },
+      "revId": "1b6daaa068fb1c240a0ff3e72637933c6218a2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2af0ccdb_10cd84a6",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-05T20:11:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6acc847d_0b24055f",
       "range": {
         "startLine": 166,
         "startChar": 8,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "2af0ccdb_90c05475",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-05T20:11:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ad9483e_682d9717",
+      "range": {
+        "startLine": 557,
+        "startChar": 0,
+        "endLine": 557,
+        "endChar": 6
+      },
+      "revId": "1b6daaa068fb1c240a0ff3e72637933c6218a2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6acc847d_eb260169",
         "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
         "patchSetId": 8
@@ -128,6 +248,30 @@
       "writtenOn": "2015-08-04T14:03:50Z",
       "side": 1,
       "message": "I would probably mirror the function name \"setEGLImageTargetStorage\", but this is a minor quibble",
+      "range": {
+        "startLine": 1225,
+        "startChar": 36,
+        "endLine": 1225,
+        "endChar": 54
+      },
+      "revId": "1b6daaa068fb1c240a0ff3e72637933c6218a2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ead95470_aebbf70d",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1225,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-05T20:11:11Z",
+      "side": 1,
+      "message": "Ugh, yea, I was torn on this one... The current renderbuffer methods are in the form of glRenderbufferStorageX but this one is the opposite :|\n\nI updated the name to setStorageEGLImageTarget to at least have the \u0027Target\u0027 in the name and still mirror the other renderbuffer methods.",
+      "parentUuid": "6acc847d_eb260169",
       "range": {
         "startLine": 1225,
         "startChar": 36,
