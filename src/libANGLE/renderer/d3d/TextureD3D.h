@@ -147,8 +147,6 @@ class TextureD3D_2D : public TextureD3D
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
-    gl::Error setEGLImageTarget(GLenum target, egl::Image *image) override;
-
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
 
     virtual gl::ImageIndexIterator imageIterator() const;
@@ -211,8 +209,6 @@ class TextureD3D_Cube : public TextureD3D
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
-    gl::Error setEGLImageTarget(GLenum target, egl::Image *image) override;
-
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
 
     virtual gl::ImageIndexIterator imageIterator() const;
@@ -274,8 +270,6 @@ class TextureD3D_3D : public TextureD3D
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
-    gl::Error setEGLImageTarget(GLenum target, egl::Image *image) override;
-
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
 
     virtual gl::ImageIndexIterator imageIterator() const;
@@ -334,8 +328,6 @@ class TextureD3D_2DArray : public TextureD3D
 
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
-
-    gl::Error setEGLImageTarget(GLenum target, egl::Image *image) override;
 
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
 

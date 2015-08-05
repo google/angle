@@ -18,7 +18,6 @@
 #include "libANGLE/Constants.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/Image.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/TextureImpl.h"
 
@@ -34,7 +33,7 @@ struct Data;
 
 bool IsMipmapFiltered(const gl::SamplerState &samplerState);
 
-class Texture final : public egl::ImageSibling
+class Texture final : public FramebufferAttachmentObject
 {
   public:
     Texture(rx::TextureImpl *impl, GLuint id, GLenum target);
@@ -55,9 +54,7 @@ class Texture final : public egl::ImageSibling
     GLenum getInternalFormat(GLenum target, size_t level) const;
 
     bool isSamplerComplete(const SamplerState &samplerState, const Data &data) const;
-    bool isMipmapComplete() const;
     bool isCubeComplete() const;
-    size_t getMipCompleteLevels() const;
 
     virtual Error setImage(GLenum target, size_t level, GLenum internalFormat, const Extents &size, GLenum format, GLenum type,
                            const PixelUnpackState &unpack, const uint8_t *pixels);
@@ -76,14 +73,10 @@ class Texture final : public egl::ImageSibling
 
     virtual Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const Extents &size);
 
-    Error setEGLImageTarget(GLenum target, egl::Image *imageTarget);
-
     virtual Error generateMipmaps();
 
     bool isImmutable() const;
     GLsizei immutableLevelCount();
-
-    egl::Surface *getBoundSurface() const;
 
     rx::TextureImpl *getImplementation() { return mTexture; }
     const rx::TextureImpl *getImplementation() const { return mTexture; }
@@ -121,6 +114,7 @@ class Texture final : public egl::ImageSibling
     };
 
     GLenum getBaseImageTarget() const;
+    size_t getExpectedMipLevels() const;
 
     bool computeSamplerCompleteness(const SamplerState &samplerState, const Data &data) const;
     bool computeMipmapCompleteness(const gl::SamplerState &samplerState) const;

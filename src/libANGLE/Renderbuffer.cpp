@@ -12,20 +12,20 @@
 
 #include "common/utilities.h"
 #include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/Image.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 
 namespace gl
 {
+
 Renderbuffer::Renderbuffer(rx::RenderbufferImpl *impl, GLuint id)
-    : egl::ImageSibling(id),
-      mRenderbuffer(impl),
-      mWidth(0),
-      mHeight(0),
-      mInternalFormat(GL_RGBA4),
-      mSamples(0)
+  : FramebufferAttachmentObject(id),
+    mRenderbuffer(impl),
+    mWidth(0),
+    mHeight(0),
+    mInternalFormat(GL_RGBA4),
+    mSamples(0)
 {
 }
 
@@ -36,8 +36,6 @@ Renderbuffer::~Renderbuffer()
 
 Error Renderbuffer::setStorage(GLenum internalformat, size_t width, size_t height)
 {
-    orphanImages();
-
     Error error = mRenderbuffer->setStorage(internalformat, width, height);
     if (error.isError())
     {
@@ -54,8 +52,6 @@ Error Renderbuffer::setStorage(GLenum internalformat, size_t width, size_t heigh
 
 Error Renderbuffer::setStorageMultisample(size_t samples, GLenum internalformat, size_t width, size_t height)
 {
-    orphanImages();
-
     Error error = mRenderbuffer->setStorageMultisample(samples, internalformat, width, height);
     if (error.isError())
     {
@@ -66,26 +62,6 @@ Error Renderbuffer::setStorageMultisample(size_t samples, GLenum internalformat,
     mHeight = height;
     mInternalFormat = internalformat;
     mSamples = samples;
-
-    return Error(GL_NO_ERROR);
-}
-
-Error Renderbuffer::setStorageEGLImageTarget(egl::Image *image)
-{
-    orphanImages();
-
-    Error error = mRenderbuffer->setStorageEGLImageTarget(image);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    setTargetImage(image);
-
-    mWidth          = image->getWidth();
-    mHeight         = image->getHeight();
-    mInternalFormat = image->getInternalFormat();
-    mSamples        = 0;
 
     return Error(GL_NO_ERROR);
 }

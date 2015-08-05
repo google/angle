@@ -15,7 +15,6 @@
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/Image.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
 
 namespace gl
@@ -25,7 +24,7 @@ namespace gl
 // FramebufferAttachment and Framebuffer for how they are applied to an FBO via an
 // attachment point.
 
-class Renderbuffer : public egl::ImageSibling
+class Renderbuffer : public FramebufferAttachmentObject
 {
   public:
     Renderbuffer(rx::RenderbufferImpl *impl, GLuint id);
@@ -33,7 +32,6 @@ class Renderbuffer : public egl::ImageSibling
 
     Error setStorage(GLenum internalformat, size_t width, size_t height);
     Error setStorageMultisample(size_t samples, GLenum internalformat, size_t width, size_t height);
-    Error setStorageEGLImageTarget(egl::Image *imageTarget);
 
     rx::RenderbufferImpl *getImplementation();
     const rx::RenderbufferImpl *getImplementation() const;
