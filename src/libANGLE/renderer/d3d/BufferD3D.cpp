@@ -116,7 +116,7 @@ gl::Error BufferD3D::getIndexRange(GLenum type, size_t offset, size_t count, gl:
         return error;
     }
 
-    *outRange = gl::ComputeIndexRange(type, data + offset, count);
+    *outRange = gl::ComputeIndexRange(type, data + offset, static_cast<GLsizei>(count));
     return gl::Error(GL_NO_ERROR);
 }
 

@@ -222,7 +222,8 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType, GLsizei count, gl::
             }
             ASSERT(bufferData != nullptr);
 
-            unsigned int convertCount = buffer->getSize() >> srcTypeInfo.bytesShift;
+            unsigned int convertCount =
+                static_cast<unsigned int>(buffer->getSize()) >> srcTypeInfo.bytesShift;
             error = StreamInIndexBuffer(staticBuffer, bufferData, convertCount,
                                         srcType, dstType, nullptr);
             if (error.isError())

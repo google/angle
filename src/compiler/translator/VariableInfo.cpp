@@ -55,7 +55,8 @@ void ExpandVariable(const ShaderVariable &variable,
     {
         if (variable.isArray())
         {
-            for (size_t elementIndex = 0; elementIndex < variable.elementCount(); elementIndex++)
+            for (unsigned int elementIndex = 0; elementIndex < variable.elementCount();
+                 elementIndex++)
             {
                 std::string lname = name + ::ArrayString(elementIndex);
                 std::string lmappedName = mappedName + ::ArrayString(elementIndex);

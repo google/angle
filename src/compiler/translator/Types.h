@@ -124,7 +124,7 @@ class TStructure : public TFieldListCollection
         return mDeepestNesting;
     }
     bool containsArrays() const;
-    bool containsType(TBasicType type) const;
+    bool containsType(TBasicType t) const;
     bool containsSamplers() const;
 
     bool equals(const TStructure &other) const;

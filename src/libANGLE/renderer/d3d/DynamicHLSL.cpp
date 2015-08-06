@@ -517,8 +517,9 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(const std::string
             // corresponding to unwritten variables are similarly undefined.
             if (outputVariable)
             {
-                declarationHLSL += "    " + HLSLTypeString(outputVariable->type) + " " + outputVariable->name +
-                                   " : " + targetSemantic + Str(layoutIndex) + ";\n";
+                declarationHLSL += "    " + HLSLTypeString(outputVariable->type) + " " +
+                                   outputVariable->name + " : " + targetSemantic +
+                                   Str(static_cast<int>(layoutIndex)) + ";\n";
 
                 copyHLSL += "    output." + outputVariable->name + " = " + outputVariable->source + ";\n";
             }

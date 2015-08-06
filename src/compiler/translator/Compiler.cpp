@@ -544,7 +544,7 @@ bool TCompiler::checkCallDepth()
             infoSink.info << "Call stack too deep (larger than " << maxCallStackDepth
                           << ") with the following call chain: " << record.name;
 
-            int currentFunction = i;
+            int currentFunction = static_cast<int>(i);
             int currentDepth = depth;
 
             while (currentFunction != -1)
@@ -574,7 +574,7 @@ bool TCompiler::checkCallDepth()
 bool TCompiler::tagUsedFunctions()
 {
     // Search from main, starting from the end of the DAG as it usually is the root.
-    for (int i = mCallDag.size(); i-- > 0;)
+    for (size_t i = mCallDag.size(); i-- > 0;)
     {
         if (mCallDag.getRecordFromIndex(i).name == "main(")
         {

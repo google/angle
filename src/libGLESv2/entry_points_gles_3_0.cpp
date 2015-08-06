@@ -3351,7 +3351,7 @@ void GL_APIENTRY GetInternalformativ(GLenum target, GLenum internalformat, GLenu
           case GL_NUM_SAMPLE_COUNTS:
             if (bufSize != 0)
             {
-                *params = formatCaps.sampleCounts.size();
+                *params = static_cast<GLint>(formatCaps.sampleCounts.size());
             }
             break;
 

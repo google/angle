@@ -470,7 +470,7 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
         return error;
     }
 
-    GLsizei streamLength = stream.length();
+    GLsizei streamLength   = static_cast<GLsizei>(stream.length());
     const void *streamData = stream.data();
 
     if (streamLength > bufSize)
@@ -632,7 +632,7 @@ void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length,
 
             if (length)
             {
-                *length = strlen(name);
+                *length = static_cast<GLsizei>(strlen(name));
             }
         }
 
@@ -749,7 +749,7 @@ void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, G
 
             if (length)
             {
-                *length = strlen(name);
+                *length = static_cast<GLsizei>(strlen(name));
             }
         }
 
@@ -777,7 +777,7 @@ GLint Program::getActiveUniformCount()
 {
     if (mLinked)
     {
-        return mProgram->getUniforms().size();
+        return static_cast<GLint>(mProgram->getUniforms().size());
     }
     else
     {
@@ -791,7 +791,7 @@ GLint Program::getActiveUniformMaxLength()
 
     if (mLinked)
     {
-        unsigned int numUniforms = mProgram->getUniforms().size();
+        unsigned int numUniforms = static_cast<unsigned int>(mProgram->getUniforms().size());
         for (unsigned int uniformIndex = 0; uniformIndex < numUniforms; uniformIndex++)
         {
             if (!mProgram->getUniforms()[uniformIndex]->name.empty())
@@ -1030,7 +1030,7 @@ void Program::updateSamplerMapping()
 
 GLuint Program::getActiveUniformBlockCount()
 {
-    return mProgram->getUniformBlocks().size();
+    return static_cast<GLuint>(mProgram->getUniformBlocks().size());
 }
 
 void Program::getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const
@@ -1053,7 +1053,7 @@ void Program::getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSiz
 
         if (length)
         {
-            *length = strlen(uniformBlockName);
+            *length = static_cast<GLsizei>(strlen(uniformBlockName));
         }
     }
 }
@@ -1099,13 +1099,14 @@ GLint Program::getActiveUniformBlockMaxLength()
 
     if (mLinked)
     {
-        unsigned int numUniformBlocks = mProgram->getUniformBlocks().size();
+        unsigned int numUniformBlocks =
+            static_cast<unsigned int>(mProgram->getUniformBlocks().size());
         for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < numUniformBlocks; uniformBlockIndex++)
         {
             const UniformBlock &uniformBlock = *mProgram->getUniformBlocks()[uniformBlockIndex];
             if (!uniformBlock.name.empty())
             {
-                const int length = uniformBlock.name.length() + 1;
+                const int length = static_cast<int>(uniformBlock.name.length()) + 1;
 
                 // Counting in "[0]".
                 const int arrayLength = (uniformBlock.isArrayElement() ? 3 : 0);
@@ -1459,7 +1460,8 @@ bool Program::areMatchingInterfaceBlocks(gl::InfoLog &infoLog, const sh::Interfa
                 << "' between vertex and fragment shaders";
         return false;
     }
-    const unsigned int numBlockMembers = vertexInterfaceBlock.fields.size();
+    const unsigned int numBlockMembers =
+        static_cast<unsigned int>(vertexInterfaceBlock.fields.size());
     for (unsigned int blockMemberIndex = 0; blockMemberIndex < numBlockMembers; blockMemberIndex++)
     {
         const sh::InterfaceBlockField &vertexMember = vertexInterfaceBlock.fields[blockMemberIndex];
@@ -1505,7 +1507,7 @@ bool Program::linkValidateVariablesBase(InfoLog &infoLog, const std::string &var
         infoLog << "Structure lengths for " << variableName << " differ between vertex and fragment shaders";
         return false;
     }
-    const unsigned int numMembers = vertexVariable.fields.size();
+    const unsigned int numMembers = static_cast<unsigned int>(vertexVariable.fields.size());
     for (unsigned int memberIndex = 0; memberIndex < numMembers; memberIndex++)
     {
         const sh::ShaderVariable &vertexMember = vertexVariable.fields[memberIndex];

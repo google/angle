@@ -1139,8 +1139,8 @@ void Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zF
     {
         actualViewport.x = 0;
         actualViewport.y = 0;
-        actualViewport.width = mRenderTargetDesc.width;
-        actualViewport.height = mRenderTargetDesc.height;
+        actualViewport.width  = static_cast<int>(mRenderTargetDesc.width);
+        actualViewport.height = static_cast<int>(mRenderTargetDesc.height);
         actualZNear = 0.0f;
         actualZFar = 1.0f;
     }
@@ -1761,7 +1761,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
     // Update the counting index buffer if it is not large enough or has not been created yet.
     if (count <= 65536)   // 16-bit indices
     {
-        const unsigned int spaceNeeded = count * sizeof(unsigned short);
+        const unsigned int spaceNeeded = static_cast<unsigned int>(count) * sizeof(unsigned short);
 
         if (!mCountingIB || mCountingIB->getBufferSize() < spaceNeeded)
         {
@@ -1791,7 +1791,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
     }
     else if (getRendererExtensions().elementIndexUint)
     {
-        const unsigned int spaceNeeded = count * sizeof(unsigned int);
+        const unsigned int spaceNeeded = static_cast<unsigned int>(count) * sizeof(unsigned int);
 
         if (!mCountingIB || mCountingIB->getBufferSize() < spaceNeeded)
         {
@@ -1807,7 +1807,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
             }
 
             unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
-            for (size_t i = 0; i < count; i++)
+            for (unsigned int i = 0; i < count; i++)
             {
                 data[i] = i;
             }
@@ -2972,7 +2972,7 @@ gl::Error Renderer9::clearTextures(gl::SamplerType samplerType, size_t rangeStar
     // TODO(jmadill): faster way?
     for (size_t samplerIndex = rangeStart; samplerIndex < rangeEnd; samplerIndex++)
     {
-        gl::Error error = setTexture(samplerType, samplerIndex, nullptr);
+        gl::Error error = setTexture(samplerType, static_cast<int>(samplerIndex), nullptr);
         if (error.isError())
         {
             return error;
