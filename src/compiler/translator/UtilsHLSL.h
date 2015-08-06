@@ -25,6 +25,8 @@ TString SamplerString(const TType &type);
 // Prepends an underscore to avoid naming clashes
 TString Decorate(const TString &string);
 TString DecorateIfNeeded(const TName &name);
+// Decorates and also unmangles the function name
+TString DecorateFunctionIfNeeded(const TName &name);
 TString DecorateUniform(const TString &string, const TType &type);
 TString DecorateField(const TString &string, const TStructure &structure);
 TString DecoratePrivate(const TString &privateText);

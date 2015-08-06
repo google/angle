@@ -51,8 +51,10 @@ class TName
   public:
     POOL_ALLOCATOR_NEW_DELETE();
     explicit TName(const TString &name) : mName(name), mIsInternal(false) {}
+    TName() : mName(), mIsInternal(false) {}
 
     const TString &getString() const { return mName; }
+    void setString(const TString &string) { mName = string; }
     bool isInternal() const { return mIsInternal; }
     void setInternal(bool isInternal) { mIsInternal = isInternal; }
 
@@ -469,8 +471,11 @@ class TIntermAggregate : public TIntermOperator
 
     TIntermSequence *getSequence() { return &mSequence; }
 
-    void setName(const TString &name) { mName = name; }
-    const TString &getName() const { return mName; }
+    void setNameObj(const TName &name) { mName = name; }
+    const TName &getNameObj() const { return mName; }
+
+    void setName(const TString &name) { mName.setString(name); }
+    const TString &getName() const { return mName.getString(); }
 
     void setUserDefined() { mUserDefined = true; }
     bool isUserDefined() const { return mUserDefined; }
@@ -496,7 +501,7 @@ class TIntermAggregate : public TIntermOperator
     TIntermAggregate(const TIntermAggregate &); // disallow copy constructor
     TIntermAggregate &operator=(const TIntermAggregate &); // disallow assignment operator
     TIntermSequence mSequence;
-    TString mName;
+    TName mName;
     bool mUserDefined; // used for user defined function names
     int mFunctionId;
 

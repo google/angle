@@ -1939,7 +1939,9 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 return false;
             }
 
-            out << TypeString(node->getType()) << " " << Decorate(TFunction::unmangleName(node->getName())) << (mOutputLod0Function ? "Lod0(" : "(");
+            TString name = DecorateFunctionIfNeeded(node->getNameObj());
+            out << TypeString(node->getType()) << " " << name
+                << (mOutputLod0Function ? "Lod0(" : "(");
 
             TIntermSequence *arguments = node->getSequence();
 
@@ -1977,7 +1979,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpFunction:
         {
             ASSERT(mCurrentFunctionMetadata == nullptr);
-            TString name = TFunction::unmangleName(node->getName());
+            TString name = TFunction::unmangleName(node->getNameObj().getString());
 
             size_t index = mCallDag.findIndex(node);
             ASSERT(index != CallDAG::InvalidIndex);
@@ -1991,7 +1993,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             }
             else
             {
-                out << Decorate(name) << (mOutputLod0Function ? "Lod0(" : "(");
+                out << DecorateFunctionIfNeeded(node->getNameObj())
+                    << (mOutputLod0Function ? "Lod0(" : "(");
             }
 
             TIntermSequence *sequence = node->getSequence();
@@ -2047,7 +2050,6 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         break;
       case EOpFunctionCall:
         {
-            TString name = TFunction::unmangleName(node->getName());
             TIntermSequence *arguments = node->getSequence();
 
             bool lod0 = mInsideDiscontinuousLoop || mOutputLod0Function;
@@ -2061,10 +2063,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 ASSERT(index != CallDAG::InvalidIndex);
                 lod0 &= mASTMetadataList[index].mNeedsLod0;
 
-                out << Decorate(name) << (lod0 ? "Lod0(" : "(");
+                out << DecorateFunctionIfNeeded(node->getNameObj()) << (lod0 ? "Lod0(" : "(");
             }
             else
             {
+                TString name           = TFunction::unmangleName(node->getNameObj().getString());
                 TBasicType samplerType = (*arguments)[0]->getAsTyped()->getType().getBasicType();
 
                 TextureFunction textureFunction;

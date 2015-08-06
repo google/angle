@@ -159,7 +159,7 @@ void TLValueTrackingTraverser::addToFunctionMap(const TString &name, TIntermSequ
 
 bool TLValueTrackingTraverser::isInFunctionMap(const TIntermAggregate *callNode) const
 {
-    ASSERT(callNode->getOp() == EOpFunctionCall || callNode->getOp() == EOpInternalFunctionCall);
+    ASSERT(callNode->getOp() == EOpFunctionCall);
     return (mFunctionMap.find(callNode->getName()) != mFunctionMap.end());
 }
 
