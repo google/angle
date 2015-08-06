@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "0abb083c_6f31d1f2",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-06T15:31:55Z",
+      "side": 1,
+      "message": "nit: GLuint?",
+      "range": {
+        "startLine": 24,
+        "startChar": 18,
+        "endLine": 24,
+        "endChar": 21
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a1d64f6_da55c529",
         "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
         "patchSetId": 1
@@ -110,6 +133,69 @@
         "startLine": 64,
         "startChar": 14,
         "endLine": 64,
+        "endChar": 16
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0abb083c_afc7393e",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-06T15:31:55Z",
+      "side": 1,
+      "message": "nit: extra space",
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0abb083c_4f2e8d90",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-06T15:31:55Z",
+      "side": 1,
+      "message": "nit: we have an ArraySize helper that can replace the constants.",
+      "range": {
+        "startLine": 35,
+        "startChar": 27,
+        "endLine": 35,
+        "endChar": 28
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "caee5036_3d0ecf3e",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-06T15:31:55Z",
+      "side": 1,
+      "message": "Looks like this needs a git cl format (does it work on mm files?)",
+      "range": {
+        "startLine": 52,
+        "startChar": 15,
+        "endLine": 52,
         "endChar": 16
       },
       "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
