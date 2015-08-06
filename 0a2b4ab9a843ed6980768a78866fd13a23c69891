@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "0a1a2803_d7559c29",
+        "filename": "include/EGL/eglplatform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-08-06T00:36:25Z",
+      "side": 1,
+      "message": "As your implementation moves closer to completion, let\u0027s consider upstreaming these changes to Khronos\u0027 repository.",
+      "range": {
+        "startLine": 128,
+        "startChar": 8,
+        "endLine": 128,
+        "endChar": 15
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a1d64f6_da55c529",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-08-06T00:36:25Z",
+      "side": 1,
+      "message": "Is the full path really needed? Would a simpler relative path (\"libGL\", \"libGL.dylib\") work?",
+      "range": {
+        "startLine": 22,
+        "startChar": 32,
+        "endLine": 22,
+        "endChar": 38
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a850058_7195d84a",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-08-06T00:36:25Z",
+      "side": 1,
+      "message": "I think these need to be converted to const char*\u0027s because otherwise they might increase Chromium\u0027s static initializer count.",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 10
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ac4207d_39d06f42",
         "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h",
         "patchSetId": 1
@@ -154,6 +223,30 @@
       "side": 1,
       "message": "Merging answers to both this comment and the one with CATransaction.\n\nANGLE -\u003e Compositor synchronization\n--------------------------------\n\nFrom what I understand (from the CGLTexIOSurface2D documentation) adding a glFlush is enough to ensure that the previous GL commands are seen by the compositor; your CL seems to be using Fences so that Chrome knows the frame is 100% ready before sending it to the compositor, allowing to time it more precisely, just before the VSync (in order to avoid tearing?).\n\nThis approach will induce 1 frame of latency in the worst case compared to using just glFlush, for example for an instant rendering, finishing just after the half-frame window. So I feel I am missing something.\n\nWith that said, I can change the CL to use GL_APPLE_fences but, at least for now, there is no way to time the call to -[CALayer: setContent] to be at half a frame as ANGLE doesn\u0027t have a task manager like Chrome. It will be possible later by exposing PostDelayedTask to in ANGLE\u0027s Platform.\n\nCompositor -\u003e ANGLE synchronization\n-----------------------------------\n\nI was using the locking of the surface in order to make sure the compositor was done with the surface and avoid drawing to it while the compositor was rendering itself. DO we have such synchronization in Chrome? A quick search didn\u0027t show anything. I didn\u0027t know lock would cause a readback and that\u0027s indeed pretty bad so we\u0027d have to find another way to synchronize.",
       "parentUuid": "6ac1e46b_5af1d5d2",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 5
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6ba46a_ea2787b8",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-08-06T00:36:25Z",
+      "side": 1,
+      "message": "In the past, we found empirically that it wasn\u0027t necessary to double-buffer Chromium\u0027s IOSurfaces. It seemed that the compositor\u0027s draw calls into the IOSurface always went down in a single command buffer to the OpenGL driver, so when sampling that IOSurface to draw it to the screen, we never saw intermediate rendering results.\n\nThat having been said, I think Chris has changed this recently and Chromium is now double-buffering IOSurfaces, which is more correct.\n\nThese calls to IOSurfaceIsInUse and Lock/Unlock won\u0027t do what you intended anyway; since this process has the IOSurface object open, IOSurfaceIsInUse will almost certainly always return true. I think we should just remove these calls for the moment. The fence work Chris is currently doing is to throttle GPU-heavy content.\n\nIf it\u0027s found to be necessary, an EGL extension API could be added letting the embedder of ANGLE tell ANGLE when it\u0027s guaranteed done with a given IOSurface (separately from swapping buffers).",
+      "parentUuid": "2af0ccdb_f0ffa0a2",
       "range": {
         "startLine": 142,
         "startChar": 0,
