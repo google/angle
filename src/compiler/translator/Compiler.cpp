@@ -120,7 +120,7 @@ bool RemoveInvariant(sh::GLenum shaderType,
 
 size_t GetGlobalMaxTokenSize(ShShaderSpec spec)
 {
-    // WebGL defines a max token legnth of 256, while ES2 leaves max token
+    // WebGL defines a max token length of 256, while ES2 leaves max token
     // size undefined. ES3 defines a max size of 1024 characters.
     switch (spec)
     {
