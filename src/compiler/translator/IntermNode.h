@@ -44,6 +44,23 @@ class TIntermRaw;
 
 class TSymbolTable;
 
+// Encapsulate an identifier string and track whether it is coming from the original shader code
+// (not internal) or from ANGLE (internal). Usually internal names shouldn't be decorated or hashed.
+class TName
+{
+  public:
+    POOL_ALLOCATOR_NEW_DELETE();
+    explicit TName(const TString &name) : mName(name), mIsInternal(false) {}
+
+    const TString &getString() const { return mName; }
+    bool isInternal() const { return mIsInternal; }
+    void setInternal(bool isInternal) { mIsInternal = isInternal; }
+
+  private:
+    TString mName;
+    bool mIsInternal;
+};
+
 //
 // Base class for the tree nodes
 //
@@ -212,22 +229,19 @@ class TIntermSymbol : public TIntermTyped
     // If sym comes from per process globalpoolallocator, then it causes increased memory usage
     // per compile it is essential to use "symbol = sym" to assign to symbol
     TIntermSymbol(int id, const TString &symbol, const TType &type)
-        : TIntermTyped(type),
-          mId(id),
-          mInternal(false)
+        : TIntermTyped(type), mId(id), mSymbol(symbol)
     {
-        mSymbol = symbol;
     }
 
     bool hasSideEffects() const override { return false; }
 
     int getId() const { return mId; }
-    const TString &getSymbol() const { return mSymbol; }
+    const TString &getSymbol() const { return mSymbol.getString(); }
+    const TName &getName() const { return mSymbol; }
 
     void setId(int newId) { mId = newId; }
 
-    bool isInternal() const { return mInternal; }
-    void setInternal(bool isInternal) { mInternal = isInternal; }
+    void setInternal(bool internal) { mSymbol.setInternal(internal); }
 
     void traverse(TIntermTraverser *it) override;
     TIntermSymbol *getAsSymbolNode() override { return this; }
@@ -235,8 +249,7 @@ class TIntermSymbol : public TIntermTyped
 
   protected:
     int mId;
-    bool mInternal;
-    TString mSymbol;
+    TName mSymbol;
 };
 
 // A Raw node stores raw code, that the translator will insert verbatim

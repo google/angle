@@ -1391,13 +1391,9 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
             mUsesFragDepth = true;
             out << "gl_Depth";
         }
-        else if (node->isInternal())
-        {
-            out << name;
-        }
         else
         {
-            out << Decorate(name);
+            out << DecorateIfNeeded(node->getName());
         }
     }
 }
@@ -2849,25 +2845,27 @@ void OutputHLSL::outputLineDirective(int line)
 TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
 {
     TQualifier qualifier = symbol->getQualifier();
-    const TType &type = symbol->getType();
-    TString name = symbol->getSymbol();
+    const TType &type    = symbol->getType();
+    const TName &name    = symbol->getName();
+    TString nameStr;
 
-    if (name.empty())   // HLSL demands named arguments, also for prototypes
+    if (name.getString().empty())  // HLSL demands named arguments, also for prototypes
     {
-        name = "x" + str(mUniqueIndex++);
+        nameStr = "x" + str(mUniqueIndex++);
     }
-    else if (!symbol->isInternal())
+    else
     {
-        name = Decorate(name);
+        nameStr = DecorateIfNeeded(name);
     }
 
     if (mOutputType == SH_HLSL11_OUTPUT && IsSampler(type.getBasicType()))
     {
-        return QualifierString(qualifier) + " " + TextureString(type) + " texture_" + name + ArrayString(type) + ", " +
-               QualifierString(qualifier) + " " + SamplerString(type) + " sampler_" + name + ArrayString(type);
+        return QualifierString(qualifier) + " " + TextureString(type) + " texture_" + nameStr +
+               ArrayString(type) + ", " + QualifierString(qualifier) + " " + SamplerString(type) +
+               " sampler_" + nameStr + ArrayString(type);
     }
 
-    return QualifierString(qualifier) + " " + TypeString(type) + " " + name + ArrayString(type);
+    return QualifierString(qualifier) + " " + TypeString(type) + " " + nameStr + ArrayString(type);
 }
 
 TString OutputHLSL::initializer(const TType &type)
