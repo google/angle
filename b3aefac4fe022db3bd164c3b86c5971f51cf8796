@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ca9c90da_cd7a8961",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-07T17:30:47Z",
+      "side": 1,
+      "message": "Done, I tackled this by passing context into the functions. I think this is a safer design, it uncovered one or two I had forgotten to add, and still lets us clear the dirty bits in the state in a better place than the API.",
+      "parentUuid": "0af308eb_ef28e1bb",
+      "range": {
+        "startLine": 745,
+        "startChar": 8,
+        "endLine": 745,
+        "endChar": 37
+      },
+      "revId": "b3aefac4fe022db3bd164c3b86c5971f51cf8796",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cad49039_8d64c114",
         "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2015-08-05T20:35:23Z",
       "side": 1,
       "message": "I wonder if it might be better to let the texture continue to sync it\u0027s own state here just because it only needs to sync a small subset of the context state (same for readpixels and clears). StateManagerGL tries to sync the minimal state for each operation which may end up being less.\n\nNot a blocker but it may be reasonable to consider having categories of dirty bits for different operations.",
+      "range": {
+        "startLine": 790,
+        "startChar": 8,
+        "endLine": 790,
+        "endChar": 37
+      },
+      "revId": "b3aefac4fe022db3bd164c3b86c5971f51cf8796",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6564c3_7ae6b921",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 790,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-07T17:30:47Z",
+      "side": 1,
+      "message": "Done, This is a good suggestion. I added masks for certain common sets of dirty bits to only update the necessary state.",
+      "parentUuid": "cad49039_8d64c114",
       "range": {
         "startLine": 790,
         "startChar": 8,
