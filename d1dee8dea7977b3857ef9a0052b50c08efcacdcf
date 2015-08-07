@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ca8ad09e_1d3773ea",
+        "filename": "src/compiler/translator/IntermTraverse.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-07T16:54:14Z",
+      "side": 1,
+      "message": "yes, this is an important one to clean up, this function is getting unwieldy",
+      "range": {
+        "startLine": 326,
+        "startChar": 0,
+        "endLine": 329,
+        "endChar": 60
+      },
+      "revId": "d1dee8dea7977b3857ef9a0052b50c08efcacdcf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
