@@ -511,29 +511,57 @@ Error Framebuffer::invalidateSub(size_t count, const GLenum *attachments, const 
     return mImpl->invalidateSub(count, attachments, area);
 }
 
-Error Framebuffer::clear(const gl::Data &data, GLbitfield mask)
+Error Framebuffer::clear(Context *context, GLbitfield mask)
 {
-    return mImpl->clear(data, mask);
+    // Sync the clear state
+    context->syncRendererState(context->getState().clearStateBitMask());
+
+    return mImpl->clear(context->getData(), mask);
 }
 
-Error Framebuffer::clearBufferfv(const State &state, GLenum buffer, GLint drawbuffer, const GLfloat *values)
+Error Framebuffer::clearBufferfv(Context *context,
+                                 GLenum buffer,
+                                 GLint drawbuffer,
+                                 const GLfloat *values)
 {
-    return mImpl->clearBufferfv(state, buffer, drawbuffer, values);
+    // Sync the clear state
+    context->syncRendererState(context->getState().clearStateBitMask());
+
+    return mImpl->clearBufferfv(context->getState(), buffer, drawbuffer, values);
 }
 
-Error Framebuffer::clearBufferuiv(const State &state, GLenum buffer, GLint drawbuffer, const GLuint *values)
+Error Framebuffer::clearBufferuiv(Context *context,
+                                  GLenum buffer,
+                                  GLint drawbuffer,
+                                  const GLuint *values)
 {
-    return mImpl->clearBufferuiv(state, buffer, drawbuffer, values);
+    // Sync the clear state
+    context->syncRendererState(context->getState().clearStateBitMask());
+
+    return mImpl->clearBufferuiv(context->getState(), buffer, drawbuffer, values);
 }
 
-Error Framebuffer::clearBufferiv(const State &state, GLenum buffer, GLint drawbuffer, const GLint *values)
+Error Framebuffer::clearBufferiv(Context *context,
+                                 GLenum buffer,
+                                 GLint drawbuffer,
+                                 const GLint *values)
 {
-    return mImpl->clearBufferiv(state, buffer, drawbuffer, values);
+    // Sync the clear state
+    context->syncRendererState(context->getState().clearStateBitMask());
+
+    return mImpl->clearBufferiv(context->getState(), buffer, drawbuffer, values);
 }
 
-Error Framebuffer::clearBufferfi(const State &state, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil)
+Error Framebuffer::clearBufferfi(Context *context,
+                                 GLenum buffer,
+                                 GLint drawbuffer,
+                                 GLfloat depth,
+                                 GLint stencil)
 {
-    return mImpl->clearBufferfi(state, buffer, drawbuffer, depth, stencil);
+    // Sync the clear state
+    context->syncRendererState(context->getState().clearStateBitMask());
+
+    return mImpl->clearBufferfi(context->getState(), buffer, drawbuffer, depth, stencil);
 }
 
 GLenum Framebuffer::getImplementationColorReadFormat() const
@@ -546,8 +574,17 @@ GLenum Framebuffer::getImplementationColorReadType() const
     return mImpl->getImplementationColorReadType();
 }
 
-Error Framebuffer::readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const
+Error Framebuffer::readPixels(Context *context,
+                              const gl::Rectangle &area,
+                              GLenum format,
+                              GLenum type,
+                              GLvoid *pixels) const
 {
+    const State &state = context->getState();
+
+    // Sync pack state
+    context->syncRendererState(state.packStateBitMask());
+
     Error error = mImpl->readPixels(state, area, format, type, pixels);
     if (error.isError())
     {

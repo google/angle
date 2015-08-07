@@ -628,7 +628,7 @@ void GL_APIENTRY Clear(GLbitfield mask)
             return;
         }
 
-        Error error = framebufferObject->clear(context->getData(), mask);
+        Error error = framebufferObject->clear(context, mask);
         if (error.isError())
         {
             context->recordError(error);
@@ -743,8 +743,9 @@ void GL_APIENTRY CompressedTexImage2D(GLenum target, GLint level, GLenum interna
 
         Extents size(width, height, 1);
         Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
-        Error error = texture->setCompressedImage(target, level, internalformat, size, context->getState().getUnpackState(), 
-                                                  imageSize, reinterpret_cast<const uint8_t *>(data));
+        Error error =
+            texture->setCompressedImage(context, target, level, internalformat, size, imageSize,
+                                        reinterpret_cast<const uint8_t *>(data));
         if (error.isError())
         {
             context->recordError(error);
@@ -785,11 +786,11 @@ void GL_APIENTRY CompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
             return;
         }
 
-
         Box area(xoffset, yoffset, 0, width, height, 1);
         Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
-        Error error = texture->setCompressedSubImage(target, level, area, format, context->getState().getUnpackState(),
-                                                     imageSize, reinterpret_cast<const uint8_t *>(data));
+        Error error =
+            texture->setCompressedSubImage(context, target, level, area, format, imageSize,
+                                           reinterpret_cast<const uint8_t *>(data));
         if (error.isError())
         {
             context->recordError(error);
@@ -3319,7 +3320,7 @@ void GL_APIENTRY ReadPixels(GLint x, GLint y, GLsizei width, GLsizei height,
         ASSERT(framebufferObject);
 
         Rectangle area(x, y, width, height);
-        Error error = framebufferObject->readPixels(context->getState(), area, format, type, pixels);
+        Error error = framebufferObject->readPixels(context, area, format, type, pixels);
         if (error.isError())
         {
             context->recordError(error);
@@ -3657,7 +3658,7 @@ void GL_APIENTRY TexImage2D(GLenum target, GLint level, GLint internalformat, GL
 
         Extents size(width, height, 1);
         Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
-        Error error = texture->setImage(target, level, internalformat, size, format, type, context->getState().getUnpackState(),
+        Error error = texture->setImage(context, target, level, internalformat, size, format, type,
                                         reinterpret_cast<const uint8_t *>(pixels));
         if (error.isError())
         {
@@ -3810,7 +3811,7 @@ void GL_APIENTRY TexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
 
         Box area(xoffset, yoffset, 0, width, height, 1);
         Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
-        Error error = texture->setSubImage(target, level, area, format, type, context->getState().getUnpackState(),
+        Error error = texture->setSubImage(context, target, level, area, format, type,
                                            reinterpret_cast<const uint8_t *>(pixels));
         if (error.isError())
         {

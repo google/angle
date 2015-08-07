@@ -13,6 +13,7 @@
 #include "libANGLE/Caps.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Framebuffer.h"
+#include "libANGLE/State.h"
 #include "libANGLE/Uniform.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/ImplFactory.h"
@@ -27,12 +28,6 @@ namespace egl
 class AttributeMap;
 class Display;
 class Surface;
-}
-
-namespace gl
-{
-class Buffer;
-struct Data;
 }
 
 namespace rx
@@ -71,6 +66,8 @@ class Renderer : public ImplFactory
     virtual void insertEventMarker(GLsizei length, const char *marker) = 0;
     virtual void pushGroupMarker(GLsizei length, const char *marker) = 0;
     virtual void popGroupMarker() = 0;
+
+    virtual void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits) = 0;
 
     // Renderer capabilities
     const gl::Caps &getRendererCaps() const;

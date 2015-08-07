@@ -194,6 +194,11 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea) = 0;
 
+    void syncState(const gl::State & /*state*/, const gl::State::DirtyBits &bitmask) override
+    {
+        // TODO(jmadill): implement state sync for D3D renderers;
+    }
+
     // Device lost
     void notifyDeviceLost() override;
     virtual bool resetDevice() = 0;

@@ -11,6 +11,7 @@
 #include "common/mathutil.h"
 #include "common/utilities.h"
 #include "libANGLE/Config.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Data.h"
 #include "libANGLE/Image.h"
 #include "libANGLE/Surface.h"
@@ -189,8 +190,14 @@ egl::Surface *Texture::getBoundSurface() const
     return mBoundSurface;
 }
 
-Error Texture::setImage(GLenum target, size_t level, GLenum internalFormat, const Extents &size, GLenum format, GLenum type,
-                        const PixelUnpackState &unpack, const uint8_t *pixels)
+Error Texture::setImage(Context *context,
+                        GLenum target,
+                        size_t level,
+                        GLenum internalFormat,
+                        const Extents &size,
+                        GLenum format,
+                        GLenum type,
+                        const uint8_t *pixels)
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
@@ -198,6 +205,15 @@ Error Texture::setImage(GLenum target, size_t level, GLenum internalFormat, cons
     releaseTexImageInternal();
     orphanImages();
 
+    // Hack: allow nullptr for testing
+    if (context != nullptr)
+    {
+        // Sync the unpack state
+        context->syncRendererState(context->getState().unpackStateBitMask());
+    }
+
+    const PixelUnpackState &unpack =
+        context ? context->getState().getUnpackState() : PixelUnpackState();
     Error error = mTexture->setImage(target, level, internalFormat, size, format, type, unpack, pixels);
     if (error.isError())
     {
@@ -209,16 +225,30 @@ Error Texture::setImage(GLenum target, size_t level, GLenum internalFormat, cons
     return Error(GL_NO_ERROR);
 }
 
-Error Texture::setSubImage(GLenum target, size_t level, const Box &area, GLenum format, GLenum type,
-                           const PixelUnpackState &unpack, const uint8_t *pixels)
+Error Texture::setSubImage(Context *context,
+                           GLenum target,
+                           size_t level,
+                           const Box &area,
+                           GLenum format,
+                           GLenum type,
+                           const uint8_t *pixels)
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
+    // Sync the unpack state
+    context->syncRendererState(context->getState().unpackStateBitMask());
+
+    const PixelUnpackState &unpack = context->getState().getUnpackState();
     return mTexture->setSubImage(target, level, area, format, type, unpack, pixels);
 }
 
-Error Texture::setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const Extents &size,
-                                  const PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
+Error Texture::setCompressedImage(Context *context,
+                                  GLenum target,
+                                  size_t level,
+                                  GLenum internalFormat,
+                                  const Extents &size,
+                                  size_t imageSize,
+                                  const uint8_t *pixels)
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
@@ -226,6 +256,10 @@ Error Texture::setCompressedImage(GLenum target, size_t level, GLenum internalFo
     releaseTexImageInternal();
     orphanImages();
 
+    // Sync the unpack state
+    context->syncRendererState(context->getState().unpackStateBitMask());
+
+    const PixelUnpackState &unpack = context->getState().getUnpackState();
     Error error = mTexture->setCompressedImage(target, level, internalFormat, size, unpack, imageSize, pixels);
     if (error.isError())
     {
@@ -237,11 +271,20 @@ Error Texture::setCompressedImage(GLenum target, size_t level, GLenum internalFo
     return Error(GL_NO_ERROR);
 }
 
-Error Texture::setCompressedSubImage(GLenum target, size_t level, const Box &area, GLenum format,
-                                     const PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
+Error Texture::setCompressedSubImage(Context *context,
+                                     GLenum target,
+                                     size_t level,
+                                     const Box &area,
+                                     GLenum format,
+                                     size_t imageSize,
+                                     const uint8_t *pixels)
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
+    // Sync the unpack state
+    context->syncRendererState(context->getState().unpackStateBitMask());
+
+    const PixelUnpackState &unpack = context->getState().getUnpackState();
     return mTexture->setCompressedSubImage(target, level, area, format, unpack, imageSize, pixels);
 }
 

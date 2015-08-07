@@ -29,6 +29,7 @@ class Surface;
 
 namespace gl
 {
+class Context;
 class Framebuffer;
 struct Data;
 
@@ -38,8 +39,7 @@ class Texture final : public egl::ImageSibling
 {
   public:
     Texture(rx::TextureImpl *impl, GLuint id, GLenum target);
-
-    virtual ~Texture();
+    ~Texture();
 
     GLenum getTarget() const;
 
@@ -59,26 +59,53 @@ class Texture final : public egl::ImageSibling
     bool isCubeComplete() const;
     size_t getMipCompleteLevels() const;
 
-    virtual Error setImage(GLenum target, size_t level, GLenum internalFormat, const Extents &size, GLenum format, GLenum type,
-                           const PixelUnpackState &unpack, const uint8_t *pixels);
-    virtual Error setSubImage(GLenum target, size_t level, const Box &area, GLenum format, GLenum type,
-                              const PixelUnpackState &unpack, const uint8_t *pixels);
+    Error setImage(Context *context,
+                   GLenum target,
+                   size_t level,
+                   GLenum internalFormat,
+                   const Extents &size,
+                   GLenum format,
+                   GLenum type,
+                   const uint8_t *pixels);
+    Error setSubImage(Context *context,
+                      GLenum target,
+                      size_t level,
+                      const Box &area,
+                      GLenum format,
+                      GLenum type,
+                      const uint8_t *pixels);
 
-    virtual Error setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const Extents &size,
-                                     const PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels);
-    virtual Error setCompressedSubImage(GLenum target, size_t level, const Box &area, GLenum format,
-                                        const PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels);
+    Error setCompressedImage(Context *context,
+                             GLenum target,
+                             size_t level,
+                             GLenum internalFormat,
+                             const Extents &size,
+                             size_t imageSize,
+                             const uint8_t *pixels);
+    Error setCompressedSubImage(Context *context,
+                                GLenum target,
+                                size_t level,
+                                const Box &area,
+                                GLenum format,
+                                size_t imageSize,
+                                const uint8_t *pixels);
 
-    virtual Error copyImage(GLenum target, size_t level, const Rectangle &sourceArea, GLenum internalFormat,
-                            const Framebuffer *source);
-    virtual Error copySubImage(GLenum target, size_t level, const Offset &destOffset, const Rectangle &sourceArea,
-                              const Framebuffer *source);
+    Error copyImage(GLenum target,
+                    size_t level,
+                    const Rectangle &sourceArea,
+                    GLenum internalFormat,
+                    const Framebuffer *source);
+    Error copySubImage(GLenum target,
+                       size_t level,
+                       const Offset &destOffset,
+                       const Rectangle &sourceArea,
+                       const Framebuffer *source);
 
-    virtual Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const Extents &size);
+    Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const Extents &size);
 
     Error setEGLImageTarget(GLenum target, egl::Image *imageTarget);
 
-    virtual Error generateMipmaps();
+    Error generateMipmaps();
 
     bool isImmutable() const;
     GLsizei immutableLevelCount();

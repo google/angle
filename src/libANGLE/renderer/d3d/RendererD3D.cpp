@@ -545,20 +545,26 @@ gl::Texture *RendererD3D::getIncompleteTexture(GLenum type)
     {
         const GLubyte color[] = { 0, 0, 0, 255 };
         const gl::Extents colorSize(1, 1, 1);
-        const gl::PixelUnpackState incompleteUnpackState(1, 0);
+        const gl::PixelUnpackState unpack(1, 0);
+        const gl::Box area(0, 0, 0, 1, 1, 1);
 
-        gl::Texture* t = new gl::Texture(createTexture(type), std::numeric_limits<GLuint>::max(), type);
+        // Skip the API layer to avoid needing to pass the Context and mess with dirty bits.
+        gl::Texture *t =
+            new gl::Texture(createTexture(type), std::numeric_limits<GLuint>::max(), type);
+        t->setStorage(type, 1, GL_RGBA8, colorSize);
 
         if (type == GL_TEXTURE_CUBE_MAP)
         {
             for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z; face++)
             {
-                t->setImage(face, 0, GL_RGBA, colorSize, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
+                t->getImplementation()->setSubImage(face, 0, area, GL_RGBA8, GL_UNSIGNED_BYTE,
+                                                    unpack, color);
             }
         }
         else
         {
-            t->setImage(type, 0, GL_RGBA, colorSize, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
+            t->getImplementation()->setSubImage(type, 0, area, GL_RGBA8, GL_UNSIGNED_BYTE, unpack,
+                                                color);
         }
 
         mIncompleteTextures[type].set(t);

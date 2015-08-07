@@ -32,6 +32,7 @@ class Surface;
 
 namespace gl
 {
+class Context;
 class Renderbuffer;
 class State;
 class Texture;
@@ -121,15 +122,23 @@ class Framebuffer
     Error invalidate(size_t count, const GLenum *attachments);
     Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area);
 
-    Error clear(const gl::Data &data, GLbitfield mask);
-    Error clearBufferfv(const State &state, GLenum buffer, GLint drawbuffer, const GLfloat *values);
-    Error clearBufferuiv(const State &state, GLenum buffer, GLint drawbuffer, const GLuint *values);
-    Error clearBufferiv(const State &state, GLenum buffer, GLint drawbuffer, const GLint *values);
-    Error clearBufferfi(const State &state, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil);
+    Error clear(Context *context, GLbitfield mask);
+    Error clearBufferfv(Context *context, GLenum buffer, GLint drawbuffer, const GLfloat *values);
+    Error clearBufferuiv(Context *context, GLenum buffer, GLint drawbuffer, const GLuint *values);
+    Error clearBufferiv(Context *context, GLenum buffer, GLint drawbuffer, const GLint *values);
+    Error clearBufferfi(Context *context,
+                        GLenum buffer,
+                        GLint drawbuffer,
+                        GLfloat depth,
+                        GLint stencil);
 
     GLenum getImplementationColorReadFormat() const;
     GLenum getImplementationColorReadType() const;
-    Error readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const;
+    Error readPixels(Context *context,
+                     const gl::Rectangle &area,
+                     GLenum format,
+                     GLenum type,
+                     GLvoid *pixels) const;
 
     Error blit(const gl::State &state, const gl::Rectangle &sourceArea, const gl::Rectangle &destArea,
                GLbitfield mask, GLenum filter, const gl::Framebuffer *sourceFramebuffer);
