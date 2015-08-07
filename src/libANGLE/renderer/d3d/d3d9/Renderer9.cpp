@@ -1302,12 +1302,13 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorAtt
                                        const gl::FramebufferAttachment *depthStencilAttachment)
 {
     const gl::FramebufferAttachment *renderAttachment = colorAttachment;
+    gl::Error error(GL_NO_ERROR);
 
     // if there is no color attachment we must synthesize a NULL colorattachment
     // to keep the D3D runtime happy.  This should only be possible if depth texturing.
     if (renderAttachment == nullptr)
     {
-        gl::Error error = getNullColorbuffer(depthStencilAttachment, &renderAttachment);
+        error = getNullColorbuffer(depthStencilAttachment, &renderAttachment);
         if (error.isError())
         {
             return error;
@@ -1320,7 +1321,7 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorAtt
     D3DFORMAT renderTargetFormat = D3DFMT_UNKNOWN;
 
     RenderTarget9 *renderTarget = nullptr;
-    gl::Error error = renderAttachment->getRenderTarget(&renderTarget);
+    error = renderAttachment->getRenderTarget(&renderTarget);
     if (error.isError())
     {
         return error;
@@ -1351,7 +1352,7 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorAtt
 
     if (depthStencilAttachment != nullptr)
     {
-        gl::Error error = depthStencilAttachment->getRenderTarget(&depthStencilRenderTarget);
+        error = depthStencilAttachment->getRenderTarget(&depthStencilRenderTarget);
         if (error.isError())
         {
             return error;

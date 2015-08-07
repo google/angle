@@ -132,8 +132,8 @@ gl::Error VertexArrayGL::syncDrawState(const std::vector<GLuint> &activeAttribLo
     {
         ASSERT(attributesNeedStreaming);
 
-        gl::Error error = streamAttributes(activeAttribLocations, streamingDataSize, maxAttributeDataSize,
-                                           indexRange);
+        error = streamAttributes(activeAttribLocations, streamingDataSize, maxAttributeDataSize,
+                                 indexRange);
         if (error.isError())
         {
             return error;

@@ -214,8 +214,6 @@ TEST_P(SixteenBppTextureTest, RGBA5551ClearAlpha)
 
     GLuint tex = 0;
     GLuint fbo = 0;
-    GLubyte pixel[4];
-
 
     // Create a simple 5551 texture
     glGenTextures(1, &tex);
@@ -233,12 +231,10 @@ TEST_P(SixteenBppTextureTest, RGBA5551ClearAlpha)
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
     EXPECT_PIXEL_EQ(0, 0, 0, 0, 0, 0);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
     EXPECT_PIXEL_EQ(0, 0, 0, 0, 0, 255);
 
     glDeleteFramebuffers(1, &fbo);
