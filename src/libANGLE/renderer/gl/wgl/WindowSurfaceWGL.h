@@ -49,6 +49,8 @@ class WindowSurfaceWGL : public SurfaceGL
     HDC mDeviceContext;
 
     const FunctionsWGL *mFunctionsWGL;
+
+    EGLint mSwapBehavior;
 };
 
 }

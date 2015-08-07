@@ -15,13 +15,17 @@
 namespace rx
 {
 
-WindowSurfaceWGL::WindowSurfaceWGL(EGLNativeWindowType window, int pixelFormat, HGLRC wglContext, const FunctionsWGL *functions)
+WindowSurfaceWGL::WindowSurfaceWGL(EGLNativeWindowType window,
+                                   int pixelFormat,
+                                   HGLRC wglContext,
+                                   const FunctionsWGL *functions)
     : SurfaceGL(),
       mPixelFormat(pixelFormat),
       mWGLContext(wglContext),
       mWindow(window),
       mDeviceContext(nullptr),
-      mFunctionsWGL(functions)
+      mFunctionsWGL(functions),
+      mSwapBehavior(0)
 {
 }
 
@@ -59,6 +63,21 @@ egl::Error WindowSurfaceWGL::initialize()
     else if (windowPixelFormat != mPixelFormat)
     {
         return egl::Error(EGL_NOT_INITIALIZED, "Pixel format of the NativeWindow and NativeDisplayType must match.");
+    }
+
+    // Check for the swap behavior of this pixel format
+    switch (
+        wgl::QueryWGLFormatAttrib(mDeviceContext, mPixelFormat, WGL_SWAP_METHOD_ARB, mFunctionsWGL))
+    {
+        case WGL_SWAP_COPY_ARB:
+            mSwapBehavior = EGL_BUFFER_PRESERVED;
+            break;
+
+        case WGL_SWAP_EXCHANGE_ARB:
+        case WGL_SWAP_UNDEFINED_ARB:
+        default:
+            mSwapBehavior = EGL_BUFFER_DESTROYED;
+            break;
     }
 
     return egl::Error(EGL_SUCCESS);
@@ -147,7 +166,7 @@ EGLint WindowSurfaceWGL::isPostSubBufferSupported() const
 
 EGLint WindowSurfaceWGL::getSwapBehavior() const
 {
-    return EGL_BUFFER_PRESERVED;
+    return mSwapBehavior;
 }
 
 }
