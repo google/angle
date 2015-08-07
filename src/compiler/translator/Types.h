@@ -491,9 +491,9 @@ class TType
         return structure ? structure->containsArrays() : false;
     }
 
-    bool isStructureContainingType(TBasicType type) const
+    bool isStructureContainingType(TBasicType t) const
     {
-        return structure ? structure->containsType(type) : false;
+        return structure ? structure->containsType(t) : false;
     }
 
     bool isStructureContainingSamplers() const
@@ -605,14 +605,14 @@ struct TPublicType
         return userDef->isStructureContainingArrays();
     }
 
-    bool isStructureContainingType(TBasicType type) const
+    bool isStructureContainingType(TBasicType t) const
     {
         if (!userDef)
         {
             return false;
         }
 
-        return userDef->isStructureContainingType(type);
+        return userDef->isStructureContainingType(t);
     }
 
     bool isMatrix() const
