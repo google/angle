@@ -927,4 +927,34 @@ EGLBoolean EGLAPIENTRY GetSyncValuesCHROMIUM(EGLDisplay dpy,
     SetGlobalError(error);
     return EGL_TRUE;
 }
+
+ANGLE_EXPORT EGLBoolean SwapBuffersWithDamageEXT(EGLDisplay dpy,
+                                                 EGLSurface surface,
+                                                 EGLint *rects,
+                                                 EGLint n_rects)
+{
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint *rects = 0x%0.8p, EGLint "
+        "n_rects = %d)",
+        dpy, surface, rects, n_rects);
+
+    Display *display    = static_cast<Display *>(dpy);
+    Surface *eglSurface = static_cast<Surface *>(surface);
+
+    Error error = ValidateSwapBuffersWithDamageEXT(display, eglSurface, rects, n_rects);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+
+    error = eglSurface->swapWithDamage(rects, n_rects);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+
+    return EGL_TRUE;
+}
 }

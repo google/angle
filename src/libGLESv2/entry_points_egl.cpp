@@ -1814,6 +1814,10 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
 
         // EGL_CHROMIUM_get_sync_values
         INSERT_PROC_ADDRESS(egl, GetSyncValuesCHROMIUM);
+
+        // EGL_EXT_swap_buffers_with_damage
+        INSERT_PROC_ADDRESS(egl, SwapBuffersWithDamageEXT);
+
 #undef INSERT_PROC_ADDRESS
         return map;
     };

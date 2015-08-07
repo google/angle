@@ -607,6 +607,9 @@ struct DisplayExtensions
 
     // EGL_CHROMIUM_get_sync_values
     bool getSyncValues;
+
+    // EGL_EXT_swap_buffers_with_damage
+    bool swapBuffersWithDamage;
 };
 
 struct DeviceExtensions

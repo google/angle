@@ -182,7 +182,7 @@ Error ValidateDisplay(const Display *display)
     return Error(EGL_SUCCESS);
 }
 
-Error ValidateSurface(const Display *display, Surface *surface)
+Error ValidateSurface(const Display *display, const Surface *surface)
 {
     ANGLE_TRY(ValidateDisplay(display));
 
@@ -206,7 +206,7 @@ Error ValidateConfig(const Display *display, const Config *config)
     return Error(EGL_SUCCESS);
 }
 
-Error ValidateContext(const Display *display, gl::Context *context)
+Error ValidateContext(const Display *display, const gl::Context *context)
 {
     ANGLE_TRY(ValidateDisplay(display));
 
@@ -1624,4 +1624,41 @@ Error ValidateGetSyncValuesCHROMIUM(const Display *display,
 
     return Error(EGL_SUCCESS);
 }
+
+Error ValidateSwapBuffersWithDamageEXT(const Display *display,
+                                       const Surface *surface,
+                                       EGLint *rects,
+                                       EGLint n_rects)
+{
+    Error error = ValidateSurface(display, surface);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    if (!display->getExtensions().swapBuffersWithDamage)
+    {
+        // It is out of spec what happens when calling an extension function when the extension is
+        // not available. EGL_BAD_DISPLAY seems like a reasonable error.
+        return Error(EGL_BAD_DISPLAY, "EGL_EXT_swap_buffers_with_damage is not available.");
+    }
+
+    if (surface == EGL_NO_SURFACE)
+    {
+        return Error(EGL_BAD_SURFACE, "Swap surface cannot be EGL_NO_SURFACE.");
+    }
+
+    if (n_rects < 0)
+    {
+        return Error(EGL_BAD_PARAMETER, "n_rects cannot be negative.");
+    }
+
+    if (n_rects > 0 && rects == nullptr)
+    {
+        return Error(EGL_BAD_PARAMETER, "n_rects cannot be greater than zero when rects is NULL.");
+    }
+
+    return Error(EGL_SUCCESS);
+}
+
 }  // namespace gl

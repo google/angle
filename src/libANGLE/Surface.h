@@ -55,6 +55,7 @@ class Surface : public gl::FramebufferAttachmentObject
 
     Error initialize();
     Error swap();
+    Error swapWithDamage(EGLint *rects, EGLint n_rects);
     Error postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height);
     Error querySurfacePointerANGLE(EGLint attribute, void **value);
     Error bindTexImage(gl::Texture *texture, EGLint buffer);

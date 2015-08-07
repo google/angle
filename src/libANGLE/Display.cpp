@@ -839,14 +839,15 @@ bool Display::isValidConfig(const Config *config) const
     return mConfigSet.contains(config);
 }
 
-bool Display::isValidContext(gl::Context *context) const
+bool Display::isValidContext(const gl::Context *context) const
 {
-    return mContextSet.find(context) != mContextSet.end();
+    return mContextSet.find(const_cast<gl::Context *>(context)) != mContextSet.end();
 }
 
-bool Display::isValidSurface(Surface *surface) const
+bool Display::isValidSurface(const Surface *surface) const
 {
-    return mImplementation->getSurfaceSet().find(surface) != mImplementation->getSurfaceSet().end();
+    return mImplementation->getSurfaceSet().find(const_cast<Surface *>(surface)) !=
+           mImplementation->getSurfaceSet().end();
 }
 
 bool Display::isValidImage(const Image *image) const

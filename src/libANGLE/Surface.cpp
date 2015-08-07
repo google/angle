@@ -138,6 +138,11 @@ Error Surface::swap()
     return mImplementation->swap();
 }
 
+Error Surface::swapWithDamage(EGLint *rects, EGLint n_rects)
+{
+    return mImplementation->swapWithDamage(rects, n_rects);
+}
+
 Error Surface::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
 {
     return mImplementation->postSubBuffer(x, y, width, height);
