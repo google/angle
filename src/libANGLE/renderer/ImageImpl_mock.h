@@ -18,7 +18,7 @@ namespace rx
 class MockImageImpl : public ImageImpl
 {
   public:
-    ~MockImageImpl() override { destructor(); }
+    virtual ~MockImageImpl() { destructor(); }
     MOCK_METHOD0(initialize, egl::Error(void));
     MOCK_METHOD1(orphan, gl::Error(egl::ImageSibling *));
     MOCK_METHOD0(destructor, void());

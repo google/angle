@@ -19,7 +19,7 @@ namespace rx
 class MockTextureImpl : public TextureImpl
 {
   public:
-    ~MockTextureImpl() override { destructor(); }
+    virtual ~MockTextureImpl() { destructor(); }
     MOCK_METHOD1(setUsage, void(GLenum));
     MOCK_METHOD8(setImage, gl::Error(GLenum, size_t, GLenum, const gl::Extents &, GLenum, GLenum, const gl::PixelUnpackState &, const uint8_t *));
     MOCK_METHOD7(setSubImage, gl::Error(GLenum, size_t, const gl::Box &, GLenum, GLenum, const gl::PixelUnpackState &, const uint8_t *));

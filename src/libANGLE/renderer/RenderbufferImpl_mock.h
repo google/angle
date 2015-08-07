@@ -20,7 +20,7 @@ namespace rx
 class MockRenderbufferImpl : public RenderbufferImpl
 {
   public:
-    ~MockRenderbufferImpl() override { destructor(); }
+    virtual ~MockRenderbufferImpl() { destructor(); }
     MOCK_METHOD3(setStorage, gl::Error(GLenum, size_t, size_t));
     MOCK_METHOD4(setStorageMultisample, gl::Error(size_t, GLenum, size_t, size_t));
     MOCK_METHOD1(setStorageEGLImageTarget, gl::Error(egl::Image *));
