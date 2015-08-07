@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ca73b092_55c62c3e",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-07T17:59:53Z",
+      "side": 1,
+      "message": "can you make this a helper function to help prettify the formatting? (eg a private class member so you don\u0027t have to pass the three member vars)",
+      "range": {
+        "startLine": 393,
+        "startChar": 8,
+        "endLine": 394,
+        "endChar": 58
+      },
+      "revId": "41894e52b1945d36601697bec1e586838419c362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
