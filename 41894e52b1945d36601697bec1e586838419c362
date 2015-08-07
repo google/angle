@@ -22,6 +22,30 @@
       "revId": "41894e52b1945d36601697bec1e586838419c362",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca8ad09e_7db957b0",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-07T20:22:12Z",
+      "side": 1,
+      "message": "Done, used a local lambda.",
+      "parentUuid": "ca73b092_55c62c3e",
+      "range": {
+        "startLine": 393,
+        "startChar": 8,
+        "endLine": 394,
+        "endChar": 58
+      },
+      "revId": "41894e52b1945d36601697bec1e586838419c362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
