@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a74cf78b_643c8aef",
+        "filename": "src/compiler/translator/IntermTraverse.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-07T13:50:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a860c97_c0043e54",
+      "range": {
+        "startLine": 245,
+        "startChar": 29,
+        "endLine": 245,
+        "endChar": 33
+      },
+      "revId": "9959339e2a9af1e0df1eda32e8bc6f6fdb948b2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aafd9cea_9c91e55e",
         "filename": "src/compiler/translator/IntermTraverse.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-08-06T18:10:05Z",
       "side": 1,
       "message": "Is there a way to configuring the code, without too much complication, of only adding functions to the map when we need to? It seems like every traverser would add each function. Granted this might not be a large number.",
+      "range": {
+        "startLine": 242,
+        "startChar": 8,
+        "endLine": 249,
+        "endChar": 9
+      },
+      "revId": "9959339e2a9af1e0df1eda32e8bc6f6fdb948b2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8719b374_f34f308c",
+        "filename": "src/compiler/translator/IntermTraverse.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-07T13:50:34Z",
+      "side": 1,
+      "message": "I\u0027d rather add this optimization afterwards in a separate patch if we think that it is needed. We can add a parameter that toggles l-value tracking to the TIntermTraverser constructor, but if we don\u0027t want to have default parameters in the constructor, the parameter would have to be specified in all traverser classes, and there are many of those.\n\nI feel like adding the parameter would also make the TIntermTraverser code even messier. Maybe we could restructure the whole thing so that instead of node-\u003etraverse() we\u0027d have functions like traverseAggregate() in TIntermTraverser which would do all the actual work and be possible to override in intermediate subclasses of TIntermTraverser, but that\u0027s also a large change.",
+      "parentUuid": "aafd9cea_9c91e55e",
       "range": {
         "startLine": 242,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "8719b374_733c40ef",
+        "filename": "src/compiler/translator/IntermTraverse.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-07T13:50:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6aae44fb_f8bbc90c",
+      "range": {
+        "startLine": 280,
+        "startChar": 12,
+        "endLine": 280,
+        "endChar": 98
+      },
+      "revId": "9959339e2a9af1e0df1eda32e8bc6f6fdb948b2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6aae44fb_38ef11f8",
         "filename": "src/compiler/translator/IntermTraverse.cpp",
         "patchSetId": 3
@@ -82,6 +154,30 @@
       "writtenOn": "2015-08-06T18:10:05Z",
       "side": 1,
       "message": "same here",
+      "range": {
+        "startLine": 303,
+        "startChar": 17,
+        "endLine": 303,
+        "endChar": 97
+      },
+      "revId": "9959339e2a9af1e0df1eda32e8bc6f6fdb948b2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0791430d_7fac2fa8",
+        "filename": "src/compiler/translator/IntermTraverse.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-07T13:50:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6aae44fb_38ef11f8",
       "range": {
         "startLine": 303,
         "startChar": 17,
