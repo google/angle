@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "2a5fecfa_98eab569",
+        "filename": "src/compiler/translator/IntermTraverse.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-07T16:49:44Z",
+      "side": 1,
+      "message": "That\u0027s fine, it sounds like there isn\u0027t a very simple way of doing this.",
+      "parentUuid": "8719b374_f34f308c",
+      "range": {
+        "startLine": 242,
+        "startChar": 8,
+        "endLine": 249,
+        "endChar": 9
+      },
+      "revId": "9959339e2a9af1e0df1eda32e8bc6f6fdb948b2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6aae44fb_f8bbc90c",
         "filename": "src/compiler/translator/IntermTraverse.cpp",
         "patchSetId": 3
