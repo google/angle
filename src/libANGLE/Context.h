@@ -275,6 +275,7 @@ class Context final : angle::NonCopyable
     GLenum mResetStatus;
     GLenum mResetStrategy;
     bool mRobustAccess;
+    egl::Surface *mCurrentSurface;
 
     ResourceManager *mResourceManager;
 

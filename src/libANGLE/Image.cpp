@@ -17,8 +17,7 @@
 
 namespace egl
 {
-ImageSibling::ImageSibling(GLuint id)
-    : gl::FramebufferAttachmentObject(id), mSourcesOf(), mTargetOf()
+ImageSibling::ImageSibling(GLuint id) : RefCountObject(id), mSourcesOf(), mTargetOf()
 {
 }
 

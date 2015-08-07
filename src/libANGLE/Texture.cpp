@@ -694,4 +694,18 @@ GLsizei Texture::getAttachmentSamples(const gl::FramebufferAttachment::Target &/
     return 0;
 }
 
+void Texture::onAttach()
+{
+    addRef();
+}
+
+void Texture::onDetach()
+{
+    release();
+}
+
+GLuint Texture::getId() const
+{
+    return id();
+}
 }
