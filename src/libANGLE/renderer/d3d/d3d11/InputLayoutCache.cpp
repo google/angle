@@ -31,16 +31,17 @@ gl::InputLayout GetInputLayout(
     const TranslatedAttribute *translatedAttributes[gl::MAX_VERTEX_ATTRIBS],
     size_t attributeCount)
 {
-    gl::InputLayout inputLayout(attributeCount, gl::VERTEX_FORMAT_INVALID);
-
+    gl::InputLayout inputLayout(gl::MAX_VERTEX_ATTRIBS, gl::VERTEX_FORMAT_INVALID);
     for (size_t attributeIndex = 0; attributeIndex < attributeCount; ++attributeIndex)
     {
         const TranslatedAttribute *translatedAttribute = translatedAttributes[attributeIndex];
 
         if (translatedAttribute->active)
         {
-            inputLayout[attributeIndex] = gl::GetVertexFormatType(
-                *translatedAttribute->attribute, translatedAttribute->currentValueType);
+            gl::VertexFormatType vertexFormatType =
+                gl::GetVertexFormatType(*translatedAttribute->attribute,
+                translatedAttribute->currentValueType);
+            inputLayout[attributeIndex] = vertexFormatType;
         }
     }
     return inputLayout;
