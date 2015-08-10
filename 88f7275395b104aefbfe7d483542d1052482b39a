@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7d42f30_7973830b",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1001245
+      },
+      "writtenOn": "2015-08-10T18:03:19Z",
+      "side": 1,
+      "message": "Does this need to be an args or can it just be a variable?",
+      "range": {
+        "startLine": 16,
+        "startChar": 2,
+        "endLine": 16,
+        "endChar": 21
+      },
+      "revId": "88f7275395b104aefbfe7d483542d1052482b39a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
