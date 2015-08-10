@@ -59,12 +59,9 @@ GLenum GetTextureType(GLenum samplerType)
 
 gl::InputLayout GetDefaultInputLayoutFromShader(const gl::Shader *vertexShader)
 {
-    gl::InputLayout defaultLayout(gl::MAX_VERTEX_ATTRIBS, gl::VERTEX_FORMAT_INVALID);
-    const auto &shaderAttributes = vertexShader->getActiveAttributes();
-    size_t layoutIndex = 0;
-    for (size_t attribIndex = 0; attribIndex < shaderAttributes.size(); ++attribIndex)
+    gl::InputLayout defaultLayout;
+    for (const sh::Attribute &shaderAttr : vertexShader->getActiveAttributes())
     {
-        const sh::Attribute &shaderAttr = shaderAttributes[attribIndex];
         if (shaderAttr.type != GL_NONE)
         {
             GLenum transposedType = gl::TransposeMatrixType(shaderAttr.type);
@@ -79,7 +76,7 @@ gl::InputLayout GetDefaultInputLayoutFromShader(const gl::Shader *vertexShader)
                 gl::VertexFormatType defaultType = gl::GetVertexFormatType(
                     componentType, GL_FALSE, components, pureInt);
 
-                defaultLayout[layoutIndex++] = defaultType;
+                defaultLayout.push_back(defaultType);
             }
         }
     }
@@ -150,23 +147,36 @@ void ProgramD3D::VertexExecutable::getSignature(RendererD3D *renderer,
                                                 const gl::InputLayout &inputLayout,
                                                 Signature *signatureOut)
 {
-    signatureOut->assign(inputLayout.size(), false);
+    signatureOut->resize(inputLayout.size());
 
     for (size_t index = 0; index < inputLayout.size(); ++index)
     {
         gl::VertexFormatType vertexFormatType = inputLayout[index];
+        bool converted = false;
         if (vertexFormatType != gl::VERTEX_FORMAT_INVALID)
         {
             VertexConversionType conversionType =
                 renderer->getVertexConversionType(vertexFormatType);
-            (*signatureOut)[index] = ((conversionType & VERTEX_CONVERT_GPU) != 0);
+            converted = ((conversionType & VERTEX_CONVERT_GPU) != 0);
         }
+
+        (*signatureOut)[index] = converted;
     }
 }
 
 bool ProgramD3D::VertexExecutable::matchesSignature(const Signature &signature) const
 {
-    return mSignature == signature;
+    size_t limit = std::max(mSignature.size(), signature.size());
+    for (size_t index = 0; index < limit; ++index)
+    {
+        // treat undefined indexes as 'not converted'
+        bool a = index < signature.size() ? signature[index] : false;
+        bool b = index < mSignature.size() ? mSignature[index] : false;
+        if (a != b)
+            return false;
+    }
+
+    return true;
 }
 
 ProgramD3D::PixelExecutable::PixelExecutable(const std::vector<GLenum> &outputSignature,
@@ -2060,7 +2070,7 @@ void ProgramD3D::sortAttributesByLayout(const std::vector<TranslatedAttribute> &
 
 void ProgramD3D::updateCachedInputLayout(const gl::Program *program, const gl::State &state)
 {
-    mCachedInputLayout.assign(gl::MAX_VERTEX_ATTRIBS, gl::VERTEX_FORMAT_INVALID);
+    mCachedInputLayout.clear();
     const int *semanticIndexes = program->getSemanticIndexes();
 
     const auto &vertexAttributes = state.getVertexArray()->getVertexAttributes();
@@ -2071,6 +2081,10 @@ void ProgramD3D::updateCachedInputLayout(const gl::Program *program, const gl::S
 
         if (semanticIndex != -1)
         {
+            if (mCachedInputLayout.size() < static_cast<size_t>(semanticIndex + 1))
+            {
+                mCachedInputLayout.resize(semanticIndex + 1, gl::VERTEX_FORMAT_INVALID);
+            }
             mCachedInputLayout[semanticIndex] =
                 GetVertexFormatType(vertexAttributes[attributeIndex],
                                     state.getVertexAttribCurrentValue(attributeIndex).Type);
