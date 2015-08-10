@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "874c5315_bbd9e721",
+        "filename": "src/tests/gl_tests/BufferDataTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-10T18:51:06Z",
+      "side": 1,
+      "message": "Does this constant have a particular signification or can it be any big number?",
+      "revId": "28266503bf933a21ad3469aa0cf06040f5dcc794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "273e474a_20c92a4f",
+        "filename": "src/tests/gl_tests/BufferDataTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-10T18:51:06Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "28266503bf933a21ad3469aa0cf06040f5dcc794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
