@@ -709,6 +709,28 @@
                             [
                                 '<@(libangle_gl_glx_sources)',
                             ],
+                            'link_settings': {
+                                'ldflags': [
+                                    '<!@(pkg-config --libs-only-L --libs-only-other x11 xi)',
+                                ],
+                                'libraries': [
+                                    '<!@(pkg-config --libs-only-l x11 xi) -ldl',
+                                ],
+                            },
+                        }],
+                        ['angle_link_glx==1',
+                        {
+                            'link_settings':
+                            {
+                                'libraries':
+                                [
+                                    '-lGL',
+                                ],
+                            },
+                            'defines':
+                            [
+                                'ANGLE_LINK_GLX',
+                            ],
                         }],
                         ['OS=="mac"',
                         {
@@ -748,20 +770,6 @@
                 {
                     'msvs_enable_winphone' : '1',
                 }],
-                ['angle_link_glx==1',
-                {
-                    'link_settings':
-                    {
-                        'libraries':
-                        [
-                            '-lGL',
-                        ],
-                    },
-                    'defines':
-                    [
-                        'ANGLE_LINK_GLX',
-                    ],
-                }],
             ],
         },
         {
@@ -796,17 +804,6 @@
                 ['angle_build_winphone==1',
                 {
                     'msvs_enable_winphone' : '1',
-                }],
-                ['angle_use_glx==1',
-                {
-                    'link_settings': {
-                        'ldflags': [
-                            '<!@(pkg-config --libs-only-L --libs-only-other x11 xi)',
-                        ],
-                        'libraries': [
-                            '<!@(pkg-config --libs-only-l x11 xi) -ldl',
-                        ],
-                    },
                 }],
                 ['OS == "mac"',
                 {
