@@ -102,7 +102,12 @@ gl::Error VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute
         return error;
     }
 
-    if (mWritePosition + spaceRequired < mWritePosition)
+    // Align to 16-byte boundary
+    unsigned int alignedSpaceRequired = roundUp(spaceRequired, 16u);
+
+    // Protect against integer overflow
+    if (!IsUnsignedAdditionSafe(mWritePosition, alignedSpaceRequired) ||
+        alignedSpaceRequired < spaceRequired)
     {
         return gl::Error(GL_OUT_OF_MEMORY, "Internal error, new vertex buffer write position would overflow.");
     }
@@ -125,10 +130,7 @@ gl::Error VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute
         *outStreamOffset = mWritePosition;
     }
 
-    mWritePosition += spaceRequired;
-
-    // Align to 16-byte boundary
-    mWritePosition = roundUp(mWritePosition, 16u);
+    mWritePosition += alignedSpaceRequired;
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -144,17 +146,18 @@ gl::Error VertexBufferInterface::reserveVertexSpace(const gl::VertexAttribute &a
         return error;
     }
 
+    // Align to 16-byte boundary
+    unsigned int alignedRequiredSpace = roundUp(requiredSpace, 16u);
+
     // Protect against integer overflow
-    if (mReservedSpace + requiredSpace < mReservedSpace)
+    if (!IsUnsignedAdditionSafe(mReservedSpace, alignedRequiredSpace) ||
+        alignedRequiredSpace < requiredSpace)
     {
         return gl::Error(GL_OUT_OF_MEMORY, "Unable to reserve %u extra bytes in internal vertex buffer, "
                          "it would result in an overflow.", requiredSpace);
     }
 
-    mReservedSpace += requiredSpace;
-
-    // Align to 16-byte boundary
-    mReservedSpace = roundUp(mReservedSpace, 16u);
+    mReservedSpace += alignedRequiredSpace;
 
     return gl::Error(GL_NO_ERROR);
 }
