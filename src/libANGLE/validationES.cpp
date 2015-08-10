@@ -1406,7 +1406,7 @@ bool ValidateCopyTexImageParametersBase(gl::Context *context, GLenum target, GLi
     return true;
 }
 
-static bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count, GLsizei maxVertex, GLsizei primcount)
+static bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count, GLsizei primcount)
 {
     switch (mode)
     {
@@ -1471,12 +1471,6 @@ static bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count, GLsiz
         return false;
     }
 
-    // Buffer validations
-    if (!ValidateDrawAttribs(context, primcount, maxVertex))
-    {
-        return false;
-    }
-
     // Uniform buffer validation
     for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < program->getActiveUniformBlockCount(); uniformBlockIndex++)
     {
@@ -1531,7 +1525,12 @@ bool ValidateDrawArrays(Context *context, GLenum mode, GLint first, GLsizei coun
         return false;
     }
 
-    if (!ValidateDrawBase(context, mode, count, count, primcount))
+    if (!ValidateDrawBase(context, mode, count, primcount))
+    {
+        return false;
+    }
+
+    if (!ValidateDrawAttribs(context, primcount, count))
     {
         return false;
     }
@@ -1664,6 +1663,11 @@ bool ValidateDrawElements(Context *context, GLenum mode, GLsizei count, GLenum t
         return false;
     }
 
+    if (!ValidateDrawBase(context, mode, count, primcount))
+    {
+        return false;
+    }
+
     // Use max index to validate if our vertex buffers are large enough for the pull.
     // TODO: offer fast path, with disabled index validation.
     // TODO: also disable index checking on back-ends that are robust to out-of-range accesses.
@@ -1682,7 +1686,7 @@ bool ValidateDrawElements(Context *context, GLenum mode, GLsizei count, GLenum t
         *indexRangeOut = ComputeIndexRange(type, indices, count);
     }
 
-    if (!ValidateDrawBase(context, mode, count, static_cast<GLsizei>(indexRangeOut->end), primcount))
+    if (!ValidateDrawAttribs(context, primcount, static_cast<GLsizei>(indexRangeOut->end)))
     {
         return false;
     }
