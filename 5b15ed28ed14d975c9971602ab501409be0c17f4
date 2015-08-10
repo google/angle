@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "874c5315_7b66ff1c",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-10T15:31:03Z",
+      "side": 1,
+      "message": "Adding the , false here causes a write to memory that will be overwritten afterwards so it can be removed.",
+      "revId": "5b15ed28ed14d975c9971602ab501409be0c17f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "874c5315_1b733bda",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-10T15:31:03Z",
+      "side": 1,
+      "message": "we might benefit from a .reserve here since we know the size",
+      "revId": "5b15ed28ed14d975c9971602ab501409be0c17f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
