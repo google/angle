@@ -28,7 +28,7 @@ class BufferDataTest : public ANGLETest
         mAttribLocation = -1;
     }
 
-    virtual void SetUp()
+    void SetUp() override
     {
         ANGLETest::SetUp();
 
@@ -72,7 +72,7 @@ class BufferDataTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         glDeleteBuffers(1, &mBuffer);
         glDeleteProgram(mProgram);
@@ -221,7 +221,7 @@ class IndexedBufferCopyTest : public ANGLETest
         setConfigDepthBits(24);
     }
 
-    virtual void SetUp()
+    void SetUp() override
     {
         ANGLETest::SetUp();
 
@@ -267,7 +267,7 @@ class IndexedBufferCopyTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         glDeleteBuffers(2, mBuffers);
         glDeleteBuffers(1, &mElementBuffer);
@@ -401,10 +401,108 @@ TEST_P(BufferDataTestES3, BufferResizing)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_INSTANTIATE_TEST(BufferDataTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
 ANGLE_INSTANTIATE_TEST(BufferDataTestES3, ES3_D3D11());
-
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(IndexedBufferCopyTest, ES3_D3D11());
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_INSTANTIATE_TEST(BufferDataTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
+#ifdef _WIN64
+
+// Test a bug where an integer overflow bug could trigger a crash in D3D.
+// The test uses 8 buffers with a size just under 0x2000000 to overflow max uint
+// (with the internal D3D rounding to 16-byte values) and trigger the bug.
+// Only handle this bug on 64-bit Windows for now. Harder to repro on 32-bit.
+class BufferDataOverflowTest : public ANGLETest
+{
+  protected:
+    BufferDataOverflowTest()
+        : mProgram(0)
+    {
+    }
+
+    ~BufferDataOverflowTest()
+    {
+        if (!mBuffers.empty())
+        {
+            glDeleteBuffers(static_cast<GLsizei>(mBuffers.size()), &mBuffers[0]);
+        }
+        if (mProgram != 0u)
+        {
+            glDeleteProgram(mProgram);
+        }
+    }
+
+    std::vector<GLuint> mBuffers;
+    GLuint mProgram;
+};
+
+// See description above.
+TEST_P(BufferDataOverflowTest, VertexBufferIntegerOverflow)
+{
+    // These values are special, to trigger the rounding bug.
+    unsigned int numItems = 0x7FFFFFE;
+    GLsizei bufferCnt = 8;
+
+    mBuffers.resize(bufferCnt);
+
+    std::stringstream vertexShaderStr;
+
+    for (GLsizei bufferIndex = 0; bufferIndex < bufferCnt; ++bufferIndex)
+    {
+        vertexShaderStr << "attribute float attrib" << bufferIndex << ";\n";
+    }
+
+    vertexShaderStr << "attribute vec2 position;\n"
+                       "varying float v_attrib;\n"
+                       "void main() {\n"
+                       "  gl_Position = vec4(position, 0, 1);\n"
+                       "  v_attrib = 0.0;\n";
+
+    for (GLsizei bufferIndex = 0; bufferIndex < bufferCnt; ++bufferIndex)
+    {
+        vertexShaderStr << "v_attrib += attrib" << bufferIndex << ";\n";
+    }
+
+    vertexShaderStr << "}";
+
+    const std::string &fragmentShader =
+        "varying highp float v_attrib;\n"
+        "void main() {\n"
+        "  gl_FragColor = vec4(v_attrib, 0, 0, 1);\n"
+        "}";
+
+    mProgram = CompileProgram(vertexShaderStr.str(), fragmentShader);
+    ASSERT_NE(0u, mProgram);
+    glUseProgram(mProgram);
+
+    glGenBuffers(bufferCnt, &mBuffers[0]);
+
+    std::vector<GLfloat> data(numItems, 1.0f);
+
+    for (GLsizei bufferIndex = 0; bufferIndex < bufferCnt; ++bufferIndex)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, mBuffers[bufferIndex]);
+        glBufferData(GL_ARRAY_BUFFER, numItems * sizeof(float), &data[0], GL_DYNAMIC_DRAW);
+
+        std::stringstream attribNameStr;
+        attribNameStr << "attrib" << bufferIndex;
+
+        GLint attribLocation = glGetAttribLocation(mProgram, attribNameStr.str().c_str());
+        ASSERT_NE(-1, attribLocation);
+
+        glVertexAttribPointer(attribLocation, 1, GL_FLOAT, GL_FALSE, 4, nullptr);
+        glEnableVertexAttribArray(attribLocation);
+    }
+
+    GLint positionLocation = glGetAttribLocation(mProgram, "position");
+    ASSERT_NE(-1, positionLocation);
+    glDisableVertexAttribArray(positionLocation);
+    glVertexAttrib2f(positionLocation, 1.0f, 1.0f);
+
+    EXPECT_GL_NO_ERROR();
+    glDrawArrays(GL_TRIANGLES, 0, numItems);
+    EXPECT_GL_ERROR(GL_OUT_OF_MEMORY);
+}
+
+ANGLE_INSTANTIATE_TEST(BufferDataOverflowTest, ES3_D3D11());
+
+#endif  // _WIN64
