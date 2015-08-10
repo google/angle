@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "071a2303_17a554b5",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-10T16:57:39Z",
+      "side": 1,
+      "message": "can you comment here as to the problem (is it Clang\u0027s fault? or ANGLE\u0027s?)",
+      "range": {
+        "startLine": 265,
+        "startChar": 39,
+        "endLine": 265,
+        "endChar": 55
+      },
+      "revId": "654aeb46fb62ac087aa2f28253abcc75b4b76a83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
