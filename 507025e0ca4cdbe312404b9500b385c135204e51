@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7e3171e_4c601faf",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-10T15:51:36Z",
+      "side": 0,
+      "message": "This code will only sync attributes that are used by the current program so the new code may be a bit slower in some cases.  Unfortunately it would be hard to leave some of the bits dirty so I\u0027m not sure if there is a good solution to that problem.",
+      "range": {
+        "startLine": 431,
+        "startChar": 4,
+        "endLine": 438,
+        "endChar": 5
+      },
+      "revId": "507025e0ca4cdbe312404b9500b385c135204e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
