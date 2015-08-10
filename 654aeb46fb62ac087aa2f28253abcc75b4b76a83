@@ -22,6 +22,30 @@
       "revId": "654aeb46fb62ac087aa2f28253abcc75b4b76a83",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "47c41b7d_3954ef4a",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-08-10T17:00:52Z",
+      "side": 1,
+      "message": "I\u0027d be interested in this too :-)",
+      "parentUuid": "071a2303_17a554b5",
+      "range": {
+        "startLine": 265,
+        "startChar": 39,
+        "endLine": 265,
+        "endChar": 55
+      },
+      "revId": "654aeb46fb62ac087aa2f28253abcc75b4b76a83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
