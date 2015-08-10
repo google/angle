@@ -7,6 +7,61 @@
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/InfoSink.h"
 
+void TIntermSymbol::traverse(TIntermTraverser *it)
+{
+    it->traverseSymbol(this);
+}
+
+void TIntermRaw::traverse(TIntermTraverser *it)
+{
+    it->traverseRaw(this);
+}
+
+void TIntermConstantUnion::traverse(TIntermTraverser *it)
+{
+    it->traverseConstantUnion(this);
+}
+
+void TIntermBinary::traverse(TIntermTraverser *it)
+{
+    it->traverseBinary(this);
+}
+
+void TIntermUnary::traverse(TIntermTraverser *it)
+{
+    it->traverseUnary(this);
+}
+
+void TIntermSelection::traverse(TIntermTraverser *it)
+{
+    it->traverseSelection(this);
+}
+
+void TIntermSwitch::traverse(TIntermTraverser *it)
+{
+    it->traverseSwitch(this);
+}
+
+void TIntermCase::traverse(TIntermTraverser *it)
+{
+    it->traverseCase(this);
+}
+
+void TIntermAggregate::traverse(TIntermTraverser *it)
+{
+    it->traverseAggregate(this);
+}
+
+void TIntermLoop::traverse(TIntermTraverser *it)
+{
+    it->traverseLoop(this);
+}
+
+void TIntermBranch::traverse(TIntermTraverser *it)
+{
+    it->traverseBranch(this);
+}
+
 void TIntermTraverser::pushParentBlock(TIntermAggregate *node)
 {
     mParentBlockStack.push_back(ParentBlock(node, 0));
@@ -137,334 +192,337 @@ bool TIntermTraverser::isInFunctionCallOutParameter() const
 //
 // Traversal functions for terminals are straighforward....
 //
-void TIntermSymbol::traverse(TIntermTraverser *it)
+void TIntermTraverser::traverseSymbol(TIntermSymbol *node)
 {
-    it->visitSymbol(this);
+    visitSymbol(node);
 }
 
-void TIntermConstantUnion::traverse(TIntermTraverser *it)
+void TIntermTraverser::traverseConstantUnion(TIntermConstantUnion *node)
 {
-    it->visitConstantUnion(this);
+    visitConstantUnion(node);
 }
 
 //
 // Traverse a binary node.
 //
-void TIntermBinary::traverse(TIntermTraverser *it)
+void TIntermTraverser::traverseBinary(TIntermBinary *node)
 {
     bool visit = true;
 
     //
     // visit the node before children if pre-visiting.
     //
-    if (it->preVisit)
-        visit = it->visitBinary(PreVisit, this);
+    if (preVisit)
+        visit = visitBinary(PreVisit, node);
 
     //
     // Visit the children, in the right order.
     //
     if (visit)
     {
-        it->incrementDepth(this);
+        incrementDepth(node);
 
         // Some binary operations like indexing can be inside an expression which must be an
         // l-value.
-        bool parentOperatorRequiresLValue     = it->operatorRequiresLValue();
-        bool parentInFunctionCallOutParameter = it->isInFunctionCallOutParameter();
-        if (isAssignment())
+        bool parentOperatorRequiresLValue     = operatorRequiresLValue();
+        bool parentInFunctionCallOutParameter = isInFunctionCallOutParameter();
+        if (node->isAssignment())
         {
-            ASSERT(!it->isLValueRequiredHere());
-            it->setOperatorRequiresLValue(true);
+            ASSERT(!isLValueRequiredHere());
+            setOperatorRequiresLValue(true);
         }
 
-        if (mLeft)
-            mLeft->traverse(it);
+        if (node->getLeft())
+            node->getLeft()->traverse(this);
 
-        if (it->inVisit)
-            visit = it->visitBinary(InVisit, this);
+        if (inVisit)
+            visit = visitBinary(InVisit, node);
 
-        if (isAssignment())
-            it->setOperatorRequiresLValue(false);
+        if (node->isAssignment())
+            setOperatorRequiresLValue(false);
 
         // Index is not required to be an l-value even when the surrounding expression is required
         // to be an l-value.
-        if (mOp == EOpIndexDirect || mOp == EOpIndexDirectInterfaceBlock ||
-            mOp == EOpIndexDirectStruct || mOp == EOpIndexIndirect)
+        TOperator op = node->getOp();
+        if (op == EOpIndexDirect || op == EOpIndexDirectInterfaceBlock ||
+            op == EOpIndexDirectStruct || op == EOpIndexIndirect)
         {
-            it->setOperatorRequiresLValue(false);
-            it->setInFunctionCallOutParameter(false);
+            setOperatorRequiresLValue(false);
+            setInFunctionCallOutParameter(false);
         }
 
-        if (visit && mRight)
-            mRight->traverse(it);
+        if (visit && node->getRight())
+            node->getRight()->traverse(this);
 
-        it->setOperatorRequiresLValue(parentOperatorRequiresLValue);
-        it->setInFunctionCallOutParameter(parentInFunctionCallOutParameter);
+        setOperatorRequiresLValue(parentOperatorRequiresLValue);
+        setInFunctionCallOutParameter(parentInFunctionCallOutParameter);
 
-        it->decrementDepth();
+        decrementDepth();
     }
 
     //
     // Visit the node after the children, if requested and the traversal
     // hasn't been cancelled yet.
     //
-    if (visit && it->postVisit)
-        it->visitBinary(PostVisit, this);
+    if (visit && postVisit)
+        visitBinary(PostVisit, node);
 }
 
 //
 // Traverse a unary node.  Same comments in binary node apply here.
 //
-void TIntermUnary::traverse(TIntermTraverser *it)
+void TIntermTraverser::traverseUnary(TIntermUnary *node)
 {
     bool visit = true;
 
-    if (it->preVisit)
-        visit = it->visitUnary(PreVisit, this);
+    if (preVisit)
+        visit = visitUnary(PreVisit, node);
 
     if (visit)
     {
-        it->incrementDepth(this);
+        incrementDepth(node);
 
-        ASSERT(!it->operatorRequiresLValue());
-        switch (getOp())
+        ASSERT(!operatorRequiresLValue());
+        switch (node->getOp())
         {
             case EOpPostIncrement:
             case EOpPostDecrement:
             case EOpPreIncrement:
             case EOpPreDecrement:
-                it->setOperatorRequiresLValue(true);
+                setOperatorRequiresLValue(true);
                 break;
             default:
                 break;
         }
 
-        mOperand->traverse(it);
+        node->getOperand()->traverse(this);
 
-        it->setOperatorRequiresLValue(false);
+        setOperatorRequiresLValue(false);
 
-        it->decrementDepth();
+        decrementDepth();
     }
 
-    if (visit && it->postVisit)
-        it->visitUnary(PostVisit, this);
+    if (visit && postVisit)
+        visitUnary(PostVisit, node);
 }
 
 //
 // Traverse an aggregate node.  Same comments in binary node apply here.
 //
-void TIntermAggregate::traverse(TIntermTraverser *it)
+void TIntermTraverser::traverseAggregate(TIntermAggregate *node)
 {
     bool visit = true;
 
-    switch (mOp)
+    TIntermSequence *sequence = node->getSequence();
+    switch (node->getOp())
     {
         case EOpFunction:
         {
-            TIntermAggregate *params = mSequence.front()->getAsAggregate();
+            TIntermAggregate *params = sequence->front()->getAsAggregate();
             ASSERT(params != nullptr);
             ASSERT(params->getOp() == EOpParameters);
-            it->addToFunctionMap(mName, params->getSequence());
+            addToFunctionMap(node->getName(), params->getSequence());
             break;
         }
         case EOpPrototype:
-            it->addToFunctionMap(mName, &mSequence);
+            addToFunctionMap(node->getName(), sequence);
             break;
         default:
             break;
     }
 
-    if (it->preVisit)
-        visit = it->visitAggregate(PreVisit, this);
+    if (preVisit)
+        visit = visitAggregate(PreVisit, node);
 
     if (visit)
     {
         bool inFunctionMap = false;
-        if (mOp == EOpFunctionCall)
+        if (node->getOp() == EOpFunctionCall)
         {
-            inFunctionMap = it->isInFunctionMap(this);
+            inFunctionMap = isInFunctionMap(node);
             if (!inFunctionMap)
             {
                 // The function is not user-defined - it is likely built-in texture function.
                 // Assume that those do not have out parameters.
-                it->setInFunctionCallOutParameter(false);
+                setInFunctionCallOutParameter(false);
             }
         }
 
-        it->incrementDepth(this);
+        incrementDepth(node);
 
         if (inFunctionMap)
         {
-            TIntermSequence *params             = it->getFunctionParameters(this);
+            TIntermSequence *params             = getFunctionParameters(node);
             TIntermSequence::iterator paramIter = params->begin();
-            for (auto *child : mSequence)
+            for (auto *child : *sequence)
             {
                 ASSERT(paramIter != params->end());
                 TQualifier qualifier = (*paramIter)->getAsTyped()->getQualifier();
-                it->setInFunctionCallOutParameter(qualifier == EvqOut || qualifier == EvqInOut);
+                setInFunctionCallOutParameter(qualifier == EvqOut || qualifier == EvqInOut);
 
-                child->traverse(it);
-                if (visit && it->inVisit)
+                child->traverse(this);
+                if (visit && inVisit)
                 {
-                    if (child != mSequence.back())
-                        visit = it->visitAggregate(InVisit, this);
+                    if (child != sequence->back())
+                        visit = visitAggregate(InVisit, node);
                 }
 
                 ++paramIter;
             }
 
-            it->setInFunctionCallOutParameter(false);
+            setInFunctionCallOutParameter(false);
         }
         else
         {
-            if (mOp == EOpSequence)
-                it->pushParentBlock(this);
+            if (node->getOp() == EOpSequence)
+                pushParentBlock(node);
 
-            for (auto *child : mSequence)
+            for (auto *child : *sequence)
             {
-                child->traverse(it);
-                if (visit && it->inVisit)
+                child->traverse(this);
+                if (visit && inVisit)
                 {
-                    if (child != mSequence.back())
-                        visit = it->visitAggregate(InVisit, this);
+                    if (child != sequence->back())
+                        visit = visitAggregate(InVisit, node);
                 }
 
-                if (mOp == EOpSequence)
-                    it->incrementParentBlockPos();
+                if (node->getOp() == EOpSequence)
+                    incrementParentBlockPos();
             }
 
-            if (mOp == EOpSequence)
-                it->popParentBlock();
+            if (node->getOp() == EOpSequence)
+                popParentBlock();
         }
 
-        it->decrementDepth();
+        decrementDepth();
     }
 
-    if (visit && it->postVisit)
-        it->visitAggregate(PostVisit, this);
+    if (visit && postVisit)
+        visitAggregate(PostVisit, node);
 }
 
 //
 // Traverse a selection node.  Same comments in binary node apply here.
 //
-void TIntermSelection::traverse(TIntermTraverser *it)
+void TIntermTraverser::traverseSelection(TIntermSelection *node)
 {
     bool visit = true;
 
-    if (it->preVisit)
-        visit = it->visitSelection(PreVisit, this);
+    if (preVisit)
+        visit = visitSelection(PreVisit, node);
 
     if (visit)
     {
-        it->incrementDepth(this);
-        mCondition->traverse(it);
-        if (mTrueBlock)
-            mTrueBlock->traverse(it);
-        if (mFalseBlock)
-            mFalseBlock->traverse(it);
-        it->decrementDepth();
+        incrementDepth(node);
+        node->getCondition()->traverse(this);
+        if (node->getTrueBlock())
+            node->getTrueBlock()->traverse(this);
+        if (node->getFalseBlock())
+            node->getFalseBlock()->traverse(this);
+        decrementDepth();
     }
 
-    if (visit && it->postVisit)
-        it->visitSelection(PostVisit, this);
+    if (visit && postVisit)
+        visitSelection(PostVisit, node);
 }
 
 //
 // Traverse a switch node.  Same comments in binary node apply here.
 //
-void TIntermSwitch::traverse(TIntermTraverser *it)
+void TIntermTraverser::traverseSwitch(TIntermSwitch *node)
 {
     bool visit = true;
 
-    if (it->preVisit)
-        visit = it->visitSwitch(PreVisit, this);
+    if (preVisit)
+        visit = visitSwitch(PreVisit, node);
 
     if (visit)
     {
-        it->incrementDepth(this);
-        mInit->traverse(it);
-        if (it->inVisit)
-            visit = it->visitSwitch(InVisit, this);
-        if (visit && mStatementList)
-            mStatementList->traverse(it);
-        it->decrementDepth();
+        incrementDepth(node);
+        node->getInit()->traverse(this);
+        if (inVisit)
+            visit = visitSwitch(InVisit, node);
+        if (visit && node->getStatementList())
+            node->getStatementList()->traverse(this);
+        decrementDepth();
     }
 
-    if (visit && it->postVisit)
-        it->visitSwitch(PostVisit, this);
+    if (visit && postVisit)
+        visitSwitch(PostVisit, node);
 }
 
 //
-// Traverse a switch node.  Same comments in binary node apply here.
+// Traverse a case node.  Same comments in binary node apply here.
 //
-void TIntermCase::traverse(TIntermTraverser *it)
+void TIntermTraverser::traverseCase(TIntermCase *node)
 {
     bool visit = true;
 
-    if (it->preVisit)
-        visit = it->visitCase(PreVisit, this);
+    if (preVisit)
+        visit = visitCase(PreVisit, node);
 
-    if (visit && mCondition)
-        mCondition->traverse(it);
+    if (visit && node->getCondition())
+        node->getCondition()->traverse(this);
 
-    if (visit && it->postVisit)
-        it->visitCase(PostVisit, this);
+    if (visit && postVisit)
+        visitCase(PostVisit, node);
 }
 
 //
 // Traverse a loop node.  Same comments in binary node apply here.
 //
-void TIntermLoop::traverse(TIntermTraverser *it)
+void TIntermTraverser::traverseLoop(TIntermLoop *node)
 {
     bool visit = true;
 
-    if (it->preVisit)
-        visit = it->visitLoop(PreVisit, this);
+    if (preVisit)
+        visit = visitLoop(PreVisit, node);
 
     if (visit)
     {
-        it->incrementDepth(this);
+        incrementDepth(node);
 
-        if (mInit)
-            mInit->traverse(it);
+        if (node->getInit())
+            node->getInit()->traverse(this);
 
-        if (mCond)
-            mCond->traverse(it);
+        if (node->getCondition())
+            node->getCondition()->traverse(this);
 
-        if (mBody)
-            mBody->traverse(it);
+        if (node->getBody())
+            node->getBody()->traverse(this);
 
-        if (mExpr)
-            mExpr->traverse(it);
+        if (node->getExpression())
+            node->getExpression()->traverse(this);
 
-        it->decrementDepth();
+        decrementDepth();
     }
 
-    if (visit && it->postVisit)
-        it->visitLoop(PostVisit, this);
+    if (visit && postVisit)
+        visitLoop(PostVisit, node);
 }
 
 //
 // Traverse a branch node.  Same comments in binary node apply here.
 //
-void TIntermBranch::traverse(TIntermTraverser *it)
+void TIntermTraverser::traverseBranch(TIntermBranch *node)
 {
     bool visit = true;
 
-    if (it->preVisit)
-        visit = it->visitBranch(PreVisit, this);
+    if (preVisit)
+        visit = visitBranch(PreVisit, node);
 
-    if (visit && mExpression) {
-        it->incrementDepth(this);
-        mExpression->traverse(it);
-        it->decrementDepth();
+    if (visit && node->getExpression())
+    {
+        incrementDepth(node);
+        node->getExpression()->traverse(this);
+        decrementDepth();
     }
 
-    if (visit && it->postVisit)
-        it->visitBranch(PostVisit, this);
+    if (visit && postVisit)
+        visitBranch(PostVisit, node);
 }
 
-void TIntermRaw::traverse(TIntermTraverser *it)
+void TIntermTraverser::traverseRaw(TIntermRaw *node)
 {
-    it->visitRaw(this);
+    visitRaw(node);
 }
