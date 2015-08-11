@@ -1422,9 +1422,9 @@ void Context::detachBuffer(GLuint buffer)
     mState.removeArrayBufferBinding(buffer);
 
     // mark as freed among the vertex array objects
-    for (auto vaoIt = mVertexArrayMap.begin(); vaoIt != mVertexArrayMap.end(); vaoIt++)
+    for (auto &vaoPair : mVertexArrayMap)
     {
-        vaoIt->second->detachBuffer(buffer);
+        vaoPair.second->detachBuffer(buffer);
     }
 }
 
