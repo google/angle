@@ -18,7 +18,7 @@
 // need to write a huge number of variations of the emulated compound assignment
 // to every translated shader with emulation enabled.
 
-class EmulatePrecision : public TIntermTraverser
+class EmulatePrecision : public TLValueTrackingTraverser
 {
   public:
     EmulatePrecision();

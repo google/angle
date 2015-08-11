@@ -292,7 +292,7 @@ bool parentUsesResult(TIntermNode* parent, TIntermNode* node)
 }  // namespace anonymous
 
 EmulatePrecision::EmulatePrecision()
-    : TIntermTraverser(true, true, true), mDeclaringVariables(false)
+    : TLValueTrackingTraverser(true, true, true), mDeclaringVariables(false)
 {}
 
 void EmulatePrecision::visitSymbol(TIntermSymbol *node)

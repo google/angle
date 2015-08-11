@@ -613,9 +613,7 @@ class TIntermTraverser : angle::NonCopyable
           postVisit(postVisit),
           mDepth(0),
           mMaxDepth(0),
-          mTemporaryIndex(nullptr),
-          mOperatorRequiresLValue(false),
-          mInFunctionCallOutParameter(false)
+          mTemporaryIndex(nullptr)
     {
     }
     virtual ~TIntermTraverser() {}
@@ -692,36 +690,6 @@ class TIntermTraverser : angle::NonCopyable
     const bool preVisit;
     const bool inVisit;
     const bool postVisit;
-
-    // Track whether an l-value is required in the node that is currently being traversed.
-    // These functions are intended to be called only from traversal functions, not from subclasses
-    // of TIntermTraverser.
-    // Use isLValueRequiredHere instead to check all conditions which require an l-value.
-    void setOperatorRequiresLValue(bool lValueRequired)
-    {
-        mOperatorRequiresLValue = lValueRequired;
-    }
-    bool operatorRequiresLValue() const { return mOperatorRequiresLValue; }
-
-    // Add a function encountered during traversal to the function map. Intended to be called only
-    // from traversal functions, not from subclasses of TIntermTraverser.
-    void addToFunctionMap(const TString &name, TIntermSequence *paramSequence);
-
-    // Return true if the prototype or definition of the function being called has been encountered
-    // during traversal.
-    bool isInFunctionMap(const TIntermAggregate *callNode) const;
-    // Return the parameters sequence from the function definition or prototype.
-    TIntermSequence *getFunctionParameters(const TIntermAggregate *callNode);
-
-    // Track whether an l-value is required inside a function call.
-    // These functions are intended to be called only from traversal functions, not from traverers.
-    void setInFunctionCallOutParameter(bool inOutParameter);
-    bool isInFunctionCallOutParameter() const;
-
-    bool isLValueRequiredHere() const
-    {
-        return mOperatorRequiresLValue || mInFunctionCallOutParameter;
-    }
 
     int mDepth;
     int mMaxDepth;
@@ -822,6 +790,54 @@ class TIntermTraverser : angle::NonCopyable
     std::vector<ParentBlock> mParentBlockStack;
 
     unsigned int *mTemporaryIndex;
+};
+
+// Traverser parent class that tracks where a node is a destination of a write operation and so is
+// required to be an l-value.
+class TLValueTrackingTraverser : public TIntermTraverser
+{
+  public:
+    TLValueTrackingTraverser(bool preVisit, bool inVisit, bool postVisit)
+        : TIntermTraverser(preVisit, inVisit, postVisit),
+          mOperatorRequiresLValue(false),
+          mInFunctionCallOutParameter(false)
+    {
+    }
+    virtual ~TLValueTrackingTraverser() {}
+
+    void traverseBinary(TIntermBinary *node) override;
+    void traverseUnary(TIntermUnary *node) override;
+    void traverseAggregate(TIntermAggregate *node) override;
+
+  protected:
+    bool isLValueRequiredHere() const
+    {
+        return mOperatorRequiresLValue || mInFunctionCallOutParameter;
+    }
+
+    // Return true if the prototype or definition of the function being called has been encountered
+    // during traversal.
+    bool isInFunctionMap(const TIntermAggregate *callNode) const;
+
+  private:
+    // Track whether an l-value is required in the node that is currently being traversed by the
+    // surrounding operator.
+    // Use isLValueRequiredHere to check all conditions which require an l-value.
+    void setOperatorRequiresLValue(bool lValueRequired)
+    {
+        mOperatorRequiresLValue = lValueRequired;
+    }
+    bool operatorRequiresLValue() const { return mOperatorRequiresLValue; }
+
+    // Add a function encountered during traversal to the function map.
+    void addToFunctionMap(const TString &name, TIntermSequence *paramSequence);
+
+    // Return the parameters sequence from the function definition or prototype.
+    TIntermSequence *getFunctionParameters(const TIntermAggregate *callNode);
+
+    // Track whether an l-value is required inside a function call.
+    void setInFunctionCallOutParameter(bool inOutParameter);
+    bool isInFunctionCallOutParameter() const;
 
     bool mOperatorRequiresLValue;
     bool mInFunctionCallOutParameter;

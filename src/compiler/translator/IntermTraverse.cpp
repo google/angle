@@ -151,29 +151,29 @@ void TIntermTraverser::nextTemporaryIndex()
     ++(*mTemporaryIndex);
 }
 
-void TIntermTraverser::addToFunctionMap(const TString &name, TIntermSequence *paramSequence)
+void TLValueTrackingTraverser::addToFunctionMap(const TString &name, TIntermSequence *paramSequence)
 {
     mFunctionMap[name] = paramSequence;
 }
 
-bool TIntermTraverser::isInFunctionMap(const TIntermAggregate *callNode) const
+bool TLValueTrackingTraverser::isInFunctionMap(const TIntermAggregate *callNode) const
 {
     ASSERT(callNode->getOp() == EOpFunctionCall || callNode->getOp() == EOpInternalFunctionCall);
     return (mFunctionMap.find(callNode->getName()) != mFunctionMap.end());
 }
 
-TIntermSequence *TIntermTraverser::getFunctionParameters(const TIntermAggregate *callNode)
+TIntermSequence *TLValueTrackingTraverser::getFunctionParameters(const TIntermAggregate *callNode)
 {
     ASSERT(isInFunctionMap(callNode));
     return mFunctionMap[callNode->getName()];
 }
 
-void TIntermTraverser::setInFunctionCallOutParameter(bool inOutParameter)
+void TLValueTrackingTraverser::setInFunctionCallOutParameter(bool inOutParameter)
 {
     mInFunctionCallOutParameter = inOutParameter;
 }
 
-bool TIntermTraverser::isInFunctionCallOutParameter() const
+bool TLValueTrackingTraverser::isInFunctionCallOutParameter() const
 {
     return mInFunctionCallOutParameter;
 }
@@ -206,6 +206,43 @@ void TIntermTraverser::traverseConstantUnion(TIntermConstantUnion *node)
 // Traverse a binary node.
 //
 void TIntermTraverser::traverseBinary(TIntermBinary *node)
+{
+    bool visit = true;
+
+    //
+    // visit the node before children if pre-visiting.
+    //
+    if (preVisit)
+        visit = visitBinary(PreVisit, node);
+
+    //
+    // Visit the children, in the right order.
+    //
+    if (visit)
+    {
+        incrementDepth(node);
+
+        if (node->getLeft())
+            node->getLeft()->traverse(this);
+
+        if (inVisit)
+            visit = visitBinary(InVisit, node);
+
+        if (visit && node->getRight())
+            node->getRight()->traverse(this);
+
+        decrementDepth();
+    }
+
+    //
+    // Visit the node after the children, if requested and the traversal
+    // hasn't been cancelled yet.
+    //
+    if (visit && postVisit)
+        visitBinary(PostVisit, node);
+}
+
+void TLValueTrackingTraverser::traverseBinary(TIntermBinary *node)
 {
     bool visit = true;
 
@@ -282,6 +319,26 @@ void TIntermTraverser::traverseUnary(TIntermUnary *node)
     {
         incrementDepth(node);
 
+        node->getOperand()->traverse(this);
+
+        decrementDepth();
+    }
+
+    if (visit && postVisit)
+        visitUnary(PostVisit, node);
+}
+
+void TLValueTrackingTraverser::traverseUnary(TIntermUnary *node)
+{
+    bool visit = true;
+
+    if (preVisit)
+        visit = visitUnary(PreVisit, node);
+
+    if (visit)
+    {
+        incrementDepth(node);
+
         ASSERT(!operatorRequiresLValue());
         switch (node->getOp())
         {
@@ -310,6 +367,45 @@ void TIntermTraverser::traverseUnary(TIntermUnary *node)
 // Traverse an aggregate node.  Same comments in binary node apply here.
 //
 void TIntermTraverser::traverseAggregate(TIntermAggregate *node)
+{
+    bool visit = true;
+
+    TIntermSequence *sequence = node->getSequence();
+
+    if (preVisit)
+        visit = visitAggregate(PreVisit, node);
+
+    if (visit)
+    {
+        incrementDepth(node);
+
+        if (node->getOp() == EOpSequence)
+            pushParentBlock(node);
+
+        for (auto *child : *sequence)
+        {
+            child->traverse(this);
+            if (visit && inVisit)
+            {
+                if (child != sequence->back())
+                    visit = visitAggregate(InVisit, node);
+            }
+
+            if (node->getOp() == EOpSequence)
+                incrementParentBlockPos();
+        }
+
+        if (node->getOp() == EOpSequence)
+            popParentBlock();
+
+        decrementDepth();
+    }
+
+    if (visit && postVisit)
+        visitAggregate(PostVisit, node);
+}
+
+void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
 {
     bool visit = true;
 
