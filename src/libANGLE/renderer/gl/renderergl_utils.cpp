@@ -244,6 +244,9 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     }
     else
     {
+        // Framebuffer is required to have at least one drawbuffer even if the extension is not
+        // supported
+        caps->maxDrawBuffers = 1;
         LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
     }
 

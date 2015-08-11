@@ -1602,15 +1602,13 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                 return false;
             }
 
-            for (size_t colorAttachment = 0;
-                 colorAttachment < drawFramebuffer->getNumColorBuffers(); ++colorAttachment)
+            for (size_t drawbufferIdx = 0;
+                 drawbufferIdx < drawFramebuffer->getDrawbufferStateCount(); ++drawbufferIdx)
             {
-                if (drawFramebuffer->isEnabledColorAttachment(colorAttachment))
+                const FramebufferAttachment *attachment =
+                    drawFramebuffer->getDrawBuffer(drawbufferIdx);
+                if (attachment)
                 {
-                    const FramebufferAttachment *attachment =
-                        drawFramebuffer->getColorbuffer(colorAttachment);
-                    ASSERT(attachment);
-
                     if (!(attachment->type() == GL_TEXTURE &&
                           attachment->getTextureImageIndex().type == GL_TEXTURE_2D) &&
                         attachment->type() != GL_RENDERBUFFER &&

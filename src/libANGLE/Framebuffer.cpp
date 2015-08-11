@@ -54,6 +54,7 @@ Framebuffer::Data::Data(const Caps &caps)
       mDrawBufferStates(caps.maxDrawBuffers, GL_NONE),
       mReadBufferState(GL_COLOR_ATTACHMENT0_EXT)
 {
+    ASSERT(mDrawBufferStates.size() > 0);
     mDrawBufferStates[0] = GL_COLOR_ATTACHMENT0_EXT;
 }
 
@@ -287,10 +288,15 @@ const FramebufferAttachment *Framebuffer::getAttachment(GLenum attachment) const
     }
 }
 
-GLenum Framebuffer::getDrawBufferState(unsigned int colorAttachment) const
+size_t Framebuffer::getDrawbufferStateCount() const
 {
-    ASSERT(colorAttachment < mData.mDrawBufferStates.size());
-    return mData.mDrawBufferStates[colorAttachment];
+    return mData.mDrawBufferStates.size();
+}
+
+GLenum Framebuffer::getDrawBufferState(size_t drawBuffer) const
+{
+    ASSERT(drawBuffer < mData.mDrawBufferStates.size());
+    return mData.mDrawBufferStates[drawBuffer];
 }
 
 void Framebuffer::setDrawBuffers(size_t count, const GLenum *buffers)
@@ -301,6 +307,36 @@ void Framebuffer::setDrawBuffers(size_t count, const GLenum *buffers)
     std::copy(buffers, buffers + count, drawStates.begin());
     std::fill(drawStates.begin() + count, drawStates.end(), GL_NONE);
     mDirtyBits.set(DIRTY_BIT_DRAW_BUFFERS);
+}
+
+const FramebufferAttachment *Framebuffer::getDrawBuffer(size_t drawBuffer) const
+{
+    ASSERT(drawBuffer < mData.mDrawBufferStates.size());
+    if (mData.mDrawBufferStates[drawBuffer] != GL_NONE)
+    {
+        // ES3 spec: "If the GL is bound to a draw framebuffer object, the ith buffer listed in bufs
+        // must be COLOR_ATTACHMENTi or NONE"
+        ASSERT(mData.mDrawBufferStates[drawBuffer] == GL_COLOR_ATTACHMENT0 + drawBuffer ||
+               (drawBuffer == 0 && mData.mDrawBufferStates[drawBuffer] == GL_BACK));
+        return getAttachment(mData.mDrawBufferStates[drawBuffer]);
+    }
+    else
+    {
+        return nullptr;
+    }
+}
+
+bool Framebuffer::hasEnabledDrawBuffer() const
+{
+    for (size_t drawbufferIdx = 0; drawbufferIdx < mData.mDrawBufferStates.size(); ++drawbufferIdx)
+    {
+        if (getDrawBuffer(drawbufferIdx) != nullptr)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 GLenum Framebuffer::getReadBufferState() const
@@ -315,26 +351,6 @@ void Framebuffer::setReadBuffer(GLenum buffer)
             (buffer - GL_COLOR_ATTACHMENT0) < mData.mColorAttachments.size()));
     mData.mReadBufferState = buffer;
     mDirtyBits.set(DIRTY_BIT_READ_BUFFER);
-}
-
-bool Framebuffer::isEnabledColorAttachment(size_t colorAttachment) const
-{
-    ASSERT(colorAttachment < mData.mColorAttachments.size());
-    return (mData.mColorAttachments[colorAttachment].isAttached() &&
-            mData.mDrawBufferStates[colorAttachment] != GL_NONE);
-}
-
-bool Framebuffer::hasEnabledColorAttachment() const
-{
-    for (size_t colorAttachment = 0; colorAttachment < mData.mColorAttachments.size(); ++colorAttachment)
-    {
-        if (isEnabledColorAttachment(static_cast<unsigned int>(colorAttachment)))
-        {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 size_t Framebuffer::getNumColorBuffers() const
@@ -354,9 +370,9 @@ bool Framebuffer::hasStencil() const
 
 bool Framebuffer::usingExtendedDrawBuffers() const
 {
-    for (size_t colorAttachment = 1; colorAttachment < mData.mColorAttachments.size(); ++colorAttachment)
+    for (size_t drawbufferIdx = 1; drawbufferIdx < mData.mDrawBufferStates.size(); ++drawbufferIdx)
     {
-        if (isEnabledColorAttachment(static_cast<unsigned int>(colorAttachment)))
+        if (getDrawBuffer(drawbufferIdx) != nullptr)
         {
             return true;
         }

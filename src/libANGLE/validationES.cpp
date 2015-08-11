@@ -682,11 +682,14 @@ bool ValidateBlitFramebufferParameters(gl::Context *context,
             GLenum readInternalFormat = readColorBuffer->getInternalFormat();
             const InternalFormat &readFormatInfo = GetInternalFormatInfo(readInternalFormat);
 
-            for (size_t i = 0; i < drawFramebuffer->getNumColorBuffers(); i++)
+            for (size_t drawbufferIdx = 0;
+                 drawbufferIdx < drawFramebuffer->getDrawbufferStateCount(); ++drawbufferIdx)
             {
-                if (drawFramebuffer->isEnabledColorAttachment(i))
+                const FramebufferAttachment *attachment =
+                    drawFramebuffer->getDrawBuffer(drawbufferIdx);
+                if (attachment)
                 {
-                    GLenum drawInternalFormat = drawFramebuffer->getColorbuffer(i)->getInternalFormat();
+                    GLenum drawInternalFormat            = attachment->getInternalFormat();
                     const InternalFormat &drawFormatInfo = GetInternalFormatInfo(drawInternalFormat);
 
                     // The GL ES 3.0.2 spec (pg 193) states that:

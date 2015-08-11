@@ -54,7 +54,7 @@ ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
     const gl::Framebuffer *framebufferObject = state.getDrawFramebuffer();
     if (mask & GL_COLOR_BUFFER_BIT)
     {
-        if (framebufferObject->hasEnabledColorAttachment())
+        if (framebufferObject->hasEnabledDrawBuffer())
         {
             for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
             {

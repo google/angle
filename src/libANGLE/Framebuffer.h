@@ -117,14 +117,15 @@ class Framebuffer final : public LabeledObject
 
     const FramebufferAttachment *getAttachment(GLenum attachment) const;
 
-    GLenum getDrawBufferState(unsigned int colorAttachment) const;
+    size_t getDrawbufferStateCount() const;
+    GLenum getDrawBufferState(size_t drawBuffer) const;
     void setDrawBuffers(size_t count, const GLenum *buffers);
+    const FramebufferAttachment *getDrawBuffer(size_t drawBuffer) const;
+    bool hasEnabledDrawBuffer() const;
 
     GLenum getReadBufferState() const;
     void setReadBuffer(GLenum buffer);
 
-    bool isEnabledColorAttachment(size_t colorAttachment) const;
-    bool hasEnabledColorAttachment() const;
     size_t getNumColorBuffers() const;
     bool hasDepth() const;
     bool hasStencil() const;
