@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a75877e6_04e69622",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-11T19:30:33Z",
+      "side": 1,
+      "message": "I though it was being released in all cases in egl::MakeCurrent but was wrong, it is released only if it is a different context. Done",
+      "parentUuid": "a7fdd7ea_1c66751b",
+      "range": {
+        "startLine": 203,
+        "startChar": 4,
+        "endLine": 204,
+        "endChar": 32
+      },
+      "revId": "ad2162877d86e12ea6da41e445366ee928cf3522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "87f7f3e0_a65e8847",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 2
@@ -72,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "47da5baa_69e6e523",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-11T19:30:33Z",
+      "side": 1,
+      "message": "In our current implementation the surface can be \"current\" twice at the same time for the following reason:\negl::MakeCurrent looks like this\n  if (context-\u003emakecurrent(surface).isError()) return error\n  previousContext-\u003ereleaseSurface()\n\nThe surface is very temporarily current to the two contexts and we cannot move the call to releaseSurface before as it would break the atomicity of the egl call (the part that says that if an error occur it is like the call wasn\u0027t made at all).\n\nI changed setIsCurrent to perform a refcount internally instead, I think the function name and prototype is decent for this use case but am open to other names / prototypes.",
+      "parentUuid": "a77f9720_cff1818f",
+      "range": {
+        "startLine": 255,
+        "startChar": 4,
+        "endLine": 255,
+        "endChar": 41
+      },
+      "revId": "ad2162877d86e12ea6da41e445366ee928cf3522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "47125bd9_4c700ffd",
         "filename": "src/libANGLE/FramebufferAttachment.cpp",
         "patchSetId": 2
@@ -83,6 +131,30 @@
       "writtenOn": "2015-08-11T14:48:46Z",
       "side": 1,
       "message": "Just call attach to increase code-reuse.",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 5
+      },
+      "revId": "ad2162877d86e12ea6da41e445366ee928cf3522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e747cfea_44d6c26c",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-11T19:30:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47125bd9_4c700ffd",
       "range": {
         "startLine": 58,
         "startChar": 4,
@@ -118,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "074143d7_c2aba45d",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-11T19:30:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7d48b39_d32eecc7",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 72,
+        "endChar": 5
+      },
+      "revId": "ad2162877d86e12ea6da41e445366ee928cf3522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c7d48b39_b32360de",
         "filename": "src/libANGLE/FramebufferAttachment.cpp",
         "patchSetId": 2
@@ -141,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "a77f9720_6fbc0db2",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-11T19:30:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7d48b39_b32360de",
+      "range": {
+        "startLine": 77,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 5
+      },
+      "revId": "ad2162877d86e12ea6da41e445366ee928cf3522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7fdd7ea_3c69b1ed",
         "filename": "src/libANGLE/FramebufferAttachment.cpp",
         "patchSetId": 2
@@ -152,6 +272,30 @@
       "writtenOn": "2015-08-11T14:48:46Z",
       "side": 1,
       "message": "here too.",
+      "range": {
+        "startLine": 89,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 5
+      },
+      "revId": "ad2162877d86e12ea6da41e445366ee928cf3522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "071a2303_77a85010",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-11T19:30:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7fdd7ea_3c69b1ed",
       "range": {
         "startLine": 89,
         "startChar": 4,
@@ -210,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "27d1e78c_6801c33d",
+        "filename": "src/libANGLE/Image.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-11T19:30:33Z",
+      "side": 1,
+      "message": "I think it does, see the binding pointer in Image.",
+      "parentUuid": "27656796_48ec9f04",
+      "range": {
+        "startLine": 28,
+        "startChar": 6,
+        "endLine": 28,
+        "endChar": 18
+      },
+      "revId": "ad2162877d86e12ea6da41e445366ee928cf3522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c759ebe9_a511be90",
         "filename": "src/libANGLE/Surface.cpp",
         "patchSetId": 2
@@ -221,6 +389,24 @@
       "writtenOn": "2015-08-11T14:55:12Z",
       "side": 1,
       "message": "this unreachable is safe?",
+      "revId": "ad2162877d86e12ea6da41e445366ee928cf3522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27864797_80ccf6ae",
+        "filename": "src/libANGLE/Surface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-11T19:30:33Z",
+      "side": 1,
+      "message": "getId() is called by FramebufferAttachment::id() which is only called by isTextureWithId or isRenderbufferWithId after checking the type is TEXTURE or RENDERBUFFER. That\u0027s why I think it is safe.",
+      "parentUuid": "c759ebe9_a511be90",
       "revId": "ad2162877d86e12ea6da41e445366ee928cf3522",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
