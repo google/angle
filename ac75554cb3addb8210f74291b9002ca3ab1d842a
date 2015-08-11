@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7d48b39_932864bb",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-11T15:08:25Z",
+      "side": 1,
+      "message": "SafeDelete if possible just so the value is set to NULL and we can verify in the debugger that things are being deleted.",
+      "range": {
+        "startLine": 134,
+        "startChar": 12,
+        "endLine": 134,
+        "endChar": 38
+      },
+      "revId": "ac75554cb3addb8210f74291b9002ca3ab1d842a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7e3171e_cf73e18c",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-11T15:08:25Z",
+      "side": 1,
+      "message": "Since this is only called from one place (as far as I can tell), can you just inline it in Context::makeCurrent to keep all the logic together? The function has a very specific purpose that won\u0027t be used in general.",
+      "range": {
+        "startLine": 165,
+        "startChar": 4,
+        "endLine": 165,
+        "endChar": 77
+      },
+      "revId": "ac75554cb3addb8210f74291b9002ca3ab1d842a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7e3171e_af789569",
+        "filename": "src/libANGLE/Surface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-11T15:08:25Z",
+      "side": 1,
+      "message": "Probably don\u0027t need this.",
+      "range": {
+        "startLine": 209,
+        "startChar": 4,
+        "endLine": 209,
+        "endChar": 35
+      },
+      "revId": "ac75554cb3addb8210f74291b9002ca3ab1d842a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "87f8d3fb_fb23cfdc",
+        "filename": "src/libANGLE/renderer/gl/SurfaceGL.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-11T15:08:25Z",
+      "side": 1,
+      "message": "Should just pass the renderer instead. The getter in DisplayGL could be made protected.",
+      "range": {
+        "startLine": 22,
+        "startChar": 14,
+        "endLine": 22,
+        "endChar": 32
+      },
+      "revId": "ac75554cb3addb8210f74291b9002ca3ab1d842a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
