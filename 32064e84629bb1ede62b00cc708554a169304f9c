@@ -142,6 +142,30 @@
       "revId": "32064e84629bb1ede62b00cc708554a169304f9c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c759ebe9_c502ba48",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1686,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-11T14:45:35Z",
+      "side": 1,
+      "message": "Do you mean splitting ValidateDrawBase in two?",
+      "parentUuid": "c7ee4b36_3dec0f04",
+      "range": {
+        "startLine": 1682,
+        "startChar": 8,
+        "endLine": 1686,
+        "endChar": 9
+      },
+      "revId": "32064e84629bb1ede62b00cc708554a169304f9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
