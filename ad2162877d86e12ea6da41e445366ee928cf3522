@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "47125bd9_4c700ffd",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-11T14:48:46Z",
+      "side": 1,
+      "message": "Just call attach to increase code-reuse.",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 5
+      },
+      "revId": "ad2162877d86e12ea6da41e445366ee928cf3522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7d48b39_d32eecc7",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-11T14:48:46Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 72,
+        "endChar": 5
+      },
+      "revId": "ad2162877d86e12ea6da41e445366ee928cf3522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7d48b39_b32360de",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-11T14:48:46Z",
+      "side": 1,
+      "message": "And here",
+      "range": {
+        "startLine": 77,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 5
+      },
+      "revId": "ad2162877d86e12ea6da41e445366ee928cf3522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7fdd7ea_3c69b1ed",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-11T14:48:46Z",
+      "side": 1,
+      "message": "here too.",
+      "range": {
+        "startLine": 89,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 5
+      },
+      "revId": "ad2162877d86e12ea6da41e445366ee928cf3522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
