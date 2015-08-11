@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a77f9720_eff6bd84",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-11T18:28:43Z",
+      "side": 1,
+      "message": "nit: on Linux we\u0027ll probably get a warning about virtual / override inconsistency",
+      "revId": "e4da2862d6a102343417ef7eb496318d51f60541",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
