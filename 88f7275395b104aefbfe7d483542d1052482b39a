@@ -22,6 +22,30 @@
       "revId": "88f7275395b104aefbfe7d483542d1052482b39a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "271727da_1b449f1c",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1133169
+      },
+      "writtenOn": "2015-08-11T13:29:58Z",
+      "side": 1,
+      "message": "No, it doesn\u0027t have to be an arg. It\u0027s overridable variable in GYP version so I put it into declare_args() just for consistency. I will change this.",
+      "parentUuid": "e7d42f30_7973830b",
+      "range": {
+        "startLine": 16,
+        "startChar": 2,
+        "endLine": 16,
+        "endChar": 21
+      },
+      "revId": "88f7275395b104aefbfe7d483542d1052482b39a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
