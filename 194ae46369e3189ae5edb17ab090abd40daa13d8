@@ -49,6 +49,54 @@
     },
     {
       "key": {
+        "uuid": "47e97bf9_667f7487",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-08-11T16:20:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7ee4b36_9db5631b",
+      "range": {
+        "startLine": 274,
+        "startChar": 16,
+        "endLine": 274,
+        "endChar": 31
+      },
+      "revId": "194ae46369e3189ae5edb17ab090abd40daa13d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67091fdd_da63650c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-08-11T16:20:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7d48b39_d3b5cc19",
+      "range": {
+        "startLine": 274,
+        "startChar": 16,
+        "endLine": 274,
+        "endChar": 31
+      },
+      "revId": "194ae46369e3189ae5edb17ab090abd40daa13d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a75877e6_44c56e82",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 2
@@ -60,6 +108,30 @@
       "writtenOn": "2015-08-11T12:06:49Z",
       "side": 1,
       "message": "you can remove the (GL_NO_ERROR)",
+      "range": {
+        "startLine": 1305,
+        "startChar": 19,
+        "endLine": 1305,
+        "endChar": 32
+      },
+      "revId": "194ae46369e3189ae5edb17ab090abd40daa13d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67e67f2a_0c8e8b3d",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1305,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-08-11T16:20:07Z",
+      "side": 1,
+      "message": "gl::Error doesn\u0027t seem to have a default constructor and fails to compile without this.",
+      "parentUuid": "a75877e6_44c56e82",
       "range": {
         "startLine": 1305,
         "startChar": 19,
