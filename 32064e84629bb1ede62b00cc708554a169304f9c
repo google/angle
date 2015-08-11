@@ -46,6 +46,30 @@
       "revId": "32064e84629bb1ede62b00cc708554a169304f9c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "874c5315_db2f1314",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1686,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-11T14:42:02Z",
+      "side": 1,
+      "message": "It\u0027s validated in ValidateDrawBase, below. How about moving ValidateDrawBase higher?",
+      "parentUuid": "a7fcf7c5_ea020348",
+      "range": {
+        "startLine": 1682,
+        "startChar": 8,
+        "endLine": 1686,
+        "endChar": 9
+      },
+      "revId": "32064e84629bb1ede62b00cc708554a169304f9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
