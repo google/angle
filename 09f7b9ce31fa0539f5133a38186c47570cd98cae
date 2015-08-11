@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "47da5baa_4915e16d",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-11T20:37:29Z",
+      "side": 1,
+      "message": "this was the problematic bit- was using the API-level object name instead of the Renderer-level name.",
+      "range": {
+        "startLine": 397,
+        "startChar": 4,
+        "endLine": 402,
+        "endChar": 80
+      },
+      "revId": "09f7b9ce31fa0539f5133a38186c47570cd98cae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
