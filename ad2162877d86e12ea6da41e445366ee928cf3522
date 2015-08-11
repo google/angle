@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "a77f9720_cff1818f",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-11T15:02:43Z",
+      "side": 1,
+      "message": "makeCurrent binds the context to the \u0027current rendering thread\u0027, and the context to the surface if I read this correctly. the ownership is confusing but I don\u0027t think there can be more than one current thing.",
+      "parentUuid": "87f7f3e0_a65e8847",
+      "range": {
+        "startLine": 255,
+        "startChar": 4,
+        "endLine": 255,
+        "endChar": 41
+      },
+      "revId": "ad2162877d86e12ea6da41e445366ee928cf3522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "47125bd9_4c700ffd",
         "filename": "src/libANGLE/FramebufferAttachment.cpp",
         "patchSetId": 2
