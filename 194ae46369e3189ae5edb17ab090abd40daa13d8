@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7ee4b36_9db5631b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-11T12:06:49Z",
+      "side": 1,
+      "message": "I\u0027d rather you change this to \u0027attachmentIndex\u0027, but this is a minor quibble",
+      "range": {
+        "startLine": 274,
+        "startChar": 16,
+        "endLine": 274,
+        "endChar": 31
+      },
+      "revId": "194ae46369e3189ae5edb17ab090abd40daa13d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a75877e6_44c56e82",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1305,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-11T12:06:49Z",
+      "side": 1,
+      "message": "you can remove the (GL_NO_ERROR)",
+      "range": {
+        "startLine": 1305,
+        "startChar": 19,
+        "endLine": 1305,
+        "endChar": 32
+      },
+      "revId": "194ae46369e3189ae5edb17ab090abd40daa13d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
