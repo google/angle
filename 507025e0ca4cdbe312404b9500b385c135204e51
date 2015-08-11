@@ -22,6 +22,30 @@
       "revId": "507025e0ca4cdbe312404b9500b385c135204e51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "074143d7_5f63ebbc",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-11T12:18:19Z",
+      "side": 0,
+      "message": "Added a comment for to watch out for this.\nIt\u0027s probably possible to optimize - keeping a mask of active attributes in the ProgramGL might work. The additional complexity makes me want to land this first, and optimize later.",
+      "parentUuid": "a7e3171e_4c601faf",
+      "range": {
+        "startLine": 431,
+        "startChar": 4,
+        "endLine": 438,
+        "endChar": 5
+      },
+      "revId": "507025e0ca4cdbe312404b9500b385c135204e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
