@@ -1057,18 +1057,21 @@ void State::setVertexAttribf(GLuint index, const GLfloat values[4])
 {
     ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
     mVertexAttribCurrentValues[index].setFloatValues(values);
+    mDirtyBits.set(DIRTY_BIT_CURRENT_VALUE_0 + index);
 }
 
 void State::setVertexAttribu(GLuint index, const GLuint values[4])
 {
     ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
     mVertexAttribCurrentValues[index].setUnsignedIntValues(values);
+    mDirtyBits.set(DIRTY_BIT_CURRENT_VALUE_0 + index);
 }
 
 void State::setVertexAttribi(GLuint index, const GLint values[4])
 {
     ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
     mVertexAttribCurrentValues[index].setIntValues(values);
+    mDirtyBits.set(DIRTY_BIT_CURRENT_VALUE_0 + index);
 }
 
 void State::setVertexAttribState(unsigned int attribNum, Buffer *boundBuffer, GLint size, GLenum type, bool normalized,
