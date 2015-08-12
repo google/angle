@@ -35,6 +35,18 @@ FramebufferGL::FramebufferGL(const gl::Framebuffer::Data &data, const FunctionsG
     }
 }
 
+FramebufferGL::FramebufferGL(GLuint id,
+                             const gl::Framebuffer::Data &data,
+                             const FunctionsGL *functions,
+                             StateManagerGL *stateManager)
+    : FramebufferImpl(data),
+      mFunctions(functions),
+      mStateManager(stateManager),
+      mFramebufferID(id),
+      mIsDefault(true)
+{
+}
+
 FramebufferGL::~FramebufferGL()
 {
     mStateManager->deleteFramebuffer(mFramebufferID);

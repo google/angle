@@ -11,13 +11,24 @@
 
 #include "libANGLE/renderer/gl/SurfaceGL.h"
 
+@class CALayer;
+struct __IOSurface;
+typedef __IOSurface *IOSurfaceRef;
+
 namespace rx
 {
+
+class DisplayCGL;
+class FramebufferGL;
+class FunctionsGL;
+class StateManagerGL;
+
+class DisplayLink;
 
 class WindowSurfaceCGL : public SurfaceGL
 {
   public:
-    WindowSurfaceCGL(RendererGL *renderer);
+    WindowSurfaceCGL(RendererGL *renderer, CALayer *layer, const FunctionsGL *functions);
     ~WindowSurfaceCGL() override;
 
     egl::Error initialize() override;
@@ -35,6 +46,31 @@ class WindowSurfaceCGL : public SurfaceGL
 
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
+
+    FramebufferImpl *createDefaultFramebuffer(const gl::Framebuffer::Data &data) override;
+
+  private:
+    struct Surface
+    {
+        IOSurfaceRef ioSurface;
+        GLuint texture;
+        uint64_t lastPresentNanos;
+    };
+
+    void freeSurfaceData(Surface *surface);
+    egl::Error initializeSurfaceData(Surface *surface, int width, int height);
+
+    CALayer *mLayer;
+    const FunctionsGL *mFunctions;
+    StateManagerGL *mStateManager;
+    DisplayLink *mDisplayLink;
+
+    // CGL doesn't have a default framebuffer, we instead render to an IOSurface
+    // that will be set as the content of the CALayer which is our native window.
+    // We use two IOSurfaces to do double buffering.
+    Surface mSurfaces[2];
+    int mCurrentSurface;
+    GLuint mFramebuffer;
 };
 
 }

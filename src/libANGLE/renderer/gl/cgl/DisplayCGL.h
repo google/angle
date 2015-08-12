@@ -11,6 +11,9 @@
 
 #include "libANGLE/renderer/gl/DisplayGL.h"
 
+struct _CGLContextObject;
+typedef _CGLContextObject *CGLContextObj;
+
 namespace rx
 {
 
@@ -54,6 +57,8 @@ class DisplayCGL : public DisplayGL
     void generateCaps(egl::Caps *outCaps) const override;
 
     egl::Display *mEGLDisplay;
+    FunctionsGL *mFunctions;
+    CGLContextObj mContext;
 };
 
 }

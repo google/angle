@@ -117,11 +117,15 @@ typedef Window   EGLNativeWindowType;
 
 #elif defined(__GNUC__) && ( defined(__APPLE_CPP__) || defined(__APPLE_CC__) || defined(__MACOS_CLASSIC__) )
 
-// TODO(jmadill): native implementation for OSX
+#if defined(__OBJC__)
+@class CALayer;
+#else
+class CALayer;
+#endif
 
 typedef void *EGLNativeDisplayType;
 typedef void *EGLNativePixmapType;
-typedef void *EGLNativeWindowType;
+typedef CALayer *EGLNativeWindowType;
 
 #else
 #error "Platform not recognized"

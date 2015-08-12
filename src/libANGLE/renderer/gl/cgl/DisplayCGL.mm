@@ -8,15 +8,42 @@
 
 #include "libANGLE/renderer/gl/CGL/DisplayCGL.h"
 
+#import <Cocoa/Cocoa.h>
+#include <dlfcn.h>
+#include <EGL/eglext.h>
+
 #include "common/debug.h"
 #include "libANGLE/renderer/gl/CGL/WindowSurfaceCGL.h"
+
+namespace
+{
+
+const char *kDefaultOpenGLDylibName =
+    "/System/Library/Frameworks/OpenGL.framework/Libraries/libGL.dylib";
+const char *kFallbackOpenGLDylibName = "GL";
+
+}
 
 namespace rx
 {
 
-DisplayCGL::DisplayCGL()
-    : DisplayGL(),
-      mEGLDisplay(nullptr)
+class FunctionsGLCGL : public FunctionsGL
+{
+  public:
+    FunctionsGLCGL(void *dylibHandle) : mDylibHandle(dylibHandle) {}
+
+    virtual ~FunctionsGLCGL() { dlclose(mDylibHandle); }
+
+  private:
+    void *loadProcAddress(const std::string &function) override
+    {
+        return dlsym(mDylibHandle, function.c_str());
+    }
+
+    void *mDylibHandle;
+};
+
+DisplayCGL::DisplayCGL() : DisplayGL(), mEGLDisplay(nullptr), mFunctions(nullptr), mContext(nullptr)
 {
 }
 
@@ -26,23 +53,66 @@ DisplayCGL::~DisplayCGL()
 
 egl::Error DisplayCGL::initialize(egl::Display *display)
 {
-    UNIMPLEMENTED();
     mEGLDisplay = display;
+
+    CGLPixelFormatObj pixelFormat;
+    {
+        // TODO(cwallez) investigate which pixel format we want
+        CGLPixelFormatAttribute attribs[] = {
+            kCGLPFAOpenGLProfile, static_cast<CGLPixelFormatAttribute>(kCGLOGLPVersion_3_2_Core),
+            static_cast<CGLPixelFormatAttribute>(0)};
+        GLint nVirtualScreens = 0;
+        CGLChoosePixelFormat(attribs, &pixelFormat, &nVirtualScreens);
+
+        if (pixelFormat == nullptr)
+        {
+            return egl::Error(EGL_NOT_INITIALIZED, "Could not create the context's pixel format.");
+        }
+    }
+
+    CGLCreateContext(pixelFormat, nullptr, &mContext);
+    if (mContext == nullptr)
+    {
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not create the CGL context.");
+    }
+    CGLSetCurrentContext(mContext);
+
+    // There is no equivalent getProcAddress in CGL so we open the dylib directly
+    void *handle = dlopen(kDefaultOpenGLDylibName, RTLD_NOW);
+    if (!handle)
+    {
+        handle = dlopen(kFallbackOpenGLDylibName, RTLD_NOW);
+    }
+    if (!handle)
+    {
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not open the OpenGL Framework.");
+    }
+
+    mFunctions = new FunctionsGLCGL(handle);
+    mFunctions->initialize();
+
     return DisplayGL::initialize(display);
 }
 
 void DisplayCGL::terminate()
 {
-    UNIMPLEMENTED();
     DisplayGL::terminate();
+
+    if (mContext != nullptr)
+    {
+        CGLSetCurrentContext(nullptr);
+        CGLReleaseContext(mContext);
+        mContext = nullptr;
+    }
+
+    SafeDelete(mFunctions);
 }
 
 SurfaceImpl *DisplayCGL::createWindowSurface(const egl::Config *configuration,
                                              EGLNativeWindowType window,
                                              const egl::AttributeMap &attribs)
 {
-    UNIMPLEMENTED();
-    return new WindowSurfaceCGL(this->getRenderer());
+    return new WindowSurfaceCGL(this->getRenderer(), window, mFunctions);
 }
 
 SurfaceImpl *DisplayCGL::createPbufferSurface(const egl::Config *configuration,
@@ -76,20 +146,73 @@ egl::Error DisplayCGL::getDevice(DeviceImpl **device)
 
 egl::ConfigSet DisplayCGL::generateConfigs() const
 {
-    UNIMPLEMENTED();
+    // TODO(cwallez): generate more config permutations
     egl::ConfigSet configs;
+
+    egl::Config config;
+
+    // Native stuff
+    config.nativeVisualID   = 0;
+    config.nativeVisualType = 0;
+    config.nativeRenderable = EGL_TRUE;
+
+    // Buffer sizes
+    config.redSize     = 8;
+    config.greenSize   = 8;
+    config.blueSize    = 8;
+    config.alphaSize   = 8;
+    config.depthSize   = 24;
+    config.stencilSize = 8;
+
+    config.colorBufferType = EGL_RGB_BUFFER;
+    config.luminanceSize   = 0;
+    config.alphaMaskSize   = 0;
+
+    config.bufferSize = config.redSize + config.greenSize + config.blueSize + config.alphaSize;
+
+    config.transparentType = EGL_NONE;
+
+    // Pbuffer
+    config.maxPBufferWidth  = 4096;
+    config.maxPBufferHeight = 4096;
+    config.maxPBufferPixels = 4096 * 4096;
+
+    // Caveat
+    config.configCaveat = EGL_NONE;
+
+    // Misc
+    config.sampleBuffers     = 0;
+    config.samples           = 0;
+    config.level             = 0;
+    config.bindToTextureRGB  = EGL_FALSE;
+    config.bindToTextureRGBA = EGL_FALSE;
+
+    config.surfaceType = EGL_WINDOW_BIT;
+
+    config.minSwapInterval = 1;
+    config.maxSwapInterval = 1;
+
+    config.renderTargetFormat = GL_RGBA8;
+    config.depthStencilFormat = GL_DEPTH24_STENCIL8;
+
+    config.conformant     = EGL_OPENGL_ES2_BIT | EGL_OPENGL_ES3_BIT_KHR;
+    config.renderableType = EGL_OPENGL_ES2_BIT | EGL_OPENGL_ES3_BIT_KHR;
+
+    config.matchNativePixmap = EGL_NONE;
+
+    configs.add(config);
     return configs;
 }
 
 bool DisplayCGL::isDeviceLost() const
 {
-    UNIMPLEMENTED();
+    // TODO(cwallez) investigate implementing this
     return false;
 }
 
 bool DisplayCGL::testDeviceLost()
 {
-    UNIMPLEMENTED();
+    // TODO(cwallez) investigate implementing this
     return false;
 }
 
@@ -101,20 +224,19 @@ egl::Error DisplayCGL::restoreLostDevice()
 
 bool DisplayCGL::isValidNativeWindow(EGLNativeWindowType window) const
 {
-    UNIMPLEMENTED();
+    // TODO(cwallez) investigate implementing this
     return true;
 }
 
 std::string DisplayCGL::getVendorString() const
 {
-    UNIMPLEMENTED();
+    // TODO(cwallez) find a useful vendor string
     return "";
 }
 
 const FunctionsGL *DisplayCGL::getFunctionsGL() const
 {
-    UNIMPLEMENTED();
-    return nullptr;
+    return mFunctions;
 }
 
 void DisplayCGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
@@ -124,6 +246,7 @@ void DisplayCGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
 void DisplayCGL::generateCaps(egl::Caps *outCaps) const
 {
-    UNIMPLEMENTED();
+    outCaps->textureNPOT = true;
 }
+
 }

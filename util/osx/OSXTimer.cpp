@@ -11,7 +11,6 @@
 #include <CoreServices/CoreServices.h>
 #include <mach/mach.h>
 #include <mach/mach_time.h>
-#include <iostream>
 
 OSXTimer::OSXTimer()
     : mRunning(false)
@@ -35,15 +34,15 @@ double OSXTimer::getElapsedTime() const
     // If this is the first time we've run, get the timebase.
     // We can use denom == 0 to indicate that sTimebaseInfo is
     // uninitialised because it makes no sense to have a zero
-    // denominator is a fraction.
+    // denominator in a fraction.
     static mach_timebase_info_data_t timebaseInfo;
+    static double secondCoeff;
 
     if ( timebaseInfo.denom == 0 )
     {
         mach_timebase_info(&timebaseInfo);
+        secondCoeff = timebaseInfo.numer * (1.0 / 1000000000) / timebaseInfo.denom;
     }
-
-    double secondCoeff = timebaseInfo.numer * (1.0 / 1000000000) / timebaseInfo.denom;
 
     if (mRunning)
     {
