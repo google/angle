@@ -113,14 +113,13 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, SwapChain9 *swapchai
     mTextureHeight = surfaceDesc.Height;
     mTextureFormat = surfaceDesc.Format;
 
-    mRenderTarget = NULL;
+    mRenderTargets.resize(mMipLevels, nullptr);
 }
 
 TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels)
     : TextureStorage9(renderer, GetTextureUsage(internalformat, renderTarget))
 {
     mTexture = NULL;
-    mRenderTarget = NULL;
 
     mInternalFormat = internalformat;
 
@@ -131,12 +130,17 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, GLenum internalforma
     mTextureWidth = width;
     mTextureHeight = height;
     mMipLevels = mTopLevel + levels;
+
+    mRenderTargets.resize(levels, nullptr);
 }
 
 TextureStorage9_2D::~TextureStorage9_2D()
 {
     SafeRelease(mTexture);
-    SafeDelete(mRenderTarget);
+    for (auto &renderTarget : mRenderTargets)
+    {
+        SafeDelete(renderTarget);
+    }
 }
 
 // Increments refcount on surface.
@@ -177,9 +181,9 @@ gl::Error TextureStorage9_2D::getSurfaceLevel(GLenum target,
 
 gl::Error TextureStorage9_2D::getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT)
 {
-    ASSERT(index.mipIndex == 0);
+    ASSERT(index.mipIndex < getLevelCount());
 
-    if (!mRenderTarget && isRenderTarget())
+    if (!mRenderTargets[index.mipIndex] && isRenderTarget())
     {
         IDirect3DBaseTexture9 *baseTexture = NULL;
         gl::Error error = getBaseTexture(&baseTexture);
@@ -195,14 +199,18 @@ gl::Error TextureStorage9_2D::getRenderTarget(const gl::ImageIndex &index, Rende
             return error;
         }
 
+        size_t textureMipLevel = mTopLevel + index.mipIndex;
+        size_t mipWidth        = std::max<size_t>(mTextureWidth >> textureMipLevel, 1u);
+        size_t mipHeight       = std::max<size_t>(mTextureHeight >> textureMipLevel, 1u);
+
         baseTexture->AddRef();
-        mRenderTarget = new TextureRenderTarget9(baseTexture, mTopLevel, surface, mInternalFormat,
-                                                 static_cast<GLsizei>(mTextureWidth),
-                                                 static_cast<GLsizei>(mTextureHeight), 1, 0);
+        mRenderTargets[index.mipIndex] = new TextureRenderTarget9(
+            baseTexture, textureMipLevel, surface, mInternalFormat, static_cast<GLsizei>(mipWidth),
+            static_cast<GLsizei>(mipHeight), 1, 0);
     }
 
     ASSERT(outRT);
-    *outRT = mRenderTarget;
+    *outRT = mRenderTargets[index.mipIndex];
     return gl::Error(GL_NO_ERROR);
 }
 

@@ -82,7 +82,7 @@ class TextureStorage9_2D : public TextureStorage9
 
   private:
     IDirect3DTexture9 *mTexture;
-    RenderTarget9 *mRenderTarget;
+    std::vector<RenderTarget9 *> mRenderTargets;
 };
 
 class TextureStorage9_Cube : public TextureStorage9
