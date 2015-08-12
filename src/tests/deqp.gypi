@@ -12,10 +12,12 @@
 
         'deqp_msvs_disabled_warnings':
         [
+            '4091', # typedef ignored when no variable is declared
             '4100',
             '4127', # conditional expression constant
             '4244', # possible loss of data
             '4245', # argument signed/unsigned mismatch
+            '4297', # function assumed not to throw an exception but does
             '4389', # signed/unsigned mismatch
             '4510', # default constructor could not be generated
             '4512',
@@ -24,6 +26,7 @@
             '4701', # potentially uninit used
             '4702', # unreachable code
             '4706',
+            '4838', # conversion requires a narrowing conversion
             '4996', # deprecated
         ],
         'deqp_defines':
