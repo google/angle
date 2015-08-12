@@ -2608,6 +2608,7 @@ gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GL
     const gl::TextureCaps &textureCaps = getRendererTextureCaps().get(format);
     GLuint supportedSamples = textureCaps.getNearestSamples(samples);
 
+    IDirect3DTexture9 *texture      = nullptr;
     IDirect3DSurface9 *renderTarget = NULL;
     if (width > 0 && height > 0)
     {
@@ -2623,10 +2624,23 @@ gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GL
         }
         else
         {
-            requiresInitialization = (d3d9FormatInfo.dataInitializerFunction != NULL);
-            result = mDevice->CreateRenderTarget(width, height, d3d9FormatInfo.renderFormat,
-                                                 gl_d3d9::GetMultisampleType(supportedSamples),
-                                                 0, FALSE, &renderTarget, NULL);
+            requiresInitialization = (d3d9FormatInfo.dataInitializerFunction != nullptr);
+            if (supportedSamples > 0)
+            {
+                result = mDevice->CreateRenderTarget(width, height, d3d9FormatInfo.renderFormat,
+                                                     gl_d3d9::GetMultisampleType(supportedSamples),
+                                                     0, FALSE, &renderTarget, nullptr);
+            }
+            else
+            {
+                result = mDevice->CreateTexture(
+                    width, height, 1, D3DUSAGE_RENDERTARGET, d3d9FormatInfo.texFormat,
+                    getTexturePool(D3DUSAGE_RENDERTARGET), &texture, nullptr);
+                if (!FAILED(result))
+                {
+                    result = texture->GetSurfaceLevel(0, &renderTarget);
+                }
+            }
         }
 
         if (FAILED(result))
@@ -2648,7 +2662,8 @@ gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GL
         }
     }
 
-    *outRT = new TextureRenderTarget9(renderTarget, format, width, height, 1, supportedSamples);
+    *outRT = new TextureRenderTarget9(texture, 0, renderTarget, format, width, height, 1,
+                                      supportedSamples);
     return gl::Error(GL_NO_ERROR);
 }
 

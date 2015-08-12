@@ -181,16 +181,24 @@ gl::Error TextureStorage9_2D::getRenderTarget(const gl::ImageIndex &index, Rende
 
     if (!mRenderTarget && isRenderTarget())
     {
-        IDirect3DSurface9 *surface = NULL;
-        gl::Error error = getSurfaceLevel(GL_TEXTURE_2D, index.mipIndex, false, &surface);
+        IDirect3DBaseTexture9 *baseTexture = NULL;
+        gl::Error error = getBaseTexture(&baseTexture);
         if (error.isError())
         {
             return error;
         }
 
-        mRenderTarget =
-            new TextureRenderTarget9(surface, mInternalFormat, static_cast<GLsizei>(mTextureWidth),
-                                     static_cast<GLsizei>(mTextureHeight), 1, 0);
+        IDirect3DSurface9 *surface = NULL;
+        error = getSurfaceLevel(GL_TEXTURE_2D, index.mipIndex, false, &surface);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        baseTexture->AddRef();
+        mRenderTarget = new TextureRenderTarget9(baseTexture, mTopLevel, surface, mInternalFormat,
+                                                 static_cast<GLsizei>(mTextureWidth),
+                                                 static_cast<GLsizei>(mTextureHeight), 1, 0);
     }
 
     ASSERT(outRT);
@@ -360,17 +368,25 @@ gl::Error TextureStorage9_Cube::getRenderTarget(const gl::ImageIndex &index, Ren
 
     if (mRenderTarget[index.layerIndex] == NULL && isRenderTarget())
     {
-        IDirect3DSurface9 *surface = NULL;
-        gl::Error error = getSurfaceLevel(GL_TEXTURE_CUBE_MAP_POSITIVE_X + index.layerIndex,
-                                          mTopLevel + index.mipIndex, false, &surface);
+        IDirect3DBaseTexture9 *baseTexture = NULL;
+        gl::Error error = getBaseTexture(&baseTexture);
         if (error.isError())
         {
             return error;
         }
 
-        mRenderTarget[index.layerIndex] =
-            new TextureRenderTarget9(surface, mInternalFormat, static_cast<GLsizei>(mTextureWidth),
-                                     static_cast<GLsizei>(mTextureHeight), 1, 0);
+        IDirect3DSurface9 *surface = NULL;
+        error = getSurfaceLevel(GL_TEXTURE_CUBE_MAP_POSITIVE_X + index.layerIndex,
+                                mTopLevel + index.mipIndex, false, &surface);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        baseTexture->AddRef();
+        mRenderTarget[index.layerIndex] = new TextureRenderTarget9(
+            baseTexture, mTopLevel + index.mipIndex, surface, mInternalFormat,
+            static_cast<GLsizei>(mTextureWidth), static_cast<GLsizei>(mTextureHeight), 1, 0);
     }
 
     *outRT = mRenderTarget[index.layerIndex];
