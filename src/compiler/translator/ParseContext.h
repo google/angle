@@ -114,7 +114,6 @@ class TParseContext : angle::NonCopyable
     const TVariable *getNamedVariable(const TSourceLoc &location, const TString *name, const TSymbol *symbol);
 
     bool parseVectorFields(const TString&, int vecSize, TVectorFields&, const TSourceLoc &line);
-    bool parseMatrixFields(const TString&, int matCols, int matRows, TMatrixFields&, const TSourceLoc &line);
 
     bool reservedErrorCheck(const TSourceLoc &line, const TString &identifier);
     void assignError(const TSourceLoc &line, const char *op, TString left, TString right);
