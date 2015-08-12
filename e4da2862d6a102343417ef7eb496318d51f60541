@@ -16,6 +16,24 @@
       "revId": "e4da2862d6a102343417ef7eb496318d51f60541",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4242da6_f6672018",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-12T10:49:51Z",
+      "side": 1,
+      "message": "I compiled Chrome on Linux with this patch and default settings, and didn\u0027t see such a warning. I\u0027m submitting the change as-is, but will monitor the bots for any breakage.",
+      "parentUuid": "a77f9720_eff6bd84",
+      "revId": "e4da2862d6a102343417ef7eb496318d51f60541",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
