@@ -2960,11 +2960,6 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
     return gl::Error(GL_NO_ERROR);
 }
 
-FramebufferImpl *Renderer11::createDefaultFramebuffer(const gl::Framebuffer::Data &data)
-{
-    return createFramebuffer(data);
-}
-
 FramebufferImpl *Renderer11::createFramebuffer(const gl::Framebuffer::Data &data)
 {
     return new Framebuffer11(data, this);

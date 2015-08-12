@@ -39,7 +39,6 @@ class RendererGL : public Renderer
     ProgramImpl *createProgram() override;
 
     // Framebuffer creation
-    FramebufferImpl *createDefaultFramebuffer(const gl::Framebuffer::Data &data) override;
     FramebufferImpl *createFramebuffer(const gl::Framebuffer::Data &data) override;
 
     // Texture creation
@@ -80,6 +79,8 @@ class RendererGL : public Renderer
     void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits) override;
 
     const gl::Version &getMaxSupportedESVersion() const;
+    const FunctionsGL *getFunctions() const { return mFunctions; }
+    StateManagerGL *getStateManager() const { return mStateManager; }
 
   private:
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureCaps,

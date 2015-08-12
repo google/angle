@@ -11,6 +11,7 @@
 #include "libANGLE/Surface.h"
 
 #include "libANGLE/Config.h"
+#include "libANGLE/Framebuffer.h"
 #include "libANGLE/Texture.h"
 
 #include <EGL/eglext.h>
@@ -26,6 +27,7 @@ Surface::Surface(rx::SurfaceImpl *impl,
                  const AttributeMap &attributes)
     : FramebufferAttachmentObject(),
       mImplementation(impl),
+      mDefaultFramebuffer(nullptr),
       mCurrentCount(0),
       mDestroyed(false),
       mType(surfaceType),
@@ -55,6 +57,9 @@ Surface::Surface(rx::SurfaceImpl *impl,
         mTextureFormat = attributes.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
         mTextureTarget = attributes.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
     }
+
+    mDefaultFramebuffer = createDefaultFramebuffer();
+    ASSERT(mDefaultFramebuffer != nullptr);
 }
 
 Surface::~Surface()
@@ -212,5 +217,31 @@ GLuint Surface::getId() const
 {
     UNREACHABLE();
     return 0;
+}
+
+gl::Framebuffer *Surface::createDefaultFramebuffer()
+{
+    gl::Framebuffer *framebuffer = new gl::Framebuffer(mImplementation);
+
+    GLenum drawBufferState = GL_BACK;
+    framebuffer->setDrawBuffers(1, &drawBufferState);
+    framebuffer->setReadBuffer(GL_BACK);
+
+    framebuffer->setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_BACK, gl::ImageIndex::MakeInvalid(),
+                               this);
+
+    if (mConfig->depthSize > 0)
+    {
+        framebuffer->setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_DEPTH, gl::ImageIndex::MakeInvalid(),
+                                   this);
+    }
+
+    if (mConfig->stencilSize > 0)
+    {
+        framebuffer->setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_STENCIL,
+                                   gl::ImageIndex::MakeInvalid(), this);
+    }
+
+    return framebuffer;
 }
 }

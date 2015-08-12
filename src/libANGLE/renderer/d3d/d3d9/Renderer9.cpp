@@ -2645,11 +2645,6 @@ gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GL
     return gl::Error(GL_NO_ERROR);
 }
 
-FramebufferImpl *Renderer9::createDefaultFramebuffer(const gl::Framebuffer::Data &data)
-{
-    return createFramebuffer(data);
-}
-
 FramebufferImpl *Renderer9::createFramebuffer(const gl::Framebuffer::Data &data)
 {
     return new Framebuffer9(data, this);

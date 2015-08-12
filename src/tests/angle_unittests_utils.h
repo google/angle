@@ -26,7 +26,6 @@ class NullFactory : public ImplFactory
     ProgramImpl *createProgram() override { return nullptr; }
 
     // Framebuffer creation
-    FramebufferImpl *createDefaultFramebuffer(const gl::Framebuffer::Data &data) override { return nullptr; }
     FramebufferImpl *createFramebuffer(const gl::Framebuffer::Data &data) override { return nullptr; }
 
     // Texture creation
