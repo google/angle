@@ -312,31 +312,7 @@ bool DisplayD3D::isValidNativeWindow(EGLNativeWindowType window) const
 
 void DisplayD3D::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
-    outExtensions->createContextRobustness = true;
-
-    // ANGLE-specific extensions
-    if (mRenderer->getShareHandleSupport())
-    {
-        outExtensions->d3dShareHandleClientBuffer = true;
-        outExtensions->surfaceD3DTexture2DShareHandle = true;
-    }
-
-    if (mRenderer->getKeyedMutexSupport())
-    {
-        outExtensions->keyedMutex = true;
-    }
-
-    outExtensions->querySurfacePointer = true;
-    outExtensions->windowFixedSize = true;
-
-    if (mRenderer->getPostSubBufferSupport())
-    {
-        outExtensions->postSubBuffer = true;
-    }
-
-    outExtensions->createContext = true;
-
-    outExtensions->deviceQuery = true;
+    mRenderer->generateDisplayExtensions(outExtensions);
 }
 
 std::string DisplayD3D::getVendorString() const

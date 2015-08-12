@@ -508,6 +508,23 @@ egl::ConfigSet Renderer9::generateConfigs() const
     return configs;
 }
 
+void Renderer9::generateDisplayExtensions(egl::DisplayExtensions *outExtensions) const
+{
+    outExtensions->createContextRobustness = true;
+
+    if (getShareHandleSupport())
+    {
+        outExtensions->d3dShareHandleClientBuffer     = true;
+        outExtensions->surfaceD3DTexture2DShareHandle = true;
+    }
+
+    outExtensions->querySurfacePointer = true;
+    outExtensions->windowFixedSize     = true;
+    outExtensions->postSubBuffer       = true;
+    outExtensions->createContext       = true;
+    outExtensions->deviceQuery         = true;
+}
+
 void Renderer9::startScene()
 {
     if (!mSceneStarted)
@@ -2505,16 +2522,6 @@ bool Renderer9::getShareHandleSupport() const
 {
     // PIX doesn't seem to support using share handles, so disable them.
     return (mD3d9Ex != NULL) && !gl::DebugAnnotationsActive();
-}
-
-bool Renderer9::getKeyedMutexSupport() const
-{
-    return false;
-}
-
-bool Renderer9::getPostSubBufferSupport() const
-{
-    return true;
 }
 
 int Renderer9::getMajorShaderModel() const

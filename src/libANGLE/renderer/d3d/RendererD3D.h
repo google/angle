@@ -92,6 +92,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     virtual egl::Error initialize() = 0;
 
     virtual egl::ConfigSet generateConfigs() const = 0;
+    virtual void generateDisplayExtensions(egl::DisplayExtensions *outExtensions) const = 0;
 
     gl::Error drawArrays(const gl::Data &data,
                          GLenum mode, GLint first,
@@ -148,9 +149,6 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     virtual unsigned int getReservedFragmentUniformVectors() const = 0;
     virtual unsigned int getReservedVertexUniformBuffers() const = 0;
     virtual unsigned int getReservedFragmentUniformBuffers() const = 0;
-    virtual bool getShareHandleSupport() const = 0;
-    virtual bool getKeyedMutexSupport() const = 0;
-    virtual bool getPostSubBufferSupport() const = 0;
 
     virtual int getMajorShaderModel() const = 0;
 

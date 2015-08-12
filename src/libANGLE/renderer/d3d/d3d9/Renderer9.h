@@ -68,6 +68,7 @@ class Renderer9 : public RendererD3D
     virtual bool resetDevice();
 
     egl::ConfigSet generateConfigs() const override;
+    void generateDisplayExtensions(egl::DisplayExtensions *outExtensions) const override;
 
     void startScene();
     void endScene();
@@ -143,9 +144,8 @@ class Renderer9 : public RendererD3D
     virtual unsigned int getReservedFragmentUniformVectors() const;
     virtual unsigned int getReservedVertexUniformBuffers() const;
     virtual unsigned int getReservedFragmentUniformBuffers() const;
-    virtual bool getShareHandleSupport() const;
-    bool getKeyedMutexSupport() const override;
-    virtual bool getPostSubBufferSupport() const;
+
+    bool getShareHandleSupport() const;
 
     virtual int getMajorShaderModel() const;
     int getMinorShaderModel() const override;

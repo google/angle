@@ -764,6 +764,31 @@ egl::ConfigSet Renderer11::generateConfigs() const
     return configs;
 }
 
+void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions) const
+{
+    outExtensions->createContextRobustness = true;
+
+    if (getShareHandleSupport())
+    {
+        outExtensions->d3dShareHandleClientBuffer     = true;
+        outExtensions->surfaceD3DTexture2DShareHandle = true;
+    }
+
+#ifdef ANGLE_ENABLE_KEYEDMUTEX
+    outExtensions->keyedMutex = true;
+#endif
+
+    outExtensions->querySurfacePointer = true;
+    outExtensions->windowFixedSize     = true;
+
+    // D3D11 does not support present with dirty rectangles until DXGI 1.2.
+    outExtensions->postSubBuffer = mRenderer11DeviceCaps.supportsDXGI1_2;
+
+    outExtensions->createContext = true;
+
+    outExtensions->deviceQuery = true;
+}
+
 gl::Error Renderer11::flush()
 {
     mDeviceContext->Flush();
@@ -2528,21 +2553,6 @@ bool Renderer11::getShareHandleSupport() const
     }
 
     return true;
-}
-
-bool Renderer11::getKeyedMutexSupport() const
-{
-#ifdef ANGLE_ENABLE_KEYEDMUTEX
-    return true;
-#else
-    return false;
-#endif
-}
-
-bool Renderer11::getPostSubBufferSupport() const
-{
-    // D3D11 does not support present with dirty rectangles until DXGI 1.2.
-    return mRenderer11DeviceCaps.supportsDXGI1_2;
 }
 
 int Renderer11::getMajorShaderModel() const
