@@ -99,7 +99,7 @@ class TIntermTyped : public TIntermNode
 {
   public:
     TIntermTyped(const TType &t) : mType(t)  { }
-    virtual TIntermTyped *getAsTyped() { return this; }
+    TIntermTyped *getAsTyped() override { return this; }
 
     virtual bool hasSideEffects() const = 0;
 
@@ -154,10 +154,10 @@ class TIntermLoop : public TIntermNode
           mBody(body),
           mUnrollFlag(false) { }
 
-    virtual TIntermLoop *getAsLoopNode() { return this; }
+    TIntermLoop *getAsLoopNode() override { return this; }
     void traverse(TIntermTraverser *it) override;
-    virtual bool replaceChildNode(
-        TIntermNode *original, TIntermNode *replacement);
+    bool replaceChildNode(
+        TIntermNode *original, TIntermNode *replacement) override;
 
     TLoopType getType() const { return mType; }
     TIntermNode *getInit() { return mInit; }
@@ -189,8 +189,8 @@ class TIntermBranch : public TIntermNode
           mExpression(e) { }
 
     void traverse(TIntermTraverser *it) override;
-    virtual bool replaceChildNode(
-        TIntermNode *original, TIntermNode *replacement);
+    bool replaceChildNode(
+        TIntermNode *original, TIntermNode *replacement) override;
 
     TOperator getFlowOp() { return mFlowOp; }
     TIntermTyped* getExpression() { return mExpression; }
@@ -217,7 +217,7 @@ class TIntermSymbol : public TIntermTyped
         mSymbol = symbol;
     }
 
-    virtual bool hasSideEffects() const { return false; }
+    bool hasSideEffects() const override { return false; }
 
     int getId() const { return mId; }
     const TString &getSymbol() const { return mSymbol; }
@@ -228,8 +228,8 @@ class TIntermSymbol : public TIntermTyped
     void setInternal(bool isInternal) { mInternal = isInternal; }
 
     void traverse(TIntermTraverser *it) override;
-    virtual TIntermSymbol *getAsSymbolNode() { return this; }
-    virtual bool replaceChildNode(TIntermNode *, TIntermNode *) { return false; }
+    TIntermSymbol *getAsSymbolNode() override { return this; }
+    bool replaceChildNode(TIntermNode *, TIntermNode *) override { return false; }
 
   protected:
     int mId;
@@ -247,14 +247,14 @@ class TIntermRaw : public TIntermTyped
         : TIntermTyped(type),
           mRawText(rawText) { }
 
-    virtual bool hasSideEffects() const { return false; }
+    bool hasSideEffects() const override { return false; }
 
     TString getRawText() const { return mRawText; }
 
     void traverse(TIntermTraverser *it) override;
 
-    virtual TIntermRaw *getAsRawNode() { return this; }
-    virtual bool replaceChildNode(TIntermNode *, TIntermNode *) { return false; }
+    TIntermRaw *getAsRawNode() override { return this; }
+    bool replaceChildNode(TIntermNode *, TIntermNode *) override { return false; }
 
   protected:
     TString mRawText;
@@ -267,7 +267,7 @@ class TIntermConstantUnion : public TIntermTyped
         : TIntermTyped(type),
           mUnionArrayPointer(unionPointer) { }
 
-    virtual bool hasSideEffects() const { return false; }
+    bool hasSideEffects() const override { return false; }
 
     const TConstantUnion *getUnionArrayPointer() const { return mUnionArrayPointer; }
     TConstantUnion *getUnionArrayPointer() { return mUnionArrayPointer; }
@@ -295,9 +295,9 @@ class TIntermConstantUnion : public TIntermTyped
         mUnionArrayPointer = safeConstantUnion;
     }
 
-    virtual TIntermConstantUnion *getAsConstantUnion()  { return this; }
+    TIntermConstantUnion *getAsConstantUnion() override { return this; }
     void traverse(TIntermTraverser *it) override;
-    virtual bool replaceChildNode(TIntermNode *, TIntermNode *) { return false; }
+    bool replaceChildNode(TIntermNode *, TIntermNode *) override { return false; }
 
     TConstantUnion *foldBinary(TOperator op, TIntermConstantUnion *rightNode, TInfoSink &infoSink);
     TConstantUnion *foldUnaryWithDifferentReturnType(TOperator op, TInfoSink &infoSink);
@@ -326,7 +326,7 @@ class TIntermOperator : public TIntermTyped
     bool isMultiplication() const;
     bool isConstructor() const;
 
-    virtual bool hasSideEffects() const { return isAssignment(); }
+    bool hasSideEffects() const override { return isAssignment(); }
 
   protected:
     TIntermOperator(TOperator op)
@@ -349,12 +349,12 @@ class TIntermBinary : public TIntermOperator
         : TIntermOperator(op),
           mAddIndexClamp(false) {}
 
-    virtual TIntermBinary *getAsBinaryNode() { return this; }
+    TIntermBinary *getAsBinaryNode() override { return this; };
     void traverse(TIntermTraverser *it) override;
-    virtual bool replaceChildNode(
-        TIntermNode *original, TIntermNode *replacement);
+    bool replaceChildNode(
+        TIntermNode *original, TIntermNode *replacement) override;
 
-    virtual bool hasSideEffects() const
+    bool hasSideEffects() const override
     {
         return isAssignment() || mLeft->hasSideEffects() || mRight->hasSideEffects();
     }
@@ -393,11 +393,11 @@ class TIntermUnary : public TIntermOperator
           mUseEmulatedFunction(false) {}
 
     void traverse(TIntermTraverser *it) override;
-    virtual TIntermUnary *getAsUnaryNode() { return this; }
-    virtual bool replaceChildNode(
-        TIntermNode *original, TIntermNode *replacement);
+    TIntermUnary *getAsUnaryNode() override { return this; }
+    bool replaceChildNode(
+        TIntermNode *original, TIntermNode *replacement) override;
 
-    virtual bool hasSideEffects() const
+    bool hasSideEffects() const override
     {
         return isAssignment() || mOperand->hasSideEffects();
     }
@@ -442,14 +442,14 @@ class TIntermAggregate : public TIntermOperator
     }
     ~TIntermAggregate() { }
 
-    virtual TIntermAggregate *getAsAggregate() { return this; }
+    TIntermAggregate *getAsAggregate() override { return this; }
     void traverse(TIntermTraverser *it) override;
-    virtual bool replaceChildNode(
-        TIntermNode *original, TIntermNode *replacement);
+    bool replaceChildNode(
+        TIntermNode *original, TIntermNode *replacement) override;
     bool replaceChildNodeWithMultiple(TIntermNode *original, TIntermSequence replacements);
     bool insertChildNodes(TIntermSequence::size_type position, TIntermSequence insertions);
     // Conservatively assume function calls and other aggregate operators have side-effects
-    virtual bool hasSideEffects() const { return true; }
+    bool hasSideEffects() const override { return true; }
     TIntermTyped *fold(TInfoSink &infoSink);
 
     TIntermSequence *getSequence() { return &mSequence; }
@@ -514,17 +514,17 @@ class TIntermSelection : public TIntermTyped
           mFalseBlock(falseB) {}
 
     void traverse(TIntermTraverser *it) override;
-    virtual bool replaceChildNode(
-        TIntermNode *original, TIntermNode *replacement);
+    bool replaceChildNode(
+        TIntermNode *original, TIntermNode *replacement) override;
 
     // Conservatively assume selections have side-effects
-    virtual bool hasSideEffects() const { return true; }
+    bool hasSideEffects() const override { return true; }
 
     bool usesTernaryOperator() const { return getBasicType() != EbtVoid; }
     TIntermNode *getCondition() const { return mCondition; }
     TIntermNode *getTrueBlock() const { return mTrueBlock; }
     TIntermNode *getFalseBlock() const { return mFalseBlock; }
-    TIntermSelection *getAsSelectionNode() { return this; }
+    TIntermSelection *getAsSelectionNode() override { return this; }
 
 protected:
     TIntermTyped *mCondition;
@@ -847,12 +847,12 @@ class TMaxDepthTraverser : public TIntermTraverser
         : TIntermTraverser(true, true, false),
           mDepthLimit(depthLimit) { }
 
-    virtual bool visitBinary(Visit, TIntermBinary *) { return depthCheck(); }
-    virtual bool visitUnary(Visit, TIntermUnary *) { return depthCheck(); }
-    virtual bool visitSelection(Visit, TIntermSelection *) { return depthCheck(); }
-    virtual bool visitAggregate(Visit, TIntermAggregate *) { return depthCheck(); }
-    virtual bool visitLoop(Visit, TIntermLoop *) { return depthCheck(); }
-    virtual bool visitBranch(Visit, TIntermBranch *) { return depthCheck(); }
+    bool visitBinary(Visit, TIntermBinary *) override { return depthCheck(); }
+    bool visitUnary(Visit, TIntermUnary *) override { return depthCheck(); }
+    bool visitSelection(Visit, TIntermSelection *) override { return depthCheck(); }
+    bool visitAggregate(Visit, TIntermAggregate *) override { return depthCheck(); }
+    bool visitLoop(Visit, TIntermLoop *) override { return depthCheck(); }
+    bool visitBranch(Visit, TIntermBranch *) override { return depthCheck(); }
 
   protected:
     bool depthCheck() const { return mMaxDepth < mDepthLimit; }
