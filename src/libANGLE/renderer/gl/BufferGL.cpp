@@ -107,7 +107,7 @@ gl::Error BufferGL::getIndexRange(GLenum type, size_t offset, size_t count, gl::
 
     mStateManager->bindBuffer(DestBufferOperationTarget, mBufferID);
     const uint8_t *bufferData = reinterpret_cast<uint8_t*>(mFunctions->mapBuffer(DestBufferOperationTarget, GL_READ_ONLY));
-    *outRange = gl::ComputeIndexRange(type, bufferData + offset, static_cast<GLsizei>(count));
+    *outRange = gl::ComputeIndexRange(type, bufferData + offset, count);
     mFunctions->unmapBuffer(DestBufferOperationTarget);
 
     return gl::Error(GL_NO_ERROR);

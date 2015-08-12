@@ -134,12 +134,12 @@ EGLint Surface::isFixedSize() const
 
 EGLint Surface::getWidth() const
 {
-    return mFixedSize ? static_cast<EGLint>(mFixedWidth) : mImplementation->getWidth();
+    return mFixedSize ? mFixedWidth : mImplementation->getWidth();
 }
 
 EGLint Surface::getHeight() const
 {
-    return mFixedSize ? static_cast<EGLint>(mFixedHeight) : mImplementation->getHeight();
+    return mFixedSize ? mFixedHeight : mImplementation->getHeight();
 }
 
 Error Surface::bindTexImage(gl::Texture *texture, EGLint buffer)

@@ -628,7 +628,7 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index, ImageD3D *image
 
     size_t outputPixelSize = dxgiFormatInfo.pixelBytes;
 
-    UINT bufferRowPitch   = static_cast<unsigned int>(outputPixelSize) * width;
+    UINT bufferRowPitch = outputPixelSize * width;
     UINT bufferDepthPitch = bufferRowPitch * height;
 
     size_t neededSize = bufferDepthPitch * depth;

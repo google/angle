@@ -171,7 +171,7 @@ EGLBoolean EGLAPIENTRY GetConfigs(EGLDisplay dpy, EGLConfig *configs, EGLint con
             configs[i] = const_cast<Config*>(filteredConfigs[i]);
         }
     }
-    *num_config = static_cast<EGLint>(filteredConfigs.size());
+    *num_config = filteredConfigs.size();
 
     SetGlobalError(Error(EGL_SUCCESS));
     return EGL_TRUE;
@@ -207,7 +207,7 @@ EGLBoolean EGLAPIENTRY ChooseConfig(EGLDisplay dpy, const EGLint *attrib_list, E
             configs[i] = const_cast<Config*>(filteredConfigs[i]);
         }
     }
-    *num_config = static_cast<EGLint>(filteredConfigs.size());
+    *num_config = filteredConfigs.size();
 
     SetGlobalError(Error(EGL_SUCCESS));
     return EGL_TRUE;

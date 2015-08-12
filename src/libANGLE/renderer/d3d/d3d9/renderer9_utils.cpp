@@ -319,7 +319,7 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, IDirect3
         }
 
         textureCaps.sampleCounts.insert(1);
-        for (unsigned int i = D3DMULTISAMPLE_2_SAMPLES; i <= D3DMULTISAMPLE_16_SAMPLES; i++)
+        for (size_t i = D3DMULTISAMPLE_2_SAMPLES; i <= D3DMULTISAMPLE_16_SAMPLES; i++)
         {
             D3DMULTISAMPLE_TYPE multisampleType = D3DMULTISAMPLE_TYPE(i);
 

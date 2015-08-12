@@ -108,7 +108,7 @@ gl::Error VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device,
             // Directly binding the storage buffer is not supported for d3d9
             ASSERT(attributes[i].storage == NULL);
 
-            int stream = static_cast<int>(i);
+            int stream = i;
 
             if (instances > 0)
             {
@@ -125,7 +125,7 @@ gl::Error VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device,
                     }
                     else if (i == 0)
                     {
-                        stream = static_cast<int>(indexedAttribute);
+                        stream = indexedAttribute;
                     }
 
                     UINT frequency = 1;
@@ -164,7 +164,7 @@ gl::Error VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device,
             element->Type = static_cast<BYTE>(d3d9VertexInfo.nativeFormat);
             element->Method = D3DDECLMETHOD_DEFAULT;
             element->Usage = D3DDECLUSAGE_TEXCOORD;
-            element->UsageIndex = static_cast<BYTE>(program->getSemanticIndex(static_cast<int>(i)));
+            element->UsageIndex = static_cast<BYTE>(program->getSemanticIndex(i));
             element++;
         }
     }

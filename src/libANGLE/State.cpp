@@ -621,7 +621,7 @@ void State::setActiveSampler(unsigned int active)
 
 unsigned int State::getActiveSampler() const
 {
-    return static_cast<unsigned int>(mActiveSampler);
+    return mActiveSampler;
 }
 
 void State::setSamplerTexture(GLenum type, Texture *texture)
@@ -1251,9 +1251,7 @@ void State::getIntegerv(const gl::Data &data, GLenum pname, GLint *params)
       case GL_UNPACK_ROW_LENGTH:                        *params = mUnpack.rowLength;                              break;
       case GL_GENERATE_MIPMAP_HINT:                     *params = mGenerateMipmapHint;                            break;
       case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES:      *params = mFragmentShaderDerivativeHint;                  break;
-      case GL_ACTIVE_TEXTURE:
-          *params = (static_cast<GLint>(mActiveSampler) + GL_TEXTURE0);
-          break;
+      case GL_ACTIVE_TEXTURE:                           *params = (mActiveSampler + GL_TEXTURE0);                 break;
       case GL_STENCIL_FUNC:                             *params = mDepthStencil.stencilFunc;                      break;
       case GL_STENCIL_REF:                              *params = mStencilRef;                                    break;
       case GL_STENCIL_VALUE_MASK:                       *params = clampToInt(mDepthStencil.stencilMask);          break;
@@ -1377,21 +1375,19 @@ void State::getIntegerv(const gl::Data &data, GLenum pname, GLint *params)
         break;
       case GL_TEXTURE_BINDING_2D:
         ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
-        *params = getSamplerTextureId(static_cast<unsigned int>(mActiveSampler), GL_TEXTURE_2D);
+        *params = getSamplerTextureId(mActiveSampler, GL_TEXTURE_2D) ;
         break;
       case GL_TEXTURE_BINDING_CUBE_MAP:
         ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
-        *params =
-            getSamplerTextureId(static_cast<unsigned int>(mActiveSampler), GL_TEXTURE_CUBE_MAP);
+        *params = getSamplerTextureId(mActiveSampler, GL_TEXTURE_CUBE_MAP);
         break;
       case GL_TEXTURE_BINDING_3D:
         ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
-        *params = getSamplerTextureId(static_cast<unsigned int>(mActiveSampler), GL_TEXTURE_3D);
+        *params = getSamplerTextureId(mActiveSampler, GL_TEXTURE_3D);
         break;
       case GL_TEXTURE_BINDING_2D_ARRAY:
         ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
-        *params =
-            getSamplerTextureId(static_cast<unsigned int>(mActiveSampler), GL_TEXTURE_2D_ARRAY);
+        *params = getSamplerTextureId(mActiveSampler, GL_TEXTURE_2D_ARRAY);
         break;
       case GL_UNIFORM_BUFFER_BINDING:
         *params = mGenericUniformBuffer.id();

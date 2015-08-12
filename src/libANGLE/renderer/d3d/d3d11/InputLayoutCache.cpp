@@ -377,8 +377,8 @@ gl::Error InputLayoutCache::applyVertexBuffers(const std::vector<TranslatedAttri
     }
 
     bool dirtyBuffers = false;
-    unsigned int minDiff            = gl::MAX_VERTEX_ATTRIBS;
-    unsigned int maxDiff            = 0;
+    size_t minDiff = gl::MAX_VERTEX_ATTRIBS;
+    size_t maxDiff = 0;
     unsigned int nextAvailableIndex = 0;
 
     for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
@@ -432,8 +432,8 @@ gl::Error InputLayoutCache::applyVertexBuffers(const std::vector<TranslatedAttri
             vertexOffset != mCurrentVertexOffsets[i])
         {
             dirtyBuffers = true;
-            minDiff      = std::min(minDiff, i);
-            maxDiff      = std::max(maxDiff, i);
+            minDiff = std::min(minDiff, static_cast<size_t>(i));
+            maxDiff = std::max(maxDiff, static_cast<size_t>(i));
 
             mCurrentBuffers[i] = buffer;
             mCurrentVertexStrides[i] = vertexStride;

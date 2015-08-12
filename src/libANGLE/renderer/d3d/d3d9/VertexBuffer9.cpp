@@ -69,8 +69,8 @@ gl::Error VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib
         return gl::Error(GL_OUT_OF_MEMORY, "Internal vertex buffer is not initialized.");
     }
 
-    int inputStride = static_cast<int>(gl::ComputeVertexAttributeStride(attrib));
-    int elementSize = static_cast<int>(gl::ComputeVertexAttributeTypeSize(attrib));
+    int inputStride = gl::ComputeVertexAttributeStride(attrib);
+    int elementSize = gl::ComputeVertexAttributeTypeSize(attrib);
 
     DWORD lockFlags = mDynamicUsage ? D3DLOCK_NOOVERWRITE : 0;
 
@@ -179,7 +179,7 @@ gl::Error VertexBuffer9::spaceRequired(const gl::VertexAttribute &attrib, std::s
         unsigned int elementCount = 0;
         if (instances == 0 || attrib.divisor == 0)
         {
-            elementCount = static_cast<unsigned int>(count);
+            elementCount = count;
         }
         else
         {
@@ -191,8 +191,7 @@ gl::Error VertexBuffer9::spaceRequired(const gl::VertexAttribute &attrib, std::s
         {
             if (outSpaceRequired)
             {
-                *outSpaceRequired =
-                    static_cast<unsigned int>(d3d9VertexInfo.outputElementSize) * elementCount;
+                *outSpaceRequired = d3d9VertexInfo.outputElementSize * elementCount;
             }
             return gl::Error(GL_NO_ERROR);
         }

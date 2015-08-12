@@ -1875,7 +1875,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
 {
     TOperator op = aggregate->getOp();
     TIntermSequence *sequence = aggregate->getSequence();
-    unsigned int paramsCount = static_cast<unsigned int>(sequence->size());
+    unsigned int paramsCount = sequence->size();
     std::vector<TConstantUnion *> unionArrays(paramsCount);
     std::vector<size_t> objectSizes(paramsCount);
     size_t maxObjectSize = 0;
@@ -2256,7 +2256,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
             {
                 // Perform component-wise matrix multiplication.
                 resultArray = new TConstantUnion[maxObjectSize];
-                int size = (*sequence)[0]->getAsTyped()->getNominalSize();
+                size_t size = (*sequence)[0]->getAsTyped()->getNominalSize();
                 angle::Matrix<float> result =
                     GetMatrix(unionArrays[0], size).compMult(GetMatrix(unionArrays[1], size));
                 SetUnionArrayFromMatrix(result, resultArray);
@@ -2272,8 +2272,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
                 size_t numCols = (*sequence)[1]->getAsTyped()->getType().getObjectSize();
                 resultArray = new TConstantUnion[numRows * numCols];
                 angle::Matrix<float> result =
-                    GetMatrix(unionArrays[0], 1, static_cast<int>(numCols))
-                        .outerProduct(GetMatrix(unionArrays[1], static_cast<int>(numRows), 1));
+                    GetMatrix(unionArrays[0], 1, numCols).outerProduct(GetMatrix(unionArrays[1], numRows, 1));
                 SetUnionArrayFromMatrix(result, resultArray);
             }
             else

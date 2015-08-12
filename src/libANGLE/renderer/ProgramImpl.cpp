@@ -86,7 +86,7 @@ GLuint ProgramImpl::getUniformIndex(const std::string &name) const
         return GL_INVALID_INDEX;
     }
 
-    unsigned int numUniforms = static_cast<unsigned int>(mUniforms.size());
+    unsigned int numUniforms = mUniforms.size();
     for (unsigned int index = 0; index < numUniforms; index++)
     {
         if (mUniforms[index]->name == baseName)
@@ -106,7 +106,7 @@ GLuint ProgramImpl::getUniformBlockIndex(const std::string &name) const
     size_t subscript = GL_INVALID_INDEX;
     std::string baseName = gl::ParseUniformName(name, &subscript);
 
-    unsigned int numUniformBlocks = static_cast<unsigned int>(mUniformBlocks.size());
+    unsigned int numUniformBlocks = mUniformBlocks.size();
     for (unsigned int blockIndex = 0; blockIndex < numUniformBlocks; blockIndex++)
     {
         const gl::UniformBlock &uniformBlock = *mUniformBlocks[blockIndex];

@@ -96,7 +96,8 @@ void FramebufferGL::onUpdateColorAttachment(size_t index)
     if (!mIsDefault)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-        BindFramebufferAttachment(mFunctions, GL_COLOR_ATTACHMENT0 + static_cast<GLenum>(index),
+        BindFramebufferAttachment(mFunctions,
+                                  GL_COLOR_ATTACHMENT0 + index,
                                   mData.getColorAttachment(static_cast<unsigned int>(index)));
     }
 }
@@ -139,7 +140,7 @@ void FramebufferGL::setDrawBuffers(size_t count, const GLenum *buffers)
     if (!mIsDefault)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-        mFunctions->drawBuffers(static_cast<GLsizei>(count), buffers);
+        mFunctions->drawBuffers(count, buffers);
     }
 }
 
@@ -164,7 +165,7 @@ gl::Error FramebufferGL::invalidate(size_t count, const GLenum *attachments)
     if (mFunctions->invalidateFramebuffer)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-        mFunctions->invalidateFramebuffer(GL_FRAMEBUFFER, static_cast<GLsizei>(count), attachments);
+        mFunctions->invalidateFramebuffer(GL_FRAMEBUFFER, count, attachments);
     }
 
     return gl::Error(GL_NO_ERROR);
@@ -176,8 +177,7 @@ gl::Error FramebufferGL::invalidateSub(size_t count, const GLenum *attachments, 
     if (mFunctions->invalidateSubFramebuffer)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-        mFunctions->invalidateSubFramebuffer(GL_FRAMEBUFFER, static_cast<GLsizei>(count),
-                                             attachments, area.x, area.y, area.width, area.height);
+        mFunctions->invalidateSubFramebuffer(GL_FRAMEBUFFER, count, attachments, area.x, area.y, area.width, area.height);
     }
 
     return gl::Error(GL_NO_ERROR);

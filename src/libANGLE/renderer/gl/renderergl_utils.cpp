@@ -97,8 +97,7 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions, G
         if (numSamples > 0)
         {
             std::vector<GLint> samples(numSamples);
-            functions->getInternalformativ(GL_RENDERBUFFER, internalFormat, GL_SAMPLES,
-                                           static_cast<GLsizei>(samples.size()), &samples[0]);
+            functions->getInternalformativ(GL_RENDERBUFFER, internalFormat, GL_SAMPLES, samples.size(), &samples[0]);
             for (size_t sampleIndex = 0; sampleIndex < samples.size(); sampleIndex++)
             {
                 textureCaps.sampleCounts.insert(samples[sampleIndex]);

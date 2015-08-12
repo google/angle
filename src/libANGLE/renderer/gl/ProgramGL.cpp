@@ -132,9 +132,7 @@ LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog,
         GLsizei uniformNameLength = 0;
         GLint uniformSize = 0;
         GLenum uniformType = GL_NONE;
-        mFunctions->getActiveUniform(mProgramID, i, static_cast<GLsizei>(uniformNameBuffer.size()),
-                                     &uniformNameLength, &uniformSize, &uniformType,
-                                     &uniformNameBuffer[0]);
+        mFunctions->getActiveUniform(mProgramID, i, uniformNameBuffer.size(), &uniformNameLength, &uniformSize, &uniformType, &uniformNameBuffer[0]);
 
         size_t subscript = 0;
         std::string uniformName = gl::ParseUniformName(std::string(&uniformNameBuffer[0], uniformNameLength), &subscript);
@@ -146,15 +144,13 @@ LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog,
             std::string locationName = uniformName;
             if (isArray)
             {
-                locationName += "[" + Str(static_cast<int>(arrayIndex)) + "]";
+                locationName += "[" + Str(arrayIndex) + "]";
             }
 
             GLint location = mFunctions->getUniformLocation(mProgramID, locationName.c_str());
             if (location >= 0)
             {
-                mUniformIndex[location] =
-                    gl::VariableLocation(uniformName, static_cast<unsigned int>(arrayIndex),
-                                         static_cast<unsigned int>(mUniforms.size()));
+                mUniformIndex[location] = gl::VariableLocation(uniformName, arrayIndex, static_cast<unsigned int>(mUniforms.size()));
 
                 // If the uniform is a sampler, track it in the sampler bindings array
                 if (gl::IsSamplerType(uniformType))
@@ -196,9 +192,7 @@ LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog,
         GLsizei attributeNameLength = 0;
         GLint attributeSize = 0;
         GLenum attributeType = GL_NONE;
-        mFunctions->getActiveAttrib(mProgramID, i, static_cast<GLsizei>(attributeNameBuffer.size()),
-                                    &attributeNameLength, &attributeSize, &attributeType,
-                                    &attributeNameBuffer[0]);
+        mFunctions->getActiveAttrib(mProgramID, i, attributeNameBuffer.size(), &attributeNameLength, &attributeSize, &attributeType, &attributeNameBuffer[0]);
 
         std::string attributeName(&attributeNameBuffer[0], attributeNameLength);
 

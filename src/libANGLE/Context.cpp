@@ -848,9 +848,7 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS: *params = mCaps.maxTransformFeedbackInterleavedComponents; break;
       case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS:       *params = mCaps.maxTransformFeedbackSeparateAttributes;    break;
       case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS:    *params = mCaps.maxTransformFeedbackSeparateComponents;    break;
-      case GL_NUM_COMPRESSED_TEXTURE_FORMATS:
-          *params = static_cast<GLint>(mCaps.compressedTextureFormats.size());
-          break;
+      case GL_NUM_COMPRESSED_TEXTURE_FORMATS:           *params = mCaps.compressedTextureFormats.size();                break;
       case GL_MAX_SAMPLES_ANGLE:                        *params = mCaps.maxSamples;                                     break;
       case GL_MAX_VIEWPORT_DIMS:
         {
@@ -865,13 +863,13 @@ void Context::getIntegerv(GLenum pname, GLint *params)
         *params = mResetStrategy;
         break;
       case GL_NUM_SHADER_BINARY_FORMATS:
-          *params = static_cast<GLint>(mCaps.shaderBinaryFormats.size());
+        *params = mCaps.shaderBinaryFormats.size();
         break;
       case GL_SHADER_BINARY_FORMATS:
         std::copy(mCaps.shaderBinaryFormats.begin(), mCaps.shaderBinaryFormats.end(), params);
         break;
       case GL_NUM_PROGRAM_BINARY_FORMATS:
-          *params = static_cast<GLint>(mCaps.programBinaryFormats.size());
+        *params = mCaps.programBinaryFormats.size();
         break;
       case GL_PROGRAM_BINARY_FORMATS:
         std::copy(mCaps.programBinaryFormats.begin(), mCaps.programBinaryFormats.end(), params);
@@ -951,19 +949,19 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_COMPRESSED_TEXTURE_FORMATS:
         {
             *type = GL_INT;
-            *numParams = static_cast<unsigned int>(mCaps.compressedTextureFormats.size());
+            *numParams = mCaps.compressedTextureFormats.size();
         }
         return true;
       case GL_PROGRAM_BINARY_FORMATS_OES:
         {
             *type = GL_INT;
-            *numParams = static_cast<unsigned int>(mCaps.programBinaryFormats.size());
+            *numParams = mCaps.programBinaryFormats.size();
         }
         return true;
       case GL_SHADER_BINARY_FORMATS:
         {
             *type = GL_INT;
-            *numParams = static_cast<unsigned int>(mCaps.shaderBinaryFormats.size());
+            *numParams = mCaps.shaderBinaryFormats.size();
         }
         return true;
 

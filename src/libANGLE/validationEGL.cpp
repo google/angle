@@ -42,7 +42,7 @@ size_t GetMaximumMipLevel(const gl::Context *context, GLenum target)
             UNREACHABLE();
     }
 
-    return gl::log2(static_cast<int>(maxDimension));
+    return gl::log2(maxDimension);
 }
 
 bool TextureHasNonZeroMipLevelsSpecified(const gl::Context *context, const gl::Texture *texture)

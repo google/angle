@@ -28,6 +28,9 @@
         4100, # Unreferenced formal parameter. Not interesting.
         4127, # conditional expression is constant. Too noisy to be useful.
 
+        # Conversion warnings.  These fire all over the place in ANGLE.
+        4267, # Conversion from 'size_t' to 'type', possible loss of data
+
         # TODO: 4702 doesn't fire on xtree in VS2015 (CTP6). We can remove C4702 after moving to VS2015.
         4702, # Unreachable code. Should only fire on system header xtree.
 
