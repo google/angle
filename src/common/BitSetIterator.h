@@ -84,7 +84,7 @@ BitSetIterator<N>::Iterator::Iterator(const std::bitset<N> &bits)
     }
     else
     {
-        mOffset = rx::roundUp(N, BitsPerWord);
+        mOffset = static_cast<unsigned long>(rx::roundUp(N, BitsPerWord));
     }
 }
 

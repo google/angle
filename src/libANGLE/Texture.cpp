@@ -164,9 +164,8 @@ size_t Texture::getMipCompleteLevels() const
     const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), 0);
     if (mTarget == GL_TEXTURE_3D)
     {
-        const size_t maxDim =
-            std::max(std::max(baseImageDesc.size.width, baseImageDesc.size.height),
-                     baseImageDesc.size.depth);
+        const int maxDim = std::max(std::max(baseImageDesc.size.width, baseImageDesc.size.height),
+                                    baseImageDesc.size.depth);
         return log2(maxDim) + 1;
     }
     else
@@ -331,7 +330,7 @@ Error Texture::setStorage(GLenum target, size_t levels, GLenum internalFormat, c
         return error;
     }
 
-    mImmutableLevelCount = levels;
+    mImmutableLevelCount = static_cast<GLsizei>(levels);
     clearImageDescs();
     setImageDescChain(levels, size, internalFormat);
 
@@ -366,16 +365,17 @@ Error Texture::generateMipmaps()
 
 void Texture::setImageDescChain(size_t levels, Extents baseSize, GLenum sizedInternalFormat)
 {
-    for (size_t level = 0; level < levels; level++)
+    for (int level = 0; level < static_cast<int>(levels); level++)
     {
-        Extents levelSize(std::max<size_t>(baseSize.width >> level, 1),
-                          std::max<size_t>(baseSize.height >> level, 1),
-                          (mTarget == GL_TEXTURE_2D_ARRAY) ? baseSize.depth : std::max<size_t>(baseSize.depth >> level, 1));
+        Extents levelSize(
+            std::max<int>(baseSize.width >> level, 1), std::max<int>(baseSize.height >> level, 1),
+            (mTarget == GL_TEXTURE_2D_ARRAY) ? baseSize.depth
+                                             : std::max<int>(baseSize.depth >> level, 1));
         ImageDesc levelInfo(levelSize, sizedInternalFormat);
 
         if (mTarget == GL_TEXTURE_CUBE_MAP)
         {
-            for (size_t face = FirstCubeMapTextureTarget; face <= LastCubeMapTextureTarget; face++)
+            for (GLenum face = FirstCubeMapTextureTarget; face <= LastCubeMapTextureTarget; face++)
             {
                 setImageDesc(face, level, levelInfo);
             }
@@ -486,7 +486,8 @@ Error Texture::setEGLImageTarget(GLenum target, egl::Image *imageTarget)
 
     setTargetImage(imageTarget);
 
-    Extents size(imageTarget->getWidth(), imageTarget->getHeight(), 1);
+    Extents size(static_cast<int>(imageTarget->getWidth()),
+                 static_cast<int>(imageTarget->getHeight()), 1);
     GLenum internalFormat = imageTarget->getInternalFormat();
     GLenum type           = GetInternalFormatInfo(internalFormat).type;
 
@@ -672,12 +673,14 @@ Texture::SamplerCompletenessCache::SamplerCompletenessCache()
 
 GLsizei Texture::getAttachmentWidth(const gl::FramebufferAttachment::Target &target) const
 {
-    return getWidth(target.textureIndex().type, target.textureIndex().mipIndex);
+    return static_cast<GLsizei>(
+        getWidth(target.textureIndex().type, target.textureIndex().mipIndex));
 }
 
 GLsizei Texture::getAttachmentHeight(const gl::FramebufferAttachment::Target &target) const
 {
-    return getHeight(target.textureIndex().type, target.textureIndex().mipIndex);
+    return static_cast<GLsizei>(
+        getHeight(target.textureIndex().type, target.textureIndex().mipIndex));
 }
 
 GLenum Texture::getAttachmentInternalFormat(const gl::FramebufferAttachment::Target &target) const

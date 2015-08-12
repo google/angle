@@ -32,8 +32,8 @@ bool Win32Pixmap::initialize(EGLNativeDisplayType display, size_t width, size_t 
     }
 
     bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo);
-    bitmapInfo.bmiHeader.biWidth = width;
-    bitmapInfo.bmiHeader.biHeight = height;
+    bitmapInfo.bmiHeader.biWidth         = static_cast<LONG>(width);
+    bitmapInfo.bmiHeader.biHeight        = static_cast<LONG>(height);
     bitmapInfo.bmiHeader.biPlanes = 1;
     bitmapInfo.bmiHeader.biBitCount = static_cast<WORD>(depth);
     bitmapInfo.bmiHeader.biCompression = BI_RGB;

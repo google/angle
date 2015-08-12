@@ -239,9 +239,9 @@ gl::Error RendererD3D::generateSwizzles(const gl::Data &data, gl::SamplerType ty
 {
     gl::Program *program = data.state->getProgram();
 
-    size_t samplerRange = program->getUsedSamplerRange(type);
+    unsigned int samplerRange = static_cast<unsigned int>(program->getUsedSamplerRange(type));
 
-    for (size_t i = 0; i < samplerRange; i++)
+    for (unsigned int i = 0; i < samplerRange; i++)
     {
         GLenum textureType = program->getSamplerTextureType(type, i);
         GLint textureUnit = program->getSamplerMapping(type, i, *data.caps);
@@ -390,8 +390,8 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shade
 {
     gl::Program *program = data.state->getProgram();
 
-    size_t samplerRange = program->getUsedSamplerRange(shaderType);
-    for (size_t samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
+    unsigned int samplerRange = program->getUsedSamplerRange(shaderType);
+    for (unsigned int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
     {
         GLenum textureType = program->getSamplerTextureType(shaderType, samplerIndex);
         GLint textureUnit = program->getSamplerMapping(shaderType, samplerIndex, *data.caps);

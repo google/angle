@@ -827,7 +827,7 @@ TEST_P(GLSLTest, FixedShaderLength)
     const std::string source = "void main() { gl_FragColor = vec4(0, 0, 0, 0); }" + appendGarbage;
     const char *sourceArray[1] = { source.c_str() };
     GLint lengths[1] = { static_cast<GLint>(source.length() - appendGarbage.length()) };
-    glShaderSource(shader, ArraySize(sourceArray), sourceArray, lengths);
+    glShaderSource(shader, static_cast<GLsizei>(ArraySize(sourceArray)), sourceArray, lengths);
     glCompileShader(shader);
 
     GLint compileResult;
@@ -842,7 +842,7 @@ TEST_P(GLSLTest, NegativeShaderLength)
 
     const char *sourceArray[1] = { "void main() { gl_FragColor = vec4(0, 0, 0, 0); }" };
     GLint lengths[1] = { -10 };
-    glShaderSource(shader, ArraySize(sourceArray), sourceArray, lengths);
+    glShaderSource(shader, static_cast<GLsizei>(ArraySize(sourceArray)), sourceArray, lengths);
     glCompileShader(shader);
 
     GLint compileResult;
@@ -871,7 +871,7 @@ TEST_P(GLSLTest, MixedShaderLengths)
     };
     ASSERT_EQ(ArraySize(sourceArray), ArraySize(lengths));
 
-    glShaderSource(shader, ArraySize(sourceArray), sourceArray, lengths);
+    glShaderSource(shader, static_cast<GLsizei>(ArraySize(sourceArray)), sourceArray, lengths);
     glCompileShader(shader);
 
     GLint compileResult;
@@ -902,7 +902,7 @@ TEST_P(GLSLTest, ZeroShaderLength)
     };
     ASSERT_EQ(ArraySize(sourceArray), ArraySize(lengths));
 
-    glShaderSource(shader, ArraySize(sourceArray), sourceArray, lengths);
+    glShaderSource(shader, static_cast<GLsizei>(ArraySize(sourceArray)), sourceArray, lengths);
     glCompileShader(shader);
 
     GLint compileResult;

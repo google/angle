@@ -968,6 +968,7 @@
                                 '/wd4101', # unreferenced local
                                 '/wd4189', # unreferenced but initted
                                 '/wd4244', # Conversion from 'type1' to 'type2', possible loss of data
+                                '/wd4267', # Conversion from 'size_t' to 'type', possible loss of data
                             ],
                         },
                     },

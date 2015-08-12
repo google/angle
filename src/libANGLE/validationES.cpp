@@ -242,7 +242,7 @@ bool ValidMipLevel(const Context *context, GLenum target, GLint level)
       default: UNREACHABLE();
     }
 
-    return level <= gl::log2(maxDimension);
+    return level <= gl::log2(static_cast<int>(maxDimension));
 }
 
 bool ValidImageSize(const Context *context, GLenum target, GLint level,

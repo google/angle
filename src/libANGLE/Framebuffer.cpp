@@ -268,7 +268,7 @@ bool Framebuffer::hasEnabledColorAttachment() const
 {
     for (size_t colorAttachment = 0; colorAttachment < mData.mColorAttachments.size(); ++colorAttachment)
     {
-        if (isEnabledColorAttachment(colorAttachment))
+        if (isEnabledColorAttachment(static_cast<unsigned int>(colorAttachment)))
         {
             return true;
         }
@@ -286,7 +286,7 @@ bool Framebuffer::usingExtendedDrawBuffers() const
 {
     for (size_t colorAttachment = 1; colorAttachment < mData.mColorAttachments.size(); ++colorAttachment)
     {
-        if (isEnabledColorAttachment(colorAttachment))
+        if (isEnabledColorAttachment(static_cast<unsigned int>(colorAttachment)))
         {
             return true;
         }

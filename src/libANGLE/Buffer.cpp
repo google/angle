@@ -162,7 +162,8 @@ void Buffer::onPixelUnpack()
 
 Error Buffer::getIndexRange(GLenum type, size_t offset, size_t count, gl::RangeUI *outRange) const
 {
-    if (mIndexRangeCache.findRange(type, offset, count, outRange))
+    if (mIndexRangeCache.findRange(type, static_cast<unsigned int>(offset),
+                                   static_cast<GLsizei>(count), outRange))
     {
         return gl::Error(GL_NO_ERROR);
     }
@@ -173,7 +174,8 @@ Error Buffer::getIndexRange(GLenum type, size_t offset, size_t count, gl::RangeU
         return error;
     }
 
-    mIndexRangeCache.addRange(type, offset, count, *outRange);
+    mIndexRangeCache.addRange(type, static_cast<unsigned int>(offset), static_cast<GLsizei>(count),
+                              *outRange);
 
     return Error(GL_NO_ERROR);
 }

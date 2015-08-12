@@ -384,16 +384,10 @@ egl::Error Renderer11::initialize()
 #ifdef _DEBUG
     {
         TRACE_EVENT0("gpu.angle", "D3D11CreateDevice (Debug)");
-        result = D3D11CreateDevice(NULL,
-                                   mDriverType,
-                                   NULL,
-                                   D3D11_CREATE_DEVICE_DEBUG,
-                                   mAvailableFeatureLevels.data(),
-                                   mAvailableFeatureLevels.size(),
-                                   D3D11_SDK_VERSION,
-                                   &mDevice,
-                                   &(mRenderer11DeviceCaps.featureLevel),
-                                   &mDeviceContext);
+        result = D3D11CreateDevice(
+            NULL, mDriverType, NULL, D3D11_CREATE_DEVICE_DEBUG, mAvailableFeatureLevels.data(),
+            static_cast<unsigned int>(mAvailableFeatureLevels.size()), D3D11_SDK_VERSION, &mDevice,
+            &(mRenderer11DeviceCaps.featureLevel), &mDeviceContext);
     }
 
     if (!mDevice || FAILED(result))
@@ -407,16 +401,10 @@ egl::Error Renderer11::initialize()
         SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.D3D11CreateDeviceMS");
         TRACE_EVENT0("gpu.angle", "D3D11CreateDevice");
 
-        result = D3D11CreateDevice(NULL,
-                                   mDriverType,
-                                   NULL,
-                                   0,
-                                   mAvailableFeatureLevels.data(),
-                                   mAvailableFeatureLevels.size(),
-                                   D3D11_SDK_VERSION,
-                                   &mDevice,
-                                   &(mRenderer11DeviceCaps.featureLevel),
-                                   &mDeviceContext);
+        result = D3D11CreateDevice(NULL, mDriverType, NULL, 0, mAvailableFeatureLevels.data(),
+                                   static_cast<unsigned int>(mAvailableFeatureLevels.size()),
+                                   D3D11_SDK_VERSION, &mDevice,
+                                   &(mRenderer11DeviceCaps.featureLevel), &mDeviceContext);
 
         // Cleanup done by destructor
         if (!mDevice || FAILED(result))
@@ -556,7 +544,7 @@ egl::Error Renderer11::initialize()
             };
 
             D3D11_INFO_QUEUE_FILTER filter = {};
-            filter.DenyList.NumIDs = ArraySize(hideMessages);
+            filter.DenyList.NumIDs         = static_cast<unsigned int>(ArraySize(hideMessages));
             filter.DenyList.pIDList = hideMessages;
 
             infoQueue->AddStorageFilterEntries(&filter);
@@ -1020,13 +1008,17 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
                 {
                     UINT firstConstant = 0, numConstants = 0;
                     CalculateConstantBufferParams(uniformBufferOffset, uniformBufferSize, &firstConstant, &numConstants);
-                    mDeviceContext1->VSSetConstantBuffers1(getReservedVertexUniformBuffers() + uniformBufferIndex,
-                                                           1, &constantBuffer, &firstConstant, &numConstants);
+                    mDeviceContext1->VSSetConstantBuffers1(
+                        getReservedVertexUniformBuffers() +
+                            static_cast<unsigned int>(uniformBufferIndex),
+                        1, &constantBuffer, &firstConstant, &numConstants);
                 }
                 else
                 {
-                    mDeviceContext->VSSetConstantBuffers(getReservedVertexUniformBuffers() + uniformBufferIndex,
-                                                         1, &constantBuffer);
+                    mDeviceContext->VSSetConstantBuffers(
+                        getReservedVertexUniformBuffers() +
+                            static_cast<unsigned int>(uniformBufferIndex),
+                        1, &constantBuffer);
                 }
 
                 mCurrentConstantBufferVS[uniformBufferIndex] = bufferStorage->getSerial();
@@ -1076,13 +1068,17 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
                 {
                     UINT firstConstant = 0, numConstants = 0;
                     CalculateConstantBufferParams(uniformBufferOffset, uniformBufferSize, &firstConstant, &numConstants);
-                    mDeviceContext1->PSSetConstantBuffers1(getReservedFragmentUniformBuffers() + uniformBufferIndex,
-                                                           1, &constantBuffer, &firstConstant, &numConstants);
+                    mDeviceContext1->PSSetConstantBuffers1(
+                        getReservedFragmentUniformBuffers() +
+                            static_cast<unsigned int>(uniformBufferIndex),
+                        1, &constantBuffer, &firstConstant, &numConstants);
                 }
                 else
                 {
-                    mDeviceContext->PSSetConstantBuffers(getReservedFragmentUniformBuffers() + uniformBufferIndex,
-                                                         1, &constantBuffer);
+                    mDeviceContext->PSSetConstantBuffers(
+                        getReservedFragmentUniformBuffers() +
+                            static_cast<unsigned int>(uniformBufferIndex),
+                        1, &constantBuffer);
                 }
 
                 mCurrentConstantBufferPS[uniformBufferIndex] = bufferStorage->getSerial();
@@ -1238,8 +1234,8 @@ void Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
     {
         actualViewport.x = 0;
         actualViewport.y = 0;
-        actualViewport.width = mRenderTargetDesc.width;
-        actualViewport.height = mRenderTargetDesc.height;
+        actualViewport.width  = static_cast<int>(mRenderTargetDesc.width);
+        actualViewport.height = static_cast<int>(mRenderTargetDesc.height);
         actualZNear = 0.0f;
         actualZFar = 1.0f;
     }
@@ -1259,8 +1255,8 @@ void Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
         if (mRenderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3)
         {
             // Feature Level 9 viewports shouldn't exceed the dimensions of the rendertarget.
-            dxMaxViewportBoundsX = mRenderTargetDesc.width;
-            dxMaxViewportBoundsY = mRenderTargetDesc.height;
+            dxMaxViewportBoundsX = static_cast<int>(mRenderTargetDesc.width);
+            dxMaxViewportBoundsY = static_cast<int>(mRenderTargetDesc.height);
             dxMinViewportBoundsX = 0;
             dxMinViewportBoundsY = 0;
         }
@@ -1619,7 +1615,8 @@ void Renderer11::applyTransformFeedbackBuffers(const gl::State &state)
 
         mAppliedNumXFBBindings = numXFBBindings;
 
-        mDeviceContext->SOSetTargets(numXFBBindings, mAppliedTFBuffers, mCurrentD3DOffsets);
+        mDeviceContext->SOSetTargets(static_cast<unsigned int>(numXFBBindings), mAppliedTFBuffers,
+                                     mCurrentD3DOffsets);
     }
 }
 
@@ -2376,20 +2373,15 @@ bool Renderer11::testDeviceResettable()
     D3D_FEATURE_LEVEL dummyFeatureLevel;
     ID3D11DeviceContext* dummyContext;
 
-    HRESULT result = D3D11CreateDevice(NULL,
-                                       mDriverType,
-                                       NULL,
+    HRESULT result = D3D11CreateDevice(
+        NULL, mDriverType, NULL,
                                        #if defined(_DEBUG)
-                                       D3D11_CREATE_DEVICE_DEBUG,
+        D3D11_CREATE_DEVICE_DEBUG,
                                        #else
-                                       0,
+        0,
                                        #endif
-                                       mAvailableFeatureLevels.data(),
-                                       mAvailableFeatureLevels.size(),
-                                       D3D11_SDK_VERSION,
-                                       &dummyDevice,
-                                       &dummyFeatureLevel,
-                                       &dummyContext);
+        mAvailableFeatureLevels.data(), static_cast<unsigned int>(mAvailableFeatureLevels.size()),
+        D3D11_SDK_VERSION, &dummyDevice, &dummyFeatureLevel, &dummyContext);
 
     if (!mDevice || FAILED(result))
     {
@@ -3011,7 +3003,7 @@ gl::Error Renderer11::loadExecutable(const void *function, size_t length, Shader
                     const gl::LinkedVarying &varying = transformFeedbackVaryings[i];
                     GLenum transposedType = gl::TransposeMatrixType(varying.type);
 
-                    for (size_t j = 0; j < varying.semanticIndexCount; j++)
+                    for (unsigned int j = 0; j < varying.semanticIndexCount; j++)
                     {
                         D3D11_SO_DECLARATION_ENTRY entry = { 0 };
                         entry.Stream = 0;
@@ -3024,8 +3016,10 @@ gl::Error Renderer11::loadExecutable(const void *function, size_t length, Shader
                     }
                 }
 
-                result = mDevice->CreateGeometryShaderWithStreamOutput(function, length, soDeclaration.data(), soDeclaration.size(),
-                                                                       NULL, 0, 0, NULL, &streamOutShader);
+                result = mDevice->CreateGeometryShaderWithStreamOutput(
+                    function, static_cast<unsigned int>(length), soDeclaration.data(),
+                    static_cast<unsigned int>(soDeclaration.size()), NULL, 0, 0, NULL,
+                    &streamOutShader);
                 ASSERT(SUCCEEDED(result));
                 if (FAILED(result))
                 {
@@ -3714,7 +3708,8 @@ void Renderer11::updateHistograms()
             sizeSum += buffer->getTotalCPUBufferMemoryBytes();
         }
         const int kOneMegaByte = 1024 * 1024;
-        ANGLE_HISTOGRAM_MEMORY_MB("GPU.ANGLE.Buffer11CPUMemoryMB", sizeSum / kOneMegaByte);
+        ANGLE_HISTOGRAM_MEMORY_MB("GPU.ANGLE.Buffer11CPUMemoryMB",
+                                  static_cast<int>(sizeSum) / kOneMegaByte);
     }
 }
 
@@ -3858,11 +3853,15 @@ gl::Error Renderer11::clearTextures(gl::SamplerType samplerType, size_t rangeSta
 
     if (samplerType == gl::SAMPLER_VERTEX)
     {
-        mDeviceContext->VSSetShaderResources(rangeStart, rangeEnd - rangeStart, &mNullSRVs[0]);
+        mDeviceContext->VSSetShaderResources(static_cast<unsigned int>(rangeStart),
+                                             static_cast<unsigned int>(rangeEnd - rangeStart),
+                                             &mNullSRVs[0]);
     }
     else
     {
-        mDeviceContext->PSSetShaderResources(rangeStart, rangeEnd - rangeStart, &mNullSRVs[0]);
+        mDeviceContext->PSSetShaderResources(static_cast<unsigned int>(rangeStart),
+                                             static_cast<unsigned int>(rangeEnd - rangeStart),
+                                             &mNullSRVs[0]);
     }
 
     for (size_t samplerIndex = rangeStart; samplerIndex < rangeEnd; ++samplerIndex)

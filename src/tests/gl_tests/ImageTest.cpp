@@ -87,7 +87,8 @@ class ImageTest : public ANGLETest
         glGenTextures(1, &source);
         glBindTexture(GL_TEXTURE_2D, source);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, type, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, static_cast<GLsizei>(width),
+                     static_cast<GLsizei>(height), 0, format, type, data);
 
         // Disable mipmapping
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -122,10 +123,11 @@ class ImageTest : public ANGLETest
         glGenTextures(1, &source);
         glBindTexture(GL_TEXTURE_CUBE_MAP, source);
 
-        for (size_t faceIdx = 0; faceIdx < 6; faceIdx++)
+        for (GLenum faceIdx = 0; faceIdx < 6; faceIdx++)
         {
-            glTexImage2D(faceIdx + GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, format, width, height, 0,
-                         format, type, data + (faceIdx * dataStride));
+            glTexImage2D(faceIdx + GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, format,
+                         static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, format, type,
+                         data + (faceIdx * dataStride));
         }
 
         // Disable mipmapping
@@ -161,7 +163,9 @@ class ImageTest : public ANGLETest
         glGenTextures(1, &source);
         glBindTexture(GL_TEXTURE_3D, source);
 
-        glTexImage3D(GL_TEXTURE_3D, 0, format, width, height, depth, 0, format, type, data);
+        glTexImage3D(GL_TEXTURE_3D, 0, format, static_cast<GLsizei>(width),
+                     static_cast<GLsizei>(height), static_cast<GLsizei>(depth), 0, format, type,
+                     data);
 
         // Disable mipmapping
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -196,7 +200,8 @@ class ImageTest : public ANGLETest
         GLuint source;
         glGenRenderbuffers(1, &source);
         glBindRenderbuffer(GL_RENDERBUFFER, source);
-        glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height);
+        glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, static_cast<GLsizei>(width),
+                              static_cast<GLsizei>(height));
 
         // Create a framebuffer and clear it to set the data
         GLuint framebuffer;
@@ -838,7 +843,7 @@ TEST_P(ImageTest, SourceCubeTarget2D)
         0,   0, 255, 255, 0,   255, 0,   255, 0,   0, 0, 255,
     };
 
-    for (size_t faceIdx = 0; faceIdx < 6; faceIdx++)
+    for (EGLenum faceIdx = 0; faceIdx < 6; faceIdx++)
     {
         // Create the Image
         GLuint source;
@@ -879,7 +884,7 @@ TEST_P(ImageTest, SourceCubeTargetRenderbuffer)
         0,   0, 255, 255, 0,   255, 0,   255, 0,   0, 0, 255,
     };
 
-    for (size_t faceIdx = 0; faceIdx < 6; faceIdx++)
+    for (EGLenum faceIdx = 0; faceIdx < 6; faceIdx++)
     {
         // Create the Image
         GLuint source;
@@ -1153,8 +1158,8 @@ TEST_P(ImageTest, MipLevels)
 
     for (size_t level = 0; level < mipLevels; level++)
     {
-        glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, textureSize >> level, textureSize >> level, 0,
-                     GL_RGBA, GL_UNSIGNED_BYTE, data[level]);
+        glTexImage2D(GL_TEXTURE_2D, static_cast<GLint>(level), GL_RGBA, textureSize >> level,
+                     textureSize >> level, 0, GL_RGBA, GL_UNSIGNED_BYTE, data[level]);
     }
 
     ASSERT_GL_NO_ERROR();

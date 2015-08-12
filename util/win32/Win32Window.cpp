@@ -450,7 +450,8 @@ bool Win32Window::initialize(const std::string &name, size_t width, size_t heigh
                                     sizeRect.right - sizeRect.left, sizeRect.bottom - sizeRect.top, NULL, NULL,
                                     GetModuleHandle(NULL), this);
 
-    mNativeWindow = CreateWindowExA(0, mChildClassName.c_str(), name.c_str(), WS_CHILD, 0, 0, width, height,
+    mNativeWindow = CreateWindowExA(0, mChildClassName.c_str(), name.c_str(), WS_CHILD, 0, 0,
+                                    static_cast<int>(width), static_cast<int>(height),
                                     mParentWindow, NULL, GetModuleHandle(NULL), this);
 
     mNativeDisplay = GetDC(mNativeWindow);

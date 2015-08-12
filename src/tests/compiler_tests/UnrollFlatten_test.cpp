@@ -32,7 +32,7 @@ class UnrollFlattenTest : public testing::Test
             FAIL() << "Shader compilation failed " << infoLog;
         }
         // Ignore the beginning of the shader to avoid the definitions of LOOP and FLATTEN
-        mCurrentPosition = mTranslatedSource.find("GL_USES_FRAG_COLOR");
+        mCurrentPosition = static_cast<int>(mTranslatedSource.find("GL_USES_FRAG_COLOR"));
     }
 
     void expect(const char *patterns[], size_t count)
@@ -59,7 +59,7 @@ class UnrollFlattenTest : public testing::Test
                 }
             }
             mExpectationList += " - " + std::string(pattern);
-            mCurrentPosition = position + 1;
+            mCurrentPosition = static_cast<int>(position) + 1;
         }
     }
 

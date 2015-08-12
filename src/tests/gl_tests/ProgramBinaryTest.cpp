@@ -138,7 +138,8 @@ TEST_P(ProgramBinaryTest, SaveAndLoadBinary)
             if (infoLogLength > 0)
             {
                 std::vector<GLchar> infoLog(infoLogLength);
-                glGetProgramInfoLog(program2, infoLog.size(), NULL, &infoLog[0]);
+                glGetProgramInfoLog(program2, static_cast<GLsizei>(infoLog.size()), NULL,
+                                    &infoLog[0]);
                 FAIL() << "program link failed: " << &infoLog[0];
             }
             else

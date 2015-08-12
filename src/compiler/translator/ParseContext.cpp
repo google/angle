@@ -537,7 +537,7 @@ bool TParseContext::constructorErrorCheck(const TSourceLoc &line,
     {
         if (type->isUnsizedArray())
         {
-            type->setArraySize(function.getParamCount());
+            type->setArraySize(static_cast<int>(function.getParamCount()));
         }
         else if (static_cast<size_t>(type->getArraySize()) != function.getParamCount())
         {

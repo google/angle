@@ -44,8 +44,8 @@ Error Renderbuffer::setStorage(GLenum internalformat, size_t width, size_t heigh
         return error;
     }
 
-    mWidth = width;
-    mHeight = height;
+    mWidth          = static_cast<GLsizei>(width);
+    mHeight         = static_cast<GLsizei>(height);
     mInternalFormat = internalformat;
     mSamples = 0;
 
@@ -62,10 +62,10 @@ Error Renderbuffer::setStorageMultisample(size_t samples, GLenum internalformat,
         return error;
     }
 
-    mWidth = width;
-    mHeight = height;
+    mWidth          = static_cast<GLsizei>(width);
+    mHeight         = static_cast<GLsizei>(height);
     mInternalFormat = internalformat;
-    mSamples = samples;
+    mSamples        = static_cast<GLsizei>(samples);
 
     return Error(GL_NO_ERROR);
 }
@@ -82,8 +82,8 @@ Error Renderbuffer::setStorageEGLImageTarget(egl::Image *image)
 
     setTargetImage(image);
 
-    mWidth          = image->getWidth();
-    mHeight         = image->getHeight();
+    mWidth          = static_cast<GLsizei>(image->getWidth());
+    mHeight         = static_cast<GLsizei>(image->getHeight());
     mInternalFormat = image->getInternalFormat();
     mSamples        = 0;
 

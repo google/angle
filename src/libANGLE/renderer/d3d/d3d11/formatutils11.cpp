@@ -389,11 +389,11 @@ void AddDXGIFormat(DXGIFormatInfoMap *map, DXGI_FORMAT dxgiFormat, GLuint pixelB
     if (colorInfoIter != colorInfoMap.end())
     {
         const DXGIColorFormatInfo &colorInfo = colorInfoIter->second;
-        info.redBits = colorInfo.redBits;
-        info.greenBits = colorInfo.greenBits;
-        info.blueBits = colorInfo.blueBits;
-        info.alphaBits = colorInfo.alphaBits;
-        info.sharedBits = colorInfo.sharedBits;
+        info.redBits                         = static_cast<GLuint>(colorInfo.redBits);
+        info.greenBits                       = static_cast<GLuint>(colorInfo.greenBits);
+        info.blueBits                        = static_cast<GLuint>(colorInfo.blueBits);
+        info.alphaBits                       = static_cast<GLuint>(colorInfo.alphaBits);
+        info.sharedBits                      = static_cast<GLuint>(colorInfo.sharedBits);
     }
 
     static const DepthStencilInfoMap dsInfoMap = BuildDepthStencilInfoMap();

@@ -90,7 +90,8 @@ std::vector<GLenum> GetDefaultOutputLayoutFromShader(const std::vector<PixelShad
 
     if (!shaderOutputVars.empty())
     {
-        defaultPixelOutput.push_back(GL_COLOR_ATTACHMENT0 + shaderOutputVars[0].outputIndex);
+        defaultPixelOutput.push_back(GL_COLOR_ATTACHMENT0 +
+                                     static_cast<unsigned int>(shaderOutputVars[0].outputIndex));
     }
 
     return defaultPixelOutput;
@@ -948,7 +949,7 @@ gl::Error ProgramD3D::getPixelExecutableForOutputLayout(const std::vector<GLenum
     else if (!infoLog)
     {
         std::vector<char> tempCharBuffer(tempInfoLog.getLength() + 3);
-        tempInfoLog.getLog(tempInfoLog.getLength(), NULL, &tempCharBuffer[0]);
+        tempInfoLog.getLog(static_cast<GLsizei>(tempInfoLog.getLength()), NULL, &tempCharBuffer[0]);
         ERR("Error compiling dynamic pixel executable:\n%s\n", &tempCharBuffer[0]);
     }
 
@@ -996,7 +997,7 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
     else if (!infoLog)
     {
         std::vector<char> tempCharBuffer(tempInfoLog.getLength() + 3);
-        tempInfoLog.getLog(tempInfoLog.getLength(), NULL, &tempCharBuffer[0]);
+        tempInfoLog.getLog(static_cast<GLsizei>(tempInfoLog.getLength()), NULL, &tempCharBuffer[0]);
         ERR("Error compiling dynamic vertex executable:\n%s\n", &tempCharBuffer[0]);
     }
 
@@ -1253,7 +1254,7 @@ bool ProgramD3D::assignUniformBlockRegister(gl::InfoLog &infoLog, gl::UniformBlo
 
 void ProgramD3D::dirtyAllUniforms()
 {
-    unsigned int numUniforms = mUniforms.size();
+    unsigned int numUniforms = static_cast<unsigned int>(mUniforms.size());
     for (unsigned int index = 0; index < numUniforms; index++)
     {
         mUniforms[index]->dirty = true;
@@ -1509,7 +1510,8 @@ void ProgramD3D::defineUniform(const ShaderD3D *shader, const sh::ShaderVariable
             ASSERT(linkedUniform);
 
             if (encoder)
-                linkedUniform->registerElement = sh::HLSLBlockEncoder::getBlockRegisterElement(blockInfo);
+                linkedUniform->registerElement = static_cast<unsigned int>(
+                    sh::HLSLBlockEncoder::getBlockRegisterElement(blockInfo));
             mUniforms.push_back(linkedUniform);
         }
 
@@ -1517,11 +1519,13 @@ void ProgramD3D::defineUniform(const ShaderD3D *shader, const sh::ShaderVariable
         {
             if (shader->getShaderType() == GL_FRAGMENT_SHADER)
             {
-                linkedUniform->psRegisterIndex = sh::HLSLBlockEncoder::getBlockRegister(blockInfo);
+                linkedUniform->psRegisterIndex =
+                    static_cast<unsigned int>(sh::HLSLBlockEncoder::getBlockRegister(blockInfo));
             }
             else if (shader->getShaderType() == GL_VERTEX_SHADER)
             {
-                linkedUniform->vsRegisterIndex = sh::HLSLBlockEncoder::getBlockRegister(blockInfo);
+                linkedUniform->vsRegisterIndex =
+                    static_cast<unsigned int>(sh::HLSLBlockEncoder::getBlockRegister(blockInfo));
             }
             else UNREACHABLE();
         }
@@ -1821,7 +1825,7 @@ void ProgramD3D::defineUniformBlockMembers(const std::vector<VarT> &fields, cons
                                                           blockIndex, memberInfo);
 
             // add to uniform list, but not index, since uniform block uniforms have no location
-            blockUniformIndexes->push_back(mUniforms.size());
+            blockUniformIndexes->push_back(static_cast<GLenum>(mUniforms.size()));
             mUniforms.push_back(newUniform);
         }
     }
@@ -1838,7 +1842,7 @@ bool ProgramD3D::defineUniformBlock(gl::InfoLog &infoLog,
     if (getUniformBlockIndex(interfaceBlock.name) == GL_INVALID_INDEX)
     {
         std::vector<unsigned int> blockUniformIndexes;
-        const unsigned int blockIndex = mUniformBlocks.size();
+        const unsigned int blockIndex = static_cast<unsigned int>(mUniformBlocks.size());
 
         // define member uniforms
         sh::BlockLayoutEncoder *encoder = NULL;
@@ -1855,7 +1859,7 @@ bool ProgramD3D::defineUniformBlock(gl::InfoLog &infoLog,
 
         defineUniformBlockMembers(interfaceBlock.fields, "", blockIndex, encoder, &blockUniformIndexes, interfaceBlock.isRowMajorLayout);
 
-        size_t dataSize = encoder->getBlockSize();
+        unsigned int dataSize = static_cast<unsigned int>(encoder->getBlockSize());
 
         // create all the uniform blocks
         if (interfaceBlock.arraySize > 0)
@@ -1995,7 +1999,8 @@ bool ProgramD3D::indexUniforms(gl::InfoLog &infoLog, const gl::Caps &caps)
             if (!uniform.isBuiltIn())
             {
                 // Assign in-order uniform locations
-                mUniformIndex[mUniformIndex.size()] = gl::VariableLocation(uniform.name, arrayIndex, uniformIndex);
+                mUniformIndex[static_cast<GLuint>(mUniformIndex.size())] = gl::VariableLocation(
+                    uniform.name, arrayIndex, static_cast<unsigned int>(uniformIndex));
             }
         }
     }

@@ -17,7 +17,8 @@ namespace angle
 std::string GetExecutablePath()
 {
     std::array<char, MAX_PATH> executableFileBuf;
-    DWORD executablePathLen = GetModuleFileNameA(NULL, executableFileBuf.data(), executableFileBuf.size());
+    DWORD executablePathLen = GetModuleFileNameA(NULL, executableFileBuf.data(),
+                                                 static_cast<DWORD>(executableFileBuf.size()));
     return (executablePathLen > 0 ? std::string(executableFileBuf.data()) : "");
 }
 

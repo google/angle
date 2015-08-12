@@ -269,7 +269,7 @@ EGLBoolean EGLWindow::FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, E
     EGLint numConfigs = 0;
     eglGetConfigs(dpy, nullptr, 0, &numConfigs);
     std::vector<EGLConfig> allConfigs(numConfigs);
-    eglGetConfigs(dpy, allConfigs.data(), allConfigs.size(), &numConfigs);
+    eglGetConfigs(dpy, allConfigs.data(), static_cast<EGLint>(allConfigs.size()), &numConfigs);
 
     for (size_t i = 0; i < allConfigs.size(); i++)
     {

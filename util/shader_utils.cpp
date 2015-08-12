@@ -47,7 +47,7 @@ GLuint CompileShader(GLenum type, const std::string &source)
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
 
         std::vector<GLchar> infoLog(infoLogLength);
-        glGetShaderInfoLog(shader, infoLog.size(), NULL, &infoLog[0]);
+        glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), NULL, &infoLog[0]);
 
         std::cerr << "shader compilation failed: " << &infoLog[0];
 
@@ -101,7 +101,7 @@ GLuint CompileProgram(const std::string &vsSource, const std::string &fsSource)
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
 
         std::vector<GLchar> infoLog(infoLogLength);
-        glGetProgramInfoLog(program, infoLog.size(), NULL, &infoLog[0]);
+        glGetProgramInfoLog(program, static_cast<GLsizei>(infoLog.size()), NULL, &infoLog[0]);
 
         std::cerr << "program link failed: " << &infoLog[0];
 

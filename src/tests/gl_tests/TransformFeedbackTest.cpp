@@ -83,7 +83,9 @@ TEST_P(TransformFeedbackTest, ZeroSizedViewport)
     {
         "gl_Position"
     };
-    glTransformFeedbackVaryings(mProgram, ArraySize(transformFeedbackVaryings), transformFeedbackVaryings, GL_INTERLEAVED_ATTRIBS);
+    glTransformFeedbackVaryings(mProgram,
+                                static_cast<GLsizei>(ArraySize(transformFeedbackVaryings)),
+                                transformFeedbackVaryings, GL_INTERLEAVED_ATTRIBS);
     glLinkProgram(mProgram);
 
     // Re-link the program
@@ -129,7 +131,9 @@ TEST_P(TransformFeedbackTest, RecordAndDraw)
     {
         "gl_Position"
     };
-    glTransformFeedbackVaryings(mProgram, ArraySize(transformFeedbackVaryings), transformFeedbackVaryings, GL_INTERLEAVED_ATTRIBS);
+    glTransformFeedbackVaryings(mProgram,
+                                static_cast<GLsizei>(ArraySize(transformFeedbackVaryings)),
+                                transformFeedbackVaryings, GL_INTERLEAVED_ATTRIBS);
     glLinkProgram(mProgram);
 
     // Re-link the program
