@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4487b9d1_81943a4b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-12T19:05:18Z",
+      "side": 1,
+      "message": "Can\u0027t we use mAttributesNeedStreaming.any() here?",
+      "revId": "208a09805769c0505b2a02412948343ca1d7cb68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
