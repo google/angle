@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e497cd00_9e8c9dbf",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1687,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-12T14:15:14Z",
+      "side": 1,
+      "message": "won\u0027t this still generate the exception? You may need to place this before the ComputeIndexRange call (probably before the if)",
+      "range": {
+        "startLine": 1684,
+        "startChar": 0,
+        "endLine": 1687,
+        "endChar": 5
+      },
+      "revId": "38f95d39cee004f8a216d438d436d87e6cbfef61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
