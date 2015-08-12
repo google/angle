@@ -169,7 +169,10 @@ class TextureD3D_2D : public TextureD3D
 
     gl::Error updateStorageLevel(int level);
 
-    void redefineImage(GLint level, GLenum internalformat, const gl::Extents &size);
+    void redefineImage(GLint level,
+                       GLenum internalformat,
+                       const gl::Extents &size,
+                       bool forceRelease);
 
     ImageD3D *mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
