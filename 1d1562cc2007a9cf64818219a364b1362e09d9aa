@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "646d9dec_baa091a6",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-12T18:08:22Z",
+      "side": 1,
+      "message": "for style\u0027s sake, you should probably either make the renderer accept the pointer param or return the extensions directly from generateExtensions",
+      "range": {
+        "startLine": 315,
+        "startChar": 4,
+        "endLine": 315,
+        "endChar": 60
+      },
+      "revId": "1d1562cc2007a9cf64818219a364b1362e09d9aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "646d9dec_5a8ff538",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-12T18:08:22Z",
+      "side": 1,
+      "message": "you should call getShaderHandleSupport here to avoid duplicating the checks (and comments) exactly - unless you meant to change the code in the other places of Renderer9 and remove getShareHandleSupport",
+      "range": {
+        "startLine": 518,
+        "startChar": 4,
+        "endLine": 518,
+        "endChar": 59
+      },
+      "revId": "1d1562cc2007a9cf64818219a364b1362e09d9aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
