@@ -787,6 +787,12 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
     outExtensions->createContext = true;
 
     outExtensions->deviceQuery = true;
+
+    outExtensions->image                 = true;
+    outExtensions->imageBase             = true;
+    outExtensions->glTexture2DImage      = true;
+    outExtensions->glTextureCubemapImage = true;
+    outExtensions->glRenderbufferImage   = true;
 }
 
 gl::Error Renderer11::flush()
@@ -2973,6 +2979,28 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
     return gl::Error(GL_NO_ERROR);
 }
 
+gl::Error Renderer11::createRenderTargetCopy(RenderTargetD3D *source, RenderTargetD3D **outRT)
+{
+    ASSERT(source != nullptr);
+
+    RenderTargetD3D *newRT = nullptr;
+    gl::Error error = createRenderTarget(source->getWidth(), source->getHeight(),
+                                         source->getInternalFormat(), source->getSamples(), &newRT);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    RenderTarget11 *source11 = GetAs<RenderTarget11>(source);
+    RenderTarget11 *dest11   = GetAs<RenderTarget11>(newRT);
+
+    mDeviceContext->CopySubresourceRegion(dest11->getTexture(), dest11->getSubresourceIndex(), 0, 0,
+                                          0, source11->getTexture(),
+                                          source11->getSubresourceIndex(), nullptr);
+    *outRT = newRT;
+    return gl::Error(GL_NO_ERROR);
+}
+
 FramebufferImpl *Renderer11::createFramebuffer(const gl::Framebuffer::Data &data)
 {
     return new Framebuffer11(data, this);
@@ -3286,6 +3314,11 @@ TextureStorage *Renderer11::createTextureStorage2D(SwapChainD3D *swapChain)
 {
     SwapChain11 *swapChain11 = GetAs<SwapChain11>(swapChain);
     return new TextureStorage11_2D(this, swapChain11);
+}
+
+TextureStorage *Renderer11::createTextureStorageEGLImage(EGLImageD3D *eglImage)
+{
+    return new TextureStorage11_EGLImage(this, eglImage);
 }
 
 TextureStorage *Renderer11::createTextureStorage2D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels, bool hintLevelZeroOnly)

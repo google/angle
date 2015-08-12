@@ -13,6 +13,7 @@
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/histogram_macros.h"
+#include "libANGLE/renderer/d3d/EGLImageD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/SurfaceD3D.h"
 #include "libANGLE/renderer/d3d/SwapChainD3D.h"
@@ -203,8 +204,7 @@ ImageImpl *DisplayD3D::createImage(EGLenum target,
                                    egl::ImageSibling *buffer,
                                    const egl::AttributeMap &attribs)
 {
-    UNIMPLEMENTED();
-    return nullptr;
+    return new EGLImageD3D(mRenderer, target, buffer, attribs);
 }
 
 egl::Error DisplayD3D::getDevice(DeviceImpl **device)

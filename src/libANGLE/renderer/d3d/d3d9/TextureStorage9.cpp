@@ -9,14 +9,16 @@
 // D3D9 texture.
 
 #include "libANGLE/renderer/d3d/d3d9/TextureStorage9.h"
-#include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
-#include "libANGLE/renderer/d3d/d3d9/SwapChain9.h"
-#include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
-#include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
-#include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
-#include "libANGLE/renderer/d3d/TextureD3D.h"
+
 #include "libANGLE/formatutils.h"
 #include "libANGLE/Texture.h"
+#include "libANGLE/renderer/d3d/EGLImageD3D.h"
+#include "libANGLE/renderer/d3d/TextureD3D.h"
+#include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
+#include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
+#include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
+#include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
+#include "libANGLE/renderer/d3d/d3d9/SwapChain9.h"
 
 namespace rx
 {
@@ -300,6 +302,131 @@ gl::Error TextureStorage9_2D::copyToStorage(TextureStorage *destStorage)
         }
     }
 
+    return gl::Error(GL_NO_ERROR);
+}
+
+TextureStorage9_EGLImage::TextureStorage9_EGLImage(Renderer9 *renderer, EGLImageD3D *image)
+    : TextureStorage9(renderer, D3DUSAGE_RENDERTARGET), mImage(image)
+{
+    RenderTargetD3D *renderTargetD3D = nullptr;
+    mImage->getRenderTarget(&renderTargetD3D);
+
+    RenderTarget9 *renderTarget9 = GetAs<RenderTarget9>(renderTargetD3D);
+
+    mInternalFormat = renderTarget9->getInternalFormat();
+    mTextureFormat  = renderTarget9->getD3DFormat();
+    mTextureWidth   = renderTarget9->getWidth();
+    mTextureHeight  = renderTarget9->getHeight();
+    mTopLevel       = static_cast<int>(renderTarget9->getTextureLevel());
+    mMipLevels      = mTopLevel + 1;
+}
+
+TextureStorage9_EGLImage::~TextureStorage9_EGLImage()
+{
+}
+
+gl::Error TextureStorage9_EGLImage::getSurfaceLevel(GLenum target,
+                                                    int level,
+                                                    bool,
+                                                    IDirect3DSurface9 **outSurface)
+{
+    ASSERT(target == GL_TEXTURE_2D);
+    ASSERT(level == 0);
+    UNUSED_ASSERTION_VARIABLE(target);
+    UNUSED_ASSERTION_VARIABLE(level);
+
+    RenderTargetD3D *renderTargetD3D = nullptr;
+    gl::Error error = mImage->getRenderTarget(&renderTargetD3D);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    RenderTarget9 *renderTarget9 = GetAs<RenderTarget9>(renderTargetD3D);
+
+    *outSurface = renderTarget9->getSurface();
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error TextureStorage9_EGLImage::getRenderTarget(const gl::ImageIndex &index,
+                                                    RenderTargetD3D **outRT)
+{
+    ASSERT(!index.hasLayer());
+    ASSERT(index.mipIndex == 0);
+    UNUSED_ASSERTION_VARIABLE(index);
+
+    return mImage->getRenderTarget(outRT);
+}
+
+gl::Error TextureStorage9_EGLImage::getBaseTexture(IDirect3DBaseTexture9 **outTexture)
+{
+    RenderTargetD3D *renderTargetD3D = nullptr;
+    gl::Error error = mImage->getRenderTarget(&renderTargetD3D);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    RenderTarget9 *renderTarget9 = GetAs<RenderTarget9>(renderTargetD3D);
+    *outTexture = renderTarget9->getTexture();
+    ASSERT(*outTexture != nullptr);
+
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error TextureStorage9_EGLImage::generateMipmap(const gl::ImageIndex &, const gl::ImageIndex &)
+{
+    UNREACHABLE();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
+gl::Error TextureStorage9_EGLImage::copyToStorage(TextureStorage *destStorage)
+{
+    ASSERT(destStorage);
+    ASSERT(getLevelCount() == 1);
+
+    TextureStorage9 *dest9 = GetAs<TextureStorage9>(destStorage);
+
+    IDirect3DBaseTexture9 *destBaseTexture9 = nullptr;
+    gl::Error error = dest9->getBaseTexture(&destBaseTexture9);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    IDirect3DTexture9 *destTexture9 = static_cast<IDirect3DTexture9 *>(destBaseTexture9);
+
+    IDirect3DSurface9 *destSurface = nullptr;
+    HRESULT result = destTexture9->GetSurfaceLevel(destStorage->getTopLevel(), &destSurface);
+    if (FAILED(result))
+    {
+        return gl::Error(GL_OUT_OF_MEMORY,
+                         "Failed to get the surface from a texture, result: 0x%X.", result);
+    }
+
+    RenderTargetD3D *sourceRenderTarget = nullptr;
+    error = mImage->getRenderTarget(&sourceRenderTarget);
+    if (error.isError())
+    {
+        SafeRelease(destSurface);
+        return error;
+    }
+
+    RenderTarget9 *sourceRenderTarget9 = GetAs<RenderTarget9>(sourceRenderTarget);
+    error =
+        mRenderer->copyToRenderTarget(destSurface, sourceRenderTarget9->getSurface(), isManaged());
+    if (error.isError())
+    {
+        SafeRelease(destSurface);
+        return error;
+    }
+
+    if (destStorage->getTopLevel() != 0)
+    {
+        destTexture9->AddDirtyRect(nullptr);
+    }
+
+    SafeRelease(destSurface);
     return gl::Error(GL_NO_ERROR);
 }
 

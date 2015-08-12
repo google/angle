@@ -16,6 +16,7 @@
 
 namespace rx
 {
+class EGLImageD3D;
 class RendererD3D;
 class RenderTargetD3D;
 class SwapChainD3D;
@@ -33,13 +34,14 @@ class RenderbufferD3D : public RenderbufferImpl
                                     size_t height) override;
     gl::Error setStorageEGLImageTarget(egl::Image *image) override;
 
-    RenderTargetD3D *getRenderTarget();
+    gl::Error getRenderTarget(RenderTargetD3D **outRenderTarget);
     gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
                                         FramebufferAttachmentRenderTarget **rtOut) override;
 
   private:
     RendererD3D *mRenderer;
     RenderTargetD3D *mRenderTarget;
+    EGLImageD3D *mImage;
 };
 
 }

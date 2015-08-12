@@ -20,8 +20,7 @@ class Framebuffer;
 
 namespace rx
 {
-
-class ImageD3D;
+class EGLImageD3D;
 class ImageD3D;
 class RendererD3D;
 class RenderTargetD3D;
@@ -178,6 +177,7 @@ class TextureD3D_2D : public TextureD3D
                        const gl::Extents &size,
                        bool forceRelease);
 
+    bool mEGLImageTarget;
     ImageD3D *mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 

@@ -9,19 +9,22 @@
 
 #include "libANGLE/renderer/d3d/RenderbufferD3D.h"
 
+#include "libANGLE/Image.h"
+#include "libANGLE/renderer/d3d/EGLImageD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 
 namespace rx
 {
-RenderbufferD3D::RenderbufferD3D(RendererD3D *renderer) : mRenderer(renderer)
+RenderbufferD3D::RenderbufferD3D(RendererD3D *renderer)
+    : mRenderer(renderer), mRenderTarget(nullptr), mImage(nullptr)
 {
-    mRenderTarget = NULL;
 }
 
 RenderbufferD3D::~RenderbufferD3D()
 {
     SafeDelete(mRenderTarget);
+    mImage = nullptr;
 }
 
 gl::Error RenderbufferD3D::setStorage(GLenum internalformat, size_t width, size_t height)
@@ -62,6 +65,7 @@ gl::Error RenderbufferD3D::setStorageMultisample(size_t samples, GLenum internal
     }
 
     SafeDelete(mRenderTarget);
+    mImage        = nullptr;
     mRenderTarget = newRT;
 
     return gl::Error(GL_NO_ERROR);
@@ -69,20 +73,29 @@ gl::Error RenderbufferD3D::setStorageMultisample(size_t samples, GLenum internal
 
 gl::Error RenderbufferD3D::setStorageEGLImageTarget(egl::Image *image)
 {
-    UNIMPLEMENTED();
+    mImage = GetImplAs<EGLImageD3D>(image);
+    SafeDelete(mRenderTarget);
+
     return gl::Error(GL_NO_ERROR);
 }
 
-RenderTargetD3D *RenderbufferD3D::getRenderTarget()
+gl::Error RenderbufferD3D::getRenderTarget(RenderTargetD3D **outRenderTarget)
 {
-    return mRenderTarget;
+    if (mImage)
+    {
+        return mImage->getRenderTarget(outRenderTarget);
+    }
+    else
+    {
+        *outRenderTarget = mRenderTarget;
+        return gl::Error(GL_NO_ERROR);
+    }
 }
 
 gl::Error RenderbufferD3D::getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
                                                      FramebufferAttachmentRenderTarget **rtOut)
 {
-    *rtOut = mRenderTarget;
-    return gl::Error(GL_NO_ERROR);
+    return getRenderTarget(reinterpret_cast<RenderTargetD3D **>(rtOut));
 }
 
 }

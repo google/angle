@@ -573,6 +573,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
     extensions->discardFramebuffer = false; // It would be valid to set this to true, since glDiscardFramebufferEXT is just a hint
     extensions->colorBufferFloat = false;
     extensions->debugMarker = true;
+    extensions->eglImage               = true;
 
     // D3D9 has no concept of separate masks and refs for front and back faces in the depth stencil
     // state.

@@ -523,6 +523,11 @@ void Renderer9::generateDisplayExtensions(egl::DisplayExtensions *outExtensions)
     outExtensions->postSubBuffer       = true;
     outExtensions->createContext       = true;
     outExtensions->deviceQuery         = true;
+
+    outExtensions->image               = true;
+    outExtensions->imageBase           = true;
+    outExtensions->glTexture2DImage    = true;
+    outExtensions->glRenderbufferImage = true;
 }
 
 void Renderer9::startScene()
@@ -2675,6 +2680,33 @@ gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GL
     return gl::Error(GL_NO_ERROR);
 }
 
+gl::Error Renderer9::createRenderTargetCopy(RenderTargetD3D *source, RenderTargetD3D **outRT)
+{
+    ASSERT(source != nullptr);
+
+    RenderTargetD3D *newRT = nullptr;
+    gl::Error error = createRenderTarget(source->getWidth(), source->getHeight(),
+                                         source->getInternalFormat(), source->getSamples(), &newRT);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    RenderTarget9 *source9 = GetAs<RenderTarget9>(source);
+    RenderTarget9 *dest9   = GetAs<RenderTarget9>(newRT);
+
+    HRESULT result = mDevice->StretchRect(source9->getSurface(), nullptr, dest9->getSurface(),
+                                          nullptr, D3DTEXF_NONE);
+    if (FAILED(result))
+    {
+        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to copy render target, result: 0x%X.", result);
+    }
+
+    *outRT = newRT;
+    return gl::Error(GL_NO_ERROR);
+}
+
 FramebufferImpl *Renderer9::createFramebuffer(const gl::Framebuffer::Data &data)
 {
     return new Framebuffer9(data, this);
@@ -2904,6 +2936,11 @@ TextureStorage *Renderer9::createTextureStorage2D(SwapChainD3D *swapChain)
 {
     SwapChain9 *swapChain9 = GetAs<SwapChain9>(swapChain);
     return new TextureStorage9_2D(this, swapChain9);
+}
+
+TextureStorage *Renderer9::createTextureStorageEGLImage(EGLImageD3D *eglImage)
+{
+    return new TextureStorage9_EGLImage(this, eglImage);
 }
 
 TextureStorage *Renderer9::createTextureStorage2D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels, bool hintLevelZeroOnly)

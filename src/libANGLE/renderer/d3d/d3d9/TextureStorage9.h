@@ -16,6 +16,7 @@
 
 namespace rx
 {
+class EGLImageD3D;
 class Renderer9;
 class SwapChain9;
 class RenderTargetD3D;
@@ -83,6 +84,26 @@ class TextureStorage9_2D : public TextureStorage9
   private:
     IDirect3DTexture9 *mTexture;
     std::vector<RenderTarget9 *> mRenderTargets;
+};
+
+class TextureStorage9_EGLImage final : public TextureStorage9
+{
+  public:
+    TextureStorage9_EGLImage(Renderer9 *renderer, EGLImageD3D *image);
+    ~TextureStorage9_EGLImage() override;
+
+    gl::Error getSurfaceLevel(GLenum target,
+                              int level,
+                              bool dirty,
+                              IDirect3DSurface9 **outSurface) override;
+    gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
+    gl::Error getBaseTexture(IDirect3DBaseTexture9 **outTexture) override;
+    gl::Error generateMipmap(const gl::ImageIndex &sourceIndex,
+                             const gl::ImageIndex &destIndex) override;
+    gl::Error copyToStorage(TextureStorage *destStorage) override;
+
+  private:
+    EGLImageD3D *mImage;
 };
 
 class TextureStorage9_Cube : public TextureStorage9
