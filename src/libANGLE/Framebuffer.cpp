@@ -20,6 +20,7 @@
 #include "libANGLE/renderer/FramebufferImpl.h"
 #include "libANGLE/renderer/ImplFactory.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
+#include "libANGLE/renderer/SurfaceImpl.h"
 
 namespace gl
 {
@@ -35,6 +36,14 @@ void DetachMatchingAttachment(FramebufferAttachment *attachment, GLenum matchTyp
         attachment->detach();
     }
 }
+}
+
+Framebuffer::Data::Data()
+    : mColorAttachments(1),
+      mDrawBufferStates(1, GL_NONE),
+      mReadBufferState(GL_COLOR_ATTACHMENT0_EXT)
+{
+    mDrawBufferStates[0] = GL_COLOR_ATTACHMENT0_EXT;
 }
 
 Framebuffer::Data::Data(const Caps &caps)
@@ -83,7 +92,7 @@ const FramebufferAttachment *Framebuffer::Data::getDepthOrStencilAttachment() co
     return nullptr;
 }
 
-const FramebufferAttachment *Framebuffer::Data::getColorAttachment(unsigned int colorAttachment) const
+const FramebufferAttachment *Framebuffer::Data::getColorAttachment(size_t colorAttachment) const
 {
     ASSERT(colorAttachment < mColorAttachments.size());
     return mColorAttachments[colorAttachment].isAttached() ?
@@ -116,18 +125,15 @@ const FramebufferAttachment *Framebuffer::Data::getDepthStencilAttachment() cons
 }
 
 Framebuffer::Framebuffer(const Caps &caps, rx::ImplFactory *factory, GLuint id)
-    : mData(caps),
-      mImpl(nullptr),
-      mId(id)
+    : mData(caps), mImpl(factory->createFramebuffer(mData)), mId(id)
 {
-    if (mId == 0)
-    {
-        mImpl = factory->createDefaultFramebuffer(mData);
-    }
-    else
-    {
-        mImpl = factory->createFramebuffer(mData);
-    }
+    ASSERT(mId != 0);
+    ASSERT(mImpl != nullptr);
+}
+
+Framebuffer::Framebuffer(rx::SurfaceImpl *surface)
+    : mData(), mImpl(surface->createDefaultFramebuffer(mData)), mId(0)
+{
     ASSERT(mImpl != nullptr);
 }
 
@@ -157,7 +163,7 @@ void Framebuffer::detachResourceById(GLenum resourceType, GLuint resourceId)
     DetachMatchingAttachment(&mData.mStencilAttachment, resourceType, resourceId);
 }
 
-const FramebufferAttachment *Framebuffer::getColorbuffer(unsigned int colorAttachment) const
+const FramebufferAttachment *Framebuffer::getColorbuffer(size_t colorAttachment) const
 {
     return mData.getColorAttachment(colorAttachment);
 }
@@ -257,7 +263,7 @@ void Framebuffer::setReadBuffer(GLenum buffer)
     mImpl->setReadBuffer(buffer);
 }
 
-bool Framebuffer::isEnabledColorAttachment(unsigned int colorAttachment) const
+bool Framebuffer::isEnabledColorAttachment(size_t colorAttachment) const
 {
     ASSERT(colorAttachment < mData.mColorAttachments.size());
     return (mData.mColorAttachments[colorAttachment].isAttached() &&
@@ -275,6 +281,11 @@ bool Framebuffer::hasEnabledColorAttachment() const
     }
 
     return false;
+}
+
+size_t Framebuffer::getNumColorBuffers() const
+{
+    return mData.mColorAttachments.size();
 }
 
 bool Framebuffer::hasStencil() const

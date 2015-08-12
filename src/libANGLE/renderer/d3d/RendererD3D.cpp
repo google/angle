@@ -519,7 +519,7 @@ size_t RendererD3D::getBoundFramebufferTextures(const gl::Data &data, Framebuffe
     size_t textureCount = 0;
 
     const gl::Framebuffer *drawFramebuffer = data.state->getDrawFramebuffer();
-    for (unsigned int i = 0; i < data.caps->maxColorAttachments; i++)
+    for (size_t i = 0; i < drawFramebuffer->getNumColorBuffers(); i++)
     {
         const gl::FramebufferAttachment *attachment = drawFramebuffer->getColorbuffer(i);
         if (attachment && attachment->type() == GL_TEXTURE)
