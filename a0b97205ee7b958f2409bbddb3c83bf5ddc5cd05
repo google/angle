@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a772378f_94644499",
+        "filename": "src/tests/gl_tests/ClientSideDataTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-12T16:51:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e497cd00_3e946997",
+      "revId": "a0b97205ee7b958f2409bbddb3c83bf5ddc5cd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6484bdcc_82cf5a57",
         "filename": "src/tests/gl_tests/ClientSideDataTest.cpp",
         "patchSetId": 3
@@ -30,6 +48,30 @@
       "writtenOn": "2015-08-12T16:49:12Z",
       "side": 1,
       "message": "long test name alert!",
+      "range": {
+        "startLine": 366,
+        "startChar": 27,
+        "endLine": 366,
+        "endChar": 95
+      },
+      "revId": "a0b97205ee7b958f2409bbddb3c83bf5ddc5cd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6733dfd7_6ab8b7ac",
+        "filename": "src/tests/gl_tests/ClientSideDataTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-12T16:51:58Z",
+      "side": 1,
+      "message": "Still within the 100 char limit! Ship it!",
+      "parentUuid": "6484bdcc_82cf5a57",
       "range": {
         "startLine": 366,
         "startChar": 27,
