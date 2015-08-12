@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "447099c3_59f86389",
+        "filename": "src/tests/gl_tests/ClientSideDataTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-12T17:49:25Z",
+      "side": 1,
+      "message": "I think it might be better to put 0, 0, 0, (maybe three times) as such a far away vertex may still cover the area.",
+      "revId": "9255a3999d364ef053c955f0f9851b37d58d3206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
