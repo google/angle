@@ -16,6 +16,24 @@
       "revId": "e78923e1e2cc5032bb3e5d779eaa3e512dee0e91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "076223c0_9aa629c7",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/TextureStorage9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-12T18:48:21Z",
+      "side": 1,
+      "message": "huh, didn\u0027t get the warning on Windows but it is legit.  Fixed.",
+      "parentUuid": "24672510_98b915b2",
+      "revId": "e78923e1e2cc5032bb3e5d779eaa3e512dee0e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
