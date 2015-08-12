@@ -45,6 +45,30 @@
       "revId": "09f7b9ce31fa0539f5133a38186c47570cd98cae",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4487b9d1_6154962b",
+        "filename": "src/tests/gl_tests/DrawElementsTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-12T14:16:27Z",
+      "side": 1,
+      "message": "I don\u0027t think we expose the VAO extension at this point on ES2. (The test could use multiple EGLContexts as well, but that would be a bit icky b/c of how EGLWindow works.)",
+      "parentUuid": "64bbdda0_2a2affb1",
+      "range": {
+        "startLine": 225,
+        "startChar": 41,
+        "endLine": 225,
+        "endChar": 51
+      },
+      "revId": "09f7b9ce31fa0539f5133a38186c47570cd98cae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
