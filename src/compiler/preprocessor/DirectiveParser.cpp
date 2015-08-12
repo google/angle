@@ -631,8 +631,7 @@ void DirectiveParser::parsePragma(Token *token)
             break;
           case PRAGMA_VALUE:
             value = token->text;
-            // Pragma value validation is handled in DirectiveHandler::handlePragma
-            // because the proper pragma value is dependent on the pragma name.
+            valid = valid && (token->type == Token::IDENTIFIER);
             break;
           case RIGHT_PAREN:
             valid = valid && (token->type == ')');
@@ -649,7 +648,7 @@ void DirectiveParser::parsePragma(Token *token)
                       (state == RIGHT_PAREN + 1));  // With value.
     if (!valid)
     {
-        mDiagnostics->report(Diagnostics::PP_INVALID_PRAGMA,
+        mDiagnostics->report(Diagnostics::PP_UNRECOGNIZED_PRAGMA,
                              token->location, name);
     }
     else if (state > PRAGMA_NAME)  // Do not notify for empty pragma.
