@@ -55,7 +55,7 @@ class D3D11EmulatedIndexedBufferTest : public ANGLETest
     void TearDown() override
     {
         SafeDelete(mSourceBuffer);
-        ANGLETest::TearDown();
+         ANGLETest::TearDown();
     }
 
     void createMappableCompareBufferFromEmulatedBuffer(ID3D11Buffer *sourceBuffer, GLuint size, ID3D11Buffer **mappableBuffer)

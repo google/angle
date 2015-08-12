@@ -23,7 +23,6 @@ namespace rx
 class ImplFactory;
 class FramebufferImpl;
 class RenderbufferImpl;
-class SurfaceImpl;
 }
 
 namespace egl
@@ -51,7 +50,6 @@ class Framebuffer
     class Data final : angle::NonCopyable
     {
       public:
-        explicit Data();
         explicit Data(const Caps &caps);
         ~Data();
 
@@ -78,7 +76,6 @@ class Framebuffer
     };
 
     Framebuffer(const Caps &caps, rx::ImplFactory *factory, GLuint id);
-    Framebuffer(rx::SurfaceImpl *surface);
     virtual ~Framebuffer();
 
     const rx::FramebufferImpl *getImplementation() const { return mImpl; }
@@ -114,7 +111,6 @@ class Framebuffer
 
     bool isEnabledColorAttachment(unsigned int colorAttachment) const;
     bool hasEnabledColorAttachment() const;
-    int getNumColorBuffers() const;
     bool hasStencil() const;
     int getSamples(const gl::Data &data) const;
     bool usingExtendedDrawBuffers() const;

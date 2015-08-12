@@ -9,24 +9,16 @@
 #include "libANGLE/renderer/gl/wgl/PbufferSurfaceWGL.h"
 
 #include "common/debug.h"
-#include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/wgl/FunctionsWGL.h"
 #include "libANGLE/renderer/gl/wgl/wgl_utils.h"
 
 namespace rx
 {
 
-PbufferSurfaceWGL::PbufferSurfaceWGL(RendererGL *renderer,
-                                     EGLint width,
-                                     EGLint height,
-                                     EGLenum textureFormat,
-                                     EGLenum textureTarget,
-                                     bool largest,
-                                     int pixelFormat,
-                                     HDC deviceContext,
-                                     HGLRC wglContext,
+PbufferSurfaceWGL::PbufferSurfaceWGL(EGLint width, EGLint height, EGLenum textureFormat, EGLenum textureTarget,
+                                     bool largest, int pixelFormat, HDC deviceContext, HGLRC wglContext,
                                      const FunctionsWGL *functions)
-    : SurfaceGL(renderer),
+    : SurfaceGL(),
       mWidth(width),
       mHeight(height),
       mLargest(largest),
