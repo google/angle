@@ -22,6 +22,29 @@
       "revId": "09f7b9ce31fa0539f5133a38186c47570cd98cae",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64bbdda0_2a2affb1",
+        "filename": "src/tests/gl_tests/DrawElementsTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-12T14:05:00Z",
+      "side": 1,
+      "message": "Can this be ES2 as well? Makes sure it\u0027s tested on more systems.",
+      "range": {
+        "startLine": 225,
+        "startChar": 41,
+        "endLine": 225,
+        "endChar": 51
+      },
+      "revId": "09f7b9ce31fa0539f5133a38186c47570cd98cae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
