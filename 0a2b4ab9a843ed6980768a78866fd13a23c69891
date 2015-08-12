@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "24672510_3821e95d",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-12T20:20:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0abb083c_6f31d1f2",
+      "range": {
+        "startLine": 24,
+        "startChar": 18,
+        "endLine": 24,
+        "endChar": 21
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a1d64f6_da55c529",
         "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
         "patchSetId": 1
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "248e45f0_a015ba4a",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-12T20:20:34Z",
+      "side": 1,
+      "message": "Tried both option without success, also opening the full path is what skia is doing: https://code.google.com/p/chromium/codesearch#chromium/src/third_party/skia/src/gpu/gl/mac/GrGLCreateNativeInterface_mac.cpp\u0026q\u003dlibGL.dylib\u0026sq\u003dpackage:chromium\u0026type\u003dcs\u0026l\u003d19",
+      "parentUuid": "6a1d64f6_da55c529",
+      "range": {
+        "startLine": 22,
+        "startChar": 32,
+        "endLine": 22,
+        "endChar": 38
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a850058_7195d84a",
         "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
         "patchSetId": 1
@@ -82,6 +130,30 @@
       "writtenOn": "2015-08-06T00:36:25Z",
       "side": 1,
       "message": "I think these need to be converted to const char*\u0027s because otherwise they might increase Chromium\u0027s static initializer count.",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 10
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "447099c3_798a07f9",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-12T20:20:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a850058_7195d84a",
       "range": {
         "startLine": 23,
         "startChar": 7,
@@ -158,6 +230,24 @@
     },
     {
       "key": {
+        "uuid": "24672510_d8054dce",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-12T20:20:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0abb083c_afc7393e",
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0abb083c_4f2e8d90",
         "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
         "patchSetId": 1
@@ -181,6 +271,30 @@
     },
     {
       "key": {
+        "uuid": "0491410d_1f1ba379",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-12T20:20:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0abb083c_4f2e8d90",
+      "range": {
+        "startLine": 35,
+        "startChar": 27,
+        "endLine": 35,
+        "endChar": 28
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "caee5036_3d0ecf3e",
         "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
         "patchSetId": 1
@@ -192,6 +306,30 @@
       "writtenOn": "2015-08-06T15:31:55Z",
       "side": 1,
       "message": "Looks like this needs a git cl format (does it work on mm files?)",
+      "range": {
+        "startLine": 52,
+        "startChar": 15,
+        "endLine": 52,
+        "endChar": 16
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4a15560_1c02d517",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-12T20:20:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "caee5036_3d0ecf3e",
       "range": {
         "startLine": 52,
         "startChar": 15,
