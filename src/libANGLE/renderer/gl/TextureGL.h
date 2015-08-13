@@ -19,6 +19,16 @@ class FunctionsGL;
 class StateManagerGL;
 struct WorkaroundsGL;
 
+struct LUMAWorkaround
+{
+    bool enabled;
+    GLenum sourceFormat;
+    GLenum workaroundFormat;
+
+    LUMAWorkaround();
+    LUMAWorkaround(bool enabled, GLenum sourceFormat, GLenum workaroundFormat);
+};
+
 class TextureGL : public TextureImpl
 {
   public:
@@ -69,6 +79,8 @@ class TextureGL : public TextureImpl
     const FunctionsGL *mFunctions;
     const WorkaroundsGL &mWorkarounds;
     StateManagerGL *mStateManager;
+
+    std::vector<LUMAWorkaround> mLUMAWorkaroundLevels;
 
     mutable gl::SamplerState mAppliedSamplerState;
     GLuint mTextureID;
