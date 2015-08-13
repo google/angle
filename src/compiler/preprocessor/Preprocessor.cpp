@@ -7,7 +7,6 @@
 #include "Preprocessor.h"
 
 #include <cassert>
-#include <sstream>
 
 #include "DiagnosticsBase.h"
 #include "DirectiveParser.h"
@@ -52,12 +51,12 @@ bool Preprocessor::init(size_t count,
                         const char * const string[],
                         const int length[])
 {
-    static const int kGLSLVersion = 100;
+    static const int kDefaultGLSLVersion = 100;
 
     // Add standard pre-defined macros.
     predefineMacro("__LINE__", 0);
     predefineMacro("__FILE__", 0);
-    predefineMacro("__VERSION__", kGLSLVersion);
+    predefineMacro("__VERSION__", kDefaultGLSLVersion);
     predefineMacro("GL_ES", 1);
 
     return mImpl->tokenizer.init(count, string, length);
@@ -65,20 +64,7 @@ bool Preprocessor::init(size_t count,
 
 void Preprocessor::predefineMacro(const char *name, int value)
 {
-    std::ostringstream stream;
-    stream << value;
-
-    Token token;
-    token.type = Token::CONST_INT;
-    token.text = stream.str();
-
-    Macro macro;
-    macro.predefined = true;
-    macro.type = Macro::kTypeObj;
-    macro.name = name;
-    macro.replacements.push_back(token);
-
-    mImpl->macroSet[name] = macro;
+    PredefineMacro(&mImpl->macroSet, name, value);
 }
 
 void Preprocessor::lex(Token *token)

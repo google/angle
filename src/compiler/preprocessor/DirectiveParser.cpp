@@ -821,6 +821,7 @@ void DirectiveParser::parseVersion(Token *token)
     {
         mDirectiveHandler->handleVersion(token->location, version);
         mShaderVersion = version;
+        PredefineMacro(mMacroSet, "__VERSION__", version);
     }
 }
 
