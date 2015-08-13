@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04f5c13c_cb25985f",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-08-13T15:47:55Z",
+      "side": 1,
+      "message": "Use reference type here",
+      "range": {
+        "startLine": 57,
+        "startChar": 25,
+        "endLine": 57,
+        "endChar": 32
+      },
+      "revId": "914dac5f45b1af83a91c74c7fdd906e88bf832d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
