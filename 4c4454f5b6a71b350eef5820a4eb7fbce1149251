@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e73d0fa0_f1110290",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-13T13:26:57Z",
+      "side": 1,
+      "message": "Can you add a helper to do these casts? Maybe our bitCast function or something similar?",
+      "range": {
+        "startLine": 104,
+        "startChar": 30,
+        "endLine": 104,
+        "endChar": 92
+      },
+      "revId": "4c4454f5b6a71b350eef5820a4eb7fbce1149251",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
