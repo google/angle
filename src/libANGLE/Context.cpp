@@ -36,15 +36,9 @@
 namespace gl
 {
 
-Context::Context(const egl::Config *config,
-                 int clientVersion,
-                 const Context *shareContext,
-                 rx::Renderer *renderer,
-                 bool notifyResets,
-                 bool robustAccess)
+Context::Context(const egl::Config *config, int clientVersion, const Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess)
     : mRenderer(renderer),
       mConfig(config),
-      mCurrentSurface(nullptr),
       mData(clientVersion, mState, mCaps, mTextureCaps, mExtensions, nullptr)
 {
     ASSERT(robustAccess == false);   // Unimplemented
@@ -169,11 +163,6 @@ Context::~Context()
     }
     mZeroTextures.clear();
 
-    if (mCurrentSurface != nullptr)
-    {
-        releaseSurface();
-    }
-
     if (mResourceManager)
     {
         mResourceManager->release();
@@ -199,15 +188,6 @@ void Context::makeCurrent(egl::Surface *surface)
 
     // TODO(jmadill): Rework this when we support ContextImpl
     mState.setAllDirtyBits();
-
-    if (mCurrentSurface)
-    {
-        releaseSurface();
-    }
-
-    ASSERT(mCurrentSurface == nullptr);
-    mCurrentSurface = surface;
-    surface->setIsCurrent(true);
 
     // Update default framebuffer
     Framebuffer *defaultFBO = mFramebufferMap[0];
@@ -250,16 +230,9 @@ void Context::makeCurrent(egl::Surface *surface)
 void Context::releaseSurface()
 {
     Framebuffer *defaultFBO = mFramebufferMap[0];
-    if (defaultFBO)
-    {
-        defaultFBO->resetAttachment(GL_BACK);
-        defaultFBO->resetAttachment(GL_DEPTH);
-        defaultFBO->resetAttachment(GL_STENCIL);
-    }
-
-    ASSERT(mCurrentSurface != nullptr);
-    mCurrentSurface->setIsCurrent(false);
-    mCurrentSurface = nullptr;
+    defaultFBO->resetAttachment(GL_BACK);
+    defaultFBO->resetAttachment(GL_DEPTH);
+    defaultFBO->resetAttachment(GL_STENCIL);
 }
 
 // NOTE: this function should not assume that this context is current!

@@ -13,6 +13,7 @@
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/RefCountObject.h"
+#include "libANGLE/FramebufferAttachment.h"
 
 #include <set>
 
@@ -25,7 +26,7 @@ namespace egl
 {
 class Image;
 
-class ImageSibling : public RefCountObject
+class ImageSibling : public gl::FramebufferAttachmentObject
 {
   public:
     ImageSibling(GLuint id);

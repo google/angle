@@ -16,7 +16,6 @@
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/RefCountObject.h"
 #include "libANGLE/renderer/SurfaceImpl.h"
 
 namespace gl
@@ -49,8 +48,6 @@ class Surface final : public gl::FramebufferAttachmentObject
     EGLint isPostSubBufferSupported() const;
 
     void setSwapInterval(EGLint interval);
-    void setIsCurrent(bool isCurrent);
-    void onDestroy();
 
     const Config *getConfig() const;
 
@@ -73,10 +70,6 @@ class Surface final : public gl::FramebufferAttachmentObject
     GLenum getAttachmentInternalFormat(const gl::FramebufferAttachment::Target &target) const override;
     GLsizei getAttachmentSamples(const gl::FramebufferAttachment::Target &target) const override;
 
-    void onAttach() override {}
-    void onDetach() override {}
-    GLuint getId() const override;
-
   private:
     virtual ~Surface();
     rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override { return mImplementation; }
@@ -86,8 +79,6 @@ class Surface final : public gl::FramebufferAttachmentObject
     void releaseTexImageFromTexture();
 
     rx::SurfaceImpl *mImplementation;
-    int mCurrentCount;
-    bool mDestroyed;
 
     EGLint mType;
 

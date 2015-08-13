@@ -151,18 +151,4 @@ GLuint Renderbuffer::getStencilSize() const
     return GetInternalFormatInfo(mInternalFormat).stencilBits;
 }
 
-void Renderbuffer::onAttach()
-{
-    addRef();
-}
-
-void Renderbuffer::onDetach()
-{
-    release();
-}
-
-GLuint Renderbuffer::getId() const
-{
-    return id();
-}
 }
