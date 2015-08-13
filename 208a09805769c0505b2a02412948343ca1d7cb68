@@ -16,6 +16,29 @@
       "revId": "208a09805769c0505b2a02412948343ca1d7cb68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64bbdda0_2a943f97",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-13T18:17:59Z",
+      "side": 1,
+      "message": "This state shouldn\u0027t be synced if the attribute needs to be streamed.  It applies slightly different state in the streamAttributes method and would probably cause lots of extra state setting.",
+      "range": {
+        "startLine": 412,
+        "startChar": 4,
+        "endLine": 433,
+        "endChar": 5
+      },
+      "revId": "208a09805769c0505b2a02412948343ca1d7cb68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
