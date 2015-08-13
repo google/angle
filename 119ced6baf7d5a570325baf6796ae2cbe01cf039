@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "849c512b_7b08bf9e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-13T17:00:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "248e45f0_c0f31e5f",
+      "range": {
+        "startLine": 9,
+        "startChar": 40,
+        "endLine": 9,
+        "endChar": 46
+      },
+      "revId": "119ced6baf7d5a570325baf6796ae2cbe01cf039",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "24672510_3b8ec33a",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-08-13T15:04:05Z",
       "side": 1,
       "message": "I seem to recall that D3D9 has some weird restrictions when copying different types of textures to one another - just a thought that you might want to read up on this to ensure there are no odd problems here.",
+      "range": {
+        "startLine": 2630,
+        "startChar": 34,
+        "endLine": 2630,
+        "endChar": 52
+      },
+      "revId": "119ced6baf7d5a570325baf6796ae2cbe01cf039",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e73d0fa0_f1b582e7",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2630,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-13T17:00:27Z",
+      "side": 1,
+      "message": "It has restrictions depending on what pool they were created from but I don\u0027t think this will affect that.  I will be sure to test this against lots of hardware though.",
+      "parentUuid": "24672510_3b8ec33a",
       "range": {
         "startLine": 2630,
         "startChar": 34,
