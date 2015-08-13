@@ -4,7 +4,7 @@ vars = {
 
 deps = {
   "third_party/gyp":
-      Var('chromium_git') + "/external/gyp@b4781fc38236b0fb1238969c918a75a200cfffdb",
+      Var('chromium_git') + "/external/gyp@81c2e5ff92af29bab61c982808076ddce3d200a2",
 
   # TODO(kbr): figure out how to better stay in sync with Chromium's
   # versions of googletest and googlemock.
