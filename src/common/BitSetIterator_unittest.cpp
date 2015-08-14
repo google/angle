@@ -21,6 +21,7 @@ class BitSetIteratorTest : public testing::Test
     std::bitset<40> mStateBits;
 };
 
+// Simple iterator test.
 TEST_F(BitSetIteratorTest, Iterator)
 {
     std::set<unsigned long> originalValues;
@@ -43,6 +44,44 @@ TEST_F(BitSetIteratorTest, Iterator)
     }
 
     EXPECT_EQ(originalValues.size(), readValues.size());
+}
+
+// Test an empty iterator.
+TEST_F(BitSetIteratorTest, EmptySet)
+{
+    for (unsigned long bit : IterateBitSet(mStateBits))
+    {
+        UNUSED_TRACE_VARIABLE(bit);
+        FAIL() << "Should not be reached";
+    }
+}
+
+// Test iterating a result of combining two bitsets.
+TEST_F(BitSetIteratorTest, NonLValueBitset)
+{
+    std::bitset<40> otherBits;
+
+    mStateBits.set(1);
+    mStateBits.set(2);
+    mStateBits.set(3);
+    mStateBits.set(4);
+
+    otherBits.set(0);
+    otherBits.set(1);
+    otherBits.set(3);
+    otherBits.set(5);
+
+    std::set<unsigned long> seenBits;
+
+    for (unsigned long bit : IterateBitSet(mStateBits & otherBits))
+    {
+        EXPECT_EQ(0u, seenBits.count(bit));
+        seenBits.insert(bit);
+        EXPECT_TRUE(mStateBits[bit]);
+        EXPECT_TRUE(otherBits[bit]);
+    }
+
+    EXPECT_EQ((mStateBits & otherBits).count(), seenBits.size());
 }
 
 }  // anonymous namespace
