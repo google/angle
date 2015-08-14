@@ -110,7 +110,8 @@ class SimpleTextureCubemapSample : public SampleApplication
         // Set the texture sampler to texture unit to 0
         glUniform1i(mSamplerLoc, 0);
 
-        glDrawElements(GL_TRIANGLES, mSphere.indices.size(), GL_UNSIGNED_SHORT, mSphere.indices.data());
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mSphere.indices.size()),
+                       GL_UNSIGNED_SHORT, mSphere.indices.data());
     }
 
   private:

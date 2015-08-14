@@ -137,14 +137,15 @@ class PostSubBufferSample : public SampleApplication
         glEnableVertexAttribArray(mTexcoordLoc);
 
         // Draw the cube
-        glDrawElements(GL_TRIANGLES, mCube.indices.size(), GL_UNSIGNED_SHORT, mCube.indices.data());
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mCube.indices.size()), GL_UNSIGNED_SHORT,
+                       mCube.indices.data());
     }
 
     virtual void swap()
     {
         // Instead of letting the application call eglSwapBuffers, call eglPostSubBufferNV here instead
-        size_t windowWidth = getWindow()->getWidth();
-        size_t windowHeight = getWindow()->getHeight();
+        EGLint windowWidth  = static_cast<EGLint>(getWindow()->getWidth());
+        EGLint windowHeight = static_cast<EGLint>(getWindow()->getHeight());
         EGLDisplay display = getDisplay();
         EGLSurface surface = getSurface();
         mPostSubBufferNV(display, surface, 60, 60, windowWidth - 120, windowHeight - 120);

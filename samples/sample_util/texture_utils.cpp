@@ -66,7 +66,8 @@ GLuint CreateSimpleTextureCubemap()
 
     for (size_t i = 0; i < 6; i++)
     {
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, &pixels[i]);
+        glTexImage2D(static_cast<GLenum>(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i), 0, GL_RGB, 1, 1, 0,
+                     GL_RGB, GL_UNSIGNED_BYTE, &pixels[i]);
     }
 
     // Set the filtering mode

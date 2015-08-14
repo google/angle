@@ -124,7 +124,8 @@ class SimpleVertexShaderSample : public SampleApplication
         glEnableVertexAttribArray(mTexcoordLoc);
 
         // Draw the cube
-        glDrawElements(GL_TRIANGLES, mCube.indices.size(), GL_UNSIGNED_SHORT, mCube.indices.data());
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mCube.indices.size()), GL_UNSIGNED_SHORT,
+                       mCube.indices.data());
     }
 
   private:

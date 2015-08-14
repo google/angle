@@ -162,7 +162,9 @@ class SimpleInstancingSample : public SampleApplication
         glUniform1i(mSamplerLoc, 0);
 
         // Do the instanced draw
-        mDrawElementsInstancedANGLE(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_SHORT, mIndices.data(), mInstances.size());
+        mDrawElementsInstancedANGLE(GL_TRIANGLES, static_cast<GLsizei>(mIndices.size()),
+                                    GL_UNSIGNED_SHORT, mIndices.data(),
+                                    static_cast<GLsizei>(mInstances.size()));
     }
 
   private:
