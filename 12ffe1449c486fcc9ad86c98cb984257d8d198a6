@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4aeed64_b522ca2c",
+        "filename": "src/tests/gl_tests/SwizzleTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-08-14T23:37:14Z",
+      "side": 1,
+      "message": "Just curious, should we use GL_LUMINANCE for internal_format also?  LUNIMANCE, LUNIMANCE_ALPHA, and ALPHA do not have sized internal formats in GLES3.",
+      "range": {
+        "startLine": 274,
+        "startChar": 18,
+        "endLine": 274,
+        "endChar": 35
+      },
+      "revId": "12ffe1449c486fcc9ad86c98cb984257d8d198a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
