@@ -207,7 +207,7 @@ LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog,
         // TODO: determine attribute precision
         setShaderAttribute(static_cast<size_t>(i), attributeType, GL_NONE, attributeName, attributeSize, location);
 
-        mActiveAttributesMask.set(location);
+        mActiveAttributeLocations.push_back(location);
     }
 
     return LinkResult(true, gl::Error(GL_NO_ERROR));
@@ -445,7 +445,7 @@ void ProgramGL::reset()
 
     mSamplerUniformMap.clear();
     mSamplerBindings.clear();
-    mActiveAttributesMask.reset();
+    mActiveAttributeLocations.clear();
 }
 
 GLuint ProgramGL::getProgramID() const
@@ -458,9 +458,9 @@ const std::vector<SamplerBindingGL> &ProgramGL::getAppliedSamplerUniforms() cons
     return mSamplerBindings;
 }
 
-const gl::AttributesMask &ProgramGL::getActiveAttributesMask() const
+const std::vector<GLuint> &ProgramGL::getActiveAttributeLocations() const
 {
-    return mActiveAttributesMask;
+    return mActiveAttributeLocations;
 }
 
 }

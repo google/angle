@@ -383,8 +383,7 @@ gl::Error StateManagerGL::setDrawArraysState(const gl::Data &data, GLint first, 
     const gl::VertexArray *vao = state.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
 
-    gl::Error error =
-        vaoGL->syncDrawArraysState(programGL->getActiveAttributesMask(), first, count);
+    gl::Error error = vaoGL->syncDrawArraysState(programGL->getActiveAttributeLocations(), first, count);
     if (error.isError())
     {
         return error;
@@ -406,8 +405,7 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::Data &data, GLsizei cou
     const gl::VertexArray *vao = state.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
 
-    gl::Error error = vaoGL->syncDrawElementsState(programGL->getActiveAttributesMask(), count,
-                                                   type, indices, outIndices);
+    gl::Error error = vaoGL->syncDrawElementsState(programGL->getActiveAttributeLocations(), count, type, indices, outIndices);
     if (error.isError())
     {
         return error;
@@ -1081,7 +1079,7 @@ void StateManagerGL::syncState(const gl::State &state, const gl::State::DirtyBit
                 // TODO(jmadill): implement this
                 break;
             case gl::State::DIRTY_BIT_VERTEX_ARRAY_OBJECT:
-                state.getVertexArray()->syncImplState();
+                // TODO(jmadill): implement this
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_BINDING:
                 // TODO(jmadill): implement this

@@ -226,7 +226,6 @@ class State : angle::NonCopyable
     void setVertexAttribi(GLuint index, const GLint values[4]);
     void setVertexAttribState(unsigned int attribNum, Buffer *boundBuffer, GLint size, GLenum type,
                               bool normalized, bool pureInteger, GLsizei stride, const void *pointer);
-    void setVertexAttribDivisor(GLuint index, GLuint divisor);
     const VertexAttribCurrentValueData &getVertexAttribCurrentValue(unsigned int attribNum) const;
     const void *getVertexAttribPointer(unsigned int attribNum) const;
 

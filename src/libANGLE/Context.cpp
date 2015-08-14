@@ -1481,7 +1481,7 @@ void Context::detachSampler(GLuint sampler)
 
 void Context::setVertexAttribDivisor(GLuint index, GLuint divisor)
 {
-    mState.setVertexAttribDivisor(index, divisor);
+    mState.getVertexArray()->setVertexAttribDivisor(index, divisor);
 }
 
 void Context::samplerParameteri(GLuint sampler, GLenum pname, GLint param)
