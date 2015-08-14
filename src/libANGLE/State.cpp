@@ -846,6 +846,8 @@ bool State::removeDrawFramebufferBinding(GLuint framebuffer)
 void State::setVertexArrayBinding(VertexArray *vertexArray)
 {
     mVertexArray = vertexArray;
+    mDirtyBits.set(DIRTY_BIT_VERTEX_ARRAY_BINDING);
+    mDirtyBits.set(DIRTY_BIT_VERTEX_ARRAY_OBJECT);
 }
 
 GLuint State::getVertexArrayId() const
@@ -865,6 +867,8 @@ bool State::removeVertexArrayBinding(GLuint vertexArray)
     if (mVertexArray->id() == vertexArray)
     {
         mVertexArray = NULL;
+        mDirtyBits.set(DIRTY_BIT_VERTEX_ARRAY_BINDING);
+        mDirtyBits.set(DIRTY_BIT_VERTEX_ARRAY_OBJECT);
         return true;
     }
 
@@ -1051,6 +1055,7 @@ Buffer *State::getTargetBuffer(GLenum target) const
 void State::setEnableVertexAttribArray(unsigned int attribNum, bool enabled)
 {
     getVertexArray()->enableAttribute(attribNum, enabled);
+    mDirtyBits.set(DIRTY_BIT_VERTEX_ARRAY_OBJECT);
 }
 
 void State::setVertexAttribf(GLuint index, const GLfloat values[4])
@@ -1074,10 +1079,23 @@ void State::setVertexAttribi(GLuint index, const GLint values[4])
     mDirtyBits.set(DIRTY_BIT_CURRENT_VALUE_0 + index);
 }
 
-void State::setVertexAttribState(unsigned int attribNum, Buffer *boundBuffer, GLint size, GLenum type, bool normalized,
-    bool pureInteger, GLsizei stride, const void *pointer)
+void State::setVertexAttribState(unsigned int attribNum,
+                                 Buffer *boundBuffer,
+                                 GLint size,
+                                 GLenum type,
+                                 bool normalized,
+                                 bool pureInteger,
+                                 GLsizei stride,
+                                 const void *pointer)
 {
     getVertexArray()->setAttributeState(attribNum, boundBuffer, size, type, normalized, pureInteger, stride, pointer);
+    mDirtyBits.set(DIRTY_BIT_VERTEX_ARRAY_OBJECT);
+}
+
+void State::setVertexAttribDivisor(GLuint index, GLuint divisor)
+{
+    getVertexArray()->setVertexAttribDivisor(index, divisor);
+    mDirtyBits.set(DIRTY_BIT_VERTEX_ARRAY_OBJECT);
 }
 
 const VertexAttribCurrentValueData &State::getVertexAttribCurrentValue(unsigned int attribNum) const

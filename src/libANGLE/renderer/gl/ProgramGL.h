@@ -95,7 +95,7 @@ class ProgramGL : public ProgramImpl
 
     GLuint getProgramID() const;
     const std::vector<SamplerBindingGL> &getAppliedSamplerUniforms() const;
-    const std::vector<GLuint> &getActiveAttributeLocations() const;
+    const gl::AttributesMask &getActiveAttributesMask() const;
 
   private:
     const FunctionsGL *mFunctions;
@@ -113,7 +113,7 @@ class ProgramGL : public ProgramImpl
     std::vector<SamplerBindingGL> mSamplerBindings;
 
     // Array of attribute locations used by this program
-    std::vector<GLuint> mActiveAttributeLocations;
+    gl::AttributesMask mActiveAttributesMask;
 
     GLuint mProgramID;
 };
