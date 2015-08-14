@@ -46,6 +46,30 @@
       "revId": "1b1ed0e02112cea058b52ebbba6772b2da8f4279",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0424e1f1_ca6e63f1",
+        "filename": "src/angle.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-14T19:43:43Z",
+      "side": 1,
+      "message": "in build/common.gypi, try placing it in a conditions block in \u0027target_defaults/configurations/Common_Base\u0027, or in target_defaults/target_conditions\u0027 instead. gyp is mysterious and weird, and the key thing is it works, rather than understanding how. :)",
+      "parentUuid": "04b861a5_bbd4ff64",
+      "range": {
+        "startLine": 93,
+        "startChar": 21,
+        "endLine": 93,
+        "endChar": 49
+      },
+      "revId": "1b1ed0e02112cea058b52ebbba6772b2da8f4279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
