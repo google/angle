@@ -70,6 +70,30 @@
       "revId": "1b1ed0e02112cea058b52ebbba6772b2da8f4279",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4a9e95f_3f20f7a0",
+        "filename": "src/angle.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-08-14T22:18:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0424e1f1_ca6e63f1",
+      "range": {
+        "startLine": 93,
+        "startChar": 21,
+        "endLine": 93,
+        "endChar": 49
+      },
+      "revId": "1b1ed0e02112cea058b52ebbba6772b2da8f4279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
