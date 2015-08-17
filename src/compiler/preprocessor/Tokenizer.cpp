@@ -594,7 +594,7 @@ typedef pp::SourceLocation YYLTYPE;
     } while(0);
 
 #define YY_INPUT(buf, result, maxSize) \
-    result = yyextra->input.read(buf, maxSize, &yylineno);
+    result = yyextra->input.read(buf, maxSize);
 
 #define INITIAL 0
 #define COMMENT 1

@@ -30,8 +30,7 @@ TEST(InputTest, DefaultConstructor)
 {
     pp::Input input;
     EXPECT_EQ(0u, input.count());
-    int lineNo = 0;
-    EXPECT_EQ(0u, input.read(NULL, 1, &lineNo));
+    EXPECT_EQ(0u, input.read(NULL, 1));
 }
 
 TEST(InputTest, NullLength)
@@ -73,35 +72,34 @@ TEST(InputTest, ReadSingleString)
     char buf[4] = {'\0', '\0', '\0', '\0'};
 
     int maxSize = 1;
-    int lineNo = 0;
     pp::Input input1(count, str, NULL);
-    EXPECT_EQ(1u, input1.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(1u, input1.read(buf, maxSize));
     EXPECT_EQ('f', buf[0]);
-    EXPECT_EQ(1u, input1.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(1u, input1.read(buf, maxSize));
     EXPECT_EQ('o', buf[0]);
-    EXPECT_EQ(1u, input1.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(1u, input1.read(buf, maxSize));
     EXPECT_EQ('o', buf[0]);
-    EXPECT_EQ(0u, input1.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(0u, input1.read(buf, maxSize));
 
     maxSize = 2;
     pp::Input input2(count, str, NULL);
-    EXPECT_EQ(2u, input2.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(2u, input2.read(buf, maxSize));
     EXPECT_STREQ("fo", buf);
-    EXPECT_EQ(1u, input2.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(1u, input2.read(buf, maxSize));
     EXPECT_EQ('o', buf[0]);
-    EXPECT_EQ(0u, input2.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(0u, input2.read(buf, maxSize));
 
     maxSize = 3;
     pp::Input input3(count, str, NULL);
-    EXPECT_EQ(3u, input3.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(3u, input3.read(buf, maxSize));
     EXPECT_STREQ("foo", buf);
-    EXPECT_EQ(0u, input3.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(0u, input3.read(buf, maxSize));
 
     maxSize = 4;
     pp::Input input4(count, str, NULL);
-    EXPECT_EQ(3u, input4.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(3u, input4.read(buf, maxSize));
     EXPECT_STREQ("foo", buf);
-    EXPECT_EQ(0u, input4.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(0u, input4.read(buf, maxSize));
 }
 
 TEST(InputTest, ReadMultipleStrings)
@@ -111,35 +109,34 @@ TEST(InputTest, ReadMultipleStrings)
     char buf[4] = {'\0', '\0', '\0', '\0'};
 
     int maxSize = 1;
-    int lineNo = 0;
     pp::Input input1(count, str, NULL);
-    EXPECT_EQ(1u, input1.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(1u, input1.read(buf, maxSize));
     EXPECT_EQ('f', buf[0]);
-    EXPECT_EQ(1u, input1.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(1u, input1.read(buf, maxSize));
     EXPECT_EQ('o', buf[0]);
-    EXPECT_EQ(1u, input1.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(1u, input1.read(buf, maxSize));
     EXPECT_EQ('o', buf[0]);
-    EXPECT_EQ(0u, input1.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(0u, input1.read(buf, maxSize));
 
     maxSize = 2;
     pp::Input input2(count, str, NULL);
-    EXPECT_EQ(2u, input2.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(2u, input2.read(buf, maxSize));
     EXPECT_STREQ("fo", buf);
-    EXPECT_EQ(1u, input2.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(1u, input2.read(buf, maxSize));
     EXPECT_EQ('o', buf[0]);
-    EXPECT_EQ(0u, input2.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(0u, input2.read(buf, maxSize));
 
     maxSize = 3;
     pp::Input input3(count, str, NULL);
-    EXPECT_EQ(3u, input3.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(3u, input3.read(buf, maxSize));
     EXPECT_STREQ("foo", buf);
-    EXPECT_EQ(0u, input3.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(0u, input3.read(buf, maxSize));
 
     maxSize = 4;
     pp::Input input4(count, str, NULL);
-    EXPECT_EQ(3u, input4.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(3u, input4.read(buf, maxSize));
     EXPECT_STREQ("foo", buf);
-    EXPECT_EQ(0u, input4.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(0u, input4.read(buf, maxSize));
 }
 
 TEST(InputTest, ReadStringsWithLength)
@@ -151,28 +148,9 @@ TEST(InputTest, ReadStringsWithLength)
     int length[] = {2, 3};
     char buf[6] = {'\0', '\0', '\0', '\0', '\0', '\0'};
     size_t maxSize = 5;
-    int lineNo = 0;
 
     pp::Input input(count, str, length);
-    EXPECT_EQ(maxSize, input.read(buf, maxSize, &lineNo));
+    EXPECT_EQ(maxSize, input.read(buf, maxSize));
     EXPECT_STREQ("fobar", buf);
 }
 
-TEST(InputTest, ReadStringsWithLineContinuation)
-{
-    int count = 2;
-    const char* str[] = {"foo\\", "\nba\\\r\nr"};
-    int length[] = {4, 7};
-    char buf[11] = {'\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'};
-    size_t maxSize = 11;
-    int lineNo = 0;
-
-    pp::Input input(count, str, length);
-    EXPECT_EQ(3, input.read(buf, maxSize, &lineNo));
-    EXPECT_EQ(lineNo, 0);
-    EXPECT_EQ(2, input.read(buf + 3, maxSize - 3, &lineNo));
-    EXPECT_EQ(lineNo, 1);
-    EXPECT_EQ(1, input.read(buf + 5, maxSize - 5, &lineNo));
-    EXPECT_EQ(lineNo, 2);
-    EXPECT_STREQ("foobar", buf);
-}
