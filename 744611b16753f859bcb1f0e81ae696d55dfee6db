@@ -22,6 +22,30 @@
       "revId": "744611b16753f859bcb1f0e81ae696d55dfee6db",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4a9e95f_5111278e",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-08-17T16:29:47Z",
+      "side": 1,
+      "message": "I can get rid of both angle_build_winrt_app_type_revision and angle_build_winrt_target_platform_ver from this file I think.",
+      "parentUuid": "a414f588_64120ae7",
+      "range": {
+        "startLine": 16,
+        "startChar": 9,
+        "endLine": 16,
+        "endChar": 46
+      },
+      "revId": "744611b16753f859bcb1f0e81ae696d55dfee6db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
