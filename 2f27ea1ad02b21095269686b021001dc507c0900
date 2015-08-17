@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "840ff177_c3b01676",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1245,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-17T19:35:04Z",
+      "side": 1,
+      "message": "Intentional.. a Chromium convention to denote static methods in the cpp file with a // static comment.",
+      "parentUuid": "64ccbd7d_224d6e18",
+      "revId": "2f27ea1ad02b21095269686b021001dc507c0900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "24d6450d_206e4aa9",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-08-17T15:18:52Z",
       "side": 1,
       "message": "nit: you used a range-based for loop in Program.cpp",
+      "revId": "2f27ea1ad02b21095269686b021001dc507c0900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "840ff177_239f6ae8",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-17T19:35:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "24d6450d_206e4aa9",
       "revId": "2f27ea1ad02b21095269686b021001dc507c0900",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "0424e1f1_7612bee6",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-17T19:35:04Z",
+      "side": 1,
+      "message": "Done? did you mean to paste the above nit?",
+      "parentUuid": "64ccbd7d_425272b7",
+      "revId": "2f27ea1ad02b21095269686b021001dc507c0900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64ccbd7d_624776f8",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 1
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "a414f588_27d9346a",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-17T19:35:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64ccbd7d_624776f8",
+      "revId": "2f27ea1ad02b21095269686b021001dc507c0900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e41a6db3_865d8ac3",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 1
@@ -81,6 +153,24 @@
       "writtenOn": "2015-08-17T15:18:52Z",
       "side": 1,
       "message": "nit: That\u0027s some unfortunate formatting, see other changes in the file too.",
+      "revId": "2f27ea1ad02b21095269686b021001dc507c0900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a414f588_07deb851",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 675,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-17T19:35:04Z",
+      "side": 1,
+      "message": "Fixed by inserting a blank line.",
+      "parentUuid": "e41a6db3_865d8ac3",
       "revId": "2f27ea1ad02b21095269686b021001dc507c0900",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
