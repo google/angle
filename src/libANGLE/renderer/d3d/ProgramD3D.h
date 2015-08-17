@@ -47,7 +47,6 @@ class ProgramD3D : public ProgramImpl
 
     const std::vector<PixelShaderOutputVariable> &getPixelShaderKey() { return mPixelShaderKey; }
     int getShaderVersion() const { return mShaderVersion; }
-    GLenum getTransformFeedbackBufferMode() const { return mTransformFeedbackBufferMode; }
 
     GLint getSamplerMapping(gl::SamplerType type, unsigned int samplerIndex, const gl::Caps &caps) const;
     GLenum getSamplerTextureType(gl::SamplerType type, unsigned int samplerIndex) const;
@@ -73,8 +72,6 @@ class ProgramD3D : public ProgramImpl
 
     LinkResult link(const gl::Data &data, gl::InfoLog &infoLog,
                     gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                    const std::vector<std::string> &transformFeedbackVaryings,
-                    GLenum transformFeedbackBufferMode,
                     int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
                     std::map<int, gl::VariableLocation> *outputVariables);
 
@@ -224,8 +221,6 @@ class ProgramD3D : public ProgramImpl
 
     UniformStorageD3D *mVertexUniformStorage;
     UniformStorageD3D *mFragmentUniformStorage;
-
-    GLenum mTransformFeedbackBufferMode;
 
     std::vector<Sampler> mSamplersPS;
     std::vector<Sampler> mSamplersVS;

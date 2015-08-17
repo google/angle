@@ -35,6 +35,7 @@ struct Data;
 
 struct PackedVarying : public sh::Varying
 {
+    // TODO(jmadill): Make these D3D-only or otherwise clearly separate from GL.
     unsigned int registerIndex; // Assigned during link
     unsigned int columnIndex; // Assigned during link, defaults to 0
 

@@ -33,7 +33,6 @@ class ProgramGL : public ProgramImpl
 
     bool usesPointSize() const override;
     int getShaderVersion() const override;
-    GLenum getTransformFeedbackBufferMode() const override;
 
     GLenum getBinaryFormat() override;
     LinkResult load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream) override;
@@ -41,8 +40,6 @@ class ProgramGL : public ProgramImpl
 
     LinkResult link(const gl::Data &data, gl::InfoLog &infoLog,
                     gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                    const std::vector<std::string> &transformFeedbackVaryings,
-                    GLenum transformFeedbackBufferMode,
                     int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
                     std::map<int, gl::VariableLocation> *outputVariables) override;
 

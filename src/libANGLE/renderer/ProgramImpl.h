@@ -38,7 +38,6 @@ class ProgramImpl : angle::NonCopyable
 
     virtual bool usesPointSize() const = 0;
     virtual int getShaderVersion() const = 0;
-    virtual GLenum getTransformFeedbackBufferMode() const = 0;
 
     virtual GLenum getBinaryFormat() = 0;
     virtual LinkResult load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream) = 0;
@@ -46,8 +45,6 @@ class ProgramImpl : angle::NonCopyable
 
     virtual LinkResult link(const gl::Data &data, gl::InfoLog &infoLog,
                             gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                            const std::vector<std::string> &transformFeedbackVaryings,
-                            GLenum transformFeedbackBufferMode,
                             int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
                             std::map<int, gl::VariableLocation> *outputVariables) = 0;
 

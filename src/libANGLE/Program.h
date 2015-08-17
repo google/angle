@@ -170,6 +170,11 @@ class Program : angle::NonCopyable
 
         const Shader *getAttachedVertexShader() const { return mAttachedVertexShader; }
         const Shader *getAttachedFragmentShader() const { return mAttachedFragmentShader; }
+        const std::vector<std::string> &getTransformFeedbackVaryings() const
+        {
+            return mTransformFeedbackVaryings;
+        }
+        GLint getTransformFeedbackBufferMode() const { return mTransformFeedbackBufferMode; }
 
       private:
         friend class Program;
@@ -281,7 +286,6 @@ class Program : angle::NonCopyable
     GLsizei getTransformFeedbackVaryingMaxLength() const;
     GLenum getTransformFeedbackBufferMode() const;
 
-    static bool linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shader *vertexShader);
     static bool linkValidateUniforms(InfoLog &infoLog, const std::string &uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform);
     static bool linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform);
 
@@ -305,6 +309,9 @@ class Program : angle::NonCopyable
                         const AttributeBindings &attributeBindings,
                         const Shader *vertexShader);
     bool linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShader, const Shader &fragmentShader, const Caps &caps);
+    static bool linkVaryings(InfoLog &infoLog,
+                             const Shader *vertexShader,
+                             const Shader *fragmentShader);
     bool areMatchingInterfaceBlocks(gl::InfoLog &infoLog, const sh::InterfaceBlock &vertexInterfaceBlock,
                                     const sh::InterfaceBlock &fragmentInterfaceBlock);
 
@@ -316,8 +323,6 @@ class Program : angle::NonCopyable
 
     static bool linkValidateVaryings(InfoLog &infoLog, const std::string &varyingName, const sh::Varying &vertexVarying, const sh::Varying &fragmentVarying);
     bool gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std::vector<LinkedVarying> &linkedVaryings,
-                                               const std::vector<std::string> &transformFeedbackVaryingNames,
-                                               GLenum transformFeedbackBufferMode,
                                                std::vector<LinkedVarying> *outTransformFeedbackLinkedVaryings,
                                                const Caps &caps) const;
     bool assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex, const Caps &caps);

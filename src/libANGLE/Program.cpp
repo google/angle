@@ -290,11 +290,15 @@ Error Program::link(const gl::Data &data)
         return Error(GL_NO_ERROR);
     }
 
+    if (!linkVaryings(mInfoLog, mData.mAttachedVertexShader, mData.mAttachedFragmentShader))
+    {
+        return Error(GL_NO_ERROR);
+    }
+
     int registers;
     std::vector<LinkedVarying> linkedVaryings;
     rx::LinkResult result =
         mProgram->link(data, mInfoLog, mData.mAttachedFragmentShader, mData.mAttachedVertexShader,
-                       mData.mTransformFeedbackVaryings, mData.mTransformFeedbackBufferMode,
                        &registers, &linkedVaryings, &mOutputVariables);
     if (result.error.isError() || !result.linkSuccess)
     {
@@ -314,9 +318,7 @@ Error Program::link(const gl::Data &data)
     }
 
     if (!gatherTransformFeedbackLinkedVaryings(
-            mInfoLog, linkedVaryings, mData.mTransformFeedbackVaryings,
-            mData.mTransformFeedbackBufferMode, &mProgram->getTransformFeedbackLinkedVaryings(),
-            *data.caps))
+            mInfoLog, linkedVaryings, &mProgram->getTransformFeedbackLinkedVaryings(), *data.caps))
     {
         return Error(GL_NO_ERROR);
     }
@@ -434,6 +436,8 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
         mProgram->setShaderAttribute(attribIndex, type, precision, name, arraySize, location);
     }
 
+    stream.readInt(&mData.mTransformFeedbackBufferMode);
+
     rx::LinkResult result = mProgram->load(mInfoLog, &stream);
     if (result.error.isError() || !result.linkSuccess)
     {
@@ -477,6 +481,8 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
         stream.writeInt(attrib.arraySize);
         stream.writeInt(attrib.location);
     }
+
+    stream.writeInt(mData.mTransformFeedbackBufferMode);
 
     gl::Error error = mProgram->save(&stream);
     if (error.isError())
@@ -1238,34 +1244,33 @@ GLenum Program::getTransformFeedbackBufferMode() const
     return mData.mTransformFeedbackBufferMode;
 }
 
-bool Program::linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shader *vertexShader)
+// static
+bool Program::linkVaryings(InfoLog &infoLog,
+                           const Shader *vertexShader,
+                           const Shader *fragmentShader)
 {
-    std::vector<PackedVarying> &fragmentVaryings = fragmentShader->getVaryings();
-    std::vector<PackedVarying> &vertexVaryings = vertexShader->getVaryings();
+    const std::vector<PackedVarying> &vertexVaryings   = vertexShader->getVaryings();
+    const std::vector<PackedVarying> &fragmentVaryings = fragmentShader->getVaryings();
 
-    for (size_t fragVaryingIndex = 0; fragVaryingIndex < fragmentVaryings.size(); fragVaryingIndex++)
+    for (const PackedVarying &output : fragmentVaryings)
     {
-        PackedVarying *input = &fragmentVaryings[fragVaryingIndex];
         bool matched = false;
 
         // Built-in varyings obey special rules
-        if (input->isBuiltIn())
+        if (output.isBuiltIn())
         {
             continue;
         }
 
-        for (size_t vertVaryingIndex = 0; vertVaryingIndex < vertexVaryings.size(); vertVaryingIndex++)
+        for (const PackedVarying &input : vertexVaryings)
         {
-            PackedVarying *output = &vertexVaryings[vertVaryingIndex];
-            if (output->name == input->name)
+            if (output.name == input.name)
             {
-                if (!linkValidateVaryings(infoLog, output->name, *input, *output))
+                ASSERT(!input.isBuiltIn());
+                if (!linkValidateVaryings(infoLog, output.name, input, output))
                 {
                     return false;
                 }
-
-                output->registerIndex = input->registerIndex;
-                output->columnIndex = input->columnIndex;
 
                 matched = true;
                 break;
@@ -1273,12 +1278,14 @@ bool Program::linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shader *ver
         }
 
         // We permit unmatched, unreferenced varyings
-        if (!matched && input->staticUse)
+        if (!matched && output.staticUse)
         {
-            infoLog << "Fragment varying " << input->name << " does not match any vertex varying";
+            infoLog << "Fragment varying " << output.name << " does not match any vertex varying";
             return false;
         }
     }
+
+    // TODO(jmadill): verify no unmatched vertex varyings?
 
     return true;
 }
@@ -1583,8 +1590,6 @@ bool Program::linkValidateVaryings(InfoLog &infoLog, const std::string &varyingN
 }
 
 bool Program::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std::vector<LinkedVarying> &linkedVaryings,
-                                                    const std::vector<std::string> &transformFeedbackVaryingNames,
-                                                    GLenum transformFeedbackBufferMode,
                                                     std::vector<LinkedVarying> *outTransformFeedbackLinkedVaryings,
                                                     const Caps &caps) const
 {
@@ -1592,12 +1597,12 @@ bool Program::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std:
 
     // Gather the linked varyings that are used for transform feedback, they should all exist.
     outTransformFeedbackLinkedVaryings->clear();
-    for (size_t i = 0; i < transformFeedbackVaryingNames.size(); i++)
+    for (size_t i = 0; i < mData.mTransformFeedbackVaryings.size(); i++)
     {
         bool found = false;
         for (size_t j = 0; j < linkedVaryings.size(); j++)
         {
-            if (transformFeedbackVaryingNames[i] == linkedVaryings[j].name)
+            if (mData.mTransformFeedbackVaryings[i] == linkedVaryings[j].name)
             {
                 for (size_t k = 0; k < outTransformFeedbackLinkedVaryings->size(); k++)
                 {
@@ -1610,7 +1615,7 @@ bool Program::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std:
                 }
 
                 size_t componentCount = linkedVaryings[j].semanticIndexCount * 4;
-                if (transformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
+                if (mData.mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
                     componentCount > caps.maxTransformFeedbackSeparateComponents)
                 {
                     infoLog << "Transform feedback varying's " << linkedVaryings[j].name
@@ -1633,7 +1638,7 @@ bool Program::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std:
         UNUSED_ASSERTION_VARIABLE(found);
     }
 
-    if (transformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS &&
+    if (mData.mTransformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS &&
         totalComponents > caps.maxTransformFeedbackInterleavedComponents)
     {
         infoLog << "Transform feedback varying total components (" << totalComponents

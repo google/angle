@@ -46,12 +46,6 @@ int ProgramGL::getShaderVersion() const
     return int();
 }
 
-GLenum ProgramGL::getTransformFeedbackBufferMode() const
-{
-    UNIMPLEMENTED();
-    return GLenum();
-}
-
 GLenum ProgramGL::getBinaryFormat()
 {
     UNIMPLEMENTED();
@@ -72,16 +66,14 @@ gl::Error ProgramGL::save(gl::BinaryOutputStream *stream)
 
 LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog,
                            gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                           const std::vector<std::string> &transformFeedbackVaryings,
-                           GLenum transformFeedbackBufferMode,
                            int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
                            std::map<int, gl::VariableLocation> *outputVariables)
 {
     // Reset the program state, delete the current program if one exists
     reset();
 
-    ShaderGL *vertexShaderGL = GetImplAs<ShaderGL>(vertexShader);
-    ShaderGL *fragmentShaderGL = GetImplAs<ShaderGL>(fragmentShader);
+    const ShaderGL *vertexShaderGL   = GetImplAs<ShaderGL>(vertexShader);
+    const ShaderGL *fragmentShaderGL = GetImplAs<ShaderGL>(fragmentShader);
 
     // Attach the shaders
     mFunctions->attachShader(mProgramID, vertexShaderGL->getShaderID());

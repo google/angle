@@ -127,7 +127,40 @@ struct AttributeSorter
     const ProgramImpl::SemanticIndexArray *originalIndices;
 };
 
+bool LinkVaryingRegisters(gl::InfoLog &infoLog,
+                          ShaderD3D *vertexShaderD3D,
+                          ShaderD3D *fragmentShaderD3D)
+{
+    for (gl::PackedVarying &input : fragmentShaderD3D->getVaryings())
+    {
+        bool matched = false;
+
+        // Built-in varyings obey special rules
+        if (input.isBuiltIn())
+        {
+            continue;
+        }
+
+        for (gl::PackedVarying &output : vertexShaderD3D->getVaryings())
+        {
+            if (output.name == input.name)
+            {
+                output.registerIndex = input.registerIndex;
+                output.columnIndex   = input.columnIndex;
+
+                matched = true;
+                break;
+            }
+        }
+
+        // We permit unmatched, unreferenced varyings
+        ASSERT(matched || !input.staticUse);
+    }
+
+    return true;
 }
+
+}  // anonymous namespace
 
 ProgramD3D::VertexExecutable::VertexExecutable(const gl::InputLayout &inputLayout,
                                                const Signature &signature,
@@ -584,7 +617,6 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
         mUniformBlocks[uniformBlockIndex] = uniformBlock;
     }
 
-    stream->readInt(&mTransformFeedbackBufferMode);
     const unsigned int transformFeedbackVaryingCount = stream->readInt<unsigned int>();
     mTransformFeedbackLinkedVaryings.resize(transformFeedbackVaryingCount);
     for (unsigned int varyingIndex = 0; varyingIndex < transformFeedbackVaryingCount; varyingIndex++)
@@ -632,12 +664,11 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
         unsigned int vertexShaderSize = stream->readInt<unsigned int>();
         const unsigned char *vertexShaderFunction = binary + stream->offset();
 
-        ShaderExecutableD3D *shaderExecutable = NULL;
-        gl::Error error = mRenderer->loadExecutable(vertexShaderFunction, vertexShaderSize,
-                                                    SHADER_VERTEX,
-                                                    mTransformFeedbackLinkedVaryings,
-                                                    (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS),
-                                                    &shaderExecutable);
+        ShaderExecutableD3D *shaderExecutable = nullptr;
+
+        gl::Error error = mRenderer->loadExecutable(
+            vertexShaderFunction, vertexShaderSize, SHADER_VERTEX, mTransformFeedbackLinkedVaryings,
+            (mData.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS), &shaderExecutable);
         if (error.isError())
         {
             return LinkResult(false, error);
@@ -671,11 +702,11 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 
         const size_t pixelShaderSize = stream->readInt<unsigned int>();
         const unsigned char *pixelShaderFunction = binary + stream->offset();
-        ShaderExecutableD3D *shaderExecutable = NULL;
-        gl::Error error = mRenderer->loadExecutable(pixelShaderFunction, pixelShaderSize, SHADER_PIXEL,
-                                                    mTransformFeedbackLinkedVaryings,
-                                                    (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS),
-                                                    &shaderExecutable);
+        ShaderExecutableD3D *shaderExecutable    = nullptr;
+
+        gl::Error error = mRenderer->loadExecutable(
+            pixelShaderFunction, pixelShaderSize, SHADER_PIXEL, mTransformFeedbackLinkedVaryings,
+            (mData.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS), &shaderExecutable);
         if (error.isError())
         {
             return LinkResult(false, error);
@@ -698,10 +729,10 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     if (geometryShaderSize > 0)
     {
         const unsigned char *geometryShaderFunction = binary + stream->offset();
-        gl::Error error = mRenderer->loadExecutable(geometryShaderFunction, geometryShaderSize, SHADER_GEOMETRY,
-                                                    mTransformFeedbackLinkedVaryings,
-                                                    (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS),
-                                                    &mGeometryExecutable);
+        gl::Error error                             = mRenderer->loadExecutable(
+            geometryShaderFunction, geometryShaderSize, SHADER_GEOMETRY,
+            mTransformFeedbackLinkedVaryings,
+            (mData.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS), &mGeometryExecutable);
         if (error.isError())
         {
             return LinkResult(false, error);
@@ -804,7 +835,6 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
         stream->writeInt(uniformBlock.vsRegisterIndex);
     }
 
-    stream->writeInt(mTransformFeedbackBufferMode);
     stream->writeInt(mTransformFeedbackLinkedVaryings.size());
     for (size_t i = 0; i < mTransformFeedbackLinkedVaryings.size(); i++)
     {
@@ -933,10 +963,10 @@ gl::Error ProgramD3D::getPixelExecutableForOutputLayout(const std::vector<GLenum
     gl::InfoLog tempInfoLog;
     gl::InfoLog *currentInfoLog = infoLog ? infoLog : &tempInfoLog;
 
-    gl::Error error = mRenderer->compileToExecutable(*currentInfoLog, finalPixelHLSL, SHADER_PIXEL,
-                                                     mTransformFeedbackLinkedVaryings,
-                                                     (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS),
-                                                     mPixelWorkarounds, &pixelExecutable);
+    gl::Error error = mRenderer->compileToExecutable(
+        *currentInfoLog, finalPixelHLSL, SHADER_PIXEL, mTransformFeedbackLinkedVaryings,
+        (mData.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS), mPixelWorkarounds,
+        &pixelExecutable);
     if (error.isError())
     {
         return error;
@@ -981,10 +1011,10 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
     gl::InfoLog tempInfoLog;
     gl::InfoLog *currentInfoLog = infoLog ? infoLog : &tempInfoLog;
 
-    gl::Error error = mRenderer->compileToExecutable(*currentInfoLog, finalVertexHLSL, SHADER_VERTEX,
-                                                     mTransformFeedbackLinkedVaryings,
-                                                     (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS),
-                                                     mVertexWorkarounds, &vertexExecutable);
+    gl::Error error = mRenderer->compileToExecutable(
+        *currentInfoLog, finalVertexHLSL, SHADER_VERTEX, mTransformFeedbackLinkedVaryings,
+        (mData.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS), mVertexWorkarounds,
+        &vertexExecutable);
     if (error.isError())
     {
         return error;
@@ -1031,10 +1061,10 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, int regis
     {
         std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(registers, fragmentShaderD3D, vertexShaderD3D);
 
-
-        error = mRenderer->compileToExecutable(infoLog, geometryHLSL, SHADER_GEOMETRY, mTransformFeedbackLinkedVaryings,
-                                               (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS),
-                                               D3DCompilerWorkarounds(), &mGeometryExecutable);
+        error = mRenderer->compileToExecutable(
+            infoLog, geometryHLSL, SHADER_GEOMETRY, mTransformFeedbackLinkedVaryings,
+            (mData.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS),
+            D3DCompilerWorkarounds(), &mGeometryExecutable);
         if (error.isError())
         {
             return LinkResult(false, error);
@@ -1068,8 +1098,6 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, int regis
 
 LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
                             gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                            const std::vector<std::string> &transformFeedbackVaryings,
-                            GLenum transformFeedbackBufferMode,
                             int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
                             std::map<int, gl::VariableLocation> *outputVariables)
 {
@@ -1078,8 +1106,6 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
 
     mSamplersPS.resize(data.caps->maxTextureImageUnits);
     mSamplersVS.resize(data.caps->maxVertexTextureImageUnits);
-
-    mTransformFeedbackBufferMode = transformFeedbackBufferMode;
 
     mPixelHLSL = fragmentShaderD3D->getTranslatedSource();
     fragmentShaderD3D->generateWorkarounds(&mPixelWorkarounds);
@@ -1099,21 +1125,20 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
 
     // Map the varyings to the register file
     VaryingPacking packing = {};
-    *registers = mDynamicHLSL->packVaryings(infoLog, packing, fragmentShaderD3D, vertexShaderD3D, transformFeedbackVaryings);
+    *registers = mDynamicHLSL->packVaryings(infoLog, packing, fragmentShaderD3D, vertexShaderD3D,
+                                            mData.getTransformFeedbackVaryings());
 
     if (*registers < 0)
     {
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
-    if (!gl::Program::linkVaryings(infoLog, fragmentShader, vertexShader))
-    {
-        return LinkResult(false, gl::Error(GL_NO_ERROR));
-    }
+    LinkVaryingRegisters(infoLog, vertexShaderD3D, fragmentShaderD3D);
 
-    if (!mDynamicHLSL->generateShaderLinkHLSL(data, infoLog, *registers, packing, mPixelHLSL, mVertexHLSL,
-                                              fragmentShaderD3D, vertexShaderD3D, transformFeedbackVaryings,
-                                              linkedVaryings, outputVariables, &mPixelShaderKey, &mUsesFragDepth))
+    if (!mDynamicHLSL->generateShaderLinkHLSL(data, infoLog, *registers, packing, mPixelHLSL,
+                                              mVertexHLSL, fragmentShaderD3D, vertexShaderD3D,
+                                              mData.getTransformFeedbackVaryings(), linkedVaryings,
+                                              outputVariables, &mPixelShaderKey, &mUsesFragDepth))
     {
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
@@ -2015,8 +2040,6 @@ void ProgramD3D::reset()
     SafeDeleteContainer(mVertexExecutables);
     SafeDeleteContainer(mPixelExecutables);
     SafeDelete(mGeometryExecutable);
-
-    mTransformFeedbackBufferMode = GL_NONE;
 
     mVertexHLSL.clear();
     mVertexWorkarounds = D3DCompilerWorkarounds();

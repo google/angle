@@ -736,10 +736,14 @@ void DynamicHLSL::storeUserLinkedVaryings(const ShaderD3D *vertexShader,
     }
 }
 
-bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data, InfoLog &infoLog, int registers,
+bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
+                                         InfoLog &infoLog,
+                                         int registers,
                                          const VaryingPacking packing,
-                                         std::string &pixelHLSL, std::string &vertexHLSL,
-                                         ShaderD3D *fragmentShader, ShaderD3D *vertexShader,
+                                         std::string &pixelHLSL,
+                                         std::string &vertexHLSL,
+                                         const ShaderD3D *fragmentShader,
+                                         const ShaderD3D *vertexShader,
                                          const std::vector<std::string> &transformFeedbackVaryings,
                                          std::vector<LinkedVarying> *linkedVaryings,
                                          std::map<int, VariableLocation> *programOutputVars,
@@ -1086,7 +1090,8 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data, InfoLog &infoLog,
     return true;
 }
 
-void DynamicHLSL::defineOutputVariables(ShaderD3D *fragmentShader, std::map<int, VariableLocation> *programOutputVars) const
+void DynamicHLSL::defineOutputVariables(const ShaderD3D *fragmentShader,
+                                        std::map<int, VariableLocation> *programOutputVars) const
 {
     const std::vector<sh::Attribute> &shaderOutputVars = fragmentShader->getActiveOutputVariables();
 
