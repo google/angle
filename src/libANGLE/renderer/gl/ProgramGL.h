@@ -26,7 +26,9 @@ struct SamplerBindingGL
 class ProgramGL : public ProgramImpl
 {
   public:
-    ProgramGL(const FunctionsGL *functions, StateManagerGL *stateManager);
+    ProgramGL(const gl::Program::Data &data,
+              const FunctionsGL *functions,
+              StateManagerGL *stateManager);
     ~ProgramGL() override;
 
     bool usesPointSize() const override;
@@ -78,8 +80,7 @@ class ProgramGL : public ProgramImpl
     void updateSamplerMapping() override;
     bool validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps) override;
 
-    LinkResult compileProgramExecutables(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                                         int registers) override;
+    LinkResult compileProgramExecutables(gl::InfoLog &infoLog, int registers) override;
 
     bool linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShader, const gl::Shader &fragmentShader,
                       const gl::Caps &caps) override;

@@ -17,11 +17,10 @@
 namespace rx
 {
 
-ProgramGL::ProgramGL(const FunctionsGL *functions, StateManagerGL *stateManager)
-    : ProgramImpl(),
-      mFunctions(functions),
-      mStateManager(stateManager),
-      mProgramID(0)
+ProgramGL::ProgramGL(const gl::Program::Data &data,
+                     const FunctionsGL *functions,
+                     StateManagerGL *stateManager)
+    : ProgramImpl(data), mFunctions(functions), mStateManager(stateManager), mProgramID(0)
 {
     ASSERT(mFunctions);
     ASSERT(mStateManager);
@@ -398,8 +397,7 @@ bool ProgramGL::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
     return true;
 }
 
-LinkResult ProgramGL::compileProgramExecutables(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                                                int registers)
+LinkResult ProgramGL::compileProgramExecutables(gl::InfoLog &infoLog, int registers)
 {
     //UNIMPLEMENTED();
     return LinkResult(true, gl::Error(GL_NO_ERROR));

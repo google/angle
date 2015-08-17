@@ -176,9 +176,9 @@ ShaderImpl *RendererGL::createShader(GLenum type)
     return new ShaderGL(type, mFunctions);
 }
 
-ProgramImpl *RendererGL::createProgram()
+ProgramImpl *RendererGL::createProgram(const gl::Program::Data &data)
 {
-    return new ProgramGL(mFunctions, mStateManager);
+    return new ProgramGL(data, mFunctions, mStateManager);
 }
 
 FramebufferImpl *RendererGL::createDefaultFramebuffer(const gl::Framebuffer::Data &data)

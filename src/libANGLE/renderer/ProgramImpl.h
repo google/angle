@@ -33,7 +33,7 @@ class ProgramImpl : angle::NonCopyable
   public:
     typedef int SemanticIndexArray[gl::MAX_VERTEX_ATTRIBS];
 
-    ProgramImpl() { }
+    ProgramImpl(const gl::Program::Data &data);
     virtual ~ProgramImpl();
 
     virtual bool usesPointSize() const = 0;
@@ -87,8 +87,7 @@ class ProgramImpl : angle::NonCopyable
     virtual void updateSamplerMapping() = 0;
     virtual bool validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps) = 0;
 
-    virtual LinkResult compileProgramExecutables(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                                                 int registers) = 0;
+    virtual LinkResult compileProgramExecutables(gl::InfoLog &infoLog, int registers) = 0;
 
     virtual bool linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShader, const gl::Shader &fragmentShader,
                               const gl::Caps &caps) = 0;
@@ -127,6 +126,8 @@ class ProgramImpl : angle::NonCopyable
     virtual void reset();
 
   protected:
+    const gl::Program::Data &mData;
+
     std::vector<gl::LinkedUniform*> mUniforms;
 
     // TODO: use a hash map

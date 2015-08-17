@@ -188,7 +188,7 @@ class Renderer11 : public RendererD3D
     // Shader creation
     virtual CompilerImpl *createCompiler(const gl::Data &data);
     virtual ShaderImpl *createShader(GLenum type);
-    virtual ProgramImpl *createProgram();
+    virtual ProgramImpl *createProgram(const gl::Program::Data &data);
 
     // Shader operations
     virtual gl::Error loadExecutable(const void *function, size_t length, ShaderType type,

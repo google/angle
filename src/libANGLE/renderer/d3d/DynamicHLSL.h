@@ -70,7 +70,9 @@ class DynamicHLSL : angle::NonCopyable
                                 std::vector<PixelShaderOutputVariable> *outPixelShaderKey,
                                 bool *outUsesFragDepth) const;
 
-    std::string generateGeometryShaderHLSL(int registers, ShaderD3D *fragmentShader, ShaderD3D *vertexShader) const;
+    std::string generateGeometryShaderHLSL(int registers,
+                                           const ShaderD3D *fragmentShader,
+                                           const ShaderD3D *vertexShader) const;
 
   private:
     RendererD3D *const mRenderer;
@@ -85,7 +87,9 @@ class DynamicHLSL : angle::NonCopyable
     void storeUserLinkedVaryings(const ShaderD3D *vertexShader, std::vector<gl::LinkedVarying> *linkedVaryings) const;
     void storeBuiltinLinkedVaryings(const SemanticInfo &info, std::vector<gl::LinkedVarying> *linkedVaryings) const;
     void defineOutputVariables(ShaderD3D *fragmentShader, std::map<int, gl::VariableLocation> *programOutputVars) const;
-    std::string generatePointSpriteHLSL(int registers, ShaderD3D *fragmentShader, ShaderD3D *vertexShader) const;
+    std::string generatePointSpriteHLSL(int registers,
+                                        const ShaderD3D *fragmentShader,
+                                        const ShaderD3D *vertexShader) const;
 
     // Prepend an underscore
     static std::string decorateVariable(const std::string &name);

@@ -141,13 +141,31 @@ LinkedVarying::LinkedVarying(const std::string &name, GLenum type, GLsizei size,
 {
 }
 
-Program::Program(rx::ProgramImpl *impl, ResourceManager *manager, GLuint handle)
-    : mProgram(impl),
-      mValidated(false),
-      mFragmentShader(nullptr),
-      mVertexShader(nullptr),
+Program::Data::Data()
+    : mAttachedFragmentShader(nullptr),
+      mAttachedVertexShader(nullptr),
       mTransformFeedbackVaryings(),
-      mTransformFeedbackBufferMode(GL_NONE),
+      mTransformFeedbackBufferMode(GL_NONE)
+{
+}
+
+Program::Data::~Data()
+{
+    if (mAttachedVertexShader != nullptr)
+    {
+        mAttachedVertexShader->release();
+    }
+
+    if (mAttachedFragmentShader != nullptr)
+    {
+        mAttachedFragmentShader->release();
+    }
+}
+
+Program::Program(rx::ImplFactory *factory, ResourceManager *manager, GLuint handle)
+    : mProgram(factory->createProgram(mData)),
+      mLinkedAttributes(gl::MAX_VERTEX_ATTRIBS),
+      mValidated(false),
       mLinked(false),
       mDeleteStatus(false),
       mRefCount(0),
@@ -164,16 +182,6 @@ Program::~Program()
 {
     unlink(true);
 
-    if (mVertexShader != nullptr)
-    {
-        mVertexShader->release();
-    }
-
-    if (mFragmentShader != nullptr)
-    {
-        mFragmentShader->release();
-    }
-
     SafeDelete(mProgram);
 }
 
@@ -181,23 +189,23 @@ bool Program::attachShader(Shader *shader)
 {
     if (shader->getType() == GL_VERTEX_SHADER)
     {
-        if (mVertexShader)
+        if (mData.mAttachedVertexShader)
         {
             return false;
         }
 
-        mVertexShader = shader;
-        mVertexShader->addRef();
+        mData.mAttachedVertexShader = shader;
+        mData.mAttachedVertexShader->addRef();
     }
     else if (shader->getType() == GL_FRAGMENT_SHADER)
     {
-        if (mFragmentShader)
+        if (mData.mAttachedFragmentShader)
         {
             return false;
         }
 
-        mFragmentShader = shader;
-        mFragmentShader->addRef();
+        mData.mAttachedFragmentShader = shader;
+        mData.mAttachedFragmentShader->addRef();
     }
     else UNREACHABLE();
 
@@ -208,23 +216,23 @@ bool Program::detachShader(Shader *shader)
 {
     if (shader->getType() == GL_VERTEX_SHADER)
     {
-        if (mVertexShader != shader)
+        if (mData.mAttachedVertexShader != shader)
         {
             return false;
         }
 
-        mVertexShader->release();
-        mVertexShader = nullptr;
+        shader->release();
+        mData.mAttachedVertexShader = nullptr;
     }
     else if (shader->getType() == GL_FRAGMENT_SHADER)
     {
-        if (mFragmentShader != shader)
+        if (mData.mAttachedFragmentShader != shader)
         {
             return false;
         }
 
-        mFragmentShader->release();
-        mFragmentShader = nullptr;
+        shader->release();
+        mData.mAttachedFragmentShader = nullptr;
     }
     else UNREACHABLE();
 
@@ -233,7 +241,7 @@ bool Program::detachShader(Shader *shader)
 
 int Program::getAttachedShadersCount() const
 {
-    return (mVertexShader ? 1 : 0) + (mFragmentShader ? 1 : 0);
+    return (mData.mAttachedVertexShader ? 1 : 0) + (mData.mAttachedFragmentShader ? 1 : 0);
 }
 
 void AttributeBindings::bindAttributeLocation(GLuint index, const char *name)
@@ -258,58 +266,64 @@ void Program::bindAttributeLocation(GLuint index, const char *name)
 // Links the HLSL code of the vertex and pixel shader by matching up their varyings,
 // compiling them into binaries, determining the attribute mappings, and collecting
 // a list of uniforms
-Error Program::link(const Data &data)
+Error Program::link(const gl::Data &data)
 {
     unlink(false);
 
     mInfoLog.reset();
     resetUniformBlockBindings();
 
-    if (!mFragmentShader || !mFragmentShader->isCompiled())
+    if (!mData.mAttachedFragmentShader || !mData.mAttachedFragmentShader->isCompiled())
     {
         return Error(GL_NO_ERROR);
     }
-    ASSERT(mFragmentShader->getType() == GL_FRAGMENT_SHADER);
+    ASSERT(mData.mAttachedFragmentShader->getType() == GL_FRAGMENT_SHADER);
 
-    if (!mVertexShader || !mVertexShader->isCompiled())
+    if (!mData.mAttachedVertexShader || !mData.mAttachedVertexShader->isCompiled())
     {
         return Error(GL_NO_ERROR);
     }
-    ASSERT(mVertexShader->getType() == GL_VERTEX_SHADER);
+    ASSERT(mData.mAttachedVertexShader->getType() == GL_VERTEX_SHADER);
 
-    if (!linkAttributes(data, mInfoLog, mAttributeBindings, mVertexShader))
+    if (!linkAttributes(data, mInfoLog, mAttributeBindings, mData.mAttachedVertexShader))
     {
         return Error(GL_NO_ERROR);
     }
 
     int registers;
     std::vector<LinkedVarying> linkedVaryings;
-    rx::LinkResult result = mProgram->link(data, mInfoLog, mFragmentShader, mVertexShader, mTransformFeedbackVaryings, mTransformFeedbackBufferMode,
-                                           &registers, &linkedVaryings, &mOutputVariables);
+    rx::LinkResult result =
+        mProgram->link(data, mInfoLog, mData.mAttachedFragmentShader, mData.mAttachedVertexShader,
+                       mData.mTransformFeedbackVaryings, mData.mTransformFeedbackBufferMode,
+                       &registers, &linkedVaryings, &mOutputVariables);
     if (result.error.isError() || !result.linkSuccess)
     {
         return result.error;
     }
 
-    if (!mProgram->linkUniforms(mInfoLog, *mVertexShader, *mFragmentShader, *data.caps))
+    if (!mProgram->linkUniforms(mInfoLog, *mData.mAttachedVertexShader,
+                                *mData.mAttachedFragmentShader, *data.caps))
     {
         return Error(GL_NO_ERROR);
     }
 
-    if (!linkUniformBlocks(mInfoLog, *mVertexShader, *mFragmentShader, *data.caps))
+    if (!linkUniformBlocks(mInfoLog, *mData.mAttachedVertexShader, *mData.mAttachedFragmentShader,
+                           *data.caps))
     {
         return Error(GL_NO_ERROR);
     }
 
-    if (!gatherTransformFeedbackLinkedVaryings(mInfoLog, linkedVaryings, mTransformFeedbackVaryings,
-                                               mTransformFeedbackBufferMode, &mProgram->getTransformFeedbackLinkedVaryings(), *data.caps))
+    if (!gatherTransformFeedbackLinkedVaryings(
+            mInfoLog, linkedVaryings, mData.mTransformFeedbackVaryings,
+            mData.mTransformFeedbackBufferMode, &mProgram->getTransformFeedbackLinkedVaryings(),
+            *data.caps))
     {
         return Error(GL_NO_ERROR);
     }
 
     // TODO: The concept of "executables" is D3D only, and as such this belongs in ProgramD3D. It must be called,
     // however, last in this function, so it can't simply be moved to ProgramD3D::link without further shuffling.
-    result = mProgram->compileProgramExecutables(mInfoLog, mFragmentShader, mVertexShader, registers);
+    result = mProgram->compileProgramExecutables(mInfoLog, registers);
     if (result.error.isError() || !result.linkSuccess)
     {
         mInfoLog << "Failed to create D3D shaders.";
@@ -339,20 +353,20 @@ void Program::unlink(bool destroy)
 {
     if (destroy)   // Object being destructed
     {
-        if (mFragmentShader)
+        if (mData.mAttachedFragmentShader)
         {
-            mFragmentShader->release();
-            mFragmentShader = nullptr;
+            mData.mAttachedFragmentShader->release();
+            mData.mAttachedFragmentShader = nullptr;
         }
 
-        if (mVertexShader)
+        if (mData.mAttachedVertexShader)
         {
-            mVertexShader->release();
-            mVertexShader = nullptr;
+            mData.mAttachedVertexShader->release();
+            mData.mAttachedVertexShader = nullptr;
         }
     }
 
-    std::fill(mLinkedAttribute, mLinkedAttribute + ArraySize(mLinkedAttribute), sh::Attribute());
+    mLinkedAttributes.assign(mLinkedAttributes.size(), sh::Attribute());
     mOutputVariables.clear();
 
     mProgram->reset();
@@ -404,8 +418,8 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
     // TODO(jmadill): replace MAX_VERTEX_ATTRIBS
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
-        stream.readInt(&mLinkedAttribute[i].type);
-        stream.readString(&mLinkedAttribute[i].name);
+        stream.readInt(&mLinkedAttributes[i].type);
+        stream.readString(&mLinkedAttributes[i].name);
         stream.readInt(&mProgram->getSemanticIndexes()[i]);
     }
 
@@ -448,8 +462,8 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
     // TODO(jmadill): replace MAX_VERTEX_ATTRIBS
     for (unsigned int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
-        stream.writeInt(mLinkedAttribute[i].type);
-        stream.writeString(mLinkedAttribute[i].name);
+        stream.writeInt(mLinkedAttributes[i].type);
+        stream.writeString(mLinkedAttributes[i].name);
         stream.writeInt(mProgram->getSemanticIndexes()[i]);
     }
 
@@ -550,21 +564,21 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shade
 {
     int total = 0;
 
-    if (mVertexShader)
+    if (mData.mAttachedVertexShader)
     {
         if (total < maxCount)
         {
-            shaders[total] = mVertexShader->getHandle();
+            shaders[total] = mData.mAttachedVertexShader->getHandle();
         }
 
         total++;
     }
 
-    if (mFragmentShader)
+    if (mData.mAttachedFragmentShader)
     {
         if (total < maxCount)
         {
-            shaders[total] = mFragmentShader->getHandle();
+            shaders[total] = mData.mAttachedFragmentShader->getHandle();
         }
 
         total++;
@@ -578,11 +592,11 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shade
 
 GLuint Program::getAttributeLocation(const std::string &name)
 {
-    for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
+    for (size_t index = 0; index < mLinkedAttributes.size(); index++)
     {
-        if (mLinkedAttribute[index].name == name)
+        if (mLinkedAttributes[index].name == name)
         {
-            return index;
+            return static_cast<GLuint>(index);
         }
     }
 
@@ -608,9 +622,10 @@ void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length,
         // Skip over inactive attributes
         unsigned int activeAttribute = 0;
         unsigned int attribute;
-        for (attribute = 0; attribute < MAX_VERTEX_ATTRIBS; attribute++)
+        for (attribute = 0; attribute < static_cast<unsigned int>(mLinkedAttributes.size());
+             attribute++)
         {
-            if (mLinkedAttribute[attribute].name.empty())
+            if (mLinkedAttributes[attribute].name.empty())
             {
                 continue;
             }
@@ -625,7 +640,7 @@ void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length,
 
         if (bufsize > 0)
         {
-            const char *string = mLinkedAttribute[attribute].name.c_str();
+            const char *string = mLinkedAttributes[attribute].name.c_str();
 
             strncpy(name, string, bufsize);
             name[bufsize - 1] = '\0';
@@ -638,7 +653,7 @@ void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length,
 
         *size = 1;   // Always a single 'type' instance
 
-        *type = mLinkedAttribute[attribute].type;
+        *type = mLinkedAttributes[attribute].type;
     }
     else
     {
@@ -665,7 +680,7 @@ GLint Program::getActiveAttributeCount()
     {
         for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
         {
-            if (!mLinkedAttribute[attributeIndex].name.empty())
+            if (!mLinkedAttributes[attributeIndex].name.empty())
             {
                 count++;
             }
@@ -677,15 +692,17 @@ GLint Program::getActiveAttributeCount()
 
 GLint Program::getActiveAttributeMaxLength()
 {
-    int maxLength = 0;
+    GLint maxLength = 0;
 
     if (mLinked)
     {
         for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
         {
-            if (!mLinkedAttribute[attributeIndex].name.empty())
+            if (!mLinkedAttributes[attributeIndex].name.empty())
             {
-                maxLength = std::max((int)(mLinkedAttribute[attributeIndex].name.length() + 1), maxLength);
+                maxLength = std::max(
+                    static_cast<GLint>(mLinkedAttributes[attributeIndex].name.length() + 1),
+                    maxLength);
             }
         }
     }
@@ -718,12 +735,12 @@ GLint Program::getFragDataLocation(const std::string &name) const
 {
     std::string baseName(name);
     unsigned int arrayIndex = ParseAndStripArrayIndex(&baseName);
-    for (auto locationIt = mOutputVariables.begin(); locationIt != mOutputVariables.end(); locationIt++)
+    for (auto outputPair : mOutputVariables)
     {
-        const VariableLocation &outputVariable = locationIt->second;
+        const VariableLocation &outputVariable = outputPair.second;
         if (outputVariable.name == baseName && (arrayIndex == GL_INVALID_INDEX || arrayIndex == outputVariable.element))
         {
-            return static_cast<GLint>(locationIt->first);
+            return static_cast<GLint>(outputPair.first);
         }
     }
     return -1;
@@ -1149,13 +1166,13 @@ void Program::resetUniformBlockBindings()
 
 void Program::setTransformFeedbackVaryings(GLsizei count, const GLchar *const *varyings, GLenum bufferMode)
 {
-    mTransformFeedbackVaryings.resize(count);
+    mData.mTransformFeedbackVaryings.resize(count);
     for (GLsizei i = 0; i < count; i++)
     {
-        mTransformFeedbackVaryings[i] = varyings[i];
+        mData.mTransformFeedbackVaryings[i] = varyings[i];
     }
 
-    mTransformFeedbackBufferMode = bufferMode;
+    mData.mTransformFeedbackBufferMode = bufferMode;
 }
 
 void Program::getTransformFeedbackVarying(GLuint index, GLsizei bufSize, GLsizei *length, GLsizei *size, GLenum *type, GLchar *name) const
@@ -1218,7 +1235,7 @@ GLsizei Program::getTransformFeedbackVaryingMaxLength() const
 
 GLenum Program::getTransformFeedbackBufferMode() const
 {
-    return mTransformFeedbackBufferMode;
+    return mData.mTransformFeedbackBufferMode;
 }
 
 bool Program::linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shader *vertexShader)
@@ -1283,7 +1300,7 @@ bool Program::linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::stri
 }
 
 // Determines the mapping between GL attributes and Direct3D 9 vertex stream usage indices
-bool Program::linkAttributes(const Data &data,
+bool Program::linkAttributes(const gl::Data &data,
                              InfoLog &infoLog,
                              const AttributeBindings &attributeBindings,
                              const Shader *vertexShader)
@@ -1325,23 +1342,22 @@ bool Program::linkAttributes(const Data &data,
             for (int row = 0; row < rows; row++)
             {
                 const int rowLocation = location + row;
-                sh::ShaderVariable &linkedAttribute = mLinkedAttribute[rowLocation];
+                sh::ShaderVariable *linkedAttribute = &mLinkedAttributes[rowLocation];
 
                 // In GLSL 3.00, attribute aliasing produces a link error
                 // In GLSL 1.00, attribute aliasing is allowed, but ANGLE currently has a bug
                 // TODO(jmadill): fix aliasing on ES2
                 // if (mProgram->getShaderVersion() >= 300)
                 {
-                    if (!linkedAttribute.name.empty())
+                    if (!linkedAttribute->name.empty())
                     {
-                        infoLog << "Attribute '" << attribute.name
-                                << "' aliases attribute '" << linkedAttribute.name
-                                << "' at location " << rowLocation;
+                        infoLog << "Attribute '" << attribute.name << "' aliases attribute '"
+                                << linkedAttribute->name << "' at location " << rowLocation;
                         return false;
                     }
                 }
 
-                linkedAttribute = attribute;
+                *linkedAttribute = attribute;
                 usedLocations |= 1 << rowLocation;
             }
         }
@@ -1367,14 +1383,14 @@ bool Program::linkAttributes(const Data &data,
                 return false;   // Fail to link
             }
 
-            mLinkedAttribute[availableIndex] = attribute;
+            mLinkedAttributes[availableIndex] = attribute;
         }
     }
 
     for (GLuint attributeIndex = 0; attributeIndex < maxAttribs;)
     {
-        int index = vertexShader->getSemanticIndex(mLinkedAttribute[attributeIndex].name);
-        int rows = VariableRegisterCount(mLinkedAttribute[attributeIndex].type);
+        int index = vertexShader->getSemanticIndex(mLinkedAttributes[attributeIndex].name);
+        int rows  = VariableRegisterCount(mLinkedAttributes[attributeIndex].type);
 
         for (int r = 0; r < rows; r++)
         {

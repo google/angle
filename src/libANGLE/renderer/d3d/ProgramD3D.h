@@ -42,7 +42,7 @@ class ShaderExecutableD3D;
 class ProgramD3D : public ProgramImpl
 {
   public:
-    ProgramD3D(RendererD3D *renderer);
+    ProgramD3D(const gl::Program::Data &data, RendererD3D *renderer);
     virtual ~ProgramD3D();
 
     const std::vector<PixelShaderOutputVariable> &getPixelShaderKey() { return mPixelShaderKey; }
@@ -69,8 +69,7 @@ class ProgramD3D : public ProgramImpl
     gl::Error getVertexExecutableForInputLayout(const gl::InputLayout &inputLayout, ShaderExecutableD3D **outExectuable, gl::InfoLog *infoLog);
     ShaderExecutableD3D *getGeometryExecutable() const { return mGeometryExecutable; }
 
-    LinkResult compileProgramExecutables(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                                         int registers);
+    LinkResult compileProgramExecutables(gl::InfoLog &infoLog, int registers);
 
     LinkResult link(const gl::Data &data, gl::InfoLog &infoLog,
                     gl::Shader *fragmentShader, gl::Shader *vertexShader,

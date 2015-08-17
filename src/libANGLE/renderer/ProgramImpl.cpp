@@ -19,6 +19,10 @@ LinkResult::LinkResult(bool linkSuccess, const gl::Error &error)
 {
 }
 
+ProgramImpl::ProgramImpl(const gl::Program::Data &data) : mData(data)
+{
+}
+
 ProgramImpl::~ProgramImpl()
 {
     // Ensure that reset was called by the inherited class during destruction

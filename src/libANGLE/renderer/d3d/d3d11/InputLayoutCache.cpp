@@ -46,21 +46,19 @@ gl::InputLayout GetInputLayout(
     return inputLayout;
 }
 
-GLenum GetNextGLSLAttributeType(const sh::Attribute *linkedAttributes, int index)
+GLenum GetNextGLSLAttributeType(const std::vector<sh::Attribute> &linkedAttributes, int index)
 {
     // Count matrices differently
     int subIndex = 0;
-    for (int attribIndex = 0; attribIndex < gl::MAX_VERTEX_ATTRIBS; ++attribIndex)
+    for (const sh::Attribute &attrib : linkedAttributes)
     {
-        GLenum attribType = linkedAttributes[attribIndex].type;
-
-        if (attribType == GL_NONE)
+        if (attrib.type == GL_NONE)
         {
             continue;
         }
 
-        GLenum transposedType = gl::TransposeMatrixType(attribType);
-        subIndex += gl::VariableRowCount(transposedType);
+        GLenum transposedType = gl::TransposeMatrixType(attrib.type);
+        subIndex += gl::VariableRowCount(attrib.type);
         if (subIndex > index)
         {
             return transposedType;
@@ -202,7 +200,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(const std::vector<TranslatedAttri
     unsigned int firstInstancedElement = gl::MAX_VERTEX_ATTRIBS;
     unsigned int nextAvailableInputSlot = 0;
 
-    const sh::Attribute *linkedAttributes = program->getLinkedAttributes();
+    const std::vector<sh::Attribute> &linkedAttributes = program->getLinkedAttributes();
 
     for (unsigned int i = 0; i < unsortedAttributes.size(); i++)
     {

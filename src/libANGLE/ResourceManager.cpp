@@ -106,7 +106,7 @@ GLuint ResourceManager::createProgram()
 {
     GLuint handle = mProgramShaderHandleAllocator.allocate();
 
-    mProgramMap[handle] = new Program(mFactory->createProgram(), this, handle);
+    mProgramMap[handle] = new Program(mFactory, this, handle);
 
     return handle;
 }

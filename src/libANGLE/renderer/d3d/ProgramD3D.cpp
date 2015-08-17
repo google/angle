@@ -198,8 +198,8 @@ ProgramD3D::Sampler::Sampler() : active(false), logicalTextureUnit(0), textureTy
 
 unsigned int ProgramD3D::mCurrentSerial = 1;
 
-ProgramD3D::ProgramD3D(RendererD3D *renderer)
-    : ProgramImpl(),
+ProgramD3D::ProgramD3D(const gl::Program::Data &data, RendererD3D *renderer)
+    : ProgramImpl(data),
       mRenderer(renderer),
       mDynamicHLSL(NULL),
       mGeometryExecutable(NULL),
@@ -1005,13 +1005,13 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
     return gl::Error(GL_NO_ERROR);
 }
 
-LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                                                 int registers)
+LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, int registers)
 {
-    ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(vertexShader);
-    ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(fragmentShader);
+    const ShaderD3D *vertexShaderD3D   = GetImplAs<ShaderD3D>(mData.getAttachedVertexShader());
+    const ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(mData.getAttachedFragmentShader());
 
-    const gl::InputLayout &defaultInputLayout    = GetDefaultInputLayoutFromShader(vertexShader);
+    const gl::InputLayout &defaultInputLayout =
+        GetDefaultInputLayoutFromShader(mData.getAttachedVertexShader());
     ShaderExecutableD3D *defaultVertexExecutable = NULL;
     gl::Error error = getVertexExecutableForInputLayout(defaultInputLayout, &defaultVertexExecutable, &infoLog);
     if (error.isError())

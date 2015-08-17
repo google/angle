@@ -2982,9 +2982,9 @@ ShaderImpl *Renderer11::createShader(GLenum type)
     return new ShaderD3D(type);
 }
 
-ProgramImpl *Renderer11::createProgram()
+ProgramImpl *Renderer11::createProgram(const gl::Program::Data &data)
 {
-    return new ProgramD3D(this);
+    return new ProgramD3D(data, this);
 }
 
 gl::Error Renderer11::loadExecutable(const void *function, size_t length, ShaderType type,
