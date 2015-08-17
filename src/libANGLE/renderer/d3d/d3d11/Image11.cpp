@@ -252,7 +252,7 @@ gl::Error Image11::loadData(const gl::Box &area, const gl::PixelUnpackState &unp
     GLuint outputPixelSize = dxgiFormatInfo.pixelBytes;
 
     const d3d11::TextureFormat &d3dFormatInfo = d3d11::GetTextureFormatInfo(mInternalFormat, mRenderer->getRenderer11DeviceCaps());
-    LoadImageFunction loadFunction = d3dFormatInfo.loadFunctions.at(type);
+    LoadImageFunction loadFunction            = d3dFormatInfo.loadFunctions.at(type).loadFunction;
 
     D3D11_MAPPED_SUBRESOURCE mappedImage;
     gl::Error error = map(D3D11_MAP_WRITE, &mappedImage);
@@ -286,7 +286,7 @@ gl::Error Image11::loadCompressedData(const gl::Box &area, const void *input)
     ASSERT(area.y % outputBlockHeight == 0);
 
     const d3d11::TextureFormat &d3dFormatInfo = d3d11::GetTextureFormatInfo(mInternalFormat, mRenderer->getRenderer11DeviceCaps());
-    LoadImageFunction loadFunction = d3dFormatInfo.loadFunctions.at(GL_UNSIGNED_BYTE);
+    LoadImageFunction loadFunction            = d3dFormatInfo.loadFunctions.at(GL_UNSIGNED_BYTE).loadFunction;
 
     D3D11_MAPPED_SUBRESOURCE mappedImage;
     gl::Error error = map(D3D11_MAP_WRITE, &mappedImage);

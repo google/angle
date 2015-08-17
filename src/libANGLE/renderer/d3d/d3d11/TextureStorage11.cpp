@@ -657,18 +657,28 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index, ImageD3D *image
     UINT bufferDepthPitch = bufferRowPitch * height;
 
     size_t neededSize = bufferDepthPitch * depth;
-    MemoryBuffer *conversionBuffer = NULL;
-    error = mRenderer->getScratchMemoryBuffer(neededSize, &conversionBuffer);
-    if (error.isError())
-    {
-        return error;
-    }
+    MemoryBuffer *conversionBuffer = nullptr;
+    const uint8_t *data            = nullptr;
 
-    // TODO: fast path
-    LoadImageFunction loadFunction = d3d11Format.loadFunctions.at(type);
-    loadFunction(width, height, depth,
-                 pixelData, srcRowPitch, srcDepthPitch,
-                 conversionBuffer->data(), bufferRowPitch, bufferDepthPitch);
+    d3d11::LoadImageFunctionInfo loadFunctionInfo = d3d11Format.loadFunctions.at(type);
+    if (loadFunctionInfo.requiresConversion)
+    {
+        error = mRenderer->getScratchMemoryBuffer(neededSize, &conversionBuffer);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        loadFunctionInfo.loadFunction(width, height, depth, pixelData, srcRowPitch, srcDepthPitch,
+                                      conversionBuffer->data(), bufferRowPitch, bufferDepthPitch);
+        data = conversionBuffer->data();
+    }
+    else
+    {
+        data             = pixelData;
+        bufferRowPitch   = srcRowPitch;
+        bufferDepthPitch = srcDepthPitch;
+    }
 
     ID3D11DeviceContext *immediateContext = mRenderer->getDeviceContext();
 
@@ -684,15 +694,13 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index, ImageD3D *image
         destD3DBox.front = destBox->z;
         destD3DBox.back = destBox->z + destBox->depth;
 
-        immediateContext->UpdateSubresource(resource, destSubresource,
-                                            &destD3DBox, conversionBuffer->data(),
+        immediateContext->UpdateSubresource(resource, destSubresource, &destD3DBox, data,
                                             bufferRowPitch, bufferDepthPitch);
     }
     else
     {
-        immediateContext->UpdateSubresource(resource, destSubresource,
-                                            NULL, conversionBuffer->data(),
-                                            bufferRowPitch, bufferDepthPitch);
+        immediateContext->UpdateSubresource(resource, destSubresource, NULL, data, bufferRowPitch,
+                                            bufferDepthPitch);
     }
 
     return gl::Error(GL_NO_ERROR);
