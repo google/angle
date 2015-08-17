@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64ccbd7d_224d6e18",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1245,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-17T15:18:52Z",
+      "side": 1,
+      "message": "nit: stray comment here",
+      "revId": "2f27ea1ad02b21095269686b021001dc507c0900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24d6450d_206e4aa9",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-17T15:18:52Z",
+      "side": 1,
+      "message": "nit: you used a range-based for loop in Program.cpp",
+      "revId": "2f27ea1ad02b21095269686b021001dc507c0900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64ccbd7d_425272b7",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-17T15:18:52Z",
+      "side": 1,
+      "message": "https://chromium-review.googlesource.com/#/c/293865/",
+      "revId": "2f27ea1ad02b21095269686b021001dc507c0900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64ccbd7d_624776f8",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-17T15:18:52Z",
+      "side": 1,
+      "message": "nit: maybe put a comment in PackedVaryings on how these are only used by D3D",
+      "revId": "2f27ea1ad02b21095269686b021001dc507c0900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e41a6db3_865d8ac3",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 675,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-17T15:18:52Z",
+      "side": 1,
+      "message": "nit: That\u0027s some unfortunate formatting, see other changes in the file too.",
+      "revId": "2f27ea1ad02b21095269686b021001dc507c0900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
