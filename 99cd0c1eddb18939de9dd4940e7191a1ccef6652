@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24d6450d_e092a228",
+        "filename": "src/compiler/preprocessor/Input.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-17T14:41:58Z",
+      "side": 1,
+      "message": "When is cIndex \u003e mLength? If it\u0027s EOF only, can you put an ASSERT somewhere to validate that?",
+      "range": {
+        "startLine": 35,
+        "startChar": 24,
+        "endLine": 35,
+        "endChar": 26
+      },
+      "revId": "99cd0c1eddb18939de9dd4940e7191a1ccef6652",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44cfb972_04cb1896",
+        "filename": "src/compiler/preprocessor/Input.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-17T14:41:58Z",
+      "side": 1,
+      "message": "nit: avoid mutating parameters - rename the parameter and use a local, or use a different named local",
+      "range": {
+        "startLine": 94,
+        "startChar": 16,
+        "endLine": 94,
+        "endChar": 23
+      },
+      "revId": "99cd0c1eddb18939de9dd4940e7191a1ccef6652",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2421e5e2_0836c76e",
+        "filename": "src/compiler/preprocessor/Tokenizer.l",
+        "patchSetId": 3
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-17T14:41:58Z",
+      "side": 1,
+      "message": "I was wondering if you could implement this alternately in the .l file here. Maybe something like splitting out the rules for PUNCUTATOR into \\\\\\n, \\\\\\r\\n and the default case. Did you investigate this? Naively it seems like it might be clean.",
+      "range": {
+        "startLine": 232,
+        "startChar": 0,
+        "endLine": 235,
+        "endChar": 1
+      },
+      "revId": "99cd0c1eddb18939de9dd4940e7191a1ccef6652",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
