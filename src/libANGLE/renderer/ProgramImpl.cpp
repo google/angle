@@ -133,7 +133,6 @@ void ProgramImpl::reset()
     SafeDeleteContainer(mUniforms);
     mUniformIndex.clear();
     SafeDeleteContainer(mUniformBlocks);
-    mTransformFeedbackLinkedVaryings.clear();
 }
 
 void ProgramImpl::setShaderAttribute(size_t index, const sh::Attribute &attrib)

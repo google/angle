@@ -64,9 +64,11 @@ gl::Error ProgramGL::save(gl::BinaryOutputStream *stream)
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog,
-                           gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                           int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
+LinkResult ProgramGL::link(const gl::Data &data,
+                           gl::InfoLog &infoLog,
+                           gl::Shader *fragmentShader,
+                           gl::Shader *vertexShader,
+                           int *registers,
                            std::map<int, gl::VariableLocation> *outputVariables)
 {
     // Reset the program state, delete the current program if one exists

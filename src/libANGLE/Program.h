@@ -170,9 +170,9 @@ class Program : angle::NonCopyable
 
         const Shader *getAttachedVertexShader() const { return mAttachedVertexShader; }
         const Shader *getAttachedFragmentShader() const { return mAttachedFragmentShader; }
-        const std::vector<std::string> &getTransformFeedbackVaryings() const
+        const std::vector<std::string> &getTransformFeedbackVaryingNames() const
         {
-            return mTransformFeedbackVaryings;
+            return mTransformFeedbackVaryingNames;
         }
         GLint getTransformFeedbackBufferMode() const { return mTransformFeedbackBufferMode; }
 
@@ -182,7 +182,8 @@ class Program : angle::NonCopyable
         Shader *mAttachedFragmentShader;
         Shader *mAttachedVertexShader;
 
-        std::vector<std::string> mTransformFeedbackVaryings;
+        std::vector<std::string> mTransformFeedbackVaryingNames;
+        std::vector<sh::Varying> mTransformFeedbackVaryingVars;
         GLenum mTransformFeedbackBufferMode;
 
         // TODO(jmadill): move more state into Data.
@@ -323,11 +324,15 @@ class Program : angle::NonCopyable
                                           bool validatePrecision);
 
     static bool linkValidateVaryings(InfoLog &infoLog, const std::string &varyingName, const sh::Varying &vertexVarying, const sh::Varying &fragmentVarying);
-    bool gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std::vector<LinkedVarying> &linkedVaryings,
-                                               std::vector<LinkedVarying> *outTransformFeedbackLinkedVaryings,
-                                               const Caps &caps) const;
+    bool linkValidateTransformFeedback(InfoLog &infoLog,
+                                       const std::vector<const sh::Varying *> &linkedVaryings,
+                                       const Caps &caps) const;
+
+    void gatherTransformFeedbackVaryings(const std::vector<const sh::Varying *> &varyings);
     bool assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex, const Caps &caps);
     void defineOutputVariables(Shader *fragmentShader);
+
+    std::vector<const sh::Varying *> getMergedVaryings() const;
 
     Data mData;
     rx::ProgramImpl *mProgram;

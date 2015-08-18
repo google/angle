@@ -1096,9 +1096,11 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, int regis
     return LinkResult(linkSuccess, gl::Error(GL_NO_ERROR));
 }
 
-LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
-                            gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                            int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
+LinkResult ProgramD3D::link(const gl::Data &data,
+                            gl::InfoLog &infoLog,
+                            gl::Shader *fragmentShader,
+                            gl::Shader *vertexShader,
+                            int *registers,
                             std::map<int, gl::VariableLocation> *outputVariables)
 {
     ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(vertexShader);
@@ -1126,7 +1128,7 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
     // Map the varyings to the register file
     VaryingPacking packing = {};
     *registers = mDynamicHLSL->packVaryings(infoLog, packing, fragmentShaderD3D, vertexShaderD3D,
-                                            mData.getTransformFeedbackVaryings());
+                                            mData.getTransformFeedbackVaryingNames());
 
     if (*registers < 0)
     {
@@ -1135,10 +1137,11 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
 
     LinkVaryingRegisters(infoLog, vertexShaderD3D, fragmentShaderD3D);
 
-    if (!mDynamicHLSL->generateShaderLinkHLSL(data, infoLog, *registers, packing, mPixelHLSL,
-                                              mVertexHLSL, fragmentShaderD3D, vertexShaderD3D,
-                                              mData.getTransformFeedbackVaryings(), linkedVaryings,
-                                              outputVariables, &mPixelShaderKey, &mUsesFragDepth))
+    std::vector<gl::LinkedVarying> linkedVaryings;
+    if (!mDynamicHLSL->generateShaderLinkHLSL(
+            data, infoLog, *registers, packing, mPixelHLSL, mVertexHLSL, fragmentShaderD3D,
+            vertexShaderD3D, mData.getTransformFeedbackVaryingNames(), &linkedVaryings,
+            outputVariables, &mPixelShaderKey, &mUsesFragDepth))
     {
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
@@ -1153,6 +1156,8 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
     }
 
     defineUniformBlocks(*data.caps);
+
+    gatherTransformFeedbackVaryings(linkedVaryings);
 
     return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
@@ -2052,6 +2057,8 @@ void ProgramD3D::reset()
     mDirtySamplerMapping = true;
 
     std::fill(mAttributesByLayout, mAttributesByLayout + ArraySize(mAttributesByLayout), -1);
+
+    mTransformFeedbackLinkedVaryings.clear();
 }
 
 unsigned int ProgramD3D::getSerial() const
@@ -2110,4 +2117,21 @@ void ProgramD3D::updateCachedInputLayout(const gl::Program *program, const gl::S
     }
 }
 
+void ProgramD3D::gatherTransformFeedbackVaryings(
+    const std::vector<gl::LinkedVarying> &linkedVaryings)
+{
+    // Gather the linked varyings that are used for transform feedback, they should all exist.
+    mTransformFeedbackLinkedVaryings.clear();
+    for (const std::string &tfVaryingName : mData.getTransformFeedbackVaryingNames())
+    {
+        for (const gl::LinkedVarying &linkedVarying : linkedVaryings)
+        {
+            if (tfVaryingName == linkedVarying.name)
+            {
+                mTransformFeedbackLinkedVaryings.push_back(linkedVarying);
+                break;
+            }
+        }
+    }
+}
 }

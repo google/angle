@@ -70,9 +70,11 @@ class ProgramD3D : public ProgramImpl
 
     LinkResult compileProgramExecutables(gl::InfoLog &infoLog, int registers);
 
-    LinkResult link(const gl::Data &data, gl::InfoLog &infoLog,
-                    gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                    int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
+    LinkResult link(const gl::Data &data,
+                    gl::InfoLog &infoLog,
+                    gl::Shader *fragmentShader,
+                    gl::Shader *vertexShader,
+                    int *registers,
                     std::map<int, gl::VariableLocation> *outputVariables);
 
     void bindAttributeLocation(GLuint index, const std::string &name) override;
@@ -206,6 +208,8 @@ class ProgramD3D : public ProgramImpl
                                    sh::BlockLayoutEncoder *encoder, std::vector<unsigned int> *blockUniformIndexes,
                                    bool inRowMajorLayout);
 
+    void gatherTransformFeedbackVaryings(const std::vector<gl::LinkedVarying> &varyings);
+
     RendererD3D *mRenderer;
     DynamicHLSL *mDynamicHLSL;
 
@@ -250,6 +254,8 @@ class ProgramD3D : public ProgramImpl
     std::vector<GLint> mFragmentUBOCache;
     VertexExecutable::Signature mCachedVertexSignature;
     gl::InputLayout mCachedInputLayout;
+
+    std::vector<gl::LinkedVarying> mTransformFeedbackLinkedVaryings;
 
     static unsigned int issueSerial();
     static unsigned int mCurrentSerial;

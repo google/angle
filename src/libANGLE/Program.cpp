@@ -144,7 +144,6 @@ LinkedVarying::LinkedVarying(const std::string &name, GLenum type, GLsizei size,
 Program::Data::Data()
     : mAttachedFragmentShader(nullptr),
       mAttachedVertexShader(nullptr),
-      mTransformFeedbackVaryings(),
       mTransformFeedbackBufferMode(GL_NONE)
 {
 }
@@ -305,20 +304,20 @@ Error Program::link(const gl::Data &data)
         return Error(GL_NO_ERROR);
     }
 
+    const auto &mergedVaryings = getMergedVaryings();
+
+    if (!linkValidateTransformFeedback(mInfoLog, mergedVaryings, *data.caps))
+    {
+        return Error(GL_NO_ERROR);
+    }
+
     int registers;
-    std::vector<LinkedVarying> linkedVaryings;
     rx::LinkResult result =
         mProgram->link(data, mInfoLog, mData.mAttachedFragmentShader, mData.mAttachedVertexShader,
-                       &registers, &linkedVaryings, &mOutputVariables);
+                       &registers, &mOutputVariables);
     if (result.error.isError() || !result.linkSuccess)
     {
         return result.error;
-    }
-
-    if (!gatherTransformFeedbackLinkedVaryings(
-            mInfoLog, linkedVaryings, &mProgram->getTransformFeedbackLinkedVaryings(), *data.caps))
-    {
-        return Error(GL_NO_ERROR);
     }
 
     // TODO: The concept of "executables" is D3D only, and as such this belongs in ProgramD3D. It must be called,
@@ -330,6 +329,8 @@ Error Program::link(const gl::Data &data)
         unlink(false);
         return result.error;
     }
+
+    gatherTransformFeedbackVaryings(mergedVaryings);
 
     mLinked = true;
     return gl::Error(GL_NO_ERROR);
@@ -367,7 +368,7 @@ void Program::unlink(bool destroy)
     }
 
     mLinkedAttributes.assign(mLinkedAttributes.size(), sh::Attribute());
-    mOutputVariables.clear();
+    mData.mTransformFeedbackVaryingVars.clear();
 
     mProgram->reset();
 
@@ -1170,10 +1171,10 @@ void Program::resetUniformBlockBindings()
 
 void Program::setTransformFeedbackVaryings(GLsizei count, const GLchar *const *varyings, GLenum bufferMode)
 {
-    mData.mTransformFeedbackVaryings.resize(count);
+    mData.mTransformFeedbackVaryingNames.resize(count);
     for (GLsizei i = 0; i < count; i++)
     {
-        mData.mTransformFeedbackVaryings[i] = varyings[i];
+        mData.mTransformFeedbackVaryingNames[i] = varyings[i];
     }
 
     mData.mTransformFeedbackBufferMode = bufferMode;
@@ -1183,8 +1184,8 @@ void Program::getTransformFeedbackVarying(GLuint index, GLsizei bufSize, GLsizei
 {
     if (mLinked)
     {
-        ASSERT(index < mProgram->getTransformFeedbackLinkedVaryings().size());
-        const LinkedVarying &varying = mProgram->getTransformFeedbackLinkedVaryings()[index];
+        ASSERT(index < mData.mTransformFeedbackVaryingVars.size());
+        const sh::Varying &varying = mData.mTransformFeedbackVaryingVars[index];
         GLsizei lastNameIdx = std::min(bufSize - 1, static_cast<GLsizei>(varying.name.length()));
         if (length)
         {
@@ -1192,7 +1193,7 @@ void Program::getTransformFeedbackVarying(GLuint index, GLsizei bufSize, GLsizei
         }
         if (size)
         {
-            *size = varying.size;
+            *size = varying.elementCount();
         }
         if (type)
         {
@@ -1210,7 +1211,7 @@ GLsizei Program::getTransformFeedbackVaryingCount() const
 {
     if (mLinked)
     {
-        return static_cast<GLsizei>(mProgram->getTransformFeedbackLinkedVaryings().size());
+        return static_cast<GLsizei>(mData.mTransformFeedbackVaryingVars.size());
     }
     else
     {
@@ -1223,9 +1224,8 @@ GLsizei Program::getTransformFeedbackVaryingMaxLength() const
     if (mLinked)
     {
         GLsizei maxSize = 0;
-        for (size_t i = 0; i < mProgram->getTransformFeedbackLinkedVaryings().size(); i++)
+        for (const sh::Varying &varying : mData.mTransformFeedbackVaryingVars)
         {
-            const LinkedVarying &varying = mProgram->getTransformFeedbackLinkedVaryings()[i];
             maxSize = std::max(maxSize, static_cast<GLsizei>(varying.name.length() + 1));
         }
 
@@ -1625,45 +1625,41 @@ bool Program::linkValidateVaryings(InfoLog &infoLog, const std::string &varyingN
     return true;
 }
 
-bool Program::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std::vector<LinkedVarying> &linkedVaryings,
-                                                    std::vector<LinkedVarying> *outTransformFeedbackLinkedVaryings,
-                                                    const Caps &caps) const
+bool Program::linkValidateTransformFeedback(InfoLog &infoLog,
+                                            const std::vector<const sh::Varying *> &varyings,
+                                            const Caps &caps) const
 {
     size_t totalComponents = 0;
 
-    // Gather the linked varyings that are used for transform feedback, they should all exist.
-    outTransformFeedbackLinkedVaryings->clear();
-    for (size_t i = 0; i < mData.mTransformFeedbackVaryings.size(); i++)
+    std::set<std::string> uniqueNames;
+
+    for (const std::string &tfVaryingName : mData.mTransformFeedbackVaryingNames)
     {
         bool found = false;
-        for (size_t j = 0; j < linkedVaryings.size(); j++)
+        for (const sh::Varying *varying : varyings)
         {
-            if (mData.mTransformFeedbackVaryings[i] == linkedVaryings[j].name)
+            if (tfVaryingName == varying->name)
             {
-                for (size_t k = 0; k < outTransformFeedbackLinkedVaryings->size(); k++)
+                if (uniqueNames.count(tfVaryingName) > 0)
                 {
-                    if (outTransformFeedbackLinkedVaryings->at(k).name == linkedVaryings[j].name)
-                    {
-                        infoLog << "Two transform feedback varyings specify the same output variable ("
-                                << linkedVaryings[j].name << ").";
-                        return false;
-                    }
+                    infoLog << "Two transform feedback varyings specify the same output variable ("
+                            << tfVaryingName << ").";
+                    return false;
                 }
+                uniqueNames.insert(tfVaryingName);
 
-                size_t componentCount = linkedVaryings[j].semanticIndexCount * 4;
+                // TODO(jmadill): Investigate implementation limits on D3D11
+                size_t componentCount = gl::VariableComponentCount(varying->type);
                 if (mData.mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
                     componentCount > caps.maxTransformFeedbackSeparateComponents)
                 {
-                    infoLog << "Transform feedback varying's " << linkedVaryings[j].name
-                            << " components (" << componentCount
-                            << ") exceed the maximum separate components ("
+                    infoLog << "Transform feedback varying's " << varying->name << " components ("
+                            << componentCount << ") exceed the maximum separate components ("
                             << caps.maxTransformFeedbackSeparateComponents << ").";
                     return false;
                 }
 
                 totalComponents += componentCount;
-
-                outTransformFeedbackLinkedVaryings->push_back(linkedVaryings[j]);
                 found = true;
                 break;
             }
@@ -1686,4 +1682,46 @@ bool Program::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std:
     return true;
 }
 
+void Program::gatherTransformFeedbackVaryings(const std::vector<const sh::Varying *> &varyings)
+{
+    // Gather the linked varyings that are used for transform feedback, they should all exist.
+    mData.mTransformFeedbackVaryingVars.clear();
+    for (const std::string &tfVaryingName : mData.mTransformFeedbackVaryingNames)
+    {
+        for (const sh::Varying *varying : varyings)
+        {
+            if (tfVaryingName == varying->name)
+            {
+                mData.mTransformFeedbackVaryingVars.push_back(*varying);
+                break;
+            }
+        }
+    }
+}
+
+std::vector<const sh::Varying *> Program::getMergedVaryings() const
+{
+    std::set<std::string> uniqueNames;
+    std::vector<const sh::Varying *> varyings;
+
+    for (const sh::Varying &varying : mData.mAttachedVertexShader->getVaryings())
+    {
+        if (uniqueNames.count(varying.name) == 0)
+        {
+            uniqueNames.insert(varying.name);
+            varyings.push_back(&varying);
+        }
+    }
+
+    for (const sh::Varying &varying : mData.mAttachedFragmentShader->getVaryings())
+    {
+        if (uniqueNames.count(varying.name) == 0)
+        {
+            uniqueNames.insert(varying.name);
+            varyings.push_back(&varying);
+        }
+    }
+
+    return varyings;
+}
 }
