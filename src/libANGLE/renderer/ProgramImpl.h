@@ -36,7 +36,6 @@ class ProgramImpl : angle::NonCopyable
     ProgramImpl(const gl::Program::Data &data);
     virtual ~ProgramImpl();
 
-    virtual bool usesPointSize() const = 0;
     virtual int getShaderVersion() const = 0;
 
     virtual GLenum getBinaryFormat() = 0;

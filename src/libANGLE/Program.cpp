@@ -710,11 +710,6 @@ GLint Program::getUsedSamplerRange(SamplerType type)
     return mProgram->getUsedSamplerRange(type);
 }
 
-bool Program::usesPointSize() const
-{
-    return mProgram->usesPointSize();
-}
-
 GLint Program::getSamplerMapping(SamplerType type, unsigned int samplerIndex, const Caps &caps)
 {
     return mProgram->getSamplerMapping(type, samplerIndex, caps);

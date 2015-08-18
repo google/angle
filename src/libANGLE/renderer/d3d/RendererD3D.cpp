@@ -81,6 +81,8 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
     gl::Program *program = data.state->getProgram();
     ASSERT(program != NULL);
 
+    bool usesPointSize = GetImplAs<ProgramD3D>(program)->usesPointSize();
+
     program->updateSamplerMapping();
 
     gl::Error error = generateSwizzles(data);
@@ -89,7 +91,7 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
         return error;
     }
 
-    if (!applyPrimitiveType(mode, count, program->usesPointSize()))
+    if (!applyPrimitiveType(mode, count, usesPointSize))
     {
         return gl::Error(GL_NO_ERROR);
     }
@@ -150,7 +152,8 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
 
     if (!skipDraw(data, mode))
     {
-        error = drawElements(mode, count, type, indices, vao->getElementArrayBuffer().get(), indexInfo, instances, program->usesPointSize());
+        error = drawElements(mode, count, type, indices, vao->getElementArrayBuffer().get(),
+                             indexInfo, instances, usesPointSize);
         if (error.isError())
         {
             return error;
@@ -167,6 +170,8 @@ gl::Error RendererD3D::drawArrays(const gl::Data &data,
     gl::Program *program = data.state->getProgram();
     ASSERT(program != NULL);
 
+    bool usesPointSize = GetImplAs<ProgramD3D>(program)->usesPointSize();
+
     program->updateSamplerMapping();
 
     gl::Error error = generateSwizzles(data);
@@ -175,7 +180,7 @@ gl::Error RendererD3D::drawArrays(const gl::Data &data,
         return error;
     }
 
-    if (!applyPrimitiveType(mode, count, program->usesPointSize()))
+    if (!applyPrimitiveType(mode, count, usesPointSize))
     {
         return gl::Error(GL_NO_ERROR);
     }
@@ -220,7 +225,7 @@ gl::Error RendererD3D::drawArrays(const gl::Data &data,
 
     if (!skipDraw(data, mode))
     {
-        error = drawArrays(data, mode, count, instances, program->usesPointSize());
+        error = drawArrays(data, mode, count, instances, usesPointSize);
         if (error.isError())
         {
             return error;
@@ -475,12 +480,16 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data)
 
 bool RendererD3D::skipDraw(const gl::Data &data, GLenum drawMode)
 {
+    const gl::State &state = *data.state;
+
     if (drawMode == GL_POINTS)
     {
+        bool usesPointSize = GetImplAs<ProgramD3D>(state.getProgram())->usesPointSize();
+
         // ProgramBinary assumes non-point rendering if gl_PointSize isn't written,
         // which affects varying interpolation. Since the value of gl_PointSize is
         // undefined when not written, just skip drawing to avoid unexpected results.
-        if (!data.state->getProgram()->usesPointSize() && !data.state->isTransformFeedbackActiveUnpaused())
+        if (!usesPointSize && !state.isTransformFeedbackActiveUnpaused())
         {
             // This is stictly speaking not an error, but developers should be
             // notified of risking undefined behavior.
@@ -491,7 +500,8 @@ bool RendererD3D::skipDraw(const gl::Data &data, GLenum drawMode)
     }
     else if (gl::IsTriangleMode(drawMode))
     {
-        if (data.state->getRasterizerState().cullFace && data.state->getRasterizerState().cullMode == GL_FRONT_AND_BACK)
+        if (state.getRasterizerState().cullFace &&
+            state.getRasterizerState().cullMode == GL_FRONT_AND_BACK)
         {
             return true;
         }

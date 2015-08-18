@@ -34,12 +34,6 @@ ProgramGL::~ProgramGL()
     mProgramID = 0;
 }
 
-bool ProgramGL::usesPointSize() const
-{
-    UNIMPLEMENTED();
-    return bool();
-}
-
 int ProgramGL::getShaderVersion() const
 {
     UNIMPLEMENTED();

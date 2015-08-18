@@ -31,7 +31,6 @@ class ProgramGL : public ProgramImpl
               StateManagerGL *stateManager);
     ~ProgramGL() override;
 
-    bool usesPointSize() const override;
     int getShaderVersion() const override;
 
     GLenum getBinaryFormat() override;

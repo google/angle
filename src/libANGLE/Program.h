@@ -226,7 +226,6 @@ class Program : angle::NonCopyable
     GLint getSamplerMapping(SamplerType type, unsigned int samplerIndex, const Caps &caps);
     GLenum getSamplerTextureType(SamplerType type, unsigned int samplerIndex);
     GLint getUsedSamplerRange(SamplerType type);
-    bool usesPointSize() const;
 
     GLint getFragDataLocation(const std::string &name) const;
 
