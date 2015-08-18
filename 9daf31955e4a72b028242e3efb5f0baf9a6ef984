@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44cfb972_47cfe257",
+        "filename": "src/libANGLE/Surface_unittest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-18T19:11:24Z",
+      "side": 1,
+      "message": "run git cl format to clean up the style",
+      "range": {
+        "startLine": 117,
+        "startChar": 22,
+        "endLine": 117,
+        "endChar": 25
+      },
+      "revId": "9daf31955e4a72b028242e3efb5f0baf9a6ef984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
