@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2421e5e2_eb152d4a",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-18T14:28:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4fb1585_09935e2e",
+      "range": {
+        "startLine": 543,
+        "startChar": 23,
+        "endLine": 543,
+        "endChar": 27
+      },
+      "revId": "12ffe1449c486fcc9ad86c98cb984257d8d198a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4434d7f_8a8468eb",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-08-18T00:46:46Z",
       "side": 1,
       "message": "Will this change client-visible state?",
+      "range": {
+        "startLine": 600,
+        "startChar": 27,
+        "endLine": 600,
+        "endChar": 38
+      },
+      "revId": "12ffe1449c486fcc9ad86c98cb984257d8d198a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0424e1f1_10cee5a6",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-18T14:28:27Z",
+      "side": 1,
+      "message": "Nope, it just defers the binding of the native texture.  I used to bind it as soon as it was clear the applied state was not equal to the target state but that comparison is not so simple anymore because the target sampler state depends on the transformed swizzles.",
+      "parentUuid": "e4434d7f_8a8468eb",
       "range": {
         "startLine": 600,
         "startChar": 27,
@@ -83,6 +131,30 @@
       "side": 1,
       "message": "This is a good point -- GL_EXT_texture_storage seems to define these internal formats, but these tests don\u0027t seem to depend on that extension being present.",
       "parentUuid": "e4aeed64_b522ca2c",
+      "range": {
+        "startLine": 274,
+        "startChar": 18,
+        "endLine": 274,
+        "endChar": 35
+      },
+      "revId": "12ffe1449c486fcc9ad86c98cb984257d8d198a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4156984_8bf3d111",
+        "filename": "src/tests/gl_tests/SwizzleTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-18T14:28:27Z",
+      "side": 1,
+      "message": "Done, the test now uses glTexImage instead of glTexStorage and uses the unsized LUMA formats so no extension check is needed.",
+      "parentUuid": "04b861a5_9fdebe50",
       "range": {
         "startLine": 274,
         "startChar": 18,
