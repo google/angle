@@ -1168,6 +1168,12 @@ LinkResult ProgramD3D::link(const gl::Data &data,
     return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
 
+GLboolean ProgramD3D::validate(const gl::Caps &caps, gl::InfoLog *infoLog)
+{
+    applyUniforms();
+    return validateSamplers(infoLog, caps);
+}
+
 void ProgramD3D::bindAttributeLocation(GLuint index, const std::string &name)
 {
 }

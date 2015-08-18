@@ -43,6 +43,8 @@ class ProgramGL : public ProgramImpl
                     gl::Shader *vertexShader,
                     std::map<int, gl::VariableLocation> *outputVariables) override;
 
+    GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
+
     void bindAttributeLocation(GLuint index, const std::string &name) override;
 
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;
@@ -77,8 +79,6 @@ class ProgramGL : public ProgramImpl
                             const gl::Shader &shader,
                             const sh::InterfaceBlock &interfaceBlock,
                             const gl::Caps &caps);
-
-    gl::Error applyUniforms() override;
 
     void reset() override;
 

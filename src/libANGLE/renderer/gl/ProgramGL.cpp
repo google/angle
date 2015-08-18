@@ -203,6 +203,12 @@ LinkResult ProgramGL::link(const gl::Data &data,
     return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
 
+GLboolean ProgramGL::validate(const gl::Caps & /*caps*/, gl::InfoLog * /*infoLog*/)
+{
+    // TODO(jmadill): implement validate
+    return true;
+}
+
 void ProgramGL::bindAttributeLocation(GLuint index, const std::string &name)
 {
     mFunctions->bindAttribLocation(mProgramID, index, name.c_str());
@@ -363,13 +369,6 @@ bool ProgramGL::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
 {
     //UNIMPLEMENTED();
     return true;
-}
-
-gl::Error ProgramGL::applyUniforms()
-{
-    //UNIMPLEMENTED();
-    // TODO(geofflang)
-    return gl::Error(GL_NO_ERROR);
 }
 
 void ProgramGL::reset()

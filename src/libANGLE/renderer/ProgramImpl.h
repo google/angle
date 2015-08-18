@@ -48,6 +48,8 @@ class ProgramImpl : angle::NonCopyable
                             gl::Shader *vertexShader,
                             std::map<int, gl::VariableLocation> *outputVariables) = 0;
 
+    virtual GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) = 0;
+
     virtual void bindAttributeLocation(GLuint index, const std::string &name) = 0;
 
     virtual void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) = 0;
@@ -79,8 +81,6 @@ class ProgramImpl : angle::NonCopyable
     // TODO: The following functions are possibly only applicable to D3D backends. The should be carefully evaluated to
     // determine if they can be removed from this interface.
     virtual bool validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps) = 0;
-
-    virtual gl::Error applyUniforms() = 0;
 
     const std::vector<gl::LinkedUniform*> &getUniforms() const { return mUniforms; }
     const std::map<GLuint, gl::VariableLocation> &getUniformIndices() const { return mUniformIndex; }

@@ -72,7 +72,9 @@ class ProgramD3D : public ProgramImpl
                     gl::InfoLog &infoLog,
                     gl::Shader *fragmentShader,
                     gl::Shader *vertexShader,
-                    std::map<int, gl::VariableLocation> *outputVariables);
+                    std::map<int, gl::VariableLocation> *outputVariables) override;
+
+    GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
     void bindAttributeLocation(GLuint index, const std::string &name) override;
 

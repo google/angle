@@ -374,7 +374,8 @@ gl::Error RendererD3D::applyState(const gl::Data &data, GLenum drawMode)
 gl::Error RendererD3D::applyShaders(const gl::Data &data)
 {
     gl::Program *program = data.state->getProgram();
-    GetImplAs<ProgramD3D>(program)->updateCachedInputLayout(program, *data.state);
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
+    programD3D->updateCachedInputLayout(program, *data.state);
 
     const gl::Framebuffer *fbo = data.state->getDrawFramebuffer();
 
@@ -384,7 +385,7 @@ gl::Error RendererD3D::applyShaders(const gl::Data &data)
         return error;
     }
 
-    return program->applyUniforms();
+    return programD3D->applyUniforms();
 }
 
 // For each Direct3D sampler of either the pixel or vertex stage,

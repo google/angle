@@ -268,8 +268,6 @@ class Program : angle::NonCopyable
     void getUniformiv(GLint location, GLint *params);
     void getUniformuiv(GLint location, GLuint *params);
 
-    Error applyUniforms();
-
     void getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const;
     void getActiveUniformBlockiv(GLuint uniformBlockIndex, GLenum pname, GLint *params) const;
     GLuint getActiveUniformBlockCount();

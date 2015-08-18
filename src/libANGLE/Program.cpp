@@ -966,12 +966,6 @@ void Program::getUniformuiv(GLint location, GLuint *v)
     mProgram->getUniformuiv(location, v);
 }
 
-// Applies all the uniforms set for this program object to the renderer
-Error Program::applyUniforms()
-{
-    return mProgram->applyUniforms();
-}
-
 void Program::flagForDeletion()
 {
     mDeleteStatus = true;
@@ -985,12 +979,10 @@ bool Program::isFlaggedForDeletion() const
 void Program::validate(const Caps &caps)
 {
     mInfoLog.reset();
-    mValidated = false;
 
     if (mLinked)
     {
-        applyUniforms();
-        mValidated = mProgram->validateSamplers(&mInfoLog, caps);
+        mValidated = (mProgram->validate(caps, &mInfoLog) == GL_TRUE);
     }
     else
     {
