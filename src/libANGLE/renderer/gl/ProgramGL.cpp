@@ -200,7 +200,11 @@ LinkResult ProgramGL::link(const gl::Data &data,
         // TODO: determine attribute precision
         setShaderAttribute(static_cast<size_t>(i), attributeType, GL_NONE, attributeName, attributeSize, location);
 
-        mActiveAttributesMask.set(location);
+        int attributeRegisterCount = gl::VariableRegisterCount(attributeType);
+        for (int offset = 0; offset < attributeRegisterCount; offset++)
+        {
+            mActiveAttributesMask.set(location + offset);
+        }
     }
 
     return LinkResult(true, gl::Error(GL_NO_ERROR));
