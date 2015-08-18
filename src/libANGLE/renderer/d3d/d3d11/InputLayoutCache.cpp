@@ -46,20 +46,20 @@ gl::InputLayout GetInputLayout(
     return inputLayout;
 }
 
-GLenum GetNextGLSLAttributeType(const std::vector<sh::Attribute> &linkedAttributes, int index)
+GLenum GetGLSLAttributeType(const std::vector<sh::Attribute> &shaderAttributes, int index)
 {
     // Count matrices differently
-    int subIndex = 0;
-    for (const sh::Attribute &attrib : linkedAttributes)
+    for (const sh::Attribute &attrib : shaderAttributes)
     {
-        if (attrib.type == GL_NONE)
+        if (attrib.location == -1)
         {
             continue;
         }
 
         GLenum transposedType = gl::TransposeMatrixType(attrib.type);
-        subIndex += gl::VariableRowCount(transposedType);
-        if (subIndex > index)
+        int rows              = gl::VariableRowCount(transposedType);
+
+        if (index >= attrib.location && index < attrib.location + rows)
         {
             return transposedType;
         }
@@ -185,6 +185,8 @@ gl::Error InputLayoutCache::applyVertexBuffers(const std::vector<TranslatedAttri
     bool instancedPointSpritesActive = programUsesInstancedPointSprites && (mode == GL_POINTS);
     bool indexedPointSpriteEmulationActive = instancedPointSpritesActive && (sourceInfo != nullptr);
 
+    const auto &semanticToLocation = programD3D->getAttributesByLayout();
+
     if (!mDevice || !mDeviceContext)
     {
         return gl::Error(GL_OUT_OF_MEMORY, "Internal input layout cache is not initialized.");
@@ -200,7 +202,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(const std::vector<TranslatedAttri
     unsigned int firstInstancedElement = gl::MAX_VERTEX_ATTRIBS;
     unsigned int nextAvailableInputSlot = 0;
 
-    const std::vector<sh::Attribute> &linkedAttributes = program->getLinkedAttributes();
+    const std::vector<sh::Attribute> &shaderAttributes = program->getAttributes();
 
     for (unsigned int i = 0; i < unsortedAttributes.size(); i++)
     {
@@ -232,7 +234,8 @@ gl::Error InputLayoutCache::applyVertexBuffers(const std::vector<TranslatedAttri
 
             // Record the type of the associated vertex shader vector in our key
             // This will prevent mismatched vertex shaders from using the same input layout
-            GLenum glslElementType = GetNextGLSLAttributeType(linkedAttributes, inputElementCount);
+            GLenum glslElementType = GetGLSLAttributeType(
+                shaderAttributes, semanticToLocation[sortedSemanticIndices[i]]);
 
             layout.addAttributeData(glslElementType,
                                     sortedSemanticIndices[i],
