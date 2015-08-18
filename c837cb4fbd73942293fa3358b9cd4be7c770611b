@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64591d73_a8ab395c",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-08-18T20:49:47Z",
+      "side": 1,
+      "message": "Not this CL\u0027s doing, but it seems to me we don\u0027t need to loop through to find the location.  Can\u0027t we just do mSequence.begin() + position (if position \u003c mSequence.size())?",
+      "revId": "c837cb4fbd73942293fa3358b9cd4be7c770611b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4a9e95f_b325fb38",
+        "filename": "src/compiler/translator/RemoveDynamicIndexing.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-08-18T20:49:47Z",
+      "side": 1,
+      "message": "Should we prefix with \"webgl_\"?",
+      "range": {
+        "startLine": 22,
+        "startChar": 17,
+        "endLine": 22,
+        "endChar": 27
+      },
+      "revId": "c837cb4fbd73942293fa3358b9cd4be7c770611b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
