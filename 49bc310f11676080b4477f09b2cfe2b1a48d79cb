@@ -16,6 +16,24 @@
       "revId": "49bc310f11676080b4477f09b2cfe2b1a48d79cb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64ccbd7d_e515504a",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1545,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-18T19:09:22Z",
+      "side": 1,
+      "message": "Done. Good catch, this was a real bug and was causing failures in dEQP-GLES3.functional.ubo.random.",
+      "parentUuid": "2421e5e2_ebc7ed39",
+      "revId": "49bc310f11676080b4477f09b2cfe2b1a48d79cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
