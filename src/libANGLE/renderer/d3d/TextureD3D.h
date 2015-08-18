@@ -67,7 +67,7 @@ class TextureD3D : public TextureImpl
                                         FramebufferAttachmentRenderTarget **rtOut) override;
 
   protected:
-    gl::Error setImageImpl(Implconst gl::ImageIndex &index,
+    gl::Error setImageImpl(const gl::ImageIndex &index,
                            GLenum type,
                            const gl::PixelUnpackState &unpack,
                            const uint8_t *pixels,
