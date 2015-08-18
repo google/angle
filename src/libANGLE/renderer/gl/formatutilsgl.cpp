@@ -316,21 +316,6 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
             // Update the internal format to GL_RGBA.
             result = GL_RGBA8;
         }
-
-        if ((functions->profile & GL_CONTEXT_CORE_PROFILE_BIT) != 0)
-        {
-            // Work around deprecated luminance alpha formats in the OpenGL core profile by backing
-            // them with R or RG textures.
-            if (formatInfo.format == GL_LUMINANCE || formatInfo.format == GL_ALPHA)
-            {
-                result = gl::GetSizedInternalFormat(GL_RED, formatInfo.type);
-            }
-
-            if (formatInfo.format == GL_LUMINANCE_ALPHA)
-            {
-                result = gl::GetSizedInternalFormat(GL_RG, formatInfo.type);
-            }
-        }
     }
     else if (functions->isAtLeastGLES(gl::Version(3, 0)))
     {
@@ -358,21 +343,6 @@ static GLenum GetNativeFormat(const FunctionsGL *functions,
         if (format == GL_SRGB_ALPHA)
         {
             result = GL_RGBA;
-        }
-
-        if ((functions->profile & GL_CONTEXT_CORE_PROFILE_BIT) != 0)
-        {
-            // Work around deprecated luminance alpha formats in the OpenGL core profile by backing
-            // them with R or RG textures.
-            if (format == GL_LUMINANCE || format == GL_ALPHA)
-            {
-                result = GL_RED;
-            }
-
-            if (format == GL_LUMINANCE_ALPHA)
-            {
-                result = GL_RG;
-            }
         }
     }
 
