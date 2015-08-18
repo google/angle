@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2421e5e2_ebc7ed39",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1545,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-18T17:15:04Z",
+      "side": 1,
+      "message": "Shouldn\u0027t it check for a packed layout here too?",
+      "revId": "49bc310f11676080b4477f09b2cfe2b1a48d79cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
