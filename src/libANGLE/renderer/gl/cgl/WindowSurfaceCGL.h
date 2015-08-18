@@ -17,7 +17,7 @@ namespace rx
 class WindowSurfaceCGL : public SurfaceGL
 {
   public:
-    WindowSurfaceCGL(RendererGL *renderer);
+    WindowSurfaceCGL();
     ~WindowSurfaceCGL() override;
 
     egl::Error initialize() override;

@@ -21,13 +21,8 @@ class FunctionsGLX;
 class WindowSurfaceGLX : public SurfaceGL
 {
   public:
-    WindowSurfaceGLX(const FunctionsGLX &glx,
-                     DisplayGLX *glxDisplay,
-                     RendererGL *renderer,
-                     Window window,
-                     Display *display,
-                     glx::Context context,
-                     glx::FBConfig fbConfig);
+    WindowSurfaceGLX(const FunctionsGLX &glx, const DisplayGLX &glxDisplay, Window window, Display *display,
+                     glx::Context context, glx::FBConfig fbConfig);
     ~WindowSurfaceGLX() override;
 
     egl::Error initialize() override;
