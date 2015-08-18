@@ -395,13 +395,6 @@ LinkResult ProgramGL::compileProgramExecutables(gl::InfoLog &infoLog, int regist
     return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
 
-bool ProgramGL::defineUniformBlock(gl::InfoLog &infoLog, const gl::Shader &shader, const sh::InterfaceBlock &interfaceBlock,
-                                   const gl::Caps &caps)
-{
-    UNIMPLEMENTED();
-    return bool();
-}
-
 gl::Error ProgramGL::applyUniforms()
 {
     //UNIMPLEMENTED();
@@ -413,13 +406,6 @@ gl::Error ProgramGL::applyUniformBuffers(const gl::Data &data, GLuint uniformBlo
 {
     UNIMPLEMENTED();
     return gl::Error(GL_INVALID_OPERATION);
-}
-
-bool ProgramGL::assignUniformBlockRegister(gl::InfoLog &infoLog, gl::UniformBlock *uniformBlock, GLenum shader,
-                                           unsigned int registerIndex, const gl::Caps &caps)
-{
-    UNIMPLEMENTED();
-    return bool();
 }
 
 void ProgramGL::reset()

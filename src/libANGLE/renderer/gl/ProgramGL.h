@@ -79,13 +79,13 @@ class ProgramGL : public ProgramImpl
 
     LinkResult compileProgramExecutables(gl::InfoLog &infoLog, int registers) override;
 
-    bool defineUniformBlock(gl::InfoLog &infoLog, const gl::Shader &shader, const sh::InterfaceBlock &interfaceBlock,
-                            const gl::Caps &caps) override;
+    void defineUniformBlock(gl::InfoLog &infoLog,
+                            const gl::Shader &shader,
+                            const sh::InterfaceBlock &interfaceBlock,
+                            const gl::Caps &caps);
 
     gl::Error applyUniforms() override;
     gl::Error applyUniformBuffers(const gl::Data &data, GLuint uniformBlockBindings[]) override;
-    bool assignUniformBlockRegister(gl::InfoLog &infoLog, gl::UniformBlock *uniformBlock, GLenum shader,
-                                    unsigned int registerIndex, const gl::Caps &caps) override;
 
     void reset() override;
 

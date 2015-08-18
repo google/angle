@@ -308,7 +308,7 @@ class Program : angle::NonCopyable
                         InfoLog &infoLog,
                         const AttributeBindings &attributeBindings,
                         const Shader *vertexShader);
-    bool linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShader, const Shader &fragmentShader, const Caps &caps);
+    bool linkUniformBlocks(InfoLog &infoLog, const Caps &caps);
     static bool linkVaryings(InfoLog &infoLog,
                              const Shader *vertexShader,
                              const Shader *fragmentShader);

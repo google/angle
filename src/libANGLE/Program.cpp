@@ -300,6 +300,11 @@ Error Program::link(const gl::Data &data)
         return Error(GL_NO_ERROR);
     }
 
+    if (!linkUniformBlocks(mInfoLog, *data.caps))
+    {
+        return Error(GL_NO_ERROR);
+    }
+
     int registers;
     std::vector<LinkedVarying> linkedVaryings;
     rx::LinkResult result =
@@ -308,12 +313,6 @@ Error Program::link(const gl::Data &data)
     if (result.error.isError() || !result.linkSuccess)
     {
         return result.error;
-    }
-
-    if (!linkUniformBlocks(mInfoLog, *mData.mAttachedVertexShader, *mData.mAttachedFragmentShader,
-                           *data.caps))
-    {
-        return Error(GL_NO_ERROR);
     }
 
     if (!gatherTransformFeedbackLinkedVaryings(
@@ -1438,22 +1437,39 @@ bool Program::linkAttributes(const gl::Data &data,
     return true;
 }
 
-bool Program::linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShader, const Shader &fragmentShader, const Caps &caps)
+bool Program::linkUniformBlocks(InfoLog &infoLog, const Caps &caps)
 {
+    const Shader &vertexShader   = *mData.mAttachedVertexShader;
+    const Shader &fragmentShader = *mData.mAttachedFragmentShader;
+
     const std::vector<sh::InterfaceBlock> &vertexInterfaceBlocks = vertexShader.getInterfaceBlocks();
     const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks = fragmentShader.getInterfaceBlocks();
+
     // Check that interface blocks defined in the vertex and fragment shaders are identical
     typedef std::map<std::string, const sh::InterfaceBlock*> UniformBlockMap;
     UniformBlockMap linkedUniformBlocks;
-    for (unsigned int blockIndex = 0; blockIndex < vertexInterfaceBlocks.size(); blockIndex++)
+
+    GLuint vertexBlockCount = 0;
+    for (const sh::InterfaceBlock &vertexInterfaceBlock : vertexInterfaceBlocks)
     {
-        const sh::InterfaceBlock &vertexInterfaceBlock = vertexInterfaceBlocks[blockIndex];
         linkedUniformBlocks[vertexInterfaceBlock.name] = &vertexInterfaceBlock;
+
+        // Note: shared and std140 layouts are always considered active
+        if (vertexInterfaceBlock.staticUse || vertexInterfaceBlock.layout != sh::BLOCKLAYOUT_PACKED)
+        {
+            if (++vertexBlockCount > caps.maxVertexUniformBlocks)
+            {
+                infoLog << "Vertex shader uniform block count exceed GL_MAX_VERTEX_UNIFORM_BLOCKS ("
+                        << caps.maxVertexUniformBlocks << ")";
+                return false;
+            }
+        }
     }
-    for (unsigned int blockIndex = 0; blockIndex < fragmentInterfaceBlocks.size(); blockIndex++)
+
+    GLuint fragmentBlockCount = 0;
+    for (const sh::InterfaceBlock &fragmentInterfaceBlock : fragmentInterfaceBlocks)
     {
-        const sh::InterfaceBlock &fragmentInterfaceBlock = fragmentInterfaceBlocks[blockIndex];
-        UniformBlockMap::const_iterator entry = linkedUniformBlocks.find(fragmentInterfaceBlock.name);
+        auto entry = linkedUniformBlocks.find(fragmentInterfaceBlock.name);
         if (entry != linkedUniformBlocks.end())
         {
             const sh::InterfaceBlock &vertexInterfaceBlock = *entry->second;
@@ -1462,31 +1478,21 @@ bool Program::linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShader, co
                 return false;
             }
         }
-    }
-    for (unsigned int blockIndex = 0; blockIndex < vertexInterfaceBlocks.size(); blockIndex++)
-    {
-        const sh::InterfaceBlock &interfaceBlock = vertexInterfaceBlocks[blockIndex];
+
         // Note: shared and std140 layouts are always considered active
-        if (interfaceBlock.staticUse || interfaceBlock.layout != sh::BLOCKLAYOUT_PACKED)
+        if (fragmentInterfaceBlock.staticUse ||
+            fragmentInterfaceBlock.layout != sh::BLOCKLAYOUT_PACKED)
         {
-            if (!mProgram->defineUniformBlock(infoLog, vertexShader, interfaceBlock, caps))
+            if (++fragmentBlockCount > caps.maxFragmentUniformBlocks)
             {
+                infoLog
+                    << "Fragment shader uniform block count exceed GL_MAX_FRAGMENT_UNIFORM_BLOCKS ("
+                    << caps.maxFragmentUniformBlocks << ")";
                 return false;
             }
         }
     }
-    for (unsigned int blockIndex = 0; blockIndex < fragmentInterfaceBlocks.size(); blockIndex++)
-    {
-        const sh::InterfaceBlock &interfaceBlock = fragmentInterfaceBlocks[blockIndex];
-        // Note: shared and std140 layouts are always considered active
-        if (interfaceBlock.staticUse || interfaceBlock.layout != sh::BLOCKLAYOUT_PACKED)
-        {
-            if (!mProgram->defineUniformBlock(infoLog, fragmentShader, interfaceBlock, caps))
-            {
-                return false;
-            }
-        }
-    }
+
     return true;
 }
 

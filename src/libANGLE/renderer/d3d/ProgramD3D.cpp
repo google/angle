@@ -1152,6 +1152,8 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
+    defineUniformBlocks(*data.caps);
+
     return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
 
@@ -1256,30 +1258,23 @@ gl::Error ProgramD3D::applyUniformBuffers(const gl::Data &data, GLuint uniformBl
     return mRenderer->setUniformBuffers(data, mVertexUBOCache, mFragmentUBOCache);
 }
 
-bool ProgramD3D::assignUniformBlockRegister(gl::InfoLog &infoLog, gl::UniformBlock *uniformBlock, GLenum shader,
-                                            unsigned int registerIndex, const gl::Caps &caps)
+void ProgramD3D::assignUniformBlockRegister(gl::UniformBlock *uniformBlock,
+                                            GLenum shader,
+                                            unsigned int registerIndex,
+                                            const gl::Caps &caps)
 {
+    // Validation done in the GL-level Program.
     if (shader == GL_VERTEX_SHADER)
     {
         uniformBlock->vsRegisterIndex = registerIndex;
-        if (registerIndex - mRenderer->getReservedVertexUniformBuffers() >= caps.maxVertexUniformBlocks)
-        {
-            infoLog << "Vertex shader uniform block count exceed GL_MAX_VERTEX_UNIFORM_BLOCKS (" << caps.maxVertexUniformBlocks << ")";
-            return false;
-        }
+        ASSERT(registerIndex < caps.maxVertexUniformBlocks);
     }
     else if (shader == GL_FRAGMENT_SHADER)
     {
         uniformBlock->psRegisterIndex = registerIndex;
-        if (registerIndex - mRenderer->getReservedFragmentUniformBuffers() >= caps.maxFragmentUniformBlocks)
-        {
-            infoLog << "Fragment shader uniform block count exceed GL_MAX_FRAGMENT_UNIFORM_BLOCKS (" << caps.maxFragmentUniformBlocks << ")";
-            return false;
-        }
+        ASSERT(registerIndex < caps.maxFragmentUniformBlocks);
     }
     else UNREACHABLE();
-
-    return true;
 }
 
 void ProgramD3D::dirtyAllUniforms()
@@ -1537,6 +1532,29 @@ void ProgramD3D::defineUniform(const ShaderD3D *shader, const sh::ShaderVariable
         if (uniform.isArray() && encoder)
         {
             encoder->exitAggregateType();
+        }
+    }
+}
+
+void ProgramD3D::defineUniformBlocks(const gl::Caps &caps)
+{
+    const gl::Shader *vertexShader = mData.getAttachedVertexShader();
+
+    for (const sh::InterfaceBlock &vertexBlock : vertexShader->getInterfaceBlocks())
+    {
+        if (vertexBlock.staticUse || vertexBlock.layout != sh::BLOCKLAYOUT_PACKED)
+        {
+            defineUniformBlock(*vertexShader, vertexBlock, caps);
+        }
+    }
+
+    const gl::Shader *fragmentShader = mData.getAttachedFragmentShader();
+
+    for (const sh::InterfaceBlock &fragmentBlock : fragmentShader->getInterfaceBlocks())
+    {
+        if (fragmentBlock.staticUse || fragmentBlock.layout != sh::BLOCKLAYOUT_PACKED)
+        {
+            defineUniformBlock(*fragmentShader, fragmentBlock, caps);
         }
     }
 }
@@ -1834,8 +1852,7 @@ void ProgramD3D::defineUniformBlockMembers(const std::vector<VarT> &fields, cons
     }
 }
 
-bool ProgramD3D::defineUniformBlock(gl::InfoLog &infoLog,
-                                    const gl::Shader &shader,
+void ProgramD3D::defineUniformBlock(const gl::Shader &shader,
                                     const sh::InterfaceBlock &interfaceBlock,
                                     const gl::Caps &caps)
 {
@@ -1897,15 +1914,10 @@ bool ProgramD3D::defineUniformBlock(gl::InfoLog &infoLog,
             gl::UniformBlock *uniformBlock = mUniformBlocks[blockIndex + uniformBlockElement];
             ASSERT(uniformBlock->name == interfaceBlock.name);
 
-            if (!assignUniformBlockRegister(infoLog, uniformBlock, shader.getType(),
-                                            interfaceBlockRegister + uniformBlockElement, caps))
-            {
-                return false;
-            }
+            assignUniformBlockRegister(uniformBlock, shader.getType(),
+                                       interfaceBlockRegister + uniformBlockElement, caps);
         }
     }
-
-    return true;
 }
 
 bool ProgramD3D::assignSamplers(unsigned int startSamplerIndex,
