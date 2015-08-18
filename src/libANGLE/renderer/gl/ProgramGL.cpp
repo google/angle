@@ -395,13 +395,6 @@ LinkResult ProgramGL::compileProgramExecutables(gl::InfoLog &infoLog, int regist
     return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
 
-bool ProgramGL::linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShader, const gl::Shader &fragmentShader,
-                             const gl::Caps &caps)
-{
-    //UNIMPLEMENTED();
-    return true;
-}
-
 bool ProgramGL::defineUniformBlock(gl::InfoLog &infoLog, const gl::Shader &shader, const sh::InterfaceBlock &interfaceBlock,
                                    const gl::Caps &caps)
 {

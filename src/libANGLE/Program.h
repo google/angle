@@ -312,6 +312,7 @@ class Program : angle::NonCopyable
     static bool linkVaryings(InfoLog &infoLog,
                              const Shader *vertexShader,
                              const Shader *fragmentShader);
+    bool linkUniforms(gl::InfoLog &infoLog, const gl::Caps &caps) const;
     bool areMatchingInterfaceBlocks(gl::InfoLog &infoLog, const sh::InterfaceBlock &vertexInterfaceBlock,
                                     const sh::InterfaceBlock &fragmentInterfaceBlock);
 

@@ -295,6 +295,11 @@ Error Program::link(const gl::Data &data)
         return Error(GL_NO_ERROR);
     }
 
+    if (!linkUniforms(mInfoLog, *data.caps))
+    {
+        return Error(GL_NO_ERROR);
+    }
+
     int registers;
     std::vector<LinkedVarying> linkedVaryings;
     rx::LinkResult result =
@@ -303,12 +308,6 @@ Error Program::link(const gl::Data &data)
     if (result.error.isError() || !result.linkSuccess)
     {
         return result.error;
-    }
-
-    if (!mProgram->linkUniforms(mInfoLog, *mData.mAttachedVertexShader,
-                                *mData.mAttachedFragmentShader, *data.caps))
-    {
-        return Error(GL_NO_ERROR);
     }
 
     if (!linkUniformBlocks(mInfoLog, *mData.mAttachedVertexShader, *mData.mAttachedFragmentShader,
@@ -1287,6 +1286,37 @@ bool Program::linkVaryings(InfoLog &infoLog,
 
     // TODO(jmadill): verify no unmatched vertex varyings?
 
+    return true;
+}
+
+bool Program::linkUniforms(gl::InfoLog &infoLog, const gl::Caps & /*caps*/) const
+{
+    const std::vector<sh::Uniform> &vertexUniforms   = mData.mAttachedVertexShader->getUniforms();
+    const std::vector<sh::Uniform> &fragmentUniforms = mData.mAttachedFragmentShader->getUniforms();
+
+    // Check that uniforms defined in the vertex and fragment shaders are identical
+    std::map<std::string, const sh::Uniform *> linkedUniforms;
+
+    for (const sh::Uniform &vertexUniform : vertexUniforms)
+    {
+        linkedUniforms[vertexUniform.name] = &vertexUniform;
+    }
+
+    for (const sh::Uniform &fragmentUniform : fragmentUniforms)
+    {
+        auto entry = linkedUniforms.find(fragmentUniform.name);
+        if (entry != linkedUniforms.end())
+        {
+            const sh::Uniform &vertexUniform = *entry->second;
+            const std::string &uniformName = "uniform '" + vertexUniform.name + "'";
+            if (!linkValidateUniforms(infoLog, uniformName, vertexUniform, fragmentUniform))
+            {
+                return false;
+            }
+        }
+    }
+
+    // TODO(jmadill): check sampler uniforms with caps
     return true;
 }
 

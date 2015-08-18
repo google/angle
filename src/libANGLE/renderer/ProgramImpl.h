@@ -86,8 +86,6 @@ class ProgramImpl : angle::NonCopyable
 
     virtual LinkResult compileProgramExecutables(gl::InfoLog &infoLog, int registers) = 0;
 
-    virtual bool linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShader, const gl::Shader &fragmentShader,
-                              const gl::Caps &caps) = 0;
     virtual bool defineUniformBlock(gl::InfoLog &infoLog, const gl::Shader &shader, const sh::InterfaceBlock &interfaceBlock,
                                     const gl::Caps &caps) = 0;
 

@@ -79,8 +79,6 @@ class ProgramGL : public ProgramImpl
 
     LinkResult compileProgramExecutables(gl::InfoLog &infoLog, int registers) override;
 
-    bool linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShader, const gl::Shader &fragmentShader,
-                      const gl::Caps &caps) override;
     bool defineUniformBlock(gl::InfoLog &infoLog, const gl::Shader &shader, const sh::InterfaceBlock &interfaceBlock,
                             const gl::Caps &caps) override;
 

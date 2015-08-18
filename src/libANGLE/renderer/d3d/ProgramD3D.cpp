@@ -1147,6 +1147,11 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
 
     initAttributesByLayout();
 
+    if (!defineUniforms(infoLog, *data.caps))
+    {
+        return LinkResult(false, gl::Error(GL_NO_ERROR));
+    }
+
     return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
 
@@ -1406,44 +1411,14 @@ void ProgramD3D::getUniformuiv(GLint location, GLuint *params)
     getUniformv(location, params, GL_UNSIGNED_INT);
 }
 
-bool ProgramD3D::linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShader, const gl::Shader &fragmentShader,
-                              const gl::Caps &caps)
+bool ProgramD3D::defineUniforms(gl::InfoLog &infoLog, const gl::Caps &caps)
 {
-    const ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(&vertexShader);
-    const ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(&fragmentShader);
+    const gl::Shader *vertexShader                 = mData.getAttachedVertexShader();
+    const std::vector<sh::Uniform> &vertexUniforms = vertexShader->getUniforms();
+    const ShaderD3D *vertexShaderD3D               = GetImplAs<ShaderD3D>(vertexShader);
 
-    const std::vector<sh::Uniform> &vertexUniforms = vertexShader.getUniforms();
-    const std::vector<sh::Uniform> &fragmentUniforms = fragmentShader.getUniforms();
-
-    // Check that uniforms defined in the vertex and fragment shaders are identical
-    typedef std::map<std::string, const sh::Uniform*> UniformMap;
-    UniformMap linkedUniforms;
-
-    for (unsigned int vertexUniformIndex = 0; vertexUniformIndex < vertexUniforms.size(); vertexUniformIndex++)
+    for (const sh::Uniform &uniform : vertexUniforms)
     {
-        const sh::Uniform &vertexUniform = vertexUniforms[vertexUniformIndex];
-        linkedUniforms[vertexUniform.name] = &vertexUniform;
-    }
-
-    for (unsigned int fragmentUniformIndex = 0; fragmentUniformIndex < fragmentUniforms.size(); fragmentUniformIndex++)
-    {
-        const sh::Uniform &fragmentUniform = fragmentUniforms[fragmentUniformIndex];
-        UniformMap::const_iterator entry = linkedUniforms.find(fragmentUniform.name);
-        if (entry != linkedUniforms.end())
-        {
-            const sh::Uniform &vertexUniform = *entry->second;
-            const std::string &uniformName = "uniform '" + vertexUniform.name + "'";
-            if (!gl::Program::linkValidateUniforms(infoLog, uniformName, vertexUniform, fragmentUniform))
-            {
-                return false;
-            }
-        }
-    }
-
-    for (unsigned int uniformIndex = 0; uniformIndex < vertexUniforms.size(); uniformIndex++)
-    {
-        const sh::Uniform &uniform = vertexUniforms[uniformIndex];
-
         if (uniform.staticUse)
         {
             unsigned int registerBase = uniform.isBuiltIn() ? GL_INVALID_INDEX :
@@ -1452,10 +1427,12 @@ bool ProgramD3D::linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShad
         }
     }
 
-    for (unsigned int uniformIndex = 0; uniformIndex < fragmentUniforms.size(); uniformIndex++)
-    {
-        const sh::Uniform &uniform = fragmentUniforms[uniformIndex];
+    const gl::Shader *fragmentShader                 = mData.getAttachedFragmentShader();
+    const std::vector<sh::Uniform> &fragmentUniforms = fragmentShader->getUniforms();
+    const ShaderD3D *fragmentShaderD3D               = GetImplAs<ShaderD3D>(fragmentShader);
 
+    for (const sh::Uniform &uniform : fragmentUniforms)
+    {
         if (uniform.staticUse)
         {
             unsigned int registerBase = uniform.isBuiltIn() ? GL_INVALID_INDEX :
@@ -1464,6 +1441,7 @@ bool ProgramD3D::linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShad
         }
     }
 
+    // TODO(jmadill): move the validation part to gl::Program
     if (!indexUniforms(infoLog, caps))
     {
         return false;

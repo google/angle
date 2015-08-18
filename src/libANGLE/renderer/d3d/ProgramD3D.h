@@ -113,8 +113,6 @@ class ProgramD3D : public ProgramImpl
     const UniformStorageD3D &getVertexUniformStorage() const { return *mVertexUniformStorage; }
     const UniformStorageD3D &getFragmentUniformStorage() const { return *mFragmentUniformStorage; }
 
-    bool linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShader, const gl::Shader &fragmentShader,
-                      const gl::Caps &caps);
     bool defineUniformBlock(gl::InfoLog &infoLog, const gl::Shader &shader, const sh::InterfaceBlock &interfaceBlock, const gl::Caps &caps);
 
     void reset();
@@ -180,6 +178,7 @@ class ProgramD3D : public ProgramImpl
         GLenum textureType;
     };
 
+    bool defineUniforms(gl::InfoLog &infoLog, const gl::Caps &caps);
     void defineUniformBase(const ShaderD3D *shader, const sh::Uniform &uniform, unsigned int uniformRegister);
     void defineUniform(const ShaderD3D *shader, const sh::ShaderVariable &uniform, const std::string &fullName,
                        sh::HLSLBlockEncoder *encoder);
