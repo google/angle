@@ -707,7 +707,7 @@ gl::Error TextureD3D_2D::setImage(GLenum target,
     bool fastUnpacked = false;
     GLint level       = static_cast<GLint>(imageLevel);
 
-    redefineImage(level, sizedInternalFormat, size, false);
+    redefineImage(level, sizedInternalFormat, size);
 
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
 
@@ -797,7 +797,7 @@ gl::Error TextureD3D_2D::setCompressedImage(GLenum target,
     GLint level = static_cast<GLint>(imageLevel);
 
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
-    redefineImage(level, internalFormat, size, false);
+    redefineImage(level, internalFormat, size);
 
     return TextureD3D::setCompressedImage(gl::ImageIndex::Make2D(level), unpack, pixels, 0);
 }
@@ -827,8 +827,7 @@ gl::Error TextureD3D_2D::copyImage(GLenum target,
 
     GLint level                = static_cast<GLint>(imageLevel);
     GLenum sizedInternalFormat = gl::GetSizedInternalFormat(internalFormat, GL_UNSIGNED_BYTE);
-    redefineImage(level, sizedInternalFormat, gl::Extents(sourceArea.width, sourceArea.height, 1),
-                  false);
+    redefineImage(level, sizedInternalFormat, gl::Extents(sourceArea.width, sourceArea.height, 1));
 
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
     gl::Offset destOffset(0, 0, 0);
@@ -932,12 +931,12 @@ gl::Error TextureD3D_2D::setStorage(GLenum target, size_t levels, GLenum interna
         gl::Extents levelSize(std::max(1, size.width >> level),
                               std::max(1, size.height >> level),
                               1);
-        redefineImage(level, internalFormat, levelSize, true);
+        mImageArray[level]->redefine(GL_TEXTURE_2D, internalFormat, levelSize, true);
     }
 
     for (size_t level = levels; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
-        redefineImage(level, GL_NONE, gl::Extents(0, 0, 1), true);
+        mImageArray[level]->redefine(GL_TEXTURE_2D, GL_NONE, gl::Extents(0, 0, 0), true);
     }
 
     // TODO(geofflang): Verify storage creation had no errors
@@ -969,7 +968,7 @@ void TextureD3D_2D::bindTexImage(egl::Surface *surface)
     GLenum internalformat = surface->getConfig()->renderTargetFormat;
 
     gl::Extents size(surface->getWidth(), surface->getHeight(), 1);
-    redefineImage(0, internalformat, size, true);
+    mImageArray[0]->redefine(GL_TEXTURE_2D, internalformat, size, true);
 
     if (mTexStorage)
     {
@@ -1013,7 +1012,7 @@ void TextureD3D_2D::initMipmapsImages()
                               std::max(getBaseLevelHeight() >> level, 1),
                               1);
 
-        redefineImage(level, getBaseLevelInternalFormat(), levelSize, false);
+        redefineImage(level, getBaseLevelInternalFormat(), levelSize);
     }
 }
 
@@ -1223,10 +1222,7 @@ gl::Error TextureD3D_2D::updateStorageLevel(int level)
     return gl::Error(GL_NO_ERROR);
 }
 
-void TextureD3D_2D::redefineImage(GLint level,
-                                  GLenum internalformat,
-                                  const gl::Extents &size,
-                                  bool forceRelease)
+void TextureD3D_2D::redefineImage(GLint level, GLenum internalformat, const gl::Extents &size)
 {
     ASSERT(size.depth == 1);
 
@@ -1235,7 +1231,7 @@ void TextureD3D_2D::redefineImage(GLint level,
     const int storageHeight = std::max(1, getBaseLevelHeight() >> level);
     const GLenum storageFormat = getBaseLevelInternalFormat();
 
-    mImageArray[level]->redefine(GL_TEXTURE_2D, internalformat, size, forceRelease);
+    mImageArray[level]->redefine(GL_TEXTURE_2D, internalformat, size, false);
 
     if (mTexStorage)
     {
