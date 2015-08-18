@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4a9e95f_33b6eb46",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-08-18T21:11:25Z",
+      "side": 1,
+      "message": "Should we assert here instead of returning nullptr and potentially crash at the caller side?",
+      "range": {
+        "startLine": 126,
+        "startChar": 45,
+        "endLine": 126,
+        "endChar": 46
+      },
+      "revId": "60e8081f0f0f9286725f666a621da559092c476a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c471e91c_d4546a4f",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-08-18T21:11:25Z",
+      "side": 1,
+      "message": "\u0026operator\u003d() \u003d delete; here and other classes?",
+      "range": {
+        "startLine": 548,
+        "startChar": 4,
+        "endLine": 548,
+        "endChar": 20
+      },
+      "revId": "60e8081f0f0f9286725f666a621da559092c476a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4a9e95f_737ea3d8",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-08-18T21:11:25Z",
+      "side": 1,
+      "message": "nit: Can you also add spaces in front? not related to this CL, but just saw it.",
+      "range": {
+        "startLine": 585,
+        "startChar": 0,
+        "endLine": 585,
+        "endChar": 9
+      },
+      "revId": "60e8081f0f0f9286725f666a621da559092c476a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
