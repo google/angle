@@ -22,6 +22,30 @@
       "revId": "f5c5d76aba3066411ddcabc907c8f4b2fd6578d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4979553_ecda8bde",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-18T19:08:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a414f588_477d5056",
+      "range": {
+        "startLine": 116,
+        "startChar": 4,
+        "endLine": 116,
+        "endChar": 68
+      },
+      "revId": "f5c5d76aba3066411ddcabc907c8f4b2fd6578d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
