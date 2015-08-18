@@ -22,6 +22,29 @@
       "revId": "e3b6e2b88019b39a4a5fcb77d3dafe4133768db7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0424e1f1_1093852e",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-18T17:40:40Z",
+      "side": 1,
+      "message": "sorry for the spam.. use gl::VariableRegisterCount. It\u0027s exactly this.",
+      "range": {
+        "startLine": 201,
+        "startChar": 31,
+        "endLine": 201,
+        "endChar": 109
+      },
+      "revId": "e3b6e2b88019b39a4a5fcb77d3dafe4133768db7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
