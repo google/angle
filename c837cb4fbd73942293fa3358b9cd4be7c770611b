@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "247d65ed_28364b6f",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-19T07:33:01Z",
+      "side": 1,
+      "message": "Ah, that\u0027s right, with random access iterators that can be done.",
+      "parentUuid": "64591d73_a8ab395c",
+      "revId": "c837cb4fbd73942293fa3358b9cd4be7c770611b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4a9e95f_b325fb38",
         "filename": "src/compiler/translator/RemoveDynamicIndexing.cpp",
         "patchSetId": 10
@@ -30,6 +48,30 @@
       "writtenOn": "2015-08-18T20:49:47Z",
       "side": 1,
       "message": "Should we prefix with \"webgl_\"?",
+      "range": {
+        "startLine": 22,
+        "startChar": 17,
+        "endLine": 22,
+        "endChar": 27
+      },
+      "revId": "c837cb4fbd73942293fa3358b9cd4be7c770611b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4c23555_57b06ef8",
+        "filename": "src/compiler/translator/RemoveDynamicIndexing.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-19T07:33:01Z",
+      "side": 1,
+      "message": "No. Name conflicts are avoided since these functions are marked as internal, hence they are not decorated by _ in the HLSL output.",
+      "parentUuid": "c4a9e95f_b325fb38",
       "range": {
         "startLine": 22,
         "startChar": 17,
