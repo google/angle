@@ -54,7 +54,6 @@
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_tex2d_rgb_depth_component16 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_tex2d_rgba = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_tex2d_rgba_depth_component16 = FAIL
-1029 WIN : dEQP-GLES2.functional.negative_api.texture.compressedtexsubimage2d_invalid_size = FAIL
 1033 WIN : dEQP-GLES2.functional.polygon_offset.fixed16_render_with_units = FAIL
 913 WIN : dEQP-GLES2.functional.shaders.constant_expressions.builtin_functions.geometric.* = FAIL
 913 WIN : dEQP-GLES2.functional.shaders.constant_expressions.builtin_functions.matrix.compMult_mat* = FAIL
@@ -534,6 +533,7 @@
 1029 WIN LINUX : dEQP-GLES2.functional.negative_api.state.get_program_info_log = FAIL
 1029 WIN LINUX : dEQP-GLES2.functional.negative_api.texture.compressedteximage_2d_invalid_format_tex2d = FAIL
 1029 WIN LINUX : dEQP-GLES2.functional.negative_api.texture.compressedteximage_2d_invalid_format_cube = FAIL
+1128 WIN LINUX : dEQP-GLES2.functional.negative_api.texture.compressedtexsubimage2d_invalid_size = FAIL
 1029 WIN LINUX : dEQP-GLES2.functional.negative_api.texture.teximage2d_invalid_format = FAIL
 1029 WIN LINUX : dEQP-GLES2.functional.negative_api.texture.teximage2d_invalid_internalformat = FAIL
 1029 WIN LINUX : dEQP-GLES2.functional.negative_api.texture.texsubimage2d_invalid_type = FAIL
