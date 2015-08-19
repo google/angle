@@ -175,8 +175,9 @@ class TCompiler : public TShHandleBase
     class UnusedPredicate;
     bool pruneUnusedFunctions(TIntermNode *root);
 
-    TIntermNode *compileTreeImpl(const char* const shaderStrings[],
-        size_t numStrings, int compileOptions);
+    TIntermNode *compileTreeImpl(const char *const shaderStrings[],
+                                 size_t numStrings,
+                                 const int compileOptions);
 
     sh::GLenum shaderType;
     ShShaderSpec shaderSpec;

@@ -182,8 +182,9 @@ TIntermNode *TCompiler::compileTreeForTesting(const char* const shaderStrings[],
     return compileTreeImpl(shaderStrings, numStrings, compileOptions);
 }
 
-TIntermNode *TCompiler::compileTreeImpl(const char* const shaderStrings[],
-    size_t numStrings, int compileOptions)
+TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
+                                        size_t numStrings,
+                                        const int compileOptions)
 {
     clearResults();
 
@@ -192,10 +193,6 @@ TIntermNode *TCompiler::compileTreeImpl(const char* const shaderStrings[],
 
     // Reset the extension behavior for each compilation unit.
     ResetExtensionBehavior(extensionBehavior);
-
-    // If compiling for WebGL, validate loop and indexing as well.
-    if (IsWebGLBasedSpec(shaderSpec))
-        compileOptions |= SH_VALIDATE_LOOP_INDEXING;
 
     // First string is path of source file if flag is set. The actual source follows.
     size_t firstSource = 0;
@@ -230,6 +227,12 @@ TIntermNode *TCompiler::compileTreeImpl(const char* const shaderStrings[],
         infoSink.info << "unsupported shader version";
         success = false;
     }
+
+    // If compiling an ESSL 1.00 shader for WebGL, or if its been requested through the API,
+    // validate loop and indexing as well (to verify that the shader only uses minimal functionality
+    // of ESSL 1.00 as in Appendix A of the spec).
+    bool validateLoopAndIndexing = (IsWebGLBasedSpec(shaderSpec) && shaderVersion == 100) ||
+                                   (compileOptions & SH_VALIDATE_LOOP_INDEXING);
 
     TIntermNode *root = nullptr;
 
@@ -273,7 +276,7 @@ TIntermNode *TCompiler::compileTreeImpl(const char* const shaderStrings[],
         if (success && shaderVersion == 300 && shaderType == GL_FRAGMENT_SHADER)
             success = validateOutputs(root);
 
-        if (success && (compileOptions & SH_VALIDATE_LOOP_INDEXING))
+        if (success && validateLoopAndIndexing)
             success = validateLimitations(root);
 
         if (success && (compileOptions & SH_TIMING_RESTRICTIONS))
