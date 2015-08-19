@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "64b59dd9_1dd9b769",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-19T10:46:38Z",
+      "side": 1,
+      "message": "Actually I think I\u0027ll just make this pure virtual here, and then add the function to IntermRaw with the assert that it\u0027s not reached. All other classes inheriting from TIntermTyped will support deepCopy.",
+      "parentUuid": "c4a9e95f_33b6eb46",
+      "range": {
+        "startLine": 126,
+        "startChar": 45,
+        "endLine": 126,
+        "endChar": 46
+      },
+      "revId": "60e8081f0f0f9286725f666a621da559092c476a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c471e91c_d4546a4f",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "24a485b9_90775447",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-19T10:46:38Z",
+      "side": 1,
+      "message": "The operator is deleted in NonCopyable, which is inherited here through TIntermNode. I\u0027ll mention this in the commit message.",
+      "parentUuid": "c471e91c_d4546a4f",
+      "range": {
+        "startLine": 548,
+        "startChar": 4,
+        "endLine": 548,
+        "endChar": 20
+      },
+      "revId": "60e8081f0f0f9286725f666a621da559092c476a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4a9e95f_737ea3d8",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2015-08-18T21:11:25Z",
       "side": 1,
       "message": "nit: Can you also add spaces in front? not related to this CL, but just saw it.",
+      "range": {
+        "startLine": 585,
+        "startChar": 0,
+        "endLine": 585,
+        "endChar": 9
+      },
+      "revId": "60e8081f0f0f9286725f666a621da559092c476a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24a485b9_b0745843",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-19T10:46:38Z",
+      "side": 1,
+      "message": "Will do.",
+      "parentUuid": "c4a9e95f_737ea3d8",
       "range": {
         "startLine": 585,
         "startChar": 0,
