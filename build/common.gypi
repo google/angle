@@ -118,6 +118,10 @@
                         'Culture': '1033',
                     },
                 },
+                'xcode_settings':
+                {
+                    'CLANG_CXX_LANGUAGE_STANDARD': 'c++11',
+                },
             },    # Common_Base
 
             'Debug_Base':
@@ -174,7 +178,6 @@
                 },
                 'xcode_settings':
                 {
-                    'CLANG_CXX_LANGUAGE_STANDARD': 'c++11',
                     'COPY_PHASE_STRIP': 'NO',
                     'GCC_OPTIMIZATION_LEVEL': '0',
                 },
