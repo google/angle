@@ -22,6 +22,30 @@
       "revId": "fd550d25fe180bac11da4cfe002b5602d0abdb60",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4a8755c_4bd3a749",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-08-19T18:01:47Z",
+      "side": 1,
+      "message": "I am OK with landing it as is, but I do agree with Jamie, that this option doesn\u0027t need to be exposed to outside ANGLE translator.",
+      "parentUuid": "84b0d10a_bbb90716",
+      "range": {
+        "startLine": 232,
+        "startChar": 8,
+        "endLine": 232,
+        "endChar": 22
+      },
+      "revId": "fd550d25fe180bac11da4cfe002b5602d0abdb60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
