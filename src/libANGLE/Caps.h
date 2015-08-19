@@ -248,6 +248,9 @@ struct Limitations
     bool attributeZeroRequiresZeroDivisorInEXT;
 
     // TODO: add entry for renderers that don't support separate stencil masks/refs
+
+    // Renderer doesn't support non-constant indexing loops in fragment shader
+    bool shadersRequireIndexedLoopValidation;
 };
 
 struct TypePrecision

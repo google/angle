@@ -25,7 +25,7 @@ class ShaderD3D : public ShaderImpl
     friend class DynamicHLSL;
 
   public:
-    ShaderD3D(GLenum type);
+    ShaderD3D(GLenum type, RendererD3D *renderer);
     virtual ~ShaderD3D();
 
     // ShaderImpl implementation
@@ -80,6 +80,7 @@ class ShaderD3D : public ShaderImpl
     std::string mDebugInfo;
     std::map<std::string, unsigned int> mUniformRegisterMap;
     std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;
+    RendererD3D *mRenderer;
 };
 
 }

@@ -1175,6 +1175,12 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     // D3D11 Feature Level 9_3 doesn't support alpha-to-coverage
     limitations->noSampleAlphaToCoverageSupport = (renderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3);
 
+    // D3D11 Feature Levels 9_3 and below do not support non-constant loop indexing and require
+    // additional
+    // pre-validation of the shader at compile time to produce a better error message.
+    limitations->shadersRequireIndexedLoopValidation =
+        (renderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3);
+
 #ifdef ANGLE_ENABLE_WINDOWS_STORE
     // Setting a non-zero divisor on attribute zero doesn't work on certain Windows Phone 8-era devices.
     // We should prevent developers from doing this on ALL Windows Store devices. This will maintain consistency across all Windows devices.

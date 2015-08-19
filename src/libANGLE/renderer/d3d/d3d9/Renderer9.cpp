@@ -2664,7 +2664,7 @@ CompilerImpl *Renderer9::createCompiler(const gl::Data &data)
 
 ShaderImpl *Renderer9::createShader(GLenum type)
 {
-    return new ShaderD3D(type);
+    return new ShaderD3D(type, this);
 }
 
 ProgramImpl *Renderer9::createProgram(const gl::Program::Data &data)

@@ -204,7 +204,8 @@ std::vector<std::string> Extensions::getStrings() const
 Limitations::Limitations()
     : noFrontFacingSupport(false),
       noSampleAlphaToCoverageSupport(false),
-      attributeZeroRequiresZeroDivisorInEXT(false)
+      attributeZeroRequiresZeroDivisorInEXT(false),
+      shadersRequireIndexedLoopValidation(false)
 {
 }
 

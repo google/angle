@@ -65,9 +65,8 @@ const std::vector<VarT> *GetShaderVariables(const std::vector<VarT> *variableLis
     return variableList;
 }
 
-ShaderD3D::ShaderD3D(GLenum type)
-    : mShaderType(type),
-      mShaderVersion(100)
+ShaderD3D::ShaderD3D(GLenum type, RendererD3D *renderer)
+    : mShaderType(type), mShaderVersion(100), mRenderer(renderer)
 {
     uncompile();
 }
@@ -152,6 +151,16 @@ void ShaderD3D::uncompile()
 void ShaderD3D::compileToHLSL(ShHandle compiler, const std::string &source)
 {
     int compileOptions = (SH_OBJECT_CODE | SH_VARIABLES);
+
+    // D3D11 Feature Level 9_3 and below do not support non-constant loop indexers in fragment
+    // shaders.
+    // Shader compilation will fail. To provide a better error message we can instruct the
+    // compiler to pre-validate.
+    if (mRenderer->getRendererLimitations().shadersRequireIndexedLoopValidation)
+    {
+        compileOptions |= SH_VALIDATE_LOOP_INDEXING;
+    }
+
     std::string sourcePath;
 
 #if !defined (ANGLE_ENABLE_WINDOWS_STORE)
