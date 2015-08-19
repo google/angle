@@ -9,19 +9,17 @@
 #include "libANGLE/renderer/gl/wgl/WindowSurfaceWGL.h"
 
 #include "common/debug.h"
-#include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/wgl/FunctionsWGL.h"
 #include "libANGLE/renderer/gl/wgl/wgl_utils.h"
 
 namespace rx
 {
 
-WindowSurfaceWGL::WindowSurfaceWGL(RendererGL *renderer,
-                                   EGLNativeWindowType window,
+WindowSurfaceWGL::WindowSurfaceWGL(EGLNativeWindowType window,
                                    int pixelFormat,
                                    HGLRC wglContext,
                                    const FunctionsWGL *functions)
-    : SurfaceGL(renderer),
+    : SurfaceGL(),
       mPixelFormat(pixelFormat),
       mWGLContext(wglContext),
       mWindow(window),

@@ -33,7 +33,6 @@ class SurfaceD3D : public SurfaceImpl
     void releaseSwapChain();
 
     egl::Error initialize() override;
-    FramebufferImpl *createDefaultFramebuffer(const gl::Framebuffer::Data &data) override;
 
     egl::Error swap() override;
     egl::Error postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height) override;
