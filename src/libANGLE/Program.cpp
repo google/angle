@@ -311,22 +311,11 @@ Error Program::link(const gl::Data &data)
         return Error(GL_NO_ERROR);
     }
 
-    int registers;
-    rx::LinkResult result =
-        mProgram->link(data, mInfoLog, mData.mAttachedFragmentShader, mData.mAttachedVertexShader,
-                       &registers, &mOutputVariables);
-    if (result.error.isError() || !result.linkSuccess)
-    {
-        return result.error;
-    }
+    rx::LinkResult result = mProgram->link(data, mInfoLog, mData.mAttachedFragmentShader,
+                                           mData.mAttachedVertexShader, &mOutputVariables);
 
-    // TODO: The concept of "executables" is D3D only, and as such this belongs in ProgramD3D. It must be called,
-    // however, last in this function, so it can't simply be moved to ProgramD3D::link without further shuffling.
-    result = mProgram->compileProgramExecutables(mInfoLog, registers);
     if (result.error.isError() || !result.linkSuccess)
     {
-        mInfoLog << "Failed to create D3D shaders.";
-        unlink(false);
         return result.error;
     }
 

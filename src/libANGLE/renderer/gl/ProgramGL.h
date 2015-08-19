@@ -42,7 +42,6 @@ class ProgramGL : public ProgramImpl
                     gl::InfoLog &infoLog,
                     gl::Shader *fragmentShader,
                     gl::Shader *vertexShader,
-                    int *registers,
                     std::map<int, gl::VariableLocation> *outputVariables) override;
 
     void bindAttributeLocation(GLuint index, const std::string &name) override;
@@ -78,8 +77,6 @@ class ProgramGL : public ProgramImpl
     GLint getUsedSamplerRange(gl::SamplerType type) const override;
     void updateSamplerMapping() override;
     bool validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps) override;
-
-    LinkResult compileProgramExecutables(gl::InfoLog &infoLog, int registers) override;
 
     void defineUniformBlock(gl::InfoLog &infoLog,
                             const gl::Shader &shader,

@@ -68,13 +68,10 @@ class ProgramD3D : public ProgramImpl
     gl::Error getVertexExecutableForInputLayout(const gl::InputLayout &inputLayout, ShaderExecutableD3D **outExectuable, gl::InfoLog *infoLog);
     ShaderExecutableD3D *getGeometryExecutable() const { return mGeometryExecutable; }
 
-    LinkResult compileProgramExecutables(gl::InfoLog &infoLog, int registers);
-
     LinkResult link(const gl::Data &data,
                     gl::InfoLog &infoLog,
                     gl::Shader *fragmentShader,
                     gl::Shader *vertexShader,
-                    int *registers,
                     std::map<int, gl::VariableLocation> *outputVariables);
 
     void bindAttributeLocation(GLuint index, const std::string &name) override;
@@ -207,6 +204,8 @@ class ProgramD3D : public ProgramImpl
     void defineUniformBlockMembers(const std::vector<VarT> &fields, const std::string &prefix, int blockIndex,
                                    sh::BlockLayoutEncoder *encoder, std::vector<unsigned int> *blockUniformIndexes,
                                    bool inRowMajorLayout);
+
+    LinkResult compileProgramExecutables(gl::InfoLog &infoLog, int registers);
 
     void gatherTransformFeedbackVaryings(const std::vector<gl::LinkedVarying> &varyings);
 

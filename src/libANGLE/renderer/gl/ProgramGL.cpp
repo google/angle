@@ -68,7 +68,6 @@ LinkResult ProgramGL::link(const gl::Data &data,
                            gl::InfoLog &infoLog,
                            gl::Shader *fragmentShader,
                            gl::Shader *vertexShader,
-                           int *registers,
                            std::map<int, gl::VariableLocation> *outputVariables)
 {
     // Reset the program state, delete the current program if one exists
@@ -393,12 +392,6 @@ bool ProgramGL::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
 {
     //UNIMPLEMENTED();
     return true;
-}
-
-LinkResult ProgramGL::compileProgramExecutables(gl::InfoLog &infoLog, int registers)
-{
-    //UNIMPLEMENTED();
-    return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
 
 gl::Error ProgramGL::applyUniforms()

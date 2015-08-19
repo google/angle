@@ -47,7 +47,6 @@ class ProgramImpl : angle::NonCopyable
                             gl::InfoLog &infoLog,
                             gl::Shader *fragmentShader,
                             gl::Shader *vertexShader,
-                            int *registers,
                             std::map<int, gl::VariableLocation> *outputVariables) = 0;
 
     virtual void bindAttributeLocation(GLuint index, const std::string &name) = 0;
@@ -85,8 +84,6 @@ class ProgramImpl : angle::NonCopyable
     virtual GLint getUsedSamplerRange(gl::SamplerType type) const = 0;
     virtual void updateSamplerMapping() = 0;
     virtual bool validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps) = 0;
-
-    virtual LinkResult compileProgramExecutables(gl::InfoLog &infoLog, int registers) = 0;
 
     virtual gl::Error applyUniforms() = 0;
     virtual gl::Error applyUniformBuffers(const gl::Data &data, GLuint uniformBlockBindings[]) = 0;
