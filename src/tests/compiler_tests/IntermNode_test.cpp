@@ -230,3 +230,4 @@ TEST_F(IntermNodeTest, DeepCopySelectionNode)
     checkSymbolCopy(original->getTrueBlock(), copy->getTrueBlock());
     checkSymbolCopy(original->getFalseBlock(), copy->getFalseBlock());
 }
+
