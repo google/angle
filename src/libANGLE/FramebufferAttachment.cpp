@@ -64,6 +64,7 @@ FramebufferAttachment::FramebufferAttachment(GLenum type,
 }
 
 FramebufferAttachment::FramebufferAttachment(const FramebufferAttachment &other)
+    : mResource(nullptr)
 {
     attach(other.mType, other.mTarget.binding(), other.mTarget.textureIndex(), other.mResource);
 }
