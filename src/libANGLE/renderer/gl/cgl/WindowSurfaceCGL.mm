@@ -9,12 +9,12 @@
 #include "libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h"
 
 #include "common/debug.h"
+#include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
 
 namespace rx
 {
 
-WindowSurfaceCGL::WindowSurfaceCGL()
-    : SurfaceGL()
+WindowSurfaceCGL::WindowSurfaceCGL(RendererGL *renderer) : SurfaceGL(renderer)
 {
 }
 

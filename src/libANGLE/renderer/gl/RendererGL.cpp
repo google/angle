@@ -181,11 +181,6 @@ ProgramImpl *RendererGL::createProgram(const gl::Program::Data &data)
     return new ProgramGL(data, mFunctions, mStateManager);
 }
 
-FramebufferImpl *RendererGL::createDefaultFramebuffer(const gl::Framebuffer::Data &data)
-{
-    return new FramebufferGL(data, mFunctions, mStateManager, true);
-}
-
 FramebufferImpl *RendererGL::createFramebuffer(const gl::Framebuffer::Data &data)
 {
     return new FramebufferGL(data, mFunctions, mStateManager, false);
