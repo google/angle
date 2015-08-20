@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "e4d98d70_6ea98fdb",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-20T15:06:58Z",
+      "side": 1,
+      "message": "\u003e\u003d or is it valid to call with \u003d\u003d size?",
+      "range": {
+        "startLine": 314,
+        "startChar": 17,
+        "endLine": 314,
+        "endChar": 18
+      },
+      "revId": "0a8602284f0a14cc87e185002b03cb12286cd9df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4a9e95f_47b07cf8",
         "filename": "src/compiler/translator/RemoveDynamicIndexing.cpp",
         "patchSetId": 12
@@ -42,6 +65,29 @@
         "startChar": 8,
         "endLine": 108,
         "endChar": 15
+      },
+      "revId": "0a8602284f0a14cc87e185002b03cb12286cd9df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84de1159_6b51812e",
+        "filename": "src/compiler/translator/RemoveDynamicIndexing.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 424,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-20T15:06:58Z",
+      "side": 1,
+      "message": "doesn\u0027t this only apply to 300 version shaders? sorry I\u0027m fuzzy on the details, but can we skip this on ESSL 1?",
+      "range": {
+        "startLine": 424,
+        "startChar": 31,
+        "endLine": 424,
+        "endChar": 44
       },
       "revId": "0a8602284f0a14cc87e185002b03cb12286cd9df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
