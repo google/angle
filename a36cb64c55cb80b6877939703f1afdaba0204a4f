@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "441259d9_893b99f3",
+        "filename": "build/common.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-20T14:10:19Z",
+      "side": 1,
+      "message": "This could go in the Common_Base configuration.",
+      "range": {
+        "startLine": 222,
+        "startChar": 16,
+        "endLine": 225,
+        "endChar": 18
+      },
+      "revId": "a36cb64c55cb80b6877939703f1afdaba0204a4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
