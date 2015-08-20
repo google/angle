@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "441259d9_891f1963",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-20T19:58:47Z",
+      "side": 1,
+      "message": "It could run from never to many times a frame. The goal is to GC inside a frame so we can reduce the peak memory usage.\nNot that important though.",
+      "parentUuid": "d8970a01_f25cf0c3",
+      "range": {
+        "startLine": 490,
+        "startChar": 14,
+        "endLine": 490,
+        "endChar": 34
+      },
+      "revId": "6b9a5feaf57c5a6d70c73c5a5d87984c56440244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "586ddaeb_e3f0a0dc",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2015-07-09T19:51:31Z",
       "side": 1,
       "message": "is there any possibility of thrash with this usage limit based design? ie if a buffer is used 21 times in a frame? is there a design that wouldn\u0027t have such a limitation?",
+      "range": {
+        "startLine": 503,
+        "startChar": 14,
+        "endLine": 503,
+        "endChar": 32
+      },
+      "revId": "6b9a5feaf57c5a6d70c73c5a5d87984c56440244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04f301eb_ef20e1a6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-20T19:58:47Z",
+      "side": 1,
+      "message": "There is a possibility, I\u0027m not sure how to make something adaptative though.",
+      "parentUuid": "586ddaeb_e3f0a0dc",
       "range": {
         "startLine": 503,
         "startChar": 14,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "640f5db2_b3e36a4f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-20T19:58:47Z",
+      "side": 1,
+      "message": "We want to grab the latest storage, but if two are ex-aequo we want the GPU one to win, which is not guaranteed by getLatestBufferStorage.",
+      "parentUuid": "586ddaeb_4315cc76",
+      "range": {
+        "startLine": 512,
+        "startChar": 0,
+        "endLine": 527,
+        "endChar": 26
+      },
+      "revId": "6b9a5feaf57c5a6d70c73c5a5d87984c56440244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d8970a01_92a00c29",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 8
@@ -82,6 +154,30 @@
       "writtenOn": "2015-07-09T19:51:31Z",
       "side": 1,
       "message": "for some reason this phrasing makes me stumble. how about mUsageCount - mLastUsage \u003e (or \u003e\u003d) limit. Also you can ASSERT the usagecount \u003e\u003d lastUsage",
+      "range": {
+        "startLine": 531,
+        "startChar": 7,
+        "endLine": 531,
+        "endChar": 65
+      },
+      "revId": "6b9a5feaf57c5a6d70c73c5a5d87984c56440244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2409e5af_a8d3fb00",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-20T19:58:47Z",
+      "side": 1,
+      "message": "Yeah reading it again I found it difficult to parse too.\nDone",
+      "parentUuid": "d8970a01_92a00c29",
       "range": {
         "startLine": 531,
         "startChar": 7,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "040ce1be_0aa1dba9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-20T19:58:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d8970a01_324338e9",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 49
+      },
+      "revId": "6b9a5feaf57c5a6d70c73c5a5d87984c56440244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "387026c3_dfa4530b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 8
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "04f301eb_4f092d36",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3833,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-20T19:58:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "387026c3_dfa4530b",
+      "range": {
+        "startLine": 3833,
+        "startChar": 7,
+        "endLine": 3833,
+        "endChar": 8
+      },
+      "revId": "6b9a5feaf57c5a6d70c73c5a5d87984c56440244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d8970a01_3216d8d6",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 8
@@ -151,6 +295,30 @@
       "writtenOn": "2015-07-09T19:51:31Z",
       "side": 1,
       "message": "nit: remove extra space",
+      "range": {
+        "startLine": 3838,
+        "startChar": 21,
+        "endLine": 3838,
+        "endChar": 24
+      },
+      "revId": "6b9a5feaf57c5a6d70c73c5a5d87984c56440244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04f301eb_2f16e955",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3838,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-20T19:58:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d8970a01_3216d8d6",
       "range": {
         "startLine": 3838,
         "startChar": 21,
