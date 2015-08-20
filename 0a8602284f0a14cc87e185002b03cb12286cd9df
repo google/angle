@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "24656596_e8ed5383",
+        "filename": "src/compiler/translator/RemoveDynamicIndexing.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-20T19:08:48Z",
+      "side": 1,
+      "message": "Yep, it\u0027s easier to test. Though on the other hand, this only applies for only a subset of indexing operations - for the others, clamping the index would more typically be used. Would it be better to actually make this behave as if the index was clamped to be more consistent with how out-of-range indices get handled in other cases?",
+      "parentUuid": "248c8586_133fae3d",
+      "range": {
+        "startLine": 108,
+        "startChar": 8,
+        "endLine": 108,
+        "endChar": 15
+      },
+      "revId": "0a8602284f0a14cc87e185002b03cb12286cd9df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "84de1159_6b51812e",
         "filename": "src/compiler/translator/RemoveDynamicIndexing.cpp",
         "patchSetId": 12
@@ -155,6 +179,30 @@
       "side": 1,
       "message": "+1\nWe should avoid this step when the dynamic indexing isn\u0027t allowed by the spec.",
       "parentUuid": "84de1159_6b51812e",
+      "range": {
+        "startLine": 424,
+        "startChar": 31,
+        "endLine": 424,
+        "endChar": 44
+      },
+      "revId": "0a8602284f0a14cc87e185002b03cb12286cd9df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44e3394a_e155e6cc",
+        "filename": "src/compiler/translator/RemoveDynamicIndexing.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 424,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-20T19:08:48Z",
+      "side": 1,
+      "message": "The shader version parameter is here simply to make TLValueTrackingTraverser to use the right built-in function table to determine which built-ins have out parameters, but maybe it\u0027s possible to remove it and hard-code 300 in RemoveDynamicIndexingTraverser. I\u0027ll go through the ESSL1.00 spec to make sure this isn\u0027t required even in the non-minimal version of the spec.",
+      "parentUuid": "e430ad80_d95637db",
       "range": {
         "startLine": 424,
         "startChar": 31,
