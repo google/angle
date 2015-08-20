@@ -52,8 +52,6 @@ class TName
     POOL_ALLOCATOR_NEW_DELETE();
     explicit TName(const TString &name) : mName(name), mIsInternal(false) {}
     TName() : mName(), mIsInternal(false) {}
-    TName(const TName &) = default;
-    TName &operator=(const TName &) = default;
 
     const TString &getString() const { return mName; }
     void setString(const TString &string) { mName = string; }
@@ -68,7 +66,7 @@ class TName
 //
 // Base class for the tree nodes
 //
-class TIntermNode : angle::NonCopyable
+class TIntermNode
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
@@ -122,9 +120,6 @@ class TIntermTyped : public TIntermNode
 {
   public:
     TIntermTyped(const TType &t) : mType(t)  { }
-
-    virtual TIntermTyped *deepCopy() const = 0;
-
     TIntermTyped *getAsTyped() override { return this; }
 
     virtual bool hasSideEffects() const = 0;
@@ -155,8 +150,6 @@ class TIntermTyped : public TIntermNode
 
   protected:
     TType mType;
-
-    TIntermTyped(const TIntermTyped &node);
 };
 
 //
@@ -242,8 +235,6 @@ class TIntermSymbol : public TIntermTyped
     {
     }
 
-    TIntermTyped *deepCopy() const override { return new TIntermSymbol(*this); }
-
     bool hasSideEffects() const override { return false; }
 
     int getId() const { return mId; }
@@ -261,9 +252,6 @@ class TIntermSymbol : public TIntermTyped
   protected:
     int mId;
     TName mSymbol;
-
-  private:
-    TIntermSymbol(const TIntermSymbol &) = default;  // Note: not deleted, just private!
 };
 
 // A Raw node stores raw code, that the translator will insert verbatim
@@ -275,13 +263,6 @@ class TIntermRaw : public TIntermTyped
     TIntermRaw(const TType &type, const TString &rawText)
         : TIntermTyped(type),
           mRawText(rawText) { }
-    TIntermRaw(const TIntermRaw &) = delete;
-
-    TIntermTyped *deepCopy() const
-    {
-        UNREACHABLE();
-        return nullptr;
-    }
 
     bool hasSideEffects() const override { return false; }
 
@@ -302,8 +283,6 @@ class TIntermConstantUnion : public TIntermTyped
     TIntermConstantUnion(TConstantUnion *unionPointer, const TType &type)
         : TIntermTyped(type),
           mUnionArrayPointer(unionPointer) { }
-
-    TIntermTyped *deepCopy() const override { return new TIntermConstantUnion(*this); }
 
     bool hasSideEffects() const override { return false; }
 
@@ -349,8 +328,6 @@ class TIntermConstantUnion : public TIntermTyped
   private:
     typedef float(*FloatTypeUnaryFunc) (float);
     bool foldFloatTypeUnary(const TConstantUnion &parameter, FloatTypeUnaryFunc builtinFunc, TInfoSink &infoSink, TConstantUnion *result) const;
-
-    TIntermConstantUnion(const TIntermConstantUnion &node);  // Note: not deleted, just private!
 };
 
 //
@@ -376,8 +353,6 @@ class TIntermOperator : public TIntermTyped
         : TIntermTyped(type),
           mOp(op) {}
 
-    TIntermOperator(const TIntermOperator &) = default;
-
     TOperator mOp;
 };
 
@@ -390,8 +365,6 @@ class TIntermBinary : public TIntermOperator
     TIntermBinary(TOperator op)
         : TIntermOperator(op),
           mAddIndexClamp(false) {}
-
-    TIntermTyped *deepCopy() const override { return new TIntermBinary(*this); }
 
     TIntermBinary *getAsBinaryNode() override { return this; };
     void traverse(TIntermTraverser *it) override;
@@ -419,9 +392,6 @@ class TIntermBinary : public TIntermOperator
 
     // If set to true, wrap any EOpIndexIndirect with a clamp to bounds.
     bool mAddIndexClamp;
-
-  private:
-    TIntermBinary(const TIntermBinary &node);  // Note: not deleted, just private!
 };
 
 //
@@ -438,8 +408,6 @@ class TIntermUnary : public TIntermOperator
         : TIntermOperator(op),
           mOperand(NULL),
           mUseEmulatedFunction(false) {}
-
-    TIntermTyped *deepCopy() const override { return new TIntermUnary(*this); }
 
     void traverse(TIntermTraverser *it) override;
     TIntermUnary *getAsUnaryNode() override { return this; }
@@ -465,9 +433,6 @@ class TIntermUnary : public TIntermOperator
     // If set to true, replace the built-in function call with an emulated one
     // to work around driver bugs.
     bool mUseEmulatedFunction;
-
-  private:
-    TIntermUnary(const TIntermUnary &node);  // note: not deleted, just private!
 };
 
 typedef TVector<TIntermNode *> TIntermSequence;
@@ -493,9 +458,6 @@ class TIntermAggregate : public TIntermOperator
     {
     }
     ~TIntermAggregate() { }
-
-    // Note: only supported for nodes that can be a part of an expression.
-    TIntermTyped *deepCopy() const override { return new TIntermAggregate(*this); }
 
     TIntermAggregate *getAsAggregate() override { return this; }
     void traverse(TIntermTraverser *it) override;
@@ -536,6 +498,8 @@ class TIntermAggregate : public TIntermOperator
     bool gotPrecisionFromChildren() const { return mGotPrecisionFromChildren; }
 
   protected:
+    TIntermAggregate(const TIntermAggregate &); // disallow copy constructor
+    TIntermAggregate &operator=(const TIntermAggregate &); // disallow assignment operator
     TIntermSequence mSequence;
     TName mName;
     bool mUserDefined; // used for user defined function names
@@ -549,9 +513,6 @@ class TIntermAggregate : public TIntermOperator
     bool mUseEmulatedFunction;
 
     bool mGotPrecisionFromChildren;
-
-  private:
-    TIntermAggregate(const TIntermAggregate &node);  // note: not deleted, just private!
 };
 
 //
@@ -572,9 +533,6 @@ class TIntermSelection : public TIntermTyped
           mTrueBlock(trueB),
           mFalseBlock(falseB) {}
 
-    // Note: only supported for ternary operator nodes.
-    TIntermTyped *deepCopy() const override { return new TIntermSelection(*this); }
-
     void traverse(TIntermTraverser *it) override;
     bool replaceChildNode(
         TIntermNode *original, TIntermNode *replacement) override;
@@ -588,13 +546,10 @@ class TIntermSelection : public TIntermTyped
     TIntermNode *getFalseBlock() const { return mFalseBlock; }
     TIntermSelection *getAsSelectionNode() override { return this; }
 
-  protected:
+protected:
     TIntermTyped *mCondition;
     TIntermNode *mTrueBlock;
     TIntermNode *mFalseBlock;
-
-  private:
-    TIntermSelection(const TIntermSelection &node);  // Note: not deleted, just private!
 };
 
 //

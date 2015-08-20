@@ -269,9 +269,6 @@ class TType
     {
     }
 
-    TType(const TType &) = default;
-    TType &operator=(const TType &) = default;
-
     TBasicType getBasicType() const
     {
         return type;
