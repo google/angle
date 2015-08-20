@@ -22,6 +22,30 @@
       "revId": "0a8602284f0a14cc87e185002b03cb12286cd9df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4c23555_578f8e86",
+        "filename": "src/compiler/translator/RemoveDynamicIndexing.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-20T08:00:18Z",
+      "side": 1,
+      "message": "The base spec says that this is undefined behavior. KHR_robust_buffer_access_behavior says that either zero or any value from the active program\u0027s memory may be returned. If you think that returning zero is better, we can do that instead.",
+      "parentUuid": "c4a9e95f_47b07cf8",
+      "range": {
+        "startLine": 108,
+        "startChar": 8,
+        "endLine": 108,
+        "endChar": 15
+      },
+      "revId": "0a8602284f0a14cc87e185002b03cb12286cd9df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
