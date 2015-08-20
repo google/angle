@@ -16,6 +16,11 @@ extern "C" {
 using namespace gpu;
 
 #if defined(OS_WIN)
+
+namespace base {
+
+namespace {
+
 // Disable the deprecated function warning for GetVersionEx
 #pragma warning(disable: 4996)
 
@@ -36,6 +41,10 @@ void SysInfo::OperatingSystemVersionNumbers(
   *minor_version = version_info.dwMinorVersion;
   *bugfix_version = version_info.dwBuildNumber;
 }
+
+} // anonymous namespace
+
+} // namespace base
 
 void DeviceIDToVendorAndDevice(const std::string& id,
                                uint32* vendor_id,
