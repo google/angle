@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "640f5db2_908cdc89",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-20T14:52:28Z",
+      "side": 1,
+      "message": "nit: use nullptr in new code",
+      "range": {
+        "startLine": 636,
+        "startChar": 26,
+        "endLine": 636,
+        "endChar": 30
+      },
+      "revId": "132eb5541b8e57655f6ca0fbffbdbd6071497cdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "84de1159_eb3c51ef",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 1
@@ -48,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "e4d98d70_8e939bb0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-20T14:52:28Z",
+      "side": 1,
+      "message": "+!",
+      "parentUuid": "243e454a_e0c90255",
+      "range": {
+        "startLine": 647,
+        "startChar": 105,
+        "endLine": 647,
+        "endChar": 113
+      },
+      "revId": "132eb5541b8e57655f6ca0fbffbdbd6071497cdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "044141d7_dfa5bbbd",
         "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
         "patchSetId": 1
@@ -81,6 +128,29 @@
         "startChar": 7,
         "endLine": 63,
         "endChar": 28
+      },
+      "revId": "132eb5541b8e57655f6ca0fbffbdbd6071497cdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "441259d9_e9a575bd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-20T14:52:28Z",
+      "side": 1,
+      "message": "how about bool requiresConversion? slightly nitty but might be more clear",
+      "range": {
+        "startLine": 70,
+        "startChar": 9,
+        "endLine": 70,
+        "endChar": 19
       },
       "revId": "132eb5541b8e57655f6ca0fbffbdbd6071497cdd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
