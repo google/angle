@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c4c3a958_58a6e198",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-20T08:08:38Z",
+      "side": 1,
+      "message": "It\u0027s new in C++11. Makes sense to use it wherever default copy constructor is meant to be supported, I\u0027d say.",
+      "parentUuid": "64c11d6c_faaf89ca",
+      "range": {
+        "startLine": 55,
+        "startChar": 27,
+        "endLine": 55,
+        "endChar": 34
+      },
+      "revId": "3a09ba6751cedd8be93f1d68697254a6f01e5d52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "840ff177_e6c7203a",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-08-19T14:23:12Z",
       "side": 1,
       "message": "is this necessary if we inherit from NonCopyable?",
+      "range": {
+        "startLine": 278,
+        "startChar": 2,
+        "endLine": 278,
+        "endChar": 44
+      },
+      "revId": "3a09ba6751cedd8be93f1d68697254a6f01e5d52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "446ed97b_e9b4751f",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-20T08:08:38Z",
+      "side": 1,
+      "message": "Yes, since TIntermTyped adds a copy constructor again in the inheritance chain.",
+      "parentUuid": "840ff177_e6c7203a",
       "range": {
         "startLine": 278,
         "startChar": 2,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e45eedce_86b92a16",
+        "filename": "src/tests/compiler_tests/IntermNode_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-20T08:08:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4b5d5f9_fcaf89ca",
+      "range": {
+        "startLine": 22,
+        "startChar": 4,
+        "endLine": 22,
+        "endChar": 11
+      },
+      "revId": "3a09ba6751cedd8be93f1d68697254a6f01e5d52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "84b0d10a_fbaf8fca",
         "filename": "src/tests/compiler_tests/IntermNode_test.cpp",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2015-08-19T14:23:12Z",
       "side": 1,
       "message": "nit: comment before each test",
+      "range": {
+        "startLine": 113,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 6
+      },
+      "revId": "3a09ba6751cedd8be93f1d68697254a6f01e5d52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4c23555_b7a54202",
+        "filename": "src/tests/compiler_tests/IntermNode_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-08-20T08:08:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "84b0d10a_fbaf8fca",
       "range": {
         "startLine": 113,
         "startChar": 0,
