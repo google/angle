@@ -2514,12 +2514,14 @@ DeviceIdentifier Renderer11::getAdapterIdentifier() const
 
 unsigned int Renderer11::getReservedVertexUniformVectors() const
 {
-    return 0;   // Driver uniforms are stored in a separate constant buffer
+    // Driver uniforms are stored in a separate constant buffer
+    return d3d11_gl::GetReservedVertexUniformVectors(mRenderer11DeviceCaps.featureLevel);
 }
 
 unsigned int Renderer11::getReservedFragmentUniformVectors() const
 {
-    return 0;   // Driver uniforms are stored in a separate constant buffer
+    // Driver uniforms are stored in a separate constant buffer
+    return d3d11_gl::GetReservedFragmentUniformVectors(mRenderer11DeviceCaps.featureLevel);
 }
 
 unsigned int Renderer11::getReservedVertexUniformBuffers() const

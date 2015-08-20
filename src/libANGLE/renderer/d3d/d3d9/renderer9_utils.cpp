@@ -274,6 +274,16 @@ D3DMULTISAMPLE_TYPE GetMultisampleType(GLuint samples)
 namespace d3d9_gl
 {
 
+unsigned int GetReservedVertexUniformVectors()
+{
+    return 3;  // dx_ViewCoords, dx_ViewAdjust and dx_DepthRange.
+}
+
+unsigned int GetReservedFragmentUniformVectors()
+{
+    return 3;  // dx_ViewCoords, dx_DepthFront and dx_DepthRange.
+}
+
 GLsizei GetSamplesCount(D3DMULTISAMPLE_TYPE type)
 {
     return (type != D3DMULTISAMPLE_NONMASKABLE) ? type : 0;
@@ -435,9 +445,9 @@ void GenerateCaps(IDirect3D9 *d3d9,
     // Vertex shader limits
     caps->maxVertexAttributes = 16;
 
-    const size_t reservedVertexUniformVectors = 2; // dx_ViewAdjust and dx_DepthRange.
     const size_t MAX_VERTEX_CONSTANT_VECTORS_D3D9 = 256;
-    caps->maxVertexUniformVectors = MAX_VERTEX_CONSTANT_VECTORS_D3D9 - reservedVertexUniformVectors;
+    caps->maxVertexUniformVectors =
+        MAX_VERTEX_CONSTANT_VECTORS_D3D9 - GetReservedVertexUniformVectors();
     caps->maxVertexUniformComponents = caps->maxVertexUniformVectors * 4;
 
     caps->maxVertexUniformBlocks = 0;
@@ -463,12 +473,12 @@ void GenerateCaps(IDirect3D9 *d3d9,
     }
 
     // Fragment shader limits
-    const size_t reservedPixelUniformVectors = 3; // dx_ViewCoords, dx_DepthFront and dx_DepthRange.
-
     const size_t MAX_PIXEL_CONSTANT_VECTORS_SM3 = 224;
     const size_t MAX_PIXEL_CONSTANT_VECTORS_SM2 = 32;
-    caps->maxFragmentUniformVectors = ((deviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0)) ? MAX_PIXEL_CONSTANT_VECTORS_SM3
-                                                                                              : MAX_PIXEL_CONSTANT_VECTORS_SM2) - reservedPixelUniformVectors;
+    caps->maxFragmentUniformVectors =
+        ((deviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0)) ? MAX_PIXEL_CONSTANT_VECTORS_SM3
+                                                                : MAX_PIXEL_CONSTANT_VECTORS_SM2) -
+        GetReservedFragmentUniformVectors();
     caps->maxFragmentUniformComponents = caps->maxFragmentUniformVectors * 4;
     caps->maxFragmentUniformBlocks = 0;
     caps->maxFragmentInputComponents = caps->maxVertexOutputComponents;

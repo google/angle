@@ -2509,12 +2509,12 @@ DeviceIdentifier Renderer9::getAdapterIdentifier() const
 
 unsigned int Renderer9::getReservedVertexUniformVectors() const
 {
-    return 2;   // dx_ViewAdjust and dx_DepthRange.
+    return d3d9_gl::GetReservedVertexUniformVectors();
 }
 
 unsigned int Renderer9::getReservedFragmentUniformVectors() const
 {
-    return 3;   // dx_ViewCoords, dx_DepthFront and dx_DepthRange.
+    return d3d9_gl::GetReservedFragmentUniformVectors();
 }
 
 unsigned int Renderer9::getReservedVertexUniformBuffers() const

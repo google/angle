@@ -1451,6 +1451,13 @@ bool ProgramD3D::defineUniforms(gl::InfoLog &infoLog, const gl::Caps &caps)
     const std::vector<sh::Uniform> &vertexUniforms = vertexShader->getUniforms();
     const ShaderD3D *vertexShaderD3D               = GetImplAs<ShaderD3D>(vertexShader);
 
+    if (vertexUniforms.size() > caps.maxVertexUniformVectors)
+    {
+        infoLog << "Vertex shader active uniforms exceed GL_MAX_VERTEX_UNIFORM_VECTORS ("
+                << caps.maxVertexUniformVectors << ").";
+        return false;
+    }
+
     for (const sh::Uniform &uniform : vertexUniforms)
     {
         if (uniform.staticUse)
@@ -1464,6 +1471,13 @@ bool ProgramD3D::defineUniforms(gl::InfoLog &infoLog, const gl::Caps &caps)
     const gl::Shader *fragmentShader                 = mData.getAttachedFragmentShader();
     const std::vector<sh::Uniform> &fragmentUniforms = fragmentShader->getUniforms();
     const ShaderD3D *fragmentShaderD3D               = GetImplAs<ShaderD3D>(fragmentShader);
+
+    if (fragmentUniforms.size() > caps.maxFragmentUniformVectors)
+    {
+        infoLog << "Vertex shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS ("
+                << caps.maxFragmentUniformVectors << ").";
+        return false;
+    }
 
     for (const sh::Uniform &uniform : fragmentUniforms)
     {
