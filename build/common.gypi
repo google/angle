@@ -361,6 +361,9 @@
                 'cflags':
                 [
                     '-pthread',
+                ],
+                'cflags_cc':
+                [
                     '-fno-exceptions',
                 ],
                 'ldflags':

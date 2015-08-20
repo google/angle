@@ -1032,9 +1032,11 @@
                                 },
                             },
                         },
-                        'cflags!':
+                        # Re-enable RTTI and exceptions, dEQP needs them.
+                        'cflags_cc!':
                         [
-                            '-fno-exceptions', # dEQP requires exceptions
+                            '-fno-exceptions',
+                            '-fno-rtti',
                         ],
                         'msvs_disabled_warnings':
                         [
@@ -1057,6 +1059,17 @@
                     'sources':
                     [
                         '<@(deqp_libtester_decpp_sources)',
+                    ],
+                    # In a chromium build dl is required for deDynamicLibrary
+                    'conditions':
+                    [
+                        ['OS=="linux"',
+                        {
+                            'link_settings':
+                            {
+                                'libraries': ['-ldl']
+                            },
+                        }],
                     ],
                 },
 
