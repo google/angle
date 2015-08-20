@@ -58,7 +58,7 @@ GLenum GetNextGLSLAttributeType(const std::vector<sh::Attribute> &linkedAttribut
         }
 
         GLenum transposedType = gl::TransposeMatrixType(attrib.type);
-        subIndex += gl::VariableRowCount(attrib.type);
+        subIndex += gl::VariableRowCount(transposedType);
         if (subIndex > index)
         {
             return transposedType;
