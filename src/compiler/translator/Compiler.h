@@ -164,6 +164,11 @@ class TCompiler : public TShHandleBase
     std::vector<sh::Varying> varyings;
     std::vector<sh::InterfaceBlock> interfaceBlocks;
 
+    virtual bool shouldCollectVariables(int compileOptions)
+    {
+        return (compileOptions & SH_VARIABLES) != 0;
+    }
+
   private:
     // Creates the function call DAG for further analysis, returning false if there is a recursion
     bool initCallDag(TIntermNode *root);

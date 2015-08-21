@@ -329,7 +329,7 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             RemovePow(root);
         }
 
-        if (success && (compileOptions & SH_VARIABLES))
+        if (success && shouldCollectVariables(compileOptions))
         {
             collectVariables(root);
             if (compileOptions & SH_ENFORCE_PACKING_RESTRICTIONS)
