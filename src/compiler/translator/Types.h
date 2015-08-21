@@ -161,10 +161,7 @@ class TStructure : public TFieldListCollection
         *mutableName = name;
     }
 
-    virtual TString mangledNamePrefix() const
-    {
-        return "struct-";
-    }
+    TString mangledNamePrefix() const override { return "struct-"; }
     int calculateDeepestNesting() const;
 
     mutable int mDeepestNesting;
@@ -212,10 +209,7 @@ class TInterfaceBlock : public TFieldListCollection
     }
 
   private:
-    virtual TString mangledNamePrefix() const
-    {
-        return "iblock-";
-    }
+    TString mangledNamePrefix() const override { return "iblock-"; }
 
     const TString *mInstanceName; // for interface block instance names
     int mArraySize; // 0 if not an array

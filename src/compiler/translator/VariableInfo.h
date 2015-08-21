@@ -28,9 +28,9 @@ class CollectVariables : public TIntermTraverser
                      ShHashFunction64 hashFunction,
                      const TSymbolTable &symbolTable);
 
-    virtual void visitSymbol(TIntermSymbol *symbol);
-    virtual bool visitAggregate(Visit, TIntermAggregate *node);
-    virtual bool visitBinary(Visit visit, TIntermBinary *binaryNode);
+    void visitSymbol(TIntermSymbol *symbol) override;
+    bool visitAggregate(Visit, TIntermAggregate *node) override;
+    bool visitBinary(Visit visit, TIntermBinary *binaryNode) override;
 
   private:
     template <typename VarT>

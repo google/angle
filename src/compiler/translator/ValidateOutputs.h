@@ -21,7 +21,7 @@ class ValidateOutputs : public TIntermTraverser
 
     int validateAndCountErrors(TInfoSinkBase &sink) const;
 
-    virtual void visitSymbol(TIntermSymbol*);
+    void visitSymbol(TIntermSymbol *) override;
 
   private:
     int mMaxDrawBuffers;

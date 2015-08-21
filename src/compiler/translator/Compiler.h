@@ -67,8 +67,8 @@ class TCompiler : public TShHandleBase
 {
   public:
     TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output);
-    virtual ~TCompiler();
-    virtual TCompiler* getAsCompiler() { return this; }
+    ~TCompiler() override;
+    TCompiler *getAsCompiler() override { return this; }
 
     bool Init(const ShBuiltInResources& resources);
 

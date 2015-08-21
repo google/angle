@@ -24,9 +24,9 @@ class MacroExpander : public Lexer
 {
   public:
     MacroExpander(Lexer *lexer, MacroSet *macroSet, Diagnostics *diagnostics);
-    virtual ~MacroExpander();
+    ~MacroExpander() override;
 
-    virtual void lex(Token *token);
+    void lex(Token *token) override;
 
   private:
     PP_DISALLOW_COPY_AND_ASSIGN(MacroExpander);

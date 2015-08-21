@@ -476,7 +476,7 @@ class NameHashingTraverser : public GetVariableTraverser
     {}
 
   private:
-    virtual void visitVariable(ShaderVariable *variable)
+    void visitVariable(ShaderVariable *variable) override
     {
         TString stringName = TString(variable->name.c_str());
         variable->mappedName = TIntermTraverser::hash(stringName, mHashFunction).c_str();

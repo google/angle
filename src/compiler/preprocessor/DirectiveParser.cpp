@@ -154,7 +154,7 @@ class DefinedParser : public Lexer
     }
 
   protected:
-    virtual void lex(Token *token)
+    void lex(Token *token) override
     {
         const char kDefined[] = "defined";
 

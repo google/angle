@@ -26,7 +26,7 @@ class TokenLexer : public Lexer
         mIter = mTokens.begin();
     }
 
-    virtual void lex(Token *token)
+    void lex(Token *token) override
     {
         if (mIter == mTokens.end())
         {

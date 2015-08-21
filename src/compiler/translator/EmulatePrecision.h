@@ -23,10 +23,10 @@ class EmulatePrecision : public TLValueTrackingTraverser
   public:
     EmulatePrecision(const TSymbolTable &symbolTable, int shaderVersion);
 
-    virtual void visitSymbol(TIntermSymbol *node);
-    virtual bool visitBinary(Visit visit, TIntermBinary *node);
-    virtual bool visitUnary(Visit visit, TIntermUnary *node);
-    virtual bool visitAggregate(Visit visit, TIntermAggregate *node);
+    void visitSymbol(TIntermSymbol *node) override;
+    bool visitBinary(Visit visit, TIntermBinary *node) override;
+    bool visitUnary(Visit visit, TIntermUnary *node) override;
+    bool visitAggregate(Visit visit, TIntermAggregate *node) override;
 
     void writeEmulationHelpers(TInfoSinkBase& sink, ShShaderOutput outputLanguage);
 
