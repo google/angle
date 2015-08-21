@@ -359,29 +359,6 @@ void ProgramGL::getUniformuiv(GLint location, GLuint *params)
     mFunctions->getUniformuiv(mProgramID, location, params);
 }
 
-GLint ProgramGL::getSamplerMapping(gl::SamplerType type, unsigned int samplerIndex, const gl::Caps &caps) const
-{
-    UNIMPLEMENTED();
-    return GLint();
-}
-
-GLenum ProgramGL::getSamplerTextureType(gl::SamplerType type, unsigned int samplerIndex) const
-{
-    UNIMPLEMENTED();
-    return GLenum();
-}
-
-GLint ProgramGL::getUsedSamplerRange(gl::SamplerType type) const
-{
-    UNIMPLEMENTED();
-    return GLint();
-}
-
-void ProgramGL::updateSamplerMapping()
-{
-    UNIMPLEMENTED();
-}
-
 bool ProgramGL::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
 {
     //UNIMPLEMENTED();

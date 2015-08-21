@@ -223,10 +223,6 @@ class Program : angle::NonCopyable
     GLint getActiveAttributeMaxLength();
     const std::vector<sh::Attribute> &getLinkedAttributes() const { return mLinkedAttributes; }
 
-    GLint getSamplerMapping(SamplerType type, unsigned int samplerIndex, const Caps &caps);
-    GLenum getSamplerTextureType(SamplerType type, unsigned int samplerIndex);
-    GLint getUsedSamplerRange(SamplerType type);
-
     GLint getFragDataLocation(const std::string &name) const;
 
     void getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
@@ -298,7 +294,6 @@ class Program : angle::NonCopyable
     void validate(const Caps &caps);
     bool validateSamplers(InfoLog *infoLog, const Caps &caps);
     bool isValidated() const;
-    void updateSamplerMapping();
 
   private:
     void unlink(bool destroy = false);

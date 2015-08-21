@@ -79,11 +79,11 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
     }
 
     gl::Program *program = data.state->getProgram();
-    ASSERT(program != NULL);
+    ASSERT(program != nullptr);
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
+    bool usesPointSize     = programD3D->usesPointSize();
 
-    bool usesPointSize = GetImplAs<ProgramD3D>(program)->usesPointSize();
-
-    program->updateSamplerMapping();
+    programD3D->updateSamplerMapping();
 
     gl::Error error = generateSwizzles(data);
     if (error.isError())
@@ -168,11 +168,11 @@ gl::Error RendererD3D::drawArrays(const gl::Data &data,
                                   GLsizei count, GLsizei instances)
 {
     gl::Program *program = data.state->getProgram();
-    ASSERT(program != NULL);
+    ASSERT(program != nullptr);
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
+    bool usesPointSize     = programD3D->usesPointSize();
 
-    bool usesPointSize = GetImplAs<ProgramD3D>(program)->usesPointSize();
-
-    program->updateSamplerMapping();
+    programD3D->updateSamplerMapping();
 
     gl::Error error = generateSwizzles(data);
     if (error.isError())
@@ -242,14 +242,14 @@ gl::Error RendererD3D::drawArrays(const gl::Data &data,
 
 gl::Error RendererD3D::generateSwizzles(const gl::Data &data, gl::SamplerType type)
 {
-    gl::Program *program = data.state->getProgram();
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.state->getProgram());
 
-    unsigned int samplerRange = static_cast<unsigned int>(program->getUsedSamplerRange(type));
+    unsigned int samplerRange = static_cast<unsigned int>(programD3D->getUsedSamplerRange(type));
 
     for (unsigned int i = 0; i < samplerRange; i++)
     {
-        GLenum textureType = program->getSamplerTextureType(type, i);
-        GLint textureUnit = program->getSamplerMapping(type, i, *data.caps);
+        GLenum textureType = programD3D->getSamplerTextureType(type, i);
+        GLint textureUnit = programD3D->getSamplerMapping(type, i, *data.caps);
         if (textureUnit != -1)
         {
             gl::Texture *texture = data.state->getSamplerTexture(textureUnit, textureType);
@@ -393,13 +393,13 @@ gl::Error RendererD3D::applyShaders(const gl::Data &data)
 gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shaderType,
                                      const FramebufferTextureArray &framebufferTextures, size_t framebufferTextureCount)
 {
-    gl::Program *program = data.state->getProgram();
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.state->getProgram());
 
-    unsigned int samplerRange = program->getUsedSamplerRange(shaderType);
+    unsigned int samplerRange = programD3D->getUsedSamplerRange(shaderType);
     for (unsigned int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
     {
-        GLenum textureType = program->getSamplerTextureType(shaderType, samplerIndex);
-        GLint textureUnit = program->getSamplerMapping(shaderType, samplerIndex, *data.caps);
+        GLenum textureType = programD3D->getSamplerTextureType(shaderType, samplerIndex);
+        GLint textureUnit = programD3D->getSamplerMapping(shaderType, samplerIndex, *data.caps);
         if (textureUnit != -1)
         {
             gl::Texture *texture = data.state->getSamplerTexture(textureUnit, textureType);

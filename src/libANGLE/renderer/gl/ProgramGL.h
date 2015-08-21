@@ -71,10 +71,6 @@ class ProgramGL : public ProgramImpl
     void getUniformiv(GLint location, GLint *params) override;
     void getUniformuiv(GLint location, GLuint *params) override;
 
-    GLint getSamplerMapping(gl::SamplerType type, unsigned int samplerIndex, const gl::Caps &caps) const override;
-    GLenum getSamplerTextureType(gl::SamplerType type, unsigned int samplerIndex) const override;
-    GLint getUsedSamplerRange(gl::SamplerType type) const override;
-    void updateSamplerMapping() override;
     bool validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps) override;
 
     void defineUniformBlock(gl::InfoLog &infoLog,

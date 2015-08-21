@@ -78,10 +78,6 @@ class ProgramImpl : angle::NonCopyable
 
     // TODO: The following functions are possibly only applicable to D3D backends. The should be carefully evaluated to
     // determine if they can be removed from this interface.
-    virtual GLint getSamplerMapping(gl::SamplerType type, unsigned int samplerIndex, const gl::Caps &caps) const = 0;
-    virtual GLenum getSamplerTextureType(gl::SamplerType type, unsigned int samplerIndex) const = 0;
-    virtual GLint getUsedSamplerRange(gl::SamplerType type) const = 0;
-    virtual void updateSamplerMapping() = 0;
     virtual bool validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps) = 0;
 
     virtual gl::Error applyUniforms() = 0;

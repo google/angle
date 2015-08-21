@@ -704,22 +704,6 @@ GLint Program::getActiveAttributeMaxLength()
     return maxLength;
 }
 
-// Returns one more than the highest sampler index used.
-GLint Program::getUsedSamplerRange(SamplerType type)
-{
-    return mProgram->getUsedSamplerRange(type);
-}
-
-GLint Program::getSamplerMapping(SamplerType type, unsigned int samplerIndex, const Caps &caps)
-{
-    return mProgram->getSamplerMapping(type, samplerIndex, caps);
-}
-
-GLenum Program::getSamplerTextureType(SamplerType type, unsigned int samplerIndex)
-{
-    return mProgram->getSamplerTextureType(type, samplerIndex);
-}
-
 GLint Program::getFragDataLocation(const std::string &name) const
 {
     std::string baseName(name);
@@ -1027,11 +1011,6 @@ bool Program::validateSamplers(InfoLog *infoLog, const Caps &caps)
 bool Program::isValidated() const
 {
     return mValidated;
-}
-
-void Program::updateSamplerMapping()
-{
-    return mProgram->updateSamplerMapping();
 }
 
 GLuint Program::getActiveUniformBlockCount()
