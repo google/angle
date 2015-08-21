@@ -43,8 +43,7 @@ class ProgramImpl : angle::NonCopyable
     virtual LinkResult link(const gl::Data &data,
                             gl::InfoLog &infoLog,
                             gl::Shader *fragmentShader,
-                            gl::Shader *vertexShader,
-                            std::map<int, gl::VariableLocation> *outputVariables) = 0;
+                            gl::Shader *vertexShader) = 0;
 
     virtual GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) = 0;
 

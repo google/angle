@@ -20,7 +20,7 @@ namespace rx
 class ShaderImpl : angle::NonCopyable
 {
   public:
-    ShaderImpl() { }
+    ShaderImpl() : mShaderVersion(100) {}
     virtual ~ShaderImpl() { }
 
     virtual bool compile(gl::Compiler *compiler, const std::string &source) = 0;
@@ -28,6 +28,8 @@ class ShaderImpl : angle::NonCopyable
 
     virtual const std::string &getInfoLog() const { return mInfoLog; }
     virtual const std::string &getTranslatedSource() const { return mTranslatedSource; }
+
+    int getShaderVersion() const { return mShaderVersion; }
 
     const std::vector<gl::PackedVarying> &getVaryings() const { return mVaryings; }
     const std::vector<sh::Uniform> &getUniforms() const { return mUniforms; }
@@ -44,6 +46,9 @@ class ShaderImpl : angle::NonCopyable
   protected:
     std::string mInfoLog;
     std::string mTranslatedSource;
+
+    // TODO(jmadill): make part of shared non-Impl state
+    int mShaderVersion;
 
     std::vector<gl::PackedVarying> mVaryings;
     std::vector<sh::Uniform> mUniforms;

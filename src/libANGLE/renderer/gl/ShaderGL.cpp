@@ -114,6 +114,8 @@ bool ShaderGL::compile(gl::Compiler *compiler, const std::string &source)
     }
 
     // Gather the shader information
+    mShaderVersion = ShGetShaderVersion(compilerHandle);
+
     // TODO: refactor this out, gathering of the attributes, varyings and outputs should be done
     // at the gl::Shader level
     if (mType == GL_VERTEX_SHADER)

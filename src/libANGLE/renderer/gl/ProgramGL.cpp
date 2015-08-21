@@ -61,8 +61,7 @@ gl::Error ProgramGL::save(gl::BinaryOutputStream *stream)
 LinkResult ProgramGL::link(const gl::Data &data,
                            gl::InfoLog &infoLog,
                            gl::Shader *fragmentShader,
-                           gl::Shader *vertexShader,
-                           std::map<int, gl::VariableLocation> *outputVariables)
+                           gl::Shader *vertexShader)
 {
     // Reset the program state, delete the current program if one exists
     reset();

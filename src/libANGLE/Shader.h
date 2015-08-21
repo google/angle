@@ -85,6 +85,8 @@ class Shader : angle::NonCopyable
     bool isFlaggedForDeletion() const;
     void flagForDeletion();
 
+    int getShaderVersion() const;
+
     const std::vector<gl::PackedVarying> &getVaryings() const;
     const std::vector<sh::Uniform> &getUniforms() const;
     const std::vector<sh::InterfaceBlock> &getInterfaceBlocks() const;

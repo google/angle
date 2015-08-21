@@ -15,6 +15,7 @@
 #include "angle_gl.h"
 #include "common/angleutils.h"
 #include "libANGLE/Constants.h"
+#include "libANGLE/Program.h"
 #include "libANGLE/formatutils.h"
 
 namespace sh
@@ -61,16 +62,13 @@ class DynamicHLSL : angle::NonCopyable
     std::string generatePixelShaderForOutputSignature(const std::string &sourceShader, const std::vector<PixelShaderOutputVariable> &outputVariables,
                                                       bool usesFragDepth, const std::vector<GLenum> &outputLayout) const;
     bool generateShaderLinkHLSL(const gl::Data &data,
+                                const gl::Program::Data &programData,
                                 gl::InfoLog &infoLog,
                                 int registers,
                                 const VaryingPacking packing,
                                 std::string &pixelHLSL,
                                 std::string &vertexHLSL,
-                                const ShaderD3D *fragmentShader,
-                                const ShaderD3D *vertexShader,
-                                const std::vector<std::string> &transformFeedbackVaryings,
                                 std::vector<gl::LinkedVarying> *linkedVaryings,
-                                std::map<int, gl::VariableLocation> *programOutputVars,
                                 std::vector<PixelShaderOutputVariable> *outPixelShaderKey,
                                 bool *outUsesFragDepth) const;
 
@@ -90,8 +88,6 @@ class DynamicHLSL : angle::NonCopyable
     std::string generateVaryingHLSL(const ShaderD3D *shader) const;
     void storeUserLinkedVaryings(const ShaderD3D *vertexShader, std::vector<gl::LinkedVarying> *linkedVaryings) const;
     void storeBuiltinLinkedVaryings(const SemanticInfo &info, std::vector<gl::LinkedVarying> *linkedVaryings) const;
-    void defineOutputVariables(const ShaderD3D *fragmentShader,
-                               std::map<int, gl::VariableLocation> *programOutputVars) const;
     std::string generatePointSpriteHLSL(int registers,
                                         const ShaderD3D *fragmentShader,
                                         const ShaderD3D *vertexShader) const;

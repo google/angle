@@ -169,6 +169,11 @@ void Shader::flagForDeletion()
     mDeleteStatus = true;
 }
 
+int Shader::getShaderVersion() const
+{
+    return mShader->getShaderVersion();
+}
+
 const std::vector<gl::PackedVarying> &Shader::getVaryings() const
 {
     return mShader->getVaryings();

@@ -65,8 +65,7 @@ const std::vector<VarT> *GetShaderVariables(const std::vector<VarT> *variableLis
     return variableList;
 }
 
-ShaderD3D::ShaderD3D(GLenum type, RendererD3D *renderer)
-    : mShaderType(type), mShaderVersion(100), mRenderer(renderer)
+ShaderD3D::ShaderD3D(GLenum type, RendererD3D *renderer) : mShaderType(type), mRenderer(renderer)
 {
     uncompile();
 }

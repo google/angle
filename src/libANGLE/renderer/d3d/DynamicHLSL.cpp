@@ -10,11 +10,11 @@
 
 #include "common/utilities.h"
 #include "compiler/translator/blocklayoutHLSL.h"
-#include "libANGLE/renderer/d3d/ShaderD3D.h"
-#include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/d3d/RendererD3D.h"
+#include "libANGLE/renderer/d3d/ShaderD3D.h"
 
 // For use with ArrayString, see angleutils.h
 static_assert(GL_INVALID_INDEX == UINT_MAX, "GL_INVALID_INDEX must be equal to the max unsigned int.");
@@ -737,16 +737,13 @@ void DynamicHLSL::storeUserLinkedVaryings(const ShaderD3D *vertexShader,
 }
 
 bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
+                                         const gl::Program::Data &programData,
                                          InfoLog &infoLog,
                                          int registers,
                                          const VaryingPacking packing,
                                          std::string &pixelHLSL,
                                          std::string &vertexHLSL,
-                                         const ShaderD3D *fragmentShader,
-                                         const ShaderD3D *vertexShader,
-                                         const std::vector<std::string> &transformFeedbackVaryings,
                                          std::vector<LinkedVarying> *linkedVaryings,
-                                         std::map<int, VariableLocation> *programOutputVars,
                                          std::vector<PixelShaderOutputVariable> *outPixelShaderKey,
                                          bool *outUsesFragDepth) const
 {
@@ -754,6 +751,9 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
     {
         return false;
     }
+
+    const ShaderD3D *vertexShader   = GetImplAs<ShaderD3D>(programData.getAttachedVertexShader());
+    const ShaderD3D *fragmentShader = GetImplAs<ShaderD3D>(programData.getAttachedFragmentShader());
 
     bool usesMRT = fragmentShader->mUsesMultipleRenderTargets;
     bool usesFragCoord = fragmentShader->mUsesFragCoord;
@@ -935,12 +935,12 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
     }
     else
     {
-        defineOutputVariables(fragmentShader, programOutputVars);
+        const auto &programOutputVars = programData.getOutputVariables();
 
         const std::vector<sh::Attribute> &shaderOutputVars = fragmentShader->getActiveOutputVariables();
-        for (auto locationIt = programOutputVars->begin(); locationIt != programOutputVars->end(); locationIt++)
+        for (auto outputPair : programOutputVars)
         {
-            const VariableLocation &outputLocation = locationIt->second;
+            const VariableLocation &outputLocation   = outputPair.second;
             const sh::ShaderVariable &outputVariable = shaderOutputVars[outputLocation.index];
             const std::string &variableName = "out_" + outputLocation.name;
             const std::string &elementString = (outputLocation.element == GL_INVALID_INDEX ? "" : Str(outputLocation.element));
@@ -951,7 +951,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
             outputKeyVariable.type = outputVariable.type;
             outputKeyVariable.name = variableName + elementString;
             outputKeyVariable.source = variableName + ArrayString(outputLocation.element);
-            outputKeyVariable.outputIndex = locationIt->first;
+            outputKeyVariable.outputIndex = outputPair.first;
 
             outPixelShaderKey->push_back(outputKeyVariable);
         }
@@ -1088,35 +1088,6 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
                  "}\n";
 
     return true;
-}
-
-void DynamicHLSL::defineOutputVariables(const ShaderD3D *fragmentShader,
-                                        std::map<int, VariableLocation> *programOutputVars) const
-{
-    const std::vector<sh::Attribute> &shaderOutputVars = fragmentShader->getActiveOutputVariables();
-
-    for (unsigned int outputVariableIndex = 0; outputVariableIndex < shaderOutputVars.size(); outputVariableIndex++)
-    {
-        const sh::Attribute &outputVariable = shaderOutputVars[outputVariableIndex];
-        const int baseLocation = outputVariable.location == -1 ? 0 : outputVariable.location;
-
-        ASSERT(outputVariable.staticUse);
-
-        if (outputVariable.arraySize > 0)
-        {
-            for (unsigned int elementIndex = 0; elementIndex < outputVariable.arraySize; elementIndex++)
-            {
-                const int location = baseLocation + elementIndex;
-                ASSERT(programOutputVars->count(location) == 0);
-                (*programOutputVars)[location] = VariableLocation(outputVariable.name, elementIndex, outputVariableIndex);
-            }
-        }
-        else
-        {
-            ASSERT(programOutputVars->count(baseLocation) == 0);
-            (*programOutputVars)[baseLocation] = VariableLocation(outputVariable.name, GL_INVALID_INDEX, outputVariableIndex);
-        }
-    }
 }
 
 std::string DynamicHLSL::generateGeometryShaderHLSL(int registers,

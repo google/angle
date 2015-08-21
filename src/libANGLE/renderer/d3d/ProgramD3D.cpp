@@ -1112,8 +1112,7 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, int regis
 LinkResult ProgramD3D::link(const gl::Data &data,
                             gl::InfoLog &infoLog,
                             gl::Shader *fragmentShader,
-                            gl::Shader *vertexShader,
-                            std::map<int, gl::VariableLocation> *outputVariables)
+                            gl::Shader *vertexShader)
 {
     ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(vertexShader);
     ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(fragmentShader);
@@ -1150,10 +1149,9 @@ LinkResult ProgramD3D::link(const gl::Data &data,
     LinkVaryingRegisters(infoLog, vertexShaderD3D, fragmentShaderD3D);
 
     std::vector<gl::LinkedVarying> linkedVaryings;
-    if (!mDynamicHLSL->generateShaderLinkHLSL(
-            data, infoLog, registers, packing, mPixelHLSL, mVertexHLSL, fragmentShaderD3D,
-            vertexShaderD3D, mData.getTransformFeedbackVaryingNames(), &linkedVaryings,
-            outputVariables, &mPixelShaderKey, &mUsesFragDepth))
+    if (!mDynamicHLSL->generateShaderLinkHLSL(data, mData, infoLog, registers, packing, mPixelHLSL,
+                                              mVertexHLSL, &linkedVaryings, &mPixelShaderKey,
+                                              &mUsesFragDepth))
     {
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }

@@ -11,6 +11,7 @@
 
 #include <algorithm>
 
+#include "common/BitSetIterator.h"
 #include "common/debug.h"
 #include "common/platform.h"
 #include "common/utilities.h"
@@ -309,8 +310,10 @@ Error Program::link(const gl::Data &data)
         return Error(GL_NO_ERROR);
     }
 
-    rx::LinkResult result = mProgram->link(data, mInfoLog, mData.mAttachedFragmentShader,
-                                           mData.mAttachedVertexShader, &mOutputVariables);
+    linkOutputVariables();
+
+    rx::LinkResult result =
+        mProgram->link(data, mInfoLog, mData.mAttachedFragmentShader, mData.mAttachedVertexShader);
 
     if (result.error.isError() || !result.linkSuccess)
     {
@@ -357,6 +360,7 @@ void Program::unlink(bool destroy)
     mData.mAttributes.clear();
     mData.mActiveAttribLocationsMask.reset();
     mData.mTransformFeedbackVaryingVars.clear();
+    mData.mOutputVariables.clear();
 
     mProgram->reset();
 
@@ -424,6 +428,17 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
 
     stream.readInt(&mData.mTransformFeedbackBufferMode);
 
+    unsigned int outputVarCount = stream.readInt<unsigned int>();
+    for (unsigned int outputIndex = 0; outputIndex < outputVarCount; ++outputIndex)
+    {
+        int locationIndex = stream.readInt<int>();
+        VariableLocation locationData;
+        locationData.element                  = stream.readInt<unsigned int>();
+        locationData.index                    = stream.readInt<unsigned int>();
+        locationData.name                     = stream.readString();
+        mData.mOutputVariables[locationIndex] = locationData;
+    }
+
     rx::LinkResult result = mProgram->load(mInfoLog, &stream);
     if (result.error.isError() || !result.linkSuccess)
     {
@@ -463,6 +478,15 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
     }
 
     stream.writeInt(mData.mTransformFeedbackBufferMode);
+
+    stream.writeInt(mData.mOutputVariables.size());
+    for (const auto &outputPair : mData.mOutputVariables)
+    {
+        stream.writeInt(outputPair.first);
+        stream.writeInt(outputPair.second.element);
+        stream.writeInt(outputPair.second.index);
+        stream.writeString(outputPair.second.name);
+    }
 
     gl::Error error = mProgram->save(&stream);
     if (error.isError())
@@ -692,7 +716,7 @@ GLint Program::getFragDataLocation(const std::string &name) const
 {
     std::string baseName(name);
     unsigned int arrayIndex = ParseAndStripArrayIndex(&baseName);
-    for (auto outputPair : mOutputVariables)
+    for (auto outputPair : mData.mOutputVariables)
     {
         const VariableLocation &outputVariable = outputPair.second;
         if (outputVariable.name == baseName && (arrayIndex == GL_INVALID_INDEX || arrayIndex == outputVariable.element))
@@ -1662,5 +1686,44 @@ std::vector<const sh::Varying *> Program::getMergedVaryings() const
     }
 
     return varyings;
+}
+
+void Program::linkOutputVariables()
+{
+    const Shader *fragmentShader = mData.mAttachedFragmentShader;
+    ASSERT(fragmentShader != nullptr);
+
+    // Skip this step for GLES2 shaders.
+    if (fragmentShader->getShaderVersion() == 100)
+        return;
+
+    const std::vector<sh::Attribute> &shaderOutputVars = fragmentShader->getActiveOutputVariables();
+
+    // TODO(jmadill): any caps validation here?
+
+    for (unsigned int outputVariableIndex = 0; outputVariableIndex < shaderOutputVars.size();
+         outputVariableIndex++)
+    {
+        const sh::Attribute &outputVariable = shaderOutputVars[outputVariableIndex];
+
+        // Don't store outputs for gl_FragDepth, gl_FragColor, etc.
+        if (outputVariable.isBuiltIn())
+            continue;
+
+        // Since multiple output locations must be specified, use 0 for non-specified locations.
+        int baseLocation = (outputVariable.location == -1 ? 0 : outputVariable.location);
+
+        ASSERT(outputVariable.staticUse);
+
+        for (unsigned int elementIndex = 0; elementIndex < outputVariable.elementCount();
+             elementIndex++)
+        {
+            const int location = baseLocation + elementIndex;
+            ASSERT(mData.mOutputVariables.count(location) == 0);
+            unsigned int element = outputVariable.isArray() ? elementIndex : GL_INVALID_INDEX;
+            mData.mOutputVariables[location] =
+                VariableLocation(outputVariable.name, element, outputVariableIndex);
+        }
+    }
 }
 }

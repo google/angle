@@ -185,6 +185,10 @@ class Program : angle::NonCopyable
         {
             return mActiveAttribLocationsMask;
         }
+        const std::map<int, VariableLocation> &getOutputVariables() const
+        {
+            return mOutputVariables;
+        }
 
       private:
         friend class Program;
@@ -200,6 +204,9 @@ class Program : angle::NonCopyable
 
         std::vector<sh::Attribute> mAttributes;
         std::bitset<MAX_VERTEX_ATTRIBS> mActiveAttribLocationsMask;
+
+        // TODO(jmadill): use unordered/hash map when available
+        std::map<int, VariableLocation> mOutputVariables;
 
         // TODO(jmadill): move more state into Data.
     };
@@ -343,11 +350,10 @@ class Program : angle::NonCopyable
     void defineOutputVariables(Shader *fragmentShader);
 
     std::vector<const sh::Varying *> getMergedVaryings() const;
+    void linkOutputVariables();
 
     Data mData;
     rx::ProgramImpl *mProgram;
-
-    std::map<int, VariableLocation> mOutputVariables;
 
     bool mValidated;
 

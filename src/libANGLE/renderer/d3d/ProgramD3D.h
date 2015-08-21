@@ -73,8 +73,7 @@ class ProgramD3D : public ProgramImpl
     LinkResult link(const gl::Data &data,
                     gl::InfoLog &infoLog,
                     gl::Shader *fragmentShader,
-                    gl::Shader *vertexShader,
-                    std::map<int, gl::VariableLocation> *outputVariables) override;
+                    gl::Shader *vertexShader) override;
 
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 

@@ -60,8 +60,6 @@ class ShaderD3D : public ShaderImpl
 
     GLenum mShaderType;
 
-    int mShaderVersion;
-
     bool mUsesMultipleRenderTargets;
     bool mUsesFragColor;
     bool mUsesFragData;
