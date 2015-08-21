@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44b17956_91b41c1f",
+        "filename": "build/common.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-21T14:45:22Z",
+      "side": 1,
+      "message": "I don\u0027t think -pthread is a c++-only flag. Do you know if Chromium defines pthread, and how they do?",
+      "range": {
+        "startLine": 363,
+        "startChar": 22,
+        "endLine": 363,
+        "endChar": 29
+      },
+      "revId": "0e3d718aa91bae745c0e50c04842e08aea4441f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
