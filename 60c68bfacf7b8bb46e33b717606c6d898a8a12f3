@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2409e5af_48035fc9",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1040,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-21T14:09:36Z",
+      "side": 1,
+      "message": "I\u0027d suggest you change ANGLE\u0027s use of -fno-exceptions to cc_flags - it only applies to c++ and mirrors Chromium.",
+      "range": {
+        "startLine": 1037,
+        "startChar": 24,
+        "endLine": 1040,
+        "endChar": 26
+      },
+      "revId": "60c68bfacf7b8bb46e33b717606c6d898a8a12f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2409e5af_28102b08",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-21T14:09:36Z",
+      "side": 1,
+      "message": "do you know why this differs from standalone?",
+      "range": {
+        "startLine": 1076,
+        "startChar": 32,
+        "endLine": 1076,
+        "endChar": 53
+      },
+      "revId": "60c68bfacf7b8bb46e33b717606c6d898a8a12f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
