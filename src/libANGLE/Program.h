@@ -180,6 +180,7 @@ class Program : angle::NonCopyable
             ASSERT(uniformBlockIndex < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS);
             return mUniformBlockBindings[uniformBlockIndex];
         }
+        const std::vector<sh::Attribute> &getAttributes() const { return mAttributes; }
 
       private:
         friend class Program;
@@ -192,6 +193,8 @@ class Program : angle::NonCopyable
         GLenum mTransformFeedbackBufferMode;
 
         GLuint mUniformBlockBindings[IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS];
+
+        std::vector<sh::Attribute> mAttributes;
 
         // TODO(jmadill): move more state into Data.
     };
@@ -228,7 +231,7 @@ class Program : angle::NonCopyable
     void getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
     GLint getActiveAttributeCount();
     GLint getActiveAttributeMaxLength();
-    const std::vector<sh::Attribute> &getLinkedAttributes() const { return mLinkedAttributes; }
+    const std::vector<sh::Attribute> &getAttributes() const { return mData.mAttributes; }
 
     GLint getFragDataLocation(const std::string &name) const;
 
@@ -334,8 +337,6 @@ class Program : angle::NonCopyable
 
     Data mData;
     rx::ProgramImpl *mProgram;
-
-    std::vector<sh::Attribute> mLinkedAttributes;
 
     std::map<int, VariableLocation> mOutputVariables;
 
