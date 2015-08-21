@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44b17956_9106dc5a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-21T21:11:19Z",
+      "side": 1,
+      "message": "can you make a comment here of how you chose this number?",
+      "range": {
+        "startLine": 705,
+        "startChar": 42,
+        "endLine": 705,
+        "endChar": 45
+      },
+      "revId": "376ea6b2534be3f637c2de5cb77d7c7746c917e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8411b10b_b3017847",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1078,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-21T21:11:19Z",
+      "side": 1,
+      "message": "can you use std::stringstreams for these? (and the test below)",
+      "range": {
+        "startLine": 1078,
+        "startChar": 16,
+        "endLine": 1078,
+        "endChar": 29
+      },
+      "revId": "376ea6b2534be3f637c2de5cb77d7c7746c917e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
