@@ -131,19 +131,19 @@ bool LinkVaryingRegisters(gl::InfoLog &infoLog,
                           ShaderD3D *vertexShaderD3D,
                           ShaderD3D *fragmentShaderD3D)
 {
-    for (gl::PackedVarying &input : fragmentShaderD3D->getVaryings())
+    for (PackedVarying &input : fragmentShaderD3D->getPackedVaryings())
     {
         bool matched = false;
 
         // Built-in varyings obey special rules
-        if (input.isBuiltIn())
+        if (input.varying->isBuiltIn())
         {
             continue;
         }
 
-        for (gl::PackedVarying &output : vertexShaderD3D->getVaryings())
+        for (PackedVarying &output : vertexShaderD3D->getPackedVaryings())
         {
-            if (output.name == input.name)
+            if (output.varying->name == input.varying->name)
             {
                 output.registerIndex = input.registerIndex;
                 output.columnIndex   = input.columnIndex;
@@ -154,7 +154,7 @@ bool LinkVaryingRegisters(gl::InfoLog &infoLog,
         }
 
         // We permit unmatched, unreferenced varyings
-        ASSERT(matched || !input.staticUse);
+        ASSERT(matched || !input.varying->staticUse);
     }
 
     return true;
@@ -1137,8 +1137,7 @@ LinkResult ProgramD3D::link(const gl::Data &data,
     }
 
     // Map the varyings to the register file
-    VaryingPacking packing = {};
-    int registers = mDynamicHLSL->packVaryings(infoLog, packing, fragmentShaderD3D, vertexShaderD3D,
+    int registers = mDynamicHLSL->packVaryings(infoLog, fragmentShaderD3D, vertexShaderD3D,
                                                mData.getTransformFeedbackVaryingNames());
 
     if (registers < 0)
@@ -1149,7 +1148,7 @@ LinkResult ProgramD3D::link(const gl::Data &data,
     LinkVaryingRegisters(infoLog, vertexShaderD3D, fragmentShaderD3D);
 
     std::vector<gl::LinkedVarying> linkedVaryings;
-    if (!mDynamicHLSL->generateShaderLinkHLSL(data, mData, infoLog, registers, packing, mPixelHLSL,
+    if (!mDynamicHLSL->generateShaderLinkHLSL(data, mData, infoLog, registers, mPixelHLSL,
                                               mVertexHLSL, &linkedVaryings, &mPixelShaderKey,
                                               &mUsesFragDepth))
     {

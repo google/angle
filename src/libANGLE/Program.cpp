@@ -1204,10 +1204,10 @@ bool Program::linkVaryings(InfoLog &infoLog,
                            const Shader *vertexShader,
                            const Shader *fragmentShader)
 {
-    const std::vector<PackedVarying> &vertexVaryings   = vertexShader->getVaryings();
-    const std::vector<PackedVarying> &fragmentVaryings = fragmentShader->getVaryings();
+    const std::vector<sh::Varying> &vertexVaryings   = vertexShader->getVaryings();
+    const std::vector<sh::Varying> &fragmentVaryings = fragmentShader->getVaryings();
 
-    for (const PackedVarying &output : fragmentVaryings)
+    for (const sh::Varying &output : fragmentVaryings)
     {
         bool matched = false;
 
@@ -1217,7 +1217,7 @@ bool Program::linkVaryings(InfoLog &infoLog,
             continue;
         }
 
-        for (const PackedVarying &input : vertexVaryings)
+        for (const sh::Varying &input : vertexVaryings)
         {
             if (output.name == input.name)
             {

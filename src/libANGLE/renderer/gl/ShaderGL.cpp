@@ -123,12 +123,7 @@ bool ShaderGL::compile(gl::Compiler *compiler, const std::string &source)
         mActiveAttributes = GetFilteredShaderVariables(ShGetAttributes(compilerHandle));
     }
 
-    const std::vector<sh::Varying> &varyings = GetShaderVariables(ShGetVaryings(compilerHandle));
-    for (size_t varyingIndex = 0; varyingIndex < varyings.size(); varyingIndex++)
-    {
-        mVaryings.push_back(gl::PackedVarying(varyings[varyingIndex]));
-    }
-
+    mVaryings        = GetShaderVariables(ShGetVaryings(compilerHandle));
     mUniforms = GetShaderVariables(ShGetUniforms(compilerHandle));
     mInterfaceBlocks = GetShaderVariables(ShGetInterfaceBlocks(compilerHandle));
 

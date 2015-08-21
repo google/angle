@@ -30,7 +30,6 @@ class InfoLog;
 struct VariableLocation;
 struct LinkedVarying;
 struct VertexAttribute;
-struct PackedVarying;
 struct Data;
 }
 
@@ -38,8 +37,6 @@ namespace rx
 {
 class RendererD3D;
 class ShaderD3D;
-
-typedef const gl::PackedVarying *VaryingPacking[gl::IMPLEMENTATION_MAX_VARYING_VECTORS][4];
 
 struct PixelShaderOutputVariable
 {
@@ -54,8 +51,10 @@ class DynamicHLSL : angle::NonCopyable
   public:
     explicit DynamicHLSL(RendererD3D *const renderer);
 
-    int packVaryings(gl::InfoLog &infoLog, VaryingPacking packing, ShaderD3D *fragmentShader,
-                     ShaderD3D *vertexShader, const std::vector<std::string>& transformFeedbackVaryings);
+    int packVaryings(gl::InfoLog &infoLog,
+                     ShaderD3D *fragmentShader,
+                     ShaderD3D *vertexShader,
+                     const std::vector<std::string> &transformFeedbackVaryings);
     std::string generateVertexShaderForInputLayout(const std::string &sourceShader,
                                                    const gl::InputLayout &inputLayout,
                                                    const std::vector<sh::Attribute> &shaderAttributes) const;
@@ -65,7 +64,6 @@ class DynamicHLSL : angle::NonCopyable
                                 const gl::Program::Data &programData,
                                 gl::InfoLog &infoLog,
                                 int registers,
-                                const VaryingPacking packing,
                                 std::string &pixelHLSL,
                                 std::string &vertexHLSL,
                                 std::vector<gl::LinkedVarying> *linkedVaryings,

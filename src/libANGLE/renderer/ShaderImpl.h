@@ -31,13 +31,13 @@ class ShaderImpl : angle::NonCopyable
 
     int getShaderVersion() const { return mShaderVersion; }
 
-    const std::vector<gl::PackedVarying> &getVaryings() const { return mVaryings; }
+    const std::vector<sh::Varying> &getVaryings() const { return mVaryings; }
     const std::vector<sh::Uniform> &getUniforms() const { return mUniforms; }
     const std::vector<sh::InterfaceBlock> &getInterfaceBlocks() const  { return mInterfaceBlocks; }
     const std::vector<sh::Attribute> &getActiveAttributes() const { return mActiveAttributes; }
     const std::vector<sh::Attribute> &getActiveOutputVariables() const { return mActiveOutputVariables; }
 
-    std::vector<gl::PackedVarying> &getVaryings() { return mVaryings; }
+    std::vector<sh::Varying> &getVaryings() { return mVaryings; }
     std::vector<sh::Uniform> &getUniforms() { return mUniforms; }
     std::vector<sh::InterfaceBlock> &getInterfaceBlocks() { return mInterfaceBlocks; }
     std::vector<sh::Attribute> &getActiveAttributes() { return mActiveAttributes; }
@@ -50,7 +50,7 @@ class ShaderImpl : angle::NonCopyable
     // TODO(jmadill): make part of shared non-Impl state
     int mShaderVersion;
 
-    std::vector<gl::PackedVarying> mVaryings;
+    std::vector<sh::Varying> mVaryings;
     std::vector<sh::Uniform> mUniforms;
     std::vector<sh::InterfaceBlock> mInterfaceBlocks;
     std::vector<sh::Attribute> mActiveAttributes;

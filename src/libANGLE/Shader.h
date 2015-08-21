@@ -33,26 +33,6 @@ class Compiler;
 class ResourceManager;
 struct Data;
 
-struct PackedVarying : public sh::Varying
-{
-    // TODO(jmadill): Make these D3D-only or otherwise clearly separate from GL.
-    unsigned int registerIndex; // Assigned during link
-    unsigned int columnIndex; // Assigned during link, defaults to 0
-
-    PackedVarying(const sh::Varying &varying)
-      : sh::Varying(varying),
-        registerIndex(GL_INVALID_INDEX),
-        columnIndex(0)
-    {}
-
-    bool registerAssigned() const { return registerIndex != GL_INVALID_INDEX; }
-
-    void resetRegisterAssignment()
-    {
-        registerIndex = GL_INVALID_INDEX;
-    }
-};
-
 class Shader : angle::NonCopyable
 {
   public:
@@ -87,13 +67,13 @@ class Shader : angle::NonCopyable
 
     int getShaderVersion() const;
 
-    const std::vector<gl::PackedVarying> &getVaryings() const;
+    const std::vector<sh::Varying> &getVaryings() const;
     const std::vector<sh::Uniform> &getUniforms() const;
     const std::vector<sh::InterfaceBlock> &getInterfaceBlocks() const;
     const std::vector<sh::Attribute> &getActiveAttributes() const;
     const std::vector<sh::Attribute> &getActiveOutputVariables() const;
 
-    std::vector<gl::PackedVarying> &getVaryings();
+    std::vector<sh::Varying> &getVaryings();
     std::vector<sh::Uniform> &getUniforms();
     std::vector<sh::InterfaceBlock> &getInterfaceBlocks();
     std::vector<sh::Attribute> &getActiveAttributes();

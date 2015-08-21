@@ -35,6 +35,27 @@ const char *GetShaderTypeString(GLenum type)
     }
 }
 
+// true if varying x has a higher priority in packing than y
+bool CompareVarying(const sh::Varying &x, const sh::Varying &y)
+{
+    if (x.type == y.type)
+    {
+        return x.arraySize > y.arraySize;
+    }
+
+    // Special case for handling structs: we sort these to the end of the list
+    if (x.type == GL_STRUCT_ANGLEX)
+    {
+        return false;
+    }
+
+    if (y.type == GL_STRUCT_ANGLEX)
+    {
+        return true;
+    }
+
+    return gl::VariableSortOrder(x.type) < gl::VariableSortOrder(y.type);
+}
 }
 
 namespace rx
@@ -87,9 +108,11 @@ void ShaderD3D::parseVaryings(ShHandle compiler)
         const std::vector<sh::Varying> *varyings = ShGetVaryings(compiler);
         ASSERT(varyings);
 
+        mVaryings = *varyings;
+
         for (size_t varyingIndex = 0; varyingIndex < varyings->size(); varyingIndex++)
         {
-            mVaryings.push_back(gl::PackedVarying((*varyings)[varyingIndex]));
+            mPackedVaryings.push_back(PackedVarying(mVaryings[varyingIndex]));
         }
 
         mUsesMultipleRenderTargets   = mTranslatedSource.find("GL_USES_MRT")                          != std::string::npos;
@@ -112,7 +135,7 @@ void ShaderD3D::resetVaryingsRegisterAssignment()
 {
     for (size_t varyingIndex = 0; varyingIndex < mVaryings.size(); varyingIndex++)
     {
-        mVaryings[varyingIndex].resetRegisterAssignment();
+        mPackedVaryings[varyingIndex].resetRegisterAssignment();
     }
 }
 
@@ -285,28 +308,6 @@ void ShaderD3D::generateWorkarounds(D3DCompilerWorkarounds *workarounds) const
     }
 }
 
-// true if varying x has a higher priority in packing than y
-bool ShaderD3D::compareVarying(const gl::PackedVarying &x, const gl::PackedVarying &y)
-{
-    if (x.type == y.type)
-    {
-        return x.arraySize > y.arraySize;
-    }
-
-    // Special case for handling structs: we sort these to the end of the list
-    if (x.type == GL_STRUCT_ANGLEX)
-    {
-        return false;
-    }
-
-    if (y.type == GL_STRUCT_ANGLEX)
-    {
-        return true;
-    }
-
-    return gl::VariableSortOrder(x.type) < gl::VariableSortOrder(y.type);
-}
-
 unsigned int ShaderD3D::getUniformRegister(const std::string &uniformName) const
 {
     ASSERT(mUniformRegisterMap.count(uniformName) > 0);
@@ -349,7 +350,7 @@ bool ShaderD3D::compile(gl::Compiler *compiler, const std::string &source)
 
     if (mShaderType == GL_FRAGMENT_SHADER)
     {
-        std::sort(mVaryings.begin(), mVaryings.end(), compareVarying);
+        std::sort(mVaryings.begin(), mVaryings.end(), CompareVarying);
 
         const std::string &hlsl = getTranslatedSource();
         if (!hlsl.empty())
