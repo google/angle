@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "64ae7dfb_92b41c1f",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1040,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-21T14:30:57Z",
+      "side": 1,
+      "message": "Good point, Done",
+      "parentUuid": "2409e5af_48035fc9",
+      "range": {
+        "startLine": 1037,
+        "startChar": 24,
+        "endLine": 1040,
+        "endChar": 26
+      },
+      "revId": "60c68bfacf7b8bb46e33b717606c6d898a8a12f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2409e5af_28102b08",
         "filename": "src/tests/deqp.gypi",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-08-21T14:09:36Z",
       "side": 1,
       "message": "do you know why this differs from standalone?",
+      "range": {
+        "startLine": 1076,
+        "startChar": 32,
+        "endLine": 1076,
+        "endChar": 53
+      },
+      "revId": "60c68bfacf7b8bb46e33b717606c6d898a8a12f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a416b5fe_94b4241f",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-21T14:30:57Z",
+      "side": 1,
+      "message": "I think the linking rules are different in Chromium and it seems that you have to link static libraries with the dynamic libs they use, Not sure why though.",
+      "parentUuid": "2409e5af_28102b08",
       "range": {
         "startLine": 1076,
         "startChar": 32,
