@@ -6,8 +6,6 @@
 
 #include "common/angleutils.h"
 
-namespace base {
-
 bool StartsWithASCII(const std::string& str,
                      const std::string& search,
                      bool case_sensitive) {
@@ -33,8 +31,6 @@ static inline bool DoLowerCaseEqualsASCII(Iter a_begin,
 bool LowerCaseEqualsASCII(const std::string& a, const char* b) {
   return DoLowerCaseEqualsASCII(a.begin(), a.end(), b);
 }
-
-} // namespace base
 
 namespace gpu {
 
