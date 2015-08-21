@@ -78,7 +78,7 @@ class ProgramD3D : public ProgramImpl
 
     void initializeUniformStorage();
     gl::Error applyUniforms();
-    gl::Error applyUniformBuffers(const gl::Data &data, GLuint uniformBlockBindings[]) override;
+    gl::Error applyUniformBuffers(const gl::Data &data);
     void assignUniformBlockRegister(gl::UniformBlock *uniformBlock,
                                     GLenum shader,
                                     unsigned int registerIndex,

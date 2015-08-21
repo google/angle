@@ -175,6 +175,11 @@ class Program : angle::NonCopyable
             return mTransformFeedbackVaryingNames;
         }
         GLint getTransformFeedbackBufferMode() const { return mTransformFeedbackBufferMode; }
+        GLuint getUniformBlockBinding(GLuint uniformBlockIndex) const
+        {
+            ASSERT(uniformBlockIndex < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS);
+            return mUniformBlockBindings[uniformBlockIndex];
+        }
 
       private:
         friend class Program;
@@ -185,6 +190,8 @@ class Program : angle::NonCopyable
         std::vector<std::string> mTransformFeedbackVaryingNames;
         std::vector<sh::Varying> mTransformFeedbackVaryingVars;
         GLenum mTransformFeedbackBufferMode;
+
+        GLuint mUniformBlockBindings[IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS];
 
         // TODO(jmadill): move more state into Data.
     };
@@ -262,7 +269,6 @@ class Program : angle::NonCopyable
     void getUniformuiv(GLint location, GLuint *params);
 
     Error applyUniforms();
-    Error applyUniformBuffers(const gl::Data &data);
 
     void getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const;
     void getActiveUniformBlockiv(GLuint uniformBlockIndex, GLenum pname, GLint *params) const;
@@ -338,8 +344,6 @@ class Program : angle::NonCopyable
     bool mValidated;
 
     AttributeBindings mAttributeBindings;
-
-    GLuint mUniformBlockBindings[IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS];
 
     bool mLinked;
     bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use

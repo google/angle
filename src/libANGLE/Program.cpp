@@ -972,11 +972,6 @@ Error Program::applyUniforms()
     return mProgram->applyUniforms();
 }
 
-Error Program::applyUniformBuffers(const gl::Data &data)
-{
-    return mProgram->applyUniformBuffers(data, mUniformBlockBindings);
-}
-
 void Program::flagForDeletion()
 {
     mDeleteStatus = true;
@@ -1116,19 +1111,19 @@ const UniformBlock *Program::getUniformBlockByIndex(GLuint index) const
 
 void Program::bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding)
 {
-    mUniformBlockBindings[uniformBlockIndex] = uniformBlockBinding;
+    mData.mUniformBlockBindings[uniformBlockIndex] = uniformBlockBinding;
 }
 
 GLuint Program::getUniformBlockBinding(GLuint uniformBlockIndex) const
 {
-    return mUniformBlockBindings[uniformBlockIndex];
+    return mData.getUniformBlockBinding(uniformBlockIndex);
 }
 
 void Program::resetUniformBlockBindings()
 {
     for (unsigned int blockId = 0; blockId < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS; blockId++)
     {
-        mUniformBlockBindings[blockId] = 0;
+        mData.mUniformBlockBindings[blockId] = 0;
     }
 }
 

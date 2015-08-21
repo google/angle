@@ -79,7 +79,6 @@ class ProgramGL : public ProgramImpl
                             const gl::Caps &caps);
 
     gl::Error applyUniforms() override;
-    gl::Error applyUniformBuffers(const gl::Data &data, GLuint uniformBlockBindings[]) override;
 
     void reset() override;
 

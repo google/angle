@@ -1216,7 +1216,7 @@ gl::Error ProgramD3D::applyUniforms()
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error ProgramD3D::applyUniformBuffers(const gl::Data &data, GLuint uniformBlockBindings[])
+gl::Error ProgramD3D::applyUniformBuffers(const gl::Data &data)
 {
     mVertexUBOCache.clear();
     mFragmentUBOCache.clear();
@@ -1227,7 +1227,7 @@ gl::Error ProgramD3D::applyUniformBuffers(const gl::Data &data, GLuint uniformBl
     for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < mUniformBlocks.size(); uniformBlockIndex++)
     {
         gl::UniformBlock *uniformBlock = mUniformBlocks[uniformBlockIndex];
-        GLuint blockBinding = uniformBlockBindings[uniformBlockIndex];
+        GLuint blockBinding            = mData.getUniformBlockBinding(uniformBlockIndex);
 
         ASSERT(uniformBlock);
 

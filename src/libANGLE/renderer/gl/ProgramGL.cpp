@@ -372,12 +372,6 @@ gl::Error ProgramGL::applyUniforms()
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error ProgramGL::applyUniformBuffers(const gl::Data &data, GLuint uniformBlockBindings[])
-{
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
-}
-
 void ProgramGL::reset()
 {
     ProgramImpl::reset();

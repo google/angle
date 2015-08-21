@@ -144,7 +144,7 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
         return error;
     }
 
-    error = program->applyUniformBuffers(data);
+    error = programD3D->applyUniformBuffers(data);
     if (error.isError())
     {
         return error;
@@ -217,7 +217,7 @@ gl::Error RendererD3D::drawArrays(const gl::Data &data,
         return error;
     }
 
-    error = program->applyUniformBuffers(data);
+    error = programD3D->applyUniformBuffers(data);
     if (error.isError())
     {
         return error;

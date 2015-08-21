@@ -81,7 +81,6 @@ class ProgramImpl : angle::NonCopyable
     virtual bool validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps) = 0;
 
     virtual gl::Error applyUniforms() = 0;
-    virtual gl::Error applyUniformBuffers(const gl::Data &data, GLuint uniformBlockBindings[]) = 0;
 
     const std::vector<gl::LinkedUniform*> &getUniforms() const { return mUniforms; }
     const std::map<GLuint, gl::VariableLocation> &getUniformIndices() const { return mUniformIndex; }
