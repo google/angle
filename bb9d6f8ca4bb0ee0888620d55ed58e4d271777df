@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4485f957_0bb53119",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1084,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-08-21T21:06:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8411b10b_b3afb8cb",
+      "range": {
+        "startLine": 1084,
+        "startChar": 5,
+        "endLine": 1084,
+        "endChar": 51
+      },
+      "revId": "bb9d6f8ca4bb0ee0888620d55ed58e4d271777df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "243e454a_c04b9e00",
         "filename": "src/tests/gl_tests/GLSLTest.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-08-21T14:22:22Z",
       "side": 1,
       "message": "can you the tests cover num uniforms \u003d\u003d MAX_VERTEX_UNIFORM_VECTORS (should succeed), and \u003d\u003d MAX + 1 (should fail)?",
+      "range": {
+        "startLine": 1062,
+        "startChar": 17,
+        "endLine": 1062,
+        "endChar": 40
+      },
+      "revId": "bb9d6f8ca4bb0ee0888620d55ed58e4d271777df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a42a3512_5b23f432",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1062,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-08-21T21:06:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "243e454a_c04b9e00",
       "range": {
         "startLine": 1062,
         "startChar": 17,
