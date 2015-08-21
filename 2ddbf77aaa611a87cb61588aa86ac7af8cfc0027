@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4a18d0d_ee881f30",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-21T20:22:30Z",
+      "side": 1,
+      "message": "Maybe add an assert that mData.mAttributes is empty before we push_back?",
+      "revId": "2ddbf77aaa611a87cb61588aa86ac7af8cfc0027",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
