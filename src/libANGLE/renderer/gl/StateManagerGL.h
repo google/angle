@@ -49,15 +49,6 @@ class StateManagerGL final : angle::NonCopyable
     void bindFramebuffer(GLenum type, GLuint framebuffer);
     void bindRenderbuffer(GLenum type, GLuint renderbuffer);
 
-    gl::Error setDrawArraysState(const gl::Data &data, GLint first, GLsizei count);
-    gl::Error setDrawElementsState(const gl::Data &data, GLsizei count, GLenum type, const GLvoid *indices,
-                                   const GLvoid **outIndices);
-
-    void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits);
-
-  private:
-    gl::Error setGenericDrawState(const gl::Data &data);
-
     void setAttributeCurrentData(size_t index, const gl::VertexAttribCurrentValueData &data);
 
     void setScissorTestEnabled(bool enabled);
@@ -68,7 +59,10 @@ class StateManagerGL final : angle::NonCopyable
 
     void setBlendEnabled(bool enabled);
     void setBlendColor(const gl::ColorF &blendColor);
-    void setBlendFuncs(GLenum sourceBlendRGB, GLenum destBlendRGB, GLenum sourceBlendAlpha, GLenum destBlendAlpha);
+    void setBlendFuncs(GLenum sourceBlendRGB,
+                       GLenum destBlendRGB,
+                       GLenum sourceBlendAlpha,
+                       GLenum destBlendAlpha);
     void setBlendEquations(GLenum blendEquationRGB, GLenum blendEquationAlpha);
     void setColorMask(bool red, bool green, bool blue, bool alpha);
     void setSampleAlphaToCoverageEnabled(bool enabled);
@@ -110,6 +104,15 @@ class StateManagerGL final : angle::NonCopyable
                              GLint skipImages);
     void setPixelPackState(const gl::PixelPackState &pack);
     void setPixelPackState(GLint alignment, GLint rowLength, GLint skipRows, GLint skipPixels);
+
+    gl::Error setDrawArraysState(const gl::Data &data, GLint first, GLsizei count);
+    gl::Error setDrawElementsState(const gl::Data &data, GLsizei count, GLenum type, const GLvoid *indices,
+                                   const GLvoid **outIndices);
+
+    void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits);
+
+  private:
+    gl::Error setGenericDrawState(const gl::Data &data);
 
     const FunctionsGL *mFunctions;
 
@@ -197,6 +200,8 @@ class StateManagerGL final : angle::NonCopyable
     gl::ColorF mClearColor;
     float mClearDepth;
     GLint mClearStencil;
+
+    gl::State::DirtyBits mLocalDirtyBits;
 };
 
 }
