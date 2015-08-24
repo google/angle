@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a4ab15ef_afaf35cb",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-24T18:34:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64d75d7f_2a785f35",
+      "revId": "9785792ee59432fa1454b10146a064188582d045",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a416b5fe_54428c13",
         "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
         "patchSetId": 6
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "64d75d7f_ca4b8300",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-24T18:34:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a416b5fe_54428c13",
+      "range": {
+        "startLine": 138,
+        "startChar": 54,
+        "endLine": 138,
+        "endChar": 62
+      },
+      "revId": "9785792ee59432fa1454b10146a064188582d045",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a416b5fe_b4bfa079",
         "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
         "patchSetId": 6
@@ -53,6 +95,24 @@
       "writtenOn": "2015-08-24T17:56:21Z",
       "side": 1,
       "message": "Why not do the *2 - 1 in the quad_positions data?",
+      "revId": "9785792ee59432fa1454b10146a064188582d045",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84a61126_6bca61b4",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-24T18:34:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a416b5fe_b4bfa079",
       "revId": "9785792ee59432fa1454b10146a064188582d045",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
