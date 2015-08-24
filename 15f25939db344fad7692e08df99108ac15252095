@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a416b5fe_14fad435",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-24T19:27:02Z",
+      "side": 1,
+      "message": "this is now completely identical to mData.mActiveAttribLocationsMask. I don\u0027t mind fixing the code to use the mData version, but if you like, add a TODO. ( The difference is that checking the attrib location might provide a different result if the driver optimizes out attribs more aggressively )",
+      "range": {
+        "startLine": 90,
+        "startChar": 12,
+        "endLine": 90,
+        "endChar": 33
+      },
+      "revId": "15f25939db344fad7692e08df99108ac15252095",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
