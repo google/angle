@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64d75d7f_2a785f35",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-24T17:56:21Z",
+      "side": 1,
+      "message": "mVAO and mScratchFBO are not being deleted.\n\nAlso you might want to zero mScratchTexture after deleting it (to mimic SafeDelete)",
+      "revId": "9785792ee59432fa1454b10146a064188582d045",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a416b5fe_54428c13",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-24T17:56:21Z",
+      "side": 1,
+      "message": "nit: compile",
+      "range": {
+        "startLine": 138,
+        "startChar": 54,
+        "endLine": 138,
+        "endChar": 62
+      },
+      "revId": "9785792ee59432fa1454b10146a064188582d045",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a416b5fe_b4bfa079",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-24T17:56:21Z",
+      "side": 1,
+      "message": "Why not do the *2 - 1 in the quad_positions data?",
+      "revId": "9785792ee59432fa1454b10146a064188582d045",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
