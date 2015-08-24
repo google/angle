@@ -1003,8 +1003,7 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
     }
 
     // Generate new dynamic layout with attribute conversions
-    std::string finalVertexHLSL = mDynamicHLSL->generateVertexShaderForInputLayout(
-        mVertexHLSL, inputLayout, mData.getAttributes());
+    std::string finalVertexHLSL = mDynamicHLSL->generateVertexShaderForInputLayout(mVertexHLSL, inputLayout, getShaderAttributes());
 
     // Generate new vertex executable
     ShaderExecutableD3D *vertexExecutable = NULL;

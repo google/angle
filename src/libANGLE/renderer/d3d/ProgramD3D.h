@@ -124,7 +124,6 @@ class ProgramD3D : public ProgramImpl
     void sortAttributesByLayout(const std::vector<TranslatedAttribute> &unsortedAttributes,
                                 int sortedSemanticIndicesOut[gl::MAX_VERTEX_ATTRIBS],
                                 const rx::TranslatedAttribute *sortedAttributesOut[gl::MAX_VERTEX_ATTRIBS]) const;
-    const SemanticIndexArray &getAttributesByLayout() const { return mAttributesByLayout; }
 
     void updateCachedInputLayout(const gl::Program *program, const gl::State &state);
     const gl::InputLayout &getCachedInputLayout() const { return mCachedInputLayout; }
@@ -246,7 +245,7 @@ class ProgramD3D : public ProgramImpl
 
     int mShaderVersion;
 
-    SemanticIndexArray mAttributesByLayout;
+    int mAttributesByLayout[gl::MAX_VERTEX_ATTRIBS];
 
     unsigned int mSerial;
 

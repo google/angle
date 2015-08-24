@@ -163,6 +163,7 @@ Program::Data::~Data()
 
 Program::Program(rx::ImplFactory *factory, ResourceManager *manager, GLuint handle)
     : mProgram(factory->createProgram(mData)),
+      mLinkedAttributes(gl::MAX_VERTEX_ATTRIBS),
       mValidated(false),
       mLinked(false),
       mDeleteStatus(false),
@@ -355,7 +356,7 @@ void Program::unlink(bool destroy)
         }
     }
 
-    mData.mAttributes.clear();
+    mLinkedAttributes.assign(mLinkedAttributes.size(), sh::Attribute());
     mData.mTransformFeedbackVaryingVars.clear();
 
     mProgram->reset();
@@ -407,21 +408,20 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
     // TODO(jmadill): replace MAX_VERTEX_ATTRIBS
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
+        stream.readInt(&mLinkedAttributes[i].type);
+        stream.readString(&mLinkedAttributes[i].name);
         stream.readInt(&mProgram->getSemanticIndexes()[i]);
     }
 
     unsigned int attribCount = stream.readInt<unsigned int>();
-    ASSERT(mData.mAttributes.empty());
     for (unsigned int attribIndex = 0; attribIndex < attribCount; ++attribIndex)
     {
-        sh::Attribute attrib;
-        attrib.type      = stream.readInt<GLenum>();
-        attrib.precision = stream.readInt<GLenum>();
-        attrib.name      = stream.readString();
-        attrib.arraySize = stream.readInt<GLint>();
-        attrib.location  = stream.readInt<int>();
-        attrib.staticUse = stream.readBool();
-        mData.mAttributes.push_back(attrib);
+        GLenum type = stream.readInt<GLenum>();
+        GLenum precision = stream.readInt<GLenum>();
+        std::string name = stream.readString();
+        GLint arraySize = stream.readInt<GLint>();
+        int location = stream.readInt<int>();
+        mProgram->setShaderAttribute(attribIndex, type, precision, name, arraySize, location);
     }
 
     stream.readInt(&mData.mTransformFeedbackBufferMode);
@@ -454,18 +454,20 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
     // TODO(jmadill): replace MAX_VERTEX_ATTRIBS
     for (unsigned int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
+        stream.writeInt(mLinkedAttributes[i].type);
+        stream.writeString(mLinkedAttributes[i].name);
         stream.writeInt(mProgram->getSemanticIndexes()[i]);
     }
 
-    stream.writeInt(mData.mAttributes.size());
-    for (const sh::Attribute &attrib : mData.mAttributes)
+    const auto &shaderAttributes = mProgram->getShaderAttributes();
+    stream.writeInt(shaderAttributes.size());
+    for (const auto &attrib : shaderAttributes)
     {
         stream.writeInt(attrib.type);
         stream.writeInt(attrib.precision);
         stream.writeString(attrib.name);
         stream.writeInt(attrib.arraySize);
         stream.writeInt(attrib.location);
-        stream.writeInt(attrib.staticUse);
     }
 
     stream.writeInt(mData.mTransformFeedbackBufferMode);
@@ -584,11 +586,11 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shade
 
 GLuint Program::getAttributeLocation(const std::string &name)
 {
-    for (const sh::Attribute &attribute : mData.mAttributes)
+    for (size_t index = 0; index < mLinkedAttributes.size(); index++)
     {
-        if (attribute.name == name && attribute.staticUse)
+        if (mLinkedAttributes[index].name == name)
         {
-            return attribute.location;
+            return static_cast<GLuint>(index);
         }
     }
 
@@ -609,7 +611,45 @@ int Program::getSemanticIndex(int attributeIndex) const
 
 void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
 {
-    if (!mLinked)
+    if (mLinked)
+    {
+        // Skip over inactive attributes
+        unsigned int activeAttribute = 0;
+        unsigned int attribute;
+        for (attribute = 0; attribute < static_cast<unsigned int>(mLinkedAttributes.size());
+             attribute++)
+        {
+            if (mLinkedAttributes[attribute].name.empty())
+            {
+                continue;
+            }
+
+            if (activeAttribute == index)
+            {
+                break;
+            }
+
+            activeAttribute++;
+        }
+
+        if (bufsize > 0)
+        {
+            const char *string = mLinkedAttributes[attribute].name.c_str();
+
+            strncpy(name, string, bufsize);
+            name[bufsize - 1] = '\0';
+
+            if (length)
+            {
+                *length = static_cast<GLsizei>(strlen(name));
+            }
+        }
+
+        *size = 1;   // Always a single 'type' instance
+
+        *type = mLinkedAttributes[attribute].type;
+    }
+    else
     {
         if (bufsize > 0)
         {
@@ -623,57 +663,22 @@ void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length,
 
         *type = GL_NONE;
         *size = 1;
-        return;
     }
-
-    size_t attributeIndex = 0;
-
-    for (const sh::Attribute &attribute : mData.mAttributes)
-    {
-        // Skip over inactive attributes
-        if (attribute.staticUse)
-        {
-            if (static_cast<size_t>(index) == attributeIndex)
-            {
-                break;
-            }
-            attributeIndex++;
-        }
-    }
-
-    ASSERT(index == attributeIndex && attributeIndex < mData.mAttributes.size());
-    const sh::Attribute &attrib = mData.mAttributes[attributeIndex];
-
-    if (bufsize > 0)
-    {
-        const char *string = attrib.name.c_str();
-
-        strncpy(name, string, bufsize);
-        name[bufsize - 1] = '\0';
-
-        if (length)
-        {
-            *length = static_cast<GLsizei>(strlen(name));
-        }
-    }
-
-    // Always a single 'type' instance
-    *size = 1;
-    *type = attrib.type;
 }
 
 GLint Program::getActiveAttributeCount()
 {
-    if (!mLinked)
-    {
-        return 0;
-    }
+    int count = 0;
 
-    GLint count = 0;
-
-    for (const sh::Attribute &attrib : mData.mAttributes)
+    if (mLinked)
     {
-        count += (attrib.staticUse ? 1 : 0);
+        for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
+        {
+            if (!mLinkedAttributes[attributeIndex].name.empty())
+            {
+                count++;
+            }
+        }
     }
 
     return count;
@@ -681,22 +686,22 @@ GLint Program::getActiveAttributeCount()
 
 GLint Program::getActiveAttributeMaxLength()
 {
-    if (!mLinked)
-    {
-        return 0;
-    }
+    GLint maxLength = 0;
 
-    size_t maxLength = 0;
-
-    for (const sh::Attribute &attrib : mData.mAttributes)
+    if (mLinked)
     {
-        if (attrib.staticUse)
+        for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
         {
-            maxLength = std::max(attrib.name.length() + 1, maxLength);
+            if (!mLinkedAttributes[attributeIndex].name.empty())
+            {
+                maxLength = std::max(
+                    static_cast<GLint>(mLinkedAttributes[attributeIndex].name.length() + 1),
+                    maxLength);
+            }
         }
     }
 
-    return static_cast<GLint>(maxLength);
+    return maxLength;
 }
 
 GLint Program::getFragDataLocation(const std::string &name) const
@@ -1287,77 +1292,73 @@ bool Program::linkAttributes(const gl::Data &data,
                              const Shader *vertexShader)
 {
     unsigned int usedLocations = 0;
-    mData.mAttributes          = vertexShader->getActiveAttributes();
+    const std::vector<sh::Attribute> &shaderAttributes = vertexShader->getActiveAttributes();
     GLuint maxAttribs = data.caps->maxVertexAttributes;
 
     // TODO(jmadill): handle aliasing robustly
-    if (mData.mAttributes.size() > maxAttribs)
+    if (shaderAttributes.size() > maxAttribs)
     {
         infoLog << "Too many vertex attributes.";
         return false;
     }
 
-    std::vector<sh::Attribute *> usedAttribMap(data.caps->maxVertexAttributes, nullptr);
-
     // Link attributes that have a binding location
-    for (sh::Attribute &attribute : mData.mAttributes)
+    for (unsigned int attributeIndex = 0; attributeIndex < shaderAttributes.size(); attributeIndex++)
     {
-        // TODO(jmadill): do staticUse filtering step here, or not at all
+        const sh::Attribute &attribute = shaderAttributes[attributeIndex];
+
         ASSERT(attribute.staticUse);
 
-        int bindingLocation = attributeBindings.getAttributeBinding(attribute.name);
-        if (attribute.location == -1 && bindingLocation != -1)
-        {
-            attribute.location = bindingLocation;
-        }
+        const int location = attribute.location == -1 ? attributeBindings.getAttributeBinding(attribute.name) : attribute.location;
 
-        if (attribute.location != -1)
+        mProgram->setShaderAttribute(attributeIndex, attribute);
+
+        if (location != -1)   // Set by glBindAttribLocation or by location layout qualifier
         {
-            // Location is set by glBindAttribLocation or by location layout qualifier
             const int rows = VariableRegisterCount(attribute.type);
 
-            if (static_cast<GLuint>(rows + attribute.location) > maxAttribs)
+            if (static_cast<GLuint>(rows + location) > maxAttribs)
             {
                 infoLog << "Active attribute (" << attribute.name << ") at location "
-                        << attribute.location << " is too big to fit";
+                        << location << " is too big to fit";
 
                 return false;
             }
 
             for (int row = 0; row < rows; row++)
             {
-                const int rowLocation               = attribute.location + row;
-                sh::ShaderVariable *linkedAttribute = usedAttribMap[rowLocation];
+                const int rowLocation = location + row;
+                sh::ShaderVariable *linkedAttribute = &mLinkedAttributes[rowLocation];
 
                 // In GLSL 3.00, attribute aliasing produces a link error
                 // In GLSL 1.00, attribute aliasing is allowed, but ANGLE currently has a bug
-                if (linkedAttribute)
+                // TODO(jmadill): fix aliasing on ES2
+                // if (mProgram->getShaderVersion() >= 300)
                 {
-                    // TODO(jmadill): fix aliasing on ES2
-                    // if (mProgram->getShaderVersion() >= 300)
+                    if (!linkedAttribute->name.empty())
                     {
                         infoLog << "Attribute '" << attribute.name << "' aliases attribute '"
                                 << linkedAttribute->name << "' at location " << rowLocation;
                         return false;
                     }
                 }
-                else
-                {
-                    usedAttribMap[rowLocation] = &attribute;
-                }
 
+                *linkedAttribute = attribute;
                 usedLocations |= 1 << rowLocation;
             }
         }
     }
 
     // Link attributes that don't have a binding location
-    for (sh::Attribute &attribute : mData.mAttributes)
+    for (unsigned int attributeIndex = 0; attributeIndex < shaderAttributes.size(); attributeIndex++)
     {
+        const sh::Attribute &attribute = shaderAttributes[attributeIndex];
+
         ASSERT(attribute.staticUse);
 
-        // Not set by glBindAttribLocation or by location layout qualifier
-        if (attribute.location == -1)
+        const int location = attribute.location == -1 ? attributeBindings.getAttributeBinding(attribute.name) : attribute.location;
+
+        if (location == -1)   // Not set by glBindAttribLocation or by location layout qualifier
         {
             int rows = VariableRegisterCount(attribute.type);
             int availableIndex = AllocateFirstFreeBits(&usedLocations, rows, maxAttribs);
@@ -1365,21 +1366,17 @@ bool Program::linkAttributes(const gl::Data &data,
             if (availableIndex == -1 || static_cast<GLuint>(availableIndex + rows) > maxAttribs)
             {
                 infoLog << "Too many active attributes (" << attribute.name << ")";
-                return false;
+                return false;   // Fail to link
             }
 
-            attribute.location = availableIndex;
+            mLinkedAttributes[availableIndex] = attribute;
         }
     }
 
-    // TODO(jmadill): make semantic index D3D-only
-    for (const sh::Attribute &attribute : mData.mAttributes)
+    for (GLuint attributeIndex = 0; attributeIndex < maxAttribs;)
     {
-        ASSERT(attribute.staticUse);
-
-        unsigned int attributeIndex = attribute.location;
-        int index                   = vertexShader->getSemanticIndex(attribute.name);
-        int rows                    = VariableRegisterCount(attribute.type);
+        int index = vertexShader->getSemanticIndex(mLinkedAttributes[attributeIndex].name);
+        int rows  = VariableRegisterCount(mLinkedAttributes[attributeIndex].type);
 
         for (int r = 0; r < rows; r++)
         {

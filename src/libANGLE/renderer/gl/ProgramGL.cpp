@@ -169,33 +169,34 @@ LinkResult ProgramGL::link(const gl::Data &data,
         }
     }
 
-    for (const sh::Attribute &attribute : mData.getAttributes())
+    // Query the attribute information
+    GLint activeAttributeMaxLength = 0;
+    mFunctions->getProgramiv(mProgramID, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &activeAttributeMaxLength);
+
+    std::vector<GLchar> attributeNameBuffer(activeAttributeMaxLength);
+
+    GLint attributeCount = 0;
+    mFunctions->getProgramiv(mProgramID, GL_ACTIVE_ATTRIBUTES, &attributeCount);
+    for (GLint i = 0; i < attributeCount; i++)
     {
-        if (!attribute.staticUse)
-            continue;
+        GLsizei attributeNameLength = 0;
+        GLint attributeSize = 0;
+        GLenum attributeType = GL_NONE;
+        mFunctions->getActiveAttrib(mProgramID, i, static_cast<GLsizei>(attributeNameBuffer.size()),
+                                    &attributeNameLength, &attributeSize, &attributeType,
+                                    &attributeNameBuffer[0]);
 
-        GLint realLocation = mFunctions->getAttribLocation(mProgramID, attribute.name.c_str());
+        std::string attributeName(&attributeNameBuffer[0], attributeNameLength);
 
-        // Some drivers optimize attributes more aggressively.
-        if (realLocation == -1)
+        GLint location = mFunctions->getAttribLocation(mProgramID, attributeName.c_str());
+
+        // TODO: determine attribute precision
+        setShaderAttribute(static_cast<size_t>(i), attributeType, GL_NONE, attributeName, attributeSize, location);
+
+        int attributeRegisterCount = gl::VariableRegisterCount(attributeType);
+        for (int offset = 0; offset < attributeRegisterCount; offset++)
         {
-            continue;
-        }
-
-        // TODO(jmadill): Fix this
-        ASSERT(attribute.location == realLocation);
-
-        int registerCount = gl::VariableRegisterCount(attribute.type);
-
-        if (mAttributeRealLocations.size() < attribute.location + registerCount + 1)
-        {
-            mAttributeRealLocations.resize(attribute.location + registerCount + 1, -1);
-        }
-
-        for (int offset = 0; offset < registerCount; ++offset)
-        {
-            mActiveAttributesMask.set(attribute.location + offset);
-            mAttributeRealLocations[attribute.location + offset] = realLocation + offset;
+            mActiveAttributesMask.set(location + offset);
         }
     }
 
@@ -377,7 +378,6 @@ void ProgramGL::reset()
     mSamplerUniformMap.clear();
     mSamplerBindings.clear();
     mActiveAttributesMask.reset();
-    mAttributeRealLocations.clear();
 }
 
 GLuint ProgramGL::getProgramID() const

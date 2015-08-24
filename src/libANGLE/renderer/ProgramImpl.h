@@ -85,6 +85,7 @@ class ProgramImpl : angle::NonCopyable
     const std::vector<gl::LinkedUniform*> &getUniforms() const { return mUniforms; }
     const std::map<GLuint, gl::VariableLocation> &getUniformIndices() const { return mUniformIndex; }
     const std::vector<gl::UniformBlock*> &getUniformBlocks() const { return mUniformBlocks; }
+    const std::vector<sh::Attribute> getShaderAttributes() { return mShaderAttributes; }
     const SemanticIndexArray &getSemanticIndexes() const { return mSemanticIndex; }
 
     std::vector<gl::LinkedUniform*> &getUniforms() { return mUniforms; }
@@ -100,6 +101,9 @@ class ProgramImpl : angle::NonCopyable
     GLuint getUniformIndex(const std::string &name) const;
     GLuint getUniformBlockIndex(const std::string &name) const;
 
+    void setShaderAttribute(size_t index, const sh::Attribute &attrib);
+    void setShaderAttribute(size_t index, GLenum type, GLenum precision, const std::string &name, GLint size, int location);
+
     virtual void reset();
 
   protected:
@@ -113,6 +117,9 @@ class ProgramImpl : angle::NonCopyable
     std::vector<gl::UniformBlock*> mUniformBlocks;
 
     SemanticIndexArray mSemanticIndex;
+
+  private:
+    std::vector<sh::Attribute> mShaderAttributes;
 };
 
 }
