@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04bb013c_95cec459",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-24T14:20:34Z",
+      "side": 1,
+      "message": "Shouldn\u0027t it be an assignement in case there is some leftover data? (or are we sure the bitset is empty in loadBinary)",
+      "revId": "38bffca314df9a90c1630c6cf0ed803f436fdf98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4a18d0d_0e580b80",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1372,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-24T14:20:34Z",
+      "side": 1,
+      "message": "nit: IIRC the register count isn\u0027t the rows but the columns. It is just a name change though (count, registerUsage or the like would be good too).",
+      "revId": "38bffca314df9a90c1630c6cf0ed803f436fdf98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44b17956_71ba58a6",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2110,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-24T14:20:34Z",
+      "side": 1,
+      "message": "ditto on rows vs. columns",
+      "revId": "38bffca314df9a90c1630c6cf0ed803f436fdf98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8411b10b_53b744bc",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-24T14:20:34Z",
+      "side": 1,
+      "message": "nit: semanticIndices or semanticIndexes",
+      "revId": "38bffca314df9a90c1630c6cf0ed803f436fdf98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8411b10b_b384d8ed",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-24T14:20:34Z",
+      "side": 1,
+      "message": "nit: ditto",
+      "revId": "38bffca314df9a90c1630c6cf0ed803f436fdf98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
