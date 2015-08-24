@@ -74,6 +74,23 @@ LinkResult ProgramGL::link(const gl::Data &data,
     mFunctions->attachShader(mProgramID, vertexShaderGL->getShaderID());
     mFunctions->attachShader(mProgramID, fragmentShaderGL->getShaderID());
 
+    // Bind attribute locations to match the GL layer.
+    for (const sh::Attribute &attribute : mData.getAttributes())
+    {
+        if (!attribute.staticUse)
+        {
+            continue;
+        }
+
+        mFunctions->bindAttribLocation(mProgramID, attribute.location, attribute.name.c_str());
+
+        int registerCount = gl::VariableRegisterCount(attribute.type);
+        for (int offset = 0; offset < registerCount; ++offset)
+        {
+            mActiveAttributesMask.set(attribute.location + offset);
+        }
+    }
+
     // Link and verify
     mFunctions->linkProgram(mProgramID);
 
@@ -169,37 +186,6 @@ LinkResult ProgramGL::link(const gl::Data &data,
         }
     }
 
-    for (const sh::Attribute &attribute : mData.getAttributes())
-    {
-        if (!attribute.staticUse)
-            continue;
-
-        GLint realLocation = mFunctions->getAttribLocation(mProgramID, attribute.name.c_str());
-
-        // Some drivers optimize attributes more aggressively.
-        if (realLocation == -1)
-        {
-            continue;
-        }
-
-        // TODO(jmadill): Fix this
-        ASSERT(attribute.location == realLocation);
-
-        int registerCount = gl::VariableRegisterCount(attribute.type);
-
-        if (static_cast<GLint>(mAttributeRealLocations.size()) <
-            attribute.location + registerCount + 1)
-        {
-            mAttributeRealLocations.resize(attribute.location + registerCount + 1, -1);
-        }
-
-        for (int offset = 0; offset < registerCount; ++offset)
-        {
-            mActiveAttributesMask.set(attribute.location + offset);
-            mAttributeRealLocations[attribute.location + offset] = realLocation + offset;
-        }
-    }
-
     return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
 
@@ -207,11 +193,6 @@ GLboolean ProgramGL::validate(const gl::Caps & /*caps*/, gl::InfoLog * /*infoLog
 {
     // TODO(jmadill): implement validate
     return true;
-}
-
-void ProgramGL::bindAttributeLocation(GLuint index, const std::string &name)
-{
-    mFunctions->bindAttribLocation(mProgramID, index, name.c_str());
 }
 
 void ProgramGL::setUniform1fv(GLint location, GLsizei count, const GLfloat *v)
@@ -378,7 +359,6 @@ void ProgramGL::reset()
     mSamplerUniformMap.clear();
     mSamplerBindings.clear();
     mActiveAttributesMask.reset();
-    mAttributeRealLocations.clear();
 }
 
 GLuint ProgramGL::getProgramID() const

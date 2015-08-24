@@ -1175,10 +1175,6 @@ GLboolean ProgramD3D::validate(const gl::Caps &caps, gl::InfoLog *infoLog)
     return validateSamplers(infoLog, caps);
 }
 
-void ProgramD3D::bindAttributeLocation(GLuint index, const std::string &name)
-{
-}
-
 void ProgramD3D::initializeUniformStorage()
 {
     // Compute total default block size

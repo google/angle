@@ -45,8 +45,6 @@ class ProgramGL : public ProgramImpl
 
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
-    void bindAttributeLocation(GLuint index, const std::string &name) override;
-
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;
     void setUniform2fv(GLint location, GLsizei count, const GLfloat *v) override;
     void setUniform3fv(GLint location, GLsizei count, const GLfloat *v) override;
@@ -100,9 +98,6 @@ class ProgramGL : public ProgramImpl
 
     // An array of the samplers that are used by the program
     std::vector<SamplerBindingGL> mSamplerBindings;
-
-    // Map from GL-layer attribute location to native location.
-    std::vector<GLint> mAttributeRealLocations;
 
     // Array of attribute locations used by this program
     gl::AttributesMask mActiveAttributesMask;

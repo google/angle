@@ -50,8 +50,6 @@ class ProgramImpl : angle::NonCopyable
 
     virtual GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) = 0;
 
-    virtual void bindAttributeLocation(GLuint index, const std::string &name) = 0;
-
     virtual void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) = 0;
     virtual void setUniform2fv(GLint location, GLsizei count, const GLfloat *v) = 0;
     virtual void setUniform3fv(GLint location, GLsizei count, const GLfloat *v) = 0;

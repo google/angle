@@ -76,8 +76,6 @@ class ProgramD3D : public ProgramImpl
 
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
-    void bindAttributeLocation(GLuint index, const std::string &name) override;
-
     void initializeUniformStorage();
     gl::Error applyUniforms();
     gl::Error applyUniformBuffers(const gl::Data &data);
