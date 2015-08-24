@@ -2482,44 +2482,50 @@ const GLubyte *GL_APIENTRY GetString(GLenum name)
 
     Context *context = GetValidGlobalContext();
 
-    switch (name)
+    if (context)
     {
-      case GL_VENDOR:
-        return (GLubyte*)"Google Inc.";
-
-      case GL_RENDERER:
-        return (GLubyte*)((context != NULL) ? context->getRendererString().c_str() : "ANGLE");
-
-      case GL_VERSION:
-        if (context->getClientVersion() == 2)
+        switch (name)
         {
-            return (GLubyte*)"OpenGL ES 2.0 (ANGLE " ANGLE_VERSION_STRING ")";
-        }
-        else
-        {
-            return (GLubyte*)"OpenGL ES 3.0 (ANGLE " ANGLE_VERSION_STRING ")";
-        }
+            case GL_VENDOR:
+                return reinterpret_cast<const GLubyte *>("Google Inc.");
 
-      case GL_SHADING_LANGUAGE_VERSION:
-        if (context->getClientVersion() == 2)
-        {
-            return (GLubyte*)"OpenGL ES GLSL ES 1.00 (ANGLE " ANGLE_VERSION_STRING ")";
-        }
-        else
-        {
-            return (GLubyte*)"OpenGL ES GLSL ES 3.00 (ANGLE " ANGLE_VERSION_STRING ")";
-        }
+            case GL_RENDERER:
+                return reinterpret_cast<const GLubyte *>(context->getRendererString().c_str());
 
-      case GL_EXTENSIONS:
-        return (GLubyte*)((context != NULL) ? context->getExtensionString().c_str() : "");
+            case GL_VERSION:
+                if (context->getClientVersion() == 2)
+                {
+                    return reinterpret_cast<const GLubyte *>(
+                        "OpenGL ES 2.0 (ANGLE " ANGLE_VERSION_STRING ")");
+                }
+                else
+                {
+                    return reinterpret_cast<const GLubyte *>(
+                        "OpenGL ES 3.0 (ANGLE " ANGLE_VERSION_STRING ")");
+                }
 
-      default:
-        if (context)
-        {
+            case GL_SHADING_LANGUAGE_VERSION:
+                if (context->getClientVersion() == 2)
+                {
+                    return reinterpret_cast<const GLubyte *>(
+                        "OpenGL ES GLSL ES 1.00 (ANGLE " ANGLE_VERSION_STRING ")");
+                }
+                else
+                {
+                    return reinterpret_cast<const GLubyte *>(
+                        "OpenGL ES GLSL ES 3.00 (ANGLE " ANGLE_VERSION_STRING ")");
+                }
+
+            case GL_EXTENSIONS:
+                return reinterpret_cast<const GLubyte *>(context->getExtensionString().c_str());
+
+            default:
             context->recordError(Error(GL_INVALID_ENUM));
+            return nullptr;
         }
-        return NULL;
     }
+
+    return nullptr;
 }
 
 void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
