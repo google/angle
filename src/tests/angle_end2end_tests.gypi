@@ -19,6 +19,7 @@
             '<(angle_path)/src/tests/gl_tests/BufferDataTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ClearTest.cpp',
             '<(angle_path)/src/tests/gl_tests/CompressedTextureTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/CopyTexImageTest.cpp',
             '<(angle_path)/src/tests/gl_tests/CubeMapTextureTest.cpp',
             '<(angle_path)/src/tests/gl_tests/DebugMarkerTest.cpp',
             '<(angle_path)/src/tests/gl_tests/DepthStencilFormatsTest.cpp',

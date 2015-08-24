@@ -15,9 +15,20 @@
 namespace rx
 {
 
+class BlitGL;
 class FunctionsGL;
 class StateManagerGL;
 struct WorkaroundsGL;
+
+struct LUMAWorkaround
+{
+    bool enabled;
+    GLenum sourceFormat;
+    GLenum workaroundFormat;
+
+    LUMAWorkaround();
+    LUMAWorkaround(bool enabled, GLenum sourceFormat, GLenum workaroundFormat);
+};
 
 class TextureGL : public TextureImpl
 {
@@ -25,7 +36,8 @@ class TextureGL : public TextureImpl
     TextureGL(GLenum type,
               const FunctionsGL *functions,
               const WorkaroundsGL &workarounds,
-              StateManagerGL *stateManager);
+              StateManagerGL *stateManager,
+              BlitGL *blitter);
     ~TextureGL() override;
 
     void setUsage(GLenum usage) override;
@@ -69,6 +81,9 @@ class TextureGL : public TextureImpl
     const FunctionsGL *mFunctions;
     const WorkaroundsGL &mWorkarounds;
     StateManagerGL *mStateManager;
+    BlitGL *mBlitter;
+
+    std::vector<LUMAWorkaround> mLUMAWorkaroundLevels;
 
     mutable gl::SamplerState mAppliedSamplerState;
     GLuint mTextureID;

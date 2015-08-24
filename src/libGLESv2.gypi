@@ -388,6 +388,8 @@
         ],
         'libangle_gl_sources':
         [
+            'libANGLE/renderer/gl/BlitGL.cpp',
+            'libANGLE/renderer/gl/BlitGL.h',
             'libANGLE/renderer/gl/BufferGL.cpp',
             'libANGLE/renderer/gl/BufferGL.h',
             'libANGLE/renderer/gl/CompilerGL.cpp',

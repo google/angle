@@ -105,14 +105,6 @@ class UnpackAlignmentTest : public ANGLETest
 
     void testAlignment(int alignment, unsigned int offset, GLenum format, GLenum type)
     {
-        // TODO(geofflang): Support LUMA formats in the core profile.
-        if (getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE &&
-            (format == GL_LUMINANCE_ALPHA || format == GL_LUMINANCE || format == GL_ALPHA))
-        {
-            std::cout << "Test skipped on OpenGL with LUMA formats." << std::endl;
-            return;
-        }
-
         static const unsigned int width = 7;
         static const unsigned int height = 2;
 

@@ -14,6 +14,7 @@
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/Data.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/renderer/gl/BlitGL.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
 #include "libANGLE/renderer/gl/CompilerGL.h"
 #include "libANGLE/renderer/gl/FenceNVGL.h"
@@ -83,11 +84,13 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
       mMaxSupportedESVersion(0, 0),
       mFunctions(functions),
       mStateManager(nullptr),
+      mBlitter(nullptr),
       mSkipDrawCalls(false)
 {
     ASSERT(mFunctions);
     mStateManager = new StateManagerGL(mFunctions, getRendererCaps());
     nativegl_gl::GenerateWorkarounds(mFunctions, &mWorkarounds);
+    mBlitter = new BlitGL(functions, mWorkarounds, mStateManager);
 
 #ifndef NDEBUG
     if (mFunctions->debugMessageControl && mFunctions->debugMessageCallback)
@@ -111,6 +114,7 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
 RendererGL::~RendererGL()
 {
     SafeDelete(mStateManager);
+    SafeDelete(mBlitter);
 }
 
 gl::Error RendererGL::flush()
@@ -188,7 +192,7 @@ FramebufferImpl *RendererGL::createFramebuffer(const gl::Framebuffer::Data &data
 
 TextureImpl *RendererGL::createTexture(GLenum target)
 {
-    return new TextureGL(target, mFunctions, mWorkarounds, mStateManager);
+    return new TextureGL(target, mFunctions, mWorkarounds, mStateManager, mBlitter);
 }
 
 RenderbufferImpl *RendererGL::createRenderbuffer()

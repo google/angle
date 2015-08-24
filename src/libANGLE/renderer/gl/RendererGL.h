@@ -15,6 +15,7 @@
 
 namespace rx
 {
+class BlitGL;
 class FunctionsGL;
 class StateManagerGL;
 
@@ -91,6 +92,8 @@ class RendererGL : public Renderer
 
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
+
+    BlitGL *mBlitter;
 
     WorkaroundsGL mWorkarounds;
 
