@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "e4a18d0d_7493602e",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 877,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-25T21:05:19Z",
+      "side": 1,
+      "message": "Where do we handle Xfb varyings that only used by the VS?",
+      "revId": "4f92fd62d2435a904238b05f800b37fefd8e451c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4a18d0d_14bbfcba",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 1
