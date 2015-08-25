@@ -221,7 +221,19 @@ gl::Error RendererGL::drawRangeElements(const gl::Data &data,
                                         const GLvoid *indices,
                                         const gl::RangeUI &indexRange)
 {
-    UNIMPLEMENTED();
+    const GLvoid *drawIndexPointer = nullptr;
+    gl::Error error =
+        mStateManager->setDrawElementsState(data, count, type, indices, 0, &drawIndexPointer);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    if (!mSkipDrawCalls)
+    {
+        mFunctions->drawRangeElements(mode, start, end, count, type, drawIndexPointer);
+    }
+
     return gl::Error(GL_NO_ERROR);
 }
 
