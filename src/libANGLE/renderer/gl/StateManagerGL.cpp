@@ -406,13 +406,12 @@ gl::Error StateManagerGL::setDrawArraysState(const gl::Data &data, GLint first, 
     const gl::State &state = *data.state;
 
     const gl::Program *program = state.getProgram();
-    const ProgramGL *programGL = GetImplAs<ProgramGL>(program);
 
     const gl::VertexArray *vao = state.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
 
     gl::Error error =
-        vaoGL->syncDrawArraysState(programGL->getActiveAttributesMask(), first, count);
+        vaoGL->syncDrawArraysState(program->getActiveAttribLocationsMask(), first, count);
     if (error.isError())
     {
         return error;
@@ -429,12 +428,11 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::Data &data, GLsizei cou
     const gl::State &state = *data.state;
 
     const gl::Program *program = state.getProgram();
-    const ProgramGL *programGL = GetImplAs<ProgramGL>(program);
 
     const gl::VertexArray *vao = state.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
 
-    gl::Error error = vaoGL->syncDrawElementsState(programGL->getActiveAttributesMask(), count,
+    gl::Error error = vaoGL->syncDrawElementsState(program->getActiveAttribLocationsMask(), count,
                                                    type, indices, outIndices);
     if (error.isError())
     {

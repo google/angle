@@ -30,9 +30,6 @@ namespace gl
 {
 class Buffer;
 
-// Used in other places.
-typedef std::bitset<MAX_VERTEX_ATTRIBS> AttributesMask;
-
 class VertexArray
 {
   public:

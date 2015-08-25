@@ -109,7 +109,7 @@ bool IsRowMajorLayout(const sh::ShaderVariable &var)
 
 struct AttributeSorter
 {
-    AttributeSorter(const ProgramImpl::SemanticIndexArray &semanticIndices)
+    AttributeSorter(const ProgramD3D::SemanticIndexArray &semanticIndices)
         : originalIndices(&semanticIndices)
     {
     }
@@ -124,7 +124,7 @@ struct AttributeSorter
         return (indexA < indexB);
     }
 
-    const ProgramImpl::SemanticIndexArray *originalIndices;
+    const ProgramD3D::SemanticIndexArray *originalIndices;
 };
 
 bool LinkVaryingRegisters(gl::InfoLog &infoLog,
@@ -513,6 +513,12 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 
     stream->readInt(&mShaderVersion);
 
+    // TODO(jmadill): replace MAX_VERTEX_ATTRIBS
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; ++i)
+    {
+        stream->readInt(&mSemanticIndexes[i]);
+    }
+
     const unsigned int psSamplerCount = stream->readInt<unsigned int>();
     for (unsigned int i = 0; i < psSamplerCount; ++i)
     {
@@ -762,6 +768,12 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
     stream->writeInt(ANGLE_COMPILE_OPTIMIZATION_LEVEL);
 
     stream->writeInt(mShaderVersion);
+
+    // TODO(jmadill): replace MAX_VERTEX_ATTRIBS
+    for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; ++i)
+    {
+        stream->writeInt(mSemanticIndexes[i]);
+    }
 
     stream->writeInt(mSamplersPS.size());
     for (unsigned int i = 0; i < mSamplersPS.size(); ++i)
@@ -1148,7 +1160,7 @@ LinkResult ProgramD3D::link(const gl::Data &data,
 
     mUsesPointSize = vertexShaderD3D->usesPointSize();
 
-    initAttributesByLayout();
+    initSemanticIndex();
 
     if (!defineUniforms(infoLog, *data.caps))
     {
@@ -2065,6 +2077,7 @@ void ProgramD3D::reset()
     mUsedPixelSamplerRange = 0;
     mDirtySamplerMapping = true;
 
+    std::fill(mSemanticIndexes, mSemanticIndexes + ArraySize(mSemanticIndexes), -1);
     std::fill(mAttributesByLayout, mAttributesByLayout + ArraySize(mAttributesByLayout), -1);
 
     mTransformFeedbackLinkedVaryings.clear();
@@ -2080,6 +2093,27 @@ unsigned int ProgramD3D::issueSerial()
     return mCurrentSerial++;
 }
 
+void ProgramD3D::initSemanticIndex()
+{
+    const gl::Shader *vertexShader = mData.getAttachedVertexShader();
+    ASSERT(vertexShader != nullptr);
+
+    // Init semantic index
+    for (const sh::Attribute &attribute : mData.getAttributes())
+    {
+        int attributeIndex = attribute.location;
+        int index          = vertexShader->getSemanticIndex(attribute.name);
+        int regs           = gl::VariableRegisterCount(attribute.type);
+
+        for (int reg = 0; reg < regs; ++reg)
+        {
+            mSemanticIndexes[attributeIndex + reg] = index + reg;
+        }
+    }
+
+    initAttributesByLayout();
+}
+
 void ProgramD3D::initAttributesByLayout()
 {
     for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
@@ -2087,7 +2121,8 @@ void ProgramD3D::initAttributesByLayout()
         mAttributesByLayout[i] = i;
     }
 
-    std::sort(&mAttributesByLayout[0], &mAttributesByLayout[gl::MAX_VERTEX_ATTRIBS], AttributeSorter(mSemanticIndex));
+    std::sort(&mAttributesByLayout[0], &mAttributesByLayout[gl::MAX_VERTEX_ATTRIBS],
+              AttributeSorter(mSemanticIndexes));
 }
 
 void ProgramD3D::sortAttributesByLayout(const std::vector<TranslatedAttribute> &unsortedAttributes,
@@ -2097,21 +2132,19 @@ void ProgramD3D::sortAttributesByLayout(const std::vector<TranslatedAttribute> &
     for (size_t attribIndex = 0; attribIndex < unsortedAttributes.size(); ++attribIndex)
     {
         int oldIndex = mAttributesByLayout[attribIndex];
-        sortedSemanticIndicesOut[attribIndex] = mSemanticIndex[oldIndex];
+        sortedSemanticIndicesOut[attribIndex] = mSemanticIndexes[oldIndex];
         sortedAttributesOut[attribIndex] = &unsortedAttributes[oldIndex];
     }
 }
 
-void ProgramD3D::updateCachedInputLayout(const gl::Program *program, const gl::State &state)
+void ProgramD3D::updateCachedInputLayout(const gl::State &state)
 {
     mCachedInputLayout.clear();
-    const int *semanticIndexes = program->getSemanticIndexes();
-
     const auto &vertexAttributes = state.getVertexArray()->getVertexAttributes();
 
     for (unsigned int attributeIndex = 0; attributeIndex < vertexAttributes.size(); attributeIndex++)
     {
-        int semanticIndex = semanticIndexes[attributeIndex];
+        int semanticIndex = mSemanticIndexes[attributeIndex];
 
         if (semanticIndex != -1)
         {

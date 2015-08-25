@@ -375,7 +375,7 @@ gl::Error RendererD3D::applyShaders(const gl::Data &data)
 {
     gl::Program *program = data.state->getProgram();
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
-    programD3D->updateCachedInputLayout(program, *data.state);
+    programD3D->updateCachedInputLayout(*data.state);
 
     const gl::Framebuffer *fbo = data.state->getDrawFramebuffer();
 

@@ -36,13 +36,11 @@ bool ValidateDrawAttribs(gl::Context *context, GLint primcount, GLint maxVertex)
 
     const VertexArray *vao     = state.getVertexArray();
     const auto &vertexAttribs  = vao->getVertexAttributes();
-    const int *semanticIndexes = program->getSemanticIndexes();
     size_t maxEnabledAttrib = vao->getMaxEnabledAttribute();
     for (size_t attributeIndex = 0; attributeIndex < maxEnabledAttrib; ++attributeIndex)
     {
         const VertexAttribute &attrib = vertexAttribs[attributeIndex];
-        bool attribActive = (semanticIndexes[attributeIndex] != -1);
-        if (attribActive && attrib.enabled)
+        if (program->isAttribLocationActive(attributeIndex) && attrib.enabled)
         {
             gl::Buffer *buffer = attrib.buffer.get();
 
@@ -1564,11 +1562,10 @@ static bool ValidateDrawInstancedANGLE(Context *context)
     gl::Program *program = state.getProgram();
 
     const VertexArray *vao = state.getVertexArray();
-    for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
+    for (size_t attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
         const VertexAttribute &attrib = vao->getVertexAttribute(attributeIndex);
-        bool active = (program->getSemanticIndex(attributeIndex) != -1);
-        if (active && attrib.divisor == 0)
+        if (program->isAttribLocationActive(attributeIndex) && attrib.divisor == 0)
         {
             return true;
         }

@@ -83,12 +83,6 @@ LinkResult ProgramGL::link(const gl::Data &data,
         }
 
         mFunctions->bindAttribLocation(mProgramID, attribute.location, attribute.name.c_str());
-
-        int registerCount = gl::VariableRegisterCount(attribute.type);
-        for (int offset = 0; offset < registerCount; ++offset)
-        {
-            mActiveAttributesMask.set(attribute.location + offset);
-        }
     }
 
     // Link and verify
@@ -358,7 +352,6 @@ void ProgramGL::reset()
 
     mSamplerUniformMap.clear();
     mSamplerBindings.clear();
-    mActiveAttributesMask.reset();
 }
 
 GLuint ProgramGL::getProgramID() const
@@ -369,11 +362,6 @@ GLuint ProgramGL::getProgramID() const
 const std::vector<SamplerBindingGL> &ProgramGL::getAppliedSamplerUniforms() const
 {
     return mSamplerBindings;
-}
-
-const gl::AttributesMask &ProgramGL::getActiveAttributesMask() const
-{
-    return mActiveAttributesMask;
 }
 
 }

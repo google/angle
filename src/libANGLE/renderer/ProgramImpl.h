@@ -31,8 +31,6 @@ struct LinkResult
 class ProgramImpl : angle::NonCopyable
 {
   public:
-    typedef int SemanticIndexArray[gl::MAX_VERTEX_ATTRIBS];
-
     ProgramImpl(const gl::Program::Data &data);
     virtual ~ProgramImpl();
 
@@ -83,12 +81,10 @@ class ProgramImpl : angle::NonCopyable
     const std::vector<gl::LinkedUniform*> &getUniforms() const { return mUniforms; }
     const std::map<GLuint, gl::VariableLocation> &getUniformIndices() const { return mUniformIndex; }
     const std::vector<gl::UniformBlock*> &getUniformBlocks() const { return mUniformBlocks; }
-    const SemanticIndexArray &getSemanticIndexes() const { return mSemanticIndex; }
 
     std::vector<gl::LinkedUniform*> &getUniforms() { return mUniforms; }
     std::map<GLuint, gl::VariableLocation> &getUniformIndices() { return mUniformIndex; }
     std::vector<gl::UniformBlock*> &getUniformBlocks() { return mUniformBlocks; }
-    SemanticIndexArray &getSemanticIndexes() { return mSemanticIndex; }
 
     gl::LinkedUniform *getUniformByLocation(GLint location) const;
     gl::LinkedUniform *getUniformByName(const std::string &name) const;
@@ -109,8 +105,6 @@ class ProgramImpl : angle::NonCopyable
     std::map<GLuint, gl::VariableLocation> mUniformIndex;
 
     std::vector<gl::UniformBlock*> mUniformBlocks;
-
-    SemanticIndexArray mSemanticIndex;
 };
 
 }

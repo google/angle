@@ -73,16 +73,10 @@ class ProgramGL : public ProgramImpl
 
     bool validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps) override;
 
-    void defineUniformBlock(gl::InfoLog &infoLog,
-                            const gl::Shader &shader,
-                            const sh::InterfaceBlock &interfaceBlock,
-                            const gl::Caps &caps);
-
     void reset() override;
 
     GLuint getProgramID() const;
     const std::vector<SamplerBindingGL> &getAppliedSamplerUniforms() const;
-    const gl::AttributesMask &getActiveAttributesMask() const;
 
   private:
     const FunctionsGL *mFunctions;
@@ -98,9 +92,6 @@ class ProgramGL : public ProgramImpl
 
     // An array of the samplers that are used by the program
     std::vector<SamplerBindingGL> mSamplerBindings;
-
-    // Array of attribute locations used by this program
-    gl::AttributesMask mActiveAttributesMask;
 
     GLuint mProgramID;
 };

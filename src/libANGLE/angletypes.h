@@ -14,6 +14,8 @@
 
 #include <stdint.h>
 
+#include <bitset>
+
 namespace gl
 {
 class Buffer;
@@ -247,6 +249,8 @@ struct PixelPackState
     {}
 };
 
+// Used in Program and VertexArray.
+typedef std::bitset<MAX_VERTEX_ATTRIBS> AttributesMask;
 }
 
 namespace rx

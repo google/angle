@@ -135,8 +135,8 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
     // Compute active enabled and active disable attributes, for speed.
     // TODO(jmadill): don't recompute if there was no state change
     const gl::VertexArray *vertexArray = state.getVertexArray();
-    const int *semanticIndexes = state.getProgram()->getSemanticIndexes();
-    const std::vector<gl::VertexAttribute> &vertexAttributes = vertexArray->getVertexAttributes();
+    const gl::Program *program         = state.getProgram();
+    const auto &vertexAttributes       = vertexArray->getVertexAttributes();
 
     mActiveEnabledAttributes.clear();
     mActiveDisabledAttributes.clear();
@@ -144,7 +144,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
 
     for (size_t attribIndex = 0; attribIndex < vertexAttributes.size(); ++attribIndex)
     {
-        if (semanticIndexes[attribIndex] != -1)
+        if (program->isAttribLocationActive(attribIndex))
         {
             // Resize automatically puts in empty attribs
             translatedAttribs->resize(attribIndex + 1);
