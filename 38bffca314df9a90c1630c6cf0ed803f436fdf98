@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "64d75d7f_0d4e558f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-25T19:37:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04bb013c_95cec459",
+      "revId": "38bffca314df9a90c1630c6cf0ed803f436fdf98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4a18d0d_0e580b80",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-08-24T14:20:34Z",
       "side": 1,
       "message": "nit: IIRC the register count isn\u0027t the rows but the columns. It is just a name change though (count, registerUsage or the like would be good too).",
+      "revId": "38bffca314df9a90c1630c6cf0ed803f436fdf98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24b8053d_73dedad5",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1372,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-25T19:37:30Z",
+      "side": 1,
+      "message": "Done - also changed in a few other places.",
+      "parentUuid": "e4a18d0d_0e580b80",
       "revId": "38bffca314df9a90c1630c6cf0ed803f436fdf98",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "24b8053d_53dbd6e3",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2110,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-25T19:37:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44b17956_71ba58a6",
+      "revId": "38bffca314df9a90c1630c6cf0ed803f436fdf98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8411b10b_53b744bc",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
         "patchSetId": 3
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "04bb013c_63a0caee",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-25T19:37:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8411b10b_53b744bc",
+      "revId": "38bffca314df9a90c1630c6cf0ed803f436fdf98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8411b10b_b384d8ed",
         "filename": "src/libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.cpp",
         "patchSetId": 3
@@ -81,6 +153,24 @@
       "writtenOn": "2015-08-24T14:20:34Z",
       "side": 1,
       "message": "nit: ditto",
+      "revId": "38bffca314df9a90c1630c6cf0ed803f436fdf98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64d75d7f_6d4b917f",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-25T19:37:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8411b10b_b384d8ed",
       "revId": "38bffca314df9a90c1630c6cf0ed803f436fdf98",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
