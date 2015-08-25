@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44b17956_14f3fadb",
+        "filename": "src/libANGLE/Surface_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-25T19:26:54Z",
+      "side": 1,
+      "message": "you don\u0027t need to use a fixture if you aren\u0027t going to allow it to allocate/clean up the Surface... you can just use TEST() and remove the Fixture.",
+      "range": {
+        "startLine": 99,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 6
+      },
+      "revId": "fe67313a8ffdbb98b96f51bb0d20ee414982a17e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
