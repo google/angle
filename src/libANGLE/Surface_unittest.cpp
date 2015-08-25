@@ -84,41 +84,7 @@ class MockFramebufferImpl : public rx::FramebufferImpl
     MOCK_METHOD0(destroy, void());
 };
 
-class SurfaceTest : public testing::Test
-{
-  protected:
-    virtual void SetUp()
-    {
-        MockFramebufferImpl *framebuffer = new MockFramebufferImpl;
-
-        mSurfaceImpl = new MockSurfaceImpl;
-
-        EXPECT_CALL(*mSurfaceImpl, getSwapBehavior());
-        EXPECT_CALL(*mSurfaceImpl, createDefaultFramebuffer(testing::_))
-            .WillOnce(testing::Return(framebuffer));
-        EXPECT_CALL(*mSurfaceImpl, destroy());
-
-        EXPECT_CALL(*framebuffer, setDrawBuffers(1, testing::_));
-        EXPECT_CALL(*framebuffer, setReadBuffer(GL_BACK));
-        EXPECT_CALL(*framebuffer, onUpdateColorAttachment(0));
-
-        mSurface = new egl::Surface(mSurfaceImpl, EGL_WINDOW_BIT, &mConfig, egl::AttributeMap());
-
-        EXPECT_CALL(*framebuffer, destroy());
-        SafeDelete(framebuffer);
-    }
-
-    virtual void TearDown()
-    {
-        mSurface->onDestroy();
-    }
-
-    MockSurfaceImpl *mSurfaceImpl;
-    egl::Surface *mSurface;
-    egl::Config mConfig;
-};
-
-TEST_F(SurfaceTest, DestructionDeletesImpl)
+TEST(SurfaceTest, DestructionDeletesImpl)
 {
     MockFramebufferImpl *framebuffer = new MockFramebufferImpl;
 
@@ -130,13 +96,13 @@ TEST_F(SurfaceTest, DestructionDeletesImpl)
     EXPECT_CALL(*framebuffer, setReadBuffer(GL_BACK));
     EXPECT_CALL(*framebuffer, onUpdateColorAttachment(0));
 
+    egl::Config config;
+    egl::Surface *surface = new egl::Surface(impl, EGL_WINDOW_BIT, &config, egl::AttributeMap());
+
+    EXPECT_CALL(*framebuffer, destroy()).Times(1).RetiresOnSaturation();
     EXPECT_CALL(*impl, destroy()).Times(1).RetiresOnSaturation();
 
-    egl::Surface *surface = new egl::Surface(impl, EGL_WINDOW_BIT, &mConfig, egl::AttributeMap());
     surface->onDestroy();
-
-    EXPECT_CALL(*framebuffer, destroy());
-    SafeDelete(framebuffer);
 
     // Only needed because the mock is leaked if bugs are present,
     // which logs an error, but does not cause the test to fail.

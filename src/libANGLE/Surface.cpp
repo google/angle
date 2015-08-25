@@ -74,6 +74,7 @@ Surface::~Surface()
         mTexture.set(nullptr);
     }
 
+    SafeDelete(mDefaultFramebuffer);
     SafeDelete(mImplementation);
 }
 
