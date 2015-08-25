@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04bb013c_9e938162",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1711,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-25T19:38:42Z",
+      "side": 1,
+      "message": "fixed a bug with trying to put gl_FragDepth and gl_FragColor, etc, in the output variables list.",
+      "range": {
+        "startLine": 1710,
+        "startChar": 0,
+        "endLine": 1711,
+        "endChar": 21
+      },
+      "revId": "16196192bf3eb0756a08332130c25dba71e42ce8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
