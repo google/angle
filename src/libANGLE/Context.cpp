@@ -140,25 +140,25 @@ Context::~Context()
         }
     }
 
-    while (!mFenceNVMap.empty())
+    for (auto fence : mFenceNVMap)
     {
-        deleteFenceNV(mFenceNVMap.begin()->first);
+        SafeDelete(fence.second);
     }
 
-    while (!mQueryMap.empty())
+    for (auto query : mQueryMap)
     {
-        deleteQuery(mQueryMap.begin()->first);
+        query.second->release();
     }
 
-    while (!mVertexArrayMap.empty())
+    for (auto vertexArray : mVertexArrayMap)
     {
-        deleteVertexArray(mVertexArrayMap.begin()->first);
+        SafeDelete(vertexArray.second);
     }
 
     mTransformFeedbackZero.set(NULL);
-    while (!mTransformFeedbackMap.empty())
+    for (auto transformFeedback : mTransformFeedbackMap)
     {
-        deleteTransformFeedback(mTransformFeedbackMap.begin()->first);
+        SafeDelete(transformFeedback.second);
     }
 
     for (auto &zeroTexture : mZeroTextures)
