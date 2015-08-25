@@ -116,9 +116,9 @@ gl::Error VertexArrayGL::syncDrawState(const gl::AttributesMask &activeAttribute
     }
     else
     {
-        // Not an indexed call, set the range to [first, first + count)
+        // Not an indexed call, set the range to [first, first + count - 1]
         indexRange.start = first;
-        indexRange.end = first + count;
+        indexRange.end = first + count - 1;
     }
 
     if (attributesNeedStreaming)

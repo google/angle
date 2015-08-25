@@ -503,7 +503,6 @@ inline unsigned int averageFloat10(unsigned int a, unsigned int b)
     return float32ToFloat10((float10ToFloat32(static_cast<unsigned short>(a)) + float10ToFloat32(static_cast<unsigned short>(b))) * 0.5f);
 }
 
-// Represents intervals of the type [a, b)
 template <typename T>
 struct Range
 {
