@@ -28,11 +28,34 @@ class RendererGL : public Renderer
     gl::Error flush() override;
     gl::Error finish() override;
 
-    gl::Error drawArrays(const gl::Data &data, GLenum mode,
-                         GLint first, GLsizei count, GLsizei instances) override;
-    gl::Error drawElements(const gl::Data &data, GLenum mode, GLsizei count, GLenum type,
-                           const GLvoid *indices, GLsizei instances,
+    gl::Error drawArrays(const gl::Data &data, GLenum mode, GLint first, GLsizei count) override;
+    gl::Error drawArraysInstanced(const gl::Data &data,
+                                  GLenum mode,
+                                  GLint first,
+                                  GLsizei count,
+                                  GLsizei instanceCount) override;
+
+    gl::Error drawElements(const gl::Data &data,
+                           GLenum mode,
+                           GLsizei count,
+                           GLenum type,
+                           const GLvoid *indices,
                            const gl::RangeUI &indexRange) override;
+    gl::Error drawElementsInstanced(const gl::Data &data,
+                                    GLenum mode,
+                                    GLsizei count,
+                                    GLenum type,
+                                    const GLvoid *indices,
+                                    GLsizei instances,
+                                    const gl::RangeUI &indexRange) override;
+    gl::Error drawRangeElements(const gl::Data &data,
+                                GLenum mode,
+                                GLuint start,
+                                GLuint end,
+                                GLsizei count,
+                                GLenum type,
+                                const GLvoid *indices,
+                                const gl::RangeUI &indexRange) override;
 
     // Shader creation
     CompilerImpl *createCompiler(const gl::Data &data) override;

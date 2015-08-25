@@ -1645,7 +1645,11 @@ void Renderer11::applyTransformFeedbackBuffers(const gl::State &state)
     }
 }
 
-gl::Error Renderer11::drawArrays(const gl::Data &data, GLenum mode, GLsizei count, GLsizei instances, bool usesPointSize)
+gl::Error Renderer11::drawArraysImpl(const gl::Data &data,
+                                     GLenum mode,
+                                     GLsizei count,
+                                     GLsizei instances,
+                                     bool usesPointSize)
 {
     bool useInstancedPointSpriteEmulation = usesPointSize && getWorkarounds().useInstancedPointSpriteEmulation;
     if (mode == GL_POINTS && data.state->isTransformFeedbackActiveUnpaused())
@@ -1731,9 +1735,14 @@ gl::Error Renderer11::drawArrays(const gl::Data &data, GLenum mode, GLsizei coun
     }
 }
 
-gl::Error Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
-                                   gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances,
-                                   bool usesPointSize)
+gl::Error Renderer11::drawElementsImpl(GLenum mode,
+                                       GLsizei count,
+                                       GLenum type,
+                                       const GLvoid *indices,
+                                       gl::Buffer *elementArrayBuffer,
+                                       const TranslatedIndexData &indexInfo,
+                                       GLsizei instances,
+                                       bool usesPointSize)
 {
     bool useInstancedPointSpriteEmulation = usesPointSize && getWorkarounds().useInstancedPointSpriteEmulation;
     int minIndex = static_cast<int>(indexInfo.indexRange.start);

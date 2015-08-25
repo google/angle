@@ -129,8 +129,7 @@ gl::Error RendererGL::finish()
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error RendererGL::drawArrays(const gl::Data &data, GLenum mode,
-                                 GLint first, GLsizei count, GLsizei instances)
+gl::Error RendererGL::drawArrays(const gl::Data &data, GLenum mode, GLint first, GLsizei count)
 {
     gl::Error error = mStateManager->setDrawArraysState(data, first, count);
     if (error.isError())
@@ -146,15 +145,23 @@ gl::Error RendererGL::drawArrays(const gl::Data &data, GLenum mode,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error RendererGL::drawElements(const gl::Data &data, GLenum mode, GLsizei count, GLenum type,
-                                   const GLvoid *indices, GLsizei instances,
+gl::Error RendererGL::drawArraysInstanced(const gl::Data &data,
+                                          GLenum mode,
+                                          GLint first,
+                                          GLsizei count,
+                                          GLsizei instanceCount)
+{
+    UNIMPLEMENTED();
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error RendererGL::drawElements(const gl::Data &data,
+                                   GLenum mode,
+                                   GLsizei count,
+                                   GLenum type,
+                                   const GLvoid *indices,
                                    const gl::RangeUI &indexRange)
 {
-    if (instances > 0)
-    {
-        UNIMPLEMENTED();
-    }
-
     const GLvoid *drawIndexPointer = nullptr;
     gl::Error error = mStateManager->setDrawElementsState(data, count, type, indices, &drawIndexPointer);
     if (error.isError())
@@ -167,6 +174,31 @@ gl::Error RendererGL::drawElements(const gl::Data &data, GLenum mode, GLsizei co
         mFunctions->drawElements(mode, count, type, drawIndexPointer);
     }
 
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error RendererGL::drawElementsInstanced(const gl::Data &data,
+                                            GLenum mode,
+                                            GLsizei count,
+                                            GLenum type,
+                                            const GLvoid *indices,
+                                            GLsizei instances,
+                                            const gl::RangeUI &indexRange)
+{
+    UNIMPLEMENTED();
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error RendererGL::drawRangeElements(const gl::Data &data,
+                                        GLenum mode,
+                                        GLuint start,
+                                        GLuint end,
+                                        GLsizei count,
+                                        GLenum type,
+                                        const GLvoid *indices,
+                                        const gl::RangeUI &indexRange)
+{
+    UNIMPLEMENTED();
     return gl::Error(GL_NO_ERROR);
 }
 

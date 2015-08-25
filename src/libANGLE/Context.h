@@ -164,10 +164,28 @@ class Context final : angle::NonCopyable
     bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
     bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams);
 
-    Error drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances);
-    Error drawElements(GLenum mode, GLsizei count, GLenum type,
-                       const GLvoid *indices, GLsizei instances,
+    Error drawArrays(GLenum mode, GLint first, GLsizei count);
+    Error drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount);
+
+    Error drawElements(GLenum mode,
+                       GLsizei count,
+                       GLenum type,
+                       const GLvoid *indices,
                        const RangeUI &indexRange);
+    Error drawElementsInstanced(GLenum mode,
+                                GLsizei count,
+                                GLenum type,
+                                const GLvoid *indices,
+                                GLsizei instances,
+                                const RangeUI &indexRange);
+    Error drawRangeElements(GLenum mode,
+                            GLuint start,
+                            GLuint end,
+                            GLsizei count,
+                            GLenum type,
+                            const GLvoid *indices,
+                            const RangeUI &indexRange);
+
     Error flush();
     Error finish();
 

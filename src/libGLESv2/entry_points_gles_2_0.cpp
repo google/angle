@@ -1220,7 +1220,7 @@ void GL_APIENTRY DrawArrays(GLenum mode, GLint first, GLsizei count)
             return;
         }
 
-        Error error = context->drawArrays(mode, first, count, 0);
+        Error error = context->drawArrays(mode, first, count);
         if (error.isError())
         {
             context->recordError(error);
@@ -1243,7 +1243,7 @@ void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const GLv
             return;
         }
 
-        Error error = context->drawElements(mode, count, type, indices, 0, indexRange);
+        Error error = context->drawElements(mode, count, type, indices, indexRange);
         if (error.isError())
         {
             context->recordError(error);

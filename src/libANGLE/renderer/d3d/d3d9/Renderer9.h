@@ -118,11 +118,6 @@ class Renderer9 : public RendererD3D
 
     void applyTransformFeedbackBuffers(const gl::State &state) override;
 
-    gl::Error drawArrays(const gl::Data &data, GLenum mode, GLsizei count, GLsizei instances, bool usesPointSize) override;
-    virtual gl::Error drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
-                                   gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances,
-                                   bool usesPointSize);
-
     gl::Error clear(const ClearParameters &clearParams,
                     const gl::FramebufferAttachment *colorBuffer,
                     const gl::FramebufferAttachment *depthStencilBuffer);
@@ -241,6 +236,20 @@ class Renderer9 : public RendererD3D
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
 
   private:
+    gl::Error drawArraysImpl(const gl::Data &data,
+                             GLenum mode,
+                             GLsizei count,
+                             GLsizei instances,
+                             bool usesPointSize) override;
+    gl::Error drawElementsImpl(GLenum mode,
+                               GLsizei count,
+                               GLenum type,
+                               const GLvoid *indices,
+                               gl::Buffer *elementArrayBuffer,
+                               const TranslatedIndexData &indexInfo,
+                               GLsizei instances,
+                               bool usesPointSize) override;
+
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps,
                       gl::Extensions *outExtensions,
                       gl::Limitations *outLimitations) const override;

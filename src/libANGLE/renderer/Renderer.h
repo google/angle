@@ -46,11 +46,34 @@ class Renderer : public ImplFactory
     virtual gl::Error flush() = 0;
     virtual gl::Error finish() = 0;
 
-    virtual gl::Error drawArrays(const gl::Data &data, GLenum mode,
-                                 GLint first, GLsizei count, GLsizei instances) = 0;
-    virtual gl::Error drawElements(const gl::Data &data, GLenum mode, GLsizei count, GLenum type,
-                                   const GLvoid *indices, GLsizei instances,
+    virtual gl::Error drawArrays(const gl::Data &data, GLenum mode, GLint first, GLsizei count) = 0;
+    virtual gl::Error drawArraysInstanced(const gl::Data &data,
+                                          GLenum mode,
+                                          GLint first,
+                                          GLsizei count,
+                                          GLsizei instanceCount) = 0;
+
+    virtual gl::Error drawElements(const gl::Data &data,
+                                   GLenum mode,
+                                   GLsizei count,
+                                   GLenum type,
+                                   const GLvoid *indices,
                                    const gl::RangeUI &indexRange) = 0;
+    virtual gl::Error drawElementsInstanced(const gl::Data &data,
+                                            GLenum mode,
+                                            GLsizei count,
+                                            GLenum type,
+                                            const GLvoid *indices,
+                                            GLsizei instances,
+                                            const gl::RangeUI &indexRange) = 0;
+    virtual gl::Error drawRangeElements(const gl::Data &data,
+                                        GLenum mode,
+                                        GLuint start,
+                                        GLuint end,
+                                        GLsizei count,
+                                        GLenum type,
+                                        const GLvoid *indices,
+                                        const gl::RangeUI &indexRange) = 0;
 
     // lost device
     //TODO(jmadill): investigate if this stuff is necessary in GL

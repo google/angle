@@ -33,6 +33,27 @@
 #include "libANGLE/validationES.h"
 #include "libANGLE/renderer/Renderer.h"
 
+namespace
+{
+
+void MarkTransformFeedbackBufferUsage(gl::TransformFeedback *transformFeedback)
+{
+    if (transformFeedback->isActive() && !transformFeedback->isPaused())
+    {
+        for (size_t tfBufferIndex = 0; tfBufferIndex < transformFeedback->getIndexedBufferCount();
+             tfBufferIndex++)
+        {
+            const OffsetBindingPointer<gl::Buffer> &buffer =
+                transformFeedback->getIndexedBuffer(tfBufferIndex);
+            if (buffer.get() != nullptr)
+            {
+                buffer->onTransformFeedback();
+            }
+        }
+    }
+}
+}  // anonymous namespace
+
 namespace gl
 {
 
@@ -1248,37 +1269,67 @@ bool Context::getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned
     return false;
 }
 
-Error Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances)
+Error Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 {
     syncRendererState();
-    Error error = mRenderer->drawArrays(getData(), mode, first, count, instances);
+    Error error = mRenderer->drawArrays(getData(), mode, first, count);
     if (error.isError())
     {
         return error;
     }
 
-    TransformFeedback *transformFeedback = mState.getCurrentTransformFeedback();
-    if (transformFeedback->isActive() && !transformFeedback->isPaused())
-    {
-        for (size_t tfBufferIndex = 0; tfBufferIndex < transformFeedback->getIndexedBufferCount(); tfBufferIndex++)
-        {
-            const OffsetBindingPointer<Buffer> &buffer = transformFeedback->getIndexedBuffer(tfBufferIndex);
-            if (buffer.get() != nullptr)
-            {
-                buffer->onTransformFeedback();
-            }
-        }
-    }
+    MarkTransformFeedbackBufferUsage(mState.getCurrentTransformFeedback());
 
     return Error(GL_NO_ERROR);
 }
 
-Error Context::drawElements(GLenum mode, GLsizei count, GLenum type,
-                            const GLvoid *indices, GLsizei instances,
+Error Context::drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount)
+{
+    syncRendererState();
+    Error error = mRenderer->drawArraysInstanced(getData(), mode, first, count, instanceCount);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    MarkTransformFeedbackBufferUsage(mState.getCurrentTransformFeedback());
+
+    return Error(GL_NO_ERROR);
+}
+
+Error Context::drawElements(GLenum mode,
+                            GLsizei count,
+                            GLenum type,
+                            const GLvoid *indices,
                             const RangeUI &indexRange)
 {
     syncRendererState();
-    return mRenderer->drawElements(getData(), mode, count, type, indices, instances, indexRange);
+    return mRenderer->drawElements(getData(), mode, count, type, indices, indexRange);
+}
+
+Error Context::drawElementsInstanced(GLenum mode,
+                                     GLsizei count,
+                                     GLenum type,
+                                     const GLvoid *indices,
+                                     GLsizei instances,
+                                     const RangeUI &indexRange)
+{
+    syncRendererState();
+    return mRenderer->drawElementsInstanced(getData(), mode, count, type, indices, instances,
+                                            indexRange);
+}
+
+Error Context::drawRangeElements(GLenum mode,
+                                 GLuint start,
+                                 GLuint end,
+                                 GLsizei count,
+                                 GLenum type,
+                                 const GLvoid *indices,
+                                 const RangeUI &indexRange)
+{
+    syncRendererState();
+    return mRenderer->drawRangeElements(getData(), mode, start, end, count, type, indices,
+                                        indexRange);
 }
 
 Error Context::flush()

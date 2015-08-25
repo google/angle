@@ -1476,7 +1476,11 @@ void Renderer9::applyTransformFeedbackBuffers(const gl::State& state)
     ASSERT(!state.isTransformFeedbackActiveUnpaused());
 }
 
-gl::Error Renderer9::drawArrays(const gl::Data &data, GLenum mode, GLsizei count, GLsizei instances, bool usesPointSize)
+gl::Error Renderer9::drawArraysImpl(const gl::Data &data,
+                                    GLenum mode,
+                                    GLsizei count,
+                                    GLsizei instances,
+                                    bool usesPointSize)
 {
     ASSERT(!data.state->isTransformFeedbackActiveUnpaused());
 
@@ -1517,9 +1521,14 @@ gl::Error Renderer9::drawArrays(const gl::Data &data, GLenum mode, GLsizei count
     }
 }
 
-gl::Error Renderer9::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
-                                  gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei /*instances*/,
-                                  bool /*usesPointSize*/)
+gl::Error Renderer9::drawElementsImpl(GLenum mode,
+                                      GLsizei count,
+                                      GLenum type,
+                                      const GLvoid *indices,
+                                      gl::Buffer *elementArrayBuffer,
+                                      const TranslatedIndexData &indexInfo,
+                                      GLsizei /*instances*/,
+                                      bool /*usesPointSize*/)
 {
     startScene();
 

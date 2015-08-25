@@ -67,10 +67,60 @@ void RendererD3D::cleanup()
     }
 }
 
+gl::Error RendererD3D::drawArrays(const gl::Data &data, GLenum mode, GLint first, GLsizei count)
+{
+    return genericDrawArrays(data, mode, first, count, 0);
+}
+
+gl::Error RendererD3D::drawArraysInstanced(const gl::Data &data,
+                                           GLenum mode,
+                                           GLint first,
+                                           GLsizei count,
+                                           GLsizei instanceCount)
+{
+    return genericDrawArrays(data, mode, first, count, instanceCount);
+}
+
 gl::Error RendererD3D::drawElements(const gl::Data &data,
-                                    GLenum mode, GLsizei count, GLenum type,
-                                    const GLvoid *indices, GLsizei instances,
+                                    GLenum mode,
+                                    GLsizei count,
+                                    GLenum type,
+                                    const GLvoid *indices,
                                     const gl::RangeUI &indexRange)
+{
+    return genericDrawElements(data, mode, count, type, indices, 0, indexRange);
+}
+
+gl::Error RendererD3D::drawElementsInstanced(const gl::Data &data,
+                                             GLenum mode,
+                                             GLsizei count,
+                                             GLenum type,
+                                             const GLvoid *indices,
+                                             GLsizei instances,
+                                             const gl::RangeUI &indexRange)
+{
+    return genericDrawElements(data, mode, count, type, indices, instances, indexRange);
+}
+
+gl::Error RendererD3D::drawRangeElements(const gl::Data &data,
+                                         GLenum mode,
+                                         GLuint start,
+                                         GLuint end,
+                                         GLsizei count,
+                                         GLenum type,
+                                         const GLvoid *indices,
+                                         const gl::RangeUI &indexRange)
+{
+    return genericDrawElements(data, mode, count, type, indices, 0, indexRange);
+}
+
+gl::Error RendererD3D::genericDrawElements(const gl::Data &data,
+                                           GLenum mode,
+                                           GLsizei count,
+                                           GLenum type,
+                                           const GLvoid *indices,
+                                           GLsizei instances,
+                                           const gl::RangeUI &indexRange)
 {
     if (data.state->isPrimitiveRestartEnabled())
     {
@@ -152,8 +202,8 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
 
     if (!skipDraw(data, mode))
     {
-        error = drawElements(mode, count, type, indices, vao->getElementArrayBuffer().get(),
-                             indexInfo, instances, usesPointSize);
+        error = drawElementsImpl(mode, count, type, indices, vao->getElementArrayBuffer().get(),
+                                 indexInfo, instances, usesPointSize);
         if (error.isError())
         {
             return error;
@@ -163,9 +213,11 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error RendererD3D::drawArrays(const gl::Data &data,
-                                  GLenum mode, GLint first,
-                                  GLsizei count, GLsizei instances)
+gl::Error RendererD3D::genericDrawArrays(const gl::Data &data,
+                                         GLenum mode,
+                                         GLint first,
+                                         GLsizei count,
+                                         GLsizei instances)
 {
     gl::Program *program = data.state->getProgram();
     ASSERT(program != nullptr);
@@ -225,7 +277,7 @@ gl::Error RendererD3D::drawArrays(const gl::Data &data,
 
     if (!skipDraw(data, mode))
     {
-        error = drawArrays(data, mode, count, instances, usesPointSize);
+        error = drawArraysImpl(data, mode, count, instances, usesPointSize);
         if (error.isError())
         {
             return error;
