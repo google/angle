@@ -418,8 +418,6 @@ TIntermAggregate::TIntermAggregate(const TIntermAggregate &node)
       mName(node.mName),
       mUserDefined(node.mUserDefined),
       mFunctionId(node.mFunctionId),
-      mOptimize(node.mOptimize),
-      mDebug(node.mDebug),
       mUseEmulatedFunction(node.mUseEmulatedFunction),
       mGotPrecisionFromChildren(node.mGotPrecisionFromChildren)
 {

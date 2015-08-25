@@ -518,11 +518,6 @@ class TIntermAggregate : public TIntermOperator
     void setUserDefined() { mUserDefined = true; }
     bool isUserDefined() const { return mUserDefined; }
 
-    void setOptimize(bool optimize) { mOptimize = optimize; }
-    bool getOptimize() const { return mOptimize; }
-    void setDebug(bool debug) { mDebug = debug; }
-    bool getDebug() const { return mDebug; }
-
     void setFunctionId(int functionId) { mFunctionId = functionId; }
     int getFunctionId() const { return mFunctionId; }
 
@@ -540,9 +535,6 @@ class TIntermAggregate : public TIntermOperator
     TName mName;
     bool mUserDefined; // used for user defined function names
     int mFunctionId;
-
-    bool mOptimize;
-    bool mDebug;
 
     // If set to true, replace the built-in function call with an emulated one
     // to work around driver bugs.
