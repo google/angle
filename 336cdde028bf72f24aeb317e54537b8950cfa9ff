@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a416b5fe_d7be9efa",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-25T20:54:58Z",
+      "side": 1,
+      "message": "SafeDeleteArray",
+      "range": {
+        "startLine": 144,
+        "startChar": 8,
+        "endLine": 144,
+        "endChar": 40
+      },
+      "revId": "336cdde028bf72f24aeb317e54537b8950cfa9ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
