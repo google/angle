@@ -149,8 +149,6 @@
 1051 LINUX : dEQP-GLES2.functional.clipping.point.wide_point_z_clip_viewport_center = FAIL
 1051 LINUX : dEQP-GLES2.functional.clipping.point.wide_point_z_clip_viewport_corner = FAIL
 1051 LINUX : dEQP-GLES2.functional.debug_marker.invalid = FAIL
-1051 LINUX : dEQP-GLES2.functional.draw.random.1 = FAIL
-1051 LINUX : dEQP-GLES2.functional.draw.random.12 = FAIL
 1051 LINUX : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.none_none_none_rbo = FAIL
 1051 LINUX : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.none_none_rbo_rbo = FAIL
 1051 LINUX : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.rbo_none_none_rbo = FAIL

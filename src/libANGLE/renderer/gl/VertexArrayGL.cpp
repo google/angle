@@ -308,10 +308,12 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
             else
             {
                 // Copy each vertex individually
-                for (size_t vertexIdx = indexRange.start; vertexIdx <= indexRange.end; vertexIdx++)
+                for (size_t vertexIdx = 0; vertexIdx <= streamedVertexCount; vertexIdx++)
                 {
-                    memcpy(bufferPointer + curBufferOffset + (destStride * vertexIdx),
-                           inputPointer + (sourceStride * vertexIdx), destStride);
+                    uint8_t *out = bufferPointer + curBufferOffset + (destStride * vertexIdx);
+                    const uint8_t *in =
+                        inputPointer + sourceStride * (vertexIdx + indexRange.start);
+                    memcpy(out, in, destStride);
                 }
             }
 
