@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4a18d0d_14bbfcba",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1147,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-25T20:00:12Z",
+      "side": 1,
+      "message": "should probably fix this comment",
+      "range": {
+        "startLine": 1147,
+        "startChar": 7,
+        "endLine": 1147,
+        "endChar": 11
+      },
+      "revId": "4f92fd62d2435a904238b05f800b37fefd8e451c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4ab15ef_6fca6db4",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-25T20:00:12Z",
+      "side": 1,
+      "message": "also fix this comment",
+      "range": {
+        "startLine": 62,
+        "startChar": 5,
+        "endLine": 62,
+        "endChar": 27
+      },
+      "revId": "4f92fd62d2435a904238b05f800b37fefd8e451c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
