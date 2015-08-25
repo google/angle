@@ -305,6 +305,8 @@ bool X11Window::resize(int width, int height)
         angle::Sleep(10);
     }
 
+    delete timer;
+
     return true;
 }
 

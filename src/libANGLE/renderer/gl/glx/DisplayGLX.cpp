@@ -385,6 +385,9 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
         int id = configs.add(config);
         configIdToGLXConfig[id] = glxConfig;
     }
+
+    XFree(glxConfigs);
+
     return configs;
 }
 
