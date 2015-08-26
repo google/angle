@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8411b10b_16481a32",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1528,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-26T17:55:06Z",
+      "side": 1,
+      "message": "be warned that this is not thread safe, according to the internet stuff I looked up. One reference:\n\nhttp://blogs.msdn.com/b/oldnewthing/archive/2004/03/08/85901.aspx\n\nWe might be concerned about this going forward.",
+      "range": {
+        "startLine": 1528,
+        "startChar": 4,
+        "endLine": 1528,
+        "endChar": 74
+      },
+      "revId": "517e837525e9bd54d43e8f9ec0136259ff658f43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
