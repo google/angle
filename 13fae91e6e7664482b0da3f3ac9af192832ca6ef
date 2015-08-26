@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44b17956_b46dcead",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-26T14:14:11Z",
+      "side": 1,
+      "message": "nit: shouldRun.. \"is...Run\" sounds like a categorization for various types of runs :)",
+      "range": {
+        "startLine": 154,
+        "startChar": 16,
+        "endLine": 154,
+        "endChar": 46
+      },
+      "revId": "13fae91e6e7664482b0da3f3ac9af192832ca6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24b8053d_7600883b",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-26T14:14:11Z",
+      "side": 1,
+      "message": "nit: make a const method if possible",
+      "range": {
+        "startLine": 104,
+        "startChar": 9,
+        "endLine": 104,
+        "endChar": 39
+      },
+      "revId": "13fae91e6e7664482b0da3f3ac9af192832ca6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24b8053d_16f3fcdb",
+        "filename": "src/compiler/translator/RemoveDynamicIndexing.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-26T14:14:11Z",
+      "side": 1,
+      "message": "nit: remove extra space",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 0
+      },
+      "revId": "13fae91e6e7664482b0da3f3ac9af192832ca6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
