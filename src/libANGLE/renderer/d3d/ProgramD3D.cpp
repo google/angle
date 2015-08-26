@@ -1128,23 +1128,23 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog,
     return LinkResult(linkSuccess, gl::Error(GL_NO_ERROR));
 }
 
-LinkResult ProgramD3D::link(const gl::Data &data,
-                            gl::InfoLog &infoLog,
-                            gl::Shader *fragmentShader,
-                            gl::Shader *vertexShader)
+LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
 {
-    ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(vertexShader);
-    ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(fragmentShader);
+    const gl::Shader *vertexShader   = mData.getAttachedVertexShader();
+    const gl::Shader *fragmentShader = mData.getAttachedFragmentShader();
 
-    mSamplersPS.resize(data.caps->maxTextureImageUnits);
+    const ShaderD3D *vertexShaderD3D   = GetImplAs<ShaderD3D>(vertexShader);
+    const ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(fragmentShader);
+
     mSamplersVS.resize(data.caps->maxVertexTextureImageUnits);
-
-    mPixelHLSL = fragmentShaderD3D->getTranslatedSource();
-    fragmentShaderD3D->generateWorkarounds(&mPixelWorkarounds);
+    mSamplersPS.resize(data.caps->maxTextureImageUnits);
 
     mVertexHLSL = vertexShaderD3D->getTranslatedSource();
     vertexShaderD3D->generateWorkarounds(&mVertexWorkarounds);
     mShaderVersion = vertexShaderD3D->getShaderVersion();
+
+    mPixelHLSL = fragmentShaderD3D->getTranslatedSource();
+    fragmentShaderD3D->generateWorkarounds(&mPixelWorkarounds);
 
     if (mRenderer->getRendererLimitations().noFrontFacingSupport)
     {

@@ -312,9 +312,7 @@ Error Program::link(const gl::Data &data)
 
     linkOutputVariables();
 
-    rx::LinkResult result =
-        mProgram->link(data, mInfoLog, mData.mAttachedFragmentShader, mData.mAttachedVertexShader);
-
+    rx::LinkResult result = mProgram->link(data, mInfoLog);
     if (result.error.isError() || !result.linkSuccess)
     {
         return result.error;

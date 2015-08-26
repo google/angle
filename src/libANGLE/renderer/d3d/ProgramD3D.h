@@ -70,11 +70,7 @@ class ProgramD3D : public ProgramImpl
     gl::Error getVertexExecutableForInputLayout(const gl::InputLayout &inputLayout, ShaderExecutableD3D **outExectuable, gl::InfoLog *infoLog);
     ShaderExecutableD3D *getGeometryExecutable() const { return mGeometryExecutable; }
 
-    LinkResult link(const gl::Data &data,
-                    gl::InfoLog &infoLog,
-                    gl::Shader *fragmentShader,
-                    gl::Shader *vertexShader) override;
-
+    LinkResult link(const gl::Data &data, gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
     void initializeUniformStorage();
