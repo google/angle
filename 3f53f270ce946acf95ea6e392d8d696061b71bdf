@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64659dc3_baddb156",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1246,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-26T17:59:55Z",
+      "side": 1,
+      "message": "nit: to preserve the deqp library naming convention, this should be angle_deqp_libegl",
+      "range": {
+        "startLine": 1246,
+        "startChar": 36,
+        "endLine": 1246,
+        "endChar": 50
+      },
+      "revId": "3f53f270ce946acf95ea6e392d8d696061b71bdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44b17956_74dec6d5",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1425,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-26T17:59:55Z",
+      "side": 1,
+      "message": "very nitty, but you sort this target in a different order than above.. maybe fix the above sorting to preserve orderliness?",
+      "range": {
+        "startLine": 1425,
+        "startChar": 36,
+        "endLine": 1425,
+        "endChar": 56
+      },
+      "revId": "3f53f270ce946acf95ea6e392d8d696061b71bdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
