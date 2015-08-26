@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a416b5fe_d7d85e1d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1170,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-26T15:19:46Z",
+      "side": 1,
+      "message": "weird spacing there",
+      "revId": "79c756ab98f7d8c67af89e922aeadca221bd7d6b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8411b10b_5690d21f",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-26T15:19:46Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "79c756ab98f7d8c67af89e922aeadca221bd7d6b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
