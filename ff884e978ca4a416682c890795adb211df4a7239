@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64d75d7f_ed4661fa",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-26T14:00:24Z",
+      "side": 1,
+      "message": "nit: static stuff should go at the top of the file (in a namespace {} block without \u0027static\u0027 usually)",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 6
+      },
+      "revId": "ff884e978ca4a416682c890795adb211df4a7239",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
