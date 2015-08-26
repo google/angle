@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04bb013c_a4fc787d",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-26T14:09:19Z",
+      "side": 1,
+      "message": "nit: //  anonymous namespace\n\nNamespace comments are a Chromium style thing that I\u0027d suggest we start using (I\u0027ve already been using it)",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 1
+      },
+      "revId": "104d0484e46c40ad2a1812c8f685dba4729a2a23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4a18d0d_d7d8561d",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-26T14:09:19Z",
+      "side": 1,
+      "message": "nit: drawArraysInternal - this doesn\u0027t just prepare, it does the draw",
+      "range": {
+        "startLine": 237,
+        "startChar": 14,
+        "endLine": 237,
+        "endChar": 31
+      },
+      "revId": "104d0484e46c40ad2a1812c8f685dba4729a2a23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64d75d7f_0d5e55bd",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-26T14:09:19Z",
+      "side": 1,
+      "message": "nit: drawElementsInternal - this doesn\u0027t just prepare, it does the draw",
+      "range": {
+        "startLine": 243,
+        "startChar": 14,
+        "endLine": 243,
+        "endChar": 33
+      },
+      "revId": "104d0484e46c40ad2a1812c8f685dba4729a2a23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
