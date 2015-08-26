@@ -277,7 +277,7 @@ class TIntermRaw : public TIntermTyped
           mRawText(rawText) { }
     TIntermRaw(const TIntermRaw &) = delete;
 
-    TIntermTyped *deepCopy() const
+    TIntermTyped *deepCopy() const override
     {
         UNREACHABLE();
         return nullptr;
