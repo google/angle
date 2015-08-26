@@ -725,6 +725,8 @@ static ClientExtensions GenerateClientExtensions()
     extensions.platformANGLEOpenGL = true;
 #endif
 
+    extensions.clientGetAllProcAddresses = true;
+
     return extensions;
 }
 
@@ -753,6 +755,10 @@ const std::string &Display::getClientExtensionString()
 void Display::initDisplayExtensions()
 {
     mDisplayExtensions = mImplementation->getExtensions();
+
+    // Force EGL_KHR_get_all_proc_addresses on.
+    mDisplayExtensions.getAllProcAddresses = true;
+
     mDisplayExtensionString = GenerateExtensionsString(mDisplayExtensions);
 }
 

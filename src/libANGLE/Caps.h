@@ -412,6 +412,9 @@ struct DisplayExtensions
 
     // EGL_KHR_gl_renderbuffer_image
     bool glRenderbufferImage;
+
+    // EGL_KHR_get_all_proc_addresses
+    bool getAllProcAddresses;
 };
 
 struct DeviceExtensions
@@ -446,6 +449,9 @@ struct ClientExtensions
 
     // EGL_ANGLE_platform_angle_opengl
     bool platformANGLEOpenGL;
+
+    // EGL_KHR_client_get_all_proc_addresses
+    bool clientGetAllProcAddresses;
 };
 
 }
