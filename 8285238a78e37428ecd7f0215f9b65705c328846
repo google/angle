@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44b17956_d420525c",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2505,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-26T18:12:43Z",
+      "side": 1,
+      "message": "These hard coded strings are gross... We should probably have a gl::Context::getVersionString and gl::Compiler::getVersionString methods.\n\nNot needed for this CL though.",
+      "range": {
+        "startLine": 2496,
+        "startChar": 16,
+        "endLine": 2505,
+        "endChar": 17
+      },
+      "revId": "8285238a78e37428ecd7f0215f9b65705c328846",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
