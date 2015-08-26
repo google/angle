@@ -25,12 +25,14 @@ const char *g_CaseListFiles[] =
 {
     "dEQP-GLES2-cases.txt.gz",
     "dEQP-GLES3-cases.txt.gz",
+    "dEQP-EGL-cases.txt.gz",
 };
 
 const char *g_TestExpectationsFiles[] =
 {
     "deqp_gles2_test_expectations.txt",
     "deqp_gles3_test_expectations.txt",
+    "deqp_egl_test_expectations.txt",
 };
 
 class dEQPCaseList
@@ -204,6 +206,10 @@ class dEQP_GLES3 : public dEQPTest<1>
 {
 };
 
+class dEQP_EGL : public dEQPTest<2>
+{
+};
+
 #ifdef ANGLE_DEQP_GLES2_TESTS
 // TODO(jmadill): add different platform configs, or ability to choose platform
 TEST_P(dEQP_GLES2, Default)
@@ -221,6 +227,15 @@ TEST_P(dEQP_GLES3, Default)
 }
 
 INSTANTIATE_TEST_CASE_P(, dEQP_GLES3, dEQP_GLES3::GetTestingRange());
+#endif
+
+#ifdef ANGLE_DEQP_EGL_TESTS
+TEST_P(dEQP_EGL, Default)
+{
+    runTest();
+}
+
+INSTANTIATE_TEST_CASE_P(, dEQP_EGL, dEQP_EGL::GetTestingRange());
 #endif
 
 } // anonymous namespace

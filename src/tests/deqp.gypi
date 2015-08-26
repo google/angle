@@ -580,6 +580,92 @@
             '<(deqp_path)/modules/gles3/tes3TestPackage.hpp',
             '<(deqp_path)/modules/gles3/tes3TestPackageEntry.cpp',
         ],
+        'deqp_egl_sources':
+        [
+            '<(deqp_path)/modules/egl/teglAndroidUtil.cpp',
+            '<(deqp_path)/modules/egl/teglAndroidUtil.hpp',
+            '<(deqp_path)/modules/egl/teglApiCase.cpp',
+            '<(deqp_path)/modules/egl/teglApiCase.hpp',
+            '<(deqp_path)/modules/egl/teglChooseConfigReference.cpp',
+            '<(deqp_path)/modules/egl/teglChooseConfigReference.hpp',
+            '<(deqp_path)/modules/egl/teglChooseConfigTests.cpp',
+            '<(deqp_path)/modules/egl/teglChooseConfigTests.hpp',
+            '<(deqp_path)/modules/egl/teglQueryConfigTests.cpp',
+            '<(deqp_path)/modules/egl/teglQueryConfigTests.hpp',
+            '<(deqp_path)/modules/egl/teglColorClearCase.cpp',
+            '<(deqp_path)/modules/egl/teglColorClearCase.hpp',
+            '<(deqp_path)/modules/egl/teglColorClearTests.cpp',
+            '<(deqp_path)/modules/egl/teglColorClearTests.hpp',
+            '<(deqp_path)/modules/egl/teglConfigList.cpp',
+            '<(deqp_path)/modules/egl/teglConfigList.hpp',
+            '<(deqp_path)/modules/egl/teglCreateContextTests.cpp',
+            '<(deqp_path)/modules/egl/teglCreateContextTests.hpp',
+            '<(deqp_path)/modules/egl/teglQueryContextTests.cpp',
+            '<(deqp_path)/modules/egl/teglQueryContextTests.hpp',
+            '<(deqp_path)/modules/egl/teglCreateSurfaceTests.cpp',
+            '<(deqp_path)/modules/egl/teglCreateSurfaceTests.hpp',
+            '<(deqp_path)/modules/egl/teglQuerySurfaceTests.cpp',
+            '<(deqp_path)/modules/egl/teglQuerySurfaceTests.hpp',
+            '<(deqp_path)/modules/egl/teglGetProcAddressTests.cpp',
+            '<(deqp_path)/modules/egl/teglGetProcAddressTests.hpp',
+            '<(deqp_path)/modules/egl/teglGLES1RenderUtil.cpp',
+            '<(deqp_path)/modules/egl/teglGLES1RenderUtil.hpp',
+            '<(deqp_path)/modules/egl/teglGLES2RenderUtil.cpp',
+            '<(deqp_path)/modules/egl/teglGLES2RenderUtil.hpp',
+            '<(deqp_path)/modules/egl/teglImageUtil.cpp',
+            '<(deqp_path)/modules/egl/teglImageUtil.hpp',
+            '<(deqp_path)/modules/egl/teglImageTests.cpp',
+            '<(deqp_path)/modules/egl/teglImageTests.hpp',
+            '<(deqp_path)/modules/egl/teglInfoTests.cpp',
+            '<(deqp_path)/modules/egl/teglInfoTests.hpp',
+            '<(deqp_path)/modules/egl/teglNegativeApiTests.cpp',
+            '<(deqp_path)/modules/egl/teglNegativeApiTests.hpp',
+            '<(deqp_path)/modules/egl/teglRenderCase.cpp',
+            '<(deqp_path)/modules/egl/teglRenderCase.hpp',
+            '<(deqp_path)/modules/egl/teglRenderTests.cpp',
+            '<(deqp_path)/modules/egl/teglRenderTests.hpp',
+            '<(deqp_path)/modules/egl/teglSimpleConfigCase.cpp',
+            '<(deqp_path)/modules/egl/teglSimpleConfigCase.hpp',
+            '<(deqp_path)/modules/egl/teglTestCase.cpp',
+            '<(deqp_path)/modules/egl/teglTestCase.hpp',
+            '<(deqp_path)/modules/egl/teglTestPackage.cpp',
+            '<(deqp_path)/modules/egl/teglTestPackage.hpp',
+            '<(deqp_path)/modules/egl/teglTestPackageEntry.cpp',
+            '<(deqp_path)/modules/egl/teglVGRenderUtil.cpp',
+            '<(deqp_path)/modules/egl/teglVGRenderUtil.hpp',
+            '<(deqp_path)/modules/egl/teglImageFormatTests.hpp',
+            '<(deqp_path)/modules/egl/teglImageFormatTests.cpp',
+            '<(deqp_path)/modules/egl/teglGLES2SharingTests.hpp',
+            '<(deqp_path)/modules/egl/teglGLES2SharingTests.cpp',
+            '<(deqp_path)/modules/egl/teglGLES2SharingThreadedTests.hpp',
+            '<(deqp_path)/modules/egl/teglGLES2SharingThreadedTests.cpp',
+            '<(deqp_path)/modules/egl/teglSyncTests.hpp',
+            '<(deqp_path)/modules/egl/teglSyncTests.cpp',
+            '<(deqp_path)/modules/egl/teglMultiThreadTests.hpp',
+            '<(deqp_path)/modules/egl/teglMultiThreadTests.cpp',
+            '<(deqp_path)/modules/egl/teglMemoryStressTests.hpp',
+            '<(deqp_path)/modules/egl/teglMemoryStressTests.cpp',
+            '<(deqp_path)/modules/egl/teglMakeCurrentPerfTests.hpp',
+            '<(deqp_path)/modules/egl/teglMakeCurrentPerfTests.cpp',
+            '<(deqp_path)/modules/egl/teglGLES2SharedRenderingPerfTests.hpp',
+            '<(deqp_path)/modules/egl/teglGLES2SharedRenderingPerfTests.cpp',
+            '<(deqp_path)/modules/egl/teglPreservingSwapTests.hpp',
+            '<(deqp_path)/modules/egl/teglPreservingSwapTests.cpp',
+            '<(deqp_path)/modules/egl/teglClientExtensionTests.hpp',
+            '<(deqp_path)/modules/egl/teglClientExtensionTests.cpp',
+            '<(deqp_path)/modules/egl/teglCreateContextExtTests.hpp',
+            '<(deqp_path)/modules/egl/teglCreateContextExtTests.cpp',
+            '<(deqp_path)/modules/egl/teglSurfacelessContextTests.hpp',
+            '<(deqp_path)/modules/egl/teglSurfacelessContextTests.cpp',
+            '<(deqp_path)/modules/egl/teglSwapBuffersTests.hpp',
+            '<(deqp_path)/modules/egl/teglSwapBuffersTests.cpp',
+            '<(deqp_path)/modules/egl/teglNativeColorMappingTests.hpp',
+            '<(deqp_path)/modules/egl/teglNativeColorMappingTests.cpp',
+            '<(deqp_path)/modules/egl/teglNativeCoordMappingTests.hpp',
+            '<(deqp_path)/modules/egl/teglNativeCoordMappingTests.cpp',
+            '<(deqp_path)/modules/egl/teglResizeTests.hpp',
+            '<(deqp_path)/modules/egl/teglResizeTests.cpp',
+        ],
         'deqp_libtester_decpp_sources':
         [
             '<(deqp_path)/framework/delibs/decpp/deArrayBuffer.cpp',
@@ -1183,6 +1269,33 @@
                     ],
                 },
 
+                {
+                    'target_name': 'angle_deqp_libegl',
+                    'type': 'shared_library',
+                    'dependencies':
+                    [
+                        'angle_deqp_libtester',
+                    ],
+                    'defines':
+                    [
+                        'ANGLE_DEQP_EGL_TESTS',
+                    ],
+                    'direct_dependent_settings':
+                    {
+                        'defines':
+                        [
+                            'ANGLE_DEQP_EGL_TESTS',
+                        ],
+                    },
+                    'sources':
+                    [
+                        '<@(deqp_egl_sources)',
+                        'deqp_support/angle_deqp_libtester_main.cpp',
+                        'deqp_support/tcuANGLEPlatform.cpp',
+                        'deqp_support/tcuANGLEPlatform.h',
+                    ],
+                },
+
                 # Helper target for synching our implementation with chrome's
                 {
                     'target_name': 'angle_deqp_gtest_support',
@@ -1309,6 +1422,19 @@
                 },
 
                 {
+                    'target_name': 'angle_deqp_egl_tests',
+                    'type': 'executable',
+                    'dependencies':
+                    [
+                        'angle_deqp_libegl',
+                    ],
+                    'sources':
+                    [
+                        'deqp_support/angle_deqp_tests_main.cpp',
+                    ],
+                },
+
+                {
                     'target_name': 'angle_deqp_gtest_gles2_tests',
                     'type': 'executable',
                     'includes': [ '../../build/common_defines.gypi', ],
@@ -1331,6 +1457,21 @@
                     [
                         'angle_deqp_gtest_support',
                         'angle_deqp_libgles3',
+                    ],
+                    'sources':
+                    [
+                        'deqp_support/angle_deqp_gtest_main.cpp',
+                    ],
+                },
+
+                {
+                    'target_name': 'angle_deqp_gtest_egl_tests',
+                    'type': 'executable',
+                    'includes': [ '../../build/common_defines.gypi', ],
+                    'dependencies':
+                    [
+                        'angle_deqp_gtest_support',
+                        'angle_deqp_libegl',
                     ],
                     'sources':
                     [
