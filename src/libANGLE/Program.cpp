@@ -615,8 +615,7 @@ GLuint Program::getAttributeLocation(const std::string &name)
 
 bool Program::isAttribLocationActive(size_t attribLocation) const
 {
-    ASSERT(attribLocation >= 0 &&
-           static_cast<size_t>(attribLocation) < mData.mActiveAttribLocationsMask.size());
+    ASSERT(attribLocation < mData.mActiveAttribLocationsMask.size());
     return mData.mActiveAttribLocationsMask[attribLocation];
 }
 
