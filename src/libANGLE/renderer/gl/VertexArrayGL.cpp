@@ -394,7 +394,6 @@ void VertexArrayGL::updateAttribPointer(size_t attribIndex)
     }
 
     updateNeedsStreaming(attribIndex);
-    mAppliedAttributes[attribIndex] = attrib;
 
     // If we need to stream, defer the attribPointer to the draw call.
     if (mAttributesNeedStreaming[attribIndex])
@@ -413,6 +412,7 @@ void VertexArrayGL::updateAttribPointer(size_t attribIndex)
     {
         mStateManager->bindBuffer(GL_ARRAY_BUFFER, 0);
     }
+    mAppliedAttributes[attribIndex].buffer = attrib.buffer;
 
     if (attrib.pureInteger)
     {
@@ -424,6 +424,12 @@ void VertexArrayGL::updateAttribPointer(size_t attribIndex)
         mFunctions->vertexAttribPointer(static_cast<GLuint>(attribIndex), attrib.size, attrib.type,
                                         attrib.normalized, attrib.stride, attrib.pointer);
     }
+    mAppliedAttributes[attribIndex].size        = attrib.size;
+    mAppliedAttributes[attribIndex].type        = attrib.type;
+    mAppliedAttributes[attribIndex].normalized  = attrib.normalized;
+    mAppliedAttributes[attribIndex].pureInteger = attrib.pureInteger;
+    mAppliedAttributes[attribIndex].stride      = attrib.stride;
+    mAppliedAttributes[attribIndex].pointer     = attrib.pointer;
 }
 
 void VertexArrayGL::syncState(const VertexArray::DirtyBits &dirtyBits)
