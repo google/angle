@@ -25,11 +25,13 @@ class VertexArrayGL : public VertexArrayImpl
 
     gl::Error syncDrawArraysState(const gl::AttributesMask &activeAttributesMask,
                                   GLint first,
-                                  GLsizei count) const;
+                                  GLsizei count,
+                                  GLsizei instanceCount) const;
     gl::Error syncDrawElementsState(const gl::AttributesMask &activeAttributesMask,
                                     GLsizei count,
                                     GLenum type,
                                     const GLvoid *indices,
+                                    GLsizei instanceCount,
                                     const GLvoid **outIndices) const;
 
     GLuint getVertexArrayID() const;
@@ -43,6 +45,7 @@ class VertexArrayGL : public VertexArrayImpl
                             GLsizei count,
                             GLenum type,
                             const GLvoid *indices,
+                            GLsizei instanceCount,
                             const GLvoid **outIndices) const;
 
     // Apply index data, only sets outIndexRange if attributesNeedStreaming is true
@@ -52,12 +55,14 @@ class VertexArrayGL : public VertexArrayImpl
     // Returns the amount of space needed to stream all attributes that need streaming
     // and the data size of the largest attribute
     void computeStreamingAttributeSizes(const gl::AttributesMask &activeAttributesMask,
+                                        GLsizei instanceCount,
                                         const gl::RangeUI &indexRange,
                                         size_t *outStreamingDataSize,
                                         size_t *outMaxAttributeDataSize) const;
 
     // Stream attributes that have client data
     gl::Error streamAttributes(const gl::AttributesMask &activeAttributesMask,
+                               GLsizei instanceCount,
                                const gl::RangeUI &indexRange) const;
 
     void updateNeedsStreaming(size_t attribIndex);
