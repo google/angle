@@ -25,37 +25,15 @@
 //  91531 MAC WIN LINUX : conformance_more_* = SKIP
 //  91532 MAC NVIDIA 0x0640 : tex_image_and_sub_image_2d_with_video = PASS FAIL
 
-// TODO(cwallez): make suppression for Linux
-
 // TODO(jmadill): triage these into temporary and permanent suppressions
 
 // Windows only failures
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_max_attributes.float = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_max_attributes.vec2 = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_max_attributes.vec3 = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_max_attributes.vec4 = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_inactive_float = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_inactive_vec2 = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_inactive_vec3 = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_inactive_vec4 = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_hole.float = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_hole.vec2 = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_hole.vec3 = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_hole.vec4 = FAIL
 1030 WIN : dEQP-GLES2.functional.attribute_location.bind_hole.mat2 = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_relink_hole.float = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_relink_hole.vec2 = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_relink_hole.vec3 = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_relink_hole.vec4 = FAIL
 1030 WIN : dEQP-GLES2.functional.attribute_location.bind_relink_hole.mat2 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb5_a1 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb5_a1_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb5_a1_depth_component16 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.stencil_clear.rbo_rgb5_a1_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_tex2d_rgb = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_tex2d_rgb_depth_component16 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_tex2d_rgba = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_tex2d_rgba_depth_component16 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.stencil.tex2d_rgb_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.stencil.tex2d_rgba_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.stencil.rbo_rgb565_stencil_index8 = FAIL
@@ -97,8 +75,6 @@
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.no_rebind_rbo_rgb5_a1_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.no_rebind_rbo_rgba4_stencil_index8 = FAIL
 1033 WIN : dEQP-GLES2.functional.polygon_offset.fixed16_render_with_units = FAIL
-913 WIN : dEQP-GLES2.functional.shaders.constant_expressions.builtin_functions.geometric.* = FAIL
-913 WIN : dEQP-GLES2.functional.shaders.constant_expressions.builtin_functions.matrix.compMult_mat* = FAIL
 1015 WIN : dEQP-GLES2.functional.shaders.functions.misc.missing_returns_vertex = FAIL
 1015 WIN : dEQP-GLES2.functional.shaders.functions.misc.missing_returns_fragment = FAIL
 1018 WIN : dEQP-GLES2.functional.shaders.invariance.highp.loop_2 = FAIL
@@ -108,7 +84,6 @@
 1017 WIN : dEQP-GLES2.functional.shaders.loops.while_constant_iterations.nested_tricky_dataflow_* = FAIL
 1017 WIN : dEQP-GLES2.functional.shaders.loops.do_while_constant_iterations.nested_tricky_dataflow_* = FAIL
 989 WIN : dEQP-GLES2.functional.shaders.preprocessor.pragmas.invalid_pragma_invalid_* = FAIL
-1018 WIN : dEQP-GLES2.functional.shaders.random.all_features.fragment.76 = FAIL
 504 WIN : dEQP-GLES2.functional.shaders.struct.uniform.sampler_vertex = FAIL
 504 WIN : dEQP-GLES2.functional.shaders.struct.uniform.sampler_fragment = FAIL
 504 WIN : dEQP-GLES2.functional.shaders.struct.uniform.sampler_nested_vertex = FAIL
@@ -116,8 +91,6 @@
 504 WIN : dEQP-GLES2.functional.shaders.struct.uniform.sampler_array_vertex = FAIL
 504 WIN : dEQP-GLES2.functional.shaders.struct.uniform.sampler_array_fragment = FAIL
 1018 WIN : dEQP-GLES2.functional.shaders.texture_functions.vertex.texturecubelod = FAIL
-1023 WIN : dEQP-GLES2.functional.texture.completeness.cube.format_mismatch_rgb_rgba_level_0_pos_z = FAIL
-1023 WIN : dEQP-GLES2.functional.texture.completeness.cube.format_mismatch_rgba_rgb_level_0_neg_z = FAIL
 1020 WIN : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
 1020 WIN : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_linear = FAIL
 1020 WIN : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
@@ -126,26 +99,6 @@
 1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_luminance = FAIL
 1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_luminance_alpha = FAIL
 1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_rgb = FAIL
-1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copytexsubimage2d.2d_alpha = FAIL
-1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copytexsubimage2d.2d_luminance = FAIL
-1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copytexsubimage2d.2d_luminance_alpha = FAIL
-1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copytexsubimage2d.2d_rgb = FAIL
-1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copytexsubimage2d.2d_rgba = FAIL
-1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copytexsubimage2d.cube_alpha = FAIL
-1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copytexsubimage2d.cube_luminance = FAIL
-1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copytexsubimage2d.cube_luminance_alpha = FAIL
-1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copytexsubimage2d.cube_rgb = FAIL
-1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copytexsubimage2d.cube_rgba = FAIL
-1022 WIN : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_clamp = FAIL
-1022 WIN : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_mirror = FAIL
-1022 WIN : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_clamp = FAIL
-1022 WIN : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_mirror = FAIL
-1022 WIN : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_clamp = FAIL
-1022 WIN : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_repeat = FAIL
-1022 WIN : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_mirror = FAIL
-1022 WIN : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_clamp = FAIL
-1022 WIN : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_repeat = FAIL
-1022 WIN : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_mirror = FAIL
 504 WIN : dEQP-GLES2.functional.uniform_api.info_query.basic_struct.sampler2D_samplerCube_* = FAIL
 504 WIN : dEQP-GLES2.functional.uniform_api.info_query.struct_in_array.sampler2D_samplerCube_* = FAIL
 504 WIN : dEQP-GLES2.functional.uniform_api.info_query.array_in_struct.sampler2D_samplerCube_* = FAIL
@@ -189,8 +142,6 @@
 504 WIN : dEQP-GLES2.functional.uniform_api.value.assigned.basic_array_assign_partial.array_in_struct.sampler2D_samplerCube_* = FAIL
 504 WIN : dEQP-GLES2.functional.uniform_api.value.assigned.unused_uniforms.sampler2D_samplerCube_* = FAIL
 
-1059 WIN : dEQP-GLES2.functional.shaders.struct.local.dynamic_loop_struct_array_fragment = FAIL
-
 // Linux only failures
 
 1051 LINUX : dEQP-GLES2.functional.shaders.functions.array_arguments.copy_global_inout_on_call_fragment = FAIL
@@ -228,6 +179,10 @@
 504 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.array_in_struct.sampler2D_samplerCube_both = FAIL
 504 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.nested_structs_arrays.sampler2D_samplerCube_both = FAIL
 504 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.nested_structs_arrays.sampler2D_samplerCube_fragment = FAIL
+1034 LINUX : dEQP-GLES2.functional.flush_finish.flush = FAIL
+1034 LINUX : dEQP-GLES2.functional.flush_finish.finish = FAIL
+1019 WIN LINUX : dEQP-GLES2.functional.texture.size.cube.256x256_rgba4444 = FAIL
+1019 WIN LINUX : dEQP-GLES2.functional.texture.size.cube.512x512_rgba4444 = FAIL
 
 // Windows and Linux failures
 
@@ -254,8 +209,6 @@
 1016 WIN LINUX : dEQP-GLES2.functional.shaders.scoping.valid.local_variable_hides_function_parameter_fragment = FAIL
 1016 WIN LINUX : dEQP-GLES2.functional.shaders.scoping.invalid.redeclare_function_vertex = FAIL
 1016 WIN LINUX : dEQP-GLES2.functional.shaders.scoping.invalid.redeclare_function_fragment = FAIL
-1019 WIN LINUX : dEQP-GLES2.functional.texture.size.cube.256x256_rgba4444 = FAIL
-1019 WIN LINUX : dEQP-GLES2.functional.texture.size.cube.512x512_rgba4444 = FAIL
 1020 WIN LINUX : dEQP-GLES2.functional.texture.mipmap.2d.projected.* = FAIL
 1020 WIN LINUX : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
 1025 WIN LINUX : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_depth_funcs.stencil_* = FAIL
@@ -336,8 +289,6 @@
 1030 WIN LINUX : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond_mat4 = FAIL
 504 WIN LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.nested_structs_arrays.sampler2D_samplerCube_* = FAIL
 1032 WIN LINUX : dEQP-GLES2.functional.state_query.shader.program_attached_shaders = FAIL
-1034 WIN LINUX : dEQP-GLES2.functional.flush_finish.flush = FAIL
-1034 WIN LINUX : dEQP-GLES2.functional.flush_finish.finish = FAIL
 
 // Skip this test on Windows due to timeouts
 1034 WIN LINUX : dEQP-GLES2.functional.flush_finish.finish_wait = SKIP
