@@ -1,0 +1,242 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4468999e_f9aad758",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-08-27T19:06:38Z",
+      "side": 1,
+      "message": "nit: for readability this might benefit from splitting the array an non-array cases before looping over the elements",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44b17956_5452a261",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-08-27T19:06:38Z",
+      "side": 1,
+      "message": "The comment probably meant \"add to uniform list but not location\" as for now it conflicts with the code.",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24b8053d_d910878e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-08-27T19:06:38Z",
+      "side": 1,
+      "message": "It seems we know these will be in sequential order, can\u0027t we just add them all at once afterwards?",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44b17956_b7af90cb",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1504,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-08-27T19:06:38Z",
+      "side": 1,
+      "message": "What is the use of this? It seems it could allow a program to have the same uniform twice in the fragment shader, as the first occurrence would be put in vertexUniform above.",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a416b5fe_1742d6c4",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2108,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-08-27T19:06:38Z",
+      "side": 1,
+      "message": "Just to understand, are we doing this because packed uniform blocks have no location? (Would make some sense as the application would know the layout)",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4a18d0d_e2e82e2b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2111,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-08-27T19:06:38Z",
+      "side": 1,
+      "message": "Aren\u0027t all blocks handled in defineUniformBlock?",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4a18d0d_4245c2cb",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2117,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-08-27T19:06:38Z",
+      "side": 1,
+      "message": "Why not a straight \u003d ?",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24b8053d_992f1fc3",
+        "filename": "src/libANGLE/Uniform.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-08-27T19:06:38Z",
+      "side": 1,
+      "message": "FYI dataSize(dataSize) works as a name gets added to the scope only after it appears in the initializer list",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84a61126_744b5e7f",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-08-27T19:06:38Z",
+      "side": 1,
+      "message": "It seems this is only called with dataSize \u003d 0, maybe it could be removed from the constructor",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44b17956_97dd2c57",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-08-27T19:06:38Z",
+      "side": 1,
+      "message": "I think you did ;-)",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64659dc3_9ab54d6d",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-08-27T19:06:38Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84a61126_b43ca6ee",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-08-27T19:06:38Z",
+      "side": 1,
+      "message": "Just a thought, would [fieldName]*blockInfoOut \u003d foo work?",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44b17956_77cec8a7",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-08-27T19:06:38Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8411b10b_59cbe395",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2015-08-27T19:06:38Z",
+      "side": 1,
+      "message": "I think it would be column, unless d3d is different than OpenGL in that regard.",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
