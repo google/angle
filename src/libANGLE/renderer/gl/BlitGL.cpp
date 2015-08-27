@@ -58,8 +58,8 @@ BlitGL::BlitGL(const FunctionsGL *functions,
       mWorkarounds(workarounds),
       mStateManager(stateManager),
       mBlitProgram(0),
-      mScratchFBO(0),
       mScratchTexture(0),
+      mScratchFBO(0),
       mVAO(0)
 {
     ASSERT(mFunctions);
