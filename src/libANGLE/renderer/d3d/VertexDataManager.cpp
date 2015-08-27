@@ -41,22 +41,6 @@ static int ElementsInBuffer(const gl::VertexAttribute &attrib, unsigned int size
            stride;
 }
 
-static int StreamingBufferElementCount(const gl::VertexAttribute &attrib, int vertexDrawCount, int instanceDrawCount)
-{
-    // For instanced rendering, we draw "instanceDrawCount" sets of "vertexDrawCount" vertices.
-    //
-    // A vertex attribute with a positive divisor loads one instanced vertex for every set of
-    // non-instanced vertices, and the instanced vertex index advances once every "mDivisor" instances.
-    if (instanceDrawCount > 0 && attrib.divisor > 0)
-    {
-        // When instanceDrawCount is not a multiple attrib.divisor, the division must round up.
-        // For instance, with 5 non-instanced vertices and a divisor equal to 3, we need 2 instanced vertices.
-        return (instanceDrawCount + attrib.divisor - 1) / attrib.divisor;
-    }
-
-    return vertexDrawCount;
-}
-
 VertexDataManager::CurrentValueState::CurrentValueState()
     : buffer(nullptr),
       offset(0)
@@ -278,12 +262,13 @@ gl::Error VertexDataManager::reserveSpaceForAttrib(const TranslatedAttribute &tr
         }
         else
         {
-            int totalCount = StreamingBufferElementCount(attrib, count, instances);
+            size_t totalCount = ComputeVertexAttributeElementCount(attrib, count, instances);
             ASSERT(!bufferImpl ||
                    ElementsInBuffer(attrib, static_cast<unsigned int>(bufferImpl->getSize())) >=
                        totalCount);
 
-            gl::Error error = mStreamingBuffer->reserveVertexSpace(attrib, totalCount, instances);
+            gl::Error error = mStreamingBuffer->reserveVertexSpace(
+                attrib, static_cast<GLsizei>(totalCount), instances);
             if (error.isError())
             {
                 return error;
@@ -388,20 +373,16 @@ gl::Error VertexDataManager::storeAttribute(TranslatedAttribute *translated,
     }
     else
     {
-        int totalCount = StreamingBufferElementCount(attrib, count, instances);
+        size_t totalCount = ComputeVertexAttributeElementCount(attrib, count, instances);
         gl::Error error = mStreamingBuffer->getVertexBuffer()->getSpaceRequired(attrib, 1, 0, &outputElementSize);
         if (error.isError())
         {
             return error;
         }
 
-        error = mStreamingBuffer->storeVertexAttributes(attrib,
-                                                        translated->currentValueType,
-                                                        firstVertexIndex,
-                                                        totalCount,
-                                                        instances,
-                                                        &streamOffset,
-                                                        sourceData);
+        error = mStreamingBuffer->storeVertexAttributes(
+            attrib, translated->currentValueType, firstVertexIndex,
+            static_cast<GLsizei>(totalCount), instances, &streamOffset, sourceData);
         if (error.isError())
         {
             return error;

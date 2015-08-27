@@ -105,8 +105,15 @@ class StateManagerGL final : angle::NonCopyable
     void setPixelPackState(const gl::PixelPackState &pack);
     void setPixelPackState(GLint alignment, GLint rowLength, GLint skipRows, GLint skipPixels);
 
-    gl::Error setDrawArraysState(const gl::Data &data, GLint first, GLsizei count);
-    gl::Error setDrawElementsState(const gl::Data &data, GLsizei count, GLenum type, const GLvoid *indices,
+    gl::Error setDrawArraysState(const gl::Data &data,
+                                 GLint first,
+                                 GLsizei count,
+                                 GLsizei instanceCount);
+    gl::Error setDrawElementsState(const gl::Data &data,
+                                   GLsizei count,
+                                   GLenum type,
+                                   const GLvoid *indices,
+                                   GLsizei instanceCount,
                                    const GLvoid **outIndices);
 
     void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits);
