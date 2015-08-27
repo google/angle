@@ -3,25 +3,23 @@ drawElements (dEQP) is a very robust and comprehensive set of open-source tests 
 
 ## How to build dEQP
 
-You should have dEQP as a target if you followed the [DevSetup](DevSetup.md) instructions. There are two executables, `angle_deqp_gles2_tests` and `angle_deqp_gles3_tests`.
+You should have dEQP as a target if you followed the [DevSetup](DevSetup.md) instructions. Current targets:
 
-Currently we only support Windows platforms.
+  * GLES2 testing with `angle_deqp_gles2_tests` (supported on Linux/GL and Windows/D3D9/D3D11/GL)
+  * GLES3 testing with `angle_deqp_gles3_tests` (supported on Windows/D3D11)
+  * EGL testing with `angle_deqp_egl_tests` (supported on Windows)
 
 ## How to use dEQP
 
-Running the full test suite in Debug can take a very long time. We recommend first dumping the complete lists of tests to a text file, then running the tests that apply to your changes.
+The `--deqp-case` flag allows you to run individual tests, with wildcard support. For example: `--deqp-case=dEQP-GLES2.functional.shaders.linkage.*`.
 
-### Dump the case list
+Full tests lists are archived in `src/tests/deqp_support`. You can also dump a list of test case names: append the command line argument `--deqp-runmode=txt-caselist`, run the test target, then look for the file named `third_party/deqp/src/data/dEQP-<target>-cases.txt`.
 
-To dump a list of test cases, append the command line arguments `--deqp-runmode=txt-caselist`, run the GLES2 or GLES3 target, then look for the file named `src\tests\third_party\deqp\data\dEQP-GLES2-cases.txt`. (Or GLES3).
+If you're running the full test suite, Debug can take a very long time. Running in Debug is more useful to isolate and fix particular failures.
 
-### Choose your tests
+### Choosing a Renderer on Windows
 
-Scan the case list files for tests with names similar to the features you're working on. Then, to run particular tests, use the command line arguments `--deqp-case=dEQP-GLES2.functional.shaders.linkage.*` (for example). Replace the test name string with the test your want from the case list files you dumped above.
-
-### Choose a Renderer
-
-By default the tests run on ANGLE D3D11. To specify the exact platform for ANGLE + dEQP, use the arguments:
+By default Windows ANGLE tests with D3D11. To specify the exact platform for ANGLE + dEQP, use the arguments:
 
   * `--deqp-egl-native-display-type=angle-d3d11` for D3D11 (high feature level)
   * `--deqp-egl-native-display-type=angle-d3d9` for D3D9
@@ -30,6 +28,10 @@ By default the tests run on ANGLE D3D11. To specify the exact platform for ANGLE
 
 ### Check your results
 
-For now, the recommended practice is to manually compare your passes/failures with the results prior to your modifications.
+dEQP generates a test log to `src/tests/TestResults.qpa`. To view the test log information, you'll need to use the open-source GUI [Cherry](https://android.googlesource.com/platform/external/cherry).
 
-dEQP uses the open-source GUI [Cherry](https://android.googlesource.com/platform/external/cherry) for viewing batch test results (see the `TestResults.qpa` file). ANGLE doesn't currently build or distribute Cherry, but feel free to check it out!
+See the [official Cherry README](https://android.googlesource.com/platform/external/cherry/+/master/README) for instructions on how to build and install Cherry on Linux or Windows.
+
+### GoogleTest, ANGLE and dEQP
+
+ANGLE also supports the same set of targets built with GoogleTest, for running on the bots. We don't currently recommend using these for local debugging, but we do maintain lists of test expectations in `src/tests/deqp_support`. When you fix tests, please remove the suppression(s) from the relevant files!
