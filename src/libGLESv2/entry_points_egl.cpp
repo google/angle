@@ -1127,7 +1127,7 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
     {
         ProcAddressMap map;
 #define INSERT_PROC_ADDRESS(ns, proc) \
-    map[#ns## #proc] = reinterpret_cast<__eglMustCastToProperFunctionPointerType>(ns::proc)
+    map[#ns #proc] = reinterpret_cast<__eglMustCastToProperFunctionPointerType>(ns::proc)
 
         // GLES2 core
         INSERT_PROC_ADDRESS(gl, ActiveTexture);
