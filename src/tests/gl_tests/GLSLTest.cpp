@@ -1095,7 +1095,7 @@ TEST_P(GLSLTest, LoopIndexingValidation)
     // If the test is configured to run limited to Feature Level 9_3, then it is
     // assumed that shader compilation will fail with an expected error message containing
     // "Loop index cannot be compared with non-constant expression"
-    if ((GetParam() == ES2_D3D11_FL9_3()))
+    if ((GetParam() == ES2_D3D11_FL9_3() || GetParam() == ES2_D3D9()))
     {
         if (compileResult != 0)
         {

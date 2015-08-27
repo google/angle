@@ -567,6 +567,11 @@ void GenerateCaps(IDirect3D9 *d3d9,
     // D3D9 has no concept of separate masks and refs for front and back faces in the depth stencil
     // state.
     limitations->noSeparateStencilRefsAndMasks = true;
+
+    // D3D9 shader models have limited support for looping, so the Appendix A
+    // index/loop limitations are necessary. Workarounds that are needed to
+    // support dynamic indexing of vectors on HLSL also don't work on D3D9.
+    limitations->shadersRequireIndexedLoopValidation = true;
 }
 
 }
