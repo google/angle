@@ -4,7 +4,8 @@
 // found in the LICENSE file.
 //
 // UnrollFlatten_test.cpp:
-//   Test for the outputting of [[unroll]] and [[flatten]] for the D3D compiler
+//   Test for the outputting of [[unroll]] and [[flatten]] for the D3D compiler.
+//   This test can only be enabled when HLSL support is enabled.
 //
 
 #include "angle_gl.h"
