@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8411b10b_394b8732",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-28T18:05:13Z",
+      "side": 1,
+      "message": "Whoops, done.",
+      "parentUuid": "4468999e_3cea7de8",
+      "range": {
+        "startLine": 391,
+        "startChar": 4,
+        "endLine": 391,
+        "endChar": 50
+      },
+      "revId": "3570bd69eb8c36e9eeeb637add8d9f30ba43c202",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "84a61126_7f4b377f",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-08-28T18:02:24Z",
       "side": 1,
       "message": "nit: did you need to remove the const in this patch?",
+      "range": {
+        "startLine": 405,
+        "startChar": 4,
+        "endLine": 405,
+        "endChar": 10
+      },
+      "revId": "3570bd69eb8c36e9eeeb637add8d9f30ba43c202",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64ae7dfb_9b51d7b4",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-28T18:05:13Z",
+      "side": 1,
+      "message": "Yea, the set function requires a non-const pointer.  Updated to just assign the whole BindingPointer.",
+      "parentUuid": "84a61126_7f4b377f",
       "range": {
         "startLine": 405,
         "startChar": 4,
