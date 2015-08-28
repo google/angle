@@ -1317,8 +1317,10 @@
                             'destination': '<(PRODUCT_DIR)/deqp_support',
                             'files':
                             [
+                                'deqp_support/dEQP-EGL-cases.txt.gz',
                                 'deqp_support/dEQP-GLES2-cases.txt.gz',
                                 'deqp_support/dEQP-GLES3-cases.txt.gz',
+                                'deqp_support/deqp_egl_test_expectations.txt',
                                 'deqp_support/deqp_gles2_test_expectations.txt',
                                 'deqp_support/deqp_gles3_test_expectations.txt',
                             ],
