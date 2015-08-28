@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a416b5fe_1a803d03",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-28T17:32:40Z",
+      "side": 0,
+      "message": "see anglebug.com/1059, this is a bot-specific failure. I think you\u0027ll need to add it back (there may be one or two other ones)",
+      "range": {
+        "startLine": 192,
+        "startChar": 0,
+        "endLine": 192,
+        "endChar": 4
+      },
+      "revId": "11865105ef6eeb2499568fd5e77ded292e357dca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
