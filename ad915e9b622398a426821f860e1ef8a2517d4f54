@@ -45,6 +45,30 @@
       "revId": "ad915e9b622398a426821f860e1ef8a2517d4f54",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24b8053d_c43c1ef0",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-28T17:45:41Z",
+      "side": 1,
+      "message": "Yeah I realized that and thought I fixed it and pushed another patch. Except I had modified the copied test-expectations, not the real one... Will be fixed in the next patch.",
+      "parentUuid": "04bb013c_8c26b668",
+      "range": {
+        "startLine": 184,
+        "startChar": 5,
+        "endLine": 184,
+        "endChar": 8
+      },
+      "revId": "ad915e9b622398a426821f860e1ef8a2517d4f54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
