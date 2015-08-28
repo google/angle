@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4468999e_3cea7de8",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-28T18:02:24Z",
+      "side": 1,
+      "message": "I think because of the way pureInteger works, not updating the applied pureInteger will muck up this compare. Would suggest just updating pureInteger as well.",
+      "range": {
+        "startLine": 391,
+        "startChar": 4,
+        "endLine": 391,
+        "endChar": 50
+      },
+      "revId": "3570bd69eb8c36e9eeeb637add8d9f30ba43c202",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84a61126_7f4b377f",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-28T18:02:24Z",
+      "side": 1,
+      "message": "nit: did you need to remove the const in this patch?",
+      "range": {
+        "startLine": 405,
+        "startChar": 4,
+        "endLine": 405,
+        "endChar": 10
+      },
+      "revId": "3570bd69eb8c36e9eeeb637add8d9f30ba43c202",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
