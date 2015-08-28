@@ -22,6 +22,30 @@
       "revId": "11865105ef6eeb2499568fd5e77ded292e357dca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a416b5fe_5a7ab594",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-28T17:39:00Z",
+      "side": 0,
+      "message": "Ok, I\u0027ll wait for the bot to cycle and add back the suppressions with a comment.",
+      "parentUuid": "a416b5fe_1a803d03",
+      "range": {
+        "startLine": 192,
+        "startChar": 0,
+        "endLine": 192,
+        "endChar": 4
+      },
+      "revId": "11865105ef6eeb2499568fd5e77ded292e357dca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
