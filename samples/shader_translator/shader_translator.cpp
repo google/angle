@@ -401,7 +401,7 @@ void PrintVariable(const std::string &prefix, size_t index, const sh::ShaderVari
       default: typeName = "UNKNOWN"; break;
     }
 
-    printf("%s %zu : name=%s, type=%s, arraySize=%u\n",
+    printf("%s %lu : name=%s, type=%s, arraySize=%u\n",
            prefix.c_str(), index, var.name.c_str(), typeName.c_str(), var.arraySize);
     if (var.fields.size())
     {
