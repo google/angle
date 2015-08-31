@@ -532,12 +532,6 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
                             functions->isAtLeastGLES(gl::Version(3, 0)) || functions->hasGLESExtension("GL_EXT_frag_depth");
     extensions->fboRenderMipmap = functions->isAtLeastGL(gl::Version(3, 0)) || functions->hasGLExtension("GL_EXT_framebuffer_object") ||
                                   functions->isAtLeastGLES(gl::Version(3, 0)) || functions->hasGLESExtension("GL_OES_fbo_render_mipmap");
-    extensions->instancedArrays = functions->isAtLeastGL(gl::Version(3, 1)) ||
-                                  (functions->hasGLExtension("GL_ARB_instanced_arrays") &&
-                                   (functions->hasGLExtension("GL_ARB_draw_instanced") ||
-                                    functions->hasGLExtension("GL_EXT_draw_instanced"))) ||
-                                  functions->isAtLeastGLES(gl::Version(3, 0)) ||
-                                  functions->hasGLESExtension("GL_EXT_instanced_arrays");
 }
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)

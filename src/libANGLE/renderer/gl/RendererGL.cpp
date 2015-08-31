@@ -131,7 +131,7 @@ gl::Error RendererGL::finish()
 
 gl::Error RendererGL::drawArrays(const gl::Data &data, GLenum mode, GLint first, GLsizei count)
 {
-    gl::Error error = mStateManager->setDrawArraysState(data, first, count, 0);
+    gl::Error error = mStateManager->setDrawArraysState(data, first, count);
     if (error.isError())
     {
         return error;
@@ -151,17 +151,7 @@ gl::Error RendererGL::drawArraysInstanced(const gl::Data &data,
                                           GLsizei count,
                                           GLsizei instanceCount)
 {
-    gl::Error error = mStateManager->setDrawArraysState(data, first, count, instanceCount);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    if (!mSkipDrawCalls)
-    {
-        mFunctions->drawArraysInstanced(mode, first, count, instanceCount);
-    }
-
+    UNIMPLEMENTED();
     return gl::Error(GL_NO_ERROR);
 }
 
@@ -173,8 +163,7 @@ gl::Error RendererGL::drawElements(const gl::Data &data,
                                    const gl::RangeUI &indexRange)
 {
     const GLvoid *drawIndexPointer = nullptr;
-    gl::Error error =
-        mStateManager->setDrawElementsState(data, count, type, indices, 0, &drawIndexPointer);
+    gl::Error error = mStateManager->setDrawElementsState(data, count, type, indices, &drawIndexPointer);
     if (error.isError())
     {
         return error;
@@ -196,19 +185,7 @@ gl::Error RendererGL::drawElementsInstanced(const gl::Data &data,
                                             GLsizei instances,
                                             const gl::RangeUI &indexRange)
 {
-    const GLvoid *drawIndexPointer = nullptr;
-    gl::Error error = mStateManager->setDrawElementsState(data, count, type, indices, instances,
-                                                          &drawIndexPointer);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    if (!mSkipDrawCalls)
-    {
-        mFunctions->drawElementsInstanced(mode, count, type, drawIndexPointer, instances);
-    }
-
+    UNIMPLEMENTED();
     return gl::Error(GL_NO_ERROR);
 }
 

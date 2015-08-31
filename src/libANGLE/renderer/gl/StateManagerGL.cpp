@@ -401,10 +401,7 @@ void StateManagerGL::bindRenderbuffer(GLenum type, GLuint renderbuffer)
     }
 }
 
-gl::Error StateManagerGL::setDrawArraysState(const gl::Data &data,
-                                             GLint first,
-                                             GLsizei count,
-                                             GLsizei instanceCount)
+gl::Error StateManagerGL::setDrawArraysState(const gl::Data &data, GLint first, GLsizei count)
 {
     const gl::State &state = *data.state;
 
@@ -413,8 +410,8 @@ gl::Error StateManagerGL::setDrawArraysState(const gl::Data &data,
     const gl::VertexArray *vao = state.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
 
-    gl::Error error = vaoGL->syncDrawArraysState(program->getActiveAttribLocationsMask(), first,
-                                                 count, instanceCount);
+    gl::Error error =
+        vaoGL->syncDrawArraysState(program->getActiveAttribLocationsMask(), first, count);
     if (error.isError())
     {
         return error;
@@ -425,11 +422,7 @@ gl::Error StateManagerGL::setDrawArraysState(const gl::Data &data,
     return setGenericDrawState(data);
 }
 
-gl::Error StateManagerGL::setDrawElementsState(const gl::Data &data,
-                                               GLsizei count,
-                                               GLenum type,
-                                               const GLvoid *indices,
-                                               GLsizei instanceCount,
+gl::Error StateManagerGL::setDrawElementsState(const gl::Data &data, GLsizei count, GLenum type, const GLvoid *indices,
                                                const GLvoid **outIndices)
 {
     const gl::State &state = *data.state;
@@ -440,7 +433,7 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::Data &data,
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
 
     gl::Error error = vaoGL->syncDrawElementsState(program->getActiveAttribLocationsMask(), count,
-                                                   type, indices, instanceCount, outIndices);
+                                                   type, indices, outIndices);
     if (error.isError())
     {
         return error;
