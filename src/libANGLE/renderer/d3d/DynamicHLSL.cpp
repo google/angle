@@ -236,8 +236,7 @@ DynamicHLSL::DynamicHLSL(RendererD3D *const renderer) : mRenderer(renderer)
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
 // Returns the number of used varying registers, or -1 if unsuccesful
 int DynamicHLSL::packVaryings(InfoLog &infoLog,
-                              ShaderD3D *fragmentShader,
-                              ShaderD3D *vertexShader,
+                              std::vector<PackedVarying> *packedVaryings,
                               const std::vector<std::string> &transformFeedbackVaryings)
 {
     // TODO (geofflang):  Use context's caps
@@ -245,17 +244,11 @@ int DynamicHLSL::packVaryings(InfoLog &infoLog,
 
     VaryingPacking packing = {};
 
-    vertexShader->resetVaryingsRegisterAssignment();
-    fragmentShader->resetVaryingsRegisterAssignment();
+    std::set<std::string> uniqueVaryingNames;
 
-    std::set<std::string> packedVaryings;
-
-    std::vector<PackedVarying> &vertexVaryings   = vertexShader->getPackedVaryings();
-    std::vector<PackedVarying> &fragmentVaryings = fragmentShader->getPackedVaryings();
-    for (unsigned int varyingIndex = 0; varyingIndex < fragmentVaryings.size(); varyingIndex++)
+    for (PackedVarying &packedVarying : *packedVaryings)
     {
-        PackedVarying *packedVarying = &fragmentVaryings[varyingIndex];
-        const sh::Varying &varying   = *packedVarying->varying;
+        const sh::Varying &varying = *packedVarying.varying;
 
         // Do not assign registers to built-in or unreferenced varyings
         if (varying.isBuiltIn() || !varying.staticUse)
@@ -263,9 +256,11 @@ int DynamicHLSL::packVaryings(InfoLog &infoLog,
             continue;
         }
 
-        if (PackVarying(packedVarying, maxVaryingVectors, packing))
+        ASSERT(uniqueVaryingNames.count(varying.name) == 0);
+
+        if (PackVarying(&packedVarying, maxVaryingVectors, packing))
         {
-            packedVaryings.insert(varying.name);
+            uniqueVaryingNames.insert(varying.name);
         }
         else
         {
@@ -274,26 +269,24 @@ int DynamicHLSL::packVaryings(InfoLog &infoLog,
         }
     }
 
-    for (unsigned int feedbackVaryingIndex = 0; feedbackVaryingIndex < transformFeedbackVaryings.size(); feedbackVaryingIndex++)
+    for (const std::string &transformFeedbackVaryingName : transformFeedbackVaryings)
     {
-        const std::string &transformFeedbackVarying = transformFeedbackVaryings[feedbackVaryingIndex];
-
-        if (transformFeedbackVarying == "gl_Position" || transformFeedbackVarying == "gl_PointSize")
+        if (transformFeedbackVaryingName == "gl_Position" ||
+            transformFeedbackVaryingName == "gl_PointSize")
         {
             // do not pack builtin XFB varyings
             continue;
         }
 
-        if (packedVaryings.find(transformFeedbackVarying) == packedVaryings.end())
+        if (uniqueVaryingNames.count(transformFeedbackVaryingName) == 0)
         {
             bool found = false;
-            for (unsigned int varyingIndex = 0; varyingIndex < vertexVaryings.size(); varyingIndex++)
+            for (PackedVarying &packedVarying : *packedVaryings)
             {
-                PackedVarying *packedVarying = &vertexVaryings[varyingIndex];
-                const sh::Varying &varying = *packedVarying->varying;
-                if (transformFeedbackVarying == varying.name)
+                const sh::Varying &varying = *packedVarying.varying;
+                if (transformFeedbackVaryingName == varying.name)
                 {
-                    if (!PackVarying(packedVarying, maxVaryingVectors, packing))
+                    if (!PackVarying(&packedVarying, maxVaryingVectors, packing))
                     {
                         infoLog << "Could not pack varying " << varying.name;
                         return -1;
@@ -306,8 +299,7 @@ int DynamicHLSL::packVaryings(InfoLog &infoLog,
 
             if (!found)
             {
-                infoLog << "Transform feedback varying "
-                        << transformFeedbackVarying
+                infoLog << "Transform feedback varying " << transformFeedbackVaryingName
                         << " does not exist in the vertex shader.";
                 return -1;
             }
@@ -328,12 +320,11 @@ int DynamicHLSL::packVaryings(InfoLog &infoLog,
     return registers;
 }
 
-std::string DynamicHLSL::generateVaryingHLSL(const ShaderD3D *shader) const
+std::string DynamicHLSL::generateVaryingHLSL(const std::vector<PackedVarying> &varyings,
+                                             bool shaderUsesPointSize) const
 {
-    std::string varyingSemantic = getVaryingSemantic(shader->mUsesPointSize);
+    std::string varyingSemantic = getVaryingSemantic(shaderUsesPointSize);
     std::string varyingHLSL;
-
-    const std::vector<PackedVarying> &varyings = shader->getPackedVaryings();
 
     for (const PackedVarying &packedVarying : varyings)
     {
@@ -735,12 +726,13 @@ void DynamicHLSL::storeBuiltinLinkedVaryings(const SemanticInfo &info,
     }
 }
 
-void DynamicHLSL::storeUserLinkedVaryings(const ShaderD3D *vertexShader,
+void DynamicHLSL::storeUserLinkedVaryings(const std::vector<PackedVarying> &packedVaryings,
+                                          bool shaderUsesPointSize,
                                           std::vector<LinkedVarying> *linkedVaryings) const
 {
-    const std::string &varyingSemantic = getVaryingSemantic(vertexShader->mUsesPointSize);
+    const std::string &varyingSemantic = getVaryingSemantic(shaderUsesPointSize);
 
-    for (const PackedVarying &packedVarying : vertexShader->getPackedVaryings())
+    for (const PackedVarying &packedVarying : packedVaryings)
     {
         if (packedVarying.registerAssigned())
         {
@@ -763,6 +755,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
                                          int registers,
                                          std::string &pixelHLSL,
                                          std::string &vertexHLSL,
+                                         const std::vector<PackedVarying> &packedVaryings,
                                          std::vector<LinkedVarying> *linkedVaryings,
                                          std::vector<PixelShaderOutputVariable> *outPixelShaderKey,
                                          bool *outUsesFragDepth) const
@@ -807,7 +800,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
         return false;
     }
 
-    const std::string &varyingHLSL = generateVaryingHLSL(vertexShader);
+    const std::string &varyingHLSL = generateVaryingHLSL(packedVaryings, usesPointSize);
 
     // Instanced PointSprite emulation requires that gl_PointCoord is present in the vertex shader VS_OUTPUT
     // structure to ensure compatibility with the generated PS_INPUT of the pixel shader.
@@ -820,7 +813,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
                                                           usesFragCoord, (useInstancedPointSpriteEmulation && usesPointCoord),
                                                           (!useInstancedPointSpriteEmulation && usesPointSize), false);
 
-    storeUserLinkedVaryings(vertexShader, linkedVaryings);
+    storeUserLinkedVaryings(packedVaryings, usesPointSize, linkedVaryings);
     storeBuiltinLinkedVaryings(vertexSemantics, linkedVaryings);
 
     // Instanced PointSprite emulation requires additional entries originally generated in the
@@ -881,8 +874,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
         vertexHLSL += "    output.gl_FragCoord = gl_Position;\n";
     }
 
-    const std::vector<PackedVarying> &vertexVaryings = vertexShader->getPackedVaryings();
-    for (const PackedVarying &packedVarying : vertexVaryings)
+    for (const PackedVarying &packedVarying : packedVaryings)
     {
         if (!packedVarying.registerAssigned())
         {
@@ -1051,8 +1043,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
         }
     }
 
-    const std::vector<PackedVarying> &fragmentVaryings = fragmentShader->getPackedVaryings();
-    for (const PackedVarying &packedVarying : fragmentVaryings)
+    for (const PackedVarying &packedVarying : packedVaryings)
     {
         const sh::Varying &varying = *packedVarying.varying;
 
@@ -1061,6 +1052,10 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
             ASSERT(varying.isBuiltIn() || !varying.staticUse);
             continue;
         }
+
+        // Don't reference VS-only transform feedback varyings in the PS.
+        if (packedVarying.vertexOnly)
+            continue;
 
         ASSERT(!varying.isBuiltIn());
         for (unsigned int elementIndex = 0; elementIndex < varying.elementCount(); elementIndex++)
@@ -1128,21 +1123,22 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
     return true;
 }
 
-std::string DynamicHLSL::generateGeometryShaderHLSL(int registers,
-                                                    const ShaderD3D *fragmentShader,
-                                                    const ShaderD3D *vertexShader) const
+std::string DynamicHLSL::generateGeometryShaderHLSL(
+    int registers,
+    const ShaderD3D *fragmentShader,
+    const std::vector<PackedVarying> &packedVaryings) const
 {
     // for now we only handle point sprite emulation
-    ASSERT(vertexShader->mUsesPointSize && mRenderer->getMajorShaderModel() >= 4);
-    return generatePointSpriteHLSL(registers, fragmentShader, vertexShader);
+    ASSERT(mRenderer->getMajorShaderModel() >= 4);
+    return generatePointSpriteHLSL(registers, fragmentShader, packedVaryings);
 }
 
-std::string DynamicHLSL::generatePointSpriteHLSL(int registers,
-                                                 const ShaderD3D *fragmentShader,
-                                                 const ShaderD3D *vertexShader) const
+std::string DynamicHLSL::generatePointSpriteHLSL(
+    int registers,
+    const ShaderD3D *fragmentShader,
+    const std::vector<PackedVarying> &packedVaryings) const
 {
     ASSERT(registers >= 0);
-    ASSERT(vertexShader->mUsesPointSize);
     ASSERT(mRenderer->getMajorShaderModel() >= 4);
 
     std::string geomHLSL;
@@ -1152,7 +1148,8 @@ std::string DynamicHLSL::generatePointSpriteHLSL(int registers,
     const SemanticInfo &outSemantics = getSemanticInfo(registers, true, fragmentShader->mUsesFragCoord,
                                                        fragmentShader->mUsesPointCoord, true, false);
 
-    std::string varyingHLSL = generateVaryingHLSL(vertexShader);
+    // If we're generating the geometry shader, we assume the vertex shader uses point size.
+    std::string varyingHLSL = generateVaryingHLSL(packedVaryings, true);
     std::string inLinkHLSL = generateVaryingLinkHLSL(inSemantics, varyingHLSL);
     std::string outLinkHLSL = generateVaryingLinkHLSL(outSemantics, varyingHLSL);
 

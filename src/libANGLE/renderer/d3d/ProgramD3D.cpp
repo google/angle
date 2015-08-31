@@ -127,37 +127,52 @@ struct AttributeSorter
     const ProgramD3D::SemanticIndexArray *originalIndices;
 };
 
-bool LinkVaryingRegisters(gl::InfoLog &infoLog,
-                          ShaderD3D *vertexShaderD3D,
-                          ShaderD3D *fragmentShaderD3D)
+std::vector<PackedVarying> MergeVaryings(const gl::Shader &vertexShader,
+                                         const gl::Shader &fragmentShader,
+                                         const std::vector<std::string> &tfVaryings)
 {
-    for (PackedVarying &input : fragmentShaderD3D->getPackedVaryings())
+    std::vector<PackedVarying> packedVaryings;
+
+    for (const sh::Varying &output : vertexShader.getVaryings())
     {
-        bool matched = false;
+        bool packed = false;
 
         // Built-in varyings obey special rules
-        if (input.varying->isBuiltIn())
+        if (output.isBuiltIn())
         {
             continue;
         }
 
-        for (PackedVarying &output : vertexShaderD3D->getPackedVaryings())
+        for (const sh::Varying &input : fragmentShader.getVaryings())
         {
-            if (output.varying->name == input.varying->name)
+            if (output.name == input.name)
             {
-                output.registerIndex = input.registerIndex;
-                output.columnIndex   = input.columnIndex;
-
-                matched = true;
+                packedVaryings.push_back(PackedVarying(input));
+                packed = true;
                 break;
             }
         }
 
-        // We permit unmatched, unreferenced varyings
-        ASSERT(matched || !input.varying->staticUse);
+        // Keep Transform FB varyings in the merged list always.
+        if (!packed)
+        {
+            for (const std::string &tfVarying : tfVaryings)
+            {
+                if (tfVarying == output.name)
+                {
+                    packedVaryings.push_back(PackedVarying(output));
+                    packedVaryings.back().vertexOnly = true;
+                    packed = true;
+                    break;
+                }
+            }
+        }
+
+        // We permit unreferenced varyings
+        ASSERT(packed || !output.staticUse);
     }
 
-    return true;
+    return packedVaryings;
 }
 
 }  // anonymous namespace
@@ -1048,9 +1063,10 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
     return gl::Error(GL_NO_ERROR);
 }
 
-LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, int registers)
+LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog,
+                                                 int registers,
+                                                 const std::vector<PackedVarying> &packedVaryings)
 {
-    const ShaderD3D *vertexShaderD3D   = GetImplAs<ShaderD3D>(mData.getAttachedVertexShader());
     const ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(mData.getAttachedFragmentShader());
 
     const gl::InputLayout &defaultInputLayout =
@@ -1072,7 +1088,8 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, int regis
 
     if (usesGeometryShader())
     {
-        std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(registers, fragmentShaderD3D, vertexShaderD3D);
+        std::string geometryHLSL =
+            mDynamicHLSL->generateGeometryShaderHLSL(registers, fragmentShaderD3D, packedVaryings);
 
         error = mRenderer->compileToExecutable(
             infoLog, geometryHLSL, SHADER_GEOMETRY, mTransformFeedbackLinkedVaryings,
@@ -1085,6 +1102,8 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, int regis
     }
 
 #if ANGLE_SHADER_DEBUG_INFO == ANGLE_ENABLED
+    const ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(mData.getAttachedVertexShader());
+
     if (usesGeometryShader() && mGeometryExecutable)
     {
         // Geometry shaders are currently only used internally, so there is no corresponding shader object at the interface level
@@ -1136,8 +1155,11 @@ LinkResult ProgramD3D::link(const gl::Data &data,
         }
     }
 
+    std::vector<PackedVarying> packedVaryings =
+        MergeVaryings(*vertexShader, *fragmentShader, mData.getTransformFeedbackVaryingNames());
+
     // Map the varyings to the register file
-    int registers = mDynamicHLSL->packVaryings(infoLog, fragmentShaderD3D, vertexShaderD3D,
+    int registers = mDynamicHLSL->packVaryings(infoLog, &packedVaryings,
                                                mData.getTransformFeedbackVaryingNames());
 
     if (registers < 0)
@@ -1145,12 +1167,10 @@ LinkResult ProgramD3D::link(const gl::Data &data,
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
-    LinkVaryingRegisters(infoLog, vertexShaderD3D, fragmentShaderD3D);
-
     std::vector<gl::LinkedVarying> linkedVaryings;
     if (!mDynamicHLSL->generateShaderLinkHLSL(data, mData, infoLog, registers, mPixelHLSL,
-                                              mVertexHLSL, &linkedVaryings, &mPixelShaderKey,
-                                              &mUsesFragDepth))
+                                              mVertexHLSL, packedVaryings, &linkedVaryings,
+                                              &mPixelShaderKey, &mUsesFragDepth))
     {
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
@@ -1168,7 +1188,7 @@ LinkResult ProgramD3D::link(const gl::Data &data,
 
     gatherTransformFeedbackVaryings(linkedVaryings);
 
-    LinkResult result = compileProgramExecutables(infoLog, registers);
+    LinkResult result = compileProgramExecutables(infoLog, registers, packedVaryings);
     if (result.error.isError() || !result.linkSuccess)
     {
         infoLog << "Failed to create D3D shaders.";

@@ -110,11 +110,6 @@ void ShaderD3D::parseVaryings(ShHandle compiler)
 
         mVaryings = *varyings;
 
-        for (size_t varyingIndex = 0; varyingIndex < varyings->size(); varyingIndex++)
-        {
-            mPackedVaryings.push_back(PackedVarying(mVaryings[varyingIndex]));
-        }
-
         mUsesMultipleRenderTargets   = mTranslatedSource.find("GL_USES_MRT")                          != std::string::npos;
         mUsesFragColor               = mTranslatedSource.find("GL_USES_FRAG_COLOR")                   != std::string::npos;
         mUsesFragData                = mTranslatedSource.find("GL_USES_FRAG_DATA")                    != std::string::npos;
@@ -128,14 +123,6 @@ void ShaderD3D::parseVaryings(ShHandle compiler)
         mUsesNestedBreak             = mTranslatedSource.find("ANGLE_USES_NESTED_BREAK")              != std::string::npos;
         mUsesDeferredInit            = mTranslatedSource.find("ANGLE_USES_DEFERRED_INIT")             != std::string::npos;
         mRequiresIEEEStrictCompiling = mTranslatedSource.find("ANGLE_REQUIRES_IEEE_STRICT_COMPILING") != std::string::npos;
-    }
-}
-
-void ShaderD3D::resetVaryingsRegisterAssignment()
-{
-    for (size_t varyingIndex = 0; varyingIndex < mVaryings.size(); varyingIndex++)
-    {
-        mPackedVaryings[varyingIndex].resetRegisterAssignment();
     }
 }
 
