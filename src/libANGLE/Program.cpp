@@ -1625,6 +1625,13 @@ bool Program::linkValidateTransformFeedback(InfoLog &infoLog,
             }
         }
 
+        // TODO(jmadill): investigate if we can support capturing array elements.
+        if (tfVaryingName.find('[') != std::string::npos)
+        {
+            infoLog << "Capture of array elements not currently supported.";
+            return false;
+        }
+
         // All transform feedback varyings are expected to exist since packVaryings checks for them.
         ASSERT(found);
         UNUSED_ASSERTION_VARIABLE(found);
