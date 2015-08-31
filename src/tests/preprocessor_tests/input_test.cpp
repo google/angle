@@ -5,8 +5,8 @@
 //
 
 #include "PreprocessorTest.h"
-#include "Input.h"
-#include "Token.h"
+#include "compiler/preprocessor/Input.h"
+#include "compiler/preprocessor/Token.h"
 
 class InitTest : public PreprocessorTest
 {

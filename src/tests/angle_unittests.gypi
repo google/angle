@@ -88,8 +88,6 @@
     [
         '<(angle_path)/include',
         '<(angle_path)/src',
-        '<(angle_path)/src/compiler/preprocessor',
-        '<(angle_path)/src/tests',
     ],
     'sources':
     [
