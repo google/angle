@@ -88,7 +88,8 @@ void VertexDataManager::hintUnmapAllResources(const std::vector<gl::VertexAttrib
     {
         gl::Buffer *buffer = translated->attribute->buffer.get();
         BufferD3D *storage = buffer ? GetImplAs<BufferD3D>(buffer) : nullptr;
-        StaticVertexBufferInterface *staticBuffer = storage ? storage->getStaticVertexBuffer() : nullptr;
+        StaticVertexBufferInterface *staticBuffer =
+            storage ? storage->getStaticVertexBuffer(*translated->attribute) : nullptr;
 
         if (staticBuffer)
         {
@@ -197,6 +198,22 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
         }
     }
 
+    // Commit all the static vertex buffers. This fixes them in size/contents, and forces ANGLE
+    // to use a new static buffer (or recreate the static buffers) next time
+    for (const TranslatedAttribute *activeAttrib : mActiveEnabledAttributes)
+    {
+        const gl::VertexAttribute &attrib = *activeAttrib->attribute;
+        gl::Buffer *buffer                = attrib.buffer.get();
+        BufferD3D *storage = buffer ? GetImplAs<BufferD3D>(buffer) : nullptr;
+        StaticVertexBufferInterface *staticBuffer =
+            storage ? storage->getStaticVertexBuffer(attrib) : nullptr;
+
+        if (staticBuffer)
+        {
+            staticBuffer->commit();
+        }
+    }
+
     // Hint to unmap all the resources
     hintUnmapAllResources(vertexAttributes);
 
@@ -223,14 +240,15 @@ void VertexDataManager::invalidateMatchingStaticData(const gl::VertexAttribute &
     if (buffer)
     {
         BufferD3D *bufferImpl = GetImplAs<BufferD3D>(buffer);
-        StaticVertexBufferInterface *staticBuffer = bufferImpl->getStaticVertexBuffer();
+        StaticVertexBufferInterface *staticBuffer = bufferImpl->getStaticVertexBuffer(attrib);
 
         if (staticBuffer &&
             staticBuffer->getBufferSize() > 0 &&
             !staticBuffer->lookupAttribute(attrib, NULL) &&
             !staticBuffer->directStoragePossible(attrib, currentValue.Type))
         {
-            bufferImpl->invalidateStaticData();
+            // This must be the default static vertex buffer, and we must invalidate it
+            bufferImpl->invalidateStaticData(false);
         }
     }
 }
@@ -242,7 +260,8 @@ gl::Error VertexDataManager::reserveSpaceForAttrib(const TranslatedAttribute &tr
     const gl::VertexAttribute &attrib = *translatedAttrib.attribute;
     gl::Buffer *buffer = attrib.buffer.get();
     BufferD3D *bufferImpl = buffer ? GetImplAs<BufferD3D>(buffer) : NULL;
-    StaticVertexBufferInterface *staticBuffer = bufferImpl ? bufferImpl->getStaticVertexBuffer() : NULL;
+    StaticVertexBufferInterface *staticBuffer =
+        bufferImpl ? bufferImpl->getStaticVertexBuffer(attrib) : NULL;
     VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
     if (!vertexBuffer->directStoragePossible(attrib, translatedAttrib.currentValueType))
@@ -291,7 +310,8 @@ gl::Error VertexDataManager::storeAttribute(TranslatedAttribute *translated,
     ASSERT(attrib.enabled);
 
     BufferD3D *storage = buffer ? GetImplAs<BufferD3D>(buffer) : NULL;
-    StaticVertexBufferInterface *staticBuffer = storage ? storage->getStaticVertexBuffer() : NULL;
+    StaticVertexBufferInterface *staticBuffer =
+        storage ? storage->getStaticVertexBuffer(attrib) : NULL;
     VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
     bool directStorage = vertexBuffer->directStoragePossible(attrib, translated->currentValueType);
 
