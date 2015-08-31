@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "8411b10b_dcb401ee",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-31T20:09:38Z",
+      "side": 1,
+      "message": "No problem.",
+      "parentUuid": "24b8053d_5f2c7798",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44b17956_5452a261",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 3
@@ -142,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "e426ed9b_e6069e29",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1504,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-31T20:09:38Z",
+      "side": 1,
+      "message": "Why do we put fragment uniforms in linkedUniforms given that linkedUniforms isn\u0027t used after this loop? If I understand correctly, linkedUniforms is really vertexUniforms and used to check that uniforms with matching names in the VS and the PS are the same.\n\nDisregard the second part of my comment, redundant uniforms should have been filtered by the compiler.\n\nBasically I\u0027m suggesting to remove the else branch as it adds no value.",
+      "parentUuid": "64659dc3_20688ee7",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a416b5fe_1742d6c4",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 3
@@ -177,6 +213,24 @@
     },
     {
       "key": {
+        "uuid": "24b8053d_3f6253ba",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2108,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-31T20:09:38Z",
+      "side": 1,
+      "message": "Thanks",
+      "parentUuid": "24b8053d_3fbed3aa",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4a18d0d_e2e82e2b",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 3
@@ -206,6 +260,24 @@
       "side": 1,
       "message": "Can you explain? I don\u0027t understand what you\u0027re asking.",
       "parentUuid": "e4a18d0d_e2e82e2b",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bb013c_9d937e2d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2111,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-31T20:09:38Z",
+      "side": 1,
+      "message": "I think that fragmentStaticUse is already set in defineUniformBlock, so this if could be removed.",
+      "parentUuid": "64659dc3_4065820e",
       "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -387,6 +459,24 @@
     },
     {
       "key": {
+        "uuid": "8411b10b_1c979953",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-31T20:09:38Z",
+      "side": 1,
+      "message": "Sure",
+      "parentUuid": "e426ed9b_e6b4deed",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "84a61126_b43ca6ee",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 3
@@ -468,6 +558,24 @@
       "side": 1,
       "message": "I think the proper call is VariableRegisterCount. I suggest we leave it as is for now as this is the current behaviour and I will fix in a follow-up patch.",
       "parentUuid": "8411b10b_59cbe395",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8411b10b_7ca4cdba",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-31T20:09:38Z",
+      "side": 1,
+      "message": "Sounds good",
+      "parentUuid": "64659dc3_806f9aec",
       "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
