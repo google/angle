@@ -228,11 +228,12 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
             TRACE("\n%s", hlsl.c_str());
             TRACE("\n%s", message.c_str());
 
-            if (message.find("error X3531:") != std::string::npos || // "can't unroll loops marked with loop attribute"
-                message.find("error X4014:") != std::string::npos)   // "cannot have gradient operations inside loops with divergent flow control",
-                                                                     // even though it is counter-intuitive to disable unrolling for this error,
-                                                                     // some very long shaders have trouble deciding which loops to unroll and
-                                                                     // turning off forced unrolls allows them to compile properly.
+            if ((message.find("error X3531:") != std::string::npos ||  // "can't unroll loops marked with loop attribute"
+                 message.find("error X4014:") != std::string::npos) && // "cannot have gradient operations inside loops with divergent flow control",
+                                                                       // even though it is counter-intuitive to disable unrolling for this error,
+                                                                       // some very long shaders have trouble deciding which loops to unroll and
+                                                                       // turning off forced unrolls allows them to compile properly.
+                macros != nullptr)
             {
                 macros = nullptr;   // Disable [loop] and [flatten]
 
