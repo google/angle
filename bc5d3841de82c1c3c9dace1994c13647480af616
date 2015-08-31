@@ -16,6 +16,24 @@
       "revId": "bc5d3841de82c1c3c9dace1994c13647480af616",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6433ddd7_aaaaaf89",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-08-31T16:55:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4a18d0d_5d52c761",
+      "revId": "bc5d3841de82c1c3c9dace1994c13647480af616",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
