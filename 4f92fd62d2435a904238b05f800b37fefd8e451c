@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8411b10b_dc10818e",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 877,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T17:43:54Z",
+      "side": 1,
+      "message": "Good catch. This is not covered by end2end_tests or dEQP that I saw. Added a test for this and it broke in this CL, will fix and update.",
+      "parentUuid": "e4a18d0d_7493602e",
+      "revId": "4f92fd62d2435a904238b05f800b37fefd8e451c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4a18d0d_14bbfcba",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 1
