@@ -23,7 +23,7 @@ Vector2::Vector2(float x, float y)
 float Vector2::length(const Vector2 &vec)
 {
     float lenSquared = lengthSquared(vec);
-    return (lenSquared != 0.0f) ? sqrt(lenSquared) : 0.0f;
+    return (lenSquared != 0.0f) ? sqrtf(lenSquared) : 0.0f;
 }
 
 float Vector2::lengthSquared(const Vector2 &vec)
@@ -62,7 +62,7 @@ Vector3::Vector3(float x, float y, float z)
 float Vector3::length(const Vector3 &vec)
 {
     float lenSquared = lengthSquared(vec);
-    return (lenSquared != 0.0f) ? sqrt(lenSquared) : 0.0f;
+    return (lenSquared != 0.0f) ? sqrtf(lenSquared) : 0.0f;
 }
 
 float Vector3::lengthSquared(const Vector3 &vec)
@@ -161,7 +161,7 @@ Vector4::Vector4(float x, float y, float z, float w)
 float Vector4::length(const Vector4 &vec)
 {
     float lenSquared = lengthSquared(vec);
-    return (lenSquared != 0.0f) ? sqrt(lenSquared) : 0.0f;
+    return (lenSquared != 0.0f) ? sqrtf(lenSquared) : 0.0f;
 }
 
 float Vector4::lengthSquared(const Vector4 &vec)
