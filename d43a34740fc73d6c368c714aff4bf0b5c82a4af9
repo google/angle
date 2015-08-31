@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "24b8053d_5f2c7798",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:21:13Z",
+      "side": 1,
+      "message": "Sure, can I leave it as is? I just refactored it to the opposite of your suggestion.",
+      "parentUuid": "4468999e_f9aad758",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44b17956_5452a261",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-08-27T19:06:38Z",
       "side": 1,
       "message": "The comment probably meant \"add to uniform list but not location\" as for now it conflicts with the code.",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84a61126_3a1ffd93",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:21:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44b17956_5452a261",
       "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "24b8053d_9fcedf59",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:21:13Z",
+      "side": 1,
+      "message": "Seems good. Done.",
+      "parentUuid": "24b8053d_d910878e",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44b17956_b7af90cb",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2015-08-27T19:06:38Z",
       "side": 1,
       "message": "What is the use of this? It seems it could allow a program to have the same uniform twice in the fragment shader, as the first occurrence would be put in vertexUniform above.",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64659dc3_20688ee7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1504,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:21:13Z",
+      "side": 1,
+      "message": "Can you explain? I don\u0027t quite follow your logic.",
+      "parentUuid": "44b17956_b7af90cb",
       "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "24b8053d_3fbed3aa",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:21:13Z",
+      "side": 1,
+      "message": "The spec says std140 and shared blocks are always \u0027active\u0027. Hence, only packed blocks are even allowed to be inactive and discarded by the linker. I added a comment.",
+      "parentUuid": "a416b5fe_1742d6c4",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4a18d0d_e2e82e2b",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 3
@@ -98,6 +188,24 @@
       "writtenOn": "2015-08-27T19:06:38Z",
       "side": 1,
       "message": "Aren\u0027t all blocks handled in defineUniformBlock?",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64659dc3_4065820e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:21:13Z",
+      "side": 1,
+      "message": "Can you explain? I don\u0027t understand what you\u0027re asking.",
+      "parentUuid": "e4a18d0d_e2e82e2b",
       "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "24b8053d_1fbb0fbb",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:21:13Z",
+      "side": 1,
+      "message": "Good catch, a remnant of a previous iteration. Done. (Don\u0027t think it could affect behaviour)",
+      "parentUuid": "e4a18d0d_4245c2cb",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "24b8053d_992f1fc3",
         "filename": "src/libANGLE/Uniform.cpp",
         "patchSetId": 3
@@ -132,6 +258,24 @@
       "writtenOn": "2015-08-27T19:06:38Z",
       "side": 1,
       "message": "FYI dataSize(dataSize) works as a name gets added to the scope only after it appears in the initializer list",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6433ddd7_8a840bee",
+        "filename": "src/libANGLE/Uniform.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:21:13Z",
+      "side": 1,
+      "message": "Yes, I don\u0027t think that\u0027s very good coding practice, to adopt shadowing.",
+      "parentUuid": "24b8053d_992f1fc3",
       "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "84a61126_1a1cc19b",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:21:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "84a61126_744b5e7f",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44b17956_97dd2c57",
         "filename": "src/libANGLE/Uniform.h",
         "patchSetId": 3
@@ -166,6 +328,24 @@
       "writtenOn": "2015-08-27T19:06:38Z",
       "side": 1,
       "message": "I think you did ;-)",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64659dc3_607286d7",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:21:13Z",
+      "side": 1,
+      "message": "Thanks, done.",
+      "parentUuid": "44b17956_97dd2c57",
       "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -189,6 +369,24 @@
     },
     {
       "key": {
+        "uuid": "e426ed9b_e6b4deed",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:21:13Z",
+      "side": 1,
+      "message": "Same reply, are you alright with me keeping it like this?",
+      "parentUuid": "64659dc3_9ab54d6d",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "84a61126_b43ca6ee",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 3
@@ -200,6 +398,24 @@
       "writtenOn": "2015-08-27T19:06:38Z",
       "side": 1,
       "message": "Just a thought, would [fieldName]*blockInfoOut \u003d foo work?",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8411b10b_3c6895e7",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:21:13Z",
+      "side": 1,
+      "message": "I honestly don\u0027t know.",
+      "parentUuid": "84a61126_b43ca6ee",
       "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -234,6 +450,24 @@
       "writtenOn": "2015-08-27T19:06:38Z",
       "side": 1,
       "message": "I think it would be column, unless d3d is different than OpenGL in that regard.",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64659dc3_806f9aec",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:21:13Z",
+      "side": 1,
+      "message": "I think the proper call is VariableRegisterCount. I suggest we leave it as is for now as this is the current behaviour and I will fix in a follow-up patch.",
+      "parentUuid": "8411b10b_59cbe395",
       "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
