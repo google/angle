@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a416b5fe_7a3fb13c",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-08-31T17:32:47Z",
+      "side": 1,
+      "message": "Even if it isn\u0027t specified, should we check that indices are in [start, end + 1]?",
+      "revId": "7348c6679835bf8010be7168c01e021bee26d2b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
