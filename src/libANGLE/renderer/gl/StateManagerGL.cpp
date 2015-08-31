@@ -571,7 +571,18 @@ void StateManagerGL::setDepthRange(float near, float far)
     {
         mNear = near;
         mFar = far;
-        mFunctions->depthRange(mNear, mFar);
+
+        // The glDepthRangef function isn't available until OpenGL 4.1.  Prefer it when it is
+        // available because OpenGL ES only works in floats.
+        if (mFunctions->depthRangef)
+        {
+            mFunctions->depthRangef(mNear, mFar);
+        }
+        else
+        {
+            ASSERT(mFunctions->depthRange);
+            mFunctions->depthRange(mNear, mFar);
+        }
 
         mLocalDirtyBits.set(gl::State::DIRTY_BIT_DEPTH_RANGE);
     }
@@ -973,7 +984,18 @@ void StateManagerGL::setClearDepth(float clearDepth)
     if (mClearDepth != clearDepth)
     {
         mClearDepth = clearDepth;
-        mFunctions->clearDepth(mClearDepth);
+
+        // The glClearDepthf function isn't available until OpenGL 4.1.  Prefer it when it is
+        // available because OpenGL ES only works in floats.
+        if (mFunctions->clearDepthf)
+        {
+            mFunctions->clearDepthf(mClearDepth);
+        }
+        else
+        {
+            ASSERT(mFunctions->clearDepth);
+            mFunctions->clearDepth(mClearDepth);
+        }
 
         mLocalDirtyBits.set(gl::State::DIRTY_BIT_CLEAR_DEPTH);
     }
