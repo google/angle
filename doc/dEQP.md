@@ -21,10 +21,10 @@ If you're running the full test suite, Debug can take a very long time. Running 
 
 By default Windows ANGLE tests with D3D11. To specify the exact platform for ANGLE + dEQP, use the arguments:
 
-  * `--deqp-egl-native-display-type=angle-d3d11` for D3D11 (high feature level)
-  * `--deqp-egl-native-display-type=angle-d3d9` for D3D9
-  * `--deqp-egl-native-display-type=angle-d3d11-fl93` for D3D11 Feature level 9_3
-  * `--deqp-egl-native-display-type=angle-gl` for OpenGL
+  * `--deqp-egl-display-type=angle-d3d11` for D3D11 (high feature level)
+  * `--deqp-egl-display-type=angle-d3d9` for D3D9
+  * `--deqp-egl-display-type=angle-d3d11-fl93` for D3D11 Feature level 9_3
+  * `--deqp-egl-display-type=angle-gl` for OpenGL
 
 ### Check your results
 
