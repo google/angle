@@ -2374,9 +2374,7 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
     }
 
     // D3D errors when there is a gradient operation in a loop in an unflattened if.
-    if (mShaderType == GL_FRAGMENT_SHADER &&
-        mCurrentFunctionMetadata->hasDiscontinuousLoop(node) &&
-        mCurrentFunctionMetadata->hasGradientInCallGraph(node))
+    if (mShaderType == GL_FRAGMENT_SHADER && mCurrentFunctionMetadata->hasGradientLoop(node))
     {
         out << "FLATTEN ";
     }
