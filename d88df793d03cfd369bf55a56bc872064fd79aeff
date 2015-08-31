@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24b8053d_df8347e1",
+        "filename": "src/libANGLE/renderer/d3d/EGLImageD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:53:23Z",
+      "side": 1,
+      "message": "should be caps",
+      "range": {
+        "startLine": 25,
+        "startChar": 22,
+        "endLine": 25,
+        "endChar": 35
+      },
+      "revId": "d88df793d03cfd369bf55a56bc872064fd79aeff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24b8053d_5f90f71f",
+        "filename": "src/libANGLE/renderer/d3d/EGLImageD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-08-31T19:53:23Z",
+      "side": 1,
+      "message": "getAttachmentRenderTarget, FramebufferAttachmentObjectImpl. Feel free to rename this class to whatever makes sense.",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 8
+      },
+      "revId": "d88df793d03cfd369bf55a56bc872064fd79aeff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
