@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c439ea02_00696604",
+        "filename": "src/common/BitSetIterator_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-01T19:17:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64a91e5e_c5447a3c",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 71
+      },
+      "revId": "9e74b51fd9720ce2ef4e9dcabdef0284db3fc8e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04306211_02120a8e",
         "filename": "src/common/BitSetIterator_unittest.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-01T19:11:49Z",
       "side": 1,
       "message": "nit: EXPECT_FALSE",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 13
+      },
+      "revId": "9e74b51fd9720ce2ef4e9dcabdef0284db3fc8e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24a3a681_c317967f",
+        "filename": "src/common/BitSetIterator_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-01T19:17:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04306211_02120a8e",
       "range": {
         "startLine": 60,
         "startChar": 4,
