@@ -58,13 +58,13 @@ gl::Error ProgramGL::save(gl::BinaryOutputStream *stream)
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog)
+LinkResult ProgramGL::link(const gl::Data &data,
+                           gl::InfoLog &infoLog,
+                           gl::Shader *fragmentShader,
+                           gl::Shader *vertexShader)
 {
     // Reset the program state, delete the current program if one exists
     reset();
-
-    const gl::Shader *vertexShader   = mData.getAttachedVertexShader();
-    const gl::Shader *fragmentShader = mData.getAttachedFragmentShader();
 
     const ShaderGL *vertexShaderGL   = GetImplAs<ShaderGL>(vertexShader);
     const ShaderGL *fragmentShaderGL = GetImplAs<ShaderGL>(fragmentShader);

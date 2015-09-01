@@ -37,7 +37,11 @@ class ProgramGL : public ProgramImpl
     LinkResult load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream) override;
     gl::Error save(gl::BinaryOutputStream *stream) override;
 
-    LinkResult link(const gl::Data &data, gl::InfoLog &infoLog) override;
+    LinkResult link(const gl::Data &data,
+                    gl::InfoLog &infoLog,
+                    gl::Shader *fragmentShader,
+                    gl::Shader *vertexShader) override;
+
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;
