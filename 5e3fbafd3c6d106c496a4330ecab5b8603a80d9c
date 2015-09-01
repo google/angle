@@ -16,6 +16,24 @@
       "revId": "5e3fbafd3c6d106c496a4330ecab5b8603a80d9c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bb02a1_ca200364",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-01T20:13:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c439ea02_60315220",
+      "revId": "5e3fbafd3c6d106c496a4330ecab5b8603a80d9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
