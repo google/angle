@@ -185,14 +185,14 @@
 1019 LINUX : dEQP-GLES2.functional.texture.size.cube.512x512_rgba4444 = FAIL
 
 // Failures on the Linux dEQP bot that do not appear on the workstation
-1143 LINUX dEQP-GLES2.functional.shaders.random.all_features.vertex.13 = FAIL
-1143 LINUX dEQP-GLES2.functional.shaders.invariance.mediump.common_subexpression_1 = FAIL
-1143 LINUX dEQP-GLES2.functional.shaders.invariance.highp.common_subexpression_1 = FAIL
-1143 LINUX dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
-1143 LINUX dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.basic_array.sampler2D_fragment = FAIL
-1143 LINUX dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.basic_array.sampler2D_both = FAIL
-1143 LINUX dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.array_in_struct.sampler2D_samplerCube_fragment = FAIL
-1143 LINUX dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.array_in_struct.sampler2D_samplerCube_both = FAIL
+1143 LINUX : dEQP-GLES2.functional.shaders.random.all_features.vertex.13 = FAIL
+1143 LINUX : dEQP-GLES2.functional.shaders.invariance.mediump.common_subexpression_1 = FAIL
+1143 LINUX : dEQP-GLES2.functional.shaders.invariance.highp.common_subexpression_1 = FAIL
+1143 LINUX : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
+1143 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.basic_array.sampler2D_fragment = FAIL
+1143 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.basic_array.sampler2D_both = FAIL
+1143 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.array_in_struct.sampler2D_samplerCube_fragment = FAIL
+1143 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.array_in_struct.sampler2D_samplerCube_both = FAIL
 
 // Windows and Linux failures
 
