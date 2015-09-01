@@ -265,7 +265,7 @@ gl::Error VertexDataManager::reserveSpaceForAttrib(const TranslatedAttribute &tr
             size_t totalCount = ComputeVertexAttributeElementCount(attrib, count, instances);
             ASSERT(!bufferImpl ||
                    ElementsInBuffer(attrib, static_cast<unsigned int>(bufferImpl->getSize())) >=
-                       totalCount);
+                       static_cast<int>(totalCount));
 
             gl::Error error = mStreamingBuffer->reserveVertexSpace(
                 attrib, static_cast<GLsizei>(totalCount), instances);
