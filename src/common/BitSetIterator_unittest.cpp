@@ -49,11 +49,15 @@ TEST_F(BitSetIteratorTest, Iterator)
 // Test an empty iterator.
 TEST_F(BitSetIteratorTest, EmptySet)
 {
+    // We don't use the FAIL gtest macro here since it returns immediately,
+    // causing an unreachable code warning in MSVS
+    bool sawBit = false;
     for (unsigned long bit : IterateBitSet(mStateBits))
     {
+        sawBit = true;
         UNUSED_TRACE_VARIABLE(bit);
-        FAIL() << "Should not be reached";
     }
+    EXPECT_FALSE(sawBit);
 }
 
 // Test iterating a result of combining two bitsets.
