@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64a91e5e_c5447a3c",
+        "filename": "src/common/BitSetIterator_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-01T19:04:08Z",
+      "side": 1,
+      "message": "how about: \"since it returns immediately, causing an unreachable code warning in MSVS\"",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 71
+      },
+      "revId": "9e74b51fd9720ce2ef4e9dcabdef0284db3fc8e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
