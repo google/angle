@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24a3a681_235a2a6b",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1449,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-01T19:47:58Z",
+      "side": 1,
+      "message": "clang-format fail :(",
+      "range": {
+        "startLine": 1449,
+        "startChar": 12,
+        "endLine": 1449,
+        "endChar": 15
+      },
+      "revId": "6cb70683e0d79b9d7406b9201020a440006cb088",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
