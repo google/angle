@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4b796b4_0764d6e6",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-01T20:53:50Z",
+      "side": 1,
+      "message": "nit: I think you should add the word simultaneous in there as it\u0027s pretty key, even if it makes it quite long.",
+      "range": {
+        "startLine": 258,
+        "startChar": 9,
+        "endLine": 258,
+        "endChar": 41
+      },
+      "revId": "43740bf4b54ca9e2f9f51a034ba2ca33e75a2fcc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
