@@ -51,9 +51,14 @@ GLsizei GetSamplesCount(D3DMULTISAMPLE_TYPE type);
 
 bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format);
 
-void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceType, UINT adapter, gl::Caps *caps,
-                  gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions);
-
+void GenerateCaps(IDirect3D9 *d3d9,
+                  IDirect3DDevice9 *device,
+                  D3DDEVTYPE deviceType,
+                  UINT adapter,
+                  gl::Caps *caps,
+                  gl::TextureCapsMap *textureCapsMap,
+                  gl::Extensions *extensions,
+                  gl::Limitations *limitations);
 }
 
 namespace d3d9

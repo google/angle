@@ -99,6 +99,10 @@
 1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_luminance = FAIL
 1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_luminance_alpha = FAIL
 1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_rgb = FAIL
+1025 WIN : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_depth_funcs.stencil_* = FAIL
+1025 WIN : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_ops.* = FAIL
+1025 WIN : dEQP-GLES2.functional.fragment_ops.depth_stencil.write_mask.* = FAIL
+1025 WIN : dEQP-GLES2.functional.fragment_ops.depth_stencil.random.* = FAIL
 504 WIN : dEQP-GLES2.functional.uniform_api.info_query.basic_struct.sampler2D_samplerCube_* = FAIL
 504 WIN : dEQP-GLES2.functional.uniform_api.info_query.struct_in_array.sampler2D_samplerCube_* = FAIL
 504 WIN : dEQP-GLES2.functional.uniform_api.info_query.array_in_struct.sampler2D_samplerCube_* = FAIL
@@ -224,10 +228,6 @@
 1016 WIN LINUX : dEQP-GLES2.functional.shaders.scoping.invalid.redeclare_function_fragment = FAIL
 1020 WIN LINUX : dEQP-GLES2.functional.texture.mipmap.2d.projected.* = FAIL
 1020 WIN LINUX : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
-1025 WIN LINUX : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_depth_funcs.stencil_* = FAIL
-1025 WIN LINUX : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_ops.* = FAIL
-1025 WIN LINUX : dEQP-GLES2.functional.fragment_ops.depth_stencil.write_mask.* = FAIL
-1025 WIN LINUX : dEQP-GLES2.functional.fragment_ops.depth_stencil.random.* = FAIL
 1025 WIN LINUX : dEQP-GLES2.functional.fragment_ops.blend.equation_src_func_dst_func.add_constant_color_constant_alpha = FAIL
 1025 WIN LINUX : dEQP-GLES2.functional.fragment_ops.blend.equation_src_func_dst_func.add_constant_color_one_minus_constant_alpha = FAIL
 1025 WIN LINUX : dEQP-GLES2.functional.fragment_ops.blend.equation_src_func_dst_func.add_one_minus_constant_color_constant_alpha = FAIL

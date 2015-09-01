@@ -1181,6 +1181,10 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     limitations->shadersRequireIndexedLoopValidation =
         (renderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3);
 
+    // D3D11 has no concept of separate masks and refs for front and back faces in the depth stencil
+    // state.
+    limitations->noSeparateStencilRefsAndMasks = true;
+
 #ifdef ANGLE_ENABLE_WINDOWS_STORE
     // Setting a non-zero divisor on attribute zero doesn't work on certain Windows Phone 8-era devices.
     // We should prevent developers from doing this on ALL Windows Store devices. This will maintain consistency across all Windows devices.

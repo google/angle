@@ -334,8 +334,14 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, IDirect3
     return textureCaps;
 }
 
-void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceType, UINT adapter, gl::Caps *caps,
-                  gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions)
+void GenerateCaps(IDirect3D9 *d3d9,
+                  IDirect3DDevice9 *device,
+                  D3DDEVTYPE deviceType,
+                  UINT adapter,
+                  gl::Caps *caps,
+                  gl::TextureCapsMap *textureCapsMap,
+                  gl::Extensions *extensions,
+                  gl::Limitations *limitations)
 {
     D3DCAPS9 deviceCaps;
     if (FAILED(d3d9->GetDeviceCaps(adapter, deviceType, &deviceCaps)))
@@ -557,6 +563,10 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
     extensions->discardFramebuffer = false; // It would be valid to set this to true, since glDiscardFramebufferEXT is just a hint
     extensions->colorBufferFloat = false;
     extensions->debugMarker = true;
+
+    // D3D9 has no concept of separate masks and refs for front and back faces in the depth stencil
+    // state.
+    limitations->noSeparateStencilRefsAndMasks = true;
 }
 
 }

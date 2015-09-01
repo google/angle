@@ -247,7 +247,8 @@ struct Limitations
     // In glVertexAttribDivisorANGLE, attribute zero must have a zero divisor
     bool attributeZeroRequiresZeroDivisorInEXT;
 
-    // TODO: add entry for renderers that don't support separate stencil masks/refs
+    // Unable to support different values for front and back faces for stencil refs and masks
+    bool noSeparateStencilRefsAndMasks;
 
     // Renderer doesn't support non-constant indexing loops in fragment shader
     bool shadersRequireIndexedLoopValidation;

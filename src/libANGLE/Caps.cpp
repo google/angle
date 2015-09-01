@@ -205,6 +205,7 @@ Limitations::Limitations()
     : noFrontFacingSupport(false),
       noSampleAlphaToCoverageSupport(false),
       attributeZeroRequiresZeroDivisorInEXT(false),
+      noSeparateStencilRefsAndMasks(false),
       shadersRequireIndexedLoopValidation(false)
 {
 }

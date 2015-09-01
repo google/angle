@@ -1437,17 +1437,21 @@ static bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count, GLsiz
         return false;
     }
 
-    const gl::DepthStencilState &depthStencilState = state.getDepthStencilState();
-    if (depthStencilState.stencilWritemask != depthStencilState.stencilBackWritemask ||
-        state.getStencilRef() != state.getStencilBackRef() ||
-        depthStencilState.stencilMask != depthStencilState.stencilBackMask)
+    if (context->getLimitations().noSeparateStencilRefsAndMasks)
     {
-        // Note: these separate values are not supported in WebGL, due to D3D's limitations.
-        // See Section 6.10 of the WebGL 1.0 spec
-        ERR("This ANGLE implementation does not support separate front/back stencil "
-            "writemasks, reference values, or stencil mask values.");
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
+        const gl::DepthStencilState &depthStencilState = state.getDepthStencilState();
+        if (depthStencilState.stencilWritemask != depthStencilState.stencilBackWritemask ||
+            state.getStencilRef() != state.getStencilBackRef() ||
+            depthStencilState.stencilMask != depthStencilState.stencilBackMask)
+        {
+            // Note: these separate values are not supported in WebGL, due to D3D's limitations. See
+            // Section 6.10 of the WebGL 1.0 spec
+            ERR(
+                "This ANGLE implementation does not support separate front/back stencil "
+                "writemasks, reference values, or stencil mask values.");
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return false;
+        }
     }
 
     const gl::Framebuffer *fbo = state.getDrawFramebuffer();
