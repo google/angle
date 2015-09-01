@@ -164,6 +164,14 @@ TEST_P(CopyTexImageTest, RGBAToL)
 
 TEST_P(CopyTexImageTest, RGBToL)
 {
+    // TODO (geofflang): Figure out why CopyTex[Sub]Image doesn't work with
+    // RGB->L on older Intel chips
+    if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    {
+        std::cout << "Test skipped on Intel OpenGL." << std::endl;
+        return;
+    }
+
     GLfloat color[] = {
         0.25f, 1.0f, 0.75f, 0.5f,
     };
@@ -259,6 +267,14 @@ TEST_P(CopyTexImageTest, SubImageRGBAToLA)
 
 TEST_P(CopyTexImageTest, SubImageRGBToL)
 {
+    // TODO (geofflang): Figure out why CopyTex[Sub]Image doesn't work with
+    // RGB->L on older Intel chips
+    if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    {
+        std::cout << "Test skipped on Intel OpenGL." << std::endl;
+        return;
+    }
+
     GLfloat color0[] = {
         0.25f, 1.0f, 0.75f, 0.5f,
     };
