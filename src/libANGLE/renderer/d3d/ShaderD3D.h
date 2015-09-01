@@ -20,6 +20,24 @@ namespace rx
 class DynamicHLSL;
 class RendererD3D;
 
+struct PackedVarying
+{
+    PackedVarying(const sh::Varying &varyingIn)
+        : varying(&varyingIn), registerIndex(GL_INVALID_INDEX), columnIndex(0)
+    {
+    }
+
+    bool registerAssigned() const { return registerIndex != GL_INVALID_INDEX; }
+
+    void resetRegisterAssignment() { registerIndex = GL_INVALID_INDEX; }
+
+    const sh::Varying *varying;
+
+    // TODO(jmadill): Make these D3D-only or otherwise clearly separate from GL.
+    unsigned int registerIndex;  // Assigned during link
+    unsigned int columnIndex;    // Assigned during link, defaults to 0
+};
+
 class ShaderD3D : public ShaderImpl
 {
     friend class DynamicHLSL;
@@ -33,6 +51,7 @@ class ShaderD3D : public ShaderImpl
 
     // D3D-specific methods
     virtual void uncompile();
+    void resetVaryingsRegisterAssignment();
     unsigned int getUniformRegister(const std::string &uniformName) const;
     unsigned int getInterfaceBlockRegister(const std::string &blockName) const;
     void appendDebugInfo(const std::string &info) { mDebugInfo += info; }
@@ -48,6 +67,11 @@ class ShaderD3D : public ShaderImpl
     ShShaderOutput getCompilerOutputType() const;
 
     virtual bool compile(gl::Compiler *compiler, const std::string &source);
+
+    const std::vector<PackedVarying> &getPackedVaryings() const { return mPackedVaryings; }
+
+    // TODO(jmadill): remove this
+    std::vector<PackedVarying> &getPackedVaryings() { return mPackedVaryings; }
 
   private:
     void compileToHLSL(ShHandle compiler, const std::string &source);
@@ -76,6 +100,7 @@ class ShaderD3D : public ShaderImpl
     std::map<std::string, unsigned int> mUniformRegisterMap;
     std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;
     RendererD3D *mRenderer;
+    std::vector<PackedVarying> mPackedVaryings;
 };
 
 }

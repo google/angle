@@ -69,11 +69,7 @@ GLuint CompileShaderFromFile(GLenum type, const std::string &sourcePath)
     return CompileShader(type, source);
 }
 
-GLuint CompileProgramWithTransformFeedback(
-    const std::string &vsSource,
-    const std::string &fsSource,
-    const std::vector<std::string> &transformFeedbackVaryings,
-    GLenum bufferMode)
+GLuint CompileProgram(const std::string &vsSource, const std::string &fsSource)
 {
     GLuint program = glCreateProgram();
 
@@ -93,19 +89,6 @@ GLuint CompileProgramWithTransformFeedback(
 
     glAttachShader(program, fs);
     glDeleteShader(fs);
-
-    if (transformFeedbackVaryings.size() > 0)
-    {
-        std::vector<const char *> constCharTFVaryings;
-
-        for (const std::string &transformFeedbackVarying : transformFeedbackVaryings)
-        {
-            constCharTFVaryings.push_back(transformFeedbackVarying.c_str());
-        }
-
-        glTransformFeedbackVaryings(program, static_cast<GLsizei>(transformFeedbackVaryings.size()),
-                                    &constCharTFVaryings[0], bufferMode);
-    }
 
     glLinkProgram(program);
 
@@ -127,12 +110,6 @@ GLuint CompileProgramWithTransformFeedback(
     }
 
     return program;
-}
-
-GLuint CompileProgram(const std::string &vsSource, const std::string &fsSource)
-{
-    std::vector<std::string> emptyVector;
-    return CompileProgramWithTransformFeedback(vsSource, fsSource, emptyVector, GL_NONE);
 }
 
 GLuint CompileProgramFromFiles(const std::string &vsPath, const std::string &fsPath)

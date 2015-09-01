@@ -207,9 +207,7 @@ class ProgramD3D : public ProgramImpl
                                    sh::BlockLayoutEncoder *encoder, std::vector<unsigned int> *blockUniformIndexes,
                                    bool inRowMajorLayout);
 
-    LinkResult compileProgramExecutables(gl::InfoLog &infoLog,
-                                         int registers,
-                                         const std::vector<PackedVarying> &packedVaryings);
+    LinkResult compileProgramExecutables(gl::InfoLog &infoLog, int registers);
 
     void gatherTransformFeedbackVaryings(const std::vector<gl::LinkedVarying> &varyings);
 
