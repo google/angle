@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e426ed9b_a6a0267d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-01T00:14:10Z",
+      "side": 1,
+      "message": "BUG\u003dangleproject:929",
+      "revId": "9fc540287e6fd08d8d2adc59d297bedb002b5a51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
