@@ -1,0 +1,39 @@
+# Copyright 2015 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//testing/test.gni")
+import("//third_party/angle/build/angle_common.gni")
+
+unittests_gypi = exec_script(
+  "//build/gypi_to_gn.py",
+  [ rebase_path("angle_unittests.gypi"), "--replace=<(angle_path)=." ],
+  "scope",
+  [ "angle_unittests.gypi" ])
+
+test("angle_unittests") {
+  include_dirs = [
+    "testing/gtest/include",
+    "../../src",
+  ]
+
+  sources = rebase_path(unittests_gypi.angle_unittests_sources, ".", "../..")
+
+  if (angle_enable_hlsl) {
+    sources += rebase_path(unittests_gypi.angle_unittests_hlsl_sources, ".", "../..")
+  }
+
+  sources += [
+    "//gpu/angle_unittest_main.cc",
+  ]
+
+  deps = [
+    "//base",
+    "//base/test:test_support",
+    "//testing/gmock",
+    "//testing/gtest",
+    "//third_party/angle:libANGLE",
+    "//third_party/angle:preprocessor",
+    "//third_party/angle:translator_static",
+  ]
+}

@@ -12,7 +12,6 @@
 {
     'variables':
     {
-        # This file list will be shared with the GN build.
         'angle_unittests_sources':
         [
             '<(angle_path)/src/common/BitSetIterator_unittest.cpp',
@@ -76,7 +75,13 @@
             '<(angle_path)/src/tests/test_utils/compiler_test.cpp',
             '<(angle_path)/src/tests/test_utils/compiler_test.h',
         ],
+        'angle_unittests_hlsl_sources':
+        [
+            '<(angle_path)/src/tests/compiler_tests/UnrollFlatten_test.cpp',
+        ],
     },
+    # Everything below this but the WinRT configuration is duplicated in the GN build.
+    # If you change anything also change angle/BUILD.gn
     'dependencies':
     [
         '<(angle_path)/src/angle.gyp:libANGLE',
@@ -122,7 +127,7 @@
             # TODO(cwallez): make this angle_enable_hlsl instead (requires gyp file refactoring)
             'sources':
             [
-                '<(angle_path)/src/tests/compiler_tests/UnrollFlatten_test.cpp',
+                '<@(angle_unittests_hlsl_sources)',
             ],
         }],
     ],

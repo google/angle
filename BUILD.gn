@@ -1,9 +1,10 @@
-# Copyright 2014 The Chromium Authors. All rights reserved.
+# Copyright 2014-2015 The Chromium Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
 # import the use_x11 variable
 import("//build/config/ui.gni")
+import("//third_party/angle/build/angle_common.gni")
 
 angle_git_is_present = exec_script("src/commit_id.py",
                                    [
@@ -42,30 +43,11 @@ config("internal_config") {
   ]
 }
 
-angle_enable_d3d9 = false
-angle_enable_d3d11 = false
-angle_enable_gl = false
-
 if (is_win) {
-  angle_enable_d3d9 = true
-  angle_enable_d3d11 = true
-  angle_enable_gl = true
-
-  import("//build/config/win/visual_studio_version.gni")
   copy("copy_compiler_dll") {
     sources = [ "$windows_sdk_path/Redist/D3D/$target_cpu/d3dcompiler_47.dll" ]
     outputs = [ "$root_build_dir/d3dcompiler_47.dll" ]
   }
-} # is_win
-
-if (is_linux) {
-  angle_enable_gl = true
-}
-
-angle_enable_hlsl = false
-
-if (angle_enable_d3d9 || angle_enable_d3d11) {
-  angle_enable_hlsl = true
 }
 
 component("translator") {
