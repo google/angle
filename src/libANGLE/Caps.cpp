@@ -206,7 +206,8 @@ Limitations::Limitations()
       noSampleAlphaToCoverageSupport(false),
       attributeZeroRequiresZeroDivisorInEXT(false),
       noSeparateStencilRefsAndMasks(false),
-      shadersRequireIndexedLoopValidation(false)
+      shadersRequireIndexedLoopValidation(false),
+      noSimultaneousConstantColorAndAlphaBlendFunc(false)
 {
 }
 

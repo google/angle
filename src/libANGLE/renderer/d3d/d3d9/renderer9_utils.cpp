@@ -572,6 +572,9 @@ void GenerateCaps(IDirect3D9 *d3d9,
     // index/loop limitations are necessary. Workarounds that are needed to
     // support dynamic indexing of vectors on HLSL also don't work on D3D9.
     limitations->shadersRequireIndexedLoopValidation = true;
+
+    // D3D9 cannot support constant color and alpha blend funcs together
+    limitations->noSimultaneousConstantColorAndAlphaBlendFunc = true;
 }
 
 }
