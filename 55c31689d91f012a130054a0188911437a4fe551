@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "84a61126_fa1bb52e",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-01T14:09:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64ae7dfb_46aaf209",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 16
+      },
+      "revId": "55c31689d91f012a130054a0188911437a4fe551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64659dc3_20516e2f",
         "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-08-31T19:42:55Z",
       "side": 1,
       "message": "How about: \"Pulls metadata on discontinous loops and \u0027gradient loops\u0027 (loops whose call graph contains a gradient instruction)\"",
+      "range": {
+        "startLine": 144,
+        "startChar": 18,
+        "endLine": 145,
+        "endChar": 51
+      },
+      "revId": "55c31689d91f012a130054a0188911437a4fe551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8411b10b_dce7e1a0",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-01T14:09:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64659dc3_20516e2f",
       "range": {
         "startLine": 144,
         "startChar": 18,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "84a61126_da20795c",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-01T14:09:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a416b5fe_7aca11b4",
+      "range": {
+        "startLine": 167,
+        "startChar": 4,
+        "endLine": 168,
+        "endChar": 61
+      },
+      "revId": "55c31689d91f012a130054a0188911437a4fe551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "24b8053d_5fb757bc",
         "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2015-08-31T19:42:55Z",
       "side": 1,
       "message": "might as well just adopt \u0027gradient loop\u0027 as a term you use everywhere.",
+      "range": {
+        "startLine": 427,
+        "startChar": 37,
+        "endLine": 427,
+        "endChar": 63
+      },
+      "revId": "55c31689d91f012a130054a0188911437a4fe551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e426ed9b_660d4ef0",
+        "filename": "src/compiler/translator/ASTMetadataHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-01T14:09:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "24b8053d_5fb757bc",
       "range": {
         "startLine": 427,
         "startChar": 37,
