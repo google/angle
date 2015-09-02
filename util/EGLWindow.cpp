@@ -69,11 +69,14 @@ bool operator==(const EGLPlatformParameters &a, const EGLPlatformParameters &b)
            (a.deviceType == b.deviceType);
 }
 
-EGLWindow::EGLWindow(EGLint glesMajorVersion, const EGLPlatformParameters &platform)
+EGLWindow::EGLWindow(EGLint glesMajorVersion,
+                     EGLint glesMinorVersion,
+                     const EGLPlatformParameters &platform)
     : mDisplay(EGL_NO_DISPLAY),
       mSurface(EGL_NO_SURFACE),
       mContext(EGL_NO_CONTEXT),
-      mClientVersion(glesMajorVersion),
+      mClientMajorVersion(glesMajorVersion),
+      mClientMinorVersion(glesMinorVersion),
       mPlatform(platform),
       mRedBits(-1),
       mGreenBits(-1),
@@ -153,6 +156,16 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
         return false;
     }
 
+    const char *displayExtensions = eglQueryString(mDisplay, EGL_EXTENSIONS);
+
+    // EGL_KHR_create_context is required to request a non-ES2 context.
+    bool hasKHRCreateContext = strstr(displayExtensions, "EGL_KHR_create_context") != nullptr;
+    if (majorVersion != 2 && minorVersion != 0 && !hasKHRCreateContext)
+    {
+        destroyGL();
+        return false;
+    }
+
     eglBindAPI(EGL_OPENGL_ES_API);
     if (eglGetError() != EGL_SUCCESS)
     {
@@ -187,7 +200,7 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
     eglGetConfigAttrib(mDisplay, mConfig, EGL_STENCIL_SIZE, &mStencilBits);
 
     std::vector<EGLint> surfaceAttributes;
-    if (strstr(eglQueryString(mDisplay, EGL_EXTENSIONS), "EGL_NV_post_sub_buffer") != nullptr)
+    if (strstr(displayExtensions, "EGL_NV_post_sub_buffer") != nullptr)
     {
         surfaceAttributes.push_back(EGL_POST_SUB_BUFFER_SUPPORTED_NV);
         surfaceAttributes.push_back(EGL_TRUE);
@@ -203,13 +216,18 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
     }
     ASSERT(mSurface != EGL_NO_SURFACE);
 
-    EGLint contextAttibutes[] =
+    std::vector<EGLint> contextAttributes;
+    if (hasKHRCreateContext)
     {
-        EGL_CONTEXT_CLIENT_VERSION, mClientVersion,
-        EGL_NONE
-    };
+        contextAttributes.push_back(EGL_CONTEXT_MAJOR_VERSION_KHR);
+        contextAttributes.push_back(mClientMajorVersion);
 
-    mContext = eglCreateContext(mDisplay, mConfig, NULL, contextAttibutes);
+        contextAttributes.push_back(EGL_CONTEXT_MINOR_VERSION_KHR);
+        contextAttributes.push_back(mClientMinorVersion);
+    }
+    contextAttributes.push_back(EGL_NONE);
+
+    mContext = eglCreateContext(mDisplay, mConfig, nullptr, &contextAttributes[0]);
     if (eglGetError() != EGL_SUCCESS)
     {
         destroyGL();

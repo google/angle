@@ -50,11 +50,12 @@ bool operator==(const EGLPlatformParameters &a, const EGLPlatformParameters &b);
 class EGLWindow : angle::NonCopyable
 {
   public:
-    EGLWindow(EGLint glesMajorVersion, const EGLPlatformParameters &platform);
+    EGLWindow(EGLint glesMajorVersion,
+              EGLint glesMinorVersion,
+              const EGLPlatformParameters &platform);
 
     ~EGLWindow();
 
-    void setClientVersion(EGLint glesMajorVersion) { mClientVersion = glesMajorVersion; }
     void setConfigRedBits(int bits) { mRedBits = bits; }
     void setConfigGreenBits(int bits) { mGreenBits = bits; }
     void setConfigBlueBits(int bits) { mBlueBits = bits; }
@@ -68,7 +69,8 @@ class EGLWindow : angle::NonCopyable
 
     void swap();
 
-    EGLint getClientVersion() const { return mClientVersion; }
+    EGLint getClientMajorVersion() const { return mClientMajorVersion; }
+    EGLint getClientMinorVersion() const { return mClientMinorVersion; }
     const EGLPlatformParameters &getPlatform() const { return mPlatform; }
     EGLConfig getConfig() const;
     EGLDisplay getDisplay() const;
@@ -93,7 +95,8 @@ class EGLWindow : angle::NonCopyable
     EGLSurface mSurface;
     EGLContext mContext;
 
-    EGLint mClientVersion;
+    EGLint mClientMajorVersion;
+    EGLint mClientMinorVersion;
     EGLPlatformParameters mPlatform;
     int mRedBits;
     int mGreenBits;

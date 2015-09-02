@@ -119,7 +119,7 @@ const FunctionsGL *DisplayCGL::getFunctionsGL() const
 
 void DisplayCGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
-    UNIMPLEMENTED();
+    outExtensions->createContext = true;
 }
 
 void DisplayCGL::generateCaps(egl::Caps *outCaps) const

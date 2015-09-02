@@ -466,7 +466,7 @@ const FunctionsGL *DisplayWGL::getFunctionsGL() const
 
 void DisplayWGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
-    //UNIMPLEMENTED();
+    outExtensions->createContext = true;
 }
 
 void DisplayWGL::generateCaps(egl::Caps *outCaps) const

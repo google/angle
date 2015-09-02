@@ -7,7 +7,8 @@ ANGLETest::ANGLETest()
       mWidth(0),
       mHeight(0)
 {
-    mEGLWindow = new EGLWindow(GetParam().majorVersion, GetParam().eglParameters);
+    mEGLWindow =
+        new EGLWindow(GetParam().majorVersion, GetParam().minorVersion, GetParam().eglParameters);
 }
 
 ANGLETest::~ANGLETest()
@@ -201,7 +202,7 @@ void ANGLETest::setMultisampleEnabled(bool enabled)
 
 int ANGLETest::getClientVersion() const
 {
-    return mEGLWindow->getClientVersion();
+    return mEGLWindow->getClientMajorVersion();
 }
 
 EGLWindow *ANGLETest::getEGLWindow() const

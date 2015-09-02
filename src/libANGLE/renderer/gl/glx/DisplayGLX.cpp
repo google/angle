@@ -452,7 +452,7 @@ const FunctionsGL *DisplayGLX::getFunctionsGL() const
 
 void DisplayGLX::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
-    // UNIMPLEMENTED();
+    outExtensions->createContext = true;
 }
 
 void DisplayGLX::generateCaps(egl::Caps *outCaps) const
