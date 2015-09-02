@@ -318,7 +318,7 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
             else
             {
                 // Copy each vertex individually
-                for (size_t vertexIdx = 0; vertexIdx <= streamedVertexCount; vertexIdx++)
+                for (size_t vertexIdx = 0; vertexIdx < streamedVertexCount; vertexIdx++)
                 {
                     uint8_t *out = bufferPointer + curBufferOffset + (destStride * vertexIdx);
                     const uint8_t *in =
