@@ -68,25 +68,28 @@ class ProgramGL : public ProgramImpl
 
     bool validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps) override;
 
-    void reset() override;
+    void gatherUniformBlockInfo(std::vector<gl::UniformBlock> *uniformBlocks,
+                                std::vector<gl::LinkedUniform> *uniforms) override;
 
     GLuint getProgramID() const;
     const std::vector<SamplerBindingGL> &getAppliedSamplerUniforms() const;
 
   private:
+    void reset();
+
+    // Helper function, makes it simpler to type.
+    GLint uniLoc(GLint glLocation) const { return mUniformRealLocationMap[glLocation]; }
+
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
 
-    // A map from uniform location to index of mSamplerBindings and array index of the uniform
-    struct SamplerLocation
-    {
-        size_t samplerIndex;
-        size_t arrayIndex;
-    };
-    std::map<GLint, SamplerLocation> mSamplerUniformMap;
+    std::vector<GLint> mUniformRealLocationMap;
 
     // An array of the samplers that are used by the program
     std::vector<SamplerBindingGL> mSamplerBindings;
+
+    // A map from a mData.getUniforms() index to a mSamplerBindings index.
+    std::vector<size_t> mUniformIndexToSamplerIndex;
 
     GLuint mProgramID;
 };

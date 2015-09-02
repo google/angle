@@ -1029,11 +1029,14 @@
 1098 WIN : dEQP-GLES3.functional.uniform_api.random.3 = FAIL
 1098 WIN : dEQP-GLES3.functional.uniform_api.random.6 = FAIL
 1098 WIN : dEQP-GLES3.functional.uniform_api.random.8 = FAIL
+1098 WIN : dEQP-GLES3.functional.uniform_api.random.17 = FAIL
 1098 WIN : dEQP-GLES3.functional.uniform_api.random.20 = FAIL
 1098 WIN : dEQP-GLES3.functional.uniform_api.random.21 = FAIL
 1098 WIN : dEQP-GLES3.functional.uniform_api.random.29 = FAIL
+1098 WIN : dEQP-GLES3.functional.uniform_api.random.54 = FAIL
 1098 WIN : dEQP-GLES3.functional.uniform_api.random.81 = FAIL
 1098 WIN : dEQP-GLES3.functional.uniform_api.random.83 = FAIL
+1098 WIN : dEQP-GLES3.functional.uniform_api.random.87 = FAIL
 1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_float = FAIL
 1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond_float = FAIL
 1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_vec2 = FAIL

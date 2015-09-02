@@ -23,16 +23,17 @@ namespace rx
 
 struct LinkResult
 {
+    LinkResult(bool linkSuccess, const gl::Error &error) : linkSuccess(linkSuccess), error(error) {}
+
     bool linkSuccess;
     gl::Error error;
-    LinkResult(bool linkSuccess, const gl::Error &error);
 };
 
 class ProgramImpl : angle::NonCopyable
 {
   public:
-    ProgramImpl(const gl::Program::Data &data);
-    virtual ~ProgramImpl();
+    ProgramImpl(const gl::Program::Data &data) : mData(data) {}
+    virtual ~ProgramImpl() {}
 
     virtual int getShaderVersion() const = 0;
 
@@ -73,33 +74,12 @@ class ProgramImpl : angle::NonCopyable
     // determine if they can be removed from this interface.
     virtual bool validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps) = 0;
 
-    const std::vector<gl::LinkedUniform*> &getUniforms() const { return mUniforms; }
-    const std::map<GLuint, gl::VariableLocation> &getUniformIndices() const { return mUniformIndex; }
-    const std::vector<gl::UniformBlock*> &getUniformBlocks() const { return mUniformBlocks; }
-
-    std::vector<gl::LinkedUniform*> &getUniforms() { return mUniforms; }
-    std::map<GLuint, gl::VariableLocation> &getUniformIndices() { return mUniformIndex; }
-    std::vector<gl::UniformBlock*> &getUniformBlocks() { return mUniformBlocks; }
-
-    gl::LinkedUniform *getUniformByLocation(GLint location) const;
-    gl::LinkedUniform *getUniformByName(const std::string &name) const;
-    gl::UniformBlock *getUniformBlockByIndex(GLuint blockIndex) const;
-
-    GLint getUniformLocation(const std::string &name) const;
-    GLuint getUniformIndex(const std::string &name) const;
-    GLuint getUniformBlockIndex(const std::string &name) const;
-
-    virtual void reset();
+    // Gather uniform block active uniform indices, and uniform block offset info.
+    virtual void gatherUniformBlockInfo(std::vector<gl::UniformBlock> *uniformBlocks,
+                                        std::vector<gl::LinkedUniform> *uniforms) = 0;
 
   protected:
     const gl::Program::Data &mData;
-
-    std::vector<gl::LinkedUniform*> mUniforms;
-
-    // TODO: use a hash map
-    std::map<GLuint, gl::VariableLocation> mUniformIndex;
-
-    std::vector<gl::UniformBlock*> mUniformBlocks;
 };
 
 }
