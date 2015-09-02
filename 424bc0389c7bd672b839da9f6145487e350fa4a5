@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "644d9e85_ae937648",
+        "filename": "BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003232
+      },
+      "writtenOn": "2015-09-02T20:36:39Z",
+      "side": 1,
+      "message": "nit: why two blank lines here?",
+      "revId": "424bc0389c7bd672b839da9f6145487e350fa4a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
