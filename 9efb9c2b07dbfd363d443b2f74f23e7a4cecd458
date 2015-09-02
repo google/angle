@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "04306211_e2cd66bd",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-02T20:35:44Z",
+      "side": 1,
+      "message": "Nope, I just reused the same target name as in the gyp files for consistency.",
+      "parentUuid": "64a91e5e_cbe9e9ef",
+      "range": {
+        "startLine": 370,
+        "startChar": 16,
+        "endLine": 370,
+        "endChar": 26
+      },
+      "revId": "9efb9c2b07dbfd363d443b2f74f23e7a4cecd458",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64a91e5e_4bd65932",
         "filename": "BUILD.gn",
         "patchSetId": 3
@@ -59,6 +83,30 @@
       "writtenOn": "2015-09-02T17:50:24Z",
       "side": 1,
       "message": "do you need this? isn\u0027t it covered by the rule above?",
+      "range": {
+        "startLine": 390,
+        "startChar": 3,
+        "endLine": 391,
+        "endChar": 14
+      },
+      "revId": "9efb9c2b07dbfd363d443b2f74f23e7a4cecd458",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64a91e5e_eba0650a",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-02T20:35:44Z",
+      "side": 1,
+      "message": "I didn\u0027t import that config. Done",
+      "parentUuid": "64a91e5e_4bd65932",
       "range": {
         "startLine": 390,
         "startChar": 3,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "64675e32_f57eb8ee",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-02T20:35:44Z",
+      "side": 1,
+      "message": "The problem is that we cannot use dependant_settings in GN; they are replaced with the concept of \"config\". In this case the debug_annotation config adds that define and is correctly used for libANGLE and libGLESv2. Added it to libEGL and angle_util. Done",
+      "parentUuid": "a4b796b4_c75b1e94",
+      "range": {
+        "startLine": 395,
+        "startChar": 2,
+        "endLine": 395,
+        "endChar": 6
+      },
+      "revId": "9efb9c2b07dbfd363d443b2f74f23e7a4cecd458",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c439ea02_60615296",
         "filename": "src/tests/BUILD.gn",
         "patchSetId": 3
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "04306211_429a52ae",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-02T20:35:44Z",
+      "side": 1,
+      "message": "I\u0027m not sure, added internal_config as a config. Done",
+      "parentUuid": "c439ea02_60615296",
+      "range": {
+        "startLine": 48,
+        "startChar": 2,
+        "endLine": 48,
+        "endChar": 14
+      },
+      "revId": "9efb9c2b07dbfd363d443b2f74f23e7a4cecd458",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6492fe15_b2e3c60b",
         "filename": "src/tests/angle_end2end_tests.gypi",
         "patchSetId": 3
@@ -128,6 +224,30 @@
       "writtenOn": "2015-09-02T17:56:58Z",
       "side": 1,
       "message": "Is it worth still commenting that the file lists are shared with the GN build?",
+      "range": {
+        "startLine": 16,
+        "startChar": 9,
+        "endLine": 16,
+        "endChar": 36
+      },
+      "revId": "9efb9c2b07dbfd363d443b2f74f23e7a4cecd458",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "042782f5_eafa47aa",
+        "filename": "src/tests/angle_end2end_tests.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-02T20:35:44Z",
+      "side": 1,
+      "message": "It is not only the file lists but also the deps, defines etc. Since we are not using GN apart for the Chrome GN build it will be very easy to forget to update the GN files. Hopefully the warning helps a little.",
+      "parentUuid": "6492fe15_b2e3c60b",
       "range": {
         "startLine": 16,
         "startChar": 9,
