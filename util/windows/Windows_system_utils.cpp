@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// Win32_system_utils.cpp: Implementation of OS-specific functions for Windows
+// Windows_system_utils.cpp: Implementation of OS-specific functions for Windows
 
 #include "system_utils.h"
 
@@ -34,9 +34,4 @@ void Sleep(unsigned int milliseconds)
     ::Sleep(static_cast<DWORD>(milliseconds));
 }
 
-void SetLowPriorityProcess()
-{
-    SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
-}
-
-} // namespace angle
+}  // namespace angle

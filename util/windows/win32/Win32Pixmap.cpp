@@ -4,12 +4,11 @@
 // found in the LICENSE file.
 //
 
-// Win32Pixmap.cpp: Implementation of OSPixmap for Windows
+// Win32Pixmap.cpp: Implementation of OSPixmap for Win32 (Windows)
 
-#include "win32/Win32Pixmap.h"
+#include "windows/win32/Win32Pixmap.h"
 
-Win32Pixmap::Win32Pixmap()
-    : mBitmap(nullptr)
+Win32Pixmap::Win32Pixmap() : mBitmap(nullptr)
 {
 }
 
@@ -31,20 +30,20 @@ bool Win32Pixmap::initialize(EGLNativeDisplayType display, size_t width, size_t 
         return false;
     }
 
-    bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo);
+    bitmapInfo.bmiHeader.biSize          = sizeof(bitmapInfo);
     bitmapInfo.bmiHeader.biWidth         = static_cast<LONG>(width);
     bitmapInfo.bmiHeader.biHeight        = static_cast<LONG>(height);
-    bitmapInfo.bmiHeader.biPlanes = 1;
-    bitmapInfo.bmiHeader.biBitCount = static_cast<WORD>(depth);
-    bitmapInfo.bmiHeader.biCompression = BI_RGB;
-    bitmapInfo.bmiHeader.biSizeImage = 0;
+    bitmapInfo.bmiHeader.biPlanes        = 1;
+    bitmapInfo.bmiHeader.biBitCount      = static_cast<WORD>(depth);
+    bitmapInfo.bmiHeader.biCompression   = BI_RGB;
+    bitmapInfo.bmiHeader.biSizeImage     = 0;
     bitmapInfo.bmiHeader.biXPelsPerMeter = 1;
     bitmapInfo.bmiHeader.biYPelsPerMeter = 1;
-    bitmapInfo.bmiHeader.biClrUsed = 0;
-    bitmapInfo.bmiHeader.biClrImportant = 0;
+    bitmapInfo.bmiHeader.biClrUsed       = 0;
+    bitmapInfo.bmiHeader.biClrImportant  = 0;
 
     void *bitmapPtr = nullptr;
-    mBitmap = CreateDIBSection(display, &bitmapInfo, DIB_RGB_COLORS, &bitmapPtr, nullptr, 0);
+    mBitmap         = CreateDIBSection(display, &bitmapInfo, DIB_RGB_COLORS, &bitmapPtr, nullptr, 0);
 
     return mBitmap != nullptr;
 }

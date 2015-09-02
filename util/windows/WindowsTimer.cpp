@@ -4,18 +4,15 @@
 // found in the LICENSE file.
 //
 
-// Win32Timer.cpp: Implementation of a high precision timer class on Windows
+// WindowsTimer.cpp: Implementation of a high precision timer class on Windows
 
-#include "win32/Win32Timer.h"
+#include "windows/WindowsTimer.h"
 
-Win32Timer::Win32Timer()
-    : mRunning(false),
-      mStartTime(0),
-      mStopTime(0)
+WindowsTimer::WindowsTimer() : mRunning(false), mStartTime(0), mStopTime(0)
 {
 }
 
-void Win32Timer::start()
+void WindowsTimer::start()
 {
     LARGE_INTEGER frequency;
     QueryPerformanceFrequency(&frequency);
@@ -28,7 +25,7 @@ void Win32Timer::start()
     mRunning = true;
 }
 
-void Win32Timer::stop()
+void WindowsTimer::stop()
 {
     LARGE_INTEGER curTime;
     QueryPerformanceCounter(&curTime);
@@ -37,7 +34,7 @@ void Win32Timer::stop()
     mRunning = false;
 }
 
-double Win32Timer::getElapsedTime() const
+double WindowsTimer::getElapsedTime() const
 {
     LONGLONG endTime;
     if (mRunning)
@@ -56,5 +53,5 @@ double Win32Timer::getElapsedTime() const
 
 Timer *CreateTimer()
 {
-    return new Win32Timer();
+    return new WindowsTimer();
 }

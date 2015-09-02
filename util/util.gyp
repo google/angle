@@ -27,13 +27,24 @@
         ],
         'util_win32_sources':
         [
-            'win32/Win32_system_utils.cpp',
-            'win32/Win32Pixmap.cpp',
-            'win32/Win32Pixmap.h',
-            'win32/Win32Timer.cpp',
-            'win32/Win32Timer.h',
-            'win32/Win32Window.cpp',
-            'win32/Win32Window.h',
+            'windows/win32/Win32_system_utils.cpp',
+            'windows/win32/Win32Pixmap.cpp',
+            'windows/win32/Win32Pixmap.h',
+            'windows/win32/Win32Window.cpp',
+            'windows/win32/Win32Window.h',
+            'windows/Windows_system_utils.cpp',
+            'windows/WindowsTimer.cpp',
+            'windows/WindowsTimer.h',
+        ],
+        'util_winrt_sources':
+        [
+            'windows/winrt/WinRT_system_utils.cpp',
+            'windows/winrt/WinRTPixmap.cpp',
+            'windows/winrt/WinRTWindow.cpp',
+            'windows/winrt/WinRTWindow.h',
+            'windows/Windows_system_utils.cpp',
+            'windows/WindowsTimer.cpp',
+            'windows/WindowsTimer.h',
         ],
         'util_linux_sources':
         [
@@ -106,12 +117,18 @@
             },
             'conditions':
             [
-                ['OS=="win"',
+                ['OS=="win" and angle_build_winrt==0',
                 {
-                    'msvs_disabled_warnings': [ 4201 ],
                     'sources':
                     [
                         '<@(util_win32_sources)',
+                    ],
+                }],
+                ['OS=="win" and angle_build_winrt==1',
+                {
+                    'sources':
+                    [
+                        '<@(util_winrt_sources)',
                     ],
                 }],
                 ['OS=="linux"',

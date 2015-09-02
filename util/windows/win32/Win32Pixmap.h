@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// Win32Pixmap.h: Definition of the implementation of OSPixmap for Windows
+// Win32Pixmap.h: Definition of the implementation of OSPixmap for Win32 (Windows)
 
 #ifndef UTIL_WIN32_PIXMAP_H_
 #define UTIL_WIN32_PIXMAP_H_
@@ -27,4 +27,4 @@ class Win32Pixmap : public OSPixmap
     HBITMAP mBitmap;
 };
 
-#endif // UTIL_WIN32_PIXMAP_H_
+#endif  // UTIL_WIN32_PIXMAP_H_

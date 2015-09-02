@@ -4,19 +4,19 @@
 // found in the LICENSE file.
 //
 
-// Win32Timer.h: Definition of a high precision timer class on Windows
+// WindowsTimer.h: Definition of a high precision timer class on Windows
 
-#ifndef UTIL_WIN32_TIMER_H
-#define UTIL_WIN32_TIMER_H
+#ifndef UTIL_WINDOWS_TIMER_H
+#define UTIL_WINDOWS_TIMER_H
 
 #include <windows.h>
 
 #include "Timer.h"
 
-class Win32Timer : public Timer
+class WindowsTimer : public Timer
 {
   public:
-    Win32Timer();
+    WindowsTimer();
 
     void start() override;
     void stop() override;
@@ -30,4 +30,4 @@ class Win32Timer : public Timer
     LONGLONG mFrequency;
 };
 
-#endif // UTIL_WIN32_TIMER_H
+#endif  // UTIL_WINDOWS_TIMER_H
