@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04bb02a1_6de1f1b7",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-02T17:50:24Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 1
+      },
+      "revId": "9efb9c2b07dbfd363d443b2f74f23e7a4cecd458",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64a91e5e_cbe9e9ef",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-02T17:50:24Z",
+      "side": 1,
+      "message": "do you need to do the little dance with chromium_code here?",
+      "range": {
+        "startLine": 370,
+        "startChar": 16,
+        "endLine": 370,
+        "endChar": 26
+      },
+      "revId": "9efb9c2b07dbfd363d443b2f74f23e7a4cecd458",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64a91e5e_4bd65932",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-02T17:50:24Z",
+      "side": 1,
+      "message": "do you need this? isn\u0027t it covered by the rule above?",
+      "range": {
+        "startLine": 390,
+        "startChar": 3,
+        "endLine": 391,
+        "endChar": 14
+      },
+      "revId": "9efb9c2b07dbfd363d443b2f74f23e7a4cecd458",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4b796b4_c75b1e94",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-02T17:50:24Z",
+      "side": 1,
+      "message": "I notice we don\u0027t include angle_common here. might be only required in gyp because we export the settings. I think we have the annoying situation where we have to maintain two sets of build files and they become desynchronized unless we have test coverage. so in this case ANGLE_ENABLE_DEBUG_ANNOTATIONS is now handled differently. any thoughts on this?",
+      "range": {
+        "startLine": 395,
+        "startChar": 2,
+        "endLine": 395,
+        "endChar": 6
+      },
+      "revId": "9efb9c2b07dbfd363d443b2f74f23e7a4cecd458",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c439ea02_60615296",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-02T17:50:24Z",
+      "side": 1,
+      "message": "I guess not, but I\u0027m surprised you don\u0027t need /include in here for the GLES and EGL headers.",
+      "range": {
+        "startLine": 48,
+        "startChar": 2,
+        "endLine": 48,
+        "endChar": 14
+      },
+      "revId": "9efb9c2b07dbfd363d443b2f74f23e7a4cecd458",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
