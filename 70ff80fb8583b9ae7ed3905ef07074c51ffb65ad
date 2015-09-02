@@ -46,6 +46,30 @@
       "revId": "70ff80fb8583b9ae7ed3905ef07074c51ffb65ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64675e32_781e1da1",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-02T20:52:30Z",
+      "side": 1,
+      "message": "I\u0027d suggest we don\u0027t do this right now in the interest of speed, as we use sh::Attribute forward-declarations in a lot of places (ie can\u0027t use typedef) and changing all of our references from getAttributes() to getInputVariables() would take a while. Moreover, it\u0027s pretty clear what Attributes are, and the GLSL ES 3.00 spec refers to Vertex shader inputs as attributes in several places. LMK if this is ok.",
+      "parentUuid": "644d9e85_ae013610",
+      "range": {
+        "startLine": 128,
+        "startChar": 23,
+        "endLine": 128,
+        "endChar": 32
+      },
+      "revId": "70ff80fb8583b9ae7ed3905ef07074c51ffb65ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
