@@ -189,16 +189,6 @@ class Program : angle::NonCopyable
         {
             return mOutputVariables;
         }
-        const std::vector<LinkedUniform> &getUniforms() const { return mUniforms; }
-        const std::vector<VariableLocation> &getUniformLocations() const
-        {
-            return mUniformLocations;
-        }
-        const std::vector<UniformBlock> &getUniformBlocks() const { return mUniformBlocks; }
-
-        const LinkedUniform *getUniformByName(const std::string &name) const;
-        GLint getUniformLocation(const std::string &name) const;
-        GLuint getUniformIndex(const std::string &name) const;
 
       private:
         friend class Program;
@@ -215,12 +205,10 @@ class Program : angle::NonCopyable
         std::vector<sh::Attribute> mAttributes;
         std::bitset<MAX_VERTEX_ATTRIBS> mActiveAttribLocationsMask;
 
-        std::vector<LinkedUniform> mUniforms;
-        std::vector<VariableLocation> mUniformLocations;
-        std::vector<UniformBlock> mUniformBlocks;
-
         // TODO(jmadill): use unordered/hash map when available
         std::map<int, VariableLocation> mOutputVariables;
+
+        // TODO(jmadill): move more state into Data.
     };
 
     Program(rx::ImplFactory *factory, ResourceManager *manager, GLuint handle);
@@ -263,10 +251,11 @@ class Program : angle::NonCopyable
     GLint getActiveUniformMaxLength();
     GLint getActiveUniformi(GLuint index, GLenum pname) const;
     bool isValidUniformLocation(GLint location) const;
-    const LinkedUniform &getUniformByLocation(GLint location) const;
+    LinkedUniform *getUniformByLocation(GLint location) const;
+    LinkedUniform *getUniformByName(const std::string &name) const;
 
-    GLint getUniformLocation(const std::string &name) const;
-    GLuint getUniformIndex(const std::string &name) const;
+    GLint getUniformLocation(const std::string &name);
+    GLuint getUniformIndex(const std::string &name);
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v);
     void setUniform2fv(GLint location, GLsizei count, const GLfloat *v);
     void setUniform3fv(GLint location, GLsizei count, const GLfloat *v);
@@ -303,7 +292,7 @@ class Program : angle::NonCopyable
     void bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding);
     GLuint getUniformBlockBinding(GLuint uniformBlockIndex) const;
 
-    const UniformBlock &getUniformBlockByIndex(GLuint index) const;
+    const UniformBlock *getUniformBlockByIndex(GLuint index) const;
 
     void setTransformFeedbackVaryings(GLsizei count, const GLchar *const *varyings, GLenum bufferMode);
     void getTransformFeedbackVarying(GLuint index, GLsizei bufSize, GLsizei *length, GLsizei *size, GLenum *type, GLchar *name) const;
@@ -341,8 +330,7 @@ class Program : angle::NonCopyable
     static bool linkVaryings(InfoLog &infoLog,
                              const Shader *vertexShader,
                              const Shader *fragmentShader);
-    bool linkUniforms(gl::InfoLog &infoLog, const gl::Caps &caps);
-    void indexUniforms();
+    bool linkUniforms(gl::InfoLog &infoLog, const gl::Caps &caps) const;
     bool areMatchingInterfaceBlocks(gl::InfoLog &infoLog, const sh::InterfaceBlock &vertexInterfaceBlock,
                                     const sh::InterfaceBlock &fragmentInterfaceBlock);
 
@@ -363,31 +351,6 @@ class Program : angle::NonCopyable
 
     std::vector<const sh::Varying *> getMergedVaryings() const;
     void linkOutputVariables();
-
-    bool flattenUniformsAndCheckCaps(const Caps &caps, InfoLog &infoLog);
-
-    struct VectorAndSamplerCount
-    {
-        VectorAndSamplerCount() : vectorCount(0), samplerCount(0) {}
-        VectorAndSamplerCount(const VectorAndSamplerCount &other) = default;
-        VectorAndSamplerCount &operator=(const VectorAndSamplerCount &other) = default;
-
-        VectorAndSamplerCount &operator+=(const VectorAndSamplerCount &other)
-        {
-            vectorCount += other.vectorCount;
-            samplerCount += other.samplerCount;
-            return *this;
-        }
-
-        unsigned int vectorCount;
-        unsigned int samplerCount;
-    };
-
-    VectorAndSamplerCount flattenUniform(const sh::ShaderVariable &uniform,
-                                         const std::string &fullName);
-
-    void gatherInterfaceBlockInfo();
-    void defineUniformBlock(const sh::InterfaceBlock &interfaceBlock, GLenum shaderType);
 
     Data mData;
     rx::ProgramImpl *mProgram;

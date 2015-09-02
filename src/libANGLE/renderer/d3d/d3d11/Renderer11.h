@@ -137,8 +137,7 @@ class Renderer11 : public RendererD3D
                            bool rasterizerDiscard,
                            bool transformFeedbackActive) override;
 
-    gl::Error applyUniforms(const ProgramD3D &programD3D,
-                            const std::vector<D3DUniform *> &uniformArray) override;
+    virtual gl::Error applyUniforms(const ProgramImpl &program, const std::vector<gl::LinkedUniform*> &uniformArray);
     virtual gl::Error applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances, SourceIndexData *sourceIndexInfo);
     virtual gl::Error applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo, SourceIndexData *sourceIndexInfo);
     void applyTransformFeedbackBuffers(const gl::State &state) override;

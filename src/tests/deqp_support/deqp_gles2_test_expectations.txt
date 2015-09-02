@@ -120,12 +120,9 @@
 1031 WIN : dEQP-GLES2.functional.uniform_api.random.41 = FAIL
 1031 WIN : dEQP-GLES2.functional.uniform_api.random.51 = FAIL
 1031 WIN : dEQP-GLES2.functional.uniform_api.random.54 = FAIL
-1031 WIN : dEQP-GLES2.functional.uniform_api.random.61 = FAIL
 1031 WIN : dEQP-GLES2.functional.uniform_api.random.72 = FAIL
 1031 WIN : dEQP-GLES2.functional.uniform_api.random.79 = FAIL
 1031 WIN : dEQP-GLES2.functional.uniform_api.random.82 = FAIL
-1031 WIN : dEQP-GLES2.functional.uniform_api.random.87 = FAIL
-1031 WIN : dEQP-GLES2.functional.uniform_api.random.93 = FAIL
 504 WIN : dEQP-GLES2.functional.uniform_api.value.initial.get_uniform.basic_struct.sampler2D_samplerCube_* = FAIL
 504 WIN : dEQP-GLES2.functional.uniform_api.value.initial.get_uniform.struct_in_array.sampler2D_samplerCube_* = FAIL
 504 WIN : dEQP-GLES2.functional.uniform_api.value.initial.get_uniform.array_in_struct.sampler2D_samplerCube_* = FAIL
