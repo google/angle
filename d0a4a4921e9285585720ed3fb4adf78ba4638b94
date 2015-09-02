@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4b796b4_6a29d7c8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-02T18:47:01Z",
+      "side": 1,
+      "message": "nit: just 525188",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 19,
+        "endChar": 19
+      },
+      "revId": "d0a4a4921e9285585720ed3fb4adf78ba4638b94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04306211_a24ebe00",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 567,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-02T18:47:01Z",
+      "side": 1,
+      "message": "nit: comment here with a short description similar to your cl description",
+      "range": {
+        "startLine": 567,
+        "startChar": 17,
+        "endLine": 567,
+        "endChar": 52
+      },
+      "revId": "d0a4a4921e9285585720ed3fb4adf78ba4638b94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
