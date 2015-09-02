@@ -211,8 +211,8 @@ Error Texture::setImage(Context *context,
         context->syncRendererState(context->getState().unpackStateBitMask());
     }
 
-    const PixelUnpackState &unpack =
-        context ? context->getState().getUnpackState() : PixelUnpackState();
+    const PixelUnpackState defaultUnpack;
+    const PixelUnpackState &unpack = context ? context->getState().getUnpackState() : defaultUnpack;
     Error error = mTexture->setImage(target, level, internalFormat, size, format, type, unpack, pixels);
     if (error.isError())
     {
