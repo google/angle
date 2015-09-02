@@ -142,6 +142,9 @@
 504 WIN : dEQP-GLES2.functional.uniform_api.value.assigned.basic_array_assign_partial.array_in_struct.sampler2D_samplerCube_* = FAIL
 504 WIN : dEQP-GLES2.functional.uniform_api.value.assigned.unused_uniforms.sampler2D_samplerCube_* = FAIL
 
+// Failures on the dEQP Windows bots that do not reproduce locally
+1108 WIN : dEQP-GLES2.functional.shaders.struct.local.dynamic_loop_struct_array_fragment = FAIL
+
 // Linux only failures
 
 1051 LINUX : dEQP-GLES2.functional.shaders.functions.array_arguments.copy_global_inout_on_call_fragment = FAIL
