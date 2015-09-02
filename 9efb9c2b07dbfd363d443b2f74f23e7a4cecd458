@@ -114,6 +114,29 @@
       "revId": "9efb9c2b07dbfd363d443b2f74f23e7a4cecd458",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6492fe15_b2e3c60b",
+        "filename": "src/tests/angle_end2end_tests.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-09-02T17:56:58Z",
+      "side": 1,
+      "message": "Is it worth still commenting that the file lists are shared with the GN build?",
+      "range": {
+        "startLine": 16,
+        "startChar": 9,
+        "endLine": 16,
+        "endChar": 36
+      },
+      "revId": "9efb9c2b07dbfd363d443b2f74f23e7a4cecd458",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
