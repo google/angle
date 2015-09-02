@@ -96,6 +96,11 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
     {
         out << "invariant ";
     }
+    if (type.getBasicType() == EbtInterfaceBlock)
+    {
+        TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
+        declareInterfaceBlockLayout(interfaceBlock);
+    }
     TQualifier qualifier = type.getQualifier();
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
     {
@@ -133,6 +138,11 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
         {
             mDeclaredStructs.insert(structure->uniqueId());
         }
+    }
+    else if (type.getBasicType() == EbtInterfaceBlock)
+    {
+        TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
+        declareInterfaceBlock(interfaceBlock);
     }
     else
     {
@@ -1287,3 +1297,70 @@ void TOutputGLSLBase::declareStruct(const TStructure *structure)
     out << "}";
 }
 
+void TOutputGLSLBase::declareInterfaceBlockLayout(const TInterfaceBlock *interfaceBlock)
+{
+    TInfoSinkBase &out = objSink();
+
+    out << "layout(";
+
+    switch (interfaceBlock->blockStorage())
+    {
+        case EbsUnspecified:
+        case EbsShared:
+            // Default block storage is shared.
+            out << "shared";
+            break;
+
+        case EbsPacked:
+            out << "packed";
+            break;
+
+        case EbsStd140:
+            out << "std140";
+            break;
+
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    out << ", ";
+
+    switch (interfaceBlock->matrixPacking())
+    {
+        case EmpUnspecified:
+        case EmpColumnMajor:
+            // Default matrix packing is column major.
+            out << "column_major";
+            break;
+
+        case EmpRowMajor:
+            out << "row_major";
+            break;
+
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    out << ") ";
+}
+
+void TOutputGLSLBase::declareInterfaceBlock(const TInterfaceBlock *interfaceBlock)
+{
+    TInfoSinkBase &out = objSink();
+
+    out << hashName(interfaceBlock->name()) << "{\n";
+    const TFieldList &fields = interfaceBlock->fields();
+    for (size_t i = 0; i < fields.size(); ++i)
+    {
+        const TField *field = fields[i];
+        if (writeVariablePrecision(field->type()->getPrecision()))
+            out << " ";
+        out << getTypeName(*field->type()) << " " << hashName(field->name());
+        if (field->type()->isArray())
+            out << arrayBrackets(*field->type());
+        out << ";\n";
+    }
+    out << "}";
+}
