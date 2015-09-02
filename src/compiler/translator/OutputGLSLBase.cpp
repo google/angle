@@ -373,6 +373,22 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
             visitChildren = false;
         }
         break;
+      case EOpIndexDirectInterfaceBlock:
+          if (visit == InVisit)
+          {
+              out << ".";
+              const TInterfaceBlock *interfaceBlock = node->getLeft()->getType().getInterfaceBlock();
+              const TIntermConstantUnion *index = node->getRight()->getAsConstantUnion();
+              const TField *field = interfaceBlock->fields()[index->getIConst(0)];
+
+              TString fieldName = field->name();
+              ASSERT(!mSymbolTable.findBuiltIn(interfaceBlock->name(), mShaderVersion));
+              fieldName = hashName(fieldName);
+
+              out << fieldName;
+              visitChildren = false;
+          }
+          break;
       case EOpVectorSwizzle:
         if (visit == InVisit)
         {
