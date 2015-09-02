@@ -420,7 +420,7 @@ static void PrintActiveVariables(ShHandle compiler)
     const std::vector<sh::Uniform> *uniforms = ShGetUniforms(compiler);
     const std::vector<sh::Varying> *varyings = ShGetVaryings(compiler);
     const std::vector<sh::Attribute> *attributes = ShGetAttributes(compiler);
-    const std::vector<sh::Attribute> *outputs = ShGetOutputVariables(compiler);
+    const std::vector<sh::OutputVariable> *outputs = ShGetOutputVariables(compiler);
     for (size_t varCategory = 0; varCategory < 4; ++varCategory)
     {
         size_t numVars = 0;

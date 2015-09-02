@@ -1701,14 +1701,14 @@ void Program::linkOutputVariables()
     if (fragmentShader->getShaderVersion() == 100)
         return;
 
-    const std::vector<sh::Attribute> &shaderOutputVars = fragmentShader->getActiveOutputVariables();
+    const auto &shaderOutputVars = fragmentShader->getActiveOutputVariables();
 
     // TODO(jmadill): any caps validation here?
 
     for (unsigned int outputVariableIndex = 0; outputVariableIndex < shaderOutputVars.size();
          outputVariableIndex++)
     {
-        const sh::Attribute &outputVariable = shaderOutputVars[outputVariableIndex];
+        const sh::OutputVariable &outputVariable = shaderOutputVars[outputVariableIndex];
 
         // Don't store outputs for gl_FragDepth, gl_FragColor, etc.
         if (outputVariable.isBuiltIn())

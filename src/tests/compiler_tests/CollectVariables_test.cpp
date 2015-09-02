@@ -98,15 +98,15 @@ class CollectVariablesTest : public testing::Test
     void validateOutputVariableForShader(const std::string &shaderString,
                                          unsigned int varIndex,
                                          const char *varName,
-                                         const sh::Attribute **outResult)
+                                         const sh::OutputVariable **outResult)
     {
         const char *shaderStrings[] = {shaderString.c_str()};
         ASSERT_TRUE(mTranslator->compile(shaderStrings, 1, SH_VARIABLES))
             << mTranslator->getInfoSink().info.str();
 
-        const std::vector<sh::Attribute> &outputVariables = mTranslator->getOutputVariables();
+        const auto &outputVariables = mTranslator->getOutputVariables();
         ASSERT_LT(varIndex, outputVariables.size());
-        const sh::Attribute &outputVariable = outputVariables[varIndex];
+        const sh::OutputVariable &outputVariable = outputVariables[varIndex];
         EXPECT_EQ(-1, outputVariable.location);
         EXPECT_TRUE(outputVariable.staticUse);
         EXPECT_EQ(varName, outputVariable.name);
@@ -142,10 +142,10 @@ TEST_F(CollectFragmentVariablesTest, SimpleOutputVar)
     const char *shaderStrings[] = { shaderString.c_str() };
     ASSERT_TRUE(mTranslator->compile(shaderStrings, 1, SH_VARIABLES));
 
-    const std::vector<sh::Attribute> &outputVariables = mTranslator->getOutputVariables();
+    const auto &outputVariables = mTranslator->getOutputVariables();
     ASSERT_EQ(1u, outputVariables.size());
 
-    const sh::Attribute &outputVariable = outputVariables[0];
+    const sh::OutputVariable &outputVariable = outputVariables[0];
 
     EXPECT_EQ(0u, outputVariable.arraySize);
     EXPECT_EQ(-1, outputVariable.location);
@@ -168,10 +168,10 @@ TEST_F(CollectFragmentVariablesTest, LocationOutputVar)
     const char *shaderStrings[] = { shaderString.c_str() };
     ASSERT_TRUE(mTranslator->compile(shaderStrings, 1, SH_VARIABLES));
 
-    const std::vector<sh::Attribute> &outputVariables = mTranslator->getOutputVariables();
+    const auto &outputVariables = mTranslator->getOutputVariables();
     ASSERT_EQ(1u, outputVariables.size());
 
-    const sh::Attribute &outputVariable = outputVariables[0];
+    const sh::OutputVariable &outputVariable = outputVariables[0];
 
     EXPECT_EQ(0u, outputVariable.arraySize);
     EXPECT_EQ(5, outputVariable.location);
@@ -478,7 +478,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragColor)
         "   gl_FragColor = vec4(1.0);\n"
         "}\n";
 
-    const sh::Attribute *outputVariable = nullptr;
+    const sh::OutputVariable *outputVariable = nullptr;
     validateOutputVariableForShader(fragColorShader, 0u, "gl_FragColor", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
     EXPECT_EQ(0u, outputVariable->arraySize);
@@ -504,7 +504,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragData)
     resources.MaxDrawBuffers = kMaxDrawBuffers;
     initTranslator(resources);
 
-    const sh::Attribute *outputVariable = nullptr;
+    const sh::OutputVariable *outputVariable = nullptr;
     validateOutputVariableForShader(fragDataShader, 0u, "gl_FragData", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
     EXPECT_EQ(kMaxDrawBuffers, outputVariable->arraySize);
@@ -527,7 +527,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragDepthMediump)
     resources.EXT_frag_depth = 1;
     initTranslator(resources);
 
-    const sh::Attribute *outputVariable = nullptr;
+    const sh::OutputVariable *outputVariable = nullptr;
     validateOutputVariableForShader(fragDepthShader, 0u, "gl_FragDepthEXT", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
     EXPECT_EQ(0u, outputVariable->arraySize);
@@ -550,7 +550,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragDepthHighp)
     resources.FragmentPrecisionHigh = 1;
     initTranslator(resources);
 
-    const sh::Attribute *outputVariable = nullptr;
+    const sh::OutputVariable *outputVariable = nullptr;
     validateOutputVariableForShader(fragDepthHighShader, 0u, "gl_FragDepthEXT", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
     EXPECT_EQ(0u, outputVariable->arraySize);
@@ -577,7 +577,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1EXTBlendFuncExtendedSecondary
     resources.MaxDualSourceDrawBuffers = resources.MaxDrawBuffers;
     initTranslator(resources);
 
-    const sh::Attribute *outputVariable = nullptr;
+    const sh::OutputVariable *outputVariable = nullptr;
     validateOutputVariableForShader(secondaryFragColorShader, 0u, "gl_FragColor", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
     EXPECT_EQ(0u, outputVariable->arraySize);
@@ -615,7 +615,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1EXTBlendFuncExtendedSecondary
     resources.MaxDualSourceDrawBuffers = resources.MaxDrawBuffers;
     initTranslator(resources);
 
-    const sh::Attribute *outputVariable = nullptr;
+    const sh::OutputVariable *outputVariable = nullptr;
     validateOutputVariableForShader(secondaryFragDataShader, 0u, "gl_FragData", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
     EXPECT_EQ(kMaxDrawBuffers, outputVariable->arraySize);

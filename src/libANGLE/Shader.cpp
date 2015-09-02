@@ -194,7 +194,7 @@ const std::vector<sh::Attribute> &Shader::getActiveAttributes() const
     return mShader->getActiveAttributes();
 }
 
-const std::vector<sh::Attribute> &Shader::getActiveOutputVariables() const
+const std::vector<sh::OutputVariable> &Shader::getActiveOutputVariables() const
 {
     return mShader->getActiveOutputVariables();
 }
@@ -219,7 +219,7 @@ std::vector<sh::Attribute> &Shader::getActiveAttributes()
     return mShader->getActiveAttributes();
 }
 
-std::vector<sh::Attribute> &Shader::getActiveOutputVariables()
+std::vector<sh::OutputVariable> &Shader::getActiveOutputVariables()
 {
     return mShader->getActiveOutputVariables();
 }

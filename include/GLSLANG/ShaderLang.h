@@ -48,7 +48,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 139
+#define ANGLE_SH_VERSION 140
 
 typedef enum {
   SH_GLES2_SPEC = 0x8B40,
@@ -406,7 +406,7 @@ COMPILER_EXPORT const std::map<std::string, std::string> *ShGetNameHashingMap(
 COMPILER_EXPORT const std::vector<sh::Uniform> *ShGetUniforms(const ShHandle handle);
 COMPILER_EXPORT const std::vector<sh::Varying> *ShGetVaryings(const ShHandle handle);
 COMPILER_EXPORT const std::vector<sh::Attribute> *ShGetAttributes(const ShHandle handle);
-COMPILER_EXPORT const std::vector<sh::Attribute> *ShGetOutputVariables(const ShHandle handle);
+COMPILER_EXPORT const std::vector<sh::OutputVariable> *ShGetOutputVariables(const ShHandle handle);
 COMPILER_EXPORT const std::vector<sh::InterfaceBlock> *ShGetInterfaceBlocks(const ShHandle handle);
 
 typedef struct

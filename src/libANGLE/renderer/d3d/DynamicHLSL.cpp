@@ -953,10 +953,9 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
     }
     else
     {
-        const auto &programOutputVars = programData.getOutputVariables();
+        const auto &shaderOutputVars = fragmentShader->getActiveOutputVariables();
 
-        const std::vector<sh::Attribute> &shaderOutputVars = fragmentShader->getActiveOutputVariables();
-        for (auto outputPair : programOutputVars)
+        for (auto outputPair : programData.getOutputVariables())
         {
             const VariableLocation &outputLocation   = outputPair.second;
             const sh::ShaderVariable &outputVariable = shaderOutputVars[outputLocation.index];
