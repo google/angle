@@ -377,9 +377,8 @@ TEST_P(ProgramBinariesAcrossPlatforms, CreateAndReloadBinary)
 
     if (program == 0)
     {
-        FAIL() << "Failed to create program from source";
         destroyEGLWindow(&eglWindow);
-        return;
+        FAIL() << "Failed to create program from source";
     }
 
     // Draw using the program to ensure it works as expected
