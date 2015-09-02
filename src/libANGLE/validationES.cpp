@@ -180,7 +180,7 @@ bool ValidBufferTarget(const Context *context, GLenum target)
 
       case GL_PIXEL_PACK_BUFFER:
       case GL_PIXEL_UNPACK_BUFFER:
-        return context->getExtensions().pixelBufferObject;
+          return (context->getExtensions().pixelBufferObject || context->getClientVersion() >= 3);
 
       case GL_COPY_READ_BUFFER:
       case GL_COPY_WRITE_BUFFER:
