@@ -1190,6 +1190,10 @@ TString TOutputGLSLBase::getTypeName(const TType &type)
     {
         out << "mat";
         out << type.getNominalSize();
+        if (type.getSecondarySize() != type.getNominalSize())
+        {
+            out << "x" << type.getSecondarySize();
+        }
     }
     else if (type.isVector())
     {
