@@ -22,6 +22,30 @@
       "revId": "18453fb065908baefcb0a21cd366c9a85adfd953",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4b48ab2_c819ef45",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1223,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-02T18:36:56Z",
+      "side": 1,
+      "message": "Good catch, fixed.",
+      "parentUuid": "e4a18d0d_e32f900f",
+      "range": {
+        "startLine": 1223,
+        "startChar": 61,
+        "endLine": 1223,
+        "endChar": 63
+      },
+      "revId": "18453fb065908baefcb0a21cd366c9a85adfd953",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
