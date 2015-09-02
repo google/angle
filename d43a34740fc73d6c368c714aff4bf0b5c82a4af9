@@ -178,6 +178,24 @@
     },
     {
       "key": {
+        "uuid": "04bb013c_bd72c288",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1504,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-02T18:36:56Z",
+      "side": 1,
+      "message": "Ah yes, good suggestion. Done.",
+      "parentUuid": "e426ed9b_e6069e29",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a416b5fe_1742d6c4",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 3
@@ -278,6 +296,24 @@
       "side": 1,
       "message": "I think that fragmentStaticUse is already set in defineUniformBlock, so this if could be removed.",
       "parentUuid": "64659dc3_4065820e",
+      "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6433ddd7_ea5587cc",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-02T18:36:56Z",
+      "side": 1,
+      "message": "I think it\u0027s needed - defineUniformBlock is only called once per block, even if shared between shaders. Otherwise we\u0027d get two blocks with the same name in the list. Hence the need to mark fragmentStaticUse on the previously defined vertex block.",
+      "parentUuid": "04bb013c_9d937e2d",
       "revId": "d43a34740fc73d6c368c714aff4bf0b5c82a4af9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
