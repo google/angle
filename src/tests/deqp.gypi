@@ -5,10 +5,90 @@
 {
     'variables':
     {
+        # Define these variables within an inner variables dict.
+        # This is necessary to get these variables defined for the conditions
+        # within the outer variables dict which operate on these variables.
+        'variables':
+        {
+            'angle_build_winrt%': 0,
+            'angle_standalone%': 0,
+        },
+
+        # Copy conditionally-set variables to the outer variables dict.
+        'angle_build_winrt%': '<(angle_build_winrt)',
+        'angle_standalone%': '<(angle_standalone)',
+
         'deqp_path': '<(DEPTH)/third_party/deqp/src',
         'delibs_path': '<(deqp_path)/framework/delibs',
         'libpng_path': '<(DEPTH)/third_party/libpng',
         'zlib_path': '<(DEPTH)/third_party/zlib',
+
+        'angle_build_deqp_libraries%' : 0,
+        'angle_build_deqp_gtest_support%' : 0,
+        'angle_build_deqp_executables%' : 0,
+        'angle_build_deqp_gtest_executables%' :0,
+
+        'conditions':
+        [
+            ['(OS=="win" or OS=="linux")',
+            {
+                # Build the dEQP libraries for all Windows/Linux builds
+                'angle_build_deqp_libraries%': 1,
+            }],
+            ['((OS=="win" or OS=="linux") and angle_build_winrt==0)',
+            {
+                # Build the dEQP GoogleTest support helpers for all Windows/Linux builds except WinRT
+                # GoogleTest doesn't support WinRT
+                'angle_build_deqp_gtest_support%': 1,
+            }],
+            ['((OS=="win" or OS=="linux") and angle_standalone==1 and angle_build_winrt==0)',
+            {
+                # Build the dEQP executables for all standalone Windows/Linux builds except WinRT
+                # GYP doesn't support generating standalone WinRT executables
+                'angle_build_deqp_executables%': 1,
+
+                # Build the GoogleTest versions of dEQP for all standalone Windows/Linux builds except WinRT
+                # GoogleTest doesn't support WinRT
+                'angle_build_deqp_gtest_executables%': 1,
+            }],
+
+            ['OS=="win"',
+            {
+                'deqp_include_dirs':
+                [
+                    '<(deqp_path)/framework/platform/win32',
+                ],
+                'deqp_libtester_sources':
+                [
+                    '<(deqp_path)/framework/delibs/dethread/win32/deMutexWin32.c',
+                    '<(deqp_path)/framework/delibs/dethread/win32/deSemaphoreWin32.c',
+                    '<(deqp_path)/framework/delibs/dethread/win32/deThreadLocalWin32.c',
+                    '<(deqp_path)/framework/delibs/dethread/win32/deThreadWin32.c',
+                ],
+            }],
+            ['OS=="linux" and use_x11==1',
+            {
+                'deqp_include_dirs':
+                [
+                    '<(deqp_path)/framework/platform/x11',
+                ],
+                'deqp_libtester_sources':
+                [
+                    '<(deqp_path)/framework/delibs/dethread/unix/deMutexUnix.c',
+                    '<(deqp_path)/framework/delibs/dethread/unix/deNamedSemaphoreUnix.c',
+                    '<(deqp_path)/framework/delibs/dethread/unix/deSemaphoreUnix.c',
+                    '<(deqp_path)/framework/delibs/dethread/unix/deThreadLocalUnix.c',
+                    '<(deqp_path)/framework/delibs/dethread/unix/deThreadUnix.c',
+                ],
+                'deqp_defines':
+                [
+                    # Ask the system headers to expose all the regular function otherwise
+                    # dEQP doesn't compile and produces warnings about implicitly defined
+                    # functions.
+                    '_GNU_SOURCE',
+                ],
+            }],
+        ],
 
         'deqp_msvs_disabled_warnings':
         [
@@ -925,50 +1005,11 @@
             '<(angle_path)/src/tests/deqp_support/tcuRandomOrderExecutor.cpp',
             '<(angle_path)/src/tests/deqp_support/tcuRandomOrderExecutor.h',
         ],
-        'conditions':
-        [
-            ['OS=="win"',
-            {
-                'deqp_include_dirs':
-                [
-                    '<(deqp_path)/framework/platform/win32',
-                ],
-                'deqp_libtester_sources':
-                [
-                    '<(deqp_path)/framework/delibs/dethread/win32/deMutexWin32.c',
-                    '<(deqp_path)/framework/delibs/dethread/win32/deSemaphoreWin32.c',
-                    '<(deqp_path)/framework/delibs/dethread/win32/deThreadLocalWin32.c',
-                    '<(deqp_path)/framework/delibs/dethread/win32/deThreadWin32.c',
-                ],
-            }],
-            ['OS=="linux" and use_x11==1',
-            {
-                'deqp_include_dirs':
-                [
-                    '<(deqp_path)/framework/platform/x11',
-                ],
-                'deqp_libtester_sources':
-                [
-                    '<(deqp_path)/framework/delibs/dethread/unix/deMutexUnix.c',
-                    '<(deqp_path)/framework/delibs/dethread/unix/deNamedSemaphoreUnix.c',
-                    '<(deqp_path)/framework/delibs/dethread/unix/deSemaphoreUnix.c',
-                    '<(deqp_path)/framework/delibs/dethread/unix/deThreadLocalUnix.c',
-                    '<(deqp_path)/framework/delibs/dethread/unix/deThreadUnix.c',
-                ],
-                'deqp_defines':
-                [
-                    # Ask the system headers to expose all the regular function otherwise
-                    # dEQP doesn't compile and produces warnings about implicitly defined
-                    # functions.
-                    '_GNU_SOURCE',
-                ],
-            }],
-        ]
     },
 
     'conditions':
     [
-        ['(OS=="win" or OS=="linux") and angle_standalone==1',
+        ['angle_build_deqp_libraries==1 and angle_standalone==1',
         {
             'targets':
             [
@@ -1001,6 +1042,19 @@
                             ],
                         },
                     },
+                    'conditions':
+                    [
+                        ['angle_build_winrt==1',
+                        {
+                            # In zlib, deflate.c/insert_string_sse assumes _MSC_VER is only used for x86 or x64
+                            # To compile this function for ARM using MSC, we trick it by defining __clang__
+                            # __clang__ isn't used elsewhere zlib, so this workaround shouldn't impact anything else
+                            'defines':
+                            [
+                                '__clang__',
+                            ],
+                        }],
+                    ],
                     'sources':
                     [
                         '<(zlib_path)/adler32.c',
@@ -1077,9 +1131,9 @@
                         '<(libpng_path)/pngwutil.c',
                     ],
                 },
-            ],
-        }],
-        ['OS=="win" or OS=="linux"',
+            ], # targets
+        }], # angle_build_deqp_libraries==1 and angle_standalone==1
+        ['angle_build_deqp_libraries==1',
         {
             'targets':
             [
@@ -1107,12 +1161,28 @@
                                     },
                                     'VCLinkerTool':
                                     {
-                                        'AdditionalDependencies':
+                                        'conditions':
                                         [
-                                            'dbghelp.lib',
-                                            'gdi32.lib',
-                                            'user32.lib',
-                                            'ws2_32.lib',
+                                            ['angle_build_winrt==0',
+                                            {
+                                                'AdditionalDependencies':
+                                                [
+                                                    'dbghelp.lib',
+                                                    'gdi32.lib',
+                                                    'user32.lib',
+                                                    'ws2_32.lib',
+                                                ],
+                                            }],
+                                            ['angle_build_winrt==1',
+                                            {
+                                                # Disable COMDAT optimizations, disabled by default for non-WinRT
+                                                'AdditionalOptions': ['/OPT:NOREF', '/OPT:NOICF'],
+                                                # AdditionalDependencies automatically configures the required .libs
+                                                'AdditionalDependencies':
+                                                [
+                                                    '%(AdditionalDependencies)'
+                                                ],
+                                            }],
                                         ],
                                     },
                                 },
@@ -1132,6 +1202,13 @@
                         'defines': ['<@(deqp_defines)'],
                         'defines!': [ '<@(deqp_undefines)' ],
                     },
+                    'conditions':
+                    [
+                        ['angle_build_winrt==1',
+                        {
+                            'type' : 'shared_library',
+                        }],
+                    ],
                 },
 
                 # Compile decpp separately because MSVC ignores the extension of the files when
@@ -1295,7 +1372,56 @@
                         'deqp_support/tcuANGLEPlatform.h',
                     ],
                 },
+            ], # targets
+        }], # angle_build_deqp_libraries
+        ['angle_build_deqp_executables==1',
+        {
+            "targets":
+            [
+                {
+                    'target_name': 'angle_deqp_gles2_tests',
+                    'type': 'executable',
+                    'dependencies':
+                    [
+                        'angle_deqp_libgles2',
+                    ],
+                    'sources':
+                    [
+                        'deqp_support/angle_deqp_tests_main.cpp',
+                    ],
+                },
 
+                {
+                    'target_name': 'angle_deqp_gles3_tests',
+                    'type': 'executable',
+                    'dependencies':
+                    [
+                        'angle_deqp_libgles3',
+                    ],
+                    'sources':
+                    [
+                        'deqp_support/angle_deqp_tests_main.cpp',
+                    ],
+                },
+
+                {
+                    'target_name': 'angle_deqp_egl_tests',
+                    'type': 'executable',
+                    'dependencies':
+                    [
+                        'angle_deqp_libegl',
+                    ],
+                    'sources':
+                    [
+                        'deqp_support/angle_deqp_tests_main.cpp',
+                    ],
+                },
+            ], # targets
+        }], # angle_build_deqp_executables
+        ['angle_build_deqp_gtest_support==1',
+        {
+            'targets':
+            [
                 # Helper target for synching our implementation with chrome's
                 {
                     'target_name': 'angle_deqp_gtest_support',
@@ -1392,50 +1518,11 @@
                     ],
                 },
             ], # targets
-        }], # OS=="win" or OS=="linux"
-        ['(OS=="win" or OS=="linux") and angle_standalone==1',
+        }], # angle_build_deqp_gtest_support
+        ['angle_build_deqp_gtest_executables==1',
         {
             "targets":
             [
-                {
-                    'target_name': 'angle_deqp_gles2_tests',
-                    'type': 'executable',
-                    'dependencies':
-                    [
-                        'angle_deqp_libgles2',
-                    ],
-                    'sources':
-                    [
-                        'deqp_support/angle_deqp_tests_main.cpp',
-                    ],
-                },
-
-                {
-                    'target_name': 'angle_deqp_gles3_tests',
-                    'type': 'executable',
-                    'dependencies':
-                    [
-                        'angle_deqp_libgles3',
-                    ],
-                    'sources':
-                    [
-                        'deqp_support/angle_deqp_tests_main.cpp',
-                    ],
-                },
-
-                {
-                    'target_name': 'angle_deqp_egl_tests',
-                    'type': 'executable',
-                    'dependencies':
-                    [
-                        'angle_deqp_libegl',
-                    ],
-                    'sources':
-                    [
-                        'deqp_support/angle_deqp_tests_main.cpp',
-                    ],
-                },
-
                 {
                     'target_name': 'angle_deqp_gtest_gles2_tests',
                     'type': 'executable',
@@ -1481,6 +1568,6 @@
                     ],
                 },
             ], # targets
-        }], # (OS=="win" or OS=="linux") and angle_standalone==1
+        }], # angle_build_deqp_gtest_executables
     ], # conditions
 }
