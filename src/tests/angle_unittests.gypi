@@ -83,7 +83,7 @@
         ],
     },
     # Everything below this but the WinRT configuration is duplicated in the GN build.
-    # If you change anything also change angle/BUILD.gn
+    # If you change anything also change angle/src/tests/BUILD.gn
     'dependencies':
     [
         '<(angle_path)/src/angle.gyp:libANGLE',

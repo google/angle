@@ -105,6 +105,7 @@ config("translator_static_config") {
   defines = [ "ANGLE_TRANSLATOR_STATIC" ]
 }
 
+
 config("debug_annotations_config") {
   if (is_debug) {
     defines = [
@@ -219,10 +220,20 @@ config("libANGLE_config") {
     defines += [ "ANGLE_USE_X11" ]
   }
   defines += [
-    "GL_APICALL=",
     "GL_GLEXT_PROTOTYPES=",
-    "EGLAPI=",
   ]
+
+  if (is_win) {
+    defines += [
+      "GL_APICALL=",
+      "EGLAPI=",
+    ]
+  } else {
+    defines += [
+      "GL_APICALL=__attribute__((visibility(\"default\")))",
+      "EGLAPI=__attribute__((visibility(\"default\")))",
+    ]
+  }
   if (is_win) {
     cflags += [ "/wd4530" ]  # C++ exception handler used, but unwind semantics are not enabled.
   }
@@ -337,6 +348,7 @@ shared_library("libEGL") {
   configs += [
     ":internal_config",
     ":commit_id_config",
+    ":debug_annotations_config",
     ":libANGLE_config",
     "//build/config/compiler:no_chromium_code",
   ]
@@ -347,6 +359,46 @@ shared_library("libEGL") {
 
   deps = [
     ":includes",
+    ":libGLESv2",
+  ]
+}
+
+util_gypi = exec_script(
+  "//build/gypi_to_gn.py",
+  [ rebase_path("util/util.gyp") ],
+  "scope",
+  [ "util/util.gyp" ])
+
+static_library("angle_util") {
+  sources = rebase_path(util_gypi.util_sources, ".", "util")
+
+  if (is_win) {
+    sources += rebase_path(util_gypi.util_win32_sources, ".", "util")
+  }
+
+  if (is_linux) {
+    sources += rebase_path(util_gypi.util_linux_sources, ".", "util")
+  }
+
+  if (is_mac) {
+    sources += rebase_path(util_gypi.util_osx_sources, ".", "util")
+  }
+
+  if (use_x11) {
+    sources += rebase_path(util_gypi.util_x11_sources, ".", "util")
+  }
+
+  configs += [
+    ":internal_config",
+    ":debug_annotations_config",
+  ]
+
+  include_dirs = [
+    "util",
+  ]
+
+  deps = [
+    ":libEGL",
     ":libGLESv2",
   ]
 }

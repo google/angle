@@ -9,9 +9,10 @@
 # gtest harness in a main.cpp.
 
 {
+    # Everything below this is duplicated in the GN build.
+    # If you change anything also change angle/src/tests/BUILD.gn
     'variables':
     {
-        # This file list will be shared with the GN build.
         'angle_end2end_tests_sources':
         [
             '<(angle_path)/src/tests/gl_tests/BlendMinMaxTest.cpp',

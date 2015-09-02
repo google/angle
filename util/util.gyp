@@ -3,6 +3,8 @@
 # found in the LICENSE file.
 
 {
+    # Everything below  this is duplicated in the GN build, except Mac support.
+    # If you change anything also change angle/BUILD.gn
     'variables':
     {
         'util_sources':
