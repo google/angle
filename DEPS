@@ -9,7 +9,7 @@ deps = {
   # TODO(kbr): figure out how to better stay in sync with Chromium's
   # versions of googletest and googlemock.
   "src/tests/third_party/googletest":
-      Var('chromium_git') + "/external/googletest.git@23574bf2333f834ff665f894c97bef8a5b33a0a9",
+      Var('chromium_git') + "/external/googletest.git@9855a87157778d39b95eccfb201a9dc90f6d61c6",
 
   "src/tests/third_party/googlemock":
       Var('chromium_git') + "/external/googlemock.git@b2cb211e49d872101d991201362d7b97d7d69910",
