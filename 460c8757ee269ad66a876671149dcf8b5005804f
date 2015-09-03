@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "e4ceee75_013dcaf1",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-03T20:32:18Z",
+      "side": 1,
+      "message": "That\u0027s fine, it\u0027s good as is. Having a static macro function is also OK, but it\u0027s a pretty slight change. Certainly better than using bind.",
+      "parentUuid": "841a92b2_06599aff",
+      "range": {
+        "startLine": 226,
+        "startChar": 30,
+        "endLine": 228,
+        "endChar": 31
+      },
+      "revId": "460c8757ee269ad66a876671149dcf8b5005804f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64675e32_98c33991",
         "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
         "patchSetId": 2
