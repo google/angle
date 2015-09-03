@@ -46,6 +46,30 @@
       "revId": "beca943ec4d042ef063205d9755975d53e0222b4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a42316eb_074356de",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-03T19:56:47Z",
+      "side": 1,
+      "message": "Sounds good, thanks",
+      "parentUuid": "44141a88_2d80f5e8",
+      "range": {
+        "startLine": 161,
+        "startChar": 4,
+        "endLine": 161,
+        "endChar": 70
+      },
+      "revId": "beca943ec4d042ef063205d9755975d53e0222b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
