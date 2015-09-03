@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e400ae3b_91413c2b",
+        "filename": "src/compiler/preprocessor/ExpressionParser.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-03T14:06:06Z",
+      "side": 1,
+      "message": "did you consider the common/Optional.h header, with some inline operators instead? Seems similar in approach.",
+      "range": {
+        "startLine": 68,
+        "startChar": 7,
+        "endLine": 68,
+        "endChar": 16
+      },
+      "revId": "4bc389f73ddcf0a7df16e80f977f3556646f0626",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "841a92b2_e61b9e79",
+        "filename": "src/compiler/preprocessor/ExpressionParser.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-03T14:06:06Z",
+      "side": 1,
+      "message": "having trouble understanding this, but isn\u0027t \u003canything\u003e || TaggedInt(0, true) \u003d\u003d \u003canything\u003e",
+      "range": {
+        "startLine": 169,
+        "startChar": 20,
+        "endLine": 169,
+        "endChar": 41
+      },
+      "revId": "4bc389f73ddcf0a7df16e80f977f3556646f0626",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4ceee75_61b93602",
+        "filename": "src/compiler/preprocessor/ExpressionParser.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-03T14:06:06Z",
+      "side": 1,
+      "message": "isn\u0027t this also a no-op?",
+      "range": {
+        "startLine": 182,
+        "startChar": 19,
+        "endLine": 182,
+        "endChar": 41
+      },
+      "revId": "4bc389f73ddcf0a7df16e80f977f3556646f0626",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64675e32_78e9fd77",
+        "filename": "src/tests/preprocessor_tests/if_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 831,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-03T14:06:06Z",
+      "side": 1,
+      "message": "nit: comment before every new test",
+      "range": {
+        "startLine": 831,
+        "startChar": 0,
+        "endLine": 831,
+        "endChar": 6
+      },
+      "revId": "4bc389f73ddcf0a7df16e80f977f3556646f0626",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
