@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "841a92b2_e6a0be61",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-03T17:05:29Z",
+      "side": 1,
+      "message": "I don\u0027t know of any built in uniform blocks. I\u0027d probably just output hashName and ASSERT the condition here.",
+      "range": {
+        "startLine": 395,
+        "startChar": 14,
+        "endLine": 395,
+        "endChar": 84
+      },
+      "revId": "ada8ef08b5e99cef1b415ac222e90775b1939f5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
