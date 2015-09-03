@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4298ecb_c94b1147",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-03T15:06:53Z",
+      "side": 1,
+      "message": "I\u0027m worried that the vector of cached buffers will grow unbounded.  Can we add a size limit and/or an LRU to the cache?",
+      "range": {
+        "startLine": 117,
+        "startChar": 12,
+        "endLine": 118,
+        "endChar": 42
+      },
+      "revId": "6640f66d1036809bf9bd7437b38a23418b759a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c439ea02_23375419",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-03T15:06:53Z",
+      "side": 1,
+      "message": "ref",
+      "revId": "6640f66d1036809bf9bd7437b38a23418b759a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4298ecb_8941192b",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-03T15:06:53Z",
+      "side": 1,
+      "message": "Should probably use the same type of loop as the ref above.  It should iterate over fewer attributes.",
+      "range": {
+        "startLine": 198,
+        "startChar": 4,
+        "endLine": 198,
+        "endChar": 86
+      },
+      "revId": "6640f66d1036809bf9bd7437b38a23418b759a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
