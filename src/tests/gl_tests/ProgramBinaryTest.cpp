@@ -185,6 +185,18 @@ struct PlatformsWithLinkResult : PlatformParameters
     bool expectedLinkResult;
 };
 
+// Provide a custom gtest parameter name function for PlatformsWithLinkResult
+// to avoid returning the same parameter name twice. Such a conflict would happen
+// between ES2_D3D11_to_ES2D3D11 and ES2_D3D11_to_ES3D3D11 as they were both
+// named ES2_D3D11
+std::ostream &operator<<(std::ostream& stream, const PlatformsWithLinkResult &platform)
+{
+    const PlatformParameters &platform1 = platform;
+    const PlatformParameters &platform2 = platform.loadParams;
+    stream << platform1 << "_to_" << platform2;
+    return stream;
+}
+
 class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWithLinkResult>
 {
   public:
