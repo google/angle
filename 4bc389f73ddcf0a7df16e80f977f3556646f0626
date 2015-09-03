@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "240f267a_46d55420",
+        "filename": "src/compiler/preprocessor/ExpressionParser.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-09-03T15:00:07Z",
+      "side": 1,
+      "message": "I wasn\u0027t aware of Optional.h. It seems like it might be more elegant, I\u0027ll work on another version of this patch using that and see if it would work better.",
+      "parentUuid": "e400ae3b_91413c2b",
+      "range": {
+        "startLine": 68,
+        "startChar": 7,
+        "endLine": 68,
+        "endChar": 16
+      },
+      "revId": "4bc389f73ddcf0a7df16e80f977f3556646f0626",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "841a92b2_e61b9e79",
         "filename": "src/compiler/preprocessor/ExpressionParser.y",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-03T14:06:06Z",
       "side": 1,
       "message": "having trouble understanding this, but isn\u0027t \u003canything\u003e || TaggedInt(0, true) \u003d\u003d \u003canything\u003e",
+      "range": {
+        "startLine": 169,
+        "startChar": 20,
+        "endLine": 169,
+        "endChar": 41
+      },
+      "revId": "4bc389f73ddcf0a7df16e80f977f3556646f0626",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8480d2c5_f9f7f391",
+        "filename": "src/compiler/preprocessor/ExpressionParser.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-09-03T15:00:07Z",
+      "side": 1,
+      "message": "If \u003canything\u003e is something other than 0/1, I wasn\u0027t sure about the behavior. This seemed like the simplest way to make sure behavior is the same as with normal || applied to ints. Do you think this should still be changed?",
+      "parentUuid": "841a92b2_e61b9e79",
       "range": {
         "startLine": 169,
         "startChar": 20,
