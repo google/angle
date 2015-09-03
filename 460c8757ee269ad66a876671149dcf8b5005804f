@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c439ea02_03b330cf",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-03T19:55:42Z",
+      "side": 1,
+      "message": "nit: GetCaseGTestName(size_t caseIndex) (to make consistent with the nomenclature in this file)",
+      "range": {
+        "startLine": 175,
+        "startChar": 23,
+        "endLine": 175,
+        "endChar": 40
+      },
+      "revId": "460c8757ee269ad66a876671149dcf8b5005804f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "042782f5_eae2473f",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-03T19:55:42Z",
+      "side": 1,
+      "message": "git cl format will fix this up",
+      "range": {
+        "startLine": 219,
+        "startChar": 42,
+        "endLine": 219,
+        "endChar": 43
+      },
+      "revId": "460c8757ee269ad66a876671149dcf8b5005804f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "841a92b2_463c3292",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-03T19:55:42Z",
+      "side": 1,
+      "message": "Wow, I actually coded support for lambdas, but didn\u0027t expect to use them here. Seems OK but I\u0027d also be fine with moving the definition outside the inner macro to a static, at which point you could use a function.",
+      "range": {
+        "startLine": 226,
+        "startChar": 30,
+        "endLine": 228,
+        "endChar": 31
+      },
+      "revId": "460c8757ee269ad66a876671149dcf8b5005804f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64675e32_98c33991",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-03T19:55:42Z",
+      "side": 1,
+      "message": "nit: ANGLE_INSTANTITATE_DEQP_TEST_CASE",
+      "range": {
+        "startLine": 231,
+        "startChar": 0,
+        "endLine": 231,
+        "endChar": 22
+      },
+      "revId": "460c8757ee269ad66a876671149dcf8b5005804f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
