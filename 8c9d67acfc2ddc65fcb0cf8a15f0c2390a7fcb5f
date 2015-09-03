@@ -22,6 +22,30 @@
       "revId": "8c9d67acfc2ddc65fcb0cf8a15f0c2390a7fcb5f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4298ecb_e941b500",
+        "filename": "src/tests/test_utils/angle_test_instantiate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-03T19:45:28Z",
+      "side": 1,
+      "message": "Yes, the operator is in angle_test_configs.h/cpp",
+      "parentUuid": "e4326e1b_07a17a63",
+      "range": {
+        "startLine": 48,
+        "startChar": 39,
+        "endLine": 48,
+        "endChar": 61
+      },
+      "revId": "8c9d67acfc2ddc65fcb0cf8a15f0c2390a7fcb5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
