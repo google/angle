@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e4326e1b_a77a4e82",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-03T20:06:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c439ea02_03b330cf",
+      "range": {
+        "startLine": 175,
+        "startChar": 23,
+        "endLine": 175,
+        "endChar": 40
+      },
+      "revId": "460c8757ee269ad66a876671149dcf8b5005804f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "042782f5_eae2473f",
         "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-03T19:55:42Z",
       "side": 1,
       "message": "git cl format will fix this up",
+      "range": {
+        "startLine": 219,
+        "startChar": 42,
+        "endLine": 219,
+        "endChar": 43
+      },
+      "revId": "460c8757ee269ad66a876671149dcf8b5005804f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4326e1b_07785a89",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-03T20:06:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "042782f5_eae2473f",
       "range": {
         "startLine": 219,
         "startChar": 42,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "841a92b2_06599aff",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-03T20:06:59Z",
+      "side": 1,
+      "message": "The thing is that the function must know about DEQP_TEST so we would have 3 functions (or a function in the macro, or an std::bind).",
+      "parentUuid": "841a92b2_463c3292",
+      "range": {
+        "startLine": 226,
+        "startChar": 30,
+        "endLine": 228,
+        "endChar": 31
+      },
+      "revId": "460c8757ee269ad66a876671149dcf8b5005804f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64675e32_98c33991",
         "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2015-09-03T19:55:42Z",
       "side": 1,
       "message": "nit: ANGLE_INSTANTITATE_DEQP_TEST_CASE",
+      "range": {
+        "startLine": 231,
+        "startChar": 0,
+        "endLine": 231,
+        "endChar": 22
+      },
+      "revId": "460c8757ee269ad66a876671149dcf8b5005804f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a42316eb_e74ba2ef",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-03T20:06:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64675e32_98c33991",
       "range": {
         "startLine": 231,
         "startChar": 0,
