@@ -22,6 +22,30 @@
       "revId": "beca943ec4d042ef063205d9755975d53e0222b4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44141a88_2d80f5e8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-09-03T19:51:56Z",
+      "side": 1,
+      "message": "AlphaMode can\u0027t be set on CoreWindow swapchains.  Only ones that were created for composition or layered window swapchains which we can\u0027t really do. SwapChainPanel and composition swapchains rely on this value to render properly with composite content.\n\nBefore, the AlphaMode was being defaulted to 0 which was DXGI_ALPHA_MODE_UNSPECIFIED.  Default structure init was doing this.  I made it explicit here because it looks better than accidentally getting a value that matches 0 :)",
+      "parentUuid": "841a92b2_06323abf",
+      "range": {
+        "startLine": 161,
+        "startChar": 4,
+        "endLine": 161,
+        "endChar": 70
+      },
+      "revId": "beca943ec4d042ef063205d9755975d53e0222b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
