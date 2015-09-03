@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "84529221_3b8c5ab9",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1443,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-09-03T21:41:53Z",
+      "side": 1,
+      "message": "After the rebase the unittest test still fail if I remove these.  The application is allowed to exceed max values where it shouldn\u0027t.",
+      "parentUuid": "64675e32_15b8941e",
+      "range": {
+        "startLine": 1438,
+        "startChar": 0,
+        "endLine": 1443,
+        "endChar": 5
+      },
+      "revId": "9f15926d648b1cccf97185619d7d4fd9f6932ce9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4326e1b_24291cca",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-02T19:33:33Z",
       "side": 1,
       "message": "need a git cl format to clean up these",
+      "range": {
+        "startLine": 281,
+        "startChar": 3,
+        "endLine": 285,
+        "endChar": 15
+      },
+      "revId": "9f15926d648b1cccf97185619d7d4fd9f6932ce9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0484e2ca_f61b7a79",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-09-03T21:41:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4326e1b_24291cca",
       "range": {
         "startLine": 281,
         "startChar": 3,
