@@ -155,7 +155,7 @@ Context::~Context()
     for (auto framebuffer : mFramebufferMap)
     {
         // Default framebuffer are owned by their respective Surface
-        if (framebuffer.second->id() != 0)
+        if (framebuffer.second != nullptr && framebuffer.second->id() != 0)
         {
             SafeDelete(framebuffer.second);
         }
