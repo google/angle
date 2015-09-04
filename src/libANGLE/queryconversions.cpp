@@ -6,24 +6,13 @@
 
 // queryconversions.cpp: Implementation of state query cast conversions
 
+#include "libANGLE/queryconversions.h"
+
 #include "libANGLE/Context.h"
 #include "common/utilities.h"
 
 namespace gl
 {
-
-// Helper class for converting a GL type to a GLenum:
-// We can't use CastStateValueEnum generally, because of GLboolean + GLubyte overlap.
-// We restrict our use to CastStateValue, where it eliminates duplicate parameters.
-
-template <typename GLType>
-struct CastStateValueEnum { static GLenum mEnumForType; };
-
-template <> GLenum CastStateValueEnum<GLint>::mEnumForType      = GL_INT;
-template <> GLenum CastStateValueEnum<GLuint>::mEnumForType     = GL_UNSIGNED_INT;
-template <> GLenum CastStateValueEnum<GLboolean>::mEnumForType  = GL_BOOL;
-template <> GLenum CastStateValueEnum<GLint64>::mEnumForType    = GL_INT_64_ANGLEX;
-template <> GLenum CastStateValueEnum<GLfloat>::mEnumForType    = GL_FLOAT;
 
 static GLint64 ExpandFloatToInteger(GLfloat value)
 {
@@ -41,8 +30,8 @@ static QueryT ClampToQueryRange(GLint64 value)
 template <typename QueryT, typename NativeT>
 QueryT CastStateValueToInt(GLenum pname, NativeT value)
 {
-    GLenum queryType = CastStateValueEnum<QueryT>::mEnumForType;
-    GLenum nativeType = CastStateValueEnum<NativeT>::mEnumForType;
+    GLenum queryType  = GLTypeToGLenum<QueryT>::value;
+    GLenum nativeType = GLTypeToGLenum<NativeT>::value;
 
     if (nativeType == GL_FLOAT)
     {
@@ -72,7 +61,7 @@ QueryT CastStateValueToInt(GLenum pname, NativeT value)
 template <typename QueryT, typename NativeT>
 QueryT CastStateValue(GLenum pname, NativeT value)
 {
-    GLenum queryType = CastStateValueEnum<QueryT>::mEnumForType;
+    GLenum queryType = GLTypeToGLenum<QueryT>::value;
 
     switch (queryType)
     {

@@ -32,10 +32,12 @@ namespace rx
 {
 class Blit9;
 class IndexDataManager;
+class ProgramD3D;
 class StreamingIndexBufferInterface;
 class StaticIndexBufferInterface;
 class VertexDataManager;
 struct ClearParameters;
+struct D3DUniform;
 struct TranslatedAttribute;
 
 enum D3D9InitError
@@ -111,7 +113,8 @@ class Renderer9 : public RendererD3D
                            const gl::Framebuffer *framebuffer,
                            bool rasterizerDiscard,
                            bool transformFeedbackActive) override;
-    virtual gl::Error applyUniforms(const ProgramImpl &program, const std::vector<gl::LinkedUniform*> &uniformArray);
+    gl::Error applyUniforms(const ProgramD3D &programD3D,
+                            const std::vector<D3DUniform *> &uniformArray) override;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize);
     virtual gl::Error applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances, SourceIndexData *sourceInfo);
     virtual gl::Error applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo, SourceIndexData *sourceIndexInfo);
@@ -258,9 +261,9 @@ class Renderer9 : public RendererD3D
 
     void release();
 
-    void applyUniformnfv(gl::LinkedUniform *targetUniform, const GLfloat *v);
-    void applyUniformniv(gl::LinkedUniform *targetUniform, const GLint *v);
-    void applyUniformnbv(gl::LinkedUniform *targetUniform, const GLint *v);
+    void applyUniformnfv(const D3DUniform *targetUniform, const GLfloat *v);
+    void applyUniformniv(const D3DUniform *targetUniform, const GLint *v);
+    void applyUniformnbv(const D3DUniform *targetUniform, const GLint *v);
 
     gl::Error drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
     gl::Error drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
