@@ -170,7 +170,7 @@ gl::Error RendererGL::drawElements(const gl::Data &data,
                                    GLsizei count,
                                    GLenum type,
                                    const GLvoid *indices,
-                                   const gl::RangeUI &indexRange)
+                                   const gl::IndexRange &indexRange)
 {
     const GLvoid *drawIndexPointer = nullptr;
     gl::Error error =
@@ -194,7 +194,7 @@ gl::Error RendererGL::drawElementsInstanced(const gl::Data &data,
                                             GLenum type,
                                             const GLvoid *indices,
                                             GLsizei instances,
-                                            const gl::RangeUI &indexRange)
+                                            const gl::IndexRange &indexRange)
 {
     const GLvoid *drawIndexPointer = nullptr;
     gl::Error error = mStateManager->setDrawElementsState(data, count, type, indices, instances,
@@ -219,7 +219,7 @@ gl::Error RendererGL::drawRangeElements(const gl::Data &data,
                                         GLsizei count,
                                         GLenum type,
                                         const GLvoid *indices,
-                                        const gl::RangeUI &indexRange)
+                                        const gl::IndexRange &indexRange)
 {
     const GLvoid *drawIndexPointer = nullptr;
     gl::Error error =

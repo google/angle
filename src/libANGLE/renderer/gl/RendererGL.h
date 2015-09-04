@@ -40,14 +40,14 @@ class RendererGL : public Renderer
                            GLsizei count,
                            GLenum type,
                            const GLvoid *indices,
-                           const gl::RangeUI &indexRange) override;
+                           const gl::IndexRange &indexRange) override;
     gl::Error drawElementsInstanced(const gl::Data &data,
                                     GLenum mode,
                                     GLsizei count,
                                     GLenum type,
                                     const GLvoid *indices,
                                     GLsizei instances,
-                                    const gl::RangeUI &indexRange) override;
+                                    const gl::IndexRange &indexRange) override;
     gl::Error drawRangeElements(const gl::Data &data,
                                 GLenum mode,
                                 GLuint start,
@@ -55,7 +55,7 @@ class RendererGL : public Renderer
                                 GLsizei count,
                                 GLenum type,
                                 const GLvoid *indices,
-                                const gl::RangeUI &indexRange) override;
+                                const gl::IndexRange &indexRange) override;
 
     // Shader creation
     CompilerImpl *createCompiler(const gl::Data &data) override;

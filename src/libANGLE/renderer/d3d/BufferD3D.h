@@ -46,7 +46,11 @@ class BufferD3D : public BufferImpl
     void invalidateStaticData();
     void promoteStaticUsage(int dataSize);
 
-    gl::Error getIndexRange(GLenum type, size_t offset, size_t count, gl::RangeUI *outRange) override;
+    gl::Error getIndexRange(GLenum type,
+                            size_t offset,
+                            size_t count,
+                            bool primitiveRestartEnabled,
+                            gl::IndexRange *outRange) override;
 
   protected:
     void updateSerial();

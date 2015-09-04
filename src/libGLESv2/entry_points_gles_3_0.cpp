@@ -59,7 +59,7 @@ void GL_APIENTRY DrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsize
             return;
         }
 
-        RangeUI indexRange;
+        IndexRange indexRange;
         if (!ValidateDrawElements(context, mode, count, type, indices, 0, &indexRange))
         {
             return;
@@ -2264,7 +2264,7 @@ void GL_APIENTRY DrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, 
             return;
         }
 
-        RangeUI indexRange;
+        IndexRange indexRange;
         if (!ValidateDrawElementsInstanced(context, mode, count, type, indices, instanceCount, &indexRange))
         {
             return;

@@ -58,14 +58,14 @@ class Renderer : public ImplFactory
                                    GLsizei count,
                                    GLenum type,
                                    const GLvoid *indices,
-                                   const gl::RangeUI &indexRange) = 0;
+                                   const gl::IndexRange &indexRange) = 0;
     virtual gl::Error drawElementsInstanced(const gl::Data &data,
                                             GLenum mode,
                                             GLsizei count,
                                             GLenum type,
                                             const GLvoid *indices,
                                             GLsizei instances,
-                                            const gl::RangeUI &indexRange) = 0;
+                                            const gl::IndexRange &indexRange) = 0;
     virtual gl::Error drawRangeElements(const gl::Data &data,
                                         GLenum mode,
                                         GLuint start,
@@ -73,7 +73,7 @@ class Renderer : public ImplFactory
                                         GLsizei count,
                                         GLenum type,
                                         const GLvoid *indices,
-                                        const gl::RangeUI &indexRange) = 0;
+                                        const gl::IndexRange &indexRange) = 0;
 
     // lost device
     //TODO(jmadill): investigate if this stuff is necessary in GL

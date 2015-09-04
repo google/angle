@@ -19,6 +19,78 @@
 #  include <windows.graphics.display.h>
 #endif
 
+namespace
+{
+
+template <class IndexType>
+gl::IndexRange ComputeTypedIndexRange(const IndexType *indices,
+                                      size_t count,
+                                      bool primitiveRestartEnabled,
+                                      GLuint primitiveRestartIndex)
+{
+    ASSERT(count > 0);
+
+    IndexType minIndex                = 0;
+    IndexType maxIndex                = 0;
+    size_t nonPrimitiveRestartIndices = 0;
+
+    if (primitiveRestartEnabled)
+    {
+        // Find the first non-primitive restart index to initialize the min and max values
+        size_t i = 0;
+        for (; i < count; i++)
+        {
+            if (indices[i] != primitiveRestartIndex)
+            {
+                minIndex = indices[i];
+                maxIndex = indices[i];
+                nonPrimitiveRestartIndices++;
+                break;
+            }
+        }
+
+        // Loop over the rest of the indices
+        for (; i < count; i++)
+        {
+            if (indices[i] != primitiveRestartIndex)
+            {
+                if (minIndex > indices[i])
+                {
+                    minIndex = indices[i];
+                }
+                if (maxIndex < indices[i])
+                {
+                    maxIndex = indices[i];
+                }
+                nonPrimitiveRestartIndices++;
+            }
+        }
+    }
+    else
+    {
+        minIndex                   = indices[0];
+        maxIndex                   = indices[0];
+        nonPrimitiveRestartIndices = count;
+
+        for (size_t i = 1; i < count; i++)
+        {
+            if (minIndex > indices[i])
+            {
+                minIndex = indices[i];
+            }
+            if (maxIndex < indices[i])
+            {
+                maxIndex = indices[i];
+            }
+        }
+    }
+
+    return gl::IndexRange(static_cast<size_t>(minIndex), static_cast<size_t>(maxIndex),
+                          nonPrimitiveRestartIndices);
+}
+
+}  // anonymous namespace
+
 namespace gl
 {
 
@@ -399,30 +471,44 @@ GLenum LayerIndexToCubeMapTextureTarget(size_t index)
     return FirstCubeMapTextureTarget + static_cast<GLenum>(index);
 }
 
-template <class IndexType>
-static RangeUI ComputeTypedIndexRange(const IndexType *indices, GLsizei count)
-{
-    ASSERT(count > 0);
-    IndexType minIndex = indices[0];
-    IndexType maxIndex = indices[0];
-
-    for (GLsizei i = 1; i < count; i++)
-    {
-        if (minIndex > indices[i]) minIndex = indices[i];
-        if (maxIndex < indices[i]) maxIndex = indices[i];
-    }
-
-    return RangeUI(static_cast<GLuint>(minIndex), static_cast<GLuint>(maxIndex));
-}
-
-RangeUI ComputeIndexRange(GLenum indexType, const GLvoid *indices, GLsizei count)
+IndexRange ComputeIndexRange(GLenum indexType,
+                             const GLvoid *indices,
+                             size_t count,
+                             bool primitiveRestartEnabled)
 {
     switch (indexType)
     {
-      case GL_UNSIGNED_BYTE:  return ComputeTypedIndexRange(static_cast<const GLubyte*>(indices), count);
-      case GL_UNSIGNED_SHORT: return ComputeTypedIndexRange(static_cast<const GLushort*>(indices), count);
-      case GL_UNSIGNED_INT:   return ComputeTypedIndexRange(static_cast<const GLuint*>(indices), count);
-      default: UNREACHABLE(); return RangeUI(0, 0);
+        case GL_UNSIGNED_BYTE:
+            return ComputeTypedIndexRange(static_cast<const GLubyte *>(indices), count,
+                                          primitiveRestartEnabled,
+                                          GetPrimitiveRestartIndex(indexType));
+        case GL_UNSIGNED_SHORT:
+            return ComputeTypedIndexRange(static_cast<const GLushort *>(indices), count,
+                                          primitiveRestartEnabled,
+                                          GetPrimitiveRestartIndex(indexType));
+        case GL_UNSIGNED_INT:
+            return ComputeTypedIndexRange(static_cast<const GLuint *>(indices), count,
+                                          primitiveRestartEnabled,
+                                          GetPrimitiveRestartIndex(indexType));
+        default:
+            UNREACHABLE();
+            return IndexRange();
+    }
+}
+
+GLuint GetPrimitiveRestartIndex(GLenum indexType)
+{
+    switch (indexType)
+    {
+        case GL_UNSIGNED_BYTE:
+            return 0xFF;
+        case GL_UNSIGNED_SHORT:
+            return 0xFFFF;
+        case GL_UNSIGNED_INT:
+            return 0xFFFFFFFF;
+        default:
+            UNREACHABLE();
+            return 0;
     }
 }
 

@@ -80,7 +80,7 @@ gl::Error VertexArrayGL::syncDrawArraysState(const gl::AttributesMask &activeAtt
                                              GLsizei count,
                                              GLsizei instanceCount) const
 {
-    return syncDrawState(activeAttributesMask, first, count, GL_NONE, nullptr, instanceCount,
+    return syncDrawState(activeAttributesMask, first, count, GL_NONE, nullptr, instanceCount, false,
                          nullptr);
 }
 
@@ -89,9 +89,11 @@ gl::Error VertexArrayGL::syncDrawElementsState(const gl::AttributesMask &activeA
                                                GLenum type,
                                                const GLvoid *indices,
                                                GLsizei instanceCount,
+                                               bool primitiveRestartEnabled,
                                                const GLvoid **outIndices) const
 {
-    return syncDrawState(activeAttributesMask, 0, count, type, indices, instanceCount, outIndices);
+    return syncDrawState(activeAttributesMask, 0, count, type, indices, instanceCount,
+                         primitiveRestartEnabled, outIndices);
 }
 
 gl::Error VertexArrayGL::syncDrawState(const gl::AttributesMask &activeAttributesMask,
@@ -100,6 +102,7 @@ gl::Error VertexArrayGL::syncDrawState(const gl::AttributesMask &activeAttribute
                                        GLenum type,
                                        const GLvoid *indices,
                                        GLsizei instanceCount,
+                                       bool primitiveRestartEnabled,
                                        const GLvoid **outIndices) const
 {
     mStateManager->bindVertexArray(mVertexArrayID, getAppliedElementArrayBufferID());
@@ -108,11 +111,11 @@ gl::Error VertexArrayGL::syncDrawState(const gl::AttributesMask &activeAttribute
     bool attributesNeedStreaming = mAttributesNeedStreaming.any();
 
     // Determine if an index buffer needs to be streamed and the range of vertices that need to be copied
-    RangeUI indexRange(0, 0);
+    IndexRange indexRange;
     if (type != GL_NONE)
     {
-        Error error =
-            syncIndexData(count, type, indices, attributesNeedStreaming, &indexRange, outIndices);
+        Error error = syncIndexData(count, type, indices, primitiveRestartEnabled,
+                                    attributesNeedStreaming, &indexRange, outIndices);
         if (error.isError())
         {
             return error;
@@ -140,8 +143,9 @@ gl::Error VertexArrayGL::syncDrawState(const gl::AttributesMask &activeAttribute
 Error VertexArrayGL::syncIndexData(GLsizei count,
                                    GLenum type,
                                    const GLvoid *indices,
+                                   bool primitiveRestartEnabled,
                                    bool attributesNeedStreaming,
-                                   RangeUI *outIndexRange,
+                                   IndexRange *outIndexRange,
                                    const GLvoid **outIndices) const
 {
     ASSERT(outIndices);
@@ -163,7 +167,7 @@ Error VertexArrayGL::syncIndexData(GLsizei count,
         {
             ptrdiff_t elementArrayBufferOffset = reinterpret_cast<ptrdiff_t>(indices);
             Error error = mData.getElementArrayBuffer()->getIndexRange(
-                type, static_cast<size_t>(elementArrayBufferOffset), count, outIndexRange);
+                type, elementArrayBufferOffset, count, primitiveRestartEnabled, outIndexRange);
             if (error.isError())
             {
                 return error;
@@ -181,7 +185,7 @@ Error VertexArrayGL::syncIndexData(GLsizei count,
         // Only compute the index range if the attributes also need to be streamed
         if (attributesNeedStreaming)
         {
-            *outIndexRange = ComputeIndexRange(type, indices, count);
+            *outIndexRange = ComputeIndexRange(type, indices, count, primitiveRestartEnabled);
         }
 
         // Allocate the streaming element array buffer
@@ -218,7 +222,7 @@ Error VertexArrayGL::syncIndexData(GLsizei count,
 
 void VertexArrayGL::computeStreamingAttributeSizes(const gl::AttributesMask &activeAttributesMask,
                                                    GLsizei instanceCount,
-                                                   const gl::RangeUI &indexRange,
+                                                   const gl::IndexRange &indexRange,
                                                    size_t *outStreamingDataSize,
                                                    size_t *outMaxAttributeDataSize) const
 {
@@ -233,21 +237,19 @@ void VertexArrayGL::computeStreamingAttributeSizes(const gl::AttributesMask &act
         const auto &attrib = attribs[idx];
         ASSERT(AttributeNeedsStreaming(attrib));
 
-        const size_t vertexCount = indexRange.end - indexRange.start + 1;
-
         // If streaming is going to be required, compute the size of the required buffer
         // and how much slack space at the beginning of the buffer will be required by determining
         // the attribute with the largest data size.
         size_t typeSize = ComputeVertexAttributeTypeSize(attrib);
-        *outStreamingDataSize +=
-            typeSize * ComputeVertexAttributeElementCount(attrib, vertexCount, instanceCount);
+        *outStreamingDataSize += typeSize * ComputeVertexAttributeElementCount(
+                                                attrib, indexRange.vertexCount(), instanceCount);
         *outMaxAttributeDataSize = std::max(*outMaxAttributeDataSize, typeSize);
     }
 }
 
 gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttributesMask,
                                           GLsizei instanceCount,
-                                          const gl::RangeUI &indexRange) const
+                                          const gl::IndexRange &indexRange) const
 {
     // Sync the vertex attribute state and track what data needs to be streamed
     size_t streamingDataSize    = 0;
@@ -289,8 +291,6 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
         uint8_t *bufferPointer = reinterpret_cast<uint8_t*>(mFunctions->mapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
         size_t curBufferOffset = bufferEmptySpace;
 
-        const size_t vertexCount = indexRange.end - indexRange.start + 1;
-
         const auto &attribs = mData.getVertexAttributes();
         for (unsigned int idx :
              angle::IterateBitSet(mAttributesNeedStreaming & activeAttributesMask))
@@ -299,7 +299,7 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
             ASSERT(AttributeNeedsStreaming(attrib));
 
             const size_t streamedVertexCount =
-                ComputeVertexAttributeElementCount(attrib, vertexCount, instanceCount);
+                ComputeVertexAttributeElementCount(attrib, indexRange.vertexCount(), instanceCount);
 
             const size_t sourceStride = ComputeVertexAttributeStride(attrib);
             const size_t destStride   = ComputeVertexAttributeTypeSize(attrib);

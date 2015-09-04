@@ -109,14 +109,14 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
                            GLsizei count,
                            GLenum type,
                            const GLvoid *indices,
-                           const gl::RangeUI &indexRange) override;
+                           const gl::IndexRange &indexRange) override;
     gl::Error drawElementsInstanced(const gl::Data &data,
                                     GLenum mode,
                                     GLsizei count,
                                     GLenum type,
                                     const GLvoid *indices,
                                     GLsizei instances,
-                                    const gl::RangeUI &indexRange) override;
+                                    const gl::IndexRange &indexRange) override;
     gl::Error drawRangeElements(const gl::Data &data,
                                 GLenum mode,
                                 GLuint start,
@@ -124,7 +124,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
                                 GLsizei count,
                                 GLenum type,
                                 const GLvoid *indices,
-                                const gl::RangeUI &indexRange) override;
+                                const gl::IndexRange &indexRange) override;
 
     bool isDeviceLost() const override;
     std::string getVendorString() const override;
@@ -270,7 +270,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
                                   GLenum type,
                                   const GLvoid *indices,
                                   GLsizei instances,
-                                  const gl::RangeUI &indexRange);
+                                  const gl::IndexRange &indexRange);
 
     virtual gl::Error drawArraysImpl(const gl::Data &data,
                                      GLenum mode,

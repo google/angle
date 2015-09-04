@@ -541,6 +541,26 @@ struct Range
 typedef Range<int> RangeI;
 typedef Range<unsigned int> RangeUI;
 
+struct IndexRange
+{
+    IndexRange() : IndexRange(0, 0, 0) {}
+    IndexRange(size_t start_, size_t end_, size_t vertexIndexCount_)
+        : start(start_), end(end_), vertexIndexCount(vertexIndexCount_)
+    {
+        ASSERT(start <= end);
+    }
+
+    // Number of vertices in the range.
+    size_t vertexCount() const { return (end - start) + 1; }
+
+    // Inclusive range of indices that are not primitive restart
+    size_t start;
+    size_t end;
+
+    // Number of non-primitive restart indices
+    size_t vertexIndexCount;
+};
+
 // First, both normalized floating-point values are converted into 16-bit integer values.
 // Then, the results are packed into the returned 32-bit unsigned integer.
 // The first float value will be written to the least significant bits of the output;

@@ -171,20 +171,20 @@ class Context final : angle::NonCopyable
                        GLsizei count,
                        GLenum type,
                        const GLvoid *indices,
-                       const RangeUI &indexRange);
+                       const IndexRange &indexRange);
     Error drawElementsInstanced(GLenum mode,
                                 GLsizei count,
                                 GLenum type,
                                 const GLvoid *indices,
                                 GLsizei instances,
-                                const RangeUI &indexRange);
+                                const IndexRange &indexRange);
     Error drawRangeElements(GLenum mode,
                             GLuint start,
                             GLuint end,
                             GLsizei count,
                             GLenum type,
                             const GLvoid *indices,
-                            const RangeUI &indexRange);
+                            const IndexRange &indexRange);
 
     Error flush();
     Error finish();

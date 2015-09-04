@@ -1301,7 +1301,7 @@ Error Context::drawElements(GLenum mode,
                             GLsizei count,
                             GLenum type,
                             const GLvoid *indices,
-                            const RangeUI &indexRange)
+                            const IndexRange &indexRange)
 {
     syncRendererState();
     return mRenderer->drawElements(getData(), mode, count, type, indices, indexRange);
@@ -1312,7 +1312,7 @@ Error Context::drawElementsInstanced(GLenum mode,
                                      GLenum type,
                                      const GLvoid *indices,
                                      GLsizei instances,
-                                     const RangeUI &indexRange)
+                                     const IndexRange &indexRange)
 {
     syncRendererState();
     return mRenderer->drawElementsInstanced(getData(), mode, count, type, indices, instances,
@@ -1325,7 +1325,7 @@ Error Context::drawRangeElements(GLenum mode,
                                  GLsizei count,
                                  GLenum type,
                                  const GLvoid *indices,
-                                 const RangeUI &indexRange)
+                                 const IndexRange &indexRange)
 {
     syncRendererState();
     return mRenderer->drawRangeElements(getData(), mode, start, end, count, type, indices,

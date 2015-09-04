@@ -448,8 +448,9 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::Data &data,
     const gl::VertexArray *vao = state.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
 
-    gl::Error error = vaoGL->syncDrawElementsState(program->getActiveAttribLocationsMask(), count,
-                                                   type, indices, instanceCount, outIndices);
+    gl::Error error =
+        vaoGL->syncDrawElementsState(program->getActiveAttribLocationsMask(), count, type, indices,
+                                     instanceCount, state.isPrimitiveRestartEnabled(), outIndices);
     if (error.isError())
     {
         return error;

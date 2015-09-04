@@ -86,7 +86,7 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
                                     GLsizei count,
                                     GLenum type,
                                     const GLvoid *indices,
-                                    const gl::RangeUI &indexRange)
+                                    const gl::IndexRange &indexRange)
 {
     return genericDrawElements(data, mode, count, type, indices, 0, indexRange);
 }
@@ -97,7 +97,7 @@ gl::Error RendererD3D::drawElementsInstanced(const gl::Data &data,
                                              GLenum type,
                                              const GLvoid *indices,
                                              GLsizei instances,
-                                             const gl::RangeUI &indexRange)
+                                             const gl::IndexRange &indexRange)
 {
     return genericDrawElements(data, mode, count, type, indices, instances, indexRange);
 }
@@ -109,7 +109,7 @@ gl::Error RendererD3D::drawRangeElements(const gl::Data &data,
                                          GLsizei count,
                                          GLenum type,
                                          const GLvoid *indices,
-                                         const gl::RangeUI &indexRange)
+                                         const gl::IndexRange &indexRange)
 {
     return genericDrawElements(data, mode, count, type, indices, 0, indexRange);
 }
@@ -120,7 +120,7 @@ gl::Error RendererD3D::genericDrawElements(const gl::Data &data,
                                            GLenum type,
                                            const GLvoid *indices,
                                            GLsizei instances,
-                                           const gl::RangeUI &indexRange)
+                                           const gl::IndexRange &indexRange)
 {
     if (data.state->isPrimitiveRestartEnabled())
     {
@@ -175,8 +175,9 @@ gl::Error RendererD3D::genericDrawElements(const gl::Data &data,
     // layer.
     ASSERT(!data.state->isTransformFeedbackActiveUnpaused());
 
-    GLsizei vertexCount = indexInfo.indexRange.length() + 1;
-    error = applyVertexBuffer(*data.state, mode, indexInfo.indexRange.start, vertexCount, instances, &sourceIndexInfo);
+    size_t vertexCount = indexInfo.indexRange.vertexCount();
+    error = applyVertexBuffer(*data.state, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
+                              static_cast<GLsizei>(vertexCount), instances, &sourceIndexInfo);
     if (error.isError())
     {
         return error;

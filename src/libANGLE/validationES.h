@@ -87,13 +87,28 @@ bool ValidateDrawArrays(Context *context, GLenum mode, GLint first, GLsizei coun
 bool ValidateDrawArraysInstanced(Context *context, GLenum mode, GLint first, GLsizei count, GLsizei primcount);
 bool ValidateDrawArraysInstancedANGLE(Context *context, GLenum mode, GLint first, GLsizei count, GLsizei primcount);
 
-bool ValidateDrawElements(Context *context, GLenum mode, GLsizei count, GLenum type,
-                          const GLvoid *indices, GLsizei primcount, RangeUI *indexRangeOut);
+bool ValidateDrawElements(Context *context,
+                          GLenum mode,
+                          GLsizei count,
+                          GLenum type,
+                          const GLvoid *indices,
+                          GLsizei primcount,
+                          IndexRange *indexRangeOut);
 
-bool ValidateDrawElementsInstanced(Context *context, GLenum mode, GLsizei count, GLenum type,
-                                   const GLvoid *indices, GLsizei primcount, RangeUI *indexRangeOut);
-bool ValidateDrawElementsInstancedANGLE(Context *context, GLenum mode, GLsizei count, GLenum type,
-                                        const GLvoid *indices, GLsizei primcount, RangeUI *indexRangeOut);
+bool ValidateDrawElementsInstanced(Context *context,
+                                   GLenum mode,
+                                   GLsizei count,
+                                   GLenum type,
+                                   const GLvoid *indices,
+                                   GLsizei primcount,
+                                   IndexRange *indexRangeOut);
+bool ValidateDrawElementsInstancedANGLE(Context *context,
+                                        GLenum mode,
+                                        GLsizei count,
+                                        GLenum type,
+                                        const GLvoid *indices,
+                                        GLsizei primcount,
+                                        IndexRange *indexRangeOut);
 
 bool ValidateFramebufferTextureBase(Context *context, GLenum target, GLenum attachment,
                                     GLuint texture, GLint level);

@@ -1549,10 +1549,12 @@ gl::Error Renderer9::drawElementsImpl(GLenum mode,
     }
     else
     {
+        size_t vertexCount = indexInfo.indexRange.vertexCount();
         for (int i = 0; i < mRepeatDraw; i++)
         {
-            GLsizei vertexCount = static_cast<int>(indexInfo.indexRange.length()) + 1;
-            mDevice->DrawIndexedPrimitive(mPrimitiveType, -minIndex, minIndex, vertexCount, indexInfo.startIndex, mPrimitiveCount);
+            mDevice->DrawIndexedPrimitive(mPrimitiveType, -minIndex, minIndex,
+                                          static_cast<UINT>(vertexCount), indexInfo.startIndex,
+                                          mPrimitiveCount);
         }
         return gl::Error(GL_NO_ERROR);
     }
