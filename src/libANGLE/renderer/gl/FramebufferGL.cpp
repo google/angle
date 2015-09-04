@@ -241,11 +241,10 @@ GLenum FramebufferGL::getImplementationColorReadType() const
 
 gl::Error FramebufferGL::readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const
 {
+    // TODO: don't sync the pixel pack state here once the dirty bits contain the pixel pack buffer
+    // binding
     const gl::PixelPackState &packState = state.getPackState();
-    if (packState.pixelBuffer.get() != nullptr)
-    {
-        UNIMPLEMENTED();
-    }
+    mStateManager->setPixelPackState(packState);
 
     mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, mFramebufferID);
     mFunctions->readPixels(area.x, area.y, area.width, area.height, format, type, pixels);
