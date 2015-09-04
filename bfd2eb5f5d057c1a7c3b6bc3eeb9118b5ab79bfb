@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e400ae3b_54bea2eb",
+        "filename": "src/compiler/preprocessor/ExpressionParser.y",
+        "patchSetId": 4
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-04T16:40:52Z",
+      "side": 1,
+      "message": "can you comment here about the overloading you\u0027re anticipating? I think I understand now but it would help future readers.",
+      "range": {
+        "startLine": 153,
+        "startChar": 17,
+        "endLine": 153,
+        "endChar": 25
+      },
+      "revId": "bfd2eb5f5d057c1a7c3b6bc3eeb9118b5ab79bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
