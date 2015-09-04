@@ -299,12 +299,6 @@
 1094 WIN : dEQP-GLES3.functional.shaders.constant_expressions.complex_types.array_length_fragment = FAIL
 1094 WIN : dEQP-GLES3.functional.shaders.constant_expressions.complex_types.array_vertex = FAIL
 1094 WIN : dEQP-GLES3.functional.shaders.constant_expressions.complex_types.array_fragment = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.filtering.2d_array.sizes.128x32x64_nearest = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.filtering.2d_array.sizes.128x32x64_linear = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.filtering.2d_array.sizes.128x32x64_nearest_mipmap_nearest = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.filtering.2d_array.sizes.128x32x64_linear_mipmap_nearest = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.filtering.2d_array.sizes.128x32x64_nearest_mipmap_linear = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.filtering.2d_array.sizes.128x32x64_linear_mipmap_linear = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_clamp = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_repeat = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_mirror = FAIL
@@ -369,7 +363,6 @@
 1095 WIN : dEQP-GLES3.functional.texture.specification.teximage2d_depth.depth32f_stencil8 = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.teximage2d_depth_pbo.depth_component32f = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.teximage2d_depth_pbo.depth_component24 = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.specification.teximage3d_depth_pbo.depth_component16_2d_array = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.teximage2d_depth_pbo.depth32f_stencil8 = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.basic_texsubimage2d.rgba32i_cube = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.basic_texsubimage2d.rgba32ui_cube = FAIL
