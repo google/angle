@@ -126,6 +126,7 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
 {
     InternalFormatInfoMap map;
 
+    // clang-format off
     //                       | Format              | OpenGL texture support                          | Filter  | OpenGL render support                        | OpenGL ES texture support                 | Filter  | OpenGL ES render support                 |
     InsertFormatMapping(&map, GL_R8,                VersionOrExts(3, 0, "GL_ARB_texture_rg"),         Always(), VersionOrExts(3, 0, "GL_ARB_texture_rg"),      VersionOrExts(3, 0, "GL_EXT_texture_rg"),   Always(), VersionOrExts(3, 0, "GL_EXT_texture_rg")  );
     InsertFormatMapping(&map, GL_R8_SNORM,          VersionOnly(3, 1),                                Always(), Never(),                                       VersionOnly(3, 0),                          Always(), Never()                                   );
@@ -139,7 +140,7 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     InsertFormatMapping(&map, GL_RGBA8,             Always(),                                         Always(), Always(),                                      VersionOrExts(3, 0, "GL_OES_rgb8_rgba8"),   Always(), VersionOrExts(3, 0, "GL_OES_rgb8_rgba8")  );
     InsertFormatMapping(&map, GL_RGBA8_SNORM,       VersionOnly(3, 1),                                Always(), Never(),                                       VersionOnly(3, 0),                          Always(), Never()                                   );
     InsertFormatMapping(&map, GL_RGB10_A2,          Always(),                                         Always(), Always(),                                      VersionOnly(3, 0),                          Always(), VersionOnly(3, 0)                         );
-    InsertFormatMapping(&map, GL_RGB10_A2UI,        VersionOrExts(3, 3, "GL_ARB_texture_rgb10_a2ui"), Never(),  Never(),                                       VersionOnly(3, 0),                          Never(),  Never()                                   );
+    InsertFormatMapping(&map, GL_RGB10_A2UI,        VersionOrExts(3, 3, "GL_ARB_texture_rgb10_a2ui"), Never(),  Always(),                                      VersionOnly(3, 0),                          Never(),  Always()                                  );
     InsertFormatMapping(&map, GL_SRGB8,             VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),       Always(), VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),    VersionOrExts(3, 0, "GL_EXT_texture_sRGB"), Always(), VersionOrExts(3, 0, "GL_EXT_texture_sRGB"));
     InsertFormatMapping(&map, GL_SRGB8_ALPHA8,      VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),       Always(), VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),    VersionOrExts(3, 0, "GL_EXT_texture_sRGB"), Always(), VersionOrExts(3, 0, "GL_EXT_texture_sRGB"));
     InsertFormatMapping(&map, GL_R8I,               VersionOrExts(3, 0, "GL_ARB_texture_rg"),         Never(),  VersionOrExts(3, 0, "GL_ARB_texture_rg"),      VersionOnly(3, 0),                          Never(),  VersionOnly(3, 0)                         );
@@ -244,6 +245,7 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
 
     // From GL_ANGLE_texture_compression_dxt5
     InsertFormatMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, ExtsOnly("GL_EXT_texture_compression_s3tc"), Always(), Never(), ExtsOnly("GL_ANGLE_texture_compression_dxt5"), Always(), Never());
+    // clang-format on
 
     return map;
 }
