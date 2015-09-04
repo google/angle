@@ -167,6 +167,13 @@ TEST_P(UniformTest, UniformArrayLocations)
 // Test that float to integer GetUniform rounds values correctly.
 TEST_P(UniformTest, FloatUniformStateQuery)
 {
+    // TODO(jmadill): remove this suppression once we support ANGLE-only state queries.
+    if (isAMD() && (GetParam() == ES2_OPENGL() || GetParam() == ES3_OPENGL()))
+    {
+        std::cout << "Skipping test due to a driver bug on AMD." << std::endl;
+        return;
+    }
+
     std::vector<GLfloat> inValues;
     std::vector<GLfloat> expectedFValues;
     std::vector<GLint> expectedIValues;
@@ -231,6 +238,13 @@ TEST_P(UniformTest, FloatUniformStateQuery)
 // Test that integer to float GetUniform rounds values correctly.
 TEST_P(UniformTest, IntUniformStateQuery)
 {
+    // TODO(jmadill): remove this suppression once we support ANGLE-only state queries.
+    if (isAMD() && (GetParam() == ES2_OPENGL() || GetParam() == ES3_OPENGL()))
+    {
+        std::cout << "Skipping test due to a driver bug on AMD." << std::endl;
+        return;
+    }
+
     std::vector<GLint> inValues;
     std::vector<GLint> expectedIValues;
     std::vector<GLfloat> expectedFValues;
