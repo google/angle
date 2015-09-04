@@ -1833,7 +1833,7 @@ void ProgramD3D::getUniformv(GLint location, T *params, GLenum uniformType)
 
                 for (unsigned int i = 0; i < size; i++)
                 {
-                    params[i] = static_cast<T>(floatParams[i]);
+                    params[i] = static_cast<T>(roundf(floatParams[i]));
                 }
             }
             break;
