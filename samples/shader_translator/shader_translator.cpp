@@ -34,8 +34,9 @@ static void PrintVariable(const std::string &prefix, size_t index, const sh::Sha
 static void PrintActiveVariables(ShHandle compiler);
 
 // If NUM_SOURCE_STRINGS is set to a value > 1, the input file data is
-// broken into that many chunks.
-const unsigned int NUM_SOURCE_STRINGS = 2;
+// broken into that many chunks. This will affect file/line numbering in
+// the preprocessor.
+const unsigned int NUM_SOURCE_STRINGS = 1;
 typedef std::vector<char *> ShaderSource;
 static bool ReadShaderSource(const char *fileName, ShaderSource &source);
 static void FreeShaderSource(ShaderSource &source);
