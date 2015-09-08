@@ -93,6 +93,30 @@
       "revId": "d88df793d03cfd369bf55a56bc872064fd79aeff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44b5faf6_7ca9395e",
+        "filename": "src/libANGLE/renderer/d3d/EGLImageD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-08T20:42:38Z",
+      "side": 1,
+      "message": "Actually I don\u0027t think you need to inherit from that, instead of storing mTextureBuffer and mRenderbufferBuffer you store a pointer to FBOAOImpl (or something that makes more sense as name) and call getAttachmentRenderTarget (or whatever makes more sense) - and avoid needing to do these \u0027ifs\u0027",
+      "parentUuid": "64a67ed7_3d972f38",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 8
+      },
+      "revId": "d88df793d03cfd369bf55a56bc872064fd79aeff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
