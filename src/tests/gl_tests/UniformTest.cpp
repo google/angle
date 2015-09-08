@@ -6,6 +6,8 @@
 
 #include "test_utils/ANGLETest.h"
 
+#include <cmath>
+
 using namespace angle;
 
 namespace
