@@ -84,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "24e486f6_fbe08f00",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-08T14:17:49Z",
+      "side": 1,
+      "message": "Sorry, the ref was meant to tag this line for the comment below.",
+      "parentUuid": "44141a88_2ddc7500",
+      "revId": "6640f66d1036809bf9bd7437b38a23418b759a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4298ecb_8941192b",
         "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
         "patchSetId": 2
