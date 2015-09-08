@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "841a92b2_4c8a93a1",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-08T14:17:49Z",
+      "side": 1,
+      "message": "vector will be better.  It will be iterated over every draw call and having all the elements contiguous in memory will be much faster.",
+      "range": {
+        "startLine": 62,
+        "startChar": 9,
+        "endLine": 62,
+        "endChar": 13
+      },
+      "revId": "d5bba0d5773ac49e3bf93e8d574fda7c4fa974be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
