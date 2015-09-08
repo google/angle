@@ -16,6 +16,24 @@
       "revId": "742040223244cf30308f08ce093e35ca43c2f3dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64675e32_de7bd9fc",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-08T17:19:26Z",
+      "side": 1,
+      "message": "They don\u0027t have to be template arguments. No strong reason against changing them one way or the other. (Increased runtime performance possibly with templated multiplications and loop indexing, vs increased code size of multiple functions)",
+      "parentUuid": "c439ea02_46b38644",
+      "revId": "742040223244cf30308f08ce093e35ca43c2f3dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
