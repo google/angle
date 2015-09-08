@@ -19,6 +19,7 @@ namespace pp
 {
 
 class Diagnostics;
+struct SourceLocation;
 
 class MacroExpander : public Lexer
 {
@@ -45,7 +46,8 @@ class MacroExpander : public Lexer
     typedef std::vector<Token> MacroArg;
     bool collectMacroArgs(const Macro &macro,
                           const Token &identifier,
-                          std::vector<MacroArg> *args);
+                          std::vector<MacroArg> *args,
+                          SourceLocation *closingParenthesisLocation);
     void replaceMacroParams(const Macro &macro,
                             const std::vector<MacroArg> &args,
                             std::vector<Token> *replacements);

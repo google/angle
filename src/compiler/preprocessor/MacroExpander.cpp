@@ -187,6 +187,12 @@ bool MacroExpander::expandMacro(const Macro &macro,
                                 std::vector<Token> *replacements)
 {
     replacements->clear();
+
+    // In the case of an object-like macro, the replacement list gets its location
+    // from the identifier, but in the case of a function-like macro, the replacement
+    // list gets its location from the closing parenthesis of the macro invocation.
+    // This is tested by dEQP-GLES3.functional.shaders.preprocessor.predefined_macros.*
+    SourceLocation replacementLocation = identifier.location;
     if (macro.type == Macro::kTypeObj)
     {
         replacements->assign(macro.replacements.begin(),
@@ -218,7 +224,7 @@ bool MacroExpander::expandMacro(const Macro &macro,
         assert(macro.type == Macro::kTypeFunc);
         std::vector<MacroArg> args;
         args.reserve(macro.parameters.size());
-        if (!collectMacroArgs(macro, identifier, &args))
+        if (!collectMacroArgs(macro, identifier, &args, &replacementLocation))
             return false;
 
         replaceMacroParams(macro, args, replacements);
@@ -234,14 +240,15 @@ bool MacroExpander::expandMacro(const Macro &macro,
             repl.setAtStartOfLine(identifier.atStartOfLine());
             repl.setHasLeadingSpace(identifier.hasLeadingSpace());
         }
-        repl.location = identifier.location;
+        repl.location = replacementLocation;
     }
     return true;
 }
 
 bool MacroExpander::collectMacroArgs(const Macro &macro,
                                      const Token &identifier,
-                                     std::vector<MacroArg> *args)
+                                     std::vector<MacroArg> *args,
+                                     SourceLocation *closingParenthesisLocation)
 {
     Token token;
     getToken(&token);
@@ -271,6 +278,7 @@ bool MacroExpander::collectMacroArgs(const Macro &macro,
           case ')':
             --openParens;
             isArg = openParens != 0;
+            *closingParenthesisLocation = token.location;
             break;
           case ',':
             // The individual arguments are separated by comma tokens, but
