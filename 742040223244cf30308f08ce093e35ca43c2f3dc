@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c439ea02_46b38644",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-08T17:00:18Z",
+      "side": 1,
+      "message": "Apart from unrolling the loops, I\u0027m not sure what the templated dimensions do here.",
+      "revId": "742040223244cf30308f08ce093e35ca43c2f3dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
