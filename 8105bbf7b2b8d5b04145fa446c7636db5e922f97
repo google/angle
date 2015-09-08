@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4497ba54_6cbe9bec",
+        "filename": "build/gyp_angle",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-08T14:27:40Z",
+      "side": 1,
+      "message": "what\u0027s the advantage of building dEQP libraries and not the executables?",
+      "range": {
+        "startLine": 68,
+        "startChar": 18,
+        "endLine": 68,
+        "endChar": 47
+      },
+      "revId": "8105bbf7b2b8d5b04145fa446c7636db5e922f97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c439ea02_064cde07",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1168,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-08T14:27:40Z",
+      "side": 1,
+      "message": "interesting, why do you need a shared library when there are no sources?",
+      "range": {
+        "startLine": 1168,
+        "startChar": 28,
+        "endLine": 1168,
+        "endChar": 54
+      },
+      "revId": "8105bbf7b2b8d5b04145fa446c7636db5e922f97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0483021e_4ab9b301",
+        "filename": "src/tests/tests.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-08T14:27:40Z",
+      "side": 1,
+      "message": "nit: trailing whitespace",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 4
+      },
+      "revId": "8105bbf7b2b8d5b04145fa446c7636db5e922f97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
