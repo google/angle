@@ -697,6 +697,10 @@ TEST_F(IfTest, UndefinedMacro)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::PP_INVALID_EXPRESSION,
+                      pp::SourceLocation(0, 1),
+                      "syntax error"));
+    EXPECT_CALL(mDiagnostics,
                 print(pp::Diagnostics::PP_CONDITIONAL_UNEXPECTED_TOKEN,
                       pp::SourceLocation(0, 1),
                       "UNDEFINED"));
@@ -829,65 +833,3 @@ TEST_F(IfTest, UnterminatedIfdef)
     mPreprocessor.lex(&token);
 }
 
-// The preprocessor only allows one expression to follow an #if directive.
-// Supplying two integer expressions should be an error.
-TEST_F(IfTest, ExtraIntExpression)
-{
-    const char *str =
-        "#if 1 1\n"
-        "#endif\n";
-    ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
-
-    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_INVALID_EXPRESSION,
-                                    pp::SourceLocation(0, 1), "syntax error"));
-
-    pp::Token token;
-    mPreprocessor.lex(&token);
-}
-
-// The preprocessor only allows one expression to follow an #if directive.
-// Supplying two expressions where one uses a preprocessor define should be an error.
-TEST_F(IfTest, ExtraIdentifierExpression)
-{
-    const char *str =
-        "#define one 1\n"
-        "#if 1 one\n"
-        "#endif\n";
-    ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
-
-    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_INVALID_EXPRESSION,
-                                    pp::SourceLocation(0, 2), "syntax error"));
-
-    pp::Token token;
-    mPreprocessor.lex(&token);
-}
-
-// Divide by zero that's not evaluated because of short-circuiting should not cause an error.
-TEST_F(IfTest, ShortCircuitedDivideByZero)
-{
-    const char *str =
-        "#if 1 || (2 / 0)\n"
-        "pass\n"
-        "#endif\n";
-    const char *expected =
-        "\n"
-        "pass\n"
-        "\n";
-
-    preprocess(str, expected);
-}
-
-// Undefined identifier that's not evaluated because of short-circuiting should not cause an error.
-TEST_F(IfTest, ShortCircuitedUndefined)
-{
-    const char *str =
-        "#if 1 || UNDEFINED\n"
-        "pass\n"
-        "#endif\n";
-    const char *expected =
-        "\n"
-        "pass\n"
-        "\n";
-
-    preprocess(str, expected);
-}
