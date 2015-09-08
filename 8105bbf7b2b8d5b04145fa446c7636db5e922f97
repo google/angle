@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "84529221_de852991",
+        "filename": "build/gyp_angle",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-09-08T16:25:58Z",
+      "side": 1,
+      "message": "Like the comment says above, GYP can\u0027t generate valid executables for WinRT- it can only generate DLLs. For now, we have to create standalone WinRT executables outside GYP which load the WinRT dEQP DLLs and call the entry function (much like the existing dEQP executables do for non-WinRT).\n\nMedium-term we hope to find a better solution to create WinRT dEQP executables, but we are hoping to make baby-steps towards this by first generating valid dEQP DLLs.",
+      "parentUuid": "4497ba54_6cbe9bec",
+      "range": {
+        "startLine": 68,
+        "startChar": 18,
+        "endLine": 68,
+        "endChar": 47
+      },
+      "revId": "8105bbf7b2b8d5b04145fa446c7636db5e922f97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c439ea02_064cde07",
         "filename": "src/tests/deqp.gypi",
         "patchSetId": 1
@@ -59,6 +83,30 @@
       "writtenOn": "2015-09-08T14:27:40Z",
       "side": 1,
       "message": "interesting, why do you need a shared library when there are no sources?",
+      "range": {
+        "startLine": 1168,
+        "startChar": 28,
+        "endLine": 1168,
+        "endChar": 54
+      },
+      "revId": "8105bbf7b2b8d5b04145fa446c7636db5e922f97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "644d9e85_395229a9",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1168,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-09-08T16:25:58Z",
+      "side": 1,
+      "message": "WinRT doesn\u0027t support \u0027type\u0027 : \u0027none\u0027, which is the default for angle_deqp_support here.\n\nWe had to apply the same trick to other projects too (e.g. commit_id and copy_compiler_dll)",
+      "parentUuid": "c439ea02_064cde07",
       "range": {
         "startLine": 1168,
         "startChar": 28,
