@@ -576,7 +576,10 @@
 1096 WIN : dEQP-GLES3.functional.fragment_ops.random.* = FAIL
 1096 WIN : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.* = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.color0.rgb16f = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.color0.rgb10_a2ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.stencil.rgb10_a2ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.depth.depth_component32 = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.depth.rgb10_a2ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rgb16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rgb9_e5 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.srgb_unsigned_byte = FAIL
@@ -591,6 +594,7 @@
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rg8_snorm = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rgb8_snorm = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rgba8_snorm = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rgb10_a2ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.rgb9_e5 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.srgb_unsigned_byte = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.srgb8 = FAIL
@@ -604,6 +608,7 @@
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.rg8_snorm = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.rgb8_snorm = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.rgba8_snorm = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.rgb10_a2ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.rgb9_e5 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.srgb_unsigned_byte = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.srgb8 = FAIL
@@ -617,6 +622,7 @@
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.rg8_snorm = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.rgb8_snorm = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.rgba8_snorm = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.rgb10_a2ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.size.distinct = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.layer.2darr_1_3 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.layer.2darr_4_15 = FAIL
@@ -624,7 +630,10 @@
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.layer.3d_4_15 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.render.resize.tex2d_rgba16f_stencil_rbo_stencil_index8 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.render.resize.tex2d_rgba8_stencil_rbo_stencil_index8 = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.render.resize.rbo_rgb10_a2ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.render.recreate_color.rbo_rgb10_a2ui_depth_stencil_rbo_depth24_stencil8 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.render.recreate_depth_stencil.tex2d_rgba8_stencil_rbo_stencil_index8 = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.color.clear.rgb10_a2ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.texcube.rgba32i = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.texcube.rgba32ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.texcube.rgba16i = FAIL
@@ -691,6 +700,7 @@
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rg16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r16f = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.blit.rbo.rgb10_a2ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth_component32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth_component24 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth_component16 = FAIL
@@ -724,6 +734,8 @@
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_dst_y = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_dst_x = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_dst_y = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba32ui_to_rgb10_a2ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba16ui_to_rgb10_a2ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba8_to_rgb8 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba8_to_rgb565 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba8_to_rgba32f = FAIL
@@ -733,6 +745,7 @@
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba8_to_rg16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba8_to_r32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba8_to_r16f = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba8ui_to_rgb10_a2ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.srgb8_alpha8_to_rgba32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.srgb8_alpha8_to_rgba16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.srgb8_alpha8_to_r11f_g11f_b10f = FAIL
@@ -747,6 +760,16 @@
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2_to_rg16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2_to_r32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2_to_r16f = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2ui_to_rgba32ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2ui_to_rgba16ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2ui_to_rgba8ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2ui_to_rgb10_a2ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2ui_to_rg32ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2ui_to_rg16ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2ui_to_rg8ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2ui_to_r32ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2ui_to_r16ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2ui_to_r8ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba4_to_rgb8 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba4_to_rgb565 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba4_to_rgba32f = FAIL
@@ -777,6 +800,8 @@
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb565_to_rg16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb565_to_r32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb565_to_r16f = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rg32ui_to_rgb10_a2ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rg16ui_to_rgb10_a2ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rg8_to_rgba32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rg8_to_rgba16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rg8_to_r11f_g11f_b10f = FAIL
@@ -784,6 +809,9 @@
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rg8_to_rg16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rg8_to_r32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rg8_to_r16f = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rg8ui_to_rgb10_a2ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.r32ui_to_rgb10_a2ui = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.r16ui_to_rgb10_a2ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.r8_to_rgba32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.r8_to_rgba16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.r8_to_r11f_g11f_b10f = FAIL
@@ -791,6 +819,7 @@
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.r8_to_rg16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.r8_to_r32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.r8_to_r16f = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.r8ui_to_rgb10_a2ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.depth_stencil.stencil_index8_basic = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.depth_stencil.stencil_index8_scale = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.default_framebuffer.rgba8_linear_out_of_bounds_blit_from_default = FAIL
@@ -1107,6 +1136,8 @@
 1100 WIN : dEQP-GLES3.functional.fragment_out.random.97 = FAIL
 1100 WIN : dEQP-GLES3.functional.fragment_out.random.98 = FAIL
 1100 WIN : dEQP-GLES3.functional.fragment_out.random.99 = FAIL
+1101 WIN : dEQP-GLES3.functional.pbo.renderbuffer.rgb10_a2ui_triangles = FAIL
+1101 WIN : dEQP-GLES3.functional.pbo.renderbuffer.rgb10_a2ui_clears = FAIL
 1101 WIN : dEQP-GLES3.functional.rasterization.flatshading.triangles = FAIL
 1101 WIN : dEQP-GLES3.functional.rasterization.flatshading.triangle_strip = FAIL
 1101 WIN : dEQP-GLES3.functional.rasterization.flatshading.triangle_fan = FAIL
@@ -1310,6 +1341,7 @@
 1101 WIN : dEQP-GLES3.functional.state_query.shader.transform_feedback = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.internal_format.rgba_samples = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.internal_format.rgb_samples = FAIL
+1101 WIN : dEQP-GLES3.functional.state_query.internal_format.rgb10_a2ui_samples = FAIL
 1101 WIN : dEQP-GLES3.functional.polygon_offset.fixed16_render_with_units = FAIL
 1101 WIN : dEQP-GLES3.functional.polygon_offset.fixed24_render_with_units = FAIL
 1101 WIN : dEQP-GLES3.functional.draw.draw_elements.points.instanced_attributes = FAIL
