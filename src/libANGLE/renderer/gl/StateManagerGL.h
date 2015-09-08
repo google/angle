@@ -126,6 +126,8 @@ class StateManagerGL final : angle::NonCopyable
   private:
     gl::Error setGenericDrawState(const gl::Data &data);
 
+    void setTextureCubemapSeamlessEnabled(bool enabled);
+
     const FunctionsGL *mFunctions;
 
     GLuint mProgram;
@@ -212,6 +214,8 @@ class StateManagerGL final : angle::NonCopyable
     gl::ColorF mClearColor;
     float mClearDepth;
     GLint mClearStencil;
+
+    bool mTextureCubemapSeamlessEnabled;
 
     gl::State::DirtyBits mLocalDirtyBits;
 };
