@@ -14,7 +14,11 @@ namespace
 class UniformTest : public ANGLETest
 {
   protected:
-    UniformTest() : mProgram(0), mUniformFLocation(-1), mUniformILocation(-1), mUniformBLocation(-1)
+    UniformTest()
+        : mProgram(0),
+          mUniformFLocation(-1),
+          mUniformILocation(-1),
+          mUniformBLocation(-1)
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -208,7 +212,7 @@ TEST_P(UniformTest, FloatUniformStateQuery)
 
     for (size_t index = 0; index < inValues.size(); ++index)
     {
-        GLfloat inValue       = inValues[index];
+        GLfloat inValue = inValues[index];
         GLfloat expectedValue = expectedFValues[index];
 
         glUniform1f(mUniformFLocation, inValue);
@@ -220,7 +224,7 @@ TEST_P(UniformTest, FloatUniformStateQuery)
 
     for (size_t index = 0; index < inValues.size(); ++index)
     {
-        GLfloat inValue     = inValues[index];
+        GLfloat inValue = inValues[index];
         GLint expectedValue = expectedIValues[index];
 
         glUniform1f(mUniformFLocation, inValue);
@@ -234,6 +238,13 @@ TEST_P(UniformTest, FloatUniformStateQuery)
 // Test that integer to float GetUniform rounds values correctly.
 TEST_P(UniformTest, IntUniformStateQuery)
 {
+    // TODO(jmadill): remove this suppression once we support ANGLE-only state queries.
+    if (isAMD() && (GetParam() == ES2_OPENGL() || GetParam() == ES3_OPENGL()))
+    {
+        std::cout << "Skipping test due to a driver bug on AMD." << std::endl;
+        return;
+    }
+
     std::vector<GLint> inValues;
     std::vector<GLint> expectedIValues;
     std::vector<GLfloat> expectedFValues;
@@ -261,7 +272,7 @@ TEST_P(UniformTest, IntUniformStateQuery)
 
     for (size_t index = 0; index < inValues.size(); ++index)
     {
-        GLint inValue       = inValues[index];
+        GLint inValue = inValues[index];
         GLint expectedValue = expectedIValues[index];
 
         glUniform1i(mUniformILocation, inValue);
@@ -273,7 +284,7 @@ TEST_P(UniformTest, IntUniformStateQuery)
 
     for (size_t index = 0; index < inValues.size(); ++index)
     {
-        GLint inValue         = inValues[index];
+        GLint inValue = inValues[index];
         GLfloat expectedValue = expectedFValues[index];
 
         glUniform1i(mUniformILocation, inValue);
@@ -288,7 +299,7 @@ TEST_P(UniformTest, IntUniformStateQuery)
 TEST_P(UniformTest, BooleanUniformStateQuery)
 {
     glUseProgram(mProgram);
-    GLint intValue     = 0;
+    GLint intValue = 0;
     GLfloat floatValue = 0.0f;
 
     glUniform1i(mUniformBLocation, GL_FALSE);
