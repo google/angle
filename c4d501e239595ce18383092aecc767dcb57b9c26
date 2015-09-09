@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e4118ed4_dd36eb1a",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T21:27:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "040f82b2_cab4e354",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 6
+      },
+      "revId": "c4d501e239595ce18383092aecc767dcb57b9c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64fd9ebf_2812638f",
         "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-09T19:52:37Z",
       "side": 1,
       "message": "nit: git cl format missed this, maybe it doesn\u0027t work on mm files? There\u0027s a bunch of style nits in this file, please do a pass-over",
+      "range": {
+        "startLine": 37,
+        "startChar": 7,
+        "endLine": 37,
+        "endChar": 34
+      },
+      "revId": "c4d501e239595ce18383092aecc767dcb57b9c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44e33a1f_0cc457c5",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T21:27:06Z",
+      "side": 1,
+      "message": "Ran CL format again, selectively keeping stuff as it has a tendency to break objC code.\nDone",
+      "parentUuid": "64fd9ebf_2812638f",
       "range": {
         "startLine": 37,
         "startChar": 7,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "64d4be37_0d6d7187",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T21:27:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "040f82b2_eaafa7fd",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 6
+      },
+      "revId": "c4d501e239595ce18383092aecc767dcb57b9c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44e33a1f_0c3fb77b",
         "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2015-09-09T19:52:37Z",
       "side": 1,
       "message": "this should go in the anonymous block",
+      "range": {
+        "startLine": 57,
+        "startChar": 6,
+        "endLine": 57,
+        "endChar": 17
+      },
+      "revId": "c4d501e239595ce18383092aecc767dcb57b9c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4118ed4_5d431b7a",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T21:27:06Z",
+      "side": 1,
+      "message": "I originally put it in the anonymous namespace but I wasn\u0027t able to forward declare it in the .h file.",
+      "parentUuid": "44e33a1f_0c3fb77b",
       "range": {
         "startLine": 57,
         "startChar": 6,
