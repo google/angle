@@ -1247,13 +1247,11 @@ void GL_APIENTRY TransformFeedbackVaryings(GLuint program, GLsizei count, const 
             return;
         }
 
-        if (!ValidProgram(context, program))
+        Program *programObject = GetValidProgram(context, program);
+        if (!programObject)
         {
             return;
         }
-
-        Program *programObject = context->getProgram(program);
-        ASSERT(programObject);
 
         programObject->setTransformFeedbackVaryings(count, varyings, bufferMode);
     }
@@ -1280,13 +1278,11 @@ void GL_APIENTRY GetTransformFeedbackVarying(GLuint program, GLuint index, GLsiz
             return;
         }
 
-        if (!ValidProgram(context, program))
+        Program *programObject = GetValidProgram(context, program);
+        if (!programObject)
         {
             return;
         }
-
-        Program *programObject = context->getProgram(program);
-        ASSERT(programObject);
 
         if (index >= static_cast<GLuint>(programObject->getTransformFeedbackVaryingCount()))
         {
@@ -1991,20 +1987,11 @@ void GL_APIENTRY GetUniformIndices(GLuint program, GLsizei uniformCount, const G
             return;
         }
 
-        Program *programObject = context->getProgram(program);
+        Program *programObject = GetValidProgram(context, program);
 
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
 
         if (!programObject->isLinked())
@@ -2044,20 +2031,11 @@ void GL_APIENTRY GetActiveUniformsiv(GLuint program, GLsizei uniformCount, const
             return;
         }
 
-        Program *programObject = context->getProgram(program);
+        Program *programObject = GetValidProgram(context, program);
 
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
 
         switch (pname)
@@ -2115,20 +2093,10 @@ GLuint GL_APIENTRY GetUniformBlockIndex(GLuint program, const GLchar* uniformBlo
             return GL_INVALID_INDEX;
         }
 
-        Program *programObject = context->getProgram(program);
-
+        Program *programObject = GetValidProgram(context, program);
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return GL_INVALID_INDEX;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return GL_INVALID_INDEX;
-            }
+            return GL_INVALID_INDEX;
         }
 
         return programObject->getUniformBlockIndex(uniformBlockName);
@@ -2150,20 +2118,11 @@ void GL_APIENTRY GetActiveUniformBlockiv(GLuint program, GLuint uniformBlockInde
             context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
-        Program *programObject = context->getProgram(program);
+        Program *programObject = GetValidProgram(context, program);
 
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
 
         if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
@@ -2208,20 +2167,11 @@ void GL_APIENTRY GetActiveUniformBlockName(GLuint program, GLuint uniformBlockIn
             return;
         }
 
-        Program *programObject = context->getProgram(program);
+        Program *programObject = GetValidProgram(context, program);
 
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
 
         if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
@@ -2254,20 +2204,11 @@ void GL_APIENTRY UniformBlockBinding(GLuint program, GLuint uniformBlockIndex, G
             return;
         }
 
-        Program *programObject = context->getProgram(program);
+        Program *programObject = GetValidProgram(context, program);
 
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
 
         // if never linked, there won't be any uniform blocks

@@ -244,11 +244,6 @@
 1028 WIN LINUX : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_short = FAIL
 1028 WIN LINUX : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_int = FAIL
 1028 WIN LINUX : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8 = FAIL
-1029 WIN LINUX : dEQP-GLES2.functional.negative_api.state.get_shaderiv = FAIL
-1029 WIN LINUX : dEQP-GLES2.functional.negative_api.state.get_shader_info_log = FAIL
-1029 WIN LINUX : dEQP-GLES2.functional.negative_api.state.get_shader_source = FAIL
-1029 WIN LINUX : dEQP-GLES2.functional.negative_api.state.get_programiv = FAIL
-1029 WIN LINUX : dEQP-GLES2.functional.negative_api.state.get_program_info_log = FAIL
 1029 WIN LINUX : dEQP-GLES2.functional.negative_api.texture.compressedteximage_2d_invalid_format_tex2d = FAIL
 1029 WIN LINUX : dEQP-GLES2.functional.negative_api.texture.compressedteximage_2d_invalid_format_cube = FAIL
 1128 WIN LINUX : dEQP-GLES2.functional.negative_api.texture.compressedtexsubimage2d_invalid_size = FAIL

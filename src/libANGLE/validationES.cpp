@@ -326,28 +326,50 @@ bool ValidQueryType(const Context *context, GLenum queryType)
     }
 }
 
-bool ValidProgram(Context *context, GLuint id)
+Program *GetValidProgram(Context *context, GLuint id)
 {
     // ES3 spec (section 2.11.1) -- "Commands that accept shader or program object names will generate the
     // error INVALID_VALUE if the provided name is not the name of either a shader or program object and
     // INVALID_OPERATION if the provided name identifies an object that is not the expected type."
 
-    if (context->getProgram(id) != NULL)
+    Program *validProgram = context->getProgram(id);
+
+    if (!validProgram)
     {
-        return true;
+        if (context->getShader(id))
+        {
+            context->recordError(
+                Error(GL_INVALID_OPERATION, "Expected a program name, but found a shader name"));
+        }
+        else
+        {
+            context->recordError(Error(GL_INVALID_VALUE, "Program name is not valid"));
+        }
     }
-    else if (context->getShader(id) != NULL)
+
+    return validProgram;
+}
+
+Shader *GetValidShader(Context *context, GLuint id)
+{
+    // See ValidProgram for spec details.
+
+    Shader *validShader = context->getShader(id);
+
+    if (!validShader)
     {
-        // ID is the wrong type
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
+        if (context->getProgram(id))
+        {
+            context->recordError(
+                Error(GL_INVALID_OPERATION, "Expected a shader name, but found a program name"));
+        }
+        else
+        {
+            context->recordError(Error(GL_INVALID_VALUE, "Shader name is invalid"));
+        }
     }
-    else
-    {
-        // No shader/program object has this ID
-        context->recordError(Error(GL_INVALID_VALUE));
-        return false;
-    }
+
+    return validShader;
 }
 
 bool ValidateAttachmentTarget(gl::Context *context, GLenum attachment)
@@ -1880,12 +1902,11 @@ bool ValidateGetUniformBase(Context *context, GLuint program, GLint location)
         return false;
     }
 
-    if (!ValidProgram(context, program))
+    gl::Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
     {
         return false;
     }
-
-    gl::Program *programObject = context->getProgram(program);
 
     if (!programObject || !programObject->isLinked())
     {

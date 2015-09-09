@@ -59,35 +59,16 @@ void GL_APIENTRY AttachShader(GLuint program, GLuint shader)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Program *programObject = context->getProgram(program);
-        Shader *shaderObject = context->getShader(shader);
-
+        Program *programObject = GetValidProgram(context, program);
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
 
+        Shader *shaderObject = GetValidShader(context, shader);
         if (!shaderObject)
         {
-            if (context->getProgram(shader))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
 
         if (!programObject->attachShader(shaderObject))
@@ -111,20 +92,11 @@ void GL_APIENTRY BindAttribLocation(GLuint program, GLuint index, const GLchar* 
             return;
         }
 
-        Program *programObject = context->getProgram(program);
+        Program *programObject = GetValidProgram(context, program);
 
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
 
         if (strncmp(name, "gl_", 3) == 0)
@@ -698,22 +670,11 @@ void GL_APIENTRY CompileShader(GLuint shader)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Shader *shaderObject = context->getShader(shader);
-
+        Shader *shaderObject = GetValidShader(context, shader);
         if (!shaderObject)
         {
-            if (context->getProgram(shader))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
-
         shaderObject->compile(context->getCompiler());
     }
 }
@@ -1140,38 +1101,16 @@ void GL_APIENTRY DetachShader(GLuint program, GLuint shader)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Program *programObject = context->getProgram(program);
-        Shader *shaderObject = context->getShader(shader);
-
+        Program *programObject = GetValidProgram(context, program);
         if (!programObject)
         {
-            Shader *shaderByProgramHandle;
-            shaderByProgramHandle = context->getShader(program);
-            if (!shaderByProgramHandle)
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
+            return;
         }
 
+        Shader *shaderObject = GetValidShader(context, shader);
         if (!shaderObject)
         {
-            Program *programByShaderHandle = context->getProgram(shader);
-            if (!programByShaderHandle)
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
+            return;
         }
 
         if (!programObject->detachShader(shaderObject))
@@ -1608,20 +1547,11 @@ void GL_APIENTRY GetActiveAttrib(GLuint program, GLuint index, GLsizei bufsize, 
             return;
         }
 
-        Program *programObject = context->getProgram(program);
+        Program *programObject = GetValidProgram(context, program);
 
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
 
         if (index >= (GLuint)programObject->getActiveAttributeCount())
@@ -1650,20 +1580,11 @@ void GL_APIENTRY GetActiveUniform(GLuint program, GLuint index, GLsizei bufsize,
             return;
         }
 
-        Program *programObject = context->getProgram(program);
+        Program *programObject = GetValidProgram(context, program);
 
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
 
         if (index >= (GLuint)programObject->getActiveUniformCount())
@@ -1690,20 +1611,11 @@ void GL_APIENTRY GetAttachedShaders(GLuint program, GLsizei maxcount, GLsizei* c
             return;
         }
 
-        Program *programObject = context->getProgram(program);
+        Program *programObject = GetValidProgram(context, program);
 
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
 
         return programObject->getAttachedShaders(maxcount, count, shaders);
@@ -1717,20 +1629,11 @@ GLint GL_APIENTRY GetAttribLocation(GLuint program, const GLchar* name)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Program *programObject = context->getProgram(program);
+        Program *programObject = GetValidProgram(context, program);
 
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return -1;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return -1;
-            }
+            return -1;
         }
 
         if (!programObject->isLinked())
@@ -2163,11 +2066,10 @@ void GL_APIENTRY GetProgramiv(GLuint program, GLenum pname, GLint* params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Program *programObject = context->getProgram(program);
+        Program *programObject = GetValidProgram(context, program);
 
         if (!programObject)
         {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -2254,11 +2156,9 @@ void GL_APIENTRY GetProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei* len
             return;
         }
 
-        Program *programObject = context->getProgram(program);
-
+        Program *programObject = GetValidProgram(context, program);
         if (!programObject)
         {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -2322,21 +2222,9 @@ void GL_APIENTRY GetShaderiv(GLuint shader, GLenum pname, GLint* params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Shader *shaderObject = context->getShader(shader);
-
+        Shader *shaderObject = GetValidShader(context, shader);
         if (!shaderObject)
         {
-            Program *programObject = context->getProgram(shader);
-
-            if (programObject)
-            {
-                context->recordError(Error(GL_INVALID_OPERATION,
-                                           "Expected a shader name, but found a program name"));
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE, "Shader name is invalid"));
-            }
             return;
         }
 
@@ -2382,11 +2270,9 @@ void GL_APIENTRY GetShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei* lengt
             return;
         }
 
-        Shader *shaderObject = context->getShader(shader);
-
+        Shader *shaderObject = GetValidShader(context, shader);
         if (!shaderObject)
         {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -2482,11 +2368,9 @@ void GL_APIENTRY GetShaderSource(GLuint shader, GLsizei bufsize, GLsizei* length
             return;
         }
 
-        Shader *shaderObject = context->getShader(shader);
-
+        Shader *shaderObject = GetValidShader(context, shader);
         if (!shaderObject)
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
@@ -2872,20 +2756,11 @@ GLint GL_APIENTRY GetUniformLocation(GLuint program, const GLchar* name)
             return -1;
         }
 
-        Program *programObject = context->getProgram(program);
+        Program *programObject = GetValidProgram(context, program);
 
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return -1;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return -1;
-            }
+            return -1;
         }
 
         if (!programObject->isLinked())
@@ -3179,20 +3054,10 @@ void GL_APIENTRY LinkProgram(GLuint program)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Program *programObject = context->getProgram(program);
-
+        Program *programObject = GetValidProgram(context, program);
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
 
         Error error = programObject->link(context->getData());
@@ -3461,22 +3326,11 @@ void GL_APIENTRY ShaderSource(GLuint shader, GLsizei count, const GLchar* const*
             return;
         }
 
-        Shader *shaderObject = context->getShader(shader);
-
+        Shader *shaderObject = GetValidShader(context, shader);
         if (!shaderObject)
         {
-            if (context->getProgram(shader))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
-
         shaderObject->setSource(count, string, length);
     }
 }
@@ -4129,20 +3983,11 @@ void GL_APIENTRY ValidateProgram(GLuint program)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Program *programObject = context->getProgram(program);
+        Program *programObject = GetValidProgram(context, program);
 
         if (!programObject)
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+            return;
         }
 
         programObject->validate(context->getCaps());

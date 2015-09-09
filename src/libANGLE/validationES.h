@@ -24,6 +24,8 @@ namespace gl
 {
 
 class Context;
+class Program;
+class Shader;
 
 bool ValidCap(const Context *context, GLenum cap);
 bool ValidTextureTarget(const Context *context, GLenum target);
@@ -35,7 +37,16 @@ bool ValidMipLevel(const Context *context, GLenum target, GLint level);
 bool ValidImageSize(const Context *context, GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth);
 bool ValidCompressedImageSize(const Context *context, GLenum internalFormat, GLsizei width, GLsizei height);
 bool ValidQueryType(const Context *context, GLenum queryType);
-bool ValidProgram(Context *context, GLuint id);
+
+// Returns valid program if id is a valid program name
+// Errors INVALID_OPERATION if valid shader is given and returns NULL
+// Errors INVALID_VALUE otherwise and returns NULL
+Program *GetValidProgram(Context *context, GLuint id);
+
+// Returns valid shader if id is a valid shader name
+// Errors INVALID_OPERATION if valid program is given and returns NULL
+// Errors INVALID_VALUE otherwise and returns NULL
+Shader *GetValidShader(Context *context, GLuint id);
 
 bool ValidateAttachmentTarget(Context *context, GLenum attachment);
 bool ValidateRenderbufferStorageParametersBase(Context *context, GLenum target, GLsizei samples,
