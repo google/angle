@@ -20,14 +20,32 @@ class FunctionsGL;
 class StateManagerGL;
 struct WorkaroundsGL;
 
-struct LUMAWorkaround
+struct LUMAWorkaroundGL
 {
     bool enabled;
-    GLenum sourceFormat;
     GLenum workaroundFormat;
 
-    LUMAWorkaround();
-    LUMAWorkaround(bool enabled, GLenum sourceFormat, GLenum workaroundFormat);
+    LUMAWorkaroundGL();
+    LUMAWorkaroundGL(bool enabled, GLenum workaroundFormat);
+};
+
+// Structure containing information about format and workarounds for each mip level of the
+// TextureGL.
+struct LevelInfoGL
+{
+    // Format of the data used in this mip level.
+    GLenum sourceFormat;
+
+    // If this mip level requires sampler-state re-writing so that only a red channel is exposed.
+    bool depthStencilWorkaround;
+
+    // Information about luminance alpha texture workarounds in the core profile.
+    LUMAWorkaroundGL lumaWorkaround;
+
+    LevelInfoGL();
+    LevelInfoGL(GLenum sourceFormat,
+                bool depthStencilWorkaround,
+                const LUMAWorkaroundGL &lumaWorkaround);
 };
 
 class TextureGL : public TextureImpl
@@ -83,7 +101,7 @@ class TextureGL : public TextureImpl
     StateManagerGL *mStateManager;
     BlitGL *mBlitter;
 
-    std::vector<LUMAWorkaround> mLUMAWorkaroundLevels;
+    std::vector<LevelInfoGL> mLevelInfo;
 
     mutable gl::SamplerState mAppliedSamplerState;
     GLuint mTextureID;
