@@ -205,15 +205,6 @@
 
 989 WIN LINUX : dEQP-GLES2.functional.shaders.preprocessor.basic.identifier_with_double_underscore_vertex = FAIL
 989 WIN LINUX : dEQP-GLES2.functional.shaders.preprocessor.basic.identifier_with_double_underscore_fragment = FAIL
-989 WIN LINUX : dEQP-GLES2.functional.shaders.preprocessor.predefined_macros.line_2_vertex = FAIL
-989 WIN LINUX : dEQP-GLES2.functional.shaders.preprocessor.predefined_macros.line_2_fragment = FAIL
-989 WIN LINUX : dEQP-GLES2.functional.shaders.preprocessor.conditional_inclusion.basic_2_vertex = FAIL
-989 WIN LINUX : dEQP-GLES2.functional.shaders.preprocessor.conditional_inclusion.basic_2_fragment = FAIL
-989 WIN LINUX : dEQP-GLES2.functional.shaders.preprocessor.undefined_identifiers.valid_undefined_identifier_* = FAIL
-989 WIN LINUX : dEQP-GLES2.functional.shaders.preprocessor.builtin.line_expression_vertex = FAIL
-989 WIN LINUX : dEQP-GLES2.functional.shaders.preprocessor.builtin.line_expression_fragment = FAIL
-989 WIN LINUX : dEQP-GLES2.functional.shaders.preprocessor.builtin.line_and_file_expression_vertex = FAIL
-989 WIN LINUX : dEQP-GLES2.functional.shaders.preprocessor.builtin.line_and_file_expression_fragment = FAIL
 989 WIN LINUX : dEQP-GLES2.functional.shaders.preprocessor.extensions.after_non_preprocessing_tokens_vertex = FAIL
 989 WIN LINUX : dEQP-GLES2.functional.shaders.preprocessor.extensions.after_non_preprocessing_tokens_fragment = FAIL
 1015 WIN LINUX : dEQP-GLES2.functional.shaders.functions.invalid.return_array_in_struct_vertex = FAIL
