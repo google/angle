@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a40b16a8_c73cdead",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2333,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-09T12:44:58Z",
+      "side": 1,
+      "message": "nit: can you add an error message as the second optional parameter to the Error class constructor? Something like \"expected a shader, but found a program name\"",
+      "range": {
+        "startLine": 2333,
+        "startChar": 63,
+        "endLine": 2333,
+        "endChar": 65
+      },
+      "revId": "6205e274a1b9f97141ca293c281166e8e03d52aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "040f82b2_ea69e7c3",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2337,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-09T12:44:58Z",
+      "side": 1,
+      "message": "nit: if you feel like it, you can add an error message here too",
+      "range": {
+        "startLine": 2337,
+        "startChar": 59,
+        "endLine": 2337,
+        "endChar": 61
+      },
+      "revId": "6205e274a1b9f97141ca293c281166e8e03d52aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
