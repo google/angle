@@ -66,7 +66,7 @@ class TextureGL : public TextureImpl
 
     gl::Error setEGLImageTarget(GLenum target, egl::Image *image) override;
 
-    void syncSamplerState(const gl::SamplerState &samplerState) const;
+    void syncSamplerState(size_t textureUnit, const gl::SamplerState &samplerState) const;
     GLuint getTextureID() const;
 
     gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,

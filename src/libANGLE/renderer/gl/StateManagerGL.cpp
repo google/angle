@@ -485,7 +485,7 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
                     bindTexture(textureType, textureGL->getTextureID());
                 }
 
-                textureGL->syncSamplerState(texture->getSamplerState());
+                textureGL->syncSamplerState(textureUnitIndex, texture->getSamplerState());
 
                 // TODO: apply sampler object if one is bound
             }
