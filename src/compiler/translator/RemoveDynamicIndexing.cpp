@@ -120,7 +120,7 @@ TType GetFieldType(const TType &indexedType)
     if (indexedType.isMatrix())
     {
         TType fieldType = TType(indexedType.getBasicType(), indexedType.getPrecision());
-        fieldType.setPrimarySize(unsigned char(indexedType.getRows()));
+        fieldType.setPrimarySize(static_cast<unsigned char>(indexedType.getRows()));
         return fieldType;
     }
     else
