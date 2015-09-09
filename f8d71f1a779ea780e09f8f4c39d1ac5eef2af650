@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8402928b_26d1765a",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-09T19:48:45Z",
+      "side": 1,
+      "message": "My reading of the spec seems to leave open the possibility to have two attachments, one SRGB, one LINEAR, and still have a complete framebuffer. This would mean if the first attachment is LINEAR and the second is SRGB, it could fail. Can you check if this is legit, and possibly add a test for it if so?",
+      "range": {
+        "startLine": 510,
+        "startChar": 41,
+        "endLine": 510,
+        "endChar": 60
+      },
+      "revId": "f8d71f1a779ea780e09f8f4c39d1ac5eef2af650",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
