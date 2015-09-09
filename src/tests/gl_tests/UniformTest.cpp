@@ -239,9 +239,9 @@ TEST_P(UniformTest, FloatUniformStateQuery)
 TEST_P(UniformTest, IntUniformStateQuery)
 {
     // TODO(jmadill): remove this suppression once we support ANGLE-only state queries.
-    if (isAMD() && (GetParam() == ES2_OPENGL() || GetParam() == ES3_OPENGL()))
+    if ((isAMD() || isIntel()) && (GetParam() == ES2_OPENGL() || GetParam() == ES3_OPENGL()))
     {
-        std::cout << "Skipping test due to a driver bug on AMD." << std::endl;
+        std::cout << "Skipping test due to a driver bug." << std::endl;
         return;
     }
 
