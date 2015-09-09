@@ -166,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "c4ef2afe_95e702e6",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1168,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-09-09T23:17:23Z",
+      "side": 1,
+      "message": "I think it\u0027s an MSVS limitation, but I\u0027m not sure. Cooper might know.",
+      "parentUuid": "24de465b_4b45a50b",
+      "range": {
+        "startLine": 1168,
+        "startChar": 28,
+        "endLine": 1168,
+        "endChar": 54
+      },
+      "revId": "8105bbf7b2b8d5b04145fa446c7636db5e922f97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "040f82b2_ca5503ec",
         "filename": "src/tests/deqp.gypi",
         "patchSetId": 1
