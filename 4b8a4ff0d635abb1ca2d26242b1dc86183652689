@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8402928b_86c14a8d",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-09T19:38:40Z",
+      "side": 1,
+      "message": "can you add some comments to these structs as to what they are and how they work? a bit hard to understand at first glance.",
+      "range": {
+        "startLine": 32,
+        "startChar": 7,
+        "endLine": 32,
+        "endChar": 16
+      },
+      "revId": "4b8a4ff0d635abb1ca2d26242b1dc86183652689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
