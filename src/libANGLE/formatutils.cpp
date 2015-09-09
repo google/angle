@@ -163,11 +163,6 @@ static bool AlwaysSupported(GLuint, const Extensions &)
     return true;
 }
 
-static bool UnimplementedSupport(GLuint, const Extensions &)
-{
-    return false;
-}
-
 static bool NeverSupported(GLuint, const Extensions &)
 {
     return false;
@@ -451,17 +446,17 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     map.insert(InternalFormatInfoPair(GL_SRGB_ALPHA_EXT,  UnsizedFormat(GL_RGBA,            RequireESOrExt<3, &Extensions::sRGB>,               RequireESOrExt<3, &Extensions::sRGB>,               AlwaysSupported)));
 
     // Compressed formats, From ES 3.0.1 spec, table 3.16
-    //                               | Internal format                             |                |W |H | BS |CC| Format                                      | Type            | SRGB | Supported          | Renderable           | Filterable         |
-    map.insert(InternalFormatInfoPair(GL_COMPRESSED_R11_EAC,                        CompressedFormat(4, 4,  64, 1, GL_COMPRESSED_R11_EAC,                        GL_UNSIGNED_BYTE, false, UnimplementedSupport, UnimplementedSupport, UnimplementedSupport)));
-    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SIGNED_R11_EAC,                 CompressedFormat(4, 4,  64, 1, GL_COMPRESSED_SIGNED_R11_EAC,                 GL_UNSIGNED_BYTE, false, UnimplementedSupport, UnimplementedSupport, UnimplementedSupport)));
-    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RG11_EAC,                       CompressedFormat(4, 4, 128, 2, GL_COMPRESSED_RG11_EAC,                       GL_UNSIGNED_BYTE, false, UnimplementedSupport, UnimplementedSupport, UnimplementedSupport)));
-    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SIGNED_RG11_EAC,                CompressedFormat(4, 4, 128, 2, GL_COMPRESSED_SIGNED_RG11_EAC,                GL_UNSIGNED_BYTE, false, UnimplementedSupport, UnimplementedSupport, UnimplementedSupport)));
-    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGB8_ETC2,                      CompressedFormat(4, 4,  64, 3, GL_COMPRESSED_RGB8_ETC2,                      GL_UNSIGNED_BYTE, false, UnimplementedSupport, UnimplementedSupport, UnimplementedSupport)));
-    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SRGB8_ETC2,                     CompressedFormat(4, 4,  64, 3, GL_COMPRESSED_SRGB8_ETC2,                     GL_UNSIGNED_BYTE, true,  UnimplementedSupport, UnimplementedSupport, UnimplementedSupport)));
-    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,  CompressedFormat(4, 4,  64, 3, GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,  GL_UNSIGNED_BYTE, false, UnimplementedSupport, UnimplementedSupport, UnimplementedSupport)));
-    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, CompressedFormat(4, 4,  64, 3, GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, GL_UNSIGNED_BYTE, true,  UnimplementedSupport, UnimplementedSupport, UnimplementedSupport)));
-    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGBA8_ETC2_EAC,                 CompressedFormat(4, 4, 128, 4, GL_COMPRESSED_RGBA8_ETC2_EAC,                 GL_UNSIGNED_BYTE, false, UnimplementedSupport, UnimplementedSupport, UnimplementedSupport)));
-    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,          CompressedFormat(4, 4, 128, 4, GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,          GL_UNSIGNED_BYTE, true,  UnimplementedSupport, UnimplementedSupport, UnimplementedSupport)));
+    //                               | Internal format                             |                |W |H | BS |CC| Format                                      | Type            | SRGB | Supported   | Renderable    | Filterable    |
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_R11_EAC,                        CompressedFormat(4, 4,  64, 1, GL_COMPRESSED_R11_EAC,                        GL_UNSIGNED_BYTE, false, RequireES<3>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SIGNED_R11_EAC,                 CompressedFormat(4, 4,  64, 1, GL_COMPRESSED_SIGNED_R11_EAC,                 GL_UNSIGNED_BYTE, false, RequireES<3>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RG11_EAC,                       CompressedFormat(4, 4, 128, 2, GL_COMPRESSED_RG11_EAC,                       GL_UNSIGNED_BYTE, false, RequireES<3>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SIGNED_RG11_EAC,                CompressedFormat(4, 4, 128, 2, GL_COMPRESSED_SIGNED_RG11_EAC,                GL_UNSIGNED_BYTE, false, RequireES<3>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGB8_ETC2,                      CompressedFormat(4, 4,  64, 3, GL_COMPRESSED_RGB8_ETC2,                      GL_UNSIGNED_BYTE, false, RequireES<3>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SRGB8_ETC2,                     CompressedFormat(4, 4,  64, 3, GL_COMPRESSED_SRGB8_ETC2,                     GL_UNSIGNED_BYTE, true,  RequireES<3>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,  CompressedFormat(4, 4,  64, 3, GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,  GL_UNSIGNED_BYTE, false, RequireES<3>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, CompressedFormat(4, 4,  64, 3, GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, GL_UNSIGNED_BYTE, true,  RequireES<3>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGBA8_ETC2_EAC,                 CompressedFormat(4, 4, 128, 4, GL_COMPRESSED_RGBA8_ETC2_EAC,                 GL_UNSIGNED_BYTE, false, RequireES<3>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,          CompressedFormat(4, 4, 128, 4, GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,          GL_UNSIGNED_BYTE, true,  RequireES<3>, NeverSupported, AlwaysSupported)));
 
     // From GL_EXT_texture_compression_dxt1
     //                               | Internal format                   |                |W |H | BS |CC| Format                            | Type            | SRGB | Supported                                      | Renderable    | Filterable    |

@@ -225,16 +225,16 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     InsertFormatMapping(&map, GL_LUMINANCE_ALPHA16F_EXT, VersionOrExts(3, 0, "GL_ARB_texture_float"), Always(), Never(), ExtsOnly("GL_EXT_texture_storage"), Always(), Never());
 
     // Compressed formats, From ES 3.0.1 spec, table 3.16
-    InsertFormatMapping(&map, GL_COMPRESSED_R11_EAC,                        Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_COMPRESSED_SIGNED_R11_EAC,                 Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_COMPRESSED_RG11_EAC,                       Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_COMPRESSED_SIGNED_RG11_EAC,                Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_COMPRESSED_RGB8_ETC2,                      Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_COMPRESSED_SRGB8_ETC2,                     Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,  Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_COMPRESSED_RGBA8_ETC2_EAC,                 Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,          Never(), Never(), Never(), Never(), Never(), Never());
+    InsertFormatMapping(&map, GL_COMPRESSED_R11_EAC,                        VersionOrExts(4, 3, "GL_ARB_ES3_compatibility"), Always(), Never(), VersionOnly(3, 0), Always(), Never());
+    InsertFormatMapping(&map, GL_COMPRESSED_SIGNED_R11_EAC,                 VersionOrExts(4, 3, "GL_ARB_ES3_compatibility"), Always(), Never(), VersionOnly(3, 0), Always(), Never());
+    InsertFormatMapping(&map, GL_COMPRESSED_RG11_EAC,                       VersionOrExts(4, 3, "GL_ARB_ES3_compatibility"), Always(), Never(), VersionOnly(3, 0), Always(), Never());
+    InsertFormatMapping(&map, GL_COMPRESSED_SIGNED_RG11_EAC,                VersionOrExts(4, 3, "GL_ARB_ES3_compatibility"), Always(), Never(), VersionOnly(3, 0), Always(), Never());
+    InsertFormatMapping(&map, GL_COMPRESSED_RGB8_ETC2,                      VersionOrExts(4, 3, "GL_ARB_ES3_compatibility"), Always(), Never(), VersionOnly(3, 0), Always(), Never());
+    InsertFormatMapping(&map, GL_COMPRESSED_SRGB8_ETC2,                     VersionOrExts(4, 3, "GL_ARB_ES3_compatibility"), Always(), Never(), VersionOnly(3, 0), Always(), Never());
+    InsertFormatMapping(&map, GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,  VersionOrExts(4, 3, "GL_ARB_ES3_compatibility"), Always(), Never(), VersionOnly(3, 0), Always(), Never());
+    InsertFormatMapping(&map, GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, VersionOrExts(4, 3, "GL_ARB_ES3_compatibility"), Always(), Never(), VersionOnly(3, 0), Always(), Never());
+    InsertFormatMapping(&map, GL_COMPRESSED_RGBA8_ETC2_EAC,                 VersionOrExts(4, 3, "GL_ARB_ES3_compatibility"), Always(), Never(), VersionOnly(3, 0), Always(), Never());
+    InsertFormatMapping(&map, GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,          VersionOrExts(4, 3, "GL_ARB_ES3_compatibility"), Always(), Never(), VersionOnly(3, 0), Always(), Never());
 
     // From GL_EXT_texture_compression_dxt1
     //                       | Format                            | OpenGL texture support                     | Filter  | Render | OpenGL ES texture support                    | Filter  | Render |

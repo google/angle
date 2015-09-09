@@ -1716,10 +1716,15 @@ void Context::initCaps(GLuint clientVersion)
 
         const InternalFormat &formatInfo = GetInternalFormatInfo(format);
 
-        // Update the format caps based on the client version and extensions
-        formatCaps.texturable = formatInfo.textureSupport(clientVersion, mExtensions);
-        formatCaps.renderable = formatInfo.renderSupport(clientVersion, mExtensions);
-        formatCaps.filterable = formatInfo.filterSupport(clientVersion, mExtensions);
+        // Update the format caps based on the client version and extensions.
+        // Caps are AND'd with the renderer caps because some core formats are still unsupported in
+        // ES3.
+        formatCaps.texturable =
+            formatCaps.texturable && formatInfo.textureSupport(clientVersion, mExtensions);
+        formatCaps.renderable =
+            formatCaps.renderable && formatInfo.renderSupport(clientVersion, mExtensions);
+        formatCaps.filterable =
+            formatCaps.filterable && formatInfo.filterSupport(clientVersion, mExtensions);
 
         // OpenGL ES does not support multisampling with integer formats
         if (!formatInfo.renderSupport || formatInfo.componentType == GL_INT || formatInfo.componentType == GL_UNSIGNED_INT)
