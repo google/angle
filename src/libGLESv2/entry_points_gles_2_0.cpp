@@ -2326,7 +2326,17 @@ void GL_APIENTRY GetShaderiv(GLuint shader, GLenum pname, GLint* params)
 
         if (!shaderObject)
         {
-            context->recordError(Error(GL_INVALID_VALUE));
+            Program *programObject = context->getProgram(shader);
+
+            if (programObject)
+            {
+                context->recordError(Error(GL_INVALID_OPERATION,
+                                           "Expected a shader name, but found a program name"));
+            }
+            else
+            {
+                context->recordError(Error(GL_INVALID_VALUE, "Shader name is invalid"));
+            }
             return;
         }
 
