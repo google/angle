@@ -85,7 +85,6 @@ class StateManagerGL final : angle::NonCopyable
     void setFrontFace(GLenum frontFace);
     void setPolygonOffsetFillEnabled(bool enabled);
     void setPolygonOffset(float factor, float units);
-    void setMultisampleEnabled(bool enabled);
     void setRasterizerDiscardEnabled(bool enabled);
     void setLineWidth(float width);
 
@@ -205,7 +204,6 @@ class StateManagerGL final : angle::NonCopyable
     bool mPolygonOffsetFillEnabled;
     GLfloat mPolygonOffsetFactor;
     GLfloat mPolygonOffsetUnits;
-    bool mMultisampleEnabled;
     bool mRasterizerDiscardEnabled;
     float mLineWidth;
 

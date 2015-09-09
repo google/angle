@@ -84,7 +84,6 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mPolygonOffsetFillEnabled(false),
       mPolygonOffsetFactor(0.0f),
       mPolygonOffsetUnits(0.0f),
-      mMultisampleEnabled(true),
       mRasterizerDiscardEnabled(false),
       mLineWidth(1.0f),
       mPrimitiveRestartEnabled(false),
@@ -926,24 +925,6 @@ void StateManagerGL::setPolygonOffset(float factor, float units)
     }
 }
 
-void StateManagerGL::setMultisampleEnabled(bool enabled)
-{
-    if (mMultisampleEnabled != enabled)
-    {
-        mMultisampleEnabled = enabled;
-        if (mMultisampleEnabled)
-        {
-            mFunctions->enable(GL_MULTISAMPLE);
-        }
-        else
-        {
-            mFunctions->disable(GL_MULTISAMPLE);
-        }
-
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_MULTISAMPLE_ENABLED);
-    }
-}
-
 void StateManagerGL::setRasterizerDiscardEnabled(bool enabled)
 {
     if (mRasterizerDiscardEnabled != enabled)
@@ -1157,9 +1138,6 @@ void StateManagerGL::syncState(const gl::State &state, const gl::State::DirtyBit
                                  rasterizerState.polygonOffsetUnits);
                 break;
             }
-            case gl::State::DIRTY_BIT_MULTISAMPLE_ENABLED:
-                setMultisampleEnabled(state.getRasterizerState().multiSample);
-                break;
             case gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
                 setRasterizerDiscardEnabled(state.isRasterizerDiscardEnabled());
                 break;
