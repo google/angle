@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "244c8613_0180ae7f",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2333,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-09T21:17:38Z",
+      "side": 1,
+      "message": "nit: use name instead of object, to be consistent with the GLES spec language.",
+      "revId": "acd22f2732e7c552909646122a1dbffc74042b1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44cedaa4_1da597e6",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2337,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-09T21:17:38Z",
+      "side": 1,
+      "message": "nit: what about \"Shader name is invalid\"?",
+      "range": {
+        "startLine": 2337,
+        "startChar": 16,
+        "endLine": 2337,
+        "endChar": 23
+      },
+      "revId": "acd22f2732e7c552909646122a1dbffc74042b1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
