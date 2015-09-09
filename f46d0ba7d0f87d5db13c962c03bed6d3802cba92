@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8402928b_464fd2fe",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T18:16:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "248e45f0_00fa6635",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 17
+      },
+      "revId": "f46d0ba7d0f87d5db13c962c03bed6d3802cba92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c492c913_5de93b76",
         "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-08-13T14:27:08Z",
       "side": 1,
       "message": "what\u0027s this file? is it an ANGLE file or should it be in \u003c\u003e brackets?",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 18
+      },
+      "revId": "f46d0ba7d0f87d5db13c962c03bed6d3802cba92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84d9b271_51f8b683",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T18:16:43Z",
+      "side": 1,
+      "message": "This is the header containing dlopen and friends.\nDone",
+      "parentUuid": "c492c913_5de93b76",
       "range": {
         "startLine": 12,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "c4080aae_0b6b21e6",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T18:16:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0491410d_ff2b5f31",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 6
+      },
+      "revId": "f46d0ba7d0f87d5db13c962c03bed6d3802cba92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "646d9dec_faa60944",
         "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2015-08-13T14:27:08Z",
       "side": 1,
       "message": "does nullptr work in mm files?",
+      "range": {
+        "startLine": 72,
+        "startChar": 34,
+        "endLine": 72,
+        "endChar": 38
+      },
+      "revId": "f46d0ba7d0f87d5db13c962c03bed6d3802cba92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44e33a1f_ec058bda",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T18:16:43Z",
+      "side": 1,
+      "message": "Yes, .mm, as far as I understand, .mm is C++ with the Objective C syntax extensions.",
+      "parentUuid": "646d9dec_faa60944",
       "range": {
         "startLine": 72,
         "startChar": 34,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "44e33a1f_acff8326",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T18:16:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4487b9d1_a1f61e50",
+      "range": {
+        "startLine": 208,
+        "startChar": 4,
+        "endLine": 208,
+        "endChar": 23
+      },
+      "revId": "f46d0ba7d0f87d5db13c962c03bed6d3802cba92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4487b9d1_c1f3225f",
         "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
         "patchSetId": 2
@@ -128,6 +248,30 @@
       "writtenOn": "2015-08-13T14:27:08Z",
       "side": 1,
       "message": "do mm files support range-for?",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 53
+      },
+      "revId": "f46d0ba7d0f87d5db13c962c03bed6d3802cba92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4080aae_6bfbbd82",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T18:16:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4487b9d1_c1f3225f",
       "range": {
         "startLine": 51,
         "startChar": 4,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "8402928b_e6e47e53",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T18:16:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "24672510_bba093a6",
+      "range": {
+        "startLine": 53,
+        "startChar": 15,
+        "endLine": 53,
+        "endChar": 17
+      },
+      "revId": "f46d0ba7d0f87d5db13c962c03bed6d3802cba92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6484bdcc_e8f5e7bf",
         "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
         "patchSetId": 2
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "64fd9ebf_65008676",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 2
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T18:16:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6484bdcc_e8f5e7bf",
+      "range": {
+        "startLine": 182,
+        "startChar": 7,
+        "endLine": 182,
+        "endChar": 11
+      },
+      "revId": "f46d0ba7d0f87d5db13c962c03bed6d3802cba92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "646d9dec_3a9ec1e8",
         "filename": "src/libGLESv2.gypi",
         "patchSetId": 2
@@ -197,6 +389,30 @@
       "writtenOn": "2015-08-13T14:27:08Z",
       "side": 1,
       "message": "Chromium uses the following paths for frameworks:\n\n $(SDKROOT)/System/Library/Frameworks/\u003cname\n\nPerhaps we should start using the same. I think SDKROOT is a Chromium thing",
+      "range": {
+        "startLine": 745,
+        "startChar": 36,
+        "endLine": 748,
+        "endChar": 59
+      },
+      "revId": "f46d0ba7d0f87d5db13c962c03bed6d3802cba92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4080aae_eb0d6d43",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 748,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T18:16:43Z",
+      "side": 1,
+      "message": "I think it might be because Chromium ships its own version of the SDK to have a constant build environment. I\u0027ll use SDKROOT here when I\u0027ll work on the Chromium build support.",
+      "parentUuid": "646d9dec_3a9ec1e8",
       "range": {
         "startLine": 745,
         "startChar": 36,
