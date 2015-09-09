@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "040f82b2_2a4fff56",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T14:47:50Z",
+      "side": 1,
+      "message": "Note: the comment might need to be updated for Intel.",
+      "revId": "8e0eb603f93ad9e673ff4a2d0e0abfae81f0322f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
