@@ -92,6 +92,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mClearColor(0.0f, 0.0f, 0.0f, 0.0f),
       mClearDepth(1.0f),
       mClearStencil(0),
+      mFramebufferSRGBEnabled(false),
       mTextureCubemapSeamlessEnabled(false),
       mLocalDirtyBits()
 {
@@ -542,6 +543,7 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
     const gl::Framebuffer *framebuffer = state.getDrawFramebuffer();
     const FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
     bindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferGL->getFramebufferID());
+    framebufferGL->syncDrawState();
 
     // Seamless cubemaps are required for ES3 and higher contexts.
     setTextureCubemapSeamlessEnabled(data.clientVersion >= 3);
@@ -1260,6 +1262,22 @@ void StateManagerGL::syncState(const gl::State &state, const gl::State::DirtyBit
         }
 
         mLocalDirtyBits.reset();
+    }
+}
+
+void StateManagerGL::setFramebufferSRGBEnabled(bool enabled)
+{
+    if (mFramebufferSRGBEnabled != enabled)
+    {
+        mFramebufferSRGBEnabled = enabled;
+        if (mFramebufferSRGBEnabled)
+        {
+            mFunctions->enable(GL_FRAMEBUFFER_SRGB);
+        }
+        else
+        {
+            mFunctions->disable(GL_FRAMEBUFFER_SRGB);
+        }
     }
 }
 
