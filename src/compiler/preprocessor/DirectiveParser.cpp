@@ -893,7 +893,6 @@ int DirectiveParser::parseExpressionIf(Token *token)
     ExpressionParser expressionParser(&macroExpander, mDiagnostics);
 
     int expression = 0;
-    macroExpander.lex(token);
     expressionParser.parse(token, &expression);
 
     // Check if there are tokens after #if expression.

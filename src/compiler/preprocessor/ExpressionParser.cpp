@@ -110,6 +110,7 @@ typedef __int64 YYSTYPE;
 #include <stdint.h>
 typedef intmax_t YYSTYPE;
 #endif  // _MSC_VER
+
 #define YYENABLE_NLS 0
 #define YYLTYPE_IS_TRIVIAL 1
 #define YYSTYPE_IS_TRIVIAL 1
@@ -495,9 +496,9 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   105,   105,   111,   112,   118,   118,   139,   139,   160,
-     163,   166,   169,   172,   175,   178,   181,   184,   187,   190,
-     193,   196,   199,   222,   245,   248,   251,   254,   257,   260
+       0,   106,   106,   113,   114,   124,   124,   145,   145,   166,
+     169,   172,   175,   178,   181,   184,   187,   190,   193,   196,
+     199,   202,   205,   224,   243,   246,   249,   252,   255,   258
 };
 #endif
 
@@ -1330,6 +1331,7 @@ yyreduce:
 
     {
         *(context->result) = static_cast<int>((yyvsp[0]));
+        YYACCEPT;
     }
 
     break;
@@ -1339,8 +1341,12 @@ yyreduce:
     {
         if (!context->isIgnoringErrors())
         {
-            YYABORT;
+            // This rule should be applied right after the token is lexed, so we can
+            // refer to context->token in the error message.
+            context->diagnostics->report(pp::Diagnostics::PP_CONDITIONAL_UNEXPECTED_TOKEN,
+                                         context->token->location, context->token->text);
         }
+        (yyval) = (yyvsp[0]);
     }
 
     break;
@@ -1518,11 +1524,7 @@ yyreduce:
     {
         if ((yyvsp[0]) == 0)
         {
-            if (context->isIgnoringErrors())
-            {
-                (yyval) = static_cast<YYSTYPE>(0);
-            }
-            else
+            if (!context->isIgnoringErrors())
             {
                 std::ostringstream stream;
                 stream << (yyvsp[-2]) << " % " << (yyvsp[0]);
@@ -1530,8 +1532,8 @@ yyreduce:
                 context->diagnostics->report(pp::Diagnostics::PP_DIVISION_BY_ZERO,
                                              context->token->location,
                                              text.c_str());
-                YYABORT;
             }
+            (yyval) = static_cast<YYSTYPE>(0);
         }
         else
         {
@@ -1546,11 +1548,7 @@ yyreduce:
     {
         if ((yyvsp[0]) == 0)
         {
-            if (context->isIgnoringErrors())
-            {
-                (yyval) = static_cast<YYSTYPE>(0);
-            }
-            else
+            if (!context->isIgnoringErrors())
             {
                 std::ostringstream stream;
                 stream << (yyvsp[-2]) << " / " << (yyvsp[0]);
@@ -1558,8 +1556,8 @@ yyreduce:
                 context->diagnostics->report(pp::Diagnostics::PP_DIVISION_BY_ZERO,
                                             context->token->location,
                                             text.c_str());
-                YYABORT;
             }
+            (yyval) = static_cast<YYSTYPE>(0);
         }
         else
         {
@@ -1851,9 +1849,11 @@ yyreturn:
 
 int yylex(YYSTYPE *lvalp, Context *context)
 {
+    pp::Token *token = context->token;
+    context->lexer->lex(token);
+
     int type = 0;
 
-    pp::Token *token = context->token;
     switch (token->type)
     {
       case pp::Token::CONST_INT: {
@@ -1868,11 +1868,6 @@ int yylex(YYSTYPE *lvalp, Context *context)
         break;
       }
       case pp::Token::IDENTIFIER:
-        if (!context->isIgnoringErrors())
-        {
-            context->diagnostics->report(pp::Diagnostics::PP_CONDITIONAL_UNEXPECTED_TOKEN,
-                                         token->location, token->text);
-        }
         *lvalp = static_cast<YYSTYPE>(-1);
         type = TOK_IDENTIFIER;
         break;
@@ -1920,10 +1915,6 @@ int yylex(YYSTYPE *lvalp, Context *context)
       default:
         break;
     }
-
-    // Advance to the next token if the current one is valid.
-    if (type != 0)
-        context->lexer->lex(token);
 
     return type;
 }

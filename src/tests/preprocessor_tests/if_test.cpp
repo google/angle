@@ -838,8 +838,8 @@ TEST_F(IfTest, ExtraIntExpression)
         "#endif\n";
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
-    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_INVALID_EXPRESSION,
-                                    pp::SourceLocation(0, 1), "syntax error"));
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_CONDITIONAL_UNEXPECTED_TOKEN,
+                                    pp::SourceLocation(0, 1), "1"));
 
     pp::Token token;
     mPreprocessor.lex(&token);
@@ -855,8 +855,8 @@ TEST_F(IfTest, ExtraIdentifierExpression)
         "#endif\n";
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
-    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_INVALID_EXPRESSION,
-                                    pp::SourceLocation(0, 2), "syntax error"));
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_CONDITIONAL_UNEXPECTED_TOKEN,
+                                    pp::SourceLocation(0, 2), "1"));
 
     pp::Token token;
     mPreprocessor.lex(&token);
