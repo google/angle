@@ -22,6 +22,30 @@
       "revId": "f8d71f1a779ea780e09f8f4c39d1ac5eef2af650",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24de465b_8ebddbef",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-09T20:37:49Z",
+      "side": 1,
+      "message": "Looked into it more and you\u0027re right about being able to have sRGB and linear attachments at the same time.\n\nI reviewed the spec and desktop GL will do the right thing if GL_SRGB_FRAMEBUFFER is enabled all the time.  It will only use sRGB blending on sRGB attachments.  Looks like it will be fine it just leave it on until/if we support EXT_sRGB_write_control.",
+      "parentUuid": "8402928b_26d1765a",
+      "range": {
+        "startLine": 510,
+        "startChar": 41,
+        "endLine": 510,
+        "endChar": 60
+      },
+      "revId": "f8d71f1a779ea780e09f8f4c39d1ac5eef2af650",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
