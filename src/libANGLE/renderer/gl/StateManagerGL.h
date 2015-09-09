@@ -111,6 +111,8 @@ class StateManagerGL final : angle::NonCopyable
                            GLint skipPixels,
                            GLuint packBuffer);
 
+    void setFramebufferSRGBEnabled(bool enabled);
+
     gl::Error setDrawArraysState(const gl::Data &data,
                                  GLint first,
                                  GLsizei count,
@@ -216,6 +218,7 @@ class StateManagerGL final : angle::NonCopyable
     float mClearDepth;
     GLint mClearStencil;
 
+    bool mFramebufferSRGBEnabled;
     bool mTextureCubemapSeamlessEnabled;
 
     gl::State::DirtyBits mLocalDirtyBits;

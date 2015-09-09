@@ -255,7 +255,7 @@ ProgramImpl *RendererGL::createProgram(const gl::Program::Data &data)
 
 FramebufferImpl *RendererGL::createFramebuffer(const gl::Framebuffer::Data &data)
 {
-    return new FramebufferGL(data, mFunctions, mStateManager, false);
+    return new FramebufferGL(data, mFunctions, mStateManager, mWorkarounds, false);
 }
 
 TextureImpl *RendererGL::createTexture(GLenum target)

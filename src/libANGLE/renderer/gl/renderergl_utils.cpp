@@ -557,6 +557,10 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 
     workarounds->rgba4IsNotSupportedForColorRendering =
         functions->standard == STANDARD_GL_DESKTOP && vendor == VENDOR_ID_INTEL;
+
+    workarounds->doesSRGBClearsOnLinearFramebufferAttachments =
+        functions->standard == STANDARD_GL_DESKTOP &&
+        (vendor == VENDOR_ID_INTEL || vendor == VENDOR_ID_AMD);
 }
 
 }
