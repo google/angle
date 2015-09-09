@@ -72,6 +72,29 @@
     },
     {
       "key": {
+        "uuid": "44e33a1f_cc876fd8",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1095,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-09T14:28:55Z",
+      "side": 1,
+      "message": "can you make a variable alias for this expression named \u0027angle_build_deqp_libraries\u0027 at the top of this file and define it as OS\u003d\u003d\"win\" or OS\u003d\u003d\"linux\" or \"angle_build_winrt\u003d\u003d0\" ?",
+      "range": {
+        "startLine": 1095,
+        "startChar": 10,
+        "endLine": 1095,
+        "endChar": 95
+      },
+      "revId": "8105bbf7b2b8d5b04145fa446c7636db5e922f97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c439ea02_064cde07",
         "filename": "src/tests/deqp.gypi",
         "patchSetId": 1
@@ -112,6 +135,99 @@
         "startChar": 28,
         "endLine": 1168,
         "endChar": 54
+      },
+      "revId": "8105bbf7b2b8d5b04145fa446c7636db5e922f97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24de465b_4b45a50b",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1168,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-09T14:28:55Z",
+      "side": 1,
+      "message": "Ah, OK. That\u0027s fine. Out of interest is there a limitation in MSVS for WinRT that you can\u0027t add build step only targets, or is this a GYP limitation?",
+      "parentUuid": "644d9e85_395229a9",
+      "range": {
+        "startLine": 1168,
+        "startChar": 28,
+        "endLine": 1168,
+        "endChar": 54
+      },
+      "revId": "8105bbf7b2b8d5b04145fa446c7636db5e922f97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "040f82b2_ca5503ec",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1336,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-09T14:28:55Z",
+      "side": 1,
+      "message": "how about an alias for this at the top of the file \u0027angle_build_deqp_executables\u0027 as \u0027(OS\u003d\u003d\"win\" or OS\u003d\u003d\"linux\") and angle_standalone\u003d\u003d1 and angle_build_winrt\u003d\u003d0",
+      "range": {
+        "startLine": 1336,
+        "startChar": 8,
+        "endLine": 1336,
+        "endChar": 98
+      },
+      "revId": "8105bbf7b2b8d5b04145fa446c7636db5e922f97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4118ed4_8f3b999a",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1380,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-09T14:28:55Z",
+      "side": 1,
+      "message": "a new variable for this at the top here as well, based on winrt-ness and the other conditions, with a comment",
+      "range": {
+        "startLine": 1380,
+        "startChar": 10,
+        "endLine": 1380,
+        "endChar": 128
+      },
+      "revId": "8105bbf7b2b8d5b04145fa446c7636db5e922f97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4080aae_8866f75d",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1481,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-09T14:28:55Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 1481,
+        "startChar": 10,
+        "endLine": 1481,
+        "endChar": 127
       },
       "revId": "8105bbf7b2b8d5b04145fa446c7636db5e922f97",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
