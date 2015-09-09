@@ -197,6 +197,7 @@ gl::Error FramebufferGL::invalidateSub(size_t count, const GLenum *attachments, 
 
 gl::Error FramebufferGL::clear(const gl::Data &data, GLbitfield mask)
 {
+    syncClearState();
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clear(mask);
 
@@ -205,6 +206,7 @@ gl::Error FramebufferGL::clear(const gl::Data &data, GLbitfield mask)
 
 gl::Error FramebufferGL::clearBufferfv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLfloat *values)
 {
+    syncClearState();
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clearBufferfv(buffer, drawbuffer, values);
 
@@ -213,6 +215,7 @@ gl::Error FramebufferGL::clearBufferfv(const gl::State &state, GLenum buffer, GL
 
 gl::Error FramebufferGL::clearBufferuiv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLuint *values)
 {
+    syncClearState();
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clearBufferuiv(buffer, drawbuffer, values);
 
@@ -221,6 +224,7 @@ gl::Error FramebufferGL::clearBufferuiv(const gl::State &state, GLenum buffer, G
 
 gl::Error FramebufferGL::clearBufferiv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLint *values)
 {
+    syncClearState();
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clearBufferiv(buffer, drawbuffer, values);
 
@@ -229,6 +233,7 @@ gl::Error FramebufferGL::clearBufferiv(const gl::State &state, GLenum buffer, GL
 
 gl::Error FramebufferGL::clearBufferfi(const gl::State &state, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil)
 {
+    syncClearState();
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clearBufferfi(buffer, drawbuffer, depth, stencil);
 
@@ -290,4 +295,13 @@ GLuint FramebufferGL::getFramebufferID() const
     return mFramebufferID;
 }
 
+void FramebufferGL::syncClearState()
+{
+    if (mFunctions->standard == STANDARD_GL_DESKTOP)
+    {
+        // TODO(geofflang): Update this when the framebuffer binding dirty changes, when it exists
+        // (see StateManagerGL.cpp)
+        mStateManager->setFramebufferSRGBEnabled(mFramebufferID != 0);
+    }
+}
 }
