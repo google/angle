@@ -504,6 +504,30 @@
       "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24de465b_cb42b5d9",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-09T18:20:00Z",
+      "side": 1,
+      "message": "Finally went back to this patch and addressed these comments.\n\nFor standalone ANGLE I went with a sleep based VSYNC synchronization. It is not ideal but the best we can do without the ability to post function to be executed later.\n\nWhen integrating with Chromium we\u0027ll obviously not do that but provide an extension giving more control, either by some task-based capabilities to ANGLE via the Platform, or by providing two function separating the swap of the buffers and the presenting.",
+      "parentUuid": "6a6ba46a_ea2787b8",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 5
+      },
+      "revId": "0a2b4ab9a843ed6980768a78866fd13a23c69891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
