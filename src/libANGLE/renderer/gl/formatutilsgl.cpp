@@ -212,16 +212,17 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     InsertFormatMapping(&map, GL_DEPTH_COMPONENT,       VersionOnly(1, 5),                                  VersionOrExts(1, 5, "GL_ARB_depth_texture"), VersionOnly(1, 5),                                  VersionOnly(2, 0),                           VersionOrExts(3, 0, "GL_OES_depth_texture"), VersionOnly(2, 0)                                                      );
     InsertFormatMapping(&map, GL_DEPTH_STENCIL,         VersionOnly(1, 5),                                  VersionOrExts(1, 5, "GL_ARB_depth_texture"), VersionOnly(1, 5),                                  VersionOnly(2, 0),                           VersionOrExts(3, 0, "GL_OES_depth_texture"), VersionOnly(2, 0)                                                      );
 
-    // Luminance alpha formats (TODO)
-    InsertFormatMapping(&map, GL_ALPHA8_EXT,             Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_LUMINANCE8_EXT,         Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_ALPHA32F_EXT,           Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_LUMINANCE32F_EXT,       Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_ALPHA16F_EXT,           Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_LUMINANCE16F_EXT,       Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_LUMINANCE8_ALPHA8_EXT,  Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA32F_EXT, Never(), Never(), Never(), Never(), Never(), Never());
-    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA16F_EXT, Never(), Never(), Never(), Never(), Never(), Never());
+    // Luminance alpha formats
+    //                       | Format                  | OpenGL texture support                      | Filter  | Render | OpenGL ES texture support         | Filter  | Render |
+    InsertFormatMapping(&map, GL_ALPHA8_EXT,             Always(),                                    Always(), Never(), ExtsOnly("GL_EXT_texture_storage"), Always(), Never());
+    InsertFormatMapping(&map, GL_LUMINANCE8_EXT,         Always(),                                    Always(), Never(), ExtsOnly("GL_EXT_texture_storage"), Always(), Never());
+    InsertFormatMapping(&map, GL_ALPHA32F_EXT,           VersionOrExts(3, 0, "GL_ARB_texture_float"), Always(), Never(), ExtsOnly("GL_EXT_texture_storage"), Always(), Never());
+    InsertFormatMapping(&map, GL_LUMINANCE32F_EXT,       VersionOrExts(3, 0, "GL_ARB_texture_float"), Always(), Never(), ExtsOnly("GL_EXT_texture_storage"), Always(), Never());
+    InsertFormatMapping(&map, GL_ALPHA16F_EXT,           VersionOrExts(3, 0, "GL_ARB_texture_float"), Always(), Never(), ExtsOnly("GL_EXT_texture_storage"), Always(), Never());
+    InsertFormatMapping(&map, GL_LUMINANCE16F_EXT,       VersionOrExts(3, 0, "GL_ARB_texture_float"), Always(), Never(), ExtsOnly("GL_EXT_texture_storage"), Always(), Never());
+    InsertFormatMapping(&map, GL_LUMINANCE8_ALPHA8_EXT,  Always(),                                    Always(), Never(), ExtsOnly("GL_EXT_texture_storage"), Always(), Never());
+    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA32F_EXT, VersionOrExts(3, 0, "GL_ARB_texture_float"), Always(), Never(), ExtsOnly("GL_EXT_texture_storage"), Always(), Never());
+    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA16F_EXT, VersionOrExts(3, 0, "GL_ARB_texture_float"), Always(), Never(), ExtsOnly("GL_EXT_texture_storage"), Always(), Never());
 
     // Compressed formats, From ES 3.0.1 spec, table 3.16
     InsertFormatMapping(&map, GL_COMPRESSED_R11_EAC,                        Never(), Never(), Never(), Never(), Never(), Never());
