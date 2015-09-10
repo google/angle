@@ -2095,7 +2095,8 @@ gl::Error Renderer11::applyShaders(gl::Program *program,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::applyUniforms(const ProgramImpl &program, const std::vector<gl::LinkedUniform*> &uniformArray)
+gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
+                                    const std::vector<D3DUniform *> &uniformArray)
 {
     unsigned int totalRegisterCountVS = 0;
     unsigned int totalRegisterCountPS = 0;
@@ -2103,26 +2104,25 @@ gl::Error Renderer11::applyUniforms(const ProgramImpl &program, const std::vecto
     bool vertexUniformsDirty = false;
     bool pixelUniformsDirty = false;
 
-    for (size_t uniformIndex = 0; uniformIndex < uniformArray.size(); uniformIndex++)
+    for (const D3DUniform *uniform : uniformArray)
     {
-        const gl::LinkedUniform &uniform = *uniformArray[uniformIndex];
-
-        if (uniform.isReferencedByVertexShader() && !uniform.isSampler())
+        if (uniform->isReferencedByVertexShader() && !uniform->isSampler())
         {
-            totalRegisterCountVS += uniform.registerCount;
-            vertexUniformsDirty = (vertexUniformsDirty || uniform.dirty);
+            totalRegisterCountVS += uniform->registerCount;
+            vertexUniformsDirty = (vertexUniformsDirty || uniform->dirty);
         }
 
-        if (uniform.isReferencedByFragmentShader() && !uniform.isSampler())
+        if (uniform->isReferencedByFragmentShader() && !uniform->isSampler())
         {
-            totalRegisterCountPS += uniform.registerCount;
-            pixelUniformsDirty = (pixelUniformsDirty || uniform.dirty);
+            totalRegisterCountPS += uniform->registerCount;
+            pixelUniformsDirty = (pixelUniformsDirty || uniform->dirty);
         }
     }
 
-    const ProgramD3D *programD3D = GetAs<ProgramD3D>(&program);
-    const UniformStorage11 *vertexUniformStorage = GetAs<UniformStorage11>(&programD3D->getVertexUniformStorage());
-    const UniformStorage11 *fragmentUniformStorage = GetAs<UniformStorage11>(&programD3D->getFragmentUniformStorage());
+    const UniformStorage11 *vertexUniformStorage =
+        GetAs<UniformStorage11>(&programD3D.getVertexUniformStorage());
+    const UniformStorage11 *fragmentUniformStorage =
+        GetAs<UniformStorage11>(&programD3D.getFragmentUniformStorage());
     ASSERT(vertexUniformStorage);
     ASSERT(fragmentUniformStorage);
 
@@ -2150,26 +2150,26 @@ gl::Error Renderer11::applyUniforms(const ProgramImpl &program, const std::vecto
         mapPS = (float(*)[4])map.pData;
     }
 
-    for (size_t uniformIndex = 0; uniformIndex < uniformArray.size(); uniformIndex++)
+    for (const D3DUniform *uniform : uniformArray)
     {
-        gl::LinkedUniform *uniform = uniformArray[uniformIndex];
+        if (uniform->isSampler())
+            continue;
 
-        if (!uniform->isSampler())
+        unsigned int componentCount = (4 - uniform->registerElement);
+
+        // we assume that uniforms from structs are arranged in struct order in our uniforms list.
+        // otherwise we would overwrite previously written regions of memory.
+
+        if (uniform->isReferencedByVertexShader() && mapVS)
         {
-            unsigned int componentCount = (4 - uniform->registerElement);
+            memcpy(&mapVS[uniform->vsRegisterIndex][uniform->registerElement], uniform->data,
+                   uniform->registerCount * sizeof(float) * componentCount);
+        }
 
-            // we assume that uniforms from structs are arranged in struct order in our uniforms list. otherwise we would
-            // overwrite previously written regions of memory.
-
-            if (uniform->isReferencedByVertexShader() && mapVS)
-            {
-                memcpy(&mapVS[uniform->vsRegisterIndex][uniform->registerElement], uniform->data, uniform->registerCount * sizeof(float) * componentCount);
-            }
-
-            if (uniform->isReferencedByFragmentShader() && mapPS)
-            {
-                memcpy(&mapPS[uniform->psRegisterIndex][uniform->registerElement], uniform->data, uniform->registerCount * sizeof(float) * componentCount);
-            }
+        if (uniform->isReferencedByFragmentShader() && mapPS)
+        {
+            memcpy(&mapPS[uniform->psRegisterIndex][uniform->registerElement], uniform->data,
+                   uniform->registerCount * sizeof(float) * componentCount);
         }
     }
 
@@ -2255,7 +2255,7 @@ gl::Error Renderer11::applyUniforms(const ProgramImpl &program, const std::vecto
     }
 
     // GSSetConstantBuffers triggers device removal on 9_3, so we should only call it if necessary
-    if (programD3D->usesGeometryShader())
+    if (programD3D.usesGeometryShader())
     {
         // needed for the point sprite geometry shader
         if (mCurrentGeometryConstantBuffer != mDriverConstantBufferPS)
