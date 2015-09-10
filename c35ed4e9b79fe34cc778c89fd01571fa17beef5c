@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64cf5e9f_349e2923",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 5
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-09-10T02:10:31Z",
+      "side": 1,
+      "message": "Have you observed this flickering or tearing in standalone ANGLE? In Chromium it was found that IOSurfaces (or Apple\u0027s OpenGL implementation) were doing enough buffering that we didn\u0027t see tearing, even when rendering to a single IOSurface. That might have been because we were only drawing two triangles to it. Basically, we should keep the code as simple as possible.",
+      "range": {
+        "startLine": 211,
+        "startChar": 39,
+        "endLine": 211,
+        "endChar": 41
+      },
+      "revId": "c35ed4e9b79fe34cc778c89fd01571fa17beef5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4c34e74_6e94d302",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 5
+      },
+      "lineNbr": 818,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-09-10T02:10:31Z",
+      "side": 1,
+      "message": "This change seems unrelated.",
+      "range": {
+        "startLine": 818,
+        "startChar": 21,
+        "endLine": 818,
+        "endChar": 41
+      },
+      "revId": "c35ed4e9b79fe34cc778c89fd01571fa17beef5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
