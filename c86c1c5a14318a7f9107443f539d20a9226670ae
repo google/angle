@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a40b16a8_8a66eb5d",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-10T21:36:04Z",
+      "side": 1,
+      "message": "If primitive restart is not enabled this check can be false but we still can have an index with value 0xFFFF so it seems we should keep both conditions.",
+      "revId": "c86c1c5a14318a7f9107443f539d20a9226670ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
