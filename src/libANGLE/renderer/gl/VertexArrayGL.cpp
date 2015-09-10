@@ -330,9 +330,20 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
             // Compute where the 0-index vertex would be.
             const size_t vertexStartOffset = curBufferOffset - (indexRange.start * destStride);
 
-            mFunctions->vertexAttribPointer(idx, attrib.size, attrib.type, attrib.normalized,
-                                            static_cast<GLsizei>(destStride),
-                                            reinterpret_cast<const GLvoid *>(vertexStartOffset));
+            if (attrib.pureInteger)
+            {
+                ASSERT(!attrib.normalized);
+                mFunctions->vertexAttribIPointer(
+                    idx, attrib.size, attrib.type, static_cast<GLsizei>(destStride),
+                    reinterpret_cast<const GLvoid *>(vertexStartOffset));
+            }
+            else
+            {
+                mFunctions->vertexAttribPointer(
+                    idx, attrib.size, attrib.type, attrib.normalized,
+                    static_cast<GLsizei>(destStride),
+                    reinterpret_cast<const GLvoid *>(vertexStartOffset));
+            }
 
             curBufferOffset += destStride * streamedVertexCount;
 
