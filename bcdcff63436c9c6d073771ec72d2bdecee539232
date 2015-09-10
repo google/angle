@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24c9e69c_28948f2f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-10T00:33:31Z",
+      "side": 1,
+      "message": "I suggest to return a Shader object instead of true, and nullptr instead of false.  Because many places right after ValidShader(), context-\u003egetShader(id) is called again.\n\nSame for ValidProgram(), return a Program instead of true.",
+      "range": {
+        "startLine": 353,
+        "startChar": 0,
+        "endLine": 353,
+        "endChar": 4
+      },
+      "revId": "bcdcff63436c9c6d073771ec72d2bdecee539232",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
