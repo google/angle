@@ -22,6 +22,30 @@
       "revId": "4b8a4ff0d635abb1ca2d26242b1dc86183652689",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84d9b271_97596e78",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-10T17:30:55Z",
+      "side": 1,
+      "message": "Done, updated some names and added comments.",
+      "parentUuid": "8402928b_86c14a8d",
+      "range": {
+        "startLine": 32,
+        "startChar": 7,
+        "endLine": 32,
+        "endChar": 16
+      },
+      "revId": "4b8a4ff0d635abb1ca2d26242b1dc86183652689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
