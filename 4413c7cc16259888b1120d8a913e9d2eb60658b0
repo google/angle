@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8402928b_89c15d8d",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-10T20:11:25Z",
+      "side": 1,
+      "message": "ASSERT(!attrib.normalized) for funsies",
+      "range": {
+        "startLine": 335,
+        "startChar": 16,
+        "endLine": 335,
+        "endChar": 26
+      },
+      "revId": "4413c7cc16259888b1120d8a913e9d2eb60658b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
