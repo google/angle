@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8402928b_893b9d9a",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 5
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-10T14:38:39Z",
+      "side": 1,
+      "message": "I tried again, removing any of the two synchronizations makes hello_triangle flicker. Hello triangle makes a clear then draws a triangle, removing the clear prevented most of the flickering so it seems that the surface was being presented in between the rendering operations.\n\nThe best solution would be to have a fence after the flush and swap only when that fence passed, however it is very impractical to do without a task manager.",
+      "parentUuid": "64cf5e9f_349e2923",
+      "range": {
+        "startLine": 211,
+        "startChar": 39,
+        "endLine": 211,
+        "endChar": 41
+      },
+      "revId": "c35ed4e9b79fe34cc778c89fd01571fa17beef5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4c34e74_6e94d302",
         "filename": "src/libGLESv2.gypi",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-10T02:10:31Z",
       "side": 1,
       "message": "This change seems unrelated.",
+      "range": {
+        "startLine": 818,
+        "startChar": 21,
+        "endLine": 818,
+        "endChar": 41
+      },
+      "revId": "c35ed4e9b79fe34cc778c89fd01571fa17beef5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a40b16a8_6af3b769",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 5
+      },
+      "lineNbr": 818,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-10T14:38:39Z",
+      "side": 1,
+      "message": "That\u0027s a gerrit artifact, this chunk isn\u0027t part of this CL. This happens when the CL has been rebased on a commit that changes the same file as the CL.",
+      "parentUuid": "e4c34e74_6e94d302",
       "range": {
         "startLine": 818,
         "startChar": 21,
