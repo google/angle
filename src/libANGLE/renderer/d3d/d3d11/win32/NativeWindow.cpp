@@ -14,8 +14,7 @@
 namespace rx
 {
 
-NativeWindow::NativeWindow(EGLNativeWindowType window, const egl::Config *config)
-    : mWindow(window), mConfig(config)
+NativeWindow::NativeWindow(EGLNativeWindowType window) : mWindow(window)
 {
 }
 

@@ -33,14 +33,8 @@ SurfaceD3D *SurfaceD3D::createFromWindow(RendererD3D *renderer, egl::Display *di
     return new SurfaceD3D(renderer, display, config, width, height, fixedSize, static_cast<EGLClientBuffer>(0), window);
 }
 
-SurfaceD3D::SurfaceD3D(RendererD3D *renderer,
-                       egl::Display *display,
-                       const egl::Config *config,
-                       EGLint width,
-                       EGLint height,
-                       EGLint fixedSize,
-                       EGLClientBuffer shareHandle,
-                       EGLNativeWindowType window)
+SurfaceD3D::SurfaceD3D(RendererD3D *renderer, egl::Display *display, const egl::Config *config, EGLint width, EGLint height, EGLint fixedSize,
+                       EGLClientBuffer shareHandle, EGLNativeWindowType window)
     : SurfaceImpl(),
       mRenderer(renderer),
       mDisplay(display),
@@ -49,11 +43,11 @@ SurfaceD3D::SurfaceD3D(RendererD3D *renderer,
       mDepthStencilFormat(config->depthStencilFormat),
       mSwapChain(nullptr),
       mSwapIntervalDirty(true),
-      mNativeWindow(window, config),
+      mNativeWindow(window),
       mWidth(width),
       mHeight(height),
       mSwapInterval(1),
-      mShareHandle(reinterpret_cast<HANDLE *>(shareHandle))
+      mShareHandle(reinterpret_cast<HANDLE*>(shareHandle))
 {
 }
 

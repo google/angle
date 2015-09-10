@@ -678,13 +678,15 @@ void Renderer11::populateRenderer11DeviceCaps()
 
 egl::ConfigSet Renderer11::generateConfigs() const
 {
-    static const GLenum colorBufferFormats[] = {
+    static const GLenum colorBufferFormats[] =
+    {
         // 32-bit supported formats
-        GL_BGRA8_EXT, GL_RGBA8_OES,
-        // 24-bit supported formats
-        GL_RGB8_OES,
+        GL_BGRA8_EXT,
+        GL_RGBA8_OES,
         // 16-bit supported formats
-        GL_RGBA4, GL_RGB5_A1, GL_RGB565,
+        GL_RGBA4,
+        GL_RGB5_A1,
+        GL_RGB565,
     };
 
     static const GLenum depthStencilBufferFormats[] =
