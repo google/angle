@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64d4be37_90229ae2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-10T17:47:45Z",
+      "side": 1,
+      "message": "don\u0027t you still want to initialize it in Windows Store mode? Maybe you could put some #ifdef logic in here as well? Not sure.",
+      "range": {
+        "startLine": 17,
+        "startChar": 66,
+        "endLine": 17,
+        "endChar": 72
+      },
+      "revId": "82aaa76b017c2c525056123d63954fd3fac06efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
