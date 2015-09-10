@@ -22,6 +22,30 @@
       "revId": "82aaa76b017c2c525056123d63954fd3fac06efe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04c1426c_c166115f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-09-10T17:51:20Z",
+      "side": 1,
+      "message": "Windows Store mode uses a different .cpp for the impl.  I think this was what Nico was refering to about a single header being implemented by two different .cpp files.",
+      "parentUuid": "64d4be37_90229ae2",
+      "range": {
+        "startLine": 17,
+        "startChar": 66,
+        "endLine": 17,
+        "endChar": 72
+      },
+      "revId": "82aaa76b017c2c525056123d63954fd3fac06efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
