@@ -1145,11 +1145,8 @@ bool ValidateEndQuery(gl::Context *context, GLenum target)
     return true;
 }
 
-static bool ValidateUniformCommonBase(gl::Context *context,
-                                      GLenum targetUniformType,
-                                      GLint location,
-                                      GLsizei count,
-                                      const LinkedUniform **uniformOut)
+static bool ValidateUniformCommonBase(gl::Context *context, GLenum targetUniformType,
+                                      GLint location, GLsizei count, LinkedUniform **uniformOut)
 {
     if (count < 0)
     {
@@ -1176,16 +1173,16 @@ static bool ValidateUniformCommonBase(gl::Context *context,
         return false;
     }
 
-    const LinkedUniform &uniform = program->getUniformByLocation(location);
+    LinkedUniform *uniform = program->getUniformByLocation(location);
 
     // attempting to write an array to a non-array uniform is an INVALID_OPERATION
-    if (!uniform.isArray() && count > 1)
+    if (!uniform->isArray() && count > 1)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
         return false;
     }
 
-    *uniformOut = &uniform;
+    *uniformOut = uniform;
     return true;
 }
 
@@ -1198,7 +1195,7 @@ bool ValidateUniform(gl::Context *context, GLenum uniformType, GLint location, G
         return false;
     }
 
-    const LinkedUniform *uniform = nullptr;
+    LinkedUniform *uniform = NULL;
     if (!ValidateUniformCommonBase(context, uniformType, location, count, &uniform))
     {
         return false;
@@ -1233,7 +1230,7 @@ bool ValidateUniformMatrix(gl::Context *context, GLenum matrixType, GLint locati
         return false;
     }
 
-    const LinkedUniform *uniform = nullptr;
+    LinkedUniform *uniform = NULL;
     if (!ValidateUniformCommonBase(context, matrixType, location, count, &uniform))
     {
         return false;
@@ -1529,7 +1526,7 @@ static bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count, GLsiz
     // Uniform buffer validation
     for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < program->getActiveUniformBlockCount(); uniformBlockIndex++)
     {
-        const gl::UniformBlock &uniformBlock = program->getUniformBlockByIndex(uniformBlockIndex);
+        const gl::UniformBlock *uniformBlock = program->getUniformBlockByIndex(uniformBlockIndex);
         GLuint blockBinding = program->getUniformBlockBinding(uniformBlockIndex);
         const gl::Buffer *uniformBuffer = state.getIndexedUniformBuffer(blockBinding);
 
@@ -1548,7 +1545,7 @@ static bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count, GLsiz
             uniformBufferSize = static_cast<size_t>(uniformBuffer->getSize());
         }
 
-        if (uniformBufferSize < uniformBlock.dataSize)
+        if (uniformBufferSize < uniformBlock->dataSize)
         {
             // undefined behaviour
             context->recordError(Error(GL_INVALID_OPERATION, "It is undefined behaviour to use a uniform buffer that is too small."));
@@ -1947,8 +1944,8 @@ static bool ValidateSizedGetUniform(Context *context, GLuint program, GLint loca
     ASSERT(programObject);
 
     // sized queries -- ensure the provided buffer is large enough
-    const LinkedUniform &uniform = programObject->getUniformByLocation(location);
-    size_t requiredBytes = VariableExternalSize(uniform.type);
+    LinkedUniform *uniform = programObject->getUniformByLocation(location);
+    size_t requiredBytes = VariableExternalSize(uniform->type);
     if (static_cast<size_t>(bufSize) < requiredBytes)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
