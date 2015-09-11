@@ -94,6 +94,52 @@
     },
     {
       "key": {
+        "uuid": "c45e4afd_f8f5718d",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 929,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-11T20:32:08Z",
+      "side": 1,
+      "message": "I think the following code should be put into else block.",
+      "range": {
+        "startLine": 929,
+        "startChar": 4,
+        "endLine": 929,
+        "endChar": 5
+      },
+      "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0465c2c3_faf5698d",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-11T20:32:08Z",
+      "side": 1,
+      "message": "nit: why not define this before the previous if block, so you can use it in the if condition?",
+      "range": {
+        "startLine": 933,
+        "startChar": 11,
+        "endLine": 933,
+        "endChar": 24
+      },
+      "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64fd9ebf_8e3b9f9a",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 2
@@ -110,6 +156,53 @@
         "startChar": 7,
         "endLine": 946,
         "endChar": 9
+      },
+      "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0465c2c3_5ab3b5ce",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 946,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-11T20:32:08Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "64fd9ebf_8e3b9f9a",
+      "range": {
+        "startLine": 940,
+        "startChar": 7,
+        "endLine": 946,
+        "endChar": 9
+      },
+      "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0465c2c3_fa0c8945",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 948,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-11T20:32:08Z",
+      "side": 1,
+      "message": "if you put these code into else, you don\u0027t need to check framebufferId !\u003d 0 here.",
+      "range": {
+        "startLine": 948,
+        "startChar": 17,
+        "endLine": 948,
+        "endChar": 30
       },
       "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
