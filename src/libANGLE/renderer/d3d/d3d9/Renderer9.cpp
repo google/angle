@@ -1910,46 +1910,45 @@ gl::Error Renderer9::applyShaders(gl::Program *program,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::applyUniforms(const ProgramImpl &program, const std::vector<gl::LinkedUniform*> &uniformArray)
+gl::Error Renderer9::applyUniforms(const ProgramD3D &programD3D,
+                                   const std::vector<D3DUniform *> &uniformArray)
 {
-    for (size_t uniformIndex = 0; uniformIndex < uniformArray.size(); uniformIndex++)
+    for (const D3DUniform *targetUniform : uniformArray)
     {
-        gl::LinkedUniform *targetUniform = uniformArray[uniformIndex];
+        if (!targetUniform->dirty)
+            continue;
 
-        if (targetUniform->dirty)
+        GLfloat *f = (GLfloat *)targetUniform->data;
+        GLint *i   = (GLint *)targetUniform->data;
+
+        switch (targetUniform->type)
         {
-            GLfloat *f = (GLfloat*)targetUniform->data;
-            GLint *i = (GLint*)targetUniform->data;
-
-            switch (targetUniform->type)
-            {
-              case GL_SAMPLER_2D:
-              case GL_SAMPLER_CUBE:
+            case GL_SAMPLER_2D:
+            case GL_SAMPLER_CUBE:
                 break;
-              case GL_BOOL:
-              case GL_BOOL_VEC2:
-              case GL_BOOL_VEC3:
-              case GL_BOOL_VEC4:
+            case GL_BOOL:
+            case GL_BOOL_VEC2:
+            case GL_BOOL_VEC3:
+            case GL_BOOL_VEC4:
                 applyUniformnbv(targetUniform, i);
                 break;
-              case GL_FLOAT:
-              case GL_FLOAT_VEC2:
-              case GL_FLOAT_VEC3:
-              case GL_FLOAT_VEC4:
-              case GL_FLOAT_MAT2:
-              case GL_FLOAT_MAT3:
-              case GL_FLOAT_MAT4:
+            case GL_FLOAT:
+            case GL_FLOAT_VEC2:
+            case GL_FLOAT_VEC3:
+            case GL_FLOAT_VEC4:
+            case GL_FLOAT_MAT2:
+            case GL_FLOAT_MAT3:
+            case GL_FLOAT_MAT4:
                 applyUniformnfv(targetUniform, f);
                 break;
-              case GL_INT:
-              case GL_INT_VEC2:
-              case GL_INT_VEC3:
-              case GL_INT_VEC4:
+            case GL_INT:
+            case GL_INT_VEC2:
+            case GL_INT_VEC3:
+            case GL_INT_VEC4:
                 applyUniformniv(targetUniform, i);
                 break;
-              default:
+            default:
                 UNREACHABLE();
-            }
         }
     }
 
@@ -1964,7 +1963,7 @@ gl::Error Renderer9::applyUniforms(const ProgramImpl &program, const std::vector
     return gl::Error(GL_NO_ERROR);
 }
 
-void Renderer9::applyUniformnfv(gl::LinkedUniform *targetUniform, const GLfloat *v)
+void Renderer9::applyUniformnfv(const D3DUniform *targetUniform, const GLfloat *v)
 {
     if (targetUniform->isReferencedByFragmentShader())
     {
@@ -1977,7 +1976,7 @@ void Renderer9::applyUniformnfv(gl::LinkedUniform *targetUniform, const GLfloat 
     }
 }
 
-void Renderer9::applyUniformniv(gl::LinkedUniform *targetUniform, const GLint *v)
+void Renderer9::applyUniformniv(const D3DUniform *targetUniform, const GLint *v)
 {
     ASSERT(targetUniform->registerCount <= MAX_VERTEX_CONSTANT_VECTORS_D3D9);
     GLfloat vector[MAX_VERTEX_CONSTANT_VECTORS_D3D9][4];
@@ -1993,7 +1992,7 @@ void Renderer9::applyUniformniv(gl::LinkedUniform *targetUniform, const GLint *v
     applyUniformnfv(targetUniform, (GLfloat*)vector);
 }
 
-void Renderer9::applyUniformnbv(gl::LinkedUniform *targetUniform, const GLint *v)
+void Renderer9::applyUniformnbv(const D3DUniform *targetUniform, const GLint *v)
 {
     ASSERT(targetUniform->registerCount <= MAX_VERTEX_CONSTANT_VECTORS_D3D9);
     GLfloat vector[MAX_VERTEX_CONSTANT_VECTORS_D3D9][4];
