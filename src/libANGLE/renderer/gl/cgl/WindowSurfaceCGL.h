@@ -71,6 +71,7 @@ class WindowSurfaceCGL : public SurfaceGL
     Surface mSurfaces[2];
     int mCurrentSurface;
     GLuint mFramebuffer;
+    GLuint mDSRenderbuffer;
 };
 
 }

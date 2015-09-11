@@ -147,7 +147,8 @@ WindowSurfaceCGL::WindowSurfaceCGL(RendererGL *renderer,
       mStateManager(renderer->getStateManager()),
       mDisplayLink(nullptr),
       mCurrentSurface(0),
-      mFramebuffer(0)
+      mFramebuffer(0),
+      mDSRenderbuffer(0)
 {
     for (auto &surface : mSurfaces)
     {
@@ -162,6 +163,12 @@ WindowSurfaceCGL::~WindowSurfaceCGL()
     {
         mFunctions->deleteFramebuffers(1, &mFramebuffer);
         mFramebuffer = 0;
+    }
+
+    if (mDSRenderbuffer != 0)
+    {
+        mFunctions->deleteRenderbuffers(1, &mDSRenderbuffer);
+        mDSRenderbuffer = 0;
     }
 
     for (auto &surface : mSurfaces)
@@ -186,10 +193,16 @@ egl::Error WindowSurfaceCGL::initialize()
         initializeSurfaceData(&surface, width, height);
     }
 
+    mFunctions->genRenderbuffers(1, &mDSRenderbuffer);
+    mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mDSRenderbuffer);
+    mFunctions->renderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+
     mFunctions->genFramebuffers(1, &mFramebuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_RECTANGLE_ARB,
                                      mSurfaces[0].texture, 0);
+    mFunctions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                                        mDSRenderbuffer);
 
     mDisplayLink = new DisplayLink;
     mDisplayLink->start();
