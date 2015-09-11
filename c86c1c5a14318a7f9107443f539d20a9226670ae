@@ -16,6 +16,24 @@
       "revId": "c86c1c5a14318a7f9107443f539d20a9226670ae",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a40b16a8_2d26f994",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-11T16:32:24Z",
+      "side": 1,
+      "message": "Thanks for noticing this, fixed.",
+      "parentUuid": "a40b16a8_8a66eb5d",
+      "revId": "c86c1c5a14318a7f9107443f539d20a9226670ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
