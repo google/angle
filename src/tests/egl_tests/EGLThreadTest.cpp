@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#define GL_GLEXT_PROTOTYPES
+
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
