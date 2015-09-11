@@ -140,6 +140,7 @@
             'libANGLE/renderer/FramebufferImpl.h',
             'libANGLE/renderer/ImageImpl.h',
             'libANGLE/renderer/ImplFactory.h',
+            'libANGLE/renderer/ProgramImpl.cpp',
             'libANGLE/renderer/ProgramImpl.h',
             'libANGLE/renderer/QueryImpl.h',
             'libANGLE/renderer/RenderbufferImpl.h',

@@ -12,7 +12,6 @@
 
 #include "angle_gl.h"
 #include "common/debug.h"
-#include "common/MemoryBuffer.h"
 #include "compiler/translator/blocklayout.h"
 #include "libANGLE/angletypes.h"
 
@@ -20,47 +19,53 @@ namespace gl
 {
 
 // Helper struct representing a single shader uniform
-struct LinkedUniform : public sh::Uniform
+struct LinkedUniform : angle::NonCopyable
 {
-    LinkedUniform();
     LinkedUniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize, const int blockIndex, const sh::BlockMemberInfo &blockInfo);
-    LinkedUniform(const sh::Uniform &uniform);
-    LinkedUniform(const LinkedUniform &uniform);
-    LinkedUniform &operator=(const LinkedUniform &uniform);
+
     ~LinkedUniform();
 
-    size_t dataSize() const;
-    uint8_t *data();
-    const uint8_t *data() const;
-    bool isSampler() const;
+    bool isArray() const;
+    unsigned int elementCount() const;
+    bool isReferencedByVertexShader() const;
+    bool isReferencedByFragmentShader() const;
     bool isInDefaultBlock() const;
-    bool isField() const;
-    size_t getElementSize() const;
-    uint8_t *getDataPtrToElement(size_t elementIndex);
-    const uint8_t *getDataPtrToElement(size_t elementIndex) const;
+    size_t dataSize() const;
+    bool isSampler() const;
+    bool isBuiltIn() const;
 
-    int blockIndex;
-    sh::BlockMemberInfo blockInfo;
+    const GLenum type;
+    const GLenum precision;
+    const std::string name;
+    const unsigned int arraySize;
+    const int blockIndex;
+    const sh::BlockMemberInfo blockInfo;
 
-  private:
-    mutable rx::MemoryBuffer mLazyData;
+    unsigned char *data;
+    bool dirty;
+
+    unsigned int psRegisterIndex;
+    unsigned int vsRegisterIndex;
+    unsigned int registerCount;
+
+    // Register "elements" are used for uniform structs in ES3, to appropriately identify single uniforms
+    // inside aggregate types, which are packed according C-like structure rules.
+    unsigned int registerElement;
 };
 
 // Helper struct representing a single shader uniform block
-struct UniformBlock
+struct UniformBlock : angle::NonCopyable
 {
-    UniformBlock();
-    UniformBlock(const std::string &nameIn, bool isArrayIn, unsigned int arrayElementIn);
-    UniformBlock(const UniformBlock &other) = default;
-    UniformBlock &operator=(const UniformBlock &other) = default;
+    // use GL_INVALID_INDEX for non-array elements
+    UniformBlock(const std::string &name, unsigned int elementIndex, unsigned int dataSize);
 
-    std::string name;
-    bool isArray;
-    unsigned int arrayElement;
-    unsigned int dataSize;
+    bool isArrayElement() const;
+    bool isReferencedByVertexShader() const;
+    bool isReferencedByFragmentShader() const;
 
-    bool vertexStaticUse;
-    bool fragmentStaticUse;
+    const std::string name;
+    const unsigned int elementIndex;
+    const unsigned int dataSize;
 
     std::vector<unsigned int> memberUniformIndexes;
 

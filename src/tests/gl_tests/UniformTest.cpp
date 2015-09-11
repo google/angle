@@ -16,7 +16,11 @@ namespace
 class UniformTest : public ANGLETest
 {
   protected:
-    UniformTest() : mProgram(0), mUniformFLocation(-1), mUniformILocation(-1), mUniformBLocation(-1)
+    UniformTest()
+        : mProgram(0),
+          mUniformFLocation(-1),
+          mUniformILocation(-1),
+          mUniformBLocation(-1)
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -36,12 +40,7 @@ class UniformTest : public ANGLETest
             "uniform float uniF;\n"
             "uniform int uniI;\n"
             "uniform bool uniB;\n"
-            "uniform bool uniBArr[4];\n"
-            "void main() {\n"
-            "  gl_FragColor = vec4(uniF + float(uniI));\n"
-            "  gl_FragColor += vec4(uniB ? 1.0 : 0.0);\n"
-            "  gl_FragColor += vec4(uniBArr[0] ? 1.0 : 0.0);\n"
-            "}";
+            "void main() { gl_FragColor = vec4(uniF + float(uniI) + (uniB ? 1.0 : 0.0)); }";
 
         mProgram = CompileProgram(vertexShader, fragShader);
         ASSERT_NE(mProgram, 0u);
@@ -170,6 +169,13 @@ TEST_P(UniformTest, UniformArrayLocations)
 // Test that float to integer GetUniform rounds values correctly.
 TEST_P(UniformTest, FloatUniformStateQuery)
 {
+    // TODO(jmadill): remove this suppression once we support ANGLE-only state queries.
+    if (isAMD() && (GetParam() == ES2_OPENGL() || GetParam() == ES3_OPENGL()))
+    {
+        std::cout << "Skipping test due to a driver bug on AMD." << std::endl;
+        return;
+    }
+
     std::vector<GLfloat> inValues;
     std::vector<GLfloat> expectedFValues;
     std::vector<GLint> expectedIValues;
@@ -208,7 +214,7 @@ TEST_P(UniformTest, FloatUniformStateQuery)
 
     for (size_t index = 0; index < inValues.size(); ++index)
     {
-        GLfloat inValue       = inValues[index];
+        GLfloat inValue = inValues[index];
         GLfloat expectedValue = expectedFValues[index];
 
         glUniform1f(mUniformFLocation, inValue);
@@ -220,7 +226,7 @@ TEST_P(UniformTest, FloatUniformStateQuery)
 
     for (size_t index = 0; index < inValues.size(); ++index)
     {
-        GLfloat inValue     = inValues[index];
+        GLfloat inValue = inValues[index];
         GLint expectedValue = expectedIValues[index];
 
         glUniform1f(mUniformFLocation, inValue);
@@ -234,6 +240,13 @@ TEST_P(UniformTest, FloatUniformStateQuery)
 // Test that integer to float GetUniform rounds values correctly.
 TEST_P(UniformTest, IntUniformStateQuery)
 {
+    // TODO(jmadill): remove this suppression once we support ANGLE-only state queries.
+    if ((isAMD() || isIntel()) && (GetParam() == ES2_OPENGL() || GetParam() == ES3_OPENGL()))
+    {
+        std::cout << "Skipping test due to a driver bug." << std::endl;
+        return;
+    }
+
     std::vector<GLint> inValues;
     std::vector<GLint> expectedIValues;
     std::vector<GLfloat> expectedFValues;
@@ -261,7 +274,7 @@ TEST_P(UniformTest, IntUniformStateQuery)
 
     for (size_t index = 0; index < inValues.size(); ++index)
     {
-        GLint inValue       = inValues[index];
+        GLint inValue = inValues[index];
         GLint expectedValue = expectedIValues[index];
 
         glUniform1i(mUniformILocation, inValue);
@@ -273,7 +286,7 @@ TEST_P(UniformTest, IntUniformStateQuery)
 
     for (size_t index = 0; index < inValues.size(); ++index)
     {
-        GLint inValue         = inValues[index];
+        GLint inValue = inValues[index];
         GLfloat expectedValue = expectedFValues[index];
 
         glUniform1i(mUniformILocation, inValue);
@@ -288,10 +301,9 @@ TEST_P(UniformTest, IntUniformStateQuery)
 TEST_P(UniformTest, BooleanUniformStateQuery)
 {
     glUseProgram(mProgram);
-    GLint intValue     = 0;
+    GLint intValue = 0;
     GLfloat floatValue = 0.0f;
 
-    // Calling Uniform1i
     glUniform1i(mUniformBLocation, GL_FALSE);
 
     glGetUniformiv(mProgram, mUniformBLocation, &intValue);
@@ -307,67 +319,6 @@ TEST_P(UniformTest, BooleanUniformStateQuery)
 
     glGetUniformfv(mProgram, mUniformBLocation, &floatValue);
     EXPECT_EQ(1.0f, floatValue);
-
-    // Calling Uniform1f
-    glUniform1f(mUniformBLocation, 0.0f);
-
-    glGetUniformiv(mProgram, mUniformBLocation, &intValue);
-    EXPECT_EQ(0, intValue);
-
-    glGetUniformfv(mProgram, mUniformBLocation, &floatValue);
-    EXPECT_EQ(0.0f, floatValue);
-
-    glUniform1f(mUniformBLocation, 1.0f);
-
-    glGetUniformiv(mProgram, mUniformBLocation, &intValue);
-    EXPECT_EQ(1, intValue);
-
-    glGetUniformfv(mProgram, mUniformBLocation, &floatValue);
-    EXPECT_EQ(1.0f, floatValue);
-
-    ASSERT_GL_NO_ERROR();
-}
-
-// Test queries for arrays of boolean uniforms.
-TEST_P(UniformTest, BooleanArrayUniformStateQuery)
-{
-    glUseProgram(mProgram);
-    GLint intValues[4]     = {0};
-    GLfloat floatValues[4] = {0.0f};
-    GLint boolValuesi[4]   = {0, 1, 0, 1};
-    GLfloat boolValuesf[4] = {0, 1, 0, 1};
-
-    GLint location = glGetUniformLocation(mProgram, "uniBArr");
-
-    // Calling Uniform1iv
-    glUniform1iv(location, 4, boolValuesi);
-
-    glGetUniformiv(mProgram, location, intValues);
-    for (unsigned int idx = 0; idx < 4; ++idx)
-    {
-        EXPECT_EQ(boolValuesi[idx], intValues[idx]);
-    }
-
-    glGetUniformfv(mProgram, location, floatValues);
-    for (unsigned int idx = 0; idx < 4; ++idx)
-    {
-        EXPECT_EQ(boolValuesf[idx], floatValues[idx]);
-    }
-
-    // Calling Uniform1fv
-    glUniform1fv(location, 4, boolValuesf);
-
-    glGetUniformiv(mProgram, location, intValues);
-    for (unsigned int idx = 0; idx < 4; ++idx)
-    {
-        EXPECT_EQ(boolValuesi[idx], intValues[idx]);
-    }
-
-    glGetUniformfv(mProgram, location, floatValues);
-    for (unsigned int idx = 0; idx < 4; ++idx)
-    {
-        EXPECT_EQ(boolValuesf[idx], floatValues[idx]);
-    }
 
     ASSERT_GL_NO_ERROR();
 }
