@@ -47,11 +47,6 @@
                 'sample_util/tga_utils.cpp',
                 'sample_util/tga_utils.h',
             ],
-            'defines':
-            [
-                'GL_GLEXT_PROTOTYPES',
-                'EGL_EGLEXT_PROTOTYPES',
-            ],
             'msvs_disabled_warnings': [ 4201 ],
             'direct_dependent_settings':
             {
@@ -59,11 +54,6 @@
                 'include_dirs':
                 [
                     'sample_util',
-                ],
-                'defines':
-                [
-                    'GL_GLEXT_PROTOTYPES',
-                    'EGL_EGLEXT_PROTOTYPES',
                 ],
             },
         },

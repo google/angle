@@ -7,7 +7,11 @@
 #ifndef UTIL_EGLWINDOW_H_
 #define UTIL_EGLWINDOW_H_
 
+#define GL_GLEXT_PROTOTYPES
+#define EGL_EGLEXT_PROTOTYPES
+
 #include <GLES3/gl3.h>
+#include <GLES3/gl3ext.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include <EGL/egl.h>

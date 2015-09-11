@@ -7,7 +7,10 @@
 #ifndef SAMPLE_UTIL_SHADER_UTILS_H
 #define SAMPLE_UTIL_SHADER_UTILS_H
 
+#define GL_GLEXT_PROTOTYPES
+
 #include <GLES3/gl3.h>
+#include <GLES3/gl3ext.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include <EGL/egl.h>
