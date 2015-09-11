@@ -165,6 +165,13 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
                 return false;
             }
             break;
+          case GL_ETC1_RGB8_OES:
+            if (!context->getExtensions().compressedETC1RGB8Texture)
+            {
+                context->recordError(Error(GL_INVALID_ENUM));
+                return false;
+            }
+            break;
           default:
             context->recordError(Error(GL_INVALID_ENUM));
             return false;
@@ -350,6 +357,18 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
                 return false;
             }
             break;
+          case GL_ETC1_RGB8_OES:
+            if (context->getExtensions().compressedETC1RGB8Texture)
+            {
+                context->recordError(Error(GL_INVALID_OPERATION));
+                return false;
+            }
+            else
+            {
+                context->recordError(Error(GL_INVALID_ENUM));
+                return false;
+            }
+            break;
           case GL_DEPTH_COMPONENT:
           case GL_DEPTH_STENCIL_OES:
             if (!context->getExtensions().depthTextures)
@@ -502,6 +521,7 @@ bool ValidateES2CopyTexImageParameters(Context* context, GLenum target, GLint le
           case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
           case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
           case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
+          case GL_ETC1_RGB8_OES:
             context->recordError(Error(GL_INVALID_OPERATION));
             return false;
           case GL_DEPTH_COMPONENT:
@@ -642,6 +662,18 @@ bool ValidateES2CopyTexImageParameters(Context* context, GLenum target, GLint le
                 return false;
             }
             break;
+          case GL_ETC1_RGB8_OES:
+            if (context->getExtensions().compressedETC1RGB8Texture)
+            {
+                context->recordError(Error(GL_INVALID_OPERATION));
+                return false;
+            }
+            else
+            {
+                context->recordError(Error(GL_INVALID_ENUM));
+                return false;
+            }
+            break;
           case GL_DEPTH_COMPONENT:
           case GL_DEPTH_COMPONENT16:
           case GL_DEPTH_COMPONENT32_OES:
@@ -754,6 +786,13 @@ bool ValidateES2TexStorageParameters(Context *context, GLenum target, GLsizei le
         break;
       case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
         if (!context->getExtensions().textureCompressionDXT5)
+        {
+            context->recordError(Error(GL_INVALID_ENUM));
+            return false;
+        }
+        break;
+      case GL_ETC1_RGB8_OES:
+        if (context->getExtensions().compressedETC1RGB8Texture)
         {
             context->recordError(Error(GL_INVALID_ENUM));
             return false;
