@@ -117,6 +117,30 @@
     },
     {
       "key": {
+        "uuid": "6473de94_f5f5788d",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 929,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-11T21:54:30Z",
+      "side": 1,
+      "message": "I didn\u0027t put it in an else block thinking oh bufs[0] could also be invalid, but it looks like the bufs[0] !\u003d GL_NONE and GL_BACK above already checks for that. Good idea :)",
+      "parentUuid": "c45e4afd_f8f5718d",
+      "range": {
+        "startLine": 929,
+        "startChar": 4,
+        "endLine": 929,
+        "endChar": 5
+      },
+      "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0465c2c3_faf5698d",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 2
@@ -174,6 +198,30 @@
       "writtenOn": "2015-09-11T20:32:08Z",
       "side": 1,
       "message": "+1",
+      "parentUuid": "64fd9ebf_8e3b9f9a",
+      "range": {
+        "startLine": 940,
+        "startChar": 7,
+        "endLine": 946,
+        "endChar": 9
+      },
+      "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a46156bd_978284c9",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 946,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-11T21:54:30Z",
+      "side": 1,
+      "message": "I actually had this section before the other statement, then thought it might be better to put it down here so in case we error with the default FBO, it doesnt have to always loop through the color attachments. Also, in the 3.1 specs, it says \"An INVALID_OPERATION error is generated if the GL is bound to the default FBO and n is not 1 or bufs is a value other than BACK or NONE\". I read this as if its the default FBO, then in the random case like GL_TRANSFORM_FEEDBACK_BUFFER_BINDING, it would return INVALID_OPERATION bc its not a BACK or NONE. But my interpretation of the specs could be wrong",
       "parentUuid": "64fd9ebf_8e3b9f9a",
       "range": {
         "startLine": 940,
