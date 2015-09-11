@@ -3082,14 +3082,28 @@ void GL_APIENTRY PixelStorei(GLenum pname, GLint param)
             {
               case GL_UNPACK_IMAGE_HEIGHT:
               case GL_UNPACK_SKIP_IMAGES:
+                  context->recordError(Error(GL_INVALID_ENUM));
+                  return;
+
               case GL_UNPACK_ROW_LENGTH:
               case GL_UNPACK_SKIP_ROWS:
               case GL_UNPACK_SKIP_PIXELS:
+                  if (!context->getExtensions().unpackSubimage)
+                  {
+                      context->recordError(Error(GL_INVALID_ENUM));
+                      return;
+                  }
+                  break;
+
               case GL_PACK_ROW_LENGTH:
               case GL_PACK_SKIP_ROWS:
               case GL_PACK_SKIP_PIXELS:
-                context->recordError(Error(GL_INVALID_ENUM));
-                return;
+                  if (!context->getExtensions().packSubimage)
+                  {
+                      context->recordError(Error(GL_INVALID_ENUM));
+                      return;
+                  }
+                  break;
             }
         }
 
@@ -3128,7 +3142,7 @@ void GL_APIENTRY PixelStorei(GLenum pname, GLint param)
             break;
 
           case GL_UNPACK_ROW_LENGTH:
-            ASSERT(context->getClientVersion() >= 3);
+              ASSERT((context->getClientVersion() >= 3) || context->getExtensions().unpackSubimage);
             state.setUnpackRowLength(param);
             break;
 
@@ -3143,27 +3157,27 @@ void GL_APIENTRY PixelStorei(GLenum pname, GLint param)
             break;
 
           case GL_UNPACK_SKIP_ROWS:
-            ASSERT(context->getClientVersion() >= 3);
+              ASSERT((context->getClientVersion() >= 3) || context->getExtensions().unpackSubimage);
             state.getUnpackState().skipRows = param;
             break;
 
           case GL_UNPACK_SKIP_PIXELS:
-            ASSERT(context->getClientVersion() >= 3);
+              ASSERT((context->getClientVersion() >= 3) || context->getExtensions().unpackSubimage);
             state.getUnpackState().skipPixels = param;
             break;
 
           case GL_PACK_ROW_LENGTH:
-            ASSERT(context->getClientVersion() >= 3);
+              ASSERT((context->getClientVersion() >= 3) || context->getExtensions().packSubimage);
             state.getPackState().rowLength = param;
             break;
 
           case GL_PACK_SKIP_ROWS:
-            ASSERT(context->getClientVersion() >= 3);
+              ASSERT((context->getClientVersion() >= 3) || context->getExtensions().packSubimage);
             state.getPackState().skipRows = param;
             break;
 
           case GL_PACK_SKIP_PIXELS:
-            ASSERT(context->getClientVersion() >= 3);
+              ASSERT((context->getClientVersion() >= 3) || context->getExtensions().packSubimage);
             state.getPackState().skipPixels = param;
             break;
 

@@ -228,6 +228,12 @@ struct Extensions
     // GL_OES_EGL_image_external_essl3
     bool eglImageExternalEssl3;
 
+    // EXT_unpack_subimage
+    bool unpackSubimage;
+
+    // NV_pack_subimage
+    bool packSubimage;
+
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float

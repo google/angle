@@ -1094,6 +1094,26 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             }
         }
         return true;
+        case GL_PACK_ROW_LENGTH:
+        case GL_PACK_SKIP_ROWS:
+        case GL_PACK_SKIP_PIXELS:
+            if (!mExtensions.packSubimage)
+            {
+                return false;
+            }
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
+        case GL_UNPACK_ROW_LENGTH:
+        case GL_UNPACK_SKIP_ROWS:
+        case GL_UNPACK_SKIP_PIXELS:
+            if (!mExtensions.unpackSubimage)
+            {
+                return false;
+            }
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
       case GL_MAX_VIEWPORT_DIMS:
         {
             *type = GL_INT;
@@ -1204,6 +1224,12 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS:
       case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS:
       case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS:
+      case GL_PACK_ROW_LENGTH:
+      case GL_PACK_SKIP_ROWS:
+      case GL_PACK_SKIP_PIXELS:
+      case GL_UNPACK_ROW_LENGTH:
+      case GL_UNPACK_SKIP_ROWS:
+      case GL_UNPACK_SKIP_PIXELS:
         {
             *type = GL_INT;
             *numParams = 1;

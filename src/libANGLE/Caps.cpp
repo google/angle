@@ -139,6 +139,8 @@ Extensions::Extensions()
       eglImage(false),
       eglImageExternal(false),
       eglImageExternalEssl3(false),
+      unpackSubimage(false),
+      packSubimage(false),
       colorBufferFloat(false)
 {
 }
@@ -195,6 +197,8 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_OES_EGL_image",                  eglImage,                 &extensionStrings);
     InsertExtensionString("GL_OES_EGL_image_external",         eglImageExternal,         &extensionStrings);
     InsertExtensionString("GL_OES_EGL_image_external_essl3",   eglImageExternalEssl3,    &extensionStrings);
+    InsertExtensionString("GL_EXT_unpack_subimage",            unpackSubimage,           &extensionStrings);
+    InsertExtensionString("GL_NV_pack_subimage",               packSubimage,             &extensionStrings);
     InsertExtensionString("GL_EXT_color_buffer_float",         colorBufferFloat,         &extensionStrings);
     // clang-format on
 
