@@ -84,12 +84,22 @@
             [
                 '<@(util_sources)',
             ],
+            'defines':
+            [
+                'GL_GLEXT_PROTOTYPES',
+                'EGL_EGLEXT_PROTOTYPES',
+            ],
             'direct_dependent_settings':
             {
                 'include_dirs':
                 [
                     '<(angle_path)/include',
                     '<(angle_path)/util',
+                ],
+                'defines':
+                [
+                    'GL_GLEXT_PROTOTYPES',
+                    'EGL_EGLEXT_PROTOTYPES',
                 ],
             },
             'conditions':
