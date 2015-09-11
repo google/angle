@@ -459,15 +459,18 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     map.insert(InternalFormatInfoPair(GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,          CompressedFormat(4, 4, 128, 4, GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,          GL_UNSIGNED_BYTE, true,  RequireES<3>, NeverSupported, AlwaysSupported)));
 
     // From GL_EXT_texture_compression_dxt1
-    //                               | Internal format                   |                |W |H | BS |CC| Format                            | Type            | SRGB | Supported                                      | Renderable    | Filterable    |
-    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGB_S3TC_DXT1_EXT,    CompressedFormat(4, 4,  64, 3, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,    GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::textureCompressionDXT1>, NeverSupported, AlwaysSupported)));
-    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   CompressedFormat(4, 4,  64, 4, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::textureCompressionDXT1>, NeverSupported, AlwaysSupported)));
+    //                               | Internal format                   |                |W |H | BS |CC| Format                            | Type            | SRGB | Supported                                         | Renderable    | Filterable    |
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGB_S3TC_DXT1_EXT,    CompressedFormat(4, 4,  64, 3, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,    GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::textureCompressionDXT1>,    NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   CompressedFormat(4, 4,  64, 4, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::textureCompressionDXT1>,    NeverSupported, AlwaysSupported)));
 
     // From GL_ANGLE_texture_compression_dxt3
-    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, CompressedFormat(4, 4, 128, 4, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::textureCompressionDXT5>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, CompressedFormat(4, 4, 128, 4, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::textureCompressionDXT5>,    NeverSupported, AlwaysSupported)));
 
     // From GL_ANGLE_texture_compression_dxt5
-    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, CompressedFormat(4, 4, 128, 4, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::textureCompressionDXT5>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, CompressedFormat(4, 4, 128, 4, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::textureCompressionDXT5>,    NeverSupported, AlwaysSupported)));
+
+    // From GL_OES_compressed_ETC1_RGB8_texture
+    map.insert(InternalFormatInfoPair(GL_ETC1_RGB8_OES,                   CompressedFormat(4, 4,  64, 3, GL_ETC1_RGB8_OES,                   GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::compressedETC1RGB8Texture>, NeverSupported, AlwaysSupported)));
 
     // For STENCIL_INDEX8 we chose a normalized component type for the following reasons:
     // - Multisampled buffer are disallowed for non-normalized integer component types and we want to support it for STENCIL_INDEX8
