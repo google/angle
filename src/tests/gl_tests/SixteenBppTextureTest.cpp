@@ -106,12 +106,19 @@ class SixteenBppTextureTest : public ANGLETest
         glBindTexture(GL_TEXTURE_2D, 0);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
 
-        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
-        EXPECT_PIXEL_EQ(1, 0, 255, 0, 0, 255);
-        EXPECT_PIXEL_EQ(1, 1, 255, 0, 0, 255);
-        EXPECT_PIXEL_EQ(0, 1, 255, 0, 0, 255);
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_UNSUPPORTED)
+        {
+            glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
+            EXPECT_PIXEL_EQ(1, 0, 255, 0, 0, 255);
+            EXPECT_PIXEL_EQ(1, 1, 255, 0, 0, 255);
+            EXPECT_PIXEL_EQ(0, 1, 255, 0, 0, 255);
+        }
+        else
+        {
+            std::cout << "Skipping rendering to an unsupported framebuffer format" << std::endl;
+        }
 
         glDeleteFramebuffers(1, &fbo);
     }
@@ -229,13 +236,20 @@ TEST_P(SixteenBppTextureTest, RGBA5551ClearAlpha)
     glBindTexture(GL_TEXTURE_2D, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
 
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    EXPECT_PIXEL_EQ(0, 0, 0, 0, 0, 0);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_UNSUPPORTED)
+    {
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_PIXEL_EQ(0, 0, 0, 0, 0, 0);
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    EXPECT_PIXEL_EQ(0, 0, 0, 0, 0, 255);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_PIXEL_EQ(0, 0, 0, 0, 0, 255);
+    }
+    else
+    {
+        std::cout << "Skipping rendering to an unsupported framebuffer format" << std::endl;
+    }
 
     glDeleteFramebuffers(1, &fbo);
     glDeleteTextures(1, &tex);
