@@ -806,39 +806,9 @@ void GL_APIENTRY DrawBuffersEXT(GLsizei n, const GLenum *bufs)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (n < 0 || static_cast<GLuint>(n) > context->getCaps().maxDrawBuffers)
+        if (!ValidateDrawBuffers(context, n, bufs))
         {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
-        }
-
-        ASSERT(context->getState().getDrawFramebuffer());
-
-        if (context->getState().getDrawFramebuffer()->id() == 0)
-        {
-            if (n != 1)
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-
-            if (bufs[0] != GL_NONE && bufs[0] != GL_BACK)
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-        }
-        else
-        {
-            for (int colorAttachment = 0; colorAttachment < n; colorAttachment++)
-            {
-                const GLenum attachment = GL_COLOR_ATTACHMENT0_EXT + colorAttachment;
-                if (bufs[colorAttachment] != GL_NONE && bufs[colorAttachment] != attachment)
-                {
-                    context->recordError(Error(GL_INVALID_OPERATION));
-                    return;
-                }
-            }
         }
 
         Framebuffer *framebuffer = context->getState().getDrawFramebuffer();
