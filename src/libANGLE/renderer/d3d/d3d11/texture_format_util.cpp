@@ -219,6 +219,9 @@ const D3D11LoadFunctionMap &BuildD3D11LoadFunctionMap()
     InsertLoadFunction(&map, GL_COMPRESSED_RGBA8_ETC2_EAC,                 GL_UNSIGNED_BYTE, DXGI_FORMAT_R8G8B8A8_UNORM,      LoadETC2RGBA8ToRGBA8  );
     InsertLoadFunction(&map, GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,          GL_UNSIGNED_BYTE, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, LoadETC2SRGBA8ToSRGBA8);
 
+    // From GL_ETC1_RGB8_OES
+    InsertLoadFunction(&map, GL_ETC1_RGB8_OES,                             GL_UNSIGNED_BYTE, DXGI_FORMAT_R8G8B8A8_UNORM,      LoadETC1RGB8ToRGBA8   );
+
     // From GL_EXT_texture_compression_dxt1
     InsertLoadFunction(&map, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,              GL_UNSIGNED_BYTE, DXGI_FORMAT_UNKNOWN,        LoadCompressedToNative<4, 4,  8>     );
     InsertLoadFunction(&map, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,             GL_UNSIGNED_BYTE, DXGI_FORMAT_UNKNOWN,        LoadCompressedToNative<4, 4,  8>     );

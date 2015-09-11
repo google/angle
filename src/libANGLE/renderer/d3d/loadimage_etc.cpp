@@ -796,6 +796,20 @@ void LoadETC2RGBA8ToRGBA8(size_t width,
 
 }  // anonymous namespace
 
+void LoadETC1RGB8ToRGBA8(size_t width,
+                         size_t height,
+                         size_t depth,
+                         const uint8_t *input,
+                         size_t inputRowPitch,
+                         size_t inputDepthPitch,
+                         uint8_t *output,
+                         size_t outputRowPitch,
+                         size_t outputDepthPitch)
+{
+    LoadETC2RGB8ToRGBA8(width, height, depth, input, inputRowPitch, inputDepthPitch, output,
+                        outputRowPitch, outputDepthPitch, false);
+}
+
 void LoadEACR11ToR8(size_t width,
                     size_t height,
                     size_t depth,
@@ -935,4 +949,5 @@ void LoadETC2SRGBA8ToSRGBA8(size_t width,
     LoadETC2RGBA8ToRGBA8(width, height, depth, input, inputRowPitch, inputDepthPitch, output,
                          outputRowPitch, outputDepthPitch, true);
 }
+
 }  // namespace rx

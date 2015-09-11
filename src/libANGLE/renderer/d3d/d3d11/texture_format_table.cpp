@@ -351,6 +351,9 @@ const D3D11ES3FormatMap &BuildD3D11FormatMap()
     InsertD3D11FormatInfo(&map, GL_COMPRESSED_RGBA8_ETC2_EAC,                 DXGI_FORMAT_R8G8B8A8_UNORM,      DXGI_FORMAT_R8G8B8A8_UNORM,           DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN,              OnlyFL10Plus);
     InsertD3D11FormatInfo(&map, GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,          DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,      DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN,              OnlyFL10Plus);
 
+    // From GL_ETC1_RGB8_OES
+    InsertD3D11FormatInfo(&map, GL_ETC1_RGB8_OES,                             DXGI_FORMAT_R8G8B8A8_UNORM,      DXGI_FORMAT_R8G8B8A8_UNORM,           DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN,              AnyDevice);
+
     // From GL_EXT_texture_compression_dxt1
     InsertD3D11FormatInfo(&map, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,              DXGI_FORMAT_BC1_UNORM,           DXGI_FORMAT_BC1_UNORM,                DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN,              AnyDevice);
     InsertD3D11FormatInfo(&map, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,             DXGI_FORMAT_BC1_UNORM,           DXGI_FORMAT_BC1_UNORM,                DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN,              AnyDevice);

@@ -172,6 +172,7 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_ANGLE_texture_compression_dxt5",   textureCompressionDXT5,    &extensionStrings);
     InsertExtensionString("GL_KHR_texture_compression_astc_hdr", textureCompressionASTCHDR, &extensionStrings);
     InsertExtensionString("GL_KHR_texture_compression_astc_ldr", textureCompressionASTCLDR, &extensionStrings);
+    InsertExtensionString("GL_OES_compressed_ETC1_RGB8_texture", compressedETC1RGB8Texture, &extensionStrings);
     InsertExtensionString("GL_EXT_sRGB",                         sRGB,                      &extensionStrings);
     InsertExtensionString("GL_ANGLE_depth_texture",              depthTextures,             &extensionStrings);
     InsertExtensionString("GL_EXT_texture_storage",              textureStorage,            &extensionStrings);
@@ -397,6 +398,15 @@ static bool DetermineASTCTextureSupport(const TextureCapsMap &textureCaps)
     return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
 }
 
+// Check for GL_ETC1_RGB8_OES
+static bool DetermineETC1RGB8TextureSupport(const TextureCapsMap &textureCaps)
+{
+    std::vector<GLenum> requiredFormats;
+    requiredFormats.push_back(GL_ETC1_RGB8_OES);
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
+}
+
 // Check for GL_ANGLE_texture_compression_dxt5
 static bool DetermineSRGBTextureSupport(const TextureCapsMap &textureCaps)
 {
@@ -452,6 +462,7 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     textureCompressionDXT5 = DetermineDXT5TextureSupport(textureCaps);
     textureCompressionASTCHDR = DetermineASTCTextureSupport(textureCaps);
     textureCompressionASTCLDR = DetermineASTCTextureSupport(textureCaps);
+    compressedETC1RGB8Texture = DetermineETC1RGB8TextureSupport(textureCaps);
     sRGB = DetermineSRGBTextureSupport(textureCaps);
     depthTextures = DetermineDepthTextureSupport(textureCaps);
     colorBufferFloat = DetermineColorBufferFloatSupport(textureCaps);
