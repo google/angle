@@ -4,8 +4,8 @@
 
 ANGLETest::ANGLETest()
     : mEGLWindow(nullptr),
-      mWidth(0),
-      mHeight(0)
+      mWidth(16),
+      mHeight(16)
 {
     mEGLWindow =
         new EGLWindow(GetParam().majorVersion, GetParam().minorVersion, GetParam().eglParameters);
