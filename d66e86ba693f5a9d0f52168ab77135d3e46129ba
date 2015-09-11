@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24de465b_913cdc5a",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 906,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-11T19:01:21Z",
+      "side": 1,
+      "message": "technically, n must be a non-negative and no greater than MAX_DRAW_BUFFERS",
+      "range": {
+        "startLine": 906,
+        "startChar": 37,
+        "endLine": 906,
+        "endChar": 95
+      },
+      "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44e33a1f_4fc49198",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 910,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-11T19:01:21Z",
+      "side": 1,
+      "message": "nit: \u0027the default framebuffer\u0027",
+      "range": {
+        "startLine": 910,
+        "startChar": 53,
+        "endLine": 910,
+        "endChar": 63
+      },
+      "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64fd9ebf_6ef3c369",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 918,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-11T19:01:21Z",
+      "side": 1,
+      "message": "nit: to the default framebuffer",
+      "range": {
+        "startLine": 918,
+        "startChar": 74,
+        "endLine": 918,
+        "endChar": 91
+      },
+      "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a40b16a8_edc8e1e4",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 926,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-11T19:01:21Z",
+      "side": 1,
+      "message": "how about: only NONE or BACK are valid values when...",
+      "range": {
+        "startLine": 926,
+        "startChar": 17,
+        "endLine": 926,
+        "endChar": 93
+      },
+      "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64fd9ebf_8e3b9f9a",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 946,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-11T19:01:21Z",
+      "side": 1,
+      "message": "very edge case but we might want to re-arrange this check to be before the GL_NONE/GL_BACK check for default FBOs, because otherwise we\u0027d be returning INVALID_OPERATION for default FBOs, when say the user specifies something random like GL_TRANSFORM_FEEDBACK_BUFFER_BINDING. Not sure if there\u0027s a test for this.",
+      "range": {
+        "startLine": 940,
+        "startChar": 7,
+        "endLine": 946,
+        "endChar": 9
+      },
+      "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
