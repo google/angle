@@ -609,7 +609,13 @@ void OSXWindow::messageLoop()
 void OSXWindow::setMousePosition(int x, int y)
 {
     y = [mWindow frame].size.height - y -1;
-    NSPoint screenspace = [mWindow convertRectToScreen: NSMakeRect(x, y, 0, 0)].origin;
+    NSPoint screenspace;
+
+    #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_7
+        screenspace = [mWindow convertBaseToScreen: NSMakePoint(x, y)];
+    #else
+        screenspace = [mWindow convertRectToScreen: NSMakeRect(x, y, 0, 0)].origin;
+    #endif
     CGWarpMouseCursorPosition(CGPointMake(screenspace.x, YCoordToFromCG(screenspace.y)));
 }
 
