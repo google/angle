@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84ca92dc_a6b2c63e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1363,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-14T14:30:00Z",
+      "side": 1,
+      "message": "Why do we skip non-static usages of sampler here?",
+      "revId": "9495eb03187132ca9b32efbcc781762bca82b53b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0936bbde_321ff09c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2282,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-14T14:30:00Z",
+      "side": 1,
+      "message": "It would be nice to state this in a comment next to the declaration of Program::Data::mUniforms.\n\nAlso the complexity of this algorithm changed from O(uniforms) in O(uniforms * samplers), you might want to use a temporary vector for uniforms and append it at the end.",
+      "revId": "9495eb03187132ca9b32efbcc781762bca82b53b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64c59ecc_a5e47e52",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-14T14:30:00Z",
+      "side": 1,
+      "message": "Nice testing :D",
+      "revId": "9495eb03187132ca9b32efbcc781762bca82b53b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
