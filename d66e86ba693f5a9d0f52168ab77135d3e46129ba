@@ -307,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "a46156bd_0060ecc9",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 946,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-14T17:28:20Z",
+      "side": 1,
+      "message": "Because that\u0027s not in the 3.0 spec.",
+      "parentUuid": "044a2242_d23164d3",
+      "range": {
+        "startLine": 940,
+        "startChar": 7,
+        "endLine": 946,
+        "endChar": 9
+      },
+      "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0465c2c3_fa0c8945",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 2
