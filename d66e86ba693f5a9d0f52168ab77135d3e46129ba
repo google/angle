@@ -355,6 +355,30 @@
     },
     {
       "key": {
+        "uuid": "84ca92dc_a9ae19b9",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 946,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-09-14T18:30:51Z",
+      "side": 1,
+      "message": "Jamie\u0027s interpretation is correct for the ES 3.1 specification-- INVALID_OPERATION is specified for the narrow cases where a token representing an actual attachment is passed, but is not appropriate for the type of framebuffer currently bound (i.e. passing a numbered color attachment while the default framebuffer is bound, or passing BACK while a user-created framebuffer is bound). INVALID_ENUM is specified for cases where the token does not represent an attachment at all, like GL_FLOAT or GL_SOMETHING_I_MADE_UP.\n\nHowever, the INVALID_ENUM text doesn\u0027t appear in ES 3.0 at all. IIRC this was simple oversight, and it was fixed in ES 3.1, but the spec authors either didn\u0027t carry the fix back to ES 3.0, or they declined to apply the fix to ES 3.0. The most spec-adherent way for us to implement this would be to return INVALID_OPERATION for any cases other than the valid ones, as we\u0027re implementing ES 3.0 currently. When we add ES 3.1 support, we\u0027d need to do a version check and apply the INVALID_ENUM return appropriately. \n\nHowever, if there\u0027s a dEQP test which expects the INVALID_ENUM rather than INVALID_OP in ES 3.0, we\u0027ll need to sort out with that team what the appropriate thing to do is, since the INVALID_ENUM return is the intended behavior, but not the specified behavior, for ES 3.0.\n\n(Just a note-- please make sure to use the ES 3.0 specification when implementing ES 3.0 entry points. It\u0027s a good idea to check for differences with ES 3.1 as well, so that we can implement things in a way that will accommodate future API revs, but ES 3.0 is the one that should be governing what we\u0027re currently adding.)",
+      "parentUuid": "246d66b4_331f086a",
+      "range": {
+        "startLine": 940,
+        "startChar": 7,
+        "endLine": 946,
+        "endChar": 9
+      },
+      "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0465c2c3_fa0c8945",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 2
