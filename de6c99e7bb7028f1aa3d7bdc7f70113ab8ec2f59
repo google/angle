@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "044a2242_3229d066",
+        "filename": "build/gyp_angle",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-14T17:37:35Z",
+      "side": 1,
+      "message": "nit: trailing whitespace",
+      "range": {
+        "startLine": 37,
+        "startChar": 26,
+        "endLine": 37,
+        "endChar": 29
+      },
+      "revId": "de6c99e7bb7028f1aa3d7bdc7f70113ab8ec2f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "044a2242_b2e30099",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 1018,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-14T17:37:35Z",
+      "side": 1,
+      "message": "I think for this one you can use build_libraries and standalone \u003d\u003d 1 (since we\u0027ll need this IFF we build dEQP outside of Chromium)",
+      "range": {
+        "startLine": 1018,
+        "startChar": 10,
+        "endLine": 1018,
+        "endChar": 33
+      },
+      "revId": "de6c99e7bb7028f1aa3d7bdc7f70113ab8ec2f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
