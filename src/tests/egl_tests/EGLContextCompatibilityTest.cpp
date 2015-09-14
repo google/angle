@@ -253,7 +253,8 @@ TEST_P(EGLContextCompatibilityTest, WindowDifferentConfig)
         for (size_t j = 0; j < mConfigs.size(); j++)
         {
             EGLConfig config2 = mConfigs[j];
-            testPbufferCompatibility(config1, config2, areConfigsCompatible(config1, config2, EGL_WINDOW_BIT));
+            testWindowCompatibility(config1, config2,
+                                    areConfigsCompatible(config1, config2, EGL_WINDOW_BIT));
         }
     }
 }
