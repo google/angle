@@ -13,6 +13,7 @@
 #include <EGL/eglext.h>
 
 #include "common/debug.h"
+#include "libANGLE/renderer/gl/CGL/PbufferSurfaceCGL.h"
 #include "libANGLE/renderer/gl/CGL/WindowSurfaceCGL.h"
 
 namespace
@@ -118,8 +119,9 @@ SurfaceImpl *DisplayCGL::createWindowSurface(const egl::Config *configuration,
 SurfaceImpl *DisplayCGL::createPbufferSurface(const egl::Config *configuration,
                                               const egl::AttributeMap &attribs)
 {
-    UNIMPLEMENTED();
-    return nullptr;
+    EGLint width  = attribs.get(EGL_WIDTH, 0);
+    EGLint height = attribs.get(EGL_HEIGHT, 0);
+    return new PbufferSurfaceCGL(this->getRenderer(), width, height, mFunctions);
 }
 
 SurfaceImpl* DisplayCGL::createPbufferFromClientBuffer(const egl::Config *configuration,
@@ -187,7 +189,7 @@ egl::ConfigSet DisplayCGL::generateConfigs() const
     config.bindToTextureRGB  = EGL_FALSE;
     config.bindToTextureRGBA = EGL_FALSE;
 
-    config.surfaceType = EGL_WINDOW_BIT;
+    config.surfaceType = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
 
     config.minSwapInterval = 1;
     config.maxSwapInterval = 1;
