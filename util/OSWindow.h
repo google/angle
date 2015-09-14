@@ -7,13 +7,14 @@
 #ifndef SAMPLE_UTIL_WINDOW_H
 #define SAMPLE_UTIL_WINDOW_H
 
-#include "Event.h"
+#include <list>
+#include <stdint.h>
+#include <string>
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
-#include <cstdint>
-#include <list>
-#include <string>
+
+#include "Event.h"
 
 class OSWindow
 {

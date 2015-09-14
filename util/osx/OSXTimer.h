@@ -9,8 +9,8 @@
 #ifndef UTIL_OSX_TIMER_H_
 #define UTIL_OSX_TIMER_H_
 
+#include <stdint.h>
 #include <time.h>
-#include <cstdint>
 
 #include "Timer.h"
 

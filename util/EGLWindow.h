@@ -7,16 +7,16 @@
 #ifndef UTIL_EGLWINDOW_H_
 #define UTIL_EGLWINDOW_H_
 
-#include <GLES3/gl3.h>
+#include <list>
+#include <memory>
+#include <stdint.h>
+#include <string>
+
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+#include <GLES3/gl3.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
-
-#include <string>
-#include <list>
-#include <cstdint>
-#include <memory>
 
 #include "common/angleutils.h"
 

@@ -7,16 +7,16 @@
 #ifndef SAMPLE_UTIL_SAMPLE_APPLICATION_H
 #define SAMPLE_UTIL_SAMPLE_APPLICATION_H
 
+#include <list>
+#include <memory>
+#include <stdint.h>
+#include <string>
+
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
 #include "OSWindow.h"
 #include "Timer.h"
-
-#include <string>
-#include <list>
-#include <cstdint>
-#include <memory>
 
 class EGLWindow;
 
