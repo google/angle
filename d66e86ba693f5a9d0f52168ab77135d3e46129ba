@@ -235,6 +235,30 @@
     },
     {
       "key": {
+        "uuid": "4447ba3e_8cdb4709",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 946,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-14T16:55:00Z",
+      "side": 1,
+      "message": "From my reading, looking at pg 329 of the 3.1 spec, \"an INVALID_ENUM error is generated if any value in bufs is not one of the values in tables 15.3, BACK, or NONE.\" comes before the INVALID_OP check, so I assume that\u0027s first. It makes sense to me intuitively to INVALID_OP if the user tries to draw to COLOR_ATTACHMENT15, but INVALID_ENUM for GL_FLOAT (for example).\n\nShannon I recall you said something about default FBOs being special-cased, any opinion here?",
+      "parentUuid": "a46156bd_978284c9",
+      "range": {
+        "startLine": 940,
+        "startChar": 7,
+        "endLine": 946,
+        "endChar": 9
+      },
+      "revId": "d66e86ba693f5a9d0f52168ab77135d3e46129ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0465c2c3_fa0c8945",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 2
