@@ -6,8 +6,6 @@
 
 #include "test_utils/ANGLETest.h"
 
-#include <array>
-
 using namespace angle;
 
 namespace

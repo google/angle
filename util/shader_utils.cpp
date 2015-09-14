@@ -12,7 +12,7 @@
 
 static std::string ReadFileToString(const std::string &source)
 {
-    std::ifstream stream(source);
+    std::ifstream stream(source.c_str());
     if (!stream)
     {
         std::cerr << "Failed to load shader file: " << source;

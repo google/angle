@@ -1151,14 +1151,14 @@ TEST_P(GLSLTest, VerifyMaxVertexUniformVectors)
 
     for (int i = 0; i < maxUniforms; i++)
     {
-        vshaderSource << "uniform vec4 v" << std::to_string(i) << ";\n";
+        vshaderSource << "uniform vec4 v" << i << ";\n";
     }
 
     vshaderSource << "void main()\n{\n";
 
     for (int i = 0; i < maxUniforms; i++)
     {
-        vshaderSource << "    gl_Position +=  v" << std::to_string(i) << ";\n";
+        vshaderSource << "    gl_Position +=  v" << i << ";\n";
     }
 
     vshaderSource << "}\n";
@@ -1192,14 +1192,14 @@ TEST_P(GLSLTest, VerifyMaxVertexUniformVectorsExceeded)
 
     for (int i = 0; i < maxUniforms; i++)
     {
-        vshaderSource << "uniform vec4 v" << std::to_string(i) << ";\n";
+        vshaderSource << "uniform vec4 v" << i << ";\n";
     }
 
     vshaderSource << "void main()\n{\n";
 
     for (int i = 0; i < maxUniforms; i++)
     {
-        vshaderSource << "    gl_Position +=  v" << std::to_string(i) << ";\n";
+        vshaderSource << "    gl_Position +=  v" << i << ";\n";
     }
 
     vshaderSource << "}\n";
@@ -1231,14 +1231,14 @@ TEST_P(GLSLTest, VerifyMaxFragmentUniformVectorsFragment)
 
     for (int i = 0; i < maxUniforms; i++)
     {
-        fshaderSource << "uniform vec4 v" << std::to_string(i) << ";\n";
+        fshaderSource << "uniform vec4 v" << i << ";\n";
     }
 
     fshaderSource << "void main()\n{\n";
 
     for (int i = 0; i < maxUniforms; i++)
     {
-        fshaderSource << "    gl_FragColor +=  v" << std::to_string(i) << ";\n";
+        fshaderSource << "    gl_FragColor +=  v" << i << ";\n";
     }
 
     fshaderSource << "}\n";
@@ -1272,14 +1272,14 @@ TEST_P(GLSLTest, VerifyMaxFragmentUniformVectorsFragmentExceeded)
 
     for (int i = 0; i < maxUniforms; i++)
     {
-        fshaderSource << "uniform vec4 v" << std::to_string(i) << ";\n";
+        fshaderSource << "uniform vec4 v" << i << ";\n";
     }
 
     fshaderSource << "void main()\n{\n";
 
     for (int i = 0; i < maxUniforms; i++)
     {
-        fshaderSource << "    gl_FragColor +=  v" << std::to_string(i) << ";\n";
+        fshaderSource << "    gl_FragColor +=  v" << i << ";\n";
     }
 
     fshaderSource << "}\n";

@@ -6,8 +6,6 @@
 
 #include "test_utils/ANGLETest.h"
 
-#include <array>
-
 using namespace angle;
 
 namespace
@@ -114,8 +112,8 @@ class UnpackAlignmentTest : public ANGLETest
         glGetIntegerv(GL_UNPACK_ALIGNMENT, &readbackAlignment);
         EXPECT_EQ(alignment, readbackAlignment);
 
-        std::array<GLubyte, 1024> buf;
-        std::fill(buf.begin(), buf.end(), 0);
+        GLubyte buf[1024];
+        memset(buf, 0, sizeof(buf));
 
         unsigned int pixelSize;
         getPixelSize(format, type, &pixelSize);
