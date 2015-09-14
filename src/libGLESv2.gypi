@@ -744,14 +744,12 @@
                             ],
                             'link_settings':
                             {
-                                # TODO(cwallez) Chromium uses an SDKROOT prefix, use it when we want to
-                                # support compiling ANGLE in Chromium on Mac
                                 'libraries':
                                 [
-                                    'OpenGL.framework',
-                                    'IOSurface.framework',
-                                    'Cocoa.framework',
-                                    'QuartzCore.framework',
+                                    '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
+                                    '$(SDKROOT)/System/Library/Frameworks/IOSurface.framework',
+                                    '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
+                                    '$(SDKROOT)/System/Library/Frameworks/QuartzCore.framework',
                                 ],
                             },
                             'all_dependent_settings':

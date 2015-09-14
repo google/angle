@@ -21,6 +21,9 @@
                 'angle_use_glx%': 0,
             }],
         ],
+
+        # root of the OSX SDK for Chromium builds, the system root for standalone builds
+        'SDKROOT%': "",
     },
     'msvs_disabled_warnings':
     [
