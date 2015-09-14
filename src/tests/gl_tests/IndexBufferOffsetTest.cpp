@@ -152,3 +152,4 @@ ANGLE_INSTANTIATE_TEST(IndexBufferOffsetTest,
                        ES3_D3D11(),
                        ES2_OPENGL(),
                        ES3_OPENGL());
+
