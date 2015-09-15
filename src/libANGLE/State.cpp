@@ -995,32 +995,10 @@ void State::setIndexedUniformBufferBinding(GLuint index, Buffer *buffer, GLintpt
     mUniformBuffers[index].set(buffer, offset, size);
 }
 
-GLuint State::getIndexedUniformBufferId(GLuint index) const
+const OffsetBindingPointer<Buffer> &State::getIndexedUniformBuffer(size_t index) const
 {
     ASSERT(static_cast<size_t>(index) < mUniformBuffers.size());
-
-    return mUniformBuffers[index].id();
-}
-
-Buffer *State::getIndexedUniformBuffer(GLuint index) const
-{
-    ASSERT(static_cast<size_t>(index) < mUniformBuffers.size());
-
-    return mUniformBuffers[index].get();
-}
-
-GLintptr State::getIndexedUniformBufferOffset(GLuint index) const
-{
-    ASSERT(static_cast<size_t>(index) < mUniformBuffers.size());
-
-    return mUniformBuffers[index].getOffset();
-}
-
-GLsizeiptr State::getIndexedUniformBufferSize(GLuint index) const
-{
-    ASSERT(static_cast<size_t>(index) < mUniformBuffers.size());
-
-    return mUniformBuffers[index].getSize();
+    return mUniformBuffers[index];
 }
 
 void State::setCopyReadBufferBinding(Buffer *buffer)

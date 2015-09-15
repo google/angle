@@ -203,10 +203,7 @@ class State : angle::NonCopyable
     // GL_UNIFORM_BUFFER - Both indexed and generic targets
     void setGenericUniformBufferBinding(Buffer *buffer);
     void setIndexedUniformBufferBinding(GLuint index, Buffer *buffer, GLintptr offset, GLsizeiptr size);
-    GLuint getIndexedUniformBufferId(GLuint index) const;
-    Buffer *getIndexedUniformBuffer(GLuint index) const;
-    GLintptr getIndexedUniformBufferOffset(GLuint index) const;
-    GLsizeiptr getIndexedUniformBufferSize(GLuint index) const;
+    const OffsetBindingPointer<Buffer> &getIndexedUniformBuffer(size_t index) const;
 
     // GL_COPY_[READ/WRITE]_BUFFER
     void setCopyReadBufferBinding(Buffer *buffer);

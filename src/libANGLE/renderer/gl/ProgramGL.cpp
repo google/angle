@@ -299,6 +299,12 @@ void ProgramGL::setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean t
     mFunctions->uniformMatrix4x3fv(uniLoc(location), count, transpose, value);
 }
 
+void ProgramGL::setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding)
+{
+    mFunctions->uniformBlockBinding(mProgramID, mUniformBlockRealLocationMap[uniformBlockIndex],
+                                    uniformBlockBinding);
+}
+
 void ProgramGL::reset()
 {
     mUniformRealLocationMap.clear();
@@ -316,9 +322,105 @@ const std::vector<SamplerBindingGL> &ProgramGL::getAppliedSamplerUniforms() cons
     return mSamplerBindings;
 }
 
-void ProgramGL::gatherUniformBlockInfo(std::vector<gl::UniformBlock> * /*uniformBlocks*/,
-                                       std::vector<gl::LinkedUniform> * /*uniforms*/)
+void ProgramGL::gatherUniformBlockInfo(std::vector<gl::UniformBlock> *uniformBlocks,
+                                       std::vector<gl::LinkedUniform> *uniforms)
 {
-    // TODO(jmadill): Gather uniform block layout info, and data sizes.
+    mUniformBlockRealLocationMap.resize(uniformBlocks->size(), 0);
+
+    for (int i = 0; i < static_cast<int>(uniformBlocks->size()); i++)
+    {
+        auto &uniformBlock = uniformBlocks->at(i);
+
+        std::stringstream fullNameStr;
+        fullNameStr << uniformBlock.name;
+        if (uniformBlock.isArray)
+        {
+            fullNameStr << "[" << uniformBlock.arrayElement << "]";
+        }
+
+        GLuint blockIndex = mFunctions->getUniformBlockIndex(mProgramID, fullNameStr.str().c_str());
+        if (blockIndex != GL_INVALID_INDEX)
+        {
+            mUniformBlockRealLocationMap[i] = blockIndex;
+
+            GLint dataSize = 0;
+            mFunctions->getActiveUniformBlockiv(mProgramID, blockIndex, GL_UNIFORM_BLOCK_DATA_SIZE,
+                                                &dataSize);
+            uniformBlock.dataSize = dataSize;
+        }
+        else
+        {
+            // Remove this uniform block
+            uniformBlocks->erase(uniformBlocks->begin() + i);
+            i--;
+        }
+    }
+
+    for (int uniformIdx = 0; uniformIdx < static_cast<int>(uniforms->size()); uniformIdx++)
+    {
+        auto &uniform = uniforms->at(uniformIdx);
+        if (uniform.isInDefaultBlock())
+        {
+            continue;
+        }
+
+        const GLchar *uniformName = uniform.name.c_str();
+        GLuint uniformIndex = 0;
+        mFunctions->getUniformIndices(mProgramID, 1, &uniformName, &uniformIndex);
+
+        if (uniformIndex == -1)
+        {
+            // Uniform member has been optimized out, remove it from the list
+            // TODO: Clean this up by using a class to wrap around the uniforms so manual removal is
+            // not needed.
+            for (size_t uniformBlockIdx = 0; uniformBlockIdx < uniformBlocks->size();
+                 uniformBlockIdx++)
+            {
+                auto &uniformBlock = uniformBlocks->at(uniformBlockIdx);
+                for (int memberIndex = 0;
+                     memberIndex < static_cast<int>(uniformBlock.memberUniformIndexes.size());
+                     memberIndex++)
+                {
+                    if (uniformBlock.memberUniformIndexes[memberIndex] ==
+                        static_cast<unsigned int>(uniformIdx))
+                    {
+                        uniformBlock.memberUniformIndexes.erase(
+                            uniformBlock.memberUniformIndexes.begin() + memberIndex);
+                        memberIndex--;
+                    }
+                    else if (uniformBlock.memberUniformIndexes[memberIndex] >
+                             static_cast<unsigned int>(uniformIdx))
+                    {
+                        uniformBlock.memberUniformIndexes[memberIndex]--;
+                    }
+                }
+            }
+            uniforms->erase(uniforms->begin() + uniformIdx);
+            uniformIdx--;
+        }
+        else
+        {
+            GLint offset = 0;
+            mFunctions->getActiveUniformsiv(mProgramID, 1, &uniformIndex, GL_UNIFORM_OFFSET,
+                                            &offset);
+            uniform.blockInfo.offset = offset;
+
+            GLint arrayStride = 0;
+            mFunctions->getActiveUniformsiv(mProgramID, 1, &uniformIndex, GL_UNIFORM_ARRAY_STRIDE,
+                                            &arrayStride);
+            uniform.blockInfo.arrayStride = arrayStride;
+
+            GLint matrixStride = 0;
+            mFunctions->getActiveUniformsiv(mProgramID, 1, &uniformIndex, GL_UNIFORM_MATRIX_STRIDE,
+                                            &matrixStride);
+            uniform.blockInfo.matrixStride = matrixStride;
+
+            // TODO: determine this at the gl::Program level.
+            GLint isRowMajorMatrix = 0;
+            mFunctions->getActiveUniformsiv(mProgramID, 1, &uniformIndex, GL_UNIFORM_IS_ROW_MAJOR,
+                                            &isRowMajorMatrix);
+            uniform.blockInfo.isRowMajorMatrix = isRowMajorMatrix != GL_FALSE;
+        }
+    }
 }
 }

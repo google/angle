@@ -1008,13 +1008,14 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
             continue;
         }
 
-        gl::Buffer *uniformBuffer = data.state->getIndexedUniformBuffer(binding);
-        GLintptr uniformBufferOffset = data.state->getIndexedUniformBufferOffset(binding);
-        GLsizeiptr uniformBufferSize = data.state->getIndexedUniformBufferSize(binding);
+        const OffsetBindingPointer<gl::Buffer> &uniformBuffer =
+            data.state->getIndexedUniformBuffer(binding);
+        GLintptr uniformBufferOffset = uniformBuffer.getOffset();
+        GLsizeiptr uniformBufferSize = uniformBuffer.getSize();
 
-        if (uniformBuffer)
+        if (uniformBuffer.get() != nullptr)
         {
-            Buffer11 *bufferStorage = GetImplAs<Buffer11>(uniformBuffer);
+            Buffer11 *bufferStorage = GetImplAs<Buffer11>(uniformBuffer.get());
             ID3D11Buffer *constantBuffer;
 
             if (mRenderer11DeviceCaps.supportsConstantBufferOffsets)
@@ -1068,13 +1069,14 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
             continue;
         }
 
-        gl::Buffer *uniformBuffer = data.state->getIndexedUniformBuffer(binding);
-        GLintptr uniformBufferOffset = data.state->getIndexedUniformBufferOffset(binding);
-        GLsizeiptr uniformBufferSize = data.state->getIndexedUniformBufferSize(binding);
+        const OffsetBindingPointer<gl::Buffer> &uniformBuffer =
+            data.state->getIndexedUniformBuffer(binding);
+        GLintptr uniformBufferOffset = uniformBuffer.getOffset();
+        GLsizeiptr uniformBufferSize = uniformBuffer.getSize();
 
-        if (uniformBuffer)
+        if (uniformBuffer.get() != nullptr)
         {
-            Buffer11 *bufferStorage = GetImplAs<Buffer11>(uniformBuffer);
+            Buffer11 *bufferStorage = GetImplAs<Buffer11>(uniformBuffer.get());
             ID3D11Buffer *constantBuffer;
 
             if (mRenderer11DeviceCaps.supportsConstantBufferOffsets)
