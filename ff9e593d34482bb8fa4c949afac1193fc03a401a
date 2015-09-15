@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "044a2242_f8a729a9",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1978,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-15T21:19:22Z",
+      "side": 1,
+      "message": "you can use a range-for loop here like so\n\n  for (unsigned int attributeIndex : angle::IterateBitSet(activeAttribLocations))\n\nyou\u0027ll also need BitSetIterator.h.\n\n(Note: the iterator might not be totally speed-optimized, but that should be fixable later if so)",
+      "range": {
+        "startLine": 1975,
+        "startChar": 0,
+        "endLine": 1978,
+        "endChar": 21
+      },
+      "revId": "ff9e593d34482bb8fa4c949afac1193fc03a401a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
