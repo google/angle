@@ -8,6 +8,7 @@
 
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
 
+#include "common/BitSetIterator.h"
 #include "common/utilities.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
@@ -1970,7 +1971,7 @@ void ProgramD3D::updateCachedInputLayout(const gl::State &state)
     mCachedInputLayout.clear();
     const auto &vertexAttributes = state.getVertexArray()->getVertexAttributes();
 
-    for (unsigned int attributeIndex = 0; attributeIndex < vertexAttributes.size(); attributeIndex++)
+    for (unsigned int attributeIndex : angle::IterateBitSet(mData.getActiveAttribLocationsMask()))
     {
         int semanticIndex = mSemanticIndexes[attributeIndex];
 
