@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "043302d8_ed3cc15b",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 980,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-15T15:40:26Z",
+      "side": 1,
+      "message": "I don\u0027t know what this is but I assume it\u0027s similar to _GNU_SOURCE. Which I also don\u0027t know.",
+      "range": {
+        "startLine": 980,
+        "startChar": 21,
+        "endLine": 980,
+        "endChar": 34
+      },
+      "revId": "fe9d6fa26bf44285d9fa232296568b4c786b1314",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
