@@ -8,8 +8,10 @@
 
 #include "system_utils.h"
 
+#include <sys/resource.h>
 #include <sched.h>
 #include <time.h>
+#include <unistd.h>
 
 namespace angle
 {
@@ -32,6 +34,11 @@ void Sleep(unsigned int milliseconds)
 
         nanosleep(&sleepTime, nullptr);
     }
+}
+
+void SetLowPriorityProcess()
+{
+    setpriority(PRIO_PROCESS, getpid(), 10);
 }
 
 } // namespace angle
