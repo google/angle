@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4447ba3e_0fa9095f",
+        "filename": "src/tests/third_party/gpu_test_expectations/gpu_test_config_mac.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-15T20:10:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "843d32a1_02f63a99",
+      "range": {
+        "startLine": 31,
+        "startChar": 24,
+        "endLine": 31,
+        "endChar": 39
+      },
+      "revId": "a1c49be0ae297f430703b0ea8a446986582ae5f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a456b6eb_4f35cd70",
         "filename": "src/tests/third_party/gpu_test_expectations/gpu_test_config_mac.mm",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-15T15:31:24Z",
       "side": 1,
       "message": "Docs say:\n\nThis function uses I/O Kit to identify the monitor associated with the specified display.\n\nReturn Value\nA serial number for the monitor associated with the specified display\n\nI see the docs use the word \u0027monitor\u0027 which seems out-of-place. Have you checked if the IDs match the expected IDs for Nvidia, AMD or Intel?\n\nI also notice Chrome hasn\u0027t upgraded to this APIs, which I\u0027m sure you saw as well. Might be worth double-checking.",
+      "range": {
+        "startLine": 40,
+        "startChar": 18,
+        "endLine": 40,
+        "endChar": 39
+      },
+      "revId": "a1c49be0ae297f430703b0ea8a446986582ae5f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "843d32a1_0299dab5",
+        "filename": "src/tests/third_party/gpu_test_expectations/gpu_test_config_mac.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-15T20:10:14Z",
+      "side": 1,
+      "message": "As discussed offline, this function wasn\u0027t correct and no workaround seem to exist for now. Instead I just suppressed the warning for CGDisplayIOServicePort",
+      "parentUuid": "a456b6eb_4f35cd70",
       "range": {
         "startLine": 40,
         "startChar": 18,
