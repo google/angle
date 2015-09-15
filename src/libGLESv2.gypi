@@ -40,8 +40,9 @@
             '../include/GLES2/gl2ext.h',
             '../include/GLES2/gl2platform.h',
             '../include/GLES3/gl3.h',
-            '../include/GLES3/gl3ext.h',
             '../include/GLES3/gl3platform.h',
+            '../include/GLES3/gl31.h',
+            '../include/GLES3/gl32.h',
             '../include/GLSLANG/ShaderLang.h',
             '../include/GLSLANG/ShaderVars.h',
             '../include/KHR/khrplatform.h',
@@ -484,8 +485,6 @@
             'libGLESv2/entry_points_gles_2_0_ext.h',
             'libGLESv2/entry_points_gles_3_0.cpp',
             'libGLESv2/entry_points_gles_3_0.h',
-            'libGLESv2/entry_points_gles_3_0_ext.cpp',
-            'libGLESv2/entry_points_gles_3_0_ext.h',
             'libGLESv2/global_state.cpp',
             'libGLESv2/global_state.h',
             'libGLESv2/libGLESv2.cpp',
@@ -539,7 +538,7 @@
                 ],
                 'defines':
                 [
-                    'GL_GLEXT_PROTOTYPES=',
+                    'GL_GLEXT_PROTOTYPES',
                     'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ "d3dcompiler_47.dll", "d3dcompiler_46.dll", "d3dcompiler_43.dll" }',
                 ],
                 'conditions':

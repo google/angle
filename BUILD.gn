@@ -84,8 +84,9 @@ source_set("includes") {
     "include/GLES2/gl2ext.h",
     "include/GLES2/gl2platform.h",
     "include/GLES3/gl3.h",
-    "include/GLES3/gl3ext.h",
     "include/GLES3/gl3platform.h",
+    "include/GLES3/gl31.h",
+    "include/GLES3/gl32.h",
     "include/GLSLANG/ShaderLang.h",
     "include/KHR/khrplatform.h",
   ]
@@ -220,7 +221,7 @@ config("libANGLE_config") {
     defines += [ "ANGLE_USE_X11" ]
   }
   defines += [
-    "GL_GLEXT_PROTOTYPES=",
+    "GL_GLEXT_PROTOTYPES",
   ]
 
   if (is_win) {
@@ -387,6 +388,11 @@ static_library("angle_util") {
   if (use_x11) {
     sources += rebase_path(util_gypi.util_x11_sources, ".", "util")
   }
+
+  defines = [
+    "GL_GLEXT_PROTOTYPES",
+    "EGL_EGLEXT_PROTOTYPES",
+  ]
 
   configs += [
     ":internal_config",
