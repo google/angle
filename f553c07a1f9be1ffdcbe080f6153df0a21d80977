@@ -22,6 +22,30 @@
       "revId": "f553c07a1f9be1ffdcbe080f6153df0a21d80977",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a48876a5_225250a9",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 928,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-09-15T20:28:59Z",
+      "side": 1,
+      "message": "There are two ways we can interpret this.\n\nA) INVALID_OPERATION is returned for the explicitly specified cases. For other cases which are not valid, no behavior is specified, therefore it is undefined, and INVALID_OPERATION or INVALID_ENUM are both valid.\n\nB) INVALID_OPERATION is returned for the explicitly specified cases. In other cases, the blanket specification for INVALID_ENUM in 2.5 \"GL Errors\" applies:\n\n\"If a command that requires an enumerated value is passed a symbolic constant that is not one of those specified as allowable for that command, the error INVALID_ENUM is generated.\"\n\nIn that case, I would say that there\u0027s room to interpret it as applying even to the default framebuffer, despite the loose language about \"...a constant other than...\"",
+      "parentUuid": "848ff2ac_85e32144",
+      "range": {
+        "startLine": 928,
+        "startChar": 21,
+        "endLine": 928,
+        "endChar": 32
+      },
+      "revId": "f553c07a1f9be1ffdcbe080f6153df0a21d80977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
