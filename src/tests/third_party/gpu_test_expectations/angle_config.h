@@ -48,6 +48,8 @@ namespace base
 #    define OS_WIN
 #elif defined(__linux__)
 #    define OS_LINUX
+#elif defined(__APPLE__)
+#    define OS_MACOSX
 #else
 #    error "Unsupported platform"
 #endif

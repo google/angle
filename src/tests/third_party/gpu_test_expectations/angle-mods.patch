@@ -1,7 +1,33 @@
+diff -u -rupN gpu_test_expectations_reverted/HowToMakeChanges.md gpu_test_expectations/HowToMakeChanges.md
+--- gpu_test_expectations_reverted/HowToMakeChanges.md	1969-12-31 16:00:00.000000000 -0800
++++ gpu_test_expectations/HowToMakeChanges.md	2015-09-14 13:47:33.000000000 -0700
+@@ -0,0 +1,22 @@
++Because the ```gpu_test_expectations``` directory is based on parts of Chromium's ```gpu/config``
++directory, we want to keep a patch of the changes added to make it compile with ANGLE. This
++will allow us to merge Chromium changes easily in our ```gpu_test_expectations```.
++
++In order to make a change to this directory, do the following:
++
++ * copy the directory somewhere like in ```gpu_test_expectations_reverted```
++ * in ```gpu_test_expectations_reverted``` run ```patch -p 1 -R < angle-mods.patch```
++ * do your changes in ```gpu_test_expectations```
++ * delete angle-mods.patch in both directories
++ * run ```diff -rupN gpu_test_expectations_reverted gpu_test_expectations > angle-mods.patch```
++ * copy ```angle-mods.patch``` in ```gpu_test_expectations```
++
++How to update from Chromium:
++
++ * ```git apply -R angle-mods.patch```, ```git add . -u```, ```git commit```
++ * Copy over Chromium files, ```git add . -u```, ```git commit```
++ * ```git revert HEAD~2```
++ * ```rm angle-mods.patch```
++ * ```git diff HEAD~1 (`)ls(`) > angle-mods.patch```,```git add angle-mods.patch```, ```git commit --amend```
++ * ```git rebase -i``` to squash the three patches into one.
++
 diff -u -rupN gpu_test_expectations_reverted/angle_config.h gpu_test_expectations/angle_config.h
---- gpu_test_expectations_reverted/angle_config.h	1969-12-31 19:00:00.000000000 -0500
-+++ gpu_test_expectations/angle_config.h	2015-08-24 12:41:54.740685662 -0400
-@@ -0,0 +1,55 @@
+--- gpu_test_expectations_reverted/angle_config.h	1969-12-31 16:00:00.000000000 -0800
++++ gpu_test_expectations/angle_config.h	2015-09-14 13:55:24.000000000 -0700
+@@ -0,0 +1,57 @@
 +//
 +// Copyright 2015 The ANGLE Project Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
@@ -52,14 +78,16 @@ diff -u -rupN gpu_test_expectations_reverted/angle_config.h gpu_test_expectation
 +#    define OS_WIN
 +#elif defined(__linux__)
 +#    define OS_LINUX
++#elif defined(__APPLE__)
++#    define OS_MACOSX
 +#else
 +#    error "Unsupported platform"
 +#endif
 +
 +#endif
 diff -u -rupN gpu_test_expectations_reverted/gpu_info.cc gpu_test_expectations/gpu_info.cc
---- gpu_test_expectations_reverted/gpu_info.cc	2015-08-24 12:44:32.953697696 -0400
-+++ gpu_test_expectations/gpu_info.cc	2015-06-30 09:40:06.654788989 -0400
+--- gpu_test_expectations_reverted/gpu_info.cc	2015-09-14 13:46:54.000000000 -0700
++++ gpu_test_expectations/gpu_info.cc	2015-07-21 08:22:04.000000000 -0700
 @@ -2,7 +2,7 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -172,8 +200,8 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_info.cc gpu_test_expectations/g
  }
  
 diff -u -rupN gpu_test_expectations_reverted/gpu_info.h gpu_test_expectations/gpu_info.h
---- gpu_test_expectations_reverted/gpu_info.h	2015-08-24 12:44:32.953697696 -0400
-+++ gpu_test_expectations/gpu_info.h	2015-06-30 09:40:06.654788989 -0400
+--- gpu_test_expectations_reverted/gpu_info.h	2015-09-14 13:46:54.000000000 -0700
++++ gpu_test_expectations/gpu_info.h	2015-07-21 08:22:04.000000000 -0700
 @@ -11,13 +11,7 @@
  #include <string>
  #include <vector>
@@ -265,9 +293,9 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_info.h gpu_test_expectations/gp
      // Markers indicating that a GPUDevice is being described.
      virtual void BeginGPUDevice() = 0;
 diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.cc gpu_test_expectations/gpu_test_config.cc
---- gpu_test_expectations_reverted/gpu_test_config.cc	2015-08-24 12:44:32.953697696 -0400
-+++ gpu_test_expectations/gpu_test_config.cc	2015-08-24 12:45:33.990093896 -0400
-@@ -2,20 +2,174 @@
+--- gpu_test_expectations_reverted/gpu_test_config.cc	2015-09-14 13:46:54.000000000 -0700
++++ gpu_test_expectations/gpu_test_config.cc	2015-09-15 10:12:23.000000000 -0700
+@@ -2,18 +2,193 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
  
@@ -281,17 +309,20 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.cc gpu_test_expecta
 -#include "gpu/config/gpu_test_expectations_parser.h"
 +#include "gpu_info.h"
 +#include "gpu_test_expectations_parser.h"
- 
--#if defined(OS_MACOSX)
--#include "base/mac/mac_util.h"
--#elif defined(OS_WIN)
--#include "base/win/windows_version.h"
++
 +#if defined(OS_LINUX)
 +extern "C" {
 +#   include <pci/pci.h>
 +}
- #endif
++#endif
  
+ #if defined(OS_MACOSX)
+-#include "base/mac/mac_util.h"
+-#elif defined(OS_WIN)
+-#include "base/win/windows_version.h"
++#include "gpu_test_config_mac.h"
++#endif
++
 +using namespace gpu;
 +
 +#if defined(OS_WIN)
@@ -447,12 +478,27 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.cc gpu_test_expecta
 +  }
 +  return result;
 +}
++
 +#endif // defined(OS_LINUX)
 +
- namespace gpu {
++#if defined(OS_MACOSX)
++
++CollectInfoResult CollectGpuID(uint32* vendor_id, uint32* device_id) {
++  DCHECK(vendor_id && device_id);
++
++  GPUInfo::GPUDevice gpu = GetActiveGPU();
++  *vendor_id = gpu.vendor_id;
++  *device_id = gpu.device_id;
++
++  if (*vendor_id != 0 && *device_id != 0)
++    return kCollectInfoSuccess;
++  return kCollectInfoNonFatalFailure;
++}
++
+ #endif
  
- namespace {
-@@ -292,21 +446,5 @@ bool GPUTestBotConfig::CurrentConfigMatc
+ namespace gpu {
+@@ -292,21 +467,5 @@ bool GPUTestBotConfig::CurrentConfigMatc
    return false;
  }
  
@@ -475,8 +521,8 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.cc gpu_test_expecta
  }  // namespace gpu
  
 diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.h gpu_test_expectations/gpu_test_config.h
---- gpu_test_expectations_reverted/gpu_test_config.h	2015-08-24 12:44:32.953697696 -0400
-+++ gpu_test_expectations/gpu_test_config.h	2015-08-10 10:53:08.730302800 -0400
+--- gpu_test_expectations_reverted/gpu_test_config.h	2015-09-14 13:46:54.000000000 -0700
++++ gpu_test_expectations/gpu_test_config.h	2015-08-11 13:26:51.000000000 -0700
 @@ -8,9 +8,7 @@
  #include <string>
  #include <vector>
@@ -498,9 +544,112 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.h gpu_test_expectat
  };
  
  }  // namespace gpu
+diff -u -rupN gpu_test_expectations_reverted/gpu_test_config_mac.h gpu_test_expectations/gpu_test_config_mac.h
+--- gpu_test_expectations_reverted/gpu_test_config_mac.h	1969-12-31 16:00:00.000000000 -0800
++++ gpu_test_expectations/gpu_test_config_mac.h	2015-09-15 10:12:29.000000000 -0700
+@@ -0,0 +1,28 @@
++//
++// Copyright 2015 The ANGLE Project Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++//
++// gpu_test_config_mac.h:
++//   Helper functions for gpu_test_config that have to be compiled in ObjectiveC++
++//
++
++#ifndef GPU_TEST_EXPECTATIONS_GPU_TEST_CONFIG_MAC_H_
++#define GPU_TEST_EXPECTATIONS_GPU_TEST_CONFIG_MAC_H_
++
++#include "gpu_info.h"
++
++namespace base {
++
++class SysInfo
++{
++  public:
++    static void OperatingSystemVersionNumbers(
++        int32 *major_version, int32 *minor_version, int32 *bugfix_version);
++};
++
++} // namespace base
++
++gpu::GPUInfo::GPUDevice GetActiveGPU();
++
++#endif // GPU_TEST_EXPECTATIONS_GPU_TEST_CONFIG_MAC_H_
+diff -u -rupN gpu_test_expectations_reverted/gpu_test_config_mac.mm gpu_test_expectations/gpu_test_config_mac.mm
+--- gpu_test_expectations_reverted/gpu_test_config_mac.mm	1969-12-31 16:00:00.000000000 -0800
++++ gpu_test_expectations/gpu_test_config_mac.mm	2015-09-15 12:49:51.000000000 -0700
+@@ -0,0 +1,67 @@
++// Copyright (c) 2012 The Chromium Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++// gpu_test_config_mac.mm:
++//   Helper functions for gpu_test_config that have to be compiled in ObjectiveC++
++
++#include "gpu_test_config_mac.h"
++
++#import <Cocoa/Cocoa.h>
++
++namespace base {
++
++void SysInfo::OperatingSystemVersionNumbers(
++    int32 *major_version, int32 *minor_version, int32 *bugfix_version)
++{
++#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_8
++  Gestalt(gestaltSystemVersionMajor, reinterpret_cast<SInt32*>(major_version));
++  Gestalt(gestaltSystemVersionMinor, reinterpret_cast<SInt32*>(minor_version));
++  Gestalt(gestaltSystemVersionBugFix, reinterpret_cast<SInt32*>(bugfix_version));
++#else
++  NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
++  *major_version = version.majorVersion;
++  *minor_version = version.minorVersion;
++  *bugfix_version = version.patchVersion;
++#endif
++}
++
++} // namespace base
++
++UInt32 GetEntryProperty(io_registry_entry_t entry, CFStringRef property_name) {
++  CFTypeRef type = IORegistryEntrySearchCFProperty(entry,
++                                                   kIOServicePlane,
++                                                   property_name,
++                                                   kCFAllocatorDefault,
++                                                   kIORegistryIterateRecursively | kIORegistryIterateParents);
++  CFDataRef data = reinterpret_cast<CFDataRef>(type);
++  if (!data) {
++    CFRelease(data);
++    return 0;
++  }
++
++  UInt32 value = 0;
++  const uint32_t* valuePointer = reinterpret_cast<const uint32_t*>(CFDataGetBytePtr(data));
++  if (valuePointer != NULL) {
++    value = *valuePointer;
++  }
++  CFRelease(data);
++  return value;
++}
++
++gpu::GPUInfo::GPUDevice GetActiveGPU() {
++  gpu::GPUInfo::GPUDevice gpu;
++
++  // Ignore the fact that CGDisplayIOServicePort is deprecated as Apple
++  // did not provide a good replacement for it as of 10.10.
++  // TODO(cwallez) revisit with later systems
++  #pragma clang diagnostic push
++  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
++    io_registry_entry_t dsp_port = CGDisplayIOServicePort(kCGDirectMainDisplay);
++  #pragma clang diagnostic pop
++
++  gpu.vendor_id = GetEntryProperty(dsp_port, CFSTR("vendor-id"));
++  gpu.device_id = GetEntryProperty(dsp_port, CFSTR("device-id"));
++  return gpu;
++}
++
 diff -u -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.cc gpu_test_expectations/gpu_test_expectations_parser.cc
---- gpu_test_expectations_reverted/gpu_test_expectations_parser.cc	2015-08-24 12:44:32.953697696 -0400
-+++ gpu_test_expectations/gpu_test_expectations_parser.cc	2015-08-24 12:45:54.450226670 -0400
+--- gpu_test_expectations_reverted/gpu_test_expectations_parser.cc	2015-09-14 13:46:54.000000000 -0700
++++ gpu_test_expectations/gpu_test_expectations_parser.cc	2015-08-24 13:06:46.000000000 -0700
 @@ -2,14 +2,43 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -609,8 +758,8 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.cc gpu
    }
    return true;
 diff -u -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.h gpu_test_expectations/gpu_test_expectations_parser.h
---- gpu_test_expectations_reverted/gpu_test_expectations_parser.h	2015-08-24 12:44:32.957697720 -0400
-+++ gpu_test_expectations/gpu_test_expectations_parser.h	2015-06-30 09:40:06.654788989 -0400
+--- gpu_test_expectations_reverted/gpu_test_expectations_parser.h	2015-09-14 13:46:54.000000000 -0700
++++ gpu_test_expectations/gpu_test_expectations_parser.h	2015-07-21 08:22:04.000000000 -0700
 @@ -8,10 +8,8 @@
  #include <string>
  #include <vector>
@@ -633,29 +782,3 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.h gpu_
  
    // Query error messages from the last LoadTestExpectations() call.
    const std::vector<std::string>& GetErrorMessages() const;
-diff -u -rupN gpu_test_expectations_reverted/HowToMakeChanges.md gpu_test_expectations/HowToMakeChanges.md
---- gpu_test_expectations_reverted/HowToMakeChanges.md	1969-12-31 19:00:00.000000000 -0500
-+++ gpu_test_expectations/HowToMakeChanges.md	2015-08-24 12:41:54.740685662 -0400
-@@ -0,0 +1,22 @@
-+Because the ```gpu_test_expectations``` directory is based on parts of Chromium's ```gpu/config``
-+directory, we want to keep a patch of the changes added to make it compile with ANGLE. This
-+will allow us to merge Chromium changes easily in our ```gpu_test_expectations```.
-+
-+In order to make a change to this directory, do the following:
-+
-+ * copy the directory somewhere like in ```gpu_test_expectations_reverted```
-+ * in ```gpu_test_expectations_reverted``` run ```patch -p 1 -R < angle-mods.patch```
-+ * do your changes in ```gpu_test_expectations```
-+ * delete angle-mods.path in both directories
-+ * run ```diff -rupN gpu_test_expectations_reverted gpu_test_expectations > angle-mods.patch```
-+ * copy ```angle-mods.patch``` in ```gpu_test_expectations```
-+
-+How to update from Chromium:
-+
-+ * ```git apply -R angle-mods.patch```, ```git add . -u```, ```git commit```
-+ * Copy over Chromium files, ```git add . -u```, ```git commit```
-+ * ```git revert HEAD~2```
-+ * ```rm angle-mods.patch```
-+ * ```git diff HEAD~1 (`)ls(`) > angle-mods.patch```,```git add angle-mods.patch```, ```git commit --amend```
-+ * ```git rebase -i``` to squash the three patches into one.
-+

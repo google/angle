@@ -1501,6 +1501,20 @@
                                     '<!@(pkg-config --libs-only-l libpci)',
                                 ],
                             }],
+                            ['OS=="mac"',
+                            {
+                                'sources':
+                                [
+                                    'third_party/gpu_test_expectations/gpu_test_config_mac.mm',
+                                ],
+                                'link_settings':
+                                {
+                                    'libraries':
+                                    [
+                                        '$(SDKROOT)/System/Library/Frameworks/IOKit.framework',
+                                    ],
+                                },
+                            }],
                         ],
                     },
 
