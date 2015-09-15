@@ -317,8 +317,7 @@ void Display::terminate()
 
     mInitialized = false;
 
-    // De-init default platform
-    DeinitDefaultPlatformImpl();
+    // Never de-init default platform.. terminate is not that final.
 }
 
 std::vector<const Config*> Display::getConfigs(const egl::AttributeMap &attribs) const
