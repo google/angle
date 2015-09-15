@@ -218,8 +218,8 @@ D3DUniform::D3DUniform(GLenum typeIn,
       arraySize(arraySizeIn),
       data(nullptr),
       dirty(true),
-      psRegisterIndex(GL_INVALID_INDEX),
       vsRegisterIndex(GL_INVALID_INDEX),
+      psRegisterIndex(GL_INVALID_INDEX),
       registerCount(0),
       registerElement(0)
 {
