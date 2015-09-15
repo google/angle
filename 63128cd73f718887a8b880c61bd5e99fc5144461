@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "043302d8_0da4b51c",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-15T15:14:29Z",
+      "side": 1,
+      "message": "having a main buffer and a cache seems a bit confusing to me. Why not just have a vector of internal buffers and treat the zero element as a main buffer? Sorry if I\u0027m missing something.\n\nAlso would it be possible to bake all the vertex info in a single buffer and store offsets into the buffer corresponding to various VA\u0027s? Not saying this is necessarily better bit it\u0027s a thought I had.",
+      "range": {
+        "startLine": 60,
+        "startChar": 1,
+        "endLine": 63,
+        "endChar": 45
+      },
+      "revId": "63128cd73f718887a8b880c61bd5e99fc5144461",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "043302d8_edae81ff",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-15T15:14:29Z",
+      "side": 1,
+      "message": "I\u0027m not positive but I think this will regress the draw call perf test, see https://chromeperf.appspot.com/report?sid\u003d62567aaeaa8e3843bb73317d1c12d690498eb82ec2709df6d5ab8466d6083823\n\nRegressions here can be hard to fix once they land, and can even be hard to detect since the bots only have the granularity of ANGLE rolls in Chrome until crbug.com/481173 is fixed. I\u0027d be okay with rolling, landing this, rolling again, and watching the bots for a regression, and reverting if there is one. In my local testing with the profiler I did see more time being spent in this function.",
+      "range": {
+        "startLine": 201,
+        "startChar": 0,
+        "endLine": 215,
+        "endChar": 5
+      },
+      "revId": "63128cd73f718887a8b880c61bd5e99fc5144461",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
