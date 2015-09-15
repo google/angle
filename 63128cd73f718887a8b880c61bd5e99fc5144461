@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "648afea0_89141c0b",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-09-15T16:46:29Z",
+      "side": 1,
+      "message": "Keeping them separate has lead to cleaner code IMO. I\u0027m happy to combine them if you wish, but I think the code to treat entry zero in the cache (or the last entry in the cache) as a \u0027special entry\u0027 would be more complicated than the current code.\n\nmStaticVertexBuffer has to be treated differently to other entries in the cache in lots of places in BufferD3D, mostly because mStaticVertexBuffer might change in the future (e.g. to add more attributes to it, or to be deleted/replaced if the cache is full) whereas the buffers in the cache won\u0027t ever change.",
+      "parentUuid": "043302d8_0da4b51c",
+      "range": {
+        "startLine": 60,
+        "startChar": 1,
+        "endLine": 63,
+        "endChar": 45
+      },
+      "revId": "63128cd73f718887a8b880c61bd5e99fc5144461",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "043302d8_edae81ff",
         "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-15T15:14:29Z",
       "side": 1,
       "message": "I\u0027m not positive but I think this will regress the draw call perf test, see https://chromeperf.appspot.com/report?sid\u003d62567aaeaa8e3843bb73317d1c12d690498eb82ec2709df6d5ab8466d6083823\n\nRegressions here can be hard to fix once they land, and can even be hard to detect since the bots only have the granularity of ANGLE rolls in Chrome until crbug.com/481173 is fixed. I\u0027d be okay with rolling, landing this, rolling again, and watching the bots for a regression, and reverting if there is one. In my local testing with the profiler I did see more time being spent in this function.",
+      "range": {
+        "startLine": 201,
+        "startChar": 0,
+        "endLine": 215,
+        "endChar": 5
+      },
+      "revId": "63128cd73f718887a8b880c61bd5e99fc5144461",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "848ff2ac_d3cdf6f2",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-09-15T16:46:29Z",
+      "side": 1,
+      "message": "Sounds good to me.",
+      "parentUuid": "043302d8_edae81ff",
       "range": {
         "startLine": 201,
         "startChar": 0,
