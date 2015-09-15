@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64383eb1_900d1a45",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-15T15:37:42Z",
+      "side": 1,
+      "message": "also add a comment about ES3 support",
+      "revId": "54e744d07a25b556089f7ac540da1c2374cf5fe1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4447ba3e_6ff8cdb2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-15T15:37:42Z",
+      "side": 1,
+      "message": "angleproject",
+      "range": {
+        "startLine": 9,
+        "startChar": 4,
+        "endLine": 9,
+        "endChar": 9
+      },
+      "revId": "54e744d07a25b556089f7ac540da1c2374cf5fe1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4447ba3e_8f2339ea",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-15T15:37:42Z",
+      "side": 1,
+      "message": "nit: trailing space. You can clean up this with \u0027git cl format\u0027",
+      "range": {
+        "startLine": 230,
+        "startChar": 0,
+        "endLine": 230,
+        "endChar": 1
+      },
+      "revId": "54e744d07a25b556089f7ac540da1c2374cf5fe1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
