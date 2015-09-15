@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "848ff2ac_85e32144",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 928,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-15T20:12:13Z",
+      "side": 1,
+      "message": "I think for the generated framebuffer object, we still want to generate INVALID_ENUM for anything other than NONE, BACK, COLOR_ATTACHMENT0-16, and INVALID_OPERATION for BACK, and COLOR_ATTACHMENTi, where i \u003e\u003d MAX.\n\nThe text describing this is \"Specifying a buffer out of order, BACK , or COLOR_ATTACHMENTm where m is greater than or equal to the value of MAX_-COLOR_ATTACHMENTS , will generate the error INVALID_OPERATION.\" My interpretation is INVALID_OPERATION is only generated when it\u0027s an valid enum but just not valid here.",
+      "range": {
+        "startLine": 928,
+        "startChar": 21,
+        "endLine": 928,
+        "endChar": 32
+      },
+      "revId": "f553c07a1f9be1ffdcbe080f6153df0a21d80977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
