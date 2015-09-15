@@ -29,4 +29,4 @@ class X11Pixmap : public OSPixmap
     Display *mDisplay;
 };
 
-#endif // UTIL_WIN32_PIXMAP_H_
+#endif // UTIL_X11_PIXMAP_H_

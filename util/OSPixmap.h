@@ -9,6 +9,8 @@
 #ifndef SAMPLE_UTIL_PIXMAP_H_
 #define SAMPLE_UTIL_PIXMAP_H_
 
+#include <stdlib.h>
+
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
