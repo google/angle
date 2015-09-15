@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "c45e4afd_8e05041e",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-09-15T16:47:36Z",
+      "side": 1,
+      "message": "RE baking all the vertex info into a single buffer: I\u0027ve not thought through all the consequences, but GL-\u003eD3D vertex format conversion would break that. You\u0027d have to convert all of the data before the first draw call that uses the static buffer, but at that point you don\u0027t know if a later draw call will use a GL vertex data format that requires conversion/expansion to a valid D3D vertex data format. You therefore don\u0027t know how much space to allocate in the static buffer.",
+      "parentUuid": "648afea0_89141c0b",
+      "range": {
+        "startLine": 60,
+        "startChar": 1,
+        "endLine": 63,
+        "endChar": 45
+      },
+      "revId": "63128cd73f718887a8b880c61bd5e99fc5144461",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "043302d8_edae81ff",
         "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
         "patchSetId": 9
