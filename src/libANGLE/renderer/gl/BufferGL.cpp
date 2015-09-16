@@ -92,7 +92,7 @@ gl::Error BufferGL::mapRange(size_t offset, size_t length, GLbitfield access, GL
 
 gl::Error BufferGL::unmap(GLboolean *result)
 {
-    ASSERT(*result);
+    ASSERT(result);
 
     mStateManager->bindBuffer(DestBufferOperationTarget, mBufferID);
     *result = mFunctions->unmapBuffer(DestBufferOperationTarget);
