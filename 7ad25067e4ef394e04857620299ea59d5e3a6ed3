@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "043302d8_50a804c1",
+        "filename": "util/windows/winrt/WinrtPixmap.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-16T19:34:57Z",
+      "side": 1,
+      "message": "can we s/Winrt/WinRT/g for these files?",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 14
+      },
+      "revId": "7ad25067e4ef394e04857620299ea59d5e3a6ed3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
