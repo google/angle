@@ -54,8 +54,6 @@
             'osx/OSX_system_utils.cpp',
             'osx/OSXTimer.cpp',
             'osx/OSXTimer.h',
-            'osx/OSXPixmap.mm',
-            'osx/OSXPixmap.h',
             'osx/OSXWindow.mm',
             'osx/OSXWindow.h',
             'posix/Posix_system_utils.cpp',
