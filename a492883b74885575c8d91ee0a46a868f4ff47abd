@@ -22,6 +22,30 @@
       "revId": "a492883b74885575c8d91ee0a46a868f4ff47abd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a46156bd_aacab282",
+        "filename": "util/util.gyp",
+        "patchSetId": 3
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-09-16T19:56:29Z",
+      "side": 0,
+      "message": "No. I just ran a local build again with this change (VS2015) and it build successfully.",
+      "parentUuid": "843d32a1_23c7b89f",
+      "range": {
+        "startLine": 111,
+        "startChar": 20,
+        "endLine": 111,
+        "endChar": 55
+      },
+      "revId": "a492883b74885575c8d91ee0a46a868f4ff47abd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
