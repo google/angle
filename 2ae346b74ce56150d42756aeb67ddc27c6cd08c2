@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e93887ce_7a50adfc",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1099,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2015-09-16T21:41:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e44c2e60_b76690af",
+      "range": {
+        "startLine": 1099,
+        "startChar": 13,
+        "endLine": 1099,
+        "endChar": 32
+      },
+      "revId": "2ae346b74ce56150d42756aeb67ddc27c6cd08c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e44c2e60_97618c9c",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-16T19:37:51Z",
       "side": 1,
       "message": "an unfortunate formatting oddity. \n\ncan you restructure these as        \n  if !extension\n     return false;\n  *type \u003d GL_INT;\n  *numParams \u003d 1;\n  return true;",
+      "range": {
+        "startLine": 1126,
+        "startChar": 12,
+        "endLine": 1126,
+        "endChar": 24
+      },
+      "revId": "2ae346b74ce56150d42756aeb67ddc27c6cd08c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e93887ce_3a5a251b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1126,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2015-09-16T21:41:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e44c2e60_97618c9c",
       "range": {
         "startLine": 1126,
         "startChar": 12,
