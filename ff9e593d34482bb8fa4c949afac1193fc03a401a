@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e44c2e60_178f5cb0",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1975,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-16T19:15:47Z",
+      "side": 1,
+      "message": "I think this got fixed in Patch Set 2.",
+      "parentUuid": "a46156bd_83ca412c",
+      "range": {
+        "startLine": 1975,
+        "startChar": 7,
+        "endLine": 1975,
+        "endChar": 8
+      },
+      "revId": "ff9e593d34482bb8fa4c949afac1193fc03a401a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "044a2242_f8a729a9",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 1
