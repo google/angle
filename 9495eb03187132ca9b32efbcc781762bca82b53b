@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c453aafb_b0e9382c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1363,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-16T16:37:32Z",
+      "side": 1,
+      "message": "We consider them optimized out, and essentially to not exist. (Static use \u003d\u003d referenced in the shader)",
+      "parentUuid": "84ca92dc_a6b2c63e",
+      "revId": "9495eb03187132ca9b32efbcc781762bca82b53b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0936bbde_321ff09c",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "4447ba3e_af7f153f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2282,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-16T16:37:32Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "0936bbde_321ff09c",
+      "revId": "9495eb03187132ca9b32efbcc781762bca82b53b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64c59ecc_a5e47e52",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 3
@@ -47,6 +83,24 @@
       "writtenOn": "2015-09-14T14:30:00Z",
       "side": 1,
       "message": "Nice testing :D",
+      "revId": "9495eb03187132ca9b32efbcc781762bca82b53b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a456b6eb_cf37fd74",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-16T16:37:32Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "64c59ecc_a5e47e52",
       "revId": "9495eb03187132ca9b32efbcc781762bca82b53b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
