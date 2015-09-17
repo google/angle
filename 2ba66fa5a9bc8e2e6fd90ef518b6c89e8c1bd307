@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a9692fe6_9a6ee9f3",
+        "filename": "util/windows/winrt/WinRTWindow.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-09-17T16:47:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8952ab21_e6bbde46",
+      "range": {
+        "startLine": 53,
+        "startChar": 13,
+        "endLine": 53,
+        "endChar": 34
+      },
+      "revId": "2ba66fa5a9bc8e2e6fd90ef518b6c89e8c1bd307",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8952ab21_c6b8e24c",
         "filename": "util/windows/winrt/WinRTWindow.h",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-17T14:35:03Z",
       "side": 1,
       "message": "Add override to make sure it\u0027s virtual. (looks like our Win32 version doesn\u0027t have it either, can you add it?)",
+      "range": {
+        "startLine": 23,
+        "startChar": 4,
+        "endLine": 23,
+        "endChar": 19
+      },
+      "revId": "2ba66fa5a9bc8e2e6fd90ef518b6c89e8c1bd307",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c9666312_fbd4cb5d",
+        "filename": "util/windows/winrt/WinRTWindow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-09-17T16:47:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8952ab21_c6b8e24c",
       "range": {
         "startLine": 23,
         "startChar": 4,
