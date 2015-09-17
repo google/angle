@@ -12,15 +12,16 @@
 #include <algorithm>
 
 #include "common/debug.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Program.h"
-#include "libANGLE/formatutils.h"
-#include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
-#include "libANGLE/renderer/d3d/FramebufferD3D.h"
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/dxgi_support_table.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
+#include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
+#include "libANGLE/renderer/d3d/FramebufferD3D.h"
+#include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
 
 namespace rx
 {

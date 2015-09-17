@@ -13,17 +13,18 @@
 
 #include "common/MemoryBuffer.h"
 #include "common/utilities.h"
-#include "libANGLE/ImageIndex.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/ImageIndex.h"
+#include "libANGLE/renderer/d3d/d3d11/Blit11.h"
+#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "libANGLE/renderer/d3d/d3d11/Image11.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+#include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
+#include "libANGLE/renderer/d3d/d3d11/SwapChain11.h"
+#include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 #include "libANGLE/renderer/d3d/EGLImageD3D.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
-#include "libANGLE/renderer/d3d/d3d11/Blit11.h"
-#include "libANGLE/renderer/d3d/d3d11/Image11.h"
-#include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "libANGLE/renderer/d3d/d3d11/SwapChain11.h"
-#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
-#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 namespace rx
 {
