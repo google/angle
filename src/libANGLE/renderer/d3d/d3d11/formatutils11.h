@@ -60,17 +60,6 @@ struct DXGIFormat
 };
 const DXGIFormat &GetDXGIFormatInfo(DXGI_FORMAT format);
 
-struct LoadImageFunctionInfo
-{
-    LoadImageFunctionInfo(LoadImageFunction loadFunction, bool requiresConversion)
-        : loadFunction(loadFunction), requiresConversion(requiresConversion)
-    {
-    }
-
-    LoadImageFunction loadFunction;
-    bool requiresConversion;
-};
-
 struct TextureFormat
 {
     TextureFormat();
@@ -87,7 +76,7 @@ struct TextureFormat
 
     InitializeTextureDataFunction dataInitializerFunction;
 
-    typedef std::map<GLenum, LoadImageFunctionInfo> LoadFunctionMap;
+    typedef std::map<GLenum, LoadImageFunction> LoadFunctionMap;
     LoadFunctionMap loadFunctions;
 };
 const TextureFormat &GetTextureFormatInfo(GLenum internalFormat, const Renderer11DeviceCaps &renderer11DeviceCaps);
