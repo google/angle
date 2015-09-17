@@ -820,7 +820,7 @@ EGLBoolean EGLAPIENTRY BindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint b
         gl::Texture *textureObject = context->getTargetTexture(GL_TEXTURE_2D);
         ASSERT(textureObject != NULL);
 
-        if (textureObject->isImmutable())
+        if (textureObject->getImmutableFormat())
         {
             SetGlobalError(Error(EGL_BAD_MATCH));
             return EGL_FALSE;

@@ -313,7 +313,7 @@ gl::Error RendererD3D::generateSwizzles(const gl::Data &data, gl::SamplerType ty
         {
             gl::Texture *texture = data.state->getSamplerTexture(textureUnit, textureType);
             ASSERT(texture);
-            if (texture->getSamplerState().swizzleRequired())
+            if (texture->getTextureState().swizzleRequired())
             {
                 gl::Error error = generateSwizzle(texture);
                 if (error.isError())
@@ -464,19 +464,18 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shade
         {
             gl::Texture *texture = data.state->getSamplerTexture(textureUnit, textureType);
             ASSERT(texture);
-            gl::SamplerState sampler = texture->getSamplerState();
 
             gl::Sampler *samplerObject = data.state->getSampler(textureUnit);
-            if (samplerObject)
-            {
-                samplerObject->getState(&sampler);
-            }
+
+            const gl::SamplerState &samplerState =
+                samplerObject ? samplerObject->getSamplerState() : texture->getSamplerState();
 
             // TODO: std::binary_search may become unavailable using older versions of GCC
-            if (texture->isSamplerComplete(sampler, data) &&
-                !std::binary_search(framebufferTextures.begin(), framebufferTextures.begin() + framebufferTextureCount, texture))
+            if (texture->isSamplerComplete(samplerState, data) &&
+                !std::binary_search(framebufferTextures.begin(),
+                                    framebufferTextures.begin() + framebufferTextureCount, texture))
             {
-                gl::Error error = setSamplerState(shaderType, samplerIndex, texture, sampler);
+                gl::Error error = setSamplerState(shaderType, samplerIndex, texture, samplerState);
                 if (error.isError())
                 {
                     return error;

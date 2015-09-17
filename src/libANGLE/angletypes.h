@@ -164,35 +164,57 @@ struct DepthStencilState
     GLuint stencilBackWritemask;
 };
 
+// State from Table 6.10 (state per sampler object)
 struct SamplerState
 {
     SamplerState();
 
     GLenum minFilter;
     GLenum magFilter;
+
     GLenum wrapS;
     GLenum wrapT;
     GLenum wrapR;
+
+    // From EXT_texture_filter_anisotropic
     float maxAnisotropy;
 
-    GLint baseLevel;
-    GLint maxLevel;
     GLfloat minLod;
     GLfloat maxLod;
 
     GLenum compareMode;
     GLenum compareFunc;
+};
+
+bool operator==(const SamplerState &a, const SamplerState &b);
+bool operator!=(const SamplerState &a, const SamplerState &b);
+
+// State from Table 6.9 (state per texture object) in the OpenGL ES 3.0.2 spec.
+struct TextureState
+{
+    TextureState();
 
     GLenum swizzleRed;
     GLenum swizzleGreen;
     GLenum swizzleBlue;
     GLenum swizzleAlpha;
 
+    SamplerState samplerState;
+
+    GLuint baseLevel;
+    GLuint maxLevel;
+
+    bool immutableFormat;
+    GLuint immutableLevels;
+
+    // From GL_ANGLE_texture_usage
+    GLenum usage;
+
     bool swizzleRequired() const;
 };
 
-bool operator==(const SamplerState &a, const SamplerState &b);
-bool operator!=(const SamplerState &a, const SamplerState &b);
+bool operator==(const TextureState &a, const TextureState &b);
+bool operator!=(const TextureState &a, const TextureState &b);
 
 struct PixelUnpackState
 {

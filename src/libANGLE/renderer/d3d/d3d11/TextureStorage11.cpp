@@ -194,14 +194,15 @@ UINT TextureStorage11::getSubresourceIndex(const gl::ImageIndex &index) const
     return subresource;
 }
 
-gl::Error TextureStorage11::getSRV(const gl::SamplerState &samplerState, ID3D11ShaderResourceView **outSRV)
+gl::Error TextureStorage11::getSRV(const gl::TextureState &textureState,
+                                   ID3D11ShaderResourceView **outSRV)
 {
-    bool swizzleRequired = samplerState.swizzleRequired();
-    bool mipmapping = gl::IsMipmapFiltered(samplerState);
-    unsigned int mipLevels = mipmapping ? (samplerState.maxLevel - samplerState.baseLevel + 1) : 1;
+    bool swizzleRequired   = textureState.swizzleRequired();
+    bool mipmapping        = gl::IsMipmapFiltered(textureState.samplerState);
+    unsigned int mipLevels = mipmapping ? (textureState.maxLevel - textureState.baseLevel + 1) : 1;
 
     // Make sure there's 'mipLevels' mipmap levels below the base level (offset by the top level, which corresponds to GL level 0)
-    mipLevels = std::min(mipLevels, mMipLevels - mTopLevel - samplerState.baseLevel);
+    mipLevels = std::min(mipLevels, mMipLevels - mTopLevel - textureState.baseLevel);
 
     if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
     {
@@ -221,10 +222,11 @@ gl::Error TextureStorage11::getSRV(const gl::SamplerState &samplerState, ID3D11S
 
     if (swizzleRequired)
     {
-        verifySwizzleExists(samplerState.swizzleRed, samplerState.swizzleGreen, samplerState.swizzleBlue, samplerState.swizzleAlpha);
+        verifySwizzleExists(textureState.swizzleRed, textureState.swizzleGreen,
+                            textureState.swizzleBlue, textureState.swizzleAlpha);
     }
 
-    SRVKey key(samplerState.baseLevel, mipLevels, swizzleRequired);
+    SRVKey key(textureState.baseLevel, mipLevels, swizzleRequired);
     auto iter = mSrvCache.find(key);
     if (iter != mSrvCache.end())
     {
@@ -252,7 +254,7 @@ gl::Error TextureStorage11::getSRV(const gl::SamplerState &samplerState, ID3D11S
 
     ID3D11ShaderResourceView *srv = nullptr;
     DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
-    gl::Error error = createSRV(samplerState.baseLevel, mipLevels, format, texture, &srv);
+    gl::Error error = createSRV(textureState.baseLevel, mipLevels, format, texture, &srv);
     if (error.isError())
     {
         return error;
@@ -1413,7 +1415,7 @@ gl::Error TextureStorage11_EGLImage::getResource(ID3D11Resource **outResource)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error TextureStorage11_EGLImage::getSRV(const gl::SamplerState &samplerState,
+gl::Error TextureStorage11_EGLImage::getSRV(const gl::TextureState &textureState,
                                             ID3D11ShaderResourceView **outSRV)
 {
     gl::Error error = checkForUpdatedRenderTarget();
@@ -1422,7 +1424,7 @@ gl::Error TextureStorage11_EGLImage::getSRV(const gl::SamplerState &samplerState
         return error;
     }
 
-    return TextureStorage11::getSRV(samplerState, outSRV);
+    return TextureStorage11::getSRV(textureState, outSRV);
 }
 
 gl::Error TextureStorage11_EGLImage::getMippedResource(ID3D11Resource **)

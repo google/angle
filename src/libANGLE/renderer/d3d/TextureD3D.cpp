@@ -384,7 +384,7 @@ ImageD3D *TextureD3D::getBaseLevelImage() const
     return getImage(getImageIndex(0, 0));
 }
 
-gl::Error TextureD3D::generateMipmaps(const gl::SamplerState &samplerState)
+gl::Error TextureD3D::generateMipmaps(const gl::TextureState &textureState)
 {
     GLint mipCount = mipLevels();
 
@@ -422,7 +422,7 @@ gl::Error TextureD3D::generateMipmaps(const gl::SamplerState &samplerState)
         }
 
         // Generate the mipmap chain using the ad-hoc DirectX function.
-        error = mRenderer->generateMipmapsUsingD3D(mTexStorage, samplerState);
+        error = mRenderer->generateMipmapsUsingD3D(mTexStorage, textureState);
         if (error.isError())
         {
             return error;

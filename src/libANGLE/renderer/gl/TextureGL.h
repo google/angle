@@ -77,14 +77,14 @@ class TextureGL : public TextureImpl
 
     gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) override;
 
-    gl::Error generateMipmaps(const gl::SamplerState &samplerState) override;
+    gl::Error generateMipmaps(const gl::TextureState &textureState) override;
 
     void bindTexImage(egl::Surface *surface) override;
     void releaseTexImage() override;
 
     gl::Error setEGLImageTarget(GLenum target, egl::Image *image) override;
 
-    void syncSamplerState(size_t textureUnit, const gl::SamplerState &samplerState) const;
+    void syncState(size_t textureUnit, const gl::TextureState &textureState) const;
     GLuint getTextureID() const;
 
     gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
@@ -103,7 +103,7 @@ class TextureGL : public TextureImpl
 
     std::vector<LevelInfoGL> mLevelInfo;
 
-    mutable gl::SamplerState mAppliedSamplerState;
+    mutable gl::TextureState mAppliedTextureState;
     GLuint mTextureID;
 };
 

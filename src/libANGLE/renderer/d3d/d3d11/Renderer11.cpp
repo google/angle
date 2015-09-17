@@ -868,10 +868,10 @@ gl::Error Renderer11::generateSwizzle(gl::Texture *texture)
         if (texStorage)
         {
             TextureStorage11 *storage11 = GetAs<TextureStorage11>(texStorage);
-            error = storage11->generateSwizzles(texture->getSamplerState().swizzleRed,
-                                                texture->getSamplerState().swizzleGreen,
-                                                texture->getSamplerState().swizzleBlue,
-                                                texture->getSamplerState().swizzleAlpha);
+            const gl::TextureState &textureState = texture->getTextureState();
+            error =
+                storage11->generateSwizzles(textureState.swizzleRed, textureState.swizzleGreen,
+                                            textureState.swizzleBlue, textureState.swizzleAlpha);
             if (error.isError())
             {
                 return error;
@@ -882,11 +882,13 @@ gl::Error Renderer11::generateSwizzle(gl::Texture *texture)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::setSamplerState(gl::SamplerType type, int index, gl::Texture *texture, const gl::SamplerState &samplerStateParam)
+gl::Error Renderer11::setSamplerState(gl::SamplerType type,
+                                      int index,
+                                      gl::Texture *texture,
+                                      const gl::SamplerState &samplerState)
 {
     // Make sure to add the level offset for our tiny compressed texture workaround
     TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
-    gl::SamplerState samplerStateInternal = samplerStateParam;
 
     TextureStorage *storage = nullptr;
     gl::Error error = textureD3D->getNativeTexture(&storage);
@@ -898,16 +900,15 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type, int index, gl::Textu
     // Storage should exist, texture should be complete
     ASSERT(storage);
 
-    samplerStateInternal.baseLevel += storage->getTopLevel();
-
     if (type == gl::SAMPLER_PIXEL)
     {
         ASSERT(static_cast<unsigned int>(index) < getRendererCaps().maxTextureImageUnits);
 
-        if (mForceSetPixelSamplerStates[index] || memcmp(&samplerStateInternal, &mCurPixelSamplerStates[index], sizeof(gl::SamplerState)) != 0)
+        if (mForceSetPixelSamplerStates[index] ||
+            memcmp(&samplerState, &mCurPixelSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
             ID3D11SamplerState *dxSamplerState = NULL;
-            error = mStateCache.getSamplerState(samplerStateInternal, &dxSamplerState);
+            error = mStateCache.getSamplerState(samplerState, &dxSamplerState);
             if (error.isError())
             {
                 return error;
@@ -916,7 +917,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type, int index, gl::Textu
             ASSERT(dxSamplerState != NULL);
             mDeviceContext->PSSetSamplers(index, 1, &dxSamplerState);
 
-            mCurPixelSamplerStates[index] = samplerStateInternal;
+            mCurPixelSamplerStates[index] = samplerState;
         }
 
         mForceSetPixelSamplerStates[index] = false;
@@ -925,10 +926,11 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type, int index, gl::Textu
     {
         ASSERT(static_cast<unsigned int>(index) < getRendererCaps().maxVertexTextureImageUnits);
 
-        if (mForceSetVertexSamplerStates[index] || memcmp(&samplerStateInternal, &mCurVertexSamplerStates[index], sizeof(gl::SamplerState)) != 0)
+        if (mForceSetVertexSamplerStates[index] ||
+            memcmp(&samplerState, &mCurVertexSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
             ID3D11SamplerState *dxSamplerState = NULL;
-            error = mStateCache.getSamplerState(samplerStateInternal, &dxSamplerState);
+            error = mStateCache.getSamplerState(samplerState, &dxSamplerState);
             if (error.isError())
             {
                 return error;
@@ -937,7 +939,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type, int index, gl::Textu
             ASSERT(dxSamplerState != NULL);
             mDeviceContext->VSSetSamplers(index, 1, &dxSamplerState);
 
-            mCurVertexSamplerStates[index] = samplerStateInternal;
+            mCurVertexSamplerStates[index] = samplerState;
         }
 
         mForceSetVertexSamplerStates[index] = false;
@@ -968,10 +970,10 @@ gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *t
         TextureStorage11 *storage11 = GetAs<TextureStorage11>(texStorage);
 
         // Make sure to add the level offset for our tiny compressed texture workaround
-        gl::SamplerState samplerState = texture->getSamplerState();
-        samplerState.baseLevel += storage11->getTopLevel();
+        gl::TextureState textureState = texture->getTextureState();
+        textureState.baseLevel += storage11->getTopLevel();
 
-        error = storage11->getSRV(samplerState, &textureSRV);
+        error = storage11->getSRV(textureState, &textureSRV);
         if (error.isError())
         {
             return error;
@@ -3283,7 +3285,8 @@ gl::Error Renderer11::generateMipmap(ImageD3D *dest, ImageD3D *src)
     return Image11::generateMipmap(dest11, src11);
 }
 
-gl::Error Renderer11::generateMipmapsUsingD3D(TextureStorage *storage, const gl::SamplerState &samplerState)
+gl::Error Renderer11::generateMipmapsUsingD3D(TextureStorage *storage,
+                                              const gl::TextureState &textureState)
 {
     TextureStorage11 *storage11 = GetAs<TextureStorage11>(storage);
 
@@ -3291,7 +3294,7 @@ gl::Error Renderer11::generateMipmapsUsingD3D(TextureStorage *storage, const gl:
     ASSERT(storage11->supportsNativeMipmapFunction());
 
     ID3D11ShaderResourceView *srv;
-    gl::Error error = storage11->getSRVLevels(samplerState.baseLevel, samplerState.maxLevel, &srv);
+    gl::Error error = storage11->getSRVLevels(textureState.baseLevel, textureState.maxLevel, &srv);
     if (error.isError())
     {
         return error;

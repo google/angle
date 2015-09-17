@@ -1401,7 +1401,7 @@ bool ValidateCopyTexImageParametersBase(gl::Context *context, GLenum target, GLi
         return false;
     }
 
-    if (texture->isImmutable() && !isSubImage)
+    if (texture->getImmutableFormat() && !isSubImage)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
         return false;

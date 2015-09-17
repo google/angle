@@ -198,7 +198,8 @@ class Renderer11 : public RendererD3D
     // Image operations
     virtual ImageD3D *createImage();
     gl::Error generateMipmap(ImageD3D *dest, ImageD3D *source) override;
-    gl::Error generateMipmapsUsingD3D(TextureStorage *storage, const gl::SamplerState &samplerState) override;
+    gl::Error generateMipmapsUsingD3D(TextureStorage *storage,
+                                      const gl::TextureState &textureState) override;
     virtual TextureStorage *createTextureStorage2D(SwapChainD3D *swapChain);
     TextureStorage *createTextureStorageEGLImage(EGLImageD3D *eglImage) override;
     virtual TextureStorage *createTextureStorage2D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels, bool hintLevelZeroOnly);

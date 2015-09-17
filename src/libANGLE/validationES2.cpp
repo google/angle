@@ -110,7 +110,7 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
     }
     else
     {
-        if (texture->isImmutable())
+        if (texture->getImmutableFormat())
         {
             context->recordError(Error(GL_INVALID_OPERATION));
             return false;
@@ -824,7 +824,7 @@ bool ValidateES2TexStorageParameters(Context *context, GLenum target, GLsizei le
         return false;
     }
 
-    if (texture->isImmutable())
+    if (texture->getImmutableFormat())
     {
         context->recordError(Error(GL_INVALID_OPERATION));
         return false;

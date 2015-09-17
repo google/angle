@@ -793,7 +793,7 @@ gl::Error Renderer9::setSamplerState(gl::SamplerType type, int index, gl::Textur
     // Storage should exist, texture should be complete
     ASSERT(storage);
 
-    DWORD baseLevel = samplerState.baseLevel + storage->getTopLevel();
+    DWORD baseLevel = texture->getBaseLevel() + storage->getTopLevel();
 
     if (appliedSampler.forceSet || appliedSampler.baseLevel != baseLevel ||
         memcmp(&samplerState, &appliedSampler, sizeof(gl::SamplerState)) != 0)
@@ -2922,7 +2922,8 @@ gl::Error Renderer9::generateMipmap(ImageD3D *dest, ImageD3D *src)
     return Image9::generateMipmap(dst9, src9);
 }
 
-gl::Error Renderer9::generateMipmapsUsingD3D(TextureStorage *storage, const gl::SamplerState &samplerState)
+gl::Error Renderer9::generateMipmapsUsingD3D(TextureStorage *storage,
+                                             const gl::TextureState &textureState)
 {
     UNREACHABLE();
     return gl::Error(GL_NO_ERROR);

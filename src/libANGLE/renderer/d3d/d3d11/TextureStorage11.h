@@ -43,7 +43,8 @@ class TextureStorage11 : public TextureStorage
     UINT getMiscFlags() const;
 
     virtual gl::Error getResource(ID3D11Resource **outResource) = 0;
-    virtual gl::Error getSRV(const gl::SamplerState &samplerState, ID3D11ShaderResourceView **outSRV);
+    virtual gl::Error getSRV(const gl::TextureState &textureState,
+                             ID3D11ShaderResourceView **outSRV);
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) = 0;
 
     virtual gl::Error generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex);
@@ -208,7 +209,7 @@ class TextureStorage11_EGLImage final : public TextureStorage11
     ~TextureStorage11_EGLImage() override;
 
     gl::Error getResource(ID3D11Resource **outResource) override;
-    gl::Error getSRV(const gl::SamplerState &samplerState,
+    gl::Error getSRV(const gl::TextureState &textureState,
                      ID3D11ShaderResourceView **outSRV) override;
     gl::Error getMippedResource(ID3D11Resource **outResource) override;
     gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;

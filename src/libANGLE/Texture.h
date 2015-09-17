@@ -39,15 +39,68 @@ class Texture final : public egl::ImageSibling, public gl::FramebufferAttachment
 {
   public:
     Texture(rx::TextureImpl *impl, GLuint id, GLenum target);
-    ~Texture();
+    ~Texture() override;
 
     GLenum getTarget() const;
 
-    const SamplerState &getSamplerState() const { return mSamplerState; }
-    SamplerState &getSamplerState() { return mSamplerState; }
+    void setSwizzleRed(GLenum swizzleRed);
+    GLenum getSwizzleRed() const;
+
+    void setSwizzleGreen(GLenum swizzleGreen);
+    GLenum getSwizzleGreen() const;
+
+    void setSwizzleBlue(GLenum swizzleBlue);
+    GLenum getSwizzleBlue() const;
+
+    void setSwizzleAlpha(GLenum swizzleAlpha);
+    GLenum getSwizzleAlpha() const;
+
+    void setMinFilter(GLenum minFilter);
+    GLenum getMinFilter() const;
+
+    void setMagFilter(GLenum magFilter);
+    GLenum getMagFilter() const;
+
+    void setWrapS(GLenum wrapS);
+    GLenum getWrapS() const;
+
+    void setWrapT(GLenum wrapT);
+    GLenum getWrapT() const;
+
+    void setWrapR(GLenum wrapR);
+    GLenum getWrapR() const;
+
+    void setMaxAnisotropy(float maxAnisotropy);
+    float getMaxAnisotropy() const;
+
+    void setMinLod(GLfloat minLod);
+    GLfloat getMinLod() const;
+
+    void setMaxLod(GLfloat maxLod);
+    GLfloat getMaxLod() const;
+
+    void setCompareMode(GLenum compareMode);
+    GLenum getCompareMode() const;
+
+    void setCompareFunc(GLenum compareFunc);
+    GLenum getCompareFunc() const;
+
+    const SamplerState &getSamplerState() const;
+
+    void setBaseLevel(GLuint baseLevel);
+    GLuint getBaseLevel() const;
+
+    void setMaxLevel(GLuint maxLevel);
+    GLuint getMaxLevel() const;
+
+    bool getImmutableFormat() const;
+
+    GLuint getImmutableLevels() const;
 
     void setUsage(GLenum usage);
     GLenum getUsage() const;
+
+    const TextureState &getTextureState() const;
 
     size_t getWidth(GLenum target, size_t level) const;
     size_t getHeight(GLenum target, size_t level) const;
@@ -107,9 +160,6 @@ class Texture final : public egl::ImageSibling, public gl::FramebufferAttachment
 
     Error generateMipmaps();
 
-    bool isImmutable() const;
-    GLsizei immutableLevelCount();
-
     egl::Surface *getBoundSurface() const;
 
     rx::TextureImpl *getImplementation() { return mTexture; }
@@ -135,10 +185,7 @@ class Texture final : public egl::ImageSibling, public gl::FramebufferAttachment
 
     rx::TextureImpl *mTexture;
 
-    SamplerState mSamplerState;
-    GLenum mUsage;
-
-    GLsizei mImmutableLevelCount;
+    TextureState mTextureState;
 
     GLenum mTarget;
 
@@ -154,8 +201,8 @@ class Texture final : public egl::ImageSibling, public gl::FramebufferAttachment
     GLenum getBaseImageTarget() const;
 
     bool computeSamplerCompleteness(const SamplerState &samplerState, const Data &data) const;
-    bool computeMipmapCompleteness(const gl::SamplerState &samplerState) const;
-    bool computeLevelCompleteness(GLenum target, size_t level, const gl::SamplerState &samplerState) const;
+    bool computeMipmapCompleteness() const;
+    bool computeLevelCompleteness(GLenum target, size_t level) const;
 
     const ImageDesc &getImageDesc(GLenum target, size_t level) const;
     void setImageDesc(GLenum target, size_t level, const ImageDesc &desc);
