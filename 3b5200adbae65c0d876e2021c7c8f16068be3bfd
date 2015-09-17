@@ -1,0 +1,262 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a9692fe6_daa7818a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/PixelTransfer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-17T17:43:02Z",
+      "side": 1,
+      "message": "wrong order",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 61
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "096ddbec_408942a9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderTarget11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-17T17:43:02Z",
+      "side": 1,
+      "message": "the original includes are out of order. Can you clean it up?",
+      "range": {
+        "startLine": 15,
+        "startChar": 1,
+        "endLine": 15,
+        "endChar": 8
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "49a1935d_82867e05",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/swizzle_format_info.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-17T17:43:02Z",
+      "side": 1,
+      "message": "Can you make this static and return a const reference of map?\n\nSo an extra copy of the map can be avoided.",
+      "range": {
+        "startLine": 54,
+        "startChar": 4,
+        "endLine": 54,
+        "endChar": 18
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8980ebc5_79b9a3b1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-17T17:43:02Z",
+      "side": 1,
+      "message": "You can put all static functions into an anonymous namespace in the beginning, and remove all static.",
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29753fb9_16f07a9d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-17T17:43:02Z",
+      "side": 1,
+      "message": "nit: use auto",
+      "range": {
+        "startLine": 213,
+        "startChar": 32,
+        "endLine": 213,
+        "endChar": 34
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8980ebc5_b9c73b24",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-17T17:43:02Z",
+      "side": 1,
+      "message": "nit: use auto",
+      "range": {
+        "startLine": 220,
+        "startChar": 26,
+        "endLine": 220,
+        "endChar": 40
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29753fb9_560fd23a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-17T17:43:02Z",
+      "side": 1,
+      "message": "Same here, you can make map static, and return a const reference of this.  To avoid an extra copy of the map.",
+      "range": {
+        "startLine": 245,
+        "startChar": 4,
+        "endLine": 245,
+        "endChar": 21
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "096ddbec_20bc4e11",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-17T17:43:02Z",
+      "side": 1,
+      "message": "Same here, move static functions to an anonymous namespace in the beginning",
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "096ddbec_409aa2aa",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-17T17:43:02Z",
+      "side": 1,
+      "message": "Same here, make this static, and make this function return const reference.",
+      "range": {
+        "startLine": 69,
+        "startChar": 25,
+        "endLine": 69,
+        "endChar": 28
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e96fa7e4_9f6edbf3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-17T17:43:02Z",
+      "side": 1,
+      "message": "Same here, make this static and make the function return const reference.",
+      "range": {
+        "startLine": 241,
+        "startChar": 4,
+        "endLine": 241,
+        "endChar": 32
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6992d715_c0cc80c1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-17T17:43:02Z",
+      "side": 1,
+      "message": "Are all the typedef needed outside this?  If not, move as many to .cpp as possible.",
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "096ddbec_208a0e51",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-17T17:43:02Z",
+      "side": 1,
+      "message": "Isn\u0027t there also a gn BUILD file that needs to be updated also?",
+      "range": {
+        "startLine": 368,
+        "startChar": 22,
+        "endLine": 368,
+        "endChar": 30
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
