@@ -2,6 +2,121 @@
   "comments": [
     {
       "key": {
+        "uuid": "69fd77bf_455b4a6c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-18T21:08:39Z",
+      "side": 1,
+      "message": "image11.h should be the first include",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 48
+      },
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0934fb64_a2bd3e9f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/PixelTransfer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-18T21:08:39Z",
+      "side": 1,
+      "message": "same comment here",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 56
+      },
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c90823ae_2efcb334",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderTarget11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-18T21:08:39Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 55
+      },
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c90823ae_ce0bd7ec",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-18T21:08:39Z",
+      "side": 1,
+      "message": "My understanding is \u003c\u003e includes go before all except the current file (also applies here).\n\nsee https://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Names_and_Order_of_Includes",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 18
+      },
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29de1f5b_4bcec542",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-18T21:08:39Z",
+      "side": 1,
+      "message": "Same here (will let you fix before making more comments on includes)",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 52
+      },
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c9ae6393_ac8b3b11",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
         "patchSetId": 2
@@ -70,6 +185,29 @@
     },
     {
       "key": {
+        "uuid": "89470bec_3e9ce9cf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-18T21:08:39Z",
+      "side": 1,
+      "message": "I think you should keep the formatting of the original file here ... just copy paste and mark the whole block as // clang-format off // clang-format on (see other code for example of the clang-format notation)",
+      "range": {
+        "startLine": 248,
+        "startChar": 4,
+        "endLine": 253,
+        "endChar": 82
+      },
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e99c0776_0b93314b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
         "patchSetId": 2
@@ -81,6 +219,29 @@
       "writtenOn": "2015-09-18T20:47:33Z",
       "side": 1,
       "message": "no need for this to be static.",
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c90823ae_4e18073f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-18T21:08:39Z",
+      "side": 1,
+      "message": "same here, the indentation got squashed, please keep it as is for now (but you can see the // clang-format off worked)",
+      "range": {
+        "startLine": 78,
+        "startChar": 5,
+        "endLine": 79,
+        "endChar": 4
+      },
       "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
