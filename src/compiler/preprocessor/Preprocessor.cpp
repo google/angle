@@ -26,12 +26,11 @@ struct PreprocessorImpl
     DirectiveParser directiveParser;
     MacroExpander macroExpander;
 
-    PreprocessorImpl(Diagnostics *diag,
-                     DirectiveHandler *directiveHandler)
+    PreprocessorImpl(Diagnostics *diag, DirectiveHandler *directiveHandler)
         : diagnostics(diag),
           tokenizer(diag),
           directiveParser(&tokenizer, &macroSet, diag, directiveHandler),
-          macroExpander(&directiveParser, &macroSet, diag)
+          macroExpander(&directiveParser, &macroSet, diag, false)
     {
     }
 };

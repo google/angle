@@ -892,3 +892,33 @@ TEST_F(DefineTest, Predefined_FILE2)
     EXPECT_EQ(pp::Token::CONST_INT, token.type);
     EXPECT_EQ("21", token.text);
 }
+
+// Defined operator produced by macro expansion should be parsed inside #if directives
+TEST_F(DefineTest, ExpandedDefinedParsedInsideIf)
+{
+    const char *input =
+        "#define bar 1\n"
+        "#define foo defined(bar)\n"
+        "#if foo\n"
+        "bar\n"
+        "#endif\n";
+    const char *expected =
+        "\n"
+        "\n"
+        "\n"
+        "1\n"
+        "\n";
+    preprocess(input, expected);
+}
+
+// Defined operator produced by macro expansion should not be parsed outside #if directives
+TEST_F(DefineTest, ExpandedDefinedNotParsedOutsideIf)
+{
+    const char *input =
+        "#define foo defined(bar)\n"
+        "foo\n";
+    const char *expected =
+        "\n"
+        "defined(bar)\n";
+    preprocess(input, expected);
+}
