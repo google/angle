@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "49c27358_dd9e5fca",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/PixelTransfer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-18T18:42:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9692fe6_daa7818a",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 61
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "096ddbec_408942a9",
         "filename": "src/libANGLE/renderer/d3d/d3d11/RenderTarget11.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-17T17:43:02Z",
       "side": 1,
       "message": "the original includes are out of order. Can you clean it up?",
+      "range": {
+        "startLine": 15,
+        "startChar": 1,
+        "endLine": 15,
+        "endChar": 8
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29753fb9_16395a69",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderTarget11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-18T18:42:39Z",
+      "side": 1,
+      "message": "Yea sure!",
+      "parentUuid": "096ddbec_408942a9",
       "range": {
         "startLine": 15,
         "startChar": 1,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e96fa7e4_bfccffbf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/swizzle_format_info.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-18T18:42:39Z",
+      "side": 1,
+      "message": "This will be changed to a static switch soon, but for now sure (:",
+      "parentUuid": "49a1935d_82867e05",
+      "range": {
+        "startLine": 54,
+        "startChar": 4,
+        "endLine": 54,
+        "endChar": 18
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8980ebc5_79b9a3b1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
         "patchSetId": 1
@@ -88,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "e99c0776_6b091d33",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-18T18:42:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8980ebc5_79b9a3b1",
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "29753fb9_16f07a9d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
         "patchSetId": 1
@@ -99,6 +189,30 @@
       "writtenOn": "2015-09-17T17:43:02Z",
       "side": 1,
       "message": "nit: use auto",
+      "range": {
+        "startLine": 213,
+        "startChar": 32,
+        "endLine": 213,
+        "endChar": 34
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29bd3fca_a7435232",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-18T18:42:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29753fb9_16f07a9d",
       "range": {
         "startLine": 213,
         "startChar": 32,
@@ -134,6 +248,30 @@
     },
     {
       "key": {
+        "uuid": "099a3b78_0665ea27",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-18T18:42:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8980ebc5_b9c73b24",
+      "range": {
+        "startLine": 220,
+        "startChar": 26,
+        "endLine": 220,
+        "endChar": 40
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "29753fb9_560fd23a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
         "patchSetId": 1
@@ -145,6 +283,30 @@
       "writtenOn": "2015-09-17T17:43:02Z",
       "side": 1,
       "message": "Same here, you can make map static, and return a const reference of this.  To avoid an extra copy of the map.",
+      "range": {
+        "startLine": 245,
+        "startChar": 4,
+        "endLine": 245,
+        "endChar": 21
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29bd3fca_074b2648",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-18T18:42:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29753fb9_560fd23a",
       "range": {
         "startLine": 245,
         "startChar": 4,
@@ -174,6 +336,24 @@
     },
     {
       "key": {
+        "uuid": "099a3b78_4638d206",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-18T18:42:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "096ddbec_20bc4e11",
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "096ddbec_409aa2aa",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
         "patchSetId": 1
@@ -185,6 +365,30 @@
       "writtenOn": "2015-09-17T17:43:02Z",
       "side": 1,
       "message": "Same here, make this static, and make this function return const reference.",
+      "range": {
+        "startLine": 69,
+        "startChar": 25,
+        "endLine": 69,
+        "endChar": 28
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "49c27358_3d1bd308",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-18T18:42:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "096ddbec_409aa2aa",
       "range": {
         "startLine": 69,
         "startChar": 25,
@@ -220,6 +424,30 @@
     },
     {
       "key": {
+        "uuid": "69dad736_2c98fb6a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-18T18:42:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e96fa7e4_9f6edbf3",
+      "range": {
+        "startLine": 241,
+        "startChar": 4,
+        "endLine": 241,
+        "endChar": 32
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6992d715_c0cc80c1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.h",
         "patchSetId": 1
@@ -237,6 +465,24 @@
     },
     {
       "key": {
+        "uuid": "29bd3fca_6733fadb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-18T18:42:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6992d715_c0cc80c1",
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "096ddbec_208a0e51",
         "filename": "src/libGLESv2.gypi",
         "patchSetId": 1
@@ -248,6 +494,30 @@
       "writtenOn": "2015-09-17T17:43:02Z",
       "side": 1,
       "message": "Isn\u0027t there also a gn BUILD file that needs to be updated also?",
+      "range": {
+        "startLine": 368,
+        "startChar": 22,
+        "endLine": 368,
+        "endChar": 30
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e96fa7e4_3fed4f83",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-18T18:42:39Z",
+      "side": 1,
+      "message": "According to https://chromium.googlesource.com/angle/angle/+/master/doc/ContributingCode.md, it says \"If you changed the gyp files other than to add or remove new files, you will also need to update BUILD.gn\". It looks like the BUILD.gn file includes does an include for new files on libGLESv2 so we should be good (:",
+      "parentUuid": "096ddbec_208a0e51",
       "range": {
         "startLine": 368,
         "startChar": 22,
