@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c9ae6393_ac8b3b11",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-18T20:47:33Z",
+      "side": 1,
+      "message": "anonymous namespace should be in the first place.",
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c9a3c3b1_b97b6386",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-18T20:47:33Z",
+      "side": 1,
+      "message": "no need for this to be static.",
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69c3b75a_0f12591e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-18T20:47:33Z",
+      "side": 1,
+      "message": "no need for this to be static",
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c91663dc_1bcc9f9e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-18T20:47:33Z",
+      "side": 1,
+      "message": "no need for this to be static.",
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e99c0776_0b93314b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-09-18T20:47:33Z",
+      "side": 1,
+      "message": "no need for this to be static.",
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
