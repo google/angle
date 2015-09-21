@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29de1f5b_8bd6ed84",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-21T17:13:31Z",
+      "side": 1,
+      "message": "write all capture explicitly, see\n\nhttps://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Lambda_expressions",
+      "range": {
+        "startLine": 208,
+        "startChar": 12,
+        "endLine": 208,
+        "endChar": 15
+      },
+      "revId": "8354883b3726b1bf0433dc58a7ac16f05005b67f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9e887f8_d1ea64ad",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-21T17:13:31Z",
+      "side": 1,
+      "message": "what does the (void) do?",
+      "range": {
+        "startLine": 229,
+        "startChar": 8,
+        "endLine": 229,
+        "endChar": 14
+      },
+      "revId": "8354883b3726b1bf0433dc58a7ac16f05005b67f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29de1f5b_6bbce13f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-21T17:13:31Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 230,
+        "startChar": 11,
+        "endLine": 230,
+        "endChar": 15
+      },
+      "revId": "8354883b3726b1bf0433dc58a7ac16f05005b67f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "495193a7_9f83b78d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-21T17:13:31Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 283,
+        "startChar": 12,
+        "endLine": 283,
+        "endChar": 15
+      },
+      "revId": "8354883b3726b1bf0433dc58a7ac16f05005b67f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69fd77bf_0501d20f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-21T17:13:31Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 350,
+        "startChar": 12,
+        "endLine": 350,
+        "endChar": 15
+      },
+      "revId": "8354883b3726b1bf0433dc58a7ac16f05005b67f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
