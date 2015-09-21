@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29de1f5b_cbccf5f6",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-21T17:08:22Z",
+      "side": 1,
+      "message": "this is totally good with me, but as an aside,\n\nwe should probably formalize a rule about naming of aliased inputs, we have a bit of an inconsistency here",
+      "range": {
+        "startLine": 547,
+        "startChar": 22,
+        "endLine": 547,
+        "endChar": 28
+      },
+      "revId": "43f0e733b0c3c293a73f922a76273c0bb51b34c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69fd77bf_45f7ca94",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-21T17:08:22Z",
+      "side": 1,
+      "message": "nit: put functions before member vars",
+      "range": {
+        "startLine": 561,
+        "startChar": 4,
+        "endLine": 561,
+        "endChar": 60
+      },
+      "revId": "43f0e733b0c3c293a73f922a76273c0bb51b34c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69d49737_f39a08ac",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-21T17:08:22Z",
+      "side": 1,
+      "message": "nit: should go at the top of the file in a namespace {} block",
+      "range": {
+        "startLine": 403,
+        "startChar": 0,
+        "endLine": 403,
+        "endChar": 6
+      },
+      "revId": "43f0e733b0c3c293a73f922a76273c0bb51b34c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29de1f5b_abd1a990",
+        "filename": "src/common/utilities.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-21T17:08:22Z",
+      "side": 1,
+      "message": "can you put a one liner comment before each function, or at least GetPrimitiveRestartIndex?",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 50
+      },
+      "revId": "43f0e733b0c3c293a73f922a76273c0bb51b34c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69d49737_d39f0c9a",
+        "filename": "src/libANGLE/IndexRangeCache.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-21T17:08:22Z",
+      "side": 1,
+      "message": "nit: auto",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 33
+      },
+      "revId": "43f0e733b0c3c293a73f922a76273c0bb51b34c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89470bec_81bfdce2",
+        "filename": "src/libANGLE/IndexRangeCache.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-21T17:08:22Z",
+      "side": 1,
+      "message": "I think this triggers a conversion to integer. Do you know if it might trigger a linter warning in some tool that Bruce Dawson looks at or anything like that? I might consider rephrasing it to avoid the bool ordering comparison, if we don\u0027t have a prior example.. not sure.",
+      "range": {
+        "startLine": 99,
+        "startChar": 11,
+        "endLine": 99,
+        "endChar": 64
+      },
+      "revId": "43f0e733b0c3c293a73f922a76273c0bb51b34c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69fd77bf_2504ce1f",
+        "filename": "src/libANGLE/IndexRangeCache.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-21T17:08:22Z",
+      "side": 1,
+      "message": "nit: functions first",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 87
+      },
+      "revId": "43f0e733b0c3c293a73f922a76273c0bb51b34c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
