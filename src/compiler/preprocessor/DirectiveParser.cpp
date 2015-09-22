@@ -119,14 +119,12 @@ void skipUntilEOD(pp::Lexer *lexer, pp::Token *token)
 bool isMacroNameReserved(const std::string &name)
 {
     // Names prefixed with "GL_" are reserved.
-    if (name.substr(0, 3) == "GL_")
-        return true;
+    return (name.substr(0, 3) == "GL_");
+}
 
-    // Names containing two consecutive underscores are reserved.
-    if (name.find("__") != std::string::npos)
-        return true;
-
-    return false;
+bool hasDoubleUnderscores(const std::string &name)
+{
+    return (name.find("__") != std::string::npos);
 }
 
 bool isMacroPredefined(const std::string &name,
@@ -290,6 +288,16 @@ void DirectiveParser::parseDefine(Token *token)
         mDiagnostics->report(Diagnostics::PP_MACRO_NAME_RESERVED,
                              token->location, token->text);
         return;
+    }
+    // Using double underscores is allowed, but may result in unintended
+    // behavior, so a warning is issued. At the time of writing this was
+    // specified in ESSL 3.10, but the intent judging from Khronos
+    // discussions and dEQP tests was that double underscores should be
+    // allowed in earlier ESSL versions too.
+    if (hasDoubleUnderscores(token->text))
+    {
+        mDiagnostics->report(Diagnostics::PP_WARNING_MACRO_NAME_RESERVED, token->location,
+                             token->text);
     }
 
     Macro macro;

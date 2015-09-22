@@ -235,8 +235,6 @@
 504 WIN LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.nested_structs_arrays.sampler2D_samplerCube_* = FAIL
 
 // Windows Linux and Mac failures
-989 WIN LINUX MAC : dEQP-GLES2.functional.shaders.preprocessor.basic.identifier_with_double_underscore_vertex = FAIL
-989 WIN LINUX MAC : dEQP-GLES2.functional.shaders.preprocessor.basic.identifier_with_double_underscore_fragment = FAIL
 989 WIN LINUX MAC : dEQP-GLES2.functional.shaders.preprocessor.extensions.after_non_preprocessing_tokens_vertex = FAIL
 989 WIN LINUX MAC : dEQP-GLES2.functional.shaders.preprocessor.extensions.after_non_preprocessing_tokens_fragment = FAIL
 1015 WIN LINUX MAC : dEQP-GLES2.functional.shaders.functions.invalid.return_array_in_struct_vertex = FAIL
