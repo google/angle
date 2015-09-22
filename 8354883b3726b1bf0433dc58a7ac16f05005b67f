@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e9e887f8_4b347976",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-09-22T16:53:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29de1f5b_8bd6ed84",
+      "range": {
+        "startLine": 208,
+        "startChar": 12,
+        "endLine": 208,
+        "endChar": 15
+      },
+      "revId": "8354883b3726b1bf0433dc58a7ac16f05005b67f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e9e887f8_d1ea64ad",
         "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-21T17:13:31Z",
       "side": 1,
       "message": "what does the (void) do?",
+      "range": {
+        "startLine": 229,
+        "startChar": 8,
+        "endLine": 229,
+        "endChar": 14
+      },
+      "revId": "8354883b3726b1bf0433dc58a7ac16f05005b67f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "49fc33c5_4b68f6ff",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-09-22T16:53:50Z",
+      "side": 1,
+      "message": "It makes it clearer to the reader that I\u0027m deliberately ignoring the return result from RunOnUIThread. I\u0027ve removed it.",
+      "parentUuid": "e9e887f8_d1ea64ad",
       "range": {
         "startLine": 229,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "89470bec_087a0851",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-09-22T16:53:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29de1f5b_6bbce13f",
+      "range": {
+        "startLine": 230,
+        "startChar": 11,
+        "endLine": 230,
+        "endChar": 15
+      },
+      "revId": "8354883b3726b1bf0433dc58a7ac16f05005b67f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "495193a7_9f83b78d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp",
         "patchSetId": 1
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "69d49737_2cdf0677",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-09-22T16:53:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "495193a7_9f83b78d",
+      "range": {
+        "startLine": 283,
+        "startChar": 12,
+        "endLine": 283,
+        "endChar": 15
+      },
+      "revId": "8354883b3726b1bf0433dc58a7ac16f05005b67f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69fd77bf_0501d20f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp",
         "patchSetId": 1
@@ -105,6 +201,30 @@
       "writtenOn": "2015-09-21T17:13:31Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 350,
+        "startChar": 12,
+        "endLine": 350,
+        "endChar": 15
+      },
+      "revId": "8354883b3726b1bf0433dc58a7ac16f05005b67f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "495193a7_e6c02f8a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-09-22T16:53:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69fd77bf_0501d20f",
       "range": {
         "startLine": 350,
         "startChar": 12,
