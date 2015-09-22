@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e91fa7ee_b9afbffa",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-22T00:51:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69fd77bf_455b4a6c",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 48
+      },
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0934fb64_a2bd3e9f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/PixelTransfer11.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-18T21:08:39Z",
       "side": 1,
       "message": "same comment here",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 56
+      },
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89470bec_81acbcd5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/PixelTransfer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-22T00:51:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0934fb64_a2bd3e9f",
       "range": {
         "startLine": 17,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e9e887f8_f13e8853",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderTarget11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-22T00:51:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c90823ae_2efcb334",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 55
+      },
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c90823ae_ce0bd7ec",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2015-09-18T21:08:39Z",
       "side": 1,
       "message": "My understanding is \u003c\u003e includes go before all except the current file (also applies here).\n\nsee https://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Names_and_Order_of_Includes",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 18
+      },
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69fd77bf_6501a67a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-22T00:51:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c90823ae_ce0bd7ec",
       "range": {
         "startLine": 60,
         "startChar": 0,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "c90823ae_82c24e6e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-22T00:51:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29de1f5b_4bcec542",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 52
+      },
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c9ae6393_ac8b3b11",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
         "patchSetId": 2
@@ -128,6 +248,24 @@
       "writtenOn": "2015-09-18T20:47:33Z",
       "side": 1,
       "message": "anonymous namespace should be in the first place.",
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69d49737_a1bc26f1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-22T00:51:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c9ae6393_ac8b3b11",
       "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -151,6 +289,24 @@
     },
     {
       "key": {
+        "uuid": "0934fb64_45cd5cb9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-22T00:51:27Z",
+      "side": 1,
+      "message": "If we remove the static here, the BuildSwizzleInfoMap() function will be called multiple times instead of once",
+      "parentUuid": "c9a3c3b1_b97b6386",
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69c3b75a_0f12591e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
         "patchSetId": 2
@@ -168,6 +324,24 @@
     },
     {
       "key": {
+        "uuid": "49fc33c5_07c318c2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-22T00:51:27Z",
+      "side": 1,
+      "message": "Similar problem as BuildSwizzleInfoMap()",
+      "parentUuid": "69c3b75a_0f12591e",
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c91663dc_1bcc9f9e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
         "patchSetId": 2
@@ -179,6 +353,24 @@
       "writtenOn": "2015-09-18T20:47:33Z",
       "side": 1,
       "message": "no need for this to be static.",
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89470bec_64473e88",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-22T00:51:27Z",
+      "side": 1,
+      "message": "If this isn\u0027t static, the loadFunctionMap inside BuildD3D11LoadFunctionMap will keep adding elements to the elements since we changed it to be a static one inside the function",
+      "parentUuid": "c91663dc_1bcc9f9e",
       "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -208,6 +400,30 @@
     },
     {
       "key": {
+        "uuid": "69d49737_41cc629f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-22T00:51:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "89470bec_3e9ce9cf",
+      "range": {
+        "startLine": 248,
+        "startChar": 4,
+        "endLine": 253,
+        "endChar": 82
+      },
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e99c0776_0b93314b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
         "patchSetId": 2
@@ -225,6 +441,24 @@
     },
     {
       "key": {
+        "uuid": "495193a7_224daa03",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-22T00:51:27Z",
+      "side": 1,
+      "message": "dito about the static variable. Also, the end2end tests hang when the static variable is removed, which makes me think the static map inside the BuildD3D11FormatMap function is adding into the vector each time this function gets called rather than returning what\u0027s already there.",
+      "parentUuid": "e99c0776_0b93314b",
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c90823ae_4e18073f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
         "patchSetId": 2
@@ -236,6 +470,30 @@
       "writtenOn": "2015-09-18T21:08:39Z",
       "side": 1,
       "message": "same here, the indentation got squashed, please keep it as is for now (but you can see the // clang-format off worked)",
+      "range": {
+        "startLine": 78,
+        "startChar": 5,
+        "endLine": 79,
+        "endChar": 4
+      },
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69d49737_21c9568f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-22T00:51:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c90823ae_4e18073f",
       "range": {
         "startLine": 78,
         "startChar": 5,
