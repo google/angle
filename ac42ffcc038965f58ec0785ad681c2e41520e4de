@@ -307,6 +307,24 @@
     },
     {
       "key": {
+        "uuid": "0934fb64_177f8640",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-22T15:15:59Z",
+      "side": 1,
+      "message": "Dian is correct, please leave the static.",
+      "parentUuid": "0934fb64_45cd5cb9",
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69c3b75a_0f12591e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
         "patchSetId": 2
@@ -336,6 +354,24 @@
       "side": 1,
       "message": "Similar problem as BuildSwizzleInfoMap()",
       "parentUuid": "69c3b75a_0f12591e",
+      "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e91fa7ee_331d086e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-22T15:15:59Z",
+      "side": 1,
+      "message": "Ditto, and so on.",
+      "parentUuid": "49fc33c5_07c318c2",
       "revId": "ac42ffcc038965f58ec0785ad681c2e41520e4de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
