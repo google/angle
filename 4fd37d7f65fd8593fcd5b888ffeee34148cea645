@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "89470bec_e858fc72",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-22T15:19:12Z",
+      "side": 1,
+      "message": "Cooper, can you reformat this so there is a short sentence (\u003c\u003d65 chars) in the first line, and a longer description after a break (width limited to 80 chars)? This makes the history tidy. Also mentioning the problem with TDR could be good to log.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 75
+      },
+      "revId": "4fd37d7f65fd8593fcd5b888ffeee34148cea645",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
