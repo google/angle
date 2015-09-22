@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "09e07b3b_c249c2a7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-22T21:02:21Z",
+      "side": 1,
+      "message": "Huh, I had no idea you could skip the parameter list for lambdas.",
+      "range": {
+        "startLine": 208,
+        "startChar": 12,
+        "endLine": 212,
+        "endChar": 14
+      },
+      "revId": "3c5b316a1f09e180415f520d98981d9c898271f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
