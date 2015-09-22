@@ -28,36 +28,6 @@ namespace rx
 namespace
 {
 
-GLenum GetTextureType(GLenum samplerType)
-{
-    switch (samplerType)
-    {
-      case GL_SAMPLER_2D:
-      case GL_INT_SAMPLER_2D:
-      case GL_UNSIGNED_INT_SAMPLER_2D:
-      case GL_SAMPLER_2D_SHADOW:
-        return GL_TEXTURE_2D;
-      case GL_SAMPLER_3D:
-      case GL_INT_SAMPLER_3D:
-      case GL_UNSIGNED_INT_SAMPLER_3D:
-        return GL_TEXTURE_3D;
-      case GL_SAMPLER_CUBE:
-      case GL_SAMPLER_CUBE_SHADOW:
-        return GL_TEXTURE_CUBE_MAP;
-      case GL_INT_SAMPLER_CUBE:
-      case GL_UNSIGNED_INT_SAMPLER_CUBE:
-        return GL_TEXTURE_CUBE_MAP;
-      case GL_SAMPLER_2D_ARRAY:
-      case GL_INT_SAMPLER_2D_ARRAY:
-      case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
-      case GL_SAMPLER_2D_ARRAY_SHADOW:
-        return GL_TEXTURE_2D_ARRAY;
-      default: UNREACHABLE();
-    }
-
-    return GL_TEXTURE_2D;
-}
-
 gl::InputLayout GetDefaultInputLayoutFromShader(const gl::Shader *vertexShader)
 {
     gl::InputLayout defaultLayout;
@@ -338,7 +308,6 @@ ProgramD3D::ProgramD3D(const gl::Program::Data &data, RendererD3D *renderer)
       mUsedVertexSamplerRange(0),
       mUsedPixelSamplerRange(0),
       mDirtySamplerMapping(true),
-      mTextureUnitTypesCache(renderer->getRendererCaps().maxCombinedTextureImageUnits),
       mShaderVersion(100),
       mSerial(issueSerial())
 {
@@ -484,106 +453,6 @@ void ProgramD3D::updateSamplerMapping()
             }
         }
     }
-}
-
-bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
-{
-    // Skip cache if we're using an infolog, so we get the full error.
-    // Also skip the cache if the sample mapping has changed, or if we haven't ever validated.
-    if (!mDirtySamplerMapping && infoLog == nullptr && mCachedValidateSamplersResult.valid())
-    {
-        return mCachedValidateSamplersResult.value();
-    }
-
-    // if any two active samplers in a program are of different types, but refer to the same
-    // texture image unit, and this is the current program, then ValidateProgram will fail, and
-    // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
-    updateSamplerMapping();
-
-    std::fill(mTextureUnitTypesCache.begin(), mTextureUnitTypesCache.end(), GL_NONE);
-
-    for (unsigned int i = 0; i < mUsedPixelSamplerRange; ++i)
-    {
-        if (mSamplersPS[i].active)
-        {
-            unsigned int unit = mSamplersPS[i].logicalTextureUnit;
-
-            if (unit >= caps.maxCombinedTextureImageUnits)
-            {
-                if (infoLog)
-                {
-                    (*infoLog) << "Sampler uniform (" << unit
-                               << ") exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS ("
-                               << caps.maxCombinedTextureImageUnits << ")";
-                }
-
-                mCachedValidateSamplersResult = false;
-                return false;
-            }
-
-            if (mTextureUnitTypesCache[unit] != GL_NONE)
-            {
-                if (mSamplersPS[i].textureType != mTextureUnitTypesCache[unit])
-                {
-                    if (infoLog)
-                    {
-                        (*infoLog) << "Samplers of conflicting types refer to the same texture image unit ("
-                                   << unit << ").";
-                    }
-
-                    mCachedValidateSamplersResult = false;
-                    return false;
-                }
-            }
-            else
-            {
-                mTextureUnitTypesCache[unit] = mSamplersPS[i].textureType;
-            }
-        }
-    }
-
-    for (unsigned int i = 0; i < mUsedVertexSamplerRange; ++i)
-    {
-        if (mSamplersVS[i].active)
-        {
-            unsigned int unit = mSamplersVS[i].logicalTextureUnit;
-
-            if (unit >= caps.maxCombinedTextureImageUnits)
-            {
-                if (infoLog)
-                {
-                    (*infoLog) << "Sampler uniform (" << unit
-                               << ") exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS ("
-                               << caps.maxCombinedTextureImageUnits << ")";
-                }
-
-                mCachedValidateSamplersResult = false;
-                return false;
-            }
-
-            if (mTextureUnitTypesCache[unit] != GL_NONE)
-            {
-                if (mSamplersVS[i].textureType != mTextureUnitTypesCache[unit])
-                {
-                    if (infoLog)
-                    {
-                        (*infoLog) << "Samplers of conflicting types refer to the same texture image unit ("
-                                   << unit << ").";
-                    }
-
-                    mCachedValidateSamplersResult = false;
-                    return false;
-                }
-            }
-            else
-            {
-                mTextureUnitTypesCache[unit] = mSamplersVS[i].textureType;
-            }
-        }
-    }
-
-    mCachedValidateSamplersResult = true;
-    return true;
 }
 
 LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
@@ -1173,7 +1042,7 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
 
     initSemanticIndex();
 
-    assignUniformRegisters();
+    defineUniformsAndAssignRegisters();
 
     gatherTransformFeedbackVaryings(linkedVaryings);
 
@@ -1187,10 +1056,10 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
     return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
 
-GLboolean ProgramD3D::validate(const gl::Caps &caps, gl::InfoLog *infoLog)
+GLboolean ProgramD3D::validate(const gl::Caps & /*caps*/, gl::InfoLog * /*infoLog*/)
 {
-    applyUniforms();
-    return validateSamplers(infoLog, caps);
+    // TODO(jmadill): Do something useful here?
+    return GL_TRUE;
 }
 
 void ProgramD3D::gatherUniformBlockInfo(std::vector<gl::UniformBlock> *uniformBlocks,
@@ -1475,17 +1344,19 @@ void ProgramD3D::setUniform4uiv(GLint location, GLsizei count, const GLuint *v)
     setUniform(location, count, v, GL_UNSIGNED_INT_VEC4);
 }
 
-void ProgramD3D::assignUniformRegisters()
+void ProgramD3D::defineUniformsAndAssignRegisters()
 {
     const gl::Shader *vertexShader   = mData.getAttachedVertexShader();
     const ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(vertexShader);
+
+    D3DUniformMap uniformMap;
 
     for (const sh::Uniform &vertexUniform : vertexShader->getUniforms())
 
     {
         if (vertexUniform.staticUse)
         {
-            assignUniformRegistersBase(vertexShaderD3D, vertexUniform);
+            defineUniformBase(vertexShaderD3D, vertexUniform, &uniformMap);
         }
     }
 
@@ -1496,19 +1367,32 @@ void ProgramD3D::assignUniformRegisters()
     {
         if (fragmentUniform.staticUse)
         {
-            assignUniformRegistersBase(fragmentShaderD3D, fragmentUniform);
+            defineUniformBase(fragmentShaderD3D, fragmentUniform, &uniformMap);
         }
+    }
+
+    // Initialize the D3DUniform list to mirror the indexing of the GL layer.
+    for (const gl::LinkedUniform &glUniform : mData.getUniforms())
+    {
+        if (!glUniform.isInDefaultBlock())
+            continue;
+
+        auto mapEntry = uniformMap.find(glUniform.name);
+        ASSERT(mapEntry != uniformMap.end());
+        mD3DUniforms.push_back(mapEntry->second);
     }
 
     assignAllSamplerRegisters();
     initializeUniformStorage();
 }
 
-void ProgramD3D::assignUniformRegistersBase(const ShaderD3D *shader, const sh::Uniform &uniform)
+void ProgramD3D::defineUniformBase(const ShaderD3D *shader,
+                                   const sh::Uniform &uniform,
+                                   D3DUniformMap *uniformMap)
 {
     if (uniform.isBuiltIn())
     {
-        assignUniformRegisters(shader, uniform, uniform.name, nullptr);
+        defineUniform(shader, uniform, uniform.name, nullptr, uniformMap);
         return;
     }
 
@@ -1517,7 +1401,7 @@ void ProgramD3D::assignUniformRegistersBase(const ShaderD3D *shader, const sh::U
     sh::HLSLBlockEncoder encoder(sh::HLSLBlockEncoder::GetStrategyFor(outputType));
     encoder.skipRegisters(startRegister);
 
-    assignUniformRegisters(shader, uniform, uniform.name, &encoder);
+    defineUniform(shader, uniform, uniform.name, &encoder, uniformMap);
 }
 
 D3DUniform *ProgramD3D::getD3DUniformByName(const std::string &name)
@@ -1533,10 +1417,11 @@ D3DUniform *ProgramD3D::getD3DUniformByName(const std::string &name)
     return nullptr;
 }
 
-void ProgramD3D::assignUniformRegisters(const ShaderD3D *shader,
-                                        const sh::ShaderVariable &uniform,
-                                        const std::string &fullName,
-                                        sh::HLSLBlockEncoder *encoder)
+void ProgramD3D::defineUniform(const ShaderD3D *shader,
+                               const sh::ShaderVariable &uniform,
+                               const std::string &fullName,
+                               sh::HLSLBlockEncoder *encoder,
+                               D3DUniformMap *uniformMap)
 {
     if (uniform.isStruct())
     {
@@ -1552,7 +1437,7 @@ void ProgramD3D::assignUniformRegisters(const ShaderD3D *shader,
                 const sh::ShaderVariable &field = uniform.fields[fieldIndex];
                 const std::string &fieldFullName = (fullName + elementString + "." + field.name);
 
-                assignUniformRegisters(shader, field, fieldFullName, encoder);
+                defineUniform(shader, field, fieldFullName, encoder, uniformMap);
             }
 
             if (encoder)
@@ -1572,27 +1457,23 @@ void ProgramD3D::assignUniformRegisters(const ShaderD3D *shader,
         encoder ? encoder->encodeType(uniform.type, uniform.arraySize, false)
                 : sh::BlockMemberInfo::getDefaultBlockInfo();
 
-    D3DUniform *d3dUniform = getD3DUniformByName(fullName);
+    auto uniformMapEntry   = uniformMap->find(fullName);
+    D3DUniform *d3dUniform = nullptr;
 
-    if (!d3dUniform)
+    if (uniformMapEntry != uniformMap->end())
     {
-        // We're building the list twice, make sure we use the same indexing. Special case
-        // built-ins.
-        ASSERT(fullName.compare(0, 3, "gl_") == 0 ||
-               mData.getUniformIndex(fullName) == static_cast<GLint>(mD3DUniforms.size()));
-
+        d3dUniform = uniformMapEntry->second;
+    }
+    else
+    {
         d3dUniform = new D3DUniform(uniform.type, fullName, uniform.arraySize, true);
-        mD3DUniforms.push_back(d3dUniform);
-
-        if (encoder)
-        {
-            d3dUniform->registerElement =
-                static_cast<unsigned int>(sh::HLSLBlockEncoder::getBlockRegisterElement(blockInfo));
-        }
+        (*uniformMap)[fullName] = d3dUniform;
     }
 
     if (encoder)
     {
+        d3dUniform->registerElement =
+            static_cast<unsigned int>(sh::HLSLBlockEncoder::getBlockRegisterElement(blockInfo));
         unsigned int reg =
             static_cast<unsigned int>(sh::HLSLBlockEncoder::getBlockRegister(blockInfo));
         if (shader->getShaderType() == GL_FRAGMENT_SHADER)
@@ -1871,7 +1752,7 @@ void ProgramD3D::AssignSamplers(unsigned int startSamplerIndex,
         ASSERT(samplerIndex < outSamplers.size());
         Sampler *sampler            = &outSamplers[samplerIndex];
         sampler->active             = true;
-        sampler->textureType        = GetTextureType(samplerType);
+        sampler->textureType        = gl::SamplerTypeToTextureType(samplerType);
         sampler->logicalTextureUnit = 0;
         *outUsedRange               = std::max(samplerIndex + 1, *outUsedRange);
         samplerIndex++;

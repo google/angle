@@ -12,7 +12,6 @@
 #include <string>
 #include <vector>
 
-#include "common/Optional.h"
 #include "compiler/translator/blocklayoutHLSL.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/formatutils.h"
@@ -33,7 +32,7 @@ class ShaderExecutableD3D;
 #endif
 
 // Helper struct representing a single shader uniform
-struct D3DUniform
+struct D3DUniform : angle::NonCopyable
 {
     D3DUniform(GLenum typeIn,
                const std::string &nameIn,
@@ -84,7 +83,6 @@ class ProgramD3D : public ProgramImpl
     GLenum getSamplerTextureType(gl::SamplerType type, unsigned int samplerIndex) const;
     GLint getUsedSamplerRange(gl::SamplerType type) const;
     void updateSamplerMapping();
-    bool validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps);
 
     bool usesPointSize() const { return mUsesPointSize; }
     bool usesPointSpriteEmulation() const;
@@ -198,14 +196,18 @@ class ProgramD3D : public ProgramImpl
         GLenum textureType;
     };
 
+    typedef std::map<std::string, D3DUniform *> D3DUniformMap;
     typedef std::map<std::string, sh::BlockMemberInfo> BlockInfoMap;
 
-    void assignUniformRegisters();
-    void assignUniformRegistersBase(const ShaderD3D *shader, const sh::Uniform &uniform);
-    void assignUniformRegisters(const ShaderD3D *shader,
-                                const sh::ShaderVariable &uniform,
-                                const std::string &fullName,
-                                sh::HLSLBlockEncoder *encoder);
+    void defineUniformsAndAssignRegisters();
+    void defineUniformBase(const ShaderD3D *shader,
+                           const sh::Uniform &uniform,
+                           D3DUniformMap *uniformMap);
+    void defineUniform(const ShaderD3D *shader,
+                       const sh::ShaderVariable &uniform,
+                       const std::string &fullName,
+                       sh::HLSLBlockEncoder *encoder,
+                       D3DUniformMap *uniformMap);
     void assignAllSamplerRegisters();
     void assignSamplerRegisters(const D3DUniform *d3dUniform);
 
@@ -262,9 +264,6 @@ class ProgramD3D : public ProgramImpl
     GLuint mUsedPixelSamplerRange;
     bool mDirtySamplerMapping;
 
-    // Cache for validateSamplers
-    std::vector<GLenum> mTextureUnitTypesCache;
-
     // Cache for getPixelExecutableForFramebuffer
     std::vector<GLenum> mPixelShaderOutputFormatCache;
 
@@ -274,8 +273,6 @@ class ProgramD3D : public ProgramImpl
     SemanticIndexArray mAttributesByLayout;
 
     unsigned int mSerial;
-
-    Optional<bool> mCachedValidateSamplersResult;
 
     std::vector<GLint> mVertexUBOCache;
     std::vector<GLint> mFragmentUBOCache;
