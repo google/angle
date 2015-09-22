@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29de1f5b_8077e45c",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-22T15:13:47Z",
+      "side": 1,
+      "message": "nit: nullptr (couple below too)",
+      "range": {
+        "startLine": 76,
+        "startChar": 28,
+        "endLine": 76,
+        "endChar": 32
+      },
+      "revId": "a529f3495c5c8c8de171e3330a07bf48af30d79c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89470bec_881938b6",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-22T15:13:47Z",
+      "side": 1,
+      "message": "This should be in the destructor only.",
+      "range": {
+        "startLine": 96,
+        "startChar": 4,
+        "endLine": 96,
+        "endChar": 32
+      },
+      "revId": "a529f3495c5c8c8de171e3330a07bf48af30d79c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29de1f5b_a061c099",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-22T15:13:47Z",
+      "side": 1,
+      "message": "The implementation\u0027s release function should be called here.",
+      "revId": "a529f3495c5c8c8de171e3330a07bf48af30d79c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89470bec_68106c86",
+        "filename": "src/libANGLE/Compiler.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-22T15:13:47Z",
+      "side": 1,
+      "message": "If we still create the impl, maybe we should make the output type a getter from the impl? Probably a bit more targetted than a Renderer method.",
+      "range": {
+        "startLine": 29,
+        "startChar": 61,
+        "endLine": 29,
+        "endChar": 86
+      },
+      "revId": "a529f3495c5c8c8de171e3330a07bf48af30d79c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
