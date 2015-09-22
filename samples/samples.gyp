@@ -34,14 +34,8 @@
             ],
             'sources':
             [
-                'sample_util/Matrix.cpp',
-                'sample_util/Matrix.h',
                 'sample_util/SampleApplication.cpp',
                 'sample_util/SampleApplication.h',
-                'sample_util/Vector.cpp',
-                'sample_util/Vector.h',
-                'sample_util/geometry_utils.cpp',
-                'sample_util/geometry_utils.h',
                 'sample_util/texture_utils.cpp',
                 'sample_util/texture_utils.h',
                 'sample_util/tga_utils.cpp',

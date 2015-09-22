@@ -3,21 +3,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
+// Vector:
+//   Vector class for linear math.
+//
 
-#ifndef SAMPLE_UTIL_VECTOR_H
-#define SAMPLE_UTIL_VECTOR_H
+#ifndef UTIL_VECTOR_H
+#define UTIL_VECTOR_H
 
 struct Vector2
 {
-    union
-    {
-        struct
-        {
-            float x, y;
-        };
-        float data[2];
-    };
-
     Vector2();
     Vector2(float x, float y);
 
@@ -25,19 +19,15 @@ struct Vector2
     static float lengthSquared(const Vector2 &vec);
 
     static Vector2 normalize(const Vector2 &vec);
+
+    float *data() { return &x; }
+    const float *data() const { return &x; }
+
+    float x, y;
 };
 
 struct Vector3
 {
-    union
-    {
-        struct
-        {
-            float x, y, z;
-        };
-        float data[3];
-    };
-
     Vector3();
     Vector3(float x, float y, float z);
 
@@ -48,26 +38,22 @@ struct Vector3
 
     static float dot(const Vector3 &a, const Vector3 &b);
     static Vector3 cross(const Vector3 &a, const Vector3 &b);
+
+    float *data() { return &x; }
+    const float *data() const { return &x; }
+
+    float x, y, z;
 };
 
 Vector3 operator*(const Vector3 &a, const Vector3 &b);
-Vector3 operator*(const Vector3 &a, const float& b);
+Vector3 operator*(const Vector3 &a, const float &b);
 Vector3 operator/(const Vector3 &a, const Vector3 &b);
-Vector3 operator/(const Vector3 &a, const float& b);
+Vector3 operator/(const Vector3 &a, const float &b);
 Vector3 operator+(const Vector3 &a, const Vector3 &b);
 Vector3 operator-(const Vector3 &a, const Vector3 &b);
 
 struct Vector4
 {
-    union
-    {
-        struct
-        {
-            float x, y, z, w;
-        };
-        float data[4];
-    };
-
     Vector4();
     Vector4(float x, float y, float z, float w);
 
@@ -77,6 +63,11 @@ struct Vector4
     static Vector4 normalize(const Vector4 &vec);
 
     static float dot(const Vector4 &a, const Vector4 &b);
+
+    float *data() { return &x; }
+    const float *data() const { return &x; }
+
+    float x, y, z, w;
 };
 
-#endif // SAMPLE_UTIL_VECTOR_H
+#endif  // UTIL_VECTOR_H

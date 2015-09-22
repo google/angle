@@ -161,7 +161,7 @@ class MultiWindowSample : public SampleApplication
             glUseProgram(mProgram);
 
             // Load the vertex data
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices[0].data);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices[0].data());
             glEnableVertexAttribArray(0);
 
             glDrawArrays(GL_TRIANGLES, 0, 3);

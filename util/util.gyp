@@ -11,6 +11,8 @@
         [
             'com_utils.h',
             'keyboard.h',
+            'geometry_utils.cpp',
+            'geometry_utils.h',
             'mouse.h',
             'random_utils.cpp',
             'random_utils.h',
@@ -20,10 +22,14 @@
             'Event.h',
             'EGLWindow.cpp',
             'EGLWindow.h',
+            'Matrix.cpp',
+            'Matrix.h',
             'OSPixmap.h',
             'OSWindow.cpp',
             'OSWindow.h',
             'Timer.h',
+            'Vector.cpp',
+            'Vector.h',
         ],
         'util_win32_sources':
         [

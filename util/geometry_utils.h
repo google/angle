@@ -3,9 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
+// geometry_utils:
+//   Helper library for generating certain sets of geometry.
+//
 
-#ifndef SAMPLE_UTIL_GEOMETRY_UTILS_H
-#define SAMPLE_UTIL_GEOMETRY_UTILS_H
+#ifndef UTIL_GEOMETRY_UTILS_H
+#define UTIL_GEOMETRY_UTILS_H
 
 #include <cstddef>
 #include <vector>
@@ -32,4 +35,4 @@ struct CubeGeometry
 
 void GenerateCubeGeometry(float radius, CubeGeometry *result);
 
-#endif // SAMPLE_UTIL_GEOMETRY_UTILS_H
+#endif  // UTIL_GEOMETRY_UTILS_H

@@ -146,14 +146,14 @@ class ParticleSystemSample : public SampleApplication
             Vector3 centerPos(RandomBetween(-0.5f, 0.5f),
                               RandomBetween(-0.5f, 0.5f),
                               RandomBetween(-0.5f, 0.5f));
-            glUniform3fv(mCenterPositionLoc, 1, centerPos.data);
+            glUniform3fv(mCenterPositionLoc, 1, centerPos.data());
 
             // Random color
             Vector4 color(RandomBetween(0.0f, 1.0f),
                           RandomBetween(0.0f, 1.0f),
                           RandomBetween(0.0f, 1.0f),
                           0.5f);
-            glUniform4fv(mColorLoc, 1, color.data);
+            glUniform4fv(mColorLoc, 1, color.data());
         }
 
         // Load uniform time variable
