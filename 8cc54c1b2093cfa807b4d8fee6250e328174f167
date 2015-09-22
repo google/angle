@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69d49737_8c1b9a3c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-22T14:23:10Z",
+      "side": 1,
+      "message": "This (almost) exact function exists as SamplerTypeToTextureType in utilities.h",
+      "range": {
+        "startLine": 177,
+        "startChar": 0,
+        "endLine": 206,
+        "endChar": 1
+      },
+      "revId": "8cc54c1b2093cfa807b4d8fee6250e328174f167",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
