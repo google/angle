@@ -64,6 +64,7 @@ struct UniformBlock
 
     std::vector<unsigned int> memberUniformIndexes;
 
+    // TODO(jmadill): Make D3D-only.
     unsigned int psRegisterIndex;
     unsigned int vsRegisterIndex;
 };
