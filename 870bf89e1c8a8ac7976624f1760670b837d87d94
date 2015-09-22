@@ -22,6 +22,30 @@
       "revId": "870bf89e1c8a8ac7976624f1760670b837d87d94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "495193a7_26e3779c",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-22T15:33:09Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "c90823ae_99963c0c",
+      "range": {
+        "startLine": 134,
+        "startChar": 12,
+        "endLine": 134,
+        "endChar": 47
+      },
+      "revId": "870bf89e1c8a8ac7976624f1760670b837d87d94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
