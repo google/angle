@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c90823ae_d9083432",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-22T14:09:07Z",
+      "side": 1,
+      "message": "Given that the language protects us here and it shouldn\u0027t be possible to alias the members, I don\u0027t have a strong opinion on this one.  Adding the trailing underscore seems reasonable because it is very simple and doesn\u0027t lengthen the line too much.",
+      "parentUuid": "29de1f5b_cbccf5f6",
+      "range": {
+        "startLine": 547,
+        "startChar": 22,
+        "endLine": 547,
+        "endChar": 28
+      },
+      "revId": "43f0e733b0c3c293a73f922a76273c0bb51b34c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69fd77bf_45f7ca94",
         "filename": "src/common/mathutil.h",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-21T17:08:22Z",
       "side": 1,
       "message": "nit: put functions before member vars",
+      "range": {
+        "startLine": 561,
+        "startChar": 4,
+        "endLine": 561,
+        "endChar": 60
+      },
+      "revId": "43f0e733b0c3c293a73f922a76273c0bb51b34c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69fd77bf_3fe5f710",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-22T14:09:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69fd77bf_45f7ca94",
       "range": {
         "startLine": 561,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e91fa7ee_d37feca3",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-22T14:09:07Z",
+      "side": 1,
+      "message": "Can we revisit this rule at some point? Having this function defined right above the only call site helps readability a lot.  It being static should make it obvious that it\u0027s an internal function.",
+      "parentUuid": "69d49737_f39a08ac",
+      "range": {
+        "startLine": 403,
+        "startChar": 0,
+        "endLine": 403,
+        "endChar": 6
+      },
+      "revId": "43f0e733b0c3c293a73f922a76273c0bb51b34c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "29de1f5b_abd1a990",
         "filename": "src/common/utilities.h",
         "patchSetId": 6
@@ -82,6 +154,30 @@
       "writtenOn": "2015-09-21T17:08:22Z",
       "side": 1,
       "message": "can you put a one liner comment before each function, or at least GetPrimitiveRestartIndex?",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 50
+      },
+      "revId": "43f0e733b0c3c293a73f922a76273c0bb51b34c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69fd77bf_1fe23b09",
+        "filename": "src/common/utilities.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-22T14:09:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29de1f5b_abd1a990",
       "range": {
         "startLine": 53,
         "startChar": 0,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "69d49737_0c07aae4",
+        "filename": "src/libANGLE/IndexRangeCache.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-22T14:09:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69d49737_d39f0c9a",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 33
+      },
+      "revId": "43f0e733b0c3c293a73f922a76273c0bb51b34c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "89470bec_81bfdce2",
         "filename": "src/libANGLE/IndexRangeCache.cpp",
         "patchSetId": 6
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "e91fa7ee_7375c0c3",
+        "filename": "src/libANGLE/IndexRangeCache.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-22T14:09:07Z",
+      "side": 1,
+      "message": "I changed it so there is no \u003c operator on bools.",
+      "parentUuid": "89470bec_81bfdce2",
+      "range": {
+        "startLine": 99,
+        "startChar": 11,
+        "endLine": 99,
+        "endChar": 64
+      },
+      "revId": "43f0e733b0c3c293a73f922a76273c0bb51b34c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69fd77bf_2504ce1f",
         "filename": "src/libANGLE/IndexRangeCache.h",
         "patchSetId": 6
@@ -151,6 +295,30 @@
       "writtenOn": "2015-09-21T17:08:22Z",
       "side": 1,
       "message": "nit: functions first",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 87
+      },
+      "revId": "43f0e733b0c3c293a73f922a76273c0bb51b34c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9e887f8_4ba0f960",
+        "filename": "src/libANGLE/IndexRangeCache.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-22T14:09:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69fd77bf_2504ce1f",
       "range": {
         "startLine": 48,
         "startChar": 8,
