@@ -299,6 +299,12 @@ void ProgramGL::setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean t
     mFunctions->uniformMatrix4x3fv(uniLoc(location), count, transpose, value);
 }
 
+bool ProgramGL::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
+{
+    //UNIMPLEMENTED();
+    return true;
+}
+
 void ProgramGL::reset()
 {
     mUniformRealLocationMap.clear();
