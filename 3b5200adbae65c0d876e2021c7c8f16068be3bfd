@@ -319,6 +319,30 @@
     },
     {
       "key": {
+        "uuid": "49fc33c5_4d449181",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-22T00:51:27Z",
+      "side": 1,
+      "message": "If we make the map static here, and function A and B both call this BuildD3D11FormatMap function, wouldn\u0027t the map have duplicate values since the insert pushes things into the vector each time?",
+      "parentUuid": "29753fb9_560fd23a",
+      "range": {
+        "startLine": 245,
+        "startChar": 4,
+        "endLine": 245,
+        "endChar": 21
+      },
+      "revId": "3b5200adbae65c0d876e2021c7c8f16068be3bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "096ddbec_20bc4e11",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
         "patchSetId": 1
