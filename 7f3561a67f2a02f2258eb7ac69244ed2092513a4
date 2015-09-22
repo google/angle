@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "495193a7_b9bd689f",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 938,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-22T17:50:32Z",
+      "side": 1,
+      "message": "nit: you can reformat this comment by making it one big continuous  long comment, then allowing git cl format to do the wrapping.",
+      "range": {
+        "startLine": 934,
+        "startChar": 4,
+        "endLine": 938,
+        "endChar": 30
+      },
+      "revId": "7f3561a67f2a02f2258eb7ac69244ed2092513a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
