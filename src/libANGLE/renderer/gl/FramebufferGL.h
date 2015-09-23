@@ -60,8 +60,6 @@ class FramebufferGL : public FramebufferImpl
     GLuint getFramebufferID() const;
 
   private:
-    void syncClearState();
-
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
 
