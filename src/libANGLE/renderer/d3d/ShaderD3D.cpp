@@ -6,14 +6,13 @@
 
 // ShaderD3D.cpp: Defines the rx::ShaderD3D class which implements rx::ShaderImpl.
 
-#include "libANGLE/Shader.h"
-#include "libANGLE/Compiler.h"
-#include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
-#include "libANGLE/renderer/d3d/CompilerD3D.h"
-#include "libANGLE/features.h"
 
 #include "common/utilities.h"
+#include "libANGLE/Compiler.h"
+#include "libANGLE/Shader.h"
+#include "libANGLE/features.h"
+#include "libANGLE/renderer/d3d/RendererD3D.h"
 
 // Definitions local to the translation unit
 namespace
@@ -321,8 +320,7 @@ bool ShaderD3D::compile(gl::Compiler *compiler, const std::string &source)
 {
     uncompile();
 
-    CompilerD3D *compilerD3D = GetImplAs<CompilerD3D>(compiler);
-    ShHandle compilerHandle = compilerD3D->getCompilerHandle(mShaderType);
+    ShHandle compilerHandle = compiler->getCompilerHandle(mShaderType);
 
     mCompilerOutputType = ShGetShaderOutputType(compilerHandle);
 

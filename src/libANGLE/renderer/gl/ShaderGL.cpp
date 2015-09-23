@@ -10,7 +10,6 @@
 
 #include "common/debug.h"
 #include "libANGLE/Compiler.h"
-#include "libANGLE/renderer/gl/CompilerGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 
 template <typename VarT>
@@ -72,8 +71,7 @@ bool ShaderGL::compile(gl::Compiler *compiler, const std::string &source)
     }
 
     // Translate the ESSL into GLSL
-    CompilerGL *compilerGL = GetImplAs<CompilerGL>(compiler);
-    ShHandle compilerHandle = compilerGL->getCompilerHandle(mType);
+    ShHandle compilerHandle = compiler->getCompilerHandle(mType);
 
     int compileOptions = (SH_OBJECT_CODE | SH_VARIABLES | SH_INIT_GL_POSITION);
     const char* sourceCString = source.c_str();

@@ -58,7 +58,7 @@ class RendererGL : public Renderer
                                 const gl::IndexRange &indexRange) override;
 
     // Shader creation
-    CompilerImpl *createCompiler(const gl::Data &data) override;
+    CompilerImpl *createCompiler() override;
     ShaderImpl *createShader(GLenum type) override;
     ProgramImpl *createProgram(const gl::Program::Data &data) override;
 

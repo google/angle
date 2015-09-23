@@ -237,9 +237,9 @@ gl::Error RendererGL::drawRangeElements(const gl::Data &data,
     return gl::Error(GL_NO_ERROR);
 }
 
-CompilerImpl *RendererGL::createCompiler(const gl::Data &data)
+CompilerImpl *RendererGL::createCompiler()
 {
-    return new CompilerGL(data, mFunctions);
+    return new CompilerGL(mFunctions);
 }
 
 ShaderImpl *RendererGL::createShader(GLenum type)

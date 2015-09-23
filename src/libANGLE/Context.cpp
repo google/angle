@@ -145,7 +145,7 @@ Context::Context(const egl::Config *config,
     mResetStrategy = (notifyResets ? GL_LOSE_CONTEXT_ON_RESET_EXT : GL_NO_RESET_NOTIFICATION_EXT);
     mRobustAccess = robustAccess;
 
-    mCompiler = new Compiler(mRenderer->createCompiler(getData()));
+    mCompiler = new Compiler(mRenderer, getData());
 }
 
 Context::~Context()

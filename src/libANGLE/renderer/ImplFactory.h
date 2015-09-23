@@ -36,7 +36,7 @@ class ImplFactory : angle::NonCopyable
     virtual ~ImplFactory() {}
 
     // Shader creation
-    virtual CompilerImpl *createCompiler(const gl::Data &data) = 0;
+    virtual CompilerImpl *createCompiler() = 0;
     virtual ShaderImpl *createShader(GLenum type) = 0;
     virtual ProgramImpl *createProgram(const gl::Program::Data &data) = 0;
 

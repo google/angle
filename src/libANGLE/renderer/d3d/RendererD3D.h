@@ -129,6 +129,8 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     bool isDeviceLost() const override;
     std::string getVendorString() const override;
 
+    CompilerImpl *createCompiler() override;
+
     virtual int getMinorShaderModel() const = 0;
     virtual std::string getShaderModelSuffix() const = 0;
 

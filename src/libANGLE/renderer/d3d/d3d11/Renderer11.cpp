@@ -22,7 +22,6 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/histogram_macros.h"
-#include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
@@ -3002,11 +3001,6 @@ gl::Error Renderer11::createRenderTargetCopy(RenderTargetD3D *source, RenderTarg
 FramebufferImpl *Renderer11::createFramebuffer(const gl::Framebuffer::Data &data)
 {
     return new Framebuffer11(data, this);
-}
-
-CompilerImpl *Renderer11::createCompiler(const gl::Data &data)
-{
-    return new CompilerD3D(data, SH_HLSL11_OUTPUT);
 }
 
 ShaderImpl *Renderer11::createShader(GLenum type)

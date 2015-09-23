@@ -21,7 +21,6 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/features.h"
 #include "libANGLE/formatutils.h"
-#include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
@@ -2712,11 +2711,6 @@ gl::Error Renderer9::createRenderTargetCopy(RenderTargetD3D *source, RenderTarge
 FramebufferImpl *Renderer9::createFramebuffer(const gl::Framebuffer::Data &data)
 {
     return new Framebuffer9(data, this);
-}
-
-CompilerImpl *Renderer9::createCompiler(const gl::Data &data)
-{
-    return new CompilerD3D(data, SH_HLSL9_OUTPUT);
 }
 
 ShaderImpl *Renderer9::createShader(GLenum type)

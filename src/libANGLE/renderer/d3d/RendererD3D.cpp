@@ -19,6 +19,7 @@
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
+#include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/DisplayD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
@@ -33,7 +34,7 @@ namespace
 // degenerate case where we are stuck hogging memory.
 const int ScratchMemoryBufferLifetime = 1000;
 
-}
+}  // anonymous namespace
 
 const uintptr_t RendererD3D::DirtyPointer = std::numeric_limits<uintptr_t>::max();
 
@@ -65,6 +66,11 @@ void RendererD3D::cleanup()
         gl::UninitializeDebugAnnotations();
         SafeDelete(mAnnotator);
     }
+}
+
+CompilerImpl *RendererD3D::createCompiler()
+{
+    return new CompilerD3D(getRendererClass());
 }
 
 gl::Error RendererD3D::drawArrays(const gl::Data &data, GLenum mode, GLint first, GLsizei count)
