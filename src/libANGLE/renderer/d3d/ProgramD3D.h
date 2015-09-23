@@ -200,10 +200,10 @@ class ProgramD3D : public ProgramImpl
     typedef std::map<std::string, sh::BlockMemberInfo> BlockInfoMap;
 
     void defineUniformsAndAssignRegisters();
-    void defineUniformBase(const ShaderD3D *shader,
+    void defineUniformBase(const gl::Shader *shader,
                            const sh::Uniform &uniform,
                            D3DUniformMap *uniformMap);
-    void defineUniform(const ShaderD3D *shader,
+    void defineUniform(GLenum shaderType,
                        const sh::ShaderVariable &uniform,
                        const std::string &fullName,
                        sh::HLSLBlockEncoder *encoder,

@@ -9,22 +9,30 @@
 // functionality. [OpenGL ES 2.0.24] section 2.10 page 24 and section 3.8 page 84.
 
 #include "libANGLE/Shader.h"
-#include "libANGLE/renderer/Renderer.h"
-#include "libANGLE/renderer/ShaderImpl.h"
-#include "libANGLE/Constants.h"
-#include "libANGLE/ResourceManager.h"
-
-#include "common/utilities.h"
-
-#include "GLSLANG/ShaderLang.h"
 
 #include <sstream>
+
+#include "common/utilities.h"
+#include "GLSLANG/ShaderLang.h"
+#include "libANGLE/Constants.h"
+#include "libANGLE/renderer/Renderer.h"
+#include "libANGLE/renderer/ShaderImpl.h"
+#include "libANGLE/ResourceManager.h"
 
 namespace gl
 {
 
-Shader::Shader(ResourceManager *manager, rx::ShaderImpl *impl, GLenum type, GLuint handle)
-    : mShader(impl),
+Shader::Data::Data(GLenum shaderType) : mShaderType(shaderType), mShaderVersion(100)
+{
+}
+
+Shader::Data::~Data()
+{
+}
+
+Shader::Shader(ResourceManager *manager, rx::ImplFactory *implFactory, GLenum type, GLuint handle)
+    : mData(type),
+      mImplementation(implFactory->createShader(&mData)),
       mHandle(handle),
       mType(type),
       mRefCount(0),
@@ -32,12 +40,12 @@ Shader::Shader(ResourceManager *manager, rx::ShaderImpl *impl, GLenum type, GLui
       mCompiled(false),
       mResourceManager(manager)
 {
-    ASSERT(impl);
+    ASSERT(mImplementation);
 }
 
 Shader::~Shader()
 {
-    SafeDelete(mShader);
+    SafeDelete(mImplementation);
 }
 
 GLuint Shader::getHandle() const
@@ -66,8 +74,12 @@ void Shader::setSource(GLsizei count, const char *const *string, const GLint *le
 
 int Shader::getInfoLogLength() const
 {
-    return mShader->getInfoLog().empty() ? 0
-                                         : (static_cast<int>(mShader->getInfoLog().length()) + 1);
+    if (mData.mInfoLog.empty())
+    {
+        return 0;
+    }
+
+    return (static_cast<int>(mData.mInfoLog.length()) + 1);
 }
 
 void Shader::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const
@@ -76,8 +88,8 @@ void Shader::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const
 
     if (bufSize > 0)
     {
-        index = std::min(bufSize - 1, static_cast<GLsizei>(mShader->getInfoLog().length()));
-        memcpy(infoLog, mShader->getInfoLog().c_str(), index);
+        index = std::min(bufSize - 1, static_cast<GLsizei>(mData.mInfoLog.length()));
+        memcpy(infoLog, mData.mInfoLog.c_str(), index);
 
         infoLog[index] = '\0';
     }
@@ -95,9 +107,12 @@ int Shader::getSourceLength() const
 
 int Shader::getTranslatedSourceLength() const
 {
-    return mShader->getTranslatedSource().empty()
-               ? 0
-               : (static_cast<int>(mShader->getTranslatedSource().length()) + 1);
+    if (mData.mTranslatedSource.empty())
+    {
+        return 0;
+    }
+
+    return (static_cast<int>(mData.mTranslatedSource.length()) + 1);
 }
 
 void Shader::getSourceImpl(const std::string &source, GLsizei bufSize, GLsizei *length, char *buffer)
@@ -125,18 +140,27 @@ void Shader::getSource(GLsizei bufSize, GLsizei *length, char *buffer) const
 
 void Shader::getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer) const
 {
-    getSourceImpl(mShader->getTranslatedSource(), bufSize, length, buffer);
+    getSourceImpl(mData.mTranslatedSource, bufSize, length, buffer);
 }
 
 void Shader::getTranslatedSourceWithDebugInfo(GLsizei bufSize, GLsizei *length, char *buffer) const
 {
-    std::string debugInfo(mShader->getDebugInfo());
+    std::string debugInfo(mImplementation->getDebugInfo());
     getSourceImpl(debugInfo, bufSize, length, buffer);
 }
 
 void Shader::compile(Compiler *compiler)
 {
-    mCompiled = mShader->compile(compiler, mSource, 0);
+    mData.mTranslatedSource.clear();
+    mData.mInfoLog.clear();
+    mData.mShaderVersion = 100;
+    mData.mVaryings.clear();
+    mData.mUniforms.clear();
+    mData.mInterfaceBlocks.clear();
+    mData.mActiveAttributes.clear();
+    mData.mActiveOutputVariables.clear();
+
+    mCompiled = mImplementation->compile(compiler, mSource, 0);
 }
 
 void Shader::addRef()
@@ -171,65 +195,39 @@ void Shader::flagForDeletion()
 
 int Shader::getShaderVersion() const
 {
-    return mShader->getShaderVersion();
+    return mData.mShaderVersion;
 }
 
 const std::vector<sh::Varying> &Shader::getVaryings() const
 {
-    return mShader->getVaryings();
+    return mData.getVaryings();
 }
 
 const std::vector<sh::Uniform> &Shader::getUniforms() const
 {
-    return mShader->getUniforms();
+    return mData.getUniforms();
 }
 
 const std::vector<sh::InterfaceBlock> &Shader::getInterfaceBlocks() const
 {
-    return mShader->getInterfaceBlocks();
+    return mData.getInterfaceBlocks();
 }
 
 const std::vector<sh::Attribute> &Shader::getActiveAttributes() const
 {
-    return mShader->getActiveAttributes();
+    return mData.getActiveAttributes();
 }
 
 const std::vector<sh::OutputVariable> &Shader::getActiveOutputVariables() const
 {
-    return mShader->getActiveOutputVariables();
+    return mData.getActiveOutputVariables();
 }
-
-std::vector<sh::Varying> &Shader::getVaryings()
-{
-    return mShader->getVaryings();
-}
-
-std::vector<sh::Uniform> &Shader::getUniforms()
-{
-    return mShader->getUniforms();
-}
-
-std::vector<sh::InterfaceBlock> &Shader::getInterfaceBlocks()
-{
-    return mShader->getInterfaceBlocks();
-}
-
-std::vector<sh::Attribute> &Shader::getActiveAttributes()
-{
-    return mShader->getActiveAttributes();
-}
-
-std::vector<sh::OutputVariable> &Shader::getActiveOutputVariables()
-{
-    return mShader->getActiveOutputVariables();
-}
-
 
 int Shader::getSemanticIndex(const std::string &attributeName) const
 {
     if (!attributeName.empty())
     {
-        const auto &activeAttributes = mShader->getActiveAttributes();
+        const auto &activeAttributes = mData.getActiveAttributes();
 
         int semanticIndex = 0;
         for (size_t attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)

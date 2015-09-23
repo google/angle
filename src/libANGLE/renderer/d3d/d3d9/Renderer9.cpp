@@ -2713,9 +2713,9 @@ FramebufferImpl *Renderer9::createFramebuffer(const gl::Framebuffer::Data &data)
     return new Framebuffer9(data, this);
 }
 
-ShaderImpl *Renderer9::createShader(GLenum type)
+ShaderImpl *Renderer9::createShader(gl::Shader::Data *data)
 {
-    return new ShaderD3D(type, getRendererLimitations());
+    return new ShaderD3D(data, getRendererLimitations());
 }
 
 ProgramImpl *Renderer9::createProgram(const gl::Program::Data &data)

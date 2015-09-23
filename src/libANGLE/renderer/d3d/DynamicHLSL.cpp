@@ -765,8 +765,10 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
         return false;
     }
 
-    const ShaderD3D *vertexShader   = GetImplAs<ShaderD3D>(programData.getAttachedVertexShader());
-    const ShaderD3D *fragmentShader = GetImplAs<ShaderD3D>(programData.getAttachedFragmentShader());
+    const gl::Shader *vertexShaderGL   = programData.getAttachedVertexShader();
+    const ShaderD3D *vertexShader      = GetImplAs<ShaderD3D>(vertexShaderGL);
+    const gl::Shader *fragmentShaderGL = programData.getAttachedFragmentShader();
+    const ShaderD3D *fragmentShader    = GetImplAs<ShaderD3D>(fragmentShaderGL);
 
     bool usesMRT = fragmentShader->mUsesMultipleRenderTargets;
     bool usesFragCoord = fragmentShader->mUsesFragCoord;
@@ -792,7 +794,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
     // This saves us 1 output vector.
     bool outputPositionFromVS = !(shaderModel >= 4 && mRenderer->getShaderModelSuffix() != "");
 
-    int shaderVersion = vertexShader->getShaderVersion();
+    int shaderVersion = vertexShaderGL->getShaderVersion();
 
     if (static_cast<GLuint>(registersNeeded) > data.caps->maxVaryingVectors)
     {
@@ -953,7 +955,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
     }
     else
     {
-        const auto &shaderOutputVars = fragmentShader->getActiveOutputVariables();
+        const auto &shaderOutputVars = fragmentShaderGL->getActiveOutputVariables();
 
         for (auto outputPair : programData.getOutputVariables())
         {

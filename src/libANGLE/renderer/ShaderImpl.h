@@ -9,8 +9,6 @@
 #ifndef LIBANGLE_RENDERER_SHADERIMPL_H_
 #define LIBANGLE_RENDERER_SHADERIMPL_H_
 
-#include <vector>
-
 #include "common/angleutils.h"
 #include "libANGLE/Shader.h"
 
@@ -20,7 +18,7 @@ namespace rx
 class ShaderImpl : angle::NonCopyable
 {
   public:
-    ShaderImpl() : mShaderVersion(100) {}
+    ShaderImpl(gl::Shader::Data *data) : mData(data) {}
     virtual ~ShaderImpl() { }
 
     virtual bool compile(gl::Compiler *compiler,
@@ -28,38 +26,9 @@ class ShaderImpl : angle::NonCopyable
                          int additionalOptions) = 0;
     virtual std::string getDebugInfo() const = 0;
 
-    virtual const std::string &getInfoLog() const { return mInfoLog; }
-    virtual const std::string &getTranslatedSource() const { return mTranslatedSource; }
-
-    int getShaderVersion() const { return mShaderVersion; }
-
-    const std::vector<sh::Varying> &getVaryings() const { return mVaryings; }
-    const std::vector<sh::Uniform> &getUniforms() const { return mUniforms; }
-    const std::vector<sh::InterfaceBlock> &getInterfaceBlocks() const  { return mInterfaceBlocks; }
-    const std::vector<sh::Attribute> &getActiveAttributes() const { return mActiveAttributes; }
-    const std::vector<sh::OutputVariable> &getActiveOutputVariables() const
-    {
-        return mActiveOutputVariables;
-    }
-
-    std::vector<sh::Varying> &getVaryings() { return mVaryings; }
-    std::vector<sh::Uniform> &getUniforms() { return mUniforms; }
-    std::vector<sh::InterfaceBlock> &getInterfaceBlocks() { return mInterfaceBlocks; }
-    std::vector<sh::Attribute> &getActiveAttributes() { return mActiveAttributes; }
-    std::vector<sh::OutputVariable> &getActiveOutputVariables() { return mActiveOutputVariables; }
-
   protected:
-    std::string mInfoLog;
-    std::string mTranslatedSource;
-
-    // TODO(jmadill): make part of shared non-Impl state
-    int mShaderVersion;
-
-    std::vector<sh::Varying> mVaryings;
-    std::vector<sh::Uniform> mUniforms;
-    std::vector<sh::InterfaceBlock> mInterfaceBlocks;
-    std::vector<sh::Attribute> mActiveAttributes;
-    std::vector<sh::OutputVariable> mActiveOutputVariables;
+    // TODO(jmadill): Use a const reference when possible.
+    gl::Shader::Data *mData;
 };
 
 }

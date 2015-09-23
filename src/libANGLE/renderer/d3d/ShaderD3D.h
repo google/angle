@@ -24,7 +24,7 @@ class ShaderD3D : public ShaderSh
     friend class DynamicHLSL;
 
   public:
-    ShaderD3D(GLenum type, const gl::Limitations &limitations);
+    ShaderD3D(gl::Shader::Data *data, const gl::Limitations &limitations);
     virtual ~ShaderD3D();
 
     // ShaderImpl implementation
@@ -38,13 +38,11 @@ class ShaderD3D : public ShaderSh
     void appendDebugInfo(const std::string &info) { mDebugInfo += info; }
 
     void generateWorkarounds(D3DCompilerWorkarounds *workarounds) const;
-    int getShaderVersion() const { return mShaderVersion; }
     bool usesDepthRange() const { return mUsesDepthRange; }
     bool usesPointSize() const { return mUsesPointSize; }
     bool usesDeferredInit() const { return mUsesDeferredInit; }
     bool usesFrontFacing() const { return mUsesFrontFacing; }
 
-    GLenum getShaderType() const;
     ShShaderOutput getCompilerOutputType() const;
 
   private:

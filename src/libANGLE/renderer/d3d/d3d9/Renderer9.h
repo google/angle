@@ -169,8 +169,8 @@ class Renderer9 : public RendererD3D
     FramebufferImpl *createFramebuffer(const gl::Framebuffer::Data &data) override;
 
     // Shader creation
-    virtual ShaderImpl *createShader(GLenum type);
-    virtual ProgramImpl *createProgram(const gl::Program::Data &data);
+    ShaderImpl *createShader(gl::Shader::Data *data) override;
+    ProgramImpl *createProgram(const gl::Program::Data &data) override;
 
     // Shader operations
     virtual gl::Error loadExecutable(const void *function, size_t length, ShaderType type,

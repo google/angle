@@ -12,6 +12,7 @@
 
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/Shader.h"
 #include "libANGLE/VertexArray.h"
 
 namespace rx
@@ -37,7 +38,8 @@ class ImplFactory : angle::NonCopyable
 
     // Shader creation
     virtual CompilerImpl *createCompiler() = 0;
-    virtual ShaderImpl *createShader(GLenum type) = 0;
+    // TODO(jmadill): Make const.
+    virtual ShaderImpl *createShader(gl::Shader::Data *data) = 0;
     virtual ProgramImpl *createProgram(const gl::Program::Data &data) = 0;
 
     // Framebuffer creation

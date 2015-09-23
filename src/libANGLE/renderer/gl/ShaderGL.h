@@ -19,7 +19,9 @@ class RendererGL;
 class ShaderGL : public ShaderSh
 {
   public:
-    ShaderGL(GLenum type, const gl::Limitations &rendererLimitations, const FunctionsGL *functions);
+    ShaderGL(gl::Shader::Data *data,
+             const gl::Limitations &rendererLimitations,
+             const FunctionsGL *functions);
     ~ShaderGL() override;
 
     bool compile(gl::Compiler *compiler, const std::string &source, int additionalOptions) override;

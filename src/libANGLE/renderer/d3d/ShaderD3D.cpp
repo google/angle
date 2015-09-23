@@ -39,7 +39,8 @@ const char *GetShaderTypeString(GLenum type)
 namespace rx
 {
 
-ShaderD3D::ShaderD3D(GLenum type, const gl::Limitations &limitations) : ShaderSh(type, limitations)
+ShaderD3D::ShaderD3D(gl::Shader::Data *data, const gl::Limitations &limitations)
+    : ShaderSh(data, limitations)
 {
     uncompile();
 }
@@ -50,17 +51,15 @@ ShaderD3D::~ShaderD3D()
 
 std::string ShaderD3D::getDebugInfo() const
 {
-    return mDebugInfo + std::string("\n// ") + GetShaderTypeString(mShaderType) + " SHADER END\n";
+    return mDebugInfo + std::string("\n// ") + GetShaderTypeString(mData->getShaderType()) +
+           " SHADER END\n";
 }
-
 
 // initialize/clean up previous state
 void ShaderD3D::uncompile()
 {
     // set by compileToHLSL
     mCompilerOutputType = SH_ESSL_OUTPUT;
-    mTranslatedSource.clear();
-    mInfoLog.clear();
 
     mUsesMultipleRenderTargets = false;
     mUsesFragColor = false;
@@ -71,17 +70,11 @@ void ShaderD3D::uncompile()
     mUsesPointCoord = false;
     mUsesDepthRange = false;
     mUsesFragDepth = false;
-    mShaderVersion = 100;
     mUsesDiscardRewriting = false;
     mUsesNestedBreak = false;
     mUsesDeferredInit = false;
     mRequiresIEEEStrictCompiling = false;
 
-    mVaryings.clear();
-    mUniforms.clear();
-    mInterfaceBlocks.clear();
-    mActiveAttributes.clear();
-    mActiveOutputVariables.clear();
     mDebugInfo.clear();
 }
 
@@ -120,11 +113,6 @@ unsigned int ShaderD3D::getInterfaceBlockRegister(const std::string &blockName) 
     return mInterfaceBlockRegisterMap.find(blockName)->second;
 }
 
-GLenum ShaderD3D::getShaderType() const
-{
-    return mShaderType;
-}
-
 ShShaderOutput ShaderD3D::getCompilerOutputType() const
 {
     return mCompilerOutputType;
@@ -134,7 +122,7 @@ bool ShaderD3D::compile(gl::Compiler *compiler, const std::string &source, int a
 {
     uncompile();
 
-    ShHandle compilerHandle = compiler->getCompilerHandle(mShaderType);
+    ShHandle compilerHandle = compiler->getCompilerHandle(mData->getShaderType());
 
     // TODO(jmadill): We shouldn't need to cache this.
     mCompilerOutputType = ShGetShaderOutputType(compilerHandle);
@@ -162,23 +150,25 @@ bool ShaderD3D::compile(gl::Compiler *compiler, const std::string &source, int a
         return false;
     }
 
-    mUsesMultipleRenderTargets = mTranslatedSource.find("GL_USES_MRT") != std::string::npos;
-    mUsesFragColor             = mTranslatedSource.find("GL_USES_FRAG_COLOR") != std::string::npos;
-    mUsesFragData              = mTranslatedSource.find("GL_USES_FRAG_DATA") != std::string::npos;
-    mUsesFragCoord             = mTranslatedSource.find("GL_USES_FRAG_COORD") != std::string::npos;
-    mUsesFrontFacing           = mTranslatedSource.find("GL_USES_FRONT_FACING") != std::string::npos;
-    mUsesPointSize             = mTranslatedSource.find("GL_USES_POINT_SIZE") != std::string::npos;
-    mUsesPointCoord            = mTranslatedSource.find("GL_USES_POINT_COORD") != std::string::npos;
-    mUsesDepthRange            = mTranslatedSource.find("GL_USES_DEPTH_RANGE") != std::string::npos;
-    mUsesFragDepth = mTranslatedSource.find("GL_USES_FRAG_DEPTH") != std::string::npos;
-    mUsesDiscardRewriting =
-        mTranslatedSource.find("ANGLE_USES_DISCARD_REWRITING") != std::string::npos;
-    mUsesNestedBreak  = mTranslatedSource.find("ANGLE_USES_NESTED_BREAK") != std::string::npos;
-    mUsesDeferredInit = mTranslatedSource.find("ANGLE_USES_DEFERRED_INIT") != std::string::npos;
-    mRequiresIEEEStrictCompiling =
-        mTranslatedSource.find("ANGLE_REQUIRES_IEEE_STRICT_COMPILING") != std::string::npos;
+    const std::string &translatedSource = mData->getTranslatedSource();
 
-    for (const sh::Uniform &uniform : mUniforms)
+    mUsesMultipleRenderTargets = translatedSource.find("GL_USES_MRT") != std::string::npos;
+    mUsesFragColor             = translatedSource.find("GL_USES_FRAG_COLOR") != std::string::npos;
+    mUsesFragData              = translatedSource.find("GL_USES_FRAG_DATA") != std::string::npos;
+    mUsesFragCoord             = translatedSource.find("GL_USES_FRAG_COORD") != std::string::npos;
+    mUsesFrontFacing           = translatedSource.find("GL_USES_FRONT_FACING") != std::string::npos;
+    mUsesPointSize             = translatedSource.find("GL_USES_POINT_SIZE") != std::string::npos;
+    mUsesPointCoord            = translatedSource.find("GL_USES_POINT_COORD") != std::string::npos;
+    mUsesDepthRange            = translatedSource.find("GL_USES_DEPTH_RANGE") != std::string::npos;
+    mUsesFragDepth = translatedSource.find("GL_USES_FRAG_DEPTH") != std::string::npos;
+    mUsesDiscardRewriting =
+        translatedSource.find("ANGLE_USES_DISCARD_REWRITING") != std::string::npos;
+    mUsesNestedBreak  = translatedSource.find("ANGLE_USES_NESTED_BREAK") != std::string::npos;
+    mUsesDeferredInit = translatedSource.find("ANGLE_USES_DEFERRED_INIT") != std::string::npos;
+    mRequiresIEEEStrictCompiling =
+        translatedSource.find("ANGLE_REQUIRES_IEEE_STRICT_COMPILING") != std::string::npos;
+
+    for (const sh::Uniform &uniform : mData->getUniforms())
     {
         if (uniform.staticUse && !uniform.isBuiltIn())
         {
@@ -192,7 +182,7 @@ bool ShaderD3D::compile(gl::Compiler *compiler, const std::string &source, int a
         }
     }
 
-    for (const sh::InterfaceBlock &interfaceBlock : mInterfaceBlocks)
+    for (const sh::InterfaceBlock &interfaceBlock : mData->getInterfaceBlocks())
     {
         if (interfaceBlock.staticUse)
         {
@@ -207,12 +197,13 @@ bool ShaderD3D::compile(gl::Compiler *compiler, const std::string &source, int a
     }
 
 #if ANGLE_SHADER_DEBUG_INFO == ANGLE_ENABLED
-    mDebugInfo += std::string("// ") + GetShaderTypeString(mShaderType) + " SHADER BEGIN\n";
+    mDebugInfo +=
+        std::string("// ") + GetShaderTypeString(mData->getShaderType()) + " SHADER BEGIN\n";
     mDebugInfo += "\n// GLSL BEGIN\n\n" + source + "\n\n// GLSL END\n\n\n";
-    mDebugInfo += "// INITIAL HLSL BEGIN\n\n" + getTranslatedSource() + "\n// INITIAL HLSL END\n\n\n";
+    mDebugInfo += "// INITIAL HLSL BEGIN\n\n" + translatedSource + "\n// INITIAL HLSL END\n\n\n";
     // Successive steps will append more info
 #else
-    mDebugInfo += getTranslatedSource();
+    mDebugInfo += translatedSource;
 #endif
     return true;
 }

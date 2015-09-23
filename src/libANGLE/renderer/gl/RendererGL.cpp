@@ -242,9 +242,9 @@ CompilerImpl *RendererGL::createCompiler()
     return new CompilerGL(mFunctions);
 }
 
-ShaderImpl *RendererGL::createShader(GLenum type)
+ShaderImpl *RendererGL::createShader(gl::Shader::Data *data)
 {
-    return new ShaderGL(type, getRendererLimitations(), mFunctions);
+    return new ShaderGL(data, getRendererLimitations(), mFunctions);
 }
 
 ProgramImpl *RendererGL::createProgram(const gl::Program::Data &data)

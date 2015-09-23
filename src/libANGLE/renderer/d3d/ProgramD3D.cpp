@@ -1002,11 +1002,11 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
     mSamplersVS.resize(data.caps->maxVertexTextureImageUnits);
     mSamplersPS.resize(data.caps->maxTextureImageUnits);
 
-    mVertexHLSL = vertexShaderD3D->getTranslatedSource();
+    mVertexHLSL = vertexShader->getTranslatedSource();
     vertexShaderD3D->generateWorkarounds(&mVertexWorkarounds);
-    mShaderVersion = vertexShaderD3D->getShaderVersion();
+    mShaderVersion = vertexShader->getShaderVersion();
 
-    mPixelHLSL = fragmentShaderD3D->getTranslatedSource();
+    mPixelHLSL = fragmentShader->getTranslatedSource();
     fragmentShaderD3D->generateWorkarounds(&mPixelWorkarounds);
 
     if (mRenderer->getRendererLimitations().noFrontFacingSupport)
@@ -1346,28 +1346,23 @@ void ProgramD3D::setUniform4uiv(GLint location, GLsizei count, const GLuint *v)
 
 void ProgramD3D::defineUniformsAndAssignRegisters()
 {
-    const gl::Shader *vertexShader   = mData.getAttachedVertexShader();
-    const ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(vertexShader);
-
     D3DUniformMap uniformMap;
-
+    const gl::Shader *vertexShader   = mData.getAttachedVertexShader();
     for (const sh::Uniform &vertexUniform : vertexShader->getUniforms())
 
     {
         if (vertexUniform.staticUse)
         {
-            defineUniformBase(vertexShaderD3D, vertexUniform, &uniformMap);
+            defineUniformBase(vertexShader, vertexUniform, &uniformMap);
         }
     }
 
     const gl::Shader *fragmentShader   = mData.getAttachedFragmentShader();
-    const ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(fragmentShader);
-
     for (const sh::Uniform &fragmentUniform : fragmentShader->getUniforms())
     {
         if (fragmentUniform.staticUse)
         {
-            defineUniformBase(fragmentShaderD3D, fragmentUniform, &uniformMap);
+            defineUniformBase(fragmentShader, fragmentUniform, &uniformMap);
         }
     }
 
@@ -1386,22 +1381,24 @@ void ProgramD3D::defineUniformsAndAssignRegisters()
     initializeUniformStorage();
 }
 
-void ProgramD3D::defineUniformBase(const ShaderD3D *shader,
+void ProgramD3D::defineUniformBase(const gl::Shader *shader,
                                    const sh::Uniform &uniform,
                                    D3DUniformMap *uniformMap)
 {
     if (uniform.isBuiltIn())
     {
-        defineUniform(shader, uniform, uniform.name, nullptr, uniformMap);
+        defineUniform(shader->getType(), uniform, uniform.name, nullptr, uniformMap);
         return;
     }
 
-    unsigned int startRegister = shader->getUniformRegister(uniform.name);
-    ShShaderOutput outputType = shader->getCompilerOutputType();
+    const ShaderD3D *shaderD3D = GetImplAs<ShaderD3D>(shader);
+
+    unsigned int startRegister = shaderD3D->getUniformRegister(uniform.name);
+    ShShaderOutput outputType = shaderD3D->getCompilerOutputType();
     sh::HLSLBlockEncoder encoder(sh::HLSLBlockEncoder::GetStrategyFor(outputType));
     encoder.skipRegisters(startRegister);
 
-    defineUniform(shader, uniform, uniform.name, &encoder, uniformMap);
+    defineUniform(shader->getType(), uniform, uniform.name, &encoder, uniformMap);
 }
 
 D3DUniform *ProgramD3D::getD3DUniformByName(const std::string &name)
@@ -1417,7 +1414,7 @@ D3DUniform *ProgramD3D::getD3DUniformByName(const std::string &name)
     return nullptr;
 }
 
-void ProgramD3D::defineUniform(const ShaderD3D *shader,
+void ProgramD3D::defineUniform(GLenum shaderType,
                                const sh::ShaderVariable &uniform,
                                const std::string &fullName,
                                sh::HLSLBlockEncoder *encoder,
@@ -1437,7 +1434,7 @@ void ProgramD3D::defineUniform(const ShaderD3D *shader,
                 const sh::ShaderVariable &field = uniform.fields[fieldIndex];
                 const std::string &fieldFullName = (fullName + elementString + "." + field.name);
 
-                defineUniform(shader, field, fieldFullName, encoder, uniformMap);
+                defineUniform(shaderType, field, fieldFullName, encoder, uniformMap);
             }
 
             if (encoder)
@@ -1476,16 +1473,15 @@ void ProgramD3D::defineUniform(const ShaderD3D *shader,
             static_cast<unsigned int>(sh::HLSLBlockEncoder::getBlockRegisterElement(blockInfo));
         unsigned int reg =
             static_cast<unsigned int>(sh::HLSLBlockEncoder::getBlockRegister(blockInfo));
-        if (shader->getShaderType() == GL_FRAGMENT_SHADER)
+        if (shaderType == GL_FRAGMENT_SHADER)
         {
             d3dUniform->psRegisterIndex = reg;
         }
-        else if (shader->getShaderType() == GL_VERTEX_SHADER)
+        else
         {
+            ASSERT(shaderType == GL_VERTEX_SHADER);
             d3dUniform->vsRegisterIndex = reg;
         }
-        else
-            UNREACHABLE();
 
         // Arrays are treated as aggregate types
         if (uniform.isArray())

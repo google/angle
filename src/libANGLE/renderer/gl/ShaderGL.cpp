@@ -16,10 +16,10 @@
 namespace rx
 {
 
-ShaderGL::ShaderGL(GLenum type,
+ShaderGL::ShaderGL(gl::Shader::Data *data,
                    const gl::Limitations &rendererLimitations,
                    const FunctionsGL *functions)
-    : ShaderSh(type, rendererLimitations), mFunctions(functions), mShaderID(0)
+    : ShaderSh(data, rendererLimitations), mFunctions(functions), mShaderID(0)
 {
     ASSERT(mFunctions);
 }
@@ -49,10 +49,10 @@ bool ShaderGL::compile(gl::Compiler *compiler, const std::string &source, int ad
     }
 
     // Translate the ESSL into GLSL
-    const char *translatedSourceCString = mTranslatedSource.c_str();
+    const char *translatedSourceCString = mData->getTranslatedSource().c_str();
 
     // Generate a shader object and set the source
-    mShaderID = mFunctions->createShader(mShaderType);
+    mShaderID = mFunctions->createShader(mData->getShaderType());
     mFunctions->shaderSource(mShaderID, 1, &translatedSourceCString, nullptr);
     mFunctions->compileShader(mShaderID);
 
@@ -72,8 +72,9 @@ bool ShaderGL::compile(gl::Compiler *compiler, const std::string &source, int ad
         mFunctions->deleteShader(mShaderID);
         mShaderID = 0;
 
-        mInfoLog = &buf[0];
-        TRACE("\n%s", mInfoLog.c_str());
+        // TODO(jmadill): possibly pass in info log?
+        mData->getMutableInfoLog() = &buf[0];
+        TRACE("\n%s", mData->getMutableInfoLog().c_str());
         return false;
     }
 

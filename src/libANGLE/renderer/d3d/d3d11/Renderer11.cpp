@@ -3003,9 +3003,9 @@ FramebufferImpl *Renderer11::createFramebuffer(const gl::Framebuffer::Data &data
     return new Framebuffer11(data, this);
 }
 
-ShaderImpl *Renderer11::createShader(GLenum type)
+ShaderImpl *Renderer11::createShader(gl::Shader::Data *data)
 {
-    return new ShaderD3D(type, getRendererLimitations());
+    return new ShaderD3D(data, getRendererLimitations());
 }
 
 ProgramImpl *Renderer11::createProgram(const gl::Program::Data &data)

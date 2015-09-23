@@ -65,8 +65,8 @@ bool CompareVarying(const sh::Varying &x, const sh::Varying &y)
 
 }  // anonymous namespace
 
-ShaderSh::ShaderSh(GLenum type, const gl::Limitations &rendererLimitations)
-    : mShaderType(type), mRendererLimitations(rendererLimitations)
+ShaderSh::ShaderSh(gl::Shader::Data *data, const gl::Limitations &rendererLimitations)
+    : ShaderImpl(data), mRendererLimitations(rendererLimitations)
 {
 }
 
@@ -76,15 +76,7 @@ ShaderSh::~ShaderSh()
 
 bool ShaderSh::compile(gl::Compiler *compiler, const std::string &source, int additionalOptions)
 {
-    // Reset the previous state
-    mActiveAttributes.clear();
-    mVaryings.clear();
-    mUniforms.clear();
-    mInterfaceBlocks.clear();
-    mActiveOutputVariables.clear();
-    mTranslatedSource.clear();
-
-    ShHandle compilerHandle = compiler->getCompilerHandle(mShaderType);
+    ShHandle compilerHandle = compiler->getCompilerHandle(mData->getShaderType());
 
     int compileOptions = (SH_OBJECT_CODE | SH_VARIABLES | additionalOptions);
 
@@ -101,12 +93,12 @@ bool ShaderSh::compile(gl::Compiler *compiler, const std::string &source, int ad
 
     if (!result)
     {
-        mInfoLog = ShGetInfoLog(compilerHandle);
-        TRACE("\n%s", mInfoLog.c_str());
+        mData->mInfoLog = ShGetInfoLog(compilerHandle);
+        TRACE("\n%s", mData->mInfoLog.c_str());
         return false;
     }
 
-    mTranslatedSource = ShGetObjectCode(compilerHandle);
+    mData->mTranslatedSource = ShGetObjectCode(compilerHandle);
 
 #ifndef NDEBUG
     // Prefix translated shader with commented out un-translated shader.
@@ -126,31 +118,32 @@ bool ShaderSh::compile(gl::Compiler *compiler, const std::string &source, int ad
         curPos = (nextLine == std::string::npos) ? std::string::npos : (nextLine + 1);
     }
     shaderStream << "\n\n";
-    shaderStream << mTranslatedSource;
-    mTranslatedSource = shaderStream.str();
+    shaderStream << mData->mTranslatedSource;
+    mData->mTranslatedSource = shaderStream.str();
 #endif
 
     // Gather the shader information
-    mShaderVersion = ShGetShaderVersion(compilerHandle);
+    mData->mShaderVersion = ShGetShaderVersion(compilerHandle);
 
-    mVaryings        = GetShaderVariables(ShGetVaryings(compilerHandle));
-    mUniforms        = GetShaderVariables(ShGetUniforms(compilerHandle));
-    mInterfaceBlocks = GetShaderVariables(ShGetInterfaceBlocks(compilerHandle));
+    mData->mVaryings        = GetShaderVariables(ShGetVaryings(compilerHandle));
+    mData->mUniforms        = GetShaderVariables(ShGetUniforms(compilerHandle));
+    mData->mInterfaceBlocks = GetShaderVariables(ShGetInterfaceBlocks(compilerHandle));
 
-    if (mShaderType == GL_VERTEX_SHADER)
+    if (mData->mShaderType == GL_VERTEX_SHADER)
     {
-        mActiveAttributes = GetActiveShaderVariables(ShGetAttributes(compilerHandle));
+        mData->mActiveAttributes = GetActiveShaderVariables(ShGetAttributes(compilerHandle));
     }
     else
     {
-        ASSERT(mShaderType == GL_FRAGMENT_SHADER);
+        ASSERT(mData->mShaderType == GL_FRAGMENT_SHADER);
 
         // TODO(jmadill): Figure out why we only sort in the FS, and if we need to.
-        std::sort(mVaryings.begin(), mVaryings.end(), CompareVarying);
-        mActiveOutputVariables = GetActiveShaderVariables(ShGetOutputVariables(compilerHandle));
+        std::sort(mData->mVaryings.begin(), mData->mVaryings.end(), CompareVarying);
+        mData->mActiveOutputVariables =
+            GetActiveShaderVariables(ShGetOutputVariables(compilerHandle));
     }
 
-    ASSERT(!mTranslatedSource.empty());
+    ASSERT(!mData->mTranslatedSource.empty());
     return true;
 }
 

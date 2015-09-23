@@ -24,13 +24,12 @@ namespace rx
 class ShaderSh : public ShaderImpl
 {
   public:
-    ShaderSh(GLenum type, const gl::Limitations &rendererLimitations);
+    ShaderSh(gl::Shader::Data *data, const gl::Limitations &rendererLimitations);
     ~ShaderSh();
 
     bool compile(gl::Compiler *compiler, const std::string &source, int additionalOptions) override;
 
   protected:
-    GLenum mShaderType;
     const gl::Limitations &mRendererLimitations;
 };
 
