@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c964a39c_28f92b45",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-23T16:37:55Z",
+      "side": 1,
+      "message": "Please add a check similar to one above.  In this case it would be..\n\n  functions-\u003estandard \u003d\u003d STANDARD_GL_DESKTOP ||                            \n  functions-\u003eisAtLeastGLES(gl::Version(3, 0)) ||\n  functions-\u003ehasGLESExtension(\"GL_EXT_unpack_subimage\")",
+      "range": {
+        "startLine": 541,
+        "startChar": 33,
+        "endLine": 541,
+        "endChar": 37
+      },
+      "revId": "6df1fba782a608f3c7dd8f8fa30575607d7f9964",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
