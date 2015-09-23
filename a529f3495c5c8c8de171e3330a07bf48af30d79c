@@ -199,6 +199,30 @@
       "revId": "a529f3495c5c8c8de171e3330a07bf48af30d79c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6959f7e7_854e0233",
+        "filename": "src/libANGLE/Compiler.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-23T14:42:10Z",
+      "side": 1,
+      "message": "Ended up rethinking my position, it looks good as a compiler method. Done.",
+      "parentUuid": "49fc33c5_59fe8fd8",
+      "range": {
+        "startLine": 29,
+        "startChar": 61,
+        "endLine": 29,
+        "endChar": 86
+      },
+      "revId": "a529f3495c5c8c8de171e3330a07bf48af30d79c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
