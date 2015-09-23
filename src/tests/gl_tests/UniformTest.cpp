@@ -452,6 +452,46 @@ TEST_P(UniformTestES3, TranposedMatrixArrayUniformStateQuery)
     }
 }
 
+// Check that sampler uniforms only show up one time in the list
+TEST_P(UniformTest, SamplerUniformsAppearOnce)
+{
+    const std::string &vertShader =
+        "attribute vec2 position;\n"
+        "uniform sampler2D tex2D;\n"
+        "varying vec4 color;\n"
+        "void main() {\n"
+        "  gl_Position = vec4(position, 0, 1);\n"
+        "  color = texture2D(tex2D, vec2(0));\n"
+        "}";
+
+    const std::string &fragShader =
+        "precision mediump float;\n"
+        "varying vec4 color;\n"
+        "uniform sampler2D tex2D;\n"
+        "void main() {\n"
+        "  gl_FragColor = texture2D(tex2D, vec2(0)) + color;\n"
+        "}";
+
+    GLuint program = CompileProgram(vertShader, fragShader);
+    ASSERT_NE(0u, program);
+
+    GLint activeUniformsCount = 0;
+    glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &activeUniformsCount);
+    ASSERT_EQ(1, activeUniformsCount);
+
+    GLint size       = 0;
+    GLenum type      = GL_NONE;
+    GLchar name[120] = {0};
+    glGetActiveUniform(program, 0, 100, nullptr, &size, &type, name);
+    EXPECT_EQ(1, size);
+    EXPECT_GLENUM_EQ(GL_SAMPLER_2D, type);
+    EXPECT_STREQ("tex2D", name);
+
+    EXPECT_GL_NO_ERROR();
+
+    glDeleteProgram(program);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(UniformTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
 ANGLE_INSTANTIATE_TEST(UniformTestES3, ES3_D3D11(), ES3_OPENGL());

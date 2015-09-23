@@ -633,6 +633,7 @@ Texture *State::getSamplerTexture(unsigned int sampler, GLenum type) const
 {
     const auto it = mSamplerTextures.find(type);
     ASSERT(it != mSamplerTextures.end());
+    ASSERT(sampler < it->second.size());
     return it->second[sampler].get();
 }
 
@@ -640,6 +641,7 @@ GLuint State::getSamplerTextureId(unsigned int sampler, GLenum type) const
 {
     const auto it = mSamplerTextures.find(type);
     ASSERT(it != mSamplerTextures.end());
+    ASSERT(sampler < it->second.size());
     return it->second[sampler].id();
 }
 
