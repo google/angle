@@ -11,38 +11,15 @@
 #include "common/debug.h"
 #include "libANGLE/Compiler.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
-
-template <typename VarT>
-static std::vector<VarT> GetFilteredShaderVariables(const std::vector<VarT> *variableList)
-{
-    ASSERT(variableList);
-    std::vector<VarT> result;
-    for (size_t varIndex = 0; varIndex < variableList->size(); varIndex++)
-    {
-        const VarT &var = variableList->at(varIndex);
-        if (var.staticUse)
-        {
-            result.push_back(var);
-        }
-    }
-    return result;
-}
-
-template <typename VarT>
-static const std::vector<VarT> &GetShaderVariables(const std::vector<VarT> *variableList)
-{
-    ASSERT(variableList);
-    return *variableList;
-}
+#include "libANGLE/renderer/gl/RendererGL.h"
 
 namespace rx
 {
 
-ShaderGL::ShaderGL(GLenum type, const FunctionsGL *functions)
-    : ShaderImpl(),
-      mFunctions(functions),
-      mType(type),
-      mShaderID(0)
+ShaderGL::ShaderGL(GLenum type,
+                   const gl::Limitations &rendererLimitations,
+                   const FunctionsGL *functions)
+    : ShaderSh(type, rendererLimitations), mFunctions(functions), mShaderID(0)
 {
     ASSERT(mFunctions);
 }
@@ -56,37 +33,26 @@ ShaderGL::~ShaderGL()
     }
 }
 
-bool ShaderGL::compile(gl::Compiler *compiler, const std::string &source)
+bool ShaderGL::compile(gl::Compiler *compiler, const std::string &source, int additionalOptionsIn)
 {
     // Reset the previous state
-    mActiveAttributes.clear();
-    mVaryings.clear();
-    mUniforms.clear();
-    mInterfaceBlocks.clear();
-    mActiveOutputVariables.clear();
     if (mShaderID != 0)
     {
         mFunctions->deleteShader(mShaderID);
         mShaderID = 0;
     }
 
-    // Translate the ESSL into GLSL
-    ShHandle compilerHandle = compiler->getCompilerHandle(mType);
-
-    int compileOptions = (SH_OBJECT_CODE | SH_VARIABLES | SH_INIT_GL_POSITION);
-    const char* sourceCString = source.c_str();
-    if (!ShCompile(compilerHandle, &sourceCString, 1, compileOptions))
+    int additionalOptions = (additionalOptionsIn | SH_INIT_GL_POSITION);
+    if (!ShaderSh::compile(compiler, source, additionalOptions))
     {
-        mInfoLog = ShGetInfoLog(compilerHandle);
-        TRACE("\n%s", mInfoLog.c_str());
         return false;
     }
 
-    mTranslatedSource = ShGetObjectCode(compilerHandle);
-    const char* translatedSourceCString = mTranslatedSource.c_str();
+    // Translate the ESSL into GLSL
+    const char *translatedSourceCString = mTranslatedSource.c_str();
 
     // Generate a shader object and set the source
-    mShaderID = mFunctions->createShader(mType);
+    mShaderID = mFunctions->createShader(mShaderType);
     mFunctions->shaderSource(mShaderID, 1, &translatedSourceCString, nullptr);
     mFunctions->compileShader(mShaderID);
 
@@ -109,25 +75,6 @@ bool ShaderGL::compile(gl::Compiler *compiler, const std::string &source)
         mInfoLog = &buf[0];
         TRACE("\n%s", mInfoLog.c_str());
         return false;
-    }
-
-    // Gather the shader information
-    mShaderVersion = ShGetShaderVersion(compilerHandle);
-
-    // TODO: refactor this out, gathering of the attributes, varyings and outputs should be done
-    // at the gl::Shader level
-    if (mType == GL_VERTEX_SHADER)
-    {
-        mActiveAttributes = GetFilteredShaderVariables(ShGetAttributes(compilerHandle));
-    }
-
-    mVaryings        = GetShaderVariables(ShGetVaryings(compilerHandle));
-    mUniforms = GetShaderVariables(ShGetUniforms(compilerHandle));
-    mInterfaceBlocks = GetShaderVariables(ShGetInterfaceBlocks(compilerHandle));
-
-    if (mType == GL_FRAGMENT_SHADER)
-    {
-        mActiveOutputVariables = GetFilteredShaderVariables(ShGetOutputVariables(compilerHandle));
     }
 
     return true;

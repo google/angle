@@ -9,20 +9,20 @@
 #ifndef LIBANGLE_RENDERER_GL_SHADERGL_H_
 #define LIBANGLE_RENDERER_GL_SHADERGL_H_
 
-#include "libANGLE/renderer/ShaderImpl.h"
+#include "libANGLE/renderer/ShaderSh.h"
 
 namespace rx
 {
-
 class FunctionsGL;
+class RendererGL;
 
-class ShaderGL : public ShaderImpl
+class ShaderGL : public ShaderSh
 {
   public:
-    ShaderGL(GLenum type, const FunctionsGL *functions);
+    ShaderGL(GLenum type, const gl::Limitations &rendererLimitations, const FunctionsGL *functions);
     ~ShaderGL() override;
 
-    bool compile(gl::Compiler *compiler, const std::string &source) override;
+    bool compile(gl::Compiler *compiler, const std::string &source, int additionalOptions) override;
     std::string getDebugInfo() const override;
 
     GLuint getShaderID() const;
@@ -30,7 +30,6 @@ class ShaderGL : public ShaderImpl
   private:
     const FunctionsGL *mFunctions;
 
-    GLenum mType;
     GLuint mShaderID;
 };
 

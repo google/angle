@@ -9,9 +9,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_SHADERD3D_H_
 #define LIBANGLE_RENDERER_D3D_SHADERD3D_H_
 
-#include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
-#include "libANGLE/renderer/ShaderImpl.h"
-#include "libANGLE/Shader.h"
+#include "libANGLE/renderer/ShaderSh.h"
 
 #include <map>
 
@@ -19,20 +17,22 @@ namespace rx
 {
 class DynamicHLSL;
 class RendererD3D;
+struct D3DCompilerWorkarounds;
 
-class ShaderD3D : public ShaderImpl
+class ShaderD3D : public ShaderSh
 {
     friend class DynamicHLSL;
 
   public:
-    ShaderD3D(GLenum type, RendererD3D *renderer);
+    ShaderD3D(GLenum type, const gl::Limitations &limitations);
     virtual ~ShaderD3D();
 
     // ShaderImpl implementation
-    virtual std::string getDebugInfo() const;
+    bool compile(gl::Compiler *compiler, const std::string &source, int additionalOptions) override;
+    std::string getDebugInfo() const override;
 
     // D3D-specific methods
-    virtual void uncompile();
+    void uncompile();
     unsigned int getUniformRegister(const std::string &uniformName) const;
     unsigned int getInterfaceBlockRegister(const std::string &blockName) const;
     void appendDebugInfo(const std::string &info) { mDebugInfo += info; }
@@ -47,16 +47,7 @@ class ShaderD3D : public ShaderImpl
     GLenum getShaderType() const;
     ShShaderOutput getCompilerOutputType() const;
 
-    virtual bool compile(gl::Compiler *compiler, const std::string &source);
-
   private:
-    void compileToHLSL(ShHandle compiler, const std::string &source);
-    void parseVaryings(ShHandle compiler);
-
-    void parseAttributes(ShHandle compiler);
-
-    GLenum mShaderType;
-
     bool mUsesMultipleRenderTargets;
     bool mUsesFragColor;
     bool mUsesFragData;
