@@ -174,17 +174,6 @@ void UniformStateQueryCastLoop(DestT *dataOut, const uint8_t *srcPointer, int co
     }
 }
 
-bool UniformInList(const std::vector<LinkedUniform> &list, const std::string &name)
-{
-    for (const LinkedUniform &uniform : list)
-    {
-        if (uniform.name == name)
-            return true;
-    }
-
-    return false;
-}
-
 }  // anonymous namespace
 
 AttributeBindings::AttributeBindings()
@@ -370,8 +359,7 @@ Program::Program(rx::ImplFactory *factory, ResourceManager *manager, GLuint hand
       mDeleteStatus(false),
       mRefCount(0),
       mResourceManager(manager),
-      mHandle(handle),
-      mSamplerUniformRange(0, 0)
+      mHandle(handle)
 {
     ASSERT(mProgram);
 
@@ -686,14 +674,11 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
     {
         int locationIndex = stream.readInt<int>();
         VariableLocation locationData;
-        stream.readInt(&locationData.element);
-        stream.readInt(&locationData.index);
-        stream.readString(&locationData.name);
+        locationData.element                  = stream.readInt<unsigned int>();
+        locationData.index                    = stream.readInt<unsigned int>();
+        locationData.name                     = stream.readString();
         mData.mOutputVariables[locationIndex] = locationData;
     }
-
-    stream.readInt(&mSamplerUniformRange.start);
-    stream.readInt(&mSamplerUniformRange.end);
 
     rx::LinkResult result = mProgram->load(mInfoLog, &stream);
     if (result.error.isError() || !result.linkSuccess)
@@ -783,9 +768,6 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
         stream.writeInt(outputPair.second.index);
         stream.writeString(outputPair.second.name);
     }
-
-    stream.writeInt(mSamplerUniformRange.start);
-    stream.writeInt(mSamplerUniformRange.end);
 
     gl::Error error = mProgram->save(&stream);
     if (error.isError())
@@ -1315,78 +1297,7 @@ void Program::validate(const Caps &caps)
 
 bool Program::validateSamplers(InfoLog *infoLog, const Caps &caps)
 {
-    // Skip cache if we're using an infolog, so we get the full error.
-    // Also skip the cache if the sample mapping has changed, or if we haven't ever validated.
-    if (infoLog == nullptr && mCachedValidateSamplersResult.valid())
-    {
-        return mCachedValidateSamplersResult.value();
-    }
-
-    if (mTextureUnitTypesCache.empty())
-    {
-        mTextureUnitTypesCache.resize(caps.maxCombinedTextureImageUnits, GL_NONE);
-    }
-    else
-    {
-        std::fill(mTextureUnitTypesCache.begin(), mTextureUnitTypesCache.end(), GL_NONE);
-    }
-
-    // if any two active samplers in a program are of different types, but refer to the same
-    // texture image unit, and this is the current program, then ValidateProgram will fail, and
-    // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
-    for (unsigned int samplerIndex = mSamplerUniformRange.start;
-         samplerIndex < mSamplerUniformRange.end; ++samplerIndex)
-    {
-        const LinkedUniform &uniform = mData.mUniforms[samplerIndex];
-        ASSERT(uniform.isSampler());
-
-        if (!uniform.staticUse)
-            continue;
-
-        const GLuint *dataPtr = reinterpret_cast<const GLuint *>(uniform.getDataPtrToElement(0));
-        GLenum textureType    = SamplerTypeToTextureType(uniform.type);
-
-        for (unsigned int arrayElement = 0; arrayElement < uniform.elementCount(); ++arrayElement)
-        {
-            GLuint textureUnit = dataPtr[arrayElement];
-
-            if (textureUnit >= caps.maxCombinedTextureImageUnits)
-            {
-                if (infoLog)
-                {
-                    (*infoLog) << "Sampler uniform (" << textureUnit
-                               << ") exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS ("
-                               << caps.maxCombinedTextureImageUnits << ")";
-                }
-
-                mCachedValidateSamplersResult = false;
-                return false;
-            }
-
-            if (mTextureUnitTypesCache[textureUnit] != GL_NONE)
-            {
-                if (textureType != mTextureUnitTypesCache[textureUnit])
-                {
-                    if (infoLog)
-                    {
-                        (*infoLog) << "Samplers of conflicting types refer to the same texture "
-                                      "image unit ("
-                                   << textureUnit << ").";
-                    }
-
-                    mCachedValidateSamplersResult = false;
-                    return false;
-                }
-            }
-            else
-            {
-                mTextureUnitTypesCache[textureUnit] = textureType;
-            }
-        }
-    }
-
-    mCachedValidateSamplersResult = true;
-    return true;
+    return mProgram->validateSamplers(infoLog, caps);
 }
 
 bool Program::isValidated() const
@@ -2175,13 +2086,11 @@ bool Program::flattenUniformsAndCheckCaps(const Caps &caps, InfoLog &infoLog)
     const gl::Shader *vertexShader = mData.getAttachedVertexShader();
     VectorAndSamplerCount vsCounts;
 
-    std::vector<LinkedUniform> samplerUniforms;
-
     for (const sh::Uniform &uniform : vertexShader->getUniforms())
     {
         if (uniform.staticUse)
         {
-            vsCounts += flattenUniform(uniform, uniform.name, &samplerUniforms);
+            vsCounts += flattenUniform(uniform, uniform.name);
         }
     }
 
@@ -2206,7 +2115,7 @@ bool Program::flattenUniformsAndCheckCaps(const Caps &caps, InfoLog &infoLog)
     {
         if (uniform.staticUse)
         {
-            fsCounts += flattenUniform(uniform, uniform.name, &samplerUniforms);
+            fsCounts += flattenUniform(uniform, uniform.name);
         }
     }
 
@@ -2224,18 +2133,11 @@ bool Program::flattenUniformsAndCheckCaps(const Caps &caps, InfoLog &infoLog)
         return false;
     }
 
-    mSamplerUniformRange.start = static_cast<unsigned int>(mData.mUniforms.size());
-    mSamplerUniformRange.end =
-        mSamplerUniformRange.start + static_cast<unsigned int>(samplerUniforms.size());
-
-    mData.mUniforms.insert(mData.mUniforms.end(), samplerUniforms.begin(), samplerUniforms.end());
-
     return true;
 }
 
 Program::VectorAndSamplerCount Program::flattenUniform(const sh::ShaderVariable &uniform,
-                                                       const std::string &fullName,
-                                                       std::vector<LinkedUniform> *samplerUniforms)
+                                                       const std::string &fullName)
 {
     VectorAndSamplerCount vectorAndSamplerCount;
 
@@ -2250,7 +2152,7 @@ Program::VectorAndSamplerCount Program::flattenUniform(const sh::ShaderVariable 
                 const sh::ShaderVariable &field  = uniform.fields[fieldIndex];
                 const std::string &fieldFullName = (fullName + elementString + "." + field.name);
 
-                vectorAndSamplerCount += flattenUniform(field, fieldFullName, samplerUniforms);
+                vectorAndSamplerCount += flattenUniform(field, fieldFullName);
             }
         }
 
@@ -2258,28 +2160,18 @@ Program::VectorAndSamplerCount Program::flattenUniform(const sh::ShaderVariable 
     }
 
     // Not a struct
-    bool isSampler = IsSamplerType(uniform.type);
-    if (!UniformInList(mData.getUniforms(), fullName) && !UniformInList(*samplerUniforms, fullName))
+    if (mData.getUniformByName(fullName) == nullptr)
     {
         gl::LinkedUniform linkedUniform(uniform.type, uniform.precision, fullName,
                                         uniform.arraySize, -1,
                                         sh::BlockMemberInfo::getDefaultBlockInfo());
         linkedUniform.staticUse = true;
-
-        // Store sampler uniforms separately, so we'll append them to the end of the list.
-        if (isSampler)
-        {
-            samplerUniforms->push_back(linkedUniform);
-        }
-        else
-        {
-            mData.mUniforms.push_back(linkedUniform);
-        }
+        mData.mUniforms.push_back(linkedUniform);
     }
 
-    unsigned int elementCount          = uniform.elementCount();
-    vectorAndSamplerCount.vectorCount  = (VariableRegisterCount(uniform.type) * elementCount);
-    vectorAndSamplerCount.samplerCount = (isSampler ? elementCount : 0);
+    vectorAndSamplerCount.vectorCount =
+        (VariableRegisterCount(uniform.type) * uniform.elementCount());
+    vectorAndSamplerCount.samplerCount = (IsSamplerType(uniform.type) ? uniform.elementCount() : 0);
 
     return vectorAndSamplerCount;
 }
@@ -2402,12 +2294,6 @@ void Program::setUniformInternal(GLint location, GLsizei count, const T *v)
     }
     else
     {
-        // Invalide the validation cache if we modify the sampler data.
-        if (linkedUniform->isSampler() && memcmp(destPointer, v, sizeof(T) * count) != 0)
-        {
-            mCachedValidateSamplersResult.reset();
-        }
-
         memcpy(destPointer, v, sizeof(T) * count);
     }
 }
