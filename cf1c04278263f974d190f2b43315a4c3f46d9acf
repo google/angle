@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6959f7e7_452a4a14",
+        "filename": "src/libANGLE/renderer/ShaderImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-23T18:21:56Z",
+      "side": 1,
+      "message": "Can you remove this? It is referenced in only one place in ProgramD3D and passing around the gl::Shaders (with one GetImplAs call inProgramD3D::defineUniformBase) cleans up things a bit.",
+      "range": {
+        "startLine": 29,
+        "startChar": 4,
+        "endLine": 29,
+        "endChar": 67
+      },
+      "revId": "cf1c04278263f974d190f2b43315a4c3f46d9acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "09e07b3b_45193cb3",
+        "filename": "src/libANGLE/renderer/gl/ShaderGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-23T18:21:56Z",
+      "side": 1,
+      "message": "I think it makes sense to pass in the info log (just like ProgramImpl::link)",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 75,
+        "endChar": 52
+      },
+      "revId": "cf1c04278263f974d190f2b43315a4c3f46d9acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
