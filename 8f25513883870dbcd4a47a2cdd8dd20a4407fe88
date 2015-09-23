@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "297a9f33_6eedefef",
+        "filename": "src/libANGLE/renderer/gl/ShaderGL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-23T16:52:31Z",
+      "side": 1,
+      "message": "If possible, I\u0027d prefer to just pass the functions and limitations directly instead of the RendererGL.  I\u0027ve been trying to reduce the circular dependencies between these classes.",
+      "range": {
+        "startLine": 22,
+        "startChar": 25,
+        "endLine": 22,
+        "endChar": 53
+      },
+      "revId": "8f25513883870dbcd4a47a2cdd8dd20a4407fe88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
