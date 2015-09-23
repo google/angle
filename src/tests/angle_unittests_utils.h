@@ -22,7 +22,7 @@ class NullFactory : public ImplFactory
 
     // Shader creation
     CompilerImpl *createCompiler() override { return nullptr; }
-    ShaderImpl *createShader(gl::Shader::Data *data) override { return nullptr; }
+    ShaderImpl *createShader(const gl::Shader::Data &data) override { return nullptr; }
     ProgramImpl *createProgram(const gl::Program::Data &data) override { return nullptr; }
 
     // Framebuffer creation

@@ -9,22 +9,21 @@
 #ifndef LIBANGLE_RENDERER_GL_SHADERGL_H_
 #define LIBANGLE_RENDERER_GL_SHADERGL_H_
 
-#include "libANGLE/renderer/ShaderSh.h"
+#include "libANGLE/renderer/ShaderImpl.h"
 
 namespace rx
 {
 class FunctionsGL;
-class RendererGL;
 
-class ShaderGL : public ShaderSh
+class ShaderGL : public ShaderImpl
 {
   public:
-    ShaderGL(gl::Shader::Data *data,
-             const gl::Limitations &rendererLimitations,
-             const FunctionsGL *functions);
+    ShaderGL(const gl::Shader::Data &data, const FunctionsGL *functions);
     ~ShaderGL() override;
 
-    bool compile(gl::Compiler *compiler, const std::string &source, int additionalOptions) override;
+    // ShaderImpl implementation
+    int prepareSourceAndReturnOptions(std::stringstream *sourceStream) override;
+    bool postTranslateCompile(gl::Compiler *compiler, std::string *infoLog) override;
     std::string getDebugInfo() const override;
 
     GLuint getShaderID() const;

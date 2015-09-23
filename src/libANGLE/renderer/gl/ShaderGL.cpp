@@ -16,10 +16,8 @@
 namespace rx
 {
 
-ShaderGL::ShaderGL(gl::Shader::Data *data,
-                   const gl::Limitations &rendererLimitations,
-                   const FunctionsGL *functions)
-    : ShaderSh(data, rendererLimitations), mFunctions(functions), mShaderID(0)
+ShaderGL::ShaderGL(const gl::Shader::Data &data, const FunctionsGL *functions)
+    : ShaderImpl(data), mFunctions(functions), mShaderID(0)
 {
     ASSERT(mFunctions);
 }
@@ -33,7 +31,7 @@ ShaderGL::~ShaderGL()
     }
 }
 
-bool ShaderGL::compile(gl::Compiler *compiler, const std::string &source, int additionalOptionsIn)
+int ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sourceStream)
 {
     // Reset the previous state
     if (mShaderID != 0)
@@ -42,17 +40,18 @@ bool ShaderGL::compile(gl::Compiler *compiler, const std::string &source, int ad
         mShaderID = 0;
     }
 
-    int additionalOptions = (additionalOptionsIn | SH_INIT_GL_POSITION);
-    if (!ShaderSh::compile(compiler, source, additionalOptions))
-    {
-        return false;
-    }
+    *sourceStream << mData.getSource();
 
+    return SH_INIT_GL_POSITION;
+}
+
+bool ShaderGL::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog)
+{
     // Translate the ESSL into GLSL
-    const char *translatedSourceCString = mData->getTranslatedSource().c_str();
+    const char *translatedSourceCString = mData.getTranslatedSource().c_str();
 
     // Generate a shader object and set the source
-    mShaderID = mFunctions->createShader(mData->getShaderType());
+    mShaderID = mFunctions->createShader(mData.getShaderType());
     mFunctions->shaderSource(mShaderID, 1, &translatedSourceCString, nullptr);
     mFunctions->compileShader(mShaderID);
 
@@ -72,9 +71,8 @@ bool ShaderGL::compile(gl::Compiler *compiler, const std::string &source, int ad
         mFunctions->deleteShader(mShaderID);
         mShaderID = 0;
 
-        // TODO(jmadill): possibly pass in info log?
-        mData->getMutableInfoLog() = &buf[0];
-        TRACE("\n%s", mData->getMutableInfoLog().c_str());
+        *infoLog = &buf[0];
+        TRACE("\n%s", infoLog->c_str());
         return false;
     }
 

@@ -147,8 +147,6 @@
             'libANGLE/renderer/Renderer.cpp',
             'libANGLE/renderer/Renderer.h',
             'libANGLE/renderer/ShaderImpl.h',
-            'libANGLE/renderer/ShaderSh.cpp',
-            'libANGLE/renderer/ShaderSh.h',
             'libANGLE/renderer/SurfaceImpl.cpp',
             'libANGLE/renderer/SurfaceImpl.h',
             'libANGLE/renderer/TextureImpl.h',

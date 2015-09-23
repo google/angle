@@ -9,7 +9,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_SHADERD3D_H_
 #define LIBANGLE_RENDERER_D3D_SHADERD3D_H_
 
-#include "libANGLE/renderer/ShaderSh.h"
+#include "libANGLE/renderer/ShaderImpl.h"
 
 #include <map>
 
@@ -19,16 +19,17 @@ class DynamicHLSL;
 class RendererD3D;
 struct D3DCompilerWorkarounds;
 
-class ShaderD3D : public ShaderSh
+class ShaderD3D : public ShaderImpl
 {
     friend class DynamicHLSL;
 
   public:
-    ShaderD3D(gl::Shader::Data *data, const gl::Limitations &limitations);
+    ShaderD3D(const gl::Shader::Data &data);
     virtual ~ShaderD3D();
 
     // ShaderImpl implementation
-    bool compile(gl::Compiler *compiler, const std::string &source, int additionalOptions) override;
+    int prepareSourceAndReturnOptions(std::stringstream *sourceStream) override;
+    bool postTranslateCompile(gl::Compiler *compiler, std::string *infoLog) override;
     std::string getDebugInfo() const override;
 
     // D3D-specific methods
@@ -64,7 +65,6 @@ class ShaderD3D : public ShaderSh
     std::string mDebugInfo;
     std::map<std::string, unsigned int> mUniformRegisterMap;
     std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;
-    RendererD3D *mRenderer;
 };
 
 }

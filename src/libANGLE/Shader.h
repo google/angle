@@ -32,6 +32,7 @@ class ShaderSh;
 namespace gl
 {
 class Compiler;
+struct Limitations;
 class ResourceManager;
 struct Data;
 
@@ -44,7 +45,7 @@ class Shader : angle::NonCopyable
         Data(GLenum shaderType);
         ~Data();
 
-        const std::string &getInfoLog() const { return mInfoLog; }
+        const std::string &getSource() const { return mSource; }
         const std::string &getTranslatedSource() const { return mTranslatedSource; }
 
         GLenum getShaderType() const { return mShaderType; }
@@ -62,19 +63,13 @@ class Shader : angle::NonCopyable
             return mActiveOutputVariables;
         }
 
-        // TODO(jmadill): Remove this.
-        std::string &getMutableInfoLog() { return mInfoLog; }
-
       private:
         friend class Shader;
-
-        // TODO(jmadill): Remove this.
-        friend class rx::ShaderSh;
 
         GLenum mShaderType;
         int mShaderVersion;
         std::string mTranslatedSource;
-        std::string mInfoLog;
+        std::string mSource;
 
         std::vector<sh::Varying> mVaryings;
         std::vector<sh::Uniform> mUniforms;
@@ -83,7 +78,11 @@ class Shader : angle::NonCopyable
         std::vector<sh::OutputVariable> mActiveOutputVariables;
     };
 
-    Shader(ResourceManager *manager, rx::ImplFactory *implFactory, GLenum type, GLuint handle);
+    Shader(ResourceManager *manager,
+           rx::ImplFactory *implFactory,
+           const gl::Limitations &rendererLimitations,
+           GLenum type,
+           GLuint handle);
 
     virtual ~Shader();
 
@@ -127,12 +126,13 @@ class Shader : angle::NonCopyable
 
     Data mData;
     rx::ShaderImpl *mImplementation;
+    const gl::Limitations &mRendererLimitations;
     const GLuint mHandle;
     const GLenum mType;
-    std::string mSource;
     unsigned int mRefCount;     // Number of program objects this shader is attached to
     bool mDeleteStatus;         // Flag to indicate that the shader can be deleted when no longer in use
     bool mCompiled;             // Indicates if this shader has been successfully compiled
+    std::string mInfoLog;
 
     ResourceManager *mResourceManager;
 };

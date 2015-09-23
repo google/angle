@@ -14,6 +14,7 @@
 
 #include "common/utilities.h"
 #include "GLSLANG/ShaderLang.h"
+#include "libANGLE/Compiler.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/renderer/ShaderImpl.h"
@@ -21,6 +22,55 @@
 
 namespace gl
 {
+
+namespace
+{
+template <typename VarT>
+std::vector<VarT> GetActiveShaderVariables(const std::vector<VarT> *variableList)
+{
+    ASSERT(variableList);
+    std::vector<VarT> result;
+    for (size_t varIndex = 0; varIndex < variableList->size(); varIndex++)
+    {
+        const VarT &var = variableList->at(varIndex);
+        if (var.staticUse)
+        {
+            result.push_back(var);
+        }
+    }
+    return result;
+}
+
+template <typename VarT>
+const std::vector<VarT> &GetShaderVariables(const std::vector<VarT> *variableList)
+{
+    ASSERT(variableList);
+    return *variableList;
+}
+
+// true if varying x has a higher priority in packing than y
+bool CompareVarying(const sh::Varying &x, const sh::Varying &y)
+{
+    if (x.type == y.type)
+    {
+        return x.arraySize > y.arraySize;
+    }
+
+    // Special case for handling structs: we sort these to the end of the list
+    if (x.type == GL_STRUCT_ANGLEX)
+    {
+        return false;
+    }
+
+    if (y.type == GL_STRUCT_ANGLEX)
+    {
+        return true;
+    }
+
+    return gl::VariableSortOrder(x.type) < gl::VariableSortOrder(y.type);
+}
+
+}  // anonymous namespace
 
 Shader::Data::Data(GLenum shaderType) : mShaderType(shaderType), mShaderVersion(100)
 {
@@ -30,9 +80,14 @@ Shader::Data::~Data()
 {
 }
 
-Shader::Shader(ResourceManager *manager, rx::ImplFactory *implFactory, GLenum type, GLuint handle)
+Shader::Shader(ResourceManager *manager,
+               rx::ImplFactory *implFactory,
+               const gl::Limitations &rendererLimitations,
+               GLenum type,
+               GLuint handle)
     : mData(type),
-      mImplementation(implFactory->createShader(&mData)),
+      mImplementation(implFactory->createShader(mData)),
+      mRendererLimitations(rendererLimitations),
       mHandle(handle),
       mType(type),
       mRefCount(0),
@@ -69,17 +124,17 @@ void Shader::setSource(GLsizei count, const char *const *string, const GLint *le
         }
     }
 
-    mSource = stream.str();
+    mData.mSource = stream.str();
 }
 
 int Shader::getInfoLogLength() const
 {
-    if (mData.mInfoLog.empty())
+    if (mInfoLog.empty())
     {
         return 0;
     }
 
-    return (static_cast<int>(mData.mInfoLog.length()) + 1);
+    return (static_cast<int>(mInfoLog.length()) + 1);
 }
 
 void Shader::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const
@@ -88,8 +143,8 @@ void Shader::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const
 
     if (bufSize > 0)
     {
-        index = std::min(bufSize - 1, static_cast<GLsizei>(mData.mInfoLog.length()));
-        memcpy(infoLog, mData.mInfoLog.c_str(), index);
+        index = std::min(bufSize - 1, static_cast<GLsizei>(mInfoLog.length()));
+        memcpy(infoLog, mInfoLog.c_str(), index);
 
         infoLog[index] = '\0';
     }
@@ -102,7 +157,7 @@ void Shader::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const
 
 int Shader::getSourceLength() const
 {
-    return mSource.empty() ? 0 : (static_cast<int>(mSource.length()) + 1);
+    return mData.mSource.empty() ? 0 : (static_cast<int>(mData.mSource.length()) + 1);
 }
 
 int Shader::getTranslatedSourceLength() const
@@ -135,7 +190,7 @@ void Shader::getSourceImpl(const std::string &source, GLsizei bufSize, GLsizei *
 
 void Shader::getSource(GLsizei bufSize, GLsizei *length, char *buffer) const
 {
-    getSourceImpl(mSource, bufSize, length, buffer);
+    getSourceImpl(mData.mSource, bufSize, length, buffer);
 }
 
 void Shader::getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer) const
@@ -152,7 +207,7 @@ void Shader::getTranslatedSourceWithDebugInfo(GLsizei bufSize, GLsizei *length, 
 void Shader::compile(Compiler *compiler)
 {
     mData.mTranslatedSource.clear();
-    mData.mInfoLog.clear();
+    mInfoLog.clear();
     mData.mShaderVersion = 100;
     mData.mVaryings.clear();
     mData.mUniforms.clear();
@@ -160,7 +215,81 @@ void Shader::compile(Compiler *compiler)
     mData.mActiveAttributes.clear();
     mData.mActiveOutputVariables.clear();
 
-    mCompiled = mImplementation->compile(compiler, mSource, 0);
+    ShHandle compilerHandle = compiler->getCompilerHandle(mData.mShaderType);
+
+    std::stringstream sourceStream;
+
+    int additionalOptions = mImplementation->prepareSourceAndReturnOptions(&sourceStream);
+    int compileOptions    = (SH_OBJECT_CODE | SH_VARIABLES | additionalOptions);
+
+    // Some targets (eg D3D11 Feature Level 9_3 and below) do not support non-constant loop indexes
+    // in fragment shaders. Shader compilation will fail. To provide a better error message we can
+    // instruct the compiler to pre-validate.
+    if (mRendererLimitations.shadersRequireIndexedLoopValidation)
+    {
+        compileOptions |= SH_VALIDATE_LOOP_INDEXING;
+    }
+
+    std::string sourceString  = sourceStream.str();
+    const char *sourceCString = sourceString.c_str();
+    bool result               = ShCompile(compilerHandle, &sourceCString, 1, compileOptions);
+
+    if (!result)
+    {
+        mInfoLog = ShGetInfoLog(compilerHandle);
+        TRACE("\n%s", mInfoLog.c_str());
+        mCompiled = false;
+        return;
+    }
+
+    mData.mTranslatedSource = ShGetObjectCode(compilerHandle);
+
+#ifndef NDEBUG
+    // Prefix translated shader with commented out un-translated shader.
+    // Useful in diagnostics tools which capture the shader source.
+    std::ostringstream shaderStream;
+    shaderStream << "// GLSL\n";
+    shaderStream << "//\n";
+
+    size_t curPos = 0;
+    while (curPos != std::string::npos)
+    {
+        size_t nextLine = mData.mSource.find("\n", curPos);
+        size_t len      = (nextLine == std::string::npos) ? std::string::npos : (nextLine - curPos + 1);
+
+        shaderStream << "// " << mData.mSource.substr(curPos, len);
+
+        curPos = (nextLine == std::string::npos) ? std::string::npos : (nextLine + 1);
+    }
+    shaderStream << "\n\n";
+    shaderStream << mData.mTranslatedSource;
+    mData.mTranslatedSource = shaderStream.str();
+#endif
+
+    // Gather the shader information
+    mData.mShaderVersion = ShGetShaderVersion(compilerHandle);
+
+    mData.mVaryings        = GetShaderVariables(ShGetVaryings(compilerHandle));
+    mData.mUniforms        = GetShaderVariables(ShGetUniforms(compilerHandle));
+    mData.mInterfaceBlocks = GetShaderVariables(ShGetInterfaceBlocks(compilerHandle));
+
+    if (mData.mShaderType == GL_VERTEX_SHADER)
+    {
+        mData.mActiveAttributes = GetActiveShaderVariables(ShGetAttributes(compilerHandle));
+    }
+    else
+    {
+        ASSERT(mData.mShaderType == GL_FRAGMENT_SHADER);
+
+        // TODO(jmadill): Figure out why we only sort in the FS, and if we need to.
+        std::sort(mData.mVaryings.begin(), mData.mVaryings.end(), CompareVarying);
+        mData.mActiveOutputVariables =
+            GetActiveShaderVariables(ShGetOutputVariables(compilerHandle));
+    }
+
+    ASSERT(!mData.mTranslatedSource.empty());
+
+    mCompiled = mImplementation->postTranslateCompile(compiler, &mInfoLog);
 }
 
 void Shader::addRef()

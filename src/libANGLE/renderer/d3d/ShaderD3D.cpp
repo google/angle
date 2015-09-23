@@ -39,8 +39,7 @@ const char *GetShaderTypeString(GLenum type)
 namespace rx
 {
 
-ShaderD3D::ShaderD3D(gl::Shader::Data *data, const gl::Limitations &limitations)
-    : ShaderSh(data, limitations)
+ShaderD3D::ShaderD3D(const gl::Shader::Data &data) : ShaderImpl(data)
 {
     uncompile();
 }
@@ -51,7 +50,7 @@ ShaderD3D::~ShaderD3D()
 
 std::string ShaderD3D::getDebugInfo() const
 {
-    return mDebugInfo + std::string("\n// ") + GetShaderTypeString(mData->getShaderType()) +
+    return mDebugInfo + std::string("\n// ") + GetShaderTypeString(mData.getShaderType()) +
            " SHADER END\n";
 }
 
@@ -118,39 +117,33 @@ ShShaderOutput ShaderD3D::getCompilerOutputType() const
     return mCompilerOutputType;
 }
 
-bool ShaderD3D::compile(gl::Compiler *compiler, const std::string &source, int additionalOptionsIn)
+int ShaderD3D::prepareSourceAndReturnOptions(std::stringstream *shaderSourceStream)
 {
     uncompile();
 
-    ShHandle compilerHandle = compiler->getCompilerHandle(mData->getShaderType());
-
-    // TODO(jmadill): We shouldn't need to cache this.
-    mCompilerOutputType = ShGetShaderOutputType(compilerHandle);
-
-    int additionalOptions = additionalOptionsIn;
+    int additionalOptions = 0;
 
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
-
-    std::stringstream sourceStream;
+    const std::string &source = mData.getSource();
 
     if (gl::DebugAnnotationsActive())
     {
         std::string sourcePath = getTempPath();
         writeFile(sourcePath.c_str(), source.c_str(), source.length());
         additionalOptions |= SH_LINE_DIRECTIVES | SH_SOURCE_PATH;
-        sourceStream << sourcePath;
+        *shaderSourceStream << sourcePath;
     }
 #endif
+    *shaderSourceStream << source;
+    return additionalOptions;
+}
 
-    sourceStream << source;
-    bool result = ShaderSh::compile(compiler, sourceStream.str(), additionalOptions);
+bool ShaderD3D::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog)
+{
+    // TODO(jmadill): We shouldn't need to cache this.
+    mCompilerOutputType = compiler->getShaderOutputType();
 
-    if (!result)
-    {
-        return false;
-    }
-
-    const std::string &translatedSource = mData->getTranslatedSource();
+    const std::string &translatedSource = mData.getTranslatedSource();
 
     mUsesMultipleRenderTargets = translatedSource.find("GL_USES_MRT") != std::string::npos;
     mUsesFragColor             = translatedSource.find("GL_USES_FRAG_COLOR") != std::string::npos;
@@ -168,7 +161,9 @@ bool ShaderD3D::compile(gl::Compiler *compiler, const std::string &source, int a
     mRequiresIEEEStrictCompiling =
         translatedSource.find("ANGLE_REQUIRES_IEEE_STRICT_COMPILING") != std::string::npos;
 
-    for (const sh::Uniform &uniform : mData->getUniforms())
+    ShHandle compilerHandle = compiler->getCompilerHandle(mData.getShaderType());
+
+    for (const sh::Uniform &uniform : mData.getUniforms())
     {
         if (uniform.staticUse && !uniform.isBuiltIn())
         {
@@ -182,7 +177,7 @@ bool ShaderD3D::compile(gl::Compiler *compiler, const std::string &source, int a
         }
     }
 
-    for (const sh::InterfaceBlock &interfaceBlock : mData->getInterfaceBlocks())
+    for (const sh::InterfaceBlock &interfaceBlock : mData.getInterfaceBlocks())
     {
         if (interfaceBlock.staticUse)
         {
