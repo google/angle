@@ -37,6 +37,7 @@ class StateManagerGL final : angle::NonCopyable
     void deleteProgram(GLuint program);
     void deleteVertexArray(GLuint vao);
     void deleteTexture(GLuint texture);
+    void deleteSampler(GLuint sampler);
     void deleteBuffer(GLuint buffer);
     void deleteFramebuffer(GLuint fbo);
     void deleteRenderbuffer(GLuint rbo);
@@ -46,6 +47,7 @@ class StateManagerGL final : angle::NonCopyable
     void bindBuffer(GLenum type, GLuint buffer);
     void activeTexture(size_t unit);
     void bindTexture(GLenum type, GLuint texture);
+    void bindSampler(size_t unit, GLuint sampler);
     void bindFramebuffer(GLenum type, GLuint framebuffer);
     void bindRenderbuffer(GLenum type, GLuint renderbuffer);
 
@@ -138,6 +140,7 @@ class StateManagerGL final : angle::NonCopyable
 
     size_t mTextureUnitIndex;
     std::map<GLenum, std::vector<GLuint>> mTextures;
+    std::vector<GLuint> mSamplers;
 
     GLint mUnpackAlignment;
     GLint mUnpackRowLength;

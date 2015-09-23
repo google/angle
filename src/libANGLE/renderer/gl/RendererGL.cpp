@@ -24,6 +24,7 @@
 #include "libANGLE/renderer/gl/ProgramGL.h"
 #include "libANGLE/renderer/gl/QueryGL.h"
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
+#include "libANGLE/renderer/gl/SamplerGL.h"
 #include "libANGLE/renderer/gl/ShaderGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/SurfaceGL.h"
@@ -295,6 +296,11 @@ FenceSyncImpl *RendererGL::createFenceSync()
 TransformFeedbackImpl *RendererGL::createTransformFeedback()
 {
     return new TransformFeedbackGL();
+}
+
+SamplerImpl *RendererGL::createSampler()
+{
+    return new SamplerGL(mFunctions, mStateManager);
 }
 
 void RendererGL::insertEventMarker(GLsizei, const char *)

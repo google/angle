@@ -85,6 +85,9 @@ class RendererGL : public Renderer
     // Transform Feedback creation
     TransformFeedbackImpl *createTransformFeedback() override;
 
+    // Sampler object creation
+    SamplerImpl *createSampler() override;
+
     // EXT_debug_marker
     void insertEventMarker(GLsizei length, const char *marker) override;
     void pushGroupMarker(GLsizei length, const char *marker) override;

@@ -16,6 +16,7 @@
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/ProgramGL.h"
+#include "libANGLE/renderer/gl/SamplerGL.h"
 #include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/VertexArrayGL.h"
 
@@ -29,6 +30,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mBuffers(),
       mTextureUnitIndex(0),
       mTextures(),
+      mSamplers(rendererCaps.maxCombinedTextureImageUnits, 0),
       mUnpackAlignment(4),
       mUnpackRowLength(0),
       mUnpackSkipRows(0),
@@ -161,6 +163,23 @@ void StateManagerGL::deleteTexture(GLuint texture)
         mFunctions->deleteTextures(1, &texture);
     }
 }
+
+void StateManagerGL::deleteSampler(GLuint sampler)
+{
+    if (sampler != 0)
+    {
+        for (size_t unit = 0; unit < mSamplers.size(); unit++)
+        {
+            if (mSamplers[unit] == sampler)
+            {
+                bindSampler(unit, 0);
+            }
+        }
+
+        mFunctions->deleteSamplers(1, &sampler);
+    }
+}
+
 void StateManagerGL::deleteBuffer(GLuint buffer)
 {
     if (buffer != 0)
@@ -250,6 +269,15 @@ void StateManagerGL::bindTexture(GLenum type, GLuint texture)
     {
         mTextures[type][mTextureUnitIndex] = texture;
         mFunctions->bindTexture(type, texture);
+    }
+}
+
+void StateManagerGL::bindSampler(size_t unit, GLuint sampler)
+{
+    if (mSamplers[unit] != sampler)
+    {
+        mSamplers[unit] = sampler;
+        mFunctions->bindSampler(static_cast<GLuint>(unit), sampler);
     }
 }
 
@@ -487,8 +515,6 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
                 }
 
                 textureGL->syncState(textureUnitIndex, texture->getTextureState());
-
-                // TODO: apply sampler object if one is bound
             }
             else
             {
@@ -497,6 +523,18 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
                     activeTexture(textureUnitIndex);
                     bindTexture(textureType, 0);
                 }
+            }
+
+            const gl::Sampler *sampler = state.getSampler(textureUnitIndex);
+            if (sampler != nullptr)
+            {
+                const SamplerGL *samplerGL = GetImplAs<SamplerGL>(sampler);
+                samplerGL->syncState(sampler->getSamplerState());
+                bindSampler(textureUnitIndex, samplerGL->getSamplerID());
+            }
+            else
+            {
+                bindSampler(textureUnitIndex, 0);
             }
         }
     }
