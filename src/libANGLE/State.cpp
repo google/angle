@@ -28,8 +28,10 @@ State::State()
     // TODO(jmadill): additional ES3 state
     mUnpackStateBitMask.set(DIRTY_BIT_UNPACK_ALIGNMENT);
     mUnpackStateBitMask.set(DIRTY_BIT_UNPACK_ROW_LENGTH);
+
     mPackStateBitMask.set(DIRTY_BIT_PACK_ALIGNMENT);
     mPackStateBitMask.set(DIRTY_BIT_PACK_REVERSE_ROW_ORDER);
+
     mClearStateBitMask.set(DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);
     mClearStateBitMask.set(DIRTY_BIT_SCISSOR_TEST_ENABLED);
     mClearStateBitMask.set(DIRTY_BIT_SCISSOR);
@@ -41,6 +43,9 @@ State::State()
     mClearStateBitMask.set(DIRTY_BIT_DEPTH_MASK);
     mClearStateBitMask.set(DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
     mClearStateBitMask.set(DIRTY_BIT_STENCIL_WRITEMASK_BACK);
+
+    mBlitStateBitMask.set(DIRTY_BIT_SCISSOR_TEST_ENABLED);
+    mBlitStateBitMask.set(DIRTY_BIT_SCISSOR);
 }
 
 State::~State()

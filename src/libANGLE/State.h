@@ -322,6 +322,7 @@ class State : angle::NonCopyable
     const DirtyBits &unpackStateBitMask() const { return mUnpackStateBitMask; }
     const DirtyBits &packStateBitMask() const { return mPackStateBitMask; }
     const DirtyBits &clearStateBitMask() const { return mClearStateBitMask; }
+    const DirtyBits &blitStateBitMask() const { return mBlitStateBitMask; }
 
   private:
     // Cached values from Context's caps
@@ -396,6 +397,7 @@ class State : angle::NonCopyable
     DirtyBits mUnpackStateBitMask;
     DirtyBits mPackStateBitMask;
     DirtyBits mClearStateBitMask;
+    DirtyBits mBlitStateBitMask;
 };
 
 }
