@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e308111_825d7a13",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-24T19:09:42Z",
+      "side": 1,
+      "message": "nit: you can cache this comparison in a local",
+      "range": {
+        "startLine": 325,
+        "startChar": 49,
+        "endLine": 325,
+        "endChar": 68
+      },
+      "revId": "fbbfd1e0e32252ad7d739b0a444d8aa3c44f4206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ceb4a9b2_a84d9b5f",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-24T19:09:42Z",
+      "side": 1,
+      "message": "this doesn\u0027t look right to me... I think the COLOR_ATTACHMENT_0 might need to be inside the second set of []. maybe use some local caching to clear up the offsetting?",
+      "range": {
+        "startLine": 345,
+        "startChar": 28,
+        "endLine": 345,
+        "endChar": 99
+      },
+      "revId": "fbbfd1e0e32252ad7d739b0a444d8aa3c44f4206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ceb4a9b2_c846cf44",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-24T19:09:42Z",
+      "side": 1,
+      "message": "ditto here",
+      "range": {
+        "startLine": 358,
+        "startChar": 53,
+        "endLine": 358,
+        "endChar": 72
+      },
+      "revId": "fbbfd1e0e32252ad7d739b0a444d8aa3c44f4206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
