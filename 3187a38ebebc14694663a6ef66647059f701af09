@@ -22,6 +22,30 @@
       "revId": "3187a38ebebc14694663a6ef66647059f701af09",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8eae3164_065dba10",
+        "filename": "src/tests/angle_unittests.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-24T18:58:24Z",
+      "side": 0,
+      "message": "Whoops, merge failure.  Fixed.",
+      "parentUuid": "ee5b2d6b_1cbc39a1",
+      "range": {
+        "startLine": 43,
+        "startChar": 13,
+        "endLine": 43,
+        "endChar": 78
+      },
+      "revId": "3187a38ebebc14694663a6ef66647059f701af09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
