@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e61c51f_137eec42",
+        "filename": "src/tests/compiler_tests/FragDepth_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-24T18:23:00Z",
+      "side": 1,
+      "message": "nit: probably geofflang?",
+      "range": {
+        "startLine": 106,
+        "startChar": 16,
+        "endLine": 106,
+        "endChar": 25
+      },
+      "revId": "741ab45acb270e241da38c97cea80c0894792b85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
