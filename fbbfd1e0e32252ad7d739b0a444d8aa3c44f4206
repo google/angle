@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8e6c7116_99433f33",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-25T15:38:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e308111_825d7a13",
+      "range": {
+        "startLine": 325,
+        "startChar": 49,
+        "endLine": 325,
+        "endChar": 68
+      },
+      "revId": "fbbfd1e0e32252ad7d739b0a444d8aa3c44f4206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ceb4a9b2_a84d9b5f",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "ceb4a9b2_8bca1186",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-25T15:38:36Z",
+      "side": 1,
+      "message": "the drawBuffer parameter to glClearBuffer is the index of the drawbuffer to clear and the array of drawbuffers is the attachment enums.  I added some locals to make it clearer.",
+      "parentUuid": "ceb4a9b2_a84d9b5f",
+      "range": {
+        "startLine": 345,
+        "startChar": 28,
+        "endLine": 345,
+        "endChar": 99
+      },
+      "revId": "fbbfd1e0e32252ad7d739b0a444d8aa3c44f4206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ceb4a9b2_c846cf44",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 6
@@ -59,6 +107,30 @@
       "writtenOn": "2015-09-24T19:09:42Z",
       "side": 1,
       "message": "ditto here",
+      "range": {
+        "startLine": 358,
+        "startChar": 53,
+        "endLine": 358,
+        "endChar": 72
+      },
+      "revId": "fbbfd1e0e32252ad7d739b0a444d8aa3c44f4206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eebded94_2c677bef",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-25T15:38:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ceb4a9b2_c846cf44",
       "range": {
         "startLine": 358,
         "startChar": 53,
