@@ -936,6 +936,13 @@ TEST_P(TextureLimitsTest, MaxFragmentTextures)
 // Test rendering with maximum combined texture units.
 TEST_P(TextureLimitsTest, MaxCombinedTextures)
 {
+    // TODO(jmadill): Investigate workaround.
+    if (isIntel() && GetParam() == ES2_OPENGL())
+    {
+        std::cout << "Test skipped on Intel." << std::endl;
+        return;
+    }
+
     GLint vertexTextures = mMaxVertexTextures;
 
     if (vertexTextures + mMaxFragmentTextures > mMaxCombinedTextures)
