@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e673d32_1bec433b",
+        "filename": "src/common/Float16ToFloat32.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2203,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:11:10Z",
+      "side": 1,
+      "message": "can you use bitCast from mathutil.h here? if not, a straight memcpy? prefer using memcpy for these kinds of casts, it is the strictest compliant form.",
+      "range": {
+        "startLine": 2199,
+        "startChar": 0,
+        "endLine": 2203,
+        "endChar": 13
+      },
+      "revId": "586a2076346bb0211964cf7c105c6273d6370ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e61c51f_396ae729",
+        "filename": "src/common/mathutil.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:11:10Z",
+      "side": 1,
+      "message": "this seems fine but I think you can also use bitCast?",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 23
+      },
+      "revId": "586a2076346bb0211964cf7c105c6273d6370ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e673d32_7bf1f70e",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:11:10Z",
+      "side": 1,
+      "message": "here you can definitely use bitCast, directly above.",
+      "range": {
+        "startLine": 155,
+        "startChar": 4,
+        "endLine": 155,
+        "endChar": 41
+      },
+      "revId": "586a2076346bb0211964cf7c105c6273d6370ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e6c7116_bcf0a95a",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:11:10Z",
+      "side": 1,
+      "message": "please run git cl format to clear up the formatting nits",
+      "range": {
+        "startLine": 90,
+        "startChar": 35,
+        "endLine": 90,
+        "endChar": 42
+      },
+      "revId": "586a2076346bb0211964cf7c105c6273d6370ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee5b2d6b_e243977a",
+        "filename": "src/libANGLE/AttributeMap.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:11:10Z",
+      "side": 1,
+      "message": "you can add final here if you like",
+      "range": {
+        "startLine": 18,
+        "startChar": 6,
+        "endLine": 18,
+        "endChar": 18
+      },
+      "revId": "586a2076346bb0211964cf7c105c6273d6370ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
