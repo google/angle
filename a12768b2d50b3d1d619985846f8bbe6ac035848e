@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eebded94_8f321987",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T19:49:34Z",
+      "side": 1,
+      "message": "\u0027to\u0027",
+      "range": {
+        "startLine": 22,
+        "startChar": 3,
+        "endLine": 22,
+        "endChar": 5
+      },
+      "revId": "a12768b2d50b3d1d619985846f8bbe6ac035848e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e61c51f_1cea79b0",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T19:49:34Z",
+      "side": 1,
+      "message": "I assume you tried this form?\n\nwhile (true)\n{\n  CODE;\n  if (!(COND)) {\n    break;\n  }\n}\n\nDid it not work out? On the off-chance you didn\u0027t try, it does eliminate the temporary. Maybe you were worried about future plans with conditional re-writing?",
+      "range": {
+        "startLine": 24,
+        "startChar": 5,
+        "endLine": 32,
+        "endChar": 6
+      },
+      "revId": "a12768b2d50b3d1d619985846f8bbe6ac035848e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ceb4a9b2_2b69a531",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T19:49:34Z",
+      "side": 1,
+      "message": "can you use a range-for loop here? if you aren\u0027t using the index.",
+      "range": {
+        "startLine": 57,
+        "startChar": 8,
+        "endLine": 59,
+        "endChar": 54
+      },
+      "revId": "a12768b2d50b3d1d619985846f8bbe6ac035848e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ea9fd5d_4b6ad92a",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T19:49:34Z",
+      "side": 1,
+      "message": "good comments.",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 16
+      },
+      "revId": "a12768b2d50b3d1d619985846f8bbe6ac035848e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e6c7116_3ce7795a",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T19:49:34Z",
+      "side": 1,
+      "message": "nit: SafeDelete",
+      "range": {
+        "startLine": 142,
+        "startChar": 12,
+        "endLine": 142,
+        "endChar": 18
+      },
+      "revId": "a12768b2d50b3d1d619985846f8bbe6ac035848e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eebded94_af2fdd21",
+        "filename": "src/compiler/translator/RewriteDoWhile.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T19:49:34Z",
+      "side": 1,
+      "message": "rewrite do-while loos as while loops to work around OSX driver bugs. (note: \u0027equivalent\u0027)",
+      "range": {
+        "startLine": 7,
+        "startChar": 21,
+        "endLine": 8,
+        "endChar": 13
+      },
+      "revId": "a12768b2d50b3d1d619985846f8bbe6ac035848e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
