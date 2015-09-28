@@ -1500,10 +1500,16 @@ static bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count, GLsiz
 
     if (context->getLimitations().noSeparateStencilRefsAndMasks)
     {
-        const gl::DepthStencilState &depthStencilState = state.getDepthStencilState();
-        if (depthStencilState.stencilWritemask != depthStencilState.stencilBackWritemask ||
+        const Framebuffer *framebuffer             = context->getState().getDrawFramebuffer();
+        const FramebufferAttachment *stencilBuffer = framebuffer->getStencilbuffer();
+        GLuint stencilBits                         = stencilBuffer ? stencilBuffer->getStencilSize() : 0;
+        GLuint minimumRequiredStencilMask          = (1 << stencilBits) - 1;
+        const DepthStencilState &depthStencilState = state.getDepthStencilState();
+        if ((depthStencilState.stencilWritemask & minimumRequiredStencilMask) !=
+                (depthStencilState.stencilBackWritemask & minimumRequiredStencilMask) ||
             state.getStencilRef() != state.getStencilBackRef() ||
-            depthStencilState.stencilMask != depthStencilState.stencilBackMask)
+            (depthStencilState.stencilMask & minimumRequiredStencilMask) !=
+                (depthStencilState.stencilBackMask & minimumRequiredStencilMask))
         {
             // Note: these separate values are not supported in WebGL, due to D3D's limitations. See
             // Section 6.10 of the WebGL 1.0 spec
