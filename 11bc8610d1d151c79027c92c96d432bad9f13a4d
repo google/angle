@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eebded94_efbb9544",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-28T19:10:43Z",
+      "side": 1,
+      "message": "Please keep these lines to 72 characters each.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 130
+      },
+      "revId": "11bc8610d1d151c79027c92c96d432bad9f13a4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ceb4a9b2_abcb55a9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1203,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-28T19:10:43Z",
+      "side": 1,
+      "message": "Can you \u0026 these with the D3D constants above?",
+      "range": {
+        "startLine": 1203,
+        "startChar": 53,
+        "endLine": 1203,
+        "endChar": 57
+      },
+      "revId": "11bc8610d1d151c79027c92c96d432bad9f13a4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e308111_c5282c1f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1496,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-28T19:10:43Z",
+      "side": 1,
+      "message": "Please query the stencil bits directly from the framebuffer instead of the getIntegerv function.\n\n   const Framebuffer *framebuffer \u003d context-\u003egetDrawFramebuffer();\n   const FramebufferAttachment *stencilbuffer \u003d framebuffer-\u003egetStencilbuffer();\n   GLuint stencilBits \u003d stencilBuffer ? stencilBuffer-\u003egetStencilSize() : 0;",
+      "range": {
+        "startLine": 1496,
+        "startChar": 8,
+        "endLine": 1496,
+        "endChar": 60
+      },
+      "revId": "11bc8610d1d151c79027c92c96d432bad9f13a4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ea9fd5d_abcb4da9",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1501,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-28T19:10:43Z",
+      "side": 1,
+      "message": "Run \u0027git cl format\u0027 to format this code.",
+      "range": {
+        "startLine": 1498,
+        "startChar": 8,
+        "endLine": 1501,
+        "endChar": 9
+      },
+      "revId": "11bc8610d1d151c79027c92c96d432bad9f13a4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
