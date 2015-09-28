@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eebded94_0ffe292a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_load_functions_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:03:30Z",
+      "side": 1,
+      "message": "see comment re: sorting",
+      "range": {
+        "startLine": 107,
+        "startChar": 24,
+        "endLine": 107,
+        "endChar": 33
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e673d32_dbf80bea",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_load_functions_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:03:30Z",
+      "side": 1,
+      "message": "see comment re: sorting",
+      "range": {
+        "startLine": 114,
+        "startChar": 32,
+        "endLine": 114,
+        "endChar": 41
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eebded94_6f09e5f6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_load_functions_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:03:30Z",
+      "side": 1,
+      "message": "I would probably add a call to sorted(json_data[i_f_i].iteritems()) here to stabilize the table structure",
+      "range": {
+        "startLine": 121,
+        "startChar": 32,
+        "endLine": 121,
+        "endChar": 41
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee5b2d6b_c2165381",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_data.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:03:30Z",
+      "side": 1,
+      "message": "I think I would recommend structuring this data as {\u0027InternalFormat1\u0027: {\u0027Type1\u0027: {..Data1..}}, {\u0027Type2\u0027: {..Data2..} } rather than the inner index being the DXGI format. Think of load functions as taking two inputs: the type being written to (internal format, GL_RG8_SNORM), and the type of the data the user is sending (GL type, GL_BYTE) and having the requiresConversion, loadFunction and DXGI format being the parameters.\n\n\nThis might help process some of the unknown formats, where are really just placeholder values for load functions which don\u0027t have a corresponding DXGI format.",
+      "range": {
+        "startLine": 2,
+        "startChar": 3,
+        "endLine": 2,
+        "endChar": 15
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee5b2d6b_02116b86",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_data.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:03:30Z",
+      "side": 1,
+      "message": "seems to be duplicated, hopefully the JSON would give an error here if you try to use the same key (GL_UNSIGNED_BYTE) twice",
+      "range": {
+        "startLine": 127,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 7
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ceb4a9b2_ebbb8d44",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:03:30Z",
+      "side": 1,
+      "message": "I might add a // TODO here to replace these maps with more generated code. I\u0027m not sure if it\u0027s a bottleneck at the moment, and it\u0027s a bit of a complex refactor, but worth noting.",
+      "range": {
+        "startLine": 60,
+        "startChar": 43,
+        "endLine": 60,
+        "endChar": 62
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee5b2d6b_02fa0ba8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:03:30Z",
+      "side": 1,
+      "message": "I might surround these with if (map.empty()). You can also use the map[key] \u003d value syntax for shorter lines I think.",
+      "range": {
+        "startLine": 73,
+        "startChar": 20,
+        "endLine": 73,
+        "endChar": 93
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8eae3164_89321d87",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:03:30Z",
+      "side": 1,
+      "message": "Probably a result of some duplicate values in the map",
+      "range": {
+        "startLine": 194,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 89
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee5b2d6b_622667fe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:03:30Z",
+      "side": 1,
+      "message": "do you know if inline makes any difference? I\u0027d be tempted to remove it from a big function like this.",
+      "range": {
+        "startLine": 110,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 6
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8eae3164_6941e1d5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T15:03:30Z",
+      "side": 1,
+      "message": "I\u0027d be curious to hear the other reviewers thoughts on this, but we could consider making duplicated tables for each FL, and then calling a specific table in the outer scope. This would save the need to check at an inner level, and potentially at all, because we could use a virtual function or just function pointer to call the correct table.",
+      "range": {
+        "startLine": 546,
+        "startChar": 16,
+        "endLine": 546,
+        "endChar": 28
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
