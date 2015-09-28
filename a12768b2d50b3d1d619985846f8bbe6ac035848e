@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "ee5b2d6b_02cccbc0",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T20:20:40Z",
+      "side": 1,
+      "message": "Makes sense. Thanks.",
+      "parentUuid": "ceb4a9b2_ab54b55f",
+      "range": {
+        "startLine": 24,
+        "startChar": 5,
+        "endLine": 32,
+        "endChar": 6
+      },
+      "revId": "a12768b2d50b3d1d619985846f8bbe6ac035848e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ceb4a9b2_2b69a531",
         "filename": "src/compiler/translator/RewriteDoWhile.cpp",
         "patchSetId": 2
@@ -131,6 +155,30 @@
       "side": 1,
       "message": "The problem is that I\u0027m going to modify the statements array inside the loop, by adding elements to it, which would invalidate the iterator. \nAdded a comment that explains it.",
       "parentUuid": "ceb4a9b2_2b69a531",
+      "range": {
+        "startLine": 57,
+        "startChar": 8,
+        "endLine": 59,
+        "endChar": 54
+      },
+      "revId": "a12768b2d50b3d1d619985846f8bbe6ac035848e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eebded94_8fe4594f",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-28T20:20:40Z",
+      "side": 1,
+      "message": "Ah yes, that makes sense. Did you look at using mMultiReplacements.push_back? I\u0027m used to seeing Olli use this form, and it\u0027s what the code does in other places currently. Were you worried about efficiency?",
+      "parentUuid": "ceb4a9b2_2ebc53ef",
       "range": {
         "startLine": 57,
         "startChar": 8,
