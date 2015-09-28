@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8eae3164_e925d143",
+        "filename": "src/compiler/translator/depgraph/DependencyGraph.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-28T14:33:06Z",
+      "side": 0,
+      "message": "When you say vestigial, you mean it compiles without warning on MSVC right?",
+      "revId": "69cce580d31bff286d9b44349919e9a1f7386ea0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
