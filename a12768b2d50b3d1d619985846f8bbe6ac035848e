@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "8eae3164_acde073f",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-28T20:42:54Z",
+      "side": 1,
+      "message": "These replacements helpers are made to be used in trickier cases where you can only figure out that you can replace once you are inside the node being replaced: you build up a list of replacements and do it all in one go with updateTree.\nThis case is simpler so I don\u0027t use it.",
+      "parentUuid": "eebded94_8fe4594f",
+      "range": {
+        "startLine": 57,
+        "startChar": 8,
+        "endLine": 59,
+        "endChar": 54
+      },
+      "revId": "a12768b2d50b3d1d619985846f8bbe6ac035848e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6ea9fd5d_4b6ad92a",
         "filename": "src/compiler/translator/RewriteDoWhile.cpp",
         "patchSetId": 2
