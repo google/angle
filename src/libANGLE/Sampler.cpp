@@ -16,7 +16,7 @@ namespace gl
 {
 
 Sampler::Sampler(rx::ImplFactory *factory, GLuint id)
-    : mImpl(factory->createSampler()), RefCountObject(id), mSamplerState()
+    : RefCountObject(id), mImpl(factory->createSampler()), mSamplerState()
 {
 }
 
