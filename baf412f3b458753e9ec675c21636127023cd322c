@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ce074951_d66a9471",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-09-29T15:36:49Z",
+      "side": 1,
+      "message": "I think this needs to be explicitly initialized to 0 in the constructor.",
+      "range": {
+        "startLine": 235,
+        "startChar": 17,
+        "endLine": 235,
+        "endChar": 32
+      },
+      "revId": "baf412f3b458753e9ec675c21636127023cd322c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce074951_f66d188c",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-09-29T15:36:49Z",
+      "side": 1,
+      "message": "Should still be ||",
+      "range": {
+        "startLine": 39,
+        "startChar": 30,
+        "endLine": 39,
+        "endChar": 32
+      },
+      "revId": "baf412f3b458753e9ec675c21636127023cd322c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
