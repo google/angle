@@ -142,6 +142,23 @@
       "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e9a4178_b8a28111",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-09-29T13:08:13Z",
+      "side": 1,
+      "message": "Wouldn\u0027t it make more sense if this flag would also have an effect on the HLSL backend?",
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
