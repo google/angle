@@ -1,0 +1,147 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eececd75_04f958eb",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-09-29T13:06:11Z",
+      "side": 1,
+      "message": "Wouldn\u0027t the alternative actually be something like while (temp || CONDITION) where temp would initially be set to true?",
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ec27958_97768615",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-09-29T13:06:11Z",
+      "side": 1,
+      "message": "Should be false",
+      "range": {
+        "startLine": 72,
+        "startChar": 27,
+        "endLine": 72,
+        "endChar": 31
+      },
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ec27958_d7571e63",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-09-29T13:06:11Z",
+      "side": 1,
+      "message": "I\u0027d name this tempDeclaration",
+      "range": {
+        "startLine": 73,
+        "startChar": 30,
+        "endLine": 73,
+        "endChar": 41
+      },
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb5e1d9_bd5a8b8c",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-09-29T13:06:11Z",
+      "side": 1,
+      "message": "Should be falseValue?",
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ec3bd5a_b870d561",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-09-29T13:06:11Z",
+      "side": 1,
+      "message": "Should be true",
+      "range": {
+        "startLine": 82,
+        "startChar": 22,
+        "endLine": 82,
+        "endChar": 27
+      },
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ebd45ca_f9decf3f",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-09-29T13:06:11Z",
+      "side": 1,
+      "message": "Should be assignTrue?",
+      "range": {
+        "startLine": 83,
+        "startChar": 27,
+        "endLine": 83,
+        "endChar": 38
+      },
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb5e1d9_40b2621e",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-09-29T13:06:11Z",
+      "side": 1,
+      "message": "TIntermNode objects are pool-allocated, so generally they are not deleted manually. I wouldn\u0027t delete the loop here either for consistency.",
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
