@@ -908,6 +908,16 @@ void FunctionsGL::initialize()
     AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glGetSamplerParameterIiv"), &getSamplerParameterIiv);
     AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glGetSamplerParameterIuiv"), &getSamplerParameterIuiv);
 
+    // GL_ARB_occlusion_query
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_occlusion_query", loadProcAddress("glGenQueriesARB"), &genQueries);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_occlusion_query", loadProcAddress("glDeleteQueriesARB"), &deleteQueries);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_occlusion_query", loadProcAddress("glIsQueryARB"), &isQuery);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_occlusion_query", loadProcAddress("glBeginQueryARB"), &beginQuery);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_occlusion_query", loadProcAddress("glEndQueryARB"), &endQuery);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_occlusion_query", loadProcAddress("glGetQueryivARB"), &getQueryiv);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_occlusion_query", loadProcAddress("glGetQueryObjectivARB"), &getQueryObjectiv);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_occlusion_query", loadProcAddress("glGetQueryObjectuivARB"), &getQueryObjectuiv);
+
     // 1.0
     if (isAtLeastGL(gl::Version(1, 0)))
     {

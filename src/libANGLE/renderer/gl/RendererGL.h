@@ -124,6 +124,8 @@ class RendererGL : public Renderer
 
     WorkaroundsGL mWorkarounds;
 
+    bool mHasDebugOutput;
+
     // For performance debugging
     bool mSkipDrawCalls;
 };

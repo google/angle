@@ -527,6 +527,11 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
                               functions->isAtLeastGLES(gl::Version(3, 0)) || functions->hasGLESExtension("GL_EXT_draw_buffers");
     extensions->textureStorage = true;
     extensions->textureFilterAnisotropic = functions->hasGLExtension("GL_EXT_texture_filter_anisotropic") || functions->hasGLESExtension("GL_EXT_texture_filter_anisotropic");
+    extensions->occlusionQueryBoolean =
+        functions->isAtLeastGL(gl::Version(1, 5)) ||
+        functions->hasGLExtension("GL_ARB_occlusion_query2") ||
+        functions->isAtLeastGLES(gl::Version(3, 0)) ||
+        functions->hasGLESExtension("GL_EXT_occlusion_query_boolean");
     extensions->maxTextureAnisotropy = extensions->textureFilterAnisotropic ? QuerySingleGLFloat(functions, GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT) : 0.0f;
     extensions->fence = functions->hasGLExtension("GL_NV_fence") || functions->hasGLESExtension("GL_NV_fence");
     extensions->blendMinMax = functions->isAtLeastGL(gl::Version(1, 5)) || functions->hasGLExtension("GL_EXT_blend_minmax") ||
@@ -577,6 +582,9 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 #if defined(ANGLE_PLATFORM_APPLE)
     workarounds->doWhileGLSLCausesGPUHang = true;
 #endif
+
+    workarounds->finishDoesNotCauseQueriesToBeAvailable =
+        functions->standard == STANDARD_GL_DESKTOP && vendor == VENDOR_ID_NVIDIA;
 }
 
 }

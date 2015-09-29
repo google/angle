@@ -86,6 +86,7 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
       mFunctions(functions),
       mStateManager(nullptr),
       mBlitter(nullptr),
+      mHasDebugOutput(false),
       mSkipDrawCalls(false)
 {
     ASSERT(mFunctions);
@@ -93,8 +94,12 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
     nativegl_gl::GenerateWorkarounds(mFunctions, &mWorkarounds);
     mBlitter = new BlitGL(functions, mWorkarounds, mStateManager);
 
+    mHasDebugOutput = mFunctions->isAtLeastGL(gl::Version(4, 3)) ||
+                      mFunctions->hasGLExtension("GL_KHR_debug") ||
+                      mFunctions->isAtLeastGLES(gl::Version(3, 2)) ||
+                      mFunctions->hasGLESExtension("GL_KHR_debug");
 #ifndef NDEBUG
-    if (mFunctions->debugMessageControl && mFunctions->debugMessageCallback)
+    if (mHasDebugOutput)
     {
         mFunctions->enable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         mFunctions->debugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_HIGH, 0, nullptr, GL_TRUE);
@@ -126,7 +131,22 @@ gl::Error RendererGL::flush()
 
 gl::Error RendererGL::finish()
 {
+#ifdef NDEBUG
+    if (mWorkarounds.finishDoesNotCauseQueriesToBeAvailable && mHasDebugOutput)
+    {
+        mFunctions->enable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    }
+#endif
+
     mFunctions->finish();
+
+#ifdef NDEBUG
+    if (mWorkarounds.finishDoesNotCauseQueriesToBeAvailable && mHasDebugOutput)
+    {
+        mFunctions->disable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    }
+#endif
+
     return gl::Error(GL_NO_ERROR);
 }
 
@@ -280,7 +300,7 @@ VertexArrayImpl *RendererGL::createVertexArray(const gl::VertexArray::Data &data
 
 QueryImpl *RendererGL::createQuery(GLenum type)
 {
-    return new QueryGL(type);
+    return new QueryGL(type, mFunctions, mStateManager);
 }
 
 FenceNVImpl *RendererGL::createFenceNV()

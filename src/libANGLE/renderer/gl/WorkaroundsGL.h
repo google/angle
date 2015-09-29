@@ -18,7 +18,8 @@ struct WorkaroundsGL
         : avoid1BitAlphaTextureFormats(false),
           rgba4IsNotSupportedForColorRendering(false),
           doesSRGBClearsOnLinearFramebufferAttachments(false),
-          doWhileGLSLCausesGPUHang(false)
+          doWhileGLSLCausesGPUHang(false),
+          finishDoesNotCauseQueriesToBeAvailable(false)
     {
     }
 
@@ -40,8 +41,8 @@ struct WorkaroundsGL
     // driver clears to the linearized clear color despite the framebuffer not supporting SRGB
     // blending.  It only seems to do this when the framebuffer has only linear attachments, mixed
     // attachments appear to get the correct clear color.
-
     bool doesSRGBClearsOnLinearFramebufferAttachments;
+
     // On Mac some GLSL constructs involving do-while loops cause GPU hangs, such as the following:
     //  int i = 1;
     //  do {
@@ -50,6 +51,11 @@ struct WorkaroundsGL
     //  } while (i > 0)
     // Work around this by rewriting the do-while to use another GLSL construct (block + while)
     bool doWhileGLSLCausesGPUHang;
+
+    // Calling glFinish doesn't cause all queries to report that the result is available on some
+    // (NVIDIA) drivers.  It was found that enabling GL_DEBUG_OUTPUT_SYNCHRONOUS before the finish
+    // causes it to fully finish.
+    bool finishDoesNotCauseQueriesToBeAvailable;
 };
 }
 
