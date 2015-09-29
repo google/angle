@@ -22,6 +22,30 @@
       "revId": "0daeccccfbe5dd089dad2d4add091859e9eec2a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7829c784_b182ba36",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-29T14:17:43Z",
+      "side": 1,
+      "message": "Done. I think you\u0027re right, probably about it being static. Let me know if it\u0027s ok to add, I\u0027d like to clear this out of my queue. It\u0027s hard for me to prove looking at the code that this assert is never hit.",
+      "parentUuid": "ceb4a9b2_ae24c38d",
+      "range": {
+        "startLine": 178,
+        "startChar": 0,
+        "endLine": 188,
+        "endChar": 13
+      },
+      "revId": "0daeccccfbe5dd089dad2d4add091859e9eec2a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
