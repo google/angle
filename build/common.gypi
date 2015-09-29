@@ -32,6 +32,7 @@
             '-Wundef',
             '-Wwrite-strings',
             '-Wno-format-nonliteral',
+            '-Wnon-virtual-dtor',
         ],
     },
     'target_defaults':
