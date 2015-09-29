@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7829c784_d4bbf4f2",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-29T15:30:14Z",
+      "side": 1,
+      "message": "Good point, done",
+      "parentUuid": "eececd75_04f958eb",
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ec27958_97768615",
         "filename": "src/compiler/translator/RewriteDoWhile.cpp",
         "patchSetId": 3
@@ -30,6 +48,30 @@
       "writtenOn": "2015-09-29T13:06:11Z",
       "side": 1,
       "message": "Should be false",
+      "range": {
+        "startLine": 72,
+        "startChar": 27,
+        "endLine": 72,
+        "endChar": 31
+      },
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ea9fd5d_8efbffe4",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-29T15:30:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ec27958_97768615",
       "range": {
         "startLine": 72,
         "startChar": 27,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "6ea9fd5d_aef83be8",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-29T15:30:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ec27958_d7571e63",
+      "range": {
+        "startLine": 73,
+        "startChar": 30,
+        "endLine": 73,
+        "endChar": 41
+      },
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0eb5e1d9_bd5a8b8c",
         "filename": "src/compiler/translator/RewriteDoWhile.cpp",
         "patchSetId": 3
@@ -76,6 +142,24 @@
       "writtenOn": "2015-09-29T13:06:11Z",
       "side": 1,
       "message": "Should be falseValue?",
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e6c7116_c5c0246a",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-29T15:30:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0eb5e1d9_bd5a8b8c",
       "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "6ea9fd5d_4eb18738",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-29T15:30:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ec3bd5a_b870d561",
+      "range": {
+        "startLine": 82,
+        "startChar": 22,
+        "endLine": 82,
+        "endChar": 27
+      },
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ebd45ca_f9decf3f",
         "filename": "src/compiler/translator/RewriteDoWhile.cpp",
         "patchSetId": 3
@@ -116,6 +224,30 @@
       "writtenOn": "2015-09-29T13:06:11Z",
       "side": 1,
       "message": "Should be assignTrue?",
+      "range": {
+        "startLine": 83,
+        "startChar": 27,
+        "endLine": 83,
+        "endChar": 38
+      },
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eebded94_d2c43a9e",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-29T15:30:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ebd45ca_f9decf3f",
       "range": {
         "startLine": 83,
         "startChar": 27,
@@ -163,6 +295,24 @@
     },
     {
       "key": {
+        "uuid": "0e308111_68c65737",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-29T15:30:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ceb4a9b2_0ee70fa8",
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e9a4178_b8a28111",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 3
@@ -192,6 +342,24 @@
       "side": 1,
       "message": "+1, it seems to apply on both as do most of the options.",
       "parentUuid": "0e9a4178_b8a28111",
+      "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ceb4a9b2_6e5b2bf7",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-29T15:30:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ceb4a9b2_2eec5389",
       "revId": "d6202eff6e3555514f71041727827c0ef25dae88",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
