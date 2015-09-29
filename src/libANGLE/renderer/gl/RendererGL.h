@@ -108,7 +108,6 @@ class RendererGL : public Renderer
     const gl::Version &getMaxSupportedESVersion() const;
     const FunctionsGL *getFunctions() const { return mFunctions; }
     StateManagerGL *getStateManager() const { return mStateManager; }
-    const WorkaroundsGL &getWorkarounds() const { return mWorkarounds; }
 
   private:
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureCaps,

@@ -27,7 +27,6 @@ PbufferSurfaceCGL::PbufferSurfaceCGL(RendererGL *renderer,
       mHeight(height),
       mFunctions(functions),
       mStateManager(renderer->getStateManager()),
-      mWorkarounds(renderer->getWorkarounds())
       mFramebuffer(0),
       mColorRenderbuffer(0),
       mDSRenderbuffer(0)
@@ -135,7 +134,7 @@ EGLint PbufferSurfaceCGL::getSwapBehavior() const
 FramebufferImpl *PbufferSurfaceCGL::createDefaultFramebuffer(const gl::Framebuffer::Data &data)
 {
     // TODO(cwallez) assert it happens only once?
-    return new FramebufferGL(mFramebuffer, data, mFunctions, mWorkarounds, mStateManager);
+    return new FramebufferGL(mFramebuffer, data, mFunctions, mStateManager);
 }
 
 }
