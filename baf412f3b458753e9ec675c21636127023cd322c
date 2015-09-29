@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ee5b2d6b_bb89caad",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-29T15:42:32Z",
+      "side": 1,
+      "message": "Uh, that\u0027s quite the oversight, it is funny how since this is unsigned, any initial value will still work.\nDone",
+      "parentUuid": "ce074951_d66a9471",
+      "range": {
+        "startLine": 235,
+        "startChar": 17,
+        "endLine": 235,
+        "endChar": 32
+      },
+      "revId": "baf412f3b458753e9ec675c21636127023cd322c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ce074951_f66d188c",
         "filename": "src/compiler/translator/RewriteDoWhile.cpp",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "0e308111_28e3afc4",
+        "filename": "src/compiler/translator/RewriteDoWhile.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-29T15:42:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce074951_f66d188c",
+      "range": {
+        "startLine": 39,
+        "startChar": 30,
+        "endLine": 39,
+        "endChar": 32
+      },
+      "revId": "baf412f3b458753e9ec675c21636127023cd322c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eebded94_d2abdabf",
         "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
         "patchSetId": 4
@@ -59,6 +107,30 @@
       "writtenOn": "2015-09-29T15:38:24Z",
       "side": 1,
       "message": "is this intentionally included?",
+      "range": {
+        "startLine": 210,
+        "startChar": 0,
+        "endLine": 211,
+        "endChar": 72
+      },
+      "revId": "baf412f3b458753e9ec675c21636127023cd322c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e308111_88d8fb09",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 4
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-09-29T15:42:32Z",
+      "side": 1,
+      "message": "Nope, removed.",
+      "parentUuid": "eebded94_d2abdabf",
       "range": {
         "startLine": 210,
         "startChar": 0,
