@@ -303,19 +303,20 @@ SamplerImpl *RendererGL::createSampler()
     return new SamplerGL(mFunctions, mStateManager);
 }
 
-void RendererGL::insertEventMarker(GLsizei, const char *)
+void RendererGL::insertEventMarker(GLsizei length, const char *marker)
 {
-    UNREACHABLE();
+    mFunctions->debugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 0,
+                                   GL_DEBUG_SEVERITY_NOTIFICATION, length, marker);
 }
 
-void RendererGL::pushGroupMarker(GLsizei, const char *)
+void RendererGL::pushGroupMarker(GLsizei length, const char *marker)
 {
-    UNREACHABLE();
+    mFunctions->pushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, length, marker);
 }
 
 void RendererGL::popGroupMarker()
 {
-    UNREACHABLE();
+    mFunctions->popDebugGroup();
 }
 
 void RendererGL::notifyDeviceLost()
