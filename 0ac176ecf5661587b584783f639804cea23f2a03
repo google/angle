@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "15117609_d3b874fb",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-30T18:48:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5b4e2df_1a853dff",
+      "range": {
+        "startLine": 69,
+        "startChar": 4,
+        "endLine": 69,
+        "endChar": 98
+      },
+      "revId": "0ac176ecf5661587b584783f639804cea23f2a03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f5b4e2df_5a7fb5a2",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "d5b7dee1_1928eb48",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-30T18:48:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5b4e2df_5a7fb5a2",
+      "range": {
+        "startLine": 344,
+        "startChar": 42,
+        "endLine": 344,
+        "endChar": 52
+      },
+      "revId": "0ac176ecf5661587b584783f639804cea23f2a03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "751ab2b5_e66b9ef6",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
         "patchSetId": 7
@@ -59,6 +107,30 @@
       "writtenOn": "2015-09-30T17:11:15Z",
       "side": 1,
       "message": "I thought about this a bit more: you can leave these as implemented by ANGLE\u0027s shader translator. It\u0027s not necessary to return the same value as the implementation might return here, and we already have sensible values for these set in gl::Program::defineUniformBlock",
+      "range": {
+        "startLine": 354,
+        "startChar": 21,
+        "endLine": 354,
+        "endChar": 36
+      },
+      "revId": "0ac176ecf5661587b584783f639804cea23f2a03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5b7dee1_392daf59",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-30T18:48:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "751ab2b5_e66b9ef6",
       "range": {
         "startLine": 354,
         "startChar": 21,
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "d5cefe75_6105b61c",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-30T18:48:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5d50a02_209c8a63",
+      "range": {
+        "startLine": 378,
+        "startChar": 12,
+        "endLine": 378,
+        "endChar": 15
+      },
+      "revId": "0ac176ecf5661587b584783f639804cea23f2a03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b5d50a02_40a18e94",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
         "patchSetId": 7
@@ -128,6 +224,30 @@
       "writtenOn": "2015-09-30T17:11:15Z",
       "side": 1,
       "message": "also a TODO here to handle this at the Program level. (This is info we can easily parse, but I don\u0027t think I implemented it)",
+      "range": {
+        "startLine": 413,
+        "startChar": 12,
+        "endLine": 416,
+        "endChar": 78
+      },
+      "revId": "0ac176ecf5661587b584783f639804cea23f2a03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "751ab2b5_46ab9273",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-30T18:48:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5d50a02_40a18e94",
       "range": {
         "startLine": 413,
         "startChar": 12,
@@ -209,6 +329,30 @@
     },
     {
       "key": {
+        "uuid": "55da0e36_1d37f316",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-30T18:48:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55da0e36_dd0e6b6c",
+      "range": {
+        "startLine": 49,
+        "startChar": 9,
+        "endLine": 49,
+        "endChar": 26
+      },
+      "revId": "0ac176ecf5661587b584783f639804cea23f2a03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9523a6eb_4750aed5",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
         "patchSetId": 7
@@ -220,6 +364,30 @@
       "writtenOn": "2015-09-30T17:11:15Z",
       "side": 1,
       "message": "nit: functions first",
+      "range": {
+        "startLine": 151,
+        "startChar": 8,
+        "endLine": 151,
+        "endChar": 28
+      },
+      "revId": "0ac176ecf5661587b584783f639804cea23f2a03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5b7dee1_d92af353",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-30T18:48:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9523a6eb_4750aed5",
       "range": {
         "startLine": 151,
         "startChar": 8,
