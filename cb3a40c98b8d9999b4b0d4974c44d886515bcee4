@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f5b4e2df_7af1d99c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-30T17:37:16Z",
+      "side": 1,
+      "message": "These assertions are not correct.  In the validation code it \u0026\u0027s with the framebuffer\u0027s current stencil mask but this \u0026\u0027s with the the maximum stencil mask.  I can trigger this assertion by setting any stencil masks that are not equal on a framebuffer with no stencil bits.",
+      "range": {
+        "startLine": 1207,
+        "startChar": 8,
+        "endLine": 1211,
+        "endChar": 86
+      },
+      "revId": "cb3a40c98b8d9999b4b0d4974c44d886515bcee4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
