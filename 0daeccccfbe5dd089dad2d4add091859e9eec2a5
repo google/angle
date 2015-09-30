@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d5cefe75_c1968210",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-30T19:11:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ceb4a9b2_2e5533bf",
+      "range": {
+        "startLine": 181,
+        "startChar": 12,
+        "endLine": 181,
+        "endChar": 52
+      },
+      "revId": "0daeccccfbe5dd089dad2d4add091859e9eec2a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ceb4a9b2_ae24c38d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
         "patchSetId": 1
