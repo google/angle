@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "751ab2b5_465d5264",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1202,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-30T16:51:16Z",
+      "side": 1,
+      "message": "can you fix the spacing on this comment? a tip is to make it all a big single line comment, then use \u0027git cl format\u0027",
+      "range": {
+        "startLine": 1199,
+        "startChar": 10,
+        "endLine": 1202,
+        "endChar": 14
+      },
+      "revId": "31e9544cbbc0138b6ee636d33cf758fcb158f3ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75df1224_5e9975b8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-30T16:51:16Z",
+      "side": 1,
+      "message": "should this use the READ_MASK constants?",
+      "range": {
+        "startLine": 1211,
+        "startChar": 48,
+        "endLine": 1211,
+        "endChar": 52
+      },
+      "revId": "31e9544cbbc0138b6ee636d33cf758fcb158f3ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9523a6eb_c722de63",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1498,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-30T16:51:16Z",
+      "side": 1,
+      "message": "you can remove the gl:: prefix here",
+      "range": {
+        "startLine": 1498,
+        "startChar": 13,
+        "endLine": 1498,
+        "endChar": 17
+      },
+      "revId": "31e9544cbbc0138b6ee636d33cf758fcb158f3ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
