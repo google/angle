@@ -306,6 +306,30 @@
     },
     {
       "key": {
+        "uuid": "75df1224_4110b45f",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-09-30T18:49:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75df1224_7e6c713b",
+      "range": {
+        "startLine": 285,
+        "startChar": 20,
+        "endLine": 285,
+        "endChar": 23
+      },
+      "revId": "0ac176ecf5661587b584783f639804cea23f2a03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "55da0e36_dd0e6b6c",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
         "patchSetId": 7
