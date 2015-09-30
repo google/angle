@@ -304,7 +304,7 @@ static MouseButton TranslateMouseButton(int button)
 
     - (void) dealloc
     {
-        [mTrackingArea dealloc];
+        [mTrackingArea release];
         [super dealloc];
     }
 
