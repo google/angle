@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "35c2fa57_74bf2892",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1202,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-09-30T17:02:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "751ab2b5_465d5264",
+      "range": {
+        "startLine": 1199,
+        "startChar": 10,
+        "endLine": 1202,
+        "endChar": 14
+      },
+      "revId": "31e9544cbbc0138b6ee636d33cf758fcb158f3ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "75df1224_5e9975b8",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "55884e36_6d0a152d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-09-30T17:02:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75df1224_5e9975b8",
+      "range": {
+        "startLine": 1211,
+        "startChar": 48,
+        "endLine": 1211,
+        "endChar": 52
+      },
+      "revId": "31e9544cbbc0138b6ee636d33cf758fcb158f3ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9523a6eb_c722de63",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2015-09-30T16:51:16Z",
       "side": 1,
       "message": "you can remove the gl:: prefix here",
+      "range": {
+        "startLine": 1498,
+        "startChar": 13,
+        "endLine": 1498,
+        "endChar": 17
+      },
+      "revId": "31e9544cbbc0138b6ee636d33cf758fcb158f3ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5851e22_a98cfd2d",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1498,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-09-30T17:02:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9523a6eb_c722de63",
       "range": {
         "startLine": 1498,
         "startChar": 13,
