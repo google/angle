@@ -173,12 +173,17 @@ inline void InsertD3D11FormatInfo(D3D11ES3FormatMap *formatMap,
             static const SwizzleInfoMap &swizzleMap = BuildSwizzleInfoMap();
             SwizzleInfoMap::const_iterator swizzleIter =
                 swizzleMap.find(SwizzleSizeType(maxBits, formatInfo.componentType));
-            ASSERT(swizzleIter != swizzleMap.end());
 
-            const SwizzleFormatInfo &swizzleInfo = swizzleIter->second;
-            info.swizzleTexFormat                = swizzleInfo.mTexFormat;
-            info.swizzleSRVFormat                = swizzleInfo.mSRVFormat;
-            info.swizzleRTVFormat                = swizzleInfo.mRTVFormat;
+            // Handle the odd case where we might find an invalid swizzle key.
+            // This should never happen, but it's hard to prove, so add a fail-safe.
+            ASSERT(swizzleIter != swizzleMap.end());
+            if (swizzleIter != swizzleMap.end())
+            {
+                const SwizzleFormatInfo &swizzleInfo = swizzleIter->second;
+                info.swizzleTexFormat                = swizzleInfo.mTexFormat;
+                info.swizzleSRVFormat                = swizzleInfo.mSRVFormat;
+                info.swizzleRTVFormat                = swizzleInfo.mRTVFormat;
+            }
         }
         else
         {
