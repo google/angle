@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0e5fa128_0726de4f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_load_functions_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-30T20:15:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eebded94_0ffe292a",
+      "range": {
+        "startLine": 107,
+        "startChar": 24,
+        "endLine": 107,
+        "endChar": 33
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e673d32_dbf80bea",
         "filename": "src/libANGLE/renderer/d3d/d3d11/gen_load_functions_table.py",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-28T15:03:30Z",
       "side": 1,
       "message": "see comment re: sorting",
+      "range": {
+        "startLine": 114,
+        "startChar": 32,
+        "endLine": 114,
+        "endChar": 41
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e4d7d85_08f031c7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_load_functions_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-30T20:15:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e673d32_dbf80bea",
       "range": {
         "startLine": 114,
         "startChar": 32,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "0e5fa128_e732aa87",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_load_functions_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-30T20:15:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eebded94_6f09e5f6",
+      "range": {
+        "startLine": 121,
+        "startChar": 32,
+        "endLine": 121,
+        "endChar": 41
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee5b2d6b_c2165381",
         "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_data.json",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2015-09-28T15:03:30Z",
       "side": 1,
       "message": "I think I would recommend structuring this data as {\u0027InternalFormat1\u0027: {\u0027Type1\u0027: {..Data1..}}, {\u0027Type2\u0027: {..Data2..} } rather than the inner index being the DXGI format. Think of load functions as taking two inputs: the type being written to (internal format, GL_RG8_SNORM), and the type of the data the user is sending (GL type, GL_BYTE) and having the requiresConversion, loadFunction and DXGI format being the parameters.\n\n\nThis might help process some of the unknown formats, where are really just placeholder values for load functions which don\u0027t have a corresponding DXGI format.",
+      "range": {
+        "startLine": 2,
+        "startChar": 3,
+        "endLine": 2,
+        "endChar": 15
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e4d7d85_e8fcb5a6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_data.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-30T20:15:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee5b2d6b_c2165381",
       "range": {
         "startLine": 2,
         "startChar": 3,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "f86a1765_d3127ef0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_data.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-30T20:15:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee5b2d6b_02116b86",
+      "range": {
+        "startLine": 127,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 7
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ceb4a9b2_ebbb8d44",
         "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table.cpp",
         "patchSetId": 4
@@ -128,6 +248,30 @@
       "writtenOn": "2015-09-28T15:03:30Z",
       "side": 1,
       "message": "I might add a // TODO here to replace these maps with more generated code. I\u0027m not sure if it\u0027s a bottleneck at the moment, and it\u0027s a bit of a complex refactor, but worth noting.",
+      "range": {
+        "startLine": 60,
+        "startChar": 43,
+        "endLine": 60,
+        "endChar": 62
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e4c398b_5d1a6aa8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-30T20:15:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ceb4a9b2_ebbb8d44",
       "range": {
         "startLine": 60,
         "startChar": 43,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "f86a1765_53cbeeaf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-30T20:15:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee5b2d6b_02fa0ba8",
+      "range": {
+        "startLine": 73,
+        "startChar": 20,
+        "endLine": 73,
+        "endChar": 93
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8eae3164_89321d87",
         "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table.cpp",
         "patchSetId": 4
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "8e52b121_14cf3642",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-30T20:15:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8eae3164_89321d87",
+      "range": {
+        "startLine": 194,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 89
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee5b2d6b_622667fe",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
         "patchSetId": 4
@@ -197,6 +389,30 @@
       "writtenOn": "2015-09-28T15:03:30Z",
       "side": 1,
       "message": "do you know if inline makes any difference? I\u0027d be tempted to remove it from a big function like this.",
+      "range": {
+        "startLine": 110,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 6
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e4c398b_dd041ae2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-09-30T20:15:25Z",
+      "side": 1,
+      "message": "It looks like the compiler in VS ignores the inline completely. There is also no performance difference between the two, so that sounds like a good idea",
+      "parentUuid": "ee5b2d6b_622667fe",
       "range": {
         "startLine": 110,
         "startChar": 0,
