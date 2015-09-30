@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "b5d50a02_408b4ee9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_data.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-09-30T20:41:40Z",
+      "side": 1,
+      "message": "Gah, I\u0027m sorry. Our tables are a bit more complicated than I imagined, and we do have multiple values for {internalformat,type} pairs, where DXGI_FORMAT differs. Sorry about that. The real key is {internalformat,type,dxgi_format}, but I think this table configuration is good.",
+      "parentUuid": "6e4d7d85_e8fcb5a6",
+      "range": {
+        "startLine": 2,
+        "startChar": 3,
+        "endLine": 2,
+        "endChar": 15
+      },
+      "revId": "44fc45158ceab17832371fab71e16c8a82293a1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee5b2d6b_02116b86",
         "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_data.json",
         "patchSetId": 4
