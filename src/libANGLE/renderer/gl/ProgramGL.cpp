@@ -356,7 +356,7 @@ void ProgramGL::gatherUniformBlockInfo(std::vector<gl::UniformBlock> *uniformBlo
         GLuint uniformIndex = 0;
         mFunctions->getUniformIndices(mProgramID, 1, &uniformName, &uniformIndex);
 
-        if (uniformIndex == -1)
+        if (uniformIndex == GL_INVALID_INDEX)
         {
             // Uniform member has been optimized out, remove it from the list
             // TODO: Clean this up by using a class to wrap around the uniforms so manual removal is
