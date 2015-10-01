@@ -34,12 +34,6 @@ ProgramGL::~ProgramGL()
     mProgramID = 0;
 }
 
-GLenum ProgramGL::getBinaryFormat()
-{
-    UNIMPLEMENTED();
-    return GLenum();
-}
-
 LinkResult ProgramGL::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 {
     UNIMPLEMENTED();

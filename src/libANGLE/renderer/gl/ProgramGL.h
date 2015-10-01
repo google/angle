@@ -31,7 +31,6 @@ class ProgramGL : public ProgramImpl
               StateManagerGL *stateManager);
     ~ProgramGL() override;
 
-    GLenum getBinaryFormat() override;
     LinkResult load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream) override;
     gl::Error save(gl::BinaryOutputStream *stream) override;
 

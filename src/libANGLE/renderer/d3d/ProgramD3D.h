@@ -88,7 +88,6 @@ class ProgramD3D : public ProgramImpl
     bool usesGeometryShader() const;
     bool usesInstancedPointSpriteEmulation() const;
 
-    GLenum getBinaryFormat() { return GL_PROGRAM_BINARY_ANGLE; }
     LinkResult load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream);
     gl::Error save(gl::BinaryOutputStream *stream);
 
