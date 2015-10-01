@@ -1531,17 +1531,17 @@ static bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count, GLsiz
     {
         const gl::UniformBlock &uniformBlock = program->getUniformBlockByIndex(uniformBlockIndex);
         GLuint blockBinding = program->getUniformBlockBinding(uniformBlockIndex);
-        const OffsetBindingPointer<Buffer> &uniformBuffer =
-            state.getIndexedUniformBuffer(blockBinding);
+        const gl::Buffer *uniformBuffer = state.getIndexedUniformBuffer(blockBinding);
 
-        if (uniformBuffer.get() == nullptr)
+        if (!uniformBuffer)
         {
             // undefined behaviour
             context->recordError(Error(GL_INVALID_OPERATION, "It is undefined behaviour to have a used but unbound uniform buffer."));
             return false;
         }
 
-        size_t uniformBufferSize = uniformBuffer.getSize();
+        size_t uniformBufferSize = state.getIndexedUniformBufferSize(blockBinding);
+
         if (uniformBufferSize == 0)
         {
             // Bind the whole buffer.

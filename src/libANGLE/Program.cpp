@@ -1520,7 +1520,6 @@ const UniformBlock &Program::getUniformBlockByIndex(GLuint index) const
 void Program::bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding)
 {
     mData.mUniformBlockBindings[uniformBlockIndex] = uniformBlockBinding;
-    mProgram->setUniformBlockBinding(uniformBlockIndex, uniformBlockBinding);
 }
 
 GLuint Program::getUniformBlockBinding(GLuint uniformBlockIndex) const
@@ -1534,7 +1533,6 @@ void Program::resetUniformBlockBindings()
     {
         mData.mUniformBlockBindings[blockId] = 0;
     }
-    mData.mActiveUniformBlockBindings.reset();
 }
 
 void Program::setTransformFeedbackVaryings(GLsizei count, const GLchar *const *varyings, GLenum bufferMode)

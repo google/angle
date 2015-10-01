@@ -182,10 +182,6 @@ class Program : angle::NonCopyable
             ASSERT(uniformBlockIndex < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS);
             return mUniformBlockBindings[uniformBlockIndex];
         }
-        const UniformBlockBindingMask &getActiveUniformBlockBindingsMask() const
-        {
-            return mActiveUniformBlockBindings;
-        }
         const std::vector<sh::Attribute> &getAttributes() const { return mAttributes; }
         const AttributesMask &getActiveAttribLocationsMask() const
         {
@@ -217,7 +213,6 @@ class Program : angle::NonCopyable
         GLenum mTransformFeedbackBufferMode;
 
         GLuint mUniformBlockBindings[IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS];
-        UniformBlockBindingMask mActiveUniformBlockBindings;
 
         std::vector<sh::Attribute> mAttributes;
         std::bitset<MAX_VERTEX_ATTRIBS> mActiveAttribLocationsMask;
