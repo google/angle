@@ -892,6 +892,22 @@ void FunctionsGL::initialize()
     AssignGLExtensionEntryPoint(extensions, "GL_ARB_draw_instanced", loadProcAddress("glDrawArraysInstancedARB"), &drawArraysInstanced);
     AssignGLExtensionEntryPoint(extensions, "GL_ARB_draw_instanced", loadProcAddress("glDrawElementsInstancedARB"), &drawElementsInstanced);
 
+    // GL_ARB_sampler_objects
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glGenSamplers"), &genSamplers);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glDeleteSamplers"), &deleteSamplers);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glIsSampler"), &isSampler);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glBindSampler"), &bindSampler);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glSamplerParameteri"), &samplerParameteri);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glSamplerParameterf"), &samplerParameterf);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glSamplerParameteriv"), &samplerParameteriv);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glSamplerParameterfv"), &samplerParameterfv);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glSamplerParameterIiv"), &samplerParameterIiv);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glSamplerParameterIuiv"), &samplerParameterIuiv);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glGetSamplerParameteriv"), &getSamplerParameteriv);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glGetSamplerParameterfv"), &getSamplerParameterfv);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glGetSamplerParameterIiv"), &getSamplerParameterIiv);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glGetSamplerParameterIuiv"), &getSamplerParameterIuiv);
+
     // 1.0
     if (isAtLeastGL(gl::Version(1, 0)))
     {
