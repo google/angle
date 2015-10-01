@@ -77,7 +77,6 @@ class ProgramD3D : public ProgramImpl
     virtual ~ProgramD3D();
 
     const std::vector<PixelShaderOutputVariable> &getPixelShaderKey() { return mPixelShaderKey; }
-    int getShaderVersion() const { return mShaderVersion; }
 
     GLint getSamplerMapping(gl::SamplerType type, unsigned int samplerIndex, const gl::Caps &caps) const;
     GLenum getSamplerTextureType(gl::SamplerType type, unsigned int samplerIndex) const;
@@ -268,8 +267,6 @@ class ProgramD3D : public ProgramImpl
 
     // Cache for getPixelExecutableForFramebuffer
     std::vector<GLenum> mPixelShaderOutputFormatCache;
-
-    int mShaderVersion;
 
     SemanticIndexArray mSemanticIndexes;
     SemanticIndexArray mAttributesByLayout;

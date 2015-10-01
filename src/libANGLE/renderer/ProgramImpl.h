@@ -35,8 +35,6 @@ class ProgramImpl : angle::NonCopyable
     ProgramImpl(const gl::Program::Data &data) : mData(data) {}
     virtual ~ProgramImpl() {}
 
-    virtual int getShaderVersion() const = 0;
-
     virtual GLenum getBinaryFormat() = 0;
     virtual LinkResult load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream) = 0;
     virtual gl::Error save(gl::BinaryOutputStream *stream) = 0;

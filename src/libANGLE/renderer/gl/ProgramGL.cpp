@@ -34,12 +34,6 @@ ProgramGL::~ProgramGL()
     mProgramID = 0;
 }
 
-int ProgramGL::getShaderVersion() const
-{
-    UNIMPLEMENTED();
-    return int();
-}
-
 GLenum ProgramGL::getBinaryFormat()
 {
     UNIMPLEMENTED();

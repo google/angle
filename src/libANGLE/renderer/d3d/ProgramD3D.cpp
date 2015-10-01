@@ -308,7 +308,6 @@ ProgramD3D::ProgramD3D(const gl::Program::Data &data, RendererD3D *renderer)
       mUsedVertexSamplerRange(0),
       mUsedPixelSamplerRange(0),
       mDirtySamplerMapping(true),
-      mShaderVersion(100),
       mSerial(issueSerial())
 {
     mDynamicHLSL = new DynamicHLSL(renderer);
@@ -475,8 +474,6 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
         infoLog << "Mismatched compilation flags.";
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
-
-    stream->readInt(&mShaderVersion);
 
     // TODO(jmadill): replace MAX_VERTEX_ATTRIBS
     for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; ++i)
@@ -673,8 +670,6 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
     stream->writeBytes(reinterpret_cast<unsigned char*>(&binaryIdentifier), sizeof(DeviceIdentifier));
 
     stream->writeInt(ANGLE_COMPILE_OPTIMIZATION_LEVEL);
-
-    stream->writeInt(mShaderVersion);
 
     // TODO(jmadill): replace MAX_VERTEX_ATTRIBS
     for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; ++i)
@@ -1004,7 +999,6 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
 
     mVertexHLSL = vertexShader->getTranslatedSource();
     vertexShaderD3D->generateWorkarounds(&mVertexWorkarounds);
-    mShaderVersion = vertexShader->getShaderVersion();
 
     mPixelHLSL = fragmentShader->getTranslatedSource();
     fragmentShaderD3D->generateWorkarounds(&mPixelWorkarounds);
@@ -1767,7 +1761,6 @@ void ProgramD3D::reset()
 
     mVertexHLSL.clear();
     mVertexWorkarounds = D3DCompilerWorkarounds();
-    mShaderVersion = 100;
 
     mPixelHLSL.clear();
     mPixelWorkarounds = D3DCompilerWorkarounds();
