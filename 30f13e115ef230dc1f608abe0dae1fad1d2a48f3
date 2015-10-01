@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5cefe75_646944bb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-01T18:54:36Z",
+      "side": 1,
+      "message": "nit: keep commit messages in the form:\n\nShort descriptor (one line \u003c 65 chars)\n\u003cblank line\u003e\nDescription paragraph(s) (lines trimmed to 71 chars)\n...\n...\n\u003cblank line\u003e\nBUG\u003dblah (LG here)",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 39
+      },
+      "revId": "30f13e115ef230dc1f608abe0dae1fad1d2a48f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15117609_96526a57",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-01T18:54:36Z",
+      "side": 1,
+      "message": "can you also add an error message here, as the optional second argument to the Error constructor?\n\neg, \"internalformat is not a supported compressed internal format\"",
+      "range": {
+        "startLine": 132,
+        "startChar": 35,
+        "endLine": 132,
+        "endChar": 50
+      },
+      "revId": "30f13e115ef230dc1f608abe0dae1fad1d2a48f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
