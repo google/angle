@@ -511,6 +511,22 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
         LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
     }
 
+    // Can't support ES3 without texture swizzling
+    if (!functions->isAtLeastGL(gl::Version(3, 3)) &&
+        !functions->hasGLExtension("GL_ARB_texture_swizzle") &&
+        !functions->hasGLExtension("GL_EXT_texture_swizzle") &&
+        !functions->isAtLeastGLES(gl::Version(3, 0)))
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
+
+        // Texture swizzling is required to work around the luminance texture format not being
+        // present in the core profile
+        if (functions->profile & GL_CONTEXT_CORE_PROFILE_BIT)
+        {
+            LimitVersion(maxSupportedESVersion, gl::Version(0, 0));
+        }
+    }
+
     // Extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
     extensions->elementIndexUint = functions->standard == STANDARD_GL_DESKTOP ||
