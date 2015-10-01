@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "d5b7dee1_7c9e35a3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-01T16:05:16Z",
+      "side": 1,
+      "message": "\"Fix undefined behaviour in clampCast\"?",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 9
+      },
+      "revId": "a7a1c9e2316982edc127e0e56e0f67cb9597acb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "55da0e36_fd2c0729",
         "filename": "src/common/mathutil.h",
         "patchSetId": 1
