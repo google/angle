@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15117609_5c4f5157",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-02T21:14:44Z",
+      "side": 1,
+      "message": "could you add in a error description here, similar to the GLES2 version?",
+      "range": {
+        "startLine": 398,
+        "startChar": 39,
+        "endLine": 398,
+        "endChar": 54
+      },
+      "revId": "7f3e08f832d647a5d598a79241a93f80b60023b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
