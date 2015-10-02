@@ -2,6 +2,121 @@
   "comments": [
     {
       "key": {
+        "uuid": "354d9aaf_063cdb7f",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-10-02T20:24:12Z",
+      "side": 1,
+      "message": "Here GL_DEBUG_OUTPUT_SYNCHRONOUS is enabled, but...",
+      "range": {
+        "startLine": 104,
+        "startChar": 8,
+        "endLine": 104,
+        "endChar": 18
+      },
+      "revId": "3a6549593b687b59f85bf818ac8e08335d83a976",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5586271_f5d34f77",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-10-02T20:24:12Z",
+      "side": 1,
+      "message": "...it\u0027s disabled again here. Is this state being managed as you expect?",
+      "range": {
+        "startLine": 146,
+        "startChar": 8,
+        "endLine": 146,
+        "endChar": 18
+      },
+      "revId": "3a6549593b687b59f85bf818ac8e08335d83a976",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15a33681_eff5cc89",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-10-02T20:24:12Z",
+      "side": 1,
+      "message": "Interesting. The dEQP transform feedback tests require the TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN query to be available or the test fails. They perform a MapBuffer operation and expect the query (which was previously passed to EndQuery) to be available. I wonder whether these tests would pass without this workaround, or whether this behavior only happens with occlusion queries.",
+      "range": {
+        "startLine": 57,
+        "startChar": 7,
+        "endLine": 57,
+        "endChar": 13
+      },
+      "revId": "3a6549593b687b59f85bf818ac8e08335d83a976",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75439281_7e956605",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-10-02T20:24:12Z",
+      "side": 1,
+      "message": "That\u0027s a pretty broad workaround since it affects the behavior of glFinish() (in debug builds). Do you think it could be narrowed down? I tested the native dEQP on NVIDIA\u0027s 355.06 Linux driver and the transform feedback tests which previously had a lot of problems are behaving much better, though I didn\u0027t see problems with the transform feedback-related queries with the earlier driver.",
+      "range": {
+        "startLine": 578,
+        "startChar": 8,
+        "endLine": 578,
+        "endChar": 17
+      },
+      "revId": "3a6549593b687b59f85bf818ac8e08335d83a976",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5586271_950813a4",
+        "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-10-02T20:24:12Z",
+      "side": 1,
+      "message": "How about \"...the D3D backend...\"?",
+      "range": {
+        "startLine": 224,
+        "startChar": 43,
+        "endLine": 224,
+        "endChar": 46
+      },
+      "revId": "3a6549593b687b59f85bf818ac8e08335d83a976",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5515ae81_4e63a7d4",
         "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
         "patchSetId": 11
