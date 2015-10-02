@@ -2872,34 +2872,49 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
     }
     else if (baseExpression->isArray())
     {
-        TType indexedType = baseExpression->getType();
-        indexedType.clearArrayness();
-        indexedExpression->setType(indexedType);
+        const TType &baseType = baseExpression->getType();
+        if (baseType.getStruct())
+        {
+            TType copyOfType(baseType.getStruct());
+            indexedExpression->setType(copyOfType);
+        }
+        else if (baseType.isInterfaceBlock())
+        {
+            TType copyOfType(baseType.getInterfaceBlock(), baseType.getQualifier(),
+                             baseType.getLayoutQualifier(), 0);
+            indexedExpression->setType(copyOfType);
+        }
+        else
+        {
+            indexedExpression->setType(
+                TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqTemporary,
+                      static_cast<unsigned char>(baseExpression->getNominalSize()),
+                      static_cast<unsigned char>(baseExpression->getSecondarySize())));
+        }
+
+        if (baseExpression->getType().getQualifier() == EvqConst)
+        {
+            indexedExpression->getTypePointer()->setQualifier(EvqConst);
+        }
     }
     else if (baseExpression->isMatrix())
     {
+        TQualifier qualifier =
+            baseExpression->getType().getQualifier() == EvqConst ? EvqConst : EvqTemporary;
         indexedExpression->setType(TType(baseExpression->getBasicType(),
-                                         baseExpression->getPrecision(), EvqTemporary,
+                                         baseExpression->getPrecision(), qualifier,
                                          static_cast<unsigned char>(baseExpression->getRows())));
     }
     else if (baseExpression->isVector())
     {
+        TQualifier qualifier =
+            baseExpression->getType().getQualifier() == EvqConst ? EvqConst : EvqTemporary;
         indexedExpression->setType(
-            TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqTemporary));
+            TType(baseExpression->getBasicType(), baseExpression->getPrecision(), qualifier));
     }
     else
     {
         indexedExpression->setType(baseExpression->getType());
-    }
-
-    if (baseExpression->getType().getQualifier() == EvqConst &&
-        indexExpression->getType().getQualifier() == EvqConst)
-    {
-        indexedExpression->getTypePointer()->setQualifier(EvqConst);
-    }
-    else
-    {
-        indexedExpression->getTypePointer()->setQualifier(EvqTemporary);
     }
 
     return indexedExpression;

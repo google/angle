@@ -872,21 +872,3 @@ TEST_F(MalformedShaderTest, FragmentShaderInputStructWithInt)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
-
-// Selecting a field of a vector that's the result of dynamic indexing a constant array should work.
-TEST_F(MalformedShaderTest, ShaderSelectingFieldOfVectorIndexedFromArray)
-{
-    const std::string &shaderString =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "uniform int i;\n"
-        "void main() {\n"
-        "    float f = vec2[1](vec2(0.0, 0.1))[i].x;\n"
-        "    my_FragColor = vec4(f);\n"
-        "}\n";
-    if (!compile(shaderString))
-    {
-        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
-    }
-}
