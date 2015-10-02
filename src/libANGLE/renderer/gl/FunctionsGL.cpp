@@ -961,6 +961,11 @@ void FunctionsGL::initializeProcsDesktopGL()
     AssignGLExtensionEntryPoint(extensions, "GL_ARB_transform_feedback3", loadProcAddress("glEndQueryIndexed"), &endQueryIndexed);
     AssignGLExtensionEntryPoint(extensions, "GL_ARB_transform_feedback3", loadProcAddress("glGetQueryIndexediv"), &getQueryIndexediv);
 
+    // GL_ARB_get_program_binary
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_get_program_binary", loadProcAddress("glGetProgramBinary"), &getProgramBinary);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_get_program_binary", loadProcAddress("glProgramBinary"), &programBinary);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_get_program_binary", loadProcAddress("glProgramParameteri"), &programParameteri);
+
     // 1.0
     if (isAtLeastGL(gl::Version(1, 0)))
     {
@@ -1790,6 +1795,10 @@ void FunctionsGL::initializeProcsGLES()
     // GL_OES_EGL_image
     AssignGLExtensionEntryPoint(extensions, "GL_OES_EGL_image", loadProcAddress("glEGLImageTargetRenderbufferStorageOES"), &eglImageTargetRenderbufferStorageOES);
     AssignGLExtensionEntryPoint(extensions, "GL_OES_EGL_image", loadProcAddress("glEGLImageTargetTexture2DOES"), &eglImageTargetTexture2DOES);
+
+    // GL_OES_get_program_binary
+    AssignGLExtensionEntryPoint(extensions, "GL_OES_get_program_binary", loadProcAddress("glGetProgramBinaryOES"), &getProgramBinary);
+    AssignGLExtensionEntryPoint(extensions, "GL_OES_get_program_binary", loadProcAddress("glProgramBinaryOES"), &programBinary);
 
     // 2.0
     if (isAtLeastGLES(gl::Version(2, 0)))

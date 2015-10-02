@@ -405,7 +405,6 @@
 1323 LINUX : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth32f_stencil8 = FAIL
 1323 LINUX : dEQP-GLES3.functional.implementation_limits.max_fragment_uniform_components = FAIL
 1323 LINUX : dEQP-GLES3.functional.implementation_limits.max_vertex_uniform_components = FAIL
-1323 LINUX : dEQP-GLES3.functional.negative_api.shader.program_binary = FAIL
 1323 LINUX : dEQP-GLES3.functional.negative_api.state.get_integeri_v = FAIL
 1323 LINUX : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_max.primitives.points = FAIL
 1323 LINUX : dEQP-GLES3.functional.shaders.builtin_functions.precision.refract.highp_fragment.scalar = FAIL
