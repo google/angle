@@ -22,6 +22,30 @@
       "revId": "8c6be8d0cbd218be447d552fe9f760ab87d8e6ea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f597825c_857944be",
+        "filename": "src/compiler/translator/intermOut.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-10-02T16:10:22Z",
+      "side": 1,
+      "message": "Done, there\u0027s already an anonymous namespace, I assume having this function in the same one is still fine, as long as it\u0027s before the definition of the class?",
+      "parentUuid": "95d8063c_a5442a18",
+      "range": {
+        "startLine": 381,
+        "startChar": 5,
+        "endLine": 381,
+        "endChar": 19
+      },
+      "revId": "8c6be8d0cbd218be447d552fe9f760ab87d8e6ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
