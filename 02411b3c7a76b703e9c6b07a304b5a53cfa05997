@@ -352,6 +352,30 @@
     },
     {
       "key": {
+        "uuid": "5515ae81_2e6f4bc4",
+        "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-02T16:58:28Z",
+      "side": 1,
+      "message": "Ah yes. What about doing the entire logic of the workaround in the gl:: layer, using logic within the gl::Query class instead of QueryImpl/QueryGL/etc? Basically what Corentin was asking.",
+      "parentUuid": "5515ae81_8ec91f3f",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 36
+      },
+      "revId": "02411b3c7a76b703e9c6b07a304b5a53cfa05997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "15117609_39fd47d8",
         "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
         "patchSetId": 10
