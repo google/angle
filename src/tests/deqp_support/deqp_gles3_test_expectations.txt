@@ -42,7 +42,6 @@
 
 1087 WIN : dEQP-GLES3.functional.implementation_limits.num_compressed_texture_formats = FAIL
 1087 WIN : dEQP-GLES3.functional.implementation_limits.compressed_texture_formats = FAIL
-1087 WIN : dEQP-GLES3.functional.implementation_limits.max_fragment_uniform_components = FAIL
 989 WIN : dEQP-GLES3.functional.shaders.preprocessor.basic.identifier_with_double_underscore_vertex = FAIL
 989 WIN : dEQP-GLES3.functional.shaders.preprocessor.basic.identifier_with_double_underscore_fragment = FAIL
 1088 WIN : dEQP-GLES3.functional.shaders.linkage.varying.rules.invalid_type_struct_array = FAIL
