@@ -28,9 +28,9 @@ By default Windows ANGLE tests with D3D11. To specify the exact platform for ANG
 
 ### Check your results
 
-dEQP generates a test log to `src/tests/TestResults.qpa`. To view the test log information, you'll need to use the open-source GUI [Cherry](https://android.googlesource.com/platform/external/cherry).
+dEQP generates a test log to `src/tests/TestResults.qpa`. To view the test log information, you'll need to use the open-source GUI [Cherry](https://android.googlesource.com/platform/external/cherry). ANGLE checks out a copy of Cherry to `angle/third_party/cherry` when you sync with gclient.
 
-See the [official Cherry README](https://android.googlesource.com/platform/external/cherry/+/master/README) for instructions on how to build and install Cherry on Linux or Windows.
+See the [official Cherry README](https://android.googlesource.com/platform/external/cherry/+/master/README) for instructions on how to run Cherry on Linux or Windows.
 
 ### GoogleTest, ANGLE and dEQP
 
