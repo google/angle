@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5cefe75_a760ae3f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-02T14:50:09Z",
+      "side": 1,
+      "message": "Aren\u0027t the assert and the if redundant?",
+      "revId": "6a891073210cb882a86e267f821ce67732be5af5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
