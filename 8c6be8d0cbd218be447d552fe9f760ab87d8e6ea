@@ -46,6 +46,30 @@
       "revId": "8c6be8d0cbd218be447d552fe9f760ab87d8e6ea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5b4e2df_e36b80f6",
+        "filename": "src/compiler/translator/intermOut.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-02T16:33:04Z",
+      "side": 1,
+      "message": "Ah yes, that\u0027s correct, thanks. Local methods should still go at the top when possible.",
+      "parentUuid": "f597825c_857944be",
+      "range": {
+        "startLine": 381,
+        "startChar": 5,
+        "endLine": 381,
+        "endChar": 19
+      },
+      "revId": "8c6be8d0cbd218be447d552fe9f760ab87d8e6ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
