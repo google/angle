@@ -376,6 +376,30 @@
     },
     {
       "key": {
+        "uuid": "55da0e36_23864ee4",
+        "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-02T17:04:05Z",
+      "side": 1,
+      "message": "It might be possible to do it all at the GL level by creating new Impl objects every time the context changes but that would cause a lot of object churn and probably wouldn\u0027t be the fastest approach.\n\nA possible solution is to handle the tracking of current context at the gl level but still handling the \"pausing\" at the impl level.  I want to see what options there are for solving this in D3D first because it may be much simpler there.",
+      "parentUuid": "5515ae81_2e6f4bc4",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 36
+      },
+      "revId": "02411b3c7a76b703e9c6b07a304b5a53cfa05997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "15117609_39fd47d8",
         "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
         "patchSetId": 10
