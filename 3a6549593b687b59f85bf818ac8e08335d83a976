@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5515ae81_4e63a7d4",
+        "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-02T17:38:02Z",
+      "side": 1,
+      "message": "nit: \"ContextInfo\"",
+      "range": {
+        "startLine": 252,
+        "startChar": 11,
+        "endLine": 252,
+        "endChar": 22
+      },
+      "revId": "3a6549593b687b59f85bf818ac8e08335d83a976",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
