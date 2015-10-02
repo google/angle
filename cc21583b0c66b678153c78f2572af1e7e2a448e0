@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f5b4e2df_23f818b3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-02T14:36:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5cefe75_4772821d",
+      "range": {
+        "startLine": 12,
+        "startChar": 4,
+        "endLine": 12,
+        "endChar": 8
+      },
+      "revId": "cc21583b0c66b678153c78f2572af1e7e2a448e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "75df1224_18f45df1",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-10-02T14:34:39Z",
       "side": 1,
       "message": "probably git cl format will alter the wrapping here",
+      "range": {
+        "startLine": 506,
+        "startChar": 66,
+        "endLine": 506,
+        "endChar": 80
+      },
+      "revId": "cc21583b0c66b678153c78f2572af1e7e2a448e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15117609_59dbe38d",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-02T14:36:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75df1224_18f45df1",
       "range": {
         "startLine": 506,
         "startChar": 66,
