@@ -36,26 +36,51 @@ ProgramGL::~ProgramGL()
 
 LinkResult ProgramGL::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 {
-    UNIMPLEMENTED();
-    return LinkResult(false, gl::Error(GL_INVALID_OPERATION));
+    preLink();
+
+    // Read the binary format, size and blob
+    GLenum binaryFormat   = stream->readInt<GLenum>();
+    GLint binaryLength    = stream->readInt<GLint>();
+    const uint8_t *binary = stream->data() + stream->offset();
+    stream->skip(binaryLength);
+
+    // Load the binary
+    mFunctions->programBinary(mProgramID, binaryFormat, binary, binaryLength);
+
+    // Verify that the program linked
+    if (!checkLinkStatus(infoLog))
+    {
+        return LinkResult(false, gl::Error(GL_NO_ERROR));
+    }
+
+    postLink();
+
+    return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
 
 gl::Error ProgramGL::save(gl::BinaryOutputStream *stream)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    GLint binaryLength = 0;
+    mFunctions->getProgramiv(mProgramID, GL_PROGRAM_BINARY_LENGTH, &binaryLength);
+
+    std::vector<uint8_t> binary(binaryLength);
+    GLenum binaryFormat = GL_NONE;
+    mFunctions->getProgramBinary(mProgramID, binaryLength, &binaryLength, &binaryFormat,
+                                 &binary[0]);
+
+    stream->writeInt(binaryFormat);
+    stream->writeInt(binaryLength);
+    stream->writeBytes(&binary[0], binaryLength);
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog)
 {
-    // Reset the program state, delete the current program if one exists
-    reset();
+    preLink();
 
-    const gl::Shader *vertexShader   = mData.getAttachedVertexShader();
-    const gl::Shader *fragmentShader = mData.getAttachedFragmentShader();
-
-    const ShaderGL *vertexShaderGL   = GetImplAs<ShaderGL>(vertexShader);
-    const ShaderGL *fragmentShaderGL = GetImplAs<ShaderGL>(fragmentShader);
+    const ShaderGL *vertexShaderGL   = GetImplAs<ShaderGL>(mData.getAttachedVertexShader());
+    const ShaderGL *fragmentShaderGL = GetImplAs<ShaderGL>(mData.getAttachedFragmentShader());
 
     // Attach the shaders
     mFunctions->attachShader(mProgramID, vertexShaderGL->getShaderID());
@@ -80,65 +105,12 @@ LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog)
     mFunctions->detachShader(mProgramID, fragmentShaderGL->getShaderID());
 
     // Verify the link
-    GLint linkStatus = GL_FALSE;
-    mFunctions->getProgramiv(mProgramID, GL_LINK_STATUS, &linkStatus);
-    ASSERT(linkStatus == GL_TRUE);
-    if (linkStatus == GL_FALSE)
+    if (!checkLinkStatus(infoLog))
     {
-        // Linking failed, put the error into the info log
-        GLint infoLogLength = 0;
-        mFunctions->getProgramiv(mProgramID, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-        std::vector<char> buf(infoLogLength);
-        mFunctions->getProgramInfoLog(mProgramID, infoLogLength, nullptr, &buf[0]);
-
-        mFunctions->deleteProgram(mProgramID);
-        mProgramID = 0;
-
-        infoLog << &buf[0];
-        TRACE("\n%s", &buf[0]);
-
-        // TODO, return GL_OUT_OF_MEMORY or just fail the link? This is an unexpected case
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
-    // Query the uniform information
-    ASSERT(mUniformRealLocationMap.empty());
-    const auto &uniforms = mData.getUniforms();
-    for (const gl::VariableLocation &entry : mData.getUniformLocations())
-    {
-        // From the spec:
-        // "Locations for sequential array indices are not required to be sequential."
-        const gl::LinkedUniform &uniform = uniforms[entry.index];
-        std::stringstream fullNameStr;
-        fullNameStr << uniform.name;
-        if (uniform.isArray())
-        {
-            fullNameStr << "[" << entry.element << "]";
-        }
-        const std::string &fullName = fullNameStr.str();
-
-        GLint realLocation = mFunctions->getUniformLocation(mProgramID, fullName.c_str());
-        mUniformRealLocationMap.push_back(realLocation);
-    }
-
-    mUniformIndexToSamplerIndex.resize(mData.getUniforms().size(), GL_INVALID_INDEX);
-
-    for (size_t uniformId = 0; uniformId < uniforms.size(); ++uniformId)
-    {
-        const gl::LinkedUniform &linkedUniform = uniforms[uniformId];
-
-        if (!linkedUniform.isSampler() || !linkedUniform.staticUse)
-            continue;
-
-        mUniformIndexToSamplerIndex[uniformId] = mSamplerBindings.size();
-
-        // If uniform is a sampler type, insert it into the mSamplerBindings array
-        SamplerBindingGL samplerBinding;
-        samplerBinding.textureType = gl::SamplerTypeToTextureType(linkedUniform.type);
-        samplerBinding.boundTextureUnits.resize(linkedUniform.elementCount(), 0);
-        mSamplerBindings.push_back(samplerBinding);
-    }
+    postLink();
 
     return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
@@ -293,13 +265,6 @@ void ProgramGL::setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformB
                                     uniformBlockBinding);
 }
 
-void ProgramGL::reset()
-{
-    mUniformRealLocationMap.clear();
-    mSamplerBindings.clear();
-    mUniformIndexToSamplerIndex.clear();
-}
-
 GLuint ProgramGL::getProgramID() const
 {
     return mProgramID;
@@ -409,6 +374,80 @@ void ProgramGL::gatherUniformBlockInfo(std::vector<gl::UniformBlock> *uniformBlo
                                             &isRowMajorMatrix);
             uniform.blockInfo.isRowMajorMatrix = isRowMajorMatrix != GL_FALSE;
         }
+    }
+}
+
+void ProgramGL::preLink()
+{
+    // Reset the program state
+    mUniformRealLocationMap.clear();
+    mSamplerBindings.clear();
+    mUniformIndexToSamplerIndex.clear();
+}
+
+bool ProgramGL::checkLinkStatus(gl::InfoLog &infoLog)
+{
+    GLint linkStatus = GL_FALSE;
+    mFunctions->getProgramiv(mProgramID, GL_LINK_STATUS, &linkStatus);
+    if (linkStatus == GL_FALSE)
+    {
+        // Linking failed, put the error into the info log
+        GLint infoLogLength = 0;
+        mFunctions->getProgramiv(mProgramID, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+        std::vector<char> buf(infoLogLength);
+        mFunctions->getProgramInfoLog(mProgramID, infoLogLength, nullptr, &buf[0]);
+
+        infoLog << &buf[0];
+        TRACE("\n%s", &buf[0]);
+
+        // TODO, return GL_OUT_OF_MEMORY or just fail the link? This is an unexpected case
+        return false;
+    }
+
+    return true;
+}
+
+void ProgramGL::postLink()
+{
+    // Query the uniform information
+    ASSERT(mUniformRealLocationMap.empty());
+    const auto &uniforms = mData.getUniforms();
+    for (const gl::VariableLocation &entry : mData.getUniformLocations())
+    {
+        // From the spec:
+        // "Locations for sequential array indices are not required to be sequential."
+        const gl::LinkedUniform &uniform = uniforms[entry.index];
+        std::stringstream fullNameStr;
+        fullNameStr << uniform.name;
+        if (uniform.isArray())
+        {
+            fullNameStr << "[" << entry.element << "]";
+        }
+        const std::string &fullName = fullNameStr.str();
+
+        GLint realLocation = mFunctions->getUniformLocation(mProgramID, fullName.c_str());
+        mUniformRealLocationMap.push_back(realLocation);
+    }
+
+    mUniformIndexToSamplerIndex.resize(mData.getUniforms().size(), GL_INVALID_INDEX);
+
+    for (size_t uniformId = 0; uniformId < uniforms.size(); ++uniformId)
+    {
+        const gl::LinkedUniform &linkedUniform = uniforms[uniformId];
+
+        if (!linkedUniform.isSampler() || !linkedUniform.staticUse)
+        {
+            continue;
+        }
+
+        mUniformIndexToSamplerIndex[uniformId] = mSamplerBindings.size();
+
+        // If uniform is a sampler type, insert it into the mSamplerBindings array
+        SamplerBindingGL samplerBinding;
+        samplerBinding.textureType = gl::SamplerTypeToTextureType(linkedUniform.type);
+        samplerBinding.boundTextureUnits.resize(linkedUniform.elementCount(), 0);
+        mSamplerBindings.push_back(samplerBinding);
     }
 }
 }
