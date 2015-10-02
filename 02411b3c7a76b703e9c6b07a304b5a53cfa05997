@@ -111,6 +111,23 @@
     },
     {
       "key": {
+        "uuid": "55da0e36_a31ede6e",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-02T15:08:18Z",
+      "side": 1,
+      "message": "IIRC on the NVidia driver this will cause the driver to stop and restart the dual-core driver, zhich might be a performance killer.",
+      "revId": "02411b3c7a76b703e9c6b07a304b5a53cfa05997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b5d50a02_836c803c",
         "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
         "patchSetId": 10
@@ -151,6 +168,23 @@
         "endLine": 211,
         "endChar": 6
       },
+      "revId": "02411b3c7a76b703e9c6b07a304b5a53cfa05997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "751ab2b5_6cb4af07",
+        "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-02T15:08:18Z",
+      "side": 1,
+      "message": "I like this test",
       "revId": "02411b3c7a76b703e9c6b07a304b5a53cfa05997",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
