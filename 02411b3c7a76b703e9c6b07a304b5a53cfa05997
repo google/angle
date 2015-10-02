@@ -1,0 +1,205 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5515ae81_eead3365",
+        "filename": "src/libANGLE/Data.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-02T15:03:55Z",
+      "side": 1,
+      "message": "I just checked, we can remove these two methods and make Data angle::NonCopyable. You can remove in this CL if you want.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 39
+      },
+      "revId": "02411b3c7a76b703e9c6b07a304b5a53cfa05997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95d8063c_45835e92",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-02T15:03:55Z",
+      "side": 1,
+      "message": "this assumes GL_TRUE is \u003d\u003d 1, maybe better to just return 1 or 0 since you\u0027re accumulating GLuints?",
+      "range": {
+        "startLine": 24,
+        "startChar": 50,
+        "endLine": 24,
+        "endChar": 57
+      },
+      "revId": "02411b3c7a76b703e9c6b07a304b5a53cfa05997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95d8063c_257e5a41",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-02T15:03:55Z",
+      "side": 1,
+      "message": "!\u003d 0 for these?",
+      "range": {
+        "startLine": 24,
+        "startChar": 20,
+        "endLine": 24,
+        "endChar": 33
+      },
+      "revId": "02411b3c7a76b703e9c6b07a304b5a53cfa05997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15117609_f902af84",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-02T15:03:55Z",
+      "side": 1,
+      "message": "maybe call this mPausedQueries? I was wondering if a pending query is the same as a paused query.",
+      "range": {
+        "startLine": 83,
+        "startChar": 11,
+        "endLine": 83,
+        "endChar": 26
+      },
+      "revId": "02411b3c7a76b703e9c6b07a304b5a53cfa05997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55da0e36_03fdd26c",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-02T15:03:55Z",
+      "side": 1,
+      "message": "Can you document the funky stuff you\u0027re doing to manage queries with multiple contexts? Maybe before the functions in the header or the cpp?",
+      "revId": "02411b3c7a76b703e9c6b07a304b5a53cfa05997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b5d50a02_836c803c",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-02T15:03:55Z",
+      "side": 1,
+      "message": "this seems a bit unfortunate. Can you check with kbr and Olli to see if they have any insight into this? Maybe command buffer ran into a similar problem, or Nvidia is (un)aware of the bug.",
+      "range": {
+        "startLine": 130,
+        "startChar": 21,
+        "endLine": 130,
+        "endChar": 59
+      },
+      "revId": "02411b3c7a76b703e9c6b07a304b5a53cfa05997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75df1224_98c5cd9e",
+        "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-02T15:03:55Z",
+      "side": 1,
+      "message": "nit: description before test",
+      "range": {
+        "startLine": 211,
+        "startChar": 0,
+        "endLine": 211,
+        "endChar": 6
+      },
+      "revId": "02411b3c7a76b703e9c6b07a304b5a53cfa05997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55da0e36_c31bea7d",
+        "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-02T15:03:55Z",
+      "side": 1,
+      "message": "whoops. guess we\u0027ll need a similar workaround? What is your thinking on handling at the gl:: level, where we virtualize contexts?",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 36
+      },
+      "revId": "02411b3c7a76b703e9c6b07a304b5a53cfa05997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15117609_39fd47d8",
+        "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-02T15:03:55Z",
+      "side": 1,
+      "message": "nit: probably split this instead of using a constructor with the definition.",
+      "range": {
+        "startLine": 250,
+        "startChar": 4,
+        "endLine": 257,
+        "endChar": 20
+      },
+      "revId": "02411b3c7a76b703e9c6b07a304b5a53cfa05997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
