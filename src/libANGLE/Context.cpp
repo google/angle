@@ -1106,7 +1106,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
         case GL_PACK_ROW_LENGTH:
         case GL_PACK_SKIP_ROWS:
         case GL_PACK_SKIP_PIXELS:
-            if (!mExtensions.packSubimage)
+            if ((mClientVersion < 3) && !mExtensions.packSubimage)
             {
                 return false;
             }
@@ -1116,7 +1116,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
         case GL_UNPACK_ROW_LENGTH:
         case GL_UNPACK_SKIP_ROWS:
         case GL_UNPACK_SKIP_PIXELS:
-            if (!mExtensions.unpackSubimage)
+            if ((mClientVersion < 3) && !mExtensions.unpackSubimage)
             {
                 return false;
             }
@@ -1237,6 +1237,8 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_PACK_SKIP_ROWS:
       case GL_PACK_SKIP_PIXELS:
       case GL_UNPACK_ROW_LENGTH:
+      case GL_UNPACK_IMAGE_HEIGHT:
+      case GL_UNPACK_SKIP_IMAGES:
       case GL_UNPACK_SKIP_ROWS:
       case GL_UNPACK_SKIP_PIXELS:
         {

@@ -232,6 +232,12 @@ class State : angle::NonCopyable
     GLint getPackAlignment() const;
     void setPackReverseRowOrder(bool reverseRowOrder);
     bool getPackReverseRowOrder() const;
+    void setPackRowLength(GLint rowLength);
+    GLint getPackRowLength() const;
+    void setPackSkipRows(GLint skipRows);
+    GLint getPackSkipRows() const;
+    void setPackSkipPixels(GLint skipPixels);
+    GLint getPackSkipPixels() const;
     const PixelPackState &getPackState() const;
     PixelPackState &getPackState();
 
@@ -240,6 +246,14 @@ class State : angle::NonCopyable
     GLint getUnpackAlignment() const;
     void setUnpackRowLength(GLint rowLength);
     GLint getUnpackRowLength() const;
+    void setUnpackImageHeight(GLint imageHeight);
+    GLint getUnpackImageHeight() const;
+    void setUnpackSkipImages(GLint skipImages);
+    GLint getUnpackSkipImages() const;
+    void setUnpackSkipRows(GLint skipRows);
+    GLint getUnpackSkipRows() const;
+    void setUnpackSkipPixels(GLint skipPixels);
+    GLint getUnpackSkipPixels() const;
     const PixelUnpackState &getUnpackState() const;
     PixelUnpackState &getUnpackState();
 
@@ -289,8 +303,15 @@ class State : angle::NonCopyable
         DIRTY_BIT_CLEAR_STENCIL,
         DIRTY_BIT_UNPACK_ALIGNMENT,
         DIRTY_BIT_UNPACK_ROW_LENGTH,
+        DIRTY_BIT_UNPACK_IMAGE_HEIGHT,
+        DIRTY_BIT_UNPACK_SKIP_IMAGES,
+        DIRTY_BIT_UNPACK_SKIP_ROWS,
+        DIRTY_BIT_UNPACK_SKIP_PIXELS,
         DIRTY_BIT_PACK_ALIGNMENT,
         DIRTY_BIT_PACK_REVERSE_ROW_ORDER,
+        DIRTY_BIT_PACK_ROW_LENGTH,
+        DIRTY_BIT_PACK_SKIP_ROWS,
+        DIRTY_BIT_PACK_SKIP_PIXELS,
         DIRTY_BIT_DITHER_ENABLED,
         DIRTY_BIT_GENERATE_MIPMAP_HINT,
         DIRTY_BIT_SHADER_DERIVATIVE_HINT,
