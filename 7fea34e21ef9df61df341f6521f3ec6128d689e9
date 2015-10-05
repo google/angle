@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "55da0e36_43a43aee",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-05T14:44:19Z",
+      "side": 1,
+      "message": "nit: you can wrap the entire tests contents in an anonymous namespace block",
+      "range": {
+        "startLine": 11,
+        "startChar": 6,
+        "endLine": 11,
+        "endChar": 31
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "95d8063c_a8a31f7a",
         "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
         "patchSetId": 7
@@ -288,6 +311,29 @@
         "startChar": 4,
         "endLine": 147,
         "endChar": 11
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15117609_67c43a24",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-05T14:44:19Z",
+      "side": 1,
+      "message": "also init to 0 in the constructor",
+      "range": {
+        "startLine": 155,
+        "startChar": 11,
+        "endLine": 155,
+        "endChar": 19
       },
       "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
