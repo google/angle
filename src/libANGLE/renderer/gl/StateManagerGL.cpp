@@ -546,8 +546,7 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
     const ProgramGL *programGL = GetImplAs<ProgramGL>(program);
     useProgram(programGL->getProgramID());
 
-    for (size_t uniformBlockIndex = 0;
-         uniformBlockIndex < gl::IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS;
+    for (size_t uniformBlockIndex = 0; uniformBlockIndex < program->getActiveUniformBlockCount();
          uniformBlockIndex++)
     {
         GLuint binding = program->getUniformBlockBinding(static_cast<GLuint>(uniformBlockIndex));
