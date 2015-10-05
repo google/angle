@@ -71,6 +71,13 @@ class ProgramBinaryTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
+    GLint getAvailableProgramBinaryFormatCount() const
+    {
+        GLint formatCount;
+        glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS_OES, &formatCount);
+        return formatCount;
+    }
+
     GLuint mProgram;
     GLuint mBuffer;
 };
@@ -79,6 +86,19 @@ class ProgramBinaryTest : public ANGLETest
 // should not internally cause a vertex shader recompile (for conversion).
 TEST_P(ProgramBinaryTest, FloatDynamicShaderSize)
 {
+    if (!extensionEnabled("GL_OES_get_program_binary"))
+    {
+        std::cout << "Test skipped because GL_OES_get_program_binary is not available."
+                  << std::endl;
+        return;
+    }
+
+    if (getAvailableProgramBinaryFormatCount() == 0)
+    {
+        std::cout << "Test skipped because no program binary formats are available." << std::endl;
+        return;
+    }
+
     glUseProgram(mProgram);
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
 
@@ -107,6 +127,19 @@ TEST_P(ProgramBinaryTest, FloatDynamicShaderSize)
 // This tests the ability to successfully save and load a program binary.
 TEST_P(ProgramBinaryTest, SaveAndLoadBinary)
 {
+    if (!extensionEnabled("GL_OES_get_program_binary"))
+    {
+        std::cout << "Test skipped because GL_OES_get_program_binary is not available."
+                  << std::endl;
+        return;
+    }
+
+    if (getAvailableProgramBinaryFormatCount() == 0)
+    {
+        std::cout << "Test skipped because no program binary formats are available." << std::endl;
+        return;
+    }
+
     GLint programLength = 0;
     GLint writtenLength = 0;
     GLenum binaryFormat = 0;
@@ -164,7 +197,12 @@ TEST_P(ProgramBinaryTest, SaveAndLoadBinary)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_INSTANTIATE_TEST(ProgramBinaryTest, ES2_D3D9(), ES2_D3D11());
+ANGLE_INSTANTIATE_TEST(ProgramBinaryTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES3_D3D11(),
+                       ES2_OPENGL(),
+                       ES3_OPENGL());
 
 // For the ProgramBinariesAcrossPlatforms tests, we need two sets of params:
 // - a set to save the program binary
