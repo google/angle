@@ -68,9 +68,7 @@ class ProgramGL : public ProgramImpl
     const std::vector<SamplerBindingGL> &getAppliedSamplerUniforms() const;
 
   private:
-    void preLink();
-    bool checkLinkStatus(gl::InfoLog &infoLog);
-    void postLink();
+    void reset();
 
     // Helper function, makes it simpler to type.
     GLint uniLoc(GLint glLocation) const { return mUniformRealLocationMap[glLocation]; }

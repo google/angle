@@ -908,11 +908,6 @@ void FunctionsGL::initialize()
     AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glGetSamplerParameterIiv"), &getSamplerParameterIiv);
     AssignGLExtensionEntryPoint(extensions, "GL_ARB_sampler_objects", loadProcAddress("glGetSamplerParameterIuiv"), &getSamplerParameterIuiv);
 
-    // GL_ARB_get_program_binary
-    AssignGLExtensionEntryPoint(extensions, "GL_ARB_get_program_binary", loadProcAddress("glGetProgramBinary"), &getProgramBinary);
-    AssignGLExtensionEntryPoint(extensions, "GL_ARB_get_program_binary", loadProcAddress("glProgramBinary"), &programBinary);
-    AssignGLExtensionEntryPoint(extensions, "GL_ARB_get_program_binary", loadProcAddress("glProgramParameteri"), &programParameteri);
-
     // 1.0
     if (isAtLeastGL(gl::Version(1, 0)))
     {
