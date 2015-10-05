@@ -11,14 +11,14 @@
 
 #include "common/angleutils.h"
 #include "common/mathutil.h"
-#include "libANGLE/AttributeMap.h"
 #include "libANGLE/angletypes.h"
-#include "libANGLE/renderer/d3d/HLSLCompiler.h"
-#include "libANGLE/renderer/d3d/RendererD3D.h"
-#include "libANGLE/renderer/d3d/RenderTargetD3D.h"
+#include "libANGLE/AttributeMap.h"
 #include "libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h"
 #include "libANGLE/renderer/d3d/d3d11/InputLayoutCache.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderStateCache.h"
+#include "libANGLE/renderer/d3d/HLSLCompiler.h"
+#include "libANGLE/renderer/d3d/RendererD3D.h"
+#include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 
 namespace gl
 {
@@ -120,13 +120,11 @@ class Renderer11 : public RendererD3D
                                 const std::vector<GLint> &vertexUniformBuffers,
                                 const std::vector<GLint> &fragmentUniformBuffers) override;
 
-    virtual gl::Error setRasterizerState(const gl::RasterizerState &rasterState);
-    gl::Error setBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
-                            unsigned int sampleMask) override;
-    virtual gl::Error setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
-                                           int stencilBackRef, bool frontFaceCCW);
+    gl::Error setRasterizerState(const gl::RasterizerState &rasterState,
+                                 const gl::State::DirtyBits &dirtyBits) override;
 
-    virtual void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
+    void setScissorRectangle(const gl::Rectangle &scissor, bool enabled) override;
+
     virtual void setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
                              bool ignoreViewport);
 
@@ -319,7 +317,6 @@ class Renderer11 : public RendererD3D
     uintptr_t mAppliedDSV;
     bool mDepthStencilInitialized;
     bool mRenderTargetDescInitialized;
-    unsigned int mCurStencilSize;
 
     struct RenderTargetDesc
     {
@@ -378,27 +375,6 @@ class Renderer11 : public RendererD3D
 
     // A block of NULL pointers, cached so we don't re-allocate every draw call
     std::vector<ID3D11ShaderResourceView*> mNullSRVs;
-
-    // Currently applied blend state
-    bool mForceSetBlendState;
-    gl::BlendState mCurBlendState;
-    gl::ColorF mCurBlendColor;
-    unsigned int mCurSampleMask;
-
-    // Currently applied rasterizer state
-    bool mForceSetRasterState;
-    gl::RasterizerState mCurRasterState;
-
-    // Currently applied depth stencil state
-    bool mForceSetDepthStencilState;
-    gl::DepthStencilState mCurDepthStencilState;
-    int mCurStencilRef;
-    int mCurStencilBackRef;
-
-    // Currently applied scissor rectangle
-    bool mForceSetScissor;
-    bool mScissorEnabled;
-    gl::Rectangle mCurScissor;
 
     // Currently applied viewport
     bool mForceSetViewport;
@@ -486,5 +462,5 @@ class Renderer11 : public RendererD3D
     ID3D11Debug *mDebug;
 };
 
-}
+}  // namespace rx
 #endif // LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_H_

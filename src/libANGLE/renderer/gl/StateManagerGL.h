@@ -135,7 +135,7 @@ class StateManagerGL final : angle::NonCopyable
                                    GLsizei instanceCount,
                                    const GLvoid **outIndices);
 
-    void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits);
+    gl::Error syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits);
 
   private:
     gl::Error setGenericDrawState(const gl::Data &data);

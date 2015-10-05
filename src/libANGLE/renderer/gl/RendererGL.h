@@ -103,7 +103,7 @@ class RendererGL : public Renderer
     std::string getVendorString() const override;
     std::string getRendererDescription() const override;
 
-    void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits) override;
+    gl::Error syncState(const gl::Data &data, const gl::State::DirtyBits &dirtyBits) override;
 
     const gl::Version &getMaxSupportedESVersion() const;
     const FunctionsGL *getFunctions() const { return mFunctions; }
