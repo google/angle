@@ -11,7 +11,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_INTERNALFORMATINITIALIZERTABLE_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_INTERNALFORMATINITIALIZERTABLE_H_
 
-#include "libANGLE/renderer/d3d/d3d11/renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 
 #include <map>
 
