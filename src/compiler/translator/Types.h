@@ -275,7 +275,11 @@ class TType
     }
     void setBasicType(TBasicType t)
     {
-        type = t;
+        if (type != t)
+        {
+            type = t;
+            invalidateMangledName();
+        }
     }
 
     TPrecision getPrecision() const
@@ -330,11 +334,19 @@ class TType
     }
     void setPrimarySize(unsigned char ps)
     {
-        primarySize = ps;
+        if (primarySize != ps)
+        {
+            primarySize = ps;
+            invalidateMangledName();
+        }
     }
     void setSecondarySize(unsigned char ss)
     {
-        secondarySize = ss;
+        if (secondarySize != ss)
+        {
+            secondarySize = ss;
+            invalidateMangledName();
+        }
     }
 
     // Full size of single instance of type
@@ -362,13 +374,21 @@ class TType
     }
     void setArraySize(int s)
     {
-        array = true;
-        arraySize = s;
+        if (!array || arraySize != s)
+        {
+            array     = true;
+            arraySize = s;
+            invalidateMangledName();
+        }
     }
     void clearArrayness()
     {
-        array = false;
-        arraySize = 0;
+        if (array)
+        {
+            array     = false;
+            arraySize = 0;
+            invalidateMangledName();
+        }
     }
 
     TInterfaceBlock *getInterfaceBlock() const
@@ -377,7 +397,11 @@ class TType
     }
     void setInterfaceBlock(TInterfaceBlock *interfaceBlockIn)
     {
-        interfaceBlock = interfaceBlockIn;
+        if (interfaceBlock != interfaceBlockIn)
+        {
+            interfaceBlock = interfaceBlockIn;
+            invalidateMangledName();
+        }
     }
     bool isInterfaceBlock() const
     {
@@ -403,7 +427,11 @@ class TType
     }
     void setStruct(TStructure *s)
     {
-        structure = s;
+        if (structure != s)
+        {
+            structure = s;
+            invalidateMangledName();
+        }
     }
 
     const TString &getMangledName() const
@@ -507,7 +535,8 @@ class TType
         getMangledName();
     }
 
-  protected:
+  private:
+    void invalidateMangledName() { mangled = ""; }
     TString buildMangledName() const;
     size_t getStructSize() const;
 
