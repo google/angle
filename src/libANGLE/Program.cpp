@@ -209,7 +209,7 @@ size_t InfoLog::getLength() const
     return logString.empty() ? 0 : logString.length() + 1;
 }
 
-void InfoLog::getLog(GLsizei bufSize, GLsizei *length, char *infoLog)
+void InfoLog::getLog(GLsizei bufSize, GLsizei *length, char *infoLog) const
 {
     size_t index = 0;
 
@@ -571,7 +571,7 @@ void Program::unlink(bool destroy)
     mLinked = false;
 }
 
-bool Program::isLinked()
+bool Program::isLinked() const
 {
     return mLinked;
 }
@@ -861,12 +861,12 @@ int Program::getInfoLogLength() const
     return static_cast<int>(mInfoLog.getLength());
 }
 
-void Program::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
+void Program::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const
 {
     return mInfoLog.getLog(bufSize, length, infoLog);
 }
 
-void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders)
+void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders) const
 {
     int total = 0;
 
@@ -896,7 +896,7 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shade
     }
 }
 
-GLuint Program::getAttributeLocation(const std::string &name)
+GLuint Program::getAttributeLocation(const std::string &name) const
 {
     for (const sh::Attribute &attribute : mData.mAttributes)
     {
@@ -970,7 +970,7 @@ void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length,
     *type = attrib.type;
 }
 
-GLint Program::getActiveAttributeCount()
+GLint Program::getActiveAttributeCount() const
 {
     if (!mLinked)
     {
@@ -987,7 +987,7 @@ GLint Program::getActiveAttributeCount()
     return count;
 }
 
-GLint Program::getActiveAttributeMaxLength()
+GLint Program::getActiveAttributeMaxLength() const
 {
     if (!mLinked)
     {
@@ -1022,7 +1022,12 @@ GLint Program::getFragDataLocation(const std::string &name) const
     return -1;
 }
 
-void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
+void Program::getActiveUniform(GLuint index,
+                               GLsizei bufsize,
+                               GLsizei *length,
+                               GLint *size,
+                               GLenum *type,
+                               GLchar *name) const
 {
     if (mLinked)
     {
@@ -1067,7 +1072,7 @@ void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, G
     }
 }
 
-GLint Program::getActiveUniformCount()
+GLint Program::getActiveUniformCount() const
 {
     if (mLinked)
     {
@@ -1079,7 +1084,7 @@ GLint Program::getActiveUniformCount()
     }
 }
 
-GLint Program::getActiveUniformMaxLength()
+GLint Program::getActiveUniformMaxLength() const
 {
     size_t maxLength = 0;
 
@@ -1271,17 +1276,17 @@ void Program::setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean tra
     mProgram->setUniformMatrix4x3fv(location, count, transpose, v);
 }
 
-void Program::getUniformfv(GLint location, GLfloat *v)
+void Program::getUniformfv(GLint location, GLfloat *v) const
 {
     getUniformInternal(location, v);
 }
 
-void Program::getUniformiv(GLint location, GLint *v)
+void Program::getUniformiv(GLint location, GLint *v) const
 {
     getUniformInternal(location, v);
 }
 
-void Program::getUniformuiv(GLint location, GLuint *v)
+void Program::getUniformuiv(GLint location, GLuint *v) const
 {
     getUniformInternal(location, v);
 }
@@ -1391,7 +1396,7 @@ bool Program::isValidated() const
     return mValidated;
 }
 
-GLuint Program::getActiveUniformBlockCount()
+GLuint Program::getActiveUniformBlockCount() const
 {
     return static_cast<GLuint>(mData.mUniformBlocks.size());
 }
@@ -1459,7 +1464,7 @@ void Program::getActiveUniformBlockiv(GLuint uniformBlockIndex, GLenum pname, GL
     }
 }
 
-GLint Program::getActiveUniformBlockMaxLength()
+GLint Program::getActiveUniformBlockMaxLength() const
 {
     int maxLength = 0;
 
@@ -1484,7 +1489,7 @@ GLint Program::getActiveUniformBlockMaxLength()
     return maxLength;
 }
 
-GLuint Program::getUniformBlockIndex(const std::string &name)
+GLuint Program::getUniformBlockIndex(const std::string &name) const
 {
     size_t subscript     = GL_INVALID_INDEX;
     std::string baseName = gl::ParseUniformName(name, &subscript);
