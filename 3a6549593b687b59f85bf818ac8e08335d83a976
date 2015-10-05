@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "15117609_a7ddb200",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-05T14:00:19Z",
+      "side": 1,
+      "message": "This one is in debug builds only while the one below is release builds only.  Maybe we should make clearer macros... BUILD_DEBUG and BUILD_RELEASE.",
+      "parentUuid": "354d9aaf_063cdb7f",
+      "range": {
+        "startLine": 104,
+        "startChar": 8,
+        "endLine": 104,
+        "endChar": 18
+      },
+      "revId": "3a6549593b687b59f85bf818ac8e08335d83a976",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f5586271_f5d34f77",
         "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
         "patchSetId": 11
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "b5d50a02_267e6241",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-05T14:00:19Z",
+      "side": 1,
+      "message": "I have a feeling this only applies to the deq pocclusion query tests.  For GL queries, it is possible to simply ask it for the result and it will block until the result is ready which I believe the transform feedback tests do.  The deqp occlusion queries have an extra step to test the GL_QUERY_RESULT_AVAILABLE query that involves calling glFinish and asserting that the result is ready.",
+      "parentUuid": "15a33681_eff5cc89",
+      "range": {
+        "startLine": 57,
+        "startChar": 7,
+        "endLine": 57,
+        "endChar": 13
+      },
+      "revId": "3a6549593b687b59f85bf818ac8e08335d83a976",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "75439281_7e956605",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 11
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "b5d50a02_66886aac",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-05T14:00:19Z",
+      "side": 1,
+      "message": "I\u0027ll try to narrow it down a bit, maybe this is windows only.  I had made this CL https://chromium-review.googlesource.com/#/c/303430 to test on the windows platforms we have here.",
+      "parentUuid": "75439281_7e956605",
+      "range": {
+        "startLine": 578,
+        "startChar": 8,
+        "endLine": 578,
+        "endChar": 17
+      },
+      "revId": "3a6549593b687b59f85bf818ac8e08335d83a976",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f5586271_950813a4",
         "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
         "patchSetId": 11
@@ -105,6 +177,30 @@
       "writtenOn": "2015-10-02T20:24:12Z",
       "side": 1,
       "message": "How about \"...the D3D backend...\"?",
+      "range": {
+        "startLine": 224,
+        "startChar": 43,
+        "endLine": 224,
+        "endChar": 46
+      },
+      "revId": "3a6549593b687b59f85bf818ac8e08335d83a976",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5b4e2df_037f94e6",
+        "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-05T14:00:19Z",
+      "side": 1,
+      "message": "Whoops, done.",
+      "parentUuid": "f5586271_950813a4",
       "range": {
         "startLine": 224,
         "startChar": 43,
