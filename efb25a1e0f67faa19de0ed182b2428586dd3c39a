@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4bca703a_6b96c149",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-05T20:36:33Z",
+      "side": 1,
+      "message": "git cl format (close call)",
+      "range": {
+        "startLine": 91,
+        "startChar": 93,
+        "endLine": 91,
+        "endChar": 101
+      },
+      "revId": "efb25a1e0f67faa19de0ed182b2428586dd3c39a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
