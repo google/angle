@@ -150,7 +150,7 @@ TEST_P(PackUnpackTest, PackUnpackSnormNormal)
 TEST_P(PackUnpackTest, PackUnpackHalfNormal)
 {
     // TODO(cwallez) figure out why it is broken on Intel on Mac
-#if ANGLE_PLATFORM_APPLE
+#if defined(ANGLE_PLATFORM_APPLE)
     if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test skipped on Intel on Mac." << std::endl;

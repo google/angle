@@ -574,7 +574,7 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
         functions->standard == STANDARD_GL_DESKTOP &&
         (vendor == VENDOR_ID_INTEL || vendor == VENDOR_ID_AMD);
 
-#if ANGLE_PLATFORM_APPLE
+#if defined(ANGLE_PLATFORM_APPLE)
     workarounds->doWhileGLSLCausesGPUHang = true;
 #endif
 }
