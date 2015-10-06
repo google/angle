@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab43ec7f_5ed07580",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/internal_format_initializer_table.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-06T13:39:36Z",
+      "side": 1,
+      "message": "Also no need for const.",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 5
+      },
+      "revId": "4d98422902b4914513791dc50046d8dd7c4da0ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b3e28eb_3d892f67",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/internal_format_initializer_table.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-06T13:39:36Z",
+      "side": 1,
+      "message": "Since this isn\u0027t returning a const reference, there is no need to make static constants here.  You can just return the function pointer.",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 36
+      },
+      "revId": "4d98422902b4914513791dc50046d8dd7c4da0ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ba8145c_aa534bf8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-06T13:39:36Z",
+      "side": 1,
+      "message": "It\u0027s not ideal to have non-const statics.  These should be initialized in one statement if possible.  How about something like...\n\n   static const std::map\u003cGLenum, LoadImageFunction\u003e loadFunctionsMap \u003d [](){\n       std::map\u003cGLenum, LoadImageFunction\u003e map;\n\n       map[GL_HALF_FLOAT] \u003d LoadA16FToRGBA16F;\n       map[GL_HALF_FLOAT_OES] \u003d LoadA16FToRGBA16F;\n\n       // DXGI_FORMAT_UNKNOWN add ons\n       map[GL_UNSIGNED_BYTE] \u003d UnreachableLoadFunction;\n       return map;\n   }();\n\nCreating a variadic template helper function to initialize the map would also be possible.",
+      "range": {
+        "startLine": 73,
+        "startChar": 20,
+        "endLine": 81,
+        "endChar": 21
+      },
+      "revId": "4d98422902b4914513791dc50046d8dd7c4da0ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
