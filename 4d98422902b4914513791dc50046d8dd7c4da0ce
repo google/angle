@@ -48,6 +48,23 @@
     },
     {
       "key": {
+        "uuid": "d00a915c_8fb0f56c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-10-06T21:21:34Z",
+      "side": 1,
+      "message": "I suggest name this file as _autogen.cpp",
+      "revId": "4d98422902b4914513791dc50046d8dd7c4da0ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6ba8145c_aa534bf8",
         "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table.cpp",
         "patchSetId": 5
@@ -65,6 +82,40 @@
         "endLine": 81,
         "endChar": 21
       },
+      "revId": "4d98422902b4914513791dc50046d8dd7c4da0ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0435d80_9e2e7d2c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/swizzle_format_info.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-10-06T21:21:34Z",
+      "side": 1,
+      "message": "I suggest rename as _autogen.cpp",
+      "revId": "4d98422902b4914513791dc50046d8dd7c4da0ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90673931_15c534c2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-10-06T21:21:34Z",
+      "side": 1,
+      "message": "I suggest rename as _autogen.cpp",
       "revId": "4d98422902b4914513791dc50046d8dd7c4da0ce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
