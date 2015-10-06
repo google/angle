@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab43ec7f_fe5341a0",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-06T17:13:33Z",
+      "side": 1,
+      "message": "did git cl format do this indentation? I\u0027m fine with whatever it decides to do (or you can tweak .clang_format, there is a relevant option or two)",
+      "range": {
+        "startLine": 222,
+        "startChar": 5,
+        "endLine": 222,
+        "endChar": 11
+      },
+      "revId": "dda505a9980632b2bb520c99038f26679bd25d90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "abae8c63_697d61a7",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-06T17:13:33Z",
+      "side": 1,
+      "message": "nit: I think these need two spaces before the //. the formatter should fix.",
+      "range": {
+        "startLine": 231,
+        "startChar": 5,
+        "endLine": 231,
+        "endChar": 6
+      },
+      "revId": "dda505a9980632b2bb520c99038f26679bd25d90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
