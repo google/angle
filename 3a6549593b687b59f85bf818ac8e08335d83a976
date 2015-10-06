@@ -233,6 +233,30 @@
       "revId": "3a6549593b687b59f85bf818ac8e08335d83a976",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab43ec7f_3eeda92f",
+        "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-06T17:17:16Z",
+      "side": 1,
+      "message": "re-nit",
+      "parentUuid": "5515ae81_4e63a7d4",
+      "range": {
+        "startLine": 252,
+        "startChar": 11,
+        "endLine": 252,
+        "endChar": 22
+      },
+      "revId": "3a6549593b687b59f85bf818ac8e08335d83a976",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
