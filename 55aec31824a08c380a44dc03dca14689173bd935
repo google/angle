@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "abae8c63_49f505b7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-07T19:00:25Z",
+      "side": 1,
+      "message": "Yuck, we really need to remove this. It\u0027s even referenced from multiple files.",
+      "range": {
+        "startLine": 179,
+        "startChar": 0,
+        "endLine": 179,
+        "endChar": 46
+      },
+      "revId": "55aec31824a08c380a44dc03dca14689173bd935",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ba35080_435ac6de",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-07T19:00:25Z",
+      "side": 1,
+      "message": "Maybe this should be in utilities.h?",
+      "range": {
+        "startLine": 442,
+        "startChar": 0,
+        "endLine": 442,
+        "endChar": 56
+      },
+      "revId": "55aec31824a08c380a44dc03dca14689173bd935",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbb740b4_e7150208",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-07T19:00:25Z",
+      "side": 1,
+      "message": "Could these two methods just be methods of ProgramImpl? I don\u0027t think we need to add another class for them.",
+      "range": {
+        "startLine": 76,
+        "startChar": 8,
+        "endLine": 81,
+        "endChar": 86
+      },
+      "revId": "55aec31824a08c380a44dc03dca14689173bd935",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
