@@ -31,7 +31,7 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
         return false;
     }
 
-    if (!ValidImageSize(context, target, level, width, height, 1))
+    if (!ValidImageSizeParameters(context, target, level, width, height, 1, isSubImage))
     {
         context->recordError(Error(GL_INVALID_VALUE));
         return false;

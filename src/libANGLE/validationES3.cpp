@@ -296,7 +296,7 @@ bool ValidateES3TexImageParameters(Context *context, GLenum target, GLint level,
     }
 
     // Validate image size
-    if (!ValidImageSize(context, target, level, width, height, depth))
+    if (!ValidImageSizeParameters(context, target, level, width, height, depth, isSubImage))
     {
         context->recordError(Error(GL_INVALID_VALUE));
         return false;

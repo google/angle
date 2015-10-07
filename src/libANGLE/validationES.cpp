@@ -243,15 +243,22 @@ bool ValidMipLevel(const Context *context, GLenum target, GLint level)
     return level <= gl::log2(static_cast<int>(maxDimension));
 }
 
-bool ValidImageSize(const Context *context, GLenum target, GLint level,
-                    GLsizei width, GLsizei height, GLsizei depth)
+bool ValidImageSizeParameters(const Context *context,
+                              GLenum target,
+                              GLint level,
+                              GLsizei width,
+                              GLsizei height,
+                              GLsizei depth,
+                              bool isSubImage)
 {
     if (level < 0 || width < 0 || height < 0 || depth < 0)
     {
         return false;
     }
 
-    if (!context->getExtensions().textureNPOT &&
+    // TexSubImage parameters can be NPOT without textureNPOT extension,
+    // as long as the destination texture is POT.
+    if (!isSubImage && !context->getExtensions().textureNPOT &&
         (level != 0 && (!gl::isPow2(width) || !gl::isPow2(height) || !gl::isPow2(depth))))
     {
         return false;
