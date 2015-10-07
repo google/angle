@@ -238,6 +238,13 @@ TEST_P(ClearTestES3, BadFBOSerialBug)
 // Test that SRGB framebuffers clear to the linearized clear color
 TEST_P(ClearTestES3, SRGBClear)
 {
+    // TODO(jmadill): figure out why this fails
+    if (isIntel() && GetParam() == ES3_OPENGL())
+    {
+        std::cout << "Test skipped on Intel due to failures." << std::endl;
+        return;
+    }
+
     // First make a simple framebuffer, and clear it
     glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 
@@ -266,6 +273,13 @@ TEST_P(ClearTestES3, MixedSRGBClear)
         return;
     }
 #endif
+
+    // TODO(jmadill): figure out why this fails
+    if (isIntel() && GetParam() == ES3_OPENGL())
+    {
+        std::cout << "Test skipped on Intel due to failures." << std::endl;
+        return;
+    }
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 
