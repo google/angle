@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10b8a9d3_f99337c8",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 790,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-07T14:37:25Z",
+      "side": 1,
+      "message": "nit: you can use a range-for loop here",
+      "range": {
+        "startLine": 788,
+        "startChar": 5,
+        "endLine": 790,
+        "endChar": 76
+      },
+      "revId": "a3402d1c93360ddb1098dc77c5b2f8416373cd50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70972555_ac0fa3fc",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-07T14:37:25Z",
+      "side": 1,
+      "message": "this might not be the same value as arraySize, probably should just use arraySize here",
+      "range": {
+        "startLine": 792,
+        "startChar": 32,
+        "endLine": 792,
+        "endChar": 44
+      },
+      "revId": "a3402d1c93360ddb1098dc77c5b2f8416373cd50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
