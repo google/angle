@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0a611c3_af3dd98c",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-07T19:28:48Z",
+      "side": 1,
+      "message": "can you rename this function readPixelsImpl? It\u0027ll chain into Framebuffer11 and 9, but would help code health.",
+      "range": {
+        "startLine": 260,
+        "startChar": 11,
+        "endLine": 260,
+        "endChar": 21
+      },
+      "revId": "a76e8f41c2a409dcbc67a39c9dc0cd34818450d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70972555_6ca21bee",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-07T19:28:48Z",
+      "side": 1,
+      "message": "It looks as though this code path is not exercised by dEQP. We only can \"fast\" unpack textures with !\u003d 3 channels, and the only format they use is RGB8.\n\nPlease move the unimplemented pixel store state error checks into this function.",
+      "range": {
+        "startLine": 313,
+        "startChar": 10,
+        "endLine": 313,
+        "endChar": 38
+      },
+      "revId": "a76e8f41c2a409dcbc67a39c9dc0cd34818450d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
