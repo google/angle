@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0dfdd22_bedc397c",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-07T17:25:02Z",
+      "side": 0,
+      "message": "Do we need to remove this from the .cpp file too?",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 141,
+        "endChar": 12
+      },
+      "revId": "b3fbd867090821ad352f6b2b964036a5c27e9a20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
