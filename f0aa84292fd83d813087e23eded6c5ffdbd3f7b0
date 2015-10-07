@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70972555_8c6e677d",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-07T15:00:22Z",
+      "side": 0,
+      "message": "The new work doesn\u0027t cover PBOs yet so I think this check needs to remain but can be moved into the PBO-only code path below.",
+      "range": {
+        "startLine": 168,
+        "startChar": 4,
+        "endLine": 174,
+        "endChar": 5
+      },
+      "revId": "f0aa84292fd83d813087e23eded6c5ffdbd3f7b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
