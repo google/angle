@@ -3152,6 +3152,15 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog, const std::strin
     configs.push_back(CompileConfig(flags | D3DCOMPILE_SKIP_VALIDATION,   "skip validation"  ));
     configs.push_back(CompileConfig(flags | D3DCOMPILE_SKIP_OPTIMIZATION, "skip optimization"));
 
+    if (getMajorShaderModel() == 4 && getShaderModelSuffix() != "")
+    {
+        // Some shaders might cause a "blob content mismatch between level9 and d3d10 shader".
+        // e.g. dEQP-GLES2.functional.shaders.struct.local.loop_nested_struct_array_*.
+        // Using the [unroll] directive works around this, as does this D3DCompile flag.
+        configs.push_back(
+            CompileConfig(flags | D3DCOMPILE_AVOID_FLOW_CONTROL, "avoid flow control"));
+    }
+
     D3D_SHADER_MACRO loopMacros[] = { {"ANGLE_ENABLE_LOOP_FLATTEN", "1"}, {0, 0} };
 
     ID3DBlob *binary = NULL;
