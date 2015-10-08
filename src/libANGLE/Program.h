@@ -405,6 +405,11 @@ class Program : angle::NonCopyable
                                          std::vector<LinkedUniform> *samplerUniforms);
 
     void gatherInterfaceBlockInfo();
+    template <typename VarT>
+    void defineUniformBlockMembers(const std::vector<VarT> &fields,
+                                   const std::string &prefix,
+                                   int blockIndex);
+
     void defineUniformBlock(const sh::InterfaceBlock &interfaceBlock, GLenum shaderType);
 
     template <typename T>
