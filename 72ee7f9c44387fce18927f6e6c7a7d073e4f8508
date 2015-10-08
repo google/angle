@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "45a34180_83675e12",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-08T14:14:06Z",
+      "side": 1,
+      "message": "you can return INVALID_OPERATION here with the error message as before \"unimplemented pixel unpack state\" (and remove the comment about \"no error\")",
+      "revId": "72ee7f9c44387fce18927f6e6c7a7d073e4f8508",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0dfdd22_2172c871",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-08T14:14:06Z",
+      "side": 1,
+      "message": "nit: unimplemented",
+      "range": {
+        "startLine": 317,
+        "startChar": 52,
+        "endLine": 317,
+        "endChar": 59
+      },
+      "revId": "72ee7f9c44387fce18927f6e6c7a7d073e4f8508",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
