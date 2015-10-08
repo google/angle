@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "45a34180_e36ad2db",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-08T14:06:01Z",
+      "side": 1,
+      "message": "nit: override instead of virtual",
+      "range": {
+        "startLine": 220,
+        "startChar": 4,
+        "endLine": 220,
+        "endChar": 11
+      },
+      "revId": "b6858636668bfdd8095282a54b463dcc87baec72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0a315b1_f082603b",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-08T14:06:01Z",
+      "side": 1,
+      "message": "I\u0027m not sure we validate this yet, but if one shader uses #version 300 the other should as well (you\u0027ll need to reformat the frag shader a bit to use an out var)",
+      "range": {
+        "startLine": 236,
+        "startChar": 12,
+        "endLine": 236,
+        "endChar": 16
+      },
+      "revId": "b6858636668bfdd8095282a54b463dcc87baec72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0dfdd22_e13aa091",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-08T14:06:01Z",
+      "side": 1,
+      "message": "nit: git cl format should clip this",
+      "range": {
+        "startLine": 246,
+        "startChar": 81,
+        "endLine": 246,
+        "endChar": 100
+      },
+      "revId": "b6858636668bfdd8095282a54b463dcc87baec72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0dfdd22_01386c97",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-08T14:06:01Z",
+      "side": 1,
+      "message": "nit: can probably make the first few error checks ASSERTs",
+      "range": {
+        "startLine": 296,
+        "startChar": 4,
+        "endLine": 296,
+        "endChar": 22
+      },
+      "revId": "b6858636668bfdd8095282a54b463dcc87baec72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70972555_affeb565",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-08T14:06:01Z",
+      "side": 1,
+      "message": "nit: EXPECT_TRUE",
+      "range": {
+        "startLine": 310,
+        "startChar": 4,
+        "endLine": 310,
+        "endChar": 13
+      },
+      "revId": "b6858636668bfdd8095282a54b463dcc87baec72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e508b5ad_088e872a",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-08T14:06:01Z",
+      "side": 1,
+      "message": "nit: EXPECT_GLENUM_EQ",
+      "range": {
+        "startLine": 325,
+        "startChar": 8,
+        "endLine": 325,
+        "endChar": 17
+      },
+      "revId": "b6858636668bfdd8095282a54b463dcc87baec72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
