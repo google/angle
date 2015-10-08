@@ -2245,7 +2245,11 @@ Program::VectorAndSamplerCount Program::flattenUniform(const sh::ShaderVariable 
     }
 
     unsigned int elementCount          = uniform.elementCount();
-    vectorAndSamplerCount.vectorCount  = (VariableRegisterCount(uniform.type) * elementCount);
+
+    // Samplers aren't "real" uniforms, so they don't count towards register usage.
+    // Likewise, don't count "real" uniforms towards sampler count.
+    vectorAndSamplerCount.vectorCount =
+        (isSampler ? 0 : (VariableRegisterCount(uniform.type) * elementCount));
     vectorAndSamplerCount.samplerCount = (isSampler ? elementCount : 0);
 
     return vectorAndSamplerCount;
