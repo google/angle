@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ca5bbe3d_a7572ae5",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-09T18:52:39Z",
+      "side": 1,
+      "message": "nit: sorry, missed this before, should be EXPECT_NE(0, linkStatus)",
+      "range": {
+        "startLine": 313,
+        "startChar": 4,
+        "endLine": 313,
+        "endChar": 15
+      },
+      "revId": "fb28b55264b96e9c39e487b7352935bfbbd3c467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
