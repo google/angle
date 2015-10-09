@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a2466ae_edb185cf",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-09T17:25:23Z",
+      "side": 1,
+      "message": "nit: why do we expect the link to be successful and then check it?",
+      "revId": "f67fbf5df9d05ac61c1e7a46972734b4f69034ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
