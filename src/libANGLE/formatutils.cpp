@@ -589,23 +589,9 @@ GLuint InternalFormat::computeRowPitch(GLenum formatType, GLsizei width, GLint a
     return rx::roundUp(rowBytes, static_cast<GLuint>(alignment));
 }
 
-GLuint InternalFormat::computeDepthPitch(GLenum formatType,
-                                         GLsizei width,
-                                         GLsizei height,
-                                         GLint alignment,
-                                         GLint rowLength,
-                                         GLint imageHeight) const
+GLuint InternalFormat::computeDepthPitch(GLenum formatType, GLsizei width, GLsizei height, GLint alignment, GLint rowLength) const
 {
-    GLuint rows;
-    if (imageHeight > 0)
-    {
-        rows = imageHeight;
-    }
-    else
-    {
-        rows = height;
-    }
-    return computeRowPitch(formatType, width, alignment, rowLength) * rows;
+    return computeRowPitch(formatType, width, alignment, rowLength) * height;
 }
 
 GLuint InternalFormat::computeBlockSize(GLenum formatType, GLsizei width, GLsizei height) const
@@ -628,15 +614,6 @@ GLuint InternalFormat::computeBlockSize(GLenum formatType, GLsizei width, GLsize
             return componentCount * typeInfo.bytes * width * height;
         }
     }
-}
-
-GLuint InternalFormat::computeSkipPixels(GLint rowPitch,
-                                         GLint depthPitch,
-                                         GLint skipImages,
-                                         GLint skipRows,
-                                         GLint skipPixels) const
-{
-    return skipImages * depthPitch + skipRows * rowPitch + skipPixels * pixelBytes;
 }
 
 GLenum GetSizedInternalFormat(GLenum internalFormat, GLenum type)
