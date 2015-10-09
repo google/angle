@@ -134,9 +134,6 @@ class Platform
 
 }
 
-extern "C"
-{
-
 typedef void(*ANGLEPlatformInitializeFunc)(angle::Platform*);
 ANGLE_EXPORT void ANGLEPlatformInitialize(angle::Platform*);
 
@@ -145,7 +142,5 @@ ANGLE_EXPORT void ANGLEPlatformShutdown();
 
 typedef angle::Platform *(*ANGLEPlatformCurrentFunc)();
 ANGLE_EXPORT angle::Platform *ANGLEPlatformCurrent();
-
-}
 
 #endif // ANGLE_PLATFORM_H

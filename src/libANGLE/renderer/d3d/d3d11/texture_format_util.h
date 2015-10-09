@@ -12,7 +12,7 @@
 
 #include <map>
 
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11.h"
 
 namespace rx
 {

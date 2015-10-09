@@ -8,7 +8,7 @@
 
 #include "libANGLE/renderer/gl/wgl/wgl_utils.h"
 
-#include "libANGLE/renderer/gl/wgl/FunctionsWGL.h"
+#include "libANGLE/renderer/gl/wgl/functionsWGL.h"
 
 namespace rx
 {
