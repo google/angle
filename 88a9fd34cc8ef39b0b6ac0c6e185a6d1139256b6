@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a2466ae_6d159552",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2285,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-09T15:14:36Z",
+      "side": 1,
+      "message": "add a one line comment here explaining samplers aren\u0027t \"real\" uniforms",
+      "range": {
+        "startLine": 2285,
+        "startChar": 4,
+        "endLine": 2285,
+        "endChar": 25
+      },
+      "revId": "88a9fd34cc8ef39b0b6ac0c6e185a6d1139256b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
