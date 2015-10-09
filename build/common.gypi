@@ -52,6 +52,10 @@
                     {
                         'WarnAsError': 'true',
                     },
+                    'VCLinkerTool':
+                    {
+                        'TreatLinkerWarningAsErrors': 'true',
+                    },
                 },
             }],
         ],
