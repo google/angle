@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4aca6e3a_6bc32121",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5d50a02_266742ad",
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "55da0e36_43a43aee",
         "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
         "patchSetId": 7
@@ -30,6 +48,30 @@
       "writtenOn": "2015-10-05T14:44:19Z",
       "side": 1,
       "message": "nit: you can wrap the entire tests contents in an anonymous namespace block",
+      "range": {
+        "startLine": 11,
+        "startChar": 6,
+        "endLine": 11,
+        "endChar": 31
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eadb2204_3014a853",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55da0e36_43a43aee",
       "range": {
         "startLine": 11,
         "startChar": 6,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "eadb2204_d028bc9d",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95d8063c_a8a31f7a",
+      "range": {
+        "startLine": 14,
+        "startChar": 4,
+        "endLine": 14,
+        "endChar": 29
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "55da0e36_239f2ea2",
         "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
         "patchSetId": 7
@@ -76,6 +142,30 @@
       "writtenOn": "2015-10-05T14:43:18Z",
       "side": 1,
       "message": "nit: override instead of virtual",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 11
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aa9c660_45716aa1",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55da0e36_239f2ea2",
       "range": {
         "startLine": 26,
         "startChar": 4,
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "aac5aa25_8e669ba6",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5515ae81_d94e435b",
+      "range": {
+        "startLine": 52,
+        "startChar": 3,
+        "endLine": 55,
+        "endChar": 9
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5b7dee1_e8d35b65",
         "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
         "patchSetId": 7
@@ -122,6 +236,30 @@
       "writtenOn": "2015-10-05T14:43:18Z",
       "side": 1,
       "message": "nit: override instead of virtual",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 61,
+        "endChar": 11
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cab73eb4_c736becf",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5b7dee1_e8d35b65",
       "range": {
         "startLine": 61,
         "startChar": 4,
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "eab402b2_8809b743",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5515ae81_393dd7a4",
+      "range": {
+        "startLine": 64,
+        "startChar": 8,
+        "endLine": 64,
+        "endChar": 23
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "95d8063c_c8a06370",
         "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
         "patchSetId": 7
@@ -168,6 +330,30 @@
       "writtenOn": "2015-10-05T14:43:18Z",
       "side": 1,
       "message": "nit: comment one line before each TEST_P describing the test contents",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 6
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ac0e616_6d1a5583",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95d8063c_c8a06370",
       "range": {
         "startLine": 72,
         "startChar": 0,
@@ -203,6 +389,30 @@
     },
     {
       "key": {
+        "uuid": "8aa9c660_6576e69c",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "git cl format fixes this. Done.",
+      "parentUuid": "751ab2b5_2ccc77f9",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 4
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5cefe75_caf937ec",
         "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
         "patchSetId": 7
@@ -214,6 +424,30 @@
       "writtenOn": "2015-10-05T14:43:18Z",
       "side": 1,
       "message": "git cl format will fix this as well",
+      "range": {
+        "startLine": 99,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 9
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ad29ae7_b2d180d9",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5cefe75_caf937ec",
       "range": {
         "startLine": 99,
         "startChar": 0,
@@ -249,6 +483,30 @@
     },
     {
       "key": {
+        "uuid": "2ae61a29_1220ecb0",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5b7dee1_08d16f5d",
+      "range": {
+        "startLine": 112,
+        "startChar": 4,
+        "endLine": 112,
+        "endChar": 11
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5cefe75_eaf6fbfa",
         "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
         "patchSetId": 7
@@ -260,6 +518,30 @@
       "writtenOn": "2015-10-05T14:43:18Z",
       "side": 1,
       "message": "formatting",
+      "range": {
+        "startLine": 116,
+        "startChar": 4,
+        "endLine": 135,
+        "endChar": 10
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ae61a29_f2bd68a6",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5cefe75_eaf6fbfa",
       "range": {
         "startLine": 116,
         "startChar": 4,
@@ -295,6 +577,30 @@
     },
     {
       "key": {
+        "uuid": "ff3846ce_71a338d7",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15117609_27ca4232",
+      "range": {
+        "startLine": 138,
+        "startChar": 0,
+        "endLine": 141,
+        "endChar": 9
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "15117609_87c7d628",
         "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
         "patchSetId": 7
@@ -306,6 +612,30 @@
       "writtenOn": "2015-10-05T14:43:18Z",
       "side": 1,
       "message": "same nits",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 147,
+        "endChar": 11
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eadb2204_f025c0c4",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15117609_87c7d628",
       "range": {
         "startLine": 147,
         "startChar": 4,
@@ -341,6 +671,30 @@
     },
     {
       "key": {
+        "uuid": "ff3846ce_51a834b1",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15117609_67c43a24",
+      "range": {
+        "startLine": 155,
+        "startChar": 11,
+        "endLine": 155,
+        "endChar": 19
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f5b4e2df_03587497",
         "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
         "patchSetId": 7
@@ -364,6 +718,30 @@
     },
     {
       "key": {
+        "uuid": "cab73eb4_e733c2dc",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5b4e2df_03587497",
+      "range": {
+        "startLine": 158,
+        "startChar": 0,
+        "endLine": 158,
+        "endChar": 6
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5b7dee1_48a447ee",
         "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
         "patchSetId": 7
@@ -375,6 +753,30 @@
       "writtenOn": "2015-10-05T14:43:18Z",
       "side": 1,
       "message": "make sure the file ends in a newline, it\u0027s not possible to see on Gerrit",
+      "range": {
+        "startLine": 172,
+        "startChar": 0,
+        "endLine": 172,
+        "endChar": 22
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff3846ce_31adb0c1",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-10T18:07:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5b7dee1_48a447ee",
       "range": {
         "startLine": 172,
         "startChar": 0,
