@@ -1,0 +1,303 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ca42de4b_c4045c95",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T19:48:28Z",
+      "side": 1,
+      "message": "you can remove the inline here",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 6
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf908e0a_bf68776c",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T19:48:28Z",
+      "side": 1,
+      "message": "nit: Caps for local static functions",
+      "range": {
+        "startLine": 13,
+        "startChar": 21,
+        "endLine": 13,
+        "endChar": 30
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a3956d0_3a922522",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T19:48:28Z",
+      "side": 1,
+      "message": "put a blank line between pairs of functions",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 1
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea588243_cee6b710",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T19:48:28Z",
+      "side": 1,
+      "message": "nit: Caps here too",
+      "range": {
+        "startLine": 17,
+        "startChar": 19,
+        "endLine": 17,
+        "endChar": 29
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf908e0a_9f6b3369",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T19:48:28Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 6
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff9a0688_61d07653",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T19:48:28Z",
+      "side": 1,
+      "message": "BGRA8",
+      "range": {
+        "startLine": 21,
+        "startChar": 7,
+        "endLine": 21,
+        "endChar": 12
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca42de4b_a4015883",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T19:48:28Z",
+      "side": 1,
+      "message": "you can remove all the inline keywords in this file",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 10
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca42de4b_84b89426",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T19:48:28Z",
+      "side": 1,
+      "message": "nit:  add // anonymous namespace at end of the scope",
+      "range": {
+        "startLine": 635,
+        "startChar": 0,
+        "endLine": 635,
+        "endChar": 1
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf908e0a_5fc5abc4",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 712,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T19:48:28Z",
+      "side": 1,
+      "message": "make sure each new file ends in a newline.",
+      "range": {
+        "startLine": 712,
+        "startChar": 0,
+        "endLine": 712,
+        "endChar": 1
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a0cf6ec_bcfcad2a",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T19:48:28Z",
+      "side": 1,
+      "message": "this file should have include guards, see any other header file for an example.",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 13
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f266a9b_c60b6238",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T19:48:28Z",
+      "side": 1,
+      "message": "hm, this is odd. Did you need to use BGRA because of the way the unpacking works? in D3D we usually use RGBA, BGRA formats are technically optionally supported, though we rely on them.",
+      "range": {
+        "startLine": 347,
+        "startChar": 78,
+        "endLine": 347,
+        "endChar": 104
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa43ea7f_27459884",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T19:48:28Z",
+      "side": 1,
+      "message": "you\u0027ll need to mark this block with // clang-format off and // clang-format on, search in the code for prior examples.",
+      "range": {
+        "startLine": 70,
+        "startChar": 3,
+        "endLine": 70,
+        "endChar": 21
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa43ea7f_674fa0a2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T19:48:28Z",
+      "side": 1,
+      "message": "see comment above for fixing the formatting here",
+      "range": {
+        "startLine": 210,
+        "startChar": 4,
+        "endLine": 210,
+        "endChar": 22
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
