@@ -780,10 +780,6 @@
                 }],
                 ['angle_build_winrt==1',
                 {
-                    'defines':
-                    [
-                        'NTDDI_VERSION=NTDDI_WINBLUE',
-                    ],
                     'msvs_requires_importlibrary' : 'true',
                     'msvs_settings':
                     {
