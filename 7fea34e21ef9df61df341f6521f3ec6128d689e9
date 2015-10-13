@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "ea588243_0bfde1da",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T14:48:02Z",
+      "side": 1,
+      "message": "nit: keep the \u0027using namespace angle;\u0027, and place the entire body of the file inside a block like\n\nnamespace\n{\n\nclass Different... etc\n\n}  // anonymous namespace\n\nlike so. The way GTEST works we don\u0027t actually need to share any symbols with other files.",
+      "parentUuid": "eadb2204_3014a853",
+      "range": {
+        "startLine": 11,
+        "startChar": 6,
+        "endLine": 11,
+        "endChar": 31
+      },
+      "revId": "7fea34e21ef9df61df341f6521f3ec6128d689e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "95d8063c_a8a31f7a",
         "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
         "patchSetId": 7
