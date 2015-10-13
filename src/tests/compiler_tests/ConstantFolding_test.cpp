@@ -71,12 +71,19 @@ class ConstantFinder : public TIntermTraverser
 
     bool isEqual(const TConstantUnion &node, const int &value) const
     {
-        return mFaultTolerance >= abs(node.getIConst() - value);
+        ASSERT(mFaultTolerance < std::numeric_limits<int>::max());
+        // abs() returns 0 at least on some platforms when the minimum int value is passed in (it
+        // doesn't have a positive counterpart).
+        return mFaultTolerance >= abs(node.getIConst() - value) &&
+               (node.getIConst() - value) != std::numeric_limits<int>::min();
     }
 
     bool isEqual(const TConstantUnion &node, const unsigned int &value) const
     {
-        return mFaultTolerance >= abs(static_cast<int>(node.getUConst() - value));
+        ASSERT(mFaultTolerance < static_cast<unsigned int>(std::numeric_limits<int>::max()));
+        return static_cast<int>(mFaultTolerance) >=
+                   abs(static_cast<int>(node.getUConst() - value)) &&
+               static_cast<int>(node.getUConst() - value) != std::numeric_limits<int>::min();
     }
 
     bool isEqual(const TConstantUnion &node, const bool &value) const
@@ -482,3 +489,78 @@ TEST_F(ConstantFoldingTest, Fold3x3MatrixTranspose)
     ASSERT_TRUE(constantVectorFoundInAST(result));
 }
 
+// Test that 0xFFFFFFFF wraps to -1 when parsed as integer.
+// This is featured in the examples of ESSL3 section 4.1.3. ESSL3 section 12.42
+// means that any 32-bit unsigned integer value is a valid literal.
+TEST_F(ConstantFoldingTest, ParseWrappedHexIntLiteral)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "precision highp int;\n"
+        "uniform int inInt;\n"
+        "out vec4 my_Vec;\n"
+        "void main() {\n"
+        "   const int i = 0xFFFFFFFF;\n"
+        "   my_Vec = vec4(i * inInt);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(-1));
+}
+
+// Test that 3000000000 wraps to -1294967296 when parsed as integer.
+// This is featured in the examples of GLSL 4.5, and ESSL behavior should match
+// desktop GLSL when it comes to integer parsing.
+TEST_F(ConstantFoldingTest, ParseWrappedDecimalIntLiteral)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "precision highp int;\n"
+        "uniform int inInt;\n"
+        "out vec4 my_Vec;\n"
+        "void main() {\n"
+        "   const int i = 3000000000;\n"
+        "   my_Vec = vec4(i * inInt);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(-1294967296));
+}
+
+// Test that 0xFFFFFFFFu is parsed correctly as an unsigned integer literal.
+// This is featured in the examples of ESSL3 section 4.1.3. ESSL3 section 12.42
+// means that any 32-bit unsigned integer value is a valid literal.
+TEST_F(ConstantFoldingTest, ParseMaxUintLiteral)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "precision highp int;\n"
+        "uniform uint inInt;\n"
+        "out vec4 my_Vec;\n"
+        "void main() {\n"
+        "   const uint i = 0xFFFFFFFFu;\n"
+        "   my_Vec = vec4(i * inInt);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(0xFFFFFFFFu));
+}
+
+// Test that unary minus applied to unsigned int is constant folded correctly.
+// This is featured in the examples of ESSL3 section 4.1.3. ESSL3 section 12.42
+// means that any 32-bit unsigned integer value is a valid literal.
+TEST_F(ConstantFoldingTest, FoldUnaryMinusOnUintLiteral)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "precision highp int;\n"
+        "uniform uint inInt;\n"
+        "out vec4 my_Vec;\n"
+        "void main() {\n"
+        "   const uint i = -1u;\n"
+        "   my_Vec = vec4(i * inInt);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(0xFFFFFFFFu));
+}

@@ -916,3 +916,20 @@ TEST_F(MalformedShaderTest, ArrayValueFromFunctionParameterAsParameter)
         FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
     }
 }
+
+// Test that out-of-range integer literal generates an error in ESSL 3.00.
+TEST_F(MalformedShaderTest, OutOfRangeIntegerLiteral)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "precision highp int;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "    my_FragColor = vec4(0x100000000);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
