@@ -22,6 +22,30 @@
       "revId": "fb28b55264b96e9c39e487b7352935bfbbd3c467",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea588243_2b11c5d4",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-13T15:49:06Z",
+      "side": 1,
+      "message": "Oops, this got missed. No worries, very trivial.",
+      "parentUuid": "ca5bbe3d_a7572ae5",
+      "range": {
+        "startLine": 313,
+        "startChar": 4,
+        "endLine": 313,
+        "endChar": 15
+      },
+      "revId": "fb28b55264b96e9c39e487b7352935bfbbd3c467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
