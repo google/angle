@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a0cf6ec_9feb9b93",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 3
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-14T14:26:19Z",
+      "side": 1,
+      "message": "just to confirm I understand this correctly, the sign for negative ints is parsed elsewhere?",
+      "range": {
+        "startLine": 523,
+        "startChar": 9,
+        "endLine": 523,
+        "endChar": 19
+      },
+      "revId": "311e6a11cfd31b8a55b25335839cefb56e7d3d50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa43ea7f_e74f30f4",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 3
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-14T14:26:19Z",
+      "side": 1,
+      "message": "if i get this correctly, this will convert \u003e MAX_INT values to negative signed values, and that\u0027s the spec?",
+      "range": {
+        "startLine": 530,
+        "startChar": 20,
+        "endLine": 530,
+        "endChar": 40
+      },
+      "revId": "311e6a11cfd31b8a55b25335839cefb56e7d3d50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
