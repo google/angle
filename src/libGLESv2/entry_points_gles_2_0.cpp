@@ -3148,37 +3148,37 @@ void GL_APIENTRY PixelStorei(GLenum pname, GLint param)
 
           case GL_UNPACK_IMAGE_HEIGHT:
             ASSERT(context->getClientVersion() >= 3);
-            state.setUnpackImageHeight(param);
+            state.getUnpackState().imageHeight = param;
             break;
 
           case GL_UNPACK_SKIP_IMAGES:
-              ASSERT(context->getClientVersion() >= 3);
-              state.setUnpackSkipImages(param);
+            ASSERT(context->getClientVersion() >= 3);
+            state.getUnpackState().skipImages = param;
             break;
 
           case GL_UNPACK_SKIP_ROWS:
               ASSERT((context->getClientVersion() >= 3) || context->getExtensions().unpackSubimage);
-              state.setUnpackSkipRows(param);
+            state.getUnpackState().skipRows = param;
             break;
 
           case GL_UNPACK_SKIP_PIXELS:
               ASSERT((context->getClientVersion() >= 3) || context->getExtensions().unpackSubimage);
-              state.setUnpackSkipPixels(param);
+            state.getUnpackState().skipPixels = param;
             break;
 
           case GL_PACK_ROW_LENGTH:
               ASSERT((context->getClientVersion() >= 3) || context->getExtensions().packSubimage);
-              state.setPackRowLength(param);
+            state.getPackState().rowLength = param;
             break;
 
           case GL_PACK_SKIP_ROWS:
               ASSERT((context->getClientVersion() >= 3) || context->getExtensions().packSubimage);
-              state.setPackSkipRows(param);
+            state.getPackState().skipRows = param;
             break;
 
           case GL_PACK_SKIP_PIXELS:
               ASSERT((context->getClientVersion() >= 3) || context->getExtensions().packSubimage);
-              state.setPackSkipPixels(param);
+            state.getPackState().skipPixels = param;
             break;
 
           default:
