@@ -28,7 +28,8 @@ class ShaderD3D : public ShaderImpl
     virtual ~ShaderD3D();
 
     // ShaderImpl implementation
-    int prepareSourceAndReturnOptions(std::stringstream *sourceStream) override;
+    int prepareSourceAndReturnOptions(std::stringstream *sourceStream,
+                                      std::string *sourcePath) override;
     bool postTranslateCompile(gl::Compiler *compiler, std::string *infoLog) override;
     std::string getDebugInfo() const override;
 

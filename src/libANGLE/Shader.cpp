@@ -219,7 +219,9 @@ void Shader::compile(Compiler *compiler)
 
     std::stringstream sourceStream;
 
-    int additionalOptions = mImplementation->prepareSourceAndReturnOptions(&sourceStream);
+    std::string sourcePath;
+    int additionalOptions =
+        mImplementation->prepareSourceAndReturnOptions(&sourceStream, &sourcePath);
     int compileOptions    = (SH_OBJECT_CODE | SH_VARIABLES | additionalOptions);
 
     // Some targets (eg D3D11 Feature Level 9_3 and below) do not support non-constant loop indexes
@@ -231,8 +233,17 @@ void Shader::compile(Compiler *compiler)
     }
 
     std::string sourceString  = sourceStream.str();
-    const char *sourceCString = sourceString.c_str();
-    bool result               = ShCompile(compilerHandle, &sourceCString, 1, compileOptions);
+    std::vector<const char *> sourceCStrings;
+
+    if (!sourcePath.empty())
+    {
+        sourceCStrings.push_back(sourcePath.c_str());
+    }
+
+    sourceCStrings.push_back(sourceString.c_str());
+
+    bool result =
+        ShCompile(compilerHandle, &sourceCStrings[0], sourceCStrings.size(), compileOptions);
 
     if (!result)
     {

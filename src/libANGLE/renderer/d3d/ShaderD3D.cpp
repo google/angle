@@ -117,7 +117,8 @@ ShShaderOutput ShaderD3D::getCompilerOutputType() const
     return mCompilerOutputType;
 }
 
-int ShaderD3D::prepareSourceAndReturnOptions(std::stringstream *shaderSourceStream)
+int ShaderD3D::prepareSourceAndReturnOptions(std::stringstream *shaderSourceStream,
+                                             std::string *sourcePath)
 {
     uncompile();
 
@@ -128,10 +129,9 @@ int ShaderD3D::prepareSourceAndReturnOptions(std::stringstream *shaderSourceStre
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
     if (gl::DebugAnnotationsActive())
     {
-        std::string sourcePath = getTempPath();
-        writeFile(sourcePath.c_str(), source.c_str(), source.length());
+        *sourcePath = getTempPath();
+        writeFile(sourcePath->c_str(), source.c_str(), source.length());
         additionalOptions |= SH_LINE_DIRECTIVES | SH_SOURCE_PATH;
-        *shaderSourceStream << sourcePath;
     }
 #endif
 

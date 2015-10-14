@@ -122,10 +122,17 @@ GLuint ANGLETest::compileShader(GLenum type, const std::string &source)
         GLint infoLogLength;
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-        std::vector<GLchar> infoLog(infoLogLength);
-        glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), NULL, &infoLog[0]);
+        if (infoLogLength == 0)
+        {
+            std::cerr << "shader compilation failed with empty log." << std::endl;
+        }
+        else
+        {
+            std::vector<GLchar> infoLog(infoLogLength);
+            glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), NULL, &infoLog[0]);
 
-        std::cerr << "shader compilation failed: " << &infoLog[0];
+            std::cerr << "shader compilation failed: " << &infoLog[0];
+        }
 
         glDeleteShader(shader);
         shader = 0;
