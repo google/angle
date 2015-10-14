@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa43ea7f_07533ca2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table_autogen.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-14T14:08:48Z",
+      "side": 1,
+      "message": "I don\u0027t think we\u0027re allowed to use this style of initializer, see (Uniform) Initialization Syntax in https://chromium-cpp.appspot.com/. I think Geoff\u0027s alternate suggestion is to define a lambda that returns it\u0027s value immediately. like int x \u003d []() { return 5; }. I\u0027m fine with that or with the way you had it before.",
+      "range": {
+        "startLine": 74,
+        "startChar": 20,
+        "endLine": 80,
+        "endChar": 22
+      },
+      "revId": "62503a75162eaf1fd10dce43ff7b04a9c6a5404c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
