@@ -105,6 +105,11 @@ static float YCoordToFromCG(float y)
         return self;
     }
 
+    - (void) onOSXWindowDeleted
+    {
+        mWindow = nil;
+    }
+
     - (BOOL) windowShouldClose: (id) sender
     {
         Event event;
@@ -138,13 +143,18 @@ static float YCoordToFromCG(float y)
         Event event;
         event.Type = Event::EVENT_GAINED_FOCUS;
         mWindow->pushEvent(event);
+        [self retain];
     }
 
     - (void) windowDidResignKey: (NSNotification*) notification
     {
-        Event event;
-        event.Type = Event::EVENT_LOST_FOCUS;
-        mWindow->pushEvent(event);
+        if (mWindow != nil)
+        {
+            Event event;
+            event.Type = Event::EVENT_LOST_FOCUS;
+            mWindow->pushEvent(event);
+        }
+        [self release];
     }
 @end
 
@@ -570,6 +580,7 @@ void OSXWindow::destroy()
 
     [mView release];
     mView = nil;
+    [mDelegate onOSXWindowDeleted];
     [mDelegate release];
     mDelegate = nil;
     [mWindow release];
