@@ -22,6 +22,30 @@
       "revId": "214e7c6e8c827af695714ce172729dc8fb6132d2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eab402b2_0bae21c3",
+        "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1135394
+      },
+      "writtenOn": "2015-10-14T14:22:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf908e0a_df677b4d",
+      "range": {
+        "startLine": 178,
+        "startChar": 0,
+        "endLine": 178,
+        "endChar": 1
+      },
+      "revId": "214e7c6e8c827af695714ce172729dc8fb6132d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
