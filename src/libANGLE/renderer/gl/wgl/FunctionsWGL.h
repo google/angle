@@ -6,6 +6,9 @@
 
 // FunctionsWGL.h: Defines the FuntionsWGL class to contain loaded WGL functions
 
+#ifndef LIBANGLE_RENDERER_GL_WGL_FUNCTIONS_WGL
+#define LIBANGLE_RENDERER_GL_WGL_FUNCTIONS_WGL
+
 #include "common/angleutils.h"
 #include "libANGLE/renderer/gl/wgl/functionswgl_typedefs.h"
 
@@ -77,3 +80,5 @@ class FunctionsWGL : angle::NonCopyable
 };
 
 }
+
+#endif // LIBANGLE_RENDERER_GL_WGL_FUNCTIONS_WGL
