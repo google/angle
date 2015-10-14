@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "3fa3be81_e05e3b7e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1506,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-14T18:43:06Z",
+      "side": 1,
+      "message": "nit: Why minimum? It seems to me that this is instead the maximum mask. (I might be missing something)",
+      "revId": "214e7c6e8c827af695714ce172729dc8fb6132d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf908e0a_df677b4d",
         "filename": "src/tests/gl_tests/DifferentStencilMasksTest.cpp",
         "patchSetId": 10
