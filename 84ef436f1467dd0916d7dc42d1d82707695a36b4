@@ -1,0 +1,349 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59b5f2f6_bc77c1bf",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "I\u0027d probably call these mCurBlendState or mAppliedBlendState, etc",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 15
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59b5f2f6_fc966949",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "Instead of making these iterate over the bits, can we do set-operations? For example:\n\n  // in the header\n  static gl::State::DirtyBits mBlendDirtyBits;\n\n  // init this in the constructor\n  mBlendDirtyBits.set(DIRTY_BIT_BLEND_EQUATIONS);\n  // .. set all the bits ..\n\n  bool StateManagerD3D::isBlendStateDirty(dirtyBits)\n  {\n     return (dirtyBits \u0026 mBlendDirtyBits).any();\n  }",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 1
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1998da8e_4263321b",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "I might redesign this if you can use the mLocalDirtyBits to make this pure virtual, then in D3D9 use a range-for over the dirty bits, while keeping a similar implementation as here in D3D11, until we can figure out how to use the dirty bits more effectively to avoid the memcmps.",
+      "range": {
+        "startLine": 207,
+        "startChar": 0,
+        "endLine": 234,
+        "endChar": 1
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99abea9d_de9ba571",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "nit: Rasterizer State",
+      "range": {
+        "startLine": 73,
+        "startChar": 7,
+        "endLine": 73,
+        "endChar": 23
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "396bde32_03e24eb4",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "Can we make this D3D9-only? It\u0027s a special case variable. It\u0027s OK to downcast StateManagerD3D to StateManager9 in Renderer9.cpp, using GetAs\u003c\u003e",
+      "range": {
+        "startLine": 76,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 31
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9a1e2bb_20694ae2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "nit: use \u0027nullptr\u0027 in new code",
+      "range": {
+        "startLine": 285,
+        "startChar": 20,
+        "endLine": 285,
+        "endChar": 24
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79a636d7_fd8c270e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManagerD3D11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "here for example you could use \n\n auto dirtySet \u003d mLocalDirtyBits | dirtyBits;\n if ((dirtySet \u0026 mBlendStateBits).any() \u0026\u0026 (memcmps...)\n\nWe might want to see if we can avoid using memcmps at some point but maybe in a follow-up patch.",
+      "range": {
+        "startLine": 32,
+        "startChar": 8,
+        "endLine": 33,
+        "endChar": 40
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79a636d7_7d2497c3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManagerD3D11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "Call these classes StateManager11 and StateManager9 to mirror our existing conventions.",
+      "range": {
+        "startLine": 19,
+        "startChar": 6,
+        "endLine": 19,
+        "endChar": 23
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9a1e2bb_406c4ef2",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1191,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "A design suggestion: Look at StateManagerGL.cpp, for example, setScissorTestEnabled. This is a public member of the State manager, that we might call internally, and when we do, it marks off a mLocalDirtyBits appropriately. mLocalDirtyBits is equivalent to a full set of \"forceSet\" bits, but with finer granularity.\n\nSee also StateManagerGL::syncState. Here, we iterate over dirtyBits | mLocalDirtyBits, and we set the state without needing to test each bit individually. Note also we use a sort of hacky approach where we clear the local dirty bits after each loop iteration. This isn\u0027t clean (there might be a better way) but this fixes the problem of setting dirty bits after clearing them within the loop.",
+      "range": {
+        "startLine": 1190,
+        "startChar": 0,
+        "endLine": 1191,
+        "endChar": 55
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99abea9d_1e37cd14",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1640,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "Can we move the body of this method to RendererD3D? It seems as though currently they\u0027re identical. Do they diverge in a future patch?",
+      "range": {
+        "startLine": 1637,
+        "startChar": 0,
+        "endLine": 1640,
+        "endChar": 1
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59709218_64ca2a38",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManagerD3D9.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "nit: fix comment",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 20
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59b5f2f6_bca0e19a",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManagerD3D9.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "nit: fix comment",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 20
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7971d61a_e55ff64e",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManagerD3D9.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "nit: use override instead of virtual (won\u0027t repeat, in a few places)",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 11
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f99a2688_f61e86a9",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManagerD3D9.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "nit: const \u0026?",
+      "range": {
+        "startLine": 89,
+        "startChar": 4,
+        "endLine": 89,
+        "endChar": 26
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99abea9d_fe966149",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManagerD3D9.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-16T14:48:45Z",
+      "side": 1,
+      "message": "nit: add comment   // namespace rx to closing namespace scopes (won\u0027t repeat, in a few other places)",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 1
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
