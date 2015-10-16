@@ -22,6 +22,30 @@
       "revId": "62503a75162eaf1fd10dce43ff7b04a9c6a5404c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa3be81_bbdcf26f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table_autogen.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-10-16T00:58:09Z",
+      "side": 1,
+      "message": "Thanks for pointing that out! I changed it to the lambda way (:",
+      "parentUuid": "aa43ea7f_07533ca2",
+      "range": {
+        "startLine": 74,
+        "startChar": 20,
+        "endLine": 80,
+        "endChar": 22
+      },
+      "revId": "62503a75162eaf1fd10dce43ff7b04a9c6a5404c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
