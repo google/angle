@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "79fd56bf_3ad62525",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2021,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-19T22:51:17Z",
+      "side": 1,
+      "message": "Maybe the error message should mention that, right now that block of code looks like arrays are TODO",
+      "parentUuid": "19829a51_954e26aa",
+      "range": {
+        "startLine": 2017,
+        "startChar": 16,
+        "endLine": 2021,
+        "endChar": 17
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99304a80_30ef3871",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 12
@@ -65,6 +89,93 @@
         "endLine": 2045,
         "endChar": 9
       },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39de7e5b_1aafe1cf",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2045,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-19T22:51:17Z",
+      "side": 1,
+      "message": "ditto, and the TODO can be removed.",
+      "parentUuid": "99304a80_30ef3871",
+      "range": {
+        "startLine": 2041,
+        "startChar": 8,
+        "endLine": 2045,
+        "endChar": 9
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d90802ae_4ff11ebf",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-19T22:51:17Z",
+      "side": 1,
+      "message": "nit: isn\u0027t the driver implicitly unbinding the transform feedback when it is deleted?",
+      "range": {
+        "startLine": 270,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 9
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9ec2e3d_13265cee",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-19T22:51:17Z",
+      "side": 1,
+      "message": "Could these be moved into the if?",
+      "range": {
+        "startLine": 651,
+        "startChar": 1,
+        "endLine": 654,
+        "endChar": 36
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99f3ea1a_64af1ecf",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-19T22:51:17Z",
+      "side": 1,
+      "message": "Since we are in a hot function, it might be sense to branch most of these on the existence of a transform feedback (isn\u0027t getCurrentTransformFeedback returning nullptr in this case?)",
       "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
