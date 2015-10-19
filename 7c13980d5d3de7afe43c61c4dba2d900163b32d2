@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "d98ba26e_f0d540a5",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1136734
+      },
+      "writtenOn": "2015-10-19T18:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ca42de4b_c4045c95",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 6
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3953decb_c37dd6a3",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1136734
+      },
+      "writtenOn": "2015-10-19T18:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf908e0a_bf68776c",
+      "range": {
+        "startLine": 13,
+        "startChar": 21,
+        "endLine": 13,
+        "endChar": 30
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a3956d0_3a922522",
         "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2015-10-13T19:48:28Z",
       "side": 1,
       "message": "put a blank line between pairs of functions",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 1
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3953decb_e38252ff",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1136734
+      },
+      "writtenOn": "2015-10-19T18:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a3956d0_3a922522",
       "range": {
         "startLine": 16,
         "startChar": 0,
@@ -117,6 +189,54 @@
     },
     {
       "key": {
+        "uuid": "99304a80_70a1306b",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1136734
+      },
+      "writtenOn": "2015-10-19T18:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea588243_cee6b710",
+      "range": {
+        "startLine": 17,
+        "startChar": 19,
+        "endLine": 17,
+        "endChar": 29
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39259e43_b69b4640",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1136734
+      },
+      "writtenOn": "2015-10-19T18:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf908e0a_9f6b3369",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 6
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff9a0688_61d07653",
         "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
         "patchSetId": 3
@@ -163,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "3953decb_8377debf",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1136734
+      },
+      "writtenOn": "2015-10-19T18:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ca42de4b_a4015883",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 10
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ca42de4b_84b89426",
         "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
         "patchSetId": 3
@@ -174,6 +318,30 @@
       "writtenOn": "2015-10-13T19:48:28Z",
       "side": 1,
       "message": "nit:  add // anonymous namespace at end of the scope",
+      "range": {
+        "startLine": 635,
+        "startChar": 0,
+        "endLine": 635,
+        "endChar": 1
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99304a80_30abb84d",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1136734
+      },
+      "writtenOn": "2015-10-19T18:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ca42de4b_84b89426",
       "range": {
         "startLine": 635,
         "startChar": 0,
@@ -209,6 +377,30 @@
     },
     {
       "key": {
+        "uuid": "d98ba26e_b0dfb8c3",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 712,
+      "author": {
+        "id": 1136734
+      },
+      "writtenOn": "2015-10-19T18:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf908e0a_5fc5abc4",
+      "range": {
+        "startLine": 712,
+        "startChar": 0,
+        "endLine": 712,
+        "endChar": 1
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a0cf6ec_bcfcad2a",
         "filename": "src/libANGLE/renderer/d3d/ETCDecoder.h",
         "patchSetId": 3
@@ -220,6 +412,30 @@
       "writtenOn": "2015-10-13T19:48:28Z",
       "side": 1,
       "message": "this file should have include guards, see any other header file for an example.",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 13
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7959d6e7_65fae670",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1136734
+      },
+      "writtenOn": "2015-10-19T18:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a0cf6ec_bcfcad2a",
       "range": {
         "startLine": 7,
         "startChar": 3,
@@ -302,6 +518,30 @@
     },
     {
       "key": {
+        "uuid": "39259e43_d67362a5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1136734
+      },
+      "writtenOn": "2015-10-19T18:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa43ea7f_27459884",
+      "range": {
+        "startLine": 70,
+        "startChar": 3,
+        "endLine": 70,
+        "endChar": 21
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa43ea7f_674fa0a2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
         "patchSetId": 3
@@ -313,6 +553,30 @@
       "writtenOn": "2015-10-13T19:48:28Z",
       "side": 1,
       "message": "see comment above for fixing the formatting here",
+      "range": {
+        "startLine": 210,
+        "startChar": 4,
+        "endLine": 210,
+        "endChar": 22
+      },
+      "revId": "7c13980d5d3de7afe43c61c4dba2d900163b32d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39259e43_f678de83",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1136734
+      },
+      "writtenOn": "2015-10-19T18:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa43ea7f_674fa0a2",
       "range": {
         "startLine": 210,
         "startChar": 4,
