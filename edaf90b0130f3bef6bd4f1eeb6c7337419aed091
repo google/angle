@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99304a80_1028fc52",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-19T18:14:12Z",
+      "side": 1,
+      "message": "nit: caps",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 12
+      },
+      "revId": "edaf90b0130f3bef6bd4f1eeb6c7337419aed091",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f984e65e_74ace673",
+        "filename": "src/libANGLE/renderer/d3d/ETCDecoder.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-19T18:14:12Z",
+      "side": 1,
+      "message": "nit: end with \u0027_\u0027",
+      "range": {
+        "startLine": 10,
+        "startChar": 8,
+        "endLine": 10,
+        "endChar": 42
+      },
+      "revId": "edaf90b0130f3bef6bd4f1eeb6c7337419aed091",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3953decb_437246d0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-19T18:14:12Z",
+      "side": 1,
+      "message": "we should still make this RGBA",
+      "range": {
+        "startLine": 347,
+        "startChar": 78,
+        "endLine": 347,
+        "endChar": 104
+      },
+      "revId": "edaf90b0130f3bef6bd4f1eeb6c7337419aed091",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f984e65e_34b65ec0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-19T18:14:12Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 214,
+        "startChar": 93,
+        "endLine": 214,
+        "endChar": 119
+      },
+      "revId": "edaf90b0130f3bef6bd4f1eeb6c7337419aed091",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
