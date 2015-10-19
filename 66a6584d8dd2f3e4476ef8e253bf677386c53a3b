@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9198e10_976884ac",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-19T18:09:23Z",
+      "side": 1,
+      "message": "Note: this is the correct default value for transform feedback buffer mode.",
+      "range": {
+        "startLine": 238,
+        "startChar": 35,
+        "endLine": 238,
+        "endChar": 57
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19829a51_954e26aa",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2021,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-19T18:09:23Z",
+      "side": 1,
+      "message": "Capturing entire arrays (just like capturing array elements, see ref below) is unspecified in the GLES spec.",
+      "range": {
+        "startLine": 2017,
+        "startChar": 16,
+        "endLine": 2021,
+        "endChar": 17
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99304a80_30ef3871",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2045,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-19T18:09:23Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 2041,
+        "startChar": 8,
+        "endLine": 2045,
+        "endChar": 9
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19829a51_b5532a4f",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-19T18:09:23Z",
+      "side": 1,
+      "message": "Turns out we need to up the minimum version to 4.0 or GL_ARB_transform_feedback2 to support full ES3 transform feedback.",
+      "range": {
+        "startLine": 481,
+        "startChar": 8,
+        "endLine": 482,
+        "endChar": 63
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
