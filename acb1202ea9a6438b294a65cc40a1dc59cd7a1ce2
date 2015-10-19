@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3953decb_e3f7b2b7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_data.json",
+        "patchSetId": 9
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-19T14:45:38Z",
+      "side": 1,
+      "message": "Ah, so what this means is that it\u0027s an emulated format. We have these in here to make sure that we don\u0027t actually try to load data into this texture directly.",
+      "range": {
+        "startLine": 485,
+        "startChar": 0,
+        "endLine": 491,
+        "endChar": 10
+      },
+      "revId": "acb1202ea9a6438b294a65cc40a1dc59cd7a1ce2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
