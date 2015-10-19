@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9198e10_f714605a",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-19T14:29:42Z",
+      "side": 1,
+      "message": "This doesn\u0027t look right to me. Going to do a Chrome build and check this out. I wonder if you can just change the GetVariableTraverser above to a NameHashingTraverser?",
+      "range": {
+        "startLine": 573,
+        "startChar": 0,
+        "endLine": 577,
+        "endChar": 9
+      },
+      "revId": "bf7a0ea27bf1c57f374ed1c8d27b166f89ec497c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
