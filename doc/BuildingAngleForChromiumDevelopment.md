@@ -2,9 +2,16 @@
 
 ## Introduction
 
-ANGLE is normally built on Windows but parts of it are cross platform including the shader validator and translator. These parts can be built and tested inside a Chromium checkout.
+On Windows, Linux, and Mac ANGLE now builds most core components cross platform, including the shader validator and translator as well as the graphics API translator. These parts can be built and tested inside a Chromium checkout.
 
-## Details
+Steps:
+
+  * Checkout and build [Chromium](http://dev.chromium.org/Home).
+  * You should now be able to use `ninja -C out/Debug angle_end2end_tests`, for example.
+
+## Building Standalone ANGLE insinde Chromium
+
+On Mac, ANGLE doesn't yet include the dEQP tests or the API translation libraries as part of Chromium. ANGLE also includes some sample applications and a few other targets that don't build on Chromium. These steps describe how to build such targets within a Chromium checkout.
 
 Steps:
 
@@ -37,15 +44,17 @@ ninja -j 10 -k1 -C out/Debug
 
 ```bash
 cd src/third_party/angle
-ninja -j 10 -k1 -C out/Debug angle_compiler_tests
+ninja -j 10 -k1 -C out/Debug angle_gles2_deqp_tests
 ```
 
   * To run
 
 ```bash
 cd src/third_party/angle
-./out/Debug/angle_compiler_tests
+./out/Debug/hello_triangle
 ```
+
+If you decide to go back to the Chromium-managed version, just remove the `.gclient` file.
 
 ## Working with Top of Tree ANGLE in Chromium
 
