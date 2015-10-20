@@ -1065,14 +1065,12 @@ gl::Error Renderer9::setDepthStencilState(const gl::DepthStencilState &depthSten
             const D3DRENDERSTATETYPE D3DRS_CCW_STENCILMASK = D3DRS_STENCILMASK;
             const D3DRENDERSTATETYPE D3DRS_CCW_STENCILWRITEMASK = D3DRS_STENCILWRITEMASK;
 
+            ASSERT(depthStencilState.stencilWritemask == depthStencilState.stencilBackWritemask);
+            ASSERT(stencilRef == stencilBackRef);
+            ASSERT(depthStencilState.stencilMask == depthStencilState.stencilBackMask);
+
             // get the maximum size of the stencil ref
             unsigned int maxStencil = (1 << mCurStencilSize) - 1;
-
-            ASSERT((depthStencilState.stencilWritemask & maxStencil) ==
-                   (depthStencilState.stencilBackWritemask & maxStencil));
-            ASSERT(stencilRef == stencilBackRef);
-            ASSERT((depthStencilState.stencilMask & maxStencil) ==
-                   (depthStencilState.stencilBackMask & maxStencil));
 
             mDevice->SetRenderState(frontFaceCCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK,
                                     depthStencilState.stencilWritemask);

@@ -239,8 +239,7 @@ Renderer11::Renderer11(egl::Display *display)
     : RendererD3D(display),
       mStateCache(this),
       mLastHistogramUpdateTime(ANGLEPlatformCurrent()->monotonicallyIncreasingTime()),
-      mDebug(nullptr),
-      mCurStencilSize(0)
+      mDebug(nullptr)
 {
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
@@ -1199,17 +1198,9 @@ gl::Error Renderer11::setDepthStencilState(const gl::DepthStencilState &depthSte
         memcmp(&depthStencilState, &mCurDepthStencilState, sizeof(gl::DepthStencilState)) != 0 ||
         stencilRef != mCurStencilRef || stencilBackRef != mCurStencilBackRef)
     {
-        // get the maximum size of the stencil ref
-        unsigned int maxStencil = 0;
-        if (depthStencilState.stencilTest && mCurStencilSize > 0)
-        {
-            maxStencil = (1 << mCurStencilSize) - 1;
-        }
-        ASSERT((depthStencilState.stencilWritemask & maxStencil) ==
-               (depthStencilState.stencilBackWritemask & maxStencil));
+        ASSERT(depthStencilState.stencilWritemask == depthStencilState.stencilBackWritemask);
         ASSERT(stencilRef == stencilBackRef);
-        ASSERT((depthStencilState.stencilMask & maxStencil) ==
-               (depthStencilState.stencilBackMask & maxStencil));
+        ASSERT(depthStencilState.stencilMask == depthStencilState.stencilBackMask);
 
         ID3D11DepthStencilState *dxDepthStencilState = NULL;
         gl::Error error = mStateCache.getDepthStencilState(depthStencilState, &dxDepthStencilState);
@@ -1508,13 +1499,6 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
             // because a rendertarget is never compressed.
             unsetConflictingSRVs(gl::SAMPLER_VERTEX, depthStencilResource, index);
             unsetConflictingSRVs(gl::SAMPLER_PIXEL, depthStencilResource, index);
-        }
-
-        unsigned int stencilSize = depthStencil->getStencilSize();
-        if (!mDepthStencilInitialized || stencilSize != mCurStencilSize)
-        {
-            mCurStencilSize            = stencilSize;
-            mForceSetDepthStencilState = true;
         }
     }
 
