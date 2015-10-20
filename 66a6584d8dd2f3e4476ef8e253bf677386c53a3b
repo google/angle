@@ -285,6 +285,30 @@
     },
     {
       "key": {
+        "uuid": "191d3af7_c044f232",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-20T19:59:11Z",
+      "side": 1,
+      "message": "Updated the comment below.",
+      "parentUuid": "191d3af7_a0969e16",
+      "range": {
+        "startLine": 545,
+        "startChar": 4,
+        "endLine": 545,
+        "endChar": 48
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9ec2e3d_13265cee",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 12
@@ -415,6 +439,24 @@
       "side": 1,
       "message": "Sure. Well, we will be mainly using this for WebGL 2, but I don\u0027t think the perftests test ES3, so this will probably hide any impact on the bots. I wonder if you could do this intelligently with dirty bits.",
       "parentUuid": "b9198e10_97f404f5",
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99304a80_d12cc368",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-20T19:59:11Z",
+      "side": 1,
+      "message": "Ah, yes, I hadn\u0027t thought about that.  I ran the perf tests locally and didn\u0027t see a difference between ES2 and ES3 (both always between 61k and 62k with multiple runs).",
+      "parentUuid": "7959d6e7_48725fd0",
       "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
