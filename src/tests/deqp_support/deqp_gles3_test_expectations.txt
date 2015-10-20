@@ -40,8 +40,6 @@
 
 // TODO(jmadill): triage these into permanent and temporary failures
 
-1087 WIN : dEQP-GLES3.functional.implementation_limits.num_compressed_texture_formats = FAIL
-1087 WIN : dEQP-GLES3.functional.implementation_limits.compressed_texture_formats = FAIL
 1088 WIN : dEQP-GLES3.functional.shaders.linkage.varying.rules.invalid_type_struct_array = FAIL
 1088 WIN : dEQP-GLES3.functional.shaders.linkage.varying.rules.invalid_type_struct_struct = FAIL
 1088 WIN : dEQP-GLES3.functional.shaders.linkage.varying.rules.invalid_type_array_struct = FAIL
