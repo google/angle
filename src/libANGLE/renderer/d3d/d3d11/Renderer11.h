@@ -323,6 +323,7 @@ class Renderer11 : public RendererD3D
     uintptr_t mAppliedDSV;
     bool mDepthStencilInitialized;
     bool mRenderTargetDescInitialized;
+    unsigned int mCurStencilSize;
 
     struct RenderTargetDesc
     {
