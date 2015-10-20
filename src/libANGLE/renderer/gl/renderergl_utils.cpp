@@ -111,35 +111,35 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions, G
 
 static GLint QuerySingleGLInt(const FunctionsGL *functions, GLenum name)
 {
-    GLint result;
+    GLint result = 0;
     functions->getIntegerv(name, &result);
     return result;
 }
 
 static GLint QueryGLIntRange(const FunctionsGL *functions, GLenum name, size_t index)
 {
-    GLint result[2];
+    GLint result[2] = {};
     functions->getIntegerv(name, result);
     return result[index];
 }
 
 static GLint64 QuerySingleGLInt64(const FunctionsGL *functions, GLenum name)
 {
-    GLint64 result;
+    GLint64 result = 0;
     functions->getInteger64v(name, &result);
     return result;
 }
 
 static GLfloat QuerySingleGLFloat(const FunctionsGL *functions, GLenum name)
 {
-    GLfloat result;
+    GLfloat result = 0.0f;
     functions->getFloatv(name, &result);
     return result;
 }
 
 static GLfloat QueryGLFloatRange(const FunctionsGL *functions, GLenum name, size_t index)
 {
-    GLfloat result[2];
+    GLfloat result[2] = {};
     functions->getFloatv(name, result);
     return result[index];
 }

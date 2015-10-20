@@ -788,13 +788,10 @@ void FunctionsGL::initialize()
     }
 
     // Check the context profile
+    profile = 0;
     if (isAtLeastGL(gl::Version(3, 2)))
     {
         getIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
-    }
-    else
-    {
-        profile = 0;
     }
 
     // clang-format off

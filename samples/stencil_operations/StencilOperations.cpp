@@ -204,7 +204,7 @@ class StencilOperationsSample : public SampleApplication
         // Since we don't know at compile time how many stencil bits are present, we'll
         // query, and update the value correct value in the  stencilValues arrays for the
         // fourth tests. We'll use this value later in rendering.
-        GLint stencilBitCount;
+        GLint stencilBitCount = 0;
         glGetIntegerv(GL_STENCIL_BITS, &stencilBitCount);
         stencilValues[3] = ~(((1 << stencilBitCount) - 1) & 0x1) & 0xff;
 
