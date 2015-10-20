@@ -261,6 +261,30 @@
     },
     {
       "key": {
+        "uuid": "191d3af7_a0969e16",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-20T19:26:25Z",
+      "side": 1,
+      "message": "Sorry, I might have put the comment in the wrong place. I was talking about the bit below, which syncs the pause state. You shouldn\u0027t be allowed to bind a transform feedback if another is active.",
+      "parentUuid": "991cca20_360ef879",
+      "range": {
+        "startLine": 545,
+        "startChar": 4,
+        "endLine": 545,
+        "endChar": 48
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9ec2e3d_13265cee",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 12
@@ -373,6 +397,24 @@
       "side": 1,
       "message": "Two things:\n1. I\u0027ve updated gl::Context so that it doesn\u0027t create a transform feedback object at all unless it\u0027s an ES3 context so we can skip a lot of this logic in ES2.\n2. The TransformFeedbackGL::syncActiveState and syncPausedState have single if-statements that only compare bools before they exit in the regular case so I\u0027m not very concerned about the perf there.  I will watch the perf bot though.",
       "parentUuid": "19829a51_15e9d61a",
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7959d6e7_48725fd0",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-20T19:26:25Z",
+      "side": 1,
+      "message": "Sure. Well, we will be mainly using this for WebGL 2, but I don\u0027t think the perftests test ES3, so this will probably hide any impact on the bots. I wonder if you could do this intelligently with dirty bits.",
+      "parentUuid": "b9198e10_97f404f5",
       "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
