@@ -214,6 +214,29 @@
     },
     {
       "key": {
+        "uuid": "f91f86ee_59a2231a",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-20T15:45:15Z",
+      "side": 1,
+      "message": "it might be worth a comment saying this is an API error, and is strictly an internal workaround implementation for the virtual contexts.",
+      "range": {
+        "startLine": 545,
+        "startChar": 4,
+        "endLine": 545,
+        "endChar": 48
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9ec2e3d_13265cee",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 12
@@ -296,6 +319,47 @@
     },
     {
       "key": {
+        "uuid": "19829a51_15e9d61a",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-20T15:45:15Z",
+      "side": 1,
+      "message": "Maybe it might make sense to no-op when the XFB has no buffer objects bound. We could use a counter inside the impl. It\u0027s worth considering, especially since we don\u0027t have bisect yet for perf regressions on ANGLE rolls.",
+      "parentUuid": "7959d6e7_48b57f04",
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "191d3af7_c0af12b9",
+        "filename": "src/libANGLE/renderer/gl/TransformFeedbackGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-20T15:45:15Z",
+      "side": 1,
+      "message": "nit: comment alignment",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 74,
+        "endChar": 36
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19829a51_b5532a4f",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 12
@@ -312,6 +376,29 @@
         "startChar": 8,
         "endLine": 482,
         "endChar": 63
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f91f86ee_99a75b2a",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-20T15:45:15Z",
+      "side": 1,
+      "message": "nice test",
+      "range": {
+        "startLine": 341,
+        "startChar": 30,
+        "endLine": 341,
+        "endChar": 42
       },
       "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
