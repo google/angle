@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f91f86ee_b9ac9f0e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_util.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-20T15:35:16Z",
+      "side": 1,
+      "message": "In these ones, the S stands for signed, I used a prefix S for sRGB and postfix for signed.  I could spell it out, think that would be more readable?",
+      "parentUuid": "d98ba26e_730b9a69",
+      "range": {
+        "startLine": 214,
+        "startChar": 126,
+        "endLine": 214,
+        "endChar": 143
+      },
+      "revId": "9fc87e85557c6652ffd2eb7ef629cdf145343d25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d98ba26e_13080e6a",
         "filename": "src/libANGLE/renderer/d3d/loadimage.h",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f984e65e_d72b54b8",
+        "filename": "src/libANGLE/renderer/d3d/loadimage.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-20T15:35:16Z",
+      "side": 1,
+      "message": "Yep, done.",
+      "parentUuid": "d98ba26e_13080e6a",
+      "range": {
+        "startLine": 191,
+        "startChar": 0,
+        "endLine": 199,
+        "endChar": 41
+      },
+      "revId": "9fc87e85557c6652ffd2eb7ef629cdf145343d25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19829a51_d53fce51",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 7
@@ -59,6 +107,30 @@
       "writtenOn": "2015-10-20T15:14:39Z",
       "side": 1,
       "message": "nit: closing namespace comment",
+      "range": {
+        "startLine": 941,
+        "startChar": 0,
+        "endLine": 941,
+        "endChar": 1
+      },
+      "revId": "9fc87e85557c6652ffd2eb7ef629cdf145343d25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3953decb_23038adf",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-20T15:35:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19829a51_d53fce51",
       "range": {
         "startLine": 941,
         "startChar": 0,

@@ -22,6 +22,30 @@
       "revId": "fe7e9ed46279988dc72deec9ee8aa5fbb185bbc9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d98ba26e_d344c68d",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-20T15:35:16Z",
+      "side": 0,
+      "message": "Unfortunately the etc2 and eac test go from unsupported-\u003epassing so not many expectation updates :(",
+      "parentUuid": "99304a80_d65a79dc",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 88
+      },
+      "revId": "fe7e9ed46279988dc72deec9ee8aa5fbb185bbc9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
