@@ -71,7 +71,6 @@ bool ShaderGL::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog
     // Check for compile errors from the native driver
     GLint compileStatus = GL_FALSE;
     mFunctions->getShaderiv(mShaderID, GL_COMPILE_STATUS, &compileStatus);
-    ASSERT(compileStatus == GL_TRUE);
     if (compileStatus == GL_FALSE)
     {
         // Compilation failed, put the error into the info log
