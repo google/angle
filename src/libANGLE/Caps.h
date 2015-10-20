@@ -246,6 +246,9 @@ struct Extensions
     // NV_pack_subimage
     bool packSubimage;
 
+    // GL_OES_vertex_array_object
+    bool vertexArrayObject;
+
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float

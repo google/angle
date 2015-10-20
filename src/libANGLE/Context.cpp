@@ -1107,26 +1107,6 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             }
         }
         return true;
-        case GL_PACK_ROW_LENGTH:
-        case GL_PACK_SKIP_ROWS:
-        case GL_PACK_SKIP_PIXELS:
-            if ((mClientVersion < 3) && !mExtensions.packSubimage)
-            {
-                return false;
-            }
-            *type      = GL_INT;
-            *numParams = 1;
-            return true;
-        case GL_UNPACK_ROW_LENGTH:
-        case GL_UNPACK_SKIP_ROWS:
-        case GL_UNPACK_SKIP_PIXELS:
-            if ((mClientVersion < 3) && !mExtensions.unpackSubimage)
-            {
-                return false;
-            }
-            *type      = GL_INT;
-            *numParams = 1;
-            return true;
       case GL_MAX_VIEWPORT_DIMS:
         {
             *type = GL_INT;
@@ -1199,6 +1179,39 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
         return true;
     }
 
+    // Check for ES3.0+ parameter names which are also exposed as ES2 extensions
+    switch (pname)
+    {
+        case GL_PACK_ROW_LENGTH:
+        case GL_PACK_SKIP_ROWS:
+        case GL_PACK_SKIP_PIXELS:
+            if ((mClientVersion < 3) && !mExtensions.packSubimage)
+            {
+                return false;
+            }
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
+        case GL_UNPACK_ROW_LENGTH:
+        case GL_UNPACK_SKIP_ROWS:
+        case GL_UNPACK_SKIP_PIXELS:
+            if ((mClientVersion < 3) && !mExtensions.unpackSubimage)
+            {
+                return false;
+            }
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
+        case GL_VERTEX_ARRAY_BINDING:
+            if ((mClientVersion < 3) && !mExtensions.vertexArrayObject)
+            {
+                return false;
+            }
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
+    }
+
     if (mClientVersion < 3)
     {
         return false;
@@ -1224,7 +1237,6 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_MAX_VERTEX_OUTPUT_COMPONENTS:
       case GL_MAX_FRAGMENT_INPUT_COMPONENTS:
       case GL_MAX_VARYING_COMPONENTS:
-      case GL_VERTEX_ARRAY_BINDING:
       case GL_MAX_VERTEX_UNIFORM_COMPONENTS:
       case GL_MAX_FRAGMENT_UNIFORM_COMPONENTS:
       case GL_MIN_PROGRAM_TEXEL_OFFSET:
@@ -1237,14 +1249,8 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS:
       case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS:
       case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS:
-      case GL_PACK_ROW_LENGTH:
-      case GL_PACK_SKIP_ROWS:
-      case GL_PACK_SKIP_PIXELS:
       case GL_UNPACK_ROW_LENGTH:
       case GL_UNPACK_IMAGE_HEIGHT:
-      case GL_UNPACK_SKIP_IMAGES:
-      case GL_UNPACK_SKIP_ROWS:
-      case GL_UNPACK_SKIP_PIXELS:
         {
             *type = GL_INT;
             *numParams = 1;
