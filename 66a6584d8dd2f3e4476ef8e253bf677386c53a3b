@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "7959d6e7_68b2bb1f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2021,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-20T15:30:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79fd56bf_3ad62525",
+      "range": {
+        "startLine": 2017,
+        "startChar": 16,
+        "endLine": 2021,
+        "endChar": 17
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99304a80_30ef3871",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 12
@@ -119,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "f91f86ee_f9b21769",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2045,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-20T15:30:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39de7e5b_1aafe1cf",
+      "range": {
+        "startLine": 2041,
+        "startChar": 8,
+        "endLine": 2045,
+        "endChar": 9
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d90802ae_4ff11ebf",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 12
@@ -130,6 +178,30 @@
       "writtenOn": "2015-10-19T22:51:17Z",
       "side": 1,
       "message": "nit: isn\u0027t the driver implicitly unbinding the transform feedback when it is deleted?",
+      "range": {
+        "startLine": 270,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 9
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19829a51_b53eca52",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-20T15:30:57Z",
+      "side": 1,
+      "message": "Yes but it is needed to avoid the issue where a new transform feedback with the same ID may be generated.",
+      "parentUuid": "d90802ae_4ff11ebf",
       "range": {
         "startLine": 270,
         "startChar": 0,
@@ -165,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "f91f86ee_d9add30d",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-20T15:30:57Z",
+      "side": 1,
+      "message": "They need to be cleared every time, the active queries or transform feedback may change even if the context stays the same so the lists need to be updated.\n\nLuckily, these are very cheap calls, no allocations.",
+      "parentUuid": "b9ec2e3d_13265cee",
+      "range": {
+        "startLine": 651,
+        "startChar": 1,
+        "endLine": 654,
+        "endChar": 36
+      },
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99f3ea1a_64af1ecf",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 12
@@ -176,6 +272,24 @@
       "writtenOn": "2015-10-19T22:51:17Z",
       "side": 1,
       "message": "Since we are in a hot function, it might be sense to branch most of these on the existence of a transform feedback (isn\u0027t getCurrentTransformFeedback returning nullptr in this case?)",
+      "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7959d6e7_48b57f04",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-20T15:30:57Z",
+      "side": 1,
+      "message": "Transform feedback cannot be null in this case.  Like framebuffers, there is always one bound.",
+      "parentUuid": "99f3ea1a_64af1ecf",
       "revId": "66a6584d8dd2f3e4476ef8e253bf677386c53a3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
