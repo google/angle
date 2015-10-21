@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6427d4a_4f208de3",
+        "filename": "src/libANGLE/queryconversions.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-21T17:43:03Z",
+      "side": 1,
+      "message": "can you substitute these with\n\n  std::vector\u003cGLint\u003e intParams(numParams, 0);\n\nAlso the ones below look like they need the update as well. This also allows us to remove the delete []",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 56
+      },
+      "revId": "0e1b7b4eb4734cab66fe3f91952bad1f8bea88d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
