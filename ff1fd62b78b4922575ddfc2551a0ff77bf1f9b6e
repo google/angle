@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19337ad8_0d175513",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-21T18:42:52Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "revId": "ff1fd62b78b4922575ddfc2551a0ff77bf1f9b6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
