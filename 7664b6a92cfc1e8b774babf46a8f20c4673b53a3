@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1636e9de_92ea1c5c",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-22T15:35:44Z",
+      "side": 1,
+      "message": "(As an aside, it might also be possible to use different code in the GS depending on the cull mode to draw the point sprites so they\u0027re never culled - see SV_IsFrontFace)",
+      "parentUuid": "d63ff1b3_705d70d5",
+      "range": {
+        "startLine": 387,
+        "startChar": 4,
+        "endLine": 387,
+        "endChar": 86
+      },
+      "revId": "7664b6a92cfc1e8b774babf46a8f20c4673b53a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6427d4a_0ff8452d",
         "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.cpp",
         "patchSetId": 8
