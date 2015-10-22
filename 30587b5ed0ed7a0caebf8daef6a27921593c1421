@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "165fc928_cd7ebde1",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1227,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-22T15:26:45Z",
+      "side": 1,
+      "message": "+1. The template is to add functions like this:\n\nbool ValidateBindVertexArrayOES(Context *context, GLuint array) in validationes2.h\nbool ValidateBindVertexArray(Context *context, GLuint array) in validationes3.h\nbool ValidateBindVertexArrayBase(Context *context, GLuint array) in validationes.h\n\nAnd have the OES and ES3 entry points call the \"Base\", after doing specific extension/ES3 validations",
+      "parentUuid": "b65b5d3e_e7b88217",
+      "range": {
+        "startLine": 1219,
+        "startChar": 8,
+        "endLine": 1227,
+        "endChar": 9
+      },
+      "revId": "30587b5ed0ed7a0caebf8daef6a27921593c1421",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f66155ea_ec8863ed",
         "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
         "patchSetId": 2
