@@ -74,26 +74,32 @@ class DynamicHLSL : angle::NonCopyable
   public:
     explicit DynamicHLSL(RendererD3D *const renderer);
 
-    int packVaryings(gl::InfoLog &infoLog,
+    int packVaryings(const gl::Caps &caps,
+                     gl::InfoLog &infoLog,
                      std::vector<PackedVarying> *packedVaryings,
                      const std::vector<std::string> &transformFeedbackVaryings);
-    std::string generateVertexShaderForInputLayout(const std::string &sourceShader,
-                                                   const gl::InputLayout &inputLayout,
-                                                   const std::vector<sh::Attribute> &shaderAttributes) const;
-    std::string generatePixelShaderForOutputSignature(const std::string &sourceShader, const std::vector<PixelShaderOutputVariable> &outputVariables,
-                                                      bool usesFragDepth, const std::vector<GLenum> &outputLayout) const;
+    std::string generateVertexShaderForInputLayout(
+        const std::string &sourceShader,
+        const gl::InputLayout &inputLayout,
+        const std::vector<sh::Attribute> &shaderAttributes) const;
+    std::string generatePixelShaderForOutputSignature(
+        const std::string &sourceShader,
+        const std::vector<PixelShaderOutputVariable> &outputVariables,
+        bool usesFragDepth,
+        const std::vector<GLenum> &outputLayout) const;
     bool generateShaderLinkHLSL(const gl::Data &data,
                                 const gl::Program::Data &programData,
                                 gl::InfoLog &infoLog,
                                 int registers,
-                                std::string &pixelHLSL,
-                                std::string &vertexHLSL,
+                                std::string *pixelHLSL,
+                                std::string *vertexHLSL,
                                 const std::vector<PackedVarying> &packedVaryings,
                                 std::vector<gl::LinkedVarying> *linkedVaryings,
                                 std::vector<PixelShaderOutputVariable> *outPixelShaderKey,
                                 bool *outUsesFragDepth) const;
 
-    std::string generateGeometryShaderHLSL(int registers,
+    std::string generateGeometryShaderHLSL(const gl::Data &data,
+                                           int registers,
                                            const ShaderD3D *fragmentShader,
                                            const std::vector<PackedVarying> &packedVaryings) const;
 
@@ -103,16 +109,24 @@ class DynamicHLSL : angle::NonCopyable
     struct SemanticInfo;
 
     std::string getVaryingSemantic(bool pointSize) const;
-    SemanticInfo getSemanticInfo(int startRegisters, bool position, bool fragCoord, bool pointCoord,
-                                 bool pointSize, bool pixelShader) const;
-    std::string generateVaryingLinkHLSL(const SemanticInfo &info, const std::string &varyingHLSL) const;
-    std::string generateVaryingHLSL(const std::vector<PackedVarying> &varyings,
+    SemanticInfo getSemanticInfo(int startRegisters,
+                                 bool position,
+                                 bool fragCoord,
+                                 bool pointCoord,
+                                 bool pointSize,
+                                 bool pixelShader) const;
+    std::string generateVaryingLinkHLSL(const SemanticInfo &info,
+                                        const std::string &varyingHLSL) const;
+    std::string generateVaryingHLSL(const gl::Caps &caps,
+                                    const std::vector<PackedVarying> &varyings,
                                     bool shaderUsesPointSize) const;
     void storeUserLinkedVaryings(const std::vector<PackedVarying> &packedVaryings,
                                  bool shaderUsesPointSize,
                                  std::vector<gl::LinkedVarying> *linkedVaryings) const;
-    void storeBuiltinLinkedVaryings(const SemanticInfo &info, std::vector<gl::LinkedVarying> *linkedVaryings) const;
-    std::string generatePointSpriteHLSL(int registers,
+    void storeBuiltinLinkedVaryings(const SemanticInfo &info,
+                                    std::vector<gl::LinkedVarying> *linkedVaryings) const;
+    std::string generatePointSpriteHLSL(const gl::Data &data,
+                                        int registers,
                                         const ShaderD3D *fragmentShader,
                                         const std::vector<PackedVarying> &packedVaryings) const;
 
@@ -122,7 +136,6 @@ class DynamicHLSL : angle::NonCopyable
     std::string generateAttributeConversionHLSL(gl::VertexFormatType vertexFormatType,
                                                 const sh::ShaderVariable &shaderAttrib) const;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_D3D_DYNAMICHLSL_H_
+#endif  // LIBANGLE_RENDERER_D3D_DYNAMICHLSL_H_

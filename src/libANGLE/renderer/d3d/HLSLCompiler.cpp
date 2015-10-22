@@ -289,7 +289,8 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
             return gl::Error(GL_OUT_OF_MEMORY, "HLSL compiler had an unexpected failure, result: 0x%X.", result);
         }
 
-        infoLog << "Warning: D3D shader compilation failed with " << configs[i].name << " flags.";
+        infoLog << "Warning: D3D shader compilation failed with " << configs[i].name << " flags. ("
+                << profile << ")";
 
         if (i + 1 < configs.size())
         {

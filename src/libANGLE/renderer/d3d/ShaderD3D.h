@@ -21,8 +21,6 @@ struct D3DCompilerWorkarounds;
 
 class ShaderD3D : public ShaderImpl
 {
-    friend class DynamicHLSL;
-
   public:
     ShaderD3D(const gl::Shader::Data &data);
     virtual ~ShaderD3D();
@@ -40,10 +38,17 @@ class ShaderD3D : public ShaderImpl
     void appendDebugInfo(const std::string &info) { mDebugInfo += info; }
 
     void generateWorkarounds(D3DCompilerWorkarounds *workarounds) const;
-    bool usesDepthRange() const { return mUsesDepthRange; }
-    bool usesPointSize() const { return mUsesPointSize; }
-    bool usesDeferredInit() const { return mUsesDeferredInit; }
+
+    bool usesMultipleRenderTargets() const { return mUsesMultipleRenderTargets; }
+    bool usesFragColor() const { return mUsesFragColor; }
+    bool usesFragData() const { return mUsesFragData; }
+    bool usesFragCoord() const { return mUsesFragCoord; }
     bool usesFrontFacing() const { return mUsesFrontFacing; }
+    bool usesPointSize() const { return mUsesPointSize; }
+    bool usesPointCoord() const { return mUsesPointCoord; }
+    bool usesDepthRange() const { return mUsesDepthRange; }
+    bool usesFragDepth() const { return mUsesFragDepth; }
+    bool usesDeferredInit() const { return mUsesDeferredInit; }
 
     ShShaderOutput getCompilerOutputType() const;
 
@@ -67,7 +72,6 @@ class ShaderD3D : public ShaderImpl
     std::map<std::string, unsigned int> mUniformRegisterMap;
     std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_D3D_SHADERD3D_H_
+#endif  // LIBANGLE_RENDERER_D3D_SHADERD3D_H_
