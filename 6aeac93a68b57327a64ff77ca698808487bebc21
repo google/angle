@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "993daaa1_a3e1e8b1",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-22T17:38:38Z",
+      "side": 1,
+      "message": "should be 8, 8",
+      "range": {
+        "startLine": 488,
+        "startChar": 99,
+        "endLine": 488,
+        "endChar": 104
+      },
+      "revId": "6aeac93a68b57327a64ff77ca698808487bebc21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19337ad8_045baae1",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-22T17:38:38Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 503,
+        "startChar": 99,
+        "endLine": 503,
+        "endChar": 104
+      },
+      "revId": "6aeac93a68b57327a64ff77ca698808487bebc21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
