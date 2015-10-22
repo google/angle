@@ -445,9 +445,9 @@ TEST_P(TransformFeedbackTest, MultiContext)
     }
 
 #if defined(ANGLE_PLATFORM_APPLE)
-    if (isNVidia() && GetParam() == ES3_OPENGL())
+    if ((isNVidia() || isAMD()) && GetParam() == ES3_OPENGL())
     {
-        std::cout << "Test skipped on NVidia OpenGL on OSX due to driver bugs." << std::endl;
+        std::cout << "Test skipped on NVidia and AMD OpenGL on OSX." << std::endl;
         return;
     }
 #endif
@@ -455,7 +455,7 @@ TEST_P(TransformFeedbackTest, MultiContext)
 #if defined(ANGLE_PLATFORM_LINUX)
     if (isAMD() && GetParam() == ES3_OPENGL())
     {
-        std::cout << "Test skipped on AMD OpenGL on Linux due to driver bugs." << std::endl;
+        std::cout << "Test skipped on AMD OpenGL on Linux." << std::endl;
         return;
     }
 #endif
