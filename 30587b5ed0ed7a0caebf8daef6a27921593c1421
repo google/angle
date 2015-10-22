@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "993daaa1_e3dbf0ff",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-10-22T19:30:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d63ff1b3_70745057",
+      "range": {
+        "startLine": 581,
+        "startChar": 36,
+        "endLine": 584,
+        "endChar": 94
+      },
+      "revId": "30587b5ed0ed7a0caebf8daef6a27921593c1421",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b65b5d3e_e7b88217",
         "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
         "patchSetId": 2
