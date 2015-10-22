@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d63ff1b3_70745057",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-22T14:00:58Z",
+      "side": 1,
+      "message": "This can just be set to true since we emulate vertex array objects in our GL layer.",
+      "range": {
+        "startLine": 581,
+        "startChar": 36,
+        "endLine": 584,
+        "endChar": 94
+      },
+      "revId": "30587b5ed0ed7a0caebf8daef6a27921593c1421",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b65b5d3e_e7b88217",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1227,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-22T14:00:58Z",
+      "side": 1,
+      "message": "Can these be refactored into one of the validation headers? There will be shared code with the ES3 versions.",
+      "range": {
+        "startLine": 1219,
+        "startChar": 8,
+        "endLine": 1227,
+        "endChar": 9
+      },
+      "revId": "30587b5ed0ed7a0caebf8daef6a27921593c1421",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f66155ea_ec8863ed",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-22T14:00:58Z",
+      "side": 1,
+      "message": "nit: nullptr",
+      "range": {
+        "startLine": 1308,
+        "startChar": 23,
+        "endLine": 1308,
+        "endChar": 27
+      },
+      "revId": "30587b5ed0ed7a0caebf8daef6a27921593c1421",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
