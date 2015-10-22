@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "99020a8c_0f69ede1",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-10-22T00:47:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59b5f2f6_bc77c1bf",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 15
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59b5f2f6_fc966949",
         "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2015-10-16T14:48:45Z",
       "side": 1,
       "message": "Instead of making these iterate over the bits, can we do set-operations? For example:\n\n  // in the header\n  static gl::State::DirtyBits mBlendDirtyBits;\n\n  // init this in the constructor\n  mBlendDirtyBits.set(DIRTY_BIT_BLEND_EQUATIONS);\n  // .. set all the bits ..\n\n  bool StateManagerD3D::isBlendStateDirty(dirtyBits)\n  {\n     return (dirtyBits \u0026 mBlendDirtyBits).any();\n  }",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 1
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f91146d4_bd6fb72a",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-10-22T00:47:43Z",
+      "side": 1,
+      "message": "That\u0027s a good idea :)! I think it may be better to have mBlendDirtyBits (and others) as a static const that\u0027s set with a lambda so as to not set it on every instance similar to:\n\n// header\nstatic const gl::State::DirtyBits mBlendDirtyBits;\n\n// cpp\nconst gl::State::DirtyBits StateManagerD3D::mBlendDirtyBits \u003d []()\n{\n    static const gl::State::DirtyBitType dirtyBits[] \u003d {\n        gl::State::DIRTY_BIT_BLEND_EQUATIONS, gl::State::DIRTY_BIT_BLEND_FUNCS,\n        gl::State::DIRTY_BIT_BLEND_ENABLED,   gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED,\n        gl::State::DIRTY_BIT_DITHER_ENABLED,  gl::State::DIRTY_BIT_COLOR_MASK,\n        gl::State::DIRTY_BIT_BLEND_COLOR};\n\n    gl::State::DirtyBits blendDirtyBits;\n    for (auto dirtyBit : dirtyBits)\n    {\n        blendDirtyBits.set(dirtyBit);\n    }\n    return blendDirtyBits;\n}();",
+      "parentUuid": "59b5f2f6_fc966949",
       "range": {
         "startLine": 71,
         "startChar": 0,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "b9f26ee4_f818a518",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-10-22T00:47:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99abea9d_de9ba571",
+      "range": {
+        "startLine": 73,
+        "startChar": 7,
+        "endLine": 73,
+        "endChar": 23
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "396bde32_03e24eb4",
         "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
         "patchSetId": 5
@@ -128,6 +200,30 @@
       "writtenOn": "2015-10-16T14:48:45Z",
       "side": 1,
       "message": "nit: use \u0027nullptr\u0027 in new code",
+      "range": {
+        "startLine": 285,
+        "startChar": 20,
+        "endLine": 285,
+        "endChar": 24
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b90b4ea8_f0bc3618",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-10-22T00:47:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9a1e2bb_20694ae2",
       "range": {
         "startLine": 285,
         "startChar": 20,
@@ -186,6 +282,30 @@
     },
     {
       "key": {
+        "uuid": "b9f26ee4_589fb1d2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManagerD3D11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-10-22T00:47:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79a636d7_7d2497c3",
+      "range": {
+        "startLine": 19,
+        "startChar": 6,
+        "endLine": 19,
+        "endChar": 23
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9a1e2bb_406c4ef2",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 5
@@ -232,6 +352,30 @@
     },
     {
       "key": {
+        "uuid": "d90802ae_bc68d9ab",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1640,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-10-22T00:47:43Z",
+      "side": 1,
+      "message": "They diverged in my initial plan but you\u0027re right, not here :)",
+      "parentUuid": "99abea9d_1e37cd14",
+      "range": {
+        "startLine": 1637,
+        "startChar": 0,
+        "endLine": 1640,
+        "endChar": 1
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59709218_64ca2a38",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManagerD3D9.cpp",
         "patchSetId": 5
@@ -243,6 +387,30 @@
       "writtenOn": "2015-10-16T14:48:45Z",
       "side": 1,
       "message": "nit: fix comment",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 20
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f91146d4_f8eadd14",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManagerD3D9.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-10-22T00:47:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59709218_64ca2a38",
       "range": {
         "startLine": 7,
         "startChar": 3,
@@ -278,6 +446,30 @@
     },
     {
       "key": {
+        "uuid": "39de7e5b_d44a5240",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManagerD3D9.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-10-22T00:47:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59b5f2f6_bca0e19a",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 20
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7971d61a_e55ff64e",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManagerD3D9.h",
         "patchSetId": 5
@@ -289,6 +481,30 @@
       "writtenOn": "2015-10-16T14:48:45Z",
       "side": 1,
       "message": "nit: use override instead of virtual (won\u0027t repeat, in a few places)",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 11
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99020a8c_4f0925ff",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManagerD3D9.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-10-22T00:47:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7971d61a_e55ff64e",
       "range": {
         "startLine": 24,
         "startChar": 4,
@@ -324,6 +540,30 @@
     },
     {
       "key": {
+        "uuid": "99d92a72_5d37a7c5",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManagerD3D9.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-10-22T00:47:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f99a2688_f61e86a9",
+      "range": {
+        "startLine": 89,
+        "startChar": 4,
+        "endLine": 89,
+        "endChar": 26
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99abea9d_fe966149",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManagerD3D9.h",
         "patchSetId": 5
@@ -335,6 +575,30 @@
       "writtenOn": "2015-10-16T14:48:45Z",
       "side": 1,
       "message": "nit: add comment   // namespace rx to closing namespace scopes (won\u0027t repeat, in a few other places)",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 1
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79d47637_5c56893e",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManagerD3D9.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-10-22T00:47:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99abea9d_fe966149",
       "range": {
         "startLine": 93,
         "startChar": 0,
