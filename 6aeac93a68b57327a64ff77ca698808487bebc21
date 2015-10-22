@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b6427d4a_6f4b5125",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-22T17:41:10Z",
+      "side": 1,
+      "message": "Good eye, thanks",
+      "parentUuid": "993daaa1_a3e1e8b1",
+      "range": {
+        "startLine": 488,
+        "startChar": 99,
+        "endLine": 488,
+        "endChar": 104
+      },
+      "revId": "6aeac93a68b57327a64ff77ca698808487bebc21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19337ad8_045baae1",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 4
