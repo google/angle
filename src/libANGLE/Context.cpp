@@ -38,7 +38,7 @@ namespace
 
 void MarkTransformFeedbackBufferUsage(gl::TransformFeedback *transformFeedback)
 {
-    if (transformFeedback && transformFeedback->isActive() && !transformFeedback->isPaused())
+    if (transformFeedback->isActive() && !transformFeedback->isPaused())
     {
         for (size_t tfBufferIndex = 0; tfBufferIndex < transformFeedback->getIndexedBufferCount();
              tfBufferIndex++)
@@ -138,16 +138,12 @@ Context::Context(const egl::Config *config,
     bindPixelPackBuffer(0);
     bindPixelUnpackBuffer(0);
 
-    if (mClientVersion >= 3)
-    {
-        // [OpenGL ES 3.0.2] section 2.14.1 pg 85:
-        // In the initial state, a default transform feedback object is bound and treated as
-        // a transform feedback object with a name of zero. That object is bound any time
-        // BindTransformFeedback is called with id of zero
-        mTransformFeedbackZero.set(
-            new TransformFeedback(mRenderer->createTransformFeedback(), 0, mCaps));
-        bindTransformFeedback(0);
-    }
+    // [OpenGL ES 3.0.2] section 2.14.1 pg 85:
+    // In the initial state, a default transform feedback object is bound and treated as
+    // a transform feedback object with a name of zero. That object is bound any time
+    // BindTransformFeedback is called with id of zero
+    mTransformFeedbackZero.set(new TransformFeedback(mRenderer->createTransformFeedback(), 0, mCaps));
+    bindTransformFeedback(0);
 
     mHasBeenCurrent = false;
     mContextLost = false;
@@ -192,7 +188,7 @@ Context::~Context()
     mTransformFeedbackZero.set(NULL);
     for (auto transformFeedback : mTransformFeedbackMap)
     {
-        transformFeedback.second->release();
+        SafeDelete(transformFeedback.second);
     }
 
     for (auto &zeroTexture : mZeroTextures)

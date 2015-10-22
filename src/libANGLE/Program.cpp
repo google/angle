@@ -235,7 +235,7 @@ LinkedVarying::LinkedVarying(const std::string &name, GLenum type, GLsizei size,
 Program::Data::Data()
     : mAttachedFragmentShader(nullptr),
       mAttachedVertexShader(nullptr),
-      mTransformFeedbackBufferMode(GL_INTERLEAVED_ATTRIBS)
+      mTransformFeedbackBufferMode(GL_NONE)
 {
 }
 
@@ -2014,12 +2014,6 @@ bool Program::linkValidateTransformFeedback(InfoLog &infoLog,
                 }
                 uniqueNames.insert(tfVaryingName);
 
-                if (varying->isArray())
-                {
-                    infoLog << "Capture of arrays is undefined and not supported.";
-                    return false;
-                }
-
                 // TODO(jmadill): Investigate implementation limits on D3D11
                 size_t componentCount = gl::VariableComponentCount(varying->type);
                 if (mData.mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
@@ -2037,9 +2031,10 @@ bool Program::linkValidateTransformFeedback(InfoLog &infoLog,
             }
         }
 
+        // TODO(jmadill): investigate if we can support capturing array elements.
         if (tfVaryingName.find('[') != std::string::npos)
         {
-            infoLog << "Capture of array elements is undefined and not supported.";
+            infoLog << "Capture of array elements not currently supported.";
             return false;
         }
 

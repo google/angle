@@ -315,8 +315,7 @@ FenceSyncImpl *RendererGL::createFenceSync()
 
 TransformFeedbackImpl *RendererGL::createTransformFeedback()
 {
-    return new TransformFeedbackGL(mFunctions, mStateManager,
-                                   getRendererCaps().maxTransformFeedbackSeparateComponents);
+    return new TransformFeedbackGL();
 }
 
 SamplerImpl *RendererGL::createSampler()

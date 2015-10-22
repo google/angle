@@ -76,13 +76,6 @@ class BindingPointer
 
     GLuint id() const { return (mObject != nullptr) ? mObject->id() : 0; }
 
-    bool operator==(const BindingPointer<ObjectType> &other) const
-    {
-        return mObject == other.mObject;
-    }
-
-    bool operator!=(const BindingPointer<ObjectType> &other) const { return !(*this == other); }
-
   private:
     ObjectType *mObject;
 };
@@ -109,16 +102,6 @@ class OffsetBindingPointer : public BindingPointer<ObjectType>
 
     GLintptr getOffset() const { return mOffset; }
     GLsizeiptr getSize() const { return mSize; }
-
-    bool operator==(const OffsetBindingPointer<ObjectType> &other) const
-    {
-        return this->get() == other.get() && mOffset == other.mOffset && mSize == other.mSize;
-    }
-
-    bool operator!=(const OffsetBindingPointer<ObjectType> &other) const
-    {
-        return !(*this == other);
-    }
 
   private:
     GLintptr mOffset;

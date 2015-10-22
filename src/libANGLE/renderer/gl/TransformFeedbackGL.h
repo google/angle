@@ -14,15 +14,10 @@
 namespace rx
 {
 
-class FunctionsGL;
-class StateManagerGL;
-
 class TransformFeedbackGL : public TransformFeedbackImpl
 {
   public:
-    TransformFeedbackGL(const FunctionsGL *functions,
-                        StateManagerGL *stateManager,
-                        size_t maxTransformFeedbackBufferBindings);
+    TransformFeedbackGL();
     ~TransformFeedbackGL() override;
 
     void begin(GLenum primitiveMode) override;
@@ -32,22 +27,6 @@ class TransformFeedbackGL : public TransformFeedbackImpl
 
     void bindGenericBuffer(const BindingPointer<gl::Buffer> &binding) override;
     void bindIndexedBuffer(size_t index, const OffsetBindingPointer<gl::Buffer> &binding) override;
-
-    GLuint getTransformFeedbackID() const;
-
-    void syncActiveState(bool active, GLenum primitiveMode) const;
-    void syncPausedState(bool paused) const;
-
-  private:
-    const FunctionsGL *mFunctions;
-    StateManagerGL *mStateManager;
-
-    GLuint mTransformFeedbackID;
-
-    mutable bool mIsActive;
-    mutable bool mIsPaused;
-
-    std::vector<OffsetBindingPointer<gl::Buffer>> mCurrentIndexedBuffers;
 };
 
 }
