@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d63ff1b3_50626c95",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-22T15:26:45Z",
+      "side": 1,
+      "message": "please open an issue for this and tag it with BUG\u003dangleproject:#### or use an existing one if there is (I don\u0027t think there is)",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 30
+      },
+      "revId": "02e81b106b9c29991901bd4da2c94a19872cc1ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b65b5d3e_a78baa5d",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1213,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-22T15:26:45Z",
+      "side": 1,
+      "message": "nit: use git cl format (I\u0027m OK with the inconsistent formatting -- use git cl format --full if you want to format the whole file, but that should go in a separate CL)",
+      "range": {
+        "startLine": 1182,
+        "startChar": 0,
+        "endLine": 1213,
+        "endChar": 5
+      },
+      "revId": "02e81b106b9c29991901bd4da2c94a19872cc1ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
