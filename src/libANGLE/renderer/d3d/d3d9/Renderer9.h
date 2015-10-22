@@ -109,10 +109,6 @@ class Renderer9 : public RendererD3D
     gl::Error applyRenderTarget(const gl::Framebuffer *frameBuffer) override;
     gl::Error applyRenderTarget(const gl::FramebufferAttachment *colorAttachment,
                                 const gl::FramebufferAttachment *depthStencilAttachment);
-    gl::Error applyShaders(gl::Program *program,
-                           const gl::Framebuffer *framebuffer,
-                           bool rasterizerDiscard,
-                           bool transformFeedbackActive) override;
     gl::Error applyUniforms(const ProgramD3D &programD3D,
                             const std::vector<D3DUniform *> &uniformArray) override;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize);
@@ -239,6 +235,7 @@ class Renderer9 : public RendererD3D
   protected:
     void createAnnotator() override;
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
+    gl::Error applyShadersImpl(const gl::Data &data) override;
 
   private:
     gl::Error drawArraysImpl(const gl::Data &data,

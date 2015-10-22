@@ -160,10 +160,6 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
                              bool ignoreViewport) = 0;
 
     virtual gl::Error applyRenderTarget(const gl::Framebuffer *frameBuffer) = 0;
-    virtual gl::Error applyShaders(gl::Program *program,
-                                   const gl::Framebuffer *framebuffer,
-                                   bool rasterizerDiscard,
-                                   bool transformFeedbackActive) = 0;
     virtual gl::Error applyUniforms(const ProgramD3D &programD3D,
                                     const std::vector<D3DUniform *> &uniformArray) = 0;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize) = 0;
@@ -246,6 +242,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
   protected:
     virtual bool getLUID(LUID *adapterLuid) const = 0;
+    virtual gl::Error applyShadersImpl(const gl::Data &data) = 0;
 
     void cleanup();
 

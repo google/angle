@@ -1862,15 +1862,9 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::applyShaders(gl::Program *program,
-                                  const gl::Framebuffer *framebuffer,
-                                  bool rasterizerDiscard,
-                                  bool transformFeedbackActive)
+gl::Error Renderer9::applyShadersImpl(const gl::Data &data)
 {
-    ASSERT(!transformFeedbackActive);
-    ASSERT(!rasterizerDiscard);
-
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
+    ProgramD3D *programD3D  = GetImplAs<ProgramD3D>(data.state->getProgram());
     const auto &inputLayout = programD3D->getCachedInputLayout();
 
     ShaderExecutableD3D *vertexExe = NULL;
@@ -1880,8 +1874,9 @@ gl::Error Renderer9::applyShaders(gl::Program *program,
         return error;
     }
 
+    const gl::Framebuffer *drawFramebuffer = data.state->getDrawFramebuffer();
     ShaderExecutableD3D *pixelExe = NULL;
-    error = programD3D->getPixelExecutableForFramebuffer(framebuffer, &pixelExe);
+    error = programD3D->getPixelExecutableForFramebuffer(drawFramebuffer, &pixelExe);
     if (error.isError())
     {
         return error;

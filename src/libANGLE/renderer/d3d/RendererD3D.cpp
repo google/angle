@@ -442,9 +442,7 @@ gl::Error RendererD3D::applyShaders(const gl::Data &data)
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
     programD3D->updateCachedInputLayout(*data.state);
 
-    const gl::Framebuffer *fbo = data.state->getDrawFramebuffer();
-
-    gl::Error error = applyShaders(program, fbo, data.state->getRasterizerState().rasterizerDiscard, data.state->isTransformFeedbackActiveUnpaused());
+    gl::Error error = applyShadersImpl(data);
     if (error.isError())
     {
         return error;

@@ -2045,12 +2045,9 @@ gl::Error Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::applyShaders(gl::Program *program,
-                                   const gl::Framebuffer *framebuffer,
-                                   bool rasterizerDiscard,
-                                   bool transformFeedbackActive)
+gl::Error Renderer11::applyShadersImpl(const gl::Data &data)
 {
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
+    ProgramD3D *programD3D  = GetImplAs<ProgramD3D>(data.state->getProgram());
     const auto &inputLayout = programD3D->getCachedInputLayout();
 
     ShaderExecutableD3D *vertexExe = NULL;
@@ -2060,8 +2057,9 @@ gl::Error Renderer11::applyShaders(gl::Program *program,
         return error;
     }
 
+    const gl::Framebuffer *drawFramebuffer = data.state->getDrawFramebuffer();
     ShaderExecutableD3D *pixelExe = NULL;
-    error = programD3D->getPixelExecutableForFramebuffer(framebuffer, &pixelExe);
+    error = programD3D->getPixelExecutableForFramebuffer(drawFramebuffer, &pixelExe);
     if (error.isError())
     {
         return error;
@@ -2073,12 +2071,14 @@ gl::Error Renderer11::applyShaders(gl::Program *program,
 
     ID3D11PixelShader *pixelShader = NULL;
     // Skip pixel shader if we're doing rasterizer discard.
+    bool rasterizerDiscard = data.state->getRasterizerState().rasterizerDiscard;
     if (!rasterizerDiscard)
     {
         pixelShader = (pixelExe ? GetAs<ShaderExecutable11>(pixelExe)->getPixelShader() : NULL);
     }
 
     ID3D11GeometryShader *geometryShader = NULL;
+    bool transformFeedbackActive = data.state->isTransformFeedbackActiveUnpaused();
     if (transformFeedbackActive)
     {
         geometryShader = (vertexExe ? GetAs<ShaderExecutable11>(vertexExe)->getStreamOutShader() : NULL);
