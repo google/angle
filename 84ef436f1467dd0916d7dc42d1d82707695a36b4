@@ -189,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "19337ad8_7e35d999",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-10-23T02:14:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "396bde32_03e24eb4",
+      "range": {
+        "startLine": 76,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 31
+      },
+      "revId": "84ef436f1467dd0916d7dc42d1d82707695a36b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9a1e2bb_20694ae2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 5
