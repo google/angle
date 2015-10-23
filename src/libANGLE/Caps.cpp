@@ -110,8 +110,6 @@ Extensions::Extensions()
       textureCompressionDXT1(false),
       textureCompressionDXT3(false),
       textureCompressionDXT5(false),
-      textureCompressionASTCHDR(false),
-      textureCompressionASTCLDR(false),
       depthTextures(false),
       textureStorage(false),
       textureNPOT(false),
@@ -171,8 +169,6 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_EXT_texture_compression_dxt1",     textureCompressionDXT1,    &extensionStrings);
     InsertExtensionString("GL_ANGLE_texture_compression_dxt3",   textureCompressionDXT3,    &extensionStrings);
     InsertExtensionString("GL_ANGLE_texture_compression_dxt5",   textureCompressionDXT5,    &extensionStrings);
-    InsertExtensionString("GL_KHR_texture_compression_astc_hdr", textureCompressionASTCHDR, &extensionStrings);
-    InsertExtensionString("GL_KHR_texture_compression_astc_ldr", textureCompressionASTCLDR, &extensionStrings);
     InsertExtensionString("GL_OES_compressed_ETC1_RGB8_texture", compressedETC1RGB8Texture, &extensionStrings);
     InsertExtensionString("GL_EXT_sRGB",                         sRGB,                      &extensionStrings);
     InsertExtensionString("GL_ANGLE_depth_texture",              depthTextures,             &extensionStrings);
@@ -364,42 +360,6 @@ static bool DetermineDXT5TextureSupport(const TextureCapsMap &textureCaps)
     return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
 }
 
-// Check for GL_KHR_texture_compression_astc_hdr and GL_KHR_texture_compression_astc_ldr
-static bool DetermineASTCTextureSupport(const TextureCapsMap &textureCaps)
-{
-    std::vector<GLenum> requiredFormats;
-    requiredFormats.push_back(GL_COMPRESSED_RGBA_ASTC_4x4_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_RGBA_ASTC_5x4_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_RGBA_ASTC_5x5_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_RGBA_ASTC_6x5_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_RGBA_ASTC_6x6_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_RGBA_ASTC_8x5_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_RGBA_ASTC_8x6_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_RGBA_ASTC_8x8_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_RGBA_ASTC_10x5_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_RGBA_ASTC_10x6_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_RGBA_ASTC_10x8_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_RGBA_ASTC_10x10_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_RGBA_ASTC_12x10_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_RGBA_ASTC_12x12_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR);
-    requiredFormats.push_back(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR);
-
-    return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
-}
-
 // Check for GL_ETC1_RGB8_OES
 static bool DetermineETC1RGB8TextureSupport(const TextureCapsMap &textureCaps)
 {
@@ -462,8 +422,6 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     textureCompressionDXT1 = DetermineDXT1TextureSupport(textureCaps);
     textureCompressionDXT3 = DetermineDXT3TextureSupport(textureCaps);
     textureCompressionDXT5 = DetermineDXT5TextureSupport(textureCaps);
-    textureCompressionASTCHDR = DetermineASTCTextureSupport(textureCaps);
-    textureCompressionASTCLDR = DetermineASTCTextureSupport(textureCaps);
     compressedETC1RGB8Texture = DetermineETC1RGB8TextureSupport(textureCaps);
     sRGB = DetermineSRGBTextureSupport(textureCaps);
     depthTextures = DetermineDepthTextureSupport(textureCaps);
