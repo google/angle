@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "36e4cdf6_db93d353",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 939,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-10-23T19:25:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f66155ea_e93a95ad",
+      "range": {
+        "startLine": 935,
+        "startChar": 5,
+        "endLine": 939,
+        "endChar": 30
+      },
+      "revId": "5656865d8e91c4998283da814d12b72e806ec215",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6427d4a_2f79c9b3",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-10-21T21:15:58Z",
       "side": 1,
       "message": "it seems like you could end up initializing gl_PointCoord twice in some code paths, can we keep this at one?",
+      "range": {
+        "startLine": 931,
+        "startChar": 30,
+        "endLine": 945,
+        "endChar": 5
+      },
+      "revId": "5656865d8e91c4998283da814d12b72e806ec215",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76dac536_a0e5f402",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 945,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-10-23T19:25:23Z",
+      "side": 1,
+      "message": "I walked through this code path multiple times and have not found a case where it can initialize twice.  If pointsize is used, then the insertDummyPointCoordValue is always false.",
+      "parentUuid": "b6427d4a_2f79c9b3",
       "range": {
         "startLine": 931,
         "startChar": 30,
