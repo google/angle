@@ -80,6 +80,7 @@ struct Extensions
     // GL_OES_texture_float, GL_OES_texture_float_linear
     // GL_EXT_texture_rg
     // GL_EXT_texture_compression_dxt1, GL_ANGLE_texture_compression_dxt3, GL_ANGLE_texture_compression_dxt5
+    // GL_KHR_texture_compression_astc_hdr, GL_KHR_texture_compression_astc_ldr
     // GL_OES_compressed_ETC1_RGB8_texture
     // GL_EXT_sRGB
     // GL_ANGLE_depth_texture
@@ -138,6 +139,12 @@ struct Extensions
     bool textureCompressionDXT1;
     bool textureCompressionDXT3;
     bool textureCompressionDXT5;
+
+    // GL_KHR_texture_compression_astc_hdr
+    bool textureCompressionASTCHDR;
+
+    // GL_KHR_texture_compression_astc_ldr
+    bool textureCompressionASTCLDR;
 
     // GL_OES_compressed_ETC1_RGB8_texture
     // Implies that TextureCaps for GL_ETC1_RGB8_OES exist

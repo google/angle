@@ -1071,7 +1071,6 @@
 1101 WIN : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage2d_invalid_size = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.texture.teximage3d = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.texture.texsubimage3d = FAIL
-1101 WIN : dEQP-GLES3.functional.negative_api.texture.compressedteximage3d_invalid_astc_target = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage3d = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage3d_invalid_buffer_target = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.texture.texstorage2d = FAIL
