@@ -1299,48 +1299,4 @@ bool ValidateCompressedTexImage3D(Context *context,
 
     return true;
 }
-
-bool ValidateBindVertexArray(Context *context, GLuint array)
-{
-    if (context->getClientVersion() < 3)
-    {
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    return ValidateBindVertexArrayBase(context, array);
-}
-
-bool ValidateDeleteVertexArrays(Context *context, GLsizei n)
-{
-    if (context->getClientVersion() < 3)
-    {
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    return ValidateDeleteVertexArraysBase(context, n);
-}
-
-bool ValidateGenVertexArrays(Context *context, GLsizei n)
-{
-    if (context->getClientVersion() < 3)
-    {
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    return ValidateGenVertexArraysBase(context, n);
-}
-
-bool ValidateIsVertexArray(Context *context)
-{
-    if (context->getClientVersion() < 3)
-    {
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    return true;
-}
 }

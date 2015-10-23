@@ -993,48 +993,4 @@ bool ValidateDrawBuffers(Context *context, GLsizei n, const GLenum *bufs)
 
     return true;
 }
-
-bool ValidateBindVertexArrayOES(Context *context, GLuint array)
-{
-    if (!context->getExtensions().vertexArrayObject)
-    {
-        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
-        return false;
-    }
-
-    return ValidateBindVertexArrayBase(context, array);
-}
-
-bool ValidateDeleteVertexArraysOES(Context *context, GLsizei n)
-{
-    if (!context->getExtensions().vertexArrayObject)
-    {
-        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
-        return false;
-    }
-
-    return ValidateDeleteVertexArraysBase(context, n);
-}
-
-bool ValidateGenVertexArraysOES(Context *context, GLsizei n)
-{
-    if (!context->getExtensions().vertexArrayObject)
-    {
-        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
-        return false;
-    }
-
-    return ValidateGenVertexArraysBase(context, n);
-}
-
-bool ValidateIsVertexArrayOES(Context *context)
-{
-    if (!context->getExtensions().vertexArrayObject)
-    {
-        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
-        return false;
-    }
-
-    return true;
-}
 }

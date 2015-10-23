@@ -806,8 +806,19 @@ void GL_APIENTRY BindVertexArray(GLuint array)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateBindVertexArray(context, array))
+        if (context->getClientVersion() < 3)
         {
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return;
+        }
+
+        VertexArray *vao = context->getVertexArray(array);
+
+        if (!vao)
+        {
+            // The default VAO should always exist
+            ASSERT(array != 0);
+            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
@@ -822,8 +833,15 @@ void GL_APIENTRY DeleteVertexArrays(GLsizei n, const GLuint* arrays)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateDeleteVertexArrays(context, n))
+        if (context->getClientVersion() < 3)
         {
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return;
+        }
+
+        if (n < 0)
+        {
+            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -844,8 +862,15 @@ void GL_APIENTRY GenVertexArrays(GLsizei n, GLuint* arrays)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGenVertexArrays(context, n))
+        if (context->getClientVersion() < 3)
         {
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return;
+        }
+
+        if (n < 0)
+        {
+            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -863,8 +888,9 @@ GLboolean GL_APIENTRY IsVertexArray(GLuint array)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateIsVertexArray(context))
+        if (context->getClientVersion() < 3)
         {
+            context->recordError(Error(GL_INVALID_OPERATION));
             return GL_FALSE;
         }
 

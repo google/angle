@@ -1341,12 +1341,6 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         INSERT_PROC_ADDRESS(gl, EGLImageTargetTexture2DOES);
         INSERT_PROC_ADDRESS(gl, EGLImageTargetRenderbufferStorageOES);
 
-        // GL_OES_vertex_array_object
-        INSERT_PROC_ADDRESS(gl, BindVertexArrayOES);
-        INSERT_PROC_ADDRESS(gl, DeleteVertexArraysOES);
-        INSERT_PROC_ADDRESS(gl, GenVertexArraysOES);
-        INSERT_PROC_ADDRESS(gl, IsVertexArrayOES);
-
         // GLES3 core
         INSERT_PROC_ADDRESS(gl, ReadBuffer);
         INSERT_PROC_ADDRESS(gl, DrawRangeElements);
