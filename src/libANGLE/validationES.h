@@ -141,6 +141,10 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
                                                   egl::Display *display,
                                                   GLenum target,
                                                   egl::Image *image);
+
+bool ValidateBindVertexArrayBase(Context *context, GLuint array);
+bool ValidateDeleteVertexArraysBase(Context *context, GLsizei n);
+bool ValidateGenVertexArraysBase(Context *context, GLsizei n);
 }
 
 #endif // LIBANGLE_VALIDATION_ES_H_

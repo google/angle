@@ -2173,4 +2173,41 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
 
     return true;
 }
+
+bool ValidateBindVertexArrayBase(Context *context, GLuint array)
+{
+    VertexArray *vao = context->getVertexArray(array);
+
+    if (!vao)
+    {
+        // The default VAO should always exist
+        ASSERT(array != 0);
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateDeleteVertexArraysBase(Context *context, GLsizei n)
+{
+    if (n < 0)
+    {
+        context->recordError(Error(GL_INVALID_VALUE));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGenVertexArraysBase(Context *context, GLsizei n)
+{
+    if (n < 0)
+    {
+        context->recordError(Error(GL_INVALID_VALUE));
+        return false;
+    }
+
+    return true;
+}
 }
