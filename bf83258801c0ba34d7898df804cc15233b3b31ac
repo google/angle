@@ -22,6 +22,30 @@
       "revId": "bf83258801c0ba34d7898df804cc15233b3b31ac",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b63c3df3_df375b13",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-23T16:51:12Z",
+      "side": 1,
+      "message": "Made it protected since overriding private methods is a bit spooky.",
+      "parentUuid": "d658d143_48c19f8a",
+      "range": {
+        "startLine": 163,
+        "startChar": 4,
+        "endLine": 163,
+        "endChar": 65
+      },
+      "revId": "bf83258801c0ba34d7898df804cc15233b3b31ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
