@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "36484da0_9bf84b76",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1006,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-23T16:51:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "362e8d91_eb6a9117",
+      "range": {
+        "startLine": 1003,
+        "startChar": 8,
+        "endLine": 1006,
+        "endChar": 22
+      },
+      "revId": "7c324167524d42112c6b164f166d4cff5529ee50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6427d4a_0f83a59b",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-10-22T18:47:25Z",
       "side": 1,
       "message": "nit: mark this (and expandMatrix) as static or anon namespace.",
+      "range": {
+        "startLine": 1661,
+        "startChar": 5,
+        "endLine": 1661,
+        "endChar": 20
+      },
+      "revId": "7c324167524d42112c6b164f166d4cff5529ee50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36a3ed81_6379024c",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1661,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-23T16:51:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6427d4a_0f83a59b",
       "range": {
         "startLine": 1661,
         "startChar": 5,
