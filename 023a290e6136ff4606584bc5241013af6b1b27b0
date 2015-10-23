@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "763e45ee_3d4bef25",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1245,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-23T16:46:35Z",
+      "side": 1,
+      "message": "I think you meant to move UNPACK_ROW_LENGTH, not UNPACK_SKIP_IMAGES",
+      "range": {
+        "startLine": 1243,
+        "startChar": 6,
+        "endLine": 1245,
+        "endChar": 33
+      },
+      "revId": "023a290e6136ff4606584bc5241013af6b1b27b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
