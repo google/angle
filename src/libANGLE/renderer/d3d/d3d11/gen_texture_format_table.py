@@ -261,11 +261,11 @@ def get_texture_format_item(idx, texture_format):
     else:
         table_data += '            else if (' + texture_format["requirementsFcn"] + '(renderer11DeviceCaps))\n'
     table_data += '            {\n'
-    table_data += '                static const TextureFormat &textureFormat = GetD3D11FormatInfo(internalFormat,\n'
-    table_data += '                                                                               ' + texture_format[tex_format] + ',\n'
-    table_data += '                                                                               ' + texture_format[srv_format] + ',\n'
-    table_data += '                                                                               ' + texture_format[rtv_format] + ',\n'
-    table_data += '                                                                               ' + texture_format[dsv_format] + ');\n'
+    table_data += '                static const TextureFormat textureFormat = GetD3D11FormatInfo(internalFormat,\n'
+    table_data += '                                                                              ' + texture_format[tex_format] + ',\n'
+    table_data += '                                                                              ' + texture_format[srv_format] + ',\n'
+    table_data += '                                                                              ' + texture_format[rtv_format] + ',\n'
+    table_data += '                                                                              ' + texture_format[dsv_format] + ');\n'
     table_data += '                return textureFormat;\n'
     table_data += '            }\n'
 
