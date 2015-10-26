@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76a645d7_1dc113b6",
+        "filename": "src/compiler/translator/RemoveDynamicIndexing.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-26T17:09:25Z",
+      "side": 1,
+      "message": "nit: git cl format",
+      "range": {
+        "startLine": 267,
+        "startChar": 97,
+        "endLine": 267,
+        "endChar": 113
+      },
+      "revId": "8832497e6fb367203e7e686d1776007cba931190",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
