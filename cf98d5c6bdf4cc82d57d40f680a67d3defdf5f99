@@ -22,6 +22,30 @@
       "revId": "cf98d5c6bdf4cc82d57d40f680a67d3defdf5f99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6ceb575_b6b37e22",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 922,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-10-26T16:08:59Z",
+      "side": 1,
+      "message": "useInstancedPointSpriteEmulation can only be enabled if pointsize is used.  insertDummyPointCoordValue can only be enabled if pointsize is not used.  So they can\u0027t be true at the same time.\n\nThe code is getting complicated, I agree.",
+      "parentUuid": "56706118_24a592dc",
+      "range": {
+        "startLine": 922,
+        "startChar": 8,
+        "endLine": 922,
+        "endChar": 40
+      },
+      "revId": "cf98d5c6bdf4cc82d57d40f680a67d3defdf5f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
