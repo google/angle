@@ -141,6 +141,7 @@ Extensions::Extensions()
       eglImageExternalEssl3(false),
       unpackSubimage(false),
       packSubimage(false),
+      vertexArrayObject(false),
       colorBufferFloat(false)
 {
 }
@@ -201,6 +202,7 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_EXT_unpack_subimage",              unpackSubimage,            &extensionStrings);
     InsertExtensionString("GL_NV_pack_subimage",                 packSubimage,              &extensionStrings);
     InsertExtensionString("GL_EXT_color_buffer_float",           colorBufferFloat,          &extensionStrings);
+    InsertExtensionString("GL_OES_vertex_array_object",          vertexArrayObject,         &extensionStrings);
     // clang-format on
 
     return extensionStrings;
