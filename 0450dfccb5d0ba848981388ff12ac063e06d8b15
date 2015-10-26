@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6a1b1bb_00f9a635",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-26T17:12:46Z",
+      "side": 1,
+      "message": "for some reason Clang-Win doesn\u0027t support this construct, because of some unimplemented feature of name mangling. See this log: http://build.chromium.org/p/tryserver.chromium.win/builders/win_clang_dbg/builds/104/steps/compile%20%28with%20patch%29/logs/stdio\n\nThe fix is just to remove the \u0026",
+      "range": {
+        "startLine": 228,
+        "startChar": 15,
+        "endLine": 228,
+        "endChar": 57
+      },
+      "revId": "0450dfccb5d0ba848981388ff12ac063e06d8b15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
