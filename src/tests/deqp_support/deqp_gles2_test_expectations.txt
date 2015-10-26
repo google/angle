@@ -190,6 +190,8 @@
 1034 LINUX : dEQP-GLES2.functional.flush_finish.finish = FAIL
 1019 LINUX : dEQP-GLES2.functional.texture.size.cube.256x256_rgba4444 = FAIL
 1019 LINUX : dEQP-GLES2.functional.texture.size.cube.512x512_rgba4444 = FAIL
+1020 LINUX : dEQP-GLES2.functional.texture.mipmap.2d.projected.nearest_linear* = FAIL
+1020 LINUX : dEQP-GLES2.functional.texture.mipmap.2d.projected.linear_linear* = FAIL
 
 // Failures on the Linux dEQP bot that do not appear on the workstation
 1143 LINUX : dEQP-GLES2.functional.shaders.random.all_features.vertex.13 = FAIL
