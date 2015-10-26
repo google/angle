@@ -781,21 +781,16 @@ class TIntermTraverser : angle::NonCopyable
     // To insert multiple nodes on the parent aggregate node
     struct NodeInsertMultipleEntry
     {
-        NodeInsertMultipleEntry(TIntermAggregate *_parent,
-                                TIntermSequence::size_type _position,
-                                TIntermSequence _insertionsBefore,
-                                TIntermSequence _insertionsAfter)
+        NodeInsertMultipleEntry(TIntermAggregate *_parent, TIntermSequence::size_type _position, TIntermSequence _insertions)
             : parent(_parent),
-              position(_position),
-              insertionsBefore(_insertionsBefore),
-              insertionsAfter(_insertionsAfter)
+            position(_position),
+            insertions(_insertions)
         {
         }
 
         TIntermAggregate *parent;
         TIntermSequence::size_type position;
-        TIntermSequence insertionsBefore;
-        TIntermSequence insertionsAfter;
+        TIntermSequence insertions;
     };
 
     // During traversing, save all the changes that need to happen into
@@ -811,11 +806,6 @@ class TIntermTraverser : angle::NonCopyable
     // Note that inserting more than one set of nodes to the same parent node on a single updateTree call is not
     // supported.
     void insertStatementsInParentBlock(const TIntermSequence &insertions);
-
-    // Same as above, but supports simultaneous insertion of statements before and after the node
-    // currently being traversed.
-    void insertStatementsInParentBlock(const TIntermSequence &insertionsBefore,
-                                       const TIntermSequence &insertionsAfter);
 
     // Helper to create a temporary symbol node with the given qualifier.
     TIntermSymbol *createTempSymbol(const TType &type, TQualifier qualifier);

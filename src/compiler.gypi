@@ -159,8 +159,6 @@
             'compiler/translator/BuiltInFunctionEmulatorHLSL.h',
             'compiler/translator/OutputHLSL.cpp',
             'compiler/translator/OutputHLSL.h',
-            'compiler/translator/RemoveDynamicIndexing.cpp',
-            'compiler/translator/RemoveDynamicIndexing.h',
             'compiler/translator/RemoveSwitchFallThrough.cpp',
             'compiler/translator/RemoveSwitchFallThrough.h',
             'compiler/translator/RewriteElseBlocks.cpp',

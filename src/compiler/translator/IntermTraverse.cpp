@@ -81,16 +81,8 @@ void TIntermTraverser::popParentBlock()
 
 void TIntermTraverser::insertStatementsInParentBlock(const TIntermSequence &insertions)
 {
-    TIntermSequence emptyInsertionsAfter;
-    insertStatementsInParentBlock(insertions, emptyInsertionsAfter);
-}
-
-void TIntermTraverser::insertStatementsInParentBlock(const TIntermSequence &insertionsBefore,
-                                                     const TIntermSequence &insertionsAfter)
-{
     ASSERT(!mParentBlockStack.empty());
-    NodeInsertMultipleEntry insert(mParentBlockStack.back().node, mParentBlockStack.back().pos,
-                                   insertionsBefore, insertionsAfter);
+    NodeInsertMultipleEntry insert(mParentBlockStack.back().node, mParentBlockStack.back().pos, insertions);
     mInsertions.push_back(insert);
 }
 
