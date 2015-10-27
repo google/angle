@@ -40,6 +40,8 @@ struct FunctionsGLX::GLXFunctionTable
         swapBuffersPtr(nullptr),
         queryExtensionPtr(nullptr),
         queryVersionPtr(nullptr),
+        getCurrentContextPtr(nullptr),
+        getCurrentDrawablePtr(nullptr),
         waitXPtr(nullptr),
         waitGLPtr(nullptr),
         queryExtensionsStringPtr(nullptr),
@@ -63,6 +65,8 @@ struct FunctionsGLX::GLXFunctionTable
     PFNGLXSWAPBUFFERSPROC swapBuffersPtr;
     PFNGLXQUERYEXTENSIONPROC queryExtensionPtr;
     PFNGLXQUERYVERSIONPROC queryVersionPtr;
+    PFNGLXGETCURRENTCONTEXTPROC getCurrentContextPtr;
+    PFNGLXGETCURRENTDRAWABLEPROC getCurrentDrawablePtr;
     PFNGLXWAITXPROC waitXPtr;
     PFNGLXWAITGLPROC waitGLPtr;
 
@@ -154,6 +158,8 @@ bool FunctionsGLX::initialize(Display *xDisplay, int screen, std::string *errorS
     GET_FNPTR_OR_ERROR(&mFnPtrs->swapBuffersPtr, glXSwapBuffers);
     GET_FNPTR_OR_ERROR(&mFnPtrs->queryExtensionPtr, glXQueryExtension);
     GET_FNPTR_OR_ERROR(&mFnPtrs->queryVersionPtr, glXQueryVersion);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->getCurrentContextPtr, glXGetCurrentContext);
+    GET_FNPTR_OR_ERROR(&mFnPtrs->getCurrentDrawablePtr, glXGetCurrentDrawable);
     GET_FNPTR_OR_ERROR(&mFnPtrs->waitXPtr, glXWaitX);
     GET_FNPTR_OR_ERROR(&mFnPtrs->waitGLPtr, glXWaitGL);
 
@@ -270,6 +276,16 @@ Bool FunctionsGLX::queryExtension(int *errorBase, int *event) const
 Bool FunctionsGLX::queryVersion(int *major, int *minor) const
 {
     return mFnPtrs->queryVersionPtr(mXDisplay, major, minor);
+}
+glx::Context FunctionsGLX::getCurrentContext() const
+{
+    GLXContext context = mFnPtrs->getCurrentContextPtr();
+    return reinterpret_cast<glx::Context>(context);
+}
+glx::Drawable FunctionsGLX::getCurrentDrawable() const
+{
+    GLXDrawable drawable = mFnPtrs->getCurrentDrawablePtr();
+    return reinterpret_cast<glx::Drawable>(drawable);
 }
 void FunctionsGLX::waitX() const
 {

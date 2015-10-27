@@ -42,6 +42,8 @@ class FunctionsGLX
     void swapBuffers(glx::Drawable drawable) const;
     Bool queryExtension(int *errorBase, int *event) const;
     Bool queryVersion(int *major, int *minor) const;
+    glx::Context getCurrentContext() const;
+    glx::Drawable getCurrentDrawable() const;
     void waitX() const;
     void waitGL() const;
 
