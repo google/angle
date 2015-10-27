@@ -146,11 +146,20 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     // FunctionsGL and DisplayGL need to make a few GL calls, for example to
     // query the version of the context so we need to make the context current.
     // glXMakeCurrent requires a GLXDrawable so we create a temporary Pbuffer
-    // (of size 0, 0) for the duration of these calls.
+    // (of size 1, 1) for the duration of these calls.
+    // Ideally we would want to unset the current context and destroy the pbuffer
+    // before going back to the application but this is TODO
+    // We could use a pbuffer of size (0, 0) but it fails on the Intel Mesa driver
+    // as commented on https://bugs.freedesktop.org/show_bug.cgi?id=38869 so we
+    // use (1, 1) instead.
 
-    // to query things like limits. Ideally we would want to unset the current context
-    // and destroy the pbuffer before going back to the application but this is TODO
-    mDummyPbuffer = mGLX.createPbuffer(mContextConfig, nullptr);
+    int dummyPbufferAttribs[] =
+    {
+        GLX_PBUFFER_WIDTH, 1,
+        GLX_PBUFFER_HEIGHT, 1,
+        None,
+    };
+    mDummyPbuffer = mGLX.createPbuffer(mContextConfig, dummyPbufferAttribs);
     if (!mDummyPbuffer)
     {
         return egl::Error(EGL_NOT_INITIALIZED, "Could not create the dummy pbuffer.");
