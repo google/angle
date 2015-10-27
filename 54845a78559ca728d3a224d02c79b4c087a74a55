@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96abb99d_5eb6752b",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-27T13:45:23Z",
+      "side": 1,
+      "message": "Could just be textureCompressionASTCLDR \u003d textureCompressionASTCHDR to save some cycles",
+      "revId": "54845a78559ca728d3a224d02c79b4c087a74a55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
