@@ -46,6 +46,30 @@
       "revId": "2a911fc1e28c6db91c9ae6488b3ddb2dc2dea93e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f685d521_e91c3535",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 4
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-27T15:06:03Z",
+      "side": 1,
+      "message": "reinterpret_cast\u0027s behavior is defined as reusing the same bits but for a different type, so it allows us to rely on the two\u0027s complement.\nWe can probably rely on the implementation using two\u0027s complement for static_cast, I only checked to make sure the standard doesn\u0027t ask static_cast to clamp the value.",
+      "parentUuid": "b6b19df3_7a9b953f",
+      "range": {
+        "startLine": 530,
+        "startChar": 20,
+        "endLine": 530,
+        "endChar": 31
+      },
+      "revId": "2a911fc1e28c6db91c9ae6488b3ddb2dc2dea93e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
