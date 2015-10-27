@@ -94,6 +94,30 @@
       "revId": "2a911fc1e28c6db91c9ae6488b3ddb2dc2dea93e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6a1b1bb_408c4e75",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 4
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-27T15:48:50Z",
+      "side": 1,
+      "message": "Oh, I always assumed cppreference to be correct (and written by the people writing the standard). Since there doesn\u0027t seem to be a portable way to do this let\u0027s just forget about that nit. Apologies for the waste of time.",
+      "parentUuid": "b6b19df3_daa90153",
+      "range": {
+        "startLine": 530,
+        "startChar": 20,
+        "endLine": 530,
+        "endChar": 31
+      },
+      "revId": "2a911fc1e28c6db91c9ae6488b3ddb2dc2dea93e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
