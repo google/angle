@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "76a645d7_00c648d5",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1208,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-27T18:59:40Z",
+      "side": 1,
+      "message": "Done. (I had this gone in a follow-up CL)",
+      "parentUuid": "b6a43dcc_42d7b421",
+      "revId": "2630270597e81f3defa91c6adb42dee4c323312a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f685d521_497e2136",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.h",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2015-10-27T17:21:26Z",
       "side": 1,
       "message": "This declaration can be removed",
+      "range": {
+        "startLine": 129,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 96
+      },
+      "revId": "2630270597e81f3defa91c6adb42dee4c323312a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56e3011f_2fd70523",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-27T18:59:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f685d521_497e2136",
       "range": {
         "startLine": 129,
         "startChar": 0,
