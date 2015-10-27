@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6a43dcc_226a70d6",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1228,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-27T19:20:18Z",
+      "side": 1,
+      "message": "corrected this here, was in a follow up CL",
+      "range": {
+        "startLine": 1228,
+        "startChar": 13,
+        "endLine": 1228,
+        "endChar": 32
+      },
+      "revId": "4f7adfd020745635b1825f41e6557787cc168cf3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
