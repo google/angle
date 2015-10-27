@@ -292,6 +292,12 @@ bool ANGLETest::isNVidia() const
     return (rendererString.find("NVIDIA") != std::string::npos);
 }
 
+bool ANGLETest::isD3D11() const
+{
+    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+    return (rendererString.find("Direct3D11 vs_5_0") != std::string::npos);
+}
+
 EGLint ANGLETest::getPlatformRenderer() const
 {
     assert(mEGLWindow);
