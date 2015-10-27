@@ -70,6 +70,30 @@
       "revId": "2a911fc1e28c6db91c9ae6488b3ddb2dc2dea93e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6b19df3_daa90153",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 4
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-10-27T15:41:40Z",
+      "side": 1,
+      "message": "Hmm, looks like cppreference.com says that, but I can\u0027t actually see that in C++14 draft from https://isocpp.org/std/the-standard . Instead it says for example \"The mapping performed by reinterpret_cast might, or might not, produce a representation different\nfrom the original value.\" If we truly want to make this more portable, I\u0027m not actually sure what should be done.",
+      "parentUuid": "f685d521_e91c3535",
+      "range": {
+        "startLine": 530,
+        "startChar": 20,
+        "endLine": 530,
+        "endChar": 31
+      },
+      "revId": "2a911fc1e28c6db91c9ae6488b3ddb2dc2dea93e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
