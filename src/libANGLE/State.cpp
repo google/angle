@@ -1265,6 +1265,9 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
       case GL_DITHER:                    *params = mBlend.dither;                 break;
       case GL_TRANSFORM_FEEDBACK_ACTIVE: *params = getCurrentTransformFeedback()->isActive() ? GL_TRUE : GL_FALSE; break;
       case GL_TRANSFORM_FEEDBACK_PAUSED: *params = getCurrentTransformFeedback()->isPaused() ? GL_TRUE : GL_FALSE; break;
+      case GL_PRIMITIVE_RESTART_FIXED_INDEX:
+          *params = mPrimitiveRestart;
+          break;
       default:
         UNREACHABLE();
         break;
