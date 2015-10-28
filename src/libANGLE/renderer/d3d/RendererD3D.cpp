@@ -20,6 +20,7 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
+#include "libANGLE/renderer/d3d/DeviceD3D.h"
 #include "libANGLE/renderer/d3d/DisplayD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
@@ -44,7 +45,8 @@ RendererD3D::RendererD3D(egl::Display *display)
       mDeviceLost(false),
       mAnnotator(nullptr),
       mScratchMemoryBufferResetCounter(0),
-      mWorkaroundsInitialized(false)
+      mWorkaroundsInitialized(false),
+      mEGLDevice(nullptr)
 {
 }
 
@@ -55,6 +57,8 @@ RendererD3D::~RendererD3D()
 
 void RendererD3D::cleanup()
 {
+    SafeDelete(mEGLDevice);
+
     mScratchMemoryBuffer.resize(0);
     for (auto &incompleteTexture : mIncompleteTextures)
     {
@@ -733,4 +737,16 @@ gl::DebugAnnotator *RendererD3D::getAnnotator()
     return mAnnotator;
 }
 
+egl::Error RendererD3D::getEGLDevice(DeviceImpl **device)
+{
+    egl::Error error = initializeEGLDevice(&mEGLDevice);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    *device = static_cast<DeviceImpl *>(mEGLDevice);
+
+    return egl::Error(EGL_SUCCESS);
+}
 }

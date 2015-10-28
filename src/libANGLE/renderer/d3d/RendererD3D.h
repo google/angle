@@ -12,6 +12,7 @@
 #include "common/debug.h"
 #include "common/MemoryBuffer.h"
 #include "libANGLE/Data.h"
+#include "libANGLE/Device.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
@@ -29,15 +30,16 @@ class ConfigSet;
 
 namespace gl
 {
-class InfoLog;
-struct LinkedVarying;
-class Texture;
 class DebugAnnotator;
+class InfoLog;
+class Texture;
+struct LinkedVarying;
 }
 
 namespace rx
 {
 struct D3DUniform;
+class DeviceD3D;
 class EGLImageD3D;
 class ImageD3D;
 class IndexBuffer;
@@ -247,6 +249,8 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     // In D3D11, faster than calling setTexture a jillion times
     virtual gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) = 0;
 
+    egl::Error getEGLDevice(DeviceImpl **device);
+
   protected:
     virtual bool getLUID(LUID *adapterLuid) const = 0;
     virtual gl::Error applyShadersImpl(const gl::Data &data, GLenum drawMode) = 0;
@@ -254,6 +258,8 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     void cleanup();
 
     virtual void createAnnotator() = 0;
+
+    virtual egl::Error initializeEGLDevice(DeviceD3D **outDevice) = 0;
 
     // dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
     static const uintptr_t DirtyPointer;
@@ -322,6 +328,8 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     mutable bool mWorkaroundsInitialized;
     mutable WorkaroundsD3D mWorkarounds;
+
+    DeviceD3D *mEGLDevice;
 };
 
 struct dx_VertexConstants

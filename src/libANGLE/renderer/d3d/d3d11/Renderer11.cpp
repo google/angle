@@ -21,6 +21,7 @@
 #include "libANGLE/histogram_macros.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
+#include "libANGLE/renderer/d3d/DeviceD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/Blit11.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Clear11.h"
@@ -4086,4 +4087,14 @@ gl::Error Renderer11::clearTextures(gl::SamplerType samplerType, size_t rangeSta
     return gl::Error(GL_NO_ERROR);
 }
 
+egl::Error Renderer11::initializeEGLDevice(DeviceD3D **outDevice)
+{
+    if (*outDevice == nullptr)
+    {
+        ASSERT(mDevice != nullptr);
+        *outDevice = new DeviceD3D(reinterpret_cast<void *>(mDevice), EGL_D3D11_DEVICE_ANGLE);
+    }
+
+    return egl::Error(EGL_SUCCESS);
+}
 }

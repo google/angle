@@ -277,6 +277,8 @@ class Renderer11 : public RendererD3D
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
     gl::Error applyShadersImpl(const gl::Data &data, GLenum drawMode) override;
 
+    egl::Error initializeEGLDevice(DeviceD3D **outDevice) override;
+
   private:
     gl::Error drawArraysImpl(const gl::Data &data,
                              GLenum mode,
