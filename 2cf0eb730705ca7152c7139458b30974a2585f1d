@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d664519c_882617ee",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-28T14:45:23Z",
+      "side": 1,
+      "message": "This seems like it will always be false for now.",
+      "revId": "2cf0eb730705ca7152c7139458b30974a2585f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f66dd57e_c97e519e",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-28T14:45:23Z",
+      "side": 1,
+      "message": "Why do we save the preamble on disk, can\u0027t it be fully recreate from other data?",
+      "revId": "2cf0eb730705ca7152c7139458b30974a2585f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d664519c_a82bdbb4",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-28T14:45:23Z",
+      "side": 1,
+      "message": "I feel this comment isn\u0027t useful as it isn\u0027t clear (even when reading the CL) why this is necessary and what dynamic GSs are. How about something like \"Precomputed interface and code to ensure for the geometry shader compatibility\" (I\u0027m not sure that it is for though)?",
+      "revId": "2cf0eb730705ca7152c7139458b30974a2585f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
