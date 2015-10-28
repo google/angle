@@ -70,6 +70,30 @@
       "revId": "cf98d5c6bdf4cc82d57d40f680a67d3defdf5f99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7621e584_889fb78d",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 922,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-10-28T20:09:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "567f8121_cc174fe6",
+      "range": {
+        "startLine": 922,
+        "startChar": 8,
+        "endLine": 922,
+        "endChar": 40
+      },
+      "revId": "cf98d5c6bdf4cc82d57d40f680a67d3defdf5f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
