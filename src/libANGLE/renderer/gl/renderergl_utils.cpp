@@ -528,6 +528,17 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
         }
     }
 
+    // Can't support ES3 without the GLSL packing builtins. We have a workaround for all
+    // desktop OpenGL versions starting from 3.3 with the bit packing extension.
+    if (!functions->isAtLeastGL(gl::Version(4, 2)) &&
+        !(functions->isAtLeastGL(gl::Version(3, 2)) &&
+          functions->hasGLExtension("GL_ARB_shader_bit_encoding")) &&
+        !functions->hasGLExtension("GL_ARB_shading_language_packing") &&
+        !functions->isAtLeastGLES(gl::Version(3, 0)))
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
+    }
+
     // Extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
     extensions->elementIndexUint = functions->standard == STANDARD_GL_DESKTOP ||
