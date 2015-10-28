@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "965e59ce_468a521e",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1206,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-28T14:32:49Z",
+      "side": 1,
+      "message": "This is comparing the new enum with the GL enum.",
+      "range": {
+        "startLine": 1206,
+        "startChar": 31,
+        "endLine": 1206,
+        "endChar": 57
+      },
+      "revId": "4f7adfd020745635b1825f41e6557787cc168cf3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6a43dcc_226a70d6",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 3
@@ -19,6 +42,23 @@
         "endLine": 1228,
         "endChar": 32
       },
+      "revId": "4f7adfd020745635b1825f41e6557787cc168cf3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "567f8121_ec1c8b0a",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1242,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-28T14:32:49Z",
+      "side": 1,
+      "message": "Add a default case that asserts.",
       "revId": "4f7adfd020745635b1825f41e6557787cc168cf3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
