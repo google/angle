@@ -46,6 +46,30 @@
       "revId": "cf98d5c6bdf4cc82d57d40f680a67d3defdf5f99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "567f8121_cc174fe6",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 922,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-28T14:31:03Z",
+      "side": 1,
+      "message": "OK, can you add an assert in one or both places where we write to gl_PointCoord that the other condition is not true?",
+      "parentUuid": "f6ceb575_b6b37e22",
+      "range": {
+        "startLine": 922,
+        "startChar": 8,
+        "endLine": 922,
+        "endChar": 40
+      },
+      "revId": "cf98d5c6bdf4cc82d57d40f680a67d3defdf5f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
