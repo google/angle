@@ -132,7 +132,6 @@ class Renderer11 : public RendererD3D
 
     virtual bool applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize);
     gl::Error applyRenderTarget(const gl::Framebuffer *frameBuffer) override;
-
     gl::Error applyUniforms(const ProgramD3D &programD3D,
                             const std::vector<D3DUniform *> &uniformArray) override;
     virtual gl::Error applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances, SourceIndexData *sourceIndexInfo);
@@ -269,7 +268,7 @@ class Renderer11 : public RendererD3D
   protected:
     void createAnnotator() override;
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
-    gl::Error applyShadersImpl(const gl::Data &data) override;
+    gl::Error applyShadersImpl(const gl::Data &data, GLenum drawMode) override;
 
   private:
     gl::Error drawArraysImpl(const gl::Data &data,

@@ -242,7 +242,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
   protected:
     virtual bool getLUID(LUID *adapterLuid) const = 0;
-    virtual gl::Error applyShadersImpl(const gl::Data &data) = 0;
+    virtual gl::Error applyShadersImpl(const gl::Data &data, GLenum drawMode) = 0;
 
     void cleanup();
 
@@ -296,7 +296,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     gl::Error applyRenderTarget(const gl::Data &data, GLenum drawMode, bool ignoreViewport);
     gl::Error applyState(const gl::Data &data, GLenum drawMode);
-    gl::Error applyShaders(const gl::Data &data);
+    gl::Error applyShaders(const gl::Data &data, GLenum drawMode);
     gl::Error applyTextures(const gl::Data &data, gl::SamplerType shaderType,
                             const FramebufferTextureArray &framebufferTextures, size_t framebufferTextureCount);
     gl::Error applyTextures(const gl::Data &data);

@@ -113,7 +113,10 @@ class ProgramD3D : public ProgramImpl
     gl::Error getVertexExecutableForInputLayout(const gl::InputLayout &inputLayout,
                                                 ShaderExecutableD3D **outExectuable,
                                                 gl::InfoLog *infoLog);
-    ShaderExecutableD3D *getGeometryExecutable() const { return mGeometryExecutable; }
+    gl::Error getGeometryExecutableForPrimitiveType(const gl::Data &data,
+                                                    GLenum drawMode,
+                                                    ShaderExecutableD3D **outExecutable,
+                                                    gl::InfoLog *infoLog);
 
     LinkResult link(const gl::Data &data, gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
@@ -278,10 +281,7 @@ class ProgramD3D : public ProgramImpl
                             const GLfloat *value,
                             GLenum targetUniformType);
 
-    LinkResult compileProgramExecutables(const gl::Data &data,
-                                         gl::InfoLog &infoLog,
-                                         int registers,
-                                         const std::vector<PackedVarying> &packedVaryings);
+    LinkResult compileProgramExecutables(const gl::Data &data, gl::InfoLog &infoLog);
 
     void gatherTransformFeedbackVaryings(const std::vector<gl::LinkedVarying> &varyings);
     D3DUniform *getD3DUniformByName(const std::string &name);
@@ -301,7 +301,7 @@ class ProgramD3D : public ProgramImpl
 
     std::vector<VertexExecutable *> mVertexExecutables;
     std::vector<PixelExecutable *> mPixelExecutables;
-    ShaderExecutableD3D *mGeometryExecutable;
+    std::vector<ShaderExecutableD3D *> mGeometryExecutables;
 
     std::string mVertexHLSL;
     D3DCompilerWorkarounds mVertexWorkarounds;
@@ -310,6 +310,11 @@ class ProgramD3D : public ProgramImpl
     D3DCompilerWorkarounds mPixelWorkarounds;
     bool mUsesFragDepth;
     std::vector<PixelShaderOutputVariable> mPixelShaderKey;
+
+    // Common code for all dynamic geometry shaders. Consists mainly of the GS input and output
+    // structures, built from the linked varying info. We store the string itself instead of the
+    // packed varyings for simplicity.
+    std::string mGeometryShaderPreamble;
 
     bool mUsesPointSize;
 

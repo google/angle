@@ -1711,7 +1711,15 @@ gl::Error Renderer11::drawArraysImpl(const gl::Data &data,
             mDeviceContext->PSSetShader(pixelShader, NULL, 0);
 
             // Retrieve the point sprite geometry shader
-            rx::ShaderExecutableD3D *geometryExe = programD3D->getGeometryExecutable();
+            rx::ShaderExecutableD3D *geometryExe = nullptr;
+
+            error = programD3D->getGeometryExecutableForPrimitiveType(data, mode, &geometryExe,
+                                                                      nullptr);
+            if (error.isError())
+            {
+                return error;
+            }
+
             ID3D11GeometryShader *geometryShader = (geometryExe ? GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader() : NULL);
             mAppliedGeometryShader = reinterpret_cast<uintptr_t>(geometryShader);
             ASSERT(geometryShader);
@@ -2045,7 +2053,7 @@ gl::Error Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::applyShadersImpl(const gl::Data &data)
+gl::Error Renderer11::applyShadersImpl(const gl::Data &data, GLenum drawMode)
 {
     ProgramD3D *programD3D  = GetImplAs<ProgramD3D>(data.state->getProgram());
     const auto &inputLayout = programD3D->getCachedInputLayout();
@@ -2065,7 +2073,13 @@ gl::Error Renderer11::applyShadersImpl(const gl::Data &data)
         return error;
     }
 
-    ShaderExecutableD3D *geometryExe = programD3D->getGeometryExecutable();
+    ShaderExecutableD3D *geometryExe = nullptr;
+    error =
+        programD3D->getGeometryExecutableForPrimitiveType(data, drawMode, &geometryExe, nullptr);
+    if (error.isError())
+    {
+        return error;
+    }
 
     ID3D11VertexShader *vertexShader = (vertexExe ? GetAs<ShaderExecutable11>(vertexExe)->getVertexShader() : NULL);
 
@@ -2083,7 +2097,7 @@ gl::Error Renderer11::applyShadersImpl(const gl::Data &data)
     {
         geometryShader = (vertexExe ? GetAs<ShaderExecutable11>(vertexExe)->getStreamOutShader() : NULL);
     }
-    else if (mCurRasterState.pointDrawMode)
+    else
     {
         geometryShader = (geometryExe ? GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader() : NULL);
     }

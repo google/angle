@@ -74,10 +74,11 @@ class DynamicHLSL : angle::NonCopyable
   public:
     explicit DynamicHLSL(RendererD3D *const renderer);
 
-    int packVaryings(const gl::Caps &caps,
-                     gl::InfoLog &infoLog,
-                     std::vector<PackedVarying> *packedVaryings,
-                     const std::vector<std::string> &transformFeedbackVaryings);
+    bool packVaryings(const gl::Caps &caps,
+                      gl::InfoLog &infoLog,
+                      std::vector<PackedVarying> *packedVaryings,
+                      const std::vector<std::string> &transformFeedbackVaryings,
+                      unsigned int *registerCountOut);
     std::string generateVertexShaderForInputLayout(
         const std::string &sourceShader,
         const gl::InputLayout &inputLayout,
@@ -90,7 +91,7 @@ class DynamicHLSL : angle::NonCopyable
     bool generateShaderLinkHLSL(const gl::Data &data,
                                 const gl::Program::Data &programData,
                                 gl::InfoLog &infoLog,
-                                int registers,
+                                unsigned int registerCount,
                                 std::string *pixelHLSL,
                                 std::string *vertexHLSL,
                                 const std::vector<PackedVarying> &packedVaryings,
@@ -98,11 +99,16 @@ class DynamicHLSL : angle::NonCopyable
                                 std::vector<PixelShaderOutputVariable> *outPixelShaderKey,
                                 bool *outUsesFragDepth) const;
 
+    std::string generateGeometryShaderPreamble(
+        const gl::Data &data,
+        const gl::Program::Data &programData,
+        unsigned int registers,
+        const std::vector<PackedVarying> &packedVaryings) const;
+
     std::string generateGeometryShaderHLSL(gl::PrimitiveType primitiveType,
                                            const gl::Data &data,
                                            const gl::Program::Data &programData,
-                                           int registers,
-                                           const std::vector<PackedVarying> &packedVaryings) const;
+                                           const std::string &preambleString) const;
 
   private:
     RendererD3D *const mRenderer;
@@ -110,7 +116,7 @@ class DynamicHLSL : angle::NonCopyable
     struct SemanticInfo;
 
     std::string getVaryingSemantic(bool pointSize) const;
-    SemanticInfo getSemanticInfo(int startRegisters,
+    SemanticInfo getSemanticInfo(unsigned int startRegisters,
                                  bool position,
                                  bool fragCoord,
                                  bool pointCoord,

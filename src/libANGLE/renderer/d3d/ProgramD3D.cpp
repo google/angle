@@ -260,6 +260,35 @@ bool ExpandMatrix(T *target,
     return dirty;
 }
 
+gl::PrimitiveType GetGeometryShaderTypeFromDrawMode(GLenum drawMode)
+{
+    switch (drawMode)
+    {
+        // Uses the point sprite geometry shader.
+        case GL_POINTS:
+            return gl::PRIMITIVE_POINTS;
+
+        // All line drawing uses the same geometry shader.
+        case GL_LINES:
+        case GL_LINE_STRIP:
+        case GL_LINE_LOOP:
+            return gl::PRIMITIVE_LINES;
+
+        // The triangle fan primitive is emulated with strips in D3D11.
+        case GL_TRIANGLES:
+        case GL_TRIANGLE_FAN:
+            return gl::PRIMITIVE_TRIANGLES;
+
+        // Special case for triangle strips.
+        case GL_TRIANGLE_STRIP:
+            return gl::PRIMITIVE_TRIANGLE_STRIP;
+
+        default:
+            UNREACHABLE();
+            return gl::PRIMITIVE_TYPE_MAX;
+    }
+}
+
 }  // anonymous namespace
 
 D3DUniform::D3DUniform(GLenum typeIn,
@@ -380,7 +409,7 @@ ProgramD3D::ProgramD3D(const gl::Program::Data &data, RendererD3D *renderer)
     : ProgramImpl(data),
       mRenderer(renderer),
       mDynamicHLSL(NULL),
-      mGeometryExecutable(NULL),
+      mGeometryExecutables(gl::PRIMITIVE_TYPE_MAX, nullptr),
       mUsesPointSize(false),
       mVertexUniformStorage(NULL),
       mFragmentUniformStorage(NULL),
@@ -663,6 +692,8 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
         stream->readInt(&mPixelShaderKey[pixelShaderKeyIndex].outputIndex);
     }
 
+    stream->readString(&mGeometryShaderPreamble);
+
     const unsigned char *binary = reinterpret_cast<const unsigned char *>(stream->data());
 
     const unsigned int vertexShaderCount = stream->readInt<unsigned int>();
@@ -741,21 +772,29 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
         stream->skip(pixelShaderSize);
     }
 
-    unsigned int geometryShaderSize = stream->readInt<unsigned int>();
-
-    if (geometryShaderSize > 0)
+    for (unsigned int geometryExeIndex = 0; geometryExeIndex < gl::PRIMITIVE_TYPE_MAX;
+         ++geometryExeIndex)
     {
+        unsigned int geometryShaderSize = stream->readInt<unsigned int>();
+        if (geometryShaderSize == 0)
+        {
+            mGeometryExecutables[geometryExeIndex] = nullptr;
+            continue;
+        }
+
         const unsigned char *geometryShaderFunction = binary + stream->offset();
-        gl::Error error                             = mRenderer->loadExecutable(
-            geometryShaderFunction, geometryShaderSize, SHADER_GEOMETRY,
-            mTransformFeedbackLinkedVaryings,
-            (mData.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS), &mGeometryExecutable);
+        bool splitAttribs                           = (mData.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS);
+
+        gl::Error error =
+            mRenderer->loadExecutable(geometryShaderFunction, geometryShaderSize, SHADER_GEOMETRY,
+                                      mTransformFeedbackLinkedVaryings, splitAttribs,
+                                      &mGeometryExecutables[geometryExeIndex]);
         if (error.isError())
         {
             return LinkResult(false, error);
         }
 
-        if (!mGeometryExecutable)
+        if (!mGeometryExecutables[geometryExeIndex])
         {
             infoLog << "Could not create geometry shader.";
             return LinkResult(false, gl::Error(GL_NO_ERROR));
@@ -856,6 +895,8 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
         stream->writeInt(variable.outputIndex);
     }
 
+    stream->writeString(mGeometryShaderPreamble);
+
     stream->writeInt(mVertexExecutables.size());
     for (size_t vertexExecutableIndex = 0; vertexExecutableIndex < mVertexExecutables.size();
          vertexExecutableIndex++)
@@ -897,14 +938,17 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
         stream->writeBytes(pixelBlob, pixelShaderSize);
     }
 
-    size_t geometryShaderSize =
-        (mGeometryExecutable != NULL) ? mGeometryExecutable->getLength() : 0;
-    stream->writeInt(geometryShaderSize);
-
-    if (mGeometryExecutable != NULL && geometryShaderSize > 0)
+    for (const ShaderExecutableD3D *geometryExe : mGeometryExecutables)
     {
-        const uint8_t *geometryBlob = mGeometryExecutable->getFunction();
-        stream->writeBytes(geometryBlob, geometryShaderSize);
+        if (geometryExe == nullptr)
+        {
+            stream->writeInt(0);
+            continue;
+        }
+
+        size_t geometryShaderSize = geometryExe->getLength();
+        stream->writeInt(geometryShaderSize);
+        stream->writeBytes(geometryExe->getFunction(), geometryShaderSize);
     }
 
     return gl::Error(GL_NO_ERROR);
@@ -1034,10 +1078,48 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
     return gl::Error(GL_NO_ERROR);
 }
 
-LinkResult ProgramD3D::compileProgramExecutables(const gl::Data &data,
-                                                 gl::InfoLog &infoLog,
-                                                 int registers,
-                                                 const std::vector<PackedVarying> &packedVaryings)
+gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Data &data,
+                                                            GLenum drawMode,
+                                                            ShaderExecutableD3D **outExecutable,
+                                                            gl::InfoLog *infoLog)
+{
+    gl::PrimitiveType geometryShaderType = GetGeometryShaderTypeFromDrawMode(drawMode);
+
+    if (mGeometryExecutables[geometryShaderType] != nullptr)
+    {
+        if (outExecutable)
+        {
+            *outExecutable = mGeometryExecutables[geometryShaderType];
+        }
+        return gl::Error(GL_NO_ERROR);
+    }
+
+    std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(
+        geometryShaderType, data, mData, mGeometryShaderPreamble);
+
+    gl::InfoLog tempInfoLog;
+    gl::InfoLog *currentInfoLog = infoLog ? infoLog : &tempInfoLog;
+
+    gl::Error error = mRenderer->compileToExecutable(
+        *currentInfoLog, geometryHLSL, SHADER_GEOMETRY, mTransformFeedbackLinkedVaryings,
+        (mData.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS), D3DCompilerWorkarounds(),
+        &mGeometryExecutables[geometryShaderType]);
+
+    if (!infoLog && error.isError())
+    {
+        std::vector<char> tempCharBuffer(tempInfoLog.getLength() + 3);
+        tempInfoLog.getLog(static_cast<GLsizei>(tempInfoLog.getLength()), NULL, &tempCharBuffer[0]);
+        ERR("Error compiling dynamic geometry executable:\n%s\n", &tempCharBuffer[0]);
+    }
+
+    if (outExecutable)
+    {
+        *outExecutable = mGeometryExecutables[geometryShaderType];
+    }
+    return error;
+}
+
+LinkResult ProgramD3D::compileProgramExecutables(const gl::Data &data, gl::InfoLog &infoLog)
 {
     const gl::InputLayout &defaultInputLayout =
         GetDefaultInputLayoutFromShader(mData.getAttachedVertexShader());
@@ -1058,19 +1140,10 @@ LinkResult ProgramD3D::compileProgramExecutables(const gl::Data &data,
         return LinkResult(false, error);
     }
 
+    // Auto-generate the geometry shader here, if we expect to be using point rendering in D3D11.
     if (usesGeometryShader())
     {
-        std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(
-            gl::PRIMITIVE_POINTS, data, mData, registers, packedVaryings);
-
-        error = mRenderer->compileToExecutable(
-            infoLog, geometryHLSL, SHADER_GEOMETRY, mTransformFeedbackLinkedVaryings,
-            (mData.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS),
-            D3DCompilerWorkarounds(), &mGeometryExecutable);
-        if (error.isError())
-        {
-            return LinkResult(false, error);
-        }
+        getGeometryExecutableForPrimitiveType(data, GL_POINTS, nullptr, &infoLog);
     }
 
 #if ANGLE_SHADER_DEBUG_INFO == ANGLE_ENABLED
@@ -1099,7 +1172,7 @@ LinkResult ProgramD3D::compileProgramExecutables(const gl::Data &data,
 #endif
 
     bool linkSuccess = (defaultVertexExecutable && defaultPixelExecutable &&
-                        (!usesGeometryShader() || mGeometryExecutable));
+                        (!usesGeometryShader() || mGeometryExecutables[gl::PRIMITIVE_POINTS]));
     return LinkResult(linkSuccess, gl::Error(GL_NO_ERROR));
 }
 
@@ -1142,16 +1215,15 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
         MergeVaryings(*vertexShader, *fragmentShader, mData.getTransformFeedbackVaryingNames());
 
     // Map the varyings to the register file
-    int registers = mDynamicHLSL->packVaryings(*data.caps, infoLog, &packedVaryings,
-                                               mData.getTransformFeedbackVaryingNames());
-
-    if (registers < 0)
+    unsigned int registerCount = 0;
+    if (!mDynamicHLSL->packVaryings(*data.caps, infoLog, &packedVaryings,
+                                    mData.getTransformFeedbackVaryingNames(), &registerCount))
     {
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
     std::vector<gl::LinkedVarying> linkedVaryings;
-    if (!mDynamicHLSL->generateShaderLinkHLSL(data, mData, infoLog, registers, &mPixelHLSL,
+    if (!mDynamicHLSL->generateShaderLinkHLSL(data, mData, infoLog, registerCount, &mPixelHLSL,
                                               &mVertexHLSL, packedVaryings, &linkedVaryings,
                                               &mPixelShaderKey, &mUsesFragDepth))
     {
@@ -1160,13 +1232,19 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
 
     mUsesPointSize = vertexShaderD3D->usesPointSize();
 
+    if (mRenderer->getMajorShaderModel() >= 4)
+    {
+        mGeometryShaderPreamble = mDynamicHLSL->generateGeometryShaderPreamble(
+            data, mData, registerCount, packedVaryings);
+    }
+
     initSemanticIndex();
 
     defineUniformsAndAssignRegisters();
 
     gatherTransformFeedbackVaryings(linkedVaryings);
 
-    LinkResult result = compileProgramExecutables(data, infoLog, registers, packedVaryings);
+    LinkResult result = compileProgramExecutables(data, infoLog);
     if (result.error.isError() || !result.linkSuccess)
     {
         infoLog << "Failed to create D3D shaders.";
@@ -1849,7 +1927,11 @@ void ProgramD3D::reset()
 {
     SafeDeleteContainer(mVertexExecutables);
     SafeDeleteContainer(mPixelExecutables);
-    SafeDelete(mGeometryExecutable);
+
+    for (auto &element : mGeometryExecutables)
+    {
+        SafeDelete(element);
+    }
 
     mVertexHLSL.clear();
     mVertexWorkarounds = D3DCompilerWorkarounds();
@@ -1877,6 +1959,8 @@ void ProgramD3D::reset()
     std::fill(mAttributesByLayout, mAttributesByLayout + ArraySize(mAttributesByLayout), -1);
 
     mTransformFeedbackLinkedVaryings.clear();
+
+    mGeometryShaderPreamble.clear();
 }
 
 unsigned int ProgramD3D::getSerial() const

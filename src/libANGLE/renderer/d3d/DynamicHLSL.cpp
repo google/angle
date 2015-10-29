@@ -256,12 +256,14 @@ DynamicHLSL::DynamicHLSL(RendererD3D *const renderer) : mRenderer(renderer)
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading
 // Language 1.00 rev. 17] appendix A section 7 page 111
 // Returns the number of used varying registers, or -1 if unsuccesful
-int DynamicHLSL::packVaryings(const gl::Caps &caps,
-                              InfoLog &infoLog,
-                              std::vector<PackedVarying> *packedVaryings,
-                              const std::vector<std::string> &transformFeedbackVaryings)
+bool DynamicHLSL::packVaryings(const gl::Caps &caps,
+                               InfoLog &infoLog,
+                               std::vector<PackedVarying> *packedVaryings,
+                               const std::vector<std::string> &transformFeedbackVaryings,
+                               unsigned int *registerCountOut)
 {
     VaryingPacking packing = {};
+    *registerCountOut      = 0;
 
     std::set<std::string> uniqueVaryingNames;
 
@@ -284,7 +286,7 @@ int DynamicHLSL::packVaryings(const gl::Caps &caps,
         else
         {
             infoLog << "Could not pack varying " << varying.name;
-            return -1;
+            return false;
         }
     }
 
@@ -308,7 +310,7 @@ int DynamicHLSL::packVaryings(const gl::Caps &caps,
                     if (!PackVarying(&packedVarying, caps.maxVaryingVectors, packing))
                     {
                         infoLog << "Could not pack varying " << varying.name;
-                        return -1;
+                        return false;
                     }
 
                     found = true;
@@ -320,23 +322,21 @@ int DynamicHLSL::packVaryings(const gl::Caps &caps,
             {
                 infoLog << "Transform feedback varying " << transformFeedbackVaryingName
                         << " does not exist in the vertex shader.";
-                return -1;
+                return false;
             }
         }
     }
 
     // Return the number of used registers
-    int registers = 0;
-
     for (GLuint r = 0; r < caps.maxVaryingVectors; r++)
     {
         if (packing[r][0] || packing[r][1] || packing[r][2] || packing[r][3])
         {
-            registers++;
+            (*registerCountOut)++;
         }
     }
 
-    return registers;
+    return true;
 }
 
 std::string DynamicHLSL::generateVaryingHLSL(const gl::Caps &caps,
@@ -639,7 +639,7 @@ struct DynamicHLSL::SemanticInfo
     BuiltinInfo glPointSize;
 };
 
-DynamicHLSL::SemanticInfo DynamicHLSL::getSemanticInfo(int startRegisters,
+DynamicHLSL::SemanticInfo DynamicHLSL::getSemanticInfo(unsigned int startRegisters,
                                                        bool position,
                                                        bool fragCoord,
                                                        bool pointCoord,
@@ -650,7 +650,7 @@ DynamicHLSL::SemanticInfo DynamicHLSL::getSemanticInfo(int startRegisters,
     bool hlsl4                         = (mRenderer->getMajorShaderModel() >= 4);
     const std::string &varyingSemantic = getVaryingSemantic(pointSize);
 
-    int reservedRegisterIndex = startRegisters;
+    unsigned int reservedRegisterIndex = startRegisters;
 
     if (hlsl4)
     {
@@ -783,7 +783,7 @@ void DynamicHLSL::storeUserLinkedVaryings(const std::vector<PackedVarying> &pack
 bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
                                          const gl::Program::Data &programData,
                                          InfoLog &infoLog,
-                                         int registers,
+                                         unsigned int registerCount,
                                          std::string *pixelHLSL,
                                          std::string *vertexHLSL,
                                          const std::vector<PackedVarying> &packedVaryings,
@@ -813,7 +813,8 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
     ASSERT(!fragmentShader->usesFragColor() || !fragmentShader->usesFragData());
 
     // Write the HLSL input/output declarations
-    const int registersNeeded = registers + (usesFragCoord ? 1 : 0) + (usesPointCoord ? 1 : 0);
+    const unsigned int registersNeeded =
+        registerCount + (usesFragCoord ? 1u : 0u) + (usesPointCoord ? 1u : 0u);
 
     // Two cases when writing to gl_FragColor and using ESSL 1.0:
     // - with a 3.0 context, the output color is copied to channel 0
@@ -844,7 +845,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
     // gl_PointSize to be in VS_OUTPUT and GS_INPUT. Instanced point sprites doesn't need
     // gl_PointSize in VS_OUTPUT.
     const SemanticInfo &vertexSemantics =
-        getSemanticInfo(registers, outputPositionFromVS, usesFragCoord, addPointCoord,
+        getSemanticInfo(registerCount, outputPositionFromVS, usesFragCoord, addPointCoord,
                         (!useInstancedPointSpriteEmulation && usesPointSize), false);
 
     storeUserLinkedVaryings(packedVaryings, usesPointSize, linkedVaryings);
@@ -988,7 +989,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
     pixelStream << fragmentShaderGL->getTranslatedSource();
 
     const SemanticInfo &pixelSemantics =
-        getSemanticInfo(registers, outputPositionFromVS, usesFragCoord, usesPointCoord,
+        getSemanticInfo(registerCount, outputPositionFromVS, usesFragCoord, usesPointCoord,
                         (!useInstancedPointSpriteEmulation && usesPointSize), true);
 
     pixelStream << "struct PS_INPUT\n" << generateVaryingLinkHLSL(pixelSemantics, varyingHLSL)
@@ -1191,35 +1192,76 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
     return true;
 }
 
-std::string DynamicHLSL::generateGeometryShaderHLSL(
-    gl::PrimitiveType primitiveType,
+std::string DynamicHLSL::generateGeometryShaderPreamble(
     const gl::Data &data,
     const gl::Program::Data &programData,
-    int registers,
+    unsigned int registerCount,
     const std::vector<PackedVarying> &packedVaryings) const
 {
-    ASSERT(registers >= 0);
+    ASSERT(registerCount >= 0 && registerCount <= data.caps->maxVaryingVectors);
     ASSERT(mRenderer->getMajorShaderModel() >= 4);
 
+    // Must be called during link, not from a binary load.
     const ShaderD3D *vertexShader   = GetImplAs<ShaderD3D>(programData.getAttachedVertexShader());
     const ShaderD3D *fragmentShader = GetImplAs<ShaderD3D>(programData.getAttachedFragmentShader());
+    ASSERT(vertexShader && fragmentShader);
 
     bool usesFragCoord  = fragmentShader->usesFragCoord();
     bool usesPointCoord = fragmentShader->usesPointCoord();
     bool usesPointSize  = vertexShader->usesPointSize();
 
     const SemanticInfo &inSemantics =
-        getSemanticInfo(registers, true, usesFragCoord, false, usesPointSize, false);
+        getSemanticInfo(registerCount, true, usesFragCoord, false, usesPointSize, false);
     const SemanticInfo &outSemantics =
-        getSemanticInfo(registers, true, usesFragCoord, usesPointCoord, usesPointSize, false);
+        getSemanticInfo(registerCount, true, usesFragCoord, usesPointCoord, usesPointSize, false);
+
+    const std::string &varyingHLSL = generateVaryingHLSL(*data.caps, packedVaryings, usesPointSize);
+    std::string inLinkHLSL         = generateVaryingLinkHLSL(inSemantics, varyingHLSL);
+    std::string outLinkHLSL        = generateVaryingLinkHLSL(outSemantics, varyingHLSL);
+
+    std::stringstream preambleStream;
+
+    preambleStream << "struct GS_INPUT\n" << inLinkHLSL << "\n"
+                   << "struct GS_OUTPUT\n" << outLinkHLSL << "\n"
+                   << "void copyVertex(inout GS_OUTPUT output, GS_INPUT input)\n"
+                   << "{\n"
+                   << "    output.gl_Position = input.gl_Position;\n";
+
+    if (usesPointSize)
+    {
+        preambleStream << "    output.gl_PointSize = input.gl_PointSize;\n";
+    }
+
+    for (unsigned int r = 0; r < registerCount; ++r)
+    {
+        preambleStream << "    output.v" << r << " = input.v" << r << ";\n";
+    }
+
+    if (usesFragCoord)
+    {
+        preambleStream << "    output.gl_FragCoord = input.gl_FragCoord;\n";
+    }
+
+    // Only write the dx_Position if we aren't using point sprites
+    preambleStream << "#ifndef ANGLE_POINT_SPRITE_SHADER\n"
+                   << "    output.dx_Position = input.dx_Position;\n"
+                   << "#endif  // ANGLE_POINT_SPRITE_SHADER\n"
+                   << "}\n";
+
+    return preambleStream.str();
+}
+
+std::string DynamicHLSL::generateGeometryShaderHLSL(gl::PrimitiveType primitiveType,
+                                                    const gl::Data &data,
+                                                    const gl::Program::Data &programData,
+                                                    const std::string &preambleString) const
+{
+    ASSERT(mRenderer->getMajorShaderModel() >= 4);
 
     std::stringstream shaderStream;
 
-    const bool pointSprites = (primitiveType == PRIMITIVE_POINTS);
-
-    std::string varyingHLSL = generateVaryingHLSL(*data.caps, packedVaryings, usesPointSize);
-    std::string inLinkHLSL  = generateVaryingLinkHLSL(inSemantics, varyingHLSL);
-    std::string outLinkHLSL = generateVaryingLinkHLSL(outSemantics, varyingHLSL);
+    const bool pointSprites   = (primitiveType == PRIMITIVE_POINTS);
+    const bool usesPointCoord = preambleString.find("gl_PointCoord") != std::string::npos;
 
     const char *inputPT  = nullptr;
     const char *outputPT = nullptr;
@@ -1260,7 +1302,9 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(
 
     if (pointSprites)
     {
-        shaderStream << "uniform float4 dx_ViewCoords : register(c1);\n"
+        shaderStream << "#define ANGLE_POINT_SPRITE_SHADER\n"
+                        "\n"
+                        "uniform float4 dx_ViewCoords : register(c1);\n"
                         "\n"
                         "static float2 pointSpriteCorners[] = \n"
                         "{\n"
@@ -1286,9 +1330,7 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(
                      << "\n";
     }
 
-    shaderStream << "struct GS_INPUT\n" << inLinkHLSL << "\n"
-                 << "struct GS_OUTPUT\n" << outLinkHLSL << "\n"
-                 << "\n"
+    shaderStream << preambleString << "\n"
                  << "[maxvertexcount(" << maxVertexOutput << ")]\n"
                  << "void main(" << inputPT << " GS_INPUT input[" << inputSize << "],"
                                                                                   " inout "
@@ -1296,37 +1338,19 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(
                  << "{\n"
                  << "    GS_OUTPUT output = (GS_OUTPUT)0;\n";
 
-    for (int vid = 0; vid < inputSize; ++vid)
+    for (int vertexIndex = 0; vertexIndex < inputSize; ++vertexIndex)
     {
-        shaderStream << "    output.gl_Position = input[" << vid << "].gl_Position;\n";
-
-        if (usesPointSize)
-        {
-            shaderStream << "    output.gl_PointSize = input[" << vid << "].gl_PointSize;\n";
-        }
-
-        for (int r = 0; r < registers; ++r)
-        {
-            shaderStream << "    output.v" << r << " = input[" << vid << "].v" << r << ";\n";
-        }
-
-        if (usesFragCoord)
-        {
-            shaderStream << "    output.gl_FragCoord = input[" << vid << "].gl_FragCoord;\n";
-        }
+        shaderStream << "    copyVertex(output, input[" << vertexIndex << "]);\n";
 
         if (!pointSprites)
         {
             ASSERT(inputSize == maxVertexOutput);
-            shaderStream << "    output.dx_Position = input[" << vid << "].dx_Position;\n"
-                         << "    outStream.Append(output);\n";
+            shaderStream << "    outStream.Append(output);\n";
         }
     }
 
     if (pointSprites)
     {
-        ASSERT(usesPointSize);
-
         shaderStream << "\n"
                         "    float4 dx_Position = input[0].dx_Position;\n"
                         "    float gl_PointSize = clamp(input[0].gl_PointSize, minPointSize, "

@@ -1862,7 +1862,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::applyShadersImpl(const gl::Data &data)
+gl::Error Renderer9::applyShadersImpl(const gl::Data &data, GLenum /*drawMode*/)
 {
     ProgramD3D *programD3D  = GetImplAs<ProgramD3D>(data.state->getProgram());
     const auto &inputLayout = programD3D->getCachedInputLayout();

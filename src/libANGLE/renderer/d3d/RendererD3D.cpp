@@ -195,7 +195,7 @@ gl::Error RendererD3D::genericDrawElements(const gl::Data &data,
         return error;
     }
 
-    error = applyShaders(data);
+    error = applyShaders(data, mode);
     if (error.isError())
     {
         return error;
@@ -270,7 +270,7 @@ gl::Error RendererD3D::genericDrawArrays(const gl::Data &data,
         return error;
     }
 
-    error = applyShaders(data);
+    error = applyShaders(data, mode);
     if (error.isError())
     {
         return error;
@@ -436,13 +436,13 @@ gl::Error RendererD3D::applyState(const gl::Data &data, GLenum drawMode)
 }
 
 // Applies the shaders and shader constants to the Direct3D device
-gl::Error RendererD3D::applyShaders(const gl::Data &data)
+gl::Error RendererD3D::applyShaders(const gl::Data &data, GLenum drawMode)
 {
     gl::Program *program = data.state->getProgram();
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
     programD3D->updateCachedInputLayout(*data.state);
 
-    gl::Error error = applyShadersImpl(data);
+    gl::Error error = applyShadersImpl(data, drawMode);
     if (error.isError())
     {
         return error;
