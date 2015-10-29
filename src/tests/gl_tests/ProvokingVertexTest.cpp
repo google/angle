@@ -125,13 +125,6 @@ class ProvokingVertexTest : public ANGLETest
 // Test drawing a simple triangle with flat shading, and different valued vertices.
 TEST_P(ProvokingVertexTest, FlatTriangle)
 {
-    // TODO(jmadill): Implement on the D3D back-end.
-    if (isD3D11())
-    {
-        std::cout << "Test disabled on D3D11." << std::endl;
-        return;
-    }
-
     GLint vertexData[] = {1, 2, 3, 1, 2, 3};
     glVertexAttribIPointer(mIntAttribLocation, 1, GL_INT, 0, vertexData);
 
@@ -147,13 +140,6 @@ TEST_P(ProvokingVertexTest, FlatTriangle)
 // Ensure that any provoking vertex shenanigans still gives correct vertex streams.
 TEST_P(ProvokingVertexTest, FlatTriWithTransformFeedback)
 {
-    // TODO(jmadill): Implement on the D3D back-end.
-    if (isD3D11())
-    {
-        std::cout << "Test disabled on D3D11." << std::endl;
-        return;
-    }
-
     glGenTransformFeedbacks(1, &mTransformFeedback);
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
 
@@ -190,13 +176,6 @@ TEST_P(ProvokingVertexTest, FlatTriWithTransformFeedback)
 // Test drawing a simple line with flat shading, and different valued vertices.
 TEST_P(ProvokingVertexTest, FlatLine)
 {
-    // TODO(jmadill): Implement on the D3D back-end.
-    if (isD3D11())
-    {
-        std::cout << "Test disabled on D3D11." << std::endl;
-        return;
-    }
-
     GLfloat halfPixel = 1.0f / static_cast<GLfloat>(getWindowWidth());
 
     GLint vertexData[]     = {1, 2};

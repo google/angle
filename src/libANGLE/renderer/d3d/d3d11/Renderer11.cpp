@@ -1672,18 +1672,17 @@ void Renderer11::applyTransformFeedbackBuffers(const gl::State &state)
 gl::Error Renderer11::drawArraysImpl(const gl::Data &data,
                                      GLenum mode,
                                      GLsizei count,
-                                     GLsizei instances,
-                                     bool usesPointSize)
+                                     GLsizei instances)
 {
-    bool useInstancedPointSpriteEmulation = usesPointSize && getWorkarounds().useInstancedPointSpriteEmulation;
-    if (mode == GL_POINTS && data.state->isTransformFeedbackActiveUnpaused())
-    {
-        // Since point sprites are generated with a geometry shader, too many vertices will
-        // be written if transform feedback is active.  To work around this, draw only the points
-        // with the stream out shader and no pixel shader to feed the stream out buffers and then
-        // draw again with the point sprite geometry shader to rasterize the point sprites.
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.state->getProgram());
 
-        mDeviceContext->PSSetShader(NULL, NULL, 0);
+    if (programD3D->usesGeometryShader(mode) && data.state->isTransformFeedbackActiveUnpaused())
+    {
+        // Since we use a geometry if-and-only-if we rewrite vertex streams, transform feedback
+        // won't get the correct output. To work around this, draw with *only* the stream out
+        // first (no pixel shader) to feed the stream out buffers and then draw again with the
+        // geometry shader + pixel shader to rasterize the primitives.
+        mDeviceContext->PSSetShader(nullptr, nullptr, 0);
 
         if (instances > 0)
         {
@@ -1694,70 +1693,41 @@ gl::Error Renderer11::drawArraysImpl(const gl::Data &data,
             mDeviceContext->Draw(count, 0);
         }
 
-        ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.state->getProgram());
-
-        rx::ShaderExecutableD3D *pixelExe = NULL;
+        rx::ShaderExecutableD3D *pixelExe = nullptr;
         gl::Error error = programD3D->getPixelExecutableForFramebuffer(data.state->getDrawFramebuffer(), &pixelExe);
         if (error.isError())
         {
             return error;
         }
 
-        // Skip this step if we're doing rasterizer discard.
-        if (pixelExe && !data.state->getRasterizerState().rasterizerDiscard && usesPointSize)
+        // Skip the draw call if rasterizer discard is enabled (or no fragment shader).
+        if (!pixelExe || data.state->getRasterizerState().rasterizerDiscard)
         {
-            ID3D11PixelShader *pixelShader = GetAs<ShaderExecutable11>(pixelExe)->getPixelShader();
-            ASSERT(reinterpret_cast<uintptr_t>(pixelShader) == mAppliedPixelShader);
-            mDeviceContext->PSSetShader(pixelShader, NULL, 0);
-
-            // Retrieve the point sprite geometry shader
-            rx::ShaderExecutableD3D *geometryExe = nullptr;
-
-            error = programD3D->getGeometryExecutableForPrimitiveType(data, mode, &geometryExe,
-                                                                      nullptr);
-            if (error.isError())
-            {
-                return error;
-            }
-
-            ID3D11GeometryShader *geometryShader = (geometryExe ? GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader() : NULL);
-            mAppliedGeometryShader = reinterpret_cast<uintptr_t>(geometryShader);
-            ASSERT(geometryShader);
-            mDeviceContext->GSSetShader(geometryShader, NULL, 0);
-
-            if (instances > 0)
-            {
-                mDeviceContext->DrawInstanced(count, instances, 0, 0);
-            }
-            else
-            {
-                mDeviceContext->Draw(count, 0);
-            }
+            return gl::Error(GL_NO_ERROR);
         }
 
-        return gl::Error(GL_NO_ERROR);
-    }
-    else if (mode == GL_LINE_LOOP)
-    {
-        return drawLineLoop(count, GL_NONE, NULL, 0, NULL);
-    }
-    else if (mode == GL_TRIANGLE_FAN)
-    {
-        return drawTriangleFan(count, GL_NONE, NULL, 0, NULL, instances);
-    }
-    else if (instances > 0)
-    {
-        mDeviceContext->DrawInstanced(count, instances, 0, 0);
-        return gl::Error(GL_NO_ERROR);
-    }
-    else
-    {
-        // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
-        // Emulating instanced point sprites for FL9_3 requires the topology to be
-        // D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST and DrawIndexedInstanced is called instead.
-        if (mode == GL_POINTS && useInstancedPointSpriteEmulation)
+        ID3D11PixelShader *pixelShader = GetAs<ShaderExecutable11>(pixelExe)->getPixelShader();
+        ASSERT(reinterpret_cast<uintptr_t>(pixelShader) == mAppliedPixelShader);
+        mDeviceContext->PSSetShader(pixelShader, NULL, 0);
+
+        // Retrieve the geometry shader.
+        rx::ShaderExecutableD3D *geometryExe = nullptr;
+        error =
+            programD3D->getGeometryExecutableForPrimitiveType(data, mode, &geometryExe, nullptr);
+        if (error.isError())
         {
-            mDeviceContext->DrawIndexedInstanced(6, count, 0, 0, 0);
+            return error;
+        }
+
+        ID3D11GeometryShader *geometryShader =
+            (geometryExe ? GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader() : NULL);
+        mAppliedGeometryShader = reinterpret_cast<uintptr_t>(geometryShader);
+        ASSERT(geometryShader);
+        mDeviceContext->GSSetShader(geometryShader, NULL, 0);
+
+        if (instances > 0)
+        {
+            mDeviceContext->DrawInstanced(count, instances, 0, 0);
         }
         else
         {
@@ -1765,6 +1735,38 @@ gl::Error Renderer11::drawArraysImpl(const gl::Data &data,
         }
         return gl::Error(GL_NO_ERROR);
     }
+
+    if (mode == GL_LINE_LOOP)
+    {
+        return drawLineLoop(count, GL_NONE, NULL, 0, NULL);
+    }
+
+    if (mode == GL_TRIANGLE_FAN)
+    {
+        return drawTriangleFan(count, GL_NONE, NULL, 0, NULL, instances);
+    }
+
+    if (instances > 0)
+    {
+        mDeviceContext->DrawInstanced(count, instances, 0, 0);
+        return gl::Error(GL_NO_ERROR);
+    }
+
+    bool useInstancedPointSpriteEmulation =
+        programD3D->usesPointSize() && getWorkarounds().useInstancedPointSpriteEmulation;
+
+    // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
+    // Emulating instanced point sprites for FL9_3 requires the topology to be
+    // D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST and DrawIndexedInstanced is called instead.
+    if (mode == GL_POINTS && useInstancedPointSpriteEmulation)
+    {
+        mDeviceContext->DrawIndexedInstanced(6, count, 0, 0, 0);
+    }
+    else
+    {
+        mDeviceContext->Draw(count, 0);
+    }
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error Renderer11::drawElementsImpl(GLenum mode,
@@ -2134,6 +2136,7 @@ gl::Error Renderer11::applyShadersImpl(const gl::Data &data, GLenum drawMode)
 }
 
 gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
+                                    GLenum drawMode,
                                     const std::vector<D3DUniform *> &uniformArray)
 {
     unsigned int totalRegisterCountVS = 0;
@@ -2293,7 +2296,7 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
     }
 
     // GSSetConstantBuffers triggers device removal on 9_3, so we should only call it if necessary
-    if (programD3D.usesGeometryShader())
+    if (programD3D.usesGeometryShader(drawMode))
     {
         // needed for the point sprite geometry shader
         if (mCurrentGeometryConstantBuffer != mDriverConstantBufferPS)

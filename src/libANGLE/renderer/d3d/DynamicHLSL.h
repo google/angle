@@ -17,6 +17,7 @@
 #include "libANGLE/Constants.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/d3d/RendererD3D.h"
 
 namespace sh
 {
@@ -35,7 +36,6 @@ struct Data;
 
 namespace rx
 {
-class RendererD3D;
 class ShaderD3D;
 
 struct PixelShaderOutputVariable
@@ -116,12 +116,12 @@ class DynamicHLSL : angle::NonCopyable
     struct SemanticInfo;
 
     std::string getVaryingSemantic(bool programUsesPointSize) const;
-    SemanticInfo getSemanticInfo(unsigned int startRegisters,
+    SemanticInfo getSemanticInfo(ShaderType shaderType,
+                                 unsigned int startRegisters,
                                  bool position,
                                  bool fragCoord,
                                  bool pointCoord,
-                                 bool pointSize,
-                                 bool pixelShader) const;
+                                 bool pointSize) const;
     void generateVaryingLinkHLSL(const gl::Caps &caps,
                                  bool programUsesPointSize,
                                  const SemanticInfo &info,

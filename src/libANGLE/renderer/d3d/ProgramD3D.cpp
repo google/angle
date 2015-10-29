@@ -411,6 +411,7 @@ ProgramD3D::ProgramD3D(const gl::Program::Data &data, RendererD3D *renderer)
       mDynamicHLSL(NULL),
       mGeometryExecutables(gl::PRIMITIVE_TYPE_MAX, nullptr),
       mUsesPointSize(false),
+      mUsesFlatInterpolation(false),
       mVertexUniformStorage(NULL),
       mFragmentUniformStorage(NULL),
       mUsedVertexSamplerRange(0),
@@ -432,8 +433,13 @@ bool ProgramD3D::usesPointSpriteEmulation() const
     return mUsesPointSize && mRenderer->getMajorShaderModel() >= 4;
 }
 
-bool ProgramD3D::usesGeometryShader() const
+bool ProgramD3D::usesGeometryShader(GLenum drawMode) const
 {
+    if (drawMode != GL_POINTS)
+    {
+        return mUsesFlatInterpolation;
+    }
+
     return usesPointSpriteEmulation() && !usesInstancedPointSpriteEmulation();
 }
 
@@ -680,6 +686,7 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
                       sizeof(D3DCompilerWorkarounds));
     stream->readBool(&mUsesFragDepth);
     stream->readBool(&mUsesPointSize);
+    stream->readBool(&mUsesFlatInterpolation);
 
     const size_t pixelShaderKeySize = stream->readInt<unsigned int>();
     mPixelShaderKey.resize(pixelShaderKeySize);
@@ -882,6 +889,7 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
                        sizeof(D3DCompilerWorkarounds));
     stream->writeInt(mUsesFragDepth);
     stream->writeInt(mUsesPointSize);
+    stream->writeInt(mUsesFlatInterpolation);
 
     const std::vector<PixelShaderOutputVariable> &pixelShaderKey = mPixelShaderKey;
     stream->writeInt(pixelShaderKey.size());
@@ -1083,6 +1091,18 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Data &data
                                                             ShaderExecutableD3D **outExecutable,
                                                             gl::InfoLog *infoLog)
 {
+    if (outExecutable)
+    {
+        *outExecutable = nullptr;
+    }
+
+    // We only uses a geometry shader for point sprite emulation, or for fixing the provoking
+    // vertex problem. Otherwise, return a null shader.
+    if (drawMode != GL_POINTS && !mUsesFlatInterpolation)
+    {
+        return gl::Error(GL_NO_ERROR);
+    }
+
     gl::PrimitiveType geometryShaderType = GetGeometryShaderTypeFromDrawMode(drawMode);
 
     if (mGeometryExecutables[geometryShaderType] != nullptr)
@@ -1141,7 +1161,7 @@ LinkResult ProgramD3D::compileProgramExecutables(const gl::Data &data, gl::InfoL
     }
 
     // Auto-generate the geometry shader here, if we expect to be using point rendering in D3D11.
-    if (usesGeometryShader())
+    if (usesGeometryShader(GL_POINTS))
     {
         getGeometryExecutableForPrimitiveType(data, GL_POINTS, nullptr, &infoLog);
     }
@@ -1171,8 +1191,9 @@ LinkResult ProgramD3D::compileProgramExecutables(const gl::Data &data, gl::InfoL
     }
 #endif
 
-    bool linkSuccess = (defaultVertexExecutable && defaultPixelExecutable &&
-                        (!usesGeometryShader() || mGeometryExecutables[gl::PRIMITIVE_POINTS]));
+    bool linkSuccess =
+        (defaultVertexExecutable && defaultPixelExecutable &&
+         (!usesGeometryShader(GL_POINTS) || mGeometryExecutables[gl::PRIMITIVE_POINTS]));
     return LinkResult(linkSuccess, gl::Error(GL_NO_ERROR));
 }
 
@@ -1231,6 +1252,16 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
     }
 
     mUsesPointSize = vertexShaderD3D->usesPointSize();
+
+    // Cache if we use flat shading
+    for (const auto &varying : packedVaryings)
+    {
+        if (varying.varying->interpolation == sh::INTERPOLATION_FLAT)
+        {
+            mUsesFlatInterpolation = true;
+            break;
+        }
+    }
 
     if (mRenderer->getMajorShaderModel() >= 4)
     {
@@ -1351,11 +1382,11 @@ void ProgramD3D::initializeUniformStorage()
     mFragmentUniformStorage = mRenderer->createUniformStorage(fragmentRegisters * 16u);
 }
 
-gl::Error ProgramD3D::applyUniforms()
+gl::Error ProgramD3D::applyUniforms(GLenum drawMode)
 {
     updateSamplerMapping();
 
-    gl::Error error = mRenderer->applyUniforms(*this, mD3DUniforms);
+    gl::Error error = mRenderer->applyUniforms(*this, drawMode, mD3DUniforms);
     if (error.isError())
     {
         return error;
@@ -1941,6 +1972,7 @@ void ProgramD3D::reset()
     mUsesFragDepth = false;
     mPixelShaderKey.clear();
     mUsesPointSize = false;
+    mUsesFlatInterpolation = false;
 
     SafeDeleteContainer(mD3DUniforms);
     mD3DUniformBlocks.clear();

@@ -99,7 +99,7 @@ class ProgramD3D : public ProgramImpl
 
     bool usesPointSize() const { return mUsesPointSize; }
     bool usesPointSpriteEmulation() const;
-    bool usesGeometryShader() const;
+    bool usesGeometryShader(GLenum drawMode) const;
     bool usesInstancedPointSpriteEmulation() const;
 
     LinkResult load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream);
@@ -126,7 +126,7 @@ class ProgramD3D : public ProgramImpl
                                    sh::BlockMemberInfo *memberInfoOut) const override;
 
     void initializeUniformStorage();
-    gl::Error applyUniforms();
+    gl::Error applyUniforms(GLenum drawMode);
     gl::Error applyUniformBuffers(const gl::Data &data);
     void dirtyAllUniforms();
 
@@ -317,6 +317,7 @@ class ProgramD3D : public ProgramImpl
     std::string mGeometryShaderPreamble;
 
     bool mUsesPointSize;
+    bool mUsesFlatInterpolation;
 
     UniformStorageD3D *mVertexUniformStorage;
     UniformStorageD3D *mFragmentUniformStorage;

@@ -133,6 +133,7 @@ class Renderer11 : public RendererD3D
     virtual bool applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize);
     gl::Error applyRenderTarget(const gl::Framebuffer *frameBuffer) override;
     gl::Error applyUniforms(const ProgramD3D &programD3D,
+                            GLenum drawMode,
                             const std::vector<D3DUniform *> &uniformArray) override;
     virtual gl::Error applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances, SourceIndexData *sourceIndexInfo);
     virtual gl::Error applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo, SourceIndexData *sourceIndexInfo);
@@ -274,8 +275,7 @@ class Renderer11 : public RendererD3D
     gl::Error drawArraysImpl(const gl::Data &data,
                              GLenum mode,
                              GLsizei count,
-                             GLsizei instances,
-                             bool usesPointSize) override;
+                             GLsizei instances) override;
     gl::Error drawElementsImpl(GLenum mode,
                                GLsizei count,
                                GLenum type,

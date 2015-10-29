@@ -1485,8 +1485,7 @@ void Renderer9::applyTransformFeedbackBuffers(const gl::State& state)
 gl::Error Renderer9::drawArraysImpl(const gl::Data &data,
                                     GLenum mode,
                                     GLsizei count,
-                                    GLsizei instances,
-                                    bool usesPointSize)
+                                    GLsizei instances)
 {
     ASSERT(!data.state->isTransformFeedbackActiveUnpaused());
 
@@ -1914,6 +1913,7 @@ gl::Error Renderer9::applyShadersImpl(const gl::Data &data, GLenum /*drawMode*/)
 }
 
 gl::Error Renderer9::applyUniforms(const ProgramD3D &programD3D,
+                                   GLenum /*drawMode*/,
                                    const std::vector<D3DUniform *> &uniformArray)
 {
     for (const D3DUniform *targetUniform : uniformArray)

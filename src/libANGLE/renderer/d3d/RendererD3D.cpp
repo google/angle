@@ -290,7 +290,7 @@ gl::Error RendererD3D::genericDrawArrays(const gl::Data &data,
 
     if (!skipDraw(data, mode))
     {
-        error = drawArraysImpl(data, mode, count, instances, usesPointSize);
+        error = drawArraysImpl(data, mode, count, instances);
         if (error.isError())
         {
             return error;
@@ -448,7 +448,7 @@ gl::Error RendererD3D::applyShaders(const gl::Data &data, GLenum drawMode)
         return error;
     }
 
-    return programD3D->applyUniforms();
+    return programD3D->applyUniforms(drawMode);
 }
 
 // For each Direct3D sampler of either the pixel or vertex stage,
