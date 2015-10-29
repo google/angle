@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "164a6942_12ba0c47",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-29T18:50:22Z",
+      "side": 1,
+      "message": "This is the workaround.",
+      "revId": "5759c2245cfef48796ae6f9857d54b113498b7a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96781971_d96ef7bd",
         "filename": "src/libANGLE/renderer/gl/glx/FBConfigCompatibility.md",
         "patchSetId": 1
@@ -25,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "f64cf55f_b1d4e0aa",
+        "filename": "src/libANGLE/renderer/gl/glx/FBConfigCompatibility.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-29T18:50:22Z",
+      "side": 1,
+      "message": "Yes, see comment on DisplayGLX.cpp",
+      "parentUuid": "96781971_d96ef7bd",
+      "range": {
+        "startLine": 164,
+        "startChar": 19,
+        "endLine": 165,
+        "endChar": 48
+      },
+      "revId": "5759c2245cfef48796ae6f9857d54b113498b7a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d65371fb_704c3005",
         "filename": "src/libANGLE/renderer/gl/glx/FBConfigCompatibility.md",
         "patchSetId": 1
@@ -36,6 +77,30 @@
       "writtenOn": "2015-10-29T14:44:32Z",
       "side": 1,
       "message": "maybe mention that it\u0027s a mesa driver?",
+      "range": {
+        "startLine": 201,
+        "startChar": 12,
+        "endLine": 201,
+        "endChar": 18
+      },
+      "revId": "5759c2245cfef48796ae6f9857d54b113498b7a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7673a594_75c168b5",
+        "filename": "src/libANGLE/renderer/gl/glx/FBConfigCompatibility.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-29T18:50:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d65371fb_704c3005",
       "range": {
         "startLine": 201,
         "startChar": 12,
