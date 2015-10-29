@@ -93,6 +93,30 @@
       "revId": "7bf19c1ed5d43957d8d920963b31d8c38d621373",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7673a594_356e107c",
+        "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-29T17:20:42Z",
+      "side": 1,
+      "message": "At some point we\u0027ll make a presubmit script that enforces \u0027git cl format\u0027 style for all code. In a case like this, the best solution would be to reformat some of the long expressions to temporaries - ie caching getWindow()-\u003egetWidth() as windowWidth or something like that.",
+      "parentUuid": "d6d0d18a_bca499f9",
+      "range": {
+        "startLine": 109,
+        "startChar": 92,
+        "endLine": 109,
+        "endChar": 111
+      },
+      "revId": "7bf19c1ed5d43957d8d920963b31d8c38d621373",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
