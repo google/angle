@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b6d35d95_90153a58",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-10-29T00:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b67fdde5_479feea4",
+      "range": {
+        "startLine": 27,
+        "startChar": 1,
+        "endLine": 28,
+        "endChar": 36
+      },
+      "revId": "fa66427a8b397bbef6f015ea1ec755d47be2054b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "366bed32_a3217ab5",
         "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
         "patchSetId": 13
@@ -36,6 +60,30 @@
       "writtenOn": "2015-10-26T17:56:42Z",
       "side": 1,
       "message": "Use SafeDeleteContainer",
+      "range": {
+        "startLine": 39,
+        "startChar": 9,
+        "endLine": 39,
+        "endChar": 38
+      },
+      "revId": "fa66427a8b397bbef6f015ea1ec755d47be2054b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7621e584_cbf3690c",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-10-29T00:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "366bed32_a3217ab5",
       "range": {
         "startLine": 39,
         "startChar": 9,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "56ab01f0_f578eab1",
+        "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-10-29T00:35:35Z",
+      "side": 1,
+      "message": "It\u0027s used by multiple methods.",
+      "parentUuid": "96d9f971_979a8e3a",
+      "range": {
+        "startLine": 53,
+        "startChar": 17,
+        "endLine": 53,
+        "endChar": 32
+      },
+      "revId": "fa66427a8b397bbef6f015ea1ec755d47be2054b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6a43dcc_bf95770e",
         "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
         "patchSetId": 13
@@ -82,6 +154,30 @@
       "writtenOn": "2015-10-26T17:56:42Z",
       "side": 1,
       "message": "the formatting on these is a bit messy, suggest just avoiding the SHADER_SOURCE macro and using string constants",
+      "range": {
+        "startLine": 66,
+        "startChar": 27,
+        "endLine": 66,
+        "endChar": 40
+      },
+      "revId": "fa66427a8b397bbef6f015ea1ec755d47be2054b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76c565cc_59ce533e",
+        "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-10-29T00:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6a43dcc_bf95770e",
       "range": {
         "startLine": 66,
         "startChar": 27,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "7621e584_6bfef5c8",
+        "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-10-29T00:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76a645d7_1d9a33e0",
+      "range": {
+        "startLine": 87,
+        "startChar": 8,
+        "endLine": 87,
+        "endChar": 12
+      },
+      "revId": "fa66427a8b397bbef6f015ea1ec755d47be2054b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f685d521_29bf2d9b",
         "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
         "patchSetId": 13
@@ -128,6 +248,30 @@
       "writtenOn": "2015-10-26T17:56:42Z",
       "side": 1,
       "message": "can you clean this up using some local variables?",
+      "range": {
+        "startLine": 91,
+        "startChar": 12,
+        "endLine": 108,
+        "endChar": 59
+      },
+      "revId": "fa66427a8b397bbef6f015ea1ec755d47be2054b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96cad9dc_bae779dc",
+        "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-10-29T00:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f685d521_29bf2d9b",
       "range": {
         "startLine": 91,
         "startChar": 12,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "b6d35d95_f0c3d621",
+        "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-10-29T00:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f685d521_49c4612b",
+      "range": {
+        "startLine": 117,
+        "startChar": 8,
+        "endLine": 117,
+        "endChar": 35
+      },
+      "revId": "fa66427a8b397bbef6f015ea1ec755d47be2054b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96abb99d_de6285cc",
         "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
         "patchSetId": 13
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "f6d955b5_b8430585",
+        "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-10-29T00:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96abb99d_de6285cc",
+      "range": {
+        "startLine": 127,
+        "startChar": 27,
+        "endLine": 127,
+        "endChar": 36
+      },
+      "revId": "fa66427a8b397bbef6f015ea1ec755d47be2054b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96abb99d_fe5d410e",
         "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
         "patchSetId": 13
@@ -197,6 +389,30 @@
       "writtenOn": "2015-10-26T17:56:42Z",
       "side": 1,
       "message": "use ANGLE\u0027s ArraySize",
+      "range": {
+        "startLine": 143,
+        "startChar": 31,
+        "endLine": 143,
+        "endChar": 40
+      },
+      "revId": "fa66427a8b397bbef6f015ea1ec755d47be2054b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6d35d95_10ab0a5d",
+        "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-10-29T00:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96abb99d_fe5d410e",
       "range": {
         "startLine": 143,
         "startChar": 31,
