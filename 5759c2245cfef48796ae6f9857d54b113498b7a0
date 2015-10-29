@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b656fdeb_b29a1e6c",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-29T20:34:27Z",
+      "side": 1,
+      "message": "Hum, OK I was confused by the CL description. Does this only affect pbuffers or does this affect depth stencil surfaces? Can you check if the description is accurate?",
+      "parentUuid": "164a6942_12ba0c47",
+      "revId": "5759c2245cfef48796ae6f9857d54b113498b7a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96781971_d96ef7bd",
         "filename": "src/libANGLE/renderer/gl/glx/FBConfigCompatibility.md",
         "patchSetId": 1
