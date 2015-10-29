@@ -115,20 +115,24 @@ class DynamicHLSL : angle::NonCopyable
 
     struct SemanticInfo;
 
-    std::string getVaryingSemantic(bool pointSize) const;
+    std::string getVaryingSemantic(bool programUsesPointSize) const;
     SemanticInfo getSemanticInfo(unsigned int startRegisters,
                                  bool position,
                                  bool fragCoord,
                                  bool pointCoord,
                                  bool pointSize,
                                  bool pixelShader) const;
-    std::string generateVaryingLinkHLSL(const SemanticInfo &info,
-                                        const std::string &varyingHLSL) const;
-    std::string generateVaryingHLSL(const gl::Caps &caps,
-                                    const std::vector<PackedVarying> &varyings,
-                                    bool shaderUsesPointSize) const;
+    void generateVaryingLinkHLSL(const gl::Caps &caps,
+                                 bool programUsesPointSize,
+                                 const SemanticInfo &info,
+                                 const std::vector<PackedVarying> &packedVaryings,
+                                 std::stringstream &linkStream) const;
+    void generateVaryingHLSL(const gl::Caps &caps,
+                             const std::vector<PackedVarying> &varyings,
+                             bool programUsesPointSize,
+                             std::stringstream &hlslStream) const;
     void storeUserLinkedVaryings(const std::vector<PackedVarying> &packedVaryings,
-                                 bool shaderUsesPointSize,
+                                 bool programUsesPointSize,
                                  std::vector<gl::LinkedVarying> *linkedVaryings) const;
     void storeBuiltinLinkedVaryings(const SemanticInfo &info,
                                     std::vector<gl::LinkedVarying> *linkedVaryings) const;
