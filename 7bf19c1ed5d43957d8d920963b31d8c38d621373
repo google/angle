@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6619dbd_1de4d393",
+        "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-29T12:35:06Z",
+      "side": 1,
+      "message": "nit: you can leave off the inline keyword outside of header files",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 6
+      },
+      "revId": "7bf19c1ed5d43957d8d920963b31d8c38d621373",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "164a6942_9246fc3b",
+        "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-29T12:35:06Z",
+      "side": 1,
+      "message": "nit: did you use git cl format? I think it\u0027ll wrap these lines",
+      "range": {
+        "startLine": 109,
+        "startChar": 92,
+        "endLine": 109,
+        "endChar": 111
+      },
+      "revId": "7bf19c1ed5d43957d8d920963b31d8c38d621373",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
