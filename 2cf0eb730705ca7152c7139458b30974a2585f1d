@@ -84,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "b656fdeb_8f17b5e6",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-29T14:42:11Z",
+      "side": 1,
+      "message": "I see, thanks!",
+      "parentUuid": "b656fdeb_8faed506",
+      "revId": "2cf0eb730705ca7152c7139458b30974a2585f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f66dd57e_c97e519e",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 3
@@ -113,6 +131,24 @@
       "side": 1,
       "message": "The alternative is to serialize and deserialize the packed varyings. I think the varyings may be of smaller size, but the string simplifies the code, so I chose the less efficient but simpler choice in the trade-off. I\u0027m willing to consider other options though.",
       "parentUuid": "f66dd57e_c97e519e",
+      "revId": "2cf0eb730705ca7152c7139458b30974a2585f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b656fdeb_af1c7909",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-10-29T14:42:11Z",
+      "side": 1,
+      "message": "I guess we  could just come back to it if serialization speed starts to be a problem.",
+      "parentUuid": "b656fdeb_afb3996d",
       "revId": "2cf0eb730705ca7152c7139458b30974a2585f1d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
