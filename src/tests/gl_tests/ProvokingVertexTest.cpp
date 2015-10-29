@@ -200,13 +200,6 @@ TEST_P(ProvokingVertexTest, FlatLine)
 // Test drawing a simple triangle strip with flat shading, and different valued vertices.
 TEST_P(ProvokingVertexTest, FlatTriStrip)
 {
-    // TODO(jmadill): Implement on the D3D back-end.
-    if (isD3D11())
-    {
-        std::cout << "Test disabled on D3D11." << std::endl;
-        return;
-    }
-
     GLint vertexData[]     = {1, 2, 3, 4, 5, 6};
     GLfloat positionData[] = {-1.0f, -1.0f, -1.0f, 1.0f,  0.0f, -1.0f,
                               0.0f,  1.0f,  1.0f,  -1.0f, 1.0f, 1.0f};

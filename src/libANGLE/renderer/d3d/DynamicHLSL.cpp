@@ -1436,17 +1436,30 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(gl::PrimitiveType primitiveT
 
     shaderStream << preambleString << "\n"
                  << "[maxvertexcount(" << maxVertexOutput << ")]\n"
-                 << "void main(" << inputPT << " GS_INPUT input[" << inputSize << "],"
-                                                                                  " inout "
-                 << outputPT << "Stream<GS_OUTPUT> outStream)\n"
+                 << "void main(" << inputPT << " GS_INPUT input[" << inputSize << "], ";
+
+    if (primitiveType == PRIMITIVE_TRIANGLE_STRIP)
+    {
+        shaderStream << "uint primitiveID : SV_PrimitiveID, ";
+    }
+
+    shaderStream << " inout " << outputPT << "Stream<GS_OUTPUT> outStream)\n"
                  << "{\n"
                  << "    GS_OUTPUT output = (GS_OUTPUT)0;\n";
 
-    int flatVertexIndex = inputSize - 1;
+    if (primitiveType == PRIMITIVE_TRIANGLE_STRIP)
+    {
+        shaderStream << "    uint lastVertexIndex = (primitiveID % 2 == 0 ? 2 : 1);\n";
+    }
+    else
+    {
+        shaderStream << "    uint lastVertexIndex = " << (inputSize - 1) << ";\n";
+    }
+
     for (int vertexIndex = 0; vertexIndex < inputSize; ++vertexIndex)
     {
-        shaderStream << "    copyVertex(output, input[" << vertexIndex << "], input["
-                     << flatVertexIndex << "]);\n";
+        shaderStream << "    copyVertex(output, input[" << vertexIndex
+                     << "], input[lastVertexIndex]);\n";
 
         if (!pointSprites)
         {
