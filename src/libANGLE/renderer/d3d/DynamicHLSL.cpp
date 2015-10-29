@@ -1192,108 +1192,167 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
 }
 
 std::string DynamicHLSL::generateGeometryShaderHLSL(
+    gl::PrimitiveType primitiveType,
     const gl::Data &data,
+    const gl::Program::Data &programData,
     int registers,
-    const ShaderD3D *fragmentShader,
-    const std::vector<PackedVarying> &packedVaryings) const
-{
-    // for now we only handle point sprite emulation
-    ASSERT(mRenderer->getMajorShaderModel() >= 4);
-    return generatePointSpriteHLSL(data, registers, fragmentShader, packedVaryings);
-}
-
-std::string DynamicHLSL::generatePointSpriteHLSL(
-    const gl::Data &data,
-    int registers,
-    const ShaderD3D *fragmentShader,
     const std::vector<PackedVarying> &packedVaryings) const
 {
     ASSERT(registers >= 0);
     ASSERT(mRenderer->getMajorShaderModel() >= 4);
 
+    const ShaderD3D *vertexShader   = GetImplAs<ShaderD3D>(programData.getAttachedVertexShader());
+    const ShaderD3D *fragmentShader = GetImplAs<ShaderD3D>(programData.getAttachedFragmentShader());
+
     bool usesFragCoord  = fragmentShader->usesFragCoord();
     bool usesPointCoord = fragmentShader->usesPointCoord();
+    bool usesPointSize  = vertexShader->usesPointSize();
+
+    const SemanticInfo &inSemantics =
+        getSemanticInfo(registers, true, usesFragCoord, false, usesPointSize, false);
+    const SemanticInfo &outSemantics =
+        getSemanticInfo(registers, true, usesFragCoord, usesPointCoord, usesPointSize, false);
 
     std::stringstream shaderStream;
 
-    const SemanticInfo &inSemantics =
-        getSemanticInfo(registers, true, usesFragCoord, false, true, false);
-    const SemanticInfo &outSemantics =
-        getSemanticInfo(registers, true, usesFragCoord, usesPointCoord, true, false);
+    const bool pointSprites = (primitiveType == PRIMITIVE_POINTS);
 
-    // If we're generating the geometry shader, we assume the vertex shader uses point size.
-    std::string varyingHLSL = generateVaryingHLSL(*data.caps, packedVaryings, true);
+    std::string varyingHLSL = generateVaryingHLSL(*data.caps, packedVaryings, usesPointSize);
     std::string inLinkHLSL  = generateVaryingLinkHLSL(inSemantics, varyingHLSL);
     std::string outLinkHLSL = generateVaryingLinkHLSL(outSemantics, varyingHLSL);
 
-    shaderStream
-        << "uniform float4 dx_ViewCoords : register(c1);\n"
-        << "\n"
-        << "struct GS_INPUT\n" << inLinkHLSL << "\n"
-        << "struct GS_OUTPUT\n" << outLinkHLSL << "\n"
-        << "\n"
-        << "static float2 pointSpriteCorners[] = \n"
-        << "{\n"
-        << "    float2( 0.5f, -0.5f),\n"
-        << "    float2( 0.5f,  0.5f),\n"
-        << "    float2(-0.5f, -0.5f),\n"
-        << "    float2(-0.5f,  0.5f)\n"
-        << "};\n"
-        << "\n"
-        << "static float2 pointSpriteTexcoords[] = \n"
-        << "{\n"
-        << "    float2(1.0f, 1.0f),\n"
-        << "    float2(1.0f, 0.0f),\n"
-        << "    float2(0.0f, 1.0f),\n"
-        << "    float2(0.0f, 0.0f)\n"
-        << "};\n"
-        << "\n"
-        << "static float minPointSize = " << static_cast<int>(data.caps->minAliasedPointSize)
-        << ".0f;\n"
-        << "static float maxPointSize = " << static_cast<int>(data.caps->maxAliasedPointSize)
-        << ".0f;\n"
-        << "\n"
-        << "[maxvertexcount(4)]\n"
-        << "void main(point GS_INPUT input[1], inout TriangleStream<GS_OUTPUT> outStream)\n"
-        << "{\n"
-        << "    GS_OUTPUT output = (GS_OUTPUT)0;\n"
-        << "    output.gl_Position = input[0].gl_Position;\n"
-        << "    output.gl_PointSize = input[0].gl_PointSize;\n";
+    const char *inputPT  = nullptr;
+    const char *outputPT = nullptr;
+    int inputSize        = 0;
+    int maxVertexOutput  = 0;
 
-    for (int r = 0; r < registers; r++)
+    switch (primitiveType)
     {
-        shaderStream << "    output.v" << r << " = input[0].v" << r << ";\n";
+        case PRIMITIVE_POINTS:
+            inputPT         = "point";
+            outputPT        = "Triangle";
+            inputSize       = 1;
+            maxVertexOutput = 4;
+            break;
+
+        case PRIMITIVE_LINES:
+        case PRIMITIVE_LINE_STRIP:
+        case PRIMITIVE_LINE_LOOP:
+            inputPT         = "line";
+            outputPT        = "Line";
+            inputSize       = 2;
+            maxVertexOutput = 2;
+            break;
+
+        case PRIMITIVE_TRIANGLES:
+        case PRIMITIVE_TRIANGLE_STRIP:
+        case PRIMITIVE_TRIANGLE_FAN:
+            inputPT         = "triangle";
+            outputPT        = "Triangle";
+            inputSize       = 3;
+            maxVertexOutput = 3;
+            break;
+
+        default:
+            UNREACHABLE();
+            break;
     }
 
-    if (usesFragCoord)
+    if (pointSprites)
     {
-        shaderStream << "    output.gl_FragCoord = input[0].gl_FragCoord;\n";
+        shaderStream << "uniform float4 dx_ViewCoords : register(c1);\n"
+                        "\n"
+                        "static float2 pointSpriteCorners[] = \n"
+                        "{\n"
+                        "    float2( 0.5f, -0.5f),\n"
+                        "    float2( 0.5f,  0.5f),\n"
+                        "    float2(-0.5f, -0.5f),\n"
+                        "    float2(-0.5f,  0.5f)\n"
+                        "};\n"
+                        "\n"
+                        "static float2 pointSpriteTexcoords[] = \n"
+                        "{\n"
+                        "    float2(1.0f, 1.0f),\n"
+                        "    float2(1.0f, 0.0f),\n"
+                        "    float2(0.0f, 1.0f),\n"
+                        "    float2(0.0f, 0.0f)\n"
+                        "};\n"
+                        "\n"
+                        "static float minPointSize = "
+                     << static_cast<int>(data.caps->minAliasedPointSize)
+                     << ".0f;\n"
+                        "static float maxPointSize = "
+                     << static_cast<int>(data.caps->maxAliasedPointSize) << ".0f;\n"
+                     << "\n";
     }
 
-    shaderStream
-        << "    \n"
-        << "    float gl_PointSize = clamp(input[0].gl_PointSize, minPointSize, maxPointSize);\n"
-        << "    float4 dx_Position = input[0].dx_Position;\n"
-        << "    float2 viewportScale = float2(1.0f / dx_ViewCoords.x, 1.0f / dx_ViewCoords.y) * "
-           "dx_Position.w;\n";
+    shaderStream << "struct GS_INPUT\n" << inLinkHLSL << "\n"
+                 << "struct GS_OUTPUT\n" << outLinkHLSL << "\n"
+                 << "\n"
+                 << "[maxvertexcount(" << maxVertexOutput << ")]\n"
+                 << "void main(" << inputPT << " GS_INPUT input[" << inputSize << "],"
+                                                                                  " inout "
+                 << outputPT << "Stream<GS_OUTPUT> outStream)\n"
+                 << "{\n"
+                 << "    GS_OUTPUT output = (GS_OUTPUT)0;\n";
 
-    for (int corner = 0; corner < 4; corner++)
+    for (int vid = 0; vid < inputSize; ++vid)
     {
-        shaderStream << "    \n"
-                     << "    output.dx_Position = dx_Position + float4(pointSpriteCorners["
-                     << corner << "] * viewportScale * gl_PointSize, 0.0f, 0.0f);\n";
+        shaderStream << "    output.gl_Position = input[" << vid << "].gl_Position;\n";
 
-        if (usesPointCoord)
+        if (usesPointSize)
         {
-            shaderStream << "    output.gl_PointCoord = pointSpriteTexcoords[" << corner << "];\n";
+            shaderStream << "    output.gl_PointSize = input[" << vid << "].gl_PointSize;\n";
         }
 
-        shaderStream << "    outStream.Append(output);\n";
+        for (int r = 0; r < registers; ++r)
+        {
+            shaderStream << "    output.v" << r << " = input[" << vid << "].v" << r << ";\n";
+        }
+
+        if (usesFragCoord)
+        {
+            shaderStream << "    output.gl_FragCoord = input[" << vid << "].gl_FragCoord;\n";
+        }
+
+        if (!pointSprites)
+        {
+            ASSERT(inputSize == maxVertexOutput);
+            shaderStream << "    output.dx_Position = input[" << vid << "].dx_Position;\n"
+                         << "    outStream.Append(output);\n";
+        }
+    }
+
+    if (pointSprites)
+    {
+        ASSERT(usesPointSize);
+
+        shaderStream << "\n"
+                        "    float4 dx_Position = input[0].dx_Position;\n"
+                        "    float gl_PointSize = clamp(input[0].gl_PointSize, minPointSize, "
+                        "maxPointSize);\n"
+                        "    float2 viewportScale = float2(1.0f / dx_ViewCoords.x, 1.0f / "
+                        "dx_ViewCoords.y) * dx_Position.w;\n";
+
+        for (int corner = 0; corner < 4; corner++)
+        {
+            shaderStream << "\n"
+                            "    output.dx_Position = dx_Position + float4(pointSpriteCorners["
+                         << corner << "] * viewportScale * gl_PointSize, 0.0f, 0.0f);\n";
+
+            if (usesPointCoord)
+            {
+                shaderStream << "    output.gl_PointCoord = pointSpriteTexcoords[" << corner
+                             << "];\n";
+            }
+
+            shaderStream << "    outStream.Append(output);\n";
+        }
     }
 
     shaderStream << "    \n"
-                 << "    outStream.RestartStrip();\n"
-                 << "}\n";
+                    "    outStream.RestartStrip();\n"
+                    "}\n";
 
     return shaderStream.str();
 }

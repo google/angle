@@ -35,7 +35,7 @@ class ShaderD3D : public ShaderImpl
     void uncompile();
     unsigned int getUniformRegister(const std::string &uniformName) const;
     unsigned int getInterfaceBlockRegister(const std::string &blockName) const;
-    void appendDebugInfo(const std::string &info) { mDebugInfo += info; }
+    void appendDebugInfo(const std::string &info) const { mDebugInfo += info; }
 
     void generateWorkarounds(D3DCompilerWorkarounds *workarounds) const;
 
@@ -68,7 +68,7 @@ class ShaderD3D : public ShaderImpl
     bool mRequiresIEEEStrictCompiling;
 
     ShShaderOutput mCompilerOutputType;
-    std::string mDebugInfo;
+    mutable std::string mDebugInfo;
     std::map<std::string, unsigned int> mUniformRegisterMap;
     std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;
 };

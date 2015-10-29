@@ -1039,8 +1039,6 @@ LinkResult ProgramD3D::compileProgramExecutables(const gl::Data &data,
                                                  int registers,
                                                  const std::vector<PackedVarying> &packedVaryings)
 {
-    const ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(mData.getAttachedFragmentShader());
-
     const gl::InputLayout &defaultInputLayout =
         GetDefaultInputLayoutFromShader(mData.getAttachedVertexShader());
     ShaderExecutableD3D *defaultVertexExecutable = NULL;
@@ -1063,7 +1061,7 @@ LinkResult ProgramD3D::compileProgramExecutables(const gl::Data &data,
     if (usesGeometryShader())
     {
         std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(
-            data, registers, fragmentShaderD3D, packedVaryings);
+            gl::PRIMITIVE_POINTS, data, mData, registers, packedVaryings);
 
         error = mRenderer->compileToExecutable(
             infoLog, geometryHLSL, SHADER_GEOMETRY, mTransformFeedbackLinkedVaryings,
@@ -1077,7 +1075,6 @@ LinkResult ProgramD3D::compileProgramExecutables(const gl::Data &data,
 
 #if ANGLE_SHADER_DEBUG_INFO == ANGLE_ENABLED
     const ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(mData.getAttachedVertexShader());
-
     if (usesGeometryShader() && mGeometryExecutable)
     {
         // Geometry shaders are currently only used internally, so there is no corresponding shader
@@ -1095,6 +1092,8 @@ LinkResult ProgramD3D::compileProgramExecutables(const gl::Data &data,
 
     if (defaultPixelExecutable)
     {
+        const ShaderD3D *fragmentShaderD3D =
+            GetImplAs<ShaderD3D>(mData.getAttachedFragmentShader());
         fragmentShaderD3D->appendDebugInfo(defaultPixelExecutable->getDebugInfo());
     }
 #endif
