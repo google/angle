@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "366dadb4_f39af03a",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-29T12:43:18Z",
+      "side": 0,
+      "message": "This entry point is defined in EGL_EXT_device_query. Until we have another extension we\u0027ll need to keep it as defined as such, and leave this check in. \n\nhttps://www.khronos.org/registry/egl/extensions/EXT/EGL_EXT_device_query.txt",
+      "range": {
+        "startLine": 302,
+        "startChar": 0,
+        "endLine": 306,
+        "endChar": 5
+      },
+      "revId": "60ad73dcd80b8f4a5e1a23db6f94d8435772bb35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

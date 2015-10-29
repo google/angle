@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d65e11fd_98bb951e",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-29T12:43:18Z",
+      "side": 1,
+      "message": "nit: just SafeDelete. (SafeDelete does exactly the null check/null assign)",
+      "range": {
+        "startLine": 62,
+        "startChar": 8,
+        "endLine": 62,
+        "endChar": 18
+      },
+      "revId": "ccf204b0ffbe0d9a096300ee50acff0922882864",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "164a6942_b24b0043",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-29T12:43:18Z",
+      "side": 1,
+      "message": "just to keep the ownership and encapsulation as tiny as possible, I\u0027d suggest making mEGLDevice private, and passing in a destination pointer in initializeEGLDevice. This way we only deal with \u0027mEGLDevice\u0027 in RendererD3D.cpp.",
+      "range": {
+        "startLine": 246,
+        "startChar": 23,
+        "endLine": 246,
+        "endChar": 42
+      },
+      "revId": "ccf204b0ffbe0d9a096300ee50acff0922882864",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
