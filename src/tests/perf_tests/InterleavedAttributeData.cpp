@@ -176,7 +176,7 @@ void InterleavedAttributeDataBenchmark::drawBenchmark()
 
             // But bind the color data from the other buffer.
             glBindBuffer(GL_ARRAY_BUFFER,
-                         mPositionColorBuffer[(i + 1) % _countof(mPositionColorBuffer)]);
+                         mPositionColorBuffer[(i + 1) % ArraySize(mPositionColorBuffer)]);
             glEnableVertexAttribArray(colorLocation);
             glVertexAttribPointer(colorLocation, 3, GL_UNSIGNED_BYTE, GL_TRUE,
                                   static_cast<GLsizei>(mBytesPerSprite),
