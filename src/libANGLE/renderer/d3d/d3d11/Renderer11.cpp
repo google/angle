@@ -4145,14 +4145,20 @@ gl::Error Renderer11::clearTextures(gl::SamplerType samplerType, size_t rangeSta
     return gl::Error(GL_NO_ERROR);
 }
 
-egl::Error Renderer11::initializeEGLDevice(DeviceD3D **outDevice)
+egl::Error Renderer11::createEGLDevice(DeviceD3D **outDevice)
 {
-    if (*outDevice == nullptr)
+    ASSERT(mDevice != nullptr);
+    DeviceD3D *device = new DeviceD3D();
+    egl::Error error =
+        device->initialize(reinterpret_cast<void *>(mDevice), EGL_D3D11_DEVICE_ANGLE, EGL_FALSE);
+
+    if (error.isError())
     {
-        ASSERT(mDevice != nullptr);
-        *outDevice = new DeviceD3D(reinterpret_cast<void *>(mDevice), EGL_D3D11_DEVICE_ANGLE);
+        SafeDelete(device);
+        return error;
     }
 
+    *outDevice = device;
     return egl::Error(EGL_SUCCESS);
 }
 }

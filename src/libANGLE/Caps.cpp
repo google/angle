@@ -639,6 +639,8 @@ ClientExtensions::ClientExtensions()
       platformANGLE(false),
       platformANGLED3D(false),
       platformANGLEOpenGL(false),
+      deviceCreation(false),
+      deviceCreationD3D11(false),
       clientGetAllProcAddresses(false)
 {
 }
@@ -654,6 +656,8 @@ std::vector<std::string> ClientExtensions::getStrings() const
     InsertExtensionString("EGL_ANGLE_platform_angle",              platformANGLE,             &extensionStrings);
     InsertExtensionString("EGL_ANGLE_platform_angle_d3d",          platformANGLED3D,          &extensionStrings);
     InsertExtensionString("EGL_ANGLE_platform_angle_opengl",       platformANGLEOpenGL,       &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_device_creation",             deviceCreation,            &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_device_creation_d3d11",       deviceCreationD3D11,       &extensionStrings);
     InsertExtensionString("EGL_KHR_client_get_all_proc_addresses", clientGetAllProcAddresses, &extensionStrings);
     // clang-format on
 
