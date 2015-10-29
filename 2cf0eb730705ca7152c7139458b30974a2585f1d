@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "96781971_79a7a37e",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-29T14:39:36Z",
+      "side": 1,
+      "message": "Done, also tried to propagate this renaming through ProgramD3D.",
+      "parentUuid": "164a6942_b2314028",
+      "range": {
+        "startLine": 263,
+        "startChar": 45,
+        "endLine": 263,
+        "endChar": 57
+      },
+      "revId": "2cf0eb730705ca7152c7139458b30974a2585f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d664519c_882617ee",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 3
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "b656fdeb_8faed506",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-29T14:39:36Z",
+      "side": 1,
+      "message": "It can appear in the \"outSemantics \u003d getSemanticInfo(..., usesPointCoord, ..) - the test can evaluate true.",
+      "parentUuid": "d664519c_882617ee",
+      "revId": "2cf0eb730705ca7152c7139458b30974a2585f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f66dd57e_c97e519e",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 3
@@ -53,6 +95,24 @@
       "writtenOn": "2015-10-28T14:45:23Z",
       "side": 1,
       "message": "Why do we save the preamble on disk, can\u0027t it be fully recreate from other data?",
+      "revId": "2cf0eb730705ca7152c7139458b30974a2585f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b656fdeb_afb3996d",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-29T14:39:36Z",
+      "side": 1,
+      "message": "The alternative is to serialize and deserialize the packed varyings. I think the varyings may be of smaller size, but the string simplifies the code, so I chose the less efficient but simpler choice in the trade-off. I\u0027m willing to consider other options though.",
+      "parentUuid": "f66dd57e_c97e519e",
       "revId": "2cf0eb730705ca7152c7139458b30974a2585f1d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "56722192_347ff0de",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1937,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-29T14:39:36Z",
+      "side": 1,
+      "message": "I don\u0027t want it to call clear(). (Resets the size to zero D: )",
+      "parentUuid": "d65371fb_50948c3c",
+      "range": {
+        "startLine": 1934,
+        "startChar": 4,
+        "endLine": 1937,
+        "endChar": 5
+      },
+      "revId": "2cf0eb730705ca7152c7139458b30974a2585f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d664519c_a82bdbb4",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
         "patchSetId": 3
@@ -93,6 +177,24 @@
       "writtenOn": "2015-10-28T14:45:23Z",
       "side": 1,
       "message": "I feel this comment isn\u0027t useful as it isn\u0027t clear (even when reading the CL) why this is necessary and what dynamic GSs are. How about something like \"Precomputed interface and code to ensure for the geometry shader compatibility\" (I\u0027m not sure that it is for though)?",
+      "revId": "2cf0eb730705ca7152c7139458b30974a2585f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6619dbd_5dee4b73",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-29T14:39:36Z",
+      "side": 1,
+      "message": "Done, expanded the comment.",
+      "parentUuid": "d664519c_a82bdbb4",
       "revId": "2cf0eb730705ca7152c7139458b30974a2585f1d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
