@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b656fdeb_f21106d9",
+        "filename": "src/compiler/translator/RemoveDynamicIndexing.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-10-30T12:21:56Z",
+      "side": 1,
+      "message": "this cast format isn\u0027t supported by Clang for some reason\n\n..\\..\\third_party\\angle\\src\\compiler\\translator\\RemoveDynamicIndexing.cpp(128,43) :  error: expected \u0027(\u0027 for function-style cast or type construction\n        fieldType.setPrimarySize(unsigned char(indexedType.getRows()));\n                                 ~~~~~~~~ ^",
+      "range": {
+        "startLine": 128,
+        "startChar": 32,
+        "endLine": 128,
+        "endChar": 71
+      },
+      "revId": "7535b761dd4740c8e76b888d7c58c7cbeefd2083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
