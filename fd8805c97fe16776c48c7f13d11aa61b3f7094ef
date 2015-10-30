@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f64cf55f_34da9e4a",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-30T15:44:19Z",
+      "side": 1,
+      "message": "nit: could also be const.",
+      "revId": "fd8805c97fe16776c48c7f13d11aa61b3f7094ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6619dbd_0683a49b",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-30T15:44:19Z",
+      "side": 1,
+      "message": "nit: const?",
+      "range": {
+        "startLine": 304,
+        "startChar": 8,
+        "endLine": 304,
+        "endChar": 12
+      },
+      "revId": "fd8805c97fe16776c48c7f13d11aa61b3f7094ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "164a6942_d5406e21",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-10-30T15:44:19Z",
+      "side": 1,
+      "message": "Could you add in a check for something like...\n\n   if (version \u003e\u003d gl::Version(3, 2)\n   {\n       request core profile\n   }\n\nI think it would be preferable to have the core profile if possible because it may be faster.",
+      "revId": "fd8805c97fe16776c48c7f13d11aa61b3f7094ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
