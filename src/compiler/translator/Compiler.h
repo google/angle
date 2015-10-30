@@ -101,8 +101,6 @@ class TCompiler : public TShHandleBase
     ShShaderOutput getOutputType() const { return outputType; }
     const std::string &getBuiltInResourcesString() const { return builtInResourcesString; }
 
-    bool shouldRunLoopAndIndexingValidation(int compileOptions) const;
-
     // Get the resources set by InitBuiltInSymbolTable
     const ShBuiltInResources& getResources() const;
 
