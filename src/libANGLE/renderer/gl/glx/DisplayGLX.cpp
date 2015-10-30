@@ -49,6 +49,7 @@ DisplayGLX::DisplayGLX()
       mContext(nullptr),
       mDummyPbuffer(0),
       mUsesNewXDisplay(false),
+      mIsMesa(false),
       mEGLDisplay(nullptr)
 {
 }
@@ -175,6 +176,10 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
 
     syncXCommands();
 
+    std::string rendererString =
+        reinterpret_cast<const char*>(mFunctionsGL->getString(GL_RENDERER));
+    mIsMesa = rendererString.find("Mesa") != std::string::npos;
+
     return DisplayGL::initialize(display);
 }
 
@@ -295,7 +300,13 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
         {
             continue;
         }
-        if (!(config.depthSize == 24 && config.stencilSize == 8) && !(config.depthSize == 0 && config.stencilSize == 0))
+        // The GLX spec says that it is ok for a whole buffer to not be present
+        // however the Mesa Intel driver (and probably on other Mesa drivers)
+        // fails to make current when the Depth stencil doesn't exactly match the
+        // configuration.
+        bool hasSameDepthStencil = config.depthSize == 24 && config.stencilSize == 8;
+        bool hasNoDepthStencil = config.depthSize == 0 && config.stencilSize == 0;
+        if (!hasSameDepthStencil && (mIsMesa || !hasNoDepthStencil))
         {
             continue;
         }
