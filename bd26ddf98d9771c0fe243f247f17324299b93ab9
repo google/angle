@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b656fdeb_f549f029",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-02T15:52:45Z",
+      "side": 1,
+      "message": "nit: parens would help the readability of this",
+      "range": {
+        "startLine": 259,
+        "startChar": 11,
+        "endLine": 260,
+        "endChar": 44
+      },
+      "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
