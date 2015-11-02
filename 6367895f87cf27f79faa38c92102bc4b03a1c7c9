@@ -22,6 +22,30 @@
       "revId": "6367895f87cf27f79faa38c92102bc4b03a1c7c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6195673_5fe13ebe",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-02T21:49:27Z",
+      "side": 1,
+      "message": "I like this alternative and agree with the idea of containing the changes in D3D. It might even be better to keep a copy of the externalDirtyBits in StateManagerD3D instead of the RendererD3D side, so when a call is made to RendererD3D::syncState, it calls StateManagerD3D::syncDirtyBits to sync the externalDirtyBits, then StateManager::syncState uses the internal and externalDirtyBits, then clears externalDirtyBits. That way, we can contain all the state manipulation in the state manager",
+      "parentUuid": "f64cf55f_94742a90",
+      "range": {
+        "startLine": 412,
+        "startChar": 4,
+        "endLine": 412,
+        "endChar": 63
+      },
+      "revId": "6367895f87cf27f79faa38c92102bc4b03a1c7c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
