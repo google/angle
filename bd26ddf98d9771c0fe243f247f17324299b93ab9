@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "366dadb4_16891af0",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T19:40:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b656fdeb_f549f029",
+      "range": {
+        "startLine": 259,
+        "startChar": 11,
+        "endLine": 260,
+        "endChar": 44
+      },
+      "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6619dbd_63e1ad83",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2015-11-02T16:15:49Z",
       "side": 1,
       "message": "nit: An empty destructor on a final class can be omitted",
+      "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f69cf62b_bb55e746",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T19:40:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6619dbd_63e1ad83",
       "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "96781971_5f364782",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T19:40:25Z",
+      "side": 1,
+      "message": "Yes, done.",
+      "parentUuid": "16a26a63_bce721ff",
+      "range": {
+        "startLine": 345,
+        "startChar": 7,
+        "endLine": 345,
+        "endChar": 16
+      },
+      "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6619dbd_a3ebc560",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 1
@@ -76,6 +142,24 @@
       "writtenOn": "2015-11-02T16:15:49Z",
       "side": 1,
       "message": "nit: We could add a comment on how this will correctly become equal to the mEnd Iterator (with both elementIndex and rowIndex equal to zero)",
+      "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f69cf62b_5b22a3e7",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T19:40:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6619dbd_a3ebc560",
       "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "b6619dbd_433f497e",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T19:40:25Z",
+      "side": 1,
+      "message": "I\u0027m OK with leaving them it so it doesn\u0027t compare with the parent (which might have to do a vector comparison and one with mEnd \u003d\u003d mEnd)",
+      "parentUuid": "96781971_bfb3db6d",
+      "range": {
+        "startLine": 372,
+        "startChar": 0,
+        "endLine": 382,
+        "endChar": 1
+      },
+      "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7673a594_98e9d922",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 1
@@ -116,6 +224,24 @@
       "writtenOn": "2015-11-02T16:15:49Z",
       "side": 1,
       "message": "Nice simplification :D",
+      "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f64cf55f_7459861a",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T19:40:25Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "7673a594_98e9d922",
       "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -138,6 +264,53 @@
         "startChar": 0,
         "endLine": 1051,
         "endChar": 97
+      },
+      "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f64cf55f_545c820b",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1051,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T19:40:25Z",
+      "side": 1,
+      "message": "Used below",
+      "parentUuid": "96781971_ffad5309",
+      "range": {
+        "startLine": 1049,
+        "startChar": 0,
+        "endLine": 1051,
+        "endChar": 97
+      },
+      "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6619dbd_234a551e",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1061,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T19:40:25Z",
+      "side": 1,
+      "message": "used here",
+      "range": {
+        "startLine": 1061,
+        "startChar": 12,
+        "endLine": 1061,
+        "endChar": 24
       },
       "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
