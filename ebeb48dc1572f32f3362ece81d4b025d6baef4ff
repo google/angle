@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7673a594_1bddc341",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T22:39:54Z",
+      "side": 1,
+      "message": "please open an angle issue to track this and tag this CL with \n\nBUG\u003dangleproject:####",
+      "range": {
+        "startLine": 7,
+        "startChar": 8,
+        "endLine": 9,
+        "endChar": 9
+      },
+      "revId": "ebeb48dc1572f32f3362ece81d4b025d6baef4ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f64cf55f_346e1e7c",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T22:39:54Z",
+      "side": 1,
+      "message": "think this needs to be hit with \u0027git cl format\u0027",
+      "range": {
+        "startLine": 554,
+        "startChar": 60,
+        "endLine": 554,
+        "endChar": 105
+      },
+      "revId": "ebeb48dc1572f32f3362ece81d4b025d6baef4ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
