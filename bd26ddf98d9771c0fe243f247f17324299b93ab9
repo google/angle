@@ -315,6 +315,30 @@
       "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7673a594_f8a3adec",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1061,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-02T20:23:46Z",
+      "side": 1,
+      "message": "Thanks",
+      "parentUuid": "b6619dbd_234a551e",
+      "range": {
+        "startLine": 1061,
+        "startChar": 12,
+        "endLine": 1061,
+        "endChar": 24
+      },
+      "revId": "bd26ddf98d9771c0fe243f247f17324299b93ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
