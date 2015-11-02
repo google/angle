@@ -309,15 +309,20 @@ TIntermTyped *TIntermediate::addComma(
 TIntermTyped *TIntermediate::addSelection(TIntermTyped *cond, TIntermTyped *trueBlock, TIntermTyped *falseBlock,
                                           const TSourceLoc &line)
 {
+    TQualifier resultQualifier = EvqTemporary;
+    if (cond->getQualifier() == EvqConst && trueBlock->getQualifier() == EvqConst &&
+        falseBlock->getQualifier() == EvqConst)
+    {
+        resultQualifier = EvqConst;
+    }
     // Right now it's safe to fold ternary operators only when all operands
     // are constant. If only the condition is constant, it's theoretically
     // possible to fold the ternary operator, but that requires making sure
     // that the node returned from here won't be treated as a constant
     // expression in case the node that gets eliminated was not a constant
     // expression.
-    if (cond->getAsConstantUnion() &&
-        trueBlock->getAsConstantUnion() &&
-        falseBlock->getAsConstantUnion())
+    if (resultQualifier == EvqConst && cond->getAsConstantUnion() &&
+        trueBlock->getAsConstantUnion() && falseBlock->getAsConstantUnion())
     {
         if (cond->getAsConstantUnion()->getBConst(0))
             return trueBlock;
@@ -329,7 +334,7 @@ TIntermTyped *TIntermediate::addSelection(TIntermTyped *cond, TIntermTyped *true
     // Make a selection node.
     //
     TIntermSelection *node = new TIntermSelection(cond, trueBlock, falseBlock, trueBlock->getType());
-    node->getTypePointer()->setQualifier(EvqTemporary);
+    node->getTypePointer()->setQualifier(resultQualifier);
     node->setLine(line);
 
     return node;

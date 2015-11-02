@@ -9,6 +9,10 @@
 // will effectively become
 //     type[n] a;
 //     a = initializer;
+//
+// Note that if the array is declared as const, the initialization is still split, making the AST
+// technically invalid. Because of that this transformation should only be used when subsequent
+// stages don't care about const qualifiers.
 
 #include "compiler/translator/SeparateArrayInitialization.h"
 

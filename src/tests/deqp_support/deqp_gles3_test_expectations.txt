@@ -257,12 +257,6 @@
 1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.modf.highp_fragment = FAIL
 1094 WIN : dEQP-GLES3.functional.shaders.invariance.highp.loop_2 = FAIL
 1094 WIN : dEQP-GLES3.functional.shaders.invariance.mediump.loop_2 = FAIL
-1094 WIN : dEQP-GLES3.functional.shaders.constant_expressions.complex_types.array_size_vertex = FAIL
-1094 WIN : dEQP-GLES3.functional.shaders.constant_expressions.complex_types.array_size_fragment = FAIL
-1094 WIN : dEQP-GLES3.functional.shaders.constant_expressions.complex_types.array_length_vertex = FAIL
-1094 WIN : dEQP-GLES3.functional.shaders.constant_expressions.complex_types.array_length_fragment = FAIL
-1094 WIN : dEQP-GLES3.functional.shaders.constant_expressions.complex_types.array_vertex = FAIL
-1094 WIN : dEQP-GLES3.functional.shaders.constant_expressions.complex_types.array_fragment = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_clamp = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_repeat = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_mirror = FAIL

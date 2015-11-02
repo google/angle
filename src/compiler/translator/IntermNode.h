@@ -516,6 +516,7 @@ class TIntermAggregate : public TIntermOperator
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
 
+    bool areChildrenConstQualified();
     void setPrecisionFromChildren();
     void setBuiltInFunctionPrecision();
 

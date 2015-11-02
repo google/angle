@@ -1869,7 +1869,9 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             TIntermTyped *variable = (*sequence)[0]->getAsTyped();
             ASSERT(sequence->size() == 1);
 
-            if (variable && (variable->getQualifier() == EvqTemporary || variable->getQualifier() == EvqGlobal))
+            if (variable &&
+                (variable->getQualifier() == EvqTemporary ||
+                 variable->getQualifier() == EvqGlobal || variable->getQualifier() == EvqConst))
             {
                 ensureStructDefined(variable->getType());
 
