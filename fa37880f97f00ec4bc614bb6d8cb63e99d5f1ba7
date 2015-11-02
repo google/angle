@@ -2,6 +2,144 @@
   "comments": [
     {
       "key": {
+        "uuid": "b656fdeb_f582d095",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T16:24:46Z",
+      "side": 1,
+      "message": "This is good. Can you do the following:\n\n1. add shaderLanguagePacking to gl::Extensions\n2. initialize the ext appropriately in renderergl_utils.cpp:GenerateCaps\n3. add ARB_shader_language_packing to ShBuiltInResources, similar to the other exts\n4. initialize the resource ext according to the gl ext in libANGLE/Compiler.cpp\n5. pass the \"ShBuiltInResources compileResources\" to InitBuiltInFunctionEmulatorForGLSLMissingFunctions\n6. use the available support of the extension to both avoid the need for the #ifs and pre-fail the compilation if we can\u0027t support these shaders?\n\nNB: This is predicated on the assumption that we would pass back a shader which would sometimes fail at the #require or #enable steps. I of course may have missed something obvious.",
+      "range": {
+        "startLine": 55,
+        "startChar": 17,
+        "endLine": 55,
+        "endChar": 55
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "164a6942_98f1bdc9",
+        "filename": "src/compiler/translator/ExtensionGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T16:24:46Z",
+      "side": 1,
+      "message": "nit: file-level comment",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 1
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b656fdeb_b578484a",
+        "filename": "src/compiler/translator/ExtensionGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T16:24:46Z",
+      "side": 1,
+      "message": "nit: place in initializer?",
+      "range": {
+        "startLine": 14,
+        "startChar": 4,
+        "endLine": 14,
+        "endChar": 18
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f69cf62b_db07935d",
+        "filename": "src/compiler/translator/ExtensionGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T16:24:46Z",
+      "side": 1,
+      "message": "nit: remove extra space",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 0
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16a26a63_9cea65c8",
+        "filename": "src/compiler/translator/ExtensionGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T16:24:46Z",
+      "side": 1,
+      "message": "nit: file level comment",
+      "range": {
+        "startLine": 5,
+        "startChar": 1,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56722192_dd95ff0d",
+        "filename": "src/compiler/translator/ExtensionGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T16:24:46Z",
+      "side": 1,
+      "message": "nit: new code should have the variable names in the function/method prototypes",
+      "range": {
+        "startLine": 25,
+        "startChar": 40,
+        "endLine": 25,
+        "endChar": 42
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6619dbd_97a444fa",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 4
@@ -13,6 +151,24 @@
       "writtenOn": "2015-11-02T15:56:22Z",
       "side": 1,
       "message": "This should be \"require\"",
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "164a6942_b8f681bc",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T16:24:46Z",
+      "side": 1,
+      "message": "True.. is this covered by any test?",
+      "parentUuid": "b6619dbd_97a444fa",
       "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
