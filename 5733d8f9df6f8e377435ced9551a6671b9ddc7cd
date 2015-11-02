@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96781971_7f330391",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-02T16:47:52Z",
+      "side": 1,
+      "message": "Can you split this logic into bools and then test them in the if? This is getting hard to read.",
+      "range": {
+        "startLine": 307,
+        "startChar": 8,
+        "endLine": 308,
+        "endChar": 77
+      },
+      "revId": "5733d8f9df6f8e377435ced9551a6671b9ddc7cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
