@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f64cf55f_94742a90",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T13:15:42Z",
+      "side": 1,
+      "message": "This is good, it seems we\u0027re passing the bots now on Windows at least in the config I checked. To repeat what I said in your doc, I think we should try to contain the workaround to the D3D code, by a) keeping a copy of the dirty bits in RendererD3D b) storing them on calls to RendererD3D::syncState, and c) StateManagerD3D::syncState with our internal copy of the dirty bits here, and clearing them. Also we may have to move the syncState to genericDrawArrays/genericDrawElements right before the skipDraw, if those other calls to applyThisAndThat call force bits.",
+      "range": {
+        "startLine": 412,
+        "startChar": 4,
+        "endLine": 412,
+        "endChar": 63
+      },
+      "revId": "6367895f87cf27f79faa38c92102bc4b03a1c7c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
