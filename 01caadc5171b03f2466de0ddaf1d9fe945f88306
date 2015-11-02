@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b688bda5_250fba75",
+        "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-11-02T15:57:26Z",
+      "side": 1,
+      "message": "Sounds reasonable, I\u0027ll change this.",
+      "parentUuid": "16a26a63_dce0edeb",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 35
+      },
+      "revId": "01caadc5171b03f2466de0ddaf1d9fe945f88306",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7673a594_d83a7160",
         "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-02T15:53:41Z",
       "side": 1,
       "message": "Why do we need an infix visit with this patch?",
+      "range": {
+        "startLine": 49,
+        "startChar": 29,
+        "endLine": 49,
+        "endChar": 33
+      },
+      "revId": "01caadc5171b03f2466de0ddaf1d9fe945f88306",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "166509c4_bda92bd1",
+        "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-11-02T15:57:26Z",
+      "side": 1,
+      "message": "Whoops, that\u0027s a mistake left over when I thought of a slightly different approach. Will fix.",
+      "parentUuid": "7673a594_d83a7160",
       "range": {
         "startLine": 49,
         "startChar": 29,
