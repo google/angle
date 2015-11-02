@@ -172,6 +172,24 @@
       "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f64cf55f_7480a6c2",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-02T16:42:39Z",
+      "side": 1,
+      "message": "Unsure, I discovered this when cherry-picking this patch to have ARB_shader_language_packing on the Intel Mesa driver.",
+      "parentUuid": "164a6942_b8f681bc",
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
