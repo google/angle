@@ -40,9 +40,6 @@
 
 // TODO(jmadill): triage these into permanent and temporary failures
 
-1088 WIN : dEQP-GLES3.functional.shaders.linkage.varying.rules.invalid_type_struct_array = FAIL
-1088 WIN : dEQP-GLES3.functional.shaders.linkage.varying.rules.invalid_type_struct_struct = FAIL
-1088 WIN : dEQP-GLES3.functional.shaders.linkage.varying.rules.invalid_type_array_struct = FAIL
 1088 WIN : dEQP-GLES3.functional.shaders.linkage.varying.struct.float_vec3 = FAIL
 1088 WIN : dEQP-GLES3.functional.shaders.linkage.varying.struct.float_uvec2_vec3 = FAIL
 1088 WIN : dEQP-GLES3.functional.shaders.linkage.uniform.block.differing_precision = FAIL
@@ -278,16 +275,12 @@
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.base_level.linear_nearest = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.base_level.nearest_linear = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.base_level.linear_linear = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.mipmap.cube.base_level.nearest_nearest = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.mipmap.cube.base_level.linear_nearest = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.cube.base_level.nearest_linear = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.cube.base_level.linear_linear = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.nearest_nearest = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.linear_nearest = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.3d.base_level.nearest_nearest = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.3d.base_level.linear_nearest = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.mipmap.3d.base_level.nearest_linear = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.mipmap.3d.base_level.linear_linear = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.swizzle.multi_channel.luminance_all_zero = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.swizzle.multi_channel.luminance_alpha_all_zero = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.swizzle.multi_channel.rg_all_zero = FAIL
@@ -604,7 +597,6 @@
 1097 WIN : dEQP-GLES3.functional.fbo.color.tex2darray.rgba16i = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.tex2darray.rgba16ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.tex2darray.rgba8 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.color.tex2darray.rgba8i = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.tex3d.rgba32i = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.tex3d.rgba16ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.tex3d.rgba8i = FAIL
@@ -632,11 +624,6 @@
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rg16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r16f = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth_component32f = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth_component24 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth_component16 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth32f_stencil8 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth24_stencil8 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth_component32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth_component24 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth_component16 = FAIL
@@ -957,12 +944,6 @@
 1099 WIN : dEQP-GLES3.functional.attribute_location.bind_relink_hole.mat2x2 = FAIL
 1099 WIN : dEQP-GLES3.functional.attribute_location.mixed_relink_hole.mat2 = FAIL
 1099 WIN : dEQP-GLES3.functional.attribute_location.mixed_relink_hole.mat2x2 = FAIL
-1101 WIN : dEQP-GLES3.functional.rasterization.flatshading.triangles = FAIL
-1101 WIN : dEQP-GLES3.functional.rasterization.flatshading.triangle_strip = FAIL
-1101 WIN : dEQP-GLES3.functional.rasterization.flatshading.triangle_fan = FAIL
-1101 WIN : dEQP-GLES3.functional.rasterization.flatshading.lines = FAIL
-1101 WIN : dEQP-GLES3.functional.rasterization.flatshading.line_strip = FAIL
-1101 WIN : dEQP-GLES3.functional.rasterization.flatshading.line_loop = FAIL
 597 WIN : dEQP-GLES3.functional.primitive_restart.* = FAIL
 1101 WIN : dEQP-GLES3.functional.rasterizer_discard.basic.clear_color = FAIL
 1101 WIN : dEQP-GLES3.functional.rasterizer_discard.scissor.clear_color = FAIL
