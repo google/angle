@@ -261,7 +261,7 @@ bool TIntermLoop::replaceChildNode(
     REPLACE_IF_IS(mInit, TIntermNode, original, replacement);
     REPLACE_IF_IS(mCond, TIntermTyped, original, replacement);
     REPLACE_IF_IS(mExpr, TIntermTyped, original, replacement);
-    REPLACE_IF_IS(mBody, TIntermNode, original, replacement);
+    REPLACE_IF_IS(mBody, TIntermAggregate, original, replacement);
     return false;
 }
 
