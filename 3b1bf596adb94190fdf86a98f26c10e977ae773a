@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "164a6942_7891794b",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-02T21:19:13Z",
+      "side": 1,
+      "message": "I believe this logic is the same as before, was that the intention?",
+      "range": {
+        "startLine": 507,
+        "startChar": 4,
+        "endLine": 519,
+        "endChar": 5
+      },
+      "revId": "3b1bf596adb94190fdf86a98f26c10e977ae773a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
