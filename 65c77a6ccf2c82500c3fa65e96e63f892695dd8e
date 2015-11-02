@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f64cf55f_d456b2b8",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T22:28:39Z",
+      "side": 1,
+      "message": "ensure the init order here matches the header",
+      "range": {
+        "startLine": 57,
+        "startChar": 6,
+        "endLine": 63,
+        "endChar": 24
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b656fdeb_18b4e909",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T22:28:39Z",
+      "side": 1,
+      "message": "can probably remove virtual here",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 11
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56722192_5d6baf6a",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T22:28:39Z",
+      "side": 1,
+      "message": "and here",
+      "range": {
+        "startLine": 28,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 11
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56722192_7d686b6d",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T22:28:39Z",
+      "side": 1,
+      "message": "add a comment or TODO explaining why this is virtual",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 11
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56722192_3d6ef37b",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T22:28:39Z",
+      "side": 1,
+      "message": "nit: Can Probably Caps These",
+      "range": {
+        "startLine": 58,
+        "startChar": 16,
+        "endLine": 58,
+        "endChar": 33
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f64cf55f_945c2adb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T22:28:39Z",
+      "side": 1,
+      "message": "either use const \u0026 or a pointer.",
+      "range": {
+        "startLine": 22,
+        "startChar": 81,
+        "endLine": 22,
+        "endChar": 82
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "164a6942_1825cdc0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T22:28:39Z",
+      "side": 1,
+      "message": "don\u0027t store non-const \u0026. Either use a const \u0026 or a pointer.",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 20
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b656fdeb_d8a981b7",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T22:28:39Z",
+      "side": 1,
+      "message": "clang is going to give a warning here, because mCurDepthStencilSize appears before mCurMaxStencil in the header and here they\u0027re initialized our-of-order. please fix. also you should init mCurFrontFaceCCW",
+      "range": {
+        "startLine": 20,
+        "startChar": 61,
+        "endLine": 20,
+        "endChar": 97
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "366dadb4_b678664a",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-02T22:28:39Z",
+      "side": 1,
+      "message": "I don\u0027t think you ever update mCurFrontFaceCCW, should add that to the appropriate place.",
+      "range": {
+        "startLine": 95,
+        "startChar": 9,
+        "endLine": 95,
+        "endChar": 25
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
