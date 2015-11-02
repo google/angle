@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "56722192_9d73876f",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-02T21:34:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "366dadb4_f69ade3a",
+      "range": {
+        "startLine": 24,
+        "startChar": 11,
+        "endLine": 24,
+        "endChar": 26
+      },
+      "revId": "fd8805c97fe16776c48c7f13d11aa61b3f7094ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "164a6942_98c8dd89",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-02T13:21:01Z",
       "side": 1,
       "message": "git cl format",
+      "range": {
+        "startLine": 262,
+        "startChar": 97,
+        "endLine": 262,
+        "endChar": 110
+      },
+      "revId": "fd8805c97fe16776c48c7f13d11aa61b3f7094ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7673a594_d870b10b",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-02T21:34:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "164a6942_98c8dd89",
       "range": {
         "startLine": 262,
         "startChar": 97,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "b6619dbd_9636fda6",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-02T21:34:08Z",
+      "side": 1,
+      "message": "The minor version would default to 0",
+      "parentUuid": "b656fdeb_5520fc66",
+      "range": {
+        "startLine": 263,
+        "startChar": 53,
+        "endLine": 263,
+        "endChar": 95
+      },
+      "revId": "fd8805c97fe16776c48c7f13d11aa61b3f7094ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f64cf55f_34da9e4a",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 3
@@ -82,6 +154,24 @@
       "writtenOn": "2015-10-30T15:44:19Z",
       "side": 1,
       "message": "nit: could also be const.",
+      "revId": "fd8805c97fe16776c48c7f13d11aa61b3f7094ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96781971_ea958f0d",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-02T21:34:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f64cf55f_34da9e4a",
       "revId": "fd8805c97fe16776c48c7f13d11aa61b3f7094ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "b656fdeb_b5a928d1",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-02T21:34:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6619dbd_0683a49b",
+      "range": {
+        "startLine": 304,
+        "startChar": 8,
+        "endLine": 304,
+        "endChar": 12
+      },
+      "revId": "fd8805c97fe16776c48c7f13d11aa61b3f7094ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "164a6942_d5406e21",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 3
@@ -122,6 +236,24 @@
       "writtenOn": "2015-10-30T15:44:19Z",
       "side": 1,
       "message": "Could you add in a check for something like...\n\n   if (version \u003e\u003d gl::Version(3, 2)\n   {\n       request core profile\n   }\n\nI think it would be preferable to have the core profile if possible because it may be faster.",
+      "revId": "fd8805c97fe16776c48c7f13d11aa61b3f7094ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96781971_0a9bab40",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-02T21:34:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "164a6942_d5406e21",
       "revId": "fd8805c97fe16776c48c7f13d11aa61b3f7094ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
