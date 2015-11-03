@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "164a6942_78333991",
+        "filename": "src/libANGLE/Error.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-03T17:50:16Z",
+      "side": 1,
+      "message": "mMessage can be null so dereferencing this isn\u0027t safe.",
+      "range": {
+        "startLine": 47,
+        "startChar": 35,
+        "endLine": 47,
+        "endChar": 63
+      },
+      "revId": "7e4341f0b43a158502b0bcd27c4c5de58b57b552",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
