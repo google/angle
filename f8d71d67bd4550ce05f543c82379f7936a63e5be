@@ -130,6 +130,30 @@
     },
     {
       "key": {
+        "uuid": "b656fdeb_78a7b57e",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-03T15:58:10Z",
+      "side": 1,
+      "message": "Agree that WrapDevice is more precise but there is no precedent of using this naming in EGL yet.  I think the GetDevice is best because has a similar meaning to WrapDevice and similar naming is already used in EGL.",
+      "parentUuid": "366dadb4_56dab271",
+      "range": {
+        "startLine": 76,
+        "startChar": 8,
+        "endLine": 76,
+        "endChar": 72
+      },
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f69cf62b_7e466d57",
         "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
         "patchSetId": 4
