@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "562a227b_8e4e7016",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-03T18:49:25Z",
+      "side": 1,
+      "message": "Yep, will do.",
+      "parentUuid": "366dadb4_96bb6a1e",
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "164a6942_f882c995",
         "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
         "patchSetId": 4
@@ -60,6 +78,30 @@
     },
     {
       "key": {
+        "uuid": "760e462a_e3b99d97",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-03T18:49:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "164a6942_f882c995",
+      "range": {
+        "startLine": 60,
+        "startChar": 28,
+        "endLine": 61,
+        "endChar": 57
+      },
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "366dadb4_16075a9e",
         "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
         "patchSetId": 4
@@ -71,6 +113,30 @@
       "writtenOn": "2015-11-03T13:23:45Z",
       "side": 1,
       "message": "ditto",
+      "range": {
+        "startLine": 63,
+        "startChar": 27,
+        "endLine": 64,
+        "endChar": 48
+      },
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "562a227b_0e6e00d8",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-03T18:49:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "366dadb4_16075a9e",
       "range": {
         "startLine": 63,
         "startChar": 27,
@@ -178,6 +244,30 @@
     },
     {
       "key": {
+        "uuid": "96401a44_ba3baec5",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-03T18:49:25Z",
+      "side": 1,
+      "message": "One requirement here is that if a D3D11 device is lost then the EGL device should be able to be completely released/destroyed. We don\u0027t want ANGLE hanging onto those lost D3D devices.\n\nTherefore, if a caller does the following:\n1) creates/gets an EGL device wrapping a D3D11 device\n2) releases/destroys the EGL device\n\nthen ANGLE shouldn\u0027t hang onto the EGL/D3D11 device. So now, if (after performing 1) and 2)) the caller calls create/get again with the same D3D11 device then they will get a different EGL device.\n\nThat\u0027s different to the Get[Platform]Display, and feels more like Create/Destroy to me.\n\nAnother (smaller) reason why I chose Create/Destroy was that I think it provides a clear interaction with a EGLDeviceEXT returned from eglQueryDisplayAttribEXT... if you query an EGL device that a Display created then the caller may think they have a taken a ref on it and need to \u0027Release\u0027 the device. I think it\u0027s clear that they shouldn\u0027t \u0027Destroy\u0027 it though.",
+      "parentUuid": "16a26a63_1c489507",
+      "range": {
+        "startLine": 76,
+        "startChar": 8,
+        "endLine": 76,
+        "endChar": 72
+      },
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f69cf62b_7e466d57",
         "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
         "patchSetId": 4
@@ -189,6 +279,30 @@
       "writtenOn": "2015-11-03T13:23:45Z",
       "side": 1,
       "message": "is this possible to verify?",
+      "range": {
+        "startLine": 88,
+        "startChar": 57,
+        "endLine": 90,
+        "endChar": 14
+      },
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "765c8636_4993d83e",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-03T18:49:25Z",
+      "side": 1,
+      "message": "Nope... removed.",
+      "parentUuid": "f69cf62b_7e466d57",
       "range": {
         "startLine": 88,
         "startChar": 57,
@@ -224,6 +338,30 @@
     },
     {
       "key": {
+        "uuid": "36204e91_082eea66",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-03T18:49:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7673a594_dbf18b96",
+      "range": {
+        "startLine": 105,
+        "startChar": 19,
+        "endLine": 105,
+        "endChar": 40
+      },
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6619dbd_d4e78ddb",
         "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
         "patchSetId": 4
@@ -235,6 +373,24 @@
       "writtenOn": "2015-11-03T13:23:45Z",
       "side": 1,
       "message": "after you create a device and make a display from it, who manages the lifetime of the device?",
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5625c29e_d12c23d6",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-03T18:49:25Z",
+      "side": 1,
+      "message": "You, and not the display. Any thoughts against that?",
+      "parentUuid": "b6619dbd_d4e78ddb",
       "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
