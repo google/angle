@@ -356,6 +356,30 @@
     },
     {
       "key": {
+        "uuid": "366dadb4_56b39239",
+        "filename": "src/compiler/translator/ExtensionGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-03T15:55:44Z",
+      "side": 1,
+      "message": "Yep, fixed.",
+      "parentUuid": "164a6942_98c53dcb",
+      "range": {
+        "startLine": 25,
+        "startChar": 40,
+        "endLine": 25,
+        "endChar": 42
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6619dbd_97a444fa",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 4
