@@ -63,16 +63,16 @@ Context::Context(const egl::Config *config,
                  rx::Renderer *renderer,
                  bool notifyResets,
                  bool robustAccess)
-    : mRenderer(renderer),
+    : ValidationContext(clientVersion,
+                        mState,
+                        mCaps,
+                        mTextureCaps,
+                        mExtensions,
+                        nullptr,
+                        mLimitations),
+      mRenderer(renderer),
       mConfig(config),
-      mCurrentSurface(nullptr),
-      mData(reinterpret_cast<uintptr_t>(this),
-            clientVersion,
-            mState,
-            mCaps,
-            mTextureCaps,
-            mExtensions,
-            nullptr)
+      mCurrentSurface(nullptr)
 {
     ASSERT(robustAccess == false);   // Unimplemented
 
@@ -1465,11 +1465,6 @@ bool Context::isResetNotificationEnabled()
     return (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT);
 }
 
-int Context::getClientVersion() const
-{
-    return mClientVersion;
-}
-
 const egl::Config *Context::getConfig() const
 {
     return mConfig;
@@ -1495,26 +1490,6 @@ EGLenum Context::getRenderBuffer() const
     {
         return EGL_NONE;
     }
-}
-
-const Caps &Context::getCaps() const
-{
-    return mCaps;
-}
-
-const TextureCapsMap &Context::getTextureCaps() const
-{
-    return mTextureCaps;
-}
-
-const Extensions &Context::getExtensions() const
-{
-    return mExtensions;
-}
-
-const Limitations &Context::getLimitations() const
-{
-    return mLimitations;
 }
 
 void Context::detachTexture(GLuint texture)

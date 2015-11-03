@@ -29,7 +29,7 @@ namespace gl
 {
 namespace
 {
-bool ValidateDrawAttribs(gl::Context *context, GLint primcount, GLint maxVertex)
+bool ValidateDrawAttribs(ValidationContext *context, GLint primcount, GLint maxVertex)
 {
     const gl::State &state     = context->getState();
     const gl::Program *program = state.getProgram();
@@ -1466,7 +1466,10 @@ bool ValidateCopyTexImageParametersBase(gl::Context *context, GLenum target, GLi
     return true;
 }
 
-static bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count, GLsizei primcount)
+static bool ValidateDrawBase(ValidationContext *context,
+                             GLenum mode,
+                             GLsizei count,
+                             GLsizei primcount)
 {
     switch (mode)
     {
@@ -1657,7 +1660,7 @@ bool ValidateDrawArraysInstancedANGLE(Context *context, GLenum mode, GLint first
     return ValidateDrawArraysInstanced(context, mode, first, count, primcount);
 }
 
-bool ValidateDrawElements(Context *context,
+bool ValidateDrawElements(ValidationContext *context,
                           GLenum mode,
                           GLsizei count,
                           GLenum type,

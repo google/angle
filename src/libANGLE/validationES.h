@@ -26,6 +26,7 @@ namespace gl
 class Context;
 class Program;
 class Shader;
+class ValidationContext;
 
 bool ValidCap(const Context *context, GLenum cap);
 bool ValidTextureTarget(const Context *context, GLenum target);
@@ -93,7 +94,7 @@ bool ValidateDrawArrays(Context *context, GLenum mode, GLint first, GLsizei coun
 bool ValidateDrawArraysInstanced(Context *context, GLenum mode, GLint first, GLsizei count, GLsizei primcount);
 bool ValidateDrawArraysInstancedANGLE(Context *context, GLenum mode, GLint first, GLsizei count, GLsizei primcount);
 
-bool ValidateDrawElements(Context *context,
+bool ValidateDrawElements(ValidationContext *context,
                           GLenum mode,
                           GLsizei count,
                           GLenum type,
