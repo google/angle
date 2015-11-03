@@ -22,6 +22,30 @@
       "revId": "1cfc980db846ee0560fd7aeaf035c3cda1ca5d7b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6619dbd_34f7e989",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-03T14:16:58Z",
+      "side": 1,
+      "message": "The important part here is that it is the same as the backing context\u0027s depth-stencil. I agree it is confusing at the moment as it is not explicit that it is to match the backing context. I have a follow up patch that will change this to be the queried depth and stencil size of the backing context.",
+      "parentUuid": "f64cf55f_34045e97",
+      "range": {
+        "startLine": 389,
+        "startChar": 13,
+        "endLine": 389,
+        "endChar": 32
+      },
+      "revId": "1cfc980db846ee0560fd7aeaf035c3cda1ca5d7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
