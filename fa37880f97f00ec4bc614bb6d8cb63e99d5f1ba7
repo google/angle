@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b656fdeb_f8e1e5ae",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-03T15:26:05Z",
+      "side": 1,
+      "message": "The goal is to not pass the shader to the compiler at all if compilation can fail.  The GL renderer should make sure that all the extensions required to emulate these builtins are already present or it shouldn\u0027t be advertising that ES3 is available at all.  I\u0027ve added logic to renderergl_utils.cpp:GenerateCaps to make sure that the GL_ARB_shader_bit_encoding extension is present before supporting ES3.",
+      "parentUuid": "b656fdeb_f582d095",
+      "range": {
+        "startLine": 55,
+        "startChar": 17,
+        "endLine": 55,
+        "endChar": 55
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "164a6942_98f1bdc9",
         "filename": "src/compiler/translator/ExtensionGLSL.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-02T16:24:46Z",
       "side": 1,
       "message": "nit: file-level comment",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 1
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7673a594_fbf6478b",
+        "filename": "src/compiler/translator/ExtensionGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-03T15:26:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "164a6942_98f1bdc9",
       "range": {
         "startLine": 5,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "f69cf62b_de0221e6",
+        "filename": "src/compiler/translator/ExtensionGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-03T15:26:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b656fdeb_b578484a",
+      "range": {
+        "startLine": 14,
+        "startChar": 4,
+        "endLine": 14,
+        "endChar": 18
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f69cf62b_db07935d",
         "filename": "src/compiler/translator/ExtensionGLSL.cpp",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2015-11-02T16:24:46Z",
       "side": 1,
       "message": "nit: remove extra space",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 0
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b656fdeb_78b5f5b2",
+        "filename": "src/compiler/translator/ExtensionGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-03T15:26:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f69cf62b_db07935d",
       "range": {
         "startLine": 16,
         "startChar": 0,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "164a6942_788fb9b9",
+        "filename": "src/compiler/translator/ExtensionGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-03T15:26:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16a26a63_9cea65c8",
+      "range": {
+        "startLine": 5,
+        "startChar": 1,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56722192_dd95ff0d",
         "filename": "src/compiler/translator/ExtensionGLSL.h",
         "patchSetId": 4
@@ -128,6 +248,30 @@
       "writtenOn": "2015-11-02T16:24:46Z",
       "side": 1,
       "message": "nit: new code should have the variable names in the function/method prototypes",
+      "range": {
+        "startLine": 25,
+        "startChar": 40,
+        "endLine": 25,
+        "endChar": 42
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7673a594_1bfce368",
+        "filename": "src/compiler/translator/ExtensionGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-03T15:26:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56722192_dd95ff0d",
       "range": {
         "startLine": 25,
         "startChar": 40,
@@ -205,6 +349,24 @@
       "side": 1,
       "message": "I guess the drivers I tested on accepted it anyways, will fix.",
       "parentUuid": "f64cf55f_7480a6c2",
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6619dbd_f4157156",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-03T15:26:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96781971_3f298b23",
       "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
