@@ -115,6 +115,9 @@ class TParseContext : angle::NonCopyable
 
     // This method is guaranteed to succeed, even if no variable with 'name' exists.
     const TVariable *getNamedVariable(const TSourceLoc &location, const TString *name, const TSymbol *symbol);
+    TIntermTyped *parseVariableIdentifier(const TSourceLoc &location,
+                                          const TString *name,
+                                          const TSymbol *symbol);
 
     bool parseVectorFields(const TString&, int vecSize, TVectorFields&, const TSourceLoc &line);
 

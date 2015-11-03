@@ -1182,6 +1182,25 @@ const TVariable *TParseContext::getNamedVariable(const TSourceLoc &location,
     return variable;
 }
 
+TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
+                                                     const TString *name,
+                                                     const TSymbol *symbol)
+{
+    const TVariable *variable = getNamedVariable(location, name, symbol);
+
+    if (variable->getType().getQualifier() == EvqConst)
+    {
+        TConstantUnion *constArray = variable->getConstPointer();
+        TType t(variable->getType());
+        return intermediate.addConstantUnion(constArray, t, location);
+    }
+    else
+    {
+        return intermediate.addSymbol(variable->getUniqueId(), variable->getName(),
+                                      variable->getType(), location);
+    }
+}
+
 //
 // Look up a function name in the symbol table, and make sure it is a function.
 //

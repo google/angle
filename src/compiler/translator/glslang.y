@@ -215,21 +215,7 @@ identifier
 variable_identifier
     : IDENTIFIER {
         // The symbol table search was done in the lexical phase
-        const TVariable *variable = context->getNamedVariable(@1, $1.string, $1.symbol);
-
-        if (variable->getType().getQualifier() == EvqConst)
-        {
-            TConstantUnion* constArray = variable->getConstPointer();
-            TType t(variable->getType());
-            $$ = context->intermediate.addConstantUnion(constArray, t, @1);
-        }
-        else
-        {
-            $$ = context->intermediate.addSymbol(variable->getUniqueId(),
-                                                 variable->getName(),
-                                                 variable->getType(),
-                                                 @1);
-        }
+        $$ = context->parseVariableIdentifier(@1, $1.string, $1.symbol);
 
         // don't delete $1.string, it's used by error recovery, and the pool
         // pop will reclaim the memory
