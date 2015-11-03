@@ -21,18 +21,25 @@ If you want to contribute code to ANGLE, there are a few things you can do to ma
  3. If you modified `glslang.y` or `glslang.l`:
     * You _must_ update the bison-generated compiler sources. Download and install the latest 64-bit Bison in [https://cygwin.com/install.html Cygwin]. From the Cygwin shell run `generate_parser.sh` in `src/compiler/translator` and update your CL. Do not edit the generated files by hand.
     * If you modified `ExpressionParser.y` or `Tokenizer.l`, follow the same process by running `src/compiler/preprocessor/generate_parser.sh`.
+
 ### Testing
- * Your must test your new code, and ensure there are no regressions with the ANGLE required tests:
-    * `angle_unittests` must have no failures on Windows.
-    * `angle_end2end_tests` must have no failures on Windows.
-    * No new failures in the [Top-of-Tree WebGL Conformance tests](https://www.khronos.org/registry/webgl/sdk/tests/webgl-conformance-tests.html) on Windows.
-      * If you are a Chromium developer, see [Building ANGLE for Chromium Development](BuildingAngleForChromiumDevelopment.md) for instructions on building ANGLE within Chromium
+ * ANGLE uses trybots to test on a variety of platforms.  Please run your changes against our trybots and check the results before requesting a review.
+    * Upload your change (see [Making changes](ContributingCode.md#Making-changes)).
+    * Run `git try`.  If you are not part of the `angle-commiters` group, you will need to either ask to be added or ask a member of the group to submit the tryjob for you.
+    * Wait for the bots to report the result on the code review page, this can take up to two hours for some of the debug bots.
+    * Sometimes the bots report failures that are not due to the patch being tested.  If a failure is unexpected, ask an ANGLE project member for advice.
+    * The `-b` flag can be used with `git try` to target individual bots.  Ex: `git try -b win_angle_rel_ng`.
+ * Tests can also be run locally, ANGLE's main testing methods are:
+    * `angle_unittests` and `angle_end2end_tests` targets.
+    * The [Top-of-Tree WebGL Conformance tests](https://www.khronos.org/registry/webgl/sdk/tests/webgl-conformance-tests.html).
+      * If you are a Chromium developer, see [Building ANGLE for Chromium Development](BuildingAngleForChromiumDevelopment.md) for instructions on building ANGLE within Chromium.
       * If you aren't a browser developer, you should be able to drop your compiled DLLs into a Chrome installation, in place of those distributed with Chrome, to check WebGL conformance. [Chrome Canary](https://www.google.com/chrome/browser/canary.html) is well-suited for this.
       * Your failures must be a subset of the expected WebGL failures located in [`src/tests/WebGL-CTS-known-failures.txt`](../src/tests/WebGL-CTS-known-failures.txt). If you believe there are failing tests missing from the known failures file, please notify project members.
    * If your code isn't covered by an existing test, you are *strongly encouraged* to add new test coverage. This both ensures that your code is correct and that new contributors won't break it in the future.
    * If you are submitting a performance fix, test your code with `angle_perftests` and add a new performance test if it is not covered by the existing benchmarks.
-   * We don't require testing on non-Windows platforms, but ANGLE tests compile and runs on Mac, Linux, ChromeOS and more. Watch the [Chromium GPU FYI bot waterfall](http://build.chromium.org/p/chromium.gpu.fyi/console) for build breaks and notify a project member if you see one!
+   * The [Chromium GPU FYI bot waterfall](http://build.chromium.org/p/chromium.gpu.fyi/console) provides continuous integration for ANGLE patches that have been committed.  There may be hardware configurations that are not tested by the ANGLE trybots, if you notice breakage on this waterfall after landing a patch, please notify a project memeber.
    * ANGLE also includes the [drawElements Quality Program (dEQP)](dEQP.md) for additional testing. If you're working on a new feature, there may be some extensive tests for it already written.
+
 ### Legal
  1. You must complete the [Individual Contributor License Agreement](http://code.google.com/legal/individual-cla-v1.0.html). You can do this online, and it only takes a minute. If you are contributing on behalf of a corporation, you must fill out the [Corporate Contributor License Agreement](http://code.google.com/legal/corporate-cla-v1.0.html) and send it to Google as described on that page.
  2. Once you've submitted the CLA, please email the following information (as entered on the CLA) to `shannonwoods at chromium dot org` for record keeping purposes:
