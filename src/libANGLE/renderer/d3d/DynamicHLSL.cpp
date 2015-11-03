@@ -264,6 +264,9 @@ struct PackedVaryingRegister final
 {
     PackedVaryingRegister() : varyingIndex(0), elementIndex(0), rowIndex(0) {}
 
+    PackedVaryingRegister(const PackedVaryingRegister &) = default;
+    PackedVaryingRegister &operator=(const PackedVaryingRegister &) = default;
+
     unsigned int registerIndex(const gl::Caps &caps,
                                const std::vector<PackedVarying> &packedVaryings) const
     {
@@ -285,6 +288,10 @@ class PackedVaryingIterator final : public angle::NonCopyable
     {
       public:
         Iterator(const PackedVaryingIterator &parent);
+
+        Iterator(const Iterator &) = default;
+        Iterator &operator=(const Iterator &) = delete;
+
         Iterator &operator++();
         bool operator==(const Iterator &other) const;
         bool operator!=(const Iterator &other) const;
