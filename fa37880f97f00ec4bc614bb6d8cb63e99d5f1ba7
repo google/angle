@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f64cf55f_34cd3ebb",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-03T15:53:48Z",
+      "side": 1,
+      "message": "Hum, you\u0027re right about the gl::Extensions and GenerateCaps. I think it\u0027s OK for the ShBuiltInResources to have non-ESSL caps-like information, there\u0027s a precedent for that. In this case the work would be to also fix the CompilerImpl layer to also update the ShBuiltInResources caps-like info as well as the translator\u0027s output type. (We may need a similar reworking for other back-ends/Vulkan/etc). However I don\u0027t want to block this work any further, so LGTM.",
+      "parentUuid": "b656fdeb_f8e1e5ae",
+      "range": {
+        "startLine": 55,
+        "startChar": 17,
+        "endLine": 55,
+        "endChar": 55
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "164a6942_98f1bdc9",
         "filename": "src/compiler/translator/ExtensionGLSL.cpp",
         "patchSetId": 4
@@ -295,6 +319,30 @@
       "writtenOn": "2015-11-03T15:50:13Z",
       "side": 1,
       "message": "I think you forgot to push that change.",
+      "parentUuid": "7673a594_1bfce368",
+      "range": {
+        "startLine": 25,
+        "startChar": 40,
+        "endLine": 25,
+        "endChar": 42
+      },
+      "revId": "fa37880f97f00ec4bc614bb6d8cb63e99d5f1ba7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "164a6942_98c53dcb",
+        "filename": "src/compiler/translator/ExtensionGLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-03T15:53:48Z",
+      "side": 1,
+      "message": "Still don\u0027t see the variable names?",
       "parentUuid": "7673a594_1bfce368",
       "range": {
         "startLine": 25,
