@@ -46,6 +46,30 @@
       "revId": "3b1bf596adb94190fdf86a98f26c10e977ae773a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f64cf55f_b4c04e89",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-03T15:28:10Z",
+      "side": 1,
+      "message": "sgtm",
+      "parentUuid": "36204e91_77030326",
+      "range": {
+        "startLine": 507,
+        "startChar": 4,
+        "endLine": 519,
+        "endChar": 5
+      },
+      "revId": "3b1bf596adb94190fdf86a98f26c10e977ae773a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
