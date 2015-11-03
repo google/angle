@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "366dadb4_96bb6a1e",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-03T14:49:21Z",
+      "side": 1,
+      "message": "Yes, I agree with this.  EGL usually does layered extensions for these types of things.",
+      "parentUuid": "16a26a63_bcd3a180",
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "164a6942_f882c995",
         "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
         "patchSetId": 4
@@ -65,6 +83,29 @@
     },
     {
       "key": {
+        "uuid": "96781971_656d30ed",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-03T14:49:21Z",
+      "side": 1,
+      "message": "While pointers are often queried from attrib lists, they usually aren\u0027t passed in via them.  I think this should match calls like eglCreatePbufferFromClientBuffer or eglGetPlatformDisplay and pass the parameters like so:\n\n   EGLDeviceEXT eglCreateDeviceANGLE(EGLenum device_type, void *device, const EGLAttrib *attrib_list);\n\nIt could also be called eglGetDeviceANGLE to mirror how displays are \u0027got\u0027 rather than created.",
+      "range": {
+        "startLine": 76,
+        "startChar": 8,
+        "endLine": 76,
+        "endChar": 72
+      },
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f69cf62b_7e466d57",
         "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
         "patchSetId": 4
@@ -81,6 +122,29 @@
         "startChar": 57,
         "endLine": 90,
         "endChar": 14
+      },
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7673a594_dbf18b96",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-03T14:49:21Z",
+      "side": 1,
+      "message": "I think eglReleaseDeviceANGLE would be a better name to not imply that the device that was passed in earlier is being completely destroyed.",
+      "range": {
+        "startLine": 105,
+        "startChar": 19,
+        "endLine": 105,
+        "endChar": 40
       },
       "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
