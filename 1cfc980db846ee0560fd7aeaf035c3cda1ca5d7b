@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f64cf55f_34045e97",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-03T13:17:42Z",
+      "side": 1,
+      "message": "confused by \u0027same\u0027.. is this config matching something, or is 24/8 just the presence of any depth stencil, aka \"hasDepthAndStencil\"",
+      "range": {
+        "startLine": 389,
+        "startChar": 13,
+        "endLine": 389,
+        "endChar": 32
+      },
+      "revId": "1cfc980db846ee0560fd7aeaf035c3cda1ca5d7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
