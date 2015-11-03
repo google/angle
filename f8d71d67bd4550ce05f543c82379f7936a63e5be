@@ -268,6 +268,30 @@
     },
     {
       "key": {
+        "uuid": "765c8636_a9093409",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-03T18:51:17Z",
+      "side": 1,
+      "message": "Regarding the pointer: any concerns about native rendering APIs that require two pointers to form an EGLDevice? e.g. D3D9 with IDirect3DDevice9 and IDirect3D9. That\u0027s why I chose to point the pointer in the attrib list, but I\u0027m happy to change that.\n\n\nRegarding pointers in attrib lists, I think that\u0027s changing with EGL 1.5:\n\n2 This is a functionality regression relative to earlier versions of EGL, first adopted in the November,\n2013 EGL 1.4 update. It was adopted because EGL implementations on some 64-bit platforms\nchose their EGLint type to be a 32-bit integer type, and changing the definition would break their\nABIs in a way considered to be too disruptive to their application base. The EGL_KHR_cl_-\nevent2 and EGL_KHR_lock_surface3 extensions replace similar earlier extensions allowing\npointers in attribute lists, and work around this regression by providing new interfaces using\nattribute types which are guaranteed to be sufficiently large. New commands in EGL 1.5 taking\nattribute lists and returning attribute values use the EGLAttrib type (see below).",
+      "parentUuid": "96401a44_ba3baec5",
+      "range": {
+        "startLine": 76,
+        "startChar": 8,
+        "endLine": 76,
+        "endChar": 72
+      },
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f69cf62b_7e466d57",
         "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
         "patchSetId": 4
