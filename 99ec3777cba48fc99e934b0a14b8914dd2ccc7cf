@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36168e90_a835f31d",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-04T21:00:47Z",
+      "side": 1,
+      "message": "Can we store this as a void*? I think the \"native\" device should be still kept as a pointer like the displays are passed into eglGetPlatformDisplay.",
+      "range": {
+        "startLine": 21,
+        "startChar": 14,
+        "endLine": 21,
+        "endChar": 23
+      },
+      "revId": "99ec3777cba48fc99e934b0a14b8914dd2ccc7cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6cc527f_821b9afd",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3053,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-04T21:00:47Z",
+      "side": 1,
+      "message": "Is this ever called with nullptr? What would be the purpose of that? (Same for Renderer11 one)",
+      "range": {
+        "startLine": 3045,
+        "startChar": 4,
+        "endLine": 3053,
+        "endChar": 5
+      },
+      "revId": "99ec3777cba48fc99e934b0a14b8914dd2ccc7cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
