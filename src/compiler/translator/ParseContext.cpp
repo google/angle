@@ -3746,6 +3746,20 @@ TIntermTyped *TParseContext::addAssign(TOperator op,
     return node;
 }
 
+TIntermTyped *TParseContext::addComma(TIntermTyped *left,
+                                      TIntermTyped *right,
+                                      const TSourceLoc &loc)
+{
+    TIntermTyped *node = intermediate.addComma(left, right, loc);
+    if (node == nullptr)
+    {
+        binaryOpError(loc, ",", left->getCompleteString(), right->getCompleteString());
+        recover();
+        return right;
+    }
+    return node;
+}
+
 TIntermBranch *TParseContext::addBranch(TOperator op, const TSourceLoc &loc)
 {
     switch (op)

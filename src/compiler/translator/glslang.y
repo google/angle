@@ -559,12 +559,7 @@ expression
         $$ = $1;
     }
     | expression COMMA assignment_expression {
-        $$ = context->intermediate.addComma($1, $3, @2);
-        if ($$ == 0) {
-            context->binaryOpError(@2, ",", $1->getCompleteString(), $3->getCompleteString());
-            context->recover();
-            $$ = $3;
-        }
+        $$ = context->addComma($1, $3, @2);
     }
     ;
 

@@ -301,6 +301,8 @@ class TParseContext : angle::NonCopyable
     TIntermTyped *addAssign(
         TOperator op, TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);
 
+    TIntermTyped *addComma(TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);
+
     TIntermBranch *addBranch(TOperator op, const TSourceLoc &loc);
     TIntermBranch *addBranch(TOperator op, TIntermTyped *returnValue, const TSourceLoc &loc);
 
