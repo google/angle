@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6cfde71_01f06af7",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-04T18:54:18Z",
+      "side": 1,
+      "message": "This is discarding the returned error.",
+      "range": {
+        "startLine": 403,
+        "startChar": 4,
+        "endLine": 403,
+        "endChar": 63
+      },
+      "revId": "8da5d1e07db5c90986ee04e98af0eb20b2dd0965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f60f9676_c9ef9517",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-04T18:54:18Z",
+      "side": 1,
+      "message": "Why change it from override to virtual?",
+      "range": {
+        "startLine": 223,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 88
+      },
+      "revId": "8da5d1e07db5c90986ee04e98af0eb20b2dd0965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36dbee3a_5d4b3b5d",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-04T18:54:18Z",
+      "side": 1,
+      "message": "Let\u0027s update this to return a gl::Error.",
+      "range": {
+        "startLine": 223,
+        "startChar": 12,
+        "endLine": 223,
+        "endChar": 16
+      },
+      "revId": "8da5d1e07db5c90986ee04e98af0eb20b2dd0965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36dbee3a_bd319fe8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-04T18:54:18Z",
+      "side": 1,
+      "message": "nit: Don\u0027t need explicit.",
+      "range": {
+        "startLine": 22,
+        "startChar": 4,
+        "endLine": 22,
+        "endChar": 12
+      },
+      "revId": "8da5d1e07db5c90986ee04e98af0eb20b2dd0965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36c4ce60_f58df8e4",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-04T18:54:18Z",
+      "side": 1,
+      "message": "Mark as override while we\u0027re at it.",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 11
+      },
+      "revId": "8da5d1e07db5c90986ee04e98af0eb20b2dd0965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36168e90_289f4377",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-04T18:54:18Z",
+      "side": 1,
+      "message": "nit: doesn\u0027t need to be explicit.",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 12
+      },
+      "revId": "8da5d1e07db5c90986ee04e98af0eb20b2dd0965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
