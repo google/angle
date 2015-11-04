@@ -258,6 +258,14 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
 
     bool hasSwapControl = mGLX.hasExtension("GLX_EXT_swap_control");
 
+    int contextRedSize   = getGLXFBConfigAttrib(mContextConfig, GLX_RED_SIZE);
+    int contextGreenSize = getGLXFBConfigAttrib(mContextConfig, GLX_GREEN_SIZE);
+    int contextBlueSize  = getGLXFBConfigAttrib(mContextConfig, GLX_BLUE_SIZE);
+    int contextAlphaSize = getGLXFBConfigAttrib(mContextConfig, GLX_ALPHA_SIZE);
+
+    int contextDepthSize   = getGLXFBConfigAttrib(mContextConfig, GLX_DEPTH_SIZE);
+    int contextStencilSize = getGLXFBConfigAttrib(mContextConfig, GLX_STENCIL_SIZE);
+
     int contextSamples = getGLXFBConfigAttrib(mContextConfig, GLX_SAMPLES);
     int contextSampleBuffers = getGLXFBConfigAttrib(mContextConfig, GLX_SAMPLE_BUFFERS);
 
@@ -296,7 +304,8 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
         config.stencilSize = getGLXFBConfigAttrib(glxConfig, GLX_STENCIL_SIZE);
 
         // We require RGBA8 and the D24S8 (or no DS buffer)
-        if (config.redSize != 8 || config.greenSize != 8 || config.blueSize != 8 || config.alphaSize != 8)
+        if (config.redSize != contextRedSize || config.greenSize != contextGreenSize ||
+            config.blueSize != contextBlueSize || config.alphaSize != contextAlphaSize)
         {
             continue;
         }
@@ -304,7 +313,8 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
         // however the Mesa Intel driver (and probably on other Mesa drivers)
         // fails to make current when the Depth stencil doesn't exactly match the
         // configuration.
-        bool hasSameDepthStencil = config.depthSize == 24 && config.stencilSize == 8;
+        bool hasSameDepthStencil =
+            config.depthSize == contextDepthSize && config.stencilSize == contextStencilSize;
         bool hasNoDepthStencil = config.depthSize == 0 && config.stencilSize == 0;
         if (!hasSameDepthStencil && (mIsMesa || !hasNoDepthStencil))
         {
