@@ -1682,7 +1682,8 @@ void Program::indexUniforms()
 
 bool Program::linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform)
 {
-    if (!linkValidateVariablesBase(infoLog, uniformName, vertexUniform, fragmentUniform, true))
+    // We don't validate precision on UBO fields. See resolution of Khronos bug 10287.
+    if (!linkValidateVariablesBase(infoLog, uniformName, vertexUniform, fragmentUniform, false))
     {
         return false;
     }
