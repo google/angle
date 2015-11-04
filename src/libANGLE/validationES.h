@@ -146,6 +146,9 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
 bool ValidateBindVertexArrayBase(Context *context, GLuint array);
 bool ValidateDeleteVertexArraysBase(Context *context, GLsizei n);
 bool ValidateGenVertexArraysBase(Context *context, GLsizei n);
+
+// Error messages shared here for use in testing.
+extern const char *g_ExceedsMaxElementErrorMessage;
 }
 
 #endif // LIBANGLE_VALIDATION_ES_H_

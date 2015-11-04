@@ -27,6 +27,8 @@
 
 namespace gl
 {
+const char *g_ExceedsMaxElementErrorMessage = "Element value exceeds maximum element index.";
+
 namespace
 {
 bool ValidateDrawAttribs(ValidationContext *context, GLint primcount, GLint maxVertex)
@@ -1674,7 +1676,7 @@ bool ValidateDrawElements(ValidationContext *context,
       case GL_UNSIGNED_SHORT:
         break;
       case GL_UNSIGNED_INT:
-        if (!context->getExtensions().elementIndexUint)
+          if (context->getClientVersion() < 3 && !context->getExtensions().elementIndexUint)
         {
             context->recordError(Error(GL_INVALID_ENUM));
             return false;
@@ -1763,6 +1765,15 @@ bool ValidateDrawElements(ValidationContext *context,
     else
     {
         *indexRangeOut = ComputeIndexRange(type, indices, count, state.isPrimitiveRestartEnabled());
+    }
+
+    // If we use an index greater than our maximum supported index range, return an error.
+    // The ES3 spec does not specify behaviour here, it is undefined, but ANGLE should always
+    // return an error if possible here.
+    if (static_cast<GLuint64>(indexRangeOut->end) >= context->getCaps().maxElementIndex)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, g_ExceedsMaxElementErrorMessage));
+        return false;
     }
 
     if (!ValidateDrawAttribs(context, primcount, static_cast<GLsizei>(indexRangeOut->end)))
