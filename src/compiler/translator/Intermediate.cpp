@@ -281,22 +281,32 @@ TIntermNode *TIntermediate::addSelection(
     return node;
 }
 
-TIntermTyped *TIntermediate::addComma(
-    TIntermTyped *left, TIntermTyped *right, const TSourceLoc &line)
+TIntermTyped *TIntermediate::addComma(TIntermTyped *left,
+                                      TIntermTyped *right,
+                                      const TSourceLoc &line,
+                                      int shaderVersion)
 {
-    if (left->getType().getQualifier() == EvqConst &&
-        right->getType().getQualifier() == EvqConst)
+    TQualifier resultQualifier = EvqConst;
+    // ESSL3.00 section 12.43: The result of a sequence operator is not a constant-expression.
+    if (shaderVersion >= 300 || left->getQualifier() != EvqConst ||
+        right->getQualifier() != EvqConst)
     {
-        return right;
+        resultQualifier = EvqTemporary;
+    }
+
+    TIntermTyped *commaNode = nullptr;
+    if (!left->hasSideEffects())
+    {
+        commaNode = right;
     }
     else
     {
-        TIntermTyped *commaAggregate = growAggregate(left, right, line);
-        commaAggregate->getAsAggregate()->setOp(EOpComma);
-        commaAggregate->setType(right->getType());
-        commaAggregate->getTypePointer()->setQualifier(EvqTemporary);
-        return commaAggregate;
+        commaNode = growAggregate(left, right, line);
+        commaNode->getAsAggregate()->setOp(EOpComma);
+        commaNode->setType(right->getType());
     }
+    commaNode->getTypePointer()->setQualifier(resultQualifier);
+    return commaNode;
 }
 
 //
