@@ -1067,3 +1067,21 @@ TEST_F(MalformedShaderTest, TernaryOperatorAppliedToArrayConstructorIsConst)
         FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
     }
 }
+
+// Test that a ternary operator with one unevaluated non-constant operand is not a constant
+// expression.
+TEST_F(MalformedShaderTest, TernaryOperatorNonConstantOperand)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform float u;\n"
+        "void main()\n"
+        "{\n"
+        "    const float f = true ? 1.0 : u;\n"
+        "    gl_FragColor = vec4(f);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

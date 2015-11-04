@@ -260,7 +260,7 @@ TIntermNode *TIntermediate::addSelection(
     // test now.
     //
 
-    if (cond->getAsTyped() && cond->getAsTyped()->getAsConstantUnion())
+    if (cond->getAsConstantUnion())
     {
         if (cond->getAsConstantUnion()->getBConst(0) == true)
         {
@@ -325,19 +325,20 @@ TIntermTyped *TIntermediate::addSelection(TIntermTyped *cond, TIntermTyped *true
     {
         resultQualifier = EvqConst;
     }
-    // Right now it's safe to fold ternary operators only when all operands
-    // are constant. If only the condition is constant, it's theoretically
-    // possible to fold the ternary operator, but that requires making sure
-    // that the node returned from here won't be treated as a constant
-    // expression in case the node that gets eliminated was not a constant
-    // expression.
-    if (resultQualifier == EvqConst && cond->getAsConstantUnion() &&
-        trueBlock->getAsConstantUnion() && falseBlock->getAsConstantUnion())
+    // Note that the node resulting from here can be a constant union without being qualified as
+    // constant.
+    if (cond->getAsConstantUnion())
     {
         if (cond->getAsConstantUnion()->getBConst(0))
+        {
+            trueBlock->getTypePointer()->setQualifier(resultQualifier);
             return trueBlock;
+        }
         else
+        {
+            falseBlock->getTypePointer()->setQualifier(resultQualifier);
             return falseBlock;
+        }
     }
 
     //

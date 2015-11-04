@@ -294,6 +294,12 @@ class TIntermRaw : public TIntermTyped
     TString mRawText;
 };
 
+// Constant folded node.
+// Note that nodes may be constant folded and not be constant expressions with the EvqConst
+// qualifier. This happens for example when the following expression is processed:
+// "true ? 1.0 : non_constant"
+// Other nodes than TIntermConstantUnion may also be constant expressions.
+//
 class TIntermConstantUnion : public TIntermTyped
 {
   public:

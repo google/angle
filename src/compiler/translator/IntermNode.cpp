@@ -188,14 +188,16 @@ float VectorDotProduct(TConstantUnion *paramArray1, TConstantUnion *paramArray2,
     return result;
 }
 
-TIntermTyped *CreateFoldedNode(TConstantUnion *constArray, const TIntermTyped *originalNode)
+TIntermTyped *CreateFoldedNode(TConstantUnion *constArray,
+                               const TIntermTyped *originalNode,
+                               TQualifier qualifier)
 {
     if (constArray == nullptr)
     {
         return nullptr;
     }
     TIntermTyped *folded = new TIntermConstantUnion(constArray, originalNode->getType());
-    folded->getTypePointer()->setQualifier(EvqConst);
+    folded->getTypePointer()->setQualifier(qualifier);
     folded->setLine(originalNode->getLine());
     return folded;
 }
@@ -893,7 +895,14 @@ TIntermTyped *TIntermBinary::fold(TInfoSink &infoSink)
         return nullptr;
     }
     TConstantUnion *constArray = leftConstant->foldBinary(mOp, rightConstant, infoSink);
-    return CreateFoldedNode(constArray, this);
+
+    // Nodes may be constant folded without being qualified as constant.
+    TQualifier resultQualifier = EvqConst;
+    if (mLeft->getQualifier() != EvqConst || mRight->getQualifier() != EvqConst)
+    {
+        resultQualifier = EvqTemporary;
+    }
+    return CreateFoldedNode(constArray, this, resultQualifier);
 }
 
 TIntermTyped *TIntermUnary::fold(TInfoSink &infoSink)
@@ -925,7 +934,10 @@ TIntermTyped *TIntermUnary::fold(TInfoSink &infoSink)
         constArray = operandConstant->foldUnaryWithSameReturnType(mOp, infoSink);
         break;
     }
-    return CreateFoldedNode(constArray, this);
+
+    // Nodes may be constant folded without being qualified as constant.
+    TQualifier resultQualifier = mOperand->getQualifier() == EvqConst ? EvqConst : EvqTemporary;
+    return CreateFoldedNode(constArray, this, resultQualifier);
 }
 
 TIntermTyped *TIntermAggregate::fold(TInfoSink &infoSink)
@@ -939,7 +951,10 @@ TIntermTyped *TIntermAggregate::fold(TInfoSink &infoSink)
         }
     }
     TConstantUnion *constArray = TIntermConstantUnion::FoldAggregateBuiltIn(this, infoSink);
-    return CreateFoldedNode(constArray, this);
+
+    // Nodes may be constant folded without being qualified as constant.
+    TQualifier resultQualifier = areChildrenConstQualified() ? EvqConst : EvqTemporary;
+    return CreateFoldedNode(constArray, this, resultQualifier);
 }
 
 //

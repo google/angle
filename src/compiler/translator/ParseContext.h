@@ -77,6 +77,13 @@ class TParseContext : angle::NonCopyable
     void warning(const TSourceLoc &loc, const char *reason, const char *token,
                  const char *extraInfo="");
 
+    // If isError is false, a warning will be reported instead.
+    void outOfRangeError(bool isError,
+                         const TSourceLoc &loc,
+                         const char *reason,
+                         const char *token,
+                         const char *extraInfo = "");
+
     void recover();
     TIntermNode *getTreeRoot() const { return mTreeRoot; }
     void setTreeRoot(TIntermNode *treeRoot) { mTreeRoot = treeRoot; }
@@ -158,7 +165,7 @@ class TParseContext : angle::NonCopyable
     void handlePragmaDirective(const TSourceLoc &loc, const char *name, const char *value, bool stdgl);
 
     bool containsSampler(const TType &type);
-    bool areAllChildConst(TIntermAggregate *aggrNode);
+    bool areAllChildrenConstantFolded(TIntermAggregate *aggrNode);
     const TFunction* findFunction(
         const TSourceLoc &line, TFunction *pfnCall, int inputShaderVersion, bool *builtIn = 0);
     bool executeInitializer(const TSourceLoc &line,
@@ -241,9 +248,18 @@ class TParseContext : angle::NonCopyable
                                  TFunction *fnCall,
                                  const TSourceLoc &line);
     TIntermTyped *foldConstConstructor(TIntermAggregate *aggrNode, const TType &type);
-    TIntermTyped *addConstVectorNode(TVectorFields&, TIntermTyped*, const TSourceLoc&);
-    TIntermTyped *addConstMatrixNode(int, TIntermTyped*, const TSourceLoc&);
-    TIntermTyped *addConstArrayNode(int index, TIntermTyped *node, const TSourceLoc &line);
+    TIntermTyped *addConstVectorNode(TVectorFields &fields,
+                                     TIntermConstantUnion *node,
+                                     const TSourceLoc &line,
+                                     bool outOfRangeIndexIsError);
+    TIntermTyped *addConstMatrixNode(int index,
+                                     TIntermConstantUnion *node,
+                                     const TSourceLoc &line,
+                                     bool outOfRangeIndexIsError);
+    TIntermTyped *addConstArrayNode(int index,
+                                    TIntermConstantUnion *node,
+                                    const TSourceLoc &line,
+                                    bool outOfRangeIndexIsError);
     TIntermTyped *addConstStruct(
         const TString &identifier, TIntermTyped *node, const TSourceLoc& line);
     TIntermTyped *addIndexExpression(TIntermTyped *baseExpression,
