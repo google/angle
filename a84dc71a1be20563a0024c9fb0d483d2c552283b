@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "561b02b8_26a5b676",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-04T18:06:45Z",
+      "side": 1,
+      "message": "If target is a cube map face, we should bind it as a GL_TEXTURE_CUBE_MAP instead.",
+      "revId": "a84dc71a1be20563a0024c9fb0d483d2c552283b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
