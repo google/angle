@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "765c8636_b012b93b",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-04T21:40:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f64cf55f_d456b2b8",
+      "range": {
+        "startLine": 57,
+        "startChar": 6,
+        "endLine": 63,
+        "endChar": 24
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b656fdeb_18b4e909",
         "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
         "patchSetId": 15
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-02T22:28:39Z",
       "side": 1,
       "message": "can probably remove virtual here",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 11
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5625c29e_0027e792",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-04T21:40:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b656fdeb_18b4e909",
       "range": {
         "startLine": 26,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "36204e91_3208f96d",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-04T21:40:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56722192_5d6baf6a",
+      "range": {
+        "startLine": 28,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 11
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56722192_7d686b6d",
         "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
         "patchSetId": 15
@@ -82,6 +154,30 @@
       "writtenOn": "2015-11-02T22:28:39Z",
       "side": 1,
       "message": "add a comment or TODO explaining why this is virtual",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 11
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d63612de_a8aa44ad",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-04T21:40:06Z",
+      "side": 1,
+      "message": "this actually doesn\u0027t need to be virtual. In order to keep 9/11 consistent, stencilSize should be calculated inside of the depthStencil function for both",
+      "parentUuid": "56722192_7d686b6d",
       "range": {
         "startLine": 46,
         "startChar": 4,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "161fca56_6a6af8f6",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-04T21:40:06Z",
+      "side": 1,
+      "message": "messaged",
+      "parentUuid": "56722192_3d6ef37b",
+      "range": {
+        "startLine": 58,
+        "startChar": 16,
+        "endLine": 58,
+        "endChar": 33
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f64cf55f_945c2adb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 15
@@ -128,6 +248,30 @@
       "writtenOn": "2015-11-02T22:28:39Z",
       "side": 1,
       "message": "either use const \u0026 or a pointer.",
+      "range": {
+        "startLine": 22,
+        "startChar": 81,
+        "endLine": 22,
+        "endChar": 82
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "760e462a_cc512be3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-04T21:40:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f64cf55f_945c2adb",
       "range": {
         "startLine": 22,
         "startChar": 81,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "d63612de_83408189",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-04T21:40:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "164a6942_1825cdc0",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 20
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b656fdeb_d8a981b7",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
         "patchSetId": 15
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "d63612de_83dc0109",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-04T21:40:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b656fdeb_d8a981b7",
+      "range": {
+        "startLine": 20,
+        "startChar": 61,
+        "endLine": 20,
+        "endChar": 97
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "366dadb4_b678664a",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.h",
         "patchSetId": 15
@@ -197,6 +389,30 @@
       "writtenOn": "2015-11-02T22:28:39Z",
       "side": 1,
       "message": "I don\u0027t think you ever update mCurFrontFaceCCW, should add that to the appropriate place.",
+      "range": {
+        "startLine": 95,
+        "startChar": 9,
+        "endLine": 95,
+        "endChar": 25
+      },
+      "revId": "65c77a6ccf2c82500c3fa65e96e63f892695dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36204e91_d209c508",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-04T21:40:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "366dadb4_b678664a",
       "range": {
         "startLine": 95,
         "startChar": 9,
