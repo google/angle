@@ -310,6 +310,30 @@
     },
     {
       "key": {
+        "uuid": "36168e90_2889030f",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-04T21:08:08Z",
+      "side": 1,
+      "message": "I don\u0027t think we should be worried about the D3D9 case since you can query the IDirect3D9 object from the device (or create a device from the IDirect3D9).\n\nI\u0027m fine with Create or Get but I still think that Release is better than Destroy because we\u0027ll be only calling Release on the underlying device.  I don\u0027t want to imply that the user\u0027s D3D11 device will be lost after cleaning up their EGL resources.",
+      "parentUuid": "765c8636_a9093409",
+      "range": {
+        "startLine": 76,
+        "startChar": 8,
+        "endLine": 76,
+        "endChar": 72
+      },
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f69cf62b_7e466d57",
         "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
         "patchSetId": 4
