@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "f6923665_4ba9c59f",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-04T18:14:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "562a227b_8e4e7016",
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "164a6942_f882c995",
         "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
         "patchSetId": 4
@@ -339,6 +357,30 @@
     },
     {
       "key": {
+        "uuid": "b686fe2b_29a48dc8",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-04T18:14:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "765c8636_4993d83e",
+      "range": {
+        "startLine": 88,
+        "startChar": 57,
+        "endLine": 90,
+        "endChar": 14
+      },
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7673a594_dbf18b96",
         "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
         "patchSetId": 4
@@ -386,6 +428,30 @@
     },
     {
       "key": {
+        "uuid": "d69a9277_f2550846",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-04T18:14:22Z",
+      "side": 1,
+      "message": "Switched back to \u0027Destroy\u0027 for now, happy to continue the discussion above.",
+      "parentUuid": "36204e91_082eea66",
+      "range": {
+        "startLine": 105,
+        "startChar": 19,
+        "endLine": 105,
+        "endChar": 40
+      },
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6619dbd_d4e78ddb",
         "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
         "patchSetId": 4
@@ -415,6 +481,24 @@
       "side": 1,
       "message": "You, and not the display. Any thoughts against that?",
       "parentUuid": "b6619dbd_d4e78ddb",
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36892e3b_add6bd19",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-04T18:14:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5625c29e_d12c23d6",
       "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
