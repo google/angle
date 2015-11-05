@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16fd0ac1_6403eaeb",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-05T21:35:35Z",
+      "side": 1,
+      "message": "these also depend on maxStencil, you\u0027ll have to validate that the curStencilSize hasn\u0027t changed as well. bonus points if you can dream up a test that breaks this (but wouldn\u0027t spend too much time on it)",
+      "range": {
+        "startLine": 280,
+        "startChar": 41,
+        "endLine": 280,
+        "endChar": 51
+      },
+      "revId": "4fe75251e018dd60de39792e638104249537fea0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36d5ae33_6d99953c",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-05T21:35:35Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 286,
+        "startChar": 44,
+        "endLine": 286,
+        "endChar": 54
+      },
+      "revId": "4fe75251e018dd60de39792e638104249537fea0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
