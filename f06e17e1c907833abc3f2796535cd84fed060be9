@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36d5ae33_8dfcc162",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-05T20:31:11Z",
+      "side": 1,
+      "message": "Not a hard requirement but we could consider wrapping this in a function in renderer11_utils, d3d11::GetPrimitiveRestartIndex",
+      "range": {
+        "startLine": 215,
+        "startChar": 29,
+        "endLine": 215,
+        "endChar": 75
+      },
+      "revId": "f06e17e1c907833abc3f2796535cd84fed060be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
