@@ -9,7 +9,6 @@
 #include "angle_gl.h"
 #include "compiler/translator/BuiltInFunctionEmulatorGLSL.h"
 #include "compiler/translator/EmulatePrecision.h"
-#include "compiler/translator/ExtensionGLSL.h"
 #include "compiler/translator/OutputGLSL.h"
 #include "compiler/translator/VersionGLSL.h"
 
@@ -40,7 +39,7 @@ void TranslatorGLSL::translate(TIntermNode *root, int compileOptions)
     writePragma();
 
     // Write extension behaviour as needed
-    writeExtensionBehavior(root);
+    writeExtensionBehavior();
 
     bool precisionEmulation = getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision;
 
@@ -157,35 +156,19 @@ void TranslatorGLSL::writeVersion(TIntermNode *root)
     }
 }
 
-void TranslatorGLSL::writeExtensionBehavior(TIntermNode *root)
-{
+void TranslatorGLSL::writeExtensionBehavior() {
     TInfoSinkBase& sink = getInfoSink().obj;
     const TExtensionBehavior& extBehavior = getExtensionBehavior();
-    for (const auto &iter : extBehavior)
-    {
-        if (iter.second == EBhUndefined)
-        {
+    for (TExtensionBehavior::const_iterator iter = extBehavior.begin();
+         iter != extBehavior.end(); ++iter) {
+        if (iter->second == EBhUndefined)
             continue;
-        }
 
         // For GLSL output, we don't need to emit most extensions explicitly,
         // but some we need to translate.
-        if (iter.first == "GL_EXT_shader_texture_lod")
-        {
-            sink << "#extension GL_ARB_shader_texture_lod : " << getBehaviorString(iter.second)
-                 << "\n";
+        if (iter->first == "GL_EXT_shader_texture_lod") {
+            sink << "#extension GL_ARB_shader_texture_lod : "
+                 << getBehaviorString(iter->second) << "\n";
         }
-    }
-
-    TExtensionGLSL extensionGLSL(getOutputType());
-    root->traverse(&extensionGLSL);
-
-    for (const auto &ext : extensionGLSL.getEnabledExtensions())
-    {
-        sink << "#extension " << ext << " : enable\n";
-    }
-    for (const auto &ext : extensionGLSL.getRequiredExtensions())
-    {
-        sink << "#extension " << ext << " : require\n";
     }
 }

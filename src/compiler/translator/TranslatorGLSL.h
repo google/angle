@@ -21,7 +21,7 @@ class TranslatorGLSL : public TCompiler
 
   private:
     void writeVersion(TIntermNode *root);
-    void writeExtensionBehavior(TIntermNode *root);
+    void writeExtensionBehavior();
 };
 
 #endif  // COMPILER_TRANSLATOR_TRANSLATORGLSL_H_

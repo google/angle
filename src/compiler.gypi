@@ -43,8 +43,6 @@
             'compiler/translator/EmulatePrecision.cpp',
             'compiler/translator/EmulatePrecision.h',
             'compiler/translator/ExtensionBehavior.h',
-            'compiler/translator/ExtensionGLSL.cpp',
-            'compiler/translator/ExtensionGLSL.h',
             'compiler/translator/FlagStd140Structs.cpp',
             'compiler/translator/FlagStd140Structs.h',
             'compiler/translator/ForLoopUnroll.cpp',
