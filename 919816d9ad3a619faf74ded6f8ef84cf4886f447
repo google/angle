@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f6c9569d_936e3c07",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-05T15:15:30Z",
+      "side": 1,
+      "message": "It\u0027s there. See Ref.",
+      "parentUuid": "56d5c228_966e2c07",
+      "revId": "919816d9ad3a619faf74ded6f8ef84cf4886f447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56da2265_ee88df0c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-11-05T14:41:16Z",
       "side": 1,
       "message": "Why is this a member variable when it is only used in drawLineLoop? If it is to avoid allocations, I worry that the call to resize might cause reallocations anyway. Keeping it it between runs might avoid allocating several times per drawLineLoop (exponential grow etc) however I think you can prove that the resulting index data will have at most (original Index data size) + 1 elements so we can reserve that directly.",
+      "revId": "919816d9ad3a619faf74ded6f8ef84cf4886f447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36d04e3b_952064dc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-05T15:15:30Z",
+      "side": 1,
+      "message": "The intent is to avoid re-allocations. clear() followed by push_back() should not reallocate. I agree it\u0027s not super nice, but I don\u0027t have a better solution and we use this pattern already for the scratch memory buffer.\n\nThe size of the resulting buffer is more dependent on restart indices. We add two values per restart. So an upper bound might be indexCount * 2.",
+      "parentUuid": "56da2265_ee88df0c",
       "revId": "919816d9ad3a619faf74ded6f8ef84cf4886f447",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
