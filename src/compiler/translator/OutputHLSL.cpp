@@ -35,6 +35,45 @@ bool IsSequence(TIntermNode *node)
     return node->getAsAggregate() != nullptr && node->getAsAggregate()->getOp() == EOpSequence;
 }
 
+void WriteSingleConstant(TInfoSinkBase &out, const TConstantUnion *const constUnion)
+{
+    ASSERT(constUnion != nullptr);
+    switch (constUnion->getType())
+    {
+        case EbtFloat:
+            out << std::min(FLT_MAX, std::max(-FLT_MAX, constUnion->getFConst()));
+            break;
+        case EbtInt:
+            out << constUnion->getIConst();
+            break;
+        case EbtUInt:
+            out << constUnion->getUConst();
+            break;
+        case EbtBool:
+            out << constUnion->getBConst();
+            break;
+        default:
+            UNREACHABLE();
+    }
+}
+
+const TConstantUnion *WriteConstantUnionArray(TInfoSinkBase &out,
+                                              const TConstantUnion *const constUnion,
+                                              const size_t size)
+{
+    const TConstantUnion *constUnionIterated = constUnion;
+    for (size_t i = 0; i < size; i++, constUnionIterated++)
+    {
+        WriteSingleConstant(out, constUnionIterated);
+
+        if (i != size - 1)
+        {
+            out << ", ";
+        }
+    }
+    return constUnionIterated;
+}
+
 } // namespace
 
 namespace sh
@@ -1514,6 +1553,10 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 // Skip initializing the rest of the expression
                 return false;
             }
+            else if (writeConstantInitialization(out, symbolNode, expression))
+            {
+                return false;
+            }
         }
         else if (visit == InVisit)
         {
@@ -2913,9 +2956,12 @@ void OutputHLSL::outputConstructor(Visit visit, const TType &type, const char *n
     }
 }
 
-const TConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const TConstantUnion *constUnion)
+const TConstantUnion *OutputHLSL::writeConstantUnion(const TType &type,
+                                                     const TConstantUnion *const constUnion)
 {
     TInfoSinkBase &out = getInfoSink();
+
+    const TConstantUnion *constUnionIterated = constUnion;
 
     const TStructure* structure = type.getStruct();
     if (structure)
@@ -2927,7 +2973,7 @@ const TConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const TC
         for (size_t i = 0; i < fields.size(); i++)
         {
             const TType *fieldType = fields[i]->type();
-            constUnion = writeConstantUnion(*fieldType, constUnion);
+            constUnionIterated     = writeConstantUnion(*fieldType, constUnionIterated);
 
             if (i != fields.size() - 1)
             {
@@ -2946,31 +2992,14 @@ const TConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const TC
         {
             out << TypeString(type) << "(";
         }
-
-        for (size_t i = 0; i < size; i++, constUnion++)
-        {
-            switch (constUnion->getType())
-            {
-              case EbtFloat: out << std::min(FLT_MAX, std::max(-FLT_MAX, constUnion->getFConst())); break;
-              case EbtInt:   out << constUnion->getIConst(); break;
-              case EbtUInt:  out << constUnion->getUConst(); break;
-              case EbtBool:  out << constUnion->getBConst(); break;
-              default: UNREACHABLE();
-            }
-
-            if (i != size - 1)
-            {
-                out << ", ";
-            }
-        }
-
+        constUnionIterated = WriteConstantUnionArray(out, constUnionIterated, size);
         if (writeType)
         {
             out << ")";
         }
     }
 
-    return constUnion;
+    return constUnionIterated;
 }
 
 void OutputHLSL::writeEmulatedFunctionTriplet(Visit visit, const char *preStr)
@@ -2997,6 +3026,68 @@ bool OutputHLSL::writeSameSymbolInitializer(TInfoSinkBase &out, TIntermSymbol *s
         return true;
     }
 
+    return false;
+}
+
+bool OutputHLSL::canWriteAsHLSLLiteral(TIntermTyped *expression)
+{
+    // We support writing constant unions and constructors that only take constant unions as
+    // parameters as HLSL literals.
+    if (expression->getAsConstantUnion())
+    {
+        return true;
+    }
+    if (expression->getQualifier() != EvqConst || !expression->getAsAggregate() ||
+        !expression->getAsAggregate()->isConstructor())
+    {
+        return false;
+    }
+    TIntermAggregate *constructor = expression->getAsAggregate();
+    for (TIntermNode *&node : *constructor->getSequence())
+    {
+        if (!node->getAsConstantUnion())
+            return false;
+    }
+    return true;
+}
+
+bool OutputHLSL::writeConstantInitialization(TInfoSinkBase &out,
+                                             TIntermSymbol *symbolNode,
+                                             TIntermTyped *expression)
+{
+    if (canWriteAsHLSLLiteral(expression))
+    {
+        symbolNode->traverse(this);
+        if (expression->getType().isArray())
+        {
+            out << "[" << expression->getType().getArraySize() << "]";
+        }
+        out << " = {";
+        if (expression->getAsConstantUnion())
+        {
+            TIntermConstantUnion *nodeConst  = expression->getAsConstantUnion();
+            const TConstantUnion *constUnion = nodeConst->getUnionArrayPointer();
+            WriteConstantUnionArray(out, constUnion, nodeConst->getType().getObjectSize());
+        }
+        else
+        {
+            TIntermAggregate *constructor = expression->getAsAggregate();
+            ASSERT(constructor != nullptr);
+            for (TIntermNode *&node : *constructor->getSequence())
+            {
+                TIntermConstantUnion *nodeConst = node->getAsConstantUnion();
+                ASSERT(nodeConst);
+                const TConstantUnion *constUnion = nodeConst->getUnionArrayPointer();
+                WriteConstantUnionArray(out, constUnion, nodeConst->getType().getObjectSize());
+                if (node != constructor->getSequence()->back())
+                {
+                    out << ", ";
+                }
+            }
+        }
+        out << "}";
+        return true;
+    }
     return false;
 }
 
