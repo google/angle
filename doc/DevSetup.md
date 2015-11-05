@@ -25,10 +25,20 @@ Set the following environment variables as needed:
 
 Download the ANGLE source by running the following commands:
 
+On Windows:
 ```
 mkdir angle
 cd angle
-gclient config --name . --unmanaged https://chromium.googlesource.com/angle/angle.git
+gclient config --name %cd% --unmanaged https://chromium.googlesource.com/angle/angle.git
+gclient sync
+git checkout master
+```
+
+On Posix systems:
+```
+mkdir angle
+cd angle
+gclient config --name `pwd` --unmanaged https://chromium.googlesource.com/angle/angle.git
 gclient sync
 git checkout master
 ```
