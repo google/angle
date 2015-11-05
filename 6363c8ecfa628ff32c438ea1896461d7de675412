@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16cfcaa0_572e4e67",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 1
+      },
+      "lineNbr": 938,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-05T13:29:03Z",
+      "side": 1,
+      "message": "do we maybe want to give them EvqLocal or something instead of const?",
+      "range": {
+        "startLine": 933,
+        "startChar": 8,
+        "endLine": 938,
+        "endChar": 47
+      },
+      "revId": "6363c8ecfa628ff32c438ea1896461d7de675412",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
