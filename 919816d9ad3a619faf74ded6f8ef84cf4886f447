@@ -69,6 +69,24 @@
       "revId": "919816d9ad3a619faf74ded6f8ef84cf4886f447",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6c9569d_135b4c64",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-05T15:33:10Z",
+      "side": 1,
+      "message": "Whoops I forgot about the fact that D3D doesn\u0027t have line loops. Ok nevermind then :)",
+      "parentUuid": "36d04e3b_952064dc",
+      "revId": "919816d9ad3a619faf74ded6f8ef84cf4886f447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
