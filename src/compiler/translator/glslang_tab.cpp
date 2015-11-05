@@ -3567,12 +3567,12 @@ yyreduce:
   case 133:
 
     {
-        if ((yyvsp[0].interm.type).qualifier != EvqConst && !context->symbolTable.atGlobalLevel()) {
+        if ((yyvsp[0].interm.type).qualifier != EvqConst && !context->symbolTable.atGlobalLevel())
+        {
             context->error((yylsp[0]), "Local variables can only use the const storage qualifier.", getQualifierString((yyvsp[0].interm.type).qualifier));
             context->recover();
-        } else {
-            (yyval.interm.type).setBasic(EbtVoid, (yyvsp[0].interm.type).qualifier, (yylsp[0]));
         }
+        (yyval.interm.type).setBasic(EbtVoid, (yyvsp[0].interm.type).qualifier, (yylsp[0]));
     }
 
     break;

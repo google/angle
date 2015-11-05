@@ -930,12 +930,12 @@ type_qualifier
         $$.invariant = true;
     }
     | storage_qualifier {
-        if ($1.qualifier != EvqConst && !context->symbolTable.atGlobalLevel()) {
+        if ($1.qualifier != EvqConst && !context->symbolTable.atGlobalLevel())
+        {
             context->error(@1, "Local variables can only use the const storage qualifier.", getQualifierString($1.qualifier));
             context->recover();
-        } else {
-            $$.setBasic(EbtVoid, $1.qualifier, @1);
         }
+        $$.setBasic(EbtVoid, $1.qualifier, @1);
     }
     | interpolation_qualifier storage_qualifier {
         $$ = context->joinInterpolationQualifiers(@1, $1.qualifier, @2, $2.qualifier);
