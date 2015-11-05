@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d69a9277_0c098b3f",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-05T19:55:00Z",
+      "side": 1,
+      "message": "remote setRasterizerState from renderer",
+      "revId": "49adf8d40e3404d2e003c7be000ec3d9cb656a48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b69d1e72_45aa8a47",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-05T19:55:00Z",
+      "side": 1,
+      "message": "reset rasterizer local bits",
+      "revId": "49adf8d40e3404d2e003c7be000ec3d9cb656a48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "568ea242_43cb6476",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-05T19:55:00Z",
+      "side": 1,
+      "message": "the dirty bits should already be set from local force bits",
+      "revId": "49adf8d40e3404d2e003c7be000ec3d9cb656a48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
