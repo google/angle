@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "96a49abb_79157b18",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-05T02:19:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36168e90_a835f31d",
+      "range": {
+        "startLine": 21,
+        "startChar": 14,
+        "endLine": 21,
+        "endChar": 23
+      },
+      "revId": "99ec3777cba48fc99e934b0a14b8914dd2ccc7cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6cc527f_821b9afd",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-04T21:00:47Z",
       "side": 1,
       "message": "Is this ever called with nullptr? What would be the purpose of that? (Same for Renderer11 one)",
+      "range": {
+        "startLine": 3045,
+        "startChar": 4,
+        "endLine": 3053,
+        "endChar": 5
+      },
+      "revId": "99ec3777cba48fc99e934b0a14b8914dd2ccc7cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b69d1e72_3796a070",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3053,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-05T02:19:02Z",
+      "side": 1,
+      "message": "Do you mean if mDevice\u003d\u003dnullptr or *outDevice\u003d\u003dnullptr?\n\nThe former would be an error, maybe if initializeEGLDevice is called before the Display is initialized (which shouldn\u0027t be possible).\n\nThe latter is valid, this method is meant to be a lazy init of *outDevice (which could be null or not depending on whether it\u0027s been initialized before).",
+      "parentUuid": "d6cc527f_821b9afd",
       "range": {
         "startLine": 3045,
         "startChar": 4,
