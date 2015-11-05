@@ -60,25 +60,31 @@ Items marked {DEV} indicate a deviation from the Google guidelines. Items marked
 #### Variable Names
 
 Use the following guidelines, they do deviate somewhat from the Google
-guidelines. * class and type names: start with capital letter and use CamelCase.
+guidelines. 
+* class and type names: start with capital letter and use CamelCase.
 * {DEV} class member variables: use an **`m`** prefix instead of trailing
-underscore and use CamelCase. * global variables (if they must be used): use a
-**`g_`** prefix. * {DEV} variable names: start with lower case and use CamelCase
-(chosen for consitency) * {DEV} function names: Member functions start with
-lower case and use CamelCase. Non-member functions start with capital letter and
-use CamelCase (chosen for consistency) * Constants: start with a **`k`** and use
-CamelCase * namespaces: use all lower case * Enumerator Names - follow constants
-* macros: all uppercase with underscores * exceptions to naming: use common
-sense!
+underscore and use CamelCase.
+* global variables (if they must be used): use a **`g_`** prefix.
+* {DEV} variable names: start with lower case and use CamelCase (chosen for consistency)
+* {DEV} function names: Member functions start with lower case and use CamelCase. Non-member functions start with capital letter and
+use CamelCase (chosen for consistency)
+* Constants: start with a **`k`** and use CamelCase
+* namespaces: use all lower case
+* Enumerator Names - follow constants
+* macros: all uppercase with underscores
+* exceptions to naming: use common sense!
 
 ### [Comments](http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml#Comments)
 
 *   {DO} read and follow Google's recommendations.
-*   Each file **must** start with the following boilerplate notice: `// //
-    Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved. //
-    Use of this source code is governed by a BSD-style license that can be //
-    found in the LICENSE file. //
-    `
+*   Each file **must** start with the following boilerplate notice:
+```
+//
+//  Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
+//  Use of this source code is governed by a BSD-style license that can be
+//  found in the LICENSE file.
+//
+```
 
 ### [Formatting](http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml#Formatting)
 
@@ -101,13 +107,44 @@ sense!
     header file where the whole function declaration and definition fit on one
     line.
 
-Examples: `if (conditional) { stuff(); } else { otherstuff() }
-` `switch (conditional) { case foo: dostuff(); break; case bar: otherstuff()
-break; default: WTFBBQ(); }
-` `class MyClass : public Foo { public: MyClass(); ~MyClass() {}; private:
-DISALLOW_COPY_AND_ASSIGN(MyClass); };
-` `char *c; const string &str;
-`
+Examples:
+```
+if (conditional)
+{
+    stuff();
+}
+else
+{
+    otherstuff()
+}
+```
+```
+switch (conditional)
+{
+  case foo:
+    dostuff();
+    break;
+  case bar:
+    otherstuff();
+    break;
+  default:
+    WTFBBQ();
+}
+```
+```
+class MyClass : public Foo
+{
+  public:
+    MyClass();
+    ~MyClass() {};
+  private:
+    DISALLOW_COPY_AND_ASSIGN(MyClass);
+};
+```
+```
+char *c;
+const string &str;
+```
 
 ### [Exceptions to the Rules](http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml#Exceptions_to_the_Rules)
 
