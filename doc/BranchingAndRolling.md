@@ -12,6 +12,7 @@ Chromium's dependency on third-party projects is tracked in [the Chromium
 repository's src/DEPS file]
 (http://src.chromium.org/viewvc/chrome/trunk/src/DEPS). To update the ANGLE
 dependency:
+
  * Find the line in this file that defines "src/third\_party/angle"
 for deps (**not** deps\_os)
  * Change the [git SHA-1 revision number]
@@ -37,6 +38,7 @@ incorporate only these changes, and not everything that has been committed since
 the version on which Chrome depended at branch time. **Please note: Only ANGLE
 admins can create a new branch.** To create a branch of ANGLE for a branched
 Chrome release:
+
  * Determine what the ANGLE dependency is for the Chrome release
 by checking the DEPS file for that branch.
  * Check out this commit as a new branch in your local repository.

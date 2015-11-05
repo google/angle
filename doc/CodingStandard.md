@@ -61,6 +61,7 @@ Items marked {DEV} indicate a deviation from the Google guidelines. Items marked
 
 Use the following guidelines, they do deviate somewhat from the Google
 guidelines. 
+
 * class and type names: start with capital letter and use CamelCase.
 * {DEV} class member variables: use an **`m`** prefix instead of trailing
 underscore and use CamelCase.
@@ -78,6 +79,7 @@ use CamelCase (chosen for consistency)
 
 *   {DO} read and follow Google's recommendations.
 *   Each file **must** start with the following boilerplate notice:
+
 ```
 //
 //  Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
@@ -108,6 +110,7 @@ use CamelCase (chosen for consistency)
     line.
 
 Examples:
+
 ```
 if (conditional)
 {
@@ -118,6 +121,7 @@ else
     otherstuff()
 }
 ```
+
 ```
 switch (conditional)
 {
@@ -131,6 +135,7 @@ switch (conditional)
     WTFBBQ();
 }
 ```
+
 ```
 class MyClass : public Foo
 {
@@ -141,6 +146,7 @@ class MyClass : public Foo
     DISALLOW_COPY_AND_ASSIGN(MyClass);
 };
 ```
+
 ```
 char *c;
 const string &str;
