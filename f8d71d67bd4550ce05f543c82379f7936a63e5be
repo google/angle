@@ -405,6 +405,30 @@
     },
     {
       "key": {
+        "uuid": "36d04e3b_d5d01cd5",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-05T21:38:53Z",
+      "side": 1,
+      "message": "I think we can leave in some language for this condition, except instead of generating an error, which isn\u0027t possible, we can leave it as undefined behaviour.",
+      "parentUuid": "b686fe2b_29a48dc8",
+      "range": {
+        "startLine": 88,
+        "startChar": 57,
+        "endLine": 90,
+        "endChar": 14
+      },
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7673a594_dbf18b96",
         "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
         "patchSetId": 4
@@ -523,6 +547,24 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "5625c29e_d12c23d6",
+      "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6e61228_12d46c67",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-05T21:38:53Z",
+      "side": 1,
+      "message": "No, self-ownership is fine, as long as we mention this in the extension.",
+      "parentUuid": "36892e3b_add6bd19",
       "revId": "f8d71d67bd4550ce05f543c82379f7936a63e5be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
