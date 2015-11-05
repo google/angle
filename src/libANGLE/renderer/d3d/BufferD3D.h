@@ -13,7 +13,6 @@
 #include "libANGLE/renderer/BufferImpl.h"
 
 #include <stdint.h>
-#include <vector>
 
 namespace rx
 {
@@ -40,11 +39,11 @@ class BufferD3D : public BufferImpl
     virtual void markTransformFeedbackUsage() = 0;
     virtual gl::Error getData(const uint8_t **outData) = 0;
 
-    StaticVertexBufferInterface *getStaticVertexBuffer(const gl::VertexAttribute &attribute);
-    StaticIndexBufferInterface *getStaticIndexBuffer();
+    StaticVertexBufferInterface *getStaticVertexBuffer() { return mStaticVertexBuffer; }
+    StaticIndexBufferInterface *getStaticIndexBuffer() { return mStaticIndexBuffer; }
 
     void initializeStaticData();
-    void invalidateStaticData(bool invalidateWholeCache);
+    void invalidateStaticData();
     void promoteStaticUsage(int dataSize);
 
     gl::Error getIndexRange(GLenum type,
@@ -63,9 +62,6 @@ class BufferD3D : public BufferImpl
 
     StaticVertexBufferInterface *mStaticVertexBuffer;
     StaticIndexBufferInterface *mStaticIndexBuffer;
-    std::vector<StaticVertexBufferInterface *> mStaticBufferCache;
-    unsigned int mStaticBufferCacheTotalSize;
-
     unsigned int mUnmodifiedDataUse;
     D3DBufferUsage mUsage;
 };

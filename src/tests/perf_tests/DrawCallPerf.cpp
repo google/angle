@@ -55,7 +55,7 @@ struct DrawCallPerfParams final : public RenderTestParams
     int numTris;
 };
 
-std::ostream &operator<<(std::ostream &os, const DrawCallPerfParams &params)
+inline std::ostream &operator<<(std::ostream &os, const DrawCallPerfParams &params)
 {
     os << params.suffix().substr(1);
     return os;

@@ -243,7 +243,7 @@ gl::Error StreamingVertexBufferInterface::reserveSpace(unsigned int size)
 }
 
 StaticVertexBufferInterface::StaticVertexBufferInterface(BufferFactoryD3D *factory)
-    : VertexBufferInterface(factory, false), mIsCommitted(false)
+    : VertexBufferInterface(factory, false)
 {
 }
 
@@ -321,11 +321,4 @@ gl::Error StaticVertexBufferInterface::storeVertexAttributes(const gl::VertexAtt
     return gl::Error(GL_NO_ERROR);
 }
 
-void StaticVertexBufferInterface::commit()
-{
-    if (getBufferSize() > 0)
-    {
-        mIsCommitted = true;
-    }
-}
 }

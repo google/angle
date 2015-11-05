@@ -45,7 +45,7 @@ struct BufferSubDataParams final : public RenderTestParams
     unsigned int iterations;
 };
 
-std::ostream &operator<<(std::ostream &os, const BufferSubDataParams &params)
+inline std::ostream &operator<<(std::ostream &os, const BufferSubDataParams &params)
 {
     os << params.suffix().substr(1);
     return os;
