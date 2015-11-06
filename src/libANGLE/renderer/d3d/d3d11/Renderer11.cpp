@@ -194,7 +194,50 @@ ANGLEFeatureLevel GetANGLEFeatureLevel(D3D_FEATURE_LEVEL d3dFeatureLevel)
     }
 }
 
+void SetLineLoopIndices(GLuint *dest, size_t count)
+{
+    for (size_t i = 0; i < count; i++)
+    {
+        dest[i] = static_cast<GLuint>(i);
+    }
+    dest[count] = 0;
 }
+
+template <typename T>
+void CopyLineLoopIndices(const GLvoid *indices, GLuint *dest, size_t count)
+{
+    const T *srcPtr = static_cast<const T *>(indices);
+    for (size_t i = 0; i < count; ++i)
+    {
+        dest[i] = static_cast<GLuint>(srcPtr[i]);
+    }
+    dest[count] = static_cast<GLuint>(srcPtr[0]);
+}
+
+void SetTriangleFanIndices(GLuint *destPtr, size_t numTris)
+{
+    for (size_t i = 0; i < numTris; i++)
+    {
+        destPtr[i * 3 + 0] = 0;
+        destPtr[i * 3 + 1] = static_cast<GLuint>(i) + 1;
+        destPtr[i * 3 + 2] = static_cast<GLuint>(i) + 2;
+    }
+}
+
+template <typename T>
+void CopyTriangleFanIndices(const GLvoid *indices, GLuint *destPtr, size_t numTris)
+{
+    const T *srcPtr = static_cast<const T *>(indices);
+
+    for (size_t i = 0; i < numTris; i++)
+    {
+        destPtr[i * 3 + 0] = static_cast<GLuint>(srcPtr[0]);
+        destPtr[i * 3 + 1] = static_cast<GLuint>(srcPtr[i + 1]);
+        destPtr[i * 3 + 2] = static_cast<GLuint>(srcPtr[i + 2]);
+    }
+}
+
+}  // anonymous namespace
 
 void Renderer11::SRVCache::update(size_t resourceIndex, ID3D11ShaderResourceView *srv)
 {
@@ -1573,9 +1616,19 @@ gl::Error Renderer11::applyVertexBuffer(const gl::State &state, GLenum mode, GLi
     return mInputLayoutCache.applyVertexBuffers(mTranslatedAttribCache, mode, state.getProgram(), sourceInfo);
 }
 
-gl::Error Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo, SourceIndexData *sourceIndexInfo)
+gl::Error Renderer11::applyIndexBuffer(const gl::Data &data,
+                                       const GLvoid *indices,
+                                       GLsizei count,
+                                       GLenum mode,
+                                       GLenum type,
+                                       TranslatedIndexData *indexInfo,
+                                       SourceIndexData *sourceIndexInfo)
 {
-    gl::Error error = mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices, indexInfo, sourceIndexInfo);
+    gl::VertexArray *vao           = data.state->getVertexArray();
+    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
+    gl::Error error                = mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices,
+                                                          indexInfo, sourceIndexInfo,
+                                                          data.state->isPrimitiveRestartEnabled());
     if (error.isError())
     {
         return error;
@@ -1738,12 +1791,12 @@ gl::Error Renderer11::drawArraysImpl(const gl::Data &data,
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(count, GL_NONE, NULL, 0, NULL);
+        return drawLineLoop(data, count, GL_NONE, nullptr, 0);
     }
 
     if (mode == GL_TRIANGLE_FAN)
     {
-        return drawTriangleFan(count, GL_NONE, NULL, 0, NULL, instances);
+        return drawTriangleFan(data, count, GL_NONE, nullptr, 0, instances);
     }
 
     if (instances > 0)
@@ -1769,59 +1822,64 @@ gl::Error Renderer11::drawArraysImpl(const gl::Data &data,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::drawElementsImpl(GLenum mode,
+gl::Error Renderer11::drawElementsImpl(const gl::Data &data,
+                                       const TranslatedIndexData &indexInfo,
+                                       GLenum mode,
                                        GLsizei count,
                                        GLenum type,
                                        const GLvoid *indices,
-                                       gl::Buffer *elementArrayBuffer,
-                                       const TranslatedIndexData &indexInfo,
-                                       GLsizei instances,
-                                       bool usesPointSize)
+                                       GLsizei instances)
 {
-    bool useInstancedPointSpriteEmulation = usesPointSize && getWorkarounds().useInstancedPointSpriteEmulation;
     int minIndex = static_cast<int>(indexInfo.indexRange.start);
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(count, type, indices, minIndex, elementArrayBuffer);
+        return drawLineLoop(data, count, type, indices, minIndex);
     }
-    else if (mode == GL_TRIANGLE_FAN)
+
+    if (mode == GL_TRIANGLE_FAN)
     {
-        return drawTriangleFan(count, type, indices, minIndex, elementArrayBuffer, instances);
+        return drawTriangleFan(data, count, type, indices, minIndex, instances);
     }
-    else if (instances > 0)
+
+    if (instances > 0)
     {
         mDeviceContext->DrawIndexedInstanced(count, instances, 0, -minIndex, 0);
         return gl::Error(GL_NO_ERROR);
     }
+
+    // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
+    // Emulating instanced point sprites for FL9_3 requires the topology to be
+    // D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST and DrawIndexedInstanced is called instead.
+    const ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.state->getProgram());
+    if (mode == GL_POINTS && programD3D->usesInstancedPointSpriteEmulation())
+    {
+        // The count parameter passed to drawElements represents the total number of instances
+        // to be rendered. Each instance is referenced by the bound index buffer from the
+        // the caller.
+        //
+        // Indexed pointsprite emulation replicates data for duplicate entries found
+        // in the index buffer.
+        // This is not an efficent rendering mechanism and is only used on downlevel renderers
+        // that do not support geometry shaders.
+        mDeviceContext->DrawIndexedInstanced(6, count, 0, 0, 0);
+    }
     else
     {
-        // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
-        // Emulating instanced point sprites for FL9_3 requires the topology to be
-        // D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST and DrawIndexedInstanced is called instead.
-        if (mode == GL_POINTS && useInstancedPointSpriteEmulation)
-        {
-            // The count parameter passed to drawElements represents the total number of instances
-            // to be rendered. Each instance is referenced by the bound index buffer from the
-            // the caller.
-            //
-            // Indexed pointsprite emulation replicates data for duplicate entries found
-            // in the index buffer.
-            // This is not an efficent rendering mechanism and is only used on downlevel renderers
-            // that do not support geometry shaders.
-            mDeviceContext->DrawIndexedInstanced(6, count, 0, 0, 0);
-            return gl::Error(GL_NO_ERROR);
-        }
-        else
-        {
-            mDeviceContext->DrawIndexed(count, 0, -minIndex);
-            return gl::Error(GL_NO_ERROR);
-        }
+        mDeviceContext->DrawIndexed(count, 0, -minIndex);
     }
+    return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer)
+gl::Error Renderer11::drawLineLoop(const gl::Data &data,
+                                   GLsizei count,
+                                   GLenum type,
+                                   const GLvoid *indices,
+                                   int minIndex)
 {
+    gl::VertexArray *vao           = data.state->getVertexArray();
+    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
+
     // Get the raw indices for an indexed draw
     if (type != GL_NONE && elementArrayBuffer)
     {
@@ -1872,40 +1930,34 @@ gl::Error Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *ind
         return error;
     }
 
-    unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
+    unsigned int *mappedInts       = reinterpret_cast<unsigned int *>(mappedMemory);
     unsigned int indexBufferOffset = offset;
 
+    if (type != GL_NONE && data.state->isPrimitiveRestartEnabled())
+    {
+        // TODO(jmadill): Implement this.
+        return gl::Error(GL_INVALID_OPERATION,
+                         "Primitive restart not yet supported for line loops.");
+    }
+
+    // Non-indexed draw
     switch (type)
     {
-      case GL_NONE:   // Non-indexed draw
-        for (int i = 0; i < count; i++)
-        {
-            data[i] = i;
-        }
-        data[count] = 0;
-        break;
-      case GL_UNSIGNED_BYTE:
-        for (int i = 0; i < count; i++)
-        {
-            data[i] = static_cast<const GLubyte*>(indices)[i];
-        }
-        data[count] = static_cast<const GLubyte*>(indices)[0];
-        break;
-      case GL_UNSIGNED_SHORT:
-        for (int i = 0; i < count; i++)
-        {
-            data[i] = static_cast<const GLushort*>(indices)[i];
-        }
-        data[count] = static_cast<const GLushort*>(indices)[0];
-        break;
-      case GL_UNSIGNED_INT:
-        for (int i = 0; i < count; i++)
-        {
-            data[i] = static_cast<const GLuint*>(indices)[i];
-        }
-        data[count] = static_cast<const GLuint*>(indices)[0];
-        break;
-      default: UNREACHABLE();
+        case GL_NONE:
+            SetLineLoopIndices(mappedInts, count);
+            break;
+        case GL_UNSIGNED_BYTE:
+            CopyLineLoopIndices<GLubyte>(indices, mappedInts, count);
+            break;
+        case GL_UNSIGNED_SHORT:
+            CopyLineLoopIndices<GLushort>(indices, mappedInts, count);
+            break;
+        case GL_UNSIGNED_INT:
+            CopyLineLoopIndices<GLuint>(indices, mappedInts, count);
+            break;
+        default:
+            UNREACHABLE();
+            break;
     }
 
     error = mLineLoopIB->unmapBuffer();
@@ -1931,8 +1983,16 @@ gl::Error Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *ind
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances)
+gl::Error Renderer11::drawTriangleFan(const gl::Data &data,
+                                      GLsizei count,
+                                      GLenum type,
+                                      const GLvoid *indices,
+                                      int minIndex,
+                                      int instances)
 {
+    gl::VertexArray *vao           = data.state->getVertexArray();
+    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
+
     // Get the raw indices for an indexed draw
     if (type != GL_NONE && elementArrayBuffer)
     {
@@ -1985,44 +2045,34 @@ gl::Error Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *
         return error;
     }
 
-    unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
+    unsigned int *destPtr          = reinterpret_cast<unsigned int *>(mappedMemory);
     unsigned int indexBufferOffset = offset;
+
+    // Non-indexed draw
+    if (type != GL_NONE && data.state->isPrimitiveRestartEnabled())
+    {
+        // TODO(jmadill): Implement this.
+        return gl::Error(GL_INVALID_OPERATION,
+                         "Primitive restart not yet supported for triangle fans.");
+    }
 
     switch (type)
     {
-      case GL_NONE:   // Non-indexed draw
-        for (unsigned int i = 0; i < numTris; i++)
-        {
-            data[i*3 + 0] = 0;
-            data[i*3 + 1] = i + 1;
-            data[i*3 + 2] = i + 2;
-        }
-        break;
-      case GL_UNSIGNED_BYTE:
-        for (unsigned int i = 0; i < numTris; i++)
-        {
-            data[i*3 + 0] = static_cast<const GLubyte*>(indices)[0];
-            data[i*3 + 1] = static_cast<const GLubyte*>(indices)[i + 1];
-            data[i*3 + 2] = static_cast<const GLubyte*>(indices)[i + 2];
-        }
-        break;
-      case GL_UNSIGNED_SHORT:
-        for (unsigned int i = 0; i < numTris; i++)
-        {
-            data[i*3 + 0] = static_cast<const GLushort*>(indices)[0];
-            data[i*3 + 1] = static_cast<const GLushort*>(indices)[i + 1];
-            data[i*3 + 2] = static_cast<const GLushort*>(indices)[i + 2];
-        }
-        break;
-      case GL_UNSIGNED_INT:
-        for (unsigned int i = 0; i < numTris; i++)
-        {
-            data[i*3 + 0] = static_cast<const GLuint*>(indices)[0];
-            data[i*3 + 1] = static_cast<const GLuint*>(indices)[i + 1];
-            data[i*3 + 2] = static_cast<const GLuint*>(indices)[i + 2];
-        }
-        break;
-      default: UNREACHABLE();
+        case GL_NONE:
+            SetTriangleFanIndices(destPtr, numTris);
+            break;
+        case GL_UNSIGNED_BYTE:
+            CopyTriangleFanIndices<GLubyte>(indices, destPtr, numTris);
+            break;
+        case GL_UNSIGNED_SHORT:
+            CopyTriangleFanIndices<GLushort>(indices, destPtr, numTris);
+            break;
+        case GL_UNSIGNED_INT:
+            CopyTriangleFanIndices<GLuint>(indices, destPtr, numTris);
+            break;
+        default:
+            UNREACHABLE();
+            break;
     }
 
     error = mTriangleFanIB->unmapBuffer();

@@ -1455,9 +1455,18 @@ gl::Error Renderer9::applyVertexBuffer(const gl::State &state, GLenum mode, GLin
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device
-gl::Error Renderer9::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo, SourceIndexData *sourceIndexInfo)
+gl::Error Renderer9::applyIndexBuffer(const gl::Data &data,
+                                      const GLvoid *indices,
+                                      GLsizei count,
+                                      GLenum mode,
+                                      GLenum type,
+                                      TranslatedIndexData *indexInfo,
+                                      SourceIndexData *sourceIndexInfo)
 {
-    gl::Error error = mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices, indexInfo, sourceIndexInfo);
+    gl::VertexArray *vao           = data.state->getVertexArray();
+    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
+    gl::Error error = mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices,
+                                                          indexInfo, sourceIndexInfo, false);
     if (error.isError())
     {
         return error;
@@ -1526,18 +1535,20 @@ gl::Error Renderer9::drawArraysImpl(const gl::Data &data,
     }
 }
 
-gl::Error Renderer9::drawElementsImpl(GLenum mode,
+gl::Error Renderer9::drawElementsImpl(const gl::Data &data,
+                                      const TranslatedIndexData &indexInfo,
+                                      GLenum mode,
                                       GLsizei count,
                                       GLenum type,
                                       const GLvoid *indices,
-                                      gl::Buffer *elementArrayBuffer,
-                                      const TranslatedIndexData &indexInfo,
-                                      GLsizei /*instances*/,
-                                      bool /*usesPointSize*/)
+                                      GLsizei /*instances*/)
 {
     startScene();
 
     int minIndex = static_cast<int>(indexInfo.indexRange.start);
+
+    gl::VertexArray *vao           = data.state->getVertexArray();
+    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
 
     if (mode == GL_POINTS)
     {

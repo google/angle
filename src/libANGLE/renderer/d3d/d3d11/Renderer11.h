@@ -136,7 +136,13 @@ class Renderer11 : public RendererD3D
                             GLenum drawMode,
                             const std::vector<D3DUniform *> &uniformArray) override;
     virtual gl::Error applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances, SourceIndexData *sourceIndexInfo);
-    virtual gl::Error applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo, SourceIndexData *sourceIndexInfo);
+    gl::Error applyIndexBuffer(const gl::Data &data,
+                               const GLvoid *indices,
+                               GLsizei count,
+                               GLenum mode,
+                               GLenum type,
+                               TranslatedIndexData *indexInfo,
+                               SourceIndexData *sourceIndexInfo) override;
     void applyTransformFeedbackBuffers(const gl::State &state) override;
 
     virtual void markAllStateDirty();
@@ -276,14 +282,13 @@ class Renderer11 : public RendererD3D
                              GLenum mode,
                              GLsizei count,
                              GLsizei instances) override;
-    gl::Error drawElementsImpl(GLenum mode,
+    gl::Error drawElementsImpl(const gl::Data &data,
+                               const TranslatedIndexData &indexInfo,
+                               GLenum mode,
                                GLsizei count,
                                GLenum type,
                                const GLvoid *indices,
-                               gl::Buffer *elementArrayBuffer,
-                               const TranslatedIndexData &indexInfo,
-                               GLsizei instances,
-                               bool usesPointSize) override;
+                               GLsizei instances) override;
 
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps,
                       gl::Extensions *outExtensions,
@@ -291,8 +296,17 @@ class Renderer11 : public RendererD3D
 
     WorkaroundsD3D generateWorkarounds() const override;
 
-    gl::Error drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
-    gl::Error drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances);
+    gl::Error drawLineLoop(const gl::Data &data,
+                           GLsizei count,
+                           GLenum type,
+                           const GLvoid *indices,
+                           int minIndex);
+    gl::Error drawTriangleFan(const gl::Data &data,
+                              GLsizei count,
+                              GLenum type,
+                              const GLvoid *indices,
+                              int minIndex,
+                              int instances);
 
     ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
     void unsetConflictingSRVs(gl::SamplerType shaderType, uintptr_t resource, const gl::ImageIndex &index);

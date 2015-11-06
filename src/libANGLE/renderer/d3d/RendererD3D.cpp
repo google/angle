@@ -134,12 +134,6 @@ gl::Error RendererD3D::genericDrawElements(const gl::Data &data,
                                            GLsizei instances,
                                            const gl::IndexRange &indexRange)
 {
-    if (data.state->isPrimitiveRestartEnabled())
-    {
-        UNIMPLEMENTED();
-        return gl::Error(GL_INVALID_OPERATION, "Primitive restart not implemented");
-    }
-
     gl::Program *program = data.state->getProgram();
     ASSERT(program != nullptr);
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
@@ -170,13 +164,12 @@ gl::Error RendererD3D::genericDrawElements(const gl::Data &data,
         return error;
     }
 
-    gl::VertexArray *vao = data.state->getVertexArray();
     TranslatedIndexData indexInfo;
     indexInfo.indexRange = indexRange;
 
     SourceIndexData sourceIndexInfo;
 
-    error = applyIndexBuffer(indices, vao->getElementArrayBuffer().get(), count, mode, type, &indexInfo, &sourceIndexInfo);
+    error = applyIndexBuffer(data, indices, count, mode, type, &indexInfo, &sourceIndexInfo);
     if (error.isError())
     {
         return error;
@@ -215,8 +208,7 @@ gl::Error RendererD3D::genericDrawElements(const gl::Data &data,
 
     if (!skipDraw(data, mode))
     {
-        error = drawElementsImpl(mode, count, type, indices, vao->getElementArrayBuffer().get(),
-                                 indexInfo, instances, usesPointSize);
+        error = drawElementsImpl(data, indexInfo, mode, count, type, indices, instances);
         if (error.isError())
         {
             return error;

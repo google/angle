@@ -114,7 +114,13 @@ class Renderer9 : public RendererD3D
                             const std::vector<D3DUniform *> &uniformArray) override;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize);
     virtual gl::Error applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances, SourceIndexData *sourceInfo);
-    virtual gl::Error applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo, SourceIndexData *sourceIndexInfo);
+    gl::Error applyIndexBuffer(const gl::Data &data,
+                               const GLvoid *indices,
+                               GLsizei count,
+                               GLenum mode,
+                               GLenum type,
+                               TranslatedIndexData *indexInfo,
+                               SourceIndexData *sourceIndexInfo) override;
 
     void applyTransformFeedbackBuffers(const gl::State &state) override;
 
@@ -243,14 +249,13 @@ class Renderer9 : public RendererD3D
                              GLenum mode,
                              GLsizei count,
                              GLsizei instances) override;
-    gl::Error drawElementsImpl(GLenum mode,
+    gl::Error drawElementsImpl(const gl::Data &data,
+                               const TranslatedIndexData &indexInfo,
+                               GLenum mode,
                                GLsizei count,
                                GLenum type,
                                const GLvoid *indices,
-                               gl::Buffer *elementArrayBuffer,
-                               const TranslatedIndexData &indexInfo,
-                               GLsizei instances,
-                               bool usesPointSize) override;
+                               GLsizei instances) override;
 
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps,
                       gl::Extensions *outExtensions,

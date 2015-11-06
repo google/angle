@@ -165,7 +165,13 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
                                     const std::vector<D3DUniform *> &uniformArray) = 0;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize) = 0;
     virtual gl::Error applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances, SourceIndexData *sourceIndexInfo) = 0;
-    virtual gl::Error applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo, SourceIndexData *sourceIndexInfo) = 0;
+    virtual gl::Error applyIndexBuffer(const gl::Data &data,
+                                       const GLvoid *indices,
+                                       GLsizei count,
+                                       GLenum mode,
+                                       GLenum type,
+                                       TranslatedIndexData *indexInfo,
+                                       SourceIndexData *sourceIndexInfo) = 0;
     virtual void applyTransformFeedbackBuffers(const gl::State& state) = 0;
 
     virtual void markAllStateDirty() = 0;
@@ -279,14 +285,13 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
                                      GLenum mode,
                                      GLsizei count,
                                      GLsizei instances) = 0;
-    virtual gl::Error drawElementsImpl(GLenum mode,
+    virtual gl::Error drawElementsImpl(const gl::Data &data,
+                                       const TranslatedIndexData &indexInfo,
+                                       GLenum mode,
                                        GLsizei count,
                                        GLenum type,
                                        const GLvoid *indices,
-                                       gl::Buffer *elementArrayBuffer,
-                                       const TranslatedIndexData &indexInfo,
-                                       GLsizei instances,
-                                       bool usesPointSize) = 0;
+                                       GLsizei instances) = 0;
 
     //FIXME(jmadill): std::array is currently prohibited by Chromium style guide
     typedef std::array<gl::Texture*, gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS> FramebufferTextureArray;
