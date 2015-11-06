@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56d5c228_d9c73790",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1087,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-06T20:15:14Z",
+      "side": 1,
+      "message": "make this this ends in a newline",
+      "range": {
+        "startLine": 1086,
+        "startChar": 0,
+        "endLine": 1087,
+        "endChar": 1
+      },
+      "revId": "f3d27d34f5a2133b4d85a5b8adb0a748bc10c680",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
