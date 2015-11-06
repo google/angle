@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76f3a6ea_d25ee227",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2160,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-06T19:57:47Z",
+      "side": 1,
+      "message": "It seems that this is only used when assigning indices, indices should just be renamed.",
+      "revId": "ceb7b8899deca5aab8593a799576fc950ef8f7f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
