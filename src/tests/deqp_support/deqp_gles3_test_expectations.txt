@@ -1004,7 +1004,6 @@
 1101 WIN : dEQP-GLES3.functional.state_query.integers.element_array_buffer_binding_getinteger = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.integers.element_array_buffer_binding_getinteger64 = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.integers.element_array_buffer_binding_getfloat = FAIL
-1101 WIN : dEQP-GLES3.functional.state_query.integers.transform_feedback_binding_getboolean = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.integers.transform_feedback_binding_getinteger = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.integers.transform_feedback_binding_getinteger64 = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.integers.transform_feedback_binding_getfloat = FAIL
