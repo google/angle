@@ -20,6 +20,20 @@ namespace rx
 
 class FunctionsGLX;
 
+// State-tracking data for the swap control to allow DisplayGLX to remember per
+// drawable information for swap control.
+struct SwapControlData
+{
+    SwapControlData();
+
+    // Set by the drawable
+    int targetSwapInterval;
+
+    // DisplayGLX-side state-tracking
+    int maxSwapInterval;
+    int currentSwapInterval;
+};
+
 class DisplayGLX : public DisplayGL
 {
   public:
@@ -59,6 +73,12 @@ class DisplayGLX : public DisplayGL
     // between the application's display and ANGLE's one.
     void syncXCommands() const;
 
+    // Depending on the supported GLX extension, swap interval can be set
+    // globally or per drawable. This function will make sure the drawable's
+    // swap interval is the one required so that the subsequent swapBuffers
+    // acts as expected.
+    void setSwapInterval(glx::Drawable drawable, SwapControlData *data);
+
   private:
     const FunctionsGL *getFunctionsGL() const override;
 
@@ -82,6 +102,18 @@ class DisplayGLX : public DisplayGL
 
     bool mUsesNewXDisplay;
     bool mIsMesa;
+
+    enum class SwapControl
+    {
+        Absent,
+        EXT,
+        Mesa,
+        SGI,
+    };
+    SwapControl mSwapControl;
+    int mMinSwapInterval;
+    int mMaxSwapInterval;
+    int mCurrentSwapInterval;
 
     FunctionsGLX mGLX;
     egl::Display *mEGLDisplay;
