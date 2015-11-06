@@ -4,7 +4,7 @@ The goal of ANGLE is to allow users of multiple operating systems to seamlessly 
 |                |  Direct3D 9   |    Direct3D 11      |    Desktop GL      |    GL ES  |
 |----------------|:-------------:|:-------------------:|:------------------:|:---------:|
 | OpenGL ES 2.0  |    complete   |      complete       |     complete       |   planned |
-| OpenGL ES 3.0  |     -----     |  nearing completion | nearing completion |   planned |
+| OpenGL ES 3.0  |               |  nearing completion | nearing completion |   planned |
 [Level of OpenGL ES support via backing renderers]
 
 |             |    Direct3D 9  |   Direct3D 11  |   Desktop GL  |
