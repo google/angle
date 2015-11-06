@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f6923665_4a78d6a7",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2015-11-06T15:01:49Z",
+      "side": 0,
+      "message": "variable-\u003egetSymbol() is null for InterfaceBlock sometimes.",
+      "range": {
+        "startLine": 554,
+        "startChar": 65,
+        "endLine": 554,
+        "endChar": 74
+      },
+      "revId": "15200047d2d511f8bf69a09d05e8c87d94b7ebf2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
