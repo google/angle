@@ -12,13 +12,12 @@
 #include "common/debug.h"
 #include "common/MemoryBuffer.h"
 #include "libANGLE/Data.h"
-#include "libANGLe/formatutils.h"
-#include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
-#include "libANGLE/renderer/d3d/formatutilsD3D.h"
-#include "libANGLE/renderer/d3d/StateManagerD3D.h"
-#include "libANGLE/renderer/d3d/VertexDataManager.h"
-#include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/Renderer.h"
+#include "libANGLE/renderer/d3d/VertexDataManager.h"
+#include "libANGLE/renderer/d3d/formatutilsD3D.h"
+#include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
+#include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
 
 //FIXME(jmadill): std::array is currently prohibited by Chromium style guide
 #include <array>
@@ -150,12 +149,13 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
                                         const std::vector<GLint> &vertexUniformBuffers,
                                         const std::vector<GLint> &fragmentUniformBuffers) = 0;
 
-    // Calls state manager to sync state using dirty bits
-    virtual gl::Error setRasterizerState(const gl::RasterizerState &rasterState,
-                                         const gl::State::DirtyBits &dirtyBits) = 0;
+    virtual gl::Error setRasterizerState(const gl::RasterizerState &rasterState) = 0;
+    virtual gl::Error setBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
+                                    unsigned int sampleMask) = 0;
+    virtual gl::Error setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
+                                           int stencilBackRef, bool frontFaceCCW) = 0;
 
     virtual void setScissorRectangle(const gl::Rectangle &scissor, bool enabled) = 0;
-
     virtual void setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
                              bool ignoreViewport) = 0;
 
@@ -220,7 +220,10 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea) = 0;
 
-    gl::Error syncState(const gl::Data &data, const gl::State::DirtyBits &dirtyBits) override;
+    void syncState(const gl::State & /*state*/, const gl::State::DirtyBits &bitmask) override
+    {
+        // TODO(jmadill): implement state sync for D3D renderers;
+    }
 
     // Device lost
     void notifyDeviceLost() override;
@@ -246,8 +249,6 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     virtual void createAnnotator() = 0;
 
-    StateManagerD3D *mStateManager;
-
     // dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
     static const uintptr_t DirtyPointer;
 
@@ -258,10 +259,6 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     gl::DebugAnnotator *mAnnotator;
 
     std::vector<TranslatedAttribute> mTranslatedAttribCache;
-
-    gl::Rectangle mCurScissor;
-    bool mScissorEnabled;
-    bool mForceSetScissor;
 
   private:
     gl::Error genericDrawArrays(const gl::Data &data,
@@ -336,6 +333,6 @@ struct dx_PixelConstants
     float depthFront[4];
 };
 
-}  // namespace rx
+}
 
 #endif // LIBANGLE_RENDERER_D3D_RENDERERD3D_H_

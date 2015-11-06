@@ -8,22 +8,22 @@
 
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 
-#include "common/debug.h"
 #include "common/MemoryBuffer.h"
+#include "common/debug.h"
 #include "common/utilities.h"
 #include "libANGLE/Display.h"
-#include "libANGLE/formatutils.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/ResourceManager.h"
+#include "libANGLE/State.h"
+#include "libANGLE/VertexArray.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/DisplayD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/SamplerD3D.h"
-#include "libANGLE/ResourceManager.h"
-#include "libANGLE/State.h"
-#include "libANGLE/VertexArray.h"
 
 namespace rx
 {
@@ -305,16 +305,6 @@ gl::Error RendererD3D::genericDrawArrays(const gl::Data &data,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error RendererD3D::syncState(const gl::Data &data, const gl::State::DirtyBits &dirtyBits)
-{
-    // TODO(dianx) mStateManager->syncState when all the states have been moved to manager
-    // We don't clear the dirty bits here because applyState uses the dirty bits.
-    // This is a bit of a workaround
-    mStateManager->syncExternalDirtyBits(dirtyBits);
-
-    return gl::Error(GL_NO_ERROR);
-}
-
 gl::Error RendererD3D::generateSwizzles(const gl::Data &data, gl::SamplerType type)
 {
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.state->getProgram());
@@ -389,22 +379,60 @@ gl::Error RendererD3D::applyState(const gl::Data &data, GLenum drawMode)
     const gl::Framebuffer *framebufferObject = data.state->getDrawFramebuffer();
     int samples = framebufferObject->getSamples(data);
 
-    // TODO(dianx) drawMode shouldn't be a part of rasterizer state. We should remove it
-    // from RasterizerState and set a local state only when drawing point sprites in the draw call
     gl::RasterizerState rasterizer = data.state->getRasterizerState();
     rasterizer.pointDrawMode = (drawMode == GL_POINTS);
     rasterizer.multiSample = (samples != 0);
 
-    gl::Error error = setRasterizerState(rasterizer, data.state->getDirtyBits());
-
+    gl::Error error = setRasterizerState(rasterizer);
     if (error.isError())
     {
         return error;
     }
 
-    error = mStateManager->syncState(data, data.state->getDirtyBits());
+    unsigned int mask = 0;
+    if (data.state->isSampleCoverageEnabled())
+    {
+        GLclampf coverageValue = data.state->getSampleCoverageValue();
+        if (coverageValue != 0)
+        {
+            float threshold = 0.5f;
 
-    return error;
+            for (int i = 0; i < samples; ++i)
+            {
+                mask <<= 1;
+
+                if ((i + 1) * coverageValue >= threshold)
+                {
+                    threshold += 1.0f;
+                    mask |= 1;
+                }
+            }
+        }
+
+        bool coverageInvert = data.state->getSampleCoverageInvert();
+        if (coverageInvert)
+        {
+            mask = ~mask;
+        }
+    }
+    else
+    {
+        mask = 0xFFFFFFFF;
+    }
+    error = setBlendState(framebufferObject, data.state->getBlendState(), data.state->getBlendColor(), mask);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    error = setDepthStencilState(data.state->getDepthStencilState(), data.state->getStencilRef(),
+                                 data.state->getStencilBackRef(), rasterizer.frontFace == GL_CCW);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 // Applies the shaders and shader constants to the Direct3D device
@@ -713,4 +741,4 @@ gl::DebugAnnotator *RendererD3D::getAnnotator()
     return mAnnotator;
 }
 
-}  // namespace rx
+}

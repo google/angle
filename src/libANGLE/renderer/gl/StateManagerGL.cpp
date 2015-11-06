@@ -1274,7 +1274,7 @@ void StateManagerGL::setClearStencil(GLint clearStencil)
     }
 }
 
-gl::Error StateManagerGL::syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits)
+void StateManagerGL::syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits)
 {
     // TODO(jmadill): Investigate only syncing vertex state for active attributes
     for (unsigned int dirtyBit : angle::IterateBitSet(dirtyBits | mLocalDirtyBits))
@@ -1507,8 +1507,6 @@ gl::Error StateManagerGL::syncState(const gl::State &state, const gl::State::Dir
 
         mLocalDirtyBits.reset();
     }
-
-    return gl::Error(GL_NO_ERROR);
 }
 
 void StateManagerGL::setFramebufferSRGBEnabled(bool enabled)

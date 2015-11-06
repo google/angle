@@ -418,8 +418,8 @@ void RendererGL::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureC
     nativegl_gl::GenerateCaps(mFunctions, outCaps, outTextureCaps, outExtensions, &mMaxSupportedESVersion);
 }
 
-gl::Error RendererGL::syncState(const gl::Data &data, const gl::State::DirtyBits &dirtyBits)
+void RendererGL::syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits)
 {
-    return mStateManager->syncState(*data.state, dirtyBits);
+    mStateManager->syncState(state, dirtyBits);
 }
 }
