@@ -225,6 +225,98 @@ void SetTriangleFanIndices(GLuint *destPtr, size_t numTris)
 }
 
 template <typename T>
+void CopyLineLoopIndicesWithRestart(const GLvoid *indices,
+                                    size_t count,
+                                    GLenum indexType,
+                                    std::vector<GLuint> *bufferOut)
+{
+    GLuint restartIndex    = gl::GetPrimitiveRestartIndex(indexType);
+    GLuint d3dRestartIndex = static_cast<GLuint>(d3d11::GetPrimitiveRestartIndex());
+    const T *srcPtr        = static_cast<const T *>(indices);
+    Optional<GLuint> currentLoopStart;
+
+    bufferOut->clear();
+
+    for (size_t indexIdx = 0; indexIdx < count; ++indexIdx)
+    {
+        GLuint value = static_cast<GLuint>(srcPtr[indexIdx]);
+
+        if (value == restartIndex)
+        {
+            if (currentLoopStart.valid())
+            {
+                bufferOut->push_back(currentLoopStart.value());
+                bufferOut->push_back(d3dRestartIndex);
+                currentLoopStart.reset();
+            }
+        }
+        else
+        {
+            bufferOut->push_back(value);
+            if (!currentLoopStart.valid())
+            {
+                currentLoopStart = value;
+            }
+        }
+    }
+
+    if (currentLoopStart.valid())
+    {
+        bufferOut->push_back(currentLoopStart.value());
+    }
+}
+
+void GetLineLoopIndices(const GLvoid *indices,
+                        GLenum indexType,
+                        GLuint count,
+                        bool usePrimitiveRestartFixedIndex,
+                        std::vector<GLuint> *bufferOut)
+{
+    if (indexType != GL_NONE && usePrimitiveRestartFixedIndex)
+    {
+        switch (indexType)
+        {
+            case GL_UNSIGNED_BYTE:
+                CopyLineLoopIndicesWithRestart<GLubyte>(indices, count, indexType, bufferOut);
+                break;
+            case GL_UNSIGNED_SHORT:
+                CopyLineLoopIndicesWithRestart<GLushort>(indices, count, indexType, bufferOut);
+                break;
+            case GL_UNSIGNED_INT:
+                CopyLineLoopIndicesWithRestart<GLuint>(indices, count, indexType, bufferOut);
+                break;
+            default:
+                UNREACHABLE();
+                break;
+        }
+        return;
+    }
+
+    // For non-primitive-restart draws, the index count is static.
+    bufferOut->resize(static_cast<size_t>(count) + 1);
+
+    switch (indexType)
+    {
+        // Non-indexed draw
+        case GL_NONE:
+            SetLineLoopIndices(&(*bufferOut)[0], count);
+            break;
+        case GL_UNSIGNED_BYTE:
+            CopyLineLoopIndices<GLubyte>(indices, &(*bufferOut)[0], count);
+            break;
+        case GL_UNSIGNED_SHORT:
+            CopyLineLoopIndices<GLushort>(indices, &(*bufferOut)[0], count);
+            break;
+        case GL_UNSIGNED_INT:
+            CopyLineLoopIndices<GLuint>(indices, &(*bufferOut)[0], count);
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+template <typename T>
 void CopyTriangleFanIndices(const GLvoid *indices, GLuint *destPtr, size_t numTris)
 {
     const T *srcPtr = static_cast<const T *>(indices);
@@ -1791,7 +1883,7 @@ gl::Error Renderer11::drawArraysImpl(const gl::Data &data,
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(data, count, GL_NONE, nullptr, 0);
+        return drawLineLoop(data, count, GL_NONE, nullptr, nullptr);
     }
 
     if (mode == GL_TRIANGLE_FAN)
@@ -1834,7 +1926,7 @@ gl::Error Renderer11::drawElementsImpl(const gl::Data &data,
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(data, count, type, indices, minIndex);
+        return drawLineLoop(data, count, type, indices, &indexInfo);
     }
 
     if (mode == GL_TRIANGLE_FAN)
@@ -1874,11 +1966,13 @@ gl::Error Renderer11::drawElementsImpl(const gl::Data &data,
 gl::Error Renderer11::drawLineLoop(const gl::Data &data,
                                    GLsizei count,
                                    GLenum type,
-                                   const GLvoid *indices,
-                                   int minIndex)
+                                   const GLvoid *indexPointer,
+                                   const TranslatedIndexData *indexInfo)
 {
     gl::VertexArray *vao           = data.state->getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
+
+    const GLvoid *indices = indexPointer;
 
     // Get the raw indices for an indexed draw
     if (type != GL_NONE && elementArrayBuffer)
@@ -1915,7 +2009,11 @@ gl::Error Renderer11::drawLineLoop(const gl::Data &data,
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to create a 32-bit looping index buffer for GL_LINE_LOOP, too many indices required.");
     }
 
-    const unsigned int spaceNeeded = (static_cast<unsigned int>(count) + 1) * sizeof(unsigned int);
+    GetLineLoopIndices(indices, type, static_cast<GLuint>(count),
+                       data.state->isPrimitiveRestartEnabled(), &mScratchIndexDataBuffer);
+
+    unsigned int spaceNeeded =
+        static_cast<unsigned int>(sizeof(GLuint) * mScratchIndexDataBuffer.size());
     gl::Error error = mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT);
     if (error.isError())
     {
@@ -1930,35 +2028,9 @@ gl::Error Renderer11::drawLineLoop(const gl::Data &data,
         return error;
     }
 
-    unsigned int *mappedInts       = reinterpret_cast<unsigned int *>(mappedMemory);
-    unsigned int indexBufferOffset = offset;
-
-    if (type != GL_NONE && data.state->isPrimitiveRestartEnabled())
-    {
-        // TODO(jmadill): Implement this.
-        return gl::Error(GL_INVALID_OPERATION,
-                         "Primitive restart not yet supported for line loops.");
-    }
-
-    // Non-indexed draw
-    switch (type)
-    {
-        case GL_NONE:
-            SetLineLoopIndices(mappedInts, count);
-            break;
-        case GL_UNSIGNED_BYTE:
-            CopyLineLoopIndices<GLubyte>(indices, mappedInts, count);
-            break;
-        case GL_UNSIGNED_SHORT:
-            CopyLineLoopIndices<GLushort>(indices, mappedInts, count);
-            break;
-        case GL_UNSIGNED_INT:
-            CopyLineLoopIndices<GLuint>(indices, mappedInts, count);
-            break;
-        default:
-            UNREACHABLE();
-            break;
-    }
+    // Copy over the converted index data.
+    memcpy(mappedMemory, &mScratchIndexDataBuffer[0],
+           sizeof(GLuint) * mScratchIndexDataBuffer.size());
 
     error = mLineLoopIB->unmapBuffer();
     if (error.isError())
@@ -1970,15 +2042,18 @@ gl::Error Renderer11::drawLineLoop(const gl::Data &data,
     ID3D11Buffer *d3dIndexBuffer = indexBuffer->getBuffer();
     DXGI_FORMAT indexFormat = indexBuffer->getIndexFormat();
 
-    if (mAppliedIB != d3dIndexBuffer || mAppliedIBFormat != indexFormat || mAppliedIBOffset != indexBufferOffset)
+    if (mAppliedIB != d3dIndexBuffer || mAppliedIBFormat != indexFormat ||
+        mAppliedIBOffset != offset)
     {
-        mDeviceContext->IASetIndexBuffer(d3dIndexBuffer, indexFormat, indexBufferOffset);
+        mDeviceContext->IASetIndexBuffer(d3dIndexBuffer, indexFormat, offset);
         mAppliedIB = d3dIndexBuffer;
         mAppliedIBFormat = indexFormat;
-        mAppliedIBOffset = indexBufferOffset;
+        mAppliedIBOffset = offset;
     }
 
-    mDeviceContext->DrawIndexed(count + 1, 0, -minIndex);
+    INT baseVertexLocation = (indexInfo ? -static_cast<int>(indexInfo->indexRange.start) : 0);
+    UINT indexCount = static_cast<UINT>(mScratchIndexDataBuffer.size());
+    mDeviceContext->DrawIndexed(indexCount, 0, baseVertexLocation);
 
     return gl::Error(GL_NO_ERROR);
 }

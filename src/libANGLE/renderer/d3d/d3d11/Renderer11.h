@@ -300,7 +300,7 @@ class Renderer11 : public RendererD3D
                            GLsizei count,
                            GLenum type,
                            const GLvoid *indices,
-                           int minIndex);
+                           const TranslatedIndexData *indexInfo);
     gl::Error drawTriangleFan(const gl::Data &data,
                               GLsizei count,
                               GLenum type,
@@ -498,6 +498,8 @@ class Renderer11 : public RendererD3D
     char mDescription[128];
     DXGIFactory *mDxgiFactory;
     ID3D11Debug *mDebug;
+
+    std::vector<GLuint> mScratchIndexDataBuffer;
 };
 
 }

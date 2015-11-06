@@ -1300,6 +1300,11 @@ void GenerateInitialTextureData(GLint internalFormat, const Renderer11DeviceCaps
     }
 }
 
+UINT GetPrimitiveRestartIndex()
+{
+    return std::numeric_limits<UINT>::max();
+}
+
 void SetPositionTexCoordVertex(PositionTexCoordVertex* vertex, float x, float y, float u, float v)
 {
     vertex->x = x;
