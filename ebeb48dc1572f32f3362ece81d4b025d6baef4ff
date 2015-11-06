@@ -45,6 +45,29 @@
       "revId": "ebeb48dc1572f32f3362ece81d4b025d6baef4ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d683721b_c4baf2fb",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2015-11-06T15:33:59Z",
+      "side": 1,
+      "message": "Jamie, in my previous CL (https://chromium-review.googlesource.com/#/c/306739/), you suggested the same idea. But you and zmo@ said that it is not appropriate later. Could you have a double check?",
+      "range": {
+        "startLine": 569,
+        "startChar": 39,
+        "endLine": 569,
+        "endChar": 52
+      },
+      "revId": "ebeb48dc1572f32f3362ece81d4b025d6baef4ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
