@@ -68,6 +68,30 @@
       "revId": "ebeb48dc1572f32f3362ece81d4b025d6baef4ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56d5c228_d9c4d7b6",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-06T17:45:11Z",
+      "side": 1,
+      "message": "I believe this line is correct.",
+      "parentUuid": "d683721b_c4baf2fb",
+      "range": {
+        "startLine": 569,
+        "startChar": 39,
+        "endLine": 569,
+        "endChar": 52
+      },
+      "revId": "ebeb48dc1572f32f3362ece81d4b025d6baef4ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
