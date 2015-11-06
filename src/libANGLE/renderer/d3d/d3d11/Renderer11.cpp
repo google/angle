@@ -330,6 +330,102 @@ void CopyTriangleFanIndices(const GLvoid *indices, GLuint *destPtr, size_t numTr
     }
 }
 
+template <typename T>
+void CopyTriangleFanIndicesWithRestart(const GLvoid *indices,
+                                       GLuint indexCount,
+                                       GLenum indexType,
+                                       std::vector<GLuint> *bufferOut)
+{
+    GLuint restartIndex    = gl::GetPrimitiveRestartIndex(indexType);
+    GLuint d3dRestartIndex = gl::GetPrimitiveRestartIndex(GL_UNSIGNED_INT);
+    const T *srcPtr        = static_cast<const T *>(indices);
+    Optional<GLuint> vertexA;
+    Optional<GLuint> vertexB;
+
+    bufferOut->clear();
+
+    for (size_t indexIdx = 0; indexIdx < indexCount; ++indexIdx)
+    {
+        GLuint value = static_cast<GLuint>(srcPtr[indexIdx]);
+
+        if (value == restartIndex)
+        {
+            bufferOut->push_back(d3dRestartIndex);
+            vertexA.reset();
+            vertexB.reset();
+        }
+        else
+        {
+            if (!vertexA.valid())
+            {
+                vertexA = value;
+            }
+            else if (!vertexB.valid())
+            {
+                vertexB = value;
+            }
+            else
+            {
+                bufferOut->push_back(vertexA.value());
+                bufferOut->push_back(vertexB.value());
+                bufferOut->push_back(value);
+                vertexB = value;
+            }
+        }
+    }
+}
+
+void GetTriFanIndices(const GLvoid *indices,
+                      GLenum indexType,
+                      GLuint count,
+                      bool usePrimitiveRestartFixedIndex,
+                      std::vector<GLuint> *bufferOut)
+{
+    if (indexType != GL_NONE && usePrimitiveRestartFixedIndex)
+    {
+        switch (indexType)
+        {
+            case GL_UNSIGNED_BYTE:
+                CopyTriangleFanIndicesWithRestart<GLubyte>(indices, count, indexType, bufferOut);
+                break;
+            case GL_UNSIGNED_SHORT:
+                CopyTriangleFanIndicesWithRestart<GLushort>(indices, count, indexType, bufferOut);
+                break;
+            case GL_UNSIGNED_INT:
+                CopyTriangleFanIndicesWithRestart<GLuint>(indices, count, indexType, bufferOut);
+                break;
+            default:
+                UNREACHABLE();
+                break;
+        }
+        return;
+    }
+
+    // For non-primitive-restart draws, the index count is static.
+    GLuint numTris = count - 2;
+    bufferOut->resize(numTris * 3);
+
+    switch (indexType)
+    {
+        // Non-indexed draw
+        case GL_NONE:
+            SetTriangleFanIndices(&(*bufferOut)[0], numTris);
+            break;
+        case GL_UNSIGNED_BYTE:
+            CopyTriangleFanIndices<GLubyte>(indices, &(*bufferOut)[0], numTris);
+            break;
+        case GL_UNSIGNED_SHORT:
+            CopyTriangleFanIndices<GLushort>(indices, &(*bufferOut)[0], numTris);
+            break;
+        case GL_UNSIGNED_INT:
+            CopyTriangleFanIndices<GLuint>(indices, &(*bufferOut)[0], numTris);
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
 }  // anonymous namespace
 
 void Renderer11::SRVCache::update(size_t resourceIndex, ID3D11ShaderResourceView *srv)
@@ -2069,6 +2165,8 @@ gl::Error Renderer11::drawTriangleFan(const gl::Data &data,
     gl::VertexArray *vao           = data.state->getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
 
+    const GLvoid *indexPointer = indices;
+
     // Get the raw indices for an indexed draw
     if (type != GL_NONE && elementArrayBuffer)
     {
@@ -2082,7 +2180,7 @@ gl::Error Renderer11::drawTriangleFan(const gl::Data &data,
             return error;
         }
 
-        indices = bufferData + offset;
+        indexPointer = bufferData + offset;
     }
 
     if (!mTriangleFanIB)
@@ -2099,21 +2197,25 @@ gl::Error Renderer11::drawTriangleFan(const gl::Data &data,
     // Checked by Renderer11::applyPrimitiveType
     ASSERT(count >= 3);
 
-    const unsigned int numTris = count - 2;
+    const GLuint numTris = count - 2;
 
     if (numTris > (std::numeric_limits<unsigned int>::max() / (sizeof(unsigned int) * 3)))
     {
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to create a scratch index buffer for GL_TRIANGLE_FAN, too many indices required.");
     }
 
-    const unsigned int spaceNeeded = (numTris * 3) * sizeof(unsigned int);
+    GetTriFanIndices(indexPointer, type, count, data.state->isPrimitiveRestartEnabled(),
+                     &mScratchIndexDataBuffer);
+
+    const unsigned int spaceNeeded =
+        static_cast<unsigned int>(mScratchIndexDataBuffer.size() * sizeof(unsigned int));
     gl::Error error = mTriangleFanIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT);
     if (error.isError())
     {
         return error;
     }
 
-    void* mappedMemory = NULL;
+    void *mappedMemory = nullptr;
     unsigned int offset;
     error = mTriangleFanIB->mapBuffer(spaceNeeded, &mappedMemory, &offset);
     if (error.isError())
@@ -2121,35 +2223,7 @@ gl::Error Renderer11::drawTriangleFan(const gl::Data &data,
         return error;
     }
 
-    unsigned int *destPtr          = reinterpret_cast<unsigned int *>(mappedMemory);
-    unsigned int indexBufferOffset = offset;
-
-    // Non-indexed draw
-    if (type != GL_NONE && data.state->isPrimitiveRestartEnabled())
-    {
-        // TODO(jmadill): Implement this.
-        return gl::Error(GL_INVALID_OPERATION,
-                         "Primitive restart not yet supported for triangle fans.");
-    }
-
-    switch (type)
-    {
-        case GL_NONE:
-            SetTriangleFanIndices(destPtr, numTris);
-            break;
-        case GL_UNSIGNED_BYTE:
-            CopyTriangleFanIndices<GLubyte>(indices, destPtr, numTris);
-            break;
-        case GL_UNSIGNED_SHORT:
-            CopyTriangleFanIndices<GLushort>(indices, destPtr, numTris);
-            break;
-        case GL_UNSIGNED_INT:
-            CopyTriangleFanIndices<GLuint>(indices, destPtr, numTris);
-            break;
-        default:
-            UNREACHABLE();
-            break;
-    }
+    memcpy(mappedMemory, &mScratchIndexDataBuffer[0], spaceNeeded);
 
     error = mTriangleFanIB->unmapBuffer();
     if (error.isError())
@@ -2161,21 +2235,24 @@ gl::Error Renderer11::drawTriangleFan(const gl::Data &data,
     ID3D11Buffer *d3dIndexBuffer = indexBuffer->getBuffer();
     DXGI_FORMAT indexFormat = indexBuffer->getIndexFormat();
 
-    if (mAppliedIB != d3dIndexBuffer || mAppliedIBFormat != indexFormat || mAppliedIBOffset != indexBufferOffset)
+    if (mAppliedIB != d3dIndexBuffer || mAppliedIBFormat != indexFormat ||
+        mAppliedIBOffset != offset)
     {
-        mDeviceContext->IASetIndexBuffer(d3dIndexBuffer, indexFormat, indexBufferOffset);
+        mDeviceContext->IASetIndexBuffer(d3dIndexBuffer, indexFormat, offset);
         mAppliedIB = d3dIndexBuffer;
         mAppliedIBFormat = indexFormat;
-        mAppliedIBOffset = indexBufferOffset;
+        mAppliedIBOffset = offset;
     }
+
+    UINT indexCount = static_cast<UINT>(mScratchIndexDataBuffer.size());
 
     if (instances > 0)
     {
-        mDeviceContext->DrawIndexedInstanced(numTris * 3, instances, 0, -minIndex, 0);
+        mDeviceContext->DrawIndexedInstanced(indexCount, instances, 0, -minIndex, 0);
     }
     else
     {
-        mDeviceContext->DrawIndexed(numTris * 3, 0, -minIndex);
+        mDeviceContext->DrawIndexed(indexCount, 0, -minIndex);
     }
 
     return gl::Error(GL_NO_ERROR);
