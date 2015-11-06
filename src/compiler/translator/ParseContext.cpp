@@ -1369,17 +1369,6 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
     return false;
 }
 
-bool TParseContext::areAllChildrenConstantFolded(TIntermAggregate *aggrNode)
-{
-    ASSERT(aggrNode != nullptr);
-    for (TIntermNode *&node : *aggrNode->getSequence())
-    {
-        if (node->getAsConstantUnion() == nullptr)
-            return false;
-    }
-    return true;
-}
-
 TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier,
                                                  bool invariant,
                                                  TLayoutQualifier layoutQualifier,
@@ -2318,40 +2307,13 @@ TIntermTyped *TParseContext::addConstructor(TIntermNode *arguments,
         type->setPrecision(constructor->getPrecision());
     }
 
-    TIntermTyped *constConstructor = foldConstConstructor(constructor, *type);
+    TIntermTyped *constConstructor = intermediate.foldAggregateBuiltIn(constructor);
     if (constConstructor)
     {
         return constConstructor;
     }
 
     return constructor;
-}
-
-TIntermTyped *TParseContext::foldConstConstructor(TIntermAggregate *aggrNode, const TType &type)
-{
-    // TODO: Add support for folding array constructors
-    bool canBeFolded = areAllChildrenConstantFolded(aggrNode) && !type.isArray();
-    if (canBeFolded)
-    {
-        bool returnVal             = false;
-        TConstantUnion *unionArray = new TConstantUnion[type.getObjectSize()];
-        if (aggrNode->getSequence()->size() == 1)
-        {
-            returnVal = intermediate.parseConstTree(aggrNode->getLine(), aggrNode, unionArray,
-                                                    aggrNode->getOp(), type, true);
-        }
-        else
-        {
-            returnVal = intermediate.parseConstTree(aggrNode->getLine(), aggrNode, unionArray,
-                                                    aggrNode->getOp(), type);
-        }
-        if (returnVal)
-            return 0;
-
-        return intermediate.addConstantUnion(unionArray, type, aggrNode->getLine());
-    }
-
-    return 0;
 }
 
 //

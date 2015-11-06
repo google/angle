@@ -950,7 +950,11 @@ TIntermTyped *TIntermAggregate::fold(TInfoSink &infoSink)
             return nullptr;
         }
     }
-    TConstantUnion *constArray = TIntermConstantUnion::FoldAggregateBuiltIn(this, infoSink);
+    TConstantUnion *constArray = nullptr;
+    if (isConstructor())
+        constArray = TIntermConstantUnion::FoldAggregateConstructor(this, infoSink);
+    else
+        constArray = TIntermConstantUnion::FoldAggregateBuiltIn(this, infoSink);
 
     // Nodes may be constant folded without being qualified as constant.
     TQualifier resultQualifier = areChildrenConstQualified() ? EvqConst : EvqTemporary;
@@ -1970,6 +1974,106 @@ bool TIntermConstantUnion::foldFloatTypeUnary(const TConstantUnion &parameter, F
         EPrefixInternalError, getLine(),
         "Unary operation not folded into constant");
     return false;
+}
+
+// static
+TConstantUnion *TIntermConstantUnion::FoldAggregateConstructor(TIntermAggregate *aggregate,
+                                                               TInfoSink &infoSink)
+{
+    ASSERT(aggregate->getSequence()->size() > 0u);
+    size_t resultSize           = aggregate->getType().getObjectSize();
+    TConstantUnion *resultArray = new TConstantUnion[resultSize];
+    TBasicType basicType        = aggregate->getBasicType();
+
+    size_t resultIndex = 0u;
+
+    if (aggregate->getSequence()->size() == 1u)
+    {
+        TIntermNode *argument                    = aggregate->getSequence()->front();
+        TIntermConstantUnion *argumentConstant   = argument->getAsConstantUnion();
+        const TConstantUnion *argumentUnionArray = argumentConstant->getUnionArrayPointer();
+        // Check the special case of constructing a matrix diagonal from a single scalar,
+        // or a vector from a single scalar.
+        if (argumentConstant->getType().getObjectSize() == 1u)
+        {
+            if (aggregate->isMatrix())
+            {
+                int resultCols = aggregate->getType().getCols();
+                int resultRows = aggregate->getType().getRows();
+                for (int col = 0; col < resultCols; ++col)
+                {
+                    for (int row = 0; row < resultRows; ++row)
+                    {
+                        if (col == row)
+                        {
+                            resultArray[resultIndex].cast(basicType, argumentUnionArray[0]);
+                        }
+                        else
+                        {
+                            resultArray[resultIndex].setFConst(0.0f);
+                        }
+                        ++resultIndex;
+                    }
+                }
+            }
+            else
+            {
+                while (resultIndex < resultSize)
+                {
+                    resultArray[resultIndex].cast(basicType, argumentUnionArray[0]);
+                    ++resultIndex;
+                }
+            }
+            ASSERT(resultIndex == resultSize);
+            return resultArray;
+        }
+        else if (aggregate->isMatrix() && argumentConstant->isMatrix())
+        {
+            // The special case of constructing a matrix from a matrix.
+            int argumentCols = argumentConstant->getType().getCols();
+            int argumentRows = argumentConstant->getType().getRows();
+            int resultCols   = aggregate->getType().getCols();
+            int resultRows = aggregate->getType().getRows();
+            for (int col = 0; col < resultCols; ++col)
+            {
+                for (int row = 0; row < resultRows; ++row)
+                {
+                    if (col < argumentCols && row < argumentRows)
+                    {
+                        resultArray[resultIndex].cast(basicType,
+                                                      argumentUnionArray[col * argumentRows + row]);
+                    }
+                    else if (col == row)
+                    {
+                        resultArray[resultIndex].setFConst(1.0f);
+                    }
+                    else
+                    {
+                        resultArray[resultIndex].setFConst(0.0f);
+                    }
+                    ++resultIndex;
+                }
+            }
+            ASSERT(resultIndex == resultSize);
+            return resultArray;
+        }
+    }
+
+    for (TIntermNode *&argument : *aggregate->getSequence())
+    {
+        TIntermConstantUnion *argumentConstant   = argument->getAsConstantUnion();
+        size_t argumentSize                      = argumentConstant->getType().getObjectSize();
+        const TConstantUnion *argumentUnionArray = argumentConstant->getUnionArrayPointer();
+        for (size_t i = 0u; i < argumentSize; ++i)
+        {
+            if (resultIndex >= resultSize)
+                break;
+            resultArray[resultIndex].cast(basicType, argumentUnionArray[i]);
+            ++resultIndex;
+        }
+    }
+    ASSERT(resultIndex == resultSize);
+    return resultArray;
 }
 
 // static

@@ -564,3 +564,136 @@ TEST_F(ConstantFoldingTest, FoldUnaryMinusOnUintLiteral)
     compile(shaderString);
     ASSERT_TRUE(constantFoundInAST(0xFFFFFFFFu));
 }
+
+// Test that constant mat2 initialization with a mat2 parameter works correctly.
+TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingMat2)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform float mult;\n"
+        "void main() {\n"
+        "   const mat2 cm = mat2(mat2(0.0, 1.0, 2.0, 3.0));\n"
+        "   mat2 m = cm * mult;\n"
+        "   gl_FragColor = vec4(m[0], m[1]);\n"
+        "}\n";
+    compile(shaderString);
+    float outputElements[] =
+    {
+        0.0f, 1.0f,
+        2.0f, 3.0f
+    };
+    std::vector<float> result(outputElements, outputElements + 4);
+    ASSERT_TRUE(constantVectorFoundInAST(result));
+}
+
+// Test that constant mat2 initialization with an int parameter works correctly.
+TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingScalar)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform float mult;\n"
+        "void main() {\n"
+        "   const mat2 cm = mat2(3);\n"
+        "   mat2 m = cm * mult;\n"
+        "   gl_FragColor = vec4(m[0], m[1]);\n"
+        "}\n";
+    compile(shaderString);
+    float outputElements[] =
+    {
+        3.0f, 0.0f,
+        0.0f, 3.0f
+    };
+    std::vector<float> result(outputElements, outputElements + 4);
+    ASSERT_TRUE(constantVectorFoundInAST(result));
+}
+
+// Test that constant mat2 initialization with a mix of parameters works correctly.
+TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingMix)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform float mult;\n"
+        "void main() {\n"
+        "   const mat2 cm = mat2(-1, vec2(0.0, 1.0), vec4(2.0));\n"
+        "   mat2 m = cm * mult;\n"
+        "   gl_FragColor = vec4(m[0], m[1]);\n"
+        "}\n";
+    compile(shaderString);
+    float outputElements[] =
+    {
+        -1.0, 0.0f,
+        1.0f, 2.0f
+    };
+    std::vector<float> result(outputElements, outputElements + 4);
+    ASSERT_TRUE(constantVectorFoundInAST(result));
+}
+
+// Test that constant mat2 initialization with a mat3 parameter works correctly.
+TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingMat3)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform float mult;\n"
+        "void main() {\n"
+        "   const mat2 cm = mat2(mat3(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0));\n"
+        "   mat2 m = cm * mult;\n"
+        "   gl_FragColor = vec4(m[0], m[1]);\n"
+        "}\n";
+    compile(shaderString);
+    float outputElements[] =
+    {
+        0.0f, 1.0f,
+        3.0f, 4.0f
+    };
+    std::vector<float> result(outputElements, outputElements + 4);
+    ASSERT_TRUE(constantVectorFoundInAST(result));
+}
+
+// Test that constant mat4x3 initialization with a mat3x2 parameter works correctly.
+TEST_F(ConstantFoldingTest, FoldMat4x3ConstructorTakingMat3x2)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "uniform float mult;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   const mat4x3 cm = mat4x3(mat3x2(1.0, 2.0,\n"
+        "                                   3.0, 4.0,\n"
+        "                                   5.0, 6.0));\n"
+        "   mat4x3 m = cm * mult;\n"
+        "   my_FragColor = vec4(m[0], m[1][0]);\n"
+        "}\n";
+    compile(shaderString);
+    float outputElements[] =
+    {
+        1.0f, 2.0f, 0.0f,
+        3.0f, 4.0f, 0.0f,
+        5.0f, 6.0f, 1.0f,
+        0.0f, 0.0f, 0.0f
+    };
+    std::vector<float> result(outputElements, outputElements + 12);
+    ASSERT_TRUE(constantVectorFoundInAST(result));
+}
+
+
+// Test that constant mat2 initialization with a vec4 parameter works correctly.
+TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingVec4)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform float mult;\n"
+        "void main() {\n"
+        "   const mat2 cm = mat2(vec4(0.0, 1.0, 2.0, 3.0));\n"
+        "   mat2 m = cm * mult;\n"
+        "   gl_FragColor = vec4(m[0], m[1]);\n"
+        "}\n";
+    compile(shaderString);
+    float outputElements[] =
+    {
+        0.0f, 1.0f,
+        2.0f, 3.0f
+    };
+    std::vector<float> result(outputElements, outputElements + 4);
+    ASSERT_TRUE(constantVectorFoundInAST(result));
+}

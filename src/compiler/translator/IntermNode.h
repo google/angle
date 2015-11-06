@@ -345,6 +345,8 @@ class TIntermConstantUnion : public TIntermTyped
     TConstantUnion *foldUnaryWithDifferentReturnType(TOperator op, TInfoSink &infoSink);
     TConstantUnion *foldUnaryWithSameReturnType(TOperator op, TInfoSink &infoSink);
 
+    static TConstantUnion *FoldAggregateConstructor(TIntermAggregate *aggregate,
+                                                    TInfoSink &infoSink);
     static TConstantUnion *FoldAggregateBuiltIn(TIntermAggregate *aggregate, TInfoSink &infoSink);
 
   protected:

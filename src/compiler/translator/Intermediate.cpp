@@ -469,33 +469,38 @@ TIntermTyped *TIntermediate::foldAggregateBuiltIn(TIntermAggregate *aggregate)
 {
     switch (aggregate->getOp())
     {
-      case EOpAtan:
-      case EOpPow:
-      case EOpMod:
-      case EOpMin:
-      case EOpMax:
-      case EOpClamp:
-      case EOpMix:
-      case EOpStep:
-      case EOpSmoothStep:
-      case EOpMul:
-      case EOpOuterProduct:
-      case EOpLessThan:
-      case EOpLessThanEqual:
-      case EOpGreaterThan:
-      case EOpGreaterThanEqual:
-      case EOpVectorEqual:
-      case EOpVectorNotEqual:
-      case EOpDistance:
-      case EOpDot:
-      case EOpCross:
-      case EOpFaceForward:
-      case EOpReflect:
-      case EOpRefract:
-        return aggregate->fold(mInfoSink);
-      default:
-        // Constant folding not supported for the built-in.
-        return nullptr;
+        case EOpAtan:
+        case EOpPow:
+        case EOpMod:
+        case EOpMin:
+        case EOpMax:
+        case EOpClamp:
+        case EOpMix:
+        case EOpStep:
+        case EOpSmoothStep:
+        case EOpMul:
+        case EOpOuterProduct:
+        case EOpLessThan:
+        case EOpLessThanEqual:
+        case EOpGreaterThan:
+        case EOpGreaterThanEqual:
+        case EOpVectorEqual:
+        case EOpVectorNotEqual:
+        case EOpDistance:
+        case EOpDot:
+        case EOpCross:
+        case EOpFaceForward:
+        case EOpReflect:
+        case EOpRefract:
+            return aggregate->fold(mInfoSink);
+        default:
+            // TODO: Add support for folding array constructors
+            if (aggregate->isConstructor() && !aggregate->isArray())
+            {
+                return aggregate->fold(mInfoSink);
+            }
+            // Constant folding not supported for the built-in.
+            return nullptr;
     }
 
     return nullptr;

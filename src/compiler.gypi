@@ -139,7 +139,6 @@
             'compiler/translator/glslang_tab.h',
             'compiler/translator/intermOut.cpp',
             'compiler/translator/length_limits.h',
-            'compiler/translator/parseConst.cpp',
             'compiler/translator/timing/RestrictFragmentShaderTiming.cpp',
             'compiler/translator/timing/RestrictFragmentShaderTiming.h',
             'compiler/translator/timing/RestrictVertexShaderTiming.cpp',

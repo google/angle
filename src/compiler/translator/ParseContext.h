@@ -165,7 +165,6 @@ class TParseContext : angle::NonCopyable
     void handlePragmaDirective(const TSourceLoc &loc, const char *name, const char *value, bool stdgl);
 
     bool containsSampler(const TType &type);
-    bool areAllChildrenConstantFolded(TIntermAggregate *aggrNode);
     const TFunction* findFunction(
         const TSourceLoc &line, TFunction *pfnCall, int inputShaderVersion, bool *builtIn = 0);
     bool executeInitializer(const TSourceLoc &line,
@@ -247,7 +246,6 @@ class TParseContext : angle::NonCopyable
                                  TOperator op,
                                  TFunction *fnCall,
                                  const TSourceLoc &line);
-    TIntermTyped *foldConstConstructor(TIntermAggregate *aggrNode, const TType &type);
     TIntermTyped *addConstVectorNode(TVectorFields &fields,
                                      TIntermConstantUnion *node,
                                      const TSourceLoc &line,

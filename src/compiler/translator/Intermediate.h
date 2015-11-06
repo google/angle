@@ -54,9 +54,6 @@ class TIntermediate
                            int shaderVersion);
     TIntermConstantUnion *addConstantUnion(
         TConstantUnion *constantUnion, const TType &type, const TSourceLoc &line);
-    // TODO(zmo): Get rid of default value.
-    bool parseConstTree(const TSourceLoc &, TIntermNode *, TConstantUnion *,
-                        TOperator, TType, bool singleConstantParam = false);
     TIntermNode *addLoop(TLoopType, TIntermNode *, TIntermTyped *, TIntermTyped *,
                          TIntermNode *, const TSourceLoc &);
     TIntermBranch *addBranch(TOperator, const TSourceLoc &);
