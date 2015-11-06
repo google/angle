@@ -62,10 +62,13 @@ class DisplayGLX : public DisplayGL
   private:
     const FunctionsGL *getFunctionsGL() const override;
 
+    glx::Context initializeContext(glx::FBConfig config, const egl::AttributeMap &eglAttributes);
+
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 
     int getGLXFBConfigAttrib(glx::FBConfig config, int attrib) const;
+    glx::Context createContextAttribs(glx::FBConfig, const std::vector<int> &attribs) const;
 
     FunctionsGL *mFunctionsGL;
 

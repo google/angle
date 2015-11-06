@@ -21,6 +21,11 @@
 namespace rx
 {
 
+static int IgnoreX11Errors(Display *, XErrorEvent *)
+{
+    return 0;
+}
+
 class FunctionsGLGLX : public FunctionsGL
 {
   public:
@@ -138,7 +143,7 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
         XFree(candidates);
     }
 
-    mContext = mGLX.createContextAttribsARB(mContextConfig, nullptr, True, nullptr);
+    mContext = initializeContext(mContextConfig, display->getAttributeMap());
     if (!mContext)
     {
         return egl::Error(EGL_NOT_INITIALIZED, "Could not create GL context.");
@@ -249,6 +254,83 @@ egl::Error DisplayGLX::getDevice(DeviceImpl **device)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_BAD_DISPLAY);
+}
+
+glx::Context DisplayGLX::initializeContext(glx::FBConfig config,
+                                           const egl::AttributeMap &eglAttributes)
+{
+    // Create a context of the requested version, if any.
+    EGLint requestedMajorVersion =
+        eglAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE);
+    EGLint requestedMinorVersion =
+        eglAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE);
+    if (requestedMajorVersion != EGL_DONT_CARE && requestedMinorVersion != EGL_DONT_CARE)
+    {
+        std::vector<int> contextAttributes;
+        contextAttributes.push_back(GLX_CONTEXT_MAJOR_VERSION_ARB);
+        contextAttributes.push_back(requestedMajorVersion);
+
+        contextAttributes.push_back(GLX_CONTEXT_MINOR_VERSION_ARB);
+        contextAttributes.push_back(requestedMinorVersion);
+
+        contextAttributes.push_back(None);
+        return createContextAttribs(config, contextAttributes);
+    }
+
+    // It is commonly assumed that glXCreateContextAttrib will create a context
+    // of the highest version possible but it is not specified in the spec and
+    // is not true on the Mesa drivers. Instead we try to create a context per
+    // desktop GL version until we succeed, starting from newer version.
+    // clang-format off
+    const gl::Version desktopVersions[] = {
+        gl::Version(4, 5),
+        gl::Version(4, 4),
+        gl::Version(4, 3),
+        gl::Version(4, 2),
+        gl::Version(4, 1),
+        gl::Version(4, 0),
+        gl::Version(3, 3),
+        gl::Version(3, 2),
+        gl::Version(3, 1),
+        gl::Version(3, 0),
+        gl::Version(2, 0),
+        gl::Version(1, 5),
+        gl::Version(1, 4),
+        gl::Version(1, 3),
+        gl::Version(1, 2),
+        gl::Version(1, 1),
+        gl::Version(1, 0),
+    };
+    // clang-format on
+
+    bool useProfile = mGLX.hasExtension("GLX_ARB_create_context_profile");
+    for (size_t i = 0; i < ArraySize(desktopVersions); ++i)
+    {
+        const auto &version = desktopVersions[i];
+
+        std::vector<int> contextAttributes;
+        contextAttributes.push_back(GLX_CONTEXT_MAJOR_VERSION_ARB);
+        contextAttributes.push_back(version.major);
+
+        contextAttributes.push_back(GLX_CONTEXT_MINOR_VERSION_ARB);
+        contextAttributes.push_back(version.minor);
+
+        if (useProfile && version >= gl::Version(3, 2))
+        {
+            contextAttributes.push_back(GLX_CONTEXT_PROFILE_MASK_ARB);
+            contextAttributes.push_back(GLX_CONTEXT_CORE_PROFILE_BIT_ARB);
+        }
+
+        contextAttributes.push_back(None);
+        auto context = createContextAttribs(config, contextAttributes);
+
+        if (context)
+        {
+            return context;
+        }
+    }
+
+    return nullptr;
 }
 
 egl::ConfigSet DisplayGLX::generateConfigs() const
@@ -498,4 +580,15 @@ int DisplayGLX::getGLXFBConfigAttrib(glx::FBConfig config, int attrib) const
     return result;
 }
 
+glx::Context DisplayGLX::createContextAttribs(glx::FBConfig, const std::vector<int> &attribs) const
+{
+    // When creating a context with glXCreateContextAttribsARB, a variety of X11 errors can
+    // be generated. To prevent these errors from crashing our process, we simply ignore
+    // them and only look if GLXContext was created.
+    auto oldErrorHandler = XSetErrorHandler(IgnoreX11Errors);
+    auto context = mGLX.createContextAttribsARB(mContextConfig, nullptr, True, attribs.data());
+    XSetErrorHandler(oldErrorHandler);
+
+    return context;
+}
 }
