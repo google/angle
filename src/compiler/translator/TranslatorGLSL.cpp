@@ -177,6 +177,12 @@ void TranslatorGLSL::writeExtensionBehavior(TIntermNode *root)
         }
     }
 
+    // GLSL ES 3 explicit location qualifiers need to use an extension before GLSL 330
+    if (getShaderVersion() >= 300 && getOutputType() < SH_GLSL_330_CORE_OUTPUT)
+    {
+        sink << "#extension GL_ARB_explicit_attrib_location : require\n";
+    }
+
     TExtensionGLSL extensionGLSL(getOutputType());
     root->traverse(&extensionGLSL);
 
