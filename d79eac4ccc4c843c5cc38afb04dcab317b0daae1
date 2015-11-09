@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56d5c228_5c5555cd",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-09T15:38:49Z",
+      "side": 1,
+      "message": "same here, use a local temporary",
+      "range": {
+        "startLine": 63,
+        "startChar": 38,
+        "endLine": 63,
+        "endChar": 48
+      },
+      "revId": "d79eac4ccc4c843c5cc38afb04dcab317b0daae1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16598ae9_e426daf8",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2990,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-09T15:38:49Z",
+      "side": 1,
+      "message": "nit: don\u0027t modify arguments... if you need to, use a local temporary.",
+      "range": {
+        "startLine": 2990,
+        "startChar": 8,
+        "endLine": 2990,
+        "endChar": 18
+      },
+      "revId": "d79eac4ccc4c843c5cc38afb04dcab317b0daae1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
