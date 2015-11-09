@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "761ac604_b714a81d",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-09T20:28:24Z",
+      "side": 1,
+      "message": "[1] This is the interval interval (heh) that the validation layer would validate against. The MESA and SGI specs aren\u0027t totally clear but it seems like 0 and 1 should always be supported.",
+      "revId": "8414d4ef2d41a1cf79b16f1f35b5e2aead366c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56d5c228_9ca88db5",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 1
@@ -36,6 +53,30 @@
       "writtenOn": "2015-11-09T20:00:30Z",
       "side": 1,
       "message": "nit: static_cast? unsigned to signed",
+      "range": {
+        "startLine": 606,
+        "startChar": 36,
+        "endLine": 606,
+        "endChar": 51
+      },
+      "revId": "8414d4ef2d41a1cf79b16f1f35b5e2aead366c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "761ac604_370ad8fd",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-09T20:28:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56d5c228_9ca88db5",
       "range": {
         "startLine": 606,
         "startChar": 36,
@@ -71,6 +112,30 @@
     },
     {
       "key": {
+        "uuid": "16cfcaa0_be357686",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-09T20:28:24Z",
+      "side": 1,
+      "message": "Added comments that explain why it should be kept in the condition.",
+      "parentUuid": "b6e35e49_417db2c3",
+      "range": {
+        "startLine": 610,
+        "startChar": 13,
+        "endLine": 610,
+        "endChar": 95
+      },
+      "revId": "8414d4ef2d41a1cf79b16f1f35b5e2aead366c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6e61228_b89a2192",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 1
@@ -82,6 +147,30 @@
       "writtenOn": "2015-11-09T20:00:30Z",
       "side": 1,
       "message": "how come you don\u0027t do the swap clamping for the non EXT cases?",
+      "range": {
+        "startLine": 619,
+        "startChar": 12,
+        "endLine": 619,
+        "endChar": 24
+      },
+      "revId": "8414d4ef2d41a1cf79b16f1f35b5e2aead366c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16598ae9_a44f8267",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-09T20:28:24Z",
+      "side": 1,
+      "message": "The MESA and SGI extensions are very featureless and don\u0027t have a query for the max swap interval and I assume our validation layer already validated that the interval is in the [0 - 1 range]. See [1].",
+      "parentUuid": "d6e61228_b89a2192",
       "range": {
         "startLine": 619,
         "startChar": 12,
