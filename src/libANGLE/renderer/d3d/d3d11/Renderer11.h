@@ -188,14 +188,20 @@ class Renderer11 : public RendererD3D
     ProgramImpl *createProgram(const gl::Program::Data &data) override;
 
     // Shader operations
-    virtual gl::Error loadExecutable(const void *function, size_t length, ShaderType type,
-                                     const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
-                                     bool separatedOutputBuffers, ShaderExecutableD3D **outExecutable);
-    virtual gl::Error compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, ShaderType type,
-                                          const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
-                                          bool separatedOutputBuffers, const D3DCompilerWorkarounds &workarounds,
-                                          ShaderExecutableD3D **outExectuable);
-    virtual UniformStorageD3D *createUniformStorage(size_t storageSize);
+    gl::Error loadExecutable(const void *function,
+                             size_t length,
+                             ShaderType type,
+                             const std::vector<D3DVarying> &transformFeedbackVaryings,
+                             bool separatedOutputBuffers,
+                             ShaderExecutableD3D **outExecutable) override;
+    gl::Error compileToExecutable(gl::InfoLog &infoLog,
+                                  const std::string &shaderHLSL,
+                                  ShaderType type,
+                                  const std::vector<D3DVarying> &transformFeedbackVaryings,
+                                  bool separatedOutputBuffers,
+                                  const D3DCompilerWorkarounds &workarounds,
+                                  ShaderExecutableD3D **outExectuable) override;
+    UniformStorageD3D *createUniformStorage(size_t storageSize) override;
 
     // Image operations
     virtual ImageD3D *createImage();

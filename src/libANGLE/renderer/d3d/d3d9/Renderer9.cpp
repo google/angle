@@ -2732,9 +2732,12 @@ ProgramImpl *Renderer9::createProgram(const gl::Program::Data &data)
     return new ProgramD3D(data, this);
 }
 
-gl::Error Renderer9::loadExecutable(const void *function, size_t length, ShaderType type,
-                                    const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
-                                    bool separatedOutputBuffers, ShaderExecutableD3D **outExecutable)
+gl::Error Renderer9::loadExecutable(const void *function,
+                                    size_t length,
+                                    ShaderType type,
+                                    const std::vector<D3DVarying> &transformFeedbackVaryings,
+                                    bool separatedOutputBuffers,
+                                    ShaderExecutableD3D **outExecutable)
 {
     // Transform feedback is not supported in ES2 or D3D9
     ASSERT(transformFeedbackVaryings.size() == 0);
@@ -2771,9 +2774,12 @@ gl::Error Renderer9::loadExecutable(const void *function, size_t length, ShaderT
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, ShaderType type,
-                                         const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
-                                         bool separatedOutputBuffers, const D3DCompilerWorkarounds &workarounds,
+gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog,
+                                         const std::string &shaderHLSL,
+                                         ShaderType type,
+                                         const std::vector<D3DVarying> &transformFeedbackVaryings,
+                                         bool separatedOutputBuffers,
+                                         const D3DCompilerWorkarounds &workarounds,
                                          ShaderExecutableD3D **outExectuable)
 {
     // Transform feedback is not supported in ES2 or D3D9

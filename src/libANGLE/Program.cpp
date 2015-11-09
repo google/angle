@@ -222,16 +222,6 @@ VariableLocation::VariableLocation(const std::string &name, unsigned int element
 {
 }
 
-LinkedVarying::LinkedVarying()
-{
-}
-
-LinkedVarying::LinkedVarying(const std::string &name, GLenum type, GLsizei size, const std::string &semanticName,
-                             unsigned int semanticIndex, unsigned int semanticIndexCount)
-    : name(name), type(type), size(size), semanticName(semanticName), semanticIndex(semanticIndex), semanticIndexCount(semanticIndexCount)
-{
-}
-
 Program::Data::Data()
     : mAttachedFragmentShader(nullptr),
       mAttachedVertexShader(nullptr),

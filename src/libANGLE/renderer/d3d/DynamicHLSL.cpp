@@ -13,6 +13,7 @@
 #include "libANGLE/Program.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
 
@@ -863,31 +864,30 @@ void DynamicHLSL::generateVaryingLinkHLSL(const gl::Caps &caps,
     linkStream << "};\n";
 }
 
-void DynamicHLSL::storeBuiltinLinkedVaryings(const SemanticInfo &info,
-                                             std::vector<LinkedVarying> *linkedVaryings) const
+void DynamicHLSL::storeBuiltinVaryings(const SemanticInfo &info,
+                                       std::vector<D3DVarying> *d3dVaryingsOut) const
 {
     if (info.glPosition.enabled)
     {
-        linkedVaryings->push_back(LinkedVarying(
-            "gl_Position", GL_FLOAT_VEC4, 1, info.glPosition.semantic, info.glPosition.index, 1));
+        d3dVaryingsOut->push_back(D3DVarying("gl_Position", GL_FLOAT_VEC4, 1,
+                                             info.glPosition.semantic, info.glPosition.index, 1));
     }
 
     if (info.glFragCoord.enabled)
     {
-        linkedVaryings->push_back(LinkedVarying("gl_FragCoord", GL_FLOAT_VEC4, 1,
-                                                info.glFragCoord.semantic, info.glFragCoord.index,
-                                                1));
+        d3dVaryingsOut->push_back(D3DVarying("gl_FragCoord", GL_FLOAT_VEC4, 1,
+                                             info.glFragCoord.semantic, info.glFragCoord.index, 1));
     }
 
     if (info.glPointSize.enabled)
     {
-        linkedVaryings->push_back(LinkedVarying("gl_PointSize", GL_FLOAT, 1, "PSIZE", 0, 1));
+        d3dVaryingsOut->push_back(D3DVarying("gl_PointSize", GL_FLOAT, 1, "PSIZE", 0, 1));
     }
 }
 
-void DynamicHLSL::storeUserLinkedVaryings(const std::vector<PackedVarying> &packedVaryings,
-                                          bool programUsesPointSize,
-                                          std::vector<LinkedVarying> *linkedVaryings) const
+void DynamicHLSL::storeUserVaryings(const std::vector<PackedVarying> &packedVaryings,
+                                    bool programUsesPointSize,
+                                    std::vector<D3DVarying> *d3dVaryingsOut) const
 {
     const std::string &varyingSemantic = getVaryingSemantic(programUsesPointSize);
 
@@ -901,9 +901,9 @@ void DynamicHLSL::storeUserLinkedVaryings(const std::vector<PackedVarying> &pack
             GLenum transposedType = TransposeMatrixType(varying.type);
             int variableRows      = (varying.isStruct() ? 1 : VariableRowCount(transposedType));
 
-            linkedVaryings->push_back(
-                LinkedVarying(varying.name, varying.type, varying.elementCount(), varyingSemantic,
-                              packedVarying.registerIndex, variableRows * varying.elementCount()));
+            d3dVaryingsOut->push_back(D3DVarying(varying.name, varying.type, varying.elementCount(),
+                                                 varyingSemantic, packedVarying.registerIndex,
+                                                 variableRows * varying.elementCount()));
         }
     }
 }
@@ -915,7 +915,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
                                          std::string *pixelHLSL,
                                          std::string *vertexHLSL,
                                          const std::vector<PackedVarying> &packedVaryings,
-                                         std::vector<LinkedVarying> *linkedVaryings,
+                                         std::vector<D3DVarying> *d3dVaryingsOut,
                                          std::vector<PixelShaderOutputVariable> *outPixelShaderKey,
                                          bool *outUsesFragDepth) const
 {
@@ -974,8 +974,8 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
         getSemanticInfo(SHADER_VERTEX, registerCount, outputPositionFromVS, usesFragCoord,
                         addPointCoord, (!useInstancedPointSpriteEmulation && usesPointSize));
 
-    storeUserLinkedVaryings(packedVaryings, usesPointSize, linkedVaryings);
-    storeBuiltinLinkedVaryings(vertexSemantics, linkedVaryings);
+    storeUserVaryings(packedVaryings, usesPointSize, d3dVaryingsOut);
+    storeBuiltinVaryings(vertexSemantics, d3dVaryingsOut);
 
     std::stringstream vertexStream;
     vertexStream << vertexShaderGL->getTranslatedSource();

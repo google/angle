@@ -29,7 +29,6 @@ namespace gl
 {
 class InfoLog;
 struct VariableLocation;
-struct LinkedVarying;
 struct VertexAttribute;
 struct Data;
 }
@@ -95,7 +94,7 @@ class DynamicHLSL : angle::NonCopyable
                                 std::string *pixelHLSL,
                                 std::string *vertexHLSL,
                                 const std::vector<PackedVarying> &packedVaryings,
-                                std::vector<gl::LinkedVarying> *linkedVaryings,
+                                std::vector<D3DVarying> *d3dVaryingsOut,
                                 std::vector<PixelShaderOutputVariable> *outPixelShaderKey,
                                 bool *outUsesFragDepth) const;
 
@@ -131,11 +130,11 @@ class DynamicHLSL : angle::NonCopyable
                              const std::vector<PackedVarying> &varyings,
                              bool programUsesPointSize,
                              std::stringstream &hlslStream) const;
-    void storeUserLinkedVaryings(const std::vector<PackedVarying> &packedVaryings,
-                                 bool programUsesPointSize,
-                                 std::vector<gl::LinkedVarying> *linkedVaryings) const;
-    void storeBuiltinLinkedVaryings(const SemanticInfo &info,
-                                    std::vector<gl::LinkedVarying> *linkedVaryings) const;
+    void storeUserVaryings(const std::vector<PackedVarying> &packedVaryings,
+                           bool programUsesPointSize,
+                           std::vector<D3DVarying> *d3dVaryingsOut) const;
+    void storeBuiltinVaryings(const SemanticInfo &info,
+                              std::vector<D3DVarying> *d3dVaryingsOut) const;
 
     // Prepend an underscore
     static std::string decorateVariable(const std::string &name);
