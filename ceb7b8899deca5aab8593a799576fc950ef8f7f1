@@ -16,6 +16,24 @@
       "revId": "ceb7b8899deca5aab8593a799576fc950ef8f7f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16fd0ac1_a7f8c437",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2160,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-09T20:28:42Z",
+      "side": 1,
+      "message": "Done. I did it the other way because it was simpler to guarantee I didn\u0027t miss a rename. I only saw it used in one place.",
+      "parentUuid": "76f3a6ea_d25ee227",
+      "revId": "ceb7b8899deca5aab8593a799576fc950ef8f7f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
