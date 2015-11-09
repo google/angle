@@ -338,7 +338,9 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
     egl::ConfigSet configs;
     configIdToGLXConfig.clear();
 
-    bool hasSwapControl = mGLX.hasExtension("GLX_EXT_swap_control");
+    const gl::Version &maxVersion = getMaxSupportedESVersion();
+    ASSERT(maxVersion >= gl::Version(2, 0));
+    bool supportsES3 = maxVersion >= gl::Version(3, 0);
 
     int contextRedSize   = getGLXFBConfigAttrib(mContextConfig, GLX_RED_SIZE);
     int contextGreenSize = getGLXFBConfigAttrib(mContextConfig, GLX_GREEN_SIZE);
@@ -488,9 +490,10 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
         // TODO(cwallez) wildly guessing these formats, another TODO says they should be removed anyway
         config.renderTargetFormat = GL_RGBA8;
         config.depthStencilFormat = GL_DEPTH24_STENCIL8;
-        // TODO(cwallez) Fill after determining the GL version we are using and what ES version it supports
-        config.conformant = EGL_OPENGL_ES2_BIT | EGL_OPENGL_ES3_BIT_KHR;
-        config.renderableType = EGL_OPENGL_ES2_BIT | EGL_OPENGL_ES3_BIT_KHR;
+
+        config.conformant = EGL_OPENGL_ES2_BIT | (supportsES3 ? EGL_OPENGL_ES3_BIT_KHR : 0);
+        config.renderableType = config.conformant;
+
         // TODO(cwallez) I have no idea what this is
         config.matchNativePixmap = EGL_NONE;
 
