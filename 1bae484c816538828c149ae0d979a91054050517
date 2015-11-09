@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96eada1e_e0ade2ac",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-09T13:28:39Z",
+      "side": 1,
+      "message": "nit: I think the comment clipping is a bit off (you shouldn\u0027t need the dash-break)",
+      "range": {
+        "startLine": 521,
+        "startChar": 5,
+        "endLine": 522,
+        "endChar": 52
+      },
+      "revId": "1bae484c816538828c149ae0d979a91054050517",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
