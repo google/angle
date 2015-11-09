@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "d6e61228_383bd1a9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-09T13:29:01Z",
+      "side": 1,
+      "message": "please open an ANGLE issue to track this bug and tag it with BUG\u003dangleproject:####",
+      "revId": "1bae484c816538828c149ae0d979a91054050517",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96eada1e_e0ade2ac",
         "filename": "src/libGLESv2/entry_points_egl.cpp",
         "patchSetId": 2
