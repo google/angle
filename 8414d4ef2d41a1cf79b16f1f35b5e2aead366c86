@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16598ae9_a458e23a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-09T20:00:30Z",
+      "side": 1,
+      "message": "wording:\n\n\u0027We would like to use the EXT_swap_control extension to specify the swap interval of each drawable independently.\u0027 (\u0027as the code currently does as it allows us\u0027 is a bit hard to parse - \u0027the code currently does as it allows\u0027 is a complete sentence :) )",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 13
+      },
+      "revId": "8414d4ef2d41a1cf79b16f1f35b5e2aead366c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56d5c228_9ca88db5",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-09T20:00:30Z",
+      "side": 1,
+      "message": "nit: static_cast? unsigned to signed",
+      "range": {
+        "startLine": 606,
+        "startChar": 36,
+        "endLine": 606,
+        "endChar": 51
+      },
+      "revId": "8414d4ef2d41a1cf79b16f1f35b5e2aead366c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6e35e49_417db2c3",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-09T20:00:30Z",
+      "side": 1,
+      "message": "nit: this should probably be done outside of the dirty check",
+      "range": {
+        "startLine": 610,
+        "startChar": 13,
+        "endLine": 610,
+        "endChar": 95
+      },
+      "revId": "8414d4ef2d41a1cf79b16f1f35b5e2aead366c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6e61228_b89a2192",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-09T20:00:30Z",
+      "side": 1,
+      "message": "how come you don\u0027t do the swap clamping for the non EXT cases?",
+      "range": {
+        "startLine": 619,
+        "startChar": 12,
+        "endLine": 619,
+        "endChar": 24
+      },
+      "revId": "8414d4ef2d41a1cf79b16f1f35b5e2aead366c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
