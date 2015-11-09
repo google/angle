@@ -328,7 +328,7 @@ function_call_header_with_parameters
         const TType *type = new TType($2->getType());
         $1->addParameter(TConstParameter(type));
         $$.function = $1;
-        $$.nodePair.node1 = $2;
+        $$.nodePair.node1 = context->intermediate.makeAggregate($2, @2);
     }
     | function_call_header_with_parameters COMMA assignment_expression {
         const TType *type = new TType($3->getType());

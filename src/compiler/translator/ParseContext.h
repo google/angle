@@ -137,7 +137,11 @@ class TParseContext : angle::NonCopyable
     bool constErrorCheck(TIntermTyped *node);
     bool integerErrorCheck(TIntermTyped *node, const char *token);
     bool globalErrorCheck(const TSourceLoc &line, bool global, const char *token);
-    bool constructorErrorCheck(const TSourceLoc &line, TIntermNode*, TFunction&, TOperator, TType*);
+    bool constructorErrorCheck(const TSourceLoc &line,
+                               TIntermNode *argumentsNode,
+                               TFunction &function,
+                               TOperator op,
+                               TType *type);
     bool arraySizeErrorCheck(const TSourceLoc &line, TIntermTyped *expr, int &size);
     bool arrayQualifierErrorCheck(const TSourceLoc &line, const TPublicType &type);
     bool arrayTypeErrorCheck(const TSourceLoc &line, const TPublicType &type);

@@ -1085,3 +1085,76 @@ TEST_F(MalformedShaderTest, TernaryOperatorNonConstantOperand)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Test that a sampler can't be used in constructor argument list
+TEST_F(MalformedShaderTest, SamplerInConstructorArguments)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform sampler2D s;\n"
+        "void main()\n"
+        "{\n"
+        "    vec2 v = vec2(0.0, s);\n"
+        "    gl_FragColor = vec4(v, 0.0, 0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Test that void can't be used in constructor argument list
+TEST_F(MalformedShaderTest, VoidInConstructorArguments)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "void foo() {}\n"
+        "void main()\n"
+        "{\n"
+        "    vec2 v = vec2(0.0, foo());\n"
+        "    gl_FragColor = vec4(v, 0.0, 0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Test that a shader passing a struct into a constructor of array of structs with 1 element works.
+TEST_F(MalformedShaderTest, SingleStructArrayConstructor)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "uniform float u;\n"
+        "struct S { float member; };\n"
+        "void main()\n"
+        "{\n"
+        "    S[1] sarr = S[1](S(u));\n"
+        "    my_FragColor = vec4(sarr[0].member);\n"
+        "}\n";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
+    }
+}
+
+// Test that a shader with empty constructor parameter list is not accepted.
+TEST_F(MalformedShaderTest, EmptyArrayConstructor)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "uniform float u;\n"
+        "const float[] f = f[]();\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = vec4(0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

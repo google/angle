@@ -493,7 +493,7 @@ bool TParseContext::reservedErrorCheck(const TSourceLoc &line, const TString &id
 // Returns true if there was an error in construction.
 //
 bool TParseContext::constructorErrorCheck(const TSourceLoc &line,
-                                          TIntermNode *node,
+                                          TIntermNode *argumentsNode,
                                           TFunction &function,
                                           TOperator op,
                                           TType *type)
@@ -604,21 +604,27 @@ bool TParseContext::constructorErrorCheck(const TSourceLoc &line,
         }
     }
 
-    TIntermTyped *typed = node ? node->getAsTyped() : 0;
-    if (typed == 0)
+    if (argumentsNode == nullptr)
     {
-        error(line, "constructor argument does not have a type", "constructor");
+        error(line, "constructor does not have any arguments", "constructor");
         return true;
     }
-    if (op != EOpConstructStruct && IsSampler(typed->getBasicType()))
+
+    TIntermAggregate *argumentsAgg = argumentsNode->getAsAggregate();
+    for (TIntermNode *&argNode : *argumentsAgg->getSequence())
     {
-        error(line, "cannot convert a sampler", "constructor");
-        return true;
-    }
-    if (typed->getBasicType() == EbtVoid)
-    {
-        error(line, "cannot convert a void", "constructor");
-        return true;
+        TIntermTyped *argTyped = argNode->getAsTyped();
+        ASSERT(argTyped != nullptr);
+        if (op != EOpConstructStruct && IsSampler(argTyped->getBasicType()))
+        {
+            error(line, "cannot convert a sampler", "constructor");
+            return true;
+        }
+        if (argTyped->getBasicType() == EbtVoid)
+        {
+            error(line, "cannot convert a void", "constructor");
+            return true;
+        }
     }
 
     return false;
@@ -2248,19 +2254,14 @@ TIntermTyped *TParseContext::addConstructor(TIntermNode *arguments,
                                             TFunction *fnCall,
                                             const TSourceLoc &line)
 {
-    TIntermAggregate *aggregateArguments = arguments->getAsAggregate();
-
-    if (!aggregateArguments)
-    {
-        aggregateArguments = new TIntermAggregate;
-        aggregateArguments->getSequence()->push_back(arguments);
-    }
+    TIntermAggregate *constructor = arguments->getAsAggregate();
+    ASSERT(constructor != nullptr);
 
     if (type->isArray())
     {
         // GLSL ES 3.00 section 5.4.4: Each argument must be the same type as the element type of
         // the array.
-        TIntermSequence *args = aggregateArguments->getSequence();
+        TIntermSequence *args = constructor->getSequence();
         for (size_t i = 0; i < args->size(); i++)
         {
             const TType &argType = (*args)[i]->getAsTyped()->getType();
@@ -2277,7 +2278,7 @@ TIntermTyped *TParseContext::addConstructor(TIntermNode *arguments,
     else if (op == EOpConstructStruct)
     {
         const TFieldList &fields = type->getStruct()->fields();
-        TIntermSequence *args    = aggregateArguments->getSequence();
+        TIntermSequence *args    = constructor->getSequence();
 
         for (size_t i = 0; i < fields.size(); i++)
         {
@@ -2293,7 +2294,8 @@ TIntermTyped *TParseContext::addConstructor(TIntermNode *arguments,
     }
 
     // Turn the argument list itself into a constructor
-    TIntermAggregate *constructor  = intermediate.setAggregateOperator(aggregateArguments, op, line);
+    constructor->setOp(op);
+    constructor->setLine(line);
     ASSERT(constructor->isConstructor());
 
     // Need to set type before setPrecisionFromChildren() because bool doesn't have precision.
@@ -3836,6 +3838,8 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
                     //
                     // Treat it like a built-in unary operator.
                     //
+                    TIntermAggregate *paramAgg = paramNode->getAsAggregate();
+                    paramNode                  = paramAgg->getSequence()->front();
                     callNode = createUnaryMath(op, paramNode->getAsTyped(), loc,
                                                &fnCandidate->getReturnType());
                     if (callNode == nullptr)
@@ -3881,7 +3885,6 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
             else
             {
                 // This is a real function call
-
                 TIntermAggregate *aggregate =
                     intermediate.setAggregateOperator(paramNode, EOpFunctionCall, loc);
                 aggregate->setType(fnCandidate->getReturnType());
