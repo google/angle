@@ -55,9 +55,7 @@ struct FunctionsGLX::GLXFunctionTable
         destroyPbufferPtr(nullptr),
         queryDrawablePtr(nullptr),
         createContextAttribsARBPtr(nullptr),
-        swapIntervalEXTPtr(nullptr),
-        swapIntervalMESAPtr(nullptr),
-        swapIntervalSGIPtr(nullptr)
+        swapIntervalEXTPtr(nullptr)
     {
     }
 
@@ -91,12 +89,6 @@ struct FunctionsGLX::GLXFunctionTable
 
     // GLX_EXT_swap_control
     PFNGLXSWAPINTERVALEXTPROC swapIntervalEXTPtr;
-
-    // GLX_MESA_swap_control
-    PFNGLXSWAPINTERVALMESAPROC swapIntervalMESAPtr;
-
-    // GLX_SGI_swap_control
-    PFNGLXSWAPINTERVALSGIPROC swapIntervalSGIPtr;
 };
 
 FunctionsGLX::FunctionsGLX()
@@ -221,17 +213,17 @@ bool FunctionsGLX::initialize(Display *xDisplay, int screen, std::string *errorS
     {
         GET_PROC_OR_ERROR(&mFnPtrs->createContextAttribsARBPtr, glXCreateContextAttribsARB);
     }
+    else
+    {
+        mFnPtrs->createContextAttribsARBPtr = nullptr;
+    }
     if (hasExtension("GLX_EXT_swap_control"))
     {
         GET_PROC_OR_ERROR(&mFnPtrs->swapIntervalEXTPtr, glXSwapIntervalEXT);
     }
-    if (hasExtension("GLX_MESA_swap_control"))
+    else
     {
-        GET_PROC_OR_ERROR(&mFnPtrs->swapIntervalMESAPtr, glXSwapIntervalMESA);
-    }
-    if (hasExtension("GLX_SGI_swap_control"))
-    {
-        GET_PROC_OR_ERROR(&mFnPtrs->swapIntervalSGIPtr, glXSwapIntervalSGI);
+        mFnPtrs->swapIntervalEXTPtr = nullptr;
     }
 
 #undef GET_FNPTR_OR_ERROR
@@ -366,16 +358,6 @@ glx::Context FunctionsGLX::createContextAttribsARB(glx::FBConfig config, glx::Co
 void FunctionsGLX::swapIntervalEXT(glx::Drawable drawable, int intervals) const
 {
     mFnPtrs->swapIntervalEXTPtr(mXDisplay, drawable, intervals);
-}
-
-int FunctionsGLX::swapIntervalMESA(int intervals) const
-{
-    return mFnPtrs->swapIntervalMESAPtr(intervals);
-}
-
-int FunctionsGLX::swapIntervalSGI(int intervals) const
-{
-    return mFnPtrs->swapIntervalSGIPtr(intervals);
 }
 
 }

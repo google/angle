@@ -10,7 +10,6 @@
 #define LIBANGLE_RENDERER_GL_GLX_WINDOWSURFACEGLX_H_
 
 #include "libANGLE/renderer/gl/SurfaceGL.h"
-#include "libANGLE/renderer/gl/glx/DisplayGLX.h"
 #include "libANGLE/renderer/gl/glx/platform_glx.h"
 
 namespace rx
@@ -56,13 +55,12 @@ class WindowSurfaceGLX : public SurfaceGL
     Display *mDisplay;
 
     const FunctionsGLX &mGLX;
-    DisplayGLX *mGLXDisplay;
+    const DisplayGLX &mGLXDisplay;
 
     glx::Context mContext;
     glx::FBConfig mFBConfig;
     glx::Window mGLXWindow;
-
-    SwapControlData mSwapControl;
+    unsigned int mMaxSwapInterval;
 };
 
 }

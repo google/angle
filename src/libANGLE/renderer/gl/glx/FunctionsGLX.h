@@ -67,12 +67,6 @@ class FunctionsGLX
     // GLX_EXT_swap_control
     void swapIntervalEXT(glx::Drawable drawable, int interval) const;
 
-    // GLX_MESA_swap_control
-    int swapIntervalMESA(int interval) const;
-
-    // GLX_SGI_swap_control
-    int swapIntervalSGI(int interval) const;
-
   private:
     // So as to isolate GLX from angle we do not include angleutils.h and cannot
     // use angle::NonCopyable so we replicated it here instead.

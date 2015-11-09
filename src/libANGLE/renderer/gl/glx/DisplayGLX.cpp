@@ -26,13 +26,6 @@ static int IgnoreX11Errors(Display *, XErrorEvent *)
     return 0;
 }
 
-SwapControlData::SwapControlData()
-  : targetSwapInterval(0),
-    maxSwapInterval(-1),
-    currentSwapInterval(-1)
-{
-}
-
 class FunctionsGLGLX : public FunctionsGL
 {
   public:
@@ -62,10 +55,6 @@ DisplayGLX::DisplayGLX()
       mDummyPbuffer(0),
       mUsesNewXDisplay(false),
       mIsMesa(false),
-      mSwapControl(SwapControl::Absent),
-      mMinSwapInterval(0),
-      mMaxSwapInterval(0),
-      mCurrentSwapInterval(-1),
       mEGLDisplay(nullptr)
 {
 }
@@ -111,40 +100,6 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
         {
             return egl::Error(EGL_NOT_INITIALIZED, "GLX doesn't support ARB_create_context.");
         }
-    }
-
-    // Choose the swap_control extension to use, if any.
-    // The EXT version is better as it allows glXSwapInterval to be called per
-    // window, while we'll potentially need to change the swap interval on each
-    // swap buffers when using the SGI or MESA versions.
-    if (mGLX.hasExtension("GLX_EXT_swap_control"))
-    {
-        mSwapControl = SwapControl::EXT;
-
-        // In GLX_EXT_swap_control querying these is done on a GLXWindow so we just
-        // set default values.
-        mMinSwapInterval = 0;
-        mMaxSwapInterval = 4;
-    }
-    else if (mGLX.hasExtension("GLX_MESA_swap_control"))
-    {
-        // If we have the Mesa or SGI extension, assume that you can at least set
-        // a swap interval of 0 or 1.
-        mSwapControl = SwapControl::Mesa;
-        mMinSwapInterval = 0;
-        mMinSwapInterval = 1;
-    }
-    else if (mGLX.hasExtension("GLX_SGI_swap_control"))
-    {
-        mSwapControl = SwapControl::SGI;
-        mMinSwapInterval = 0;
-        mMinSwapInterval = 1;
-    }
-    else
-    {
-        mSwapControl = SwapControl::Absent;
-        mMinSwapInterval = 1;
-        mMinSwapInterval = 1;
     }
 
     // When glXMakeCurrent is called, the context and the surface must be
@@ -383,6 +338,8 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
     egl::ConfigSet configs;
     configIdToGLXConfig.clear();
 
+    bool hasSwapControl = mGLX.hasExtension("GLX_EXT_swap_control");
+
     int contextRedSize   = getGLXFBConfigAttrib(mContextConfig, GLX_RED_SIZE);
     int contextGreenSize = getGLXFBConfigAttrib(mContextConfig, GLX_GREEN_SIZE);
     int contextBlueSize  = getGLXFBConfigAttrib(mContextConfig, GLX_BLUE_SIZE);
@@ -517,9 +474,17 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
             (glxDrawable & GLX_PBUFFER_BIT ? EGL_PBUFFER_BIT : 0) |
             (glxDrawable & GLX_PIXMAP_BIT ? EGL_PIXMAP_BIT : 0);
 
-        config.minSwapInterval = mMinSwapInterval;
-        config.maxSwapInterval = mMaxSwapInterval;
-
+        if (hasSwapControl)
+        {
+            // In GLX_EXT_swap_control querying these is done on a GLXWindow so we just set a default value.
+            config.minSwapInterval = 0;
+            config.maxSwapInterval = 4;
+        }
+        else
+        {
+            config.minSwapInterval = 1;
+            config.maxSwapInterval = 1;
+        }
         // TODO(cwallez) wildly guessing these formats, another TODO says they should be removed anyway
         config.renderTargetFormat = GL_RGBA8;
         config.depthStencilFormat = GL_DEPTH24_STENCIL8;
@@ -589,42 +554,6 @@ void DisplayGLX::syncXCommands() const
     if (mUsesNewXDisplay)
     {
         XSync(mGLX.getDisplay(), False);
-    }
-}
-
-void DisplayGLX::setSwapInterval(glx::Drawable drawable, SwapControlData *data)
-{
-    // TODO(cwallez) error checking?
-    if (mSwapControl == SwapControl::EXT)
-    {
-        // Prefer the EXT extension, it gives per-drawable swap intervals, which will
-        // minimize the number of driver calls.
-        if (data->maxSwapInterval < 0)
-        {
-            unsigned int maxSwapInterval = 0;
-            mGLX.queryDrawable(drawable, GLX_MAX_SWAP_INTERVAL_EXT, &maxSwapInterval);
-            data->maxSwapInterval = maxSwapInterval;
-        }
-        if (data->currentSwapInterval != data->targetSwapInterval)
-        {
-            const int realInterval = std::min(data->targetSwapInterval, data->maxSwapInterval);
-            mGLX.swapIntervalEXT(drawable, realInterval);
-            data->currentSwapInterval = data->targetSwapInterval;
-        }
-    }
-    else if (mCurrentSwapInterval != data->targetSwapInterval)
-    {
-        // With the Mesa or SGI extensions we can still do per-drawable swap control
-        // manually but it is more expensive in number of driver calls.
-        if (mSwapControl == SwapControl::Mesa)
-        {
-            mGLX.swapIntervalMESA(data->targetSwapInterval);
-        }
-        else if (mSwapControl == SwapControl::Mesa)
-        {
-            mGLX.swapIntervalSGI(data->targetSwapInterval);
-        }
-        mCurrentSwapInterval = data->targetSwapInterval;
     }
 }
 
