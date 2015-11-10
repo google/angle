@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "765726ea_127daac4",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-10T17:48:01Z",
+      "side": 1,
+      "message": "probably put a TODO here that we should remove this override of \u0027multiSample\u0027, and the copy it creates. again something for a future patch.",
+      "range": {
+        "startLine": 260,
+        "startChar": 4,
+        "endLine": 261,
+        "endChar": 52
+      },
+      "revId": "fdf6c2c8c953460141e7e0480b73c51c66f3ff3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
