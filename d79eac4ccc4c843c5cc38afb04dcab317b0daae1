@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "968c9a88_d0727cc8",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-11-10T00:44:25Z",
+      "side": 1,
+      "message": "assert(constUnion)?",
+      "revId": "d79eac4ccc4c843c5cc38afb04dcab317b0daae1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56d5c228_5c5555cd",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 4
