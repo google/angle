@@ -16,6 +16,24 @@
       "revId": "ac9e760ce2cd14a906bf89b98180aefc5f6e8634",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b636fec5_4902214e",
+        "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-10T16:43:26Z",
+      "side": 1,
+      "message": "This still holds ;-)",
+      "parentUuid": "96781971_65b8d0ac",
+      "revId": "ac9e760ce2cd14a906bf89b98180aefc5f6e8634",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
