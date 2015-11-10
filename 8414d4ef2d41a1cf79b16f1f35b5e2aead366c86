@@ -204,6 +204,30 @@
       "revId": "8414d4ef2d41a1cf79b16f1f35b5e2aead366c86",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "765726ea_72e8b6d0",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-10T17:30:58Z",
+      "side": 1,
+      "message": "Is it possible that targetSwapInterval \u003e 1 or \u003c 0?",
+      "parentUuid": "16598ae9_a44f8267",
+      "range": {
+        "startLine": 619,
+        "startChar": 12,
+        "endLine": 619,
+        "endChar": 24
+      },
+      "revId": "8414d4ef2d41a1cf79b16f1f35b5e2aead366c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
