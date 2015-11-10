@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "563ea29c_ae5e3726",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-10T19:01:48Z",
+      "side": 1,
+      "message": "No need for this",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 7
+      },
+      "revId": "fdf6c2c8c953460141e7e0480b73c51c66f3ff3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36392eb5_2d7a4dcd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-10T19:01:48Z",
+      "side": 1,
+      "message": "I think this may work but usually we use capital BUG",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 3
+      },
+      "revId": "fdf6c2c8c953460141e7e0480b73c51c66f3ff3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "962d7a79_c80d2f82",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-10T19:01:48Z",
+      "side": 1,
+      "message": "This copies the RasterizerState as well because pointDrawMode isn\u0027t a real GL state.  Please add a TODO here as well.",
+      "range": {
+        "startLine": 392,
+        "startChar": 4,
+        "endLine": 392,
+        "endChar": 55
+      },
+      "revId": "fdf6c2c8c953460141e7e0480b73c51c66f3ff3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "765726ea_127daac4",
         "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.cpp",
         "patchSetId": 2
@@ -13,6 +82,30 @@
       "writtenOn": "2015-11-10T17:48:01Z",
       "side": 1,
       "message": "probably put a TODO here that we should remove this override of \u0027multiSample\u0027, and the copy it creates. again something for a future patch.",
+      "range": {
+        "startLine": 260,
+        "startChar": 4,
+        "endLine": 261,
+        "endChar": 52
+      },
+      "revId": "fdf6c2c8c953460141e7e0480b73c51c66f3ff3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36392eb5_0d7d91c4",
+        "filename": "src/libANGLE/renderer/d3d/StateManagerD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-10T19:01:48Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "765726ea_127daac4",
       "range": {
         "startLine": 260,
         "startChar": 4,
