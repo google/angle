@@ -46,6 +46,30 @@
       "revId": "adba899325fdf887ea81c8a4c67c261ce05f8af5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36392eb5_6d2d35cf",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-10T18:37:38Z",
+      "side": 1,
+      "message": "Ah okay. This seems fine.. although there may be a slight benefit to not resetting the state every time if we call with 5, 4, 6, 4, 5, 4, etc",
+      "parentUuid": "563ea29c_eeb3dfbf",
+      "range": {
+        "startLine": 608,
+        "startChar": 6,
+        "endLine": 615,
+        "endChar": 57
+      },
+      "revId": "adba899325fdf887ea81c8a4c67c261ce05f8af5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
