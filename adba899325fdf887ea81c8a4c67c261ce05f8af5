@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "765726ea_834f8e3b",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-11T14:56:38Z",
+      "side": 1,
+      "message": "It looks like data is expected to never be null, let\u0027s assert on that.",
+      "range": {
+        "startLine": 595,
+        "startChar": 57,
+        "endLine": 595,
+        "endChar": 78
+      },
+      "revId": "adba899325fdf887ea81c8a4c67c261ce05f8af5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "763006ce_07365628",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 3
@@ -61,6 +84,30 @@
       "side": 1,
       "message": "Ah okay. This seems fine.. although there may be a slight benefit to not resetting the state every time if we call with 5, 4, 6, 4, 5, 4, etc",
       "parentUuid": "563ea29c_eeb3dfbf",
+      "range": {
+        "startLine": 608,
+        "startChar": 6,
+        "endLine": 615,
+        "endChar": 57
+      },
+      "revId": "adba899325fdf887ea81c8a4c67c261ce05f8af5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96549ae5_93d8bea6",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-11T14:56:38Z",
+      "side": 1,
+      "message": "Agreed that tracking the currently applied value is better than the user\u0027s value so we don\u0027t needlessly re-apply.",
+      "parentUuid": "36392eb5_6d2d35cf",
       "range": {
         "startLine": 608,
         "startChar": 6,
