@@ -1216,7 +1216,7 @@ TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
 
     if (variable->getConstPointer())
     {
-        TConstantUnion *constArray = variable->getConstPointer();
+        const TConstantUnion *constArray = variable->getConstPointer();
         return intermediate.addConstantUnion(constArray, variable->getType(), location);
     }
     else
@@ -1353,7 +1353,7 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
                 symbolTable.find(initializer->getAsSymbolNode()->getSymbol(), 0);
             const TVariable *tVar = static_cast<const TVariable *>(symbol);
 
-            TConstantUnion *constArray = tVar->getConstPointer();
+            const TConstantUnion *constArray = tVar->getConstPointer();
             if (constArray)
             {
                 variable->shareConstPointer(constArray);
@@ -2373,7 +2373,7 @@ TIntermTyped *TParseContext::addConstMatrixNode(int index,
         index = node->getType().getCols() - 1;
     }
 
-    TConstantUnion *unionArray = node->getUnionArrayPointer();
+    const TConstantUnion *unionArray = node->getUnionArrayPointer();
     int size = node->getType().getCols();
     return intermediate.addConstantUnion(&unionArray[size * index], node->getType(), line);
 }
@@ -2401,8 +2401,8 @@ TIntermTyped *TParseContext::addConstArrayNode(int index,
         outOfRangeError(outOfRangeIndexIsError, line, "", "[", extraInfo.c_str());
         index = node->getType().getArraySize() - 1;
     }
-    size_t arrayElementSize    = arrayElementType.getObjectSize();
-    TConstantUnion *unionArray = node->getUnionArrayPointer();
+    size_t arrayElementSize          = arrayElementType.getObjectSize();
+    const TConstantUnion *unionArray = node->getUnionArrayPointer();
     return intermediate.addConstantUnion(&unionArray[arrayElementSize * index], node->getType(),
                                          line);
 }
@@ -2437,7 +2437,7 @@ TIntermTyped *TParseContext::addConstStruct(const TString &identifier,
     TIntermConstantUnion *tempConstantNode = node->getAsConstantUnion();
     if (tempConstantNode)
     {
-        TConstantUnion *constArray = tempConstantNode->getUnionArrayPointer();
+        const TConstantUnion *constArray = tempConstantNode->getUnionArrayPointer();
 
         // type will be changed in the calling function
         typedNode = intermediate.addConstantUnion(constArray + instanceSize,
@@ -2796,8 +2796,9 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
                 safeIndex = baseExpression->getType().getNominalSize() - 1;
             }
 
-            // Don't modify the data of the previous constant union, because it can point
-            // to builtins, like gl_MaxDrawBuffers. Instead use a new sanitized object.
+            // Data of constant unions can't be changed, because it may be shared with other
+            // constant unions or even builtins, like gl_MaxDrawBuffers. Instead use a new
+            // sanitized object.
             if (safeIndex != -1)
             {
                 TConstantUnion *safeConstantUnion = new TConstantUnion();

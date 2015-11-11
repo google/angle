@@ -375,8 +375,9 @@ TIntermCase *TIntermediate::addCase(
 // Returns the constant union node created.
 //
 
-TIntermConstantUnion *TIntermediate::addConstantUnion(
-    TConstantUnion *constantUnion, const TType &type, const TSourceLoc &line)
+TIntermConstantUnion *TIntermediate::addConstantUnion(const TConstantUnion *constantUnion,
+                                                      const TType &type,
+                                                      const TSourceLoc &line)
 {
     TIntermConstantUnion *node = new TIntermConstantUnion(constantUnion, type);
     node->setLine(line);

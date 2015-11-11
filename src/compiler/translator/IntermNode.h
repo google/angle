@@ -302,16 +302,16 @@ class TIntermRaw : public TIntermTyped
 class TIntermConstantUnion : public TIntermTyped
 {
   public:
-    TIntermConstantUnion(TConstantUnion *unionPointer, const TType &type)
-        : TIntermTyped(type),
-          mUnionArrayPointer(unionPointer) { }
+    TIntermConstantUnion(const TConstantUnion *unionPointer, const TType &type)
+        : TIntermTyped(type), mUnionArrayPointer(unionPointer)
+    {
+    }
 
     TIntermTyped *deepCopy() const override { return new TIntermConstantUnion(*this); }
 
     bool hasSideEffects() const override { return false; }
 
     const TConstantUnion *getUnionArrayPointer() const { return mUnionArrayPointer; }
-    TConstantUnion *getUnionArrayPointer() { return mUnionArrayPointer; }
 
     int getIConst(size_t index) const
     {
@@ -330,7 +330,7 @@ class TIntermConstantUnion : public TIntermTyped
         return mUnionArrayPointer ? mUnionArrayPointer[index].getBConst() : false;
     }
 
-    void replaceConstantUnion(TConstantUnion *safeConstantUnion)
+    void replaceConstantUnion(const TConstantUnion *safeConstantUnion)
     {
         // Previous union pointer freed on pool deallocation.
         mUnionArrayPointer = safeConstantUnion;
@@ -349,7 +349,8 @@ class TIntermConstantUnion : public TIntermTyped
     static TConstantUnion *FoldAggregateBuiltIn(TIntermAggregate *aggregate, TInfoSink &infoSink);
 
   protected:
-    TConstantUnion *mUnionArrayPointer;
+    // Same data may be shared between multiple constant unions, so it can't be modified.
+    const TConstantUnion *mUnionArrayPointer;
 
   private:
     typedef float(*FloatTypeUnaryFunc) (float);

@@ -52,8 +52,9 @@ class TIntermediate
                            TIntermTyped *right,
                            const TSourceLoc &line,
                            int shaderVersion);
-    TIntermConstantUnion *addConstantUnion(
-        TConstantUnion *constantUnion, const TType &type, const TSourceLoc &line);
+    TIntermConstantUnion *addConstantUnion(const TConstantUnion *constantUnion,
+                                           const TType &type,
+                                           const TSourceLoc &line);
     TIntermNode *addLoop(TLoopType, TIntermNode *, TIntermTyped *, TIntermTyped *,
                          TIntermNode *, const TSourceLoc &);
     TIntermBranch *addBranch(TOperator, const TSourceLoc &);
