@@ -102,6 +102,8 @@ class DisplayGLX : public DisplayGL
 
     bool mUsesNewXDisplay;
     bool mIsMesa;
+    bool mHasMultisample;
+    bool mHasARBCreateContext;
 
     enum class SwapControl
     {

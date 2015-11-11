@@ -35,33 +35,35 @@ static bool GetProc(PFNGETPROCPROC getProc, T *member, const char *name)
 struct FunctionsGLX::GLXFunctionTable
 {
     GLXFunctionTable()
-      : destroyContextPtr(nullptr),
-        makeCurrentPtr(nullptr),
-        swapBuffersPtr(nullptr),
-        queryExtensionPtr(nullptr),
-        queryVersionPtr(nullptr),
-        getCurrentContextPtr(nullptr),
-        getCurrentDrawablePtr(nullptr),
-        waitXPtr(nullptr),
-        waitGLPtr(nullptr),
-        queryExtensionsStringPtr(nullptr),
-        getFBConfigsPtr(nullptr),
-        chooseFBConfigPtr(nullptr),
-        getFBConfigAttribPtr(nullptr),
-        getVisualFromFBConfigPtr(nullptr),
-        createWindowPtr(nullptr),
-        destroyWindowPtr(nullptr),
-        createPbufferPtr(nullptr),
-        destroyPbufferPtr(nullptr),
-        queryDrawablePtr(nullptr),
-        createContextAttribsARBPtr(nullptr),
-        swapIntervalEXTPtr(nullptr),
-        swapIntervalMESAPtr(nullptr),
-        swapIntervalSGIPtr(nullptr)
+        : createContextPtr(nullptr),
+          destroyContextPtr(nullptr),
+          makeCurrentPtr(nullptr),
+          swapBuffersPtr(nullptr),
+          queryExtensionPtr(nullptr),
+          queryVersionPtr(nullptr),
+          getCurrentContextPtr(nullptr),
+          getCurrentDrawablePtr(nullptr),
+          waitXPtr(nullptr),
+          waitGLPtr(nullptr),
+          queryExtensionsStringPtr(nullptr),
+          getFBConfigsPtr(nullptr),
+          chooseFBConfigPtr(nullptr),
+          getFBConfigAttribPtr(nullptr),
+          getVisualFromFBConfigPtr(nullptr),
+          createWindowPtr(nullptr),
+          destroyWindowPtr(nullptr),
+          createPbufferPtr(nullptr),
+          destroyPbufferPtr(nullptr),
+          queryDrawablePtr(nullptr),
+          createContextAttribsARBPtr(nullptr),
+          swapIntervalEXTPtr(nullptr),
+          swapIntervalMESAPtr(nullptr),
+          swapIntervalSGIPtr(nullptr)
     {
     }
 
     // GLX 1.0
+    PFNGLXCREATECONTEXTPROC createContextPtr;
     PFNGLXDESTROYCONTEXTPROC destroyContextPtr;
     PFNGLXMAKECURRENTPROC makeCurrentPtr;
     PFNGLXSWAPBUFFERSPROC swapBuffersPtr;
@@ -161,6 +163,7 @@ bool FunctionsGLX::initialize(Display *xDisplay, int screen, std::string *errorS
 #endif
 
     // GLX 1.0
+    GET_FNPTR_OR_ERROR(&mFnPtrs->createContextPtr, glXCreateContext);
     GET_FNPTR_OR_ERROR(&mFnPtrs->destroyContextPtr, glXDestroyContext);
     GET_FNPTR_OR_ERROR(&mFnPtrs->makeCurrentPtr, glXMakeCurrent);
     GET_FNPTR_OR_ERROR(&mFnPtrs->swapBuffersPtr, glXSwapBuffers);
@@ -263,6 +266,12 @@ int FunctionsGLX::getScreen() const
 // GLX functions
 
 // GLX 1.0
+glx::Context FunctionsGLX::createContext(XVisualInfo *visual, glx::Context share, bool direct) const
+{
+    GLXContext shareCtx = reinterpret_cast<GLXContext>(share);
+    GLXContext context = mFnPtrs->createContextPtr(mXDisplay, visual, shareCtx, direct);
+    return reinterpret_cast<glx::Context>(context);
+}
 void FunctionsGLX::destroyContext(glx::Context context) const
 {
     GLXContext ctx = reinterpret_cast<GLXContext>(context);

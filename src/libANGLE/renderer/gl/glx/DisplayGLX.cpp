@@ -62,6 +62,8 @@ DisplayGLX::DisplayGLX()
       mDummyPbuffer(0),
       mUsesNewXDisplay(false),
       mIsMesa(false),
+      mHasMultisample(false),
+      mHasARBCreateContext(false),
       mSwapControl(SwapControl::Absent),
       mMinSwapInterval(0),
       mMaxSwapInterval(0),
@@ -98,20 +100,8 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
         return egl::Error(EGL_NOT_INITIALIZED, glxInitError.c_str());
     }
 
-    // Check we have the needed extensions
-    {
-        if (mGLX.minorVersion == 3 && !mGLX.hasExtension("GLX_ARB_multisample"))
-        {
-            return egl::Error(EGL_NOT_INITIALIZED, "GLX doesn't support ARB_multisample.");
-        }
-        // Require ARB_create_context which has been supported since Mesa 9 unconditionnaly
-        // and is present in Mesa 8 in an almost always on compile flag. Also assume proprietary
-        // drivers have it.
-        if (!mGLX.hasExtension("GLX_ARB_create_context"))
-        {
-            return egl::Error(EGL_NOT_INITIALIZED, "GLX doesn't support ARB_create_context.");
-        }
-    }
+    mHasMultisample      = mGLX.minorVersion > 3 || mGLX.hasExtension("GLX_ARB_multisample");
+    mHasARBCreateContext = mGLX.hasExtension("GLX_ARB_create_context");
 
     // Choose the swap_control extension to use, if any.
     // The EXT version is better as it allows glXSwapInterval to be called per
@@ -188,7 +178,27 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
         XFree(candidates);
     }
 
-    mContext = initializeContext(mContextConfig, display->getAttributeMap());
+    if (mHasARBCreateContext)
+    {
+        mContext = initializeContext(mContextConfig, display->getAttributeMap());
+    }
+    else
+    {
+        XVisualInfo visualTemplate;
+        visualTemplate.visualid = getGLXFBConfigAttrib(mContextConfig, GLX_VISUAL_ID);
+
+        int numVisuals       = 0;
+        XVisualInfo *visuals = XGetVisualInfo(xDisplay, VisualIDMask, &visualTemplate, &numVisuals);
+        if (numVisuals <= 0)
+        {
+            return egl::Error(EGL_NOT_INITIALIZED,
+                              "Could not get the visual info from the fb config");
+        }
+        ASSERT(numVisuals == 1);
+
+        mContext = mGLX.createContext(&visuals[0], nullptr, true);
+        XFree(visuals);
+    }
     if (!mContext)
     {
         return egl::Error(EGL_NOT_INITIALIZED, "Could not create GL context.");
@@ -383,8 +393,6 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
     egl::ConfigSet configs;
     configIdToGLXConfig.clear();
 
-    bool hasSwapControl = mGLX.hasExtension("GLX_EXT_swap_control");
-
     const gl::Version &maxVersion = getMaxSupportedESVersion();
     ASSERT(maxVersion >= gl::Version(2, 0));
     bool supportsES3 = maxVersion >= gl::Version(3, 0);
@@ -397,8 +405,9 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
     int contextDepthSize   = getGLXFBConfigAttrib(mContextConfig, GLX_DEPTH_SIZE);
     int contextStencilSize = getGLXFBConfigAttrib(mContextConfig, GLX_STENCIL_SIZE);
 
-    int contextSamples = getGLXFBConfigAttrib(mContextConfig, GLX_SAMPLES);
-    int contextSampleBuffers = getGLXFBConfigAttrib(mContextConfig, GLX_SAMPLE_BUFFERS);
+    int contextSamples = mHasMultisample ? getGLXFBConfigAttrib(mContextConfig, GLX_SAMPLES) : 0;
+    int contextSampleBuffers =
+        mHasMultisample ? getGLXFBConfigAttrib(mContextConfig, GLX_SAMPLE_BUFFERS) : 0;
 
     int contextAccumRedSize = getGLXFBConfigAttrib(mContextConfig, GLX_ACCUM_RED_SIZE);
     int contextAccumGreenSize = getGLXFBConfigAttrib(mContextConfig, GLX_ACCUM_GREEN_SIZE);
@@ -459,8 +468,9 @@ egl::ConfigSet DisplayGLX::generateConfigs() const
         config.bufferSize = config.redSize + config.greenSize + config.blueSize + config.alphaSize;
 
         // Multisample and accumulation buffers
-        int samples = getGLXFBConfigAttrib(glxConfig, GLX_SAMPLES);
-        int sampleBuffers = getGLXFBConfigAttrib(glxConfig, GLX_SAMPLE_BUFFERS);
+        int samples = mHasMultisample ? getGLXFBConfigAttrib(glxConfig, GLX_SAMPLES) : 0;
+        int sampleBuffers =
+            mHasMultisample ? getGLXFBConfigAttrib(glxConfig, GLX_SAMPLE_BUFFERS) : 0;
 
         int accumRedSize = getGLXFBConfigAttrib(glxConfig, GLX_ACCUM_RED_SIZE);
         int accumGreenSize = getGLXFBConfigAttrib(glxConfig, GLX_ACCUM_GREEN_SIZE);

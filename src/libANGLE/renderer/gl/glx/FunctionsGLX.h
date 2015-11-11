@@ -37,6 +37,7 @@ class FunctionsGLX
     PFNGETPROCPROC getProc;
 
     // GLX 1.0
+    glx::Context createContext(XVisualInfo *visual, glx::Context share, bool direct) const;
     void destroyContext(glx::Context context) const;
     Bool makeCurrent(glx::Drawable drawable, glx::Context context) const;
     void swapBuffers(glx::Drawable drawable) const;
