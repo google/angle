@@ -34,6 +34,24 @@
       "revId": "ac9e760ce2cd14a906bf89b98180aefc5f6e8634",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56278298_8627aaa5",
+        "filename": "src/compiler/translator/UnfoldShortCircuitToIf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-11-11T08:54:17Z",
+      "side": 1,
+      "message": "Whoops, forgot about this when taking a break from this patch. Fixing in next patch set.",
+      "parentUuid": "b636fec5_4902214e",
+      "revId": "ac9e760ce2cd14a906bf89b98180aefc5f6e8634",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
