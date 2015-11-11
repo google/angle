@@ -19,6 +19,7 @@
 #include "libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h"
 #include "libANGLE/renderer/d3d/d3d11/InputLayoutCache.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderStateCache.h"
+#include "libANGLE/renderer/d3d/d3d11/StateManager11.h"
 
 namespace gl
 {
@@ -121,8 +122,11 @@ class Renderer11 : public RendererD3D
                                 const std::vector<GLint> &fragmentUniformBuffers) override;
 
     virtual gl::Error setRasterizerState(const gl::RasterizerState &rasterState);
-    gl::Error setBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
+    gl::Error setBlendState(const gl::Framebuffer *framebuffer,
+                            const gl::BlendState &blendState,
+                            const gl::ColorF &blendColor,
                             unsigned int sampleMask) override;
+
     virtual gl::Error setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
                                            int stencilBackRef, bool frontFaceCCW);
 
@@ -244,6 +248,8 @@ class Renderer11 : public RendererD3D
     ID3D11DeviceContext1 *getDeviceContext1IfSupported() { return mDeviceContext1; };
     DXGIFactory *getDxgiFactory() { return mDxgiFactory; };
 
+    RenderStateCache &getStateCache() { return mStateCache; }
+
     Blit11 *getBlitter() { return mBlit; }
     Clear11 *getClearer() { return mClear; }
 
@@ -284,6 +290,8 @@ class Renderer11 : public RendererD3D
     gl::Error applyShadersImpl(const gl::Data &data, GLenum drawMode) override;
 
     egl::Error initializeEGLDevice(DeviceD3D **outDevice) override;
+
+    void syncState(const gl::State &state, const gl::State::DirtyBits &bitmask) override;
 
   private:
     gl::Error drawArraysImpl(const gl::Data &data,
@@ -402,11 +410,7 @@ class Renderer11 : public RendererD3D
     // A block of NULL pointers, cached so we don't re-allocate every draw call
     std::vector<ID3D11ShaderResourceView*> mNullSRVs;
 
-    // Currently applied blend state
-    bool mForceSetBlendState;
-    gl::BlendState mCurBlendState;
-    gl::ColorF mCurBlendColor;
-    unsigned int mCurSampleMask;
+    StateManager11 mStateManager;
 
     // Currently applied rasterizer state
     bool mForceSetRasterState;

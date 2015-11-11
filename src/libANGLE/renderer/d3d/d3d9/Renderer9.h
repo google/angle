@@ -97,7 +97,9 @@ class Renderer9 : public RendererD3D
                                 const std::vector<GLint> &fragmentUniformBuffers) override;
 
     virtual gl::Error setRasterizerState(const gl::RasterizerState &rasterState);
-    gl::Error setBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
+    gl::Error setBlendState(const gl::Framebuffer *framebuffer,
+                            const gl::BlendState &blendState,
+                            const gl::ColorF &blendColor,
                             unsigned int sampleMask) override;
     virtual gl::Error setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
                                            int stencilBackRef, bool frontFaceCCW);
@@ -229,6 +231,11 @@ class Renderer9 : public RendererD3D
     virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const;
     virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
+
+    void syncState(const gl::State & /*state*/, const gl::State::DirtyBits &bitmask) override
+    {
+        // TODO(dianx) implement d3d9 dirty bits
+    }
 
     // D3D9-renderer specific methods
     gl::Error boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);

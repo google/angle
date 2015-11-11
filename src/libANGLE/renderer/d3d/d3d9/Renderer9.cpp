@@ -8,19 +8,34 @@
 
 #include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
 
+#include <sstream>
+#include <EGL/eglext.h>
+
 #include "common/utilities.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Display.h"
+#include "libANGLE/features.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Renderbuffer.h"
-#include "libANGLE/State.h"
-#include "libANGLE/Surface.h"
-#include "libANGLE/Texture.h"
-#include "libANGLE/angletypes.h"
-#include "libANGLE/features.h"
-#include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/d3d/d3d9/Blit9.h"
+#include "libANGLE/renderer/d3d/d3d9/Buffer9.h"
+#include "libANGLE/renderer/d3d/d3d9/Fence9.h"
+#include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
+#include "libANGLE/renderer/d3d/d3d9/Framebuffer9.h"
+#include "libANGLE/renderer/d3d/d3d9/Image9.h"
+#include "libANGLE/renderer/d3d/d3d9/IndexBuffer9.h"
+#include "libANGLE/renderer/d3d/d3d9/Query9.h"
+#include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
+#include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
+#include "libANGLE/renderer/d3d/d3d9/ShaderExecutable9.h"
+#include "libANGLE/renderer/d3d/d3d9/SwapChain9.h"
+#include "libANGLE/renderer/d3d/d3d9/TextureStorage9.h"
+#include "libANGLE/renderer/d3d/d3d9/VertexArray9.h"
+#include "libANGLE/renderer/d3d/d3d9/VertexBuffer9.h"
 #include "libANGLE/renderer/d3d/DeviceD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
@@ -30,28 +45,12 @@
 #include "libANGLE/renderer/d3d/SurfaceD3D.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
 #include "libANGLE/renderer/d3d/TransformFeedbackD3D.h"
-#include "libANGLE/renderer/d3d/d3d9/Blit9.h"
-#include "libANGLE/renderer/d3d/d3d9/Buffer9.h"
-#include "libANGLE/renderer/d3d/d3d9/Fence9.h"
-#include "libANGLE/renderer/d3d/d3d9/Framebuffer9.h"
-#include "libANGLE/renderer/d3d/d3d9/Image9.h"
-#include "libANGLE/renderer/d3d/d3d9/IndexBuffer9.h"
-#include "libANGLE/renderer/d3d/d3d9/Query9.h"
-#include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
-#include "libANGLE/renderer/d3d/d3d9/ShaderExecutable9.h"
-#include "libANGLE/renderer/d3d/d3d9/SwapChain9.h"
-#include "libANGLE/renderer/d3d/d3d9/TextureStorage9.h"
-#include "libANGLE/renderer/d3d/d3d9/VertexArray9.h"
-#include "libANGLE/renderer/d3d/d3d9/VertexBuffer9.h"
-#include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
-#include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
-
+#include "libANGLE/State.h"
+#include "libANGLE/Surface.h"
+#include "libANGLE/Texture.h"
 #include "third_party/trace_event/trace_event.h"
 
-#include <sstream>
-#include <EGL/eglext.h>
 
-#include <EGL/eglext.h>
 
 #if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
 #define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL3
@@ -924,7 +923,9 @@ gl::Error Renderer9::setRasterizerState(const gl::RasterizerState &rasterState)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::setBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
+gl::Error Renderer9::setBlendState(const gl::Framebuffer *framebuffer,
+                                   const gl::BlendState &blendState,
+                                   const gl::ColorF &blendColor,
                                    unsigned int sampleMask)
 {
     bool blendStateChanged = mForceSetBlendState || memcmp(&blendState, &mCurBlendState, sizeof(gl::BlendState)) != 0;

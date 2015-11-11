@@ -373,6 +373,8 @@
             'libANGLE/renderer/d3d/d3d11/shaders/compiled/swizzleui2darrayps.h',
             'libANGLE/renderer/d3d/d3d11/shaders/compiled/swizzleui2dps.h',
             'libANGLE/renderer/d3d/d3d11/shaders/compiled/swizzleui3dps.h',
+            'libANGLE/renderer/d3d/d3d11/StateManager11.cpp',
+            'libANGLE/renderer/d3d/d3d11/StateManager11.h',
             'libANGLE/renderer/d3d/d3d11/SwapChain11.cpp',
             'libANGLE/renderer/d3d/d3d11/SwapChain11.h',
             'libANGLE/renderer/d3d/d3d11/swizzle_format_info.h',

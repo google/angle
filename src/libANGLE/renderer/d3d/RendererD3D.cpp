@@ -8,16 +8,13 @@
 
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 
-#include "common/MemoryBuffer.h"
 #include "common/debug.h"
+#include "common/MemoryBuffer.h"
 #include "common/utilities.h"
 #include "libANGLE/Display.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/ResourceManager.h"
-#include "libANGLE/State.h"
-#include "libANGLE/VertexArray.h"
-#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/DeviceD3D.h"
@@ -25,6 +22,9 @@
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/SamplerD3D.h"
+#include "libANGLE/ResourceManager.h"
+#include "libANGLE/State.h"
+#include "libANGLE/VertexArray.h"
 
 namespace rx
 {
@@ -415,7 +415,8 @@ gl::Error RendererD3D::applyState(const gl::Data &data, GLenum drawMode)
     {
         mask = 0xFFFFFFFF;
     }
-    error = setBlendState(framebufferObject, data.state->getBlendState(), data.state->getBlendColor(), mask);
+    error = setBlendState(framebufferObject, data.state->getBlendState(),
+                          data.state->getBlendColor(), mask);
     if (error.isError())
     {
         return error;

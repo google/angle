@@ -21,7 +21,6 @@
 #include "libANGLE/histogram_macros.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
-#include "libANGLE/renderer/d3d/DeviceD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/Blit11.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Clear11.h"
@@ -42,6 +41,7 @@
 #include "libANGLE/renderer/d3d/d3d11/Trim11.h"
 #include "libANGLE/renderer/d3d/d3d11/VertexArray11.h"
 #include "libANGLE/renderer/d3d/d3d11/VertexBuffer11.h"
+#include "libANGLE/renderer/d3d/DeviceD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
@@ -471,6 +471,7 @@ Renderer11::Renderer11(egl::Display *display)
     : RendererD3D(display),
       mStateCache(this),
       mCurStencilSize(0),
+      mStateManager(this),
       mLastHistogramUpdateTime(ANGLEPlatformCurrent()->monotonicallyIncreasingTime()),
       mDebug(nullptr)
 {
@@ -1378,50 +1379,17 @@ gl::Error Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::setBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
+void Renderer11::syncState(const gl::State &state, const gl::State::DirtyBits &bitmask)
+{
+    mStateManager.syncState(state, bitmask);
+}
+
+gl::Error Renderer11::setBlendState(const gl::Framebuffer *framebuffer,
+                                    const gl::BlendState &blendState,
+                                    const gl::ColorF &blendColor,
                                     unsigned int sampleMask)
 {
-    if (mForceSetBlendState ||
-        memcmp(&blendState, &mCurBlendState, sizeof(gl::BlendState)) != 0 ||
-        memcmp(&blendColor, &mCurBlendColor, sizeof(gl::ColorF)) != 0 ||
-        sampleMask != mCurSampleMask)
-    {
-        ID3D11BlendState *dxBlendState = NULL;
-        gl::Error error = mStateCache.getBlendState(framebuffer, blendState, &dxBlendState);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        ASSERT(dxBlendState != NULL);
-
-        float blendColors[4] = {0.0f};
-        if (blendState.sourceBlendRGB != GL_CONSTANT_ALPHA && blendState.sourceBlendRGB != GL_ONE_MINUS_CONSTANT_ALPHA &&
-            blendState.destBlendRGB != GL_CONSTANT_ALPHA && blendState.destBlendRGB != GL_ONE_MINUS_CONSTANT_ALPHA)
-        {
-            blendColors[0] = blendColor.red;
-            blendColors[1] = blendColor.green;
-            blendColors[2] = blendColor.blue;
-            blendColors[3] = blendColor.alpha;
-        }
-        else
-        {
-            blendColors[0] = blendColor.alpha;
-            blendColors[1] = blendColor.alpha;
-            blendColors[2] = blendColor.alpha;
-            blendColors[3] = blendColor.alpha;
-        }
-
-        mDeviceContext->OMSetBlendState(dxBlendState, blendColors, sampleMask);
-
-        mCurBlendState = blendState;
-        mCurBlendColor = blendColor;
-        mCurSampleMask = sampleMask;
-    }
-
-    mForceSetBlendState = false;
-
-    return gl::Error(GL_NO_ERROR);
+    return mStateManager.setBlendState(framebuffer, blendState, blendColor, sampleMask);
 }
 
 gl::Error Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
@@ -1762,7 +1730,7 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
         mRenderTargetDesc.format = renderTargetFormat;
         mForceSetViewport = true;
         mForceSetScissor = true;
-        mForceSetBlendState = true;
+        mStateManager.forceSetBlendState();
 
         if (!mDepthStencilInitialized)
         {
@@ -2555,7 +2523,7 @@ void Renderer11::markAllStateDirty()
         mForceSetPixelSamplerStates[fsamplerId] = true;
     }
 
-    mForceSetBlendState = true;
+    mStateManager.forceSetBlendState();
     mForceSetRasterState = true;
     mForceSetDepthStencilState = true;
     mForceSetScissor = true;
