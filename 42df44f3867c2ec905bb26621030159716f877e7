@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d64a9241_9515061e",
+        "filename": "src/libANGLE/renderer/d3d/VaryingPacking.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-12T21:30:42Z",
+      "side": 1,
+      "message": "Can you explain why you chose this algorithm, providing a pointer to the OpenGL ES specification (and maybe briefly describe the algorithm?)",
+      "revId": "42df44f3867c2ec905bb26621030159716f877e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d63372d5_4ab85303",
+        "filename": "src/libANGLE/renderer/d3d/VaryingPacking.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-12T21:30:42Z",
+      "side": 1,
+      "message": "Why do we choose the most full column? To avoid fragmentation?",
+      "range": {
+        "startLine": 129,
+        "startChar": 17,
+        "endLine": 129,
+        "endChar": 60
+      },
+      "revId": "42df44f3867c2ec905bb26621030159716f877e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f642362f_ce30e398",
+        "filename": "src/libANGLE/renderer/d3d/VaryingPacking.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-12T21:30:42Z",
+      "side": 1,
+      "message": "This should check that all the next varyingsRows [bestColumn] are empty.",
+      "revId": "42df44f3867c2ec905bb26621030159716f877e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "765726ea_817a1ccb",
+        "filename": "src/libANGLE/renderer/d3d/VaryingPacking.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-12T21:30:42Z",
+      "side": 1,
+      "message": "This really is a register occupancy.",
+      "range": {
+        "startLine": 83,
+        "startChar": 11,
+        "endLine": 83,
+        "endChar": 19
+      },
+      "revId": "42df44f3867c2ec905bb26621030159716f877e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "763006ce_2adebf2c",
+        "filename": "src/libANGLE/renderer/d3d/VaryingPacking.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-12T21:30:42Z",
+      "side": 1,
+      "message": "Is it possible to do std::vector\u003cbool[4]\u003e mRegisterOccupancy instead? (I\u0027m not sure if the type is valid though)",
+      "revId": "42df44f3867c2ec905bb26621030159716f877e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
