@@ -223,8 +223,6 @@
             'libANGLE/renderer/d3d/TextureStorage.h',
             'libANGLE/renderer/d3d/TransformFeedbackD3D.cpp',
             'libANGLE/renderer/d3d/TransformFeedbackD3D.h',
-            'libANGLE/renderer/d3d/VaryingPacking.cpp',
-            'libANGLE/renderer/d3d/VaryingPacking.h',
             'libANGLE/renderer/d3d/VertexBuffer.cpp',
             'libANGLE/renderer/d3d/VertexBuffer.h',
             'libANGLE/renderer/d3d/VertexDataManager.cpp',

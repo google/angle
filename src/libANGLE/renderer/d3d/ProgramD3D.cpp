@@ -20,7 +20,6 @@
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
 #include "libANGLE/renderer/d3d/ShaderExecutableD3D.h"
-#include "libANGLE/renderer/d3d/VaryingPacking.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 
 namespace rx
@@ -1262,8 +1261,8 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
 
     // Map the varyings to the register file
     unsigned int registerCount = 0;
-    if (!PackVaryings(*data.caps, infoLog, &packedVaryings,
-                      mData.getTransformFeedbackVaryingNames(), &registerCount))
+    if (!mDynamicHLSL->packVaryings(*data.caps, infoLog, &packedVaryings,
+                                    mData.getTransformFeedbackVaryingNames(), &registerCount))
     {
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }

@@ -16,7 +16,6 @@
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
-#include "libANGLE/renderer/d3d/VaryingPacking.h"
 
 // For use with ArrayString, see angleutils.h
 static_assert(GL_INVALID_INDEX == UINT_MAX,
@@ -107,19 +106,386 @@ const PixelShaderOutputVariable *FindOutputAtLocation(
     return nullptr;
 }
 
+typedef const PackedVarying *VaryingPacking[gl::IMPLEMENTATION_MAX_VARYING_VECTORS][4];
+
+bool PackVarying(PackedVarying *packedVarying, const int maxVaryingVectors, VaryingPacking &packing)
+{
+    // Make sure we use transposed matrix types to count registers correctly.
+    int registers = 0;
+    int elements  = 0;
+
+    const sh::Varying &varying = *packedVarying->varying;
+
+    if (varying.isStruct())
+    {
+        registers = HLSLVariableRegisterCount(varying, true) * varying.elementCount();
+        elements  = 4;
+    }
+    else
+    {
+        GLenum transposedType = TransposeMatrixType(varying.type);
+        registers             = VariableRowCount(transposedType) * varying.elementCount();
+        elements              = VariableColumnCount(transposedType);
+    }
+
+    if (elements >= 2 && elements <= 4)
+    {
+        for (int r = 0; r <= maxVaryingVectors - registers; r++)
+        {
+            bool available = true;
+
+            for (int y = 0; y < registers && available; y++)
+            {
+                for (int x = 0; x < elements && available; x++)
+                {
+                    if (packing[r + y][x])
+                    {
+                        available = false;
+                    }
+                }
+            }
+
+            if (available)
+            {
+                packedVarying->registerIndex = r;
+                packedVarying->columnIndex   = 0;
+
+                for (int y = 0; y < registers; y++)
+                {
+                    for (int x = 0; x < elements; x++)
+                    {
+                        packing[r + y][x] = packedVarying;
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        if (elements == 2)
+        {
+            for (int r = maxVaryingVectors - registers; r >= 0; r--)
+            {
+                bool available = true;
+
+                for (int y = 0; y < registers && available; y++)
+                {
+                    for (int x = 2; x < 4 && available; x++)
+                    {
+                        if (packing[r + y][x])
+                        {
+                            available = false;
+                        }
+                    }
+                }
+
+                if (available)
+                {
+                    packedVarying->registerIndex = r;
+                    packedVarying->columnIndex   = 2;
+
+                    for (int y = 0; y < registers; y++)
+                    {
+                        for (int x = 2; x < 4; x++)
+                        {
+                            packing[r + y][x] = packedVarying;
+                        }
+                    }
+
+                    return true;
+                }
+            }
+        }
+    }
+    else if (elements == 1)
+    {
+        int space[4] = {0};
+
+        for (int y = 0; y < maxVaryingVectors; y++)
+        {
+            for (int x = 0; x < 4; x++)
+            {
+                space[x] += packing[y][x] ? 0 : 1;
+            }
+        }
+
+        int column = 0;
+
+        for (int x = 0; x < 4; x++)
+        {
+            if (space[x] >= registers && (space[column] < registers || space[x] < space[column]))
+            {
+                column = x;
+            }
+        }
+
+        if (space[column] >= registers)
+        {
+            for (int r = 0; r < maxVaryingVectors; r++)
+            {
+                if (!packing[r][column])
+                {
+                    packedVarying->registerIndex = r;
+                    packedVarying->columnIndex   = column;
+
+                    for (int y = r; y < r + registers; y++)
+                    {
+                        packing[y][column] = packedVarying;
+                    }
+
+                    break;
+                }
+            }
+
+            return true;
+        }
+    }
+    else
+        UNREACHABLE();
+
+    return false;
+}
+
+unsigned int VaryingRegisterIndex(const gl::Caps &caps,
+                                  const PackedVarying &packedVarying,
+                                  unsigned int elementIndex,
+                                  unsigned int row)
+{
+    const sh::Varying &varying = *packedVarying.varying;
+
+    GLenum transposedType = TransposeMatrixType(varying.type);
+    unsigned int variableRows =
+        static_cast<unsigned int>(varying.isStruct() ? 1 : VariableRowCount(transposedType));
+
+    return (elementIndex * variableRows + (packedVarying.columnIndex * caps.maxVaryingVectors) +
+            (packedVarying.registerIndex + row));
+}
+
+struct PackedVaryingRegister final
+{
+    PackedVaryingRegister() : varyingIndex(0), elementIndex(0), rowIndex(0) {}
+
+    PackedVaryingRegister(const PackedVaryingRegister &) = default;
+    PackedVaryingRegister &operator=(const PackedVaryingRegister &) = default;
+
+    unsigned int registerIndex(const gl::Caps &caps,
+                               const std::vector<PackedVarying> &packedVaryings) const
+    {
+        const PackedVarying &packedVarying = packedVaryings[varyingIndex];
+        return VaryingRegisterIndex(caps, packedVarying, elementIndex, rowIndex);
+    }
+
+    size_t varyingIndex;
+    unsigned int elementIndex;
+    unsigned int rowIndex;
+};
+
+class PackedVaryingIterator final : public angle::NonCopyable
+{
+  public:
+    PackedVaryingIterator(const std::vector<PackedVarying> &packedVaryings);
+
+    class Iterator final
+    {
+      public:
+        Iterator(const PackedVaryingIterator &parent);
+
+        Iterator(const Iterator &) = default;
+        Iterator &operator=(const Iterator &) = delete;
+
+        Iterator &operator++();
+        bool operator==(const Iterator &other) const;
+        bool operator!=(const Iterator &other) const;
+
+        const PackedVaryingRegister &operator*() const { return mRegister; }
+        void setEnd() { mRegister.varyingIndex = mParent.mPackedVaryings.size(); }
+
+      private:
+        const PackedVaryingIterator &mParent;
+        PackedVaryingRegister mRegister;
+    };
+
+    Iterator begin() const;
+    const Iterator &end() const;
+
+  private:
+    const std::vector<PackedVarying> &mPackedVaryings;
+    Iterator mEnd;
+};
+
+PackedVaryingIterator::PackedVaryingIterator(const std::vector<PackedVarying> &packedVaryings)
+    : mPackedVaryings(packedVaryings), mEnd(*this)
+{
+    mEnd.setEnd();
+}
+
+PackedVaryingIterator::Iterator PackedVaryingIterator::begin() const
+{
+    return Iterator(*this);
+}
+
+const PackedVaryingIterator::Iterator &PackedVaryingIterator::end() const
+{
+    return mEnd;
+}
+
+PackedVaryingIterator::Iterator::Iterator(const PackedVaryingIterator &parent) : mParent(parent)
+{
+    while (mRegister.varyingIndex < mParent.mPackedVaryings.size() &&
+           !mParent.mPackedVaryings[mRegister.varyingIndex].registerAssigned())
+    {
+        ++mRegister.varyingIndex;
+    }
+}
+
+PackedVaryingIterator::Iterator &PackedVaryingIterator::Iterator::operator++()
+{
+    const sh::Varying *varying = mParent.mPackedVaryings[mRegister.varyingIndex].varying;
+    GLenum transposedType = TransposeMatrixType(varying->type);
+    unsigned int variableRows =
+        static_cast<unsigned int>(varying->isStruct() ? 1 : VariableRowCount(transposedType));
+
+    // Innermost iteration: row count
+    if (mRegister.rowIndex + 1 < variableRows)
+    {
+        ++mRegister.rowIndex;
+        return *this;
+    }
+
+    mRegister.rowIndex = 0;
+
+    // Middle iteration: element count
+    if (mRegister.elementIndex + 1 < varying->elementCount())
+    {
+        ++mRegister.elementIndex;
+        return *this;
+    }
+
+    mRegister.elementIndex = 0;
+
+    // Outer iteration: the varying itself. Once we pass the last varying, this Iterator will
+    // equal the end Iterator.
+    do
+    {
+        ++mRegister.varyingIndex;
+    } while (mRegister.varyingIndex < mParent.mPackedVaryings.size() &&
+             !mParent.mPackedVaryings[mRegister.varyingIndex].registerAssigned());
+    return *this;
+}
+
+bool PackedVaryingIterator::Iterator::operator==(const Iterator &other) const
+{
+    return mRegister.elementIndex == other.mRegister.elementIndex &&
+           mRegister.rowIndex == other.mRegister.rowIndex &&
+           mRegister.varyingIndex == other.mRegister.varyingIndex;
+}
+
+bool PackedVaryingIterator::Iterator::operator!=(const Iterator &other) const
+{
+    return !(*this == other);
+}
+
 const std::string VERTEX_ATTRIBUTE_STUB_STRING = "@@ VERTEX ATTRIBUTES @@";
 const std::string PIXEL_OUTPUT_STUB_STRING     = "@@ PIXEL OUTPUT @@";
 }  // anonymous namespace
 
-std::string GetVaryingSemantic(int majorShaderModel, bool programUsesPointSize)
-{
-    // SM3 reserves the TEXCOORD semantic for point sprite texcoords (gl_PointCoord)
-    // In D3D11 we manually compute gl_PointCoord in the GS.
-    return ((programUsesPointSize && majorShaderModel < 4) ? "COLOR" : "TEXCOORD");
-}
-
 DynamicHLSL::DynamicHLSL(RendererD3D *const renderer) : mRenderer(renderer)
 {
+}
+
+// Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading
+// Language 1.00 rev. 17] appendix A section 7 page 111
+// Returns the number of used varying registers, or -1 if unsuccesful
+bool DynamicHLSL::packVaryings(const gl::Caps &caps,
+                               InfoLog &infoLog,
+                               std::vector<PackedVarying> *packedVaryings,
+                               const std::vector<std::string> &transformFeedbackVaryings,
+                               unsigned int *registerCountOut)
+{
+    VaryingPacking packing = {};
+    *registerCountOut      = 0;
+
+    std::set<std::string> uniqueVaryingNames;
+
+    for (PackedVarying &packedVarying : *packedVaryings)
+    {
+        const sh::Varying &varying = *packedVarying.varying;
+
+        // Do not assign registers to built-in or unreferenced varyings
+        if (varying.isBuiltIn() || !varying.staticUse)
+        {
+            continue;
+        }
+
+        ASSERT(uniqueVaryingNames.count(varying.name) == 0);
+
+        if (PackVarying(&packedVarying, caps.maxVaryingVectors, packing))
+        {
+            uniqueVaryingNames.insert(varying.name);
+        }
+        else
+        {
+            infoLog << "Could not pack varying " << varying.name;
+            return false;
+        }
+    }
+
+    for (const std::string &transformFeedbackVaryingName : transformFeedbackVaryings)
+    {
+        if (transformFeedbackVaryingName.compare(0, 3, "gl_") == 0)
+        {
+            // do not pack builtin XFB varyings
+            continue;
+        }
+
+        for (PackedVarying &packedVarying : *packedVaryings)
+        {
+            const sh::Varying &varying = *packedVarying.varying;
+
+            // Make sure transform feedback varyings aren't optimized out.
+            if (uniqueVaryingNames.count(transformFeedbackVaryingName) == 0)
+            {
+                bool found = false;
+                if (transformFeedbackVaryingName == varying.name)
+                {
+                    if (!PackVarying(&packedVarying, caps.maxVaryingVectors, packing))
+                    {
+                        infoLog << "Could not pack varying " << varying.name;
+                        return false;
+                    }
+
+                    found = true;
+                    break;
+                }
+                if (!found)
+                {
+                    infoLog << "Transform feedback varying " << transformFeedbackVaryingName
+                            << " does not exist in the vertex shader.";
+                    return false;
+                }
+            }
+
+            // Add duplicate transform feedback varyings for 'flat' shaded attributes. This is
+            // necessary because we write out modified vertex data to correct for the provoking
+            // vertex in D3D11. This extra transform feedback varying is the unmodified stream.
+            if (varying.interpolation == sh::INTERPOLATION_FLAT)
+            {
+                sh::Varying duplicateVarying(varying);
+                duplicateVarying.name = "StreamOut_" + duplicateVarying.name;
+            }
+        }
+    }
+
+    // Return the number of used registers
+    for (GLuint r = 0; r < caps.maxVaryingVectors; r++)
+    {
+        if (packing[r][0] || packing[r][1] || packing[r][2] || packing[r][3])
+        {
+            (*registerCountOut)++;
+        }
+    }
+
+    return true;
 }
 
 void DynamicHLSL::generateVaryingHLSL(const gl::Caps &caps,
@@ -127,8 +493,7 @@ void DynamicHLSL::generateVaryingHLSL(const gl::Caps &caps,
                                       bool programUsesPointSize,
                                       std::stringstream &hlslStream) const
 {
-    std::string varyingSemantic =
-        GetVaryingSemantic(mRenderer->getMajorShaderModel(), programUsesPointSize);
+    std::string varyingSemantic = getVaryingSemantic(programUsesPointSize);
 
     for (const PackedVaryingRegister &registerInfo : PackedVaryingIterator(varyings))
     {
@@ -360,6 +725,108 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(
     return pixelHLSL;
 }
 
+std::string DynamicHLSL::getVaryingSemantic(bool programUsesPointSize) const
+{
+    // SM3 reserves the TEXCOORD semantic for point sprite texcoords (gl_PointCoord)
+    // In D3D11 we manually compute gl_PointCoord in the GS.
+    int shaderModel = mRenderer->getMajorShaderModel();
+    return ((programUsesPointSize && shaderModel < 4) ? "COLOR" : "TEXCOORD");
+}
+
+struct DynamicHLSL::SemanticInfo
+{
+    struct BuiltinInfo
+    {
+        BuiltinInfo() : enabled(false), index(0), systemValue(false) {}
+
+        bool enabled;
+        std::string semantic;
+        unsigned int index;
+        bool systemValue;
+
+        std::string str() const { return (systemValue ? semantic : (semantic + Str(index))); }
+
+        void enableSystem(const std::string &systemValueSemantic)
+        {
+            enabled     = true;
+            semantic    = systemValueSemantic;
+            systemValue = true;
+        }
+
+        void enable(const std::string &semanticVal, unsigned int indexVal)
+        {
+            enabled  = true;
+            semantic = semanticVal;
+            index    = indexVal;
+        }
+    };
+
+    BuiltinInfo dxPosition;
+    BuiltinInfo glPosition;
+    BuiltinInfo glFragCoord;
+    BuiltinInfo glPointCoord;
+    BuiltinInfo glPointSize;
+};
+
+DynamicHLSL::SemanticInfo DynamicHLSL::getSemanticInfo(ShaderType shaderType,
+                                                       unsigned int startRegisters,
+                                                       bool position,
+                                                       bool fragCoord,
+                                                       bool pointCoord,
+                                                       bool pointSize) const
+{
+    SemanticInfo info;
+    bool hlsl4                         = (mRenderer->getMajorShaderModel() >= 4);
+    const std::string &varyingSemantic = getVaryingSemantic(pointSize);
+
+    unsigned int reservedRegisterIndex = startRegisters;
+
+    if (hlsl4)
+    {
+        info.dxPosition.enableSystem("SV_Position");
+    }
+    else if (shaderType == SHADER_PIXEL)
+    {
+        info.dxPosition.enableSystem("VPOS");
+    }
+    else
+    {
+        info.dxPosition.enableSystem("POSITION");
+    }
+
+    if (position)
+    {
+        info.glPosition.enable(varyingSemantic, reservedRegisterIndex++);
+    }
+
+    if (fragCoord)
+    {
+        info.glFragCoord.enable(varyingSemantic, reservedRegisterIndex++);
+    }
+
+    if (pointCoord)
+    {
+        // SM3 reserves the TEXCOORD semantic for point sprite texcoords (gl_PointCoord)
+        // In D3D11 we manually compute gl_PointCoord in the GS.
+        if (hlsl4)
+        {
+            info.glPointCoord.enable(varyingSemantic, reservedRegisterIndex++);
+        }
+        else
+        {
+            info.glPointCoord.enable("TEXCOORD", 0);
+        }
+    }
+
+    // Special case: do not include PSIZE semantic in HLSL 3 pixel shaders
+    if (pointSize && (shaderType != SHADER_PIXEL || hlsl4))
+    {
+        info.glPointSize.enableSystem("PSIZE");
+    }
+
+    return info;
+}
+
 void DynamicHLSL::generateVaryingLinkHLSL(const gl::Caps &caps,
                                           bool programUsesPointSize,
                                           const SemanticInfo &info,
@@ -422,8 +889,7 @@ void DynamicHLSL::storeUserVaryings(const std::vector<PackedVarying> &packedVary
                                     bool programUsesPointSize,
                                     std::vector<D3DVarying> *d3dVaryingsOut) const
 {
-    const std::string &varyingSemantic =
-        GetVaryingSemantic(mRenderer->getMajorShaderModel(), programUsesPointSize);
+    const std::string &varyingSemantic = getVaryingSemantic(programUsesPointSize);
 
     for (const PackedVarying &packedVarying : packedVaryings)
     {
