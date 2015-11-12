@@ -21,7 +21,7 @@ ANGLE is used as the default WebGL backend for both Google Chrome and Mozilla Fi
 Portions of the ANGLE shader compiler are used as a shader validator and translator by WebGL implementations across multiple platforms. It is used on Mac OS X, Linux, and in mobile variants of the browsers. Having one shader validator helps to ensure that a consistent set of GLSL ES shaders are accepted across browsers and platforms. The shader translator can be used to translate shaders to other shading languages, and to optionally apply shader modifications to work around bugs or quirks in the native graphics drivers. The translator targets Desktop GLSL, Direct3D HLSL, and even ESSL for native GLES2 platforms.
 
 ##Building
-View the [Dev setup instructions](doc/DevSetup.md).
+View the [Dev setup instructions](doc/DevSetup.md). For generating a Windows Store version of ANGLE view the [Windows Store instructions](doc/BuildingAngleForWindowsStore.md)
 
 ##Contributing
 * Join our [Google group](https://groups.google.com/group/angleproject) to keep up to date.
