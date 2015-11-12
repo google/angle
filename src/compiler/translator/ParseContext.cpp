@@ -2698,6 +2698,27 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
 
     TIntermConstantUnion *indexConstantUnion = indexExpression->getAsConstantUnion();
 
+    // TODO(oetuaho@nvidia.com): Get rid of indexConstantUnion == nullptr below once ANGLE is able
+    // to constant fold all constant expressions. Right now we don't allow indexing interface blocks
+    // or fragment outputs with expressions that ANGLE is not able to constant fold, even if the
+    // index is a constant expression.
+    if (indexExpression->getQualifier() != EvqConst || indexConstantUnion == nullptr)
+    {
+        if (baseExpression->isInterfaceBlock())
+        {
+            error(
+                location, "", "[",
+                "array indexes for interface blocks arrays must be constant integral expressions");
+            recover();
+        }
+        else if (baseExpression->getQualifier() == EvqFragmentOut)
+        {
+            error(location, "", "[",
+                  "array indexes for fragment outputs must be constant integral expressions");
+            recover();
+        }
+    }
+
     if (indexConstantUnion)
     {
         // If the index is not qualified as constant, the behavior in the spec is undefined. This
@@ -2790,20 +2811,6 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
     }
     else
     {
-        if (baseExpression->isInterfaceBlock())
-        {
-            error(
-                location, "", "[",
-                "array indexes for interface blocks arrays must be constant integral expressions");
-            recover();
-        }
-        else if (baseExpression->getQualifier() == EvqFragmentOut)
-        {
-            error(location, "", "[",
-                  "array indexes for fragment outputs must be constant integral expressions");
-            recover();
-        }
-
         indexedExpression =
             intermediate.addIndex(EOpIndexIndirect, baseExpression, indexExpression, location);
     }

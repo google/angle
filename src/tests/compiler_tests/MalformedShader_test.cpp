@@ -1158,3 +1158,46 @@ TEST_F(MalformedShaderTest, EmptyArrayConstructor)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Test that indexing fragment outputs with a non-constant expression is forbidden, even if ANGLE
+// is able to constant fold the index expression. ESSL 3.00 section 4.3.6.
+TEST_F(MalformedShaderTest, DynamicallyIndexedFragmentOutput)
+{
+    const std::string &shaderString =
+        "#version 300 es"
+        "precision mediump float;\n"
+        "uniform int a;\n"
+        "out vec4[2] my_FragData;\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragData[true ? 0 : a] = vec4(0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Test that indexing an interface block array with a non-constant expression is forbidden, even if
+// ANGLE is able to constant fold the index expression. ESSL 3.00 section 4.3.7.
+TEST_F(MalformedShaderTest, DynamicallyIndexedInterfaceBlock)
+{
+    const std::string &shaderString =
+        "#version 300 es"
+        "precision mediump float;\n"
+        "uniform int a;\n"
+        "uniform B\n"
+        "{\n"
+        "    vec4 f;\n"
+        "}\n"
+        "blocks[2];\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = blocks[true ? 0 : a].f;\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
