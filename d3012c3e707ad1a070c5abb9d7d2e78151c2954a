@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b6da7ea7_9759a6dc",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-12T23:25:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16734a96_5a165533",
+      "range": {
+        "startLine": 209,
+        "startChar": 8,
+        "endLine": 209,
+        "endChar": 38
+      },
+      "revId": "d3012c3e707ad1a070c5abb9d7d2e78151c2954a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "965f3af9_de217591",
         "filename": "src/libANGLE/renderer/d3d/BufferD3D.h",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-12T22:40:05Z",
       "side": 1,
       "message": "same here, add an enum for this policy",
+      "range": {
+        "startLine": 44,
+        "startChar": 54,
+        "endLine": 44,
+        "endChar": 77
+      },
+      "revId": "d3012c3e707ad1a070c5abb9d7d2e78151c2954a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6da7ea7_f7c2a281",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-12T23:25:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "965f3af9_de217591",
       "range": {
         "startLine": 44,
         "startChar": 54,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "fb2e9f8f_5141541c",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-12T23:25:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7662c6c1_3dd4373a",
+      "range": {
+        "startLine": 48,
+        "startChar": 30,
+        "endLine": 48,
+        "endChar": 55
+      },
+      "revId": "d3012c3e707ad1a070c5abb9d7d2e78151c2954a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d64a9241_352e1a67",
         "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
         "patchSetId": 5
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "16c50ace_1f22f494",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-12T23:25:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d64a9241_352e1a67",
+      "range": {
+        "startLine": 157,
+        "startChar": 28,
+        "endLine": 157,
+        "endChar": 38
+      },
+      "revId": "d3012c3e707ad1a070c5abb9d7d2e78151c2954a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7662c6c1_bdae87c0",
         "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
         "patchSetId": 5
@@ -105,6 +201,30 @@
       "writtenOn": "2015-11-12T22:40:05Z",
       "side": 1,
       "message": "nit: \"anonymous namespace\"",
+      "range": {
+        "startLine": 236,
+        "startChar": 6,
+        "endLine": 236,
+        "endChar": 15
+      },
+      "revId": "d3012c3e707ad1a070c5abb9d7d2e78151c2954a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b2597a9_b6e98ed5",
+        "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-12T23:25:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7662c6c1_bdae87c0",
       "range": {
         "startLine": 236,
         "startChar": 6,
