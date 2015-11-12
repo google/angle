@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b636fec5_2cd41b3a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-12T15:29:58Z",
+      "side": 1,
+      "message": "Do you plan on sharing lots of code between 9 and 11? It might make sense if they don\u0027t share much to keep them entirely separate. Something to consider.",
+      "range": {
+        "startLine": 409,
+        "startChar": 4,
+        "endLine": 409,
+        "endChar": 78
+      },
+      "revId": "4dc654c134c2904dead4bb57843666a3dcb5cf40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f642362f_ae2c778a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-12T15:29:58Z",
+      "side": 1,
+      "message": "add a closing #endif comment  \n\n #endif  // LIBANGLE_RENDERER_D3D11_STATEMANAGER11_H_",
+      "revId": "4dc654c134c2904dead4bb57843666a3dcb5cf40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
