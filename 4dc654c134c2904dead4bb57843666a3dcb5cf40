@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "16c50ace_247a47cd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-12T18:46:29Z",
+      "side": 1,
+      "message": "Hm... at this point the only things that will be shared are the mCurXXX variables inside the state manager. On the renderer side, I\u0027ll have to see when I start creating the StateManager9. The method signatures will probably be similar (mStateManager-\u003esync, etc) that could be called from RendererD3D::sync, but will definitely consider :)",
+      "parentUuid": "b636fec5_2cd41b3a",
+      "range": {
+        "startLine": 409,
+        "startChar": 4,
+        "endLine": 409,
+        "endChar": 78
+      },
+      "revId": "4dc654c134c2904dead4bb57843666a3dcb5cf40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f642362f_ae2c778a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 2
@@ -36,6 +60,24 @@
       "writtenOn": "2015-11-12T15:29:58Z",
       "side": 1,
       "message": "add a closing #endif comment  \n\n #endif  // LIBANGLE_RENDERER_D3D11_STATEMANAGER11_H_",
+      "revId": "4dc654c134c2904dead4bb57843666a3dcb5cf40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb2e9f8f_ee7bbfce",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-12T18:46:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f642362f_ae2c778a",
       "revId": "4dc654c134c2904dead4bb57843666a3dcb5cf40",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
