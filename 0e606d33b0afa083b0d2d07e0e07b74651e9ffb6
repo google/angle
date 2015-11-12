@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "563ea29c_b1c77a90",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-12T15:32:03Z",
+      "side": 1,
+      "message": "git cl format",
+      "range": {
+        "startLine": 193,
+        "startChar": 9,
+        "endLine": 194,
+        "endChar": 103
+      },
+      "revId": "0e606d33b0afa083b0d2d07e0e07b74651e9ffb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
