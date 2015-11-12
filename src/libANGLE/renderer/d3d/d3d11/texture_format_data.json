@@ -300,6 +300,15 @@
       "requirementsFcn": "OnlyFL10Plus"
     }
   ],
+  "GL_ETC1_RGB8_OES": [
+    {
+      "texFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
+      "srvFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
+      "rtvFormat": "DXGI_FORMAT_UNKNOWN",
+      "dsvFormat": "DXGI_FORMAT_UNKNOWN",
+      "requirementsFcn": "AnyDevice"
+    }
+  ],
   "GL_LUMINANCE": [
     {
       "texFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",

@@ -112,6 +112,7 @@ Extensions::Extensions()
       textureCompressionDXT5(false),
       textureCompressionASTCHDR(false),
       textureCompressionASTCLDR(false),
+      compressedETC1RGB8Texture(false),
       depthTextures(false),
       textureStorage(false),
       textureNPOT(false),
