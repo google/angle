@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "563ea29c_94ec2cec",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-12T19:38:45Z",
+      "side": 1,
+      "message": "please add an appropriate BUG\u003dangleproject:#### tag here, and open an issue on the issue tracker if there isn\u0027t already. Also to document which dEQP specifically, you can add\n\nTEST\u003ddEQP-GLES#.functional.\u003cfull test name...\u003e",
+      "revId": "b21e471a95a9272748f42cddf437224fce64c1d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
