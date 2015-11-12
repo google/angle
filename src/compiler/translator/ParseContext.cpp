@@ -2724,6 +2724,11 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
                   "array indexes for fragment outputs must be constant integral expressions");
             recover();
         }
+        else if (mShaderSpec == SH_WEBGL2_SPEC && baseExpression->getQualifier() == EvqFragData)
+        {
+            error(location, "", "[", "array index for gl_FragData must be constant zero");
+            recover();
+        }
     }
 
     if (indexConstantUnion)
@@ -2775,22 +2780,35 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
 
             if (baseExpression->isArray())
             {
-                if (index >= baseExpression->getType().getArraySize())
+                if (baseExpression->getQualifier() == EvqFragData && index > 0)
+                {
+                    if (mShaderSpec == SH_WEBGL2_SPEC)
+                    {
+                        // Error has been already generated if index is not const.
+                        if (indexExpression->getQualifier() == EvqConst)
+                        {
+                            error(location, "", "[",
+                                  "array index for gl_FragData must be constant zero");
+                            recover();
+                        }
+                        safeIndex = 0;
+                    }
+                    else if (!isExtensionEnabled("GL_EXT_draw_buffers"))
+                    {
+                        outOfRangeError(outOfRangeIndexIsError, location, "", "[",
+                                        "array index for gl_FragData must be zero when "
+                                        "GL_EXT_draw_buffers is disabled");
+                        safeIndex = 0;
+                    }
+                }
+                // Only do generic out-of-range check if similar error hasn't already been reported.
+                if (safeIndex < 0 && index >= baseExpression->getType().getArraySize())
                 {
                     std::stringstream extraInfoStream;
                     extraInfoStream << "array index out of range '" << index << "'";
                     std::string extraInfo = extraInfoStream.str();
                     outOfRangeError(outOfRangeIndexIsError, location, "", "[", extraInfo.c_str());
                     safeIndex = baseExpression->getType().getArraySize() - 1;
-                }
-                else if (baseExpression->getQualifier() == EvqFragData && index > 0 &&
-                         !isExtensionEnabled("GL_EXT_draw_buffers"))
-                {
-                    outOfRangeError(
-                        outOfRangeIndexIsError, location, "", "[",
-                        "array indexes for gl_FragData must be zero when GL_EXT_draw_buffers is "
-                        "disabled");
-                    safeIndex = 0;
                 }
             }
             else if ((baseExpression->isVector() || baseExpression->isMatrix()) &&

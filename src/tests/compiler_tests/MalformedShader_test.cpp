@@ -68,6 +68,22 @@ class MalformedVertexShaderTest : public MalformedShaderTest
     }
 };
 
+class MalformedWebGL2ShaderTest : public MalformedShaderTest
+{
+  public:
+    MalformedWebGL2ShaderTest() {}
+
+  protected:
+    void SetUp() override
+    {
+        ShBuiltInResources resources;
+        ShInitBuiltInResources(&resources);
+
+        mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_WEBGL2_SPEC);
+        ASSERT_TRUE(mTranslator->Init(resources));
+    }
+};
+
 // This is a test for a bug that used to exist in ANGLE:
 // Calling a function with all parameters missing should not succeed.
 TEST_F(MalformedShaderTest, FunctionParameterMismatch)
@@ -1212,6 +1228,25 @@ TEST_F(MalformedShaderTest, StructConstructorWithStructDefinition)
         "{\n"
         "    struct s { float f; } (0.0);\n"
         "    gl_FragColor = vec4(0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Test that indexing gl_FragData with a non-constant expression is forbidden in WebGL 2.0, even
+// when ANGLE is able to constant fold the index.
+// WebGL 2.0 spec section 'GLSL ES 1.00 Fragment Shader Output'
+TEST_F(MalformedWebGL2ShaderTest, IndexFragDataWithNonConstant)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "void main()\n"
+        "{\n"
+        "    for (int i = 0; i < 2; ++i) {\n"
+        "        gl_FragData[true ? 0 : i] = vec4(0.0);\n"
+        "    }\n"
         "}\n";
     if (compile(shaderString))
     {
