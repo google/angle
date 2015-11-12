@@ -697,3 +697,50 @@ TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingVec4)
     std::vector<float> result(outputElements, outputElements + 4);
     ASSERT_TRUE(constantVectorFoundInAST(result));
 }
+
+// Test that equality comparison of two different structs with a nested struct inside returns false.
+TEST_F(ConstantFoldingTest, FoldNestedDifferentStructEqualityComparison)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "struct nested {\n"
+        "    float f\n;"
+        "};\n"
+        "struct S {\n"
+        "    nested a;\n"
+        "    float f;\n"
+        "};\n"
+        "uniform vec4 mult;\n"
+        "void main()\n"
+        "{\n"
+        "    const S s1 = S(nested(0.0), 2.0);\n"
+        "    const S s2 = S(nested(0.0), 3.0);\n"
+        "    gl_FragColor = (s1 == s2 ? 1.0 : 0.5) * mult;\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(0.5f));
+}
+
+// Test that equality comparison of two identical structs with a nested struct inside returns true.
+TEST_F(ConstantFoldingTest, FoldNestedIdenticalStructEqualityComparison)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "struct nested {\n"
+        "    float f\n;"
+        "};\n"
+        "struct S {\n"
+        "    nested a;\n"
+        "    float f;\n"
+        "    int i;\n"
+        "};\n"
+        "uniform vec4 mult;\n"
+        "void main()\n"
+        "{\n"
+        "    const S s1 = S(nested(0.0), 2.0, 3);\n"
+        "    const S s2 = S(nested(0.0), 2.0, 3);\n"
+        "    gl_FragColor = (s1 == s2 ? 1.0 : 0.5) * mult;\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(1.0f));
+}

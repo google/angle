@@ -66,73 +66,6 @@ bool ValidateMultiplication(TOperator op, const TType &left, const TType &right)
     }
 }
 
-bool CompareStructure(const TType& leftNodeType,
-                      const TConstantUnion *rightUnionArray,
-                      const TConstantUnion *leftUnionArray);
-
-bool CompareStruct(const TType &leftNodeType,
-                   const TConstantUnion *rightUnionArray,
-                   const TConstantUnion *leftUnionArray)
-{
-    const TFieldList &fields = leftNodeType.getStruct()->fields();
-
-    size_t structSize = fields.size();
-    size_t index = 0;
-
-    for (size_t j = 0; j < structSize; j++)
-    {
-        size_t size = fields[j]->type()->getObjectSize();
-        for (size_t i = 0; i < size; i++)
-        {
-            if (fields[j]->type()->getBasicType() == EbtStruct)
-            {
-                if (!CompareStructure(*fields[j]->type(),
-                                      &rightUnionArray[index],
-                                      &leftUnionArray[index]))
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                if (leftUnionArray[index] != rightUnionArray[index])
-                    return false;
-                index++;
-            }
-        }
-    }
-    return true;
-}
-
-bool CompareStructure(const TType &leftNodeType,
-                      const TConstantUnion *rightUnionArray,
-                      const TConstantUnion *leftUnionArray)
-{
-    if (leftNodeType.isArray())
-    {
-        TType typeWithoutArrayness = leftNodeType;
-        typeWithoutArrayness.clearArrayness();
-
-        size_t arraySize = leftNodeType.getArraySize();
-
-        for (size_t i = 0; i < arraySize; ++i)
-        {
-            size_t offset = typeWithoutArrayness.getObjectSize() * i;
-            if (!CompareStruct(typeWithoutArrayness,
-                               &rightUnionArray[offset],
-                               &leftUnionArray[offset]))
-            {
-                return false;
-            }
-        }
-    }
-    else
-    {
-        return CompareStruct(leftNodeType, rightUnionArray, leftUnionArray);
-    }
-    return true;
-}
-
 TConstantUnion *Vectorize(const TConstantUnion &constant, size_t size)
 {
     TConstantUnion *constUnion = new TConstantUnion[size];
@@ -1269,19 +1202,12 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op, TIntermConstantUn
         {
             resultArray = new TConstantUnion[1];
             bool equal = true;
-            if (getType().getBasicType() == EbtStruct)
+            for (size_t i = 0; i < objectSize; i++)
             {
-                equal = CompareStructure(getType(), rightArray, leftArray);
-            }
-            else
-            {
-                for (size_t i = 0; i < objectSize; i++)
+                if (leftArray[i] != rightArray[i])
                 {
-                    if (leftArray[i] != rightArray[i])
-                    {
-                        equal = false;
-                        break;  // break out of for loop
-                    }
+                    equal = false;
+                    break;  // break out of for loop
                 }
             }
             if (op == EOpEqual)
