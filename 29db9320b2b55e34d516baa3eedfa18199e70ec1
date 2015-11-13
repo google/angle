@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1648aa4e_808ea6de",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2096,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T19:07:24Z",
+      "side": 1,
+      "message": "sorry i\u0027m in dense, but why can\u0027t we use userDef !\u003d nullptr here?",
+      "range": {
+        "startLine": 2096,
+        "startChar": 4,
+        "endLine": 2096,
+        "endChar": 37
+      },
+      "revId": "29db9320b2b55e34d516baa3eedfa18199e70ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
