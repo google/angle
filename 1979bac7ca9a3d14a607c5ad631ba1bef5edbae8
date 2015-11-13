@@ -25,6 +25,47 @@
     },
     {
       "key": {
+        "uuid": "76d4867d_a83ba5a6",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-13T22:26:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b636fec5_4faea1ee",
+      "range": {
+        "startLine": 241,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 5
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b532b27_6f9ea17a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-13T22:26:28Z",
+      "side": 1,
+      "message": "sort",
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1648aa4e_a08ac291",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 1
@@ -42,6 +83,23 @@
         "endLine": 58,
         "endChar": 34
       },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b532b27_8c632b5c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-13T22:26:28Z",
+      "side": 1,
+      "message": "Remove, don\u0027t need this",
       "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -71,6 +129,23 @@
     },
     {
       "key": {
+        "uuid": "1b3453db_211c34f4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2603,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-13T22:26:28Z",
+      "side": 1,
+      "message": "Uncomment this, memory leak uh oh :o",
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d63372d5_0d367528",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
         "patchSetId": 1
@@ -82,6 +157,30 @@
       "writtenOn": "2015-11-13T21:41:37Z",
       "side": 1,
       "message": "I wonder if you might consider storing StateManager11 by value. If you pass in this \u0027this\u0027 pointer to Renderer11, you can retrieve the device context, and you can store the StateManager as an object instead of pointer.",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 21
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b3453db_93ec5beb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-13T22:26:28Z",
+      "side": 1,
+      "message": "Yupp, I actually tried this yesterday, but not by passing the \u0027this\u0027 pointer, rather just setting the deviceContext and statecache in after the two have been initialized. It might be better to just keep the device context and statecache inside of renderer and call a renderer11-\u003egetDeviceContext when needed",
+      "parentUuid": "d63372d5_0d367528",
       "range": {
         "startLine": 41,
         "startChar": 0,
@@ -117,6 +216,47 @@
     },
     {
       "key": {
+        "uuid": "76d4867d_888ea1de",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-13T22:26:28Z",
+      "side": 1,
+      "message": "Don\u0027t need these two",
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb2e9f8f_ba660d6c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-13T22:26:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36392eb5_d0cc02b7",
+      "range": {
+        "startLine": 412,
+        "startChar": 0,
+        "endLine": 412,
+        "endChar": 44
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "563ea29c_f44c901d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 1
@@ -128,6 +268,30 @@
       "writtenOn": "2015-11-13T21:41:37Z",
       "side": 1,
       "message": "nit: duplicated header",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 55
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b3453db_53a8339b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-13T22:26:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "563ea29c_f44c901d",
       "range": {
         "startLine": 10,
         "startChar": 0,
@@ -163,6 +327,30 @@
     },
     {
       "key": {
+        "uuid": "5b25eb9e_9d4fe412",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-13T22:26:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f642362f_b11858c5",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 51
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "962d7a79_ebfbcda0",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 1
@@ -180,6 +368,23 @@
         "endLine": 39,
         "endChar": 77
       },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b2597a9_e283cc70",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-13T22:26:28Z",
+      "side": 1,
+      "message": "We may not need the dirty bits to be a parameter until a later patch",
       "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -209,6 +414,30 @@
     },
     {
       "key": {
+        "uuid": "76d4867d_c86899a0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-13T22:26:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d63372d5_2d333939",
+      "range": {
+        "startLine": 45,
+        "startChar": 41,
+        "endLine": 45,
+        "endChar": 45
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "563ea29c_345ff8c1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 1
@@ -226,6 +455,47 @@
         "endLine": 20,
         "endChar": 20
       },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb3987d2_6ebb4633",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-13T22:26:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "563ea29c_345ff8c1",
+      "range": {
+        "startLine": 20,
+        "startChar": 6,
+        "endLine": 20,
+        "endChar": 20
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b25eb9e_7d8f68a2",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-13T22:26:28Z",
+      "side": 1,
+      "message": "dirty bits not needed for now?",
       "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
