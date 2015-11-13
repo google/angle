@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "763006ce_0a365b28",
+        "filename": "src/libANGLE/renderer/d3d/VaryingPacking.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T16:40:21Z",
+      "side": 1,
+      "message": "Done. Comment was below, moved up. Also added quite a few more comments.",
+      "parentUuid": "d64a9241_9515061e",
+      "revId": "42df44f3867c2ec905bb26621030159716f877e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d63372d5_4ab85303",
         "filename": "src/libANGLE/renderer/d3d/VaryingPacking.cpp",
         "patchSetId": 12
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "962d7a79_28824b26",
+        "filename": "src/libANGLE/renderer/d3d/VaryingPacking.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T16:40:21Z",
+      "side": 1,
+      "message": "Think so. It\u0027s what the spec algorithm suggests.",
+      "parentUuid": "d63372d5_4ab85303",
+      "range": {
+        "startLine": 129,
+        "startChar": 17,
+        "endLine": 129,
+        "endChar": 60
+      },
+      "revId": "42df44f3867c2ec905bb26621030159716f877e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f642362f_ce30e398",
         "filename": "src/libANGLE/renderer/d3d/VaryingPacking.cpp",
         "patchSetId": 12
@@ -53,6 +95,47 @@
       "writtenOn": "2015-11-12T21:30:42Z",
       "side": 1,
       "message": "This should check that all the next varyingsRows [bestColumn] are empty.",
+      "revId": "42df44f3867c2ec905bb26621030159716f877e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "763006ce_8a888b0c",
+        "filename": "src/libANGLE/renderer/d3d/VaryingPacking.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T16:40:21Z",
+      "side": 1,
+      "message": "Drat, good catch. Done.",
+      "parentUuid": "f642362f_ce30e398",
+      "revId": "42df44f3867c2ec905bb26621030159716f877e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96549ae5_d930a798",
+        "filename": "src/libANGLE/renderer/d3d/VaryingPacking.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T16:40:21Z",
+      "side": 1,
+      "message": "comment is here",
+      "range": {
+        "startLine": 225,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 69
+      },
       "revId": "42df44f3867c2ec905bb26621030159716f877e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -93,6 +176,24 @@
       "writtenOn": "2015-11-12T21:30:42Z",
       "side": 1,
       "message": "Is it possible to do std::vector\u003cbool[4]\u003e mRegisterOccupancy instead? (I\u0027m not sure if the type is valid though)",
+      "revId": "42df44f3867c2ec905bb26621030159716f877e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36392eb5_7038aeaa",
+        "filename": "src/libANGLE/renderer/d3d/VaryingPacking.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T16:40:21Z",
+      "side": 1,
+      "message": "I kinda like my way! Easy to initialize.",
+      "parentUuid": "763006ce_2adebf2c",
       "revId": "42df44f3867c2ec905bb26621030159716f877e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
