@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b636fec5_4faea1ee",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T21:41:37Z",
+      "side": 1,
+      "message": "you can move this stub into Renderer9.h or cpp",
+      "range": {
+        "startLine": 241,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 5
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1648aa4e_a08ac291",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T21:41:37Z",
+      "side": 1,
+      "message": "nit: sort alphabetically",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 34
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d63372d5_ed2041dd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2603,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T21:41:37Z",
+      "side": 1,
+      "message": "uncomment this?",
+      "range": {
+        "startLine": 2603,
+        "startChar": 4,
+        "endLine": 2603,
+        "endChar": 33
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d63372d5_0d367528",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T21:41:37Z",
+      "side": 1,
+      "message": "I wonder if you might consider storing StateManager11 by value. If you pass in this \u0027this\u0027 pointer to Renderer11, you can retrieve the device context, and you can store the StateManager as an object instead of pointer.",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 21
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36392eb5_d0cc02b7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T21:41:37Z",
+      "side": 1,
+      "message": "think you can remove this",
+      "range": {
+        "startLine": 412,
+        "startChar": 0,
+        "endLine": 412,
+        "endChar": 44
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "563ea29c_f44c901d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T21:41:37Z",
+      "side": 1,
+      "message": "nit: duplicated header",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 55
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f642362f_b11858c5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T21:41:37Z",
+      "side": 1,
+      "message": "comment seems not valid at this point (no DS state)",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 51
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "962d7a79_ebfbcda0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T21:41:37Z",
+      "side": 1,
+      "message": "seems as though dirtyBits is not referenced? you can probably remove it",
+      "range": {
+        "startLine": 39,
+        "startChar": 40,
+        "endLine": 39,
+        "endChar": 77
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d63372d5_2d333939",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T21:41:37Z",
+      "side": 1,
+      "message": "nit: s/NULL/nullptr",
+      "range": {
+        "startLine": 45,
+        "startChar": 41,
+        "endLine": 45,
+        "endChar": 45
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "563ea29c_345ff8c1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T21:41:37Z",
+      "side": 1,
+      "message": "nit: final and angle::NonCopyable",
+      "range": {
+        "startLine": 20,
+        "startChar": 6,
+        "endLine": 20,
+        "endChar": 20
+      },
+      "revId": "1979bac7ca9a3d14a607c5ad631ba1bef5edbae8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
