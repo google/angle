@@ -1201,3 +1201,20 @@ TEST_F(MalformedShaderTest, DynamicallyIndexedInterfaceBlock)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Test that a shader that uses a struct definition in place of a struct constructor does not
+// compile. See GLSL ES 1.00 section 5.4.3.
+TEST_F(MalformedShaderTest, StructConstructorWithStructDefinition)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "void main()\n"
+        "{\n"
+        "    struct s { float f; } (0.0);\n"
+        "    gl_FragColor = vec4(0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

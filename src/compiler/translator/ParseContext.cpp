@@ -2093,6 +2093,13 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
 TFunction *TParseContext::addConstructorFunc(const TPublicType &publicTypeIn)
 {
     TPublicType publicType = publicTypeIn;
+    if (publicType.isStructSpecifier)
+    {
+        error(publicType.line, "constructor can't be a structure definition",
+              getBasicString(publicType.type));
+        recover();
+    }
+
     TOperator op = EOpNull;
     if (publicType.userDef)
     {
@@ -3281,6 +3288,7 @@ TPublicType TParseContext::addStructure(const TSourceLoc &structLine,
     TPublicType publicType;
     publicType.setBasic(EbtStruct, EvqTemporary, structLine);
     publicType.userDef = structureType;
+    publicType.isStructSpecifier = true;
     exitStructDeclaration();
 
     return publicType;
