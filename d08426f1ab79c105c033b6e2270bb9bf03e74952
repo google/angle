@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f642362f_6ef0cff9",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T13:05:04Z",
+      "side": 1,
+      "message": "nit: \"D3D_BUFFFER\" -\u003e \"D3D_BUFFER\"",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 15
+      },
+      "revId": "d08426f1ab79c105c033b6e2270bb9bf03e74952",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f642362f_8e1b3b01",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-13T13:05:04Z",
+      "side": 1,
+      "message": "nit: git cl format",
+      "range": {
+        "startLine": 92,
+        "startChar": 78,
+        "endLine": 92,
+        "endChar": 113
+      },
+      "revId": "d08426f1ab79c105c033b6e2270bb9bf03e74952",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
