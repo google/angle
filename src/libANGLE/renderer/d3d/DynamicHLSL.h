@@ -35,6 +35,8 @@ struct Data;
 
 namespace rx
 {
+struct PackedVarying;
+struct SemanticInfo;
 class ShaderD3D;
 
 struct PixelShaderOutputVariable
@@ -45,39 +47,11 @@ struct PixelShaderOutputVariable
     size_t outputIndex;
 };
 
-struct PackedVarying
-{
-    PackedVarying(const sh::Varying &varyingIn)
-        : varying(&varyingIn), registerIndex(GL_INVALID_INDEX), columnIndex(0), vertexOnly(false)
-    {
-    }
-
-    bool registerAssigned() const { return registerIndex != GL_INVALID_INDEX; }
-
-    void resetRegisterAssignment() { registerIndex = GL_INVALID_INDEX; }
-
-    const sh::Varying *varying;
-
-    // Assigned during link
-    unsigned int registerIndex;
-
-    // Assigned during link, Defaults to 0
-    unsigned int columnIndex;
-
-    // Transform feedback varyings can be only referenced in the VS.
-    bool vertexOnly;
-};
-
 class DynamicHLSL : angle::NonCopyable
 {
   public:
     explicit DynamicHLSL(RendererD3D *const renderer);
 
-    bool packVaryings(const gl::Caps &caps,
-                      gl::InfoLog &infoLog,
-                      std::vector<PackedVarying> *packedVaryings,
-                      const std::vector<std::string> &transformFeedbackVaryings,
-                      unsigned int *registerCountOut);
     std::string generateVertexShaderForInputLayout(
         const std::string &sourceShader,
         const gl::InputLayout &inputLayout,
@@ -112,15 +86,6 @@ class DynamicHLSL : angle::NonCopyable
   private:
     RendererD3D *const mRenderer;
 
-    struct SemanticInfo;
-
-    std::string getVaryingSemantic(bool programUsesPointSize) const;
-    SemanticInfo getSemanticInfo(ShaderType shaderType,
-                                 unsigned int startRegisters,
-                                 bool position,
-                                 bool fragCoord,
-                                 bool pointCoord,
-                                 bool pointSize) const;
     void generateVaryingLinkHLSL(const gl::Caps &caps,
                                  bool programUsesPointSize,
                                  const SemanticInfo &info,
@@ -142,6 +107,8 @@ class DynamicHLSL : angle::NonCopyable
     std::string generateAttributeConversionHLSL(gl::VertexFormatType vertexFormatType,
                                                 const sh::ShaderVariable &shaderAttrib) const;
 };
+
+std::string GetVaryingSemantic(int majorShaderModel, bool programUsesPointSize);
 }
 
 #endif  // LIBANGLE_RENDERER_D3D_DYNAMICHLSL_H_
