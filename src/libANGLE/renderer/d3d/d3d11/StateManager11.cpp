@@ -18,6 +18,10 @@ StateManager11::StateManager11(Renderer11 *renderer11)
     : mBlendStateIsDirty(false),
       mCurBlendColor(0, 0, 0, 0),
       mCurSampleMask(0),
+      mDepthStencilStateIsDirty(false),
+      mCurStencilRef(0),
+      mCurStencilBackRef(0),
+      mCurStencilSize(0),
       mRenderer11(renderer11)
 {
     mCurBlendState.blend                 = false;
@@ -33,10 +37,36 @@ StateManager11::StateManager11(Renderer11 *renderer11)
     mCurBlendState.colorMaskAlpha        = true;
     mCurBlendState.sampleAlphaToCoverage = false;
     mCurBlendState.dither                = false;
+
+    mCurDepthStencilState.depthTest                = false;
+    mCurDepthStencilState.depthFunc                = GL_LESS;
+    mCurDepthStencilState.depthMask                = true;
+    mCurDepthStencilState.stencilTest              = false;
+    mCurDepthStencilState.stencilMask              = true;
+    mCurDepthStencilState.stencilFail              = GL_KEEP;
+    mCurDepthStencilState.stencilPassDepthFail     = GL_KEEP;
+    mCurDepthStencilState.stencilPassDepthPass     = GL_KEEP;
+    mCurDepthStencilState.stencilWritemask         = static_cast<GLuint>(-1);
+    mCurDepthStencilState.stencilBackFunc          = GL_ALWAYS;
+    mCurDepthStencilState.stencilBackMask          = static_cast<GLuint>(-1);
+    mCurDepthStencilState.stencilBackFail          = GL_KEEP;
+    mCurDepthStencilState.stencilBackPassDepthFail = GL_KEEP;
+    mCurDepthStencilState.stencilBackPassDepthPass = GL_KEEP;
+    mCurDepthStencilState.stencilBackWritemask     = static_cast<GLuint>(-1);
 }
 
 StateManager11::~StateManager11()
 {
+}
+
+void StateManager11::updateStencilSizeIfChanged(bool depthStencilInitialized,
+                                                unsigned int stencilSize)
+{
+    if (!depthStencilInitialized || stencilSize != mCurStencilSize)
+    {
+        mCurStencilSize           = stencilSize;
+        mDepthStencilStateIsDirty = true;
+    }
 }
 
 void StateManager11::syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits)
@@ -104,6 +134,91 @@ void StateManager11::syncState(const gl::State &state, const gl::State::DirtyBit
                     mBlendStateIsDirty = true;
                 }
                 break;
+            case gl::State::DIRTY_BIT_DEPTH_MASK:
+                if (state.getDepthStencilState().depthMask != mCurDepthStencilState.depthMask)
+                {
+                    mDepthStencilStateIsDirty = true;
+                }
+                break;
+            case gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED:
+                if (state.getDepthStencilState().depthTest != mCurDepthStencilState.depthTest)
+                {
+                    mDepthStencilStateIsDirty = true;
+                }
+                break;
+            case gl::State::DIRTY_BIT_DEPTH_FUNC:
+                if (state.getDepthStencilState().depthFunc != mCurDepthStencilState.depthFunc)
+                {
+                    mDepthStencilStateIsDirty = true;
+                }
+                break;
+            case gl::State::DIRTY_BIT_STENCIL_TEST_ENABLED:
+                if (state.getDepthStencilState().stencilTest != mCurDepthStencilState.stencilTest)
+                {
+                    mDepthStencilStateIsDirty = true;
+                }
+                break;
+            case gl::State::DIRTY_BIT_STENCIL_FUNCS_FRONT:
+            {
+                const gl::DepthStencilState &depthStencil = state.getDepthStencilState();
+                if (depthStencil.stencilFunc != mCurDepthStencilState.stencilFunc ||
+                    depthStencil.stencilMask != mCurDepthStencilState.stencilMask ||
+                    state.getStencilRef() != mCurStencilRef)
+                {
+                    mDepthStencilStateIsDirty = true;
+                }
+                break;
+            }
+            case gl::State::DIRTY_BIT_STENCIL_FUNCS_BACK:
+            {
+                const gl::DepthStencilState &depthStencil = state.getDepthStencilState();
+                if (depthStencil.stencilBackFunc != mCurDepthStencilState.stencilBackFunc ||
+                    depthStencil.stencilBackMask != mCurDepthStencilState.stencilBackMask ||
+                    state.getStencilBackRef() != mCurStencilBackRef)
+                {
+                    mDepthStencilStateIsDirty = true;
+                }
+                break;
+            }
+            case gl::State::DIRTY_BIT_STENCIL_WRITEMASK_FRONT:
+                if (state.getDepthStencilState().stencilWritemask !=
+                    mCurDepthStencilState.stencilWritemask)
+                {
+                    mDepthStencilStateIsDirty = true;
+                }
+                break;
+            case gl::State::DIRTY_BIT_STENCIL_WRITEMASK_BACK:
+                if (state.getDepthStencilState().stencilBackWritemask !=
+                    mCurDepthStencilState.stencilBackWritemask)
+                {
+                    mDepthStencilStateIsDirty = true;
+                }
+                break;
+            case gl::State::DIRTY_BIT_STENCIL_OPS_FRONT:
+            {
+                const gl::DepthStencilState &depthStencil = state.getDepthStencilState();
+                if (depthStencil.stencilFail != mCurDepthStencilState.stencilFail ||
+                    depthStencil.stencilPassDepthFail !=
+                        mCurDepthStencilState.stencilPassDepthFail ||
+                    depthStencil.stencilPassDepthPass != mCurDepthStencilState.stencilPassDepthPass)
+                {
+                    mDepthStencilStateIsDirty = true;
+                }
+                break;
+            }
+            case gl::State::DIRTY_BIT_STENCIL_OPS_BACK:
+            {
+                const gl::DepthStencilState &depthStencil = state.getDepthStencilState();
+                if (depthStencil.stencilBackFail != mCurDepthStencilState.stencilBackFail ||
+                    depthStencil.stencilBackPassDepthFail !=
+                        mCurDepthStencilState.stencilBackPassDepthFail ||
+                    depthStencil.stencilBackPassDepthPass !=
+                        mCurDepthStencilState.stencilBackPassDepthPass)
+                {
+                    mDepthStencilStateIsDirty = true;
+                }
+                break;
+            }
             default:
                 break;
         }
@@ -153,6 +268,56 @@ gl::Error StateManager11::setBlendState(const gl::Framebuffer *framebuffer,
         mCurSampleMask = sampleMask;
 
         mBlendStateIsDirty = false;
+    }
+
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error StateManager11::setDepthStencilState(const gl::DepthStencilState &depthStencilState,
+                                               int stencilRef,
+                                               int stencilBackRef)
+{
+    if (mDepthStencilStateIsDirty)
+    {
+        // get the maximum size of the stencil ref
+        unsigned int maxStencil = 0;
+        if (depthStencilState.stencilTest && mCurStencilSize > 0)
+        {
+            maxStencil = (1 << mCurStencilSize) - 1;
+        }
+        ASSERT((depthStencilState.stencilWritemask & maxStencil) ==
+               (depthStencilState.stencilBackWritemask & maxStencil));
+        ASSERT(stencilRef == stencilBackRef);
+        ASSERT((depthStencilState.stencilMask & maxStencil) ==
+               (depthStencilState.stencilBackMask & maxStencil));
+
+        ID3D11DepthStencilState *dxDepthStencilState = NULL;
+        gl::Error error = mRenderer11->getStateCache().getDepthStencilState(depthStencilState,
+                                                                            &dxDepthStencilState);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        ASSERT(dxDepthStencilState);
+
+        // Max D3D11 stencil reference value is 0xFF,
+        // corresponding to the max 8 bits in a stencil buffer
+        // GL specifies we should clamp the ref value to the
+        // nearest bit depth when doing stencil ops
+        static_assert(D3D11_DEFAULT_STENCIL_READ_MASK == 0xFF,
+                      "Unexpected value of D3D11_DEFAULT_STENCIL_READ_MASK");
+        static_assert(D3D11_DEFAULT_STENCIL_WRITE_MASK == 0xFF,
+                      "Unexpected value of D3D11_DEFAULT_STENCIL_WRITE_MASK");
+        UINT dxStencilRef = std::min<UINT>(stencilRef, 0xFFu);
+
+        mRenderer11->getDeviceContext()->OMSetDepthStencilState(dxDepthStencilState, dxStencilRef);
+
+        mCurDepthStencilState = depthStencilState;
+        mCurStencilRef        = stencilRef;
+        mCurStencilBackRef    = stencilBackRef;
+
+        mDepthStencilStateIsDirty = false;
     }
 
     return gl::Error(GL_NO_ERROR);

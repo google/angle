@@ -33,7 +33,14 @@ class StateManager11 final : angle::NonCopyable
                             const gl::ColorF &blendColor,
                             unsigned int sampleMask);
 
+    gl::Error setDepthStencilState(const gl::DepthStencilState &depthStencilState,
+                                   int stencilRef,
+                                   int stencilBackRef);
+
     void forceSetBlendState() { mBlendStateIsDirty = true; }
+    void forceSetDepthStencilState() { mDepthStencilStateIsDirty = true; }
+
+    void updateStencilSizeIfChanged(bool depthStencilInitialized, unsigned int stencilSize);
 
   private:
     // Blend State
@@ -43,6 +50,13 @@ class StateManager11 final : angle::NonCopyable
     gl::BlendState mCurBlendState;
     gl::ColorF mCurBlendColor;
     unsigned int mCurSampleMask;
+
+    // Currently applied depth stencil state
+    bool mDepthStencilStateIsDirty;
+    gl::DepthStencilState mCurDepthStencilState;
+    int mCurStencilRef;
+    int mCurStencilBackRef;
+    unsigned int mCurStencilSize;
 
     Renderer11 *mRenderer11;
 };

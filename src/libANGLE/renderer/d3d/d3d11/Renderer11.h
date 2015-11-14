@@ -127,8 +127,10 @@ class Renderer11 : public RendererD3D
                             const gl::ColorF &blendColor,
                             unsigned int sampleMask) override;
 
-    virtual gl::Error setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
-                                           int stencilBackRef, bool frontFaceCCW);
+    gl::Error setDepthStencilState(const gl::DepthStencilState &depthStencilState,
+                                   int stencilRef,
+                                   int stencilBackRef,
+                                   bool frontFaceCCW) override;
 
     virtual void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
     virtual void setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
@@ -350,7 +352,6 @@ class Renderer11 : public RendererD3D
     uintptr_t mAppliedDSV;
     bool mDepthStencilInitialized;
     bool mRenderTargetDescInitialized;
-    unsigned int mCurStencilSize;
 
     struct RenderTargetDesc
     {
@@ -415,12 +416,6 @@ class Renderer11 : public RendererD3D
     // Currently applied rasterizer state
     bool mForceSetRasterState;
     gl::RasterizerState mCurRasterState;
-
-    // Currently applied depth stencil state
-    bool mForceSetDepthStencilState;
-    gl::DepthStencilState mCurDepthStencilState;
-    int mCurStencilRef;
-    int mCurStencilBackRef;
 
     // Currently applied scissor rectangle
     bool mForceSetScissor;
