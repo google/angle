@@ -22,6 +22,29 @@
       "revId": "969e764663dfef4023d8c8e2e0ea1fb4c1032bfe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d63372d5_edca0120",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-16T14:51:34Z",
+      "side": 1,
+      "message": "also, init all these in the constructor",
+      "range": {
+        "startLine": 39,
+        "startChar": 1,
+        "endLine": 45,
+        "endChar": 32
+      },
+      "revId": "969e764663dfef4023d8c8e2e0ea1fb4c1032bfe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
