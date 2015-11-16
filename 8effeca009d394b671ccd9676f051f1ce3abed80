@@ -95,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "f642362f_911b5c01",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-16T15:57:11Z",
+      "side": 1,
+      "message": "Sorry I got confused an thought this was valid in C++, but it turns out it isn\u0027t :S nvm then.",
+      "parentUuid": "1648aa4e_201092d7",
+      "range": {
+        "startLine": 81,
+        "startChar": 10,
+        "endLine": 81,
+        "endChar": 96
+      },
+      "revId": "8effeca009d394b671ccd9676f051f1ce3abed80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f642362f_d1fec4d2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 2
