@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f642362f_71f0b0f9",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-16T15:55:22Z",
+      "side": 1,
+      "message": "A boolean getter that starts with add sounds odd, maybe shouldAdd... ?",
+      "range": {
+        "startLine": 417,
+        "startChar": 25,
+        "endLine": 417,
+        "endChar": 28
+      },
+      "revId": "fb1828761ac507c7d6477159e66bf2541fefd2eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
