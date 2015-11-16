@@ -711,6 +711,10 @@ static ClientExtensions GenerateClientExtensions()
     extensions.platformANGLEOpenGL = true;
 #endif
 
+#if defined(ANGLE_USE_X11)
+    extensions.x11Visual = true;
+#endif
+
     extensions.clientGetAllProcAddresses = true;
 
     return extensions;

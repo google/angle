@@ -81,6 +81,10 @@
             # TODO(cwallez) for Linux, requires a portable implementation of threads
             '<(angle_path)/src/tests/egl_tests/EGLThreadTest.cpp',
         ],
+        'angle_end2end_tests_x11_sources':
+        [
+            '<(angle_path)/src/tests/egl_tests/EGLX11VisualTest.cpp',
+        ],
     },
     'dependencies':
     [
@@ -106,6 +110,13 @@
             'sources':
             [
                 '<@(angle_end2end_tests_win_sources)',
+            ],
+        }],
+        ['use_x11==1',
+        {
+            'sources':
+            [
+                '<@(angle_end2end_tests_x11_sources)',
             ],
         }],
     ]
