@@ -213,11 +213,9 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         ++firstSource;
     }
 
-    bool debugShaderPrecision = getResources().WEBGL_debug_shader_precision == 1;
     TIntermediate intermediate(infoSink);
-    TParseContext parseContext(symbolTable, extensionBehavior, intermediate,
-                               shaderType, shaderSpec, compileOptions, true,
-                               infoSink, debugShaderPrecision);
+    TParseContext parseContext(symbolTable, extensionBehavior, intermediate, shaderType, shaderSpec,
+                               compileOptions, true, infoSink, getResources());
 
     parseContext.setFragmentPrecisionHighOnESSL1(fragmentPrecisionHigh);
     SetGlobalParseContext(&parseContext);

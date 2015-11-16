@@ -3767,6 +3767,59 @@ TIntermBranch *TParseContext::addBranch(TOperator op,
     return intermediate.addBranch(op, returnValue, loc);
 }
 
+void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
+{
+    ASSERT(!functionCall->isUserDefined());
+    const TString &name        = functionCall->getName();
+    TIntermNode *offset        = nullptr;
+    TIntermSequence *arguments = functionCall->getSequence();
+    if (name.compare(0, 16, "texelFetchOffset") == 0 ||
+        name.compare(0, 16, "textureLodOffset") == 0 ||
+        name.compare(0, 20, "textureProjLodOffset") == 0 ||
+        name.compare(0, 17, "textureGradOffset") == 0 ||
+        name.compare(0, 21, "textureProjGradOffset") == 0)
+    {
+        offset = arguments->back();
+    }
+    else if (name.compare(0, 13, "textureOffset") == 0 ||
+             name.compare(0, 17, "textureProjOffset") == 0)
+    {
+        // A bias parameter might follow the offset parameter.
+        ASSERT(arguments->size() >= 3);
+        offset = (*arguments)[2];
+    }
+    if (offset != nullptr)
+    {
+        TIntermConstantUnion *offsetConstantUnion = offset->getAsConstantUnion();
+        if (offset->getAsTyped()->getQualifier() != EvqConst || !offsetConstantUnion)
+        {
+            TString unmangledName = TFunction::unmangleName(name);
+            error(functionCall->getLine(), "Texture offset must be a constant expression",
+                  unmangledName.c_str());
+            recover();
+        }
+        else
+        {
+            ASSERT(offsetConstantUnion->getBasicType() == EbtInt);
+            size_t size                  = offsetConstantUnion->getType().getObjectSize();
+            const TConstantUnion *values = offsetConstantUnion->getUnionArrayPointer();
+            for (size_t i = 0u; i < size; ++i)
+            {
+                int offsetValue = values[i].getIConst();
+                if (offsetValue > mMaxProgramTexelOffset || offsetValue < mMinProgramTexelOffset)
+                {
+                    std::stringstream tokenStream;
+                    tokenStream << offsetValue;
+                    std::string token = tokenStream.str();
+                    error(offset->getLine(), "Texture offset value out of valid range",
+                          token.c_str());
+                    recover();
+                }
+            }
+        }
+    }
+}
+
 TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
                                                      TIntermNode *paramNode,
                                                      TIntermNode *thisNode,
@@ -3935,7 +3988,11 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
 
                 // This needs to happen after the name is set
                 if (builtIn)
+                {
                     aggregate->setBuiltInFunctionPrecision();
+
+                    checkTextureOffsetConst(aggregate);
+                }
 
                 callNode = aggregate;
 

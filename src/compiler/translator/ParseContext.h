@@ -36,7 +36,7 @@ class TParseContext : angle::NonCopyable
                   int options,
                   bool checksPrecErrors,
                   TInfoSink &is,
-                  bool debugShaderPrecisionSupported)
+                  const ShBuiltInResources &resources)
         : intermediate(interm),
           symbolTable(symt),
           mDeferredSingleDeclarationErrorCheck(false),
@@ -54,12 +54,17 @@ class TParseContext : angle::NonCopyable
           mDefaultMatrixPacking(EmpColumnMajor),
           mDefaultBlockStorage(EbsShared),
           mDiagnostics(is),
-          mDirectiveHandler(ext, mDiagnostics, mShaderVersion, debugShaderPrecisionSupported),
+          mDirectiveHandler(ext,
+                            mDiagnostics,
+                            mShaderVersion,
+                            resources.WEBGL_debug_shader_precision == 1),
           mPreprocessor(&mDiagnostics, &mDirectiveHandler),
           mScanner(nullptr),
           mUsesFragData(false),
           mUsesFragColor(false),
-          mUsesSecondaryOutputs(false)
+          mUsesSecondaryOutputs(false),
+          mMinProgramTexelOffset(resources.MinProgramTexelOffset),
+          mMaxProgramTexelOffset(resources.MaxProgramTexelOffset)
     {
     }
 
@@ -324,6 +329,7 @@ class TParseContext : angle::NonCopyable
     TIntermBranch *addBranch(TOperator op, const TSourceLoc &loc);
     TIntermBranch *addBranch(TOperator op, TIntermTyped *returnValue, const TSourceLoc &loc);
 
+    void checkTextureOffsetConst(TIntermAggregate *functionCall);
     TIntermTyped *addFunctionCallOrMethod(TFunction *fnCall,
                                           TIntermNode *paramNode,
                                           TIntermNode *thisNode,
@@ -381,6 +387,8 @@ class TParseContext : angle::NonCopyable
     bool mUsesFragColor;
     bool mUsesSecondaryOutputs;  // Track if we are using either gl_SecondaryFragData or
                                  // gl_Secondary FragColor or both.
+    int mMinProgramTexelOffset;
+    int mMaxProgramTexelOffset;
 };
 
 int PaParseStrings(

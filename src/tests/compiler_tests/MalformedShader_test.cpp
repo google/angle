@@ -1253,3 +1253,65 @@ TEST_F(MalformedWebGL2ShaderTest, IndexFragDataWithNonConstant)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Test that a non-constant texture offset is not accepted for textureOffset.
+// ESSL 3.00 section 8.8
+TEST_F(MalformedShaderTest, TextureOffsetNonConst)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "uniform vec3 u_texCoord;\n"
+        "uniform mediump sampler3D u_sampler;\n"
+        "uniform int x;\n"
+        "void main()\n"
+        "{\n"
+        "   my_FragColor = textureOffset(u_sampler, u_texCoord, ivec3(x, 3, -8));\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Test that a non-constant texture offset is not accepted for textureProjOffset with bias.
+// ESSL 3.00 section 8.8
+TEST_F(MalformedShaderTest, TextureProjOffsetNonConst)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "uniform vec4 u_texCoord;\n"
+        "uniform mediump sampler3D u_sampler;\n"
+        "uniform int x;\n"
+        "void main()\n"
+        "{\n"
+        "   my_FragColor = textureProjOffset(u_sampler, u_texCoord, ivec3(x, 3, -8), 0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Test that an out-of-range texture offset is not accepted.
+// GLES 3.0.4 section 3.8.10 specifies that out-of-range offset has undefined behavior.
+TEST_F(MalformedShaderTest, TextureLodOffsetOutOfRange)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "uniform vec3 u_texCoord;\n"
+        "uniform mediump sampler3D u_sampler;\n"
+        "void main()\n"
+        "{\n"
+        "   my_FragColor = textureLodOffset(u_sampler, u_texCoord, 0.0, ivec3(0, 0, 8));\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
