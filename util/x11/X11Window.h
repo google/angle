@@ -20,6 +20,7 @@ class X11Window : public OSWindow
 {
   public:
     X11Window();
+    X11Window(int visualId);
     ~X11Window();
 
     bool initialize(const std::string &name, size_t width, size_t height) override;
@@ -46,6 +47,7 @@ class X11Window : public OSWindow
 
     Display *mDisplay;
     Window mWindow;
+    int mRequestedVisualId;
 };
 
 #endif // UTIL_X11_WINDOW_H
