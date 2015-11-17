@@ -22,6 +22,30 @@
       "revId": "db24f94c319d0a430d4467d0543417d2c6fe09e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b3453db_b8216e7d",
+        "filename": "doc/BuildingAngleForWindowsStore.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-11-17T16:54:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b2a4b7b_5f9a7493",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 1
+      },
+      "revId": "db24f94c319d0a430d4467d0543417d2c6fe09e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
