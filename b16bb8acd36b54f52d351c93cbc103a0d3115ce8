@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "369daed4_a17c6604",
+        "filename": "extensions/EGL_ANGLE_device_creation.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-17T06:33:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "563ea29c_cef7037d",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 14
+      },
+      "revId": "b16bb8acd36b54f52d351c93cbc103a0d3115ce8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "563ea29c_eefcbf63",
         "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-10T17:39:34Z",
       "side": 1,
       "message": "wording: you use \u0027this extension\u0027 two times in the sentence with a different meaning each time. consider being more specific in one or both cases.",
+      "range": {
+        "startLine": 47,
+        "startChar": 67,
+        "endLine": 47,
+        "endChar": 71
+      },
+      "revId": "b16bb8acd36b54f52d351c93cbc103a0d3115ce8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6a6b626_65d1ea20",
+        "filename": "extensions/EGL_ANGLE_device_creation_d3d11.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-17T06:33:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "563ea29c_eefcbf63",
       "range": {
         "startLine": 47,
         "startChar": 67,
