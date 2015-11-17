@@ -22,9 +22,10 @@ class Renderer11;
 class StateManager11 final : angle::NonCopyable
 {
   public:
-    StateManager11(Renderer11 *renderer11);
-
+    StateManager11();
     ~StateManager11();
+
+    void initialize(ID3D11DeviceContext *deviceContext, RenderStateCache *stateCache);
 
     void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits);
 
@@ -37,8 +38,13 @@ class StateManager11 final : angle::NonCopyable
                                    int stencilRef,
                                    int stencilBackRef);
 
+    gl::Error setRasterizerState(const gl::RasterizerState &rasterState);
+
     void forceSetBlendState() { mBlendStateIsDirty = true; }
     void forceSetDepthStencilState() { mDepthStencilStateIsDirty = true; }
+    void forceSetRasterState() { mRasterizerStateIsDirty = true; }
+
+    void setCurScissorEnabled(bool enabled) { mCurScissorEnabled = enabled; }
 
     void updateStencilSizeIfChanged(bool depthStencilInitialized, unsigned int stencilSize);
 
@@ -58,7 +64,14 @@ class StateManager11 final : angle::NonCopyable
     int mCurStencilBackRef;
     unsigned int mCurStencilSize;
 
-    Renderer11 *mRenderer11;
+    // Currenly applied rasterizer state
+    bool mRasterizerStateIsDirty;
+    gl::RasterizerState mCurRasterState;
+
+    bool mCurScissorEnabled;
+
+    ID3D11DeviceContext *mDeviceContext;
+    RenderStateCache *mStateCache;
 };
 
 }  // namespace rx

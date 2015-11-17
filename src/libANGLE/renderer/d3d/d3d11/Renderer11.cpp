@@ -470,7 +470,7 @@ void Renderer11::SRVCache::clear()
 Renderer11::Renderer11(egl::Display *display)
     : RendererD3D(display),
       mStateCache(this),
-      mStateManager(this),
+      mStateManager(),
       mLastHistogramUpdateTime(ANGLEPlatformCurrent()->monotonicallyIncreasingTime()),
       mDebug(nullptr)
 {
@@ -832,6 +832,8 @@ void Renderer11::initializeDevice()
 
     ASSERT(!mPixelTransfer);
     mPixelTransfer = new PixelTransfer11(this);
+
+    mStateManager.initialize(mDeviceContext, &mStateCache);
 
     const gl::Caps &rendererCaps = getRendererCaps();
 
@@ -1359,23 +1361,7 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
 
 gl::Error Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
 {
-    if (mForceSetRasterState || memcmp(&rasterState, &mCurRasterState, sizeof(gl::RasterizerState)) != 0)
-    {
-        ID3D11RasterizerState *dxRasterState = NULL;
-        gl::Error error = mStateCache.getRasterizerState(rasterState, mScissorEnabled, &dxRasterState);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        mDeviceContext->RSSetState(dxRasterState);
-
-        mCurRasterState = rasterState;
-    }
-
-    mForceSetRasterState = false;
-
-    return gl::Error(GL_NO_ERROR);
+    return mStateManager.setRasterizerState(rasterState);
 }
 
 void Renderer11::syncState(const gl::State &state, const gl::State::DirtyBits &bitmask)
@@ -1415,11 +1401,12 @@ void Renderer11::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
 
         if (enabled != mScissorEnabled)
         {
-            mForceSetRasterState = true;
+            mStateManager.forceSetRasterState();
         }
 
         mCurScissor = scissor;
         mScissorEnabled = enabled;
+        mStateManager.setCurScissorEnabled(mScissorEnabled);
     }
 
     mForceSetScissor = false;
@@ -1690,7 +1677,7 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
 
         if (!mDepthStencilInitialized)
         {
-            mForceSetRasterState = true;
+            mStateManager.forceSetRasterState();
         }
 
         for (size_t rtIndex = 0; rtIndex < ArraySize(framebufferRTVs); rtIndex++)
@@ -2481,7 +2468,7 @@ void Renderer11::markAllStateDirty()
 
     mStateManager.forceSetBlendState();
     mStateManager.forceSetDepthStencilState();
-    mForceSetRasterState = true;
+    mStateManager.forceSetRasterState();
     mForceSetScissor = true;
     mForceSetViewport = true;
 

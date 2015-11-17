@@ -413,10 +413,6 @@ class Renderer11 : public RendererD3D
 
     StateManager11 mStateManager;
 
-    // Currently applied rasterizer state
-    bool mForceSetRasterState;
-    gl::RasterizerState mCurRasterState;
-
     // Currently applied scissor rectangle
     bool mForceSetScissor;
     bool mScissorEnabled;

@@ -14,7 +14,7 @@
 namespace rx
 {
 
-StateManager11::StateManager11(Renderer11 *renderer11)
+StateManager11::StateManager11()
     : mBlendStateIsDirty(false),
       mCurBlendColor(0, 0, 0, 0),
       mCurSampleMask(0),
@@ -22,7 +22,10 @@ StateManager11::StateManager11(Renderer11 *renderer11)
       mCurStencilRef(0),
       mCurStencilBackRef(0),
       mCurStencilSize(0),
-      mRenderer11(renderer11)
+      mRasterizerStateIsDirty(false),
+      mCurScissorEnabled(false),
+      mDeviceContext(nullptr),
+      mStateCache(nullptr)
 {
     mCurBlendState.blend                 = false;
     mCurBlendState.sourceBlendRGB        = GL_ONE;
@@ -53,10 +56,26 @@ StateManager11::StateManager11(Renderer11 *renderer11)
     mCurDepthStencilState.stencilBackPassDepthFail = GL_KEEP;
     mCurDepthStencilState.stencilBackPassDepthPass = GL_KEEP;
     mCurDepthStencilState.stencilBackWritemask     = static_cast<GLuint>(-1);
+
+    mCurRasterState.rasterizerDiscard   = false;
+    mCurRasterState.cullFace            = false;
+    mCurRasterState.cullMode            = GL_BACK;
+    mCurRasterState.frontFace           = GL_CCW;
+    mCurRasterState.polygonOffsetFill   = false;
+    mCurRasterState.polygonOffsetFactor = 0.0f;
+    mCurRasterState.polygonOffsetUnits  = 0.0f;
+    mCurRasterState.pointDrawMode       = false;
+    mCurRasterState.multiSample         = false;
 }
 
 StateManager11::~StateManager11()
 {
+}
+
+void StateManager11::initialize(ID3D11DeviceContext *deviceContext, RenderStateCache *stateCache)
+{
+    mDeviceContext = deviceContext;
+    mStateCache    = stateCache;
 }
 
 void StateManager11::updateStencilSizeIfChanged(bool depthStencilInitialized,
@@ -219,6 +238,48 @@ void StateManager11::syncState(const gl::State &state, const gl::State::DirtyBit
                 }
                 break;
             }
+            case gl::State::DIRTY_BIT_CULL_FACE_ENABLED:
+                if (state.getRasterizerState().cullFace != mCurRasterState.cullFace)
+                {
+                    mRasterizerStateIsDirty = true;
+                }
+                break;
+            case gl::State::DIRTY_BIT_CULL_FACE:
+                if (state.getRasterizerState().cullMode != mCurRasterState.cullMode)
+                {
+                    mRasterizerStateIsDirty = true;
+                }
+                break;
+            case gl::State::DIRTY_BIT_FRONT_FACE:
+                if (state.getRasterizerState().frontFace != mCurRasterState.frontFace)
+                {
+                    mRasterizerStateIsDirty = true;
+                }
+                break;
+            case gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
+                if (state.getRasterizerState().polygonOffsetFill !=
+                    mCurRasterState.polygonOffsetFill)
+                {
+                    mRasterizerStateIsDirty = true;
+                }
+                break;
+            case gl::State::DIRTY_BIT_POLYGON_OFFSET:
+            {
+                const gl::RasterizerState &rasterState = state.getRasterizerState();
+                if (rasterState.polygonOffsetFactor != mCurRasterState.polygonOffsetFactor ||
+                    rasterState.polygonOffsetUnits != mCurRasterState.polygonOffsetUnits)
+                {
+                    mRasterizerStateIsDirty = true;
+                }
+                break;
+            }
+            case gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
+                if (state.getRasterizerState().rasterizerDiscard !=
+                    mCurRasterState.rasterizerDiscard)
+                {
+                    mRasterizerStateIsDirty = true;
+                }
+                break;
             default:
                 break;
         }
@@ -233,8 +294,7 @@ gl::Error StateManager11::setBlendState(const gl::Framebuffer *framebuffer,
     if (mBlendStateIsDirty || sampleMask != mCurSampleMask)
     {
         ID3D11BlendState *dxBlendState = nullptr;
-        gl::Error error =
-            mRenderer11->getStateCache().getBlendState(framebuffer, blendState, &dxBlendState);
+        gl::Error error = mStateCache->getBlendState(framebuffer, blendState, &dxBlendState);
         if (error.isError())
         {
             return error;
@@ -261,7 +321,7 @@ gl::Error StateManager11::setBlendState(const gl::Framebuffer *framebuffer,
             blendColors[3] = blendColor.alpha;
         }
 
-        mRenderer11->getDeviceContext()->OMSetBlendState(dxBlendState, blendColors, sampleMask);
+        mDeviceContext->OMSetBlendState(dxBlendState, blendColors, sampleMask);
 
         mCurBlendState = blendState;
         mCurBlendColor = blendColor;
@@ -292,8 +352,8 @@ gl::Error StateManager11::setDepthStencilState(const gl::DepthStencilState &dept
                (depthStencilState.stencilBackMask & maxStencil));
 
         ID3D11DepthStencilState *dxDepthStencilState = NULL;
-        gl::Error error = mRenderer11->getStateCache().getDepthStencilState(depthStencilState,
-                                                                            &dxDepthStencilState);
+        gl::Error error =
+            mStateCache->getDepthStencilState(depthStencilState, &dxDepthStencilState);
         if (error.isError())
         {
             return error;
@@ -311,13 +371,34 @@ gl::Error StateManager11::setDepthStencilState(const gl::DepthStencilState &dept
                       "Unexpected value of D3D11_DEFAULT_STENCIL_WRITE_MASK");
         UINT dxStencilRef = std::min<UINT>(stencilRef, 0xFFu);
 
-        mRenderer11->getDeviceContext()->OMSetDepthStencilState(dxDepthStencilState, dxStencilRef);
+        mDeviceContext->OMSetDepthStencilState(dxDepthStencilState, dxStencilRef);
 
         mCurDepthStencilState = depthStencilState;
         mCurStencilRef        = stencilRef;
         mCurStencilBackRef    = stencilBackRef;
 
         mDepthStencilStateIsDirty = false;
+    }
+
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error StateManager11::setRasterizerState(const gl::RasterizerState &rasterState)
+{
+    if (mRasterizerStateIsDirty)
+    {
+        ID3D11RasterizerState *dxRasterState = nullptr;
+        gl::Error error =
+            mStateCache->getRasterizerState(rasterState, mCurScissorEnabled, &dxRasterState);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        mDeviceContext->RSSetState(dxRasterState);
+
+        mCurRasterState         = rasterState;
+        mRasterizerStateIsDirty = false;
     }
 
     return gl::Error(GL_NO_ERROR);
