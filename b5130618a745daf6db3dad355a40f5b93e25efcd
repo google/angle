@@ -22,6 +22,29 @@
       "revId": "b5130618a745daf6db3dad355a40f5b93e25efcd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb75bfb9_a702b24b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-17T23:03:22Z",
+      "side": 1,
+      "message": "to summarize our discussion earlier:\n\nyou can probably use if statements to check the difference between mCurBlendState and state.getBlendState(), placed within each dirty bit case, and skip the memcmp in setBlendState below. This might work especially well for the blend color.",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 50
+      },
+      "revId": "b5130618a745daf6db3dad355a40f5b93e25efcd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
