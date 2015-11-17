@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1b3453db_a48f08a1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-17T23:29:22Z",
+      "side": 1,
+      "message": "weird ._. this must be left over from the merge conflict when I was trying to rebase this onto the depth stencil state patch",
+      "parentUuid": "3b2597a9_9ba90d53",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 34
+      },
+      "revId": "b5130618a745daf6db3dad355a40f5b93e25efcd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fb75bfb9_a702b24b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 5
