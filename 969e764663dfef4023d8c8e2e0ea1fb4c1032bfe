@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5b2a4b7b_24e0bbe9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1399,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-17T23:29:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d63372d5_8dcb4527",
+      "range": {
+        "startLine": 1385,
+        "startChar": 0,
+        "endLine": 1399,
+        "endChar": 5
+      },
+      "revId": "969e764663dfef4023d8c8e2e0ea1fb4c1032bfe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d63372d5_edca0120",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-16T14:51:34Z",
       "side": 1,
       "message": "also, init all these in the constructor",
+      "range": {
+        "startLine": 39,
+        "startChar": 1,
+        "endLine": 45,
+        "endChar": 32
+      },
+      "revId": "969e764663dfef4023d8c8e2e0ea1fb4c1032bfe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db847bce_4b972d2b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-17T23:29:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d63372d5_edca0120",
       "range": {
         "startLine": 39,
         "startChar": 1,
