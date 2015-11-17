@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5b816bc7_79dbe30f",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-17T20:44:37Z",
+      "side": 1,
+      "message": "It doesn\u0027t do a null check:\n\nsrc\\common\\angleutils.h\n\ntemplate \u003ctypename T\u003e\nvoid SafeDelete(T*\u0026 resource)\n{\n    delete resource;\n    resource \u003d NULL;\n}",
+      "parentUuid": "db847bce_f79dc2d8",
+      "range": {
+        "startLine": 308,
+        "startChar": 0,
+        "endLine": 311,
+        "endChar": 5
+      },
+      "revId": "43b2745219ede677a7194c8967abf8c4bfb1731d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b816bc7_f94a93a4",
         "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-17T18:41:49Z",
       "side": 1,
       "message": "maybe it would be better to just always ref the device in this object, and always release. this would avoid needing to store if the device is externally sourced",
+      "range": {
+        "startLine": 30,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 9
+      },
+      "revId": "43b2745219ede677a7194c8967abf8c4bfb1731d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b816bc7_5c3cd5a3",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-17T20:44:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b816bc7_f94a93a4",
       "range": {
         "startLine": 30,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "1b3453db_1e318be7",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-17T20:44:37Z",
+      "side": 1,
+      "message": "N/A now",
+      "parentUuid": "96d1fa8e_cfc41fb7",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 50
+      },
+      "revId": "43b2745219ede677a7194c8967abf8c4bfb1731d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fb75bfb9_3697b62c",
         "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
         "patchSetId": 10
@@ -82,6 +154,30 @@
       "writtenOn": "2015-11-17T18:41:49Z",
       "side": 1,
       "message": "I feel like it wouldn\u0027t be wrong to validate this with a non-externally-sourced device?",
+      "range": {
+        "startLine": 71,
+        "startChar": 12,
+        "endLine": 79,
+        "endChar": 20
+      },
+      "revId": "43b2745219ede677a7194c8967abf8c4bfb1731d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb75bfb9_b965f7f1",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-17T20:44:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fb75bfb9_3697b62c",
       "range": {
         "startLine": 71,
         "startChar": 12,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "3b2597a9_9e60dbe6",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-17T20:44:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b2597a9_dee66304",
+      "range": {
+        "startLine": 304,
+        "startChar": 23,
+        "endLine": 304,
+        "endChar": 28
+      },
+      "revId": "43b2745219ede677a7194c8967abf8c4bfb1731d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b816bc7_798d2318",
         "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
         "patchSetId": 10
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "7b6aafda_40286472",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-17T20:44:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b816bc7_798d2318",
+      "range": {
+        "startLine": 109,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 13
+      },
+      "revId": "43b2745219ede677a7194c8967abf8c4bfb1731d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db847bce_77c1b2a5",
         "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
         "patchSetId": 10
@@ -151,6 +295,30 @@
       "writtenOn": "2015-11-17T18:41:49Z",
       "side": 1,
       "message": "is there an ASSERT_EGL_SUCCESS?",
+      "range": {
+        "startLine": 110,
+        "startChar": 4,
+        "endLine": 110,
+        "endChar": 42
+      },
+      "revId": "43b2745219ede677a7194c8967abf8c4bfb1731d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b25eb9e_e43ab8c0",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-17T20:44:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db847bce_77c1b2a5",
       "range": {
         "startLine": 110,
         "startChar": 4,
