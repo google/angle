@@ -1,0 +1,182 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76d4867d_f6029720",
+        "filename": "src/libANGLE/Device.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-17T00:33:19Z",
+      "side": 1,
+      "message": "No need for the null check.",
+      "range": {
+        "startLine": 70,
+        "startChar": 4,
+        "endLine": 73,
+        "endChar": 5
+      },
+      "revId": "27b06b03b5f7359bee6b1f26050acc25c88af1f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b2a4b7b_7f78905e",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-17T00:33:19Z",
+      "side": 1,
+      "message": "I don\u0027t think we need to change the name of this.",
+      "range": {
+        "startLine": 82,
+        "startChar": 23,
+        "endLine": 82,
+        "endChar": 36
+      },
+      "revId": "27b06b03b5f7359bee6b1f26050acc25c88af1f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b6aafda_fadcc534",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-17T00:33:19Z",
+      "side": 1,
+      "message": "override",
+      "revId": "27b06b03b5f7359bee6b1f26050acc25c88af1f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db847bce_916006e7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 4175,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-17T00:33:19Z",
+      "side": 1,
+      "message": "This initialization logic is a bit awkward, how it only generates a new device if the passed in pointer is null.  This is the opposite of how most other functions work.  Can we update the call sites to only call this if it\u0027s not already initialized and rename this to createEGLDevice?",
+      "range": {
+        "startLine": 4175,
+        "startChar": 4,
+        "endLine": 4175,
+        "endChar": 30
+      },
+      "revId": "27b06b03b5f7359bee6b1f26050acc25c88af1f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db847bce_b1baea88",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-17T00:33:19Z",
+      "side": 1,
+      "message": "I see this is only checking device against null (EGL_NO_DEVICE_EXT) but the spec says we should return EGL_BAD_ACCESS if device is not valid.  All EGL functions protect themselves against crashing by making sure the pointers are valid.\n\nWe should be storing a set of all devices in Device.cpp and adding a Device::isValidDevice. See Display::isValidSurface and Display::isValidContext for examples.",
+      "range": {
+        "startLine": 292,
+        "startChar": 4,
+        "endLine": 297,
+        "endChar": 5
+      },
+      "revId": "27b06b03b5f7359bee6b1f26050acc25c88af1f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b6aafda_7a28b5c4",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-17T00:33:19Z",
+      "side": 1,
+      "message": "Can you move the validation for these into validationEGL.h?",
+      "range": {
+        "startLine": 442,
+        "startChar": 38,
+        "endLine": 442,
+        "endChar": 55
+      },
+      "revId": "27b06b03b5f7359bee6b1f26050acc25c88af1f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96d1fa8e_547a82cd",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 462,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-17T00:33:19Z",
+      "side": 1,
+      "message": "Since we may add attributes later, we might as well set up the code for it now.  See the other code in ValidationEGL but it would be something like..\n\n    AttributeMap attributes(attrib_list);\n    for (auto attributeIter \u003d attributes.begin(); attributeIter !\u003d attributes.end(); attributeIter++)\n    {\n        EGLint attribute \u003d attributeIter-\u003efirst;\n        EGLint value     \u003d attributeIter-\u003esecond;\n\n        switch (attribute)\n        {\n            default:\n                // error\n        }\n     }",
+      "range": {
+        "startLine": 458,
+        "startChar": 4,
+        "endLine": 462,
+        "endChar": 5
+      },
+      "revId": "27b06b03b5f7359bee6b1f26050acc25c88af1f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b2a4b7b_1f874c81",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-17T00:33:19Z",
+      "side": 1,
+      "message": "No need for this case.",
+      "range": {
+        "startLine": 474,
+        "startChar": 8,
+        "endLine": 474,
+        "endChar": 35
+      },
+      "revId": "27b06b03b5f7359bee6b1f26050acc25c88af1f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
