@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "1b3453db_6d734334",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T18:22:46Z",
+      "side": 1,
+      "message": "Ah, I was getting confused by the create and query extensions. Quite right.",
+      "parentUuid": "76d4867d_97a990a3",
+      "range": {
+        "startLine": 28,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 46
+      },
+      "revId": "155dc69c64e55bfb1b1e005cd855a5b5af8a3f20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db847bce_ecb734a1",
         "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
         "patchSetId": 11
