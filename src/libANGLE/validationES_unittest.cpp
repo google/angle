@@ -132,6 +132,11 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
                                       &indexRange));
 
     texture->release();
+
+    state.setVertexArrayBinding(nullptr);
+    state.setDrawFramebufferBinding(nullptr);
+    state.setProgram(nullptr);
+
     SafeDelete(vertexArray);
     SafeDelete(framebuffer);
     SafeDelete(program);
