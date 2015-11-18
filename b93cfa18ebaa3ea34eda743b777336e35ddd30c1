@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76d4867d_6c0413a3",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 928,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T16:24:25Z",
+      "side": 1,
+      "message": "Are there not any methods where we don\u0027t need to GetDimensions? Like LOD0 or something?",
+      "range": {
+        "startLine": 928,
+        "startChar": 28,
+        "endLine": 928,
+        "endChar": 94
+      },
+      "revId": "b93cfa18ebaa3ea34eda743b777336e35ddd30c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
