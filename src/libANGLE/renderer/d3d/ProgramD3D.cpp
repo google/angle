@@ -363,6 +363,98 @@ D3DVarying::D3DVarying(const std::string &name,
 {
 }
 
+// ProgramD3DMetadata Implementation
+
+ProgramD3DMetadata::ProgramD3DMetadata(int rendererMajorShaderModel,
+                                       const std::string &shaderModelSuffix,
+                                       bool usesInstancedPointSpriteEmulation,
+                                       const ShaderD3D *vertexShader,
+                                       const ShaderD3D *fragmentShader)
+    : mRendererMajorShaderModel(rendererMajorShaderModel),
+      mShaderModelSuffix(shaderModelSuffix),
+      mUsesInstancedPointSpriteEmulation(usesInstancedPointSpriteEmulation),
+      mVertexShader(vertexShader),
+      mFragmentShader(fragmentShader)
+{
+}
+
+int ProgramD3DMetadata::getRendererMajorShaderModel() const
+{
+    return mRendererMajorShaderModel;
+}
+
+bool ProgramD3DMetadata::usesBroadcast(const gl::Data &data) const
+{
+    return (mFragmentShader->usesFragColor() && data.clientVersion < 3);
+}
+
+bool ProgramD3DMetadata::usesFragDepth(const gl::Program::Data &programData) const
+{
+    // TODO(jmadill): Rename this or check if we need it for version 300
+    return (getMajorShaderVersion() < 300 && mFragmentShader->usesFragDepth());
+}
+
+bool ProgramD3DMetadata::usesPointCoord() const
+{
+    return mFragmentShader->usesPointCoord();
+}
+
+bool ProgramD3DMetadata::usesFragCoord() const
+{
+    return mFragmentShader->usesFragCoord();
+}
+
+bool ProgramD3DMetadata::usesPointSize() const
+{
+    return mVertexShader->usesPointSize();
+}
+
+bool ProgramD3DMetadata::usesInsertedPointCoordValue() const
+{
+    return !usesPointSize() && usesPointCoord() && mRendererMajorShaderModel >= 4;
+}
+
+bool ProgramD3DMetadata::addsPointCoordToVertexShader() const
+{
+    // Instanced PointSprite emulation requires that gl_PointCoord is present in the vertex shader
+    // VS_OUTPUT structure to ensure compatibility with the generated PS_INPUT of the pixel shader.
+    // GeometryShader PointSprite emulation does not require this additional entry because the
+    // GS_OUTPUT of the Geometry shader contains the pointCoord value and already matches the
+    // PS_INPUT of the generated pixel shader. The Geometry Shader point sprite implementation needs
+    // gl_PointSize to be in VS_OUTPUT and GS_INPUT. Instanced point sprites doesn't need
+    // gl_PointSize in VS_OUTPUT.
+    return (mUsesInstancedPointSpriteEmulation && usesPointCoord()) ||
+           usesInsertedPointCoordValue();
+}
+
+bool ProgramD3DMetadata::usesTransformFeedbackGLPosition() const
+{
+    // gl_Position only needs to be outputted from the vertex shader if transform feedback is
+    // active. This isn't supported on D3D11 Feature Level 9_3, so we don't output gl_Position from
+    // the vertex shader in this case. This saves us 1 output vector.
+    return !(mRendererMajorShaderModel >= 4 && mShaderModelSuffix != "");
+}
+
+bool ProgramD3DMetadata::usesSystemValuePointSize() const
+{
+    return !mUsesInstancedPointSpriteEmulation && usesPointSize();
+}
+
+bool ProgramD3DMetadata::usesMultipleFragmentOuts() const
+{
+    return mFragmentShader->usesMultipleRenderTargets();
+}
+
+GLint ProgramD3DMetadata::getMajorShaderVersion() const
+{
+    return mVertexShader->getData().getShaderVersion();
+}
+
+const ShaderD3D *ProgramD3DMetadata::getFragmentShader() const
+{
+    return mFragmentShader;
+}
+
 // ProgramD3D Implementation
 
 ProgramD3D::VertexExecutable::VertexExecutable(const gl::InputLayout &inputLayout,
@@ -1268,15 +1360,21 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
+    ProgramD3DMetadata metadata(mRenderer->getMajorShaderModel(), mRenderer->getShaderModelSuffix(),
+                                usesInstancedPointSpriteEmulation(), vertexShaderD3D,
+                                fragmentShaderD3D);
+
     std::vector<D3DVarying> d3dVaryings;
-    if (!mDynamicHLSL->generateShaderLinkHLSL(data, mData, infoLog, registerCount, &mPixelHLSL,
-                                              &mVertexHLSL, packedVaryings, &d3dVaryings,
-                                              &mPixelShaderKey, &mUsesFragDepth))
+    if (!mDynamicHLSL->generateShaderLinkHLSL(data, mData, metadata, infoLog, registerCount,
+                                              &mPixelHLSL, &mVertexHLSL, packedVaryings,
+                                              &d3dVaryings))
     {
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
     mUsesPointSize = vertexShaderD3D->usesPointSize();
+    mDynamicHLSL->getPixelShaderOutputKey(data, mData, metadata, &mPixelShaderKey);
+    mUsesFragDepth = metadata.usesFragDepth(mData);
 
     // Cache if we use flat shading
     for (const auto &varying : packedVaryings)
@@ -1291,7 +1389,7 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
     if (mRenderer->getMajorShaderModel() >= 4)
     {
         mGeometryShaderPreamble = mDynamicHLSL->generateGeometryShaderPreamble(
-            data, mData, registerCount, packedVaryings);
+            data, mData, metadata, registerCount, packedVaryings);
     }
 
     initSemanticIndex();

@@ -29,6 +29,8 @@ class ShaderImpl : angle::NonCopyable
 
     virtual std::string getDebugInfo() const = 0;
 
+    const gl::Shader::Data &getData() const { return mData; }
+
   protected:
     const gl::Shader::Data &mData;
 };

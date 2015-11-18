@@ -13,6 +13,7 @@
 #include "common/utilities.h"
 #include "compiler/translator/blocklayoutHLSL.h"
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
+#include "libANGLE/renderer/d3d/ProgramD3D.h"
 
 namespace rx
 {
@@ -361,19 +362,21 @@ bool PackVaryings(const gl::Caps &caps,
 }
 
 SemanticInfo GetSemanticInfo(ShaderType shaderType,
-                             int majorShaderModel,
-                             unsigned int startRegisters,
-                             bool position,
-                             bool fragCoord,
-                             bool pointCoord,
-                             bool pointSize)
+                             const ProgramD3DMetadata &programMetadata,
+                             unsigned int startRegisters)
 {
-    SemanticInfo info;
-    bool hlsl4                         = (majorShaderModel >= 4);
-    const std::string &varyingSemantic = GetVaryingSemantic(majorShaderModel, pointSize);
+    int majorShaderModel = programMetadata.getRendererMajorShaderModel();
+    bool position        = programMetadata.usesTransformFeedbackGLPosition();
+    bool fragCoord       = programMetadata.usesFragCoord();
+    bool pointCoord = shaderType == SHADER_VERTEX ? programMetadata.addsPointCoordToVertexShader()
+                                                  : programMetadata.usesPointCoord();
+    bool pointSize = programMetadata.usesSystemValuePointSize();
+    bool hlsl4     = (majorShaderModel >= 4);
 
+    const std::string &userSemantic    = GetVaryingSemantic(majorShaderModel, pointSize);
     unsigned int reservedRegisterIndex = startRegisters;
 
+    SemanticInfo info;
     if (hlsl4)
     {
         info.dxPosition.enableSystem("SV_Position");
@@ -389,12 +392,12 @@ SemanticInfo GetSemanticInfo(ShaderType shaderType,
 
     if (position)
     {
-        info.glPosition.enable(varyingSemantic, reservedRegisterIndex++);
+        info.glPosition.enable(userSemantic, reservedRegisterIndex++);
     }
 
     if (fragCoord)
     {
-        info.glFragCoord.enable(varyingSemantic, reservedRegisterIndex++);
+        info.glFragCoord.enable(userSemantic, reservedRegisterIndex++);
     }
 
     if (pointCoord)
@@ -403,7 +406,7 @@ SemanticInfo GetSemanticInfo(ShaderType shaderType,
         // In D3D11 we manually compute gl_PointCoord in the GS.
         if (hlsl4)
         {
-            info.glPointCoord.enable(varyingSemantic, reservedRegisterIndex++);
+            info.glPointCoord.enable(userSemantic, reservedRegisterIndex++);
         }
         else
         {

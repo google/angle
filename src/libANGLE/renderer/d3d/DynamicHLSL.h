@@ -36,6 +36,7 @@ struct Data;
 namespace rx
 {
 struct PackedVarying;
+class ProgramD3DMetadata;
 struct SemanticInfo;
 class ShaderD3D;
 
@@ -63,18 +64,18 @@ class DynamicHLSL : angle::NonCopyable
         const std::vector<GLenum> &outputLayout) const;
     bool generateShaderLinkHLSL(const gl::Data &data,
                                 const gl::Program::Data &programData,
+                                const ProgramD3DMetadata &programMetadata,
                                 gl::InfoLog &infoLog,
                                 unsigned int registerCount,
                                 std::string *pixelHLSL,
                                 std::string *vertexHLSL,
                                 const std::vector<PackedVarying> &packedVaryings,
-                                std::vector<D3DVarying> *d3dVaryingsOut,
-                                std::vector<PixelShaderOutputVariable> *outPixelShaderKey,
-                                bool *outUsesFragDepth) const;
+                                std::vector<D3DVarying> *d3dVaryingsOut) const;
 
     std::string generateGeometryShaderPreamble(
         const gl::Data &data,
         const gl::Program::Data &programData,
+        const ProgramD3DMetadata &programMetadata,
         unsigned int registers,
         const std::vector<PackedVarying> &packedVaryings) const;
 
@@ -82,6 +83,11 @@ class DynamicHLSL : angle::NonCopyable
                                            const gl::Data &data,
                                            const gl::Program::Data &programData,
                                            const std::string &preambleString) const;
+
+    void getPixelShaderOutputKey(const gl::Data &data,
+                                 const gl::Program::Data &programData,
+                                 const ProgramD3DMetadata &metadata,
+                                 std::vector<PixelShaderOutputVariable> *outPixelShaderKey);
 
   private:
     RendererD3D *const mRenderer;

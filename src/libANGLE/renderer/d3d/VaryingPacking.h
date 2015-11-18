@@ -15,6 +15,7 @@
 
 namespace rx
 {
+class ProgramD3DMetadata;
 
 struct PackedVarying
 {
@@ -119,12 +120,8 @@ struct SemanticInfo final
 };
 
 SemanticInfo GetSemanticInfo(ShaderType shaderType,
-                             int majorShaderModel,
-                             unsigned int startRegisters,
-                             bool position,
-                             bool fragCoord,
-                             bool pointCoord,
-                             bool pointSize);
+                             const ProgramD3DMetadata &programMetadata,
+                             unsigned int startRegisters);
 
 }  // namespace rx
 
