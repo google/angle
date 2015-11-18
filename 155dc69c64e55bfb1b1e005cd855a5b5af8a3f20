@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "76d4867d_97a990a3",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-18T17:46:02Z",
+      "side": 1,
+      "message": "No, D3D9 uses this path too if you try to query the D3D9 device out of ANGLE.",
+      "parentUuid": "5b25eb9e_a704c22e",
+      "range": {
+        "startLine": 28,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 46
+      },
+      "revId": "155dc69c64e55bfb1b1e005cd855a5b5af8a3f20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db847bce_ecb734a1",
         "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
         "patchSetId": 11
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "3b2597a9_5597ee2a",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-18T17:46:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db847bce_ecb734a1",
+      "range": {
+        "startLine": 165,
+        "startChar": 4,
+        "endLine": 165,
+        "endChar": 15
+      },
+      "revId": "155dc69c64e55bfb1b1e005cd855a5b5af8a3f20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "76d4867d_8785e72f",
         "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
         "patchSetId": 11
@@ -59,6 +107,30 @@
       "writtenOn": "2015-11-17T21:21:09Z",
       "side": 1,
       "message": "can you expect a particular error here",
+      "range": {
+        "startLine": 210,
+        "startChar": 4,
+        "endLine": 210,
+        "endChar": 15
+      },
+      "revId": "155dc69c64e55bfb1b1e005cd855a5b5af8a3f20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b6aafda_a0413b1f",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-18T17:46:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76d4867d_8785e72f",
       "range": {
         "startLine": 210,
         "startChar": 4,
