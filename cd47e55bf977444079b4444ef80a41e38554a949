@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b6aafda_16d86d45",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T21:18:38Z",
+      "side": 1,
+      "message": "what are the native EGL types? (is that the display, surface, etc? in which case maybe native EGL objects is a better wording? or something like \u0027the native application\u0027s active X11 visual ID\u0027)",
+      "range": {
+        "startLine": 40,
+        "startChar": 52,
+        "endLine": 41,
+        "endChar": 8
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b6aafda_d6d19522",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T21:18:38Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 43,
+        "startChar": 58,
+        "endLine": 43,
+        "endChar": 59
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b6aafda_76ec49ea",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T21:18:38Z",
+      "side": 1,
+      "message": "did you confirm this with Shannon?",
+      "range": {
+        "startLine": 58,
+        "startChar": 34,
+        "endLine": 58,
+        "endChar": 40
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76d4867d_b29ca2dc",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T21:18:38Z",
+      "side": 1,
+      "message": "the visual ID of.. ? or perhaps \u0027a valid X11 visual ID.\u0027 you can also mention it\u0027s unspecified if the visual ID is invalid.",
+      "range": {
+        "startLine": 67,
+        "startChar": 45,
+        "endLine": 67,
+        "endChar": 59
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db847bce_f03dc2ba",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T21:18:38Z",
+      "side": 1,
+      "message": "is this unicode?",
+      "range": {
+        "startLine": 75,
+        "startChar": 38,
+        "endLine": 75,
+        "endChar": 39
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db847bce_b0297a7b",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T21:18:38Z",
+      "side": 1,
+      "message": "not sure what native types are in this context... but if it is easy to validate and makes sense, I think so.",
+      "range": {
+        "startLine": 74,
+        "startChar": 1,
+        "endLine": 75,
+        "endChar": 51
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb75bfb9_fc86f882",
+        "filename": "src/tests/egl_tests/EGLX11VisualHintTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T21:18:38Z",
+      "side": 1,
+      "message": "nit: comment before every test",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 6
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96d1fa8e_9036bf26",
+        "filename": "src/tests/egl_tests/EGLX11VisualHintTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T21:18:38Z",
+      "side": 1,
+      "message": "does it give a warning to use a comparison here?",
+      "range": {
+        "startLine": 59,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 43
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b25eb9e_1eaf3fa3",
+        "filename": "src/tests/egl_tests/EGLX11VisualHintTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T21:18:38Z",
+      "side": 1,
+      "message": "nit: for all of these use ASSERT_EQ,ASSERT_NE, etc where you are doing comparisons",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 75
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b816bc7_ab3d99bb",
+        "filename": "src/tests/egl_tests/EGLX11VisualHintTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T21:18:38Z",
+      "side": 1,
+      "message": "use ASSERT_EQ(1, nConfigs);",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 91,
+        "endChar": 31
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
