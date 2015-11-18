@@ -75,10 +75,6 @@
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojoffset.sampler3d_float_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.isamplercube_* = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.usamplercube_* = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.isampler2darray_* = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.usampler2darray_* = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.isampler3d_* = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.usampler3d_* = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.sampler2dshadow_* = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.isampler2d_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.isampler2d_fragment = FAIL
@@ -94,10 +90,6 @@
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.usampler3d_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.sampler2dshadow_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.sampler2dshadow_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.isampler3d_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.isampler3d_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.usampler3d_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.usampler3d_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.sampler2dshadow_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.sampler2dshadow_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlodoffset.isampler2d_vec3_vertex = FAIL

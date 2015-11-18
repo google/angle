@@ -924,11 +924,12 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
                         }
                         else
                         {
+
+                            out << "    x.GetDimensions(0, width, height, layers, levels);\n";
                             if (textureFunction->method == TextureFunction::IMPLICIT ||
                                 textureFunction->method == TextureFunction::BIAS)
                             {
-                                out << "    x.GetDimensions(0, width, height, layers, levels);\n"
-                                       "    float2 tSized = float2(t.x * width, t.y * height);\n"
+                                out << "    float2 tSized = float2(t.x * width, t.y * height);\n"
                                        "    float dx = length(ddx(tSized));\n"
                                        "    float dy = length(ddy(tSized));\n"
                                        "    float lod = log2(max(dx, dy));\n";
@@ -940,8 +941,7 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
                             }
                             else if (textureFunction->method == TextureFunction::GRAD)
                             {
-                                out << "    x.GetDimensions(0, width, height, layers, levels);\n"
-                                       "    float lod = log2(max(length(ddx), length(ddy)));\n";
+                                out << "    float lod = log2(max(length(ddx), length(ddy)));\n";
                             }
 
                             out << "    uint mip = uint(min(max(round(lod), 0), levels - 1));\n";
@@ -963,11 +963,12 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
                         }
                         else
                         {
+                            out << "    x.GetDimensions(0, width, height, levels);\n";
+
                             if (textureFunction->method == TextureFunction::IMPLICIT ||
                                 textureFunction->method == TextureFunction::BIAS)
                             {
-                                out << "    x.GetDimensions(0, width, height, levels);\n"
-                                       "    float2 tSized = float2(t.x * width, t.y * height);\n"
+                                out << "    float2 tSized = float2(t.x * width, t.y * height);\n"
                                        "    float dx = length(ddx(tSized));\n"
                                        "    float dy = length(ddy(tSized));\n"
                                        "    float lod = log2(max(dx, dy));\n";
@@ -977,14 +978,9 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
                                     out << "    lod += bias;\n";
                                 }
                             }
-                            else if (textureFunction->method == TextureFunction::LOD)
-                            {
-                                out << "    x.GetDimensions(0, width, height, levels);\n";
-                            }
                             else if (textureFunction->method == TextureFunction::GRAD)
                             {
-                                out << "    x.GetDimensions(0, width, height, levels);\n"
-                                       "    float lod = log2(max(length(ddx), length(ddy)));\n";
+                                out << "    float lod = log2(max(length(ddx), length(ddy)));\n";
                             }
 
                             out << "    uint mip = uint(min(max(round(lod), 0), levels - 1));\n";
@@ -1007,11 +1003,13 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
                     }
                     else
                     {
+                        out << "    x.GetDimensions(0, width, height, depth, levels);\n";
+
                         if (textureFunction->method == TextureFunction::IMPLICIT ||
                             textureFunction->method == TextureFunction::BIAS)
                         {
-                            out << "    x.GetDimensions(0, width, height, depth, levels);\n"
-                                   "    float3 tSized = float3(t.x * width, t.y * height, t.z * depth);\n"
+                            out << "    float3 tSized = float3(t.x * width, t.y * height, t.z * "
+                                   "depth);\n"
                                    "    float dx = length(ddx(tSized));\n"
                                    "    float dy = length(ddy(tSized));\n"
                                    "    float lod = log2(max(dx, dy));\n";
@@ -1023,8 +1021,7 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
                         }
                         else if (textureFunction->method == TextureFunction::GRAD)
                         {
-                            out << "    x.GetDimensions(0, width, height, depth, levels);\n"
-                                   "    float lod = log2(max(length(ddx), length(ddy)));\n";
+                            out << "    float lod = log2(max(length(ddx), length(ddy)));\n";
                         }
 
                         out << "    uint mip = uint(min(max(round(lod), 0), levels - 1));\n";
