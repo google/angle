@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "db847bce_3d60e880",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T02:00:49Z",
+      "side": 1,
+      "message": "Good catch. Done.",
+      "parentUuid": "3b2597a9_db0c3652",
+      "range": {
+        "startLine": 464,
+        "startChar": 4,
+        "endLine": 464,
+        "endChar": 59
+      },
+      "revId": "fb1828761ac507c7d6477159e66bf2541fefd2eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1b3453db_7d2e5883",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 8
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "1b3453db_f2d4ae14",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T02:00:49Z",
+      "side": 1,
+      "message": "Done. (addsPointCoord..)",
+      "parentUuid": "f642362f_71f0b0f9",
+      "range": {
+        "startLine": 417,
+        "startChar": 25,
+        "endLine": 417,
+        "endChar": 28
+      },
+      "revId": "fb1828761ac507c7d6477159e66bf2541fefd2eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b6aafda_1a309995",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 8
@@ -82,6 +130,30 @@
       "writtenOn": "2015-11-17T01:45:12Z",
       "side": 1,
       "message": "This uses the value from the vertex shader.  If we just use this method above, we could remove Program::Data::getShaderVersion.",
+      "range": {
+        "startLine": 450,
+        "startChar": 11,
+        "endLine": 450,
+        "endChar": 54
+      },
+      "revId": "fb1828761ac507c7d6477159e66bf2541fefd2eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b816bc7_caeed31b",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T02:00:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b6aafda_1a309995",
       "range": {
         "startLine": 450,
         "startChar": 11,
