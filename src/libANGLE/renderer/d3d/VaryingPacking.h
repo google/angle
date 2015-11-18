@@ -19,12 +19,32 @@ class ProgramD3DMetadata;
 
 struct PackedVarying
 {
-    PackedVarying(const sh::Varying &varyingIn) : varying(&varyingIn), vertexOnly(false) {}
+    PackedVarying(const sh::ShaderVariable &varyingIn, sh::InterpolationType interpolationIn)
+        : varying(&varyingIn), vertexOnly(false), interpolation(interpolationIn)
+    {
+    }
+    PackedVarying(const sh::ShaderVariable &varyingIn,
+                  sh::InterpolationType interpolationIn,
+                  const std::string &parentStructNameIn)
+        : varying(&varyingIn),
+          vertexOnly(false),
+          interpolation(interpolationIn),
+          parentStructName(parentStructNameIn)
+    {
+    }
 
-    const sh::Varying *varying;
+    bool isStructField() const { return !parentStructName.empty(); }
+
+    const sh::ShaderVariable *varying;
 
     // Transform feedback varyings can be only referenced in the VS.
     bool vertexOnly;
+
+    // Cached so we can store sh::ShaderVariable to point to varying fields.
+    sh::InterpolationType interpolation;
+
+    // Struct name
+    std::string parentStructName;
 };
 
 struct PackedVaryingRegister final
@@ -52,6 +72,8 @@ struct PackedVaryingRegister final
         return registerRow * 4 + registerColumn;
     }
 
+    bool isStructField() const { return !structFieldName.empty(); }
+
     // Index to the array of varyings.
     const PackedVarying *packedVarying;
 
@@ -69,6 +91,9 @@ struct PackedVaryingRegister final
 
     // Assigned after packing
     unsigned int semanticIndex;
+
+    // Struct member this varying corresponds to.
+    std::string structFieldName;
 };
 
 class VaryingPacking final : angle::NonCopyable

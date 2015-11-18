@@ -104,7 +104,7 @@ struct AttributeSorter
 // true if varying x has a higher priority in packing than y
 bool ComparePackedVarying(const PackedVarying &x, const PackedVarying &y)
 {
-    return gl::CompareVarying(*x.varying, *y.varying);
+    return gl::CompareShaderVar(*x.varying, *y.varying);
 }
 
 std::vector<PackedVarying> MergeVaryings(const gl::Shader &vertexShader,
@@ -127,7 +127,20 @@ std::vector<PackedVarying> MergeVaryings(const gl::Shader &vertexShader,
         {
             if (output.name == input.name)
             {
-                packedVaryings.push_back(PackedVarying(input));
+                if (output.isStruct())
+                {
+                    ASSERT(!output.isArray());
+                    for (const auto &field : output.fields)
+                    {
+                        ASSERT(!field.isStruct() && !field.isArray());
+                        packedVaryings.push_back(
+                            PackedVarying(field, input.interpolation, input.name));
+                    }
+                }
+                else
+                {
+                    packedVaryings.push_back(PackedVarying(input, input.interpolation));
+                }
                 packed = true;
                 break;
             }
@@ -140,8 +153,14 @@ std::vector<PackedVarying> MergeVaryings(const gl::Shader &vertexShader,
             {
                 if (tfVarying == output.name)
                 {
-                    packedVaryings.push_back(PackedVarying(output));
-                    packedVaryings.back().vertexOnly = true;
+                    // Transform feedback for varying structs is underspecified.
+                    // See Khronos bug 9856.
+                    // TODO(jmadill): Figure out how to be spec-compliant here.
+                    if (!output.isStruct())
+                    {
+                        packedVaryings.push_back(PackedVarying(output, output.interpolation));
+                        packedVaryings.back().vertexOnly = true;
+                    }
                     break;
                 }
             }
@@ -1391,9 +1410,10 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
     mUsesFragDepth = metadata.usesFragDepth(mData);
 
     // Cache if we use flat shading
+    mUsesFlatInterpolation = false;
     for (const auto &varying : packedVaryings)
     {
-        if (varying.varying->interpolation == sh::INTERPOLATION_FLAT)
+        if (varying.interpolation == sh::INTERPOLATION_FLAT)
         {
             mUsesFlatInterpolation = true;
             break;
@@ -2251,10 +2271,16 @@ void ProgramD3D::gatherTransformFeedbackVaryings(const VaryingPacking &varyingPa
         {
             for (const PackedVaryingRegister &registerInfo : varyingPacking.getRegisterList())
             {
-                const sh::Varying &varying = *registerInfo.packedVarying->varying;
-                GLenum transposedType      = gl::TransposeMatrixType(varying.type);
+                const auto &varying   = *registerInfo.packedVarying->varying;
+                GLenum transposedType = gl::TransposeMatrixType(varying.type);
                 int componentCount = gl::VariableColumnCount(transposedType);
                 ASSERT(!varying.isBuiltIn());
+
+                // Transform feedback for varying structs is underspecified.
+                // See Khronos bug 9856.
+                // TODO(jmadill): Figure out how to be spec-compliant here.
+                if (registerInfo.packedVarying->isStructField() || varying.isStruct())
+                    continue;
 
                 // There can be more than one register assigned to a particular varying, and each
                 // register needs its own stream out entry.

@@ -40,8 +40,6 @@
 
 // TODO(jmadill): triage these into permanent and temporary failures
 
-1088 WIN : dEQP-GLES3.functional.shaders.linkage.varying.struct.float_vec3 = FAIL
-1088 WIN : dEQP-GLES3.functional.shaders.linkage.varying.struct.float_uvec2_vec3 = FAIL
 1089 WIN : dEQP-GLES3.functional.shaders.functions.invalid.local_function_prototype_vertex = FAIL
 1089 WIN : dEQP-GLES3.functional.shaders.functions.invalid.local_function_prototype_fragment = FAIL
 1089 WIN : dEQP-GLES3.functional.shaders.functions.invalid.overload_builtin_function_vertex = FAIL

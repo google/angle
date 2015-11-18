@@ -18,10 +18,6 @@
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
 #include "libANGLE/renderer/d3d/VaryingPacking.h"
 
-// For use with ArrayString, see angleutils.h
-static_assert(GL_INVALID_INDEX == UINT_MAX,
-              "GL_INVALID_INDEX must be equal to the max unsigned int.");
-
 using namespace gl;
 
 namespace rx
@@ -107,6 +103,20 @@ const PixelShaderOutputVariable *FindOutputAtLocation(
     return nullptr;
 }
 
+void WriteArrayString(std::stringstream &strstr, unsigned int i)
+{
+    static_assert(GL_INVALID_INDEX == UINT_MAX,
+                  "GL_INVALID_INDEX must be equal to the max unsigned int.");
+    if (i == UINT_MAX)
+    {
+        return;
+    }
+
+    strstr << "[";
+    strstr << i;
+    strstr << "]";
+}
+
 const std::string VERTEX_ATTRIBUTE_STUB_STRING = "@@ VERTEX ATTRIBUTES @@";
 const std::string PIXEL_OUTPUT_STUB_STRING     = "@@ PIXEL OUTPUT @@";
 }  // anonymous namespace
@@ -132,9 +142,8 @@ void DynamicHLSL::generateVaryingHLSL(const VaryingPacking &varyingPacking,
 
     for (const PackedVaryingRegister &registerInfo : varyingPacking.getRegisterList())
     {
-        const sh::Varying &varying = *registerInfo.packedVarying->varying;
-        GLenum transposedType      = gl::TransposeMatrixType(varying.type);
-        unsigned int semanticIndex = registerInfo.semanticIndex;
+        const auto &varying = *registerInfo.packedVarying->varying;
+        ASSERT(!varying.isStruct());
 
         // TODO: Add checks to ensure D3D interpolation modifiers don't result in too many
         // registers being used.
@@ -143,7 +152,7 @@ void DynamicHLSL::generateVaryingHLSL(const VaryingPacking &varyingPacking,
         // If the float varying has the 'nointerpolation' modifier on it then we would need
         // N + 1 registers, and D3D compilation will fail.
 
-        switch (varying.interpolation)
+        switch (registerInfo.packedVarying->interpolation)
         {
             case sh::INTERPOLATION_SMOOTH:
                 hlslStream << "    ";
@@ -158,18 +167,11 @@ void DynamicHLSL::generateVaryingHLSL(const VaryingPacking &varyingPacking,
                 UNREACHABLE();
         }
 
-        if (varying.isStruct())
-        {
-            // TODO(jmadill): pass back translated name from the shader translator
-            hlslStream << decorateVariable(varying.structName);
-        }
-        else
-        {
-            GLenum componentType = VariableComponentType(transposedType);
-            int columnCount = VariableColumnCount(transposedType);
-            hlslStream << HLSLComponentTypeString(componentType, columnCount);
-        }
-
+        GLenum transposedType = gl::TransposeMatrixType(varying.type);
+        GLenum componentType  = gl::VariableComponentType(transposedType);
+        int columnCount = gl::VariableColumnCount(transposedType);
+        hlslStream << HLSLComponentTypeString(componentType, columnCount);
+        unsigned int semanticIndex = registerInfo.semanticIndex;
         hlslStream << " v" << semanticIndex << " : " << varyingSemantic << semanticIndex << ";\n";
     }
 }
@@ -490,21 +492,27 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
 
     for (const PackedVaryingRegister &registerInfo : varyingPacking.getRegisterList())
     {
-        const sh::Varying &varying = *registerInfo.packedVarying->varying;
-        GLenum transposedType = TransposeMatrixType(varying.type);
-        unsigned int variableRows =
-            static_cast<unsigned int>(varying.isStruct() ? 1 : VariableRowCount(transposedType));
+        const auto &packedVarying = *registerInfo.packedVarying;
+        const auto &varying = *packedVarying.varying;
+        ASSERT(!varying.isStruct());
 
-        vertexStream << "    output.v" << registerInfo.semanticIndex << " = _" + varying.name;
+        vertexStream << "    output.v" << registerInfo.semanticIndex << " = ";
+
+        if (packedVarying.isStructField())
+        {
+            vertexStream << decorateVariable(packedVarying.parentStructName) << ".";
+        }
+
+        vertexStream << decorateVariable(varying.name);
 
         if (varying.isArray())
         {
-            vertexStream << ArrayString(registerInfo.varyingArrayIndex);
+            WriteArrayString(vertexStream, registerInfo.varyingArrayIndex);
         }
 
-        if (variableRows > 1)
+        if (VariableRowCount(varying.type) > 1)
         {
-            vertexStream << ArrayString(registerInfo.varyingRowIndex);
+            WriteArrayString(vertexStream, registerInfo.varyingRowIndex);
         }
 
         vertexStream << ";\n";
@@ -623,47 +631,51 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
 
     for (const PackedVaryingRegister &registerInfo : varyingPacking.getRegisterList())
     {
-        const sh::Varying &varying = *registerInfo.packedVarying->varying;
+        const auto &packedVarying = *registerInfo.packedVarying;
+        const auto &varying = *packedVarying.varying;
+        ASSERT(!varying.isBuiltIn() && !varying.isStruct());
 
         // Don't reference VS-only transform feedback varyings in the PS.
         if (registerInfo.packedVarying->vertexOnly)
             continue;
 
-        ASSERT(!varying.isBuiltIn());
-        GLenum transposedType      = TransposeMatrixType(varying.type);
-        int variableRows           = (varying.isStruct() ? 1 : VariableRowCount(transposedType));
-        pixelStream << "    _" << varying.name;
+        pixelStream << "    ";
+
+        if (packedVarying.isStructField())
+        {
+            pixelStream << decorateVariable(packedVarying.parentStructName) << ".";
+        }
+
+        pixelStream << decorateVariable(varying.name);
 
         if (varying.isArray())
         {
-            pixelStream << ArrayString(registerInfo.varyingArrayIndex);
+            WriteArrayString(pixelStream, registerInfo.varyingArrayIndex);
         }
 
-        if (variableRows > 1)
+        GLenum transposedType = TransposeMatrixType(varying.type);
+        if (VariableRowCount(transposedType) > 1)
         {
-            pixelStream << ArrayString(registerInfo.varyingRowIndex);
+            WriteArrayString(pixelStream, registerInfo.varyingRowIndex);
         }
 
         pixelStream << " = input.v" << registerInfo.semanticIndex;
 
-        if (!varying.isStruct())
+        switch (VariableColumnCount(transposedType))
         {
-            switch (VariableColumnCount(transposedType))
-            {
-                case 1:
-                    pixelStream << ".x";
-                    break;
-                case 2:
-                    pixelStream << ".xy";
-                    break;
-                case 3:
-                    pixelStream << ".xyz";
-                    break;
-                case 4:
-                    break;
-                default:
-                    UNREACHABLE();
-            }
+            case 1:
+                pixelStream << ".x";
+                break;
+            case 2:
+                pixelStream << ".xy";
+                break;
+            case 3:
+                pixelStream << ".xyz";
+                break;
+            case 4:
+                break;
+            default:
+                UNREACHABLE();
         }
         pixelStream << ";\n";
     }
@@ -712,10 +724,8 @@ std::string DynamicHLSL::generateGeometryShaderPreamble(const VaryingPacking &va
 
     for (const PackedVaryingRegister &varyingRegister : varyingPacking.getRegisterList())
     {
-        const sh::Varying &varying = *varyingRegister.packedVarying->varying;
-
         preambleStream << "    output.v" << varyingRegister.semanticIndex << " = ";
-        if (varying.interpolation == sh::INTERPOLATION_FLAT)
+        if (varyingRegister.packedVarying->interpolation == sh::INTERPOLATION_FLAT)
         {
             preambleStream << "flat";
         }

@@ -57,23 +57,16 @@ bool VaryingPacking::packVarying(const PackedVarying &packedVarying)
     unsigned int varyingRows    = 0;
     unsigned int varyingColumns = 0;
 
-    const sh::Varying &varying = *packedVarying.varying;
+    const auto &varying = *packedVarying.varying;
 
-    if (varying.isStruct())
-    {
-        varyingRows    = HLSLVariableRegisterCount(varying, true);
-        varyingColumns = 4;
-    }
-    else
-    {
-        // "Non - square matrices of type matCxR consume the same space as a square matrix of type
-        // matN where N is the greater of C and R.Variables of type mat2 occupies 2 complete rows."
-        // Here we are a bit more conservative and allow packing non-square matrices more tightly.
-        // Make sure we use transposed matrix types to count registers correctly.
-        GLenum transposedType = gl::TransposeMatrixType(varying.type);
-        varyingRows           = gl::VariableRowCount(transposedType);
-        varyingColumns        = gl::VariableColumnCount(transposedType);
-    }
+    // "Non - square matrices of type matCxR consume the same space as a square matrix of type matN
+    // where N is the greater of C and R.Variables of type mat2 occupies 2 complete rows."
+    // Here we are a bit more conservative and allow packing non-square matrices more tightly.
+    // Make sure we use transposed matrix types to count registers correctly.
+    ASSERT(!varying.isStruct());
+    GLenum transposedType = gl::TransposeMatrixType(varying.type);
+    varyingRows           = gl::VariableRowCount(transposedType);
+    varyingColumns        = gl::VariableColumnCount(transposedType);
 
     // "Arrays of size N are assumed to take N times the size of the base type"
     varyingRows *= varying.elementCount();
@@ -206,18 +199,11 @@ void VaryingPacking::insert(unsigned int registerRow,
     unsigned int varyingRows    = 0;
     unsigned int varyingColumns = 0;
 
-    const sh::Varying &varying = *packedVarying.varying;
-    if (varying.isStruct())
-    {
-        varyingRows    = HLSLVariableRegisterCount(varying, true);
-        varyingColumns = 4;
-    }
-    else
-    {
-        GLenum transposedType = gl::TransposeMatrixType(varying.type);
-        varyingRows           = gl::VariableRowCount(transposedType);
-        varyingColumns        = gl::VariableColumnCount(transposedType);
-    }
+    const auto &varying = *packedVarying.varying;
+    ASSERT(!varying.isStruct());
+    GLenum transposedType = gl::TransposeMatrixType(varying.type);
+    varyingRows           = gl::VariableRowCount(transposedType);
+    varyingColumns        = gl::VariableColumnCount(transposedType);
 
     PackedVaryingRegister registerInfo;
     registerInfo.packedVarying  = &packedVarying;
@@ -251,14 +237,15 @@ bool VaryingPacking::packVaryings(gl::InfoLog &infoLog,
     // subrectangle. No splitting of variables is permitted."
     for (const PackedVarying &packedVarying : packedVaryings)
     {
-        const sh::Varying &varying = *packedVarying.varying;
+        const auto &varying = *packedVarying.varying;
 
         // Do not assign registers to built-in or unreferenced varyings
-        if (varying.isBuiltIn() || !varying.staticUse)
+        if (varying.isBuiltIn() || (!varying.staticUse && !packedVarying.isStructField()))
         {
             continue;
         }
 
+        ASSERT(!varying.isStruct());
         ASSERT(uniqueVaryingNames.count(varying.name) == 0);
 
         if (packVarying(packedVarying))
@@ -282,7 +269,7 @@ bool VaryingPacking::packVaryings(gl::InfoLog &infoLog,
 
         for (const PackedVarying &packedVarying : packedVaryings)
         {
-            const sh::Varying &varying = *packedVarying.varying;
+            const auto &varying = *packedVarying.varying;
 
             // Make sure transform feedback varyings aren't optimized out.
             if (uniqueVaryingNames.count(transformFeedbackVaryingName) == 0)

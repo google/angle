@@ -51,7 +51,7 @@ const std::vector<VarT> &GetShaderVariables(const std::vector<VarT> *variableLis
 }  // anonymous namespace
 
 // true if varying x has a higher priority in packing than y
-bool CompareVarying(const sh::Varying &x, const sh::Varying &y)
+bool CompareShaderVar(const sh::ShaderVariable &x, const sh::ShaderVariable &y)
 {
     if (x.type == y.type)
     {
@@ -293,7 +293,7 @@ void Shader::compile(Compiler *compiler)
         ASSERT(mData.mShaderType == GL_FRAGMENT_SHADER);
 
         // TODO(jmadill): Figure out why we only sort in the FS, and if we need to.
-        std::sort(mData.mVaryings.begin(), mData.mVaryings.end(), CompareVarying);
+        std::sort(mData.mVaryings.begin(), mData.mVaryings.end(), CompareShaderVar);
         mData.mActiveOutputVariables =
             GetActiveShaderVariables(ShGetOutputVariables(compilerHandle));
     }
