@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "7b91cf0c_05e59639",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-18T22:03:34Z",
+      "side": 1,
+      "message": "Sure, this is inside an ANGLE range, unused in our headers and 0x33A2 is used by another ANGLE extension. Adding Shannon to the review.",
+      "parentUuid": "7b6aafda_76ec49ea",
+      "range": {
+        "startLine": 58,
+        "startChar": 34,
+        "endLine": 58,
+        "endChar": 40
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "76d4867d_b29ca2dc",
         "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
         "patchSetId": 2
@@ -174,6 +198,30 @@
       "writtenOn": "2015-11-18T21:18:38Z",
       "side": 1,
       "message": "does it give a warning to use a comparison here?",
+      "range": {
+        "startLine": 59,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 43
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "765726ea_833da0a2",
+        "filename": "src/tests/egl_tests/EGLX11VisualHintTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-18T22:03:34Z",
+      "side": 1,
+      "message": "Yes, sadly ASSERT_EQ warns",
+      "parentUuid": "96d1fa8e_9036bf26",
       "range": {
         "startLine": 59,
         "startChar": 4,
