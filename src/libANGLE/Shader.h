@@ -137,6 +137,7 @@ class Shader : angle::NonCopyable
     ResourceManager *mResourceManager;
 };
 
+bool CompareVarying(const sh::Varying &x, const sh::Varying &y);
 }
 
 #endif   // LIBANGLE_SHADER_H_

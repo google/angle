@@ -3257,7 +3257,7 @@ ProgramImpl *Renderer11::createProgram(const gl::Program::Data &data)
 gl::Error Renderer11::loadExecutable(const void *function,
                                      size_t length,
                                      ShaderType type,
-                                     const std::vector<D3DVarying> &transformFeedbackVaryings,
+                                     const std::vector<D3DVarying> &streamOutVaryings,
                                      bool separatedOutputBuffers,
                                      ShaderExecutableD3D **outExecutable)
 {
@@ -3275,25 +3275,22 @@ gl::Error Renderer11::loadExecutable(const void *function,
                 return gl::Error(GL_OUT_OF_MEMORY, "Failed to create vertex shader, result: 0x%X.", result);
             }
 
-            if (transformFeedbackVaryings.size() > 0)
+            if (!streamOutVaryings.empty())
             {
                 std::vector<D3D11_SO_DECLARATION_ENTRY> soDeclaration;
-                for (size_t i = 0; i < transformFeedbackVaryings.size(); i++)
-                {
-                    const D3DVarying &varying = transformFeedbackVaryings[i];
-                    GLenum transposedType = gl::TransposeMatrixType(varying.type);
+                soDeclaration.reserve(streamOutVaryings.size());
 
-                    for (unsigned int j = 0; j < varying.semanticIndexCount; j++)
-                    {
-                        D3D11_SO_DECLARATION_ENTRY entry = { 0 };
-                        entry.Stream = 0;
-                        entry.SemanticName = varying.semanticName.c_str();
-                        entry.SemanticIndex = varying.semanticIndex + j;
-                        entry.StartComponent = 0;
-                        entry.ComponentCount = static_cast<BYTE>(gl::VariableColumnCount(transposedType));
-                        entry.OutputSlot = static_cast<BYTE>((separatedOutputBuffers ? i : 0));
-                        soDeclaration.push_back(entry);
-                    }
+                for (const auto &streamOutVarying : streamOutVaryings)
+                {
+                    D3D11_SO_DECLARATION_ENTRY entry = {0};
+                    entry.Stream                     = 0;
+                    entry.SemanticName               = streamOutVarying.semanticName.c_str();
+                    entry.SemanticIndex              = streamOutVarying.semanticIndex;
+                    entry.StartComponent             = 0;
+                    entry.ComponentCount             = static_cast<BYTE>(streamOutVarying.componentCount);
+                    entry.OutputSlot = static_cast<BYTE>(
+                        (separatedOutputBuffers ? streamOutVarying.outputSlot : 0));
+                    soDeclaration.push_back(entry);
                 }
 
                 result = mDevice->CreateGeometryShaderWithStreamOutput(
@@ -3349,7 +3346,7 @@ gl::Error Renderer11::loadExecutable(const void *function,
 gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
                                           const std::string &shaderHLSL,
                                           ShaderType type,
-                                          const std::vector<D3DVarying> &transformFeedbackVaryings,
+                                          const std::vector<D3DVarying> &streamOutVaryings,
                                           bool separatedOutputBuffers,
                                           const D3DCompilerWorkarounds &workarounds,
                                           ShaderExecutableD3D **outExectuable)
@@ -3422,7 +3419,7 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
     }
 
     error = loadExecutable(binary->GetBufferPointer(), binary->GetBufferSize(), type,
-                           transformFeedbackVaryings, separatedOutputBuffers, outExectuable);
+                           streamOutVaryings, separatedOutputBuffers, outExectuable);
 
     SafeRelease(binary);
     if (error.isError())

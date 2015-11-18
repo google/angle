@@ -10,10 +10,15 @@
 #ifndef UTIL_VECTOR_H
 #define UTIL_VECTOR_H
 
+#include <ostream>
+
 struct Vector2
 {
     Vector2();
     Vector2(float x, float y);
+
+    bool operator==(const Vector2 &vec) const;
+    bool operator!=(const Vector2 &vec) const;
 
     static float length(const Vector2 &vec);
     static float lengthSquared(const Vector2 &vec);
@@ -25,6 +30,8 @@ struct Vector2
 
     float x, y;
 };
+
+std::ostream &operator<<(std::ostream &stream, const Vector2 &vec);
 
 struct Vector3
 {

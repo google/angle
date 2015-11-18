@@ -48,6 +48,8 @@ const std::vector<VarT> &GetShaderVariables(const std::vector<VarT> *variableLis
     return *variableList;
 }
 
+}  // anonymous namespace
+
 // true if varying x has a higher priority in packing than y
 bool CompareVarying(const sh::Varying &x, const sh::Varying &y)
 {
@@ -69,8 +71,6 @@ bool CompareVarying(const sh::Varying &x, const sh::Varying &y)
 
     return gl::VariableSortOrder(x.type) < gl::VariableSortOrder(y.type);
 }
-
-}  // anonymous namespace
 
 Shader::Data::Data(GLenum shaderType) : mShaderType(shaderType), mShaderVersion(100)
 {

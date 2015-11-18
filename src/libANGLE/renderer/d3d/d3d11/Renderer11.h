@@ -191,13 +191,13 @@ class Renderer11 : public RendererD3D
     gl::Error loadExecutable(const void *function,
                              size_t length,
                              ShaderType type,
-                             const std::vector<D3DVarying> &transformFeedbackVaryings,
+                             const std::vector<D3DVarying> &streamOutVaryings,
                              bool separatedOutputBuffers,
                              ShaderExecutableD3D **outExecutable) override;
     gl::Error compileToExecutable(gl::InfoLog &infoLog,
                                   const std::string &shaderHLSL,
                                   ShaderType type,
-                                  const std::vector<D3DVarying> &transformFeedbackVaryings,
+                                  const std::vector<D3DVarying> &streamOutVaryings,
                                   bool separatedOutputBuffers,
                                   const D3DCompilerWorkarounds &workarounds,
                                   ShaderExecutableD3D **outExectuable) override;

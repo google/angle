@@ -19,6 +19,22 @@ Vector2::Vector2(float x, float y) : x(x), y(y)
 {
 }
 
+bool Vector2::operator==(const Vector2 &vec) const
+{
+    return x == vec.x && y == vec.y;
+}
+
+bool Vector2::operator!=(const Vector2 &vec) const
+{
+    return !(*this == vec);
+}
+
+std::ostream &operator<<(std::ostream &stream, const Vector2 &vec)
+{
+    stream << "(" << vec.x << "," << vec.y << ")";
+    return stream;
+}
+
 float Vector2::length(const Vector2 &vec)
 {
     float lenSquared = lengthSquared(vec);

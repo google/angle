@@ -828,8 +828,14 @@ TEST_P(GLSLTest, MaxVaryingVec3Array)
 }
 
 // Disabled because of a failure in D3D9
-TEST_P(GLSLTest, DISABLED_MaxVaryingVec3AndOneFloat)
+TEST_P(GLSLTest, MaxVaryingVec3AndOneFloat)
 {
+    if (isD3D9())
+    {
+        std::cout << "Test disabled on D3D9." << std::endl;
+        return;
+    }
+
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
@@ -837,8 +843,14 @@ TEST_P(GLSLTest, DISABLED_MaxVaryingVec3AndOneFloat)
 }
 
 // Disabled because of a failure in D3D9
-TEST_P(GLSLTest, DISABLED_MaxVaryingVec3ArrayAndOneFloatArray)
+TEST_P(GLSLTest, MaxVaryingVec3ArrayAndOneFloatArray)
 {
+    if (isD3D9())
+    {
+        std::cout << "Test disabled on D3D9." << std::endl;
+        return;
+    }
+
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
@@ -846,8 +858,14 @@ TEST_P(GLSLTest, DISABLED_MaxVaryingVec3ArrayAndOneFloatArray)
 }
 
 // Disabled because of a failure in D3D9
-TEST_P(GLSLTest, DISABLED_TwiceMaxVaryingVec2)
+TEST_P(GLSLTest, TwiceMaxVaryingVec2)
 {
+    if (isD3D9())
+    {
+        std::cout << "Test disabled on D3D9." << std::endl;
+        return;
+    }
+
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
@@ -855,8 +873,14 @@ TEST_P(GLSLTest, DISABLED_TwiceMaxVaryingVec2)
 }
 
 // Disabled because of a failure in D3D9
-TEST_P(GLSLTest, DISABLED_MaxVaryingVec2Arrays)
+TEST_P(GLSLTest, MaxVaryingVec2Arrays)
 {
+    if (isD3DSM3())
+    {
+        std::cout << "Test disabled on SM3." << std::endl;
+        return;
+    }
+
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 

@@ -298,6 +298,24 @@ bool ANGLETest::isD3D11() const
     return (rendererString.find("Direct3D11 vs_5_0") != std::string::npos);
 }
 
+bool ANGLETest::isD3D11_FL93() const
+{
+    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+    return (rendererString.find("Direct3D11 vs_4_0_") != std::string::npos);
+}
+
+bool ANGLETest::isD3D9() const
+{
+    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+    return (rendererString.find("Direct3D9") != std::string::npos);
+}
+
+bool ANGLETest::isD3DSM3() const
+{
+    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+    return isD3D9() || isD3D11_FL93();
+}
+
 EGLint ANGLETest::getPlatformRenderer() const
 {
     assert(mEGLWindow);

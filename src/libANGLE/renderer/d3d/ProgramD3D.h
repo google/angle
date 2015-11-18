@@ -80,26 +80,21 @@ struct D3DUniformBlock
     unsigned int psRegisterIndex;
 };
 
-struct D3DVarying
+struct D3DVarying final
 {
     D3DVarying();
-    D3DVarying(const std::string &name,
-               GLenum type,
-               GLsizei size,
-               const std::string &semanticName,
-               unsigned int semanticIndex,
-               unsigned int semanticIndexCount);
+    D3DVarying(const std::string &semanticNameIn,
+               unsigned int semanticIndexIn,
+               unsigned int componentCountIn,
+               unsigned int outputSlotIn);
 
-    // Original GL name
-    std::string name;
+    D3DVarying(const D3DVarying &) = default;
+    D3DVarying &operator=(const D3DVarying &) = default;
 
-    GLenum type;
-    GLsizei size;
-
-    // DirectX semantic information
     std::string semanticName;
     unsigned int semanticIndex;
-    unsigned int semanticIndexCount;
+    unsigned int componentCount;
+    unsigned int outputSlot;
 };
 
 class ProgramD3DMetadata : angle::NonCopyable
@@ -336,7 +331,7 @@ class ProgramD3D : public ProgramImpl
 
     LinkResult compileProgramExecutables(const gl::Data &data, gl::InfoLog &infoLog);
 
-    void gatherTransformFeedbackVaryings(const std::vector<D3DVarying> &varyings);
+    void gatherTransformFeedbackVaryings(const VaryingPacking &varyings);
     D3DUniform *getD3DUniformByName(const std::string &name);
     D3DUniform *getD3DUniformFromLocation(GLint location);
 
@@ -394,7 +389,7 @@ class ProgramD3D : public ProgramImpl
     VertexExecutable::Signature mCachedVertexSignature;
     gl::InputLayout mCachedInputLayout;
 
-    std::vector<D3DVarying> mTransformFeedbackD3DVaryings;
+    std::vector<D3DVarying> mStreamOutVaryings;
     std::vector<D3DUniform *> mD3DUniforms;
     std::vector<D3DUniformBlock> mD3DUniformBlocks;
 

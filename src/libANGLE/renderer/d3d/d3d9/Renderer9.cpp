@@ -2735,12 +2735,12 @@ ProgramImpl *Renderer9::createProgram(const gl::Program::Data &data)
 gl::Error Renderer9::loadExecutable(const void *function,
                                     size_t length,
                                     ShaderType type,
-                                    const std::vector<D3DVarying> &transformFeedbackVaryings,
+                                    const std::vector<D3DVarying> &streamOutVaryings,
                                     bool separatedOutputBuffers,
                                     ShaderExecutableD3D **outExecutable)
 {
     // Transform feedback is not supported in ES2 or D3D9
-    ASSERT(transformFeedbackVaryings.size() == 0);
+    ASSERT(streamOutVaryings.empty());
 
     switch (type)
     {
@@ -2777,13 +2777,13 @@ gl::Error Renderer9::loadExecutable(const void *function,
 gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog,
                                          const std::string &shaderHLSL,
                                          ShaderType type,
-                                         const std::vector<D3DVarying> &transformFeedbackVaryings,
+                                         const std::vector<D3DVarying> &streamOutVaryings,
                                          bool separatedOutputBuffers,
                                          const D3DCompilerWorkarounds &workarounds,
                                          ShaderExecutableD3D **outExectuable)
 {
     // Transform feedback is not supported in ES2 or D3D9
-    ASSERT(transformFeedbackVaryings.size() == 0);
+    ASSERT(streamOutVaryings.empty());
 
     const char *profileType = NULL;
     switch (type)
@@ -2846,7 +2846,7 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog,
     }
 
     error = loadExecutable(binary->GetBufferPointer(), binary->GetBufferSize(), type,
-                           transformFeedbackVaryings, separatedOutputBuffers, outExectuable);
+                           streamOutVaryings, separatedOutputBuffers, outExectuable);
 
     SafeRelease(binary);
     if (error.isError())

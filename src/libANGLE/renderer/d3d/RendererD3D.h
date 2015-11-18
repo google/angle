@@ -56,7 +56,8 @@ enum ShaderType
 {
     SHADER_VERTEX,
     SHADER_PIXEL,
-    SHADER_GEOMETRY
+    SHADER_GEOMETRY,
+    SHADER_TYPE_MAX
 };
 
 struct DeviceIdentifier
@@ -206,13 +207,13 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     virtual gl::Error loadExecutable(const void *function,
                                      size_t length,
                                      ShaderType type,
-                                     const std::vector<D3DVarying> &transformFeedbackVaryings,
+                                     const std::vector<D3DVarying> &streamOutVaryings,
                                      bool separatedOutputBuffers,
                                      ShaderExecutableD3D **outExecutable) = 0;
     virtual gl::Error compileToExecutable(gl::InfoLog &infoLog,
                                           const std::string &shaderHLSL,
                                           ShaderType type,
-                                          const std::vector<D3DVarying> &transformFeedbackVaryings,
+                                          const std::vector<D3DVarying> &streamOutVaryings,
                                           bool separatedOutputBuffers,
                                           const D3DCompilerWorkarounds &workarounds,
                                           ShaderExecutableD3D **outExectuable) = 0;

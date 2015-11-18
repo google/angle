@@ -19,22 +19,9 @@ class ProgramD3DMetadata;
 
 struct PackedVarying
 {
-    PackedVarying(const sh::Varying &varyingIn)
-        : varying(&varyingIn), registerIndex(GL_INVALID_INDEX), columnIndex(0), vertexOnly(false)
-    {
-    }
-
-    bool registerAssigned() const { return registerIndex != GL_INVALID_INDEX; }
-
-    void resetRegisterAssignment() { registerIndex = GL_INVALID_INDEX; }
+    PackedVarying(const sh::Varying &varyingIn) : varying(&varyingIn), vertexOnly(false) {}
 
     const sh::Varying *varying;
-
-    // Assigned during link
-    unsigned int registerIndex;
-
-    // Assigned during link, Defaults to 0
-    unsigned int columnIndex;
 
     // Transform feedback varyings can be only referenced in the VS.
     bool vertexOnly;
@@ -42,65 +29,82 @@ struct PackedVarying
 
 struct PackedVaryingRegister final
 {
-    PackedVaryingRegister() : varyingIndex(0), elementIndex(0), rowIndex(0) {}
+    PackedVaryingRegister()
+        : packedVarying(nullptr),
+          varyingArrayIndex(0),
+          varyingRowIndex(0),
+          registerRow(0),
+          registerColumn(0)
+    {
+    }
 
     PackedVaryingRegister(const PackedVaryingRegister &) = default;
     PackedVaryingRegister &operator=(const PackedVaryingRegister &) = default;
 
-    unsigned int registerIndex(const gl::Caps &caps,
-                               const std::vector<PackedVarying> &packedVaryings) const;
+    bool operator<(const PackedVaryingRegister &other) const
+    {
+        return sortOrder() < other.sortOrder();
+    }
 
-    size_t varyingIndex;
-    unsigned int elementIndex;
-    unsigned int rowIndex;
+    unsigned int sortOrder() const
+    {
+        // TODO(jmadill): Handle interpolation types
+        return registerRow * 4 + registerColumn;
+    }
+
+    // Index to the array of varyings.
+    const PackedVarying *packedVarying;
+
+    // The array element of the packed varying.
+    unsigned int varyingArrayIndex;
+
+    // The row of the array element of the packed varying.
+    unsigned int varyingRowIndex;
+
+    // The register row to which we've assigned this packed varying.
+    unsigned int registerRow;
+
+    // The column of the register row into which we've packed this varying.
+    unsigned int registerColumn;
+
+    // Assigned after packing
+    unsigned int semanticIndex;
 };
 
-class PackedVaryingIterator final : public angle::NonCopyable
+class VaryingPacking final : angle::NonCopyable
 {
   public:
-    PackedVaryingIterator(const std::vector<PackedVarying> &packedVaryings);
+    VaryingPacking(GLuint maxVaryingVectors);
 
-    class Iterator final
+    bool packVaryings(gl::InfoLog &infoLog,
+                      const std::vector<PackedVarying> &packedVaryings,
+                      const std::vector<std::string> &transformFeedbackVaryings);
+
+    struct Register
     {
-      public:
-        Iterator(const PackedVaryingIterator &parent);
+        Register() { data[0] = data[1] = data[2] = data[3] = false; }
 
-        Iterator(const Iterator &) = default;
-        Iterator &operator=(const Iterator &) = delete;
+        bool &operator[](unsigned int index) { return data[index]; }
+        bool operator[](unsigned int index) const { return data[index]; }
 
-        Iterator &operator++();
-        bool operator==(const Iterator &other) const;
-        bool operator!=(const Iterator &other) const;
-
-        const PackedVaryingRegister &operator*() const { return mRegister; }
-        void setEnd() { mRegister.varyingIndex = mParent.mPackedVaryings.size(); }
-
-      private:
-        const PackedVaryingIterator &mParent;
-        PackedVaryingRegister mRegister;
+        bool data[4];
     };
 
-    Iterator begin() const;
-    const Iterator &end() const;
+    Register &operator[](unsigned int index) { return mRegisterMap[index]; }
+    const Register &operator[](unsigned int index) const { return mRegisterMap[index]; }
 
-  private:
-    const std::vector<PackedVarying> &mPackedVaryings;
-    Iterator mEnd;
-};
-
-typedef const PackedVarying *VaryingPacking[gl::IMPLEMENTATION_MAX_VARYING_VECTORS][4];
-
-bool PackVaryings(const gl::Caps &caps,
-                  gl::InfoLog &infoLog,
-                  std::vector<PackedVarying> *packedVaryings,
-                  const std::vector<std::string> &transformFeedbackVaryings,
-                  unsigned int *registerCountOut);
-
-struct SemanticInfo final
-{
-    struct BuiltinInfo final
+    const std::vector<PackedVaryingRegister> &getRegisterList() const { return mRegisterList; }
+    unsigned int getMaxSemanticIndex() const
     {
-        BuiltinInfo();
+        return static_cast<unsigned int>(mRegisterList.size());
+    }
+    unsigned int getRegisterCount() const;
+
+    void enableBuiltins(ShaderType shaderType, const ProgramD3DMetadata &programMetadata);
+
+    struct BuiltinVarying final : angle::NonCopyable
+    {
+        BuiltinVarying();
 
         std::string str() const;
         void enableSystem(const std::string &systemValueSemantic);
@@ -112,16 +116,34 @@ struct SemanticInfo final
         bool systemValue;
     };
 
-    BuiltinInfo dxPosition;
-    BuiltinInfo glPosition;
-    BuiltinInfo glFragCoord;
-    BuiltinInfo glPointCoord;
-    BuiltinInfo glPointSize;
-};
+    struct BuiltinInfo
+    {
+        BuiltinVarying dxPosition;
+        BuiltinVarying glPosition;
+        BuiltinVarying glFragCoord;
+        BuiltinVarying glPointCoord;
+        BuiltinVarying glPointSize;
+    };
 
-SemanticInfo GetSemanticInfo(ShaderType shaderType,
-                             const ProgramD3DMetadata &programMetadata,
-                             unsigned int startRegisters);
+    const BuiltinInfo &builtins(ShaderType shaderType) const { return mBuiltinInfo[shaderType]; }
+
+    bool usesPointSize() const { return mBuiltinInfo[SHADER_VERTEX].glPointSize.enabled; }
+
+  private:
+    bool packVarying(const PackedVarying &packedVarying);
+    bool isFree(unsigned int registerRow,
+                unsigned int registerColumn,
+                unsigned int varyingRows,
+                unsigned int varyingColumns) const;
+    void insert(unsigned int registerRow,
+                unsigned int registerColumn,
+                const PackedVarying &packedVarying);
+
+    std::vector<Register> mRegisterMap;
+    std::vector<PackedVaryingRegister> mRegisterList;
+
+    std::vector<BuiltinInfo> mBuiltinInfo;
+};
 
 }  // namespace rx
 
