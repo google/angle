@@ -428,6 +428,30 @@
     },
     {
       "key": {
+        "uuid": "7b6aafda_c0aeafec",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T18:22:46Z",
+      "side": 1,
+      "message": "OK, thanks for letting us know. For non-EGLenums, please use EXPECT_EQ/EXPECT_NE/etc as required (EGLDevice, etc should be fine). For any EGLenum checks, please add EXPECT_EGLENUM_EQ and ASSERT_EGLENUM_EQ and use those as required. (See ANGLETest.h)",
+      "parentUuid": "1b3453db_6de22357",
+      "range": {
+        "startLine": 109,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 13
+      },
+      "revId": "43b2745219ede677a7194c8967abf8c4bfb1731d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db847bce_77c1b2a5",
         "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
         "patchSetId": 10
