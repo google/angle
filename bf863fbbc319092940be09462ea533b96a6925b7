@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d63372d5_d0695402",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3740,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-18T18:11:36Z",
+      "side": 1,
+      "message": "I don\u0027t think this condition is necessary since we are checking for offset !\u003d nullptr before doing anything.",
+      "revId": "bf863fbbc319092940be09462ea533b96a6925b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d63372d5_f06e5807",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3744,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-18T18:11:36Z",
+      "side": 1,
+      "message": "We use find instead of an explicit string match (or prefix match) ?",
+      "revId": "bf863fbbc319092940be09462ea533b96a6925b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
