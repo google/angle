@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1b3453db_d82d53d0",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-18T21:17:43Z",
+      "side": 1,
+      "message": "there\u0027s already one of these in d3d9, I shall remove this one",
+      "parentUuid": "db847bce_9388030b",
+      "range": {
+        "startLine": 241,
+        "startChar": 1,
+        "endLine": 244,
+        "endChar": 5
+      },
+      "revId": "1ecd65879a13b42dcc9006dc44dde8c0f2787da7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b816bc7_65901075",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-18T16:32:22Z",
       "side": 1,
       "message": "seeing as we treat mForceSetBlendState and mBlendStateIsDirty as the same now, you can get rid of mForce and just set mBlendStateIsDirty when we call force()",
+      "range": {
+        "startLine": 119,
+        "startChar": 7,
+        "endLine": 119,
+        "endChar": 82
+      },
+      "revId": "1ecd65879a13b42dcc9006dc44dde8c0f2787da7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b2597a9_b5173225",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-18T21:17:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b816bc7_65901075",
       "range": {
         "startLine": 119,
         "startChar": 7,
