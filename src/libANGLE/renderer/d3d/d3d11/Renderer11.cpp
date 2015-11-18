@@ -1441,31 +1441,7 @@ gl::Error Renderer11::setDepthStencilState(const gl::State &glState)
 
 void Renderer11::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
 {
-    if (mForceSetScissor || memcmp(&scissor, &mCurScissor, sizeof(gl::Rectangle)) != 0 ||
-        enabled != mScissorEnabled)
-    {
-        if (enabled)
-        {
-            D3D11_RECT rect;
-            rect.left = std::max(0, scissor.x);
-            rect.top = std::max(0, scissor.y);
-            rect.right = scissor.x + std::max(0, scissor.width);
-            rect.bottom = scissor.y + std::max(0, scissor.height);
-
-            mDeviceContext->RSSetScissorRects(1, &rect);
-        }
-
-        if (enabled != mScissorEnabled)
-        {
-            mStateManager.forceSetRasterState();
-        }
-
-        mCurScissor = scissor;
-        mScissorEnabled = enabled;
-        mStateManager.setCurScissorEnabled(mScissorEnabled);
-    }
-
-    mForceSetScissor = false;
+    mStateManager.setScissorRectangle(scissor, enabled);
 }
 
 void Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
@@ -1728,7 +1704,6 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
         mRenderTargetDesc.height = renderTargetHeight;
         mRenderTargetDesc.format = renderTargetFormat;
         mForceSetViewport = true;
-        mForceSetScissor = true;
         mStateManager.forceSetBlendState();
 
         if (!mDepthStencilInitialized)
@@ -2525,7 +2500,7 @@ void Renderer11::markAllStateDirty()
     mStateManager.forceSetBlendState();
     mStateManager.forceSetDepthStencilState();
     mStateManager.forceSetRasterState();
-    mForceSetScissor = true;
+    mStateManager.forceSetScissorState();
     mForceSetViewport = true;
 
     mAppliedIB = NULL;

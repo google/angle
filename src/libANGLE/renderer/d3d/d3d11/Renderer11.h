@@ -413,11 +413,6 @@ class Renderer11 : public RendererD3D
 
     StateManager11 mStateManager;
 
-    // Currently applied scissor rectangle
-    bool mForceSetScissor;
-    bool mScissorEnabled;
-    gl::Rectangle mCurScissor;
-
     // Currently applied viewport
     bool mForceSetViewport;
     gl::Rectangle mCurViewport;
