@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5b2a4b7b_4bad0faa",
+        "filename": "src/libANGLE/renderer/d3d/VaryingPacking.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T02:01:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db847bce_51035e9c",
+      "revId": "43fc4b0d885c81ca827cb00acacaa5dd3ad88380",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96d1fa8e_149acae2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 14
@@ -30,6 +48,30 @@
       "writtenOn": "2015-11-17T01:24:55Z",
       "side": 1,
       "message": "nit: now that the number of streamed elements is known, we can reserve or initialize this to the correct size.",
+      "range": {
+        "startLine": 3280,
+        "startChar": 56,
+        "endLine": 3280,
+        "endChar": 69
+      },
+      "revId": "43fc4b0d885c81ca827cb00acacaa5dd3ad88380",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b25eb9e_cdd8ffa5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3280,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-18T02:01:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96d1fa8e_149acae2",
       "range": {
         "startLine": 3280,
         "startChar": 56,
