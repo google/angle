@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "db847bce_d33d2bbb",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-18T17:46:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76d4867d_e7ae63c1",
+      "range": {
+        "startLine": 308,
+        "startChar": 0,
+        "endLine": 311,
+        "endChar": 5
+      },
+      "revId": "43b2745219ede677a7194c8967abf8c4bfb1731d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b816bc7_f94a93a4",
         "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
         "patchSetId": 10
@@ -179,6 +203,30 @@
       "side": 1,
       "message": "N/A?",
       "parentUuid": "1b3453db_1e318be7",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 50
+      },
+      "revId": "43b2745219ede677a7194c8967abf8c4bfb1731d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b6aafda_604fa368",
+        "filename": "src/libANGLE/renderer/d3d/DeviceD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-18T17:46:02Z",
+      "side": 1,
+      "message": "It was possible to ASSERT this in Patch Set #10 but it\u0027s not possible in Patch Set #11.\n\n\nIn #10, this code could only be hit if \"mDeviceExternallySourced \u003d true\" (which was only true for the D3D11 renderer) so the highlighted code could be converted to an ASSERT. However in #11, the \"mDeviceExternallySourced \u003d true\" check has been removed so this code can be executed by the D3D9 renderer. We therefore can\u0027t assert D3D11.",
+      "parentUuid": "76d4867d_67bb9301",
       "range": {
         "startLine": 69,
         "startChar": 8,
@@ -344,6 +392,30 @@
       "side": 1,
       "message": "Sorry, please leave them as ASSERT_EQ, ASSERT_NE, etc, instead of ASSERT_TRUE(comparison), but with the proper form of expected value first. This is pretty nitty but it generates a linter error in internal Google code so it is the \"proper\" style.",
       "parentUuid": "7b6aafda_40286472",
+      "range": {
+        "startLine": 109,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 13
+      },
+      "revId": "43b2745219ede677a7194c8967abf8c4bfb1731d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b3453db_6de22357",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-18T17:46:02Z",
+      "side": 1,
+      "message": "There are no prior uses of ASSERT_EQ/NE for EGL enums as far as I can tell- all of the other EGL tests use ASSERT_TRUE(comparison) or EXPECT_TRUE(comparison).\n\nShould I use ASSERT_EQ (even though there are no prior uses) or ASSERT_TRUE?",
+      "parentUuid": "76d4867d_c7b87f05",
       "range": {
         "startLine": 109,
         "startChar": 4,
