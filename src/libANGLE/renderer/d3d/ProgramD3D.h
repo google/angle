@@ -245,6 +245,8 @@ class ProgramD3D : public ProgramImpl
     void updateCachedInputLayout(const gl::State &state);
     const gl::InputLayout &getCachedInputLayout() const { return mCachedInputLayout; }
 
+    bool isSamplerMappingDirty() { return mDirtySamplerMapping; }
+
   private:
     class VertexExecutable
     {
