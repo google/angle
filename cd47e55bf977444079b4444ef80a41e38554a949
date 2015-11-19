@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1648aa4e_e15dacfb",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-19T17:50:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b6aafda_16d86d45",
+      "range": {
+        "startLine": 40,
+        "startChar": 52,
+        "endLine": 41,
+        "endChar": 8
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b6aafda_d6d19522",
         "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-18T21:18:38Z",
       "side": 1,
       "message": "nit: trailing space",
+      "range": {
+        "startLine": 43,
+        "startChar": 58,
+        "endLine": 43,
+        "endChar": 59
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f642362f_d4d06dd5",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-19T17:50:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b6aafda_d6d19522",
       "range": {
         "startLine": 43,
         "startChar": 58,
@@ -118,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "36392eb5_36829e26",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-19T17:50:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76d4867d_b29ca2dc",
+      "range": {
+        "startLine": 67,
+        "startChar": 45,
+        "endLine": 67,
+        "endChar": 59
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db847bce_f03dc2ba",
         "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
         "patchSetId": 2
@@ -164,6 +236,54 @@
     },
     {
       "key": {
+        "uuid": "763006ce_0d03d5eb",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-19T17:50:37Z",
+      "side": 1,
+      "message": "Probably, was inserted by Google Docs",
+      "parentUuid": "db847bce_f03dc2ba",
+      "range": {
+        "startLine": 75,
+        "startChar": 38,
+        "endLine": 75,
+        "endChar": 39
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b91cf0c_0884cb78",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-19T17:50:37Z",
+      "side": 1,
+      "message": "Ok, I\u0027ll implement that in a follow up patch.",
+      "parentUuid": "db847bce_b0297a7b",
+      "range": {
+        "startLine": 74,
+        "startChar": 1,
+        "endLine": 75,
+        "endChar": 51
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fb75bfb9_fc86f882",
         "filename": "src/tests/egl_tests/EGLX11VisualHintTest.cpp",
         "patchSetId": 2
@@ -175,6 +295,30 @@
       "writtenOn": "2015-11-18T21:18:38Z",
       "side": 1,
       "message": "nit: comment before every test",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 6
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96549ae5_85deb058",
+        "filename": "src/tests/egl_tests/EGLX11VisualHintTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-19T17:50:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fb75bfb9_fc86f882",
       "range": {
         "startLine": 52,
         "startChar": 0,
@@ -257,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "96549ae5_a5a9f4bc",
+        "filename": "src/tests/egl_tests/EGLX11VisualHintTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-19T17:50:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b25eb9e_1eaf3fa3",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 75
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b816bc7_ab3d99bb",
         "filename": "src/tests/egl_tests/EGLX11VisualHintTest.cpp",
         "patchSetId": 2
@@ -268,6 +436,30 @@
       "writtenOn": "2015-11-18T21:18:38Z",
       "side": 1,
       "message": "use ASSERT_EQ(1, nConfigs);",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 91,
+        "endChar": 31
+      },
+      "revId": "cd47e55bf977444079b4444ef80a41e38554a949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "765726ea_2ceaf80b",
+        "filename": "src/tests/egl_tests/EGLX11VisualHintTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-19T17:50:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b816bc7_ab3d99bb",
       "range": {
         "startLine": 91,
         "startChar": 4,
