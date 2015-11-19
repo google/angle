@@ -22,6 +22,30 @@
       "revId": "4064b8478b4c7015e0512d067e8a32d061a1651d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "569062ca_925b6c62",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2783,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-11-19T16:04:47Z",
+      "side": 1,
+      "message": "Index is already checked to be positive around line 2743. It\u0027s clamped to zero too if it\u0027s not positive. I don\u0027t think it matters whether \u003e 0 or !\u003d 0 is used here.",
+      "parentUuid": "5b2a4b7b_f921327c",
+      "range": {
+        "startLine": 2783,
+        "startChar": 75,
+        "endLine": 2783,
+        "endChar": 78
+      },
+      "revId": "4064b8478b4c7015e0512d067e8a32d061a1651d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
