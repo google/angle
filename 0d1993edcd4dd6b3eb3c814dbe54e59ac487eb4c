@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96d1fa8e_fa68bc9f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-19T00:11:17Z",
+      "side": 1,
+      "message": "nit: mention D3D11",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 5
+      },
+      "revId": "0d1993edcd4dd6b3eb3c814dbe54e59ac487eb4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b816bc7_a5b86802",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-19T00:11:17Z",
+      "side": 1,
+      "message": "nit: colon",
+      "range": {
+        "startLine": 9,
+        "startChar": 16,
+        "endLine": 9,
+        "endChar": 17
+      },
+      "revId": "0d1993edcd4dd6b3eb3c814dbe54e59ac487eb4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb75bfb9_a8bb5fe5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-19T00:11:17Z",
+      "side": 1,
+      "message": "same comment re: if statements here",
+      "range": {
+        "startLine": 126,
+        "startChar": 12,
+        "endLine": 127,
+        "endChar": 59
+      },
+      "revId": "0d1993edcd4dd6b3eb3c814dbe54e59ac487eb4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb75bfb9_08aff3a2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-19T00:11:17Z",
+      "side": 1,
+      "message": "you can remove this",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 50,
+        "endChar": 77
+      },
+      "revId": "0d1993edcd4dd6b3eb3c814dbe54e59ac487eb4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
