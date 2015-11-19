@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b25eb9e_998da91b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-19T00:07:11Z",
+      "side": 1,
+      "message": "this is nitty, but you can do\n\n if (!mDepthStencilStateIsDirty)\n {\n   return gl::Error(GL_NO_ERROR);\n }\n\n // nice flattened scope below",
+      "range": {
+        "startLine": 280,
+        "startChar": 8,
+        "endLine": 280,
+        "endChar": 33
+      },
+      "revId": "5ff0380888178d3ca9693f44d3815c48317691c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
