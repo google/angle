@@ -12,21 +12,16 @@ import sys
 
 
 def main():
-  gclient_cmd = [
-      'gclient', 'config',
-      '--name', 'change2dot',
-      '--unmanaged',
-      'https://chromium.googlesource.com/angle/angle.git'
-  ]
-  cmd_str = ' '.join(gclient_cmd)
+  gclient_cmd = ('gclient config --name change2dot --unmanaged '
+      'https://chromium.googlesource.com/angle/angle.git')
   try:
-    rc = subprocess.call(gclient_cmd)
+    rc = subprocess.call(gclient_cmd, shell=True)
   except OSError:
-    print 'could not run "%s" - is gclient installed?' % cmd_str
+    print 'could not run "%s" via shell' % gclient_cmd
     sys.exit(1)
 
   if rc:
-    print 'failed command: "%s"' % cmd_str
+    print 'failed command: "%s"' % gclient_cmd
     sys.exit(1)
 
   with open('.gclient') as gclient_file:
