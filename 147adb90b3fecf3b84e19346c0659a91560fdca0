@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b3453db_d22d32d0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-19T00:10:07Z",
+      "side": 1,
+      "message": "nit: mention D3D11",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 5
+      },
+      "revId": "147adb90b3fecf3b84e19346c0659a91560fdca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96d1fa8e_8bc054ff",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-19T00:10:07Z",
+      "side": 1,
+      "message": "same comment here about if splitting",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 126,
+        "endChar": 22
+      },
+      "revId": "147adb90b3fecf3b84e19346c0659a91560fdca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b2597a9_47be1f81",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-19T00:10:07Z",
+      "side": 1,
+      "message": "nit: probably should use the full \u0027forceSetRasterizerState\u0027 to be consistent",
+      "range": {
+        "startLine": 45,
+        "startChar": 9,
+        "endLine": 45,
+        "endChar": 28
+      },
+      "revId": "147adb90b3fecf3b84e19346c0659a91560fdca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b3453db_059ff31e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-19T00:10:07Z",
+      "side": 1,
+      "message": "it\u0027s ok if you want to cache these, but you should init them to null in the constructor first",
+      "range": {
+        "startLine": 76,
+        "startChar": 3,
+        "endLine": 77,
+        "endChar": 34
+      },
+      "revId": "147adb90b3fecf3b84e19346c0659a91560fdca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
