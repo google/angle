@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3b4e7783_8ee67f03",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3740,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-11-19T11:39:57Z",
+      "side": 1,
+      "message": "It\u0027s not strictly necessary, but it avoids a bunch of string comparisons in case \"Offset\" is not in the function name. I think I\u0027ll get rid of this when I switch to faster version of checking the strings.",
+      "parentUuid": "d63372d5_d0695402",
+      "revId": "bf863fbbc319092940be09462ea533b96a6925b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d63372d5_f06e5807",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-11-18T18:11:36Z",
       "side": 1,
       "message": "We use find instead of an explicit string match (or prefix match) ?",
+      "revId": "bf863fbbc319092940be09462ea533b96a6925b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b8e83ee_4922d9e5",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3744,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-11-19T11:39:57Z",
+      "side": 1,
+      "message": "This was the easiest way to make the code clear, but I admit that it\u0027s a lazy solution. Using std::string::compare  would be faster and I\u0027ll switch to that. Unfortunately it\u0027s a bit harder to verify since the constant string length needs to be specified manually.",
+      "parentUuid": "d63372d5_f06e5807",
       "revId": "bf863fbbc319092940be09462ea533b96a6925b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
