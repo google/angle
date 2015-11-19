@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36392eb5_a113a6a7",
+        "filename": "scripts/perf_test_runner.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-19T21:37:06Z",
+      "side": 1,
+      "message": "return sorted(data)[n:-n-1] ? It also has a better complextity.",
+      "revId": "7ce7813f139823bd737fbe43c2a3e2c3618e58f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
