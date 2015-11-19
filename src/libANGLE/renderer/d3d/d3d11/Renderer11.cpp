@@ -1980,7 +1980,7 @@ gl::Error Renderer11::drawArraysImpl(const gl::Data &data,
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(data, count, GL_NONE, nullptr, nullptr);
+        return drawLineLoop(data, count, GL_NONE, nullptr, nullptr, instances);
     }
 
     if (mode == GL_TRIANGLE_FAN)
@@ -2023,7 +2023,7 @@ gl::Error Renderer11::drawElementsImpl(const gl::Data &data,
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(data, count, type, indices, &indexInfo);
+        return drawLineLoop(data, count, type, indices, &indexInfo, instances);
     }
 
     if (mode == GL_TRIANGLE_FAN)
@@ -2064,7 +2064,8 @@ gl::Error Renderer11::drawLineLoop(const gl::Data &data,
                                    GLsizei count,
                                    GLenum type,
                                    const GLvoid *indexPointer,
-                                   const TranslatedIndexData *indexInfo)
+                                   const TranslatedIndexData *indexInfo,
+                                   int instances)
 {
     gl::VertexArray *vao           = data.state->getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
@@ -2150,7 +2151,15 @@ gl::Error Renderer11::drawLineLoop(const gl::Data &data,
 
     INT baseVertexLocation = (indexInfo ? -static_cast<int>(indexInfo->indexRange.start) : 0);
     UINT indexCount = static_cast<UINT>(mScratchIndexDataBuffer.size());
-    mDeviceContext->DrawIndexed(indexCount, 0, baseVertexLocation);
+
+    if (instances > 0)
+    {
+        mDeviceContext->DrawIndexedInstanced(indexCount, instances, 0, baseVertexLocation, 0);
+    }
+    else
+    {
+        mDeviceContext->DrawIndexed(indexCount, 0, baseVertexLocation);
+    }
 
     return gl::Error(GL_NO_ERROR);
 }

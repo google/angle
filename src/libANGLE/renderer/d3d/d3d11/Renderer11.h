@@ -308,7 +308,8 @@ class Renderer11 : public RendererD3D
                            GLsizei count,
                            GLenum type,
                            const GLvoid *indices,
-                           const TranslatedIndexData *indexInfo);
+                           const TranslatedIndexData *indexInfo,
+                           int instances);
     gl::Error drawTriangleFan(const gl::Data &data,
                               GLsizei count,
                               GLenum type,
