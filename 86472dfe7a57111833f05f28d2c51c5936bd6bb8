@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96549ae5_450da8bc",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2720,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-19T15:51:04Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be indexExpression? Actually Reading the chunk below, it seems we use baseExpression\u0027s qualifier to know if it is gl_FragData. However we should still check indexExpression-\u003egetQualifer() !\u003d EvqConst no?",
+      "range": {
+        "startLine": 2720,
+        "startChar": 50,
+        "endLine": 2720,
+        "endChar": 64
+      },
+      "revId": "86472dfe7a57111833f05f28d2c51c5936bd6bb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b91cf0c_a8527fe5",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2722,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-19T15:51:04Z",
+      "side": 1,
+      "message": "nit: the error is not that it isn\u0027t zero but that it isn\u0027t constant so we can remove the zero part.",
+      "range": {
+        "startLine": 2722,
+        "startChar": 82,
+        "endLine": 2722,
+        "endChar": 87
+      },
+      "revId": "86472dfe7a57111833f05f28d2c51c5936bd6bb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
