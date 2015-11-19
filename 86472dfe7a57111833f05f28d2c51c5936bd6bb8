@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d67c5259_ab263960",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2720,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-11-19T16:04:47Z",
+      "side": 1,
+      "message": "indexExpression-\u003egetQualifer() !\u003d EvqConst check is above.",
+      "parentUuid": "96549ae5_450da8bc",
+      "range": {
+        "startLine": 2720,
+        "startChar": 50,
+        "endLine": 2720,
+        "endChar": 64
+      },
+      "revId": "86472dfe7a57111833f05f28d2c51c5936bd6bb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b91cf0c_a8527fe5",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-19T15:51:04Z",
       "side": 1,
       "message": "nit: the error is not that it isn\u0027t zero but that it isn\u0027t constant so we can remove the zero part.",
+      "range": {
+        "startLine": 2722,
+        "startChar": 82,
+        "endLine": 2722,
+        "endChar": 87
+      },
+      "revId": "86472dfe7a57111833f05f28d2c51c5936bd6bb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b4e7783_ee2a9359",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2722,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-11-19T16:04:47Z",
+      "side": 1,
+      "message": "I\u0027d rather inform the API user up front that besides being constant, the value also must be zero. That way they don\u0027t end up doing extra work to make indices constant only to discover that they need to migrate to ESSL3 shaders.",
+      "parentUuid": "7b91cf0c_a8527fe5",
       "range": {
         "startLine": 2722,
         "startChar": 82,
