@@ -22,6 +22,30 @@
       "revId": "c78a1ac77c77f0dc60817e82203087afc3efac42",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f642362f_1459153e",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-19T17:55:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76d4867d_0fd104d7",
+      "range": {
+        "startLine": 72,
+        "startChar": 6,
+        "endLine": 72,
+        "endChar": 8
+      },
+      "revId": "c78a1ac77c77f0dc60817e82203087afc3efac42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
