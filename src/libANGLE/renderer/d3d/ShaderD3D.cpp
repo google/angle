@@ -192,15 +192,11 @@ bool ShaderD3D::postTranslateCompile(gl::Compiler *compiler, std::string *infoLo
         }
     }
 
-#if ANGLE_SHADER_DEBUG_INFO == ANGLE_ENABLED
     mDebugInfo +=
-        std::string("// ") + GetShaderTypeString(mData->getShaderType()) + " SHADER BEGIN\n";
-    mDebugInfo += "\n// GLSL BEGIN\n\n" + source + "\n\n// GLSL END\n\n\n";
+        std::string("// ") + GetShaderTypeString(mData.getShaderType()) + " SHADER BEGIN\n";
+    mDebugInfo += "\n// GLSL BEGIN\n\n" + mData.getSource() + "\n\n// GLSL END\n\n\n";
     mDebugInfo += "// INITIAL HLSL BEGIN\n\n" + translatedSource + "\n// INITIAL HLSL END\n\n\n";
     // Successive steps will append more info
-#else
-    mDebugInfo += translatedSource;
-#endif
     return true;
 }
 
