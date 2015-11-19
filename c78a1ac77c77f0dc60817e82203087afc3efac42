@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76d4867d_0fd104d7",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-19T17:52:55Z",
+      "side": 1,
+      "message": "nit: double space",
+      "range": {
+        "startLine": 72,
+        "startChar": 6,
+        "endLine": 72,
+        "endChar": 8
+      },
+      "revId": "c78a1ac77c77f0dc60817e82203087afc3efac42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
