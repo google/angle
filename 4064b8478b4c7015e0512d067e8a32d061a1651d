@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b2a4b7b_f921327c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2783,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-19T15:32:29Z",
+      "side": 1,
+      "message": "!\u003d 0? Is it theoretically possible for the index here to be negative? Maybe we\u0027d rather report that error elsewhere?",
+      "range": {
+        "startLine": 2783,
+        "startChar": 75,
+        "endLine": 2783,
+        "endChar": 78
+      },
+      "revId": "4064b8478b4c7015e0512d067e8a32d061a1651d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
