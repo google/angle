@@ -290,7 +290,7 @@ gl::Error VertexDataManager::storeAttribute(TranslatedAttribute *translated,
     bool directStorage = vertexBuffer->directStoragePossible(attrib, translated->currentValueType);
 
     // Instanced vertices do not apply the 'start' offset
-    GLint firstVertexIndex = (instances > 0 && attrib.divisor > 0 ? 0 : start);
+    GLint firstVertexIndex = (attrib.divisor > 0 ? 0 : start);
 
     translated->vertexBuffer = vertexBuffer->getVertexBuffer();
 
@@ -357,7 +357,8 @@ gl::Error VertexDataManager::storeAttribute(TranslatedAttribute *translated,
             (static_cast<unsigned int>(attrib.offset) /
              static_cast<unsigned int>(ComputeVertexAttributeStride(attrib))) *
             outputElementSize;
-        unsigned int startOffset = (instances == 0 || attrib.divisor == 0) ? firstVertexIndex * outputElementSize : 0;
+        ASSERT(attrib.divisor == 0 || firstVertexIndex == 0);
+        unsigned int startOffset = firstVertexIndex * outputElementSize;
         if (streamOffset + firstElementOffset + startOffset < streamOffset)
         {
             return gl::Error(GL_OUT_OF_MEMORY);
