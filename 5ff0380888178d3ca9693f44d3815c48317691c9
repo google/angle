@@ -22,6 +22,30 @@
       "revId": "5ff0380888178d3ca9693f44d3815c48317691c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b25eb9e_6ecc3ee2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-20T18:56:21Z",
+      "side": 1,
+      "message": "I could, but it won\u0027t be consistent with other functions in this class",
+      "parentUuid": "5b25eb9e_998da91b",
+      "range": {
+        "startLine": 280,
+        "startChar": 8,
+        "endLine": 280,
+        "endChar": 33
+      },
+      "revId": "5ff0380888178d3ca9693f44d3815c48317691c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
