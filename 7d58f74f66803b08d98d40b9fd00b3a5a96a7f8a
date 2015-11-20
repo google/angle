@@ -115,6 +115,30 @@
       "revId": "7d58f74f66803b08d98d40b9fd00b3a5a96a7f8a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b2123e5_0bc6c1be",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-20T22:49:51Z",
+      "side": 1,
+      "message": "Maybe x11_visual_display would work too because it binds the display to the visual id.",
+      "parentUuid": "1648aa4e_13984b59",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 51
+      },
+      "revId": "7d58f74f66803b08d98d40b9fd00b3a5a96a7f8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
