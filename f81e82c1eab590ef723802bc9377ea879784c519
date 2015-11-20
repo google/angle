@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b1b2bb8_29d8e9a2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-20T22:40:43Z",
+      "side": 1,
+      "message": "as per offline discussion: could probably set Force here intelligently if the previous desc/size doesn\u0027t match the new desc/size",
+      "range": {
+        "startLine": 105,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 38
+      },
+      "revId": "f81e82c1eab590ef723802bc9377ea879784c519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db271bf3_4d81edb2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-20T22:40:43Z",
+      "side": 1,
+      "message": "as per offline desc, can nuke these three",
+      "range": {
+        "startLine": 467,
+        "startChar": 33,
+        "endLine": 469,
+        "endChar": 52
+      },
+      "revId": "f81e82c1eab590ef723802bc9377ea879784c519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b153384_4728b072",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-20T22:40:43Z",
+      "side": 1,
+      "message": "would probably get rid of RenderTargetDesc and use gl::Extents here. format is entirely unused. note, depth would always be unused or \u003d\u003d 1, but it still seems closer to a size than storing a format we don\u0027t use.",
+      "range": {
+        "startLine": 113,
+        "startChar": 11,
+        "endLine": 113,
+        "endChar": 27
+      },
+      "revId": "f81e82c1eab590ef723802bc9377ea879784c519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb2a67bd_c94031e6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-20T22:40:43Z",
+      "side": 1,
+      "message": "use ANGLE\u0027s Optional here. See common/Optional.h",
+      "range": {
+        "startLine": 111,
+        "startChar": 4,
+        "endLine": 119,
+        "endChar": 39
+      },
+      "revId": "f81e82c1eab590ef723802bc9377ea879784c519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
