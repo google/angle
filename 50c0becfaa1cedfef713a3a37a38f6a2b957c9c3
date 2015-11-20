@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fb75bfb9_8b8a1891",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-20T18:56:21Z",
+      "side": 1,
+      "message": "done in patch 7 :)",
+      "parentUuid": "5b25eb9e_edabbbd9",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 5
+      },
+      "revId": "50c0becfaa1cedfef713a3a37a38f6a2b957c9c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fb75bfb9_62c24885",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-18T02:03:53Z",
       "side": 1,
       "message": "I think we should also try spicing in all the if statements here and eliminating the memcmp!",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 55
+      },
+      "revId": "50c0becfaa1cedfef713a3a37a38f6a2b957c9c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db847bce_f854ce4b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-20T18:56:21Z",
+      "side": 1,
+      "message": "Yupp :) will do that for all of these cls",
+      "parentUuid": "fb75bfb9_62c24885",
       "range": {
         "startLine": 89,
         "startChar": 0,
