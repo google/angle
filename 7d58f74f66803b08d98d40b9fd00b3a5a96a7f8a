@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76d4867d_9bca52c5",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-20T01:58:23Z",
+      "side": 1,
+      "message": "How about:  \"This hint may allow the created display to be more compatible and performant\"",
+      "range": {
+        "startLine": 41,
+        "startChar": 44,
+        "endLine": 42,
+        "endChar": 63
+      },
+      "revId": "7d58f74f66803b08d98d40b9fd00b3a5a96a7f8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b3453db_94f9cf73",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-20T01:58:23Z",
+      "side": 1,
+      "message": "I believe this whole block should be indented (ones below too).",
+      "range": {
+        "startLine": 40,
+        "startChar": 3,
+        "endLine": 43,
+        "endChar": 68
+      },
+      "revId": "7d58f74f66803b08d98d40b9fd00b3a5a96a7f8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b3453db_94c78f19",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-20T01:58:23Z",
+      "side": 1,
+      "message": "I think this should be more descriptive:\n\n\"eglGetPlatformDisplay will return EGL_NO_DISPLAY and generate the EGL_NOT_INITIALIZED error.\"",
+      "range": {
+        "startLine": 71,
+        "startChar": 49,
+        "endLine": 72,
+        "endChar": 46
+      },
+      "revId": "7d58f74f66803b08d98d40b9fd00b3a5a96a7f8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96d1fa8e_2df219c8",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-20T01:58:23Z",
+      "side": 1,
+      "message": "We should answer this before publishing.  I think we should not force all windows to use the provided visual ID because it is called a hint and we should have no problem supporting other visual IDs.",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 51
+      },
+      "revId": "7d58f74f66803b08d98d40b9fd00b3a5a96a7f8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
