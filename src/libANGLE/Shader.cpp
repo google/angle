@@ -170,6 +170,17 @@ int Shader::getTranslatedSourceLength() const
     return (static_cast<int>(mData.mTranslatedSource.length()) + 1);
 }
 
+int Shader::getTranslatedSourceWithDebugInfoLength() const
+{
+    const std::string &debugInfo = mImplementation->getDebugInfo();
+    if (debugInfo.empty())
+    {
+        return 0;
+    }
+
+    return (static_cast<int>(debugInfo.length()) + 1);
+}
+
 void Shader::getSourceImpl(const std::string &source, GLsizei bufSize, GLsizei *length, char *buffer)
 {
     int index = 0;
@@ -200,7 +211,7 @@ void Shader::getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer)
 
 void Shader::getTranslatedSourceWithDebugInfo(GLsizei bufSize, GLsizei *length, char *buffer) const
 {
-    std::string debugInfo(mImplementation->getDebugInfo());
+    const std::string &debugInfo = mImplementation->getDebugInfo();
     getSourceImpl(debugInfo, bufSize, length, buffer);
 }
 
