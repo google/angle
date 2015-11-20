@@ -13,11 +13,13 @@
 #include "libANGLE/Data.h"
 #include "libANGLE/State.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderStateCache.h"
+#include "libANGLE/renderer/d3d/RendererD3D.h"
 
 namespace rx
 {
 
-class Renderer11;
+struct RenderTargetDesc;
+struct Renderer11DeviceCaps;
 
 class StateManager11 final : angle::NonCopyable
 {
@@ -25,7 +27,9 @@ class StateManager11 final : angle::NonCopyable
     StateManager11();
     ~StateManager11();
 
-    void initialize(ID3D11DeviceContext *deviceContext, RenderStateCache *stateCache);
+    void initialize(ID3D11DeviceContext *deviceContext,
+                    RenderStateCache *stateCache,
+                    Renderer11DeviceCaps *renderer11DeviceCaps);
 
     void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits);
 
@@ -40,10 +44,17 @@ class StateManager11 final : angle::NonCopyable
 
     void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
 
+    void setViewport(const gl::Caps *caps, const gl::Rectangle &viewport, float zNear, float zFar);
+
     void forceSetBlendState() { mBlendStateIsDirty = true; }
     void forceSetDepthStencilState() { mDepthStencilStateIsDirty = true; }
     void forceSetRasterState() { mRasterizerStateIsDirty = true; }
     void forceSetScissorState() { mScissorStateIsDirty = true; }
+    void forceSetViewportState() { mViewportStateIsDirty = true; }
+    void setViewportBounds(const int width, const int height);
+
+    const dx_VertexConstants &getVertexConstants() const { return mVertexConstants; }
+    const dx_PixelConstants &getPixelConstants() const { return mPixelConstants; }
 
     void updateStencilSizeIfChanged(bool depthStencilInitialized, unsigned int stencilSize);
 
@@ -74,6 +85,20 @@ class StateManager11 final : angle::NonCopyable
     bool mCurScissorEnabled;
     gl::Rectangle mCurScissorRect;
 
+    // Currently applied viewport state
+    bool mViewportStateIsDirty;
+    gl::Rectangle mCurViewport;
+    float mCurNear;
+    float mCurFar;
+
+    // Things needed in viewport state
+    dx_VertexConstants mVertexConstants;
+    dx_PixelConstants mPixelConstants;
+
+    // Render target variables
+    gl::Extents mViewportBounds;
+
+    Renderer11DeviceCaps *mRenderer11DeviceCaps;
     ID3D11DeviceContext *mDeviceContext;
     RenderStateCache *mStateCache;
 };

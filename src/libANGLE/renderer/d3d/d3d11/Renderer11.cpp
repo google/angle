@@ -890,7 +890,7 @@ void Renderer11::initializeDevice()
     ASSERT(!mPixelTransfer);
     mPixelTransfer = new PixelTransfer11(this);
 
-    mStateManager.initialize(mDeviceContext, &mStateCache);
+    mStateManager.initialize(mDeviceContext, &mStateCache, &mRenderer11DeviceCaps);
 
     const gl::Caps &rendererCaps = getRendererCaps();
 
@@ -1444,96 +1444,15 @@ void Renderer11::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
     mStateManager.setScissorRectangle(scissor, enabled);
 }
 
-void Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
+void Renderer11::setViewport(const gl::Caps *caps,
+                             const gl::Rectangle &viewport,
+                             float zNear,
+                             float zFar,
+                             GLenum drawMode,
+                             GLenum frontFace,
                              bool ignoreViewport)
 {
-    gl::Rectangle actualViewport = viewport;
-    float actualZNear = gl::clamp01(zNear);
-    float actualZFar = gl::clamp01(zFar);
-    if (ignoreViewport)
-    {
-        actualViewport.x = 0;
-        actualViewport.y = 0;
-        actualViewport.width  = static_cast<int>(mRenderTargetDesc.width);
-        actualViewport.height = static_cast<int>(mRenderTargetDesc.height);
-        actualZNear = 0.0f;
-        actualZFar = 1.0f;
-    }
-
-    bool viewportChanged = mForceSetViewport || memcmp(&actualViewport, &mCurViewport, sizeof(gl::Rectangle)) != 0 ||
-                           actualZNear != mCurNear || actualZFar != mCurFar;
-
-    if (viewportChanged)
-    {
-        const gl::Caps& caps = getRendererCaps();
-
-        int dxMaxViewportBoundsX = static_cast<int>(caps.maxViewportWidth);
-        int dxMaxViewportBoundsY = static_cast<int>(caps.maxViewportHeight);
-        int dxMinViewportBoundsX = -dxMaxViewportBoundsX;
-        int dxMinViewportBoundsY = -dxMaxViewportBoundsY;
-
-        if (mRenderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3)
-        {
-            // Feature Level 9 viewports shouldn't exceed the dimensions of the rendertarget.
-            dxMaxViewportBoundsX = static_cast<int>(mRenderTargetDesc.width);
-            dxMaxViewportBoundsY = static_cast<int>(mRenderTargetDesc.height);
-            dxMinViewportBoundsX = 0;
-            dxMinViewportBoundsY = 0;
-        }
-
-        int dxViewportTopLeftX = gl::clamp(actualViewport.x, dxMinViewportBoundsX, dxMaxViewportBoundsX);
-        int dxViewportTopLeftY = gl::clamp(actualViewport.y, dxMinViewportBoundsY, dxMaxViewportBoundsY);
-        int dxViewportWidth =    gl::clamp(actualViewport.width, 0, dxMaxViewportBoundsX - dxViewportTopLeftX);
-        int dxViewportHeight =   gl::clamp(actualViewport.height, 0, dxMaxViewportBoundsY - dxViewportTopLeftY);
-
-        D3D11_VIEWPORT dxViewport;
-        dxViewport.TopLeftX = static_cast<float>(dxViewportTopLeftX);
-        dxViewport.TopLeftY = static_cast<float>(dxViewportTopLeftY);
-        dxViewport.Width =    static_cast<float>(dxViewportWidth);
-        dxViewport.Height =   static_cast<float>(dxViewportHeight);
-        dxViewport.MinDepth = actualZNear;
-        dxViewport.MaxDepth = actualZFar;
-
-        mDeviceContext->RSSetViewports(1, &dxViewport);
-
-        mCurViewport = actualViewport;
-        mCurNear = actualZNear;
-        mCurFar = actualZFar;
-
-        // On Feature Level 9_*, we must emulate large and/or negative viewports in the shaders using viewAdjust (like the D3D9 renderer).
-        if (mRenderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3)
-        {
-            mVertexConstants.viewAdjust[0] = static_cast<float>((actualViewport.width  - dxViewportWidth)  + 2 * (actualViewport.x - dxViewportTopLeftX)) / dxViewport.Width;
-            mVertexConstants.viewAdjust[1] = static_cast<float>((actualViewport.height - dxViewportHeight) + 2 * (actualViewport.y - dxViewportTopLeftY)) / dxViewport.Height;
-            mVertexConstants.viewAdjust[2] = static_cast<float>(actualViewport.width) / dxViewport.Width;
-            mVertexConstants.viewAdjust[3] = static_cast<float>(actualViewport.height) / dxViewport.Height;
-        }
-
-        mPixelConstants.viewCoords[0] = actualViewport.width  * 0.5f;
-        mPixelConstants.viewCoords[1] = actualViewport.height * 0.5f;
-        mPixelConstants.viewCoords[2] = actualViewport.x + (actualViewport.width  * 0.5f);
-        mPixelConstants.viewCoords[3] = actualViewport.y + (actualViewport.height * 0.5f);
-
-        // Instanced pointsprite emulation requires ViewCoords to be defined in the
-        // the vertex shader.
-        mVertexConstants.viewCoords[0] = mPixelConstants.viewCoords[0];
-        mVertexConstants.viewCoords[1] = mPixelConstants.viewCoords[1];
-        mVertexConstants.viewCoords[2] = mPixelConstants.viewCoords[2];
-        mVertexConstants.viewCoords[3] = mPixelConstants.viewCoords[3];
-
-        mPixelConstants.depthFront[0] = (actualZFar - actualZNear) * 0.5f;
-        mPixelConstants.depthFront[1] = (actualZNear + actualZFar) * 0.5f;
-
-        mVertexConstants.depthRange[0] = actualZNear;
-        mVertexConstants.depthRange[1] = actualZFar;
-        mVertexConstants.depthRange[2] = actualZFar - actualZNear;
-
-        mPixelConstants.depthRange[0] = actualZNear;
-        mPixelConstants.depthRange[1] = actualZFar;
-        mPixelConstants.depthRange[2] = actualZFar - actualZNear;
-    }
-
-    mForceSetViewport = false;
+    mStateManager.setViewport(caps, viewport, zNear, zFar);
 }
 
 bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize)
@@ -1675,7 +1594,6 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
         {
             renderTargetWidth = depthStencilRenderTarget->getWidth();
             renderTargetHeight = depthStencilRenderTarget->getHeight();
-            renderTargetFormat = depthStencilRenderTarget->getDXGIFormat();
         }
 
         // Unbind render target SRVs from the shader here to prevent D3D11 warnings.
@@ -1694,16 +1612,12 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
     }
 
     // Apply the render target and depth stencil
-    if (!mRenderTargetDescInitialized || !mDepthStencilInitialized ||
+    if (!mDepthStencilInitialized ||
         memcmp(framebufferRTVs, mAppliedRTVs, sizeof(framebufferRTVs)) != 0 ||
         reinterpret_cast<uintptr_t>(framebufferDSV) != mAppliedDSV)
     {
         mDeviceContext->OMSetRenderTargets(getRendererCaps().maxDrawBuffers, framebufferRTVs, framebufferDSV);
-
-        mRenderTargetDesc.width = renderTargetWidth;
-        mRenderTargetDesc.height = renderTargetHeight;
-        mRenderTargetDesc.format = renderTargetFormat;
-        mForceSetViewport = true;
+        mStateManager.setViewportBounds(renderTargetWidth, renderTargetHeight);
         mStateManager.forceSetBlendState();
 
         if (!mDepthStencilInitialized)
@@ -1716,7 +1630,6 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
             mAppliedRTVs[rtIndex] = reinterpret_cast<uintptr_t>(framebufferRTVs[rtIndex]);
         }
         mAppliedDSV = reinterpret_cast<uintptr_t>(framebufferDSV);
-        mRenderTargetDescInitialized = true;
         mDepthStencilInitialized = true;
     }
 
@@ -2429,23 +2342,27 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
         mDeviceContext->PSSetConstantBuffers(1, 1, &mDriverConstantBufferPS);
     }
 
-    if (memcmp(&mVertexConstants, &mAppliedVertexConstants, sizeof(dx_VertexConstants)) != 0)
+    const dx_VertexConstants &vertexConstants = mStateManager.getVertexConstants();
+    if (memcmp(&vertexConstants, &mAppliedVertexConstants, sizeof(dx_VertexConstants)) != 0)
     {
         ASSERT(mDriverConstantBufferVS != nullptr);
         if (mDriverConstantBufferVS)
         {
-            mDeviceContext->UpdateSubresource(mDriverConstantBufferVS, 0, NULL, &mVertexConstants, 16, 0);
-            memcpy(&mAppliedVertexConstants, &mVertexConstants, sizeof(dx_VertexConstants));
+            mDeviceContext->UpdateSubresource(mDriverConstantBufferVS, 0, NULL, &vertexConstants,
+                                              16, 0);
+            memcpy(&mAppliedVertexConstants, &vertexConstants, sizeof(dx_VertexConstants));
         }
     }
 
-    if (memcmp(&mPixelConstants, &mAppliedPixelConstants, sizeof(dx_PixelConstants)) != 0)
+    const dx_PixelConstants &pixelConstants = mStateManager.getPixelConstants();
+    if (memcmp(&pixelConstants, &mAppliedPixelConstants, sizeof(dx_PixelConstants)) != 0)
     {
         ASSERT(mDriverConstantBufferPS != nullptr);
         if (mDriverConstantBufferPS)
         {
-            mDeviceContext->UpdateSubresource(mDriverConstantBufferPS, 0, NULL, &mPixelConstants, 16, 0);
-            memcpy(&mAppliedPixelConstants, &mPixelConstants, sizeof(dx_PixelConstants));
+            mDeviceContext->UpdateSubresource(mDriverConstantBufferPS, 0, NULL, &pixelConstants, 16,
+                                              0);
+            memcpy(&mAppliedPixelConstants, &pixelConstants, sizeof(dx_PixelConstants));
         }
     }
 
@@ -2477,7 +2394,6 @@ void Renderer11::markAllStateDirty()
     }
     mAppliedDSV = DirtyPointer;
     mDepthStencilInitialized = false;
-    mRenderTargetDescInitialized = false;
 
     // We reset the current SRV data because it might not be in sync with D3D's state
     // anymore. For example when a currently used SRV is used as an RTV, D3D silently
@@ -2501,7 +2417,7 @@ void Renderer11::markAllStateDirty()
     mStateManager.forceSetDepthStencilState();
     mStateManager.forceSetRasterState();
     mStateManager.forceSetScissorState();
-    mForceSetViewport = true;
+    mStateManager.forceSetViewportState();
 
     mAppliedIB = NULL;
     mAppliedIBFormat = DXGI_FORMAT_UNKNOWN;

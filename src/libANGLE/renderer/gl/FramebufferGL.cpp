@@ -213,7 +213,10 @@ gl::Error FramebufferGL::clear(const gl::Data &data, GLbitfield mask)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error FramebufferGL::clearBufferfv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLfloat *values)
+gl::Error FramebufferGL::clearBufferfv(const gl::Data &data,
+                                       GLenum buffer,
+                                       GLint drawbuffer,
+                                       const GLfloat *values)
 {
     syncClearBufferState(buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
@@ -222,7 +225,10 @@ gl::Error FramebufferGL::clearBufferfv(const gl::State &state, GLenum buffer, GL
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error FramebufferGL::clearBufferuiv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLuint *values)
+gl::Error FramebufferGL::clearBufferuiv(const gl::Data &data,
+                                        GLenum buffer,
+                                        GLint drawbuffer,
+                                        const GLuint *values)
 {
     syncClearBufferState(buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
@@ -231,7 +237,10 @@ gl::Error FramebufferGL::clearBufferuiv(const gl::State &state, GLenum buffer, G
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error FramebufferGL::clearBufferiv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLint *values)
+gl::Error FramebufferGL::clearBufferiv(const gl::Data &data,
+                                       GLenum buffer,
+                                       GLint drawbuffer,
+                                       const GLint *values)
 {
     syncClearBufferState(buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
@@ -240,7 +249,11 @@ gl::Error FramebufferGL::clearBufferiv(const gl::State &state, GLenum buffer, GL
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error FramebufferGL::clearBufferfi(const gl::State &state, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil)
+gl::Error FramebufferGL::clearBufferfi(const gl::Data &data,
+                                       GLenum buffer,
+                                       GLint drawbuffer,
+                                       GLfloat depth,
+                                       GLint stencil)
 {
     syncClearBufferState(buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);

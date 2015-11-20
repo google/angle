@@ -358,7 +358,7 @@ gl::Error RendererD3D::applyRenderTarget(const gl::Data &data, GLenum drawMode, 
 
     float nearZ = data.state->getNearPlane();
     float farZ = data.state->getFarPlane();
-    setViewport(data.state->getViewport(), nearZ, farZ, drawMode,
+    setViewport(data.caps, data.state->getViewport(), nearZ, farZ, drawMode,
                 data.state->getRasterizerState().frontFace, ignoreViewport);
 
     setScissorRectangle(data.state->getScissor(), data.state->isScissorTestEnabled());

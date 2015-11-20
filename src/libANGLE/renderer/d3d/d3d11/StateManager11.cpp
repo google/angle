@@ -26,6 +26,12 @@ StateManager11::StateManager11()
       mScissorStateIsDirty(false),
       mCurScissorEnabled(false),
       mCurScissorRect(),
+      mViewportStateIsDirty(false),
+      mCurViewport(),
+      mCurNear(0.0f),
+      mCurFar(0.0f),
+      mViewportBounds(),
+      mRenderer11DeviceCaps(nullptr),
       mDeviceContext(nullptr),
       mStateCache(nullptr)
 {
@@ -74,10 +80,13 @@ StateManager11::~StateManager11()
 {
 }
 
-void StateManager11::initialize(ID3D11DeviceContext *deviceContext, RenderStateCache *stateCache)
+void StateManager11::initialize(ID3D11DeviceContext *deviceContext,
+                                RenderStateCache *stateCache,
+                                Renderer11DeviceCaps *renderer11DeviceCaps)
 {
-    mDeviceContext = deviceContext;
-    mStateCache    = stateCache;
+    mDeviceContext        = deviceContext;
+    mStateCache           = stateCache;
+    mRenderer11DeviceCaps = renderer11DeviceCaps;
 }
 
 void StateManager11::updateStencilSizeIfChanged(bool depthStencilInitialized,
@@ -87,6 +96,16 @@ void StateManager11::updateStencilSizeIfChanged(bool depthStencilInitialized,
     {
         mCurStencilSize           = stencilSize;
         mDepthStencilStateIsDirty = true;
+    }
+}
+
+void StateManager11::setViewportBounds(const int width, const int height)
+{
+    if (mRenderer11DeviceCaps->featureLevel <= D3D_FEATURE_LEVEL_9_3 &&
+        (mViewportBounds.width != width || mViewportBounds.height != height))
+    {
+        mViewportBounds       = gl::Extents(width, height, 1);
+        mViewportStateIsDirty = true;
     }
 }
 
@@ -296,6 +315,18 @@ void StateManager11::syncState(const gl::State &state, const gl::State::DirtyBit
                     mRasterizerStateIsDirty = true;
                 }
                 break;
+            case gl::State::DIRTY_BIT_DEPTH_RANGE:
+                if (state.getNearPlane() != mCurNear || state.getFarPlane() != mCurFar)
+                {
+                    mViewportStateIsDirty = true;
+                }
+                break;
+            case gl::State::DIRTY_BIT_VIEWPORT:
+                if (state.getViewport() != mCurViewport)
+                {
+                    mViewportStateIsDirty = true;
+                }
+                break;
             default:
                 break;
         }
@@ -462,6 +493,90 @@ void StateManager11::setScissorRectangle(const gl::Rectangle &scissor, bool enab
     mCurScissorRect      = scissor;
     mCurScissorEnabled   = enabled;
     mScissorStateIsDirty = false;
+}
+
+void StateManager11::setViewport(const gl::Caps *caps,
+                                 const gl::Rectangle &viewport,
+                                 float zNear,
+                                 float zFar)
+{
+    if (!mViewportStateIsDirty)
+        return;
+
+    float actualZNear = gl::clamp01(zNear);
+    float actualZFar  = gl::clamp01(zFar);
+
+    int dxMaxViewportBoundsX = static_cast<int>(caps->maxViewportWidth);
+    int dxMaxViewportBoundsY = static_cast<int>(caps->maxViewportHeight);
+    int dxMinViewportBoundsX = -dxMaxViewportBoundsX;
+    int dxMinViewportBoundsY = -dxMaxViewportBoundsY;
+
+    if (mRenderer11DeviceCaps->featureLevel <= D3D_FEATURE_LEVEL_9_3)
+    {
+        // Feature Level 9 viewports shouldn't exceed the dimensions of the rendertarget.
+        dxMaxViewportBoundsX = static_cast<int>(mViewportBounds.width);
+        dxMaxViewportBoundsY = static_cast<int>(mViewportBounds.height);
+        dxMinViewportBoundsX = 0;
+        dxMinViewportBoundsY = 0;
+    }
+
+    int dxViewportTopLeftX = gl::clamp(viewport.x, dxMinViewportBoundsX, dxMaxViewportBoundsX);
+    int dxViewportTopLeftY = gl::clamp(viewport.y, dxMinViewportBoundsY, dxMaxViewportBoundsY);
+    int dxViewportWidth    = gl::clamp(viewport.width, 0, dxMaxViewportBoundsX - dxViewportTopLeftX);
+    int dxViewportHeight   = gl::clamp(viewport.height, 0, dxMaxViewportBoundsY - dxViewportTopLeftY);
+
+    D3D11_VIEWPORT dxViewport;
+    dxViewport.TopLeftX = static_cast<float>(dxViewportTopLeftX);
+    dxViewport.TopLeftY = static_cast<float>(dxViewportTopLeftY);
+    dxViewport.Width    = static_cast<float>(dxViewportWidth);
+    dxViewport.Height   = static_cast<float>(dxViewportHeight);
+    dxViewport.MinDepth = actualZNear;
+    dxViewport.MaxDepth = actualZFar;
+
+    mDeviceContext->RSSetViewports(1, &dxViewport);
+
+    mCurViewport = viewport;
+    mCurNear     = actualZNear;
+    mCurFar      = actualZFar;
+
+    // On Feature Level 9_*, we must emulate large and/or negative viewports in the shaders
+    // using viewAdjust (like the D3D9 renderer).
+    if (mRenderer11DeviceCaps->featureLevel <= D3D_FEATURE_LEVEL_9_3)
+    {
+        mVertexConstants.viewAdjust[0] = static_cast<float>((viewport.width - dxViewportWidth) +
+                                                            2 * (viewport.x - dxViewportTopLeftX)) /
+                                         dxViewport.Width;
+        mVertexConstants.viewAdjust[1] = static_cast<float>((viewport.height - dxViewportHeight) +
+                                                            2 * (viewport.y - dxViewportTopLeftY)) /
+                                         dxViewport.Height;
+        mVertexConstants.viewAdjust[2] = static_cast<float>(viewport.width) / dxViewport.Width;
+        mVertexConstants.viewAdjust[3] = static_cast<float>(viewport.height) / dxViewport.Height;
+    }
+
+    mPixelConstants.viewCoords[0] = viewport.width * 0.5f;
+    mPixelConstants.viewCoords[1] = viewport.height * 0.5f;
+    mPixelConstants.viewCoords[2] = viewport.x + (viewport.width * 0.5f);
+    mPixelConstants.viewCoords[3] = viewport.y + (viewport.height * 0.5f);
+
+    // Instanced pointsprite emulation requires ViewCoords to be defined in the
+    // the vertex shader.
+    mVertexConstants.viewCoords[0] = mPixelConstants.viewCoords[0];
+    mVertexConstants.viewCoords[1] = mPixelConstants.viewCoords[1];
+    mVertexConstants.viewCoords[2] = mPixelConstants.viewCoords[2];
+    mVertexConstants.viewCoords[3] = mPixelConstants.viewCoords[3];
+
+    mPixelConstants.depthFront[0] = (actualZFar - actualZNear) * 0.5f;
+    mPixelConstants.depthFront[1] = (actualZNear + actualZFar) * 0.5f;
+
+    mVertexConstants.depthRange[0] = actualZNear;
+    mVertexConstants.depthRange[1] = actualZFar;
+    mVertexConstants.depthRange[2] = actualZFar - actualZNear;
+
+    mPixelConstants.depthRange[0] = actualZNear;
+    mPixelConstants.depthRange[1] = actualZFar;
+    mPixelConstants.depthRange[2] = actualZFar - actualZNear;
+
+    mViewportStateIsDirty = false;
 }
 
 }  // namespace rx

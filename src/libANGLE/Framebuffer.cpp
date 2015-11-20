@@ -587,8 +587,7 @@ Error Framebuffer::clearBufferfv(Context *context,
 
     // Sync the clear state
     context->syncRendererState(context->getState().clearStateBitMask());
-
-    return mImpl->clearBufferfv(context->getState(), buffer, drawbuffer, values);
+    return mImpl->clearBufferfv(context->getData(), buffer, drawbuffer, values);
 }
 
 Error Framebuffer::clearBufferuiv(Context *context,
@@ -604,7 +603,7 @@ Error Framebuffer::clearBufferuiv(Context *context,
     // Sync the clear state
     context->syncRendererState(context->getState().clearStateBitMask());
 
-    return mImpl->clearBufferuiv(context->getState(), buffer, drawbuffer, values);
+    return mImpl->clearBufferuiv(context->getData(), buffer, drawbuffer, values);
 }
 
 Error Framebuffer::clearBufferiv(Context *context,
@@ -620,7 +619,7 @@ Error Framebuffer::clearBufferiv(Context *context,
     // Sync the clear state
     context->syncRendererState(context->getState().clearStateBitMask());
 
-    return mImpl->clearBufferiv(context->getState(), buffer, drawbuffer, values);
+    return mImpl->clearBufferiv(context->getData(), buffer, drawbuffer, values);
 }
 
 Error Framebuffer::clearBufferfi(Context *context,
@@ -637,7 +636,7 @@ Error Framebuffer::clearBufferfi(Context *context,
     // Sync the clear state
     context->syncRendererState(context->getState().clearStateBitMask());
 
-    return mImpl->clearBufferfi(context->getState(), buffer, drawbuffer, depth, stencil);
+    return mImpl->clearBufferfi(context->getData(), buffer, drawbuffer, depth, stencil);
 }
 
 GLenum Framebuffer::getImplementationColorReadFormat() const
