@@ -1315,3 +1315,22 @@ TEST_F(MalformedShaderTest, TextureLodOffsetOutOfRange)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Test that default precision qualifier for uint is not accepted.
+// ESSL 3.00.4 section 4.5.4: Only allowed for float, int and sampler types.
+TEST_F(MalformedShaderTest, DefaultPrecisionUint)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "precision mediump uint;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "   my_FragColor = vec4(0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
