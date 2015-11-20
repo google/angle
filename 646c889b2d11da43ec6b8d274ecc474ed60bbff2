@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1bfc537c_efaeddeb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1650,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-20T22:33:24Z",
+      "side": 1,
+      "message": "is this actually necessary? it doesn\u0027t look like the scissor state depends on the FBO",
+      "range": {
+        "startLine": 1650,
+        "startChar": 8,
+        "endLine": 1650,
+        "endChar": 45
+      },
+      "revId": "646c889b2d11da43ec6b8d274ecc474ed60bbff2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bfc537c_6fbb0d33",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-20T22:33:24Z",
+      "side": 1,
+      "message": "same comment about early-return here",
+      "range": {
+        "startLine": 422,
+        "startChar": 3,
+        "endLine": 423,
+        "endChar": 5
+      },
+      "revId": "646c889b2d11da43ec6b8d274ecc474ed60bbff2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3bed97ca_1076eae4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-20T22:33:24Z",
+      "side": 1,
+      "message": "why not place this in the dirty bits iteration? (with a comment on why we need it for D3D11)",
+      "range": {
+        "startLine": 435,
+        "startChar": 0,
+        "endLine": 438,
+        "endChar": 9
+      },
+      "revId": "646c889b2d11da43ec6b8d274ecc474ed60bbff2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
