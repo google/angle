@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5b25eb9e_8c8fb0a1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1707,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-20T18:56:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d63372d5_cdc53d11",
+      "range": {
+        "startLine": 1703,
+        "startChar": 0,
+        "endLine": 1707,
+        "endChar": 9
+      },
+      "revId": "8effeca009d394b671ccd9676f051f1ce3abed80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "765726ea_f0cacc71",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-16T14:51:09Z",
       "side": 1,
       "message": "is this referenced anywhere?",
+      "range": {
+        "startLine": 77,
+        "startChar": 46,
+        "endLine": 77,
+        "endChar": 63
+      },
+      "revId": "8effeca009d394b671ccd9676f051f1ce3abed80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96d1fa8e_e92123e3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-20T18:56:21Z",
+      "side": 1,
+      "message": "Nope, this was carried over when D3D9/11 shared the same signature. Will change that :)",
+      "parentUuid": "765726ea_f0cacc71",
       "range": {
         "startLine": 77,
         "startChar": 46,
@@ -130,6 +178,30 @@
       "writtenOn": "2015-11-16T14:51:09Z",
       "side": 1,
       "message": "init all these in the constructor",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 33
+      },
+      "revId": "8effeca009d394b671ccd9676f051f1ce3abed80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6da7ea7_540eff7d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-20T18:56:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f642362f_d1fec4d2",
       "range": {
         "startLine": 58,
         "startChar": 0,
