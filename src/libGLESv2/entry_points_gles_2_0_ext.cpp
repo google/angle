@@ -390,6 +390,7 @@ void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader, GLsizei bufsize, 
             return;
         }
 
+        // Only returns extra info if ANGLE_GENERATE_SHADER_DEBUG_INFO is defined
         shaderObject->getTranslatedSourceWithDebugInfo(bufsize, length, source);
     }
 }

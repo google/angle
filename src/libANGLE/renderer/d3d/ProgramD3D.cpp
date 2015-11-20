@@ -1294,21 +1294,20 @@ LinkResult ProgramD3D::compileProgramExecutables(const gl::Data &data, gl::InfoL
     }
 
     // Auto-generate the geometry shader here, if we expect to be using point rendering in D3D11.
-    ShaderExecutableD3D *pointGS = nullptr;
     if (usesGeometryShader(GL_POINTS))
     {
-        getGeometryExecutableForPrimitiveType(data, GL_POINTS, &pointGS, &infoLog);
+        getGeometryExecutableForPrimitiveType(data, GL_POINTS, nullptr, &infoLog);
     }
 
+#if ANGLE_SHADER_DEBUG_INFO == ANGLE_ENABLED
     const ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(mData.getAttachedVertexShader());
-
-    if (usesGeometryShader(GL_POINTS) && pointGS)
+    if (usesGeometryShader() && mGeometryExecutable)
     {
         // Geometry shaders are currently only used internally, so there is no corresponding shader
         // object at the interface level. For now the geometry shader debug info is prepended to
         // the vertex shader.
         vertexShaderD3D->appendDebugInfo("// GEOMETRY SHADER BEGIN\n\n");
-        vertexShaderD3D->appendDebugInfo(pointGS->getDebugInfo());
+        vertexShaderD3D->appendDebugInfo(mGeometryExecutable->getDebugInfo());
         vertexShaderD3D->appendDebugInfo("\nGEOMETRY SHADER END\n\n\n");
     }
 
@@ -1323,9 +1322,11 @@ LinkResult ProgramD3D::compileProgramExecutables(const gl::Data &data, gl::InfoL
             GetImplAs<ShaderD3D>(mData.getAttachedFragmentShader());
         fragmentShaderD3D->appendDebugInfo(defaultPixelExecutable->getDebugInfo());
     }
+#endif
 
-    bool linkSuccess = (defaultVertexExecutable && defaultPixelExecutable &&
-                        (!usesGeometryShader(GL_POINTS) || pointGS));
+    bool linkSuccess =
+        (defaultVertexExecutable && defaultPixelExecutable &&
+         (!usesGeometryShader(GL_POINTS) || mGeometryExecutables[gl::PRIMITIVE_POINTS]));
     return LinkResult(linkSuccess, gl::Error(GL_NO_ERROR));
 }
 

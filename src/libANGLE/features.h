@@ -32,14 +32,10 @@
 #define ANGLE_PROGRAM_BINARY_LOAD ANGLE_ENABLED
 #endif
 
-// Append HLSL assembly to shader debug info. Defaults to enabled in Debug and off in Release.
-#if !defined(ANGLE_APPEND_ASSEMBLY_TO_SHADER_DEBUG_INFO)
-#if !defined(NDEBUG)
-#define ANGLE_APPEND_ASSEMBLY_TO_SHADER_DEBUG_INFO ANGLE_ENABLED
-#else
-#define ANGLE_APPEND_ASSEMBLY_TO_SHADER_DEBUG_INFO ANGLE_DISABLED
-#endif  // !defined(NDEBUG)
-#endif  // !defined(ANGLE_APPEND_ASSEMBLY_TO_SHADER_DEBUG_INFO)
+// Shader debug info
+#if !defined(ANGLE_SHADER_DEBUG_INFO)
+#define ANGLE_SHADER_DEBUG_INFO ANGLE_DISABLED
+#endif
 
 // Program link validation of precisions for uniforms. This feature was
 // requested by developers to allow non-conformant shaders to be used which
