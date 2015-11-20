@@ -1334,3 +1334,22 @@ TEST_F(MalformedShaderTest, DefaultPrecisionUint)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Test that sampler3D needs to be precision qualified.
+// ESSL 3.00.4 section 4.5.4: New ESSL 3.00 sampler types don't have predefined precision.
+TEST_F(MalformedShaderTest, NoPrecisionSampler3D)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "uniform sampler3D s;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "   my_FragColor = vec4(0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

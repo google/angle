@@ -423,11 +423,6 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
     floatingPoint.secondarySize = 1;
     floatingPoint.array = false;
 
-    TPublicType sampler;
-    sampler.primarySize = 1;
-    sampler.secondarySize = 1;
-    sampler.array = false;
-
     switch(shaderType)
     {
       case GL_FRAGMENT_SHADER:
@@ -440,20 +435,32 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
       default:
         assert(false && "Language not supported");
     }
-    // We set defaults for all the sampler types, even those that are
+    // Set defaults for sampler types that have default precision, even those that are
     // only available if an extension exists.
-    for (int samplerType = EbtGuardSamplerBegin + 1;
-         samplerType < EbtGuardSamplerEnd; ++samplerType)
-    {
-        sampler.type = static_cast<TBasicType>(samplerType);
-        symbolTable.setDefaultPrecision(sampler, EbpLow);
-    }
+    // New sampler types in ESSL3 don't have default precision. ESSL1 types do.
+    initSamplerDefaultPrecision(EbtSampler2D);
+    initSamplerDefaultPrecision(EbtSamplerCube);
+    // SamplerExternalOES is specified in the extension to have default precision.
+    initSamplerDefaultPrecision(EbtSamplerExternalOES);
+    // It isn't specified whether Sampler2DRect has default precision.
+    initSamplerDefaultPrecision(EbtSampler2DRect);
 
     InsertBuiltInFunctions(shaderType, shaderSpec, resources, symbolTable);
 
     IdentifyBuiltIns(shaderType, shaderSpec, resources, symbolTable);
 
     return true;
+}
+
+void TCompiler::initSamplerDefaultPrecision(TBasicType samplerType)
+{
+    ASSERT(samplerType > EbtGuardSamplerBegin && samplerType < EbtGuardSamplerEnd);
+    TPublicType sampler;
+    sampler.primarySize   = 1;
+    sampler.secondarySize = 1;
+    sampler.array         = false;
+    sampler.type          = samplerType;
+    symbolTable.setDefaultPrecision(sampler, EbpLow);
 }
 
 void TCompiler::setResourceString()
