@@ -143,144 +143,177 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
             return EGL_NO_DISPLAY;
         }
         break;
-
+      case EGL_PLATFORM_DEVICE_EXT:
+          if (!clientExtensions.platformDevice)
+          {
+              SetGlobalError(Error(EGL_BAD_PARAMETER, "Platform Device extension is not active"));
+              return EGL_NO_DISPLAY;
+          }
+          break;
       default:
         SetGlobalError(Error(EGL_BAD_CONFIG));
         return EGL_NO_DISPLAY;
     }
 
-    EGLint platformType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
-    EGLint deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
-    bool majorVersionSpecified = false;
-    bool minorVersionSpecified = false;
-    bool enableAutoTrimSpecified = false;
-    bool deviceTypeSpecified = false;
-
-    if (attrib_list)
+    if (platform == EGL_PLATFORM_ANGLE_ANGLE)
     {
-        for (const EGLint *curAttrib = attrib_list; curAttrib[0] != EGL_NONE; curAttrib += 2)
+        EGLint platformType          = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
+        EGLint deviceType            = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
+        bool majorVersionSpecified   = false;
+        bool minorVersionSpecified   = false;
+        bool enableAutoTrimSpecified = false;
+        bool deviceTypeSpecified     = false;
+
+        if (attrib_list)
         {
-            switch (curAttrib[0])
+            for (const EGLint *curAttrib = attrib_list; curAttrib[0] != EGL_NONE; curAttrib += 2)
             {
-              case EGL_PLATFORM_ANGLE_TYPE_ANGLE:
-                switch (curAttrib[1])
+                switch (curAttrib[0])
                 {
-                  case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
-                    break;
-
-                  case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
-                  case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
-                    if (!clientExtensions.platformANGLED3D)
+                    case EGL_PLATFORM_ANGLE_TYPE_ANGLE:
+                        switch (curAttrib[1])
                     {
+                        case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
+                            break;
+
+                        case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
+                        case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
+                            if (!clientExtensions.platformANGLED3D)
+                            {
+                                SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
+                                return EGL_NO_DISPLAY;
+                            }
+                            break;
+
+                        case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
+                        case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
+                            if (!clientExtensions.platformANGLEOpenGL)
+                            {
+                                SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
+                                return EGL_NO_DISPLAY;
+                            }
+                            break;
+
+                        default:
                         SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
                         return EGL_NO_DISPLAY;
                     }
+                    platformType = curAttrib[1];
                     break;
 
-                  case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
-                  case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
-                    if (!clientExtensions.platformANGLEOpenGL)
+                    case EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE:
+                        if (curAttrib[1] != EGL_DONT_CARE)
+                        {
+                            majorVersionSpecified = true;
+                        }
+                        break;
+
+                    case EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE:
+                        if (curAttrib[1] != EGL_DONT_CARE)
+                        {
+                            minorVersionSpecified = true;
+                        }
+                        break;
+
+                    case EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE:
+                        switch (curAttrib[1])
                     {
+                        case EGL_TRUE:
+                        case EGL_FALSE:
+                            break;
+                        default:
                         SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
                         return EGL_NO_DISPLAY;
                     }
+                    enableAutoTrimSpecified = true;
                     break;
 
-                  default:
-                    SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
-                    return EGL_NO_DISPLAY;
-                }
-                platformType = curAttrib[1];
-                break;
+                    case EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE:
+                        switch (curAttrib[1])
+                        {
+                            case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
+                            case EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE:
+                            case EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE:
+                                deviceTypeSpecified = true;
+                                break;
 
-              case EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE:
-                if (curAttrib[1] != EGL_DONT_CARE)
-                {
-                    majorVersionSpecified = true;
-                }
-                break;
+                            case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
+                                // This is a hidden option, accepted by the OpenGL back-end.
+                                break;
 
-              case EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE:
-                if (curAttrib[1] != EGL_DONT_CARE)
-                {
-                    minorVersionSpecified = true;
-                }
-                break;
-
-              case EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE:
-                switch (curAttrib[1])
-                {
-                  case EGL_TRUE:
-                  case EGL_FALSE:
-                    break;
-                  default:
-                    SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
-                    return EGL_NO_DISPLAY;
-                }
-                enableAutoTrimSpecified = true;
-                break;
-
-              case EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE:
-                switch (curAttrib[1])
-                {
-                  case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
-                  case EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE:
-                  case EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE:
-                    deviceTypeSpecified = true;
+                            default:
+                                SetGlobalError(Error(EGL_BAD_ATTRIBUTE,
+                                                     "Invalid value for "
+                                                     "EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE "
+                                                     "attrib"));
+                                return EGL_NO_DISPLAY;
+                        }
+                        deviceType = curAttrib[1];
                     break;
 
-                  case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
-                    // This is a hidden option, accepted by the OpenGL back-end.
-                    break;
-
-                  default:
-                    SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
-                    return EGL_NO_DISPLAY;
+                    default:
+                        break;
                 }
-                deviceType = curAttrib[1];
-                break;
-
-              default:
-                break;
             }
         }
-    }
 
-    if (!majorVersionSpecified && minorVersionSpecified)
+        if (!majorVersionSpecified && minorVersionSpecified)
+        {
+            SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
+            return EGL_NO_DISPLAY;
+        }
+
+        if (deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE &&
+            platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+        {
+            SetGlobalError(
+                Error(EGL_BAD_ATTRIBUTE,
+                      "EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE requires a device type of "
+                      "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE."));
+            return EGL_NO_DISPLAY;
+        }
+
+        if (enableAutoTrimSpecified && platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+        {
+            SetGlobalError(
+                Error(EGL_BAD_ATTRIBUTE,
+                      "EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE requires a device type of "
+                      "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE."));
+            return EGL_NO_DISPLAY;
+        }
+
+        if (deviceTypeSpecified && platformType != EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE &&
+            platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+        {
+            SetGlobalError(
+                Error(EGL_BAD_ATTRIBUTE,
+                      "EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE requires a device type of "
+                      "EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE or EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE."));
+            return EGL_NO_DISPLAY;
+        }
+
+        SetGlobalError(Error(EGL_SUCCESS));
+        return Display::GetDisplayFromAttribs(native_display, AttributeMap(attrib_list));
+    }
+    else if (platform == EGL_PLATFORM_DEVICE_EXT)
     {
-        SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
+        Device *eglDevice = reinterpret_cast<Device *>(native_display);
+        if (eglDevice == nullptr || !Device::IsValidDevice(eglDevice))
+        {
+            SetGlobalError(Error(EGL_BAD_ATTRIBUTE,
+                                 "native_display should be a valid EGL device if platform equals "
+                                 "EGL_PLATFORM_DEVICE_EXT"));
+            return EGL_NO_DISPLAY;
+        }
+
+        SetGlobalError(Error(EGL_SUCCESS));
+        return Display::GetDisplayFromDevice(native_display);
+    }
+    else
+    {
+        UNREACHABLE();
         return EGL_NO_DISPLAY;
     }
-
-    if (deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE &&
-        platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-    {
-        SetGlobalError(Error(EGL_BAD_ATTRIBUTE, "EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE requires a device type of "
-                                                "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE."));
-        return EGL_NO_DISPLAY;
-    }
-
-    if (enableAutoTrimSpecified &&
-        platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-    {
-        SetGlobalError(Error(EGL_BAD_ATTRIBUTE, "EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE requires a device type of "
-                                                "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE."));
-        return EGL_NO_DISPLAY;
-    }
-
-    if (deviceTypeSpecified &&
-        platformType != EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE &&
-        platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-    {
-        SetGlobalError(Error(EGL_BAD_ATTRIBUTE, "EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE requires a device type of "
-                                                "EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE or EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE."));
-        return EGL_NO_DISPLAY;
-    }
-
-    SetGlobalError(Error(EGL_SUCCESS));
-
-    EGLNativeDisplayType displayId = static_cast<EGLNativeDisplayType>(native_display);
-    return Display::getDisplay(displayId, AttributeMap(attrib_list));
 }
 
 // EGL_EXT_device_query

@@ -283,12 +283,12 @@ class Renderer11 : public RendererD3D
     void onSwap();
     void onBufferDelete(const Buffer11 *deleted);
 
+    egl::Error getEGLDevice(DeviceImpl **device) override;
+
   protected:
     void createAnnotator() override;
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
     gl::Error applyShadersImpl(const gl::Data &data, GLenum drawMode) override;
-
-    egl::Error createEGLDevice(DeviceD3D **outDevice) override;
 
     void syncState(const gl::State &state, const gl::State::DirtyBits &bitmask) override;
 
@@ -335,9 +335,12 @@ class Renderer11 : public RendererD3D
     HMODULE mDxgiModule;
     std::vector<D3D_FEATURE_LEVEL> mAvailableFeatureLevels;
     D3D_DRIVER_TYPE mDriverType;
+    bool mCreatedWithDeviceEXT;
+    DeviceD3D *mEGLDevice;
 
     HLSLCompiler mCompiler;
 
+    egl::Error initializeD3DDevice();
     void initializeDevice();
     void releaseDeviceResources();
     void release();

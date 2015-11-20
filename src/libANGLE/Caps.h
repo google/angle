@@ -471,6 +471,9 @@ struct ClientExtensions
     // EGL_EXT_platform_base
     bool platformBase;
 
+    // EGL_EXT_platform_device
+    bool platformDevice;
+
     // EGL_ANGLE_platform_angle
     bool platformANGLE;
 

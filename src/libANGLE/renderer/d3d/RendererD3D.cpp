@@ -45,8 +45,7 @@ RendererD3D::RendererD3D(egl::Display *display)
       mDeviceLost(false),
       mAnnotator(nullptr),
       mScratchMemoryBufferResetCounter(0),
-      mWorkaroundsInitialized(false),
-      mEGLDevice(nullptr)
+      mWorkaroundsInitialized(false)
 {
 }
 
@@ -57,8 +56,6 @@ RendererD3D::~RendererD3D()
 
 void RendererD3D::cleanup()
 {
-    SafeDelete(mEGLDevice);
-
     mScratchMemoryBuffer.resize(0);
     for (auto &incompleteTexture : mIncompleteTextures)
     {
@@ -735,21 +732,5 @@ gl::DebugAnnotator *RendererD3D::getAnnotator()
 {
     ASSERT(mAnnotator);
     return mAnnotator;
-}
-
-egl::Error RendererD3D::getEGLDevice(DeviceImpl **device)
-{
-    if (mEGLDevice == nullptr)
-    {
-        egl::Error error = createEGLDevice(&mEGLDevice);
-        if (error.isError())
-        {
-            return error;
-        }
-    }
-
-    *device = static_cast<DeviceImpl *>(mEGLDevice);
-
-    return egl::Error(EGL_SUCCESS);
 }
 }
