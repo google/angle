@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1bc3735c_9464c428",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-23T19:10:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76d4867d_9bca52c5",
+      "range": {
+        "startLine": 41,
+        "startChar": 44,
+        "endLine": 42,
+        "endChar": 63
+      },
+      "revId": "7d58f74f66803b08d98d40b9fd00b3a5a96a7f8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1b3453db_94f9cf73",
         "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
         "patchSetId": 5
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "db9abb77_72e75865",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-23T19:10:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b3453db_94f9cf73",
+      "range": {
+        "startLine": 40,
+        "startChar": 3,
+        "endLine": 43,
+        "endChar": 68
+      },
+      "revId": "7d58f74f66803b08d98d40b9fd00b3a5a96a7f8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1b3453db_94c78f19",
         "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
         "patchSetId": 5
@@ -59,6 +107,30 @@
       "writtenOn": "2015-11-20T01:58:23Z",
       "side": 1,
       "message": "I think this should be more descriptive:\n\n\"eglGetPlatformDisplay will return EGL_NO_DISPLAY and generate the EGL_NOT_INITIALIZED error.\"",
+      "range": {
+        "startLine": 71,
+        "startChar": 49,
+        "endLine": 72,
+        "endChar": 46
+      },
+      "revId": "7d58f74f66803b08d98d40b9fd00b3a5a96a7f8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b98d384_2cd2d3dc",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-23T19:10:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b3453db_94c78f19",
       "range": {
         "startLine": 71,
         "startChar": 49,
@@ -130,6 +202,30 @@
       "side": 1,
       "message": "Maybe x11_visual_display would work too because it binds the display to the visual id.",
       "parentUuid": "1648aa4e_13984b59",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 51
+      },
+      "revId": "7d58f74f66803b08d98d40b9fd00b3a5a96a7f8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bc3735c_b40f0045",
+        "filename": "extensions/EGL_ANGLE_x11_visual_hint.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-23T19:10:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b2123e5_0bc6c1be",
       "range": {
         "startLine": 76,
         "startChar": 0,
