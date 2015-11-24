@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b98d384_ac9a43dd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-24T15:43:32Z",
+      "side": 1,
+      "message": "Needs to be updated.",
+      "range": {
+        "startLine": 7,
+        "startChar": 10,
+        "endLine": 7,
+        "endChar": 35
+      },
+      "revId": "1c25caf312c02a556039136977bf198772a45581",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb9d0772_dadc9435",
+        "filename": "extensions/EGL_ANGLE_x11_visual.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-24T15:43:32Z",
+      "side": 1,
+      "message": "Should be just ANGLE_x11_visual",
+      "range": {
+        "startLine": 3,
+        "startChar": 4,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "1c25caf312c02a556039136977bf198772a45581",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b8ecb42_b1337a37",
+        "filename": "extensions/EGL_ANGLE_x11_visual.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-24T15:43:32Z",
+      "side": 1,
+      "message": "This should be EGL_X11_VISUAL_ID_ANGLE",
+      "range": {
+        "startLine": 70,
+        "startChar": 8,
+        "endLine": 70,
+        "endChar": 31
+      },
+      "revId": "1c25caf312c02a556039136977bf198772a45581",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b89173b_10d60aea",
+        "filename": "extensions/EGL_ANGLE_x11_visual.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-24T15:43:32Z",
+      "side": 1,
+      "message": "This should be just CreateWindowSurface.  We don\u0027t support CreatePlatformWindowSurface yet.",
+      "range": {
+        "startLine": 76,
+        "startChar": 42,
+        "endLine": 76,
+        "endChar": 69
+      },
+      "revId": "1c25caf312c02a556039136977bf198772a45581",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bc3735c_f436d8bd",
+        "filename": "extensions/EGL_ANGLE_x11_visual.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-24T15:43:32Z",
+      "side": 1,
+      "message": "Errors arn\u0027t returned in EGL, it would be something like: \n\n\"if \u003cerror case\u003e, an EGL_BAD_MATCH error is generated and EGL_NO_SURFACE is returned.\"",
+      "range": {
+        "startLine": 80,
+        "startChar": 28,
+        "endLine": 80,
+        "endChar": 50
+      },
+      "revId": "1c25caf312c02a556039136977bf198772a45581",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db9abb77_f563325a",
+        "filename": "extensions/EGL_ANGLE_x11_visual.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-11-24T15:43:32Z",
+      "side": 1,
+      "message": "an",
+      "range": {
+        "startLine": 90,
+        "startChar": 39,
+        "endLine": 90,
+        "endChar": 42
+      },
+      "revId": "1c25caf312c02a556039136977bf198772a45581",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
