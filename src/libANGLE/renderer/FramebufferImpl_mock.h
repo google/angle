@@ -55,7 +55,7 @@ class MockFramebufferImpl : public rx::FramebufferImpl
                            GLenum,
                            const gl::Framebuffer *));
 
-    MOCK_CONST_METHOD0(checkStatus, GLenum());
+    MOCK_CONST_METHOD0(checkStatus, bool());
 
     MOCK_METHOD0(destroy, void());
 };

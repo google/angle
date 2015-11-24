@@ -12,6 +12,7 @@
 
 #include "angle_gl.h"
 #include "common/angleutils.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/ImageIndex.h"
 
@@ -113,6 +114,7 @@ class FramebufferAttachment final
 
     GLsizei getWidth() const;
     GLsizei getHeight() const;
+    Extents getSize() const { return Extents(getWidth(), getHeight(), 1); }
     GLenum getInternalFormat() const;
     GLsizei getSamples() const;
     GLenum type() const { return mType; }

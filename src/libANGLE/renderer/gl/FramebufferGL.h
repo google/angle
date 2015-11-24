@@ -61,7 +61,7 @@ class FramebufferGL : public FramebufferImpl
     gl::Error blit(const gl::State &state, const gl::Rectangle &sourceArea, const gl::Rectangle &destArea,
                    GLbitfield mask, GLenum filter, const gl::Framebuffer *sourceFramebuffer) override;
 
-    GLenum checkStatus() const override;
+    bool checkStatus() const override;
 
     void syncDrawState() const;
 

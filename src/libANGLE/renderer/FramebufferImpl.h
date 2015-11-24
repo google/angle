@@ -56,7 +56,7 @@ class FramebufferImpl : angle::NonCopyable
     virtual gl::Error blit(const gl::State &state, const gl::Rectangle &sourceArea, const gl::Rectangle &destArea,
                            GLbitfield mask, GLenum filter, const gl::Framebuffer *sourceFramebuffer) = 0;
 
-    virtual GLenum checkStatus() const = 0;
+    virtual bool checkStatus() const = 0;
 
     const gl::Framebuffer::Data &getData() const { return mData; }
 

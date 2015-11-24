@@ -79,7 +79,7 @@ class FramebufferD3D : public FramebufferImpl
     gl::Error blit(const gl::State &state, const gl::Rectangle &sourceArea, const gl::Rectangle &destArea,
                    GLbitfield mask, GLenum filter, const gl::Framebuffer *sourceFramebuffer) override;
 
-    GLenum checkStatus() const override;
+    bool checkStatus() const override;
 
     const gl::AttachmentList &getColorAttachmentsForRender(const WorkaroundsD3D &workarounds) const;
 

@@ -104,6 +104,9 @@ struct Extents
     bool empty() const { return (width * height * depth) == 0; }
 };
 
+bool operator==(const Extents &lhs, const Extents &rhs);
+bool operator!=(const Extents &lhs, const Extents &rhs);
+
 struct Box
 {
     int x;

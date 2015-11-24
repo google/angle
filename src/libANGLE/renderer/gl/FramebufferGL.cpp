@@ -19,6 +19,7 @@
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/WorkaroundsGL.h"
+#include "platform/Platform.h"
 
 namespace rx
 {
@@ -292,10 +293,15 @@ gl::Error FramebufferGL::blit(const gl::State &state, const gl::Rectangle &sourc
     return gl::Error(GL_NO_ERROR);
 }
 
-GLenum FramebufferGL::checkStatus() const
+bool FramebufferGL::checkStatus() const
 {
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-    return mFunctions->checkFramebufferStatus(GL_FRAMEBUFFER);
+    GLenum status = mFunctions->checkFramebufferStatus(GL_FRAMEBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE)
+    {
+        ANGLEPlatformCurrent()->logWarning("GL framebuffer returned incomplete.");
+    }
+    return (status == GL_FRAMEBUFFER_COMPLETE);
 }
 
 GLuint FramebufferGL::getFramebufferID() const

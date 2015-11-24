@@ -30,6 +30,9 @@
 // TODO(jmadill): Figure out why this fails on the bots, but not locally.
 1108 WIN : dEQP-GLES3.functional.shaders.struct.local.dynamic_loop_struct_array_fragment = FAIL
 
+// We can't support distinct texture sizes in D3D11.
+1097 WIN : dEQP-GLES3.functional.fbo.completeness.size.distinct = FAIL
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 //  Temprory entries: they should be removed once the bugs are fixed.
@@ -457,7 +460,6 @@
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.rg8_snorm = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.rgb8_snorm = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.rgba8_snorm = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.completeness.size.distinct = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.layer.2darr_1_3 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.layer.2darr_4_15 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.layer.3d_1_15 = FAIL
