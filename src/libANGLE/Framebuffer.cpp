@@ -559,6 +559,11 @@ Error Framebuffer::invalidateSub(size_t count, const GLenum *attachments, const 
 
 Error Framebuffer::clear(Context *context, GLbitfield mask)
 {
+    if (context->getState().isRasterizerDiscardEnabled())
+    {
+        return gl::Error(GL_NO_ERROR);
+    }
+
     // Sync the clear state
     context->syncRendererState(context->getState().clearStateBitMask());
 
@@ -570,6 +575,11 @@ Error Framebuffer::clearBufferfv(Context *context,
                                  GLint drawbuffer,
                                  const GLfloat *values)
 {
+    if (context->getState().isRasterizerDiscardEnabled())
+    {
+        return gl::Error(GL_NO_ERROR);
+    }
+
     // Sync the clear state
     context->syncRendererState(context->getState().clearStateBitMask());
 
@@ -581,6 +591,11 @@ Error Framebuffer::clearBufferuiv(Context *context,
                                   GLint drawbuffer,
                                   const GLuint *values)
 {
+    if (context->getState().isRasterizerDiscardEnabled())
+    {
+        return gl::Error(GL_NO_ERROR);
+    }
+
     // Sync the clear state
     context->syncRendererState(context->getState().clearStateBitMask());
 
@@ -592,6 +607,11 @@ Error Framebuffer::clearBufferiv(Context *context,
                                  GLint drawbuffer,
                                  const GLint *values)
 {
+    if (context->getState().isRasterizerDiscardEnabled())
+    {
+        return gl::Error(GL_NO_ERROR);
+    }
+
     // Sync the clear state
     context->syncRendererState(context->getState().clearStateBitMask());
 
@@ -604,6 +624,11 @@ Error Framebuffer::clearBufferfi(Context *context,
                                  GLfloat depth,
                                  GLint stencil)
 {
+    if (context->getState().isRasterizerDiscardEnabled())
+    {
+        return gl::Error(GL_NO_ERROR);
+    }
+
     // Sync the clear state
     context->syncRendererState(context->getState().clearStateBitMask());
 
