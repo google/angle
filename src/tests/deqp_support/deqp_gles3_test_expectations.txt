@@ -608,11 +608,6 @@
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rg16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r16f = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth_component32f = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth_component24 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth_component16 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth32f_stencil8 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth24_stencil8 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.stencil.basic.depth32f_stencil8 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.stencil.basic.depth24_stencil8 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.stencil.basic.stencil_index8 = FAIL

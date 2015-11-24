@@ -413,8 +413,7 @@ bool ProgramD3DMetadata::usesBroadcast(const gl::Data &data) const
 
 bool ProgramD3DMetadata::usesFragDepth(const gl::Program::Data &programData) const
 {
-    // TODO(jmadill): Rename this or check if we need it for version 300
-    return (getMajorShaderVersion() < 300 && mFragmentShader->usesFragDepth());
+    return mFragmentShader->usesFragDepth();
 }
 
 bool ProgramD3DMetadata::usesPointCoord() const
