@@ -1529,7 +1529,9 @@
 
                         'conditions':
                         [
-                            ['OS=="linux"',
+                            # NOTE(smcgruer): Guarding with use_libpci allows gyp to run successfully
+                            # on systems without libpci, but the test targets will not compile or link.
+                            ['OS=="linux" and use_libpci==1',
                             {
                                 'ldflags':
                                 [
