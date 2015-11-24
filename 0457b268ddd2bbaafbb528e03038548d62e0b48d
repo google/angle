@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ba4c3bb_f3ab4ad9",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1002358
+      },
+      "writtenOn": "2015-11-24T17:19:34Z",
+      "side": 1,
+      "message": "This will draw every frame (and swap the buffers), even if there is no new content available. IIUC, if there are no calls to SwapBuffers, this will continue toggling between two buffers inappropriately.\n\nThis can be avoided by implementing\n\n- canDrawInCGLContext:pixelFormat:forLayerTime:displayTime:\n\nThat callback will be called by the system, and if you return YES, you will be asked to draw a frame and if you return NO, you won\u0027t.\n\nIf there has been a call to SwapBuffers, then make the next call to canDrawInCGLContext return YES and do the std::swap of the buffer pointers there.",
+      "revId": "0457b268ddd2bbaafbb528e03038548d62e0b48d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
