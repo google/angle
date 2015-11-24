@@ -422,8 +422,7 @@ gl::Error RendererD3D::applyState(const gl::Data &data, GLenum drawMode)
         return error;
     }
 
-    error = setDepthStencilState(data.state->getDepthStencilState(), data.state->getStencilRef(),
-                                 data.state->getStencilBackRef(), rasterizer.frontFace == GL_CCW);
+    error = setDepthStencilState(*data.state);
     if (error.isError())
     {
         return error;

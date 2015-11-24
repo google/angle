@@ -127,10 +127,7 @@ class Renderer11 : public RendererD3D
                             const gl::ColorF &blendColor,
                             unsigned int sampleMask) override;
 
-    gl::Error setDepthStencilState(const gl::DepthStencilState &depthStencilState,
-                                   int stencilRef,
-                                   int stencilBackRef,
-                                   bool frontFaceCCW) override;
+    gl::Error setDepthStencilState(const gl::State &glState) override;
 
     virtual void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
     virtual void setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,

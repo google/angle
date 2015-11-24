@@ -387,9 +387,6 @@
 1096 WIN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.equation_src_func_dst_func.reverse_subtract_one_minus_constant_alpha_one_minus_constant_color = FAIL
 1096 WIN : dEQP-GLES3.functional.fragment_ops.random.* = FAIL
 1096 WIN : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.* = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.render.resize.tex2d_rgba16f_stencil_rbo_stencil_index8 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.render.resize.tex2d_rgba8_stencil_rbo_stencil_index8 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.render.recreate_depth_stencil.tex2d_rgba8_stencil_rbo_stencil_index8 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.tex3d.rgba32i = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.tex3d.rgba16ui = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.tex3d.rgba8i = FAIL
@@ -417,11 +414,7 @@
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rg16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r16f = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.stencil.basic.depth32f_stencil8 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.stencil.basic.depth24_stencil8 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.stencil.basic.stencil_index8 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.stencil.attach.depth_only = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.stencil.attach.stencil_only = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_nearest = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_x_nearest = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_y_nearest = FAIL
@@ -494,8 +487,6 @@
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.r8_to_rg16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.r8_to_r32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.r8_to_r16f = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.depth_stencil.stencil_index8_basic = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.depth_stencil.stencil_index8_scale = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.default_framebuffer.rgba8_linear_out_of_bounds_blit_from_default = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.default_framebuffer.rgba8_linear_out_of_bounds_blit_to_default = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8_linear_out_of_bounds_blit_from_default = FAIL

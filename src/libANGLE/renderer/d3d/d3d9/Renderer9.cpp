@@ -1031,9 +1031,13 @@ gl::Error Renderer9::setBlendState(const gl::Framebuffer *framebuffer,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
-                                          int stencilBackRef, bool frontFaceCCW)
+gl::Error Renderer9::setDepthStencilState(const gl::State &glState)
 {
+    const auto &depthStencilState = glState.getDepthStencilState();
+    int stencilRef                = glState.getStencilRef();
+    int stencilBackRef            = glState.getStencilBackRef();
+    bool frontFaceCCW             = (glState.getRasterizerState().frontFace == GL_CCW);
+
     bool depthStencilStateChanged = mForceSetDepthStencilState ||
                                     memcmp(&depthStencilState, &mCurDepthStencilState, sizeof(gl::DepthStencilState)) != 0;
     bool stencilRefChanged = mForceSetDepthStencilState || stencilRef != mCurStencilRef ||

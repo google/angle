@@ -1377,10 +1377,9 @@ gl::Error Renderer11::setBlendState(const gl::Framebuffer *framebuffer,
     return mStateManager.setBlendState(framebuffer, blendState, blendColor, sampleMask);
 }
 
-gl::Error Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
-                                           int stencilBackRef, bool frontFaceCCW)
+gl::Error Renderer11::setDepthStencilState(const gl::State &glState)
 {
-    return mStateManager.setDepthStencilState(depthStencilState, stencilRef, stencilBackRef);
+    return mStateManager.setDepthStencilState(glState);
 }
 
 void Renderer11::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)

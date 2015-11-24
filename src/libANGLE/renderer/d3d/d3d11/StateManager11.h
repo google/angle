@@ -34,9 +34,7 @@ class StateManager11 final : angle::NonCopyable
                             const gl::ColorF &blendColor,
                             unsigned int sampleMask);
 
-    gl::Error setDepthStencilState(const gl::DepthStencilState &depthStencilState,
-                                   int stencilRef,
-                                   int stencilBackRef);
+    gl::Error setDepthStencilState(const gl::State &glState);
 
     gl::Error setRasterizerState(const gl::RasterizerState &rasterState);
 
@@ -63,6 +61,7 @@ class StateManager11 final : angle::NonCopyable
     int mCurStencilRef;
     int mCurStencilBackRef;
     unsigned int mCurStencilSize;
+    Optional<bool> mCurDisableDepth;
 
     // Currenly applied rasterizer state
     bool mRasterizerStateIsDirty;

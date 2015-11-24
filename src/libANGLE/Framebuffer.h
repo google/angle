@@ -117,6 +117,7 @@ class Framebuffer
     bool isEnabledColorAttachment(size_t colorAttachment) const;
     bool hasEnabledColorAttachment() const;
     size_t getNumColorBuffers() const;
+    bool hasDepth() const;
     bool hasStencil() const;
     int getSamples(const gl::Data &data) const;
     bool usingExtendedDrawBuffers() const;

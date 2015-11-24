@@ -325,6 +325,11 @@ size_t Framebuffer::getNumColorBuffers() const
     return mData.mColorAttachments.size();
 }
 
+bool Framebuffer::hasDepth() const
+{
+    return (mData.mDepthAttachment.isAttached() && mData.mDepthAttachment.getDepthSize() > 0);
+}
+
 bool Framebuffer::hasStencil() const
 {
     return (mData.mStencilAttachment.isAttached() && mData.mStencilAttachment.getStencilSize() > 0);

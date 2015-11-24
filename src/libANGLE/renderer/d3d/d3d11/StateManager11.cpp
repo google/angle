@@ -333,12 +333,23 @@ gl::Error StateManager11::setBlendState(const gl::Framebuffer *framebuffer,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error StateManager11::setDepthStencilState(const gl::DepthStencilState &depthStencilState,
-                                               int stencilRef,
-                                               int stencilBackRef)
+gl::Error StateManager11::setDepthStencilState(const gl::State &glState)
 {
-    if (mDepthStencilStateIsDirty)
+    const auto &fbo = *glState.getDrawFramebuffer();
+
+    // Disable the depth test/depth write if we are using a stencil-only attachment.
+    // This is because ANGLE emulates stencil-only with D24S8 on D3D11 - we should neither read
+    // nor write to the unused depth part of this emulated texture.
+    bool disableDepth = (!fbo.hasDepth() && fbo.hasStencil());
+
+    // CurDisableDepth is reset automatically here if we call forceSetDepthStencilState.
+    if (mDepthStencilStateIsDirty || !mCurDisableDepth.valid() ||
+        disableDepth != mCurDisableDepth.value())
     {
+        const auto &depthStencilState = glState.getDepthStencilState();
+        int stencilRef                = glState.getStencilRef();
+        int stencilBackRef            = glState.getStencilBackRef();
+
         // get the maximum size of the stencil ref
         unsigned int maxStencil = 0;
         if (depthStencilState.stencilTest && mCurStencilSize > 0)
@@ -352,8 +363,8 @@ gl::Error StateManager11::setDepthStencilState(const gl::DepthStencilState &dept
                (depthStencilState.stencilBackMask & maxStencil));
 
         ID3D11DepthStencilState *dxDepthStencilState = NULL;
-        gl::Error error =
-            mStateCache->getDepthStencilState(depthStencilState, &dxDepthStencilState);
+        gl::Error error = mStateCache->getDepthStencilState(depthStencilState, disableDepth,
+                                                            &dxDepthStencilState);
         if (error.isError())
         {
             return error;
@@ -376,6 +387,7 @@ gl::Error StateManager11::setDepthStencilState(const gl::DepthStencilState &dept
         mCurDepthStencilState = depthStencilState;
         mCurStencilRef        = stencilRef;
         mCurStencilBackRef    = stencilBackRef;
+        mCurDisableDepth      = disableDepth;
 
         mDepthStencilStateIsDirty = false;
     }
