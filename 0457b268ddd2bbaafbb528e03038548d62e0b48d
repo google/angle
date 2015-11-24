@@ -16,6 +16,24 @@
       "revId": "0457b268ddd2bbaafbb528e03038548d62e0b48d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bc3735c_34ddb093",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-24T20:59:18Z",
+      "side": 1,
+      "message": "Good catch, I had consider the case where frames are produced too quickly but not the contrary. Will do something similar to what you suggest.",
+      "parentUuid": "9ba4c3bb_f3ab4ad9",
+      "revId": "0457b268ddd2bbaafbb528e03038548d62e0b48d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
