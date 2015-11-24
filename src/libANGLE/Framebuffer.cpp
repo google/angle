@@ -373,7 +373,7 @@ GLenum Framebuffer::checkStatus(const gl::Data &data) const
             {
                 if (!formatCaps.renderable)
                 {
-                    return GL_FRAMEBUFFER_UNSUPPORTED;
+                    return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
                 }
 
                 if (formatInfo.depthBits > 0 || formatInfo.stencilBits > 0)
@@ -444,7 +444,7 @@ GLenum Framebuffer::checkStatus(const gl::Data &data) const
 
             if (!formatCaps.renderable)
             {
-                return GL_FRAMEBUFFER_UNSUPPORTED;
+                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
 
             if (formatInfo.depthBits == 0)
@@ -494,7 +494,7 @@ GLenum Framebuffer::checkStatus(const gl::Data &data) const
 
             if (!formatCaps.renderable)
             {
-                return GL_FRAMEBUFFER_UNSUPPORTED;
+                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
 
             if (formatInfo.stencilBits == 0)
