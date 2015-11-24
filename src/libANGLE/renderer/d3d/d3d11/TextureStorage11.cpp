@@ -2225,7 +2225,7 @@ gl::Error TextureStorage11_Cube::createSRV(int baseLevel, int mipLevels, DXGI_FO
     {
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
         srvDesc.Texture2DArray.MostDetailedMip = mTopLevel + baseLevel;
-        srvDesc.Texture2DArray.MipLevels       = mipLevels;
+        srvDesc.Texture2DArray.MipLevels = 1;
         srvDesc.Texture2DArray.FirstArraySlice = 0;
         srvDesc.Texture2DArray.ArraySize = CUBE_FACE_COUNT;
     }

@@ -904,14 +904,6 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
 
                 out << "    t.x = (u * 0.5f / m) + 0.5f;\n";
                 out << "    t.y = (v * 0.5f / m) + 0.5f;\n";
-
-                // Mip level computation.
-                out << "    float2 tSized = float2(t.x * width, t.y * height);\n"
-                       "    float2 dx = ddx(tSized);\n"
-                       "    float2 dy = ddy(tSized);\n"
-                       "    float lod = 0.5f * log2(max(dot(dx, dx), dot(dy, dy)));\n"
-                       "    mip = uint(min(max(round(lod), 0), levels - 1));\n"
-                       "    x.GetDimensions(mip, width, height, layers, levels);\n";
             }
             else if (IsIntegerSampler(textureFunction->sampler) &&
                      textureFunction->method != TextureFunction::FETCH)
