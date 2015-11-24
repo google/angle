@@ -1635,7 +1635,8 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
             // check for zero-sized default framebuffer, which is a special case.
             // in this case we do not wish to modify any state and just silently return false.
             // this will not report any gl error but will cause the calling method to return.
-            if (colorbuffer->getWidth() == 0 || colorbuffer->getHeight() == 0)
+            const gl::Extents &size = colorbuffer->getSize();
+            if (size.width == 0 || size.height == 0)
             {
                 return gl::Error(GL_NO_ERROR);
             }

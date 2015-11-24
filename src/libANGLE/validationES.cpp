@@ -543,9 +543,11 @@ static bool IsPartialBlit(gl::Context *context, const gl::FramebufferAttachment 
                           GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
                           GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1)
 {
-    if (srcX0 != 0 || srcY0 != 0 || dstX0 != 0 || dstY0 != 0 ||
-        dstX1 != writeBuffer->getWidth() || dstY1 != writeBuffer->getHeight() ||
-        srcX1 != readBuffer->getWidth() || srcY1 != readBuffer->getHeight())
+    const Extents &writeSize = writeBuffer->getSize();
+    const Extents &readSize  = readBuffer->getSize();
+
+    if (srcX0 != 0 || srcY0 != 0 || dstX0 != 0 || dstY0 != 0 || dstX1 != writeSize.width ||
+        dstY1 != writeSize.height || srcX1 != readSize.width || srcY1 != readSize.height)
     {
         return true;
     }
@@ -553,9 +555,8 @@ static bool IsPartialBlit(gl::Context *context, const gl::FramebufferAttachment 
     {
         const Rectangle &scissor = context->getState().getScissor();
 
-        return scissor.x > 0 || scissor.y > 0 ||
-               scissor.width < writeBuffer->getWidth() ||
-               scissor.height < writeBuffer->getHeight();
+        return scissor.x > 0 || scissor.y > 0 || scissor.width < writeSize.width ||
+               scissor.height < writeSize.height;
     }
     else
     {

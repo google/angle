@@ -538,10 +538,6 @@
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.rg8_snorm = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.rgb8_snorm = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.rgba8_snorm = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.completeness.layer.2darr_1_3 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.completeness.layer.2darr_4_15 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.completeness.layer.3d_1_15 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.completeness.layer.3d_4_15 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.render.resize.tex2d_rgba16f_stencil_rbo_stencil_index8 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.render.resize.tex2d_rgba8_stencil_rbo_stencil_index8 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.render.recreate_depth_stencil.tex2d_rgba8_stencil_rbo_stencil_index8 = FAIL

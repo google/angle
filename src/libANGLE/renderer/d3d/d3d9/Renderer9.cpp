@@ -1277,15 +1277,14 @@ gl::Error Renderer9::getNullColorbuffer(const gl::FramebufferAttachment *depthbu
 {
     ASSERT(depthbuffer);
 
-    GLsizei width  = depthbuffer->getWidth();
-    GLsizei height = depthbuffer->getHeight();
+    const gl::Extents &size = depthbuffer->getSize();
 
     // search cached nullcolorbuffers
     for (int i = 0; i < NUM_NULL_COLORBUFFER_CACHE_ENTRIES; i++)
     {
         if (mNullColorbufferCache[i].buffer != NULL &&
-            mNullColorbufferCache[i].width == width &&
-            mNullColorbufferCache[i].height == height)
+            mNullColorbufferCache[i].width == size.width &&
+            mNullColorbufferCache[i].height == size.height)
         {
             mNullColorbufferCache[i].lruCount = ++mMaxNullColorbufferLRU;
             *outColorBuffer = mNullColorbufferCache[i].buffer;
@@ -1294,7 +1293,7 @@ gl::Error Renderer9::getNullColorbuffer(const gl::FramebufferAttachment *depthbu
     }
 
     gl::Renderbuffer *nullRenderbuffer = new gl::Renderbuffer(createRenderbuffer(), 0);
-    gl::Error error = nullRenderbuffer->setStorage(GL_NONE, width, height);
+    gl::Error error = nullRenderbuffer->setStorage(GL_NONE, size.width, size.height);
     if (error.isError())
     {
         SafeDelete(nullRenderbuffer);
@@ -1316,8 +1315,8 @@ gl::Error Renderer9::getNullColorbuffer(const gl::FramebufferAttachment *depthbu
     delete oldest->buffer;
     oldest->buffer = nullbuffer;
     oldest->lruCount = ++mMaxNullColorbufferLRU;
-    oldest->width = width;
-    oldest->height = height;
+    oldest->width    = size.width;
+    oldest->height   = size.height;
 
     *outColorBuffer = nullbuffer;
     return gl::Error(GL_NO_ERROR);
