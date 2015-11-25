@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "db839b1b_2a22bf36",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-25T19:21:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db839b1b_aae4ef3e",
+      "range": {
+        "startLine": 34,
+        "startChar": 8,
+        "endLine": 34,
+        "endChar": 30
+      },
+      "revId": "fccdc39ea9229b9f107d0ff4f050c05d79fca57a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db839b1b_8ae72b43",
         "filename": "src/common/string_utils.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "3b89173b_937be4cf",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-25T19:21:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db839b1b_8ae72b43",
+      "range": {
+        "startLine": 85,
+        "startChar": 4,
+        "endLine": 85,
+        "endChar": 26
+      },
+      "revId": "fccdc39ea9229b9f107d0ff4f050c05d79fca57a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ba4c3bb_36ddc093",
         "filename": "src/tests/third_party/gpu_test_expectations/angle_config.h",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2015-11-25T18:46:43Z",
       "side": 1,
       "message": "nit: sort?",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 34
+      },
+      "revId": "fccdc39ea9229b9f107d0ff4f050c05d79fca57a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b89173b_1388d408",
+        "filename": "src/tests/third_party/gpu_test_expectations/angle_config.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-11-25T19:21:34Z",
+      "side": 1,
+      "message": "They are in the order in which they are defined in string_utils.h because I wanted to keep the different enum values together. What sorting do you suggest?",
+      "parentUuid": "9ba4c3bb_36ddc093",
       "range": {
         "startLine": 35,
         "startChar": 0,
