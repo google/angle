@@ -1083,6 +1083,8 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
     outExtensions->glTexture2DImage      = true;
     outExtensions->glTextureCubemapImage = true;
     outExtensions->glRenderbufferImage   = true;
+
+    outExtensions->flexibleSurfaceCompatibility = true;
 }
 
 gl::Error Renderer11::flush()

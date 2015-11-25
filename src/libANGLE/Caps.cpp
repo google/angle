@@ -615,7 +615,8 @@ DisplayExtensions::DisplayExtensions()
       glTextureCubemapImage(false),
       glTexture3DImage(false),
       glRenderbufferImage(false),
-      getAllProcAddresses(false)
+      getAllProcAddresses(false),
+      flexibleSurfaceCompatibility(false)
 {
 }
 
@@ -642,6 +643,7 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_KHR_gl_texture_3D_image",                   glTexture3DImage,               &extensionStrings);
     InsertExtensionString("EGL_KHR_gl_renderbuffer_image",                 glRenderbufferImage,            &extensionStrings);
     InsertExtensionString("EGL_KHR_get_all_proc_addresses",                getAllProcAddresses,            &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_flexible_surface_compatibilty",       flexibleSurfaceCompatibility,   &extensionStrings);
     // clang-format on
 
     return extensionStrings;

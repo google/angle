@@ -44,6 +44,8 @@ Surface::Surface(rx::SurfaceImpl *impl,
       mSwapBehavior(impl->getSwapBehavior())
 {
     mPostSubBufferRequested = (attributes.get(EGL_POST_SUB_BUFFER_SUPPORTED_NV, EGL_FALSE) == EGL_TRUE);
+    mFlexibleSurfaceCompatibilityRequested =
+        (attributes.get(EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE, EGL_FALSE) == EGL_TRUE);
 
     mFixedSize = (attributes.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE) == EGL_TRUE);
     if (mFixedSize)

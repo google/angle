@@ -426,6 +426,17 @@ EGLBoolean EGLAPIENTRY QuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint a
         }
         *value = eglSurface->isFixedSize();
         break;
+      case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
+          if (!display->getExtensions().flexibleSurfaceCompatibility)
+          {
+              SetGlobalError(
+                  Error(EGL_BAD_ATTRIBUTE,
+                        "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be used without "
+                        "EGL_ANGLE_flexible_surface_compatibility support."));
+              return EGL_FALSE;
+          }
+          *value = eglSurface->flexibleSurfaceCompatibilityRequested();
+          break;
       default:
         SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
         return EGL_FALSE;
@@ -589,7 +600,9 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
 
     if (readSurface)
     {
-        Error readCompatError = ValidateCompatibleConfigs(readSurface->getConfig(), context->getConfig(), readSurface->getType());
+        Error readCompatError =
+            ValidateCompatibleConfigs(display, readSurface->getConfig(), readSurface,
+                                      context->getConfig(), readSurface->getType());
         if (readCompatError.isError())
         {
             SetGlobalError(readCompatError);
@@ -603,7 +616,9 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
 
         if (drawSurface)
         {
-            Error drawCompatError = ValidateCompatibleConfigs(drawSurface->getConfig(), context->getConfig(), drawSurface->getType());
+            Error drawCompatError =
+                ValidateCompatibleConfigs(display, drawSurface->getConfig(), drawSurface,
+                                          context->getConfig(), drawSurface->getType());
             if (drawCompatError.isError())
             {
                 SetGlobalError(drawCompatError);

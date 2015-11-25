@@ -78,6 +78,11 @@ class Surface final : public gl::FramebufferAttachmentObject
     void onDetach() override {}
     GLuint getId() const override;
 
+    bool flexibleSurfaceCompatibilityRequested() const
+    {
+        return mFlexibleSurfaceCompatibilityRequested;
+    }
+
   private:
     virtual ~Surface();
     rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override { return mImplementation; }
@@ -98,6 +103,7 @@ class Surface final : public gl::FramebufferAttachmentObject
     const egl::Config *mConfig;
 
     bool mPostSubBufferRequested;
+    bool mFlexibleSurfaceCompatibilityRequested;
 
     bool mFixedSize;
     size_t mFixedWidth;

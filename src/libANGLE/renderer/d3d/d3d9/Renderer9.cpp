@@ -529,6 +529,8 @@ void Renderer9::generateDisplayExtensions(egl::DisplayExtensions *outExtensions)
     outExtensions->imageBase           = true;
     outExtensions->glTexture2DImage    = true;
     outExtensions->glRenderbufferImage = true;
+
+    outExtensions->flexibleSurfaceCompatibility = true;
 }
 
 void Renderer9::startScene()

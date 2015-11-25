@@ -343,6 +343,13 @@ Error ValidateCreateWindowSurface(Display *display, Config *config, EGLNativeWin
             }
             break;
 
+          case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
+              if (!displayExtensions.flexibleSurfaceCompatibility)
+              {
+                  return Error(EGL_BAD_ATTRIBUTE);
+              }
+              break;
+
           case EGL_WIDTH:
           case EGL_HEIGHT:
             if (!displayExtensions.windowFixedSize)
@@ -388,7 +395,9 @@ Error ValidateCreatePbufferSurface(Display *display, Config *config, const Attri
     {
         return error;
     }
-    
+
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+
     for (AttributeMap::const_iterator attributeIter = attributes.begin(); attributeIter != attributes.end(); attributeIter++)
     {
         EGLint attribute = attributeIter->first;
@@ -438,6 +447,16 @@ Error ValidateCreatePbufferSurface(Display *display, Config *config, const Attri
 
           case EGL_VG_ALPHA_FORMAT:
             break;
+
+          case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
+              if (!displayExtensions.flexibleSurfaceCompatibility)
+              {
+                  return Error(
+                      EGL_BAD_ATTRIBUTE,
+                      "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be used without "
+                      "EGL_ANGLE_flexible_surface_compatibility support.");
+              }
+              break;
 
           default:
             return Error(EGL_BAD_ATTRIBUTE);
@@ -549,6 +568,16 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
           case EGL_MIPMAP_TEXTURE:
             break;
 
+          case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
+              if (!displayExtensions.flexibleSurfaceCompatibility)
+              {
+                  return Error(
+                      EGL_BAD_ATTRIBUTE,
+                      "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be used without "
+                      "EGL_ANGLE_flexible_surface_compatibility support.");
+              }
+              break;
+
           default:
             return Error(EGL_BAD_ATTRIBUTE);
         }
@@ -593,28 +622,38 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
     return Error(EGL_SUCCESS);
 }
 
-Error ValidateCompatibleConfigs(const Config *config1, const Config *config2, EGLint surfaceType)
+Error ValidateCompatibleConfigs(const Display *display,
+                                const Config *config1,
+                                const Surface *surface,
+                                const Config *config2,
+                                EGLint surfaceType)
 {
-    // Config compatibility is defined in section 2.2 of the EGL 1.5 spec
 
-    bool colorBufferCompat = config1->colorBufferType == config2->colorBufferType;
-    if (!colorBufferCompat)
+    if (!surface->flexibleSurfaceCompatibilityRequested())
     {
-        return Error(EGL_BAD_MATCH, "Color buffer types are not compatible.");
-    }
+        // Config compatibility is defined in section 2.2 of the EGL 1.5 spec
 
-    bool colorCompat = config1->redSize == config2->redSize && config1->greenSize == config2->greenSize &&
-                       config1->blueSize == config2->blueSize && config1->alphaSize == config2->alphaSize &&
-                       config1->luminanceSize == config2->luminanceSize;
-    if (!colorCompat)
-    {
-        return Error(EGL_BAD_MATCH, "Color buffer sizes are not compatible.");
-    }
+        bool colorBufferCompat = config1->colorBufferType == config2->colorBufferType;
+        if (!colorBufferCompat)
+        {
+            return Error(EGL_BAD_MATCH, "Color buffer types are not compatible.");
+        }
 
-    bool dsCompat = config1->depthSize == config2->depthSize && config1->stencilSize == config2->stencilSize;
-    if (!dsCompat)
-    {
-        return Error(EGL_BAD_MATCH, "Depth-stencil buffer types are not compatible.");
+        bool colorCompat =
+            config1->redSize == config2->redSize && config1->greenSize == config2->greenSize &&
+            config1->blueSize == config2->blueSize && config1->alphaSize == config2->alphaSize &&
+            config1->luminanceSize == config2->luminanceSize;
+        if (!colorCompat)
+        {
+            return Error(EGL_BAD_MATCH, "Color buffer sizes are not compatible.");
+        }
+
+        bool dsCompat = config1->depthSize == config2->depthSize &&
+                        config1->stencilSize == config2->stencilSize;
+        if (!dsCompat)
+        {
+            return Error(EGL_BAD_MATCH, "Depth-stencil buffer types are not compatible.");
+        }
     }
 
     bool surfaceTypeCompat = (config1->surfaceType & config2->surfaceType & surfaceType) != 0;
