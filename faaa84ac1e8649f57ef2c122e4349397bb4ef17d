@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db9abb77_9b7bf7cf",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-25T20:11:59Z",
+      "side": 0,
+      "message": "suggestion: use ANGLEPlatformCurrent()-\u003elogWarning to record this.",
+      "range": {
+        "startLine": 108,
+        "startChar": 4,
+        "endLine": 108,
+        "endChar": 34
+      },
+      "revId": "faaa84ac1e8649f57ef2c122e4349397bb4ef17d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
