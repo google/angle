@@ -414,7 +414,6 @@
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rg16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r16f = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.stencil.attach.depth_only = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_nearest = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_x_nearest = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_y_nearest = FAIL

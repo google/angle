@@ -342,9 +342,13 @@ gl::Error StateManager11::setDepthStencilState(const gl::State &glState)
     // nor write to the unused depth part of this emulated texture.
     bool disableDepth = (!fbo.hasDepth() && fbo.hasStencil());
 
-    // CurDisableDepth is reset automatically here if we call forceSetDepthStencilState.
+    // Similarly we disable the stencil portion of the DS attachment if the app only binds depth.
+    bool disableStencil = (fbo.hasDepth() && !fbo.hasStencil());
+
+    // CurDisableDepth/Stencil are reset automatically after we call forceSetDepthStencilState.
     if (mDepthStencilStateIsDirty || !mCurDisableDepth.valid() ||
-        disableDepth != mCurDisableDepth.value())
+        disableDepth != mCurDisableDepth.value() || !mCurDisableStencil.valid() ||
+        disableStencil != mCurDisableStencil.value())
     {
         const auto &depthStencilState = glState.getDepthStencilState();
         int stencilRef                = glState.getStencilRef();
@@ -364,7 +368,7 @@ gl::Error StateManager11::setDepthStencilState(const gl::State &glState)
 
         ID3D11DepthStencilState *dxDepthStencilState = NULL;
         gl::Error error = mStateCache->getDepthStencilState(depthStencilState, disableDepth,
-                                                            &dxDepthStencilState);
+                                                            disableStencil, &dxDepthStencilState);
         if (error.isError())
         {
             return error;
@@ -388,6 +392,7 @@ gl::Error StateManager11::setDepthStencilState(const gl::State &glState)
         mCurStencilRef        = stencilRef;
         mCurStencilBackRef    = stencilBackRef;
         mCurDisableDepth      = disableDepth;
+        mCurDisableStencil    = disableStencil;
 
         mDepthStencilStateIsDirty = false;
     }

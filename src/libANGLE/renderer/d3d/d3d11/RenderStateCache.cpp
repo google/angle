@@ -300,6 +300,7 @@ bool RenderStateCache::compareDepthStencilStates(const gl::DepthStencilState &a,
 
 gl::Error RenderStateCache::getDepthStencilState(const gl::DepthStencilState &originalState,
                                                  bool disableDepth,
+                                                 bool disableStencil,
                                                  ID3D11DepthStencilState **outDSState)
 {
     if (!mDevice)
@@ -312,6 +313,13 @@ gl::Error RenderStateCache::getDepthStencilState(const gl::DepthStencilState &or
     {
         glState.depthTest = false;
         glState.depthMask = false;
+    }
+
+    if (disableStencil)
+    {
+        glState.stencilWritemask     = 0;
+        glState.stencilBackWritemask = 0;
+        glState.stencilTest          = false;
     }
 
     auto keyIter = mDepthStencilStateCache.find(glState);

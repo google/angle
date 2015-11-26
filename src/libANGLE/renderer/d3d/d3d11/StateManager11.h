@@ -62,6 +62,7 @@ class StateManager11 final : angle::NonCopyable
     int mCurStencilBackRef;
     unsigned int mCurStencilSize;
     Optional<bool> mCurDisableDepth;
+    Optional<bool> mCurDisableStencil;
 
     // Currenly applied rasterizer state
     bool mRasterizerStateIsDirty;
