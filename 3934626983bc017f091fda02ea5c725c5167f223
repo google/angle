@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b98d384_ef2d1dd0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-26T12:57:33Z",
+      "side": 1,
+      "message": "tag this with an appropriate ANGLE bug, opening one if necessary",
+      "revId": "3934626983bc017f091fda02ea5c725c5167f223",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db839b1b_edb8c1ea",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-26T12:57:33Z",
+      "side": 1,
+      "message": "wrap this in a helper function and use it in both places",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 36
+      },
+      "revId": "3934626983bc017f091fda02ea5c725c5167f223",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
