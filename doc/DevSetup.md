@@ -27,7 +27,8 @@ Download the ANGLE source by running the following commands:
 
 ```
 git clone https://chromium.googlesource.com/angle/angle
-python angle/scripts/bootstrap.py
+cd angle
+python scripts/bootstrap.py
 gclient sync
 git checkout master
 ```
