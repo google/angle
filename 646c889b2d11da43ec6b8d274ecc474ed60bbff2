@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "fbde9f59_8e483bb0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-30T23:01:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bfc537c_6fbb0d33",
+      "range": {
+        "startLine": 422,
+        "startChar": 3,
+        "endLine": 423,
+        "endChar": 5
+      },
+      "revId": "646c889b2d11da43ec6b8d274ecc474ed60bbff2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3bed97ca_1076eae4",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 5
@@ -59,6 +83,30 @@
       "writtenOn": "2015-11-20T22:33:24Z",
       "side": 1,
       "message": "why not place this in the dirty bits iteration? (with a comment on why we need it for D3D11)",
+      "range": {
+        "startLine": 435,
+        "startChar": 0,
+        "endLine": 438,
+        "endChar": 9
+      },
+      "revId": "646c889b2d11da43ec6b8d274ecc474ed60bbff2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1be45325_ef71fdc5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-30T23:01:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3bed97ca_1076eae4",
       "range": {
         "startLine": 435,
         "startChar": 0,
