@@ -7,6 +7,7 @@ The goal of ANGLE is to allow users of multiple operating systems to seamlessly 
 | OpenGL ES 3.0  |               |  nearing completion | nearing completion |   planned |
 [Level of OpenGL ES support via backing renderers]
 
+
 |             |    Direct3D 9  |   Direct3D 11  |   Desktop GL  |
 |------------:|:--------------:|:--------------:|:-------------:|
 | Windows     |        *       |        *       |       *       |
@@ -19,6 +20,9 @@ ANGLE v1.0.772 was certified compliant by passing the ES 2.0.3 conformance tests
 ANGLE is used as the default WebGL backend for both Google Chrome and Mozilla Firefox on Windows platforms. Chrome uses ANGLE for all graphics rendering on Windows, including the accelerated Canvas2D implementation and the Native Client sandbox environment.
 
 Portions of the ANGLE shader compiler are used as a shader validator and translator by WebGL implementations across multiple platforms. It is used on Mac OS X, Linux, and in mobile variants of the browsers. Having one shader validator helps to ensure that a consistent set of GLSL ES shaders are accepted across browsers and platforms. The shader translator can be used to translate shaders to other shading languages, and to optionally apply shader modifications to work around bugs or quirks in the native graphics drivers. The translator targets Desktop GLSL, Direct3D HLSL, and even ESSL for native GLES2 platforms.
+
+##Browsing
+Browse ANGLE's source in the [repository](https://chromium.googlesource.com/angle/angle)
 
 ##Building
 View the [Dev setup instructions](doc/DevSetup.md). For generating a Windows Store version of ANGLE view the [Windows Store instructions](doc/BuildingAngleForWindowsStore.md)
