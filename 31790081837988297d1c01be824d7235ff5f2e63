@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7bf38fea_95acc4af",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-30T22:42:41Z",
+      "side": 1,
+      "message": "Sorry, I meant to explain. \n\nIn another CR (https://chromium-review.googlesource.com/#/c/313444/), Geoff said \"GetImplAs, RTTI are not available in non-debug and chrome compiles.\", but RTTI is currently allowed in release standalone ANGLE builds. It seems odd for ANGLE and Chromium to diverge like this (my original change using dynamic_cast successfully compiled locally for all flavours!), so this change brings Chrome and ANGLE closer.",
+      "parentUuid": "5b8ecb42_1717de26",
+      "revId": "31790081837988297d1c01be824d7235ff5f2e63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3b89173b_b6bd2e85",
         "filename": "src/tests/deqp.gypi",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2015-11-30T22:33:08Z",
       "side": 1,
       "message": "how come you changed this? Chrome disables RTTI in Debug as well, hence why it was unconditionally enabled (which is should be). I also noticed the trybots didn\u0027t run the dEQP tests which is concerning.",
+      "range": {
+        "startLine": 1225,
+        "startChar": 39,
+        "endLine": 1225,
+        "endChar": 84
+      },
+      "revId": "31790081837988297d1c01be824d7235ff5f2e63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1be45325_5279d4d5",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1225,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-30T22:42:41Z",
+      "side": 1,
+      "message": "If this is left in Common_Base then the Debug_Base/Release_Base settings from common.gypi appear to override it, and there are build breaks. Therefore I had to move this out into Release_Base to override common.gypi.\n\nIf Chrome doesn\u0027t enable RTTI in debug builds then I presume I\u0027ll need to add an override for Debug_Base and Release_Base?",
+      "parentUuid": "3b89173b_b6bd2e85",
       "range": {
         "startLine": 1225,
         "startChar": 39,
