@@ -1476,22 +1476,6 @@
                         '<(angle_path)/util/util.gyp:angle_util',
                     ],
 
-                    'copies':
-                    [
-                        {
-                            'destination': '<(PRODUCT_DIR)/deqp_support',
-                            'files':
-                            [
-                                'deqp_support/dEQP-EGL-cases.txt.gz',
-                                'deqp_support/dEQP-GLES2-cases.txt.gz',
-                                'deqp_support/dEQP-GLES3-cases.txt.gz',
-                                'deqp_support/deqp_egl_test_expectations.txt',
-                                'deqp_support/deqp_gles2_test_expectations.txt',
-                                'deqp_support/deqp_gles3_test_expectations.txt',
-                            ],
-                        },
-                    ],
-
                     'direct_dependent_settings':
                     {
                         'include_dirs':
@@ -1558,19 +1542,6 @@
                             }],
                         ],
                     },
-
-                    'conditions':
-                    [
-                        ['angle_standalone==1',
-                        {
-                            'dependencies': [ 'angle_zlib' ],
-                            'export_dependent_settings': [ 'angle_zlib' ],
-                        },
-                        { # angle_standalone!=1
-                            'dependencies': [ '<(zlib_path)/zlib.gyp:zlib' ],
-                            'export_dependent_settings': [ '<(zlib_path)/zlib.gyp:zlib' ],
-                        }],
-                    ],
                 },
             ], # targets
         }], # angle_build_deqp_gtest_support

@@ -35,16 +35,17 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//  Temprory entries: they should be removed once the bugs are fixed.
+//  Temporary entries: they should be removed once the bugs are fixed.
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+// TODO(jmadill): Find why this fails when run in a certain sequence, but not singly.
+1098 WIN : dEQP-GLES3.functional.uniform_api.random.50 = FAIL
 
 // TODO(jmadill): triage these into permanent and temporary failures
 
 1089 WIN : dEQP-GLES3.functional.shaders.functions.invalid.local_function_prototype_vertex = FAIL
 1089 WIN : dEQP-GLES3.functional.shaders.functions.invalid.local_function_prototype_fragment = FAIL
-1089 WIN : dEQP-GLES3.functional.shaders.functions.invalid.overload_builtin_function_vertex = FAIL
-1089 WIN : dEQP-GLES3.functional.shaders.functions.invalid.overload_builtin_function_fragment = FAIL
 1091 WIN : dEQP-GLES3.functional.shaders.loops.for_constant_iterations.nested_sequence_vertex = FAIL
 1091 WIN : dEQP-GLES3.functional.shaders.loops.for_constant_iterations.nested_sequence_fragment = FAIL
 1091 WIN : dEQP-GLES3.functional.shaders.loops.for_constant_iterations.nested_tricky_dataflow_1_vertex = FAIL
@@ -61,7 +62,6 @@
 1091 WIN : dEQP-GLES3.functional.shaders.loops.do_while_constant_iterations.nested_tricky_dataflow_2_fragment = FAIL
 504 WIN : dEQP-GLES3.functional.shaders.struct.uniform.sampler_vertex = FAIL
 504 WIN : dEQP-GLES3.functional.shaders.struct.uniform.sampler_fragment = FAIL
-504 WIN : dEQP-GLES3.functional.shaders.struct.uniform.sampler_nested_vertex = FAIL
 504 WIN : dEQP-GLES3.functional.shaders.struct.uniform.sampler_nested_fragment = FAIL
 504 WIN : dEQP-GLES3.functional.shaders.struct.uniform.sampler_array_vertex = FAIL
 504 WIN : dEQP-GLES3.functional.shaders.struct.uniform.sampler_array_fragment = FAIL
@@ -83,11 +83,9 @@
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.usampler2d_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.isampler2darray_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.isampler2darray_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.usampler2darray_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.usampler2darray_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.isampler3d_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.isampler3d_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.usampler3d_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.usampler3d_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.sampler2dshadow_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.sampler2dshadow_fragment = FAIL
@@ -101,7 +99,6 @@
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlodoffset.isampler2d_vec4_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlodoffset.usampler2d_vec4_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlodoffset.usampler2d_vec4_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlodoffset.isampler3d_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlodoffset.isampler3d_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlodoffset.usampler3d_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlodoffset.usampler3d_fragment = FAIL
@@ -112,7 +109,6 @@
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usampler2d_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usampler2d_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.isamplercube_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.isamplercube_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usamplercube_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usamplercube_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.isampler2darray_vertex = FAIL
@@ -125,8 +121,6 @@
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usampler3d_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.sampler2dshadow_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.sampler2dshadow_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.samplercubeshadow_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.samplercubeshadow_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.sampler2darrayshadow_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.sampler2darrayshadow_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegradoffset.isampler2d_vertex = FAIL
@@ -211,34 +205,6 @@
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.usampler2darray_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.sampler2darrayshadow_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.sampler2darrayshadow_fragment = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.mediump_vertex.scalar = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.mediump_vertex.vec2 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.mediump_vertex.vec3 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.mediump_vertex.vec4 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.mediump_fragment.scalar = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.mediump_fragment.vec2 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.mediump_fragment.vec3 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.mediump_fragment.vec4 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.highp_vertex.scalar = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.highp_vertex.vec2 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.highp_vertex.vec3 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.highp_vertex.vec4 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.highp_fragment.scalar = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.highp_fragment.vec2 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.highp_fragment.vec3 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.asin.highp_fragment.vec4 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.atan2.mediump_vertex.vec2 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.atan2.mediump_vertex.vec4 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.atan2.mediump_fragment.vec2 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.atan2.mediump_fragment.vec4 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.atan2.highp_vertex.scalar = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.atan2.highp_vertex.vec2 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.atan2.highp_vertex.vec3 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.atan2.highp_vertex.vec4 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.atan2.highp_fragment.scalar = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.atan2.highp_fragment.vec2 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.atan2.highp_fragment.vec3 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.atan2.highp_fragment.vec4 = FAIL
 1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_vertex.scalar = FAIL
 1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_vertex.vec2 = FAIL
 1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_vertex.vec3 = FAIL
@@ -247,10 +213,6 @@
 1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_fragment.vec2 = FAIL
 1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_fragment.vec3 = FAIL
 1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_fragment.vec4 = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.modf.highp_vertex = FAIL
-1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.modf.highp_fragment = FAIL
-1094 WIN : dEQP-GLES3.functional.shaders.invariance.highp.loop_2 = FAIL
-1094 WIN : dEQP-GLES3.functional.shaders.invariance.mediump.loop_2 = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_clamp = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_repeat = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_mirror = FAIL
@@ -267,8 +229,6 @@
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.cube.base_level.linear_linear = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.nearest_nearest = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.linear_nearest = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.mipmap.3d.base_level.nearest_nearest = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.mipmap.3d.base_level.linear_nearest = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.swizzle.multi_channel.luminance_all_zero = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.swizzle.multi_channel.luminance_alpha_all_zero = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.swizzle.multi_channel.rg_all_zero = FAIL
@@ -294,11 +254,13 @@
 1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copytexsubimage2d.cube_luminance_alpha = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copytexsubimage2d.cube_rgb = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copytexsubimage2d.cube_rgba = FAIL
+1095 WIN : dEQP-GLES3.functional.texture.specification.teximage3d_pbo.rgb5_a1_3d = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.teximage3d_depth.depth_component32f_2d_array = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.teximage3d_depth.depth32f_stencil8_2d_array = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.teximage3d_depth_pbo.depth_component32f_2d_array = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.teximage3d_depth_pbo.depth32f_stencil8_2d_array = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.teximage3d_depth_pbo.depth_component24_2d_array = FAIL
+1095 WIN : dEQP-GLES3.functional.texture.specification.texsubimage3d_pbo.rgb5_a1_3d = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.texsubimage3d_depth.depth_component32f_2d_array = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.texsubimage3d_depth.depth32f_stencil8_2d_array = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.units.2_units.only_2d.3 = FAIL
@@ -418,9 +380,7 @@
 1096 WIN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.equation_src_func_dst_func.reverse_subtract_one_minus_constant_alpha_one_minus_constant_color = FAIL
 1096 WIN : dEQP-GLES3.functional.fragment_ops.random.* = FAIL
 1096 WIN : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.* = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.color0.rgb16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.depth.depth_component32 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rgb16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rgb9_e5 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.srgb_unsigned_byte = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.srgb8 = FAIL
@@ -496,25 +456,13 @@
 1097 WIN : dEQP-GLES3.functional.fbo.stencil.attach.depth_only = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.stencil.attach.stencil_only = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_nearest = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_linear = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_x_nearest = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_x_linear = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_y_nearest = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_y_linear = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_dst_x_nearest = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_dst_x_linear = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_dst_y_nearest = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_dst_y_linear = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_dst_x_nearest = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_dst_x_linear = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_dst_y_nearest = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_dst_y_linear = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_dst_x = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_dst_y = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_dst_x = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_dst_y = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba8_to_rgb8 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba8_to_rgb565 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba8_to_rgba32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba8_to_rgba16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba8_to_r11f_g11f_b10f = FAIL
@@ -537,7 +485,6 @@
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2_to_r32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgb10_a2_to_r16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba4_to_rgb8 = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba4_to_rgb565 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba4_to_rgba32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba4_to_rgba16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba4_to_r11f_g11f_b10f = FAIL
@@ -595,7 +542,6 @@
 1097 WIN : dEQP-GLES3.functional.fbo.blit.default_framebuffer.rgb8 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.default_framebuffer.rgb8_linear_out_of_bounds_blit_from_default = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.default_framebuffer.rgb8_linear_out_of_bounds_blit_to_default = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.blit.default_framebuffer.rgb565 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.default_framebuffer.rgb565_linear_out_of_bounds_blit_from_default = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.default_framebuffer.rgb565_linear_out_of_bounds_blit_to_default = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.blit.default_framebuffer.rg8_linear_out_of_bounds_blit_from_default = FAIL
@@ -778,41 +724,18 @@
 1098 WIN : dEQP-GLES3.functional.uniform_api.random.81 = FAIL
 1098 WIN : dEQP-GLES3.functional.uniform_api.random.83 = FAIL
 1098 WIN : dEQP-GLES3.functional.uniform_api.random.87 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_float = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond_float = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_vec2 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond_vec2 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_vec3 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond_vec3 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_vec4 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond_vec4 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_mat2 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_mat2_offset_1 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond_mat2 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_mat3 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_mat3_offset_1 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond_mat3 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_mat4 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_mat4_offset_1 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond_mat4 = FAIL
 1099 WIN : dEQP-GLES3.functional.attribute_location.bind_hole.mat2 = FAIL
 1099 WIN : dEQP-GLES3.functional.attribute_location.bind_hole.mat2x2 = FAIL
 1099 WIN : dEQP-GLES3.functional.attribute_location.layout_hole.mat2 = FAIL
 1099 WIN : dEQP-GLES3.functional.attribute_location.layout_hole.mat2x2 = FAIL
 1099 WIN : dEQP-GLES3.functional.attribute_location.mixed_hole.mat2 = FAIL
 1099 WIN : dEQP-GLES3.functional.attribute_location.mixed_hole.mat2x2 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_relink_hole.mat2 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.bind_relink_hole.mat2x2 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.mixed_relink_hole.mat2 = FAIL
-1099 WIN : dEQP-GLES3.functional.attribute_location.mixed_relink_hole.mat2x2 = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.buffer.draw_buffers = FAIL
-1101 WIN : dEQP-GLES3.functional.negative_api.buffer.read_buffer = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.buffer.renderbuffer_storage = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.buffer.renderbuffer_storage_multisample = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.texture.bindtexture = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage2d = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage2d_invalid_size = FAIL
-1101 WIN : dEQP-GLES3.functional.negative_api.texture.teximage3d = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.texture.texsubimage3d = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage3d = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage3d_invalid_buffer_target = FAIL
@@ -820,7 +743,6 @@
 1101 WIN : dEQP-GLES3.functional.negative_api.texture.texstorage3d = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.shader.link_program = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.shader.use_program = FAIL
-1101 WIN : dEQP-GLES3.functional.negative_api.shader.program_parameteri = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.shader.sampler_parameterfv = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.shader.gen_transform_feedbacks = FAIL
 1101 WIN : dEQP-GLES3.functional.negative_api.shader.delete_transform_feedbacks = FAIL
@@ -865,9 +787,6 @@
 1101 WIN : dEQP-GLES3.functional.state_query.integers.element_array_buffer_binding_getinteger = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.integers.element_array_buffer_binding_getinteger64 = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.integers.element_array_buffer_binding_getfloat = FAIL
-1101 WIN : dEQP-GLES3.functional.state_query.integers.transform_feedback_binding_getinteger = FAIL
-1101 WIN : dEQP-GLES3.functional.state_query.integers.transform_feedback_binding_getinteger64 = FAIL
-1101 WIN : dEQP-GLES3.functional.state_query.integers.transform_feedback_binding_getfloat = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.integers.sampler_binding_getboolean = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.integers.sampler_binding_getinteger = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.integers.sampler_binding_getinteger64 = FAIL
@@ -903,21 +822,13 @@
 1101 WIN : dEQP-GLES3.functional.state_query.sampler.sampler_texture_min_lod_getsamplerparameteri = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.sampler.sampler_texture_max_lod_getsamplerparameteri = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.fbo.framebuffer_attachment_x_size_rbo = FAIL
-1101 WIN : dEQP-GLES3.functional.state_query.fbo.framebuffer_unspecified_attachment_x_size_rbo = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.shader.program_attached_shaders = FAIL
-1101 WIN : dEQP-GLES3.functional.state_query.shader.program_active_uniform_types = FAIL
 1101 WIN : dEQP-GLES3.functional.state_query.shader.program_binary = FAIL
-1101 WIN : dEQP-GLES3.functional.state_query.internal_format.rgba_samples = FAIL
-1101 WIN : dEQP-GLES3.functional.state_query.internal_format.rgb_samples = FAIL
 1101 WIN : dEQP-GLES3.functional.polygon_offset.fixed16_render_with_units = FAIL
 1101 WIN : dEQP-GLES3.functional.polygon_offset.fixed24_render_with_units = FAIL
 1101 WIN : dEQP-GLES3.functional.flush_finish.flush = FAIL
 1101 WIN : dEQP-GLES3.functional.lifetime.gen.transform_feedback = FAIL
 1101 WIN : dEQP-GLES3.functional.lifetime.gen.vertex_array = FAIL
 1101 WIN : dEQP-GLES3.functional.lifetime.attach.deleted_input.buffer_vertex_array = FAIL
-1101 WIN : dEQP-GLES3.functional.lifetime.attach.deleted_name.buffer_vertex_array = FAIL
 1101 WIN : dEQP-GLES3.functional.lifetime.delete_active.transform_feedback = FAIL
 1101 WIN : dEQP-GLES3.functional.lifetime.delete_bound.transform_feedback = SKIP
-
-// TODO(jmadill): Find why this fails when run in a certain sequence, but not singly.
-1098 WIN : dEQP-GLES3.functional.uniform_api.random.50 = FAIL
