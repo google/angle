@@ -99,7 +99,6 @@
                         'ExceptionHandling': '0',
                         'EnableFunctionLevelLinking': 'true',
                         'MinimalRebuild': 'false',
-                        'RuntimeTypeInfo': 'true',
                         'WarningLevel': '4',
                     },
                     'VCLinkerTool':
@@ -142,6 +141,7 @@
                     {
                         'Optimization': '0',    # /Od
                         'BasicRuntimeChecks': '3',
+                        'RuntimeTypeInfo': 'true',
                         'conditions':
                         [
                             ['angle_build_winrt==1',
@@ -200,6 +200,7 @@
                     'VCCLCompilerTool':
                     {
                         'Optimization': '2',    # /Os
+                        'RuntimeTypeInfo': 'false',
                         'conditions':
                         [
                             ['angle_build_winrt==1',
