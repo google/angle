@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b8ecb42_1717de26",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-30T22:33:08Z",
+      "side": 1,
+      "message": "please open an ANGLE issue to track this. Also some justification would help explaining the need for your change, since it is fairly substantial",
+      "revId": "31790081837988297d1c01be824d7235ff5f2e63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b89173b_b6bd2e85",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1225,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-30T22:33:08Z",
+      "side": 1,
+      "message": "how come you changed this? Chrome disables RTTI in Debug as well, hence why it was unconditionally enabled (which is should be). I also noticed the trybots didn\u0027t run the dEQP tests which is concerning.",
+      "range": {
+        "startLine": 1225,
+        "startChar": 39,
+        "endLine": 1225,
+        "endChar": 84
+      },
+      "revId": "31790081837988297d1c01be824d7235ff5f2e63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
