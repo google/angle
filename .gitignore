@@ -13,6 +13,7 @@ Release_ARM/
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
+*.VC.opendb
 patches-*
 *.target.mk
 ipch
