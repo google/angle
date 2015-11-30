@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9b0923b2_e85a1334",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-30T23:18:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b89173b_7697462b",
+      "revId": "47ca4040e1248674401d8a280bde2547389bf0cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b8ecb42_777022e6",
         "filename": "src/libANGLE/Display.cpp",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "bbe987fc_711df84e",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-30T23:18:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b8ecb42_777022e6",
+      "revId": "47ca4040e1248674401d8a280bde2547389bf0cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ba4c3bb_991cdf55",
         "filename": "src/libANGLE/Display.cpp",
         "patchSetId": 3
@@ -47,6 +83,24 @@
       "writtenOn": "2015-11-30T15:46:54Z",
       "side": 1,
       "message": "How about an else that nulls the device.",
+      "revId": "47ca4040e1248674401d8a280bde2547389bf0cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7bf38fea_75e040eb",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-30T23:18:50Z",
+      "side": 1,
+      "message": "We shouldn\u0027t null the device here in case eglInitialize() is called again for this display. I\u0027ve added a comment for this.",
+      "parentUuid": "9ba4c3bb_991cdf55",
       "revId": "47ca4040e1248674401d8a280bde2547389bf0cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -76,6 +130,30 @@
     },
     {
       "key": {
+        "uuid": "3bd59733_33d5300f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-30T23:18:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b98d384_0f8a6992",
+      "range": {
+        "startLine": 583,
+        "startChar": 21,
+        "endLine": 583,
+        "endChar": 90
+      },
+      "revId": "47ca4040e1248674401d8a280bde2547389bf0cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb9d0772_94cc94b5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -87,6 +165,24 @@
       "writtenOn": "2015-11-30T15:46:54Z",
       "side": 1,
       "message": "nit: Add an else that nulls the device.",
+      "revId": "47ca4040e1248674401d8a280bde2547389bf0cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b0923b2_ee145b92",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2708,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-30T23:18:50Z",
+      "side": 1,
+      "message": "I deliberately left this non-null in case the renderer is reinitialized later. See the comment a couple of lines above.\n\nA key use of this is if the D3D device is lost, then ANGLE will keep the device here, reinitialization of the renderer will fail, and ANGLE will output a nice error message.",
+      "parentUuid": "bb9d0772_94cc94b5",
       "revId": "47ca4040e1248674401d8a280bde2547389bf0cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -116,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "fbde9f59_113b4cc7",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-30T23:18:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b8ecb42_9764ae28",
+      "range": {
+        "startLine": 44,
+        "startChar": 57,
+        "endLine": 44,
+        "endChar": 67
+      },
+      "revId": "47ca4040e1248674401d8a280bde2547389bf0cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ba4c3bb_d9166733",
         "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
         "patchSetId": 3
@@ -127,6 +247,24 @@
       "writtenOn": "2015-11-30T15:46:54Z",
       "side": 1,
       "message": "else with unreachable, the platform is validated above.",
+      "revId": "47ca4040e1248674401d8a280bde2547389bf0cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fbde9f59_d12dc485",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-11-30T23:18:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ba4c3bb_d9166733",
       "revId": "47ca4040e1248674401d8a280bde2547389bf0cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
