@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fbde9f59_cb5f5522",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-30T18:47:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb86e72b_6c4f7368",
+      "range": {
+        "startLine": 304,
+        "startChar": 8,
+        "endLine": 307,
+        "endChar": 14
+      },
+      "revId": "1a974635f0e7398a19b26f72ca1aa4e80764931e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1bc3735c_378db219",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-30T15:23:44Z",
       "side": 1,
       "message": "I think this name should change, something like forceUpdate.",
+      "range": {
+        "startLine": 43,
+        "startChar": 41,
+        "endLine": 43,
+        "endChar": 64
+      },
+      "revId": "1a974635f0e7398a19b26f72ca1aa4e80764931e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9bf043de_701df04e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-11-30T18:47:18Z",
+      "side": 1,
+      "message": "I think this is clearer than forceUpdate because forceUpdate could mean from anywhere but this is specifically if it hasn\u0027t been initialized, then we force update",
+      "parentUuid": "1bc3735c_378db219",
       "range": {
         "startLine": 43,
         "startChar": 41,
