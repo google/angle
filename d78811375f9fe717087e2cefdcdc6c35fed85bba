@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ba4c3bb_79c01ba0",
+        "filename": "src/tests/egl_tests/EGLX11VisualTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-11-30T22:38:05Z",
+      "side": 1,
+      "message": "I feel like these tests shouldn\u0027t be using ANGLETest at all, but rather start clean, like with EGLQueryContextTest. You end up doing a bit of a dance with OSWindow that makes me think you don\u0027t need the default ANGLETest fixture class.",
+      "range": {
+        "startLine": 27,
+        "startChar": 36,
+        "endLine": 27,
+        "endChar": 45
+      },
+      "revId": "d78811375f9fe717087e2cefdcdc6c35fed85bba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
