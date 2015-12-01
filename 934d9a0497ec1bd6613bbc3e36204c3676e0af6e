@@ -22,6 +22,30 @@
       "revId": "934d9a0497ec1bd6613bbc3e36204c3676e0af6e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bfe13e6_9c2725f6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T14:53:38Z",
+      "side": 1,
+      "message": "We can\u0027t use IsWindows8OrGreater from versionhelpers.h? https://msdn.microsoft.com/en-us/library/windows/desktop/dn424972(v\u003dvs.85).aspx",
+      "parentUuid": "5bf40b02_5e0ab534",
+      "range": {
+        "startLine": 55,
+        "startChar": 8,
+        "endLine": 60,
+        "endChar": 85
+      },
+      "revId": "934d9a0497ec1bd6613bbc3e36204c3676e0af6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
