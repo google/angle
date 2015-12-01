@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5bf40b02_7e0cd117",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T19:59:53Z",
+      "side": 1,
+      "message": "it\u0027s ok to delete null. Remove the if.",
+      "range": {
+        "startLine": 78,
+        "startChar": 12,
+        "endLine": 78,
+        "endChar": 22
+      },
+      "revId": "76395d6f1d08562826e9b15611781f2022c25f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fbf85ffc_bb1ca7f8",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T19:59:53Z",
+      "side": 1,
+      "message": "D3D_FEATURE_LEVEL_9_3 first",
+      "range": {
+        "startLine": 110,
+        "startChar": 33,
+        "endLine": 110,
+        "endChar": 54
+      },
+      "revId": "76395d6f1d08562826e9b15611781f2022c25f14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
