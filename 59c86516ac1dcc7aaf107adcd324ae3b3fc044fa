@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3bef5734_9d03a326",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T14:49:34Z",
+      "side": 1,
+      "message": "please add the documentation on the reasoning for the change to the CL description",
+      "revId": "59c86516ac1dcc7aaf107adcd324ae3b3fc044fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
