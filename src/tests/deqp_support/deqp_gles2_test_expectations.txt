@@ -266,7 +266,6 @@
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.renderbuffer.color0.rg16f = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.renderbuffer.color0.rgba16f = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.renderbuffer.color0.rgb16f = FAIL
-1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.renderbuffer.depth.depth_component32 = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgb_float = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgb_half_float_oes = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgba_float = FAIL

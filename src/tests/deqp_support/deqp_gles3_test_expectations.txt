@@ -387,7 +387,6 @@
 1096 WIN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.equation_src_func_dst_func.reverse_subtract_one_minus_constant_alpha_one_minus_constant_color = FAIL
 1096 WIN : dEQP-GLES3.functional.fragment_ops.random.* = FAIL
 1096 WIN : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.* = FAIL
-1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.depth.depth_component32 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rgb9_e5 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.srgb_unsigned_byte = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.srgb8 = FAIL
