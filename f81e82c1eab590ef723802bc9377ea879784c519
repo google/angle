@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3b18372c_9521c434",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-01T23:37:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b1b2bb8_29d8e9a2",
+      "range": {
+        "startLine": 105,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 38
+      },
+      "revId": "f81e82c1eab590ef723802bc9377ea879784c519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db271bf3_4d81edb2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-20T22:40:43Z",
       "side": 1,
       "message": "as per offline desc, can nuke these three",
+      "range": {
+        "startLine": 467,
+        "startChar": 33,
+        "endLine": 469,
+        "endChar": 52
+      },
+      "revId": "f81e82c1eab590ef723802bc9377ea879784c519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9bf043de_3958737d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-01T23:37:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db271bf3_4d81edb2",
       "range": {
         "startLine": 467,
         "startChar": 33,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "bbe987fc_776de848",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-01T23:37:17Z",
+      "side": 1,
+      "message": "hm.. It may be confusing why a gl::Extents is used for a render target description. I\u0027d rather use something like another struct that only has width and height or just two size_t variables",
+      "parentUuid": "1b153384_4728b072",
+      "range": {
+        "startLine": 113,
+        "startChar": 11,
+        "endLine": 113,
+        "endChar": 27
+      },
+      "revId": "f81e82c1eab590ef723802bc9377ea879784c519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb2a67bd_c94031e6",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2015-11-20T22:40:43Z",
       "side": 1,
       "message": "use ANGLE\u0027s Optional here. See common/Optional.h",
+      "range": {
+        "startLine": 111,
+        "startChar": 4,
+        "endLine": 119,
+        "endChar": 39
+      },
+      "revId": "f81e82c1eab590ef723802bc9377ea879784c519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db0f1bb0_1ed23d27",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-01T23:37:17Z",
+      "side": 1,
+      "message": "For RenderTargetDesc? Is it because we shouldn\u0027t use it unless setRenderTargetDesc has been called to set the values?",
+      "parentUuid": "bb2a67bd_c94031e6",
       "range": {
         "startLine": 111,
         "startChar": 4,
