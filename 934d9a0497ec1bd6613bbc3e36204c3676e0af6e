@@ -46,6 +46,30 @@
       "revId": "934d9a0497ec1bd6613bbc3e36204c3676e0af6e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5bf40b02_1e95cdff",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-01T15:02:48Z",
+      "side": 1,
+      "message": "It looks like we added some preprocessor stuff to wrap these functions in SystemInfo.cpp.  I\u0027m not sure why _WIN32_WINNT_WINBLUE is required for them and if we can ignore that now.",
+      "parentUuid": "1bfe13e6_9c2725f6",
+      "range": {
+        "startLine": 55,
+        "startChar": 8,
+        "endLine": 60,
+        "endChar": 85
+      },
+      "revId": "934d9a0497ec1bd6613bbc3e36204c3676e0af6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
