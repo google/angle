@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "5b316b81_f92773f4",
+        "filename": "extensions/EGL_ANGLE_flexible_surface_compatibility.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-12-01T23:23:23Z",
+      "side": 1,
+      "message": "Yes, I think that sounds sensible.",
+      "parentUuid": "3b18372c_d821b1e1",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 61,
+        "endChar": 32
+      },
+      "revId": "833dd97432ed940aa0dabea38ef9a8e18a37da87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bbe34749_214b4eab",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 2
