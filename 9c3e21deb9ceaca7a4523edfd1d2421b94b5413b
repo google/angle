@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5bcb2be2_4f55e544",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1559,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T23:42:14Z",
+      "side": 1,
+      "message": "setViewportBounds",
+      "range": {
+        "startLine": 1559,
+        "startChar": 22,
+        "endLine": 1559,
+        "endChar": 41
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9bd1238f_a8145b91",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1560,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T23:42:14Z",
+      "side": 1,
+      "message": "can remove this, given the above",
+      "range": {
+        "startLine": 1560,
+        "startChar": 22,
+        "endLine": 1560,
+        "endChar": 43
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fbbf7f30_e30e727b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1561,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T23:42:14Z",
+      "side": 1,
+      "message": "should the scissor state stuff be here? don\u0027t see it on the left",
+      "range": {
+        "startLine": 1561,
+        "startChar": 8,
+        "endLine": 1561,
+        "endChar": 45
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb7fc74b_a1149e91",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1574,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T23:42:14Z",
+      "side": 1,
+      "message": "can remove this",
+      "range": {
+        "startLine": 1574,
+        "startChar": 22,
+        "endLine": 1574,
+        "endChar": 52
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bbda67a7_69038552",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2339,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T23:42:14Z",
+      "side": 1,
+      "message": "resetViewportBounds. Also make this update the dirty bit for the viewport",
+      "range": {
+        "startLine": 2339,
+        "startChar": 18,
+        "endLine": 2339,
+        "endChar": 48
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9bd1238f_c8138fa5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T23:42:14Z",
+      "side": 1,
+      "message": "these are available from the gl::Data (from the caps member variable), so if you wanted to fix this, you can pass it down from applyRenderTarget (just pass the gl::Data)",
+      "range": {
+        "startLine": 491,
+        "startChar": 8,
+        "endLine": 491,
+        "endChar": 49
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dbd71b7d_cab263be",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T23:42:14Z",
+      "side": 1,
+      "message": "this can be areViewportBoundsValid() {  mViewportBounds.valid() }",
+      "range": {
+        "startLine": 62,
+        "startChar": 9,
+        "endLine": 62,
+        "endChar": 38
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7bd46f7d_e7c6821c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T23:42:14Z",
+      "side": 1,
+      "message": "we seem to use this exclusively for the viewport limits in FL9_3. I suggest we specialize it more.\n\n* call this setViewportBounds(const gl::Extents \u0026size)\n* inside, set Optional\u003cgl::Extents\u003e mViewportBounds\n* also set mViewportStateIsDirty\n* in applyRenderTarget, remove the calls to force and setInitialized\n\nRegarding using Extents, it\u0027s fine to ignore the last value. Extents is just another word for size. If you want you can also rename gl::Extents to gl::Extents3 and make a gl::Extents2 structure, or alternately add gl::Size, but I\u0027d be fine with keeping it as is with an unused z value.",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 58
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5bcb2be2_6f58a17e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T23:42:14Z",
+      "side": 1,
+      "message": "I know this is easier here, but I\u0027m not sure the State Manager should own these. Will think about this.",
+      "range": {
+        "startLine": 101,
+        "startChar": 3,
+        "endLine": 103,
+        "endChar": 38
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
