@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9bea031f_e0fcc22a",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1290,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T14:51:17Z",
+      "side": 1,
+      "message": "isRasterizerDiscardEnabled() ? GL_TRUE : GL_FALSE",
+      "range": {
+        "startLine": 1290,
+        "startChar": 10,
+        "endLine": 1290,
+        "endChar": 49
+      },
+      "revId": "50f98d98d1bee1cc639bb89b0ab5aab6fccbe869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
