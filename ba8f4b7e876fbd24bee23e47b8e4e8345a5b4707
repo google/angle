@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bbe34749_a1759ed9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-01T20:53:51Z",
+      "side": 1,
+      "message": "typo: origiNal",
+      "range": {
+        "startLine": 300,
+        "startChar": 83,
+        "endLine": 300,
+        "endChar": 84
+      },
+      "revId": "ba8f4b7e876fbd24bee23e47b8e4e8345a5b4707",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3bc677da_65bc46de",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-01T20:53:51Z",
+      "side": 1,
+      "message": "nit: copiedState sounds weird, copied isn\u0027t the most important property of that variable, adjustedState maybe?",
+      "revId": "ba8f4b7e876fbd24bee23e47b8e4e8345a5b4707",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
