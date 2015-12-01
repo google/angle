@@ -26,9 +26,12 @@
 // Don't run these tests for faster turnover
 998 WIN LINUX : dEQP-GLES3.performance.* = SKIP
 998 WIN LINUX : dEQP-GLES3.stress.* = SKIP
+1101 WIN : dEQP-GLES3.functional.flush_finish.* = FAIL
 
-// TODO(jmadill): Figure out why this fails on the bots, but not locally.
+// TODO(jmadill): Figure out why these fail on the bots, but not locally.
 1108 WIN : dEQP-GLES3.functional.shaders.struct.local.dynamic_loop_struct_array_fragment = FAIL
+1094 WIN : dEQP-GLES3.functional.shaders.invariance.highp.loop_2 = FAIL
+1094 WIN : dEQP-GLES3.functional.shaders.invariance.mediump.loop_2 = FAIL
 
 // We can't support distinct texture sizes in D3D11.
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.size.distinct = FAIL
@@ -41,6 +44,10 @@
 
 // TODO(jmadill): Find why this fails when run in a certain sequence, but not singly.
 1098 WIN : dEQP-GLES3.functional.uniform_api.random.50 = FAIL
+
+// TODO(jmadill): This seems to fail only on certain NVidia configurations.
+1097 WIN : dEQP-GLES3.functional.fbo.blit.conversion.rgba8_to_rgb565 = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.blit.default_framebuffer.rgb565 = FAIL
 
 // TODO(jmadill): triage these into permanent and temporary failures
 
@@ -822,7 +829,6 @@
 1101 WIN : dEQP-GLES3.functional.state_query.shader.program_binary = FAIL
 1101 WIN : dEQP-GLES3.functional.polygon_offset.fixed16_render_with_units = FAIL
 1101 WIN : dEQP-GLES3.functional.polygon_offset.fixed24_render_with_units = FAIL
-1101 WIN : dEQP-GLES3.functional.flush_finish.flush = FAIL
 1101 WIN : dEQP-GLES3.functional.lifetime.gen.transform_feedback = FAIL
 1101 WIN : dEQP-GLES3.functional.lifetime.gen.vertex_array = FAIL
 1101 WIN : dEQP-GLES3.functional.lifetime.attach.deleted_input.buffer_vertex_array = FAIL

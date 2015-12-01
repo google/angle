@@ -23,6 +23,23 @@
 //  91531 MAC WIN LINUX : conformance_more_* = SKIP
 //  91532 MAC NVIDIA 0x0640 : tex_image_and_sub_image_2d_with_video = PASS FAIL
 
+// TODO(jmadill): Figure out why these fail on the bots, but not locally.
+1018 WIN : dEQP-GLES2.functional.shaders.invariance.highp.loop_2 = FAIL
+1018 WIN : dEQP-GLES2.functional.shaders.invariance.mediump.loop_2 = FAIL
+
+// Skip these tests due to timeouts
+1034 WIN LINUX MAC : dEQP-GLES2.functional.flush_finish.* = SKIP
+
+// Don't run these tests for faster turnover
+998 WIN LINUX MAC : dEQP-GLES2.performance.* = SKIP
+998 WIN LINUX MAC : dEQP-GLES2.stress.* = SKIP
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//  Temporary entries: they should be removed once the bugs are fixed.
+//
+////////////////////////////////////////////////////////////////////////////////
+
 // TODO(jmadill): triage these into temporary and permanent suppressions
 
 // Windows only failures
@@ -182,8 +199,6 @@
 504 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.array_in_struct.sampler2D_samplerCube_both = FAIL
 504 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.nested_structs_arrays.sampler2D_samplerCube_both = FAIL
 504 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.nested_structs_arrays.sampler2D_samplerCube_fragment = FAIL
-1034 LINUX : dEQP-GLES2.functional.flush_finish.flush = FAIL
-1034 LINUX : dEQP-GLES2.functional.flush_finish.finish = FAIL
 1019 LINUX : dEQP-GLES2.functional.texture.size.cube.256x256_rgba4444 = FAIL
 1019 LINUX : dEQP-GLES2.functional.texture.size.cube.512x512_rgba4444 = FAIL
 1020 LINUX : dEQP-GLES2.functional.texture.mipmap.2d.projected.nearest_linear* = FAIL
@@ -223,8 +238,6 @@
 1143 MAC : dEQP-GLES2.functional.texture.size.cube.512x512_rgba4444 = FAIL
 1143 MAC : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
 1143 MAC : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_* = FAIL
-1143 MAC : dEQP-GLES2.functional.flush_finish.flush = FAIL
-1143 MAC : dEQP-GLES2.functional.flush_finish.finish = FAIL
 
 // Windows and Linux failures
 1015 WIN LINUX : dEQP-GLES2.functional.shaders.functions.invalid.local_function_prototype_vertex = FAIL
@@ -286,16 +299,3 @@
 1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond_mat4_offset_1 = FAIL
 1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond_mat4 = FAIL
 1032 WIN LINUX MAC : dEQP-GLES2.functional.state_query.shader.program_attached_shaders = FAIL
-
-// Skip this test due to timeouts
-1034 WIN LINUX MAC : dEQP-GLES2.functional.flush_finish.finish_wait = SKIP
-
-// Don't run these tests for faster turnover
-998 WIN LINUX MAC : dEQP-GLES2.performance.* = SKIP
-998 WIN LINUX MAC : dEQP-GLES2.stress.* = SKIP
-
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Temprory entries: they should be removed once the bugs are fixed.
-//
-////////////////////////////////////////////////////////////////////////////////
