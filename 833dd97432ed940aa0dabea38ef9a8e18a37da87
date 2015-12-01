@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1b2b7319_344170e8",
+        "filename": "extensions/EGL_ANGLE_flexible_surface_compatibility.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-12-01T16:04:43Z",
+      "side": 1,
+      "message": "Extensions which make changes to the spec should do so in a way that\u0027s controllable by the app-- it\u0027s not really fair game to make a blanket change to the specified behavior via an extension that the application may not even know to check for. Is there a way to make this enable/disable, or otherwise enabled by request only?",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 61,
+        "endChar": 32
+      },
+      "revId": "833dd97432ed940aa0dabea38ef9a8e18a37da87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bbe34749_214b4eab",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 2
