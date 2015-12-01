@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3b18372c_d821b1e1",
+        "filename": "extensions/EGL_ANGLE_flexible_surface_compatibility.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2015-12-01T21:50:40Z",
+      "side": 1,
+      "message": "Would it be ok to add an extra surface attrib (EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE ?)\nthat, when set, would allow making the surface current with contexts with different configs?",
+      "parentUuid": "1b2b7319_344170e8",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 61,
+        "endChar": 32
+      },
+      "revId": "833dd97432ed940aa0dabea38ef9a8e18a37da87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bbe34749_214b4eab",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 2
