@@ -16,6 +16,24 @@
       "revId": "002ce2d9faf406e4d877840b30cc8e6a88cbe7eb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db09dbde_ba22f1e5",
+        "filename": "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm",
+        "patchSetId": 5
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-01T15:09:58Z",
+      "side": 1,
+      "message": "Makes sense, I checked the doc for canDrawInCGLContext, and it says that it will be called before every drawInCGLContext.\n\nDone.",
+      "parentUuid": "9b1763d8_db162729",
+      "revId": "002ce2d9faf406e4d877840b30cc8e6a88cbe7eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
