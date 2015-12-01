@@ -1286,6 +1286,9 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
       case GL_PRIMITIVE_RESTART_FIXED_INDEX:
           *params = mPrimitiveRestart;
           break;
+      case GL_RASTERIZER_DISCARD:
+          *params = isRasterizerDiscardEnabled() ? GL_TRUE : GL_FALSE;
+          break;
       default:
         UNREACHABLE();
         break;

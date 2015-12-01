@@ -1271,6 +1271,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_TRANSFORM_FEEDBACK_ACTIVE:
       case GL_TRANSFORM_FEEDBACK_PAUSED:
       case GL_PRIMITIVE_RESTART_FIXED_INDEX:
+      case GL_RASTERIZER_DISCARD:
         {
             *type = GL_BOOL;
             *numParams = 1;
