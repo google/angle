@@ -1,0 +1,602 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1bfe13e6_3c37f126",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "CreateDisplayFromDevice",
+      "range": {
+        "startLine": 102,
+        "startChar": 17,
+        "endLine": 102,
+        "endChar": 34
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9bea031f_4002cee8",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "CreateDisplayFromAttribs",
+      "range": {
+        "startLine": 133,
+        "startChar": 17,
+        "endLine": 133,
+        "endChar": 34
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bfe13e6_dc21ade1",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "I think I\u0027d prefer if you implement this as two static functions with different signatures, then use an internal or local static function to implement any common parts (but there don\u0027t seem to be that many)\n\n(also: nit: Capitalize the first character of the static method)",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 67
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fbf85ffc_7b905fff",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 694,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "how about abstracting this into initializeD3DDevice?",
+      "range": {
+        "startLine": 603,
+        "startChar": 4,
+        "endLine": 694,
+        "endChar": 5
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bbe34749_e14846b1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "mCreatedWithDeviceEXT",
+      "range": {
+        "startLine": 341,
+        "startChar": 9,
+        "endLine": 341,
+        "endChar": 27
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dbe0fb3e_823e9ab4",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "nit: add an error message",
+      "range": {
+        "startLine": 149,
+        "startChar": 29,
+        "endLine": 149,
+        "endChar": 34
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7bed4f37_e52172e1",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "nit: error message",
+      "range": {
+        "startLine": 245,
+        "startChar": 47,
+        "endLine": 245,
+        "endChar": 52
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db09dbde_fa1c69a7",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "SafeDelete",
+      "range": {
+        "startLine": 76,
+        "startChar": 8,
+        "endLine": 80,
+        "endChar": 9
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3bef5734_3d988f37",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "these should return void and use Gtest asserts",
+      "range": {
+        "startLine": 119,
+        "startChar": 4,
+        "endLine": 119,
+        "endChar": 8
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3bef5734_ddb24bbe",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "EGL_TRUE first",
+      "range": {
+        "startLine": 142,
+        "startChar": 8,
+        "endLine": 142,
+        "endChar": 17
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb53ffc7_030d2e4b",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "ASSERT_EGL_SUCCESS",
+      "range": {
+        "startLine": 145,
+        "startChar": 8,
+        "endLine": 145,
+        "endChar": 17
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5bf40b02_9ed1ddda",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "EGL_TRUE first",
+      "range": {
+        "startLine": 150,
+        "startChar": 8,
+        "endLine": 150,
+        "endChar": 17
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db09dbde_3a370127",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "ASSERT_EGL_SUCCESS",
+      "range": {
+        "startLine": 158,
+        "startChar": 8,
+        "endLine": 158,
+        "endChar": 46
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9bea031f_a01bda4e",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "ASSERT_EGL_SUCCESS",
+      "range": {
+        "startLine": 163,
+        "startChar": 8,
+        "endLine": 163,
+        "endChar": 17
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bfe13e6_7c31792e",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "ASSERT_EGL_SUCCESS",
+      "range": {
+        "startLine": 167,
+        "startChar": 8,
+        "endLine": 167,
+        "endChar": 17
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fbf85ffc_fb490f65",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "void",
+      "range": {
+        "startLine": 172,
+        "startChar": 4,
+        "endLine": 172,
+        "endChar": 8
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7bed4f37_a58c8a1d",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "use the GTEST asserts here",
+      "range": {
+        "startLine": 181,
+        "startChar": 8,
+        "endLine": 181,
+        "endChar": 14
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fbf85ffc_db4ed36a",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "use a gtest assert here",
+      "range": {
+        "startLine": 188,
+        "startChar": 8,
+        "endLine": 188,
+        "endChar": 14
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9bea031f_20ffca1c",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "why is failing to create a device an acceptable outcome for these tests? I think you should filter the feature level here, and fail the test if the device creation fails.",
+      "range": {
+        "startLine": 267,
+        "startChar": 29,
+        "endLine": 267,
+        "endChar": 46
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7bed4f37_c5870efa",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "ASSERT_EGL_SUCCESS",
+      "range": {
+        "startLine": 275,
+        "startChar": 4,
+        "endLine": 275,
+        "endChar": 13
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fbf85ffc_9b444b4f",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "ASSERT_EGL_SUCCESS",
+      "range": {
+        "startLine": 308,
+        "startChar": 4,
+        "endLine": 308,
+        "endChar": 13
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb53ffc7_6310a268",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "EGL_TRUE first",
+      "range": {
+        "startLine": 325,
+        "startChar": 4,
+        "endLine": 325,
+        "endChar": 13
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dbe0fb3e_c228a278",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "ASSERT_TRUE",
+      "range": {
+        "startLine": 328,
+        "startChar": 4,
+        "endLine": 328,
+        "endChar": 13
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3bef5734_fdad875c",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "EGL_NO_SURFACE first",
+      "range": {
+        "startLine": 341,
+        "startChar": 4,
+        "endLine": 341,
+        "endChar": 13
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7bed4f37_652e02cd",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "ASERT_EGL_SUCCESS",
+      "range": {
+        "startLine": 342,
+        "startChar": 4,
+        "endLine": 342,
+        "endChar": 13
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fbf85ffc_bb3f87b7",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-01T15:20:19Z",
+      "side": 1,
+      "message": "ASSERT_EGL_SUCCESS",
+      "range": {
+        "startLine": 373,
+        "startChar": 4,
+        "endLine": 373,
+        "endChar": 42
+      },
+      "revId": "bf7ba662f57ddb5357e5913a3d034596e2b01b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
