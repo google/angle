@@ -238,6 +238,12 @@
       "srvFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
     }
   ],
+  "GL_ETC1_RGB8_LOSSY_DECODE_ANGLE": [
+    {
+      "texFormat": "DXGI_FORMAT_BC1_UNORM",
+      "srvFormat": "DXGI_FORMAT_BC1_UNORM"
+    }
+  ],
   "GL_LUMINANCE": [
     {
       "texFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",

@@ -334,6 +334,7 @@ bool CompressedTextureFormatRequiresExactSize(GLenum internalFormat)
         case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
         case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
         case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
+        case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
             return true;
 
         default:

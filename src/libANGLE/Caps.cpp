@@ -156,6 +156,7 @@ Extensions::Extensions()
       maxDebugGroupStackDepth(0),
       maxLabelLength(0),
       noError(false),
+      lossyETCDecode(false),
       colorBufferFloat(false)
 {
 }
@@ -225,6 +226,8 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_KHR_debug",                        debug,                     &extensionStrings);
     // TODO(jmadill): Enable this when complete.
     //InsertExtensionString("GL_KHR_no_error",                     noError,                   &extensionStrings);
+
+    InsertExtensionString("GL_ANGLE_lossy_etc_decode",           lossyETCDecode,            &extensionStrings);
     // clang-format on
 
     return extensionStrings;

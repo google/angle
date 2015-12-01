@@ -275,6 +275,9 @@ struct Extensions
     // KHR_no_error
     bool noError;
 
+    // GL_ANGLE_lossy_etc_decode
+    bool lossyETCDecode;
+
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float

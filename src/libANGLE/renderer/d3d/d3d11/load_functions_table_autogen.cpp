@@ -771,6 +771,24 @@ const std::map<GLenum, LoadImageFunction> &GetLoadFunctionsMap(GLenum internalFo
                 }
             }
         }
+        case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
+        {
+            switch (dxgiFormat)
+            {
+                case DXGI_FORMAT_BC1_UNORM:
+                {
+                    static const std::map<GLenum, LoadImageFunction> loadFunctionsMap = []() {
+                        std::map<GLenum, LoadImageFunction> loadMap;
+                        loadMap[GL_UNSIGNED_BYTE] = LoadETC1RGB8ToBC1;
+                        return loadMap;
+                    }();
+
+                    return loadFunctionsMap;
+                }
+                default:
+                    break;
+            }
+        }
         case GL_ETC1_RGB8_OES:
         {
             switch (dxgiFormat)

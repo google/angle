@@ -732,6 +732,22 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
                 break;
             }
         }
+        case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
+        {
+            if (AnyDevice(renderer11DeviceCaps))
+            {
+                static const TextureFormat textureFormat = GetD3D11FormatInfo(internalFormat,
+                                                                              DXGI_FORMAT_BC1_UNORM,
+                                                                              DXGI_FORMAT_BC1_UNORM,
+                                                                              DXGI_FORMAT_UNKNOWN,
+                                                                              DXGI_FORMAT_UNKNOWN);
+                return textureFormat;
+            }
+            else
+            {
+                break;
+            }
+        }
         case GL_ETC1_RGB8_OES:
         {
             if (AnyDevice(renderer11DeviceCaps))

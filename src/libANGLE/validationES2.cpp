@@ -195,6 +195,14 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
                 return false;
             }
             break;
+          case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
+              if (!context->getExtensions().lossyETCDecode)
+              {
+                  context->recordError(
+                      Error(GL_INVALID_ENUM, "ANGLE_lossy_etc_decode extension is not supported"));
+                  return false;
+              }
+              break;
           default:
               context->recordError(Error(
                   GL_INVALID_ENUM, "internalformat is not a supported compressed internal format"));
@@ -398,6 +406,21 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
                 return false;
             }
             break;
+          case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
+              if (context->getExtensions().lossyETCDecode)
+              {
+                  context->recordError(
+                      Error(GL_INVALID_OPERATION,
+                            "ETC1_RGB8_LOSSY_DECODE_ANGLE can't work with this type."));
+                  return false;
+              }
+              else
+              {
+                  context->recordError(
+                      Error(GL_INVALID_ENUM, "ANGLE_lossy_etc_decode extension is not supported."));
+                  return false;
+              }
+              break;
           case GL_DEPTH_COMPONENT:
           case GL_DEPTH_STENCIL_OES:
             if (!context->getExtensions().depthTextures)
@@ -564,6 +587,7 @@ bool ValidateES2CopyTexImageParameters(ValidationContext *context,
           case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
           case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
           case GL_ETC1_RGB8_OES:
+          case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
             context->recordError(Error(GL_INVALID_OPERATION));
             return false;
           case GL_DEPTH_COMPONENT:
@@ -716,6 +740,20 @@ bool ValidateES2CopyTexImageParameters(ValidationContext *context,
                 return false;
             }
             break;
+          case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
+              if (context->getExtensions().lossyETCDecode)
+              {
+                  context->recordError(Error(GL_INVALID_OPERATION,
+                                             "ETC1_RGB8_LOSSY_DECODE_ANGLE can't be copied to."));
+                  return false;
+              }
+              else
+              {
+                  context->recordError(
+                      Error(GL_INVALID_ENUM, "ANGLE_lossy_etc_decode extension is not supported."));
+                  return false;
+              }
+              break;
           case GL_DEPTH_COMPONENT:
           case GL_DEPTH_COMPONENT16:
           case GL_DEPTH_COMPONENT32_OES:
@@ -840,6 +878,14 @@ bool ValidateES2TexStorageParameters(Context *context, GLenum target, GLsizei le
             return false;
         }
         break;
+      case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
+          if (!context->getExtensions().lossyETCDecode)
+          {
+              context->recordError(
+                  Error(GL_INVALID_ENUM, "ANGLE_lossy_etc_decode extension is not supported."));
+              return false;
+          }
+          break;
       case GL_RGBA32F_EXT:
       case GL_RGB32F_EXT:
       case GL_ALPHA32F_EXT:
