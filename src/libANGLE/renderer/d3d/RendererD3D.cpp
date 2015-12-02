@@ -739,10 +739,13 @@ gl::DebugAnnotator *RendererD3D::getAnnotator()
 
 egl::Error RendererD3D::getEGLDevice(DeviceImpl **device)
 {
-    egl::Error error = initializeEGLDevice(&mEGLDevice);
-    if (error.isError())
+    if (mEGLDevice == nullptr)
     {
-        return error;
+        egl::Error error = createEGLDevice(&mEGLDevice);
+        if (error.isError())
+        {
+            return error;
+        }
     }
 
     *device = static_cast<DeviceImpl *>(mEGLDevice);
