@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3bc677da_c527faa2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1561,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-02T16:03:39Z",
+      "side": 1,
+      "message": "This part worries me: it seems it was missing before, was the behavior incorrect? If yes, how can we avoid having to do manual dirtying like this?",
+      "range": {
+        "startLine": 1560,
+        "startChar": 0,
+        "endLine": 1561,
+        "endChar": 45
+      },
+      "revId": "c139bf8b0e7e8f5f9655e553c1aeb287f8a87535",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bbda67a7_29598d0c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-02T16:03:39Z",
+      "side": 1,
+      "message": "Isn\u0027t this included in mRenderer11DeviceCaps?",
+      "revId": "c139bf8b0e7e8f5f9655e553c1aeb287f8a87535",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
