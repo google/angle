@@ -290,24 +290,20 @@ EGLBoolean EGLAPIENTRY QueryDeviceAttribEXT(EGLDeviceEXT device, EGLint attribut
           device, attribute, value);
 
     Device *dev = static_cast<Device*>(device);
-    if (dev == EGL_NO_DEVICE_EXT || !Device::IsValidDevice(dev))
+    if (dev == EGL_NO_DEVICE_EXT)
     {
         SetGlobalError(Error(EGL_BAD_ACCESS));
         return EGL_FALSE;
     }
 
-    // If the device was created by (and is owned by) a display, and that display doesn't support
-    // device querying, then this call should fail
-    Display *owningDisplay = dev->getOwningDisplay();
-    if (owningDisplay != nullptr && !owningDisplay->getExtensions().deviceQuery)
+    Display *display = dev->getDisplay();
+    Error error(EGL_SUCCESS);
+
+    if (!display->getExtensions().deviceQuery)
     {
-        SetGlobalError(Error(EGL_BAD_ACCESS,
-                             "Device wasn't created using eglCreateDeviceANGLE, and the Display "
-                             "that created it doesn't support device querying"));
+        SetGlobalError(Error(EGL_BAD_ACCESS));
         return EGL_FALSE;
     }
-
-    Error error(EGL_SUCCESS);
 
     // validate the attribute parameter
     switch (attribute)
@@ -337,7 +333,7 @@ const char * EGLAPIENTRY QueryDeviceStringEXT(EGLDeviceEXT device, EGLint name)
           device, name);
 
     Device *dev = static_cast<Device*>(device);
-    if (dev == EGL_NO_DEVICE_EXT || !Device::IsValidDevice(dev))
+    if (dev == EGL_NO_DEVICE_EXT)
     {
         SetGlobalError(Error(EGL_BAD_DEVICE_EXT));
         return nullptr;
@@ -437,52 +433,6 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY DestroyImageKHR(EGLDisplay dpy, EGLImageKHR 
     }
 
     display->destroyImage(img);
-
-    return EGL_TRUE;
-}
-
-ANGLE_EXPORT EGLDeviceEXT EGLAPIENTRY CreateDeviceANGLE(EGLint device_type,
-                                                        void *native_device,
-                                                        const EGLAttrib *attrib_list)
-{
-    EVENT(
-        "(EGLint device_type = %d, void* native_device = 0x%0.8p, const EGLAttrib* attrib_list = "
-        "0x%0.8p)",
-        device_type, native_device, attrib_list);
-
-    Error error = ValidateCreateDeviceANGLE(device_type, native_device, attrib_list);
-    if (error.isError())
-    {
-        SetGlobalError(error);
-        return EGL_NO_DEVICE_EXT;
-    }
-
-    Device *device = nullptr;
-    error = Device::CreateDevice(native_device, device_type, &device);
-    if (error.isError())
-    {
-        ASSERT(device == nullptr);
-        SetGlobalError(error);
-        return EGL_NO_DEVICE_EXT;
-    }
-
-    return device;
-}
-
-ANGLE_EXPORT EGLBoolean EGLAPIENTRY ReleaseDeviceANGLE(EGLDeviceEXT device)
-{
-    EVENT("(EGLDeviceEXT device = 0x%0.8p)", device);
-
-    Device *dev = static_cast<Device *>(device);
-
-    Error error = ValidateReleaseDeviceANGLE(dev);
-    if (error.isError())
-    {
-        SetGlobalError(error);
-        return EGL_FALSE;
-    }
-
-    SafeDelete(dev);
 
     return EGL_TRUE;
 }

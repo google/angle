@@ -272,12 +272,7 @@ Error Display::initialize()
         {
             return error;
         }
-
-        error = Device::CreateDevice(this, impl, &mDevice);
-        if (error.isError())
-        {
-            return error;
-        }
+        mDevice = new Device(this, impl);
     }
     else
     {
@@ -304,8 +299,6 @@ void Display::terminate()
     }
 
     mConfigSet.clear();
-
-    SafeDelete(mDevice);
 
     mImplementation->terminate();
 
@@ -716,11 +709,6 @@ static ClientExtensions GenerateClientExtensions()
 
 #if defined(ANGLE_ENABLE_OPENGL)
     extensions.platformANGLEOpenGL = true;
-#endif
-
-#if defined(ANGLE_ENABLE_D3D11)
-    extensions.deviceCreation      = true;
-    extensions.deviceCreationD3D11 = true;
 #endif
 
 #if defined(ANGLE_USE_X11)

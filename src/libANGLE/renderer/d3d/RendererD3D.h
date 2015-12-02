@@ -265,7 +265,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     virtual void createAnnotator() = 0;
 
-    virtual egl::Error createEGLDevice(DeviceD3D **outDevice) = 0;
+    virtual egl::Error initializeEGLDevice(DeviceD3D **outDevice) = 0;
 
     // dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
     static const uintptr_t DirtyPointer;
