@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bbb18759_4b3af975",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-02T23:37:34Z",
+      "side": 1,
+      "message": "can probably pass in caps instead of data",
+      "range": {
+        "startLine": 364,
+        "startChar": 16,
+        "endLine": 364,
+        "endChar": 20
+      },
+      "revId": "c3e6a8a2c36638ed1485986b13a93dcf56471afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb113f0a_486f8bd2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-02T23:37:34Z",
+      "side": 1,
+      "message": "we might not need this anymore since we\u0027re not using the initialized variable",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 35
+      },
+      "revId": "c3e6a8a2c36638ed1485986b13a93dcf56471afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b18372c_0449000c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-02T23:37:34Z",
+      "side": 1,
+      "message": "we might be able to remove this since we don\u0027t need the initialized variable anymore",
+      "range": {
+        "startLine": 103,
+        "startChar": 4,
+        "endLine": 103,
+        "endChar": 12
+      },
+      "revId": "c3e6a8a2c36638ed1485986b13a93dcf56471afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
