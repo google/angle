@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "dbae3bf9_356d5a4a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1559,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-02T19:35:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5bcb2be2_4f55e544",
+      "range": {
+        "startLine": 1559,
+        "startChar": 22,
+        "endLine": 1559,
+        "endChar": 41
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9bd1238f_a8145b91",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-12-01T23:42:14Z",
       "side": 1,
       "message": "can remove this, given the above",
+      "range": {
+        "startLine": 1560,
+        "startChar": 22,
+        "endLine": 1560,
+        "endChar": 43
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b18372c_3b989f37",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1560,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-02T19:35:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9bd1238f_a8145b91",
       "range": {
         "startLine": 1560,
         "startChar": 22,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "5ba24b12_17ff7e1c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1561,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-02T19:35:43Z",
+      "side": 1,
+      "message": "Nope, nice catch!",
+      "parentUuid": "fbbf7f30_e30e727b",
+      "range": {
+        "startLine": 1561,
+        "startChar": 8,
+        "endLine": 1561,
+        "endChar": 45
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb7fc74b_a1149e91",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -82,6 +154,30 @@
       "writtenOn": "2015-12-01T23:42:14Z",
       "side": 1,
       "message": "can remove this",
+      "range": {
+        "startLine": 1574,
+        "startChar": 22,
+        "endLine": 1574,
+        "endChar": 52
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb113f0a_7c25ed87",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1574,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-02T19:35:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb7fc74b_a1149e91",
       "range": {
         "startLine": 1574,
         "startChar": 22,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "5b1deb19_1caf9da2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2339,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-02T19:35:43Z",
+      "side": 1,
+      "message": "The viewport bit is already updated below",
+      "parentUuid": "bbda67a7_69038552",
+      "range": {
+        "startLine": 2339,
+        "startChar": 18,
+        "endLine": 2339,
+        "endChar": 48
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9bd1238f_c8138fa5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 3
@@ -128,6 +248,30 @@
       "writtenOn": "2015-12-01T23:42:14Z",
       "side": 1,
       "message": "these are available from the gl::Data (from the caps member variable), so if you wanted to fix this, you can pass it down from applyRenderTarget (just pass the gl::Data)",
+      "range": {
+        "startLine": 491,
+        "startChar": 8,
+        "endLine": 491,
+        "endChar": 49
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b17f3fd_7dd5eb0d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-02T19:35:43Z",
+      "side": 1,
+      "message": ":D! great",
+      "parentUuid": "9bd1238f_c8138fa5",
       "range": {
         "startLine": 491,
         "startChar": 8,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "fb113f0a_dc15211b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-02T19:35:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dbd71b7d_cab263be",
+      "range": {
+        "startLine": 62,
+        "startChar": 9,
+        "endLine": 62,
+        "endChar": 38
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7bd46f7d_e7c6821c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 3
@@ -174,6 +342,30 @@
       "writtenOn": "2015-12-01T23:42:14Z",
       "side": 1,
       "message": "we seem to use this exclusively for the viewport limits in FL9_3. I suggest we specialize it more.\n\n* call this setViewportBounds(const gl::Extents \u0026size)\n* inside, set Optional\u003cgl::Extents\u003e mViewportBounds\n* also set mViewportStateIsDirty\n* in applyRenderTarget, remove the calls to force and setInitialized\n\nRegarding using Extents, it\u0027s fine to ignore the last value. Extents is just another word for size. If you want you can also rename gl::Extents to gl::Extents3 and make a gl::Extents2 structure, or alternately add gl::Size, but I\u0027d be fine with keeping it as is with an unused z value.",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 58
+      },
+      "revId": "9c3e21deb9ceaca7a4523edfd1d2421b94b5413b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bbb18759_57b8e490",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-02T19:35:43Z",
+      "side": 1,
+      "message": "oh I see, wouldn\u0027t we need to call mViewportBounds.valid() in applyRenderTarget instead of removing that call all together?... oh I see how Optional works. kay ignore that other comment too",
+      "parentUuid": "7bd46f7d_e7c6821c",
       "range": {
         "startLine": 58,
         "startChar": 0,
