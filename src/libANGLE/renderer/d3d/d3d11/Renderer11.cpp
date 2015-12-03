@@ -3782,9 +3782,15 @@ gl::Error Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsP
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTargetD3D *readRenderTarget,
-                                           RenderTargetD3D *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,
-                                           bool colorBlit, bool depthBlit, bool stencilBlit)
+gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
+                                           const gl::Rectangle &drawRectIn,
+                                           RenderTargetD3D *readRenderTarget,
+                                           RenderTargetD3D *drawRenderTarget,
+                                           GLenum filter,
+                                           const gl::Rectangle *scissor,
+                                           bool colorBlit,
+                                           bool depthBlit,
+                                           bool stencilBlit)
 {
     // Since blitRenderbufferRect is called for each render buffer that needs to be blitted,
     // it should never be the case that both color and depth/stencil need to be blitted at
@@ -3849,6 +3855,66 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const 
 
     gl::Extents readSize(readRenderTarget->getWidth(), readRenderTarget->getHeight(), 1);
     gl::Extents drawSize(drawRenderTarget->getWidth(), drawRenderTarget->getHeight(), 1);
+
+    // From the spec:
+    // "The actual region taken from the read framebuffer is limited to the intersection of the
+    // source buffers being transferred, which may include the color buffer selected by the read
+    // buffer, the depth buffer, and / or the stencil buffer depending on mask."
+    // This means negative x and y are out of bounds, and not to be read from. We handle this here
+    // by internally scaling the read and draw rectangles.
+    gl::Rectangle readRect = readRectIn;
+    gl::Rectangle drawRect = drawRectIn;
+    auto readToDrawX       = [&drawRectIn, &readRectIn](int readOffset)
+    {
+        double readToDrawScale =
+            static_cast<double>(drawRectIn.width) / static_cast<double>(readRectIn.width);
+        return static_cast<int>(round(static_cast<double>(readOffset) * readToDrawScale));
+    };
+    if (readRect.x < 0)
+    {
+        int readOffset = -readRect.x;
+        readRect.x += readOffset;
+        readRect.width -= readOffset;
+
+        int drawOffset = readToDrawX(readOffset);
+        drawRect.x += drawOffset;
+        drawRect.width -= drawOffset;
+    }
+
+    auto readToDrawY = [&drawRectIn, &readRectIn](int readOffset)
+    {
+        double readToDrawScale =
+            static_cast<double>(drawRectIn.height) / static_cast<double>(readRectIn.height);
+        return static_cast<int>(round(static_cast<double>(readOffset) * readToDrawScale));
+    };
+    if (readRect.y < 0)
+    {
+        int readOffset = -readRect.y;
+        readRect.y += readOffset;
+        readRect.height -= readOffset;
+
+        int drawOffset = readToDrawY(readOffset);
+        drawRect.y += drawOffset;
+        drawRect.height -= drawOffset;
+    }
+
+    if (readRect.x1() < 0)
+    {
+        int readOffset = -readRect.x1();
+        readRect.width += readOffset;
+
+        int drawOffset = readToDrawX(readOffset);
+        drawRect.width += drawOffset;
+    }
+
+    if (readRect.y1() < 0)
+    {
+        int readOffset = -readRect.y1();
+        readRect.height += readOffset;
+
+        int drawOffset = readToDrawY(readOffset);
+        drawRect.height += drawOffset;
+    }
 
     bool scissorNeeded = scissor && gl::ClipRectangle(drawRect, *scissor, NULL);
 

@@ -286,9 +286,8 @@ gl::Error FramebufferGL::blit(const gl::State &state, const gl::Rectangle &sourc
     mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, sourceFramebufferGL->getFramebufferID());
     mStateManager->bindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebufferID);
 
-    mFunctions->blitFramebuffer(sourceArea.x, sourceArea.y, sourceArea.x + sourceArea.width, sourceArea.y + sourceArea.height,
-                                destArea.x, destArea.y, destArea.x + destArea.width, destArea.y + destArea.height,
-                                mask, filter);
+    mFunctions->blitFramebuffer(sourceArea.x, sourceArea.y, sourceArea.x1(), sourceArea.y1(),
+                                destArea.x, destArea.y, destArea.x1(), destArea.y1(), mask, filter);
 
     return gl::Error(GL_NO_ERROR);
 }
