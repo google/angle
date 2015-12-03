@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5bcb2be2_cf81bc6a",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-03T18:22:26Z",
+      "side": 1,
+      "message": "s/NULL/nullptr",
+      "range": {
+        "startLine": 1022,
+        "startChar": 34,
+        "endLine": 1022,
+        "endChar": 38
+      },
+      "revId": "612c6a793040f37daab8c53bd488b0eca12aee6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7bd46f7d_eae12752",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-03T18:22:26Z",
+      "side": 1,
+      "message": "This syntax is a bit obtuse but these event notifier methods will eventually be replaced by dirty bits.\n\n mGenericBuffer.set(nullptr);\n mImplementation-\u003ebindGenericBuffer(mGenericBuffer);",
+      "range": {
+        "startLine": 92,
+        "startChar": 8,
+        "endLine": 93,
+        "endChar": 36
+      },
+      "revId": "612c6a793040f37daab8c53bd488b0eca12aee6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dbd71b7d_4d504dde",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-03T18:22:26Z",
+      "side": 1,
+      "message": "use git cl format to clean up the tabs",
+      "range": {
+        "startLine": 114,
+        "startChar": 0,
+        "endLine": 114,
+        "endChar": 1
+      },
+      "revId": "612c6a793040f37daab8c53bd488b0eca12aee6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5bcb2be2_0fd8f4a2",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-03T18:22:26Z",
+      "side": 1,
+      "message": "same comment as above here",
+      "range": {
+        "startLine": 120,
+        "startChar": 12,
+        "endLine": 121,
+        "endChar": 39
+      },
+      "revId": "612c6a793040f37daab8c53bd488b0eca12aee6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b22f78a_e54e966a",
+        "filename": "src/libANGLE/renderer/TransformFeedbackImpl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-03T18:22:26Z",
+      "side": 1,
+      "message": "don\u0027t need these two methods",
+      "range": {
+        "startLine": 29,
+        "startChar": 17,
+        "endLine": 29,
+        "endChar": 43
+      },
+      "revId": "612c6a793040f37daab8c53bd488b0eca12aee6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
