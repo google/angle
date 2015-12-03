@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db7c7b59_828ddae4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-03T13:23:42Z",
+      "side": 1,
+      "message": "nit: add / open a bug for this",
+      "revId": "43cba4b73361ebf997a77440a490bb348105e676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5bcb2be2_8f6fc4d1",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-03T13:23:42Z",
+      "side": 1,
+      "message": "you can probably merge this into updateState as well. drawMode and ignoreViewport are both ignored as well it seems, the only thing this function does is ASSERT(framebuffer.complete()) and call applyRenderTarget.",
+      "range": {
+        "startLine": 385,
+        "startChar": 0,
+        "endLine": 394,
+        "endChar": 1
+      },
+      "revId": "43cba4b73361ebf997a77440a490bb348105e676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bc533ce_0710f866",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-03T13:23:42Z",
+      "side": 1,
+      "message": "I think you can remove \u0027ignoreViewport\u0027, as it is only ever set to false. Just pass false in Renderer9::updateState",
+      "range": {
+        "startLine": 156,
+        "startChar": 78,
+        "endLine": 156,
+        "endChar": 92
+      },
+      "revId": "43cba4b73361ebf997a77440a490bb348105e676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fbbf7f30_c359b63e",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-03T13:23:42Z",
+      "side": 1,
+      "message": "nit: Capitalize",
+      "range": {
+        "startLine": 259,
+        "startChar": 4,
+        "endLine": 259,
+        "endChar": 78
+      },
+      "revId": "43cba4b73361ebf997a77440a490bb348105e676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7bd46f7d_aa160f27",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-03T13:23:42Z",
+      "side": 1,
+      "message": "can any of these be marked as private?",
+      "range": {
+        "startLine": 102,
+        "startChar": 4,
+        "endLine": 119,
+        "endChar": 42
+      },
+      "revId": "43cba4b73361ebf997a77440a490bb348105e676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
