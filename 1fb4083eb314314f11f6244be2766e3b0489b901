@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "806a90d7_77c9b07e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3803,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-03T20:59:16Z",
+      "side": 1,
+      "message": "Interesting, thanks!",
+      "parentUuid": "c07008c6_39fecf91",
+      "range": {
+        "startLine": 3803,
+        "startChar": 30,
+        "endLine": 3803,
+        "endChar": 54
+      },
+      "revId": "1fb4083eb314314f11f6244be2766e3b0489b901",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9bd1238f_6881c368",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 1
