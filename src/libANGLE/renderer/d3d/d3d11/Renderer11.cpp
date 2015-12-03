@@ -1416,43 +1416,54 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
+gl::Error Renderer11::updateState(const gl::Data &data, GLenum drawMode)
 {
-    return mStateManager.setRasterizerState(rasterState);
+    // Applies the render target surface, depth stencil surface, viewport rectangle and
+    // scissor rectangle to the renderer
+    const gl::Framebuffer *framebufferObject = data.state->getDrawFramebuffer();
+    ASSERT(framebufferObject && framebufferObject->checkStatus(data) == GL_FRAMEBUFFER_COMPLETE);
+    gl::Error error = applyRenderTarget(framebufferObject);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    // Setting viewport state
+    mStateManager.setViewport(data.caps, data.state->getViewport(), data.state->getNearPlane(),
+                              data.state->getFarPlane());
+
+    // Setting scissor state
+    mStateManager.setScissorRectangle(data.state->getScissor(), data.state->isScissorTestEnabled());
+
+    // Applying rasterizer state to D3D11 device
+    int samples                    = framebufferObject->getSamples(data);
+    gl::RasterizerState rasterizer = data.state->getRasterizerState();
+    rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
+    rasterizer.multiSample         = (samples != 0);
+
+    error = mStateManager.setRasterizerState(rasterizer);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    // Setting blend state
+    unsigned int mask = GetBlendSampleMask(data, samples);
+    error = mStateManager.setBlendState(framebufferObject, data.state->getBlendState(),
+                                        data.state->getBlendColor(), mask);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    // Setting depth stencil state
+    error = mStateManager.setDepthStencilState(*data.state);
+    return error;
 }
 
 void Renderer11::syncState(const gl::State &state, const gl::State::DirtyBits &bitmask)
 {
     mStateManager.syncState(state, bitmask);
-}
-
-gl::Error Renderer11::setBlendState(const gl::Framebuffer *framebuffer,
-                                    const gl::BlendState &blendState,
-                                    const gl::ColorF &blendColor,
-                                    unsigned int sampleMask)
-{
-    return mStateManager.setBlendState(framebuffer, blendState, blendColor, sampleMask);
-}
-
-gl::Error Renderer11::setDepthStencilState(const gl::State &glState)
-{
-    return mStateManager.setDepthStencilState(glState);
-}
-
-void Renderer11::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
-{
-    mStateManager.setScissorRectangle(scissor, enabled);
-}
-
-void Renderer11::setViewport(const gl::Caps *caps,
-                             const gl::Rectangle &viewport,
-                             float zNear,
-                             float zFar,
-                             GLenum drawMode,
-                             GLenum frontFace,
-                             bool ignoreViewport)
-{
-    mStateManager.setViewport(caps, viewport, zNear, zFar);
 }
 
 bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize)

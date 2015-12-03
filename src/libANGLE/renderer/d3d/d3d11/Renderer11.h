@@ -121,22 +121,7 @@ class Renderer11 : public RendererD3D
                                 const std::vector<GLint> &vertexUniformBuffers,
                                 const std::vector<GLint> &fragmentUniformBuffers) override;
 
-    virtual gl::Error setRasterizerState(const gl::RasterizerState &rasterState);
-    gl::Error setBlendState(const gl::Framebuffer *framebuffer,
-                            const gl::BlendState &blendState,
-                            const gl::ColorF &blendColor,
-                            unsigned int sampleMask) override;
-
-    gl::Error setDepthStencilState(const gl::State &glState) override;
-
-    virtual void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
-    virtual void setViewport(const gl::Caps *caps,
-                             const gl::Rectangle &viewport,
-                             float zNear,
-                             float zFar,
-                             GLenum drawMode,
-                             GLenum frontFace,
-                             bool ignoreViewport);
+    gl::Error updateState(const gl::Data &data, GLenum drawMode) override;
 
     virtual bool applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize);
     gl::Error applyRenderTarget(const gl::Framebuffer *frameBuffer) override;

@@ -886,6 +886,53 @@ gl::Error Renderer9::setUniformBuffers(const gl::Data &/*data*/,
     return gl::Error(GL_NO_ERROR);
 }
 
+gl::Error Renderer9::updateState(const gl::Data &data, GLenum drawMode)
+{
+    // Applies the render target surface, depth stencil surface, viewport rectangle and
+    // scissor rectangle to the renderer
+    const gl::Framebuffer *framebufferObject = data.state->getDrawFramebuffer();
+    ASSERT(framebufferObject && framebufferObject->checkStatus(data) == GL_FRAMEBUFFER_COMPLETE);
+
+    gl::Error error = applyRenderTarget(framebufferObject);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    // Setting viewport state
+    setViewport(data.caps, data.state->getViewport(), data.state->getNearPlane(),
+                data.state->getFarPlane(), drawMode, data.state->getRasterizerState().frontFace,
+                false);
+
+    // Setting scissors state
+    setScissorRectangle(data.state->getScissor(), data.state->isScissorTestEnabled());
+
+    // Setting rasterizer state
+    int samples                    = framebufferObject->getSamples(data);
+    gl::RasterizerState rasterizer = data.state->getRasterizerState();
+    rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
+    rasterizer.multiSample         = (samples != 0);
+
+    error = setRasterizerState(rasterizer);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    // Setting blend state
+    unsigned int mask = GetBlendSampleMask(data, samples);
+    error = setBlendState(framebufferObject, data.state->getBlendState(),
+                          data.state->getBlendColor(), mask);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    // Setting depth stencil state
+    error = setDepthStencilState(*data.state);
+    return error;
+}
+
 gl::Error Renderer9::setRasterizerState(const gl::RasterizerState &rasterState)
 {
     bool rasterStateChanged = mForceSetRasterState || memcmp(&rasterState, &mCurRasterState, sizeof(gl::RasterizerState)) != 0;

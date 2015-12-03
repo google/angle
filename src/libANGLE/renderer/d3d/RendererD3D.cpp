@@ -153,13 +153,7 @@ gl::Error RendererD3D::genericDrawElements(const gl::Data &data,
         return gl::Error(GL_NO_ERROR);
     }
 
-    error = applyRenderTarget(data, mode, false);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    error = applyState(data, mode);
+    error = updateState(data, mode);
     if (error.isError())
     {
         return error;
@@ -243,13 +237,7 @@ gl::Error RendererD3D::genericDrawArrays(const gl::Data &data,
         return gl::Error(GL_NO_ERROR);
     }
 
-    error = applyRenderTarget(data, mode, false);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    error = applyState(data, mode);
+    error = updateState(data, mode);
     if (error.isError())
     {
         return error;
@@ -343,45 +331,8 @@ gl::Error RendererD3D::generateSwizzles(const gl::Data &data)
     return gl::Error(GL_NO_ERROR);
 }
 
-// Applies the render target surface, depth stencil surface, viewport rectangle and
-// scissor rectangle to the renderer
-gl::Error RendererD3D::applyRenderTarget(const gl::Data &data, GLenum drawMode, bool ignoreViewport)
+unsigned int RendererD3D::GetBlendSampleMask(const gl::Data &data, int samples)
 {
-    const gl::Framebuffer *framebufferObject = data.state->getDrawFramebuffer();
-    ASSERT(framebufferObject && framebufferObject->checkStatus(data) == GL_FRAMEBUFFER_COMPLETE);
-
-    gl::Error error = applyRenderTarget(framebufferObject);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    float nearZ = data.state->getNearPlane();
-    float farZ = data.state->getFarPlane();
-    setViewport(data.caps, data.state->getViewport(), nearZ, farZ, drawMode,
-                data.state->getRasterizerState().frontFace, ignoreViewport);
-
-    setScissorRectangle(data.state->getScissor(), data.state->isScissorTestEnabled());
-
-    return gl::Error(GL_NO_ERROR);
-}
-
-// Applies the fixed-function state (culling, depth test, alpha blending, stenciling, etc) to the Direct3D device
-gl::Error RendererD3D::applyState(const gl::Data &data, GLenum drawMode)
-{
-    const gl::Framebuffer *framebufferObject = data.state->getDrawFramebuffer();
-    int samples = framebufferObject->getSamples(data);
-
-    gl::RasterizerState rasterizer = data.state->getRasterizerState();
-    rasterizer.pointDrawMode = (drawMode == GL_POINTS);
-    rasterizer.multiSample = (samples != 0);
-
-    gl::Error error = setRasterizerState(rasterizer);
-    if (error.isError())
-    {
-        return error;
-    }
-
     unsigned int mask = 0;
     if (data.state->isSampleCoverageEnabled())
     {
@@ -412,20 +363,8 @@ gl::Error RendererD3D::applyState(const gl::Data &data, GLenum drawMode)
     {
         mask = 0xFFFFFFFF;
     }
-    error = setBlendState(framebufferObject, data.state->getBlendState(),
-                          data.state->getBlendColor(), mask);
-    if (error.isError())
-    {
-        return error;
-    }
 
-    error = setDepthStencilState(*data.state);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    return gl::Error(GL_NO_ERROR);
+    return mask;
 }
 
 // Applies the shaders and shader constants to the Direct3D device
