@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0076a0c5_b32af8b8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-03T22:00:29Z",
+      "side": 1,
+      "message": "should be \u003d\u003d",
+      "range": {
+        "startLine": 369,
+        "startChar": 23,
+        "endLine": 369,
+        "endChar": 25
+      },
+      "revId": "4311d9d8d181fdedb156cedb2477dfd3695072f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
