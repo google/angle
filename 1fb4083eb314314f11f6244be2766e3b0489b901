@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9bd1238f_88dcf797",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-03T18:18:57Z",
+      "side": 1,
+      "message": "Maybe add x0 and y0 that return const references for consistency?",
+      "range": {
+        "startLine": 77,
+        "startChar": 4,
+        "endLine": 78,
+        "endChar": 41
+      },
+      "revId": "1fb4083eb314314f11f6244be2766e3b0489b901",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
