@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7bd46f7d_0a28fb5f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-03T15:31:58Z",
+      "side": 1,
+      "message": "please tag with BUG\u003dangleproject:#### where the number matches your related CL",
+      "revId": "7a6d1567397c80525dd820c1874e8ca8f401ba79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
