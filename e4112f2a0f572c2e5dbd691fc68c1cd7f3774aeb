@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3bc677da_282b4360",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-03T15:40:30Z",
+      "side": 1,
+      "message": "nit: since these formats are exposed by OES_texture_float they should be listed at [1]",
+      "revId": "e4112f2a0f572c2e5dbd691fc68c1cd7f3774aeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fbbf7f30_8344de4e",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-03T15:40:30Z",
+      "side": 1,
+      "message": "[1]",
+      "revId": "e4112f2a0f572c2e5dbd691fc68c1cd7f3774aeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
