@@ -1077,20 +1077,6 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             }
         }
         return true;
-      case GL_PIXEL_PACK_BUFFER_BINDING:
-      case GL_PIXEL_UNPACK_BUFFER_BINDING:
-        {
-            if (mExtensions.pixelBufferObject)
-            {
-                *type = GL_INT;
-                *numParams = 1;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        return true;
       case GL_MAX_VIEWPORT_DIMS:
         {
             *type = GL_INT;
@@ -1188,6 +1174,15 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             return true;
         case GL_VERTEX_ARRAY_BINDING:
             if ((mClientVersion < 3) && !mExtensions.vertexArrayObject)
+            {
+                return false;
+            }
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
+        case GL_PIXEL_PACK_BUFFER_BINDING:
+        case GL_PIXEL_UNPACK_BUFFER_BINDING:
+            if ((mClientVersion < 3) && !mExtensions.pixelBufferObject)
             {
                 return false;
             }
@@ -1519,24 +1514,15 @@ void Context::detachTexture(GLuint texture)
 
 void Context::detachBuffer(GLuint buffer)
 {
-    // Buffer detachment is handled by Context, because the buffer must also be
-    // attached from any VAOs in existence, and Context holds the VAO map.
+    // Simple pass-through to State's detachBuffer method, since
+    // only buffer attachments to container objects that are bound to the current context
+    // should be detached. And all those are available in State.
 
-    // [OpenGL ES 2.0.24] section 2.9 page 22:
-    // If a buffer object is deleted while it is bound, all bindings to that object in the current context
-    // (i.e. in the thread that called Delete-Buffers) are reset to zero.
-
-    mState.removeArrayBufferBinding(buffer);
-
-    // mark as freed among the vertex array objects
-    for (auto &vaoPair : mVertexArrayMap)
-    {
-        VertexArray* vertexArray = vaoPair.second;
-        if (vertexArray != nullptr)
-        {
-            vertexArray->detachBuffer(buffer);
-        }
-    }
+    // [OpenGL ES 3.2] section 5.1.2 page 45:
+    // Attachments to unbound container objects, such as
+    // deletion of a buffer attached to a vertex array object which is not bound to the context,
+    // are not affected and continue to act as references on the deleted object
+    mState.detachBuffer(buffer);
 }
 
 void Context::detachFramebuffer(GLuint framebuffer)

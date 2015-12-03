@@ -999,17 +999,6 @@ GLuint State::getArrayBufferId() const
     return mArrayBuffer.id();
 }
 
-bool State::removeArrayBufferBinding(GLuint buffer)
-{
-    if (mArrayBuffer.id() == buffer)
-    {
-        mArrayBuffer.set(NULL);
-        return true;
-    }
-
-    return false;
-}
-
 void State::setGenericUniformBufferBinding(Buffer *buffer)
 {
     mGenericUniformBuffer.set(buffer);
@@ -1060,6 +1049,28 @@ Buffer *State::getTargetBuffer(GLenum target) const
       case GL_UNIFORM_BUFFER:            return mGenericUniformBuffer.get();
       default: UNREACHABLE();            return NULL;
     }
+}
+
+void State::detachBuffer(GLuint bufferName)
+{
+    BindingPointer<Buffer> *buffers[] = {&mArrayBuffer,        &mCopyReadBuffer,
+                                         &mCopyWriteBuffer,    &mPack.pixelBuffer,
+                                         &mUnpack.pixelBuffer, &mGenericUniformBuffer};
+    for (auto buffer : buffers)
+    {
+        if (buffer->id() == bufferName)
+        {
+            buffer->set(nullptr);
+        }
+    }
+
+    TransformFeedback *curTransformFeedback = getCurrentTransformFeedback();
+    if (curTransformFeedback)
+    {
+        curTransformFeedback->detachBuffer(bufferName);
+    }
+
+    getVertexArray()->detachBuffer(bufferName);
 }
 
 void State::setEnableVertexAttribArray(unsigned int attribNum, bool enabled)
