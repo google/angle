@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b22f78a_65b8e691",
+        "filename": "src/libANGLE/renderer/FramebufferImpl.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-03T13:30:05Z",
+      "side": 1,
+      "message": "I think if you rebased your virtuals patch before this one, you wouldn\u0027t need to do the Framebuffer refactoring. the D3D9 renderer calls setViewport internally, but only the D3D11 side uses the Caps parameter. It\u0027s fine like this, since it may be necessary at some point in the future, but something we could clean up.",
+      "range": {
+        "startLine": 47,
+        "startChar": 5,
+        "endLine": 63,
+        "endChar": 55
+      },
+      "revId": "f31ec69dc58219037abeccdf31066e349566c60b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
