@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c08728d0_01302abf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-04T23:13:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db7c7b59_828ddae4",
+      "revId": "43cba4b73361ebf997a77440a490bb348105e676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5bcb2be2_8f6fc4d1",
         "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
         "patchSetId": 2
@@ -30,6 +48,30 @@
       "writtenOn": "2015-12-03T13:23:42Z",
       "side": 1,
       "message": "you can probably merge this into updateState as well. drawMode and ignoreViewport are both ignored as well it seems, the only thing this function does is ASSERT(framebuffer.complete()) and call applyRenderTarget.",
+      "range": {
+        "startLine": 385,
+        "startChar": 0,
+        "endLine": 394,
+        "endChar": 1
+      },
+      "revId": "43cba4b73361ebf997a77440a490bb348105e676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e0842cce_b153cae7",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-04T23:13:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5bcb2be2_8f6fc4d1",
       "range": {
         "startLine": 385,
         "startChar": 0,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "e0842cce_1134f6d3",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-04T23:13:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bc533ce_0710f866",
+      "range": {
+        "startLine": 156,
+        "startChar": 78,
+        "endLine": 156,
+        "endChar": 92
+      },
+      "revId": "43cba4b73361ebf997a77440a490bb348105e676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fbbf7f30_c359b63e",
         "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
         "patchSetId": 2
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "8091b00f_4e9adb51",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-04T23:13:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbbf7f30_c359b63e",
+      "range": {
+        "startLine": 259,
+        "startChar": 4,
+        "endLine": 259,
+        "endChar": 78
+      },
+      "revId": "43cba4b73361ebf997a77440a490bb348105e676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7bd46f7d_aa160f27",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
         "patchSetId": 2
@@ -99,6 +189,30 @@
       "writtenOn": "2015-12-03T13:23:42Z",
       "side": 1,
       "message": "can any of these be marked as private?",
+      "range": {
+        "startLine": 102,
+        "startChar": 4,
+        "endLine": 119,
+        "endChar": 42
+      },
+      "revId": "43cba4b73361ebf997a77440a490bb348105e676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8091b00f_6ecebf3b",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-04T23:13:35Z",
+      "side": 1,
+      "message": "yupp, setRasterizer/blendstate/depthstencilstate can :)",
+      "parentUuid": "7bd46f7d_aa160f27",
       "range": {
         "startLine": 102,
         "startChar": 4,
