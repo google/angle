@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e0d26ce6_32fb506a",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1151,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-04T19:26:06Z",
+      "side": 1,
+      "message": "I think this should be 0.5f given that at this point you are in the [0, w - 1] range and not in the [0, 1] range.",
+      "range": {
+        "startLine": 1151,
+        "startChar": 43,
+        "endLine": 1151,
+        "endChar": 49
+      },
+      "revId": "af8d7c5b230c7d266bab4b401add8b31d32087a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
