@@ -22,6 +22,30 @@
       "revId": "af8d7c5b230c7d266bab4b401add8b31d32087a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a067940d_98f4b5ed",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1151,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-04T21:21:35Z",
+      "side": 1,
+      "message": "Nice catch. Done. Had to change the floor to round because of numerical issues (I think) and this also fixed 3 more tests.",
+      "parentUuid": "e0d26ce6_32fb506a",
+      "range": {
+        "startLine": 1151,
+        "startChar": 43,
+        "endLine": 1151,
+        "endChar": 49
+      },
+      "revId": "af8d7c5b230c7d266bab4b401add8b31d32087a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
