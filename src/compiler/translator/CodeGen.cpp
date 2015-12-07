@@ -40,11 +40,11 @@ TCompiler* ConstructCompiler(
 #else
         // This compiler is not supported in this
         // configuration. Return NULL per the ShConstructCompiler API.
-        return NULL;
+        return nullptr;
 #endif // ANGLE_ENABLE_HLSL
       default:
         // Unknown format. Return NULL per the ShConstructCompiler API.
-        return NULL;
+        return nullptr;
     }
 }
 
