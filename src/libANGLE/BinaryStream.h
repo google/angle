@@ -92,7 +92,7 @@ class BinaryInputStream : angle::NonCopyable
             return;
         }
 
-        if (!rx::IsUnsignedAdditionSafe(mOffset, length) || mOffset + length > mLength)
+        if (mOffset + length > mLength)
         {
             mError = true;
             return;
@@ -104,7 +104,7 @@ class BinaryInputStream : angle::NonCopyable
 
     void skip(size_t length)
     {
-        if (!rx::IsUnsignedAdditionSafe(mOffset, length) || mOffset + length > mLength)
+        if (mOffset + length > mLength)
         {
             mError = true;
             return;
@@ -144,15 +144,9 @@ class BinaryInputStream : angle::NonCopyable
     {
         StaticAssertIsFundamental<T>();
 
-        if (!rx::IsUnsignedMultiplicationSafe(num, sizeof(T)))
-        {
-            mError = true;
-            return;
-        }
-
         size_t length = num * sizeof(T);
 
-        if (!rx::IsUnsignedAdditionSafe(mOffset, length) || mOffset + length > mLength)
+        if (mOffset + length > mLength)
         {
             mError = true;
             return;
