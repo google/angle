@@ -1104,6 +1104,10 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
     return gl::Error(GL_NO_ERROR);
 }
 
+void ProgramD3D::setBinaryRetrievableHint(bool /* retrievable */)
+{
+}
+
 gl::Error ProgramD3D::getPixelExecutableForFramebuffer(const gl::Framebuffer *fbo,
                                                        ShaderExecutableD3D **outExecutable)
 {

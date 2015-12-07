@@ -47,6 +47,11 @@ gl::Error ProgramGL::save(gl::BinaryOutputStream *stream)
     return gl::Error(GL_INVALID_OPERATION);
 }
 
+void ProgramGL::setBinaryRetrievableHint(bool retrievable)
+{
+    UNIMPLEMENTED();
+}
+
 LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog)
 {
     // Reset the program state, delete the current program if one exists

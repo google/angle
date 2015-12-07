@@ -2223,4 +2223,49 @@ bool ValidateGenVertexArraysBase(Context *context, GLsizei n)
 
     return true;
 }
+
+bool ValidateProgramBinaryBase(Context *context,
+                               GLuint program,
+                               GLenum binaryFormat,
+                               const void *binary,
+                               GLint length)
+{
+    Program *programObject = GetValidProgram(context, program);
+    if (programObject == nullptr)
+    {
+        return false;
+    }
+
+    const std::vector<GLenum> &programBinaryFormats = context->getCaps().programBinaryFormats;
+    if (std::find(programBinaryFormats.begin(), programBinaryFormats.end(), binaryFormat) ==
+        programBinaryFormats.end())
+    {
+        context->recordError(Error(GL_INVALID_ENUM, "Program binary format is not valid."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetProgramBinaryBase(Context *context,
+                                  GLuint program,
+                                  GLsizei bufSize,
+                                  GLsizei *length,
+                                  GLenum *binaryFormat,
+                                  void *binary)
+{
+    Program *programObject = GetValidProgram(context, program);
+    if (programObject == nullptr)
+    {
+        return false;
+    }
+
+    if (!programObject->isLinked())
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Program is not linked."));
+        return false;
+    }
+
+    return true;
+}
 }
