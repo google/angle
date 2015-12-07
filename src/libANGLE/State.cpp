@@ -1529,7 +1529,7 @@ void State::getIntegerv(const gl::Data &data, GLenum pname, GLint *params)
         *params = mGenericUniformBuffer.id();
         break;
       case GL_TRANSFORM_FEEDBACK_BINDING:
-        *params = mTransformFeedback->id();
+          *params = mTransformFeedback.id();
         break;
       case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
         *params = mTransformFeedback->getGenericBuffer().id();
