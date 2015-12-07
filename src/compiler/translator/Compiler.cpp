@@ -744,17 +744,6 @@ bool TCompiler::limitExpressionComplexity(TIntermNode* root)
         return false;
     }
 
-    TDependencyGraph graph(root);
-
-    for (TFunctionCallVector::const_iterator iter = graph.beginUserDefinedFunctionCalls();
-         iter != graph.endUserDefinedFunctionCalls();
-         ++iter)
-    {
-        TGraphFunctionCall* samplerSymbol = *iter;
-        TDependencyGraphTraverser graphTraverser;
-        samplerSymbol->traverse(&graphTraverser);
-    }
-
     return true;
 }
 
