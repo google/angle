@@ -228,7 +228,7 @@ Key VirtualKeyCodeToKey(WPARAM key, LPARAM flags)
     return Key(0);
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Win32Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
@@ -444,6 +444,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             case WM_MOUSEMOVE:
             {
+                if (!window->mIsMouseInWindow)
+                {
+                    window->mIsMouseInWindow = true;
+                    Event event;
+                    event.Type = Event::EVENT_MOUSE_ENTERED;
+                    window->pushEvent(event);
+                }
+
                 int mouseX = static_cast<short>(LOWORD(lParam));
                 int mouseY = static_cast<short>(HIWORD(lParam));
 
@@ -460,6 +468,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 Event event;
                 event.Type = Event::EVENT_MOUSE_LEFT;
                 window->pushEvent(event);
+                window->mIsMouseInWindow = false;
                 break;
             }
 
@@ -478,6 +487,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 Win32Window::Win32Window()
     : mIsVisible(false),
       mSetVisibleTimer(CreateTimer()),
+      mIsMouseInWindow(false),
       mNativeWindow(0),
       mParentWindow(0),
       mNativeDisplay(0)

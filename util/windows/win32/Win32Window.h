@@ -41,11 +41,15 @@ class Win32Window : public OSWindow
     void signalTestEvent() override;
 
   private:
+    static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
     std::string mParentClassName;
     std::string mChildClassName;
 
     bool mIsVisible;
     Timer *mSetVisibleTimer;
+
+    bool mIsMouseInWindow;
 
     EGLNativeWindowType mNativeWindow;
     EGLNativeWindowType mParentWindow;
