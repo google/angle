@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "20c3a45c_94b04403",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1370,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-07T20:48:09Z",
+      "side": 1,
+      "message": "We should be able to just assign this.",
+      "range": {
+        "startLine": 1370,
+        "startChar": 4,
+        "endLine": 1370,
+        "endChar": 52
+      },
+      "revId": "3ae6bb3f4f9514b9dbc0bd175a4ff91f6b77d30c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
