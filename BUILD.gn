@@ -338,6 +338,12 @@ shared_library("libGLESv2") {
   ]
 }
 
+shared_library("libGLESv2_ANGLE") {
+  deps = [
+    ":libGLESv2"
+  ]
+}
+
 shared_library("libEGL") {
   sources = rebase_path(gles_gypi.libegl_sources, ".", "src")
 
@@ -362,6 +368,12 @@ shared_library("libEGL") {
   deps = [
     ":includes",
     ":libGLESv2",
+  ]
+}
+
+shared_library("libEGL_ANGLE") {
+  deps = [
+    ":libEGL"
   ]
 }
 
