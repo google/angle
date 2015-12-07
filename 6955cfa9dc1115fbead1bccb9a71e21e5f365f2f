@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a0af948e_5b46d7ff",
+        "filename": "src/libEGL.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-12-07T21:02:28Z",
+      "side": 1,
+      "message": "Did you mean \u003d\u003d1 or \u003d\u003d0 here?",
+      "range": {
+        "startLine": 50,
+        "startChar": 10,
+        "endLine": 50,
+        "endChar": 26
+      },
+      "revId": "6955cfa9dc1115fbead1bccb9a71e21e5f365f2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
