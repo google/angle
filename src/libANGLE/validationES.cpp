@@ -656,6 +656,7 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
     {
         const gl::FramebufferAttachment *readColorBuffer = readFramebuffer->getReadColorbuffer();
         const gl::FramebufferAttachment *drawColorBuffer = drawFramebuffer->getFirstColorbuffer();
+        const Extensions &extensions                     = context->getExtensions();
 
         if (readColorBuffer && drawColorBuffer)
         {
@@ -673,20 +674,45 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
                     // 1) If the read buffer is fixed point format, the draw buffer must be as well
                     // 2) If the read buffer is an unsigned integer format, the draw buffer must be as well
                     // 3) If the read buffer is a signed integer format, the draw buffer must be as well
-                    if ( (readFormatInfo.componentType == GL_UNSIGNED_NORMALIZED || readFormatInfo.componentType == GL_SIGNED_NORMALIZED) &&
-                        !(drawFormatInfo.componentType == GL_UNSIGNED_NORMALIZED || drawFormatInfo.componentType == GL_SIGNED_NORMALIZED))
+                    // Changes with EXT_color_buffer_float:
+                    // Case 1) is changed to fixed point OR floating point
+                    GLenum readComponentType = readFormatInfo.componentType;
+                    GLenum drawComponentType = drawFormatInfo.componentType;
+                    bool readFixedPoint = (readComponentType == GL_UNSIGNED_NORMALIZED ||
+                                           readComponentType == GL_SIGNED_NORMALIZED);
+                    bool drawFixedPoint = (drawComponentType == GL_UNSIGNED_NORMALIZED ||
+                                           drawComponentType == GL_SIGNED_NORMALIZED);
+
+                    if (extensions.colorBufferFloat)
+                    {
+                        bool readFixedOrFloat = (readFixedPoint || readComponentType == GL_FLOAT);
+                        bool drawFixedOrFloat = (drawFixedPoint || drawComponentType == GL_FLOAT);
+
+                        if (readFixedOrFloat != drawFixedOrFloat)
+                        {
+                            context->recordError(Error(GL_INVALID_OPERATION,
+                                                       "If the read buffer contains fixed-point or "
+                                                       "floating-point values, the draw buffer "
+                                                       "must as well."));
+                            return false;
+                        }
+                    }
+                    else if (readFixedPoint != drawFixedPoint)
+                    {
+                        context->recordError(Error(GL_INVALID_OPERATION,
+                                                   "If the read buffer contains fixed-point "
+                                                   "values, the draw buffer must as well."));
+                        return false;
+                    }
+
+                    if (readComponentType == GL_UNSIGNED_INT &&
+                        drawComponentType != GL_UNSIGNED_INT)
                     {
                         context->recordError(Error(GL_INVALID_OPERATION));
                         return false;
                     }
 
-                    if (readFormatInfo.componentType == GL_UNSIGNED_INT && drawFormatInfo.componentType != GL_UNSIGNED_INT)
-                    {
-                        context->recordError(Error(GL_INVALID_OPERATION));
-                        return false;
-                    }
-
-                    if (readFormatInfo.componentType == GL_INT && drawFormatInfo.componentType != GL_INT)
+                    if (readComponentType == GL_INT && drawComponentType != GL_INT)
                     {
                         context->recordError(Error(GL_INVALID_OPERATION));
                         return false;
