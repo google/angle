@@ -1118,7 +1118,9 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
             TString addressx = "";
             TString addressy = "";
             TString addressz = "";
-            TString close = "";
+            TString closex   = "";
+            TString closey   = "";
+            TString closez   = "";
 
             if (IsIntegerSampler(textureFunction->sampler) ||
                 textureFunction->method == TextureFunction::FETCH)
@@ -1133,23 +1135,23 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
                 // Convert from normalized floating-point to integer
                 if (textureFunction->method != TextureFunction::FETCH)
                 {
-                    addressx = "int(floor(width * frac((";
-                    addressy = "int(floor(height * frac((";
+                    // We hard-code the clamp wrap mode for integer textures.
+                    // TODO(jmadill): Figure out how to integer texture wrap modes.
+                    addressx = "int(clamp(round((width *";
+                    addressy = "int(clamp(round((height * ";
+                    closex   = ") - 0.5f), 0.0f, width - 1.0f))";
+                    closey   = ") - 0.5f), 0.0f, height - 1.0f))";
 
                     if (IsSamplerArray(textureFunction->sampler))
                     {
                         addressz = "int(max(0, min(layers - 1, floor(0.5 + ";
+                        closez   = "))))";
                     }
-                    else if (IsSamplerCube(textureFunction->sampler))
+                    else if (IsSampler3D(textureFunction->sampler))
                     {
-                        addressz = "((((";
+                        addressz = "int(clamp(round((depth * ";
+                        closez   = ") - 0.5f), 0.0f, depth - 1.0f))";
                     }
-                    else
-                    {
-                        addressz = "int(floor(depth * frac((";
-                    }
-
-                    close = "))))";
                 }
             }
             else
@@ -1175,7 +1177,7 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
                 }
             }
 
-            out << addressx + ("t.x" + proj) + close + ", " + addressy + ("t.y" + proj) + close;
+            out << addressx + ("t.x" + proj) + closex + ", " + addressy + ("t.y" + proj) + closey;
 
             if (mOutputType == SH_HLSL9_OUTPUT)
             {
@@ -1215,7 +1217,7 @@ void OutputHLSL::header(const BuiltInFunctionEmulator *builtInFunctionEmulator)
                     }
                     else
                     {
-                        out << ", " + addressz + ("t.z" + proj) + close;
+                        out << ", " + addressz + ("t.z" + proj) + closez;
                     }
                 }
 
