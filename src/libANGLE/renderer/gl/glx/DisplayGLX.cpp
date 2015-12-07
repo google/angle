@@ -690,9 +690,9 @@ void DisplayGLX::setSwapInterval(glx::Drawable drawable, SwapControlData *data)
     }
 }
 
-bool DisplayGLX::isValidWindowVisualId(int visualId) const
+bool DisplayGLX::isValidWindowVisualId(unsigned long visualId) const
 {
-    return mRequestedVisual == -1 || mRequestedVisual == visualId;
+    return mRequestedVisual == -1 || static_cast<unsigned long>(mRequestedVisual) == visualId;
 }
 
 const FunctionsGL *DisplayGLX::getFunctionsGL() const

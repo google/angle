@@ -57,7 +57,7 @@ egl::Error WindowSurfaceGLX::initialize()
     {
         XWindowAttributes windowAttributes;
         XGetWindowAttributes(mDisplay, mParent, &windowAttributes);
-        int visualId = windowAttributes.visual->visualid;
+        unsigned long visualId = windowAttributes.visual->visualid;
 
         if (!mGLXDisplay->isValidWindowVisualId(visualId))
         {

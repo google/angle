@@ -79,7 +79,7 @@ class DisplayGLX : public DisplayGL
     // acts as expected.
     void setSwapInterval(glx::Drawable drawable, SwapControlData *data);
 
-    bool isValidWindowVisualId(int visualId) const;
+    bool isValidWindowVisualId(unsigned long visualId) const;
 
   private:
     const FunctionsGL *getFunctionsGL() const override;
