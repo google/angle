@@ -353,6 +353,14 @@ shared_library("libGLESv2") {
   ]
 }
 
+if (!is_win) {
+  shared_library("libGLESv2_ANGLE") {
+    deps = [
+      ":libGLESv2",
+    ]
+  }
+}
+
 shared_library("libEGL") {
   sources = rebase_path(gles_gypi.libegl_sources, ".", "src")
 
@@ -375,6 +383,14 @@ shared_library("libEGL") {
     ":includes",
     ":libGLESv2",
   ]
+}
+
+if (!is_win) {
+  shared_library("libEGL_ANGLE") {
+    deps = [
+      ":libEGL",
+    ]
+  }
 }
 
 util_gypi = exec_script("//build/gypi_to_gn.py",
