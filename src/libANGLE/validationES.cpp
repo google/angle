@@ -2191,9 +2191,7 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
 
 bool ValidateBindVertexArrayBase(Context *context, GLuint array)
 {
-    VertexArray *vao = context->getVertexArray(array);
-
-    if (!vao)
+    if (!context->isVertexArrayGenerated(array))
     {
         // The default VAO should always exist
         ASSERT(array != 0);
