@@ -17,6 +17,7 @@
 #include "libANGLE/renderer/d3d/d3d9/DebugAnnotator9.h"
 #include "libANGLE/renderer/d3d/d3d9/ShaderCache.h"
 #include "libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.h"
+#include "libANGLE/renderer/d3d/d3d9/StateManager9.h"
 
 namespace gl
 {
@@ -135,7 +136,7 @@ class Renderer9 : public RendererD3D
     bool testDeviceLost() override;
     bool testDeviceResettable() override;
 
-    VendorID getVendorId() const override;
+    VendorID getVendorId() const;
     std::string getRendererDescription() const override;
     DeviceIdentifier getAdapterIdentifier() const override;
 
@@ -231,10 +232,7 @@ class Renderer9 : public RendererD3D
     virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
 
-    void syncState(const gl::State & /*state*/, const gl::State::DirtyBits &bitmask) override
-    {
-        // TODO(dianx) implement d3d9 dirty bits
-    }
+    void syncState(const gl::State &state, const gl::State::DirtyBits &bitmask) override;
 
     // D3D9-renderer specific methods
     gl::Error boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);
@@ -351,6 +349,8 @@ class Renderer9 : public RendererD3D
 
     IDirect3DStateBlock9 *mMaskedClearSavedState;
 
+    StateManager9 mStateManager;
+
     // previously set render states
     bool mForceSetDepthStencilState;
     gl::DepthStencilState mCurDepthStencilState;
@@ -370,11 +370,6 @@ class Renderer9 : public RendererD3D
     float mCurNear;
     float mCurFar;
     float mCurDepthFront;
-
-    bool mForceSetBlendState;
-    gl::BlendState mCurBlendState;
-    gl::ColorF mCurBlendColor;
-    GLuint mCurSampleMask;
 
     // Currently applied sampler states
     struct CurSamplerState

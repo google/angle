@@ -363,12 +363,6 @@ bool RendererGL::testDeviceResettable()
     return bool();
 }
 
-VendorID RendererGL::getVendorId() const
-{
-    UNIMPLEMENTED();
-    return VendorID();
-}
-
 std::string RendererGL::getVendorString() const
 {
     return std::string(reinterpret_cast<const char*>(mFunctions->getString(GL_VENDOR)));

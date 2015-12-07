@@ -82,7 +82,6 @@ class Renderer : public ImplFactory
     virtual bool testDeviceLost() = 0;
     virtual bool testDeviceResettable() = 0;
 
-    virtual VendorID getVendorId() const = 0;
     virtual std::string getVendorString() const = 0;
     virtual std::string getRendererDescription() const = 0;
 

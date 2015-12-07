@@ -76,8 +76,7 @@ enum
     MAX_TEXTURE_IMAGE_UNITS_VTF_SM3 = 4
 };
 
-Renderer9::Renderer9(egl::Display *display)
-    : RendererD3D(display)
+Renderer9::Renderer9(egl::Display *display) : RendererD3D(display), mStateManager(this)
 {
     mD3d9Module = NULL;
 
@@ -886,6 +885,11 @@ gl::Error Renderer9::setUniformBuffers(const gl::Data &/*data*/,
     return gl::Error(GL_NO_ERROR);
 }
 
+void Renderer9::syncState(const gl::State &state, const gl::State::DirtyBits &bitmask)
+{
+    mStateManager.syncState(state, bitmask);
+}
+
 gl::Error Renderer9::updateState(const gl::Data &data, GLenum drawMode)
 {
     // Applies the render target surface, depth stencil surface, viewport rectangle and
@@ -930,6 +934,9 @@ gl::Error Renderer9::updateState(const gl::Data &data, GLenum drawMode)
 
     // Setting depth stencil state
     error = setDepthStencilState(*data.state);
+
+    mStateManager.resetDirtyBits();
+
     return error;
 }
 
@@ -978,107 +985,7 @@ gl::Error Renderer9::setBlendState(const gl::Framebuffer *framebuffer,
                                    const gl::ColorF &blendColor,
                                    unsigned int sampleMask)
 {
-    bool blendStateChanged = mForceSetBlendState || memcmp(&blendState, &mCurBlendState, sizeof(gl::BlendState)) != 0;
-    bool blendColorChanged = mForceSetBlendState || memcmp(&blendColor, &mCurBlendColor, sizeof(gl::ColorF)) != 0;
-    bool sampleMaskChanged = mForceSetBlendState || sampleMask != mCurSampleMask;
-
-    if (blendStateChanged || blendColorChanged)
-    {
-        if (blendState.blend)
-        {
-            mDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-
-            if (blendState.sourceBlendRGB != GL_CONSTANT_ALPHA && blendState.sourceBlendRGB != GL_ONE_MINUS_CONSTANT_ALPHA &&
-                blendState.destBlendRGB != GL_CONSTANT_ALPHA && blendState.destBlendRGB != GL_ONE_MINUS_CONSTANT_ALPHA)
-            {
-                mDevice->SetRenderState(D3DRS_BLENDFACTOR, gl_d3d9::ConvertColor(blendColor));
-            }
-            else
-            {
-                mDevice->SetRenderState(D3DRS_BLENDFACTOR, D3DCOLOR_RGBA(gl::unorm<8>(blendColor.alpha),
-                                                                         gl::unorm<8>(blendColor.alpha),
-                                                                         gl::unorm<8>(blendColor.alpha),
-                                                                         gl::unorm<8>(blendColor.alpha)));
-            }
-
-            mDevice->SetRenderState(D3DRS_SRCBLEND, gl_d3d9::ConvertBlendFunc(blendState.sourceBlendRGB));
-            mDevice->SetRenderState(D3DRS_DESTBLEND, gl_d3d9::ConvertBlendFunc(blendState.destBlendRGB));
-            mDevice->SetRenderState(D3DRS_BLENDOP, gl_d3d9::ConvertBlendOp(blendState.blendEquationRGB));
-
-            if (blendState.sourceBlendRGB != blendState.sourceBlendAlpha ||
-                blendState.destBlendRGB != blendState.destBlendAlpha ||
-                blendState.blendEquationRGB != blendState.blendEquationAlpha)
-            {
-                mDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
-
-                mDevice->SetRenderState(D3DRS_SRCBLENDALPHA, gl_d3d9::ConvertBlendFunc(blendState.sourceBlendAlpha));
-                mDevice->SetRenderState(D3DRS_DESTBLENDALPHA, gl_d3d9::ConvertBlendFunc(blendState.destBlendAlpha));
-                mDevice->SetRenderState(D3DRS_BLENDOPALPHA, gl_d3d9::ConvertBlendOp(blendState.blendEquationAlpha));
-            }
-            else
-            {
-                mDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, FALSE);
-            }
-        }
-        else
-        {
-            mDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-        }
-
-        if (blendState.sampleAlphaToCoverage)
-        {
-            FIXME("Sample alpha to coverage is unimplemented.");
-        }
-
-        const gl::FramebufferAttachment *attachment = framebuffer->getFirstColorbuffer();
-        GLenum internalFormat = attachment ? attachment->getInternalFormat() : GL_NONE;
-
-        // Set the color mask
-        bool zeroColorMaskAllowed = getVendorId() != VENDOR_ID_AMD;
-        // Apparently some ATI cards have a bug where a draw with a zero color
-        // write mask can cause later draws to have incorrect results. Instead,
-        // set a nonzero color write mask but modify the blend state so that no
-        // drawing is done.
-        // http://code.google.com/p/angleproject/issues/detail?id=169
-
-        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
-        DWORD colorMask = gl_d3d9::ConvertColorMask(formatInfo.redBits   > 0 && blendState.colorMaskRed,
-                                                    formatInfo.greenBits > 0 && blendState.colorMaskGreen,
-                                                    formatInfo.blueBits  > 0 && blendState.colorMaskBlue,
-                                                    formatInfo.alphaBits > 0 && blendState.colorMaskAlpha);
-        if (colorMask == 0 && !zeroColorMaskAllowed)
-        {
-            // Enable green channel, but set blending so nothing will be drawn.
-            mDevice->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_GREEN);
-            mDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-
-            mDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ZERO);
-            mDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-            mDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-        }
-        else
-        {
-            mDevice->SetRenderState(D3DRS_COLORWRITEENABLE, colorMask);
-        }
-
-        mDevice->SetRenderState(D3DRS_DITHERENABLE, blendState.dither ? TRUE : FALSE);
-
-        mCurBlendState = blendState;
-        mCurBlendColor = blendColor;
-    }
-
-    if (sampleMaskChanged)
-    {
-        // Set the multisample mask
-        mDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);
-        mDevice->SetRenderState(D3DRS_MULTISAMPLEMASK, static_cast<DWORD>(sampleMask));
-
-        mCurSampleMask = sampleMask;
-    }
-
-    mForceSetBlendState = false;
-
-    return gl::Error(GL_NO_ERROR);
+    return mStateManager.setBlendState(framebuffer, blendState, blendColor, sampleMask);
 }
 
 gl::Error Renderer9::setDepthStencilState(const gl::State &glState)
@@ -1487,7 +1394,7 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorAtt
     {
         mForceSetScissor = true;
         mForceSetViewport = true;
-        mForceSetBlendState = true;
+        mStateManager.forceSetBlendState();
 
         mRenderTargetDesc.width = renderTargetWidth;
         mRenderTargetDesc.height = renderTargetHeight;
@@ -2335,7 +2242,7 @@ void Renderer9::markAllStateDirty()
     mForceSetRasterState = true;
     mForceSetScissor = true;
     mForceSetViewport = true;
-    mForceSetBlendState = true;
+    mStateManager.forceSetBlendState();
 
     ASSERT(mCurVertexSamplerStates.size() == mCurVertexTextures.size());
     for (unsigned int i = 0; i < mCurVertexTextures.size(); i++)

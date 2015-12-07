@@ -265,6 +265,8 @@
             'libANGLE/renderer/d3d/d3d9/shaders/compiled/luminanceps.h',
             'libANGLE/renderer/d3d/d3d9/shaders/compiled/passthroughps.h',
             'libANGLE/renderer/d3d/d3d9/shaders/compiled/standardvs.h',
+            'libANGLE/renderer/d3d/d3d9/StateManager9.cpp',
+            'libANGLE/renderer/d3d/d3d9/StateManager9.h',
             'libANGLE/renderer/d3d/d3d9/SwapChain9.cpp',
             'libANGLE/renderer/d3d/d3d9/SwapChain9.h',
             'libANGLE/renderer/d3d/d3d9/TextureStorage9.cpp',
