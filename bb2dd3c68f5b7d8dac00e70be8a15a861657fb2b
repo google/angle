@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c07008c6_5f436348",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-07T19:24:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0d568d0_31b6f0b0",
+      "range": {
+        "startLine": 557,
+        "startChar": 4,
+        "endLine": 557,
+        "endChar": 40
+      },
+      "revId": "bb2dd3c68f5b7d8dac00e70be8a15a861657fb2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a067940d_5b58573a",
         "filename": "src/libANGLE/Context.h",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-12-07T17:39:58Z",
       "side": 1,
       "message": "nit: call these isVertexArray and isTransformFeedback to mirror the OpenGL ES API calls",
+      "range": {
+        "startLine": 156,
+        "startChar": 4,
+        "endLine": 157,
+        "endChar": 58
+      },
+      "revId": "bb2dd3c68f5b7d8dac00e70be8a15a861657fb2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a067940d_1b4dff72",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-07T19:24:11Z",
+      "side": 1,
+      "message": "They don\u0027t mirror the API calls here, this is to determine if the IDs were generated and are capable of being bound.  glIsVertexArray/TransformFeedback is supposed to return false even if the ID was generated.",
+      "parentUuid": "a067940d_5b58573a",
       "range": {
         "startLine": 156,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "0076a0c5_a7f2b28e",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1532,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-07T19:24:11Z",
+      "side": 1,
+      "message": "BindingPointer has an \"id\" member function that does a null check, this is just switching to that.",
+      "parentUuid": "806a90d7_b708a8ae",
+      "range": {
+        "startLine": 1531,
+        "startChar": 39,
+        "endLine": 1532,
+        "endChar": 38
+      },
+      "revId": "bb2dd3c68f5b7d8dac00e70be8a15a861657fb2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "207ba4af_b7ce6281",
         "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2015-12-07T17:39:58Z",
       "side": 1,
       "message": "nit: add error message",
+      "range": {
+        "startLine": 2929,
+        "startChar": 47,
+        "endLine": 2929,
+        "endChar": 67
+      },
+      "revId": "bb2dd3c68f5b7d8dac00e70be8a15a861657fb2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c07008c6_1f4deb72",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2929,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-07T19:24:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "207ba4af_b7ce6281",
       "range": {
         "startLine": 2929,
         "startChar": 47,
