@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "207ba4af_d7843ec6",
+        "filename": "src/libANGLE/BinaryStream.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-07T19:39:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "806a90d7_d7bbdcfd",
+      "range": {
+        "startLine": 147,
+        "startChar": 17,
+        "endLine": 147,
+        "endChar": 39
+      },
+      "revId": "f7b5289470887ea3d3d5d9ecf1856e78277231ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "207ba4af_77d3eadd",
         "filename": "src/libANGLE/BinaryStream_unittest.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-12-07T19:33:16Z",
       "side": 1,
       "message": "nit: comment before each test",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 4
+      },
+      "revId": "f7b5289470887ea3d3d5d9ecf1856e78277231ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a067940d_3b9803e7",
+        "filename": "src/libANGLE/BinaryStream_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-07T19:39:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "207ba4af_77d3eadd",
       "range": {
         "startLine": 16,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "a0dcf4fd_161abca9",
+        "filename": "src/libANGLE/BinaryStream_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-07T19:39:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a067940d_fb560bd9",
+      "range": {
+        "startLine": 32,
+        "startChar": 70,
+        "endLine": 35,
+        "endChar": 34
+      },
+      "revId": "f7b5289470887ea3d3d5d9ecf1856e78277231ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e0d26ce6_f224e890",
         "filename": "src/libANGLE/BinaryStream_unittest.cpp",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2015-12-07T19:33:16Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 47,
+        "startChar": 32,
+        "endLine": 49,
+        "endChar": 34
+      },
+      "revId": "f7b5289470887ea3d3d5d9ecf1856e78277231ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e0d26ce6_324ef04f",
+        "filename": "src/libANGLE/BinaryStream_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-07T19:39:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0d26ce6_f224e890",
       "range": {
         "startLine": 47,
         "startChar": 32,
