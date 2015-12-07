@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "60811cc8_191aefa9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-07T15:25:09Z",
+      "side": 1,
+      "message": "nit: type, remove I",
+      "range": {
+        "startLine": 10,
+        "startChar": 4,
+        "endLine": 10,
+        "endChar": 5
+      },
+      "revId": "993c48b5761000bdc227efa6933a3f2084566b18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
