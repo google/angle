@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "60e03ce1_81ac7cb3",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 838,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-12-07T19:00:51Z",
+      "side": 1,
+      "message": "I\u0027m surprised this works -- the libGLESv2 target already has a type, and libGLESv2_ANGLE doesn\u0027t contain any additional sources -- but if it\u0027s been tested, that\u0027s fine.",
+      "revId": "547ef39037fdc6f3b4bbec499c6033ae037fb5f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
