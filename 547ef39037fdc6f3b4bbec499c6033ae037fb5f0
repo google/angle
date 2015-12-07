@@ -16,6 +16,24 @@
       "revId": "547ef39037fdc6f3b4bbec499c6033ae037fb5f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "60811cc8_f962931a",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 838,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-07T19:13:38Z",
+      "side": 1,
+      "message": "Basically the _ANGLE target is used as a proxy to load libGLESv2.so. I was able to get Chromium to load ANGLE via this new target.",
+      "parentUuid": "60e03ce1_81ac7cb3",
+      "revId": "547ef39037fdc6f3b4bbec499c6033ae037fb5f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
