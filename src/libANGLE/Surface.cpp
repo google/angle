@@ -185,7 +185,7 @@ Error Surface::bindTexImage(gl::Texture *texture, EGLint buffer)
 
     texture->bindTexImageFromSurface(this);
     mTexture.set(texture);
-    return mImplementation->bindTexImage(buffer);
+    return mImplementation->bindTexImage(texture, buffer);
 }
 
 Error Surface::releaseTexImage(EGLint buffer)
