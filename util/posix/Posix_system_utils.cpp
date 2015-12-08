@@ -41,4 +41,9 @@ void SetLowPriorityProcess()
     setpriority(PRIO_PROCESS, getpid(), 10);
 }
 
+void WriteDebugMessage(const char *format, ...)
+{
+    // TODO(jmadill): Implement this
+}
+
 } // namespace angle

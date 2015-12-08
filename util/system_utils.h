@@ -22,6 +22,9 @@ void Sleep(unsigned int milliseconds);
 
 void SetLowPriorityProcess();
 
+// Write a debug message, either to a standard output or Debug window.
+void WriteDebugMessage(const char *format, ...);
+
 } // namespace angle
 
 #endif // SAMPLE_UTIL_PATH_UTILS_H
