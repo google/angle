@@ -2924,11 +2924,9 @@ void GL_APIENTRY BindTransformFeedback(GLenum target, GLuint id)
                 }
 
                 // Cannot bind a transform feedback object that does not exist (3.0.2 pg 85 section 2.14.1)
-                if (!context->isTransformFeedbackGenerated(id))
+                if (context->getTransformFeedback(id) == NULL)
                 {
-                    context->recordError(
-                        Error(GL_INVALID_OPERATION,
-                              "Cannot bind a transform feedback object that does not exist."));
+                    context->recordError(Error(GL_INVALID_OPERATION));
                     return;
                 }
 
@@ -2996,15 +2994,7 @@ GLboolean GL_APIENTRY IsTransformFeedback(GLuint id)
             return GL_FALSE;
         }
 
-        if (id == 0)
-        {
-            // The 3.0.4 spec [section 6.1.11] states that if ID is zero, IsTransformFeedback
-            // returns FALSE
-            return GL_FALSE;
-        }
-
-        const TransformFeedback *transformFeedback = context->getTransformFeedback(id);
-        return ((transformFeedback != nullptr) ? GL_TRUE : GL_FALSE);
+        return ((context->getTransformFeedback(id) != NULL) ? GL_TRUE : GL_FALSE);
     }
 
     return GL_FALSE;
