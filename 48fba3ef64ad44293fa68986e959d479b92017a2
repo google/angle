@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0093006b_4bf62582",
+        "filename": "util/windows/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 462,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-08T15:43:59Z",
+      "side": 1,
+      "message": "I think this should go in front of the mouse moved event, ie, push this first, so the app knows \"entered window, mouse moved\" instead of \"mouse moved, entered window\"",
+      "range": {
+        "startLine": 456,
+        "startChar": 0,
+        "endLine": 462,
+        "endChar": 17
+      },
+      "revId": "48fba3ef64ad44293fa68986e959d479b92017a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
