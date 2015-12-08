@@ -20,6 +20,8 @@ StateManager9::StateManager9(Renderer9 *renderer9)
     : mCurBlendState(),
       mCurBlendColor(0, 0, 0, 0),
       mCurSampleMask(0),
+      mCurRasterState(),
+      mCurDepthSize(0),
       mRenderer9(renderer9),
       mDirtyBits()
 {
@@ -30,6 +32,9 @@ StateManager9::StateManager9(Renderer9 *renderer9)
     mBlendStateDirtyBits.set(DIRTY_BIT_COLOR_MASK);
     mBlendStateDirtyBits.set(DIRTY_BIT_DITHER);
     mBlendStateDirtyBits.set(DIRTY_BIT_SAMPLE_MASK);
+
+    mRasterizerStateDirtyBits.set(DIRTY_BIT_CULL_MODE);
+    mRasterizerStateDirtyBits.set(DIRTY_BIT_DEPTH_BIAS);
 }
 
 StateManager9::~StateManager9()
@@ -39,6 +44,11 @@ StateManager9::~StateManager9()
 void StateManager9::forceSetBlendState()
 {
     mDirtyBits |= mBlendStateDirtyBits;
+}
+
+void StateManager9::forceSetRasterState()
+{
+    mDirtyBits |= mRasterizerStateDirtyBits;
 }
 
 void StateManager9::syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits)
@@ -111,18 +121,56 @@ void StateManager9::syncState(const gl::State &state, const gl::State::DirtyBits
                     mDirtyBits.set(DIRTY_BIT_BLEND_COLOR);
                 }
                 break;
+            case gl::State::DIRTY_BIT_CULL_FACE_ENABLED:
+                if (state.getRasterizerState().cullFace != mCurRasterState.cullFace)
+                {
+                    mDirtyBits.set(DIRTY_BIT_CULL_MODE);
+                }
+                break;
+            case gl::State::DIRTY_BIT_CULL_FACE:
+                if (state.getRasterizerState().cullMode != mCurRasterState.cullMode)
+                {
+                    mDirtyBits.set(DIRTY_BIT_CULL_MODE);
+                }
+                break;
+            case gl::State::DIRTY_BIT_FRONT_FACE:
+                if (state.getRasterizerState().frontFace != mCurRasterState.frontFace)
+                {
+                    mDirtyBits.set(DIRTY_BIT_CULL_MODE);
+                }
+                break;
+            case gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
+                if (state.getRasterizerState().polygonOffsetFill !=
+                    mCurRasterState.polygonOffsetFill)
+                {
+                    mDirtyBits.set(DIRTY_BIT_DEPTH_BIAS);
+                }
+                break;
+            case gl::State::DIRTY_BIT_POLYGON_OFFSET:
+            {
+                const gl::RasterizerState &rasterizerState = state.getRasterizerState();
+                if (rasterizerState.polygonOffsetFactor != mCurRasterState.polygonOffsetFactor ||
+                    rasterizerState.polygonOffsetUnits != mCurRasterState.polygonOffsetUnits)
+                {
+                    mDirtyBits.set(DIRTY_BIT_DEPTH_BIAS);
+                }
+                break;
+            }
             default:
                 break;
         }
     }
 }
 
-gl::Error StateManager9::setBlendState(const gl::Framebuffer *framebuffer,
-                                       const gl::BlendState &blendState,
-                                       const gl::ColorF &blendColor,
-                                       unsigned int sampleMask)
+gl::Error StateManager9::setBlendAndRasterizerState(const gl::State &glState,
+                                                    unsigned int sampleMask)
 {
-    for (unsigned int dirtyBit : angle::IterateBitSet(mDirtyBits))
+    const gl::Framebuffer *framebuffer     = glState.getDrawFramebuffer();
+    const gl::BlendState &blendState       = glState.getBlendState();
+    const gl::ColorF &blendColor           = glState.getBlendColor();
+    const gl::RasterizerState &rasterState = glState.getRasterizerState();
+
+    for (auto dirtyBit : angle::IterateBitSet(mDirtyBits))
     {
         switch (dirtyBit)
         {
@@ -145,6 +193,12 @@ gl::Error StateManager9::setBlendState(const gl::Framebuffer *framebuffer,
             case DIRTY_BIT_DITHER:
                 setDither(blendState.dither);
                 break;
+            case DIRTY_BIT_CULL_MODE:
+                setCullMode(rasterState.cullFace, rasterState.cullMode, rasterState.frontFace);
+                break;
+            case DIRTY_BIT_DEPTH_BIAS:
+                setDepthBias(rasterState.polygonOffsetFill, rasterState.polygonOffsetFactor,
+                             rasterState.polygonOffsetUnits);
             default:
                 break;
         }
@@ -293,4 +347,56 @@ void StateManager9::setSampleMask(unsigned int sampleMask)
     mCurSampleMask = sampleMask;
 }
 
+void StateManager9::setCullMode(bool cullFace, GLenum cullMode, GLenum frontFace)
+{
+    if (cullFace)
+    {
+        mRenderer9->getDevice()->SetRenderState(D3DRS_CULLMODE,
+                                                gl_d3d9::ConvertCullMode(cullMode, frontFace));
+    }
+    else
+    {
+        mRenderer9->getDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+    }
+
+    mCurRasterState.cullFace  = cullFace;
+    mCurRasterState.cullMode  = cullMode;
+    mCurRasterState.frontFace = frontFace;
+}
+
+void StateManager9::setDepthBias(bool polygonOffsetFill,
+                                 GLfloat polygonOffsetFactor,
+                                 GLfloat polygonOffsetUnits)
+{
+    if (polygonOffsetFill)
+    {
+        if (mCurDepthSize > 0)
+        {
+            IDirect3DDevice9 *device = mRenderer9->getDevice();
+            device->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *(DWORD *)&polygonOffsetFactor);
+
+            float depthBias = ldexp(polygonOffsetUnits, -static_cast<int>(mCurDepthSize));
+            device->SetRenderState(D3DRS_DEPTHBIAS, *(DWORD *)&depthBias);
+        }
+    }
+    else
+    {
+        IDirect3DDevice9 *device = mRenderer9->getDevice();
+        device->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, 0);
+        device->SetRenderState(D3DRS_DEPTHBIAS, 0);
+    }
+
+    mCurRasterState.polygonOffsetFill   = polygonOffsetFill;
+    mCurRasterState.polygonOffsetFactor = polygonOffsetFactor;
+    mCurRasterState.polygonOffsetUnits  = polygonOffsetUnits;
+}
+
+void StateManager9::updateDepthSizeIfChanged(bool depthStencilInitialized, unsigned int depthSize)
+{
+    if (!depthStencilInitialized || depthSize != mCurDepthSize)
+    {
+        mCurDepthSize = depthSize;
+        forceSetRasterState();
+    }
+}
 }  // namespace rx
