@@ -420,6 +420,11 @@ void Display::terminate()
         destroyImage(*mImageSet.begin());
     }
 
+    while (!mImplementation->getSurfaceSet().empty())
+    {
+        destroySurface(*mImplementation->getSurfaceSet().begin());
+    }
+
     mConfigSet.clear();
 
     if (mDevice != nullptr && mDevice->getOwningDisplay() != nullptr)
