@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c09d6871_ba627519",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-08T13:03:33Z",
+      "side": 1,
+      "message": "TODO(jmadill): replace with dirty bits",
+      "range": {
+        "startLine": 797,
+        "startChar": 14,
+        "endLine": 797,
+        "endChar": 38
+      },
+      "revId": "545a3cc3c85f80c085f5d29a98101256fb8f3a72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c086482d_0920a9de",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-08T13:03:33Z",
+      "side": 1,
+      "message": "/* retrievable */",
+      "range": {
+        "startLine": 1107,
+        "startChar": 47,
+        "endLine": 1107,
+        "endChar": 58
+      },
+      "revId": "545a3cc3c85f80c085f5d29a98101256fb8f3a72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "20980485_ac06c361",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-08T13:03:33Z",
+      "side": 1,
+      "message": "TODO(geofflang)?",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 52,
+        "endChar": 17
+      },
+      "revId": "545a3cc3c85f80c085f5d29a98101256fb8f3a72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
