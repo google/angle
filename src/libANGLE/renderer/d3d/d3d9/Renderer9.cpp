@@ -913,29 +913,26 @@ gl::Error Renderer9::updateState(const gl::Data &data, GLenum drawMode)
     // Setting scissors state
     setScissorRectangle(data.state->getScissor(), data.state->isScissorTestEnabled());
 
-    // Setting rasterizer state
+    // Setting blend, depth stencil, and rasterizer states
     int samples                    = framebufferObject->getSamples(data);
     gl::RasterizerState rasterizer = data.state->getRasterizerState();
     rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
     rasterizer.multiSample         = (samples != 0);
 
     unsigned int mask = GetBlendSampleMask(data, samples);
-    error             = setBlendAndRasterizerState(data, mask);
+    error             = setBlendDepthRasterStates(data, mask);
 
     if (error.isError())
     {
         return error;
     }
 
-    // Setting depth stencil state
-    error = setDepthStencilState(*data.state);
-
     mStateManager.resetDirtyBits();
 
     return error;
 }
 
-gl::Error Renderer9::setBlendAndRasterizerState(const gl::Data &glData, GLenum drawMode)
+gl::Error Renderer9::setBlendDepthRasterStates(const gl::Data &glData, GLenum drawMode)
 {
     int samples                    = glData.state->getDrawFramebuffer()->getSamples(glData);
     gl::RasterizerState rasterizer = glData.state->getRasterizerState();
@@ -943,107 +940,7 @@ gl::Error Renderer9::setBlendAndRasterizerState(const gl::Data &glData, GLenum d
     rasterizer.multiSample         = (samples != 0);
 
     unsigned int mask = GetBlendSampleMask(glData, samples);
-    return mStateManager.setBlendAndRasterizerState(*glData.state, mask);
-}
-
-gl::Error Renderer9::setDepthStencilState(const gl::State &glState)
-{
-    const auto &depthStencilState = glState.getDepthStencilState();
-    int stencilRef                = glState.getStencilRef();
-    int stencilBackRef            = glState.getStencilBackRef();
-    bool frontFaceCCW             = (glState.getRasterizerState().frontFace == GL_CCW);
-
-    bool depthStencilStateChanged = mForceSetDepthStencilState ||
-                                    memcmp(&depthStencilState, &mCurDepthStencilState, sizeof(gl::DepthStencilState)) != 0;
-    bool stencilRefChanged = mForceSetDepthStencilState || stencilRef != mCurStencilRef ||
-                             stencilBackRef != mCurStencilBackRef;
-    bool frontFaceCCWChanged = mForceSetDepthStencilState || frontFaceCCW != mCurFrontFaceCCW;
-
-    if (depthStencilStateChanged)
-    {
-        if (depthStencilState.depthTest)
-        {
-            mDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
-            mDevice->SetRenderState(D3DRS_ZFUNC, gl_d3d9::ConvertComparison(depthStencilState.depthFunc));
-        }
-        else
-        {
-            mDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
-        }
-
-        mCurDepthStencilState = depthStencilState;
-    }
-
-    if (depthStencilStateChanged || stencilRefChanged || frontFaceCCWChanged)
-    {
-        if (depthStencilState.stencilTest && mCurStencilSize > 0)
-        {
-            mDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-            mDevice->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, TRUE);
-
-            // FIXME: Unsupported by D3D9
-            const D3DRENDERSTATETYPE D3DRS_CCW_STENCILREF = D3DRS_STENCILREF;
-            const D3DRENDERSTATETYPE D3DRS_CCW_STENCILMASK = D3DRS_STENCILMASK;
-            const D3DRENDERSTATETYPE D3DRS_CCW_STENCILWRITEMASK = D3DRS_STENCILWRITEMASK;
-
-            // get the maximum size of the stencil ref
-            unsigned int maxStencil = (1 << mCurStencilSize) - 1;
-
-            ASSERT((depthStencilState.stencilWritemask & maxStencil) ==
-                   (depthStencilState.stencilBackWritemask & maxStencil));
-            ASSERT(stencilRef == stencilBackRef);
-            ASSERT((depthStencilState.stencilMask & maxStencil) ==
-                   (depthStencilState.stencilBackMask & maxStencil));
-
-            mDevice->SetRenderState(frontFaceCCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK,
-                                    depthStencilState.stencilWritemask);
-            mDevice->SetRenderState(frontFaceCCW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC,
-                                    gl_d3d9::ConvertComparison(depthStencilState.stencilFunc));
-
-            mDevice->SetRenderState(frontFaceCCW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF,
-                                    (stencilRef < (int)maxStencil) ? stencilRef : maxStencil);
-            mDevice->SetRenderState(frontFaceCCW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK,
-                                    depthStencilState.stencilMask);
-
-            mDevice->SetRenderState(frontFaceCCW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL,
-                                    gl_d3d9::ConvertStencilOp(depthStencilState.stencilFail));
-            mDevice->SetRenderState(frontFaceCCW ? D3DRS_STENCILZFAIL : D3DRS_CCW_STENCILZFAIL,
-                                    gl_d3d9::ConvertStencilOp(depthStencilState.stencilPassDepthFail));
-            mDevice->SetRenderState(frontFaceCCW ? D3DRS_STENCILPASS : D3DRS_CCW_STENCILPASS,
-                                    gl_d3d9::ConvertStencilOp(depthStencilState.stencilPassDepthPass));
-
-            mDevice->SetRenderState(!frontFaceCCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK,
-                                    depthStencilState.stencilBackWritemask);
-            mDevice->SetRenderState(!frontFaceCCW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC,
-                                    gl_d3d9::ConvertComparison(depthStencilState.stencilBackFunc));
-
-            mDevice->SetRenderState(!frontFaceCCW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF,
-                                    (stencilBackRef < (int)maxStencil) ? stencilBackRef : maxStencil);
-            mDevice->SetRenderState(!frontFaceCCW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK,
-                                    depthStencilState.stencilBackMask);
-
-            mDevice->SetRenderState(!frontFaceCCW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL,
-                                    gl_d3d9::ConvertStencilOp(depthStencilState.stencilBackFail));
-            mDevice->SetRenderState(!frontFaceCCW ? D3DRS_STENCILZFAIL : D3DRS_CCW_STENCILZFAIL,
-                                    gl_d3d9::ConvertStencilOp(depthStencilState.stencilBackPassDepthFail));
-            mDevice->SetRenderState(!frontFaceCCW ? D3DRS_STENCILPASS : D3DRS_CCW_STENCILPASS,
-                                    gl_d3d9::ConvertStencilOp(depthStencilState.stencilBackPassDepthPass));
-        }
-        else
-        {
-            mDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
-        }
-
-        mDevice->SetRenderState(D3DRS_ZWRITEENABLE, depthStencilState.depthMask ? TRUE : FALSE);
-
-        mCurStencilRef = stencilRef;
-        mCurStencilBackRef = stencilBackRef;
-        mCurFrontFaceCCW = frontFaceCCW;
-    }
-
-    mForceSetDepthStencilState = false;
-
-    return gl::Error(GL_NO_ERROR);
+    return mStateManager.setBlendDepthRasterStates(*glData.state, mask);
 }
 
 void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
@@ -1334,11 +1231,7 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorAtt
 
         mStateManager.updateDepthSizeIfChanged(mDepthStencilInitialized, depthSize);
 
-        if (!mDepthStencilInitialized || stencilSize != mCurStencilSize)
-        {
-            mCurStencilSize = stencilSize;
-            mForceSetDepthStencilState = true;
-        }
+        mStateManager.updateStencilSizeIfChanged(mDepthStencilInitialized, stencilSize);
 
         mAppliedDepthStencilSerial = depthStencilSerial;
         mDepthStencilInitialized = true;
@@ -2192,10 +2085,10 @@ void Renderer9::markAllStateDirty()
     mDepthStencilInitialized = false;
     mRenderTargetDescInitialized = false;
 
-    mForceSetDepthStencilState = true;
     mForceSetScissor = true;
     mForceSetViewport = true;
     mStateManager.forceSetRasterState();
+    mStateManager.forceSetDepthStencilState();
     mStateManager.forceSetBlendState();
 
     ASSERT(mCurVertexSamplerStates.size() == mCurVertexTextures.size());
