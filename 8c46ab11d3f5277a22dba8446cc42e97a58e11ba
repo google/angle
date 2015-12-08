@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e01d0cf8_5ad8d546",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1535,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2015-12-08T20:30:31Z",
+      "side": 0,
+      "message": "I had a question about this one.\nSeems there is no reason for detachment to be handled by Context anymore. Should I move this code into State?\nWould I need removeXXXBufferBinding in State API at all, and call them from State::detachBuffer()? Or just access the relevant State members from State::detachBuffer() directly?",
+      "parentUuid": "20980485_8c090777",
+      "range": {
+        "startLine": 1530,
+        "startChar": 5,
+        "endLine": 1535,
+        "endChar": 73
+      },
+      "revId": "8c46ab11d3f5277a22dba8446cc42e97a58e11ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "20c3a45c_343e900b",
         "filename": "src/libANGLE/renderer/d3d/TransformFeedbackD3D.cpp",
         "patchSetId": 4
