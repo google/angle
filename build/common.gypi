@@ -176,7 +176,9 @@
                                 'AdditionalDependencies':
                                 [
                                     'dxgi.lib',
-                                ]
+                                ],
+                                'EnableCOMDATFolding': '1', # disable
+                                'OptimizeReferences': '1', # disable
                             }],
                         ],
                     },
