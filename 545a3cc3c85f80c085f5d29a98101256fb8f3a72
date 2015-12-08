@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "20c3a45c_347770df",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-08T17:58:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c09d6871_ba627519",
+      "range": {
+        "startLine": 797,
+        "startChar": 14,
+        "endLine": 797,
+        "endChar": 38
+      },
+      "revId": "545a3cc3c85f80c085f5d29a98101256fb8f3a72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c086482d_0920a9de",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "20c3a45c_147274ee",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1107,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-08T17:58:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c086482d_0920a9de",
+      "range": {
+        "startLine": 1107,
+        "startChar": 47,
+        "endLine": 1107,
+        "endChar": 58
+      },
+      "revId": "545a3cc3c85f80c085f5d29a98101256fb8f3a72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "20980485_ac06c361",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2015-12-08T13:03:33Z",
       "side": 1,
       "message": "TODO(geofflang)?",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 52,
+        "endChar": 17
+      },
+      "revId": "545a3cc3c85f80c085f5d29a98101256fb8f3a72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0093006b_0b717dc1",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-08T17:58:06Z",
+      "side": 1,
+      "message": "Coming in the next patch.",
+      "parentUuid": "20980485_ac06c361",
       "range": {
         "startLine": 52,
         "startChar": 4,
