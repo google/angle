@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "608e7c43_ae0cf754",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-08T12:58:50Z",
+      "side": 1,
+      "message": "also add a mention of changing the VAO functionality",
+      "revId": "1ed962720c5b189f8412d9e09090c34c68e58b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "00bea0c6_761d6eef",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1533,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-08T12:58:50Z",
+      "side": 1,
+      "message": "currentTransformFeedback",
+      "range": {
+        "startLine": 1533,
+        "startChar": 8,
+        "endLine": 1533,
+        "endChar": 44
+      },
+      "revId": "1ed962720c5b189f8412d9e09090c34c68e58b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "00bea0c6_56187200",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-08T12:58:50Z",
+      "side": 1,
+      "message": "I\u0027d probably merge these two functions into \u0027detachBuffer\u0027, like with VertexArray",
+      "range": {
+        "startLine": 88,
+        "startChar": 24,
+        "endLine": 88,
+        "endChar": 50
+      },
+      "revId": "1ed962720c5b189f8412d9e09090c34c68e58b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c086482d_c9569150",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-08T12:58:50Z",
+      "side": 1,
+      "message": "can the same buffer occur more than once? I think it can, in which case you\u0027ll have to check every binding. Also make this return void, the return value is not important. Also place the index declaration inside the for loop init.",
+      "range": {
+        "startLine": 114,
+        "startChar": 4,
+        "endLine": 114,
+        "endChar": 10
+      },
+      "revId": "1ed962720c5b189f8412d9e09090c34c68e58b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "20980485_6c15bb86",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-08T12:58:50Z",
+      "side": 1,
+      "message": "only use const-\u0026 for locals, so in this case use a pointer.",
+      "range": {
+        "startLine": 117,
+        "startChar": 8,
+        "endLine": 117,
+        "endChar": 38
+      },
+      "revId": "1ed962720c5b189f8412d9e09090c34c68e58b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
