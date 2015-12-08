@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "80a7f0be_6fcdb139",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-08T18:48:14Z",
+      "side": 1,
+      "message": "Should these be checking the current values before applying?",
+      "revId": "fd3b08706c00da05904e8ed119b2616d8be6e4a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "608e7c43_8e365bdd",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-08T18:48:14Z",
+      "side": 1,
+      "message": "Same as above.",
+      "revId": "fd3b08706c00da05904e8ed119b2616d8be6e4a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
