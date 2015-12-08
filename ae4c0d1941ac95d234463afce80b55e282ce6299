@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e09a6c77_72c118a4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-08T15:45:34Z",
+      "side": 1,
+      "message": "Why copy here?",
+      "range": {
+        "startLine": 551,
+        "startChar": 4,
+        "endLine": 555,
+        "endChar": 5
+      },
+      "revId": "ae4c0d1941ac95d234463afce80b55e282ce6299",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "608e7c43_8e9adb2d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-08T15:45:34Z",
+      "side": 1,
+      "message": "We probably don\u0027t need to make a copy here.",
+      "range": {
+        "startLine": 551,
+        "startChar": 4,
+        "endLine": 555,
+        "endChar": 5
+      },
+      "revId": "ae4c0d1941ac95d234463afce80b55e282ce6299",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
