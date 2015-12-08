@@ -13,6 +13,7 @@
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
+#include "libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.h"
 #include "libANGLE/renderer/gl/wgl/FunctionsWGL.h"
 #include "libANGLE/renderer/gl/wgl/PbufferSurfaceWGL.h"
 #include "libANGLE/renderer/gl/wgl/WindowSurfaceWGL.h"
@@ -65,6 +66,11 @@ DisplayWGL::DisplayWGL()
       mDeviceContext(nullptr),
       mPixelFormat(0),
       mWGLContext(nullptr),
+      mUseDXGISwapChains(false),
+      mDxgiModule(nullptr),
+      mD3d11Module(nullptr),
+      mD3D11DeviceHandle(nullptr),
+      mD3D11Device(nullptr),
       mDisplay(nullptr)
 {
 }
@@ -323,12 +329,39 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     mFunctionsGL = new FunctionsGLWindows(mOpenGLModule, mFunctionsWGL->getProcAddress);
     mFunctionsGL->initialize();
 
+    // Create DXGI swap chains for windows that come from other processes.  Windows is unable to
+    // SetPixelFormat on windows from other processes when a sandbox is enabled.
+    HDC nativeDisplay = display->getNativeDisplayId();
+    HWND nativeWindow = WindowFromDC(nativeDisplay);
+    if (nativeWindow != nullptr)
+    {
+        DWORD currentProcessId = GetCurrentProcessId();
+        DWORD windowProcessId;
+        GetWindowThreadProcessId(nativeWindow, &windowProcessId);
+        mUseDXGISwapChains = (currentProcessId != windowProcessId);
+    }
+    else
+    {
+        mUseDXGISwapChains = false;
+    }
+
+    if (mUseDXGISwapChains)
+    {
+        egl::Error error = initializeD3DDevice();
+        if (error.isError())
+        {
+            return error;
+        }
+    }
+
     return DisplayGL::initialize(display);
 }
 
 void DisplayWGL::terminate()
 {
     DisplayGL::terminate();
+
+    releaseD3DDevice(mD3D11DeviceHandle);
 
     mFunctionsWGL->makeCurrent(mDeviceContext, NULL);
     mFunctionsWGL->deleteContext(mWGLContext);
@@ -348,14 +381,40 @@ void DisplayWGL::terminate()
 
     FreeLibrary(mOpenGLModule);
     mOpenGLModule = nullptr;
+
+    SafeRelease(mD3D11Device);
+
+    if (mDxgiModule)
+    {
+        FreeLibrary(mDxgiModule);
+        mDxgiModule = nullptr;
+    }
+
+    if (mD3d11Module)
+    {
+        FreeLibrary(mD3d11Module);
+        mD3d11Module = nullptr;
+    }
+
+    ASSERT(mRegisteredD3DDevices.empty());
 }
 
 SurfaceImpl *DisplayWGL::createWindowSurface(const egl::Config *configuration,
                                              EGLNativeWindowType window,
                                              const egl::AttributeMap &attribs)
 {
-    return new WindowSurfaceWGL(this->getRenderer(), window, mPixelFormat, mWGLContext,
-                                mFunctionsWGL);
+    EGLint orientation = attribs.get(EGL_SURFACE_ORIENTATION_ANGLE, 0);
+    if (mUseDXGISwapChains)
+    {
+        return new DXGISwapChainWindowSurfaceWGL(this->getRenderer(), window, mD3D11Device,
+                                                 mD3D11DeviceHandle, mWGLContext, mDeviceContext,
+                                                 mFunctionsGL, mFunctionsWGL, orientation);
+    }
+    else
+    {
+        return new WindowSurfaceWGL(this->getRenderer(), window, mPixelFormat, mWGLContext,
+                                    mFunctionsWGL, orientation);
+    }
 }
 
 SurfaceImpl *DisplayWGL::createPbufferSurface(const egl::Config *configuration,
@@ -418,6 +477,9 @@ egl::ConfigSet DisplayWGL::generateConfigs() const
         return wgl::QueryWGLFormatAttrib(mDeviceContext, mPixelFormat, attrib, mFunctionsWGL);
     };
 
+    const EGLint optimalSurfaceOrientation =
+        mUseDXGISwapChains ? EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE : 0;
+
     egl::Config config;
     config.renderTargetFormat = GL_RGBA8; // TODO: use the bit counts to determine the format
     config.depthStencilFormat = GL_DEPTH24_STENCIL8; // TODO: use the bit counts to determine the format
@@ -453,6 +515,8 @@ egl::ConfigSet DisplayWGL::generateConfigs() const
         ((getAttrib(WGL_DRAW_TO_PBUFFER_ARB) == TRUE) ? EGL_PBUFFER_BIT : 0) |
         ((getAttrib(WGL_SWAP_METHOD_ARB) == WGL_SWAP_COPY_ARB) ? EGL_SWAP_BEHAVIOR_PRESERVED_BIT
                                                                : 0);
+    config.optimalOrientation = optimalSurfaceOrientation;
+
     config.transparentType = EGL_NONE;
     config.transparentRedValue = 0;
     config.transparentGreenValue = 0;
@@ -497,10 +561,60 @@ const FunctionsGL *DisplayWGL::getFunctionsGL() const
     return mFunctionsGL;
 }
 
+egl::Error DisplayWGL::initializeD3DDevice()
+{
+    if (mD3D11Device != nullptr)
+    {
+        return egl::Error(EGL_SUCCESS);
+    }
+
+    mDxgiModule = LoadLibrary(TEXT("dxgi.dll"));
+    if (!mDxgiModule)
+    {
+        return egl::Error(EGL_NOT_INITIALIZED, "Failed to load DXGI library.");
+    }
+
+    mD3d11Module = LoadLibrary(TEXT("d3d11.dll"));
+    if (!mD3d11Module)
+    {
+        return egl::Error(EGL_NOT_INITIALIZED, "Failed to load d3d11 library.");
+    }
+
+    PFN_D3D11_CREATE_DEVICE d3d11CreateDevice = nullptr;
+    d3d11CreateDevice = reinterpret_cast<PFN_D3D11_CREATE_DEVICE>(
+        GetProcAddress(mD3d11Module, "D3D11CreateDevice"));
+    if (d3d11CreateDevice == nullptr)
+    {
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not retrieve D3D11CreateDevice address.");
+    }
+
+    HRESULT result = d3d11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, nullptr, 0,
+                                       D3D11_SDK_VERSION, &mD3D11Device, nullptr, nullptr);
+    if (FAILED(result))
+    {
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not create D3D11 device, error: 0x%X",
+                          result);
+    }
+
+    egl::Error error = registerD3DDevice(mD3D11Device, &mD3D11DeviceHandle);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    return egl::Error(EGL_SUCCESS);
+}
+
 void DisplayWGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
     outExtensions->createContext = true;
     outExtensions->createContextNoError = true;
+
+    // Only enable the surface orientation  and post sub buffer for DXGI swap chain surfaces, they
+    // prefer to swap with
+    // inverted Y.
+    outExtensions->postSubBuffer      = mUseDXGISwapChains;
+    outExtensions->surfaceOrientation = mUseDXGISwapChains;
 }
 
 void DisplayWGL::generateCaps(egl::Caps *outCaps) const
@@ -520,5 +634,53 @@ egl::Error DisplayWGL::waitNative(EGLint engine,
 {
     // Unimplemented as this is not needed for WGL
     return egl::Error(EGL_SUCCESS);
+}
+
+egl::Error DisplayWGL::registerD3DDevice(IUnknown *device, HANDLE *outHandle)
+{
+    ASSERT(device != nullptr);
+    ASSERT(outHandle != nullptr);
+
+    auto iter = mRegisteredD3DDevices.find(device);
+    if (iter != mRegisteredD3DDevices.end())
+    {
+        iter->second.refCount++;
+        *outHandle = iter->second.handle;
+        return egl::Error(EGL_SUCCESS);
+    }
+
+    HANDLE handle = mFunctionsWGL->dxOpenDeviceNV(device);
+    if (!handle)
+    {
+        return egl::Error(EGL_BAD_PARAMETER, "Failed to open D3D device.");
+    }
+
+    device->AddRef();
+
+    D3DObjectHandle newDeviceInfo;
+    newDeviceInfo.handle          = handle;
+    newDeviceInfo.refCount        = 1;
+    mRegisteredD3DDevices[device] = newDeviceInfo;
+
+    *outHandle = handle;
+    return egl::Error(EGL_SUCCESS);
+}
+
+void DisplayWGL::releaseD3DDevice(HANDLE deviceHandle)
+{
+    for (auto iter = mRegisteredD3DDevices.begin(); iter != mRegisteredD3DDevices.end(); iter++)
+    {
+        if (iter->second.handle == deviceHandle)
+        {
+            iter->second.refCount--;
+            if (iter->second.refCount == 0)
+            {
+                mFunctionsWGL->dxCloseDeviceNV(iter->second.handle);
+                iter->first->Release();
+                mRegisteredD3DDevices.erase(iter);
+                break;
+            }
+        }
+    }
 }
 }

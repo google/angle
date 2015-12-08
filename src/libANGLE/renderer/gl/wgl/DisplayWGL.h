@@ -57,8 +57,13 @@ class DisplayWGL : public DisplayGL
                           egl::Surface *drawSurface,
                           egl::Surface *readSurface) const override;
 
+    egl::Error registerD3DDevice(IUnknown *device, HANDLE *outHandle);
+    void releaseD3DDevice(HANDLE handle);
+
   private:
     const FunctionsGL *getFunctionsGL() const override;
+
+    egl::Error initializeD3DDevice();
 
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
@@ -73,6 +78,19 @@ class DisplayWGL : public DisplayGL
     HDC mDeviceContext;
     int mPixelFormat;
     HGLRC mWGLContext;
+
+    bool mUseDXGISwapChains;
+    HMODULE mDxgiModule;
+    HMODULE mD3d11Module;
+    HANDLE mD3D11DeviceHandle;
+    ID3D11Device *mD3D11Device;
+
+    struct D3DObjectHandle
+    {
+        HANDLE handle;
+        size_t refCount;
+    };
+    std::map<IUnknown *, D3DObjectHandle> mRegisteredD3DDevices;
 
     egl::Display *mDisplay;
 };
