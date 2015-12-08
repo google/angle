@@ -1184,9 +1184,8 @@
                                 {
                                     'VCCLCompilerTool':
                                     {
-                                        # dEQP requires exceptions and RTTI
+                                        # dEQP requires exceptions
                                         'ExceptionHandling': 1,
-                                        'RuntimeTypeInfo': 'true',
                                     },
                                     'VCLinkerTool':
                                     {
@@ -1213,6 +1212,28 @@
                                                 ],
                                             }],
                                         ],
+                                    },
+                                },
+                            },
+
+                            'Debug_Base':
+                            {
+                                'msvs_settings':
+                                {
+                                    'VCCLCompilerTool':
+                                    {
+                                        'RuntimeTypeInfo': 'true', # dEQP needs RTTI
+                                    },
+                                },
+                            },
+
+                            'Release_Base':
+                            {
+                                'msvs_settings':
+                                {
+                                    'VCCLCompilerTool':
+                                    {
+                                        'RuntimeTypeInfo': 'true', # dEQP needs RTTI
                                     },
                                 },
                             },
