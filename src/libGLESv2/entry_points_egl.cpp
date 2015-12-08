@@ -1068,7 +1068,8 @@ EGLSurface EGLAPIENTRY CreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum buf
     }
 
     egl::Surface *surface = nullptr;
-    error = display->createPbufferFromClientBuffer(configuration, buffer, attributes, &surface);
+    error = display->createPbufferFromClientBuffer(configuration, buftype, buffer, attributes,
+                                                   &surface);
     if (error.isError())
     {
         SetGlobalError(error);

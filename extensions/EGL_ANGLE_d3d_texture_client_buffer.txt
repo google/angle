@@ -1,0 +1,106 @@
+Name
+
+    ANGLE_d3d_texture_client_buffer
+
+Name Strings
+
+    EGL_ANGLE_d3d_texture_client_buffer
+
+Contributors
+
+    Geoff Lang
+
+Contacts
+
+    Geoff Lang, Google Inc. (geofflang 'at' google.com)
+
+Status
+
+    Draft
+
+Version
+
+    Version 1, Oct 5, 2016
+
+Number
+
+    EGL Extension #??
+
+Dependencies
+
+    This extension is written against the wording of the EGL 1.4
+    Specification.
+
+    References the EGL_ANGLE_device_d3d extension.
+
+Overview
+
+    This extension allows creating EGL surfaces from D3D texture objects.
+
+New Types
+
+    None
+
+New Procedures and Functions
+
+    None
+
+New Tokens
+
+    Accepted in the <buftype> parameter of eglCreatePbufferFromClientBuffer:
+
+        EGL_D3D_TEXTURE_ANGLE            0x33A3
+
+Additions to Chapter 3 of the EGL 1.4 Specification (EGL Functions and Errors)
+
+    Replace the last sentence of paragraph 1 of Section 3.5.3 with the
+    following text.
+    "Currently, the only client API resources which may be bound in this
+    fashion are OpenVG VGImage objects and Direct3D texture objects."
+
+    Replace the last sentence of paragraph 2 ("To bind a client API...") of
+    Section 3.5.3 with the following text.
+    "When <buftype> is EGL_OPENVG_IMAGE or EGL_D3D_TEXTURE_ANGLE, the width and
+    height of the pbuffer are determined by the width and height of <buffer>."
+
+    Replace the third paragraph of Section 3.5.3 with the following text.
+    "<buftype> specifies the type of buffer to be bound. The only allowed values
+    of <buftype> are EGL_OPENVG_IMAGE and EGL_D3D_TEXTURE_ANGLE".
+
+    Append the following text to the fourth paragraph of Section 3.5.3.
+    "When <buftype> is EGL_D3D_TEXTURE_ANGLE, <buffer> must be
+    a valid D3D texture object, cast into the type EGLClientBuffer. See table
+    egl.restrictions for acceptable texture object types and formats. If the
+    EGL_ANGLE_device_d3d extension is present, the provided D3D texture object
+    must have been created by the same D3D device queried from the display.
+    If these requirements are not met, an EGL_BAD_PARAMETER error is
+    generated."
+
+    ---------------------------------------------------------------------------
+    Resource Type      Resource Restrictions
+    ---------------------------------------------------------------------------
+    IDirect3DTexture9  Memory pool must be D3DPOOL_DEFAULT. Format must be
+                       D3DFMT_R8G8B8, D3DFMT_A8R8G8B8, D3DFMT_A16B16G16R16F or
+                       D3DFMT_A32B32G32R32F.
+    ID3D11Texture2D    Usage flags must be D3D11_USAGE_DEFAULT. Format must be
+                       DXGI_FORMAT_R8G8B8A8_UNORM,
+                       DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+                       DXGI_FORMAT_B8G8R8A8_UNORM,
+                       DXGI_FORMAT_B8G8R8A8_UNORM_SRGB,
+                       DXGI_FORMAT_R16G16B16A16_FLOAT or
+                       DXGI_FORMAT_R32G32B32A32_FLOAT.
+   --------------------------------------------------------------------------
+    Table egl.restrictions - Restrictions on D3D resources that can be used
+    as a <buffer>.
+    --------------------------------------------------------------------------
+
+    Append to the end of Section 3.5.3.
+    "When a pbuffer is created with type EGL_D3D_TEXTURE_ANGLE, the contents
+    of the associcated D3D texture object are undefined while the pbuffer is
+    the current read surface, draw surface or bound to a client texture."
+
+Issues
+
+Revision History
+
+    Version 1, 2016/10/05 - first draft.

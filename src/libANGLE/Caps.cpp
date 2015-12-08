@@ -762,6 +762,7 @@ Caps::Caps()
 DisplayExtensions::DisplayExtensions()
     : createContextRobustness(false),
       d3dShareHandleClientBuffer(false),
+      d3dTextureClientBuffer(false),
       surfaceD3DTexture2DShareHandle(false),
       querySurfacePointer(false),
       windowFixedSize(false),
@@ -800,6 +801,7 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     //                   | Extension name                                       | Supported flag                    | Output vector   |
     InsertExtensionString("EGL_EXT_create_context_robustness",                   createContextRobustness,            &extensionStrings);
     InsertExtensionString("EGL_ANGLE_d3d_share_handle_client_buffer",            d3dShareHandleClientBuffer,         &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_d3d_texture_client_buffer",                 d3dTextureClientBuffer,             &extensionStrings);
     InsertExtensionString("EGL_ANGLE_surface_d3d_texture_2d_share_handle",       surfaceD3DTexture2DShareHandle,     &extensionStrings);
     InsertExtensionString("EGL_ANGLE_query_surface_pointer",                     querySurfacePointer,                &extensionStrings);
     InsertExtensionString("EGL_ANGLE_window_fixed_size",                         windowFixedSize,                    &extensionStrings);

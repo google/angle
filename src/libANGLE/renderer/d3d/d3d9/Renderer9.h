@@ -88,9 +88,17 @@ class Renderer9 : public RendererD3D
 
     SwapChainD3D *createSwapChain(NativeWindowD3D *nativeWindow,
                                   HANDLE shareHandle,
+                                  IUnknown *d3dTexture,
                                   GLenum backBufferFormat,
                                   GLenum depthBufferFormat,
                                   EGLint orientation) override;
+    egl::Error getD3DTextureInfo(IUnknown *d3dTexture,
+                                 EGLint *width,
+                                 EGLint *height,
+                                 GLenum *fboFormat) const override;
+    egl::Error validateShareHandle(const egl::Config *config,
+                                   HANDLE shareHandle,
+                                   const egl::AttributeMap &attribs) const override;
 
     ContextImpl *createContext(const gl::ContextState &state) override;
 

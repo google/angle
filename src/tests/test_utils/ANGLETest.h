@@ -172,6 +172,7 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     static GLuint compileShader(GLenum type, const std::string &source);
     static bool extensionEnabled(const std::string &extName);
     static bool eglClientExtensionEnabled(const std::string &extName);
+    static bool eglDeviceExtensionEnabled(EGLDeviceEXT device, const std::string &extName);
 
     void setWindowWidth(int width);
     void setWindowHeight(int height);

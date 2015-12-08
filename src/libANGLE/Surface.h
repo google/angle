@@ -164,7 +164,8 @@ class PbufferSurface final : public Surface
                    const AttributeMap &attribs);
     PbufferSurface(rx::EGLImplFactory *implFactory,
                    const Config *config,
-                   EGLClientBuffer shareHandle,
+                   EGLenum buftype,
+                   EGLClientBuffer clientBuffer,
                    const AttributeMap &attribs);
     ~PbufferSurface() override;
 };

@@ -185,7 +185,8 @@ SurfaceImpl *DisplayAndroid::createPbufferSurface(const egl::SurfaceState &state
 
 SurfaceImpl *DisplayAndroid::createPbufferFromClientBuffer(const egl::SurfaceState &state,
                                                            const egl::Config *configuration,
-                                                           EGLClientBuffer shareHandle,
+                                                           EGLenum buftype,
+                                                           EGLClientBuffer clientBuffer,
                                                            const egl::AttributeMap &attribs)
 {
     UNIMPLEMENTED();

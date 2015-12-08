@@ -859,7 +859,8 @@ SurfaceImpl *DisplayOzone::createPbufferSurface(const egl::SurfaceState &state,
 
 SurfaceImpl *DisplayOzone::createPbufferFromClientBuffer(const egl::SurfaceState &state,
                                                          const egl::Config *configuration,
-                                                         EGLClientBuffer shareHandle,
+                                                         EGLenum buftype,
+                                                         EGLClientBuffer clientBuffer,
                                                          const egl::AttributeMap &attribs)
 {
     UNIMPLEMENTED();

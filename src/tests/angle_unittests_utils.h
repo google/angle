@@ -103,9 +103,10 @@ class MockEGLFactory : public EGLImplFactory
                  SurfaceImpl *(const egl::SurfaceState &,
                                const egl::Config *,
                                const egl::AttributeMap &));
-    MOCK_METHOD4(createPbufferFromClientBuffer,
+    MOCK_METHOD5(createPbufferFromClientBuffer,
                  SurfaceImpl *(const egl::SurfaceState &,
                                const egl::Config *,
+                               EGLenum,
                                EGLClientBuffer,
                                const egl::AttributeMap &));
     MOCK_METHOD4(createPixmapSurface,

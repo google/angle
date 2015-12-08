@@ -116,7 +116,8 @@ SurfaceImpl *DisplayNULL::createPbufferSurface(const egl::SurfaceState &state,
 
 SurfaceImpl *DisplayNULL::createPbufferFromClientBuffer(const egl::SurfaceState &state,
                                                         const egl::Config *configuration,
-                                                        EGLClientBuffer shareHandle,
+                                                        EGLenum buftype,
+                                                        EGLClientBuffer buffer,
                                                         const egl::AttributeMap &attribs)
 {
     UNIMPLEMENTED();

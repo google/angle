@@ -60,6 +60,11 @@ GLenum GetComponentType(DXGI_FORMAT dxgiFormat);
 
 }  // namespace d3d11
 
+namespace d3d11_angle
+{
+const angle::Format &GetFormat(DXGI_FORMAT dxgiFormat);
+}
+
 }  // namespace rx
 
 #endif // LIBANGLE_RENDERER_D3D_D3D11_FORMATUTILS11_H_

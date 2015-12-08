@@ -587,8 +587,11 @@ Error Display::createPbufferSurface(const Config *configuration, const Attribute
     return egl::Error(EGL_SUCCESS);
 }
 
-Error Display::createPbufferFromClientBuffer(const Config *configuration, EGLClientBuffer shareHandle,
-                                             const AttributeMap &attribs, Surface **outSurface)
+Error Display::createPbufferFromClientBuffer(const Config *configuration,
+                                             EGLenum buftype,
+                                             EGLClientBuffer clientBuffer,
+                                             const AttributeMap &attribs,
+                                             Surface **outSurface)
 {
     ASSERT(isInitialized());
 
@@ -598,7 +601,7 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration, EGLCli
     }
 
     std::unique_ptr<Surface> surface(
-        new PbufferSurface(mImplementation, configuration, shareHandle, attribs));
+        new PbufferSurface(mImplementation, configuration, buftype, clientBuffer, attribs));
     ANGLE_TRY(surface->initialize());
 
     ASSERT(outSurface != nullptr);
@@ -945,6 +948,14 @@ void Display::initDisplayExtensions()
 bool Display::isValidNativeWindow(EGLNativeWindowType window) const
 {
     return mImplementation->isValidNativeWindow(window);
+}
+
+Error Display::validateClientBuffer(const Config *configuration,
+                                    EGLenum buftype,
+                                    EGLClientBuffer clientBuffer,
+                                    const AttributeMap &attribs)
+{
+    return mImplementation->validateClientBuffer(configuration, buftype, clientBuffer, attribs);
 }
 
 bool Display::isValidDisplay(const egl::Display *display)

@@ -14,6 +14,7 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
+#include "libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.h"
 #include "libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.h"
 #include "libANGLE/renderer/gl/wgl/FunctionsWGL.h"
 #include "libANGLE/renderer/gl/wgl/PbufferSurfaceWGL.h"
@@ -464,11 +465,13 @@ SurfaceImpl *DisplayWGL::createPbufferSurface(const egl::SurfaceState &state,
 
 SurfaceImpl *DisplayWGL::createPbufferFromClientBuffer(const egl::SurfaceState &state,
                                                        const egl::Config *configuration,
-                                                       EGLClientBuffer shareHandle,
+                                                       EGLenum buftype,
+                                                       EGLClientBuffer clientBuffer,
                                                        const egl::AttributeMap &attribs)
 {
-    UNIMPLEMENTED();
-    return nullptr;
+    ASSERT(buftype == EGL_D3D_TEXTURE_ANGLE);
+    return new D3DTextureSurfaceWGL(state, getRenderer(), clientBuffer, this, mWGLContext,
+                                    mDeviceContext, mFunctionsGL, mFunctionsWGL);
 }
 
 SurfaceImpl *DisplayWGL::createPixmapSurface(const egl::SurfaceState &state,
@@ -581,6 +584,21 @@ bool DisplayWGL::isValidNativeWindow(EGLNativeWindowType window) const
     return (IsWindow(window) == TRUE);
 }
 
+egl::Error DisplayWGL::validateClientBuffer(const egl::Config *configuration,
+                                            EGLenum buftype,
+                                            EGLClientBuffer clientBuffer,
+                                            const egl::AttributeMap &attribs) const
+{
+    switch (buftype)
+    {
+        case EGL_D3D_TEXTURE_ANGLE:
+            return D3DTextureSurfaceWGL::ValidateD3DTextureClientBuffer(clientBuffer);
+
+        default:
+            return DisplayGL::validateClientBuffer(configuration, buftype, clientBuffer, attribs);
+    }
+}
+
 std::string DisplayWGL::getVendorString() const
 {
     //UNIMPLEMENTED();
@@ -644,6 +662,8 @@ void DisplayWGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->surfaceOrientation = mUseDXGISwapChains;
 
     outExtensions->createContextRobustness = mHasRobustness;
+
+    outExtensions->d3dTextureClientBuffer = mFunctionsWGL->hasExtension("WGL_NV_DX_interop2");
 }
 
 void DisplayWGL::generateCaps(egl::Caps *outCaps) const

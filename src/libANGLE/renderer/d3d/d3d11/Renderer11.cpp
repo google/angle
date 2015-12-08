@@ -1081,6 +1081,7 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
         outExtensions->d3dShareHandleClientBuffer     = true;
         outExtensions->surfaceD3DTexture2DShareHandle = true;
     }
+    outExtensions->d3dTextureClientBuffer = true;
 
     outExtensions->keyedMutex          = true;
     outExtensions->querySurfacePointer = true;
@@ -1193,14 +1194,119 @@ NativeWindowD3D *Renderer11::createNativeWindow(EGLNativeWindowType window,
 #endif
 }
 
+egl::Error Renderer11::getD3DTextureInfo(IUnknown *d3dTexture,
+                                         EGLint *width,
+                                         EGLint *height,
+                                         GLenum *fboFormat) const
+{
+    ID3D11Texture2D *texture = d3d11::DynamicCastComObject<ID3D11Texture2D>(d3dTexture);
+    if (texture == nullptr)
+    {
+        return egl::Error(EGL_BAD_PARAMETER, "client buffer is not a ID3D11Texture2D");
+    }
+
+    ID3D11Device *textureDevice = nullptr;
+    texture->GetDevice(&textureDevice);
+    if (textureDevice != mDevice)
+    {
+        SafeRelease(texture);
+        return egl::Error(EGL_BAD_PARAMETER, "Texture's device does not match.");
+    }
+    SafeRelease(textureDevice);
+
+    D3D11_TEXTURE2D_DESC desc = {0};
+    texture->GetDesc(&desc);
+    SafeRelease(texture);
+
+    if (width)
+    {
+        *width = static_cast<EGLint>(desc.Width);
+    }
+    if (height)
+    {
+        *height = static_cast<EGLint>(desc.Height);
+    }
+
+    // From table egl.restrictions in EGL_ANGLE_d3d_texture_client_buffer.
+    switch (desc.Format)
+    {
+        case DXGI_FORMAT_R8G8B8A8_UNORM:
+        case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+        case DXGI_FORMAT_B8G8R8A8_UNORM:
+        case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB:
+        case DXGI_FORMAT_R16G16B16A16_FLOAT:
+        case DXGI_FORMAT_R32G32B32A32_FLOAT:
+            break;
+
+        default:
+            return egl::Error(EGL_BAD_PARAMETER, "Unknown client buffer texture format: %u.",
+                              desc.Format);
+    }
+
+    if (fboFormat)
+    {
+        const angle::Format &angleFormat = d3d11_angle::GetFormat(desc.Format);
+        *fboFormat                       = angleFormat.fboImplementationInternalFormat;
+    }
+
+    return egl::Error(EGL_SUCCESS);
+}
+
+egl::Error Renderer11::validateShareHandle(const egl::Config *config,
+                                           HANDLE shareHandle,
+                                           const egl::AttributeMap &attribs) const
+{
+    if (shareHandle == nullptr)
+    {
+        return egl::Error(EGL_BAD_PARAMETER, "NULL share handle.");
+    }
+
+    ID3D11Resource *tempResource11 = nullptr;
+    HRESULT result = mDevice->OpenSharedResource(shareHandle, __uuidof(ID3D11Resource),
+                                                 (void **)&tempResource11);
+    if (FAILED(result))
+    {
+        return egl::Error(EGL_BAD_PARAMETER, "Failed to open share handle, result: 0x%X.", result);
+    }
+
+    ID3D11Texture2D *texture2D = d3d11::DynamicCastComObject<ID3D11Texture2D>(tempResource11);
+    SafeRelease(tempResource11);
+
+    if (texture2D == nullptr)
+    {
+        return egl::Error(EGL_BAD_PARAMETER,
+                          "Failed to query ID3D11Texture2D object from share handle.");
+    }
+
+    D3D11_TEXTURE2D_DESC desc = {0};
+    texture2D->GetDesc(&desc);
+    SafeRelease(texture2D);
+
+    EGLint width  = attribs.getAsInt(EGL_WIDTH, 0);
+    EGLint height = attribs.getAsInt(EGL_HEIGHT, 0);
+    ASSERT(width != 0 && height != 0);
+
+    const d3d11::Format &backbufferFormatInfo =
+        d3d11::Format::Get(config->renderTargetFormat, getRenderer11DeviceCaps());
+
+    if (desc.Width != static_cast<UINT>(width) || desc.Height != static_cast<UINT>(height) ||
+        desc.Format != backbufferFormatInfo.texFormat || desc.MipLevels != 1 || desc.ArraySize != 1)
+    {
+        return egl::Error(EGL_BAD_PARAMETER, "Invalid texture parameters in share handle texture.");
+    }
+
+    return egl::Error(EGL_SUCCESS);
+}
+
 SwapChainD3D *Renderer11::createSwapChain(NativeWindowD3D *nativeWindow,
                                           HANDLE shareHandle,
+                                          IUnknown *d3dTexture,
                                           GLenum backBufferFormat,
                                           GLenum depthBufferFormat,
                                           EGLint orientation)
 {
-    return new SwapChain11(this, GetAs<NativeWindow11>(nativeWindow), shareHandle, backBufferFormat,
-                           depthBufferFormat, orientation);
+    return new SwapChain11(this, GetAs<NativeWindow11>(nativeWindow), shareHandle, d3dTexture,
+                           backBufferFormat, depthBufferFormat, orientation);
 }
 
 void *Renderer11::getD3DDevice()

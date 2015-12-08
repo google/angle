@@ -653,6 +653,17 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
         }
         break;
 
+      case EGL_D3D_TEXTURE_ANGLE:
+          if (!displayExtensions.d3dTextureClientBuffer)
+          {
+              return Error(EGL_BAD_PARAMETER);
+          }
+          if (buffer == nullptr)
+          {
+              return Error(EGL_BAD_PARAMETER);
+          }
+          break;
+
       default:
         return Error(EGL_BAD_PARAMETER);
     }
@@ -752,6 +763,8 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
             return Error(EGL_BAD_MATCH);
         }
     }
+
+    ANGLE_TRY(display->validateClientBuffer(config, buftype, buffer, attributes));
 
     return Error(EGL_SUCCESS);
 }
