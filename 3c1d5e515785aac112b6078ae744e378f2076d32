@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e09a6c77_92b59c3c",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-08T15:45:48Z",
+      "side": 1,
+      "message": "nit: add error messages to your new errors",
+      "range": {
+        "startLine": 454,
+        "startChar": 25,
+        "endLine": 454,
+        "endChar": 30
+      },
+      "revId": "3c1d5e515785aac112b6078ae744e378f2076d32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "608e7c43_ae979704",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-08T15:45:48Z",
+      "side": 1,
+      "message": "nit: add message",
+      "range": {
+        "startLine": 571,
+        "startChar": 25,
+        "endLine": 571,
+        "endChar": 30
+      },
+      "revId": "3c1d5e515785aac112b6078ae744e378f2076d32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "00bea0c6_36985699",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-08T15:45:48Z",
+      "side": 1,
+      "message": "add message",
+      "range": {
+        "startLine": 432,
+        "startChar": 29,
+        "endLine": 432,
+        "endChar": 34
+      },
+      "revId": "3c1d5e515785aac112b6078ae744e378f2076d32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
