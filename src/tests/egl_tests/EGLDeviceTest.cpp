@@ -124,7 +124,7 @@ class EGLDeviceCreationTest : public testing::Test
     void CreateWindowSurface()
     {
         EGLint majorVersion, minorVersion;
-        ASSERT_EQ(EGL_TRUE, eglInitialize(mDisplay, &majorVersion, &minorVersion));
+        ASSERT_EGL_TRUE(eglInitialize(mDisplay, &majorVersion, &minorVersion));
 
         eglBindAPI(EGL_OPENGL_ES_API);
         ASSERT_EGL_SUCCESS();
@@ -132,7 +132,7 @@ class EGLDeviceCreationTest : public testing::Test
         // Choose a config
         const EGLint configAttributes[] = {EGL_NONE};
         EGLint configCount = 0;
-        ASSERT_EQ(EGL_TRUE, eglChooseConfig(mDisplay, configAttributes, &mConfig, 1, &configCount));
+        ASSERT_EGL_TRUE(eglChooseConfig(mDisplay, configAttributes, &mConfig, 1, &configCount));
 
         // Create an OS Window
         mOSWindow = CreateOSWindow();
@@ -315,7 +315,7 @@ TEST_F(EGLDeviceCreationTest, D3D11DeviceRecovery)
 
     // ANGLE's SwapChain11::initPassThroughResources doesn't handle device lost before
     // eglSwapBuffers, so we must call eglSwapBuffers before we lose the device.
-    ASSERT_EQ(EGL_TRUE, eglSwapBuffers(mDisplay, mSurface));
+    ASSERT_EGL_TRUE(eglSwapBuffers(mDisplay, mSurface));
 
     // Trigger a lost device
     trigger9_3DeviceLost();
@@ -337,8 +337,8 @@ TEST_F(EGLDeviceCreationTest, D3D11DeviceRecovery)
     // Get the D3D11 device out of the EGLDisplay again. It should be the same one as above.
     EGLAttrib device       = 0;
     EGLAttrib newEglDevice = 0;
-    ASSERT_EQ(EGL_TRUE, eglQueryDisplayAttribEXT(mDisplay, EGL_DEVICE_EXT, &newEglDevice));
-    ASSERT_EQ(EGL_TRUE, eglQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(newEglDevice),
+    ASSERT_EGL_TRUE(eglQueryDisplayAttribEXT(mDisplay, EGL_DEVICE_EXT, &newEglDevice));
+    ASSERT_EGL_TRUE(eglQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(newEglDevice),
                                                 EGL_D3D11_DEVICE_ANGLE, &device));
     ID3D11Device *newDevice = reinterpret_cast<ID3D11Device *>(device);
 
@@ -574,7 +574,7 @@ TEST_P(EGLDeviceQueryTest, QueryDeviceBadAttribute)
 TEST_P(EGLDeviceQueryTest, getPlatformDisplayDeviceReuse)
 {
     EGLAttrib eglDevice = 0;
-    EXPECT_EQ(EGL_TRUE,
+    EXPECT_EGL_TRUE(
               eglQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &eglDevice));
 
     EGLDisplay display2 = eglGetPlatformDisplayEXT(
