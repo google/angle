@@ -27,6 +27,10 @@
 #define EXPECT_EGL_ERROR(err) EXPECT_EQ((err), eglGetError())
 #define EXPECT_EGL_SUCCESS() EXPECT_EGL_ERROR(EGL_SUCCESS)
 
+// EGLBoolean is |unsigned int| but EGL_TRUE is 0, not 0u.
+#define EXPECT_EGL_TRUE(a) EXPECT_EQ(static_cast<EGLBoolean>(EGL_TRUE), (a))
+#define EXPECT_EGL_FALSE(a) EXPECT_EQ(static_cast<EGLBoolean>(EGL_FALSE), (a))
+
 #define ASSERT_EGL_ERROR(err) ASSERT_EQ((err), eglGetError())
 #define ASSERT_EGL_SUCCESS() ASSERT_EGL_ERROR(EGL_SUCCESS)
 

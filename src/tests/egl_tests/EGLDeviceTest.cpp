@@ -490,8 +490,8 @@ class EGLDeviceQueryTest : public ANGLETest
         }
 
         EGLAttrib angleDevice = 0;
-        EXPECT_EQ(EGL_TRUE, mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT,
-                                                   &angleDevice));
+        EXPECT_EGL_TRUE(
+            mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
         extensionString = static_cast<const char *>(
             mQueryDeviceStringEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice), EGL_EXTENSIONS));
         if (strstr(extensionString, "EGL_ANGLE_device_d3d") == NULL)
@@ -517,10 +517,10 @@ TEST_P(EGLDeviceQueryTest, QueryDevice)
     EGLAttrib angleDevice = 0;
     if (getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
     {
-        EXPECT_EQ(EGL_TRUE, mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT,
-                                                   &angleDevice));
-        EXPECT_EQ(EGL_TRUE, mQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
-                                                  EGL_D3D11_DEVICE_ANGLE, &device));
+        EXPECT_EGL_TRUE(
+            mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
+        EXPECT_EGL_TRUE(mQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
+                                              EGL_D3D11_DEVICE_ANGLE, &device));
         ID3D11Device *d3d11Device = reinterpret_cast<ID3D11Device *>(device);
         IDXGIDevice *dxgiDevice = DynamicCastComObject<IDXGIDevice>(d3d11Device);
         EXPECT_TRUE(dxgiDevice != nullptr);
@@ -529,10 +529,10 @@ TEST_P(EGLDeviceQueryTest, QueryDevice)
 
     if (getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE)
     {
-        EXPECT_EQ(EGL_TRUE, mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT,
-                                                   &angleDevice));
-        EXPECT_EQ(EGL_TRUE, mQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
-                                                  EGL_D3D9_DEVICE_ANGLE, &device));
+        EXPECT_EGL_TRUE(
+            mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
+        EXPECT_EGL_TRUE(mQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
+                                              EGL_D3D9_DEVICE_ANGLE, &device));
         IDirect3DDevice9 *d3d9Device = reinterpret_cast<IDirect3DDevice9 *>(device);
         IDirect3D9 *d3d9 = nullptr;
         EXPECT_EQ(S_OK, d3d9Device->GetDirect3D(&d3d9));
@@ -551,18 +551,18 @@ TEST_P(EGLDeviceQueryTest, QueryDeviceBadAttribute)
     EGLAttrib angleDevice = 0;
     if (getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
     {
-        EXPECT_EQ(EGL_TRUE, mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT,
-                                                   &angleDevice));
-        EXPECT_EQ(EGL_FALSE, mQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
-                                                   EGL_D3D9_DEVICE_ANGLE, &device));
+        EXPECT_EGL_TRUE(
+            mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
+        EXPECT_EGL_FALSE(mQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
+                                               EGL_D3D9_DEVICE_ANGLE, &device));
     }
 
     if (getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE)
     {
-        EXPECT_EQ(EGL_TRUE, mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT,
-                                                   &angleDevice));
-        EXPECT_EQ(EGL_FALSE, mQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
-                                                   EGL_D3D11_DEVICE_ANGLE, &device));
+        EXPECT_EGL_TRUE(
+            mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
+        EXPECT_EGL_FALSE(mQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
+                                               EGL_D3D11_DEVICE_ANGLE, &device));
     }
 }
 
