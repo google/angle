@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e0aeecf8_928ffc13",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1058,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-09T13:59:31Z",
+      "side": 1,
+      "message": "uniform init syntax is currently banned, see\n\nhttps://chromium-cpp.appspot.com/\n\nHowever you can use a C fixed size array here for the same purpose.",
+      "range": {
+        "startLine": 1056,
+        "startChar": 0,
+        "endLine": 1058,
+        "endChar": 99
+      },
+      "revId": "b5f1492b93b22868f68d13b3f7560080f4beaf16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
