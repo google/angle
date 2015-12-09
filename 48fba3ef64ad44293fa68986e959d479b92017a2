@@ -22,6 +22,30 @@
       "revId": "48fba3ef64ad44293fa68986e959d479b92017a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "601d9c1a_364d58c1",
+        "filename": "util/windows/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 462,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-09T15:13:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0093006b_4bf62582",
+      "range": {
+        "startLine": 456,
+        "startChar": 0,
+        "endLine": 462,
+        "endChar": 17
+      },
+      "revId": "48fba3ef64ad44293fa68986e959d479b92017a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
