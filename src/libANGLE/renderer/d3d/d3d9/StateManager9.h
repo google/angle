@@ -27,13 +27,19 @@ class StateManager9 final : angle::NonCopyable
     void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits);
 
     gl::Error setBlendDepthRasterStates(const gl::State &glState, unsigned int sampleMask);
+    void setScissorState(const gl::Rectangle &scissor, bool enabled);
 
     void forceSetBlendState();
     void forceSetRasterState();
     void forceSetDepthStencilState();
+    void forceSetScissorState();
 
     void updateDepthSizeIfChanged(bool depthStencilInitialized, unsigned int depthSize);
     void updateStencilSizeIfChanged(bool depthStencilInitialized, unsigned int stencilSize);
+    void setRenderTargetBounds(size_t width, size_t height);
+
+    int getRenderTargetWidth() const { return mRenderTargetBounds.width; }
+    int getRenderTargetHeight() const { return mRenderTargetBounds.height; }
 
     void resetDirtyBits() { mDirtyBits.reset(); }
 
@@ -82,6 +88,9 @@ class StateManager9 final : angle::NonCopyable
                              unsigned int maxStencil);
     void setStencilWriteMask(GLuint stencilWriteMask, bool frontFaceCCW);
 
+    void setScissorEnabled(bool scissorEnabled);
+    void setScissorRect(const gl::Rectangle &scissor, bool enabled);
+
     enum DirtyBitType
     {
         // Blend dirty bits
@@ -108,6 +117,10 @@ class StateManager9 final : angle::NonCopyable
         DIRTY_BIT_STENCIL_OPS_FRONT,
         DIRTY_BIT_STENCIL_OPS_BACK,
 
+        // Scissor dirty bits
+        DIRTY_BIT_SCISSOR_ENABLED,
+        DIRTY_BIT_SCISSOR_RECT,
+
         DIRTY_BIT_MAX
     };
 
@@ -131,6 +144,12 @@ class StateManager9 final : angle::NonCopyable
     bool mCurFrontFaceCCW;
     unsigned int mCurStencilSize;
     DirtyBits mDepthStencilStateDirtyBits;
+
+    // Currently applied scissor states
+    gl::Rectangle mCurScissorRect;
+    bool mCurScissorEnabled;
+    gl::Extents mRenderTargetBounds;
+    DirtyBits mScissorStateDirtyBits;
 
     // FIXME: Unsupported by D3D9
     static const D3DRENDERSTATETYPE D3DRS_CCW_STENCILREF       = D3DRS_STENCILREF;

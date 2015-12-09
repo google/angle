@@ -932,6 +932,11 @@ gl::Error Renderer9::updateState(const gl::Data &data, GLenum drawMode)
     return error;
 }
 
+void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
+{
+    mStateManager.setScissorState(scissor, enabled);
+}
+
 gl::Error Renderer9::setBlendDepthRasterStates(const gl::Data &glData, GLenum drawMode)
 {
     int samples                    = glData.state->getDrawFramebuffer()->getSamples(glData);
@@ -943,33 +948,6 @@ gl::Error Renderer9::setBlendDepthRasterStates(const gl::Data &glData, GLenum dr
     return mStateManager.setBlendDepthRasterStates(*glData.state, mask);
 }
 
-void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
-{
-    bool scissorChanged = mForceSetScissor ||
-                          memcmp(&scissor, &mCurScissor, sizeof(gl::Rectangle)) != 0 ||
-                          enabled != mScissorEnabled;
-
-    if (scissorChanged)
-    {
-        if (enabled)
-        {
-            RECT rect;
-            rect.left = gl::clamp(scissor.x, 0, static_cast<int>(mRenderTargetDesc.width));
-            rect.top = gl::clamp(scissor.y, 0, static_cast<int>(mRenderTargetDesc.height));
-            rect.right = gl::clamp(scissor.x + scissor.width, 0, static_cast<int>(mRenderTargetDesc.width));
-            rect.bottom = gl::clamp(scissor.y + scissor.height, 0, static_cast<int>(mRenderTargetDesc.height));
-            mDevice->SetScissorRect(&rect);
-        }
-
-        mDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, enabled ? TRUE : FALSE);
-
-        mScissorEnabled = enabled;
-        mCurScissor = scissor;
-    }
-
-    mForceSetScissor = false;
-}
-
 void Renderer9::setViewport(const gl::Caps *caps,
                             const gl::Rectangle &viewport,
                             float zNear,
@@ -978,6 +956,9 @@ void Renderer9::setViewport(const gl::Caps *caps,
                             GLenum frontFace,
                             bool ignoreViewport)
 {
+    int renderTargetWidth  = mStateManager.getRenderTargetWidth();
+    int renderTargetHeight = mStateManager.getRenderTargetHeight();
+
     gl::Rectangle actualViewport = viewport;
     float actualZNear = gl::clamp01(zNear);
     float actualZFar = gl::clamp01(zFar);
@@ -985,17 +966,19 @@ void Renderer9::setViewport(const gl::Caps *caps,
     {
         actualViewport.x = 0;
         actualViewport.y = 0;
-        actualViewport.width  = static_cast<int>(mRenderTargetDesc.width);
-        actualViewport.height = static_cast<int>(mRenderTargetDesc.height);
+        actualViewport.width  = static_cast<int>(renderTargetWidth);
+        actualViewport.height = static_cast<int>(renderTargetHeight);
         actualZNear = 0.0f;
         actualZFar = 1.0f;
     }
 
     D3DVIEWPORT9 dxViewport;
-    dxViewport.X = gl::clamp(actualViewport.x, 0, static_cast<int>(mRenderTargetDesc.width));
-    dxViewport.Y = gl::clamp(actualViewport.y, 0, static_cast<int>(mRenderTargetDesc.height));
-    dxViewport.Width = gl::clamp(actualViewport.width, 0, static_cast<int>(mRenderTargetDesc.width) - static_cast<int>(dxViewport.X));
-    dxViewport.Height = gl::clamp(actualViewport.height, 0, static_cast<int>(mRenderTargetDesc.height) - static_cast<int>(dxViewport.Y));
+    dxViewport.X     = gl::clamp(actualViewport.x, 0, static_cast<int>(renderTargetWidth));
+    dxViewport.Y     = gl::clamp(actualViewport.y, 0, static_cast<int>(renderTargetHeight));
+    dxViewport.Width = gl::clamp(actualViewport.width, 0, static_cast<int>(renderTargetWidth) -
+                                                              static_cast<int>(dxViewport.X));
+    dxViewport.Height = gl::clamp(actualViewport.height, 0, static_cast<int>(renderTargetHeight) -
+                                                                static_cast<int>(dxViewport.Y));
     dxViewport.MinZ = actualZNear;
     dxViewport.MaxZ = actualZFar;
 
@@ -1230,7 +1213,6 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorAtt
         }
 
         mStateManager.updateDepthSizeIfChanged(mDepthStencilInitialized, depthSize);
-
         mStateManager.updateStencilSizeIfChanged(mDepthStencilInitialized, stencilSize);
 
         mAppliedDepthStencilSerial = depthStencilSerial;
@@ -1239,13 +1221,10 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorAtt
 
     if (renderTargetChanged || !mRenderTargetDescInitialized)
     {
-        mForceSetScissor = true;
         mForceSetViewport = true;
         mStateManager.forceSetBlendState();
-
-        mRenderTargetDesc.width = renderTargetWidth;
-        mRenderTargetDesc.height = renderTargetHeight;
-        mRenderTargetDesc.format = renderTargetFormat;
+        mStateManager.forceSetScissorState();
+        mStateManager.setRenderTargetBounds(renderTargetWidth, renderTargetHeight);
         mRenderTargetDescInitialized = true;
     }
 
@@ -2020,14 +1999,17 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
             mDevice->SetStreamSourceFreq(i, 1);
         }
 
+        int renderTargetWidth  = mStateManager.getRenderTargetWidth();
+        int renderTargetHeight = mStateManager.getRenderTargetHeight();
+
         float quad[4][4];   // A quadrilateral covering the target, aligned to match the edges
         quad[0][0] = -0.5f;
-        quad[0][1] = mRenderTargetDesc.height - 0.5f;
+        quad[0][1] = renderTargetHeight - 0.5f;
         quad[0][2] = 0.0f;
         quad[0][3] = 1.0f;
 
-        quad[1][0] = mRenderTargetDesc.width - 0.5f;
-        quad[1][1] = mRenderTargetDesc.height - 0.5f;
+        quad[1][0] = renderTargetWidth - 0.5f;
+        quad[1][1] = renderTargetHeight - 0.5f;
         quad[1][2] = 0.0f;
         quad[1][3] = 1.0f;
 
@@ -2036,7 +2018,7 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
         quad[2][2] = 0.0f;
         quad[2][3] = 1.0f;
 
-        quad[3][0] = mRenderTargetDesc.width - 0.5f;
+        quad[3][0] = renderTargetWidth - 0.5f;
         quad[3][1] = -0.5f;
         quad[3][2] = 0.0f;
         quad[3][3] = 1.0f;
@@ -2085,11 +2067,11 @@ void Renderer9::markAllStateDirty()
     mDepthStencilInitialized = false;
     mRenderTargetDescInitialized = false;
 
-    mForceSetScissor = true;
     mForceSetViewport = true;
     mStateManager.forceSetRasterState();
     mStateManager.forceSetDepthStencilState();
     mStateManager.forceSetBlendState();
+    mStateManager.forceSetScissorState();
 
     ASSERT(mCurVertexSamplerStates.size() == mCurVertexTextures.size());
     for (unsigned int i = 0; i < mCurVertexTextures.size(); i++)

@@ -332,21 +332,9 @@ class Renderer9 : public RendererD3D
     bool mDepthStencilInitialized;
     bool mRenderTargetDescInitialized;
 
-    struct RenderTargetDesc
-    {
-        size_t width;
-        size_t height;
-        D3DFORMAT format;
-    };
-    RenderTargetDesc mRenderTargetDesc;
-
     IDirect3DStateBlock9 *mMaskedClearSavedState;
 
     StateManager9 mStateManager;
-
-    bool mForceSetScissor;
-    gl::Rectangle mCurScissor;
-    bool mScissorEnabled;
 
     bool mForceSetViewport;
     gl::Rectangle mCurViewport;
