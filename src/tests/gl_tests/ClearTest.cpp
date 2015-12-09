@@ -177,9 +177,11 @@ TEST_P(ClearTestES3, MaskedClearBufferBug)
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_EQ(0, 0, 255, 255, 255, 255);
 
-    glReadBuffer(GL_COLOR_ATTACHMENT1);
-    ASSERT_GL_NO_ERROR();
+    // TODO: glReadBuffer support
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, 0, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1], 0);
 
+    //TODO(jmadill): Robust handling of pixel test error ranges
     EXPECT_PIXEL_NEAR(0, 0, 0, 127, 255, 255, 1);
 
     glDeleteTextures(2, textures);
