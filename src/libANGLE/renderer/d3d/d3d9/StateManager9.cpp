@@ -8,6 +8,7 @@
 #include "libANGLE/renderer/d3d/d3d9/StateManager9.h"
 
 #include "common/BitSetIterator.h"
+#include "common/utilities.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libANGLE/renderer/d3d/d3d9/Framebuffer9.h"
@@ -29,6 +30,11 @@ StateManager9::StateManager9(Renderer9 *renderer9)
       mCurStencilSize(0),
       mCurScissorRect(),
       mCurScissorEnabled(false),
+      mCurViewport(),
+      mCurNear(0.0f),
+      mCurFar(0.0f),
+      mCurDepthFront(0.0f),
+      mCurIgnoreViewport(false),
       mRenderer9(renderer9),
       mDirtyBits()
 {
@@ -79,6 +85,16 @@ void StateManager9::forceSetDepthStencilState()
 void StateManager9::forceSetScissorState()
 {
     mDirtyBits |= mScissorStateDirtyBits;
+}
+
+void StateManager9::forceSetViewportState()
+{
+    mForceSetViewport = true;
+}
+
+void StateManager9::forceSetDXUniformsState()
+{
+    mDxUniformsDirty = true;
 }
 
 void StateManager9::updateStencilSizeIfChanged(bool depthStencilInitialized,
@@ -177,6 +193,9 @@ void StateManager9::syncState(const gl::State &state, const gl::State::DirtyBits
                 if (state.getRasterizerState().frontFace != mCurRasterState.frontFace)
                 {
                     mDirtyBits.set(DIRTY_BIT_CULL_MODE);
+
+                    // Viewport state depends on rasterizer.frontface
+                    mDirtyBits.set(DIRTY_BIT_VIEWPORT);
                 }
                 break;
             case gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
@@ -302,6 +321,18 @@ void StateManager9::syncState(const gl::State &state, const gl::State::DirtyBits
                     mDirtyBits.set(DIRTY_BIT_SCISSOR_RECT);
                 }
                 break;
+            case gl::State::DIRTY_BIT_DEPTH_RANGE:
+                if (state.getNearPlane() != mCurNear || state.getFarPlane() != mCurFar)
+                {
+                    mDirtyBits.set(DIRTY_BIT_VIEWPORT);
+                }
+                break;
+            case gl::State::DIRTY_BIT_VIEWPORT:
+                if (state.getViewport() != mCurViewport)
+                {
+                    mDirtyBits.set(DIRTY_BIT_VIEWPORT);
+                }
+                break;
             default:
                 break;
         }
@@ -405,6 +436,113 @@ gl::Error StateManager9::setBlendDepthRasterStates(const gl::State &glState,
     return gl::Error(GL_NO_ERROR);
 }
 
+void StateManager9::setViewportState(const gl::Caps *caps,
+                                     const gl::Rectangle &viewport,
+                                     float zNear,
+                                     float zFar,
+                                     GLenum drawMode,
+                                     GLenum frontFace,
+                                     bool ignoreViewport)
+{
+    if (!mDirtyBits.test(DIRTY_BIT_VIEWPORT) && mCurIgnoreViewport == ignoreViewport)
+        return;
+
+    gl::Rectangle actualViewport = viewport;
+    float actualZNear            = gl::clamp01(zNear);
+    float actualZFar             = gl::clamp01(zFar);
+
+    if (ignoreViewport)
+    {
+        actualViewport.x      = 0;
+        actualViewport.y      = 0;
+        actualViewport.width  = static_cast<int>(mRenderTargetBounds.width);
+        actualViewport.height = static_cast<int>(mRenderTargetBounds.height);
+        actualZNear           = 0.0f;
+        actualZFar            = 1.0f;
+    }
+
+    D3DVIEWPORT9 dxViewport;
+    dxViewport.X = gl::clamp(actualViewport.x, 0, static_cast<int>(mRenderTargetBounds.width));
+    dxViewport.Y = gl::clamp(actualViewport.y, 0, static_cast<int>(mRenderTargetBounds.height));
+    dxViewport.Width =
+        gl::clamp(actualViewport.width, 0,
+                  static_cast<int>(mRenderTargetBounds.width) - static_cast<int>(dxViewport.X));
+    dxViewport.Height =
+        gl::clamp(actualViewport.height, 0,
+                  static_cast<int>(mRenderTargetBounds.height) - static_cast<int>(dxViewport.Y));
+    dxViewport.MinZ = actualZNear;
+    dxViewport.MaxZ = actualZFar;
+
+    float depthFront = !gl::IsTriangleMode(drawMode) ? 0.0f : (frontFace == GL_CCW ? 1.0f : -1.0f);
+
+    mRenderer9->getDevice()->SetViewport(&dxViewport);
+
+    mCurViewport       = actualViewport;
+    mCurNear           = actualZNear;
+    mCurFar            = actualZFar;
+    mCurDepthFront     = depthFront;
+    mCurIgnoreViewport = ignoreViewport;
+
+    // Setting shader constants
+    dx_VertexConstants vc = {};
+    dx_PixelConstants pc  = {};
+
+    vc.viewAdjust[0] =
+        static_cast<float>((actualViewport.width - static_cast<int>(dxViewport.Width)) +
+                           2 * (actualViewport.x - static_cast<int>(dxViewport.X)) - 1) /
+        dxViewport.Width;
+    vc.viewAdjust[1] =
+        static_cast<float>((actualViewport.height - static_cast<int>(dxViewport.Height)) +
+                           2 * (actualViewport.y - static_cast<int>(dxViewport.Y)) - 1) /
+        dxViewport.Height;
+    vc.viewAdjust[2] = static_cast<float>(actualViewport.width) / dxViewport.Width;
+    vc.viewAdjust[3] = static_cast<float>(actualViewport.height) / dxViewport.Height;
+
+    pc.viewCoords[0] = actualViewport.width * 0.5f;
+    pc.viewCoords[1] = actualViewport.height * 0.5f;
+    pc.viewCoords[2] = actualViewport.x + (actualViewport.width * 0.5f);
+    pc.viewCoords[3] = actualViewport.y + (actualViewport.height * 0.5f);
+
+    pc.depthFront[0] = (actualZFar - actualZNear) * 0.5f;
+    pc.depthFront[1] = (actualZNear + actualZFar) * 0.5f;
+    pc.depthFront[2] = depthFront;
+
+    vc.depthRange[0] = actualZNear;
+    vc.depthRange[1] = actualZFar;
+    vc.depthRange[2] = actualZFar - actualZNear;
+
+    pc.depthRange[0] = actualZNear;
+    pc.depthRange[1] = actualZFar;
+    pc.depthRange[2] = actualZFar - actualZNear;
+
+    if (memcmp(&vc, &mVertexConstants, sizeof(dx_VertexConstants)) != 0)
+    {
+        mVertexConstants = vc;
+        mDxUniformsDirty = true;
+    }
+
+    if (memcmp(&pc, &mPixelConstants, sizeof(dx_PixelConstants)) != 0)
+    {
+        mPixelConstants  = pc;
+        mDxUniformsDirty = true;
+    }
+
+    mForceSetViewport = false;
+}
+
+void StateManager9::setShaderConstants()
+{
+    if (!mDxUniformsDirty)
+        return;
+
+    IDirect3DDevice9 *device = mRenderer9->getDevice();
+    device->SetVertexShaderConstantF(0, reinterpret_cast<float *>(&mVertexConstants),
+                                     sizeof(dx_VertexConstants) / sizeof(float[4]));
+    device->SetPixelShaderConstantF(0, reinterpret_cast<float *>(&mPixelConstants),
+                                    sizeof(dx_PixelConstants) / sizeof(float[4]));
+    mDxUniformsDirty = false;
+}
+
 // This is separate from the main state loop because other functions
 // outside call only setScissorState to update scissor state
 void StateManager9::setScissorState(const gl::Rectangle &scissor, bool enabled)
@@ -420,6 +558,7 @@ void StateManager9::setRenderTargetBounds(size_t width, size_t height)
 {
     mRenderTargetBounds.width  = (int)width;
     mRenderTargetBounds.height = (int)height;
+    forceSetViewportState();
 }
 
 void StateManager9::setScissorEnabled(bool scissorEnabled)

@@ -336,12 +336,6 @@ class Renderer9 : public RendererD3D
 
     StateManager9 mStateManager;
 
-    bool mForceSetViewport;
-    gl::Rectangle mCurViewport;
-    float mCurNear;
-    float mCurFar;
-    float mCurDepthFront;
-
     // Currently applied sampler states
     struct CurSamplerState
     {
@@ -362,10 +356,6 @@ class Renderer9 : public RendererD3D
     IDirect3DVertexShader9 *mAppliedVertexShader;
     IDirect3DPixelShader9 *mAppliedPixelShader;
     unsigned int mAppliedProgramSerial;
-
-    dx_VertexConstants mVertexConstants;
-    dx_PixelConstants mPixelConstants;
-    bool mDxUniformsDirty;
 
     // A pool of event queries that are currently unused.
     std::vector<IDirect3DQuery9*> mEventQueryPool;

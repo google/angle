@@ -956,84 +956,8 @@ void Renderer9::setViewport(const gl::Caps *caps,
                             GLenum frontFace,
                             bool ignoreViewport)
 {
-    int renderTargetWidth  = mStateManager.getRenderTargetWidth();
-    int renderTargetHeight = mStateManager.getRenderTargetHeight();
-
-    gl::Rectangle actualViewport = viewport;
-    float actualZNear = gl::clamp01(zNear);
-    float actualZFar = gl::clamp01(zFar);
-    if (ignoreViewport)
-    {
-        actualViewport.x = 0;
-        actualViewport.y = 0;
-        actualViewport.width  = static_cast<int>(renderTargetWidth);
-        actualViewport.height = static_cast<int>(renderTargetHeight);
-        actualZNear = 0.0f;
-        actualZFar = 1.0f;
-    }
-
-    D3DVIEWPORT9 dxViewport;
-    dxViewport.X     = gl::clamp(actualViewport.x, 0, static_cast<int>(renderTargetWidth));
-    dxViewport.Y     = gl::clamp(actualViewport.y, 0, static_cast<int>(renderTargetHeight));
-    dxViewport.Width = gl::clamp(actualViewport.width, 0, static_cast<int>(renderTargetWidth) -
-                                                              static_cast<int>(dxViewport.X));
-    dxViewport.Height = gl::clamp(actualViewport.height, 0, static_cast<int>(renderTargetHeight) -
-                                                                static_cast<int>(dxViewport.Y));
-    dxViewport.MinZ = actualZNear;
-    dxViewport.MaxZ = actualZFar;
-
-    float depthFront = !gl::IsTriangleMode(drawMode) ? 0.0f : (frontFace == GL_CCW ? 1.0f : -1.0f);
-
-    bool viewportChanged = mForceSetViewport || memcmp(&actualViewport, &mCurViewport, sizeof(gl::Rectangle)) != 0 ||
-                           actualZNear != mCurNear || actualZFar != mCurFar || mCurDepthFront != depthFront;
-    if (viewportChanged)
-    {
-        mDevice->SetViewport(&dxViewport);
-
-        mCurViewport = actualViewport;
-        mCurNear = actualZNear;
-        mCurFar = actualZFar;
-        mCurDepthFront = depthFront;
-
-        dx_VertexConstants vc = {};
-        dx_PixelConstants pc = {};
-
-        vc.viewAdjust[0] = (float)((actualViewport.width - (int)dxViewport.Width) + 2 * (actualViewport.x - (int)dxViewport.X) - 1) / dxViewport.Width;
-        vc.viewAdjust[1] = (float)((actualViewport.height - (int)dxViewport.Height) + 2 * (actualViewport.y - (int)dxViewport.Y) - 1) / dxViewport.Height;
-        vc.viewAdjust[2] = (float)actualViewport.width / dxViewport.Width;
-        vc.viewAdjust[3] = (float)actualViewport.height / dxViewport.Height;
-
-        pc.viewCoords[0] = actualViewport.width  * 0.5f;
-        pc.viewCoords[1] = actualViewport.height * 0.5f;
-        pc.viewCoords[2] = actualViewport.x + (actualViewport.width  * 0.5f);
-        pc.viewCoords[3] = actualViewport.y + (actualViewport.height * 0.5f);
-
-        pc.depthFront[0] = (actualZFar - actualZNear) * 0.5f;
-        pc.depthFront[1] = (actualZNear + actualZFar) * 0.5f;
-        pc.depthFront[2] = depthFront;
-
-        vc.depthRange[0] = actualZNear;
-        vc.depthRange[1] = actualZFar;
-        vc.depthRange[2] = actualZFar - actualZNear;
-
-        pc.depthRange[0] = actualZNear;
-        pc.depthRange[1] = actualZFar;
-        pc.depthRange[2] = actualZFar - actualZNear;
-
-        if (memcmp(&vc, &mVertexConstants, sizeof(dx_VertexConstants)) != 0)
-        {
-            mVertexConstants = vc;
-            mDxUniformsDirty = true;
-        }
-
-        if (memcmp(&pc, &mPixelConstants, sizeof(dx_PixelConstants)) != 0)
-        {
-            mPixelConstants = pc;
-            mDxUniformsDirty = true;
-        }
-    }
-
-    mForceSetViewport = false;
+    mStateManager.setViewportState(caps, viewport, zNear, zFar, drawMode, frontFace,
+                                   ignoreViewport);
 }
 
 bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize)
@@ -1221,7 +1145,6 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorAtt
 
     if (renderTargetChanged || !mRenderTargetDescInitialized)
     {
-        mForceSetViewport = true;
         mStateManager.forceSetBlendState();
         mStateManager.forceSetScissorState();
         mStateManager.setRenderTargetBounds(renderTargetWidth, renderTargetHeight);
@@ -1709,7 +1632,7 @@ gl::Error Renderer9::applyShadersImpl(const gl::Data &data, GLenum /*drawMode*/)
     if (programSerial != mAppliedProgramSerial)
     {
         programD3D->dirtyAllUniforms();
-        mDxUniformsDirty = true;
+        mStateManager.forceSetDXUniformsState();
         mAppliedProgramSerial = programSerial;
     }
 
@@ -1760,12 +1683,7 @@ gl::Error Renderer9::applyUniforms(const ProgramD3D &programD3D,
     }
 
     // Driver uniforms
-    if (mDxUniformsDirty)
-    {
-        mDevice->SetVertexShaderConstantF(0, (float*)&mVertexConstants, sizeof(dx_VertexConstants) / sizeof(float[4]));
-        mDevice->SetPixelShaderConstantF(0, (float*)&mPixelConstants, sizeof(dx_PixelConstants) / sizeof(float[4]));
-        mDxUniformsDirty = false;
-    }
+    mStateManager.setShaderConstants();
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -2067,11 +1985,11 @@ void Renderer9::markAllStateDirty()
     mDepthStencilInitialized = false;
     mRenderTargetDescInitialized = false;
 
-    mForceSetViewport = true;
     mStateManager.forceSetRasterState();
     mStateManager.forceSetDepthStencilState();
     mStateManager.forceSetBlendState();
     mStateManager.forceSetScissorState();
+    mStateManager.forceSetViewportState();
 
     ASSERT(mCurVertexSamplerStates.size() == mCurVertexTextures.size());
     for (unsigned int i = 0; i < mCurVertexTextures.size(); i++)
@@ -2091,7 +2009,7 @@ void Renderer9::markAllStateDirty()
     mAppliedVertexShader = NULL;
     mAppliedPixelShader = NULL;
     mAppliedProgramSerial = 0;
-    mDxUniformsDirty = true;
+    mStateManager.forceSetDXUniformsState();
 
     mVertexDeclarationCache.markStateDirty();
 }

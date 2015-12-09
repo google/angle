@@ -12,6 +12,7 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Data.h"
 #include "libANGLE/State.h"
+#include "libANGLE/renderer/d3d/RendererD3D.h"
 
 namespace rx
 {
@@ -28,14 +29,26 @@ class StateManager9 final : angle::NonCopyable
 
     gl::Error setBlendDepthRasterStates(const gl::State &glState, unsigned int sampleMask);
     void setScissorState(const gl::Rectangle &scissor, bool enabled);
+    void setViewportState(const gl::Caps *caps,
+                          const gl::Rectangle &viewport,
+                          float zNear,
+                          float zFar,
+                          GLenum drawMode,
+                          GLenum frontFace,
+                          bool ignoreViewport);
+
+    void setShaderConstants();
 
     void forceSetBlendState();
     void forceSetRasterState();
     void forceSetDepthStencilState();
     void forceSetScissorState();
+    void forceSetViewportState();
+    void forceSetDXUniformsState();
 
     void updateDepthSizeIfChanged(bool depthStencilInitialized, unsigned int depthSize);
     void updateStencilSizeIfChanged(bool depthStencilInitialized, unsigned int stencilSize);
+
     void setRenderTargetBounds(size_t width, size_t height);
 
     int getRenderTargetWidth() const { return mRenderTargetBounds.width; }
@@ -121,6 +134,9 @@ class StateManager9 final : angle::NonCopyable
         DIRTY_BIT_SCISSOR_ENABLED,
         DIRTY_BIT_SCISSOR_RECT,
 
+        // Viewport dirty bits
+        DIRTY_BIT_VIEWPORT,
+
         DIRTY_BIT_MAX
     };
 
@@ -150,6 +166,18 @@ class StateManager9 final : angle::NonCopyable
     bool mCurScissorEnabled;
     gl::Extents mRenderTargetBounds;
     DirtyBits mScissorStateDirtyBits;
+
+    // Currently applied viewport states
+    bool mForceSetViewport;
+    gl::Rectangle mCurViewport;
+    float mCurNear;
+    float mCurFar;
+    float mCurDepthFront;
+    bool mCurIgnoreViewport;
+
+    dx_VertexConstants mVertexConstants;
+    dx_PixelConstants mPixelConstants;
+    bool mDxUniformsDirty;
 
     // FIXME: Unsupported by D3D9
     static const D3DRENDERSTATETYPE D3DRS_CCW_STENCILREF       = D3DRS_STENCILREF;
