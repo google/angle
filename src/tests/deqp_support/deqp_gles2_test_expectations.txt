@@ -40,9 +40,15 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+// Windows only failures
+
+// These tests crash for unknown reason under a newer D3DCompiler_47.dll
+// TODO(jmadill): Figure out if we can solve these crashes
+1252 WIN : dEQP-GLES2.functional.shaders.random.trigonometric.vertex.63 = SKIP
+1252 WIN : dEQP-GLES2.functional.shaders.random.trigonometric.fragment.63 = SKIP
+
 // TODO(jmadill): triage these into temporary and permanent suppressions
 
-// Windows only failures
 1030 WIN : dEQP-GLES2.functional.attribute_location.bind_hole.mat2 = FAIL
 1030 WIN : dEQP-GLES2.functional.attribute_location.bind_relink_hole.mat2 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb5_a1 = FAIL
