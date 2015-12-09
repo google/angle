@@ -16,6 +16,24 @@
       "revId": "4793901a5da4f83a9f5f9eda49a9032b4178e5a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "652a0e7c_6e17cf94",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-09T20:42:01Z",
+      "side": 1,
+      "message": "Can you make a macro EXPECT_EGL_TRUE and EXPECT_EGL_FALSE next to EXPECT_EGL_ERROR?",
+      "parentUuid": "001ce050_83295e7f",
+      "revId": "4793901a5da4f83a9f5f9eda49a9032b4178e5a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
