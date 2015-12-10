@@ -223,7 +223,8 @@ VariableLocation::VariableLocation(const std::string &name, unsigned int element
 }
 
 Program::Data::Data()
-    : mAttachedFragmentShader(nullptr),
+    : mLabel(),
+      mAttachedFragmentShader(nullptr),
       mAttachedVertexShader(nullptr),
       mTransformFeedbackBufferMode(GL_INTERLEAVED_ATTRIBS),
       mBinaryRetrieveableHint(false)
@@ -241,6 +242,11 @@ Program::Data::~Data()
     {
         mAttachedFragmentShader->release();
     }
+}
+
+const std::string &Program::Data::getLabel()
+{
+    return mLabel;
 }
 
 const LinkedUniform *Program::Data::getUniformByName(const std::string &name) const
@@ -326,6 +332,16 @@ Program::~Program()
     unlink(true);
 
     SafeDelete(mProgram);
+}
+
+void Program::setLabel(const std::string &label)
+{
+    mData.mLabel = label;
+}
+
+const std::string &Program::getLabel() const
+{
+    return mData.mLabel;
 }
 
 bool Program::attachShader(Shader *shader)

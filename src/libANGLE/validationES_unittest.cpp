@@ -96,7 +96,7 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
     caps.maxElementIndex     = 100;
     caps.maxDrawBuffers      = 1;
     caps.maxColorAttachments = 1;
-    state.initialize(caps, 3);
+    state.initialize(caps, extensions, 3, false);
 
     MockTextureImpl *textureImpl = new MockTextureImpl();
     EXPECT_CALL(*textureImpl, setStorage(_, _, _, _)).WillOnce(Return(Error(GL_NO_ERROR)));

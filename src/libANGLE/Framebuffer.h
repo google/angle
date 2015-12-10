@@ -14,6 +14,7 @@
 
 #include "common/angleutils.h"
 #include "libANGLE/Constants.h"
+#include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/RefCountObject.h"
@@ -44,7 +45,7 @@ struct Extensions;
 struct ImageIndex;
 struct Rectangle;
 
-class Framebuffer
+class Framebuffer final : public LabeledObject
 {
   public:
 
@@ -54,6 +55,8 @@ class Framebuffer
         explicit Data();
         explicit Data(const Caps &caps);
         ~Data();
+
+        const std::string &getLabel();
 
         const FramebufferAttachment *getReadAttachment() const;
         const FramebufferAttachment *getFirstColorAttachment() const;
@@ -71,6 +74,8 @@ class Framebuffer
       private:
         friend class Framebuffer;
 
+        std::string mLabel;
+
         std::vector<FramebufferAttachment> mColorAttachments;
         FramebufferAttachment mDepthAttachment;
         FramebufferAttachment mStencilAttachment;
@@ -82,6 +87,9 @@ class Framebuffer
     Framebuffer(const Caps &caps, rx::ImplFactory *factory, GLuint id);
     Framebuffer(rx::SurfaceImpl *surface);
     virtual ~Framebuffer();
+
+    void setLabel(const std::string &label) override;
+    const std::string &getLabel() const override;
 
     const rx::FramebufferImpl *getImplementation() const { return mImpl; }
     rx::FramebufferImpl *getImplementation() { return mImpl; }

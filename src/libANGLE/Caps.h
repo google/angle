@@ -262,6 +262,10 @@ struct Extensions
 
     // GL_KHR_debug
     bool debug;
+    GLuint maxDebugMessageLength;
+    GLuint maxDebugLoggedMessages;
+    GLuint maxDebugGroupStackDepth;
+    GLuint maxLabelLength;
 
     // ES3 Extension support
 

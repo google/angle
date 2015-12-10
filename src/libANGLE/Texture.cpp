@@ -50,6 +50,7 @@ static size_t GetImageDescIndex(GLenum target, size_t level)
 Texture::Texture(rx::TextureImpl *impl, GLuint id, GLenum target)
     : egl::ImageSibling(id),
       mTexture(impl),
+      mLabel(),
       mTextureState(),
       mTarget(target),
       mImageDescs(IMPLEMENTATION_MAX_TEXTURE_LEVELS * (target == GL_TEXTURE_CUBE_MAP ? 6 : 1)),
@@ -66,6 +67,16 @@ Texture::~Texture()
         mBoundSurface = NULL;
     }
     SafeDelete(mTexture);
+}
+
+void Texture::setLabel(const std::string &label)
+{
+    mLabel = label;
+}
+
+const std::string &Texture::getLabel() const
+{
+    return mLabel;
 }
 
 GLenum Texture::getTarget() const
