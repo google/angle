@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5408643_3347f2fd",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-10T18:37:28Z",
+      "side": 1,
+      "message": "would probably just call this CULL_MODE to mirror D3D9",
+      "range": {
+        "startLine": 200,
+        "startChar": 17,
+        "endLine": 200,
+        "endChar": 43
+      },
+      "revId": "dc7a6d4c7fec8a8e71810c172cdb69dde3812550",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "257bb6af_f4de1829",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-10T18:37:28Z",
+      "side": 1,
+      "message": "I would probably just call this the D3D9 name.. DEPTH_BIAS",
+      "range": {
+        "startLine": 203,
+        "startChar": 17,
+        "endLine": 203,
+        "endChar": 48
+      },
+      "revId": "dc7a6d4c7fec8a8e71810c172cdb69dde3812550",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45250aa8_9cf0f1f8",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-10T18:37:28Z",
+      "side": 1,
+      "message": "would also call this with D3D9-names",
+      "range": {
+        "startLine": 372,
+        "startChar": 20,
+        "endLine": 372,
+        "endChar": 40
+      },
+      "revId": "dc7a6d4c7fec8a8e71810c172cdb69dde3812550",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
