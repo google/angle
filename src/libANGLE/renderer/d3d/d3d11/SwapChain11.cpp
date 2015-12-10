@@ -821,6 +821,8 @@ EGLint SwapChain11::present(EGLint x, EGLint y, EGLint width, EGLint height)
         ERR("Present failed with error code 0x%08X", result);
     }
 
+    mNativeWindow.commitChange();
+
     return EGL_SUCCESS;
 }
 

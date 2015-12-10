@@ -499,6 +499,7 @@ Renderer11::Renderer11(egl::Display *display)
 
     mD3d11Module = NULL;
     mDxgiModule = NULL;
+    mDCompModule          = NULL;
     mCreatedWithDeviceEXT = false;
     mEGLDevice            = nullptr;
 
@@ -765,6 +766,7 @@ egl::Error Renderer11::initializeD3DDevice()
             TRACE_EVENT0("gpu.angle", "Renderer11::initialize (Load DLLs)");
             mDxgiModule  = LoadLibrary(TEXT("dxgi.dll"));
             mD3d11Module = LoadLibrary(TEXT("d3d11.dll"));
+            mDCompModule = LoadLibrary(TEXT("dcomp.dll"));
 
             if (mD3d11Module == nullptr || mDxgiModule == nullptr)
             {
@@ -1089,6 +1091,7 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
     outExtensions->glRenderbufferImage   = true;
 
     outExtensions->flexibleSurfaceCompatibility = true;
+    outExtensions->directComposition            = !!mDCompModule;
 }
 
 gl::Error Renderer11::flush()
@@ -2602,6 +2605,12 @@ void Renderer11::release()
     {
         FreeLibrary(mDxgiModule);
         mDxgiModule = NULL;
+    }
+
+    if (mDCompModule)
+    {
+        FreeLibrary(mDCompModule);
+        mDCompModule = NULL;
     }
 
     mCompiler.release();

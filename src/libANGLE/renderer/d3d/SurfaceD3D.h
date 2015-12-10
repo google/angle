@@ -30,6 +30,7 @@ class SurfaceD3D : public SurfaceImpl
                                         const egl::Config *config,
                                         EGLNativeWindowType window,
                                         EGLint fixedSize,
+                                        EGLint directComposition,
                                         EGLint width,
                                         EGLint height,
                                         EGLint orientation);
@@ -73,6 +74,7 @@ class SurfaceD3D : public SurfaceImpl
                EGLint height,
                EGLint fixedSize,
                EGLint orientation,
+               EGLint directComposition,
                EGLClientBuffer shareHandle,
                EGLNativeWindowType window);
 

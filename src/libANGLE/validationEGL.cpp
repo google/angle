@@ -385,6 +385,13 @@ Error ValidateCreateWindowSurface(Display *display, Config *config, EGLNativeWin
           case EGL_VG_ALPHA_FORMAT:
             return Error(EGL_BAD_MATCH);
 
+          case EGL_DIRECT_COMPOSITION_ANGLE:
+              if (!displayExtensions.directComposition)
+              {
+                  return Error(EGL_BAD_ATTRIBUTE);
+              }
+              break;
+
           default:
             return Error(EGL_BAD_ATTRIBUTE);
         }

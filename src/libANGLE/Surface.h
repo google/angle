@@ -84,6 +84,8 @@ class Surface final : public gl::FramebufferAttachmentObject
     }
     EGLint getOrientation() const { return mOrientation; }
 
+    bool directComposition() const { return mDirectComposition; }
+
   private:
     virtual ~Surface();
     rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override { return mImplementation; }
@@ -109,6 +111,8 @@ class Surface final : public gl::FramebufferAttachmentObject
     bool mFixedSize;
     size_t mFixedWidth;
     size_t mFixedHeight;
+
+    bool mDirectComposition;
 
     EGLenum mTextureFormat;
     EGLenum mTextureTarget;

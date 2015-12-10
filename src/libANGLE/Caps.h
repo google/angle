@@ -465,6 +465,9 @@ struct DisplayExtensions
 
     // EGL_ANGLE_flexible_surface_compatibility
     bool flexibleSurfaceCompatibility;
+
+    // EGL_ANGLE_direct_composition
+    bool directComposition;
 };
 
 struct DeviceExtensions

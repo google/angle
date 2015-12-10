@@ -49,6 +49,8 @@ Surface::Surface(rx::SurfaceImpl *impl,
     mFlexibleSurfaceCompatibilityRequested =
         (attributes.get(EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE, EGL_FALSE) == EGL_TRUE);
 
+    mDirectComposition = (attributes.get(EGL_DIRECT_COMPOSITION_ANGLE, EGL_FALSE) == EGL_TRUE);
+
     mFixedSize = (attributes.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE) == EGL_TRUE);
     if (mFixedSize)
     {

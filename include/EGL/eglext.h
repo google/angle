@@ -468,6 +468,11 @@ EGLAPI EGLBoolean EGLAPIENTRY eglQuerySurfacePointerANGLE (EGLDisplay dpy, EGLSu
 #define EGL_ANGLE_surface_d3d_texture_2d_share_handle 1
 #endif /* EGL_ANGLE_surface_d3d_texture_2d_share_handle */
 
+#ifndef EGL_ANGLE_direct_composition
+#define EGL_ANGLE_direct_composition 1
+#define EGL_DIRECT_COMPOSITION_ANGLE 0x33A5
+#endif /* EGL_ANGLE_direct_composition */
+
 #ifndef EGL_ANGLE_platform_angle
 #define EGL_ANGLE_platform_angle 1
 #define EGL_PLATFORM_ANGLE_ANGLE          0x3202

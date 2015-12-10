@@ -447,6 +447,16 @@ EGLBoolean EGLAPIENTRY QuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint a
           }
           *value = eglSurface->getOrientation();
           break;
+      case EGL_DIRECT_COMPOSITION_ANGLE:
+          if (!display->getExtensions().directComposition)
+          {
+              SetGlobalError(Error(EGL_BAD_ATTRIBUTE,
+                                   "EGL_DIRECT_COMPOSITION_ANGLE cannot be used without "
+                                   "EGL_ANGLE_direct_composition support."));
+              return EGL_FALSE;
+          }
+          *value = eglSurface->directComposition();
+          break;
       default:
         SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
         return EGL_FALSE;
