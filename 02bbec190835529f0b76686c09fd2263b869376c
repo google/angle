@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8543824f_12162a95",
+        "filename": "src/libANGLE/renderer/Renderer.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-10T18:34:08Z",
+      "side": 0,
+      "message": "I\u0027m fine with removing this, but it does apply to all Renderers. Maybe it should be in a Cap somewhere.",
+      "range": {
+        "startLine": 85,
+        "startChar": 21,
+        "endLine": 85,
+        "endChar": 32
+      },
+      "revId": "02bbec190835529f0b76686c09fd2263b869376c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
