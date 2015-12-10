@@ -1527,7 +1527,6 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
     // Also extract the render target dimensions and view
     unsigned int renderTargetWidth = 0;
     unsigned int renderTargetHeight = 0;
-    DXGI_FORMAT renderTargetFormat = DXGI_FORMAT_UNKNOWN;
     ID3D11RenderTargetView* framebufferRTVs[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS] = {NULL};
     bool missingColorRenderTarget = true;
 
@@ -1567,7 +1566,6 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
             {
                 renderTargetWidth = renderTarget->getWidth();
                 renderTargetHeight = renderTarget->getHeight();
-                renderTargetFormat = renderTarget->getDXGIFormat();
                 missingColorRenderTarget = false;
             }
 
