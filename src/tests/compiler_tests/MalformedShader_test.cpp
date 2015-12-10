@@ -15,7 +15,7 @@
 class MalformedShaderTest : public testing::Test
 {
   public:
-    MalformedShaderTest() {}
+    MalformedShaderTest() : mExtraCompileOptions(0) {}
 
   protected:
     virtual void SetUp()
@@ -36,7 +36,8 @@ class MalformedShaderTest : public testing::Test
     bool compile(const std::string& shaderString)
     {
         const char *shaderStrings[] = { shaderString.c_str() };
-        bool compilationSuccess = mTranslator->compile(shaderStrings, 1, SH_INTERMEDIATE_TREE);
+        bool compilationSuccess =
+            mTranslator->compile(shaderStrings, 1, SH_INTERMEDIATE_TREE | mExtraCompileOptions);
         TInfoSink &infoSink = mTranslator->getInfoSink();
         mInfoLog = infoSink.info.c_str();
         return compilationSuccess;
@@ -50,6 +51,7 @@ class MalformedShaderTest : public testing::Test
   protected:
     std::string mInfoLog;
     TranslatorESSL *mTranslator;
+    int mExtraCompileOptions;
 };
 
 class MalformedVertexShaderTest : public MalformedShaderTest
@@ -98,6 +100,12 @@ class MalformedWebGL1ShaderTest : public MalformedShaderTest
         mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_WEBGL_SPEC);
         ASSERT_TRUE(mTranslator->Init(resources));
     }
+};
+
+class UnrollForLoopsTest : public MalformedShaderTest
+{
+  public:
+    UnrollForLoopsTest() { mExtraCompileOptions = SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX; }
 };
 
 // This is a test for a bug that used to exist in ANGLE:
@@ -1387,5 +1395,44 @@ TEST_F(MalformedWebGL1ShaderTest, NonConstantLoopIndex)
     if (compile(shaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Regression test for an old crash bug in ANGLE.
+// ForLoopUnroll used to crash when it encountered a while loop.
+TEST_F(UnrollForLoopsTest, WhileLoop)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "void main()\n"
+        "{\n"
+        "    while (true) {\n"
+        "        gl_FragColor = vec4(0.0);\n"
+        "        break;\n"
+        "    }\n"
+        "}\n";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
+    }
+}
+
+// Regression test for an old crash bug in ANGLE.
+// ForLoopUnroll used to crash when it encountered a loop that didn't fit the ESSL 1.00
+// Appendix A limitations.
+TEST_F(UnrollForLoopsTest, UnlimitedForLoop)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "void main()\n"
+        "{\n"
+        "    for (;true;) {\n"
+        "        gl_FragColor = vec4(0.0);\n"
+        "        break;\n"
+        "    }\n"
+        "}\n";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
     }
 }

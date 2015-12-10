@@ -294,12 +294,14 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         // Unroll for-loop markup needs to happen after validateLimitations pass.
         if (success && (compileOptions & SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX))
         {
-            ForLoopUnrollMarker marker(ForLoopUnrollMarker::kIntegerIndex);
+            ForLoopUnrollMarker marker(ForLoopUnrollMarker::kIntegerIndex,
+                                       shouldRunLoopAndIndexingValidation(compileOptions));
             root->traverse(&marker);
         }
         if (success && (compileOptions & SH_UNROLL_FOR_LOOP_WITH_SAMPLER_ARRAY_INDEX))
         {
-            ForLoopUnrollMarker marker(ForLoopUnrollMarker::kSamplerArrayIndex);
+            ForLoopUnrollMarker marker(ForLoopUnrollMarker::kSamplerArrayIndex,
+                                       shouldRunLoopAndIndexingValidation(compileOptions));
             root->traverse(&marker);
             if (marker.samplerArrayIndexIsFloatLoopIndex())
             {
@@ -696,7 +698,7 @@ void TCompiler::rewriteCSSShader(TIntermNode* root)
 
 bool TCompiler::validateLimitations(TIntermNode* root)
 {
-    ValidateLimitations validate(shaderType, infoSink.info);
+    ValidateLimitations validate(shaderType, &infoSink.info);
     root->traverse(&validate);
     return validate.numErrors() == 0;
 }
