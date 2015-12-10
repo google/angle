@@ -433,8 +433,8 @@ bool ValidateLimitations::validateOperation(TIntermOperator *node,
 
 bool ValidateLimitations::isConstExpr(TIntermNode *node)
 {
-    ASSERT(node != NULL);
-    return node->getAsConstantUnion() != NULL;
+    ASSERT(node != nullptr);
+    return node->getAsConstantUnion() != nullptr && node->getAsTyped()->getQualifier() == EvqConst;
 }
 
 bool ValidateLimitations::isConstIndexExpr(TIntermNode *node)

@@ -84,6 +84,22 @@ class MalformedWebGL2ShaderTest : public MalformedShaderTest
     }
 };
 
+class MalformedWebGL1ShaderTest : public MalformedShaderTest
+{
+  public:
+    MalformedWebGL1ShaderTest() {}
+
+  protected:
+    void SetUp() override
+    {
+        ShBuiltInResources resources;
+        ShInitBuiltInResources(&resources);
+
+        mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_WEBGL_SPEC);
+        ASSERT_TRUE(mTranslator->Init(resources));
+    }
+};
+
 // This is a test for a bug that used to exist in ANGLE:
 // Calling a function with all parameters missing should not succeed.
 TEST_F(MalformedShaderTest, FunctionParameterMismatch)
@@ -1347,6 +1363,26 @@ TEST_F(MalformedShaderTest, NoPrecisionSampler3D)
         "void main()\n"
         "{\n"
         "   my_FragColor = vec4(0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Test that using a non-constant expression in a for loop initializer is forbidden in WebGL 1.0,
+// even when ANGLE is able to constant fold the initializer.
+// ESSL 1.00 Appendix A.
+TEST_F(MalformedWebGL1ShaderTest, NonConstantLoopIndex)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform int u;\n"
+        "void main()\n"
+        "{\n"
+        "    for (int i = (true ? 1 : u); i < 5; ++i) {\n"
+        "        gl_FragColor = vec4(0.0);\n"
+        "    }\n"
         "}\n";
     if (compile(shaderString))
     {
