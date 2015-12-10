@@ -15,12 +15,14 @@ namespace gl
 
 Error::Error(GLenum errorCode)
     : mCode(errorCode),
+      mID(errorCode),
       mMessage(nullptr)
 {
 }
 
 Error::Error(const Error &other)
     : mCode(other.mCode),
+      mID(other.mID),
       mMessage(nullptr)
 {
     if (other.mMessage != nullptr)
@@ -32,6 +34,7 @@ Error::Error(const Error &other)
 
 Error::Error(Error &&other)
     : mCode(other.mCode),
+      mID(other.mID),
       mMessage(other.mMessage)
 {
     other.mMessage = nullptr;
@@ -45,6 +48,7 @@ Error::~Error()
 Error &Error::operator=(const Error &other)
 {
     mCode = other.mCode;
+    mID = other.mID;
 
     if (other.mMessage != nullptr)
     {
@@ -62,6 +66,7 @@ Error &Error::operator=(const Error &other)
 Error &Error::operator=(Error &&other)
 {
     mCode = other.mCode;
+    mID = other.mID;
     mMessage = other.mMessage;
 
     other.mMessage = nullptr;
@@ -72,6 +77,11 @@ Error &Error::operator=(Error &&other)
 GLenum Error::getCode() const
 {
     return mCode;
+}
+
+GLuint Error::getID() const
+{
+    return mID;
 }
 
 bool Error::isError() const

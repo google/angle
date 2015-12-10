@@ -22,6 +22,7 @@ class Error final
   public:
     explicit inline Error(GLenum errorCode);
     Error(GLenum errorCode, const char *msg, ...);
+    Error(GLenum errorCode, GLuint id, const char *msg, ...);
     inline Error(const Error &other);
     inline Error(Error &&other);
 
@@ -31,6 +32,7 @@ class Error final
     inline Error &operator=(Error &&other);
 
     inline GLenum getCode() const;
+    inline GLuint getID() const;
     inline bool isError() const;
 
     const std::string &getMessage() const;
@@ -43,6 +45,7 @@ class Error final
     void createMessageString() const;
 
     GLenum mCode;
+    GLuint mID;
     mutable std::string *mMessage;
 };
 

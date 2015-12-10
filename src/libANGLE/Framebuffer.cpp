@@ -40,7 +40,8 @@ void DetachMatchingAttachment(FramebufferAttachment *attachment, GLenum matchTyp
 }
 
 Framebuffer::Data::Data()
-    : mColorAttachments(1),
+    : mLabel(),
+      mColorAttachments(1),
       mDrawBufferStates(1, GL_NONE),
       mReadBufferState(GL_COLOR_ATTACHMENT0_EXT)
 {
@@ -48,7 +49,8 @@ Framebuffer::Data::Data()
 }
 
 Framebuffer::Data::Data(const Caps &caps)
-    : mColorAttachments(caps.maxColorAttachments),
+    : mLabel(),
+      mColorAttachments(caps.maxColorAttachments),
       mDrawBufferStates(caps.maxDrawBuffers, GL_NONE),
       mReadBufferState(GL_COLOR_ATTACHMENT0_EXT)
 {
@@ -57,6 +59,11 @@ Framebuffer::Data::Data(const Caps &caps)
 
 Framebuffer::Data::~Data()
 {
+}
+
+const std::string &Framebuffer::Data::getLabel()
+{
+    return mLabel;
 }
 
 const FramebufferAttachment *Framebuffer::Data::getReadAttachment() const
@@ -177,6 +184,16 @@ Framebuffer::Framebuffer(rx::SurfaceImpl *surface)
 Framebuffer::~Framebuffer()
 {
     SafeDelete(mImpl);
+}
+
+void Framebuffer::setLabel(const std::string &label)
+{
+    mData.mLabel = label;
+}
+
+const std::string &Framebuffer::getLabel() const
+{
+    return mData.mLabel;
 }
 
 void Framebuffer::detachTexture(GLuint textureId)

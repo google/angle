@@ -109,9 +109,15 @@ bool ValidCap(const Context *context, GLenum cap)
       case GL_BLEND:
       case GL_DITHER:
         return true;
+
       case GL_PRIMITIVE_RESTART_FIXED_INDEX:
       case GL_RASTERIZER_DISCARD:
         return (context->getClientVersion() >= 3);
+
+      case GL_DEBUG_OUTPUT_SYNCHRONOUS:
+      case GL_DEBUG_OUTPUT:
+          return context->getExtensions().debug;
+
       default:
         return false;
     }

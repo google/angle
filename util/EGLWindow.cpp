@@ -85,6 +85,7 @@ EGLWindow::EGLWindow(EGLint glesMajorVersion,
       mDepthBits(-1),
       mStencilBits(-1),
       mMultisample(false),
+      mDebug(false),
       mSwapInterval(-1)
 {
 }
@@ -224,6 +225,9 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
 
         contextAttributes.push_back(EGL_CONTEXT_MINOR_VERSION_KHR);
         contextAttributes.push_back(mClientMinorVersion);
+
+        contextAttributes.push_back(EGL_CONTEXT_OPENGL_DEBUG);
+        contextAttributes.push_back(mDebug ? EGL_TRUE : EGL_FALSE);
     }
     contextAttributes.push_back(EGL_NONE);
 
