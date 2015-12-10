@@ -91,6 +91,49 @@ ANGLE_EXPORT void GL_APIENTRY BindVertexArrayOES(GLuint array);
 ANGLE_EXPORT void GL_APIENTRY DeleteVertexArraysOES(GLsizei n, const GLuint *arrays);
 ANGLE_EXPORT void GL_APIENTRY GenVertexArraysOES(GLsizei n, GLuint *arrays);
 ANGLE_EXPORT GLboolean GL_APIENTRY IsVertexArrayOES(GLuint array);
+
+// GL_KHR_debug
+ANGLE_EXPORT void GL_APIENTRY DebugMessageControlKHR(GLenum source,
+                                                     GLenum type,
+                                                     GLenum severity,
+                                                     GLsizei count,
+                                                     const GLuint *ids,
+                                                     GLboolean enabled);
+ANGLE_EXPORT void GL_APIENTRY DebugMessageInsertKHR(GLenum source,
+                                                    GLenum type,
+                                                    GLuint id,
+                                                    GLenum severity,
+                                                    GLsizei length,
+                                                    const GLchar *buf);
+ANGLE_EXPORT void GL_APIENTRY DebugMessageCallbackKHR(GLDEBUGPROCKHR callback,
+                                                      const void *userParam);
+ANGLE_EXPORT GLuint GL_APIENTRY GetDebugMessageLogKHR(GLuint count,
+                                                      GLsizei bufSize,
+                                                      GLenum *sources,
+                                                      GLenum *types,
+                                                      GLuint *ids,
+                                                      GLenum *severities,
+                                                      GLsizei *lengths,
+                                                      GLchar *messageLog);
+ANGLE_EXPORT void GL_APIENTRY PushDebugGroupKHR(GLenum source,
+                                                GLuint id,
+                                                GLsizei length,
+                                                const GLchar *message);
+ANGLE_EXPORT void GL_APIENTRY PopDebugGroupKHR(void);
+ANGLE_EXPORT void GL_APIENTRY ObjectLabelKHR(GLenum identifier,
+                                             GLuint name,
+                                             GLsizei length,
+                                             const GLchar *label);
+ANGLE_EXPORT void GL_APIENTRY
+GetObjectLabelKHR(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *length, GLchar *label);
+ANGLE_EXPORT void GL_APIENTRY ObjectPtrLabelKHR(const void *ptr,
+                                                GLsizei length,
+                                                const GLchar *label);
+ANGLE_EXPORT void GL_APIENTRY GetObjectPtrLabelKHR(const void *ptr,
+                                                   GLsizei bufSize,
+                                                   GLsizei *length,
+                                                   GLchar *label);
+ANGLE_EXPORT void GL_APIENTRY GetPointervKHR(GLenum pname, void **params);
 }
 
 #endif // LIBGLESV2_ENTRYPOINTGLES20EXT_H_

@@ -146,6 +146,7 @@ Extensions::Extensions()
       unpackSubimage(false),
       packSubimage(false),
       vertexArrayObject(false),
+      debug(false),
       colorBufferFloat(false)
 {
 }
@@ -210,6 +211,7 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_NV_pack_subimage",                 packSubimage,              &extensionStrings);
     InsertExtensionString("GL_EXT_color_buffer_float",           colorBufferFloat,          &extensionStrings);
     InsertExtensionString("GL_OES_vertex_array_object",          vertexArrayObject,         &extensionStrings);
+    InsertExtensionString("GL_KHR_debug",                        debug,                     &extensionStrings);
     // clang-format on
 
     return extensionStrings;

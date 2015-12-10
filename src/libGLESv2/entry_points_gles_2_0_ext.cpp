@@ -1277,4 +1277,228 @@ GLboolean GL_APIENTRY IsVertexArrayOES(GLuint array)
 
     return GL_FALSE;
 }
+
+void GL_APIENTRY DebugMessageControlKHR(GLenum source,
+                                        GLenum type,
+                                        GLenum severity,
+                                        GLsizei count,
+                                        const GLuint *ids,
+                                        GLboolean enabled)
+{
+    EVENT(
+        "(GLenum source = 0x%X, GLenum type = 0x%X, GLenum severity = 0x%X, GLsizei count = %d, "
+        "GLint *ids = 0x%0.8p, GLboolean enabled = %d)",
+        source, type, severity, count, ids, enabled);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateDebugMessageControlKHR(context, source, type, severity, count, ids, enabled))
+        {
+            return;
+        }
+
+        UNIMPLEMENTED();
+    }
+}
+
+void GL_APIENTRY DebugMessageInsertKHR(GLenum source,
+                                       GLenum type,
+                                       GLuint id,
+                                       GLenum severity,
+                                       GLsizei length,
+                                       const GLchar *buf)
+{
+    EVENT(
+        "(GLenum source = 0x%X, GLenum type = 0x%X, GLint id = %d, GLenum severity = 0x%X, GLsizei "
+        "length = %d, const GLchar *buf = 0x%0.8p)",
+        source, type, id, severity, length, buf);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateDebugMessageInsertKHR(context, source, type, id, severity, length, buf))
+        {
+            return;
+        }
+
+        UNIMPLEMENTED();
+    }
+}
+
+void GL_APIENTRY DebugMessageCallbackKHR(GLDEBUGPROCKHR callback, const void *userParam)
+{
+    EVENT("(GLDEBUGPROCKHR callback = 0x%0.8p, const void *userParam = 0x%0.8p)", callback,
+          userParam);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateDebugMessageCallbackKHR(context, callback, userParam))
+        {
+            return;
+        }
+
+        UNIMPLEMENTED();
+    }
+}
+
+GLuint GL_APIENTRY GetDebugMessageLogKHR(GLuint count,
+                                         GLsizei bufSize,
+                                         GLenum *sources,
+                                         GLenum *types,
+                                         GLuint *ids,
+                                         GLenum *severities,
+                                         GLsizei *lengths,
+                                         GLchar *messageLog)
+{
+    EVENT(
+        "(GLsizei count = %d, GLsizei bufSize = %d, GLenum *sources, GLenum *types = 0x%0.8p, "
+        "GLuint *ids = 0x%0.8p, GLenum *severities = 0x%0.8p, GLsizei *lengths = 0x%0.8p, GLchar "
+        "*messageLog = 0x%0.8p)",
+        count, bufSize, sources, types, ids, severities, lengths, messageLog);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateGetDebugMessageLogKHR(context, count, bufSize, sources, types, ids, severities,
+                                           lengths, messageLog))
+        {
+            return 0;
+        }
+
+        UNIMPLEMENTED();
+    }
+
+    return 0;
+}
+
+void GL_APIENTRY PushDebugGroupKHR(GLenum source, GLuint id, GLsizei length, const GLchar *message)
+{
+    EVENT(
+        "(GLenum source = 0x%X, GLuint id = 0x%X, GLsizei length = %d, const GLchar *message = "
+        "0x%0.8p)",
+        source, id, length, message);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidatePushDebugGroupKHR(context, source, id, length, message))
+        {
+            return;
+        }
+
+        UNIMPLEMENTED();
+    }
+}
+
+void GL_APIENTRY PopDebugGroupKHR(void)
+{
+    EVENT("()");
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidatePopDebugGroupKHR(context))
+        {
+            return;
+        }
+
+        UNIMPLEMENTED();
+    }
+}
+
+void GL_APIENTRY ObjectLabelKHR(GLenum identifier, GLuint name, GLsizei length, const GLchar *label)
+{
+    EVENT(
+        "(GLenum identifier = 0x%X, GLuint name = %u, GLsizei length = %d, const GLchar *label = "
+        "0x%0.8p)",
+        identifier, name, length, label);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateObjectLabelKHR(context, identifier, name, length, label))
+        {
+            return;
+        }
+
+        UNIMPLEMENTED();
+    }
+}
+
+void GL_APIENTRY
+GetObjectLabelKHR(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *length, GLchar *label)
+{
+    EVENT(
+        "(GLenum identifier = 0x%X, GLuint name = %u, GLsizei bufSize = %d, GLsizei *length = "
+        "0x%0.8p, GLchar *label = 0x%0.8p)",
+        identifier, name, bufSize, length, label);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateGetObjectLabelKHR(context, identifier, name, bufSize, length, label))
+        {
+            return;
+        }
+
+        UNIMPLEMENTED();
+    }
+}
+
+void GL_APIENTRY ObjectPtrLabelKHR(const void *ptr, GLsizei length, const GLchar *label)
+{
+    EVENT("(const void *ptr = 0x%0.8p, GLsizei length = %d, const GLchar *label = 0x%0.8p)", ptr,
+          length, label);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateObjectPtrLabelKHR(context, ptr, length, label))
+        {
+            return;
+        }
+
+        UNIMPLEMENTED();
+    }
+}
+
+void GL_APIENTRY GetObjectPtrLabelKHR(const void *ptr,
+                                      GLsizei bufSize,
+                                      GLsizei *length,
+                                      GLchar *label)
+{
+    EVENT(
+        "(const void *ptr = 0x%0.8p, GLsizei bufSize = %d, GLsizei *length = 0x%0.8p, GLchar "
+        "*label = 0x%0.8p)",
+        ptr, bufSize, length, label);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateGetObjectPtrLabelKHR(context, ptr, bufSize, length, label))
+        {
+            return;
+        }
+
+        UNIMPLEMENTED();
+    }
+}
+
+void GL_APIENTRY GetPointervKHR(GLenum pname, void **params)
+{
+    EVENT("(GLenum pname = 0x%X, void **params = 0x%0.8p)", pname, params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateGetPointervKHR(context, pname, params))
+        {
+            return;
+        }
+
+        UNIMPLEMENTED();
+    }
+}
 }

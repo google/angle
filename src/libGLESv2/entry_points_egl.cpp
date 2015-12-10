@@ -1361,6 +1361,19 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         INSERT_PROC_ADDRESS(gl, GenVertexArraysOES);
         INSERT_PROC_ADDRESS(gl, IsVertexArrayOES);
 
+        // GL_KHR_debug
+        INSERT_PROC_ADDRESS(gl, DebugMessageControlKHR);
+        INSERT_PROC_ADDRESS(gl, DebugMessageInsertKHR);
+        INSERT_PROC_ADDRESS(gl, DebugMessageCallbackKHR);
+        INSERT_PROC_ADDRESS(gl, GetDebugMessageLogKHR);
+        INSERT_PROC_ADDRESS(gl, PushDebugGroupKHR);
+        INSERT_PROC_ADDRESS(gl, PopDebugGroupKHR);
+        INSERT_PROC_ADDRESS(gl, ObjectLabelKHR);
+        INSERT_PROC_ADDRESS(gl, GetObjectLabelKHR);
+        INSERT_PROC_ADDRESS(gl, ObjectPtrLabelKHR);
+        INSERT_PROC_ADDRESS(gl, GetObjectPtrLabelKHR);
+        INSERT_PROC_ADDRESS(gl, GetPointervKHR);
+
         // GLES3 core
         INSERT_PROC_ADDRESS(gl, ReadBuffer);
         INSERT_PROC_ADDRESS(gl, DrawRangeElements);

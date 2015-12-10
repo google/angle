@@ -10,6 +10,7 @@
 #define LIBANGLE_VALIDATION_ES2_H_
 
 #include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 
 namespace gl
 {
@@ -50,6 +51,61 @@ bool ValidateGetProgramBinaryOES(Context *context,
                                  GLsizei *length,
                                  GLenum *binaryFormat,
                                  void *binary);
+
+// GL_KHR_debug
+bool ValidateDebugMessageControlKHR(Context *context,
+                                    GLenum source,
+                                    GLenum type,
+                                    GLenum severity,
+                                    GLsizei count,
+                                    const GLuint *ids,
+                                    GLboolean enabled);
+bool ValidateDebugMessageInsertKHR(Context *context,
+                                   GLenum source,
+                                   GLenum type,
+                                   GLuint id,
+                                   GLenum severity,
+                                   GLsizei length,
+                                   const GLchar *buf);
+bool ValidateDebugMessageCallbackKHR(Context *context,
+                                     GLDEBUGPROCKHR callback,
+                                     const void *userParam);
+bool ValidateGetDebugMessageLogKHR(Context *context,
+                                   GLuint count,
+                                   GLsizei bufSize,
+                                   GLenum *sources,
+                                   GLenum *types,
+                                   GLuint *ids,
+                                   GLenum *severities,
+                                   GLsizei *lengths,
+                                   GLchar *messageLog);
+bool ValidatePushDebugGroupKHR(Context *context,
+                               GLenum source,
+                               GLuint id,
+                               GLsizei length,
+                               const GLchar *message);
+bool ValidatePopDebugGroupKHR(Context *context);
+bool ValidateObjectLabelKHR(Context *context,
+                            GLenum identifier,
+                            GLuint name,
+                            GLsizei length,
+                            const GLchar *label);
+bool ValidateGetObjectLabelKHR(Context *context,
+                               GLenum identifier,
+                               GLuint name,
+                               GLsizei bufSize,
+                               GLsizei *length,
+                               GLchar *label);
+bool ValidateObjectPtrLabelKHR(Context *context,
+                               const void *ptr,
+                               GLsizei length,
+                               const GLchar *label);
+bool ValidateGetObjectPtrLabelKHR(Context *context,
+                                  const void *ptr,
+                                  GLsizei bufSize,
+                                  GLsizei *length,
+                                  GLchar *label);
+bool ValidateGetPointervKHR(Context *context, GLenum pname, void **params);
 }
 
 #endif // LIBANGLE_VALIDATION_ES2_H_

@@ -1068,4 +1068,178 @@ bool ValidateGetProgramBinaryOES(Context *context,
 
     return ValidateGetProgramBinaryBase(context, program, bufSize, length, binaryFormat, binary);
 }
+
+bool ValidateDebugMessageControlKHR(Context *context,
+                                    GLenum source,
+                                    GLenum type,
+                                    GLenum severity,
+                                    GLsizei count,
+                                    const GLuint *ids,
+                                    GLboolean enabled)
+{
+    if (!context->getExtensions().debug)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateDebugMessageInsertKHR(Context *context,
+                                   GLenum source,
+                                   GLenum type,
+                                   GLuint id,
+                                   GLenum severity,
+                                   GLsizei length,
+                                   const GLchar *buf)
+{
+    if (!context->getExtensions().debug)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateDebugMessageCallbackKHR(Context *context,
+                                     GLDEBUGPROCKHR callback,
+                                     const void *userParam)
+{
+    if (!context->getExtensions().debug)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateGetDebugMessageLogKHR(Context *context,
+                                   GLuint count,
+                                   GLsizei bufSize,
+                                   GLenum *sources,
+                                   GLenum *types,
+                                   GLuint *ids,
+                                   GLenum *severities,
+                                   GLsizei *lengths,
+                                   GLchar *messageLog)
+{
+    if (!context->getExtensions().debug)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidatePushDebugGroupKHR(Context *context,
+                               GLenum source,
+                               GLuint id,
+                               GLsizei length,
+                               const GLchar *message)
+{
+    if (!context->getExtensions().debug)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidatePopDebugGroupKHR(Context *context)
+{
+    if (!context->getExtensions().debug)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateObjectLabelKHR(Context *context,
+                            GLenum identifier,
+                            GLuint name,
+                            GLsizei length,
+                            const GLchar *label)
+{
+    if (!context->getExtensions().debug)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateGetObjectLabelKHR(Context *context,
+                               GLenum identifier,
+                               GLuint name,
+                               GLsizei bufSize,
+                               GLsizei *length,
+                               GLchar *label)
+{
+    if (!context->getExtensions().debug)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateObjectPtrLabelKHR(Context *context,
+                               const void *ptr,
+                               GLsizei length,
+                               const GLchar *label)
+{
+    if (!context->getExtensions().debug)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateGetObjectPtrLabelKHR(Context *context,
+                                  const void *ptr,
+                                  GLsizei bufSize,
+                                  GLsizei *length,
+                                  GLchar *label)
+{
+    if (!context->getExtensions().debug)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateGetPointervKHR(Context *context, GLenum pname, void **params)
+{
+    if (!context->getExtensions().debug)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return true;
+}
 }
