@@ -256,7 +256,6 @@ TEST_P(ReadPixelsTest, DrawWithPBO)
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
     EXPECT_GL_NO_ERROR();
 
-    // glReadBuffer(GL_COLOR_ATTACHMENT0); // FIXME: currently UNIMPLEMENTED
     glBindFramebuffer(GL_READ_FRAMEBUFFER, mFBO);
     EXPECT_GL_NO_ERROR();
 
