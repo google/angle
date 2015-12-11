@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5b5e6ad_c866cf31",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-11T18:46:59Z",
+      "side": 1,
+      "message": "can you add some commentary to the description on what intent of the patch and it\u0027s goal?",
+      "revId": "daa567c8a7b0c13a96e0e545eac4ed22cc0a550b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85b8e2a7_678fd214",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 588,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-11T18:46:59Z",
+      "side": 1,
+      "message": "static cast",
+      "range": {
+        "startLine": 588,
+        "startChar": 31,
+        "endLine": 588,
+        "endChar": 48
+      },
+      "revId": "daa567c8a7b0c13a96e0e545eac4ed22cc0a550b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c533ba1e_81f8daa4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 795,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-11T18:46:59Z",
+      "side": 1,
+      "message": "s/NULL/nullptr",
+      "range": {
+        "startLine": 795,
+        "startChar": 39,
+        "endLine": 795,
+        "endChar": 43
+      },
+      "revId": "daa567c8a7b0c13a96e0e545eac4ed22cc0a550b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
