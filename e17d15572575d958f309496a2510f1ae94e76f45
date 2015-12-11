@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8543824f_72f696fd",
+        "filename": "src/compiler/translator/ValidateLimitations.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-11T14:28:10Z",
+      "side": 1,
+      "message": "nit: // static",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 12
+      },
+      "revId": "e17d15572575d958f309496a2510f1ae94e76f45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "257bb6af_54d4acde",
+        "filename": "src/compiler/translator/ValidateLimitations.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-11T14:28:10Z",
+      "side": 1,
+      "message": "nit: IsLimitedForLoop (static)",
+      "range": {
+        "startLine": 29,
+        "startChar": 16,
+        "endLine": 29,
+        "endChar": 32
+      },
+      "revId": "e17d15572575d958f309496a2510f1ae94e76f45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
