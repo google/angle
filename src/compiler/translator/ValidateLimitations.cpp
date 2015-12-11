@@ -482,13 +482,6 @@ bool ValidateLimitations::validateIndexing(TIntermBinary *node)
 
     bool valid = true;
     TIntermTyped *index = node->getRight();
-    // The index expression must have integral type.
-    if (!index->isScalarInt()) {
-        error(index->getLine(),
-              "Index expression must have integral type",
-              index->getCompleteString().c_str());
-        valid = false;
-    }
     // The index expession must be a constant-index-expression unless
     // the operand is a uniform in a vertex shader.
     TIntermTyped *operand = node->getLeft();
