@@ -4,8 +4,14 @@
 // found in the LICENSE file.
 //
 
+#ifdef ANGLE_ENABLE_ESSL
 #include "compiler/translator/TranslatorESSL.h"
+#endif
+
+#ifdef ANGLE_ENABLE_GLSL
 #include "compiler/translator/TranslatorGLSL.h"
+#endif
+
 #ifdef ANGLE_ENABLE_HLSL
 #include "compiler/translator/TranslatorHLSL.h"
 #endif // ANGLE_ENABLE_HLSL
@@ -20,7 +26,13 @@ TCompiler* ConstructCompiler(
 {
     switch (output) {
       case SH_ESSL_OUTPUT:
+#ifdef ANGLE_ENABLE_ESSL
         return new TranslatorESSL(type, spec);
+#else
+        // This compiler is not supported in this
+        // configuration. Return NULL per the ShConstructCompiler API.
+        return nullptr;
+#endif // ANGLE_ENABLE_ESSL
       case SH_GLSL_130_OUTPUT:
       case SH_GLSL_140_OUTPUT:
       case SH_GLSL_150_CORE_OUTPUT:
@@ -32,7 +44,13 @@ TCompiler* ConstructCompiler(
       case SH_GLSL_440_CORE_OUTPUT:
       case SH_GLSL_450_CORE_OUTPUT:
       case SH_GLSL_COMPATIBILITY_OUTPUT:
+#ifdef ANGLE_ENABLE_GLSL
         return new TranslatorGLSL(type, spec, output);
+#else
+        // This compiler is not supported in this
+        // configuration. Return NULL per the ShConstructCompiler API.
+        return nullptr;
+#endif // ANGLE_ENABLE_GLSL
       case SH_HLSL9_OUTPUT:
       case SH_HLSL11_OUTPUT:
 #ifdef ANGLE_ENABLE_HLSL

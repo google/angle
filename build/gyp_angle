@@ -56,6 +56,8 @@ def generateWinRTProjects(generate_args, generation_dir, build_winphone, msvs_ve
     args.append('-Dangle_build_winphone=' + ('1' if build_winphone else '0'))
     args.append('-Dangle_enable_d3d9=0')
     args.append('-Dangle_enable_gl=0')
+    args.append('-Dangle_enable_essl=0')
+    args.append('-Dangle_enable_glsl=0')
     # Add all.gyp as the main gyp file to be generated.
     args.append(os.path.join(script_dir, 'ANGLE.gyp'))
 

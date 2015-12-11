@@ -18,6 +18,8 @@ if (is_linux) {
   angle_enable_gl = true
 }
 
+angle_enable_essl = true
+angle_enable_glsl = true
 angle_enable_hlsl = false
 
 if (angle_enable_d3d9 || angle_enable_d3d11) {
