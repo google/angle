@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "25ead6c4_7f1e2bed",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2015-12-12T01:52:43Z",
+      "side": 1,
+      "message": "GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH is not returned from getIntegerv",
+      "range": {
+        "startLine": 1233,
+        "startChar": 17,
+        "endLine": 1233,
+        "endChar": 52
+      },
+      "revId": "ab588460337c736219b3c02a6940b87c8245681a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05107294_c915d525",
+        "filename": "src/libANGLE/Debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2015-12-12T01:52:43Z",
+      "side": 1,
+      "message": "According to the KHR_debug spec, getMessage is supposed to remove the messages that have been fetched.  This method doesn\u0027t appear to be doing that.",
+      "range": {
+        "startLine": 106,
+        "startChar": 7,
+        "endLine": 106,
+        "endChar": 25
+      },
+      "revId": "ab588460337c736219b3c02a6940b87c8245681a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25ead6c4_1fa9a7bb",
+        "filename": "src/libANGLE/Error.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2015-12-12T01:52:43Z",
+      "side": 1,
+      "message": "Having the id be next to the string in the callsite can lead to instances where one id maps to more than one string or vice versa. Consider instead putting the strings in a \u0027static const\u0027 lookup table by id.  \nAnother advantage of having the strings in a lookup table is it gives us a central location to do an edit pass on all the strings.",
+      "range": {
+        "startLine": 29,
+        "startChar": 13,
+        "endLine": 29,
+        "endChar": 62
+      },
+      "revId": "ab588460337c736219b3c02a6940b87c8245681a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
