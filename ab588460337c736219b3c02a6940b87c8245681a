@@ -68,6 +68,30 @@
       "revId": "ab588460337c736219b3c02a6940b87c8245681a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0593126b_0ba6dd85",
+        "filename": "src/libANGLE/Error.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-14T15:44:05Z",
+      "side": 1,
+      "message": "The problem then becomes that if we do any substitution, it decouples the location of the substitution parameters from the format string.  I\u0027m not sure which is better.\n\nOne thought is to use less granular message IDs.  An ID may be only something like... INVALID_TEXTURE_FORMAT_ENUM and it will be used in multiple callsites but the callsites themselves may do a bit of specification by printing a message like \"The texture format 0x%X is not a valid enum because GL_OES_rgb8_rgba8 is not enabled.\"\n\nThis all depends on how specific you want the translated strings to be but it would let us use far fewer message IDs, probably in the 100-200 range, instead of potentially thousands.",
+      "parentUuid": "25ead6c4_1fa9a7bb",
+      "range": {
+        "startLine": 29,
+        "startChar": 13,
+        "endLine": 29,
+        "endChar": 62
+      },
+      "revId": "ab588460337c736219b3c02a6940b87c8245681a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
