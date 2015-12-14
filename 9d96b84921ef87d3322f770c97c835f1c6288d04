@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "65f20ea9_74de40fe",
+        "filename": "src/tests/perf_tests/InstancingPerf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-14T21:25:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a58ec6ed_a00a9a34",
+      "range": {
+        "startLine": 33,
+        "startChar": 6,
+        "endLine": 33,
+        "endChar": 7
+      },
+      "revId": "9d96b84921ef87d3322f770c97c835f1c6288d04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25a2d663_5cfdbd5c",
         "filename": "src/tests/perf_tests/InstancingPerf.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-12-09T21:13:13Z",
       "side": 1,
       "message": "It seems like we could simply avoid overriding the method for the same effect. Ah, or is it because of the operator\u003c\u003c resolution having a bug on MSVC?",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 28
+      },
+      "revId": "9d96b84921ef87d3322f770c97c835f1c6288d04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5865a2d_cc093f0b",
+        "filename": "src/tests/perf_tests/InstancingPerf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-14T21:25:41Z",
+      "side": 1,
+      "message": "Edited",
+      "parentUuid": "25a2d663_5cfdbd5c",
       "range": {
         "startLine": 61,
         "startChar": 0,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "65f20ea9_b4e708d5",
+        "filename": "src/tests/perf_tests/InstancingPerf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-14T21:25:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e56d1eee_ba01714b",
+      "revId": "9d96b84921ef87d3322f770c97c835f1c6288d04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8543824f_0f51650b",
         "filename": "src/tests/perf_tests/InstancingPerf.cpp",
         "patchSetId": 3
@@ -76,6 +142,24 @@
       "writtenOn": "2015-12-09T21:13:13Z",
       "side": 1,
       "message": "nit: not a fan of having an array for all the buffers, even if we use them only one time (except 3 and 4).",
+      "revId": "9d96b84921ef87d3322f770c97c835f1c6288d04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a52166e4_abe97519",
+        "filename": "src/tests/perf_tests/InstancingPerf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-14T21:25:41Z",
+      "side": 1,
+      "message": "Vector makes them easier to allocate/cleanup on deallocation (if you don\u0027t mind)",
+      "parentUuid": "8543824f_0f51650b",
       "revId": "9d96b84921ef87d3322f770c97c835f1c6288d04",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -99,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "a52166e4_8be63147",
+        "filename": "src/tests/perf_tests/InstancingPerf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-14T21:25:41Z",
+      "side": 1,
+      "message": "Removed comment",
+      "parentUuid": "a58ec6ed_c0a0fe63",
+      "revId": "9d96b84921ef87d3322f770c97c835f1c6288d04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45250aa8_8d57a1a4",
         "filename": "src/tests/perf_tests/InstancingPerf.cpp",
         "patchSetId": 3
@@ -110,6 +212,24 @@
       "writtenOn": "2015-12-09T21:13:13Z",
       "side": 1,
       "message": "Should this code be removed? If it is removed, the buffers could be made STATIC_DRAW and triangleSignal can be removed.",
+      "revId": "9d96b84921ef87d3322f770c97c835f1c6288d04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a57de6ee_8b349120",
+        "filename": "src/tests/perf_tests/InstancingPerf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-14T21:25:41Z",
+      "side": 1,
+      "message": "Made this a parameter",
+      "parentUuid": "45250aa8_8d57a1a4",
       "revId": "9d96b84921ef87d3322f770c97c835f1c6288d04",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -133,6 +253,24 @@
     },
     {
       "key": {
+        "uuid": "45a7cad1_806ff843",
+        "filename": "src/tests/perf_tests/InstancingPerf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-14T21:25:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5843ece_c201e24a",
+      "revId": "9d96b84921ef87d3322f770c97c835f1c6288d04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5408643_b009980b",
         "filename": "src/tests/perf_tests/InstancingPerf.cpp",
         "patchSetId": 3
@@ -150,6 +288,24 @@
     },
     {
       "key": {
+        "uuid": "65f20ea9_f4f1908d",
+        "filename": "src/tests/perf_tests/InstancingPerf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-14T21:25:41Z",
+      "side": 1,
+      "message": "Removed this test",
+      "parentUuid": "a5408643_b009980b",
+      "revId": "9d96b84921ef87d3322f770c97c835f1c6288d04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25a2d663_7cabd94b",
         "filename": "src/tests/perf_tests/InstancingPerf.cpp",
         "patchSetId": 3
@@ -161,6 +317,24 @@
       "writtenOn": "2015-12-09T21:13:13Z",
       "side": 1,
       "message": "This function is mostly the same as InstancingPerfBenchmarks, they could benefit from sharing code in a parent class.",
+      "revId": "9d96b84921ef87d3322f770c97c835f1c6288d04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45a7cad1_606cec4e",
+        "filename": "src/tests/perf_tests/InstancingPerf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-14T21:25:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25a2d663_7cabd94b",
       "revId": "9d96b84921ef87d3322f770c97c835f1c6288d04",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -212,6 +386,24 @@
       "writtenOn": "2015-12-09T21:13:13Z",
       "side": 1,
       "message": "ditto",
+      "revId": "9d96b84921ef87d3322f770c97c835f1c6288d04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "651beeb8_a9285964",
+        "filename": "src/tests/perf_tests/InstancingPerf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-14T21:25:41Z",
+      "side": 1,
+      "message": "Removed this test",
+      "parentUuid": "652a0e7c_4e3d330c",
       "revId": "9d96b84921ef87d3322f770c97c835f1c6288d04",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
