@@ -16,6 +16,24 @@
       "revId": "baa3f09fc24068235e357f6163f757c0fe0b1ef5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85a702bf_4f42ad94",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1429,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-14T09:17:51Z",
+      "side": 1,
+      "message": "Yes. It\u0027s legal in ESSL1.00 too on platforms which support the full language without Appendix A limitations.",
+      "parentUuid": "253496db_09295e67",
+      "revId": "baa3f09fc24068235e357f6163f757c0fe0b1ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
