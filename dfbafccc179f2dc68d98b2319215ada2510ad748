@@ -46,6 +46,30 @@
       "revId": "dfbafccc179f2dc68d98b2319215ada2510ad748",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "852462f4_6aa657d5",
+        "filename": "src/compiler/translator/timing/RestrictFragmentShaderTiming.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-14T20:34:14Z",
+      "side": 1,
+      "message": "No, that\u0027s fine.",
+      "parentUuid": "852462f4_2a9c5f7d",
+      "range": {
+        "startLine": 66,
+        "startChar": 9,
+        "endLine": 66,
+        "endChar": 13
+      },
+      "revId": "dfbafccc179f2dc68d98b2319215ada2510ad748",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
