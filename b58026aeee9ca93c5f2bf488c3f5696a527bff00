@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "65f20ea9_d7f0d6f9",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 496,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-15T17:59:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0593126b_bf7a5fc7",
+      "range": {
+        "startLine": 496,
+        "startChar": 7,
+        "endLine": 496,
+        "endChar": 18
+      },
+      "revId": "b58026aeee9ca93c5f2bf488c3f5696a527bff00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a52166e4_b1344220",
         "filename": "src/common/mathutil.h",
         "patchSetId": 3
@@ -94,6 +118,78 @@
     },
     {
       "key": {
+        "uuid": "a57de6ee_eecfdb7b",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-15T17:59:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85a542c9_850026e2",
+      "range": {
+        "startLine": 498,
+        "startChar": 23,
+        "endLine": 498,
+        "endChar": 29
+      },
+      "revId": "b58026aeee9ca93c5f2bf488c3f5696a527bff00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45a7cad1_0cc31fb3",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-15T17:59:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a52166e4_b1344220",
+      "range": {
+        "startLine": 498,
+        "startChar": 50,
+        "endLine": 498,
+        "endChar": 62
+      },
+      "revId": "b58026aeee9ca93c5f2bf488c3f5696a527bff00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5865a2d_0fa6e985",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-15T17:59:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0593126b_df872bf6",
+      "range": {
+        "startLine": 498,
+        "startChar": 35,
+        "endLine": 498,
+        "endChar": 48
+      },
+      "revId": "b58026aeee9ca93c5f2bf488c3f5696a527bff00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45a7cad1_2cd5bb63",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 3
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "651beeb8_0c1a5b49",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-15T17:59:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45a7cad1_2cd5bb63",
+      "range": {
+        "startLine": 336,
+        "startChar": 32,
+        "endLine": 336,
+        "endChar": 44
+      },
+      "revId": "b58026aeee9ca93c5f2bf488c3f5696a527bff00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "651beeb8_cc0683fa",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 3
@@ -128,6 +248,30 @@
       "writtenOn": "2015-12-15T17:50:52Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 343,
+        "startChar": 32,
+        "endLine": 343,
+        "endChar": 44
+      },
+      "revId": "b58026aeee9ca93c5f2bf488c3f5696a527bff00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a52166e4_f12ebacd",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-15T17:59:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "651beeb8_cc0683fa",
       "range": {
         "startLine": 343,
         "startChar": 32,
