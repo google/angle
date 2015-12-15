@@ -5,10 +5,6 @@
 {
     # Everything below this is duplicated in the GN build. If you change
     # anything also change angle/BUILD.gn
-    'variables':
-    {
-        'angle_standalone%': 0,
-    },
     'targets':
     [
         {
@@ -40,22 +36,5 @@
                 }],
             ],
         },
-    ],
-    'conditions':
-    [
-        ['angle_standalone==0',
-        {
-            'targets':
-            [
-                {
-                    'target_name': 'libEGL_ANGLE',
-                    'type': 'loadable_module',
-                    'dependencies':
-                    [
-                        'libEGL',
-                    ],
-                },
-            ],
-        }],
     ],
 }

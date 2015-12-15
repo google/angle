@@ -5,8 +5,6 @@
 {
     'variables':
     {
-        'angle_standalone%': 0,
-
         # These file lists are shared with the GN build.
         'libangle_common_sources':
         [
@@ -819,22 +817,5 @@
                 }],
             ],
         },
-    ],
-    'conditions':
-    [
-        ['angle_standalone==0',
-        {
-            'targets':
-            [
-                {
-                    'target_name': 'libGLESv2_ANGLE',
-                    'type': 'loadable_module',
-                    'dependencies':
-                    [
-                        'libGLESv2',
-                    ],
-                },
-            ],
-        }],
     ],
 }
