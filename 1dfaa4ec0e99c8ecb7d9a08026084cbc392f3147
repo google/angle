@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "85a542c9_e5fa52dd",
+        "filename": "src/tests/perf_tests/InstancingPerf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-15T20:29:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85a542c9_6533e2ef",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 1
+      },
+      "revId": "1dfaa4ec0e99c8ecb7d9a08026084cbc392f3147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5bb26f1_58d67d1b",
         "filename": "util/shader_utils.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-12-15T16:46:05Z",
       "side": 1,
       "message": "nit: This can go in the if statement.",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 51
+      },
+      "revId": "1dfaa4ec0e99c8ecb7d9a08026084cbc392f3147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0593126b_3ff10f52",
+        "filename": "util/shader_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-15T20:29:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5bb26f1_58d67d1b",
       "range": {
         "startLine": 49,
         "startChar": 8,
