@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e5cc3e7f_d163ae1e",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-15T21:18:36Z",
+      "side": 1,
+      "message": "There\u0027s a circular reference between StateManager9 and Renderer9 :( by-value won\u0027t work for this",
+      "parentUuid": "c5873ad0_81767a71",
+      "range": {
+        "startLine": 352,
+        "startChar": 19,
+        "endLine": 352,
+        "endChar": 32
+      },
+      "revId": "3a5113630a13c5be895f8c29f537331a437b44c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45250aa8_fce93518",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2015-12-10T18:34:08Z",
       "side": 1,
       "message": "aren\u0027t you using one bit for color mask?",
+      "range": {
+        "startLine": 239,
+        "startChar": 0,
+        "endLine": 239,
+        "endChar": 37
+      },
+      "revId": "3a5113630a13c5be895f8c29f537331a437b44c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45db4a39_ecb61315",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-15T21:18:36Z",
+      "side": 1,
+      "message": "Yupp, must have been leftover comments from when I was reminding myself which bits is dirty to call each function",
+      "parentUuid": "45250aa8_fce93518",
       "range": {
         "startLine": 239,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e5cc3e7f_31d4dade",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-15T21:18:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "257bb6af_34fd7093",
+      "range": {
+        "startLine": 292,
+        "startChar": 0,
+        "endLine": 292,
+        "endChar": 1
+      },
+      "revId": "3a5113630a13c5be895f8c29f537331a437b44c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a58ec6ed_a0093a0b",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.h",
         "patchSetId": 6
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "65e04ee1_12d0bc1a",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-15T21:18:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a58ec6ed_a0093a0b",
+      "range": {
+        "startLine": 21,
+        "startChar": 18,
+        "endLine": 21,
+        "endChar": 42
+      },
+      "revId": "3a5113630a13c5be895f8c29f537331a437b44c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5408643_535276bb",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.h",
         "patchSetId": 6
@@ -105,6 +201,30 @@
       "writtenOn": "2015-12-10T18:34:08Z",
       "side": 1,
       "message": "nit:  // namespace rx",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 1
+      },
+      "revId": "3a5113630a13c5be895f8c29f537331a437b44c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05107294_3d8adf04",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-15T21:18:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5408643_535276bb",
       "range": {
         "startLine": 78,
         "startChar": 0,
