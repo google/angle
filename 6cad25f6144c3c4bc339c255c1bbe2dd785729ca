@@ -22,6 +22,30 @@
       "revId": "6cad25f6144c3c4bc339c255c1bbe2dd785729ca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a57de6ee_2ef3b3cb",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-15T18:04:06Z",
+      "side": 1,
+      "message": "I think it will promote to the bigger type before doing the operation. Adding ll just to be sure.",
+      "parentUuid": "a52166e4_d12bb6bb",
+      "range": {
+        "startLine": 498,
+        "startChar": 82,
+        "endLine": 498,
+        "endChar": 83
+      },
+      "revId": "6cad25f6144c3c4bc339c255c1bbe2dd785729ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
