@@ -83,7 +83,6 @@ class InstancingPerfBenchmark : public ANGLERenderTest,
 
     void initializeBenchmark() override;
     void destroyBenchmark() override;
-    void beginDrawBenchmark() override;
     void drawBenchmark() override;
 
   private:
@@ -106,7 +105,6 @@ void InstancingPerfBenchmark::initializeBenchmark()
     const auto &params = GetParam();
 
     ASSERT_LT(0u, params.iterations);
-    mDrawIterations = params.iterations;
 
     const std::string vs =
         "attribute vec2 aPosition;\n"
@@ -268,13 +266,10 @@ void InstancingPerfBenchmark::destroyBenchmark()
     }
 }
 
-void InstancingPerfBenchmark::beginDrawBenchmark()
-{
-    glClear(GL_COLOR_BUFFER_BIT);
-}
-
 void InstancingPerfBenchmark::drawBenchmark()
 {
+    glClear(GL_COLOR_BUFFER_BIT);
+
     const auto &params = GetParam();
 
     // Animatino makes the test more interesting visually, but also eats up many CPU cycles.

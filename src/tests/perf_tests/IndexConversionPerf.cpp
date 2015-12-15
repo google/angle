@@ -50,7 +50,6 @@ class IndexConversionPerfTest : public ANGLERenderTest,
 
     void initializeBenchmark() override;
     void destroyBenchmark() override;
-    void beginDrawBenchmark() override;
     void drawBenchmark() override;
 
     void updateBufferData();
@@ -77,8 +76,6 @@ void IndexConversionPerfTest::initializeBenchmark()
 
     ASSERT_LT(0u, params.iterations);
     ASSERT_LT(0u, params.numIndexTris);
-
-    mDrawIterations = params.iterations;
 
     const std::string vs = SHADER_SOURCE
     (
@@ -165,14 +162,10 @@ void IndexConversionPerfTest::destroyBenchmark()
     glDeleteBuffers(1, &mIndexBuffer);
 }
 
-void IndexConversionPerfTest::beginDrawBenchmark()
-{
-    // Clear the color buffer
-    glClear(GL_COLOR_BUFFER_BIT);
-}
-
 void IndexConversionPerfTest::drawBenchmark()
 {
+    glClear(GL_COLOR_BUFFER_BIT);
+
     const auto &params = GetParam();
 
     // Trigger an update to ensure we convert once a frame
@@ -197,7 +190,7 @@ IndexConversionPerfParams IndexConversionPerfD3D11Params()
     params.minorVersion = 0;
     params.windowWidth = 256;
     params.windowHeight = 256;
-    params.iterations = 15;
+    params.iterations    = 225;
     params.numIndexTris = 3000;
     return params;
 }

@@ -69,7 +69,6 @@ class DrawCallPerfBenchmark : public ANGLERenderTest,
 
     void initializeBenchmark() override;
     void destroyBenchmark() override;
-    void beginDrawBenchmark() override;
     void drawBenchmark() override;
 
   private:
@@ -92,7 +91,6 @@ void DrawCallPerfBenchmark::initializeBenchmark()
     const auto &params = GetParam();
 
     ASSERT_LT(0u, params.iterations);
-    mDrawIterations = params.iterations;
 
     const std::string vs = SHADER_SOURCE
     (
@@ -166,14 +164,10 @@ void DrawCallPerfBenchmark::destroyBenchmark()
     glDeleteBuffers(1, &mBuffer);
 }
 
-void DrawCallPerfBenchmark::beginDrawBenchmark()
-{
-    // Clear the color buffer
-    glClear(GL_COLOR_BUFFER_BIT);
-}
-
 void DrawCallPerfBenchmark::drawBenchmark()
 {
+    glClear(GL_COLOR_BUFFER_BIT);
+
     const auto &params = GetParam();
 
     for (unsigned int it = 0; it < params.iterations; it++)
@@ -211,7 +205,7 @@ DrawCallPerfParams DrawCallPerfValidationOnly()
 {
     DrawCallPerfParams params;
     params.eglParameters = DEFAULT();
-    params.iterations = 100;
+    params.iterations     = 10000;
     params.numTris = 0;
     params.runTimeSeconds = 5.0;
     return params;

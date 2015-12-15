@@ -29,7 +29,7 @@ struct PointSpritesParams final : public RenderTestParams
         minorVersion = 0;
         windowWidth = 1280;
         windowHeight = 720;
-        iterations = 10;
+        iterations   = 100;
         count = 10;
         size = 3.0f;
         numVaryings = 3;
@@ -59,7 +59,6 @@ class PointSpritesBenchmark : public ANGLERenderTest,
 
     void initializeBenchmark() override;
     void destroyBenchmark() override;
-    void beginDrawBenchmark() override;
     void drawBenchmark() override;
 
   private:
@@ -87,7 +86,6 @@ void PointSpritesBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
 
-    mDrawIterations = params.iterations;
     ASSERT_LT(0u, params.iterations);
 
     std::stringstream vstrstr;
@@ -184,14 +182,10 @@ void PointSpritesBenchmark::destroyBenchmark()
     glDeleteBuffers(1, &mBuffer);
 }
 
-void PointSpritesBenchmark::beginDrawBenchmark()
-{
-    // Clear the color buffer
-    glClear(GL_COLOR_BUFFER_BIT);
-}
-
 void PointSpritesBenchmark::drawBenchmark()
 {
+    glClear(GL_COLOR_BUFFER_BIT);
+
     const auto &params = GetParam();
 
     for (unsigned int it = 0; it < params.iterations; it++)

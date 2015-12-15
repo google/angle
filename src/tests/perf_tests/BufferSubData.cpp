@@ -28,7 +28,7 @@ struct BufferSubDataParams final : public RenderTestParams
         windowHeight = 512;
         updateSize = 3000;
         bufferSize = 40000000;
-        iterations = 2;
+        iterations   = 4;
         updateRate = 1;
     }
 
@@ -59,7 +59,6 @@ class BufferSubDataBenchmark : public ANGLERenderTest,
 
     void initializeBenchmark() override;
     void destroyBenchmark() override;
-    void beginDrawBenchmark() override;
     void drawBenchmark() override;
 
   private:
@@ -269,7 +268,6 @@ void BufferSubDataBenchmark::initializeBenchmark()
 
     ASSERT_LT(1, params.vertexComponentCount);
     ASSERT_LT(0u, params.iterations);
-    mDrawIterations = params.iterations;
 
     const std::string vs = SHADER_SOURCE
     (
@@ -359,19 +357,15 @@ void BufferSubDataBenchmark::destroyBenchmark()
     SafeDeleteArray(mUpdateData);
 }
 
-void BufferSubDataBenchmark::beginDrawBenchmark()
-{
-    // Clear the color buffer
-    glClear(GL_COLOR_BUFFER_BIT);
-}
-
 void BufferSubDataBenchmark::drawBenchmark()
 {
+    glClear(GL_COLOR_BUFFER_BIT);
+
     const auto &params = GetParam();
 
     for (unsigned int it = 0; it < params.iterations; it++)
     {
-        if (params.updateSize > 0 && ((mNumFrames % params.updateRate) == 0))
+        if (params.updateSize > 0 && ((getNumStepsPerformed() % params.updateRate) == 0))
         {
             glBufferSubData(GL_ARRAY_BUFFER, 0, params.updateSize, mUpdateData);
         }

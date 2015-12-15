@@ -36,7 +36,10 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     ANGLEPerfTest(const std::string &name, const std::string &suffix);
     virtual ~ANGLEPerfTest();
 
-    virtual void step(float dt, double totalTime) = 0;
+    virtual void step() = 0;
+
+    // Called right before timer is stopped to let the test wait for asynchronous operations.
+    virtual void finishTest() {}
 
   protected:
     void run();
@@ -48,12 +51,19 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     // Normalize a time value according to the number of test loop iterations (mFrameCount)
     double normalizedTime(size_t value) const;
 
+    // Call if the test step was aborted and the test should stop running.
+    void abortTest() { mRunning = false; }
+
+    int getNumStepsPerformed() const { return mNumStepsPerformed; }
+
     std::string mName;
     std::string mSuffix;
-
-    bool mRunning;
     Timer *mTimer;
-    int mNumFrames;
+    double mRunTimeSeconds;
+
+  private:
+    int mNumStepsPerformed;
+    bool mRunning;
 };
 
 struct RenderTestParams : public angle::PlatformParameters
@@ -73,11 +83,7 @@ class ANGLERenderTest : public ANGLEPerfTest
     virtual void initializeBenchmark() { }
     virtual void destroyBenchmark() { }
 
-    virtual void stepBenchmark(float dt, double totalTime) { }
-
-    virtual void beginDrawBenchmark() { }
     virtual void drawBenchmark() = 0;
-    virtual void endDrawBenchmark() { }
 
     bool popEvent(Event *event);
 
@@ -85,15 +91,13 @@ class ANGLERenderTest : public ANGLEPerfTest
 
   protected:
     const RenderTestParams &mTestParams;
-    unsigned int mDrawIterations;
-    double mRunTimeSeconds;
 
   private:
     void SetUp() override;
     void TearDown() override;
 
-    void step(float dt, double totalTime) override;
-    void draw();
+    void step() override;
+    void finishTest() override;
 
     EGLWindow *mEGLWindow;
     OSWindow *mOSWindow;
