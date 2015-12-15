@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "05487277_2c943724",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-15T21:18:36Z",
+      "side": 1,
+      "message": "no :(, SwapChain9::reset uses it to set some parameters",
+      "parentUuid": "c086482d_097269ee",
+      "range": {
+        "startLine": 139,
+        "startChar": 13,
+        "endLine": 139,
+        "endChar": 24
+      },
+      "revId": "e3b109c23f74c9fb2716cee105a5b2d557bc7632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0093006b_ab0ce954",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-12-08T15:54:31Z",
       "side": 1,
       "message": "did you try storing these dirty bits in a group? seems like a nice code cleanup, though I\u0027d be okay with leaving it like this if there was a regression in performance. If so, please comment so future developers know not to do that.",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 14
+      },
+      "revId": "e3b109c23f74c9fb2716cee105a5b2d557bc7632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "454eea83_8bf0b1f8",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-15T21:18:36Z",
+      "side": 1,
+      "message": "The change made a small difference on my machine, not sure if it\u0027s big enough to call a performance regression. Done for now",
+      "parentUuid": "0093006b_ab0ce954",
       "range": {
         "startLine": 41,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e55fde25_de25458d",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-15T21:18:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "608e7c43_cea4e378",
+      "range": {
+        "startLine": 184,
+        "startChar": 4,
+        "endLine": 184,
+        "endChar": 25
+      },
+      "revId": "e3b109c23f74c9fb2716cee105a5b2d557bc7632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c086482d_697125e6",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2015-12-08T15:54:31Z",
       "side": 1,
       "message": "can use early return here",
+      "range": {
+        "startLine": 206,
+        "startChar": 4,
+        "endLine": 206,
+        "endChar": 25
+      },
+      "revId": "e3b109c23f74c9fb2716cee105a5b2d557bc7632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a567a60d_deff7519",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-15T21:18:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c086482d_697125e6",
       "range": {
         "startLine": 206,
         "startChar": 4,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "65984e34_a754e8d1",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-15T21:18:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0093006b_0ba7bd81",
+      "range": {
+        "startLine": 270,
+        "startChar": 5,
+        "endLine": 271,
+        "endChar": 43
+      },
+      "revId": "e3b109c23f74c9fb2716cee105a5b2d557bc7632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0093006b_8b0f2d49",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.h",
         "patchSetId": 2
@@ -128,6 +248,30 @@
       "writtenOn": "2015-12-08T15:54:31Z",
       "side": 1,
       "message": "this really should not be a member of StateManager, it has nothing to do with state. I\u0027d suggest just storing a pointer to the Renderer9 instead.",
+      "range": {
+        "startLine": 33,
+        "startChar": 13,
+        "endLine": 33,
+        "endChar": 24
+      },
+      "revId": "e3b109c23f74c9fb2716cee105a5b2d557bc7632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6553ee27_6f4d811b",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-15T21:18:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0093006b_8b0f2d49",
       "range": {
         "startLine": 33,
         "startChar": 13,
