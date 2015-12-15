@@ -607,7 +607,7 @@ bool TCompiler::tagUsedFunctions()
     }
 
     infoSink.info.prefix(EPrefixError);
-    infoSink.info << "Missing main()";
+    infoSink.info << "Missing main()\n";
     return false;
 }
 
