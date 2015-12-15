@@ -25,6 +25,7 @@
             '<(angle_path)/src/tests/perf_tests/InterleavedAttributeData.cpp',
             '<(angle_path)/src/tests/perf_tests/PointSprites.cpp',
             '<(angle_path)/src/tests/perf_tests/TexSubImage.cpp',
+            '<(angle_path)/src/tests/perf_tests/TextureSampling.cpp',
             '<(angle_path)/src/tests/perf_tests/third_party/perf/perf_test.cc',
             '<(angle_path)/src/tests/perf_tests/third_party/perf/perf_test.h',
             '<(angle_path)/src/tests/test_utils/angle_test_configs.cpp',
