@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5bb26f1_984655a5",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-15T21:32:55Z",
+      "side": 1,
+      "message": "nit: auto (technically unsigned long)",
+      "range": {
+        "startLine": 47,
+        "startChar": 9,
+        "endLine": 47,
+        "endChar": 22
+      },
+      "revId": "67d9035e8e0fc84e42bdf640f8c6509246072e7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5bb26f1_784ca1c3",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-15T21:32:55Z",
+      "side": 1,
+      "message": "auto",
+      "range": {
+        "startLine": 126,
+        "startChar": 9,
+        "endLine": 126,
+        "endChar": 21
+      },
+      "revId": "67d9035e8e0fc84e42bdf640f8c6509246072e7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0593126b_5fbdfb22",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-15T21:32:55Z",
+      "side": 1,
+      "message": "DIRTY_BIT_BLEND_FACTOR",
+      "range": {
+        "startLine": 133,
+        "startChar": 17,
+        "endLine": 133,
+        "endChar": 38
+      },
+      "revId": "67d9035e8e0fc84e42bdf640f8c6509246072e7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0593126b_3fc82fca",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-15T21:32:55Z",
+      "side": 1,
+      "message": "setBlendFactor",
+      "range": {
+        "startLine": 171,
+        "startChar": 20,
+        "endLine": 171,
+        "endChar": 33
+      },
+      "revId": "67d9035e8e0fc84e42bdf640f8c6509246072e7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
