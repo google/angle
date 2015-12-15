@@ -390,6 +390,17 @@ GLenum Framebuffer::checkStatus(const gl::Data &data) const
                 {
                     return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
                 }
+
+                // ES3 specifies that cube map texture attachments must be cube complete.
+                // This language is missing from the ES2 spec, but we enforce it here because some
+                // desktop OpenGL drivers also enforce this validation.
+                // TODO(jmadill): Check if OpenGL ES2 drivers enforce cube completeness.
+                const Texture *texture = colorAttachment.getTexture();
+                ASSERT(texture);
+                if (texture->getTarget() == GL_TEXTURE_CUBE_MAP && !texture->isCubeComplete())
+                {
+                    return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+                }
             }
             else if (colorAttachment.type() == GL_RENDERBUFFER)
             {
