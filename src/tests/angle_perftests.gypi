@@ -21,6 +21,7 @@
             '<(angle_path)/src/tests/perf_tests/DrawCallPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/EGLInitializePerf.cpp',
             '<(angle_path)/src/tests/perf_tests/IndexConversionPerf.cpp',
+            '<(angle_path)/src/tests/perf_tests/InstancingPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/InterleavedAttributeData.cpp',
             '<(angle_path)/src/tests/perf_tests/PointSprites.cpp',
             '<(angle_path)/src/tests/perf_tests/TexSubImage.cpp',

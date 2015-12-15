@@ -3,20 +3,35 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
+// random_utils:
+//   Helper functions for random number generation.
+//
 
 #include "random_utils.h"
 #include <time.h>
 #include <cstdlib>
 
+namespace angle
+{
+
+void RandomInitFromTime()
+{
+    srand(static_cast<unsigned int>(time(NULL)));
+}
+
+float RandomFloat()
+{
+    return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+}
+
 float RandomBetween(float min, float max)
 {
-    static bool randInitialized = false;
-    if (!randInitialized)
-    {
-        srand(static_cast<unsigned int>(time(NULL)));
-        randInitialized = true;
-    }
-
-    const size_t divisor = 10000;
-    return min + ((rand() % divisor) / static_cast<float>(divisor)) * (max - min);
+    return min + RandomFloat() * (max - min);
 }
+
+float RandomNegativeOneToOne()
+{
+    return RandomBetween(0.0f, 1.0f);
+}
+
+}  // namespace angle

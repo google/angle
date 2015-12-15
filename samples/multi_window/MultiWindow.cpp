@@ -14,6 +14,8 @@
 #include "random_utils.h"
 #include "shader_utils.h"
 
+using namespace angle;
+
 class MultiWindowSample : public SampleApplication
 {
   public:

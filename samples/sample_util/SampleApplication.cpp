@@ -6,6 +6,7 @@
 
 #include "SampleApplication.h"
 #include "EGLWindow.h"
+#include "random_utils.h"
 
 SampleApplication::SampleApplication(const std::string &name,
                                      size_t width,
@@ -29,6 +30,8 @@ SampleApplication::SampleApplication(const std::string &name,
 
     // Disable vsync
     mEGLWindow->setSwapInterval(0);
+
+    angle::RandomInitFromTime();
 }
 
 SampleApplication::~SampleApplication()
