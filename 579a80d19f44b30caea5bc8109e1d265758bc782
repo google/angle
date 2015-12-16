@@ -48,6 +48,53 @@
     },
     {
       "key": {
+        "uuid": "65768e4c_ce20a3e3",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T16:33:40Z",
+      "side": 1,
+      "message": "Geoff, this is an internal mask of all GL dirty bits that map to the forceSetBlendState command. See below. The dirty bits that control the D3D state are called \"mDirtyBits\".",
+      "parentUuid": "851aa201_97416491",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 52
+      },
+      "revId": "579a80d19f44b30caea5bc8109e1d265758bc782",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "65768e4c_ee255ff0",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T16:33:40Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 1
+      },
+      "revId": "579a80d19f44b30caea5bc8109e1d265758bc782",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "252bb619_b446e0a4",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
         "patchSetId": 11
