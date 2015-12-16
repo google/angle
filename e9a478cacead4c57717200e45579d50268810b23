@@ -1,0 +1,372 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e5827e50_b2e260c5",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "please add to /extensions",
+      "range": {
+        "startLine": 256,
+        "startChar": 7,
+        "endLine": 256,
+        "endChar": 19
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "252bb619_941ac4a7",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "I had to stare at this for a second to get it.. I\u0027d maybe call it getLabledObjectFromPtr",
+      "range": {
+        "startLine": 584,
+        "startChar": 24,
+        "endLine": 584,
+        "endChar": 43
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5827e50_52e8d4a3",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1220,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "where do you handle these enums?",
+      "range": {
+        "startLine": 1218,
+        "startChar": 1,
+        "endLine": 1220,
+        "endChar": 44
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "252bb619_54350c19",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1230,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "and these",
+      "range": {
+        "startLine": 1229,
+        "startChar": 1,
+        "endLine": 1230,
+        "endChar": 33
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a58c0688_1061e416",
+        "filename": "src/libANGLE/Debug.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "If you always iterate controllers in reverse order, it might make sense to store them reversed, so you can forward-iterate",
+      "range": {
+        "startLine": 237,
+        "startChar": 8,
+        "endLine": 237,
+        "endChar": 97
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5827e50_72e5d8ca",
+        "filename": "src/libANGLE/Debug.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "// namespace gl",
+      "range": {
+        "startLine": 292,
+        "startChar": 0,
+        "endLine": 292,
+        "endChar": 1
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5857a5a_7132b834",
+        "filename": "src/libANGLE/Debug.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "nit: sort",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 17
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5827e50_92f63c80",
+        "filename": "src/libANGLE/Debug.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "at least some of these methods never get called, probably should remove them if they\u0027re not needed as they would be untested",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 37
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "851aa201_b7158889",
+        "filename": "src/libANGLE/Debug.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "nit: // namespace gl",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 1
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5827e50_d2d364f6",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "you don\u0027t seem to need the label in the Impl - might not need to make this a member of Data",
+      "range": {
+        "startLine": 77,
+        "startChar": 8,
+        "endLine": 77,
+        "endChar": 27
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "252bb619_b41fc096",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "same comment as for Framebuffer.. do you intend to use the Label in the impl?",
+      "range": {
+        "startLine": 247,
+        "startChar": 28,
+        "endLine": 247,
+        "endChar": 32
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "452c2a2e_f5d8d812",
+        "filename": "src/tests/gl_tests/DebugTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "nit: init mDebugExtensionAvailabe",
+      "range": {
+        "startLine": 17,
+        "startChar": 4,
+        "endLine": 17,
+        "endChar": 13
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "65768e4c_ce166397",
+        "filename": "src/tests/gl_tests/DebugTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "nit: override instead of virtual",
+      "range": {
+        "startLine": 29,
+        "startChar": 4,
+        "endLine": 29,
+        "endChar": 11
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "252bb619_f42538f0",
+        "filename": "src/tests/gl_tests/DebugTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "nit: override instead of virtual",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 11
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5857a5a_312c30d4",
+        "filename": "src/tests/gl_tests/DebugTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "nit: // namespace angle",
+      "range": {
+        "startLine": 411,
+        "startChar": 0,
+        "endLine": 411,
+        "endChar": 1
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554f2af_466d74da",
+        "filename": "util/EGLWindow.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T14:33:59Z",
+      "side": 1,
+      "message": "nit: might call this setDebugEnabled",
+      "range": {
+        "startLine": 62,
+        "startChar": 9,
+        "endLine": 62,
+        "endChar": 17
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
