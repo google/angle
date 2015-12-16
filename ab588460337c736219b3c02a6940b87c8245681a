@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2580164e_6f6acdc5",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2015-12-16T21:53:36Z",
+      "side": 1,
+      "message": "I see this has been fixed by having the state class\u0027s version of getIntegerv handle the enum.",
+      "parentUuid": "25ead6c4_7f1e2bed",
+      "range": {
+        "startLine": 1233,
+        "startChar": 17,
+        "endLine": 1233,
+        "endChar": 52
+      },
+      "revId": "ab588460337c736219b3c02a6940b87c8245681a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05107294_c915d525",
         "filename": "src/libANGLE/Debug.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-12-12T01:52:43Z",
       "side": 1,
       "message": "According to the KHR_debug spec, getMessage is supposed to remove the messages that have been fetched.  This method doesn\u0027t appear to be doing that.",
+      "range": {
+        "startLine": 106,
+        "startChar": 7,
+        "endLine": 106,
+        "endChar": 25
+      },
+      "revId": "ab588460337c736219b3c02a6940b87c8245681a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "057b1238_6e264f9a",
+        "filename": "src/libANGLE/Debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2015-12-16T21:53:36Z",
+      "side": 1,
+      "message": "I see this has been fixed in a subsequent revision.",
+      "parentUuid": "05107294_c915d525",
       "range": {
         "startLine": 106,
         "startChar": 7,
@@ -83,6 +131,30 @@
       "side": 1,
       "message": "The problem then becomes that if we do any substitution, it decouples the location of the substitution parameters from the format string.  I\u0027m not sure which is better.\n\nOne thought is to use less granular message IDs.  An ID may be only something like... INVALID_TEXTURE_FORMAT_ENUM and it will be used in multiple callsites but the callsites themselves may do a bit of specification by printing a message like \"The texture format 0x%X is not a valid enum because GL_OES_rgb8_rgba8 is not enabled.\"\n\nThis all depends on how specific you want the translated strings to be but it would let us use far fewer message IDs, probably in the 100-200 range, instead of potentially thousands.",
       "parentUuid": "25ead6c4_1fa9a7bb",
+      "range": {
+        "startLine": 29,
+        "startChar": 13,
+        "endLine": 29,
+        "endChar": 62
+      },
+      "revId": "ab588460337c736219b3c02a6940b87c8245681a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0512320e_331f2848",
+        "filename": "src/libANGLE/Error.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2015-12-16T21:53:36Z",
+      "side": 1,
+      "message": "Having less granular message IDs is OK but I worry people will go overboard on the reuse. \nPlus, if INVALID_TEXTURE_FORMAT_ENUM is, indeed, used in many places, retyping the string every time can be a drag, and lead to easy spelling mistakes creeping in. \nPerhaps we can solve with multiple constructors that give you the option of being more specific or using the default string for the id.",
+      "parentUuid": "0593126b_0ba6dd85",
       "range": {
         "startLine": 29,
         "startChar": 13,
