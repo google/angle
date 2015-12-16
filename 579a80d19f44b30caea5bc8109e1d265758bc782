@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "c5857a5a_110b2c3c",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-16T17:56:02Z",
+      "side": 1,
+      "message": "Ah, gotcha.",
+      "parentUuid": "65768e4c_ce20a3e3",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 52
+      },
+      "revId": "579a80d19f44b30caea5bc8109e1d265758bc782",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65768e4c_ee255ff0",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
         "patchSetId": 11
