@@ -1,0 +1,435 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a517a6d7_18f26592",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "nit: can add a line or two describing how the benchmark specifically targets the performance of ANGLE\u0027s translation of the texture() builtin functions",
+      "range": {
+        "startLine": 7,
+        "startChar": 34,
+        "endLine": 7,
+        "endChar": 42
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5827e50_726ab8c5",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "nit: extra //",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 2
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "452c2a2e_95c8842b",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "use std::vector",
+      "range": {
+        "startLine": 69,
+        "startChar": 4,
+        "endLine": 69,
+        "endChar": 10
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "452c2a2e_95af2456",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "nit: can you place this directly above the TextureSampleBenchmark constructor",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 1
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554f2af_e6758066",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "git cl format",
+      "range": {
+        "startLine": 83,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 24
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "851aa201_d7891c11",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "ASSERT_GT(0, params.iterations) (might be wrong in other tests, not sure, not necessary to fix)",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 91,
+        "endChar": 15
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a58c0688_10bd647f",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "maybe make this a parameter like kernelSize?",
+      "range": {
+        "startLine": 137,
+        "startChar": 44,
+        "endLine": 137,
+        "endChar": 45
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "851aa201_f78ea016",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "ASSERT_NE(0u, mProgram)",
+      "range": {
+        "startLine": 150,
+        "startChar": 4,
+        "endLine": 150,
+        "endChar": 15
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a517a6d7_58e8dda3",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "nit: GLint",
+      "range": {
+        "startLine": 182,
+        "startChar": 4,
+        "endLine": 182,
+        "endChar": 7
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a58c0688_d06fdcde",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "ASSERT_NE(-1, positionLocation)",
+      "range": {
+        "startLine": 183,
+        "startChar": 4,
+        "endLine": 183,
+        "endChar": 15
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "851aa201_9793a43d",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "s/NULL/nullptr",
+      "range": {
+        "startLine": 185,
+        "startChar": 70,
+        "endLine": 185,
+        "endChar": 74
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5827e50_b229007b",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "use a std::vector so you don\u0027t have to call delete manually",
+      "range": {
+        "startLine": 194,
+        "startChar": 4,
+        "endLine": 194,
+        "endChar": 16
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a517a6d7_78e5a1ca",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "nit: std::numeric_limits\u003cunsigned int\u003e::max() ?",
+      "range": {
+        "startLine": 197,
+        "startChar": 53,
+        "endLine": 197,
+        "endChar": 56
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a58c0688_b07ed88d",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "nit: extra space",
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "65768e4c_6e7bafce",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "ASSERT_NE",
+      "range": {
+        "startLine": 219,
+        "startChar": 8,
+        "endLine": 219,
+        "endChar": 19
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "65768e4c_0e88eb04",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "don\u0027t need the for loop here",
+      "range": {
+        "startLine": 234,
+        "startChar": 8,
+        "endLine": 237,
+        "endChar": 9
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5827e50_521f7446",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "nit: ++it",
+      "range": {
+        "startLine": 248,
+        "startChar": 54,
+        "endLine": 248,
+        "endChar": 58
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a517a6d7_d8d38df6",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "nit: sorry I corrected you earlier (a way back) incorrectly, should be \u0027anonymous namespace\u0027",
+      "range": {
+        "startLine": 277,
+        "startChar": 6,
+        "endLine": 277,
+        "endChar": 15
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "65768e4c_ae98b757",
+        "filename": "util/random_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T17:52:11Z",
+      "side": 1,
+      "message": "RandomFloat() could have precision issues that would carry over from using RAND_MAX.\n\nI\u0027d suggest making:\n\n RandomUInt() { return static_cast\u003cunsigned int\u003e(rand()) \u003c\u003c static_cast\u003cunsigned int\u003e((rand() % 2); }\n\nor something very similar, and using that.",
+      "range": {
+        "startLine": 40,
+        "startChar": 43,
+        "endLine": 40,
+        "endChar": 54
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
