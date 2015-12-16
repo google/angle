@@ -9,6 +9,13 @@
         # standalone ANGLE on Chrome OS.
         'chromeos': 0,
 
+        # Chromium puts the pkg-config command in a variable because
+        # calling pkg-config directly doesn't work in a sysroot image.
+        # See Chromium bug 569947 for more information.
+        # For standalone builds we don't have this problem so we use
+        # the regular command.
+        'pkg-config': 'pkg-config',
+
         # Use a nested variable trick to get use_x11 evaluated more
         # eagerly than other conditional variables.
         'variables':

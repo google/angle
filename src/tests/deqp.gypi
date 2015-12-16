@@ -1540,11 +1540,11 @@
                             {
                                 'ldflags':
                                 [
-                                    '<!@(pkg-config --libs-only-L --libs-only-other libpci)',
+                                    '<!@(<(pkg-config) --libs-only-L --libs-only-other libpci)',
                                 ],
                                 'libraries':
                                 [
-                                    '<!@(pkg-config --libs-only-l libpci)',
+                                    '<!@(<(pkg-config) --libs-only-l libpci)',
                                 ],
                             }],
                             ['OS=="mac"',
