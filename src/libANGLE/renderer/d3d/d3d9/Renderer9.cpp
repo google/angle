@@ -652,9 +652,14 @@ gl::Error Renderer9::finish()
     return gl::Error(GL_NO_ERROR);
 }
 
-SwapChainD3D *Renderer9::createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
+SwapChainD3D *Renderer9::createSwapChain(NativeWindow nativeWindow,
+                                         HANDLE shareHandle,
+                                         GLenum backBufferFormat,
+                                         GLenum depthBufferFormat,
+                                         EGLint orientation)
 {
-    return new SwapChain9(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat);
+    return new SwapChain9(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat,
+                          orientation);
 }
 
 void *Renderer9::getD3DDevice()

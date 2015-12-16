@@ -79,7 +79,11 @@ class Renderer9 : public RendererD3D
     gl::Error flush() override;
     gl::Error finish() override;
 
-    virtual SwapChainD3D *createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat);
+    SwapChainD3D *createSwapChain(NativeWindow nativeWindow,
+                                  HANDLE shareHandle,
+                                  GLenum backBufferFormat,
+                                  GLenum depthBufferFormat,
+                                  EGLint orientation) override;
 
     gl::Error allocateEventQuery(IDirect3DQuery9 **outQuery);
     void freeEventQuery(IDirect3DQuery9* query);

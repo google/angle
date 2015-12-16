@@ -483,6 +483,15 @@ bool Display::getConfigAttrib(const Config *configuration, EGLint attribute, EGL
       case EGL_MAX_PBUFFER_WIDTH:         *value = configuration->maxPBufferWidth;        break;
       case EGL_MAX_PBUFFER_HEIGHT:        *value = configuration->maxPBufferHeight;       break;
       case EGL_MAX_PBUFFER_PIXELS:        *value = configuration->maxPBufferPixels;       break;
+
+      case EGL_OPTIMAL_SURFACE_ORIENTATION_ANGLE:
+          if (!getExtensions().surfaceOrientation)
+          {
+              return false;
+          }
+          *value = configuration->optimalOrientation;
+          break;
+
       default:
         return false;
     }

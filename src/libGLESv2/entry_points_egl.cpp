@@ -437,6 +437,16 @@ EGLBoolean EGLAPIENTRY QuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint a
           }
           *value = eglSurface->flexibleSurfaceCompatibilityRequested();
           break;
+      case EGL_SURFACE_ORIENTATION_ANGLE:
+          if (!display->getExtensions().surfaceOrientation)
+          {
+              SetGlobalError(Error(EGL_BAD_ATTRIBUTE,
+                                   "EGL_SURFACE_ORIENTATION_ANGLE cannot be queried without "
+                                   "EGL_ANGLE_surface_orientation support."));
+              return EGL_FALSE;
+          }
+          *value = eglSurface->getOrientation();
+          break;
       default:
         SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
         return EGL_FALSE;
