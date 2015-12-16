@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "c5857a5a_31a19066",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-16T18:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "851aa201_f72540f0",
+      "range": {
+        "startLine": 584,
+        "startChar": 24,
+        "endLine": 584,
+        "endChar": 43
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5827e50_52e8d4a3",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 8
@@ -297,6 +321,30 @@
       "side": 1,
       "message": "adding controls should not be a performance critical path.",
       "parentUuid": "252bb619_f48e9816",
+      "range": {
+        "startLine": 237,
+        "startChar": 8,
+        "endLine": 237,
+        "endChar": 97
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "452c2a2e_758128b3",
+        "filename": "src/libANGLE/Debug.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-16T18:36:05Z",
+      "side": 1,
+      "message": "Agreed but the only cost is iterating in backwards in this function so I think is reasonable for the performance gain.",
+      "parentUuid": "858f027c_cfa5fd79",
       "range": {
         "startLine": 237,
         "startChar": 8,
@@ -580,6 +628,30 @@
       "side": 1,
       "message": "Not doing this would allow you to avoid using this Java interface class design and simply store the label in the helper class.",
       "parentUuid": "e5827e50_128ecce2",
+      "range": {
+        "startLine": 77,
+        "startChar": 8,
+        "endLine": 77,
+        "endChar": 27
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554f2af_461334e4",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-16T18:36:05Z",
+      "side": 1,
+      "message": "I considered both but I think we\u0027ll be able to make use of the labels if they are visible to the impls so I took this approach.",
+      "parentUuid": "858f027c_efaa4147",
       "range": {
         "startLine": 77,
         "startChar": 8,
