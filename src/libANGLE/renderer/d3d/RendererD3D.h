@@ -143,7 +143,11 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     // Direct3D Specific methods
     virtual DeviceIdentifier getAdapterIdentifier() const = 0;
 
-    virtual SwapChainD3D *createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat) = 0;
+    virtual SwapChainD3D *createSwapChain(NativeWindow nativeWindow,
+                                          HANDLE shareHandle,
+                                          GLenum backBufferFormat,
+                                          GLenum depthBufferFormat,
+                                          EGLint orientation) = 0;
 
     virtual gl::Error generateSwizzle(gl::Texture *texture) = 0;
     virtual gl::Error setSamplerState(gl::SamplerType type, int index, gl::Texture *texture, const gl::SamplerState &sampler) = 0;

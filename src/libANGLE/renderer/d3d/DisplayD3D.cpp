@@ -172,6 +172,7 @@ SurfaceImpl *DisplayD3D::createWindowSurface(const egl::Config *configuration,
     EGLint width = attribs.get(EGL_WIDTH, 0);
     EGLint height = attribs.get(EGL_HEIGHT, 0);
     EGLint fixedSize = attribs.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE);
+    EGLint orientation = attribs.get(EGL_SURFACE_ORIENTATION_ANGLE, 0);
 
     if (!fixedSize)
     {
@@ -179,8 +180,8 @@ SurfaceImpl *DisplayD3D::createWindowSurface(const egl::Config *configuration,
         height = -1;
     }
 
-    return SurfaceD3D::createFromWindow(
-        mRenderer, mDisplay, configuration, window, fixedSize, width, height);
+    return SurfaceD3D::createFromWindow(mRenderer, mDisplay, configuration, window, fixedSize,
+                                        width, height, orientation);
 }
 
 SurfaceImpl *DisplayD3D::createPbufferSurface(const egl::Config *configuration,

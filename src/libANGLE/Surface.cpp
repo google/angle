@@ -41,6 +41,7 @@ Surface::Surface(rx::SurfaceImpl *impl,
       // FIXME: Determine actual pixel aspect ratio
       mPixelAspectRatio(static_cast<EGLint>(1.0 * EGL_DISPLAY_SCALING)),
       mRenderBuffer(EGL_BACK_BUFFER),
+      mOrientation(0),
       mSwapBehavior(impl->getSwapBehavior())
 {
     mPostSubBufferRequested = (attributes.get(EGL_POST_SUB_BUFFER_SUPPORTED_NV, EGL_FALSE) == EGL_TRUE);
@@ -59,6 +60,8 @@ Surface::Surface(rx::SurfaceImpl *impl,
         mTextureFormat = attributes.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
         mTextureTarget = attributes.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
     }
+
+    mOrientation = attributes.get(EGL_SURFACE_ORIENTATION_ANGLE, 0);
 
     mDefaultFramebuffer = createDefaultFramebuffer();
     ASSERT(mDefaultFramebuffer != nullptr);
