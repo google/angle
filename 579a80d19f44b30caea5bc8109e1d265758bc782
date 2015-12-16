@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "851aa201_97416491",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-16T15:48:05Z",
+      "side": 1,
+      "message": "We should probably use mBlendStateDirtyBits.set() to set all dirty bits.  This is prone to bugs if new dirty bits are added and this isn\u0027t updated.",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 52
+      },
+      "revId": "579a80d19f44b30caea5bc8109e1d265758bc782",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "252bb619_b446e0a4",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
         "patchSetId": 11
