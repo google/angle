@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "a517a6d7_18610517",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T16:41:47Z",
+      "side": 1,
+      "message": "Disagree, it\u0027s useful to have a reference to the version we implemented, so we know what to refer to when looking at the code, and to track when we make mistakes.",
+      "parentUuid": "858f027c_2f85a9ed",
+      "range": {
+        "startLine": 256,
+        "startChar": 7,
+        "endLine": 256,
+        "endChar": 19
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "252bb619_941ac4a7",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 8
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "I just renamed them both to getLabeledObject.",
       "parentUuid": "252bb619_941ac4a7",
+      "range": {
+        "startLine": 584,
+        "startChar": 24,
+        "endLine": 584,
+        "endChar": 43
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "851aa201_f72540f0",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T16:41:47Z",
+      "side": 1,
+      "message": "Don\u0027t like having overloading, can you call it getLabeledObjectFromPtr",
+      "parentUuid": "e5827e50_b27ee08d",
       "range": {
         "startLine": 584,
         "startChar": 24,
@@ -237,6 +285,30 @@
     },
     {
       "key": {
+        "uuid": "858f027c_cfa5fd79",
+        "filename": "src/libANGLE/Debug.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T16:41:47Z",
+      "side": 1,
+      "message": "adding controls should not be a performance critical path.",
+      "parentUuid": "252bb619_f48e9816",
+      "range": {
+        "startLine": 237,
+        "startChar": 8,
+        "endLine": 237,
+        "endChar": 97
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5827e50_72e5d8ca",
         "filename": "src/libANGLE/Debug.cpp",
         "patchSetId": 8
@@ -378,6 +450,30 @@
     },
     {
       "key": {
+        "uuid": "858f027c_2f08493c",
+        "filename": "src/libANGLE/Debug.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T16:41:47Z",
+      "side": 1,
+      "message": "OK",
+      "parentUuid": "a58c0688_f001c020",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 37
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "851aa201_b7158889",
         "filename": "src/libANGLE/Debug.h",
         "patchSetId": 8
@@ -460,6 +556,30 @@
       "side": 1,
       "message": "I figured that I might as well add it to the Data structure for the future.  It could be useful for debugging at the Impl level or we could even set the labels on the underlying objects in D3D or GL.",
       "parentUuid": "e5827e50_d2d364f6",
+      "range": {
+        "startLine": 77,
+        "startChar": 8,
+        "endLine": 77,
+        "endChar": 27
+      },
+      "revId": "e9a478cacead4c57717200e45579d50268810b23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "858f027c_efaa4147",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-16T16:41:47Z",
+      "side": 1,
+      "message": "Not doing this would allow you to avoid using this Java interface class design and simply store the label in the helper class.",
+      "parentUuid": "e5827e50_128ecce2",
       "range": {
         "startLine": 77,
         "startChar": 8,
