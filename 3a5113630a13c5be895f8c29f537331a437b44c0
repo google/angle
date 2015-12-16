@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "05107294_8c6be689",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-16T20:00:24Z",
+      "side": 1,
+      "message": "Actually, nvm. It\u0027s a bit awkward because we can only include either Renderer9 or StateManager9 but not both. \n\nI originally had it like this: \n\nStateManager9.h:\nclass Renderer9;\nclass StateManager9 { ...Renderer9* mRenderer9... }\n\nStateManager9.cpp:\n#include \"../StateManager9.h\" \u003c--- (-___-)\n#include \"../Renderer9.h\"\n\nRenderer9.h\n#include \"../StateManager9.h\"\nclass Renderer9 { ... StateManager9 mStateManager ... }\n\nBut including StateManager9.h and Renderer9.h inside of StateManager.cpp caused a problem because Renderer9.h also included StateManager9.h.",
+      "parentUuid": "a5bb26f1_b8411991",
+      "range": {
+        "startLine": 352,
+        "startChar": 19,
+        "endLine": 352,
+        "endChar": 32
+      },
+      "revId": "3a5113630a13c5be895f8c29f537331a437b44c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45250aa8_fce93518",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
         "patchSetId": 6
