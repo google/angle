@@ -1,0 +1,147 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0512320e_f310109b",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1301,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2015-12-16T21:53:36Z",
+      "side": 1,
+      "message": "Instead of using a std::vector and hitting the heap every time DebugMessageControlKHR is called, consider instead passing ids and count straight to setMessageControl.",
+      "range": {
+        "startLine": 1301,
+        "startChar": 8,
+        "endLine": 1301,
+        "endChar": 55
+      },
+      "revId": "00a82787570eab6bb1c26fc04dcb572c5a9dface",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5b1fa58_11d66c1a",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1327,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2015-12-16T21:53:36Z",
+      "side": 1,
+      "message": "Similar to my previous comment, consider using the buf pointer directly instead of duplicating the string on the heap.\nSame goes for the other instances of the same thing in this file.",
+      "range": {
+        "startLine": 1327,
+        "startChar": 8,
+        "endLine": 1327,
+        "endChar": 23
+      },
+      "revId": "00a82787570eab6bb1c26fc04dcb572c5a9dface",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8568e271_cac2c3ad",
+        "filename": "src/tests/gl_tests/DebugTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2015-12-16T21:53:36Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this particular extension always be available?",
+      "revId": "00a82787570eab6bb1c26fc04dcb572c5a9dface",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5e3ba48_e450540a",
+        "filename": "src/tests/gl_tests/DebugTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2015-12-16T21:53:36Z",
+      "side": 1,
+      "message": "Would be good to insert message strings of different content instead of always using \"Message\". That way, you can verify that \"next logged message length\" corresponds to the correct message.",
+      "revId": "00a82787570eab6bb1c26fc04dcb572c5a9dface",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0512320e_73ba40e2",
+        "filename": "src/tests/gl_tests/DebugTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2015-12-16T21:53:36Z",
+      "side": 1,
+      "message": "This should be static_cast.",
+      "range": {
+        "startLine": 167,
+        "startChar": 8,
+        "endLine": 167,
+        "endChar": 24
+      },
+      "revId": "00a82787570eab6bb1c26fc04dcb572c5a9dface",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a565e697_ce87378c",
+        "filename": "src/tests/gl_tests/DebugTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2015-12-16T21:53:36Z",
+      "side": 1,
+      "message": "Would be good to test that the callback is not called unless you enable the extension. Same goes for message insertion.",
+      "revId": "00a82787570eab6bb1c26fc04dcb572c5a9dface",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "850622ce_17df7426",
+        "filename": "src/tests/gl_tests/DebugTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2015-12-16T21:53:36Z",
+      "side": 1,
+      "message": "Unless I am missing something, I don\u0027t see the need for these two calls, given you already check GL_DEBUG_LOGGED_MESSAGES on line 194 and there haven\u0027t been any API calls since them.",
+      "range": {
+        "startLine": 206,
+        "startChar": 0,
+        "endLine": 207,
+        "endChar": 30
+      },
+      "revId": "00a82787570eab6bb1c26fc04dcb572c5a9dface",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
