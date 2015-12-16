@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "60dafc65_2ea7072c",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-16T22:35:06Z",
+      "side": 1,
+      "message": "Beauty of dirty bits :). These are only called when the DIRTY_BIT_RASTER_CULL_MODE bit is dirty in D3D9. That bit is dirtied in sync state, where the check happens",
+      "parentUuid": "80a7f0be_6fcdb139",
+      "revId": "fd3b08706c00da05904e8ed119b2616d8be6e4a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "608e7c43_8e365bdd",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-12-08T18:48:14Z",
       "side": 1,
       "message": "Same as above.",
+      "revId": "fd3b08706c00da05904e8ed119b2616d8be6e4a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "40fed8bd_250bae05",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-16T22:35:06Z",
+      "side": 1,
+      "message": "see answer from above",
+      "parentUuid": "608e7c43_8e365bdd",
       "revId": "fd3b08706c00da05904e8ed119b2616d8be6e4a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
