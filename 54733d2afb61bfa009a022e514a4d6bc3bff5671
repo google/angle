@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "e57c3e59_2bd9494a",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-17T21:19:23Z",
+      "side": 1,
+      "message": "note: we should use auto here instead of unsigned int",
+      "range": {
+        "startLine": 88,
+        "startChar": 9,
+        "endLine": 88,
+        "endChar": 21
+      },
+      "revId": "54733d2afb61bfa009a022e514a4d6bc3bff5671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25fc967c_f5a34a6d",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
         "patchSetId": 5
