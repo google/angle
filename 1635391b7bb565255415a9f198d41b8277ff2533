@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "65f4ce02_defc0599",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:05Z",
+      "side": 1,
+      "message": "How should we determine the default number of steps for each test? I can make the run time of the tests to stay roughly the same on my laptop, but should we target lower/higher end?",
+      "parentUuid": "65768e4c_ae1f5796",
+      "range": {
+        "startLine": 19,
+        "startChar": 6,
+        "endLine": 19,
+        "endChar": 21
+      },
+      "revId": "1635391b7bb565255415a9f198d41b8277ff2533",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65768e4c_8e1a9ba7",
         "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "e5099ede_da988559",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65768e4c_8e1a9ba7",
+      "range": {
+        "startLine": 36,
+        "startChar": 22,
+        "endLine": 36,
+        "endChar": 23
+      },
+      "revId": "1635391b7bb565255415a9f198d41b8277ff2533",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a517a6d7_385e4950",
         "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2015-12-16T16:48:15Z",
       "side": 1,
       "message": "remove the swap",
+      "range": {
+        "startLine": 155,
+        "startChar": 8,
+        "endLine": 155,
+        "endChar": 27
+      },
+      "revId": "1635391b7bb565255415a9f198d41b8277ff2533",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a50326be_b8167995",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:05Z",
+      "side": 1,
+      "message": "I don\u0027t think we should do that. If there\u0027s no swap or flush every once in a while, the driver might not submit the commands to the GPU until glFinish is called at the very end of the test. This breaks pipelining and the tests become very different from any real-world use case.\n\nRemoving the swap could result in some very odd behavior: for example, randomly calling glFlush inside ANGLE might improve the test scores, even though it could only make real-world performance worse.",
+      "parentUuid": "a517a6d7_385e4950",
       "range": {
         "startLine": 155,
         "startChar": 8,
