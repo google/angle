@@ -880,6 +880,30 @@
       "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c57f3a4b_c18e0217",
+        "filename": "util/random_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-17T15:06:57Z",
+      "side": 1,
+      "message": "Not allowed yet: https://chromium-cpp.appspot.com/",
+      "parentUuid": "85ed423a_df987b59",
+      "range": {
+        "startLine": 40,
+        "startChar": 43,
+        "endLine": 40,
+        "endChar": 54
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
