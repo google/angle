@@ -95,7 +95,7 @@ void InterleavedAttributeDataBenchmark::initializeBenchmark()
         "}";
 
     mPointSpriteProgram = CompileProgram(vs, fs);
-    ASSERT_TRUE(mPointSpriteProgram != 0);
+    ASSERT_NE(0u, mPointSpriteProgram);
 
     glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 

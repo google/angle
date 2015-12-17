@@ -105,7 +105,7 @@ void InstancingPerfBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
 
-    ASSERT_TRUE(params.iterations > 0);
+    ASSERT_LT(0u, params.iterations);
     mDrawIterations = params.iterations;
 
     const std::string vs =
@@ -133,7 +133,7 @@ void InstancingPerfBenchmark::initializeBenchmark()
         "}\n";
 
     mProgram = CompileProgram(vs, fs);
-    ASSERT_TRUE(mProgram != 0);
+    ASSERT_NE(0u, mProgram);
 
     glUseProgram(mProgram);
 

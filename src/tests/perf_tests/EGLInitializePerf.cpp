@@ -134,11 +134,11 @@ EGLInitializePerfTest::~EGLInitializePerfTest()
 
 void EGLInitializePerfTest::step(float dt, double totalTime)
 {
-    ASSERT_TRUE(mDisplay != EGL_NO_DISPLAY);
+    ASSERT_NE(EGL_NO_DISPLAY, mDisplay);
 
     EGLint majorVersion, minorVersion;
-    ASSERT_TRUE(eglInitialize(mDisplay, &majorVersion, &minorVersion) == EGL_TRUE);
-    ASSERT_TRUE(eglTerminate(mDisplay) == EGL_TRUE);
+    ASSERT_EQ(static_cast<EGLBoolean>(EGL_TRUE), eglInitialize(mDisplay, &majorVersion, &minorVersion));
+    ASSERT_EQ(static_cast<EGLBoolean>(EGL_TRUE), eglTerminate(mDisplay));
 
     if (mTimer->getElapsedTime() >= 5.0)
     {

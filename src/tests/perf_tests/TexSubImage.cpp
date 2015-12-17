@@ -99,7 +99,7 @@ TexSubImageBenchmark::TexSubImageBenchmark()
       mTexture(0),
       mVertexBuffer(0),
       mIndexBuffer(0),
-      mPixels(NULL)
+      mPixels(nullptr)
 {
 }
 
@@ -157,7 +157,7 @@ void TexSubImageBenchmark::initializeBenchmark()
     );
 
     mProgram = CompileProgram(vs, fs);
-    ASSERT_TRUE(mProgram != 0);
+    ASSERT_NE(0u, mProgram);
 
     // Get the attribute locations
     mPositionLoc = glGetAttribLocation(mProgram, "a_position");

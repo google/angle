@@ -27,7 +27,7 @@
 class Event;
 
 #ifndef ASSERT_GL_NO_ERROR
-#define ASSERT_GL_NO_ERROR() ASSERT_TRUE(glGetError() == GL_NO_ERROR)
+#define ASSERT_GL_NO_ERROR() ASSERT_EQ(static_cast<GLenum>(GL_NO_ERROR), glGetError())
 #endif
 
 class ANGLEPerfTest : public testing::Test, angle::NonCopyable

@@ -75,8 +75,8 @@ void IndexConversionPerfTest::initializeBenchmark()
 {
     const auto &params = GetParam();
 
-    ASSERT_TRUE(params.iterations > 0);
-    ASSERT_TRUE(params.numIndexTris > 0);
+    ASSERT_LT(0u, params.iterations);
+    ASSERT_LT(0u, params.numIndexTris);
 
     mDrawIterations = params.iterations;
 
@@ -101,7 +101,7 @@ void IndexConversionPerfTest::initializeBenchmark()
     );
 
     mProgram = CompileProgram(vs, fs);
-    ASSERT_TRUE(mProgram != 0);
+    ASSERT_NE(0u, mProgram);
 
     // Use the program object
     glUseProgram(mProgram);
@@ -150,7 +150,7 @@ void IndexConversionPerfTest::initializeBenchmark()
     glUniform1f(glGetUniformLocation(mProgram, "uScale"), scale);
     glUniform1f(glGetUniformLocation(mProgram, "uOffset"), offset);
 
-    ASSERT_TRUE(glGetError() == GL_NO_ERROR);
+    ASSERT_GL_NO_ERROR();
 }
 
 void IndexConversionPerfTest::updateBufferData()
@@ -186,7 +186,7 @@ void IndexConversionPerfTest::drawBenchmark()
                        reinterpret_cast<GLvoid*>(0));
     }
 
-    EXPECT_TRUE(glGetError() == GL_NO_ERROR);
+    ASSERT_GL_NO_ERROR();
 }
 
 IndexConversionPerfParams IndexConversionPerfD3D11Params()
