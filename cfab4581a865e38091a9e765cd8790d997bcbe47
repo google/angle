@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "80d9b040_ee21af7e",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-17T21:13:08Z",
+      "side": 1,
+      "message": "We should be able to merge this loop with blend state when more states are in",
+      "revId": "cfab4581a865e38091a9e765cd8790d997bcbe47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
