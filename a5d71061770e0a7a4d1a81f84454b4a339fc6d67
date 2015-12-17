@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "c57f3a4b_c177e2dc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-17T16:29:25Z",
+      "side": 1,
+      "message": "I opened issue 1261 to track the work here",
+      "range": {
+        "startLine": 13,
+        "startChar": 6,
+        "endLine": 13,
+        "endChar": 20
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a517a6d7_18f26592",
         "filename": "src/tests/perf_tests/TextureSampling.cpp",
         "patchSetId": 1
