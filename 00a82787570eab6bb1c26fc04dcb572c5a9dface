@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "45398ab3_cdf62981",
+        "filename": "src/libANGLE/Buffer.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-17T13:51:12Z",
+      "side": 1,
+      "message": "The default constructor doesn\u0027t need to be explicitly called here. Same think for the other cases like this.",
+      "revId": "00a82787570eab6bb1c26fc04dcb572c5a9dface",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c50c9af0_7919875f",
+        "filename": "src/libANGLE/Error.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-17T13:51:12Z",
+      "side": 1,
+      "message": "Same concern here that it would be too easy to reuse the same id over and over again.",
+      "revId": "00a82787570eab6bb1c26fc04dcb572c5a9dface",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0512320e_f310109b",
         "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
         "patchSetId": 11
@@ -13,6 +47,30 @@
       "writtenOn": "2015-12-16T21:53:36Z",
       "side": 1,
       "message": "Instead of using a std::vector and hitting the heap every time DebugMessageControlKHR is called, consider instead passing ids and count straight to setMessageControl.",
+      "range": {
+        "startLine": 1301,
+        "startChar": 8,
+        "endLine": 1301,
+        "endChar": 55
+      },
+      "revId": "00a82787570eab6bb1c26fc04dcb572c5a9dface",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a50326be_b8fcb962",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1301,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-17T13:51:12Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "0512320e_f310109b",
       "range": {
         "startLine": 1301,
         "startChar": 8,
