@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a50326be_585e3d50",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 5
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2015-12-17T12:49:58Z",
+      "side": 1,
+      "message": "This is gerrit picking up changes because of a rebase, it is not actually part of the commit. Please ignore.",
+      "revId": "e137611e14f80ef2b6c55084c2b1f2d81cfe8d0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
