@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e5099ede_da71a5e9",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a517a6d7_18f26592",
+      "range": {
+        "startLine": 7,
+        "startChar": 34,
+        "endLine": 7,
+        "endChar": 42
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5827e50_726ab8c5",
         "filename": "src/tests/perf_tests/TextureSampling.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-12-16T17:52:11Z",
       "side": 1,
       "message": "nit: extra //",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 2
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05f952fe_5b2c83d4",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5827e50_726ab8c5",
       "range": {
         "startLine": 9,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "c50c9af0_5908033d",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "452c2a2e_95c8842b",
+      "range": {
+        "startLine": 69,
+        "startChar": 4,
+        "endLine": 69,
+        "endChar": 10
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "452c2a2e_95af2456",
         "filename": "src/tests/perf_tests/TextureSampling.cpp",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2015-12-16T17:52:11Z",
       "side": 1,
       "message": "nit: can you place this directly above the TextureSampleBenchmark constructor",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 1
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "65f4ce02_3e11a96b",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "452c2a2e_95af2456",
       "range": {
         "startLine": 72,
         "startChar": 0,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "45398ab3_4decf9e5",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554f2af_e6758066",
+      "range": {
+        "startLine": 83,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 24
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "851aa201_d7891c11",
         "filename": "src/tests/perf_tests/TextureSampling.cpp",
         "patchSetId": 1
@@ -128,6 +248,30 @@
       "writtenOn": "2015-12-16T17:52:11Z",
       "side": 1,
       "message": "ASSERT_GT(0, params.iterations) (might be wrong in other tests, not sure, not necessary to fix)",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 91,
+        "endChar": 15
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45398ab3_6de9b5d4",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done, though it needs to be the other way around.",
+      "parentUuid": "851aa201_d7891c11",
       "range": {
         "startLine": 91,
         "startChar": 4,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "45398ab3_ed984559",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Good idea, done.",
+      "parentUuid": "a58c0688_10bd647f",
+      "range": {
+        "startLine": 137,
+        "startChar": 44,
+        "endLine": 137,
+        "endChar": 45
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "851aa201_f78ea016",
         "filename": "src/tests/perf_tests/TextureSampling.cpp",
         "patchSetId": 1
@@ -174,6 +342,30 @@
       "writtenOn": "2015-12-16T17:52:11Z",
       "side": 1,
       "message": "ASSERT_NE(0u, mProgram)",
+      "range": {
+        "startLine": 150,
+        "startChar": 4,
+        "endLine": 150,
+        "endChar": 15
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "651dae1a_b67208ee",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "851aa201_f78ea016",
       "range": {
         "startLine": 150,
         "startChar": 4,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "e5099ede_7a885906",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a517a6d7_58e8dda3",
+      "range": {
+        "startLine": 182,
+        "startChar": 4,
+        "endLine": 182,
+        "endChar": 7
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a58c0688_d06fdcde",
         "filename": "src/tests/perf_tests/TextureSampling.cpp",
         "patchSetId": 1
@@ -220,6 +436,30 @@
       "writtenOn": "2015-12-16T17:52:11Z",
       "side": 1,
       "message": "ASSERT_NE(-1, positionLocation)",
+      "range": {
+        "startLine": 183,
+        "startChar": 4,
+        "endLine": 183,
+        "endChar": 15
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "651dae1a_76051056",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a58c0688_d06fdcde",
       "range": {
         "startLine": 183,
         "startChar": 4,
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "a50326be_f810f19a",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "851aa201_9793a43d",
+      "range": {
+        "startLine": 185,
+        "startChar": 70,
+        "endLine": 185,
+        "endChar": 74
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5827e50_b229007b",
         "filename": "src/tests/perf_tests/TextureSampling.cpp",
         "patchSetId": 1
@@ -266,6 +530,30 @@
       "writtenOn": "2015-12-16T17:52:11Z",
       "side": 1,
       "message": "use a std::vector so you don\u0027t have to call delete manually",
+      "range": {
+        "startLine": 194,
+        "startChar": 4,
+        "endLine": 194,
+        "endChar": 16
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c50c9af0_39354f1b",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5827e50_b229007b",
       "range": {
         "startLine": 194,
         "startChar": 4,
@@ -301,6 +589,30 @@
     },
     {
       "key": {
+        "uuid": "a50326be_d8152d89",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a517a6d7_78e5a1ca",
+      "range": {
+        "startLine": 197,
+        "startChar": 53,
+        "endLine": 197,
+        "endChar": 56
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a58c0688_b07ed88d",
         "filename": "src/tests/perf_tests/TextureSampling.cpp",
         "patchSetId": 1
@@ -318,6 +630,24 @@
     },
     {
       "key": {
+        "uuid": "c50c9af0_f993d73b",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a58c0688_b07ed88d",
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65768e4c_6e7bafce",
         "filename": "src/tests/perf_tests/TextureSampling.cpp",
         "patchSetId": 1
@@ -329,6 +659,30 @@
       "writtenOn": "2015-12-16T17:52:11Z",
       "side": 1,
       "message": "ASSERT_NE",
+      "range": {
+        "startLine": 219,
+        "startChar": 8,
+        "endLine": 219,
+        "endChar": 19
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45398ab3_cd10e99b",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65768e4c_6e7bafce",
       "range": {
         "startLine": 219,
         "startChar": 8,
@@ -364,6 +718,30 @@
     },
     {
       "key": {
+        "uuid": "c50c9af0_397eefbe",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Whoops. Done.",
+      "parentUuid": "65768e4c_0e88eb04",
+      "range": {
+        "startLine": 234,
+        "startChar": 8,
+        "endLine": 237,
+        "endChar": 9
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5827e50_521f7446",
         "filename": "src/tests/perf_tests/TextureSampling.cpp",
         "patchSetId": 1
@@ -375,6 +753,30 @@
       "writtenOn": "2015-12-16T17:52:11Z",
       "side": 1,
       "message": "nit: ++it",
+      "range": {
+        "startLine": 248,
+        "startChar": 54,
+        "endLine": 248,
+        "endChar": 58
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85ed423a_7feccfe5",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5827e50_521f7446",
       "range": {
         "startLine": 248,
         "startChar": 54,
@@ -410,6 +812,30 @@
     },
     {
       "key": {
+        "uuid": "c50c9af0_197b2bcf",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a517a6d7_d8d38df6",
+      "range": {
+        "startLine": 277,
+        "startChar": 6,
+        "endLine": 277,
+        "endChar": 15
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65768e4c_ae98b757",
         "filename": "util/random_utils.cpp",
         "patchSetId": 1
@@ -421,6 +847,30 @@
       "writtenOn": "2015-12-16T17:52:11Z",
       "side": 1,
       "message": "RandomFloat() could have precision issues that would carry over from using RAND_MAX.\n\nI\u0027d suggest making:\n\n RandomUInt() { return static_cast\u003cunsigned int\u003e(rand()) \u003c\u003c static_cast\u003cunsigned int\u003e((rand() % 2); }\n\nor something very similar, and using that.",
+      "range": {
+        "startLine": 40,
+        "startChar": 43,
+        "endLine": 40,
+        "endChar": 54
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85ed423a_df987b59",
+        "filename": "util/random_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T14:55:16Z",
+      "side": 1,
+      "message": "Actually, it seems simpler to use c++11 random functions. I\u0027ll just switch to that.",
+      "parentUuid": "65768e4c_ae98b757",
       "range": {
         "startLine": 40,
         "startChar": 43,
