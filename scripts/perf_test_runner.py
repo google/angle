@@ -76,11 +76,11 @@ if not os.path.exists(perftests_path):
 
 test_name = "DrawCallPerfBenchmark.Run/d3d11_null"
 
-print('Using test executable: ' + perftests_path)
-print('Test name: ' + test_name)
-
 if len(sys.argv) >= 2:
     test_name = sys.argv[1]
+
+print('Using test executable: ' + perftests_path)
+print('Test name: ' + test_name)
 
 # Infinite loop of running the tests.
 while True:
