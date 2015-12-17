@@ -16,6 +16,23 @@
       "revId": "c4e6085b5e478ab8a4103f3d14a55e1a42409668",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5b1fa58_f49bd692",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2015-12-17T01:19:32Z",
+      "side": 1,
+      "message": "DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL implicitly unbinds the backbuffer from the graphics pipeline, so you\u0027ll need to do something like mRenderer-\u003emarkAllStateDirty(); when on WinRT (or DirectComposition).",
+      "revId": "c4e6085b5e478ab8a4103f3d14a55e1a42409668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
