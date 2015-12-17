@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "45742a7b_d5107c9b",
+        "filename": "scripts/perf_test_runner.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-17T15:21:10Z",
+      "side": 1,
+      "message": "there was one thing I was wanting to add : can you print a message indicating which binary it found? just useful so the dev can tell if they re-compile perftests and nothing changes",
+      "range": {
+        "startLine": 67,
+        "startChar": 8,
+        "endLine": 67,
+        "endChar": 13
+      },
+      "revId": "b6009deedb52c9d2d579bcbf52e12683c2df73fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
