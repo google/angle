@@ -405,6 +405,7 @@
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r8 = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rgba32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rgba16f = FAIL
+1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rgb16f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r11f_g11f_b10f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rg32f = FAIL
 1097 WIN : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rg16f = FAIL

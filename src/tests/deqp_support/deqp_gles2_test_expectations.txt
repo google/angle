@@ -268,10 +268,6 @@
 1025 WIN LINUX MAC : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.* = FAIL
 1027 WIN LINUX MAC : dEQP-GLES2.functional.fbo.render.repeated_clear.tex2d_rgb = FAIL
 1027 WIN LINUX MAC : dEQP-GLES2.functional.fbo.render.repeated_clear.tex2d_rgba = FAIL
-1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.renderbuffer.color0.r16f = FAIL
-1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.renderbuffer.color0.rg16f = FAIL
-1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.renderbuffer.color0.rgba16f = FAIL
-1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.renderbuffer.color0.rgb16f = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgb_float = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgb_half_float_oes = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgba_float = FAIL
