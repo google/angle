@@ -164,6 +164,30 @@
       "revId": "ab588460337c736219b3c02a6940b87c8245681a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "65cbeee2_8677cadd",
+        "filename": "src/libANGLE/Error.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-17T16:17:33Z",
+      "side": 1,
+      "message": "Let\u0027s address this in a subsequent patch because it is a detail of how we\u0027re going to handle the localization.",
+      "parentUuid": "0512320e_331f2848",
+      "range": {
+        "startLine": 29,
+        "startChar": 13,
+        "endLine": 29,
+        "endChar": 62
+      },
+      "revId": "ab588460337c736219b3c02a6940b87c8245681a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
