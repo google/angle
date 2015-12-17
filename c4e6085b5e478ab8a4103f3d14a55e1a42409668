@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "459d0ad3_102f8a64",
+        "filename": "extensions/EGL_ANGLE_surface_orientation.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2015-12-17T00:35:16Z",
+      "side": 1,
+      "message": "I just used this for EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE.",
+      "revId": "c4e6085b5e478ab8a4103f3d14a55e1a42409668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
