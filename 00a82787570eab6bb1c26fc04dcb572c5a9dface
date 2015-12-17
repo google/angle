@@ -207,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "4a2517a8_ad193d68",
+        "filename": "src/tests/gl_tests/DebugTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2015-12-17T22:59:22Z",
+      "side": 1,
+      "message": "OK but, at the end of the day, the tests are for Angle. If a careless person commits a change that totally breaks GL_KHR_debug, the test will pass. That seems bad.",
+      "parentUuid": "85d4627e_8ac98b81",
+      "revId": "00a82787570eab6bb1c26fc04dcb572c5a9dface",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5e3ba48_e450540a",
         "filename": "src/tests/gl_tests/DebugTest.cpp",
         "patchSetId": 11
