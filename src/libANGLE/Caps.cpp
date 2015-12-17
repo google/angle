@@ -102,7 +102,6 @@ Extensions::Extensions()
       pixelBufferObject(false),
       mapBuffer(false),
       mapBufferRange(false),
-      colorBufferHalfFloat(false),
       textureHalfFloat(false),
       textureHalfFloatLinear(false),
       textureFloat(false),
@@ -167,7 +166,6 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_NV_pixel_buffer_object",           pixelBufferObject,         &extensionStrings);
     InsertExtensionString("GL_OES_mapbuffer",                    mapBuffer,                 &extensionStrings);
     InsertExtensionString("GL_EXT_map_buffer_range",             mapBufferRange,            &extensionStrings);
-    InsertExtensionString("GL_EXT_color_buffer_half_float",      colorBufferHalfFloat,      &extensionStrings);
     InsertExtensionString("GL_OES_texture_half_float",           textureHalfFloat,          &extensionStrings);
     InsertExtensionString("GL_OES_texture_half_float_linear",    textureHalfFloatLinear,    &extensionStrings);
     InsertExtensionString("GL_OES_texture_float",                textureFloat,              &extensionStrings);
@@ -281,18 +279,6 @@ static bool DetermineBGRA8TextureSupport(const TextureCapsMap &textureCaps)
     requiredFormats.push_back(GL_BGRA8_EXT);
 
     return GetFormatSupport(textureCaps, requiredFormats, true, true, true);
-}
-
-// Checks for GL_OES_color_buffer_half_float support
-static bool DetermineColorBufferHalfFloatSupport(const TextureCapsMap &textureCaps)
-{
-    std::vector<GLenum> requiredFormats;
-    requiredFormats.push_back(GL_RGBA16F);
-    requiredFormats.push_back(GL_RGB16F);
-    requiredFormats.push_back(GL_RG16F);
-    requiredFormats.push_back(GL_R16F);
-
-    return GetFormatSupport(textureCaps, requiredFormats, true, false, true);
 }
 
 // Checks for GL_OES_texture_half_float support
@@ -482,7 +468,6 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     packedDepthStencil = DeterminePackedDepthStencilSupport(textureCaps);
     rgb8rgba8 = DetermineRGB8AndRGBA8TextureSupport(textureCaps);
     textureFormatBGRA8888 = DetermineBGRA8TextureSupport(textureCaps);
-    colorBufferHalfFloat      = DetermineColorBufferHalfFloatSupport(textureCaps);
     textureHalfFloat = DetermineHalfFloatTextureSupport(textureCaps);
     textureHalfFloatLinear = DetermineHalfFloatTextureFilteringSupport(textureCaps);
     textureFloat = DetermineFloatTextureSupport(textureCaps);

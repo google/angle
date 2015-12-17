@@ -76,12 +76,10 @@ struct Extensions
     // GL_OES_packed_depth_stencil
     // GL_OES_rgb8_rgba8
     // GL_EXT_texture_format_BGRA8888
-    // GL_EXT_color_buffer_half_float,
     // GL_OES_texture_half_float, GL_OES_texture_half_float_linear
     // GL_OES_texture_float, GL_OES_texture_float_linear
     // GL_EXT_texture_rg
-    // GL_EXT_texture_compression_dxt1, GL_ANGLE_texture_compression_dxt3,
-    // GL_ANGLE_texture_compression_dxt5
+    // GL_EXT_texture_compression_dxt1, GL_ANGLE_texture_compression_dxt3, GL_ANGLE_texture_compression_dxt5
     // GL_KHR_texture_compression_astc_hdr, GL_KHR_texture_compression_astc_ldr
     // GL_OES_compressed_ETC1_RGB8_texture
     // GL_EXT_sRGB
@@ -117,11 +115,6 @@ struct Extensions
     // GL_OES_mapbuffer and GL_EXT_map_buffer_range
     bool mapBuffer;
     bool mapBufferRange;
-
-    // GL_EXT_color_buffer_half_float
-    // Together with GL_OES_texture_half_float in a GLES 2.0 context, implies that half-float
-    // textures are renderable.
-    bool colorBufferHalfFloat;
 
     // GL_OES_texture_half_float and GL_OES_texture_half_float_linear
     // Implies that TextureCaps for GL_RGB16F, GL_RGBA16F, GL_ALPHA32F_EXT, GL_LUMINANCE32F_EXT and
