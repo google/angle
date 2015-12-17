@@ -904,6 +904,30 @@
       "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5ea461e_803cd69c",
+        "filename": "util/random_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-12-17T16:21:56Z",
+      "side": 1,
+      "message": "Okay, in that case I think I\u0027ll just switch to a less random way of generating the pixel data. Building anything reasonable on top of rand() is pretty complicated.",
+      "parentUuid": "c57f3a4b_c18e0217",
+      "range": {
+        "startLine": 40,
+        "startChar": 43,
+        "endLine": 40,
+        "endChar": 54
+      },
+      "revId": "a5d71061770e0a7a4d1a81f84454b4a339fc6d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
