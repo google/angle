@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "4a935718_5d8dbb1d",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T22:54:49Z",
+      "side": 1,
+      "message": "OK, this is fine.",
+      "parentUuid": "8a438f4f_43762620",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 26
+      },
+      "revId": "94eaf9f488192bffc0de47a3b98b956a3850e7bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2aa2a363_7c4439a1",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
         "patchSetId": 3
