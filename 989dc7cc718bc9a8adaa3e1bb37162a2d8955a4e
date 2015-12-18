@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa8e93ed_a0613a11",
+        "filename": "extensions/EGL_ANGLE_surface_orientation.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T21:29:49Z",
+      "side": 1,
+      "message": "I feel like this should use a different enum value. also going to add Shannon to confirm enum usage.",
+      "range": {
+        "startLine": 61,
+        "startChar": 38,
+        "endLine": 61,
+        "endChar": 44
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a91cf0f_7f2bcfbe",
+        "filename": "extensions/EGL_ANGLE_surface_orientation.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T21:29:49Z",
+      "side": 1,
+      "message": "honestly this seems a bit over-fancy. I don\u0027t think there\u0027s a current use case for x invert, but ok.",
+      "range": {
+        "startLine": 67,
+        "startChar": 8,
+        "endLine": 67,
+        "endChar": 46
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca8747d0_0136eadb",
+        "filename": "extensions/EGL_ANGLE_surface_orientation.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T21:29:49Z",
+      "side": 1,
+      "message": "I think this should have an \u0027injection\u0027 point in the EGL spec somewhere",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 12
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea840bce_85c7646d",
+        "filename": "extensions/EGL_ANGLE_surface_orientation.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T21:29:49Z",
+      "side": 1,
+      "message": "wouldn\u0027t the x flip be inverted along the vertical axis, and vice-versa?",
+      "range": {
+        "startLine": 102,
+        "startChar": 23,
+        "endLine": 102,
+        "endChar": 33
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca8747d0_a1429e3e",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T21:29:49Z",
+      "side": 1,
+      "message": "we could use GLbitfield for this, after the cast from EGLint. (I realize there isn\u0027t an EGLuint type)",
+      "range": {
+        "startLine": 87,
+        "startChar": 4,
+        "endLine": 87,
+        "endChar": 9
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a9ddf25_bb308725",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T21:29:49Z",
+      "side": 1,
+      "message": "don\u0027t store this as a cached variable, instead making it a method needsOffscreenTexture() { return mOrientation !\u003d default; }",
+      "range": {
+        "startLine": 51,
+        "startChar": 6,
+        "endLine": 51,
+        "endChar": 28
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea840bce_e5d51015",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T21:29:49Z",
+      "side": 1,
+      "message": "s/NULL/nullptr",
+      "range": {
+        "startLine": 287,
+        "startChar": 36,
+        "endLine": 287,
+        "endChar": 40
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea840bce_45c15c55",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T21:29:49Z",
+      "side": 1,
+      "message": "can\u0027t we think of getting the same effect you need without dirtying the rasterizer state?",
+      "range": {
+        "startLine": 605,
+        "startChar": 4,
+        "endLine": 605,
+        "endChar": 59
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aa2a363_fc35a9cf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T21:29:49Z",
+      "side": 1,
+      "message": "comment here since this is important",
+      "range": {
+        "startLine": 679,
+        "startChar": 4,
+        "endLine": 679,
+        "endChar": 69
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
