@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6a981b34_e12c206d",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T16:41:31Z",
+      "side": 1,
+      "message": "No, this is good.",
+      "parentUuid": "6a81fbc7_3686d8d0",
+      "revId": "8e0b849f100940eba1bd0610af6b31491f1eb63e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a7c37a4_35b010b0",
         "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-12-18T15:31:56Z",
       "side": 1,
       "message": "Isn\u0027t this a simpler way of disabling the swap compared to adding a different member variable?",
+      "revId": "8e0b849f100940eba1bd0610af6b31491f1eb63e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a935718_7dee77e0",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T16:41:31Z",
+      "side": 1,
+      "message": "Yes, I didn\u0027t see this, looks good. Can you add a comment here mentioning this is because null devices should be testing CPU overhead, so won\u0027t render anything or talk to the GPU?",
+      "parentUuid": "4a7c37a4_35b010b0",
       "revId": "8e0b849f100940eba1bd0610af6b31491f1eb63e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
