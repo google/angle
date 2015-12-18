@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2aa2a363_fc4fe9b8",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T15:17:45Z",
+      "side": 1,
+      "message": "do you need this any more?",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 25
+      },
+      "revId": "1f33ba14b50182af92593834617aba8798d08695",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a981b34_a1193868",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T15:17:45Z",
+      "side": 1,
+      "message": "!mTextures.empty",
+      "range": {
+        "startLine": 241,
+        "startChar": 8,
+        "endLine": 241,
+        "endChar": 29
+      },
+      "revId": "1f33ba14b50182af92593834617aba8798d08695",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
