@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "6a81fbc7_3686d8d0",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2015-12-18T15:31:56Z",
+      "side": 1,
+      "message": "This discussion still wasn\u0027t finished - should we move to a system where the number of steps are fixed instead of time, and how to determine a good number of steps for that?",
+      "revId": "8e0b849f100940eba1bd0610af6b31491f1eb63e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a7c37a4_35b010b0",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2015-12-18T15:31:56Z",
+      "side": 1,
+      "message": "Isn\u0027t this a simpler way of disabling the swap compared to adding a different member variable?",
+      "revId": "8e0b849f100940eba1bd0610af6b31491f1eb63e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea840bce_e2250687",
         "filename": "src/tests/perf_tests/ANGLEPerfTest.h",
         "patchSetId": 1
