@@ -225,6 +225,24 @@
     },
     {
       "key": {
+        "uuid": "4a935718_dd030b55",
+        "filename": "src/tests/gl_tests/DebugTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-18T18:18:07Z",
+      "side": 1,
+      "message": "I added a verification that it is enabled.  In general, most of our extensions are not enabled on all our backends though.\n\nThe worst that can happen is that the extension becomes disabled from a bug but there is no chance that it is enabled and broken.",
+      "parentUuid": "4a2517a8_ad193d68",
+      "revId": "00a82787570eab6bb1c26fc04dcb572c5a9dface",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5e3ba48_e450540a",
         "filename": "src/tests/gl_tests/DebugTest.cpp",
         "patchSetId": 11
