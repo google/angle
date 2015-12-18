@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cad587d0_515e142f",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2015-12-18T15:29:43Z",
+      "side": 1,
+      "message": "That\u0027s right, it\u0027s not needed any more.",
+      "parentUuid": "2aa2a363_fc4fe9b8",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 25
+      },
+      "revId": "1f33ba14b50182af92593834617aba8798d08695",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a981b34_a1193868",
         "filename": "src/tests/perf_tests/TextureSampling.cpp",
         "patchSetId": 1
