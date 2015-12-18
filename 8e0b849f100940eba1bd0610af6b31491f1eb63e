@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea840bce_e2250687",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T15:15:36Z",
+      "side": 1,
+      "message": "to rehash the previous discussion. I would put a swapEnabled member in RenderTestParams and disable it in the null driver test, at least for draw call perf.",
+      "range": {
+        "startLine": 93,
+        "startChar": 10,
+        "endLine": 93,
+        "endChar": 26
+      },
+      "revId": "8e0b849f100940eba1bd0610af6b31491f1eb63e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
