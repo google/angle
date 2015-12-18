@@ -45,6 +45,23 @@
       "revId": "1f33ba14b50182af92593834617aba8798d08695",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ead24be6_926b1cc1",
+        "filename": "src/tests/perf_tests/TextureSampling.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2015-12-18T15:18:14Z",
+      "side": 1,
+      "message": "This still needs to be replaced with empty()",
+      "revId": "1f33ba14b50182af92593834617aba8798d08695",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
