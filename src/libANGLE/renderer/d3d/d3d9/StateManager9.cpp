@@ -489,8 +489,8 @@ void StateManager9::setViewportState(const gl::Caps *caps,
     mCurIgnoreViewport = ignoreViewport;
 
     // Setting shader constants
-    dx_VertexConstants vc = {};
-    dx_PixelConstants pc  = {};
+    dx_VertexConstants9 vc = {};
+    dx_PixelConstants9 pc  = {};
 
     vc.viewAdjust[0] =
         static_cast<float>((actualViewport.width - static_cast<int>(dxViewport.Width)) +
@@ -520,13 +520,13 @@ void StateManager9::setViewportState(const gl::Caps *caps,
     pc.depthRange[1] = actualZFar;
     pc.depthRange[2] = actualZFar - actualZNear;
 
-    if (memcmp(&vc, &mVertexConstants, sizeof(dx_VertexConstants)) != 0)
+    if (memcmp(&vc, &mVertexConstants, sizeof(dx_VertexConstants9)) != 0)
     {
         mVertexConstants = vc;
         mDxUniformsDirty = true;
     }
 
-    if (memcmp(&pc, &mPixelConstants, sizeof(dx_PixelConstants)) != 0)
+    if (memcmp(&pc, &mPixelConstants, sizeof(dx_PixelConstants9)) != 0)
     {
         mPixelConstants  = pc;
         mDxUniformsDirty = true;
@@ -542,9 +542,9 @@ void StateManager9::setShaderConstants()
 
     IDirect3DDevice9 *device = mRenderer9->getDevice();
     device->SetVertexShaderConstantF(0, reinterpret_cast<float *>(&mVertexConstants),
-                                     sizeof(dx_VertexConstants) / sizeof(float[4]));
+                                     sizeof(dx_VertexConstants9) / sizeof(float[4]));
     device->SetPixelShaderConstantF(0, reinterpret_cast<float *>(&mPixelConstants),
-                                    sizeof(dx_PixelConstants) / sizeof(float[4]));
+                                    sizeof(dx_PixelConstants9) / sizeof(float[4]));
     mDxUniformsDirty = false;
 }
 

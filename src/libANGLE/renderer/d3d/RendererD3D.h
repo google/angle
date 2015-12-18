@@ -251,6 +251,8 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     virtual egl::Error getEGLDevice(DeviceImpl **device) = 0;
 
+    bool presentPathFastEnabled() const { return mPresentPathFastEnabled; }
+
   protected:
     virtual bool getLUID(LUID *adapterLuid) const = 0;
     virtual gl::Error applyShadersImpl(const gl::Data &data, GLenum drawMode) = 0;
@@ -270,6 +272,8 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     gl::DebugAnnotator *mAnnotator;
 
     std::vector<TranslatedAttribute> mTranslatedAttribCache;
+
+    bool mPresentPathFastEnabled;
 
   private:
     gl::Error genericDrawArrays(const gl::Data &data,
@@ -326,20 +330,6 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     mutable bool mWorkaroundsInitialized;
     mutable WorkaroundsD3D mWorkarounds;
-};
-
-struct dx_VertexConstants
-{
-    float depthRange[4];
-    float viewAdjust[4];
-    float viewCoords[4];
-};
-
-struct dx_PixelConstants
-{
-    float depthRange[4];
-    float viewCoords[4];
-    float depthFront[4];
 };
 
 }

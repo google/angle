@@ -1,10 +1,10 @@
 Name
 
-    experimental_present_path_angle
+    ANGLE_experimental_present_path
 
 Name Strings
 
-    EGL_experimental_present_path_angle
+    EGL_ANGLE_experimental_present_path
 
 Contributors
 

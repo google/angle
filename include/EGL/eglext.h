@@ -522,6 +522,13 @@ EGLAPI EGLBoolean EGLAPIENTRY eglQuerySurfacePointerANGLE (EGLDisplay dpy, EGLSu
 #define EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE 0x0002
 #endif /* EGL_ANGLE_surface_orientation */
 
+#ifndef EGL_ANGLE_experimental_present_path
+#define EGL_ANGLE_experimental_present_path
+#define EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE 0x33A4
+#define EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE 0x33A9
+#define EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE 0x33AA
+#endif /* EGL_ANGLE_experimental_present_path */
+
 #ifndef EGL_ARM_pixmap_multisample_discard
 #define EGL_ARM_pixmap_multisample_discard 1
 #define EGL_DISCARD_SAMPLES_ARM           0x3286

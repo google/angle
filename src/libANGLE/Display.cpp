@@ -882,6 +882,7 @@ static ClientExtensions GenerateClientExtensions()
 #if defined(ANGLE_ENABLE_D3D11)
     extensions.deviceCreation      = true;
     extensions.deviceCreationD3D11 = true;
+    extensions.experimentalPresentPath = true;
 #endif
 
 #if defined(ANGLE_USE_X11)

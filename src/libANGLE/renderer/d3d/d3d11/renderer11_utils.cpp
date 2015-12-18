@@ -289,7 +289,7 @@ unsigned int GetReservedVertexUniformVectors(D3D_FEATURE_LEVEL featureLevel)
         case D3D_FEATURE_LEVEL_9_3:
         case D3D_FEATURE_LEVEL_9_2:
         case D3D_FEATURE_LEVEL_9_1:
-            return 2;  // dx_ViewAdjust and dx_ViewCoords
+            return 3;  // dx_ViewAdjust, dx_ViewCoords and dx_ViewScale
 
         default:
             UNREACHABLE();
@@ -310,7 +310,7 @@ unsigned int GetReservedFragmentUniformVectors(D3D_FEATURE_LEVEL featureLevel)
         case D3D_FEATURE_LEVEL_9_3:
         case D3D_FEATURE_LEVEL_9_2:
         case D3D_FEATURE_LEVEL_9_1:
-            return 2;
+            return 3;
 
         default:
             UNREACHABLE();
@@ -1660,6 +1660,18 @@ gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
     }
 
     return TextureHelper11::MakeAndPossess3D(stagingTex);
+}
+
+bool UsePresentPathFast(const Renderer11 *renderer,
+                        const gl::FramebufferAttachment *framebufferAttachment)
+{
+    if (framebufferAttachment == nullptr)
+    {
+        return false;
+    }
+
+    return (framebufferAttachment->type() == GL_FRAMEBUFFER_DEFAULT &&
+            renderer->presentPathFastEnabled());
 }
 
 }  // namespace rx
