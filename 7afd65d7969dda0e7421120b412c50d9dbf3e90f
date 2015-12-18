@@ -22,6 +22,30 @@
       "revId": "7afd65d7969dda0e7421120b412c50d9dbf3e90f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a81fbc7_f6b86091",
+        "filename": "src/tests/perf_tests/EGLInitializePerf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2015-12-18T15:33:32Z",
+      "side": 1,
+      "message": "EGL_NO_DISPLAY seems to be defined as \"((EGLDisplay)0)\", I think that should work without the cast.",
+      "parentUuid": "2aa2a363_3c4eb1c1",
+      "range": {
+        "startLine": 137,
+        "startChar": 14,
+        "endLine": 137,
+        "endChar": 28
+      },
+      "revId": "7afd65d7969dda0e7421120b412c50d9dbf3e90f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
