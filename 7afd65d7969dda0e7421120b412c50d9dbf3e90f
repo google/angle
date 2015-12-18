@@ -46,6 +46,53 @@
       "revId": "7afd65d7969dda0e7421120b412c50d9dbf3e90f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a91cf0f_1f0ac36d",
+        "filename": "src/tests/perf_tests/EGLInitializePerf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T16:44:12Z",
+      "side": 1,
+      "message": "ok, yes, seems good.",
+      "parentUuid": "6a81fbc7_f6b86091",
+      "range": {
+        "startLine": 137,
+        "startChar": 14,
+        "endLine": 137,
+        "endChar": 28
+      },
+      "revId": "7afd65d7969dda0e7421120b412c50d9dbf3e90f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a91cf0f_7f150f8e",
+        "filename": "src/tests/perf_tests/EGLInitializePerf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T16:44:12Z",
+      "side": 1,
+      "message": "sorry, we actually have ASSERT_EGL_TRUE and ASSERT_EGL_FALSE, please use these",
+      "range": {
+        "startLine": 140,
+        "startChar": 4,
+        "endLine": 140,
+        "endChar": 13
+      },
+      "revId": "7afd65d7969dda0e7421120b412c50d9dbf3e90f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
