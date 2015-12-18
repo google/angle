@@ -16,6 +16,24 @@
       "revId": "52352f421e3371314434b9a1366d9f1e2f2fa741",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5d1668e_4852ffe5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-18T00:41:34Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s that significant since it should\u0027ve been removed when we did one of the refactors",
+      "parentUuid": "a517a6d7_b8cd793a",
+      "revId": "52352f421e3371314434b9a1366d9f1e2f2fa741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
