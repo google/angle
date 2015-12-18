@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a91cf0f_9fe6d3ff",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T14:56:05Z",
+      "side": 1,
+      "message": "please change this to \u0027auto\u0027",
+      "range": {
+        "startLine": 173,
+        "startChar": 9,
+        "endLine": 173,
+        "endChar": 21
+      },
+      "revId": "a85910bbf83f9e12b46db7bf7aad544e9509835d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
