@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a935718_1d2093d6",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T21:17:18Z",
+      "side": 1,
+      "message": "these dirty bits depend on frontFace, you\u0027ll need to add a check for the current value of them like you did in d3d11",
+      "range": {
+        "startLine": 441,
+        "startChar": 44,
+        "endLine": 441,
+        "endChar": 53
+      },
+      "revId": "9727d3e85e0c009131d6c52a481571e13da9f3d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a9ddf25_fb360f23",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T21:17:18Z",
+      "side": 1,
+      "message": "nit: use c++ casts in this code",
+      "range": {
+        "startLine": 487,
+        "startChar": 55,
+        "endLine": 487,
+        "endChar": 60
+      },
+      "revId": "9727d3e85e0c009131d6c52a481571e13da9f3d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aa2a363_5c45bd4c",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T21:17:18Z",
+      "side": 1,
+      "message": "I\u0027m not sure if I like having the shader constants managed by the state manager, but let\u0027s leave it for now.",
+      "range": {
+        "startLine": 528,
+        "startChar": 20,
+        "endLine": 528,
+        "endChar": 38
+      },
+      "revId": "9727d3e85e0c009131d6c52a481571e13da9f3d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a935718_7d2bd7be",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T21:17:18Z",
+      "side": 1,
+      "message": "nit: use a c++ cast",
+      "range": {
+        "startLine": 534,
+        "startChar": 40,
+        "endLine": 534,
+        "endChar": 49
+      },
+      "revId": "9727d3e85e0c009131d6c52a481571e13da9f3d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aa2a363_7c4af95f",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T21:17:18Z",
+      "side": 1,
+      "message": "nit: use a c++ cast",
+      "range": {
+        "startLine": 536,
+        "startChar": 39,
+        "endLine": 536,
+        "endChar": 48
+      },
+      "revId": "9727d3e85e0c009131d6c52a481571e13da9f3d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
