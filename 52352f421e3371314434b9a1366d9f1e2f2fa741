@@ -34,6 +34,24 @@
       "revId": "52352f421e3371314434b9a1366d9f1e2f2fa741",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a935718_ddd54b15",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-18T14:53:33Z",
+      "side": 1,
+      "message": "Then you should associate it with that bug.",
+      "parentUuid": "a5d1668e_4852ffe5",
+      "revId": "52352f421e3371314434b9a1366d9f1e2f2fa741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
