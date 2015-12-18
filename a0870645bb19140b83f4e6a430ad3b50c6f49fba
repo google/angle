@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a2adb7b_71eb3260",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2015-12-18T02:10:14Z",
+      "side": 1,
+      "message": "The default value should be 0. :)",
+      "revId": "a0870645bb19140b83f4e6a430ad3b50c6f49fba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
