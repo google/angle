@@ -16,6 +16,24 @@
       "revId": "a0870645bb19140b83f4e6a430ad3b50c6f49fba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a935718_9dfd8389",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-18T18:23:24Z",
+      "side": 1,
+      "message": "Whoops, debug code :)",
+      "parentUuid": "6a2adb7b_71eb3260",
+      "revId": "a0870645bb19140b83f4e6a430ad3b50c6f49fba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
