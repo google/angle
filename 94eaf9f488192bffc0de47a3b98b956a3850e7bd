@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8a438f4f_43762620",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-18T22:16:36Z",
+      "side": 1,
+      "message": "I think we should keep it consistent (raster also has two) so it\u0027s easier to read / follow. Another option is to get rid of the mRasterizerStateDirtyBits too",
+      "parentUuid": "0a9ddf25_3b0f977e",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 26
+      },
+      "revId": "94eaf9f488192bffc0de47a3b98b956a3850e7bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2aa2a363_7c4439a1",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
         "patchSetId": 3
