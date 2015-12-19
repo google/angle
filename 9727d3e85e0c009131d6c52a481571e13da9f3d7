@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8a438f4f_fec12d76",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-19T00:25:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a935718_1d2093d6",
+      "range": {
+        "startLine": 441,
+        "startChar": 44,
+        "endLine": 441,
+        "endChar": 53
+      },
+      "revId": "9727d3e85e0c009131d6c52a481571e13da9f3d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a9ddf25_fb360f23",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-12-18T21:17:18Z",
       "side": 1,
       "message": "nit: use c++ casts in this code",
+      "range": {
+        "startLine": 487,
+        "startChar": 55,
+        "endLine": 487,
+        "endChar": 60
+      },
+      "revId": "9727d3e85e0c009131d6c52a481571e13da9f3d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a2adb7b_57170628",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-19T00:25:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a9ddf25_fb360f23",
       "range": {
         "startLine": 487,
         "startChar": 55,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "8a5c6f37_fb25b786",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-19T00:25:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a935718_7d2bd7be",
+      "range": {
+        "startLine": 534,
+        "startChar": 40,
+        "endLine": 534,
+        "endChar": 49
+      },
+      "revId": "9727d3e85e0c009131d6c52a481571e13da9f3d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2aa2a363_7c4af95f",
         "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
         "patchSetId": 2
@@ -105,6 +177,30 @@
       "writtenOn": "2015-12-18T21:17:18Z",
       "side": 1,
       "message": "nit: use a c++ cast",
+      "range": {
+        "startLine": 536,
+        "startChar": 39,
+        "endLine": 536,
+        "endChar": 48
+      },
+      "revId": "9727d3e85e0c009131d6c52a481571e13da9f3d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa593347_62d8fa17",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1135124
+      },
+      "writtenOn": "2015-12-19T00:25:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2aa2a363_7c4af95f",
       "range": {
         "startLine": 536,
         "startChar": 39,
