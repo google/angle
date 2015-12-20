@@ -13,6 +13,7 @@
 #include <EGL/egl.h>
 
 #include <string>
+#include <memory>
 
 namespace gl
 {
@@ -25,8 +26,6 @@ class Error final
     Error(GLenum errorCode, GLuint id, const char *msg, ...);
     inline Error(const Error &other);
     inline Error(Error &&other);
-
-    inline ~Error();
 
     inline Error &operator=(const Error &other);
     inline Error &operator=(Error &&other);
@@ -46,7 +45,7 @@ class Error final
 
     GLenum mCode;
     GLuint mID;
-    mutable std::string *mMessage;
+    mutable std::unique_ptr<std::string> mMessage;
 };
 
 }
@@ -63,8 +62,6 @@ class Error final
     inline Error(const Error &other);
     inline Error(Error &&other);
 
-    inline ~Error();
-
     inline Error &operator=(const Error &other);
     inline Error &operator=(Error &&other);
 
@@ -79,7 +76,7 @@ class Error final
 
     EGLint mCode;
     EGLint mID;
-    mutable std::string *mMessage;
+    mutable std::unique_ptr<std::string> mMessage;
 };
 
 }
