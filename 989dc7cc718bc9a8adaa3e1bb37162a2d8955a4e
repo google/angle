@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ea840bce_85f0c44b",
+        "filename": "extensions/EGL_ANGLE_surface_orientation.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-21T15:23:15Z",
+      "side": 1,
+      "message": "Forgot to update this one, fixed.",
+      "parentUuid": "aa8e93ed_a0613a11",
+      "range": {
+        "startLine": 61,
+        "startChar": 38,
+        "endLine": 61,
+        "endChar": 44
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a91cf0f_7f2bcfbe",
         "filename": "extensions/EGL_ANGLE_surface_orientation.txt",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2015-12-18T21:29:49Z",
       "side": 1,
       "message": "honestly this seems a bit over-fancy. I don\u0027t think there\u0027s a current use case for x invert, but ok.",
+      "range": {
+        "startLine": 67,
+        "startChar": 8,
+        "endLine": 67,
+        "endChar": 46
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca8747d0_a1693e3a",
+        "filename": "extensions/EGL_ANGLE_surface_orientation.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-21T15:23:15Z",
+      "side": 1,
+      "message": "My thoughts were that since we could support it so easily, why not?",
+      "parentUuid": "8a91cf0f_7f2bcfbe",
       "range": {
         "startLine": 67,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "2aa2a363_bc8f2150",
+        "filename": "extensions/EGL_ANGLE_surface_orientation.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-21T15:23:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ca8747d0_0136eadb",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 12
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea840bce_85c7646d",
         "filename": "extensions/EGL_ANGLE_surface_orientation.txt",
         "patchSetId": 7
@@ -82,6 +154,30 @@
       "writtenOn": "2015-12-18T21:29:49Z",
       "side": 1,
       "message": "wouldn\u0027t the x flip be inverted along the vertical axis, and vice-versa?",
+      "range": {
+        "startLine": 102,
+        "startChar": 23,
+        "endLine": 102,
+        "endChar": 33
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea840bce_25f5383a",
+        "filename": "extensions/EGL_ANGLE_surface_orientation.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-21T15:23:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea840bce_85c7646d",
       "range": {
         "startLine": 102,
         "startChar": 23,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "aa67730d_1843c529",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-21T15:23:15Z",
+      "side": 1,
+      "message": "Yea, it\u0027s unfortunate that there isn\u0027t a EGLuint or EGLbitfield type...  I figured that since it\u0027s supplied  and queried as an EGLint, I\u0027d keep it that way.",
+      "parentUuid": "ca8747d0_a1429e3e",
+      "range": {
+        "startLine": 87,
+        "startChar": 4,
+        "endLine": 87,
+        "endChar": 9
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a9ddf25_bb308725",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 7
@@ -128,6 +248,30 @@
       "writtenOn": "2015-12-18T21:29:49Z",
       "side": 1,
       "message": "don\u0027t store this as a cached variable, instead making it a method needsOffscreenTexture() { return mOrientation !\u003d default; }",
+      "range": {
+        "startLine": 51,
+        "startChar": 6,
+        "endLine": 51,
+        "endChar": 28
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a981b34_b25c2878",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-21T15:23:15Z",
+      "side": 1,
+      "message": "What\u0027s the benefit of this?",
+      "parentUuid": "0a9ddf25_bb308725",
       "range": {
         "startLine": 51,
         "startChar": 6,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "0a9ddf25_7b63dfed",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-21T15:23:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea840bce_e5d51015",
+      "range": {
+        "startLine": 287,
+        "startChar": 36,
+        "endLine": 287,
+        "endChar": 40
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea840bce_45c15c55",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 7
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "aa8e93ed_602c9287",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-21T15:23:15Z",
+      "side": 1,
+      "message": "It would be possible to have the vertices always follow the same winding order but it would not make a difference in dirtying state.  It will always be necessary to set a rasterizer state (or null) before rendering the quad.",
+      "parentUuid": "ea840bce_45c15c55",
+      "range": {
+        "startLine": 605,
+        "startChar": 4,
+        "endLine": 605,
+        "endChar": 59
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2aa2a363_fc35a9cf",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 7
@@ -197,6 +389,30 @@
       "writtenOn": "2015-12-18T21:29:49Z",
       "side": 1,
       "message": "comment here since this is important",
+      "range": {
+        "startLine": 679,
+        "startChar": 4,
+        "endLine": 679,
+        "endChar": 69
+      },
+      "revId": "989dc7cc718bc9a8adaa3e1bb37162a2d8955a4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa8e93ed_803196e0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-21T15:23:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2aa2a363_fc35a9cf",
       "range": {
         "startLine": 679,
         "startChar": 4,
