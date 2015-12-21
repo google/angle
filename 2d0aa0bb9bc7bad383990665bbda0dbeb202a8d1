@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2aa2a363_fc6cc94b",
+        "filename": "src/libANGLE/Error.inl",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-21T15:55:18Z",
+      "side": 1,
+      "message": "nit: please use SafeDelete.  I know it\u0027s redundant in this situation but it helps prevent bugs later if the code changes.",
+      "range": {
+        "startLine": 65,
+        "startChar": 4,
+        "endLine": 65,
+        "endChar": 20
+      },
+      "revId": "2d0aa0bb9bc7bad383990665bbda0dbeb202a8d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
