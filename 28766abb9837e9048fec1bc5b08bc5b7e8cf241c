@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aab5b3ad_c8bb2f8c",
+        "filename": "extensions/EGL_ANGLE_surface_orientation.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-12-21T22:35:41Z",
+      "side": 1,
+      "message": "I don\u0027t think anything has 0x33A7 yet.",
+      "range": {
+        "startLine": 56,
+        "startChar": 46,
+        "endLine": 56,
+        "endChar": 53
+      },
+      "revId": "28766abb9837e9048fec1bc5b08bc5b7e8cf241c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a4d4387_6ac21360",
+        "filename": "extensions/EGL_ANGLE_surface_orientation.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-12-21T22:35:41Z",
+      "side": 1,
+      "message": "OPTIMAL?",
+      "range": {
+        "startLine": 56,
+        "startChar": 12,
+        "endLine": 56,
+        "endChar": 20
+      },
+      "revId": "28766abb9837e9048fec1bc5b08bc5b7e8cf241c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
