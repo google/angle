@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a6aafd7_d7c19c76",
+        "filename": "src/tests/perf_tests/InterleavedAttributeData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2015-12-21T09:18:04Z",
+      "side": 1,
+      "message": "Decreased the number of per-frame iterations so that the overall score from this test will be a bit higher and error from rounding the score would be less significant.",
+      "revId": "30b7426e256cfda12f1585a3e3f183ad7315b4df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
