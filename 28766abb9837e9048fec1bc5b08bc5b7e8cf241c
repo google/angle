@@ -45,6 +45,23 @@
       "revId": "28766abb9837e9048fec1bc5b08bc5b7e8cf241c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa2133e4_685ae308",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2015-12-22T03:31:46Z",
+      "side": 1,
+      "message": "One problem I noticed is that if we do eglSwapInterval, eglSwapBuffers, eglPostSubBuffersNV, the eglPostSubBuffersNV (and all after it) cause errors and don\u0027t do anything, because the modifying the swap interval causes a new swap chain to be created after the eglSwapBuffers, and the first present on a swap chain has to swap the entire thing, not just part of it. That happened to work before because this swapRect caused the entire swapchain to be presented, but it\u0027s not being called if there\u0027s no offscreen texture.\n\nI think the best solution would actually be to have eglSwapInterval avoid recreating the swapchain, because that\u0027s not necessary on D3D11.",
+      "revId": "28766abb9837e9048fec1bc5b08bc5b7e8cf241c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
