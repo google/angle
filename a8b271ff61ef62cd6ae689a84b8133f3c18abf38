@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0aa4ff85_6394a2bb",
+        "filename": "src/libANGLE/Error.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-22T21:35:07Z",
+      "side": 1,
+      "message": "git cl format to clean this up i think",
+      "range": {
+        "startLine": 49,
+        "startChar": 3,
+        "endLine": 50,
+        "endChar": 39
+      },
+      "revId": "a8b271ff61ef62cd6ae689a84b8133f3c18abf38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
