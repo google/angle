@@ -96,7 +96,6 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     void setConfigDepthBits(int bits);
     void setConfigStencilBits(int bits);
     void setMultisampleEnabled(bool enabled);
-    void setDebugEnabled(bool enabled);
 
     int getClientVersion() const;
 

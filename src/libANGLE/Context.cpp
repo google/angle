@@ -62,8 +62,7 @@ Context::Context(const egl::Config *config,
                  const Context *shareContext,
                  rx::Renderer *renderer,
                  bool notifyResets,
-                 bool robustAccess,
-                 bool debug)
+                 bool robustAccess)
     : ValidationContext(clientVersion,
                         mState,
                         mCaps,
@@ -78,7 +77,7 @@ Context::Context(const egl::Config *config,
     ASSERT(robustAccess == false);   // Unimplemented
 
     initCaps(clientVersion);
-    mState.initialize(mCaps, mExtensions, clientVersion, debug);
+    mState.initialize(mCaps, clientVersion);
 
     mClientVersion = clientVersion;
 
@@ -504,7 +503,7 @@ void Context::deleteQuery(GLuint query)
     }
 }
 
-Buffer *Context::getBuffer(GLuint handle) const
+Buffer *Context::getBuffer(GLuint handle)
 {
     return mResourceManager->getBuffer(handle);
 }
@@ -524,7 +523,7 @@ Texture *Context::getTexture(GLuint handle) const
     return mResourceManager->getTexture(handle);
 }
 
-Renderbuffer *Context::getRenderbuffer(GLuint handle) const
+Renderbuffer *Context::getRenderbuffer(GLuint handle)
 {
     return mResourceManager->getRenderbuffer(handle);
 }
@@ -549,41 +548,6 @@ TransformFeedback *Context::getTransformFeedback(GLuint handle) const
 {
     auto iter = mTransformFeedbackMap.find(handle);
     return (iter != mTransformFeedbackMap.end()) ? iter->second : nullptr;
-}
-
-LabeledObject *Context::getLabeledObject(GLenum identifier, GLuint name) const
-{
-    switch (identifier)
-    {
-        case GL_BUFFER:
-            return getBuffer(name);
-        case GL_SHADER:
-            return getShader(name);
-        case GL_PROGRAM:
-            return getProgram(name);
-        case GL_VERTEX_ARRAY:
-            return getVertexArray(name);
-        case GL_QUERY:
-            return getQuery(name);
-        case GL_TRANSFORM_FEEDBACK:
-            return getTransformFeedback(name);
-        case GL_SAMPLER:
-            return getSampler(name);
-        case GL_TEXTURE:
-            return getTexture(name);
-        case GL_RENDERBUFFER:
-            return getRenderbuffer(name);
-        case GL_FRAMEBUFFER:
-            return getFramebuffer(name);
-        default:
-            UNREACHABLE();
-            return nullptr;
-    }
-}
-
-LabeledObject *Context::getLabeledObjectFromPtr(const void *ptr) const
-{
-    return getFenceSync(reinterpret_cast<GLsync>(const_cast<void *>(ptr)));
 }
 
 bool Context::isSampler(GLuint samplerName) const
@@ -812,12 +776,6 @@ Query *Context::getQuery(unsigned int handle, bool create, GLenum type)
     }
 }
 
-Query *Context::getQuery(GLuint handle) const
-{
-    auto iter = mQueryMap.find(handle);
-    return (iter != mQueryMap.end()) ? iter->second : nullptr;
-}
-
 Texture *Context::getTargetTexture(GLenum target) const
 {
     ASSERT(ValidTextureTarget(this, target));
@@ -947,21 +905,6 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_NUM_EXTENSIONS:
         *params = static_cast<GLint>(mExtensionStrings.size());
         break;
-
-      // GL_KHR_debug
-      case GL_MAX_DEBUG_MESSAGE_LENGTH:
-          *params = mExtensions.maxDebugMessageLength;
-          break;
-      case GL_MAX_DEBUG_LOGGED_MESSAGES:
-          *params = mExtensions.maxDebugLoggedMessages;
-          break;
-      case GL_MAX_DEBUG_GROUP_STACK_DEPTH:
-          *params = mExtensions.maxDebugGroupStackDepth;
-          break;
-      case GL_MAX_LABEL_LENGTH:
-          *params = mExtensions.maxLabelLength;
-          break;
-
       default:
         mState.getIntegerv(getData(), pname, params);
         break;
@@ -993,11 +936,6 @@ void Context::getInteger64v(GLenum pname, GLint64 *params)
         UNREACHABLE();
         break;
     }
-}
-
-void Context::getPointerv(GLenum pname, void **params) const
-{
-    mState.getPointerv(pname, params);
 }
 
 bool Context::getIndexedIntegerv(GLenum target, GLuint index, GLint *data)
@@ -1209,29 +1147,6 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
         *type = GL_FLOAT;
         *numParams = 1;
         return true;
-    }
-
-    if (mExtensions.debug)
-    {
-        switch (pname)
-        {
-            case GL_DEBUG_LOGGED_MESSAGES:
-            case GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH:
-            case GL_DEBUG_GROUP_STACK_DEPTH:
-            case GL_MAX_DEBUG_MESSAGE_LENGTH:
-            case GL_MAX_DEBUG_LOGGED_MESSAGES:
-            case GL_MAX_DEBUG_GROUP_STACK_DEPTH:
-            case GL_MAX_LABEL_LENGTH:
-                *type      = GL_INT;
-                *numParams = 1;
-                return true;
-
-            case GL_DEBUG_OUTPUT_SYNCHRONOUS:
-            case GL_DEBUG_OUTPUT:
-                *type      = GL_BOOL;
-                *numParams = 1;
-                return true;
-        }
     }
 
     // Check for ES3.0+ parameter names which are also exposed as ES2 extensions
@@ -1478,13 +1393,6 @@ void Context::recordError(const Error &error)
     if (error.isError())
     {
         mErrors.insert(error.getCode());
-
-        if (!error.getMessage().empty())
-        {
-            auto &debug = mState.getDebug();
-            debug.insertMessage(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR, error.getID(),
-                                GL_DEBUG_SEVERITY_HIGH, error.getMessage());
-        }
     }
 }
 
@@ -1831,13 +1739,6 @@ void Context::initCaps(GLuint clientVersion)
         // FIXME(geofflang): Don't support EXT_sRGB in non-ES2 contexts
         //mExtensions.sRGB = false;
     }
-
-    // Explicitly enable GL_KHR_debug
-    mExtensions.debug                   = true;
-    mExtensions.maxDebugMessageLength   = 1024;
-    mExtensions.maxDebugLoggedMessages  = 1024;
-    mExtensions.maxDebugGroupStackDepth = 1024;
-    mExtensions.maxLabelLength          = 1024;
 
     // Apply implementation limits
     mCaps.maxVertexAttributes = std::min<GLuint>(mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);

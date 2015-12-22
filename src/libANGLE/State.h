@@ -10,10 +10,8 @@
 #define LIBANGLE_STATE_H_
 
 #include <bitset>
-#include <memory>
 
 #include "common/angleutils.h"
-#include "libANGLE/Debug.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/Renderbuffer.h"
@@ -39,10 +37,7 @@ class State : angle::NonCopyable
     State();
     ~State();
 
-    void initialize(const Caps &caps,
-                    const Extensions &extensions,
-                    GLuint clientVersion,
-                    bool debug);
+    void initialize(const Caps& caps, GLuint clientVersion);
     void reset();
 
     // State chunk getters
@@ -263,15 +258,10 @@ class State : angle::NonCopyable
     const PixelUnpackState &getUnpackState() const;
     PixelUnpackState &getUnpackState();
 
-    // Debug state
-    const Debug &getDebug() const;
-    Debug &getDebug();
-
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params);
     void getFloatv(GLenum pname, GLfloat *params);
     void getIntegerv(const gl::Data &data, GLenum pname, GLint *params);
-    void getPointerv(GLenum pname, void **params) const;
     bool getIndexedIntegerv(GLenum target, GLuint index, GLint *data);
     bool getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data);
 
@@ -421,8 +411,6 @@ class State : angle::NonCopyable
     PixelPackState mPack;
 
     bool mPrimitiveRestart;
-
-    Debug mDebug;
 
     DirtyBits mDirtyBits;
     DirtyBits mUnpackStateBitMask;

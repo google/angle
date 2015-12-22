@@ -58,13 +58,7 @@ class TransformFeedback;
 class Context final : public ValidationContext
 {
   public:
-    Context(const egl::Config *config,
-            int clientVersion,
-            const Context *shareContext,
-            rx::Renderer *renderer,
-            bool notifyResets,
-            bool robustAccess,
-            bool debug);
+    Context(const egl::Config *config, int clientVersion, const Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess);
 
     virtual ~Context();
 
@@ -139,21 +133,18 @@ class Context final : public ValidationContext
     GLint getSamplerParameteri(GLuint sampler, GLenum pname);
     GLfloat getSamplerParameterf(GLuint sampler, GLenum pname);
 
-    Buffer *getBuffer(GLuint handle) const;
+    Buffer *getBuffer(GLuint handle);
     FenceNV *getFenceNV(GLuint handle);
     FenceSync *getFenceSync(GLsync handle) const;
     Shader *getShader(GLuint handle) const;
     Program *getProgram(GLuint handle) const;
     Texture *getTexture(GLuint handle) const;
     Framebuffer *getFramebuffer(GLuint handle) const;
-    Renderbuffer *getRenderbuffer(GLuint handle) const;
+    Renderbuffer *getRenderbuffer(GLuint handle);
     VertexArray *getVertexArray(GLuint handle) const;
     Sampler *getSampler(GLuint handle) const;
     Query *getQuery(GLuint handle, bool create, GLenum type);
-    Query *getQuery(GLuint handle) const;
     TransformFeedback *getTransformFeedback(GLuint handle) const;
-    LabeledObject *getLabeledObject(GLenum identifier, GLuint name) const;
-    LabeledObject *getLabeledObjectFromPtr(const void *ptr) const;
 
     Texture *getTargetTexture(GLenum target) const;
     Texture *getSamplerTexture(unsigned int sampler, GLenum type) const;
@@ -169,7 +160,6 @@ class Context final : public ValidationContext
     void getFloatv(GLenum pname, GLfloat *params);
     void getIntegerv(GLenum pname, GLint *params);
     void getInteger64v(GLenum pname, GLint64 *params);
-    void getPointerv(GLenum pname, void **params) const;
 
     bool getIndexedIntegerv(GLenum target, GLuint index, GLint *data);
     bool getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data);

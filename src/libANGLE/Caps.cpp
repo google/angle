@@ -148,10 +148,6 @@ Extensions::Extensions()
       packSubimage(false),
       vertexArrayObject(false),
       debug(false),
-      maxDebugMessageLength(0),
-      maxDebugLoggedMessages(0),
-      maxDebugGroupStackDepth(0),
-      maxLabelLength(0),
       colorBufferFloat(false)
 {
 }

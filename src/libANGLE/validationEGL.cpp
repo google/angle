@@ -210,9 +210,6 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
             contextFlags = value;
             break;
 
-          case EGL_CONTEXT_OPENGL_DEBUG:
-              break;
-
           case EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR:
             // Only valid for OpenGL (non-ES) contexts
             return Error(EGL_BAD_ATTRIBUTE);

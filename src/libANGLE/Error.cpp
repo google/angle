@@ -17,17 +17,8 @@ namespace gl
 {
 
 Error::Error(GLenum errorCode, const char *msg, ...)
-    : mCode(errorCode), mID(errorCode), mMessage(nullptr)
-{
-    va_list vararg;
-    va_start(vararg, msg);
-    createMessageString();
-    *mMessage = FormatString(msg, vararg);
-    va_end(vararg);
-}
-
-Error::Error(GLenum errorCode, GLuint id, const char *msg, ...)
-    : mCode(errorCode), mID(id), mMessage(nullptr)
+    : mCode(errorCode),
+      mMessage(nullptr)
 {
     va_list vararg;
     va_start(vararg, msg);
