@@ -62,6 +62,24 @@
       "revId": "28766abb9837e9048fec1bc5b08bc5b7e8cf241c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a4e23ac_9c00454a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-22T15:38:26Z",
+      "side": 1,
+      "message": "Ew, yes, we should not be re-creating the D3D11 Swap chain.  I\u0027ll fix that.",
+      "parentUuid": "aa2133e4_685ae308",
+      "revId": "28766abb9837e9048fec1bc5b08bc5b7e8cf241c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
