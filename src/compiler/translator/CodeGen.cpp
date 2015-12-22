@@ -51,8 +51,9 @@ TCompiler* ConstructCompiler(
         // configuration. Return NULL per the ShConstructCompiler API.
         return nullptr;
 #endif // ANGLE_ENABLE_GLSL
-      case SH_HLSL9_OUTPUT:
-      case SH_HLSL11_OUTPUT:
+      case SH_HLSL_3_0_OUTPUT:
+      case SH_HLSL_4_1_OUTPUT:
+      case SH_HLSL_4_0_FL9_3_OUTPUT:
 #ifdef ANGLE_ENABLE_HLSL
         return new TranslatorHLSL(type, spec, output);
 #else

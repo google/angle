@@ -42,6 +42,7 @@
 #include "libANGLE/renderer/d3d/d3d11/Trim11.h"
 #include "libANGLE/renderer/d3d/d3d11/VertexArray11.h"
 #include "libANGLE/renderer/d3d/d3d11/VertexBuffer11.h"
+#include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/DeviceD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
@@ -1159,6 +1160,18 @@ SwapChainD3D *Renderer11::createSwapChain(NativeWindow nativeWindow,
 {
     return new SwapChain11(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat,
                            orientation);
+}
+
+CompilerImpl *Renderer11::createCompiler()
+{
+    if (mRenderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3)
+    {
+        return new CompilerD3D(SH_HLSL_4_0_FL9_3_OUTPUT);
+    }
+    else
+    {
+        return new CompilerD3D(SH_HLSL_4_1_OUTPUT);
+    }
 }
 
 void *Renderer11::getD3DDevice()

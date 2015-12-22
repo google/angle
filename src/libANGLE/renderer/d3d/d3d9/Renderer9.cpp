@@ -36,6 +36,7 @@
 #include "libANGLE/renderer/d3d/d3d9/TextureStorage9.h"
 #include "libANGLE/renderer/d3d/d3d9/VertexArray9.h"
 #include "libANGLE/renderer/d3d/d3d9/VertexBuffer9.h"
+#include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/DeviceD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
@@ -661,6 +662,11 @@ SwapChainD3D *Renderer9::createSwapChain(NativeWindow nativeWindow,
 {
     return new SwapChain9(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat,
                           orientation);
+}
+
+CompilerImpl *Renderer9::createCompiler()
+{
+    return new CompilerD3D(SH_HLSL_3_0_OUTPUT);
 }
 
 void *Renderer9::getD3DDevice()

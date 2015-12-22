@@ -146,11 +146,11 @@ int main(int argc, char *argv[])
                       case 'h':
                         if (argv[0][4] == '1' && argv[0][5] == '1')
                         {
-                            output = SH_HLSL11_OUTPUT;
+                            output = SH_HLSL_4_1_OUTPUT;
                         }
                         else
                         {
-                            output = SH_HLSL9_OUTPUT;
+                            output = SH_HLSL_3_0_OUTPUT;
                         }
                         break;
                       default: failCode = EFailUsage;
