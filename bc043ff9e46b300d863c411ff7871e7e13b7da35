@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea308b14_423ff205",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-22T20:52:00Z",
+      "side": 1,
+      "message": "make a first sentence with \u003c65 chars and put the rest in a paragraph after a break with \u003c71 chars",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 39
+      },
+      "revId": "bc043ff9e46b300d863c411ff7871e7e13b7da35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca5ca766_19d8cb16",
+        "filename": "src/libANGLE/Error.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-22T20:52:00Z",
+      "side": 1,
+      "message": "nit: we can use !mMessage here to use operator bool",
+      "range": {
+        "startLine": 31,
+        "startChar": 8,
+        "endLine": 31,
+        "endChar": 33
+      },
+      "revId": "bc043ff9e46b300d863c411ff7871e7e13b7da35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa3a13f4_60a4b2d3",
+        "filename": "src/libANGLE/Error.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-12-22T20:52:00Z",
+      "side": 1,
+      "message": "same for all of this.",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 34
+      },
+      "revId": "bc043ff9e46b300d863c411ff7871e7e13b7da35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
