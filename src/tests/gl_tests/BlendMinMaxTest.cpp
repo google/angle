@@ -184,9 +184,10 @@ TEST_P(BlendMinMaxTest, RGBA32f)
 
 TEST_P(BlendMinMaxTest, RGBA16F)
 {
-    if (getClientVersion() < 3 && !extensionEnabled("GL_OES_texture_half_float"))
+    if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_color_buffer_half_float"))
     {
-        std::cout << "Test skipped because ES3 or GL_OES_texture_half_float is not available." << std::endl;
+        std::cout << "Test skipped because ES3 or GL_EXT_color_buffer_half_float is not available."
+                  << std::endl;
         return;
     }
 
@@ -201,4 +202,4 @@ TEST_P(BlendMinMaxTest, RGBA16F)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_INSTANTIATE_TEST(BlendMinMaxTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(BlendMinMaxTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL());
