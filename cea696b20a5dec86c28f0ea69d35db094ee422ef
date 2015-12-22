@@ -16,6 +16,24 @@
       "revId": "cea696b20a5dec86c28f0ea69d35db094ee422ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa3a13f4_804456f9",
+        "filename": "extensions/EGL_ANGLE_surface_orientation.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-12-22T18:08:24Z",
+      "side": 1,
+      "message": "Damn it, I swear I know how to speel this word.  Fixed.",
+      "parentUuid": "4a68b702_d55e1c56",
+      "revId": "cea696b20a5dec86c28f0ea69d35db094ee422ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
