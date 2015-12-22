@@ -22,6 +22,30 @@
       "revId": "771c451d4879aa1e912a02b4848903bf30377619",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eafecb6e_f236c8b9",
+        "filename": "src/tests/compiler_tests/FragDepth_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-12-22T02:20:45Z",
+      "side": 1,
+      "message": "Done. I undid the resulting changes to ShaderLang.h however as they were not useful.",
+      "parentUuid": "0a9ddf25_9be6ebff",
+      "range": {
+        "startLine": 45,
+        "startChar": 85,
+        "endLine": 45,
+        "endChar": 110
+      },
+      "revId": "771c451d4879aa1e912a02b4848903bf30377619",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
