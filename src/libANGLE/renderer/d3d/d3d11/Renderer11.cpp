@@ -1078,10 +1078,7 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
         outExtensions->surfaceD3DTexture2DShareHandle = true;
     }
 
-#ifdef ANGLE_ENABLE_KEYEDMUTEX
     outExtensions->keyedMutex = true;
-#endif
-
     outExtensions->querySurfacePointer = true;
     outExtensions->windowFixedSize     = true;
     outExtensions->surfaceOrientation  = true;
