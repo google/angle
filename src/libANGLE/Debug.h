@@ -22,6 +22,7 @@ namespace gl
 class LabeledObject
 {
   public:
+    virtual ~LabeledObject() {}
     virtual void setLabel(const std::string &label) = 0;
     virtual const std::string &getLabel() const = 0;
 };
