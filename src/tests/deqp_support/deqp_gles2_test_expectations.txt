@@ -256,8 +256,6 @@
 989 WIN LINUX MAC : dEQP-GLES2.functional.shaders.preprocessor.extensions.after_non_preprocessing_tokens_fragment = FAIL
 1015 WIN LINUX MAC : dEQP-GLES2.functional.shaders.functions.invalid.return_array_in_struct_vertex = FAIL
 1015 WIN LINUX MAC : dEQP-GLES2.functional.shaders.functions.invalid.return_array_in_struct_fragment = FAIL
-996 WIN LINUX MAC : dEQP-GLES2.functional.shaders.functions.invalid.double_declare_vertex = FAIL
-996 WIN LINUX MAC : dEQP-GLES2.functional.shaders.functions.invalid.double_declare_fragment = FAIL
 1016 WIN LINUX MAC : dEQP-GLES2.functional.shaders.scoping.valid.local_variable_hides_function_parameter_vertex = FAIL
 1016 WIN LINUX MAC : dEQP-GLES2.functional.shaders.scoping.valid.local_variable_hides_function_parameter_fragment = FAIL
 1016 WIN LINUX MAC : dEQP-GLES2.functional.shaders.scoping.invalid.redeclare_function_vertex = FAIL

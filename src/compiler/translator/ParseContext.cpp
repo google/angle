@@ -1928,6 +1928,20 @@ void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
 TIntermAggregate *TParseContext::addFunctionPrototypeDeclaration(const TFunction &function,
                                                                  const TSourceLoc &location)
 {
+    // Note: symbolTableFunction could be the same as function if this is the first declaration.
+    // Either way the instance in the symbol table is used to track whether the function is declared
+    // multiple times.
+    TFunction *symbolTableFunction =
+        static_cast<TFunction *>(symbolTable.find(function.getMangledName(), getShaderVersion()));
+    if (symbolTableFunction->hasPrototypeDeclaration() && mShaderVersion == 100)
+    {
+        // ESSL 1.00.17 section 4.2.7.
+        // Doesn't apply to ESSL 3.00.4: see section 4.2.3.
+        error(location, "duplicate function prototype declarations are not allowed", "function");
+        recover();
+    }
+    symbolTableFunction->setHasPrototypeDeclaration();
+
     TIntermAggregate *prototype = new TIntermAggregate;
     prototype->setType(function.getReturnType());
     prototype->setName(function.getMangledName());
@@ -2086,12 +2100,12 @@ void TParseContext::parseFunctionPrototype(const TSourceLoc &location,
 TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TFunction *function)
 {
     //
-    // Multiple declarations of the same function are allowed.
+    // We don't know at this point whether this is a function definition or a prototype.
+    // The definition production code will check for redefinitions.
+    // In the case of ESSL 1.00 the prototype production code will also check for redeclarations.
     //
-    // If this is a definition, the definition production code will check for redefinitions
-    // (we don't know at this point if it's a definition or not).
-    //
-    // Redeclarations are allowed.  But, return types and parameter qualifiers must match.
+    // Return types and parameter qualifiers must match in all redeclarations, so those are checked
+    // here.
     //
     TFunction *prevDec =
         static_cast<TFunction *>(symbolTable.find(function->getMangledName(), getShaderVersion()));

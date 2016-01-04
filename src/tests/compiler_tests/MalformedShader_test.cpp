@@ -1454,3 +1454,43 @@ TEST_F(MalformedShaderTest, NonIntegerIndex)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// ESSL1 shaders with a duplicate function prototype should be rejected.
+// ESSL 1.00.17 section 4.2.7.
+TEST_F(MalformedShaderTest, DuplicatePrototypeESSL1)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "void foo();\n"
+        "void foo();\n"
+        "void foo() {}\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// ESSL3 shaders with a duplicate function prototype should be allowed.
+// ESSL 3.00.4 section 4.2.3.
+TEST_F(MalformedShaderTest, DuplicatePrototypeESSL3)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void foo();\n"
+        "void foo();\n"
+        "void foo() {}\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = vec4(0.0);\n"
+        "}\n";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
+    }
+}
