@@ -111,11 +111,7 @@ class Renderer11 : public RendererD3D
     gl::Error flush() override;
     gl::Error finish() override;
 
-    SwapChainD3D *createSwapChain(NativeWindow nativeWindow,
-                                  HANDLE shareHandle,
-                                  GLenum backBufferFormat,
-                                  GLenum depthBufferFormat,
-                                  EGLint orientation) override;
+    virtual SwapChainD3D *createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat);
 
     virtual gl::Error generateSwizzle(gl::Texture *texture);
     virtual gl::Error setSamplerState(gl::SamplerType type, int index, gl::Texture *texture, const gl::SamplerState &sampler);
@@ -143,7 +139,6 @@ class Renderer11 : public RendererD3D
     void applyTransformFeedbackBuffers(const gl::State &state) override;
 
     virtual void markAllStateDirty();
-    void markRenderTargetStateDirty();
 
     // lost device
     bool testDeviceLost() override;

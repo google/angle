@@ -989,8 +989,6 @@ egl::ConfigSet Renderer11::generateConfigs() const
     const gl::Caps &rendererCaps = getRendererCaps();
     const gl::TextureCapsMap &rendererTextureCaps = getRendererTextureCaps();
 
-    const EGLint optimalSurfaceOrientation = EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE;
-
     egl::ConfigSet configs;
     for (size_t formatIndex = 0; formatIndex < ArraySize(colorBufferFormats); formatIndex++)
     {
@@ -1045,7 +1043,6 @@ egl::ConfigSet Renderer11::generateConfigs() const
                     config.transparentRedValue = 0;
                     config.transparentGreenValue = 0;
                     config.transparentBlueValue = 0;
-                    config.optimalOrientation    = optimalSurfaceOrientation;
 
                     configs.add(config);
                 }
@@ -1073,7 +1070,6 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
 
     outExtensions->querySurfacePointer = true;
     outExtensions->windowFixedSize     = true;
-    outExtensions->surfaceOrientation  = true;
 
     // D3D11 does not support present with dirty rectangles until DXGI 1.2.
     outExtensions->postSubBuffer = mRenderer11DeviceCaps.supportsDXGI1_2;
@@ -1140,14 +1136,9 @@ gl::Error Renderer11::finish()
     return gl::Error(GL_NO_ERROR);
 }
 
-SwapChainD3D *Renderer11::createSwapChain(NativeWindow nativeWindow,
-                                          HANDLE shareHandle,
-                                          GLenum backBufferFormat,
-                                          GLenum depthBufferFormat,
-                                          EGLint orientation)
+SwapChainD3D *Renderer11::createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
 {
-    return new SwapChain11(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat,
-                           orientation);
+    return new SwapChain11(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat);
 }
 
 void *Renderer11::getD3DDevice()
@@ -2408,7 +2399,12 @@ void Renderer11::markAllStateDirty()
 {
     TRACE_EVENT0("gpu.angle", "Renderer11::markAllStateDirty");
 
-    markRenderTargetStateDirty();
+    for (size_t rtIndex = 0; rtIndex < ArraySize(mAppliedRTVs); rtIndex++)
+    {
+        mAppliedRTVs[rtIndex] = DirtyPointer;
+    }
+    mAppliedDSV = DirtyPointer;
+    mDepthStencilInitialized = false;
 
     // We reset the current SRV data because it might not be in sync with D3D's state
     // anymore. For example when a currently used SRV is used as an RTV, D3D silently
@@ -2470,16 +2466,6 @@ void Renderer11::markAllStateDirty()
     mCurrentGeometryConstantBuffer = NULL;
 
     mCurrentPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
-}
-
-void Renderer11::markRenderTargetStateDirty()
-{
-    for (size_t rtIndex = 0; rtIndex < ArraySize(mAppliedRTVs); rtIndex++)
-    {
-        mAppliedRTVs[rtIndex] = DirtyPointer;
-    }
-    mAppliedDSV              = DirtyPointer;
-    mDepthStencilInitialized = false;
 }
 
 void Renderer11::releaseDeviceResources()

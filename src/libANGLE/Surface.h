@@ -82,7 +82,6 @@ class Surface final : public gl::FramebufferAttachmentObject
     {
         return mFlexibleSurfaceCompatibilityRequested;
     }
-    EGLint getOrientation() const { return mOrientation; }
 
   private:
     virtual ~Surface();
@@ -116,8 +115,6 @@ class Surface final : public gl::FramebufferAttachmentObject
     EGLint mPixelAspectRatio;      // Display aspect ratio
     EGLenum mRenderBuffer;         // Render buffer
     EGLenum mSwapBehavior;         // Buffer swap behavior
-
-    EGLint mOrientation;
 
     BindingPointer<gl::Texture> mTexture;
 };

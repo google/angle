@@ -372,13 +372,6 @@ Error ValidateCreateWindowSurface(Display *display, Config *config, EGLNativeWin
             }
             break;
 
-          case EGL_SURFACE_ORIENTATION_ANGLE:
-              if (!displayExtensions.surfaceOrientation)
-              {
-                  return Error(EGL_BAD_ATTRIBUTE, "EGL_ANGLE_surface_orientation is not enabled.");
-              }
-              break;
-
           case EGL_VG_COLORSPACE:
             return Error(EGL_BAD_MATCH);
 

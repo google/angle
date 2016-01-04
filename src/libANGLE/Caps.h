@@ -427,9 +427,6 @@ struct DisplayExtensions
     // EGL_ANGLE_keyed_mutex
     bool keyedMutex;
 
-    // EGL_ANGLE_surface_orientation
-    bool surfaceOrientation;
-
     // EGL_NV_post_sub_buffer
     bool postSubBuffer;
 
