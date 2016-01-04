@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a670334_17e25651",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 1250,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2016-01-04T19:17:32Z",
+      "side": 1,
+      "message": "Oh, do you need to check for clang? gcc probably won\u0027t understand this flag.",
+      "revId": "92bba079329b5000caeb9096371ff423232fe76d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
