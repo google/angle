@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6aac9bb5_61875082",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-04T09:40:59Z",
+      "side": 1,
+      "message": "Maybe we could assert that directComposition is false here (assumig dcomp.dll is not present on WinRT).",
+      "revId": "c28600a448a7112f0f6b0898e4437f0b9d0c6bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
