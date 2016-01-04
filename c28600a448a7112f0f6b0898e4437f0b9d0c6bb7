@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "6a6d7b10_d6662467",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2599,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-04T14:53:54Z",
+      "side": 1,
+      "message": "nit: nullptr",
+      "range": {
+        "startLine": 2599,
+        "startChar": 23,
+        "endLine": 2599,
+        "endChar": 27
+      },
+      "revId": "c28600a448a7112f0f6b0898e4437f0b9d0c6bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea832b1b_b6360d8b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-04T14:53:54Z",
+      "side": 1,
+      "message": "nit: put these in the initializer list.",
+      "range": {
+        "startLine": 25,
+        "startChar": 3,
+        "endLine": 27,
+        "endChar": 33
+      },
+      "revId": "c28600a448a7112f0f6b0898e4437f0b9d0c6bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6aac9bb5_61875082",
         "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.cpp",
         "patchSetId": 1
