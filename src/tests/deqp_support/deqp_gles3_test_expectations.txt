@@ -47,8 +47,6 @@
 
 // TODO(jmadill): triage these into permanent and temporary failures
 
-1089 WIN : dEQP-GLES3.functional.shaders.functions.invalid.local_function_prototype_vertex = FAIL
-1089 WIN : dEQP-GLES3.functional.shaders.functions.invalid.local_function_prototype_fragment = FAIL
 1091 WIN : dEQP-GLES3.functional.shaders.loops.for_constant_iterations.nested_sequence_vertex = FAIL
 1091 WIN : dEQP-GLES3.functional.shaders.loops.for_constant_iterations.nested_sequence_fragment = FAIL
 1091 WIN : dEQP-GLES3.functional.shaders.loops.for_constant_iterations.nested_tricky_dataflow_1_vertex = FAIL

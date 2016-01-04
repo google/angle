@@ -1494,3 +1494,22 @@ TEST_F(MalformedShaderTest, DuplicatePrototypeESSL3)
         FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
     }
 }
+
+// Shaders with a local function prototype should be rejected.
+// ESSL 3.00.4 section 4.2.4.
+TEST_F(MalformedShaderTest, LocalFunctionPrototype)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    void foo();\n"
+        "    my_FragColor = vec4(0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

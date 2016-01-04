@@ -1968,6 +1968,14 @@ TIntermAggregate *TParseContext::addFunctionPrototypeDeclaration(const TFunction
     prototype->setOp(EOpPrototype);
 
     symbolTable.pop();
+
+    if (!symbolTable.atGlobalLevel())
+    {
+        // ESSL 3.00.4 section 4.2.4.
+        error(location, "local function prototype declarations are not allowed", "function");
+        recover();
+    }
+
     return prototype;
 }
 

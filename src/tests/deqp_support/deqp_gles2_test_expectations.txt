@@ -246,8 +246,6 @@
 1143 MAC : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_* = FAIL
 
 // Windows and Linux failures
-1015 WIN LINUX : dEQP-GLES2.functional.shaders.functions.invalid.local_function_prototype_vertex = FAIL
-1015 WIN LINUX : dEQP-GLES2.functional.shaders.functions.invalid.local_function_prototype_fragment = FAIL
 1020 WIN LINUX : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
 504 WIN LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.nested_structs_arrays.sampler2D_samplerCube_* = FAIL
 
