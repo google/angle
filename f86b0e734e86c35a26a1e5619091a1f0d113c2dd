@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a3d4ff0_a5d9aa49",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-04T17:50:12Z",
+      "side": 1,
+      "message": "we can probably get rid of these accessors and setters and just use the variables directly.",
+      "range": {
+        "startLine": 341,
+        "startChar": 4,
+        "endLine": 350,
+        "endChar": 5
+      },
+      "revId": "f86b0e734e86c35a26a1e5619091a1f0d113c2dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
