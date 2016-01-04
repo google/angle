@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a727721_058fb2a8",
+        "filename": "src/libANGLE/Config.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-04T10:21:03Z",
+      "side": 1,
+      "message": "typo: optimial -\u003e optimal",
+      "revId": "4d3a564211291d87a070c1d1a3467f8b4b83a082",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a8e5b43_3165cac1",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-04T10:21:03Z",
+      "side": 1,
+      "message": "Maybe assert that orientation is the default.",
+      "revId": "4d3a564211291d87a070c1d1a3467f8b4b83a082",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
