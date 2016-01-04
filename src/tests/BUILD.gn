@@ -2,7 +2,6 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-
 import("//testing/test.gni")
 import("//third_party/angle/build/angle_common.gni")
 
@@ -56,11 +55,13 @@ if (is_win || is_linux || is_mac) {
       "../../util",
     ]
 
-    sources = rebase_path(end2end_gypi.angle_end2end_tests_sources, ".", "../..")
+    sources =
+        rebase_path(end2end_gypi.angle_end2end_tests_sources, ".", "../..")
 
     if (is_win) {
-      sources +=
-          rebase_path(end2end_gypi.angle_end2end_tests_win_sources, ".", "../..")
+      sources += rebase_path(end2end_gypi.angle_end2end_tests_win_sources,
+                             ".",
+                             "../..")
     }
 
     sources += [ "//gpu/angle_end2end_tests_main.cc" ]
@@ -109,7 +110,7 @@ if (is_win) {
     sources = rebase_path(perftests_gypi.angle_perf_tests_sources, ".", "../..")
 
     sources +=
-      rebase_path(perftests_gypi.angle_perf_tests_win_sources, ".", "../..")
+        rebase_path(perftests_gypi.angle_perf_tests_win_sources, ".", "../..")
 
     sources += [ "//gpu/angle_perftests_main.cc" ]
 
@@ -128,5 +129,145 @@ if (is_win) {
       "//third_party/angle:libEGL",
       "//third_party/angle:libGLESv2",
     ]
+  }
+}
+
+###-----------------------------------------------------
+### dEQP tests
+###-----------------------------------------------------
+
+# TODO(jmadill): Linux build
+if (is_win) {
+  deqp_gypi = exec_script("//build/gypi_to_gn.py",
+                          [
+                            rebase_path("deqp.gypi"),
+                            "--replace=<(angle_path)=.",
+                            "--replace=<(deqp_path)=../deqp/src",
+                          ],
+                          "scope",
+                          [ "deqp.gypi" ])
+
+  config("angle_deqp_support") {
+    include_dirs = rebase_path(deqp_gypi.deqp_include_dirs, ".", "../..")
+    if (is_win) {
+      include_dirs += [ "../deqp/src/framework/platform/win32" ]
+      cflags = deqp_gypi.deqp_win_cflags
+    }
+    defines = deqp_gypi.deqp_defines
+    defines += [ "_MBCS" ]
+  }
+
+  deqp_undefine_configs = [
+    "//build/config/compiler:chromium_code",
+    "//build/config/win:lean_and_mean",
+    "//build/config/win:nominmax",
+    "//build/config/win:unicode",
+    "//build/config/compiler:no_rtti",
+  ]
+
+  static_library("angle_deqp_decpp") {
+    configs -= deqp_undefine_configs
+    public_configs = [
+      ":angle_deqp_support",
+      "//build/config/compiler:no_chromium_code",
+      "//third_party/angle:internal_config",
+    ]
+    sources = rebase_path(deqp_gypi.deqp_libtester_decpp_sources, ".", "../..")
+  }
+
+  config("angle_deqp_libtester_config") {
+    defines = [ "ANGLE_DEQP_LIBTESTER_IMPLEMENTATION" ]
+  }
+
+  static_library("angle_deqp_libtester") {
+    public_deps = [
+      ":angle_deqp_decpp",
+      "//third_party/angle:angle_util",
+      "//third_party/angle:libEGL",
+      "//third_party/libpng:libpng",
+    ]
+    configs -= deqp_undefine_configs
+    public_configs = [ ":angle_deqp_libtester_config" ]
+    sources = rebase_path(deqp_gypi.deqp_libtester_sources, ".", "../..")
+    if (is_win) {
+      sources += rebase_path(deqp_gypi.deqp_libtester_sources_win, ".", "../..")
+    }
+  }
+
+  config("angle_deqp_gtest_support_config") {
+    include_dirs = [ "third_party/gpu_test_expectations" ]
+  }
+
+  source_set("angle_deqp_gtest_support") {
+    testonly = true
+    public_deps = [
+      "//base",
+      "//base/test:test_support",
+      "//testing/gtest",
+      "//third_party/angle:angle_common",
+      "//third_party/angle:angle_util",
+    ]
+    public_configs = [ ":angle_deqp_gtest_support_config" ]
+    sources = deqp_gypi.deqp_gpu_test_expectations_sources
+    sources += [ "//gpu/angle_deqp_tests_main.cc" ]
+  }
+
+  target_names = [
+    "gles2",
+    "gles3",
+    "egl",
+  ]
+  target_defines = [
+    "ANGLE_DEQP_GLES2_TESTS",
+    "ANGLE_DEQP_GLES3_TESTS",
+    "ANGLE_DEQP_EGL_TESTS",
+  ]
+  target_sources = [
+    deqp_gypi.deqp_gles2_sources,
+    deqp_gypi.deqp_gles3_sources,
+    deqp_gypi.deqp_egl_sources,
+  ]
+
+  foreach(index,
+          [
+            0,
+            1,
+            2,
+          ]) {
+    target_name = target_names[index]
+    config_name = "angle_deqp_lib${target_name}_config"
+    config(config_name) {
+      defines = [ target_defines[index] ]
+    }
+
+    shared_library_name = "angle_deqp_lib${target_name}"
+    shared_library(shared_library_name) {
+      deps = [
+        ":angle_deqp_libtester",
+      ]
+
+      configs -= deqp_undefine_configs
+      public_configs = [ ":${config_name}" ]
+
+      sources = rebase_path(target_sources[index], ".", "../..")
+      sources += [
+        "deqp_support/angle_deqp_libtester_main.cpp",
+        "deqp_support/tcuANGLEPlatform.cpp",
+        "deqp_support/tcuANGLEPlatform.h",
+      ]
+    }
+
+    test_name = "angle_deqp_${target_name}_tests"
+    test(test_name) {
+      deps = [
+        ":${shared_library_name}",
+        ":angle_deqp_gtest_support",
+      ]
+
+      # Must be included outside of the source set for the define
+      sources = [
+        "deqp_support/angle_deqp_gtest.cpp",
+      ]
+    }
   }
 }
