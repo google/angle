@@ -24,7 +24,7 @@ class MultiWindowSample : public SampleApplication
     {
     }
 
-    virtual bool initialize()
+    bool initialize() override
     {
         const std::string vs = SHADER_SOURCE
         (
@@ -82,44 +82,44 @@ class MultiWindowSample : public SampleApplication
             mWindows.push_back(window);
         }
 
-        for (size_t i = 1; i < mWindows.size(); i++)
+        int baseX = rootWindow.osWindow->getX();
+        int baseY = rootWindow.osWindow->getY();
+        for (auto &window : mWindows)
         {
-            int x = rootWindow.osWindow->getX() + static_cast<int>(RandomBetween(0, 512));
-            int y = rootWindow.osWindow->getY() + static_cast<int>(RandomBetween(0, 512));
+            int x      = baseX + static_cast<int>(RandomBetween(0, 512));
+            int y      = baseY + static_cast<int>(RandomBetween(0, 512));
             int width = static_cast<int>(RandomBetween(128, 512));
             int height = static_cast<int>(RandomBetween(128, 512));
-            mWindows[i].osWindow->setPosition(x, y);
-            mWindows[i].osWindow->resize(width, height);
+            window.osWindow->setPosition(x, y);
+            window.osWindow->resize(width, height);
         }
 
         return true;
     }
 
-    virtual void destroy()
-    {
-        glDeleteProgram(mProgram);
-    }
+    void destroy() override { glDeleteProgram(mProgram); }
 
-    virtual void step(float dt, double totalTime)
+    void step(float dt, double totalTime) override
     {
         mRotation = fmod(mRotation + (dt * 40.0f), 360.0f);
 
-        for (size_t i = 1; i < mWindows.size(); i++)
+        for (auto &window : mWindows)
         {
-            mWindows[i].osWindow->messageLoop();
+            window.osWindow->messageLoop();
         }
     }
 
-    virtual void draw()
+    void draw() override
     {
         OSWindow* rootWindow = mWindows[0].osWindow;
         int left = rootWindow->getX();
         int right = rootWindow->getX() + rootWindow->getWidth();
         int top = rootWindow->getY();
         int bottom = rootWindow->getY() + rootWindow->getHeight();
-        for (size_t i = 1; i < mWindows.size(); i++)
+
+        for (auto &windowRecord : mWindows)
         {
-            OSWindow* window = mWindows[i].osWindow;
+            OSWindow *window = windowRecord.osWindow;
             left = std::min(left, window->getX());
             right = std::max(right, window->getX() + window->getWidth());
             top = std::min(top, window->getY());
@@ -134,10 +134,10 @@ class MultiWindowSample : public SampleApplication
                               Matrix4::translate(Vector3(-midX, -midY, 0.0f));
         Matrix4 viewMatrix = Matrix4::identity();
 
-        for (size_t i = 0; i < mWindows.size(); i++)
+        for (auto &windowRecord : mWindows)
         {
-            OSWindow* window = mWindows[i].osWindow;
-            EGLSurface surface = mWindows[i].surface;
+            OSWindow *window   = windowRecord.osWindow;
+            EGLSurface surface = windowRecord.surface;
 
             eglMakeCurrent(getDisplay(), surface, surface, getContext());
 
@@ -171,6 +171,11 @@ class MultiWindowSample : public SampleApplication
             eglSwapBuffers(getDisplay(), surface);
         }
     }
+
+    // Override swap to do nothing as we already swapped the root
+    // window in draw() and swapping another time would invalidate
+    // the content of the default framebuffer.
+    void swap() override {}
 
   private:
     // Handle to a program object
