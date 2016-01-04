@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0aa4ff85_e66c204c",
+        "filename": "src/libANGLE/Error.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-04T15:52:35Z",
+      "side": 1,
+      "message": "Yep, make_unique is a C++14 feature.",
+      "range": {
+        "startLine": 32,
+        "startChar": 24,
+        "endLine": 32,
+        "endChar": 35
+      },
+      "revId": "5ec0d7bd72588b77979810c25f8be862fb05fdbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
