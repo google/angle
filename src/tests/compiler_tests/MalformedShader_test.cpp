@@ -1447,7 +1447,7 @@ TEST_F(MalformedShaderTest, NonIntegerIndex)
         "{\n"
         "    float f[3];\n"
         "    const float i = 2.0;\n"
-        "    gl_fragColor = vec4(f[i]);\n"
+        "    gl_FragColor = vec4(f[i]);\n"
         "}\n";
     if (compile(shaderString))
     {
