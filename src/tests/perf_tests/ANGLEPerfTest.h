@@ -10,19 +10,20 @@
 #ifndef PERF_TESTS_ANGLE_PERF_TEST_H_
 #define PERF_TESTS_ANGLE_PERF_TEST_H_
 
-#include <gtest/gtest.h>
 #include <string>
 #include <vector>
+
+#include <gtest/gtest.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
-#include "EGLWindow.h"
-#include "OSWindow.h"
-#include "Timer.h"
 #include "common/angleutils.h"
 #include "common/debug.h"
+#include "EGLWindow.h"
+#include "OSWindow.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/angle_test_instantiate.h"
+#include "Timer.h"
 
 class Event;
 

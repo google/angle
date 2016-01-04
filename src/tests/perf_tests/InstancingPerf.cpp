@@ -7,6 +7,7 @@
 //   Performance tests for ANGLE instanced draw calls.
 //
 
+#include <cmath>
 #include <sstream>
 
 #include "ANGLEPerfTest.h"
@@ -24,7 +25,7 @@ namespace
 float AnimationSignal(float t)
 {
     float l = t / 2.0f;
-    float f = l - floor(l);
+    float f = l - std::floor(l);
     return (f > 0.5f ? 1.0f - f : f) * 4.0f - 1.0f;
 }
 
