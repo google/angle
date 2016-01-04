@@ -102,21 +102,9 @@ class TParseContext : angle::NonCopyable
         mFragmentPrecisionHighOnESSL1 = fragmentPrecisionHigh;
     }
 
-    bool getFunctionReturnsValue() const { return mFunctionReturnsValue; }
-    void setFunctionReturnsValue(bool functionReturnsValue)
-    {
-        mFunctionReturnsValue = functionReturnsValue;
-    }
-
     void setLoopNestingLevel(int loopNestintLevel)
     {
         mLoopNestingLevel = loopNestintLevel;
-    }
-
-    const TType *getCurrentFunctionType() const { return mCurrentFunctionType; }
-    void setCurrentFunctionType(const TType *currentFunctionType)
-    {
-        mCurrentFunctionType = currentFunctionType;
     }
 
     void incrLoopNestingLevel() { ++mLoopNestingLevel; }
@@ -244,6 +232,12 @@ class TParseContext : angle::NonCopyable
                                                TIntermTyped *initializer);
 
     void parseGlobalLayoutQualifier(const TPublicType &typeQualifier);
+    TIntermAggregate *addFunctionPrototypeDeclaration(const TFunction &function,
+                                                      const TSourceLoc &location);
+    TIntermAggregate *addFunctionDefinition(const TFunction &function,
+                                            TIntermAggregate *functionPrototype,
+                                            TIntermAggregate *functionBody,
+                                            const TSourceLoc &location);
     void parseFunctionPrototype(const TSourceLoc &location,
                                 TFunction *function,
                                 TIntermAggregate **aggregateOut);
