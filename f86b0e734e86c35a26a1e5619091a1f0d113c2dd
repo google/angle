@@ -22,6 +22,30 @@
       "revId": "f86b0e734e86c35a26a1e5619091a1f0d113c2dd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eae08b3e_62cd5687",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-05T10:19:45Z",
+      "side": 1,
+      "message": "True, might as well use the variables directly.",
+      "parentUuid": "8a3d4ff0_a5d9aa49",
+      "range": {
+        "startLine": 341,
+        "startChar": 4,
+        "endLine": 350,
+        "endChar": 5
+      },
+      "revId": "f86b0e734e86c35a26a1e5619091a1f0d113c2dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
