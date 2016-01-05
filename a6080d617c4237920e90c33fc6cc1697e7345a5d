@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a54ffaf_6392e21d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-05T13:26:41Z",
+      "side": 1,
+      "message": "Do you think that this is okay? To me this seems like the most reasonable interpretation of the spec, and the implementation is straightforward. However, the other alternative of allowing the prototype declaration to follow the definition would preserve more backward compatibility. I didn\u0027t find an explicit mention of this case in the spec.",
+      "revId": "a6080d617c4237920e90c33fc6cc1697e7345a5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
