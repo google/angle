@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "0a4ddf0f_610e5251",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-05T22:57:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a8e5b43_f14a622f",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 57
+      },
+      "revId": "06402eedfb6c5ad541b29785a160776ff301123f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a773b0f_66adcebf",
         "filename": "extensions/ANGLE_lossy_etc_decode.txt",
         "patchSetId": 2
@@ -65,6 +89,30 @@
     },
     {
       "key": {
+        "uuid": "6a481bfe_2184c87a",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-05T22:57:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a773b0f_66adcebf",
+      "range": {
+        "startLine": 105,
+        "startChar": 15,
+        "endLine": 106,
+        "endChar": 29
+      },
+      "revId": "06402eedfb6c5ad541b29785a160776ff301123f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6aac9bb5_01dd2c98",
         "filename": "extensions/ANGLE_lossy_etc_decode.txt",
         "patchSetId": 2
@@ -76,6 +124,30 @@
       "writtenOn": "2016-01-04T11:56:58Z",
       "side": 1,
       "message": "ditto",
+      "range": {
+        "startLine": 121,
+        "startChar": 25,
+        "endLine": 122,
+        "endChar": 29
+      },
+      "revId": "06402eedfb6c5ad541b29785a160776ff301123f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa1773d7_beafa14f",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-05T22:57:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6aac9bb5_01dd2c98",
       "range": {
         "startLine": 121,
         "startChar": 25,
@@ -122,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "aa3e9347_039af098",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-05T22:57:05Z",
+      "side": 1,
+      "message": "Yes, it\u0027ll support all ETC1 and ETC2/EAC formats in a near future.",
+      "parentUuid": "2ac3835c_fae321ed",
+      "revId": "06402eedfb6c5ad541b29785a160776ff301123f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa7db3ee_a8b4fb3b",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 2
@@ -133,6 +223,30 @@
       "writtenOn": "2016-01-04T11:56:58Z",
       "side": 1,
       "message": "nit: whitespace errors here and in the rest of the file.",
+      "range": {
+        "startLine": 643,
+        "startChar": 31,
+        "endLine": 643,
+        "endChar": 32
+      },
+      "revId": "06402eedfb6c5ad541b29785a160776ff301123f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa3e9347_a39ea489",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-05T22:57:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa7db3ee_a8b4fb3b",
       "range": {
         "startLine": 643,
         "startChar": 31,
