@@ -6,15 +6,15 @@
 
 // DisplayCGL.mm: CGL implementation of egl::Display
 
-#include "libANGLE/renderer/gl/CGL/DisplayCGL.h"
+#include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
 
 #import <Cocoa/Cocoa.h>
 #include <dlfcn.h>
 #include <EGL/eglext.h>
 
 #include "common/debug.h"
-#include "libANGLE/renderer/gl/CGL/PbufferSurfaceCGL.h"
-#include "libANGLE/renderer/gl/CGL/WindowSurfaceCGL.h"
+#include "libANGLE/renderer/gl/cgl/PbufferSurfaceCGL.h"
+#include "libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h"
 
 namespace
 {
