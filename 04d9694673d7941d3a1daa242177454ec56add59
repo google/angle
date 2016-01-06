@@ -52,6 +52,24 @@
       "revId": "04d9694673d7941d3a1daa242177454ec56add59",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0af87fd1_23416aec",
+        "filename": "build/common.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-06T16:24:44Z",
+      "side": 1,
+      "message": "I would agree if we have to pick one.",
+      "parentUuid": "4afef7bd_c5273a58",
+      "revId": "04d9694673d7941d3a1daa242177454ec56add59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
