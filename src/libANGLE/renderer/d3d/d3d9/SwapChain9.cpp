@@ -25,7 +25,6 @@ SwapChain9::SwapChain9(Renderer9 *renderer,
       mRenderer(renderer),
       mWidth(-1),
       mHeight(-1),
-      mOrientation(orientation),
       mSwapInterval(-1),
       mSwapChain(nullptr),
       mBackBuffer(nullptr),
@@ -35,7 +34,7 @@ SwapChain9::SwapChain9(Renderer9 *renderer,
       mColorRenderTarget(this, false),
       mDepthStencilRenderTarget(this, true)
 {
-    ASSERT(mOrientation == 0);
+    ASSERT(orientation == 0);
 }
 
 SwapChain9::~SwapChain9()

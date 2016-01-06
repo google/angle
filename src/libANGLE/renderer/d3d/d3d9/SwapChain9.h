@@ -49,9 +49,8 @@ class SwapChain9 : public SwapChainD3D
     void release();
 
     Renderer9 *mRenderer;
-    EGLint mHeight;
     EGLint mWidth;
-    EGLint mOrientation;
+    EGLint mHeight;
     EGLint mSwapInterval;
 
     IDirect3DSwapChain9 *mSwapChain;

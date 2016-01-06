@@ -64,8 +64,8 @@ class SwapChain11 : public SwapChainD3D
     EGLint present(EGLint x, EGLint y, EGLint width, EGLint height);
 
     Renderer11 *mRenderer;
-    EGLint mHeight;
     EGLint mWidth;
+    EGLint mHeight;
     const EGLint mOrientation;
     bool mAppCreatedShareHandle;
     unsigned int mSwapInterval;

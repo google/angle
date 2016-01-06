@@ -22,8 +22,8 @@ NativeWindow::NativeWindow(EGLNativeWindowType window,
                            bool directComposition)
     : mWindow(window),
       mDirectComposition(directComposition),
-      mCompositionTarget(nullptr),
       mDevice(nullptr),
+      mCompositionTarget(nullptr),
       mVisual(nullptr),
       mConfig(config)
 {

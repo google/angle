@@ -19,8 +19,8 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name, const std::string &suffix)
     : mName(name),
       mSuffix(suffix),
       mTimer(nullptr),
-      mNumStepsPerformed(0),
       mRunTimeSeconds(5.0),
+      mNumStepsPerformed(0),
       mRunning(true)
 {
     mTimer = CreateTimer();
