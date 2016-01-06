@@ -35,6 +35,9 @@
             '-Wundef',
             '-Wwrite-strings',
         ],
+
+        # TODO: Pull chromium's clang dep.
+        'clang%': 0,
     },
     'target_defaults':
     {
