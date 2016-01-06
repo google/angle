@@ -34,6 +34,24 @@
       "revId": "04d9694673d7941d3a1daa242177454ec56add59",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4afef7bd_c5273a58",
+        "filename": "build/common.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-06T15:59:31Z",
+      "side": 1,
+      "message": "Sorry for breaking the standalone build. Geoff, Nico had mentioned that since the warning above is Clang-only, it would probably break GCC to add it unconditionally. How about we use Nico\u0027s option #1 and leave a TODO to implement #2?",
+      "parentUuid": "4afef7bd_e522364a",
+      "revId": "04d9694673d7941d3a1daa242177454ec56add59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
