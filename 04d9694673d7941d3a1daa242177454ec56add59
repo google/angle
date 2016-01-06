@@ -16,6 +16,24 @@
       "revId": "04d9694673d7941d3a1daa242177454ec56add59",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4afef7bd_e522364a",
+        "filename": "build/common.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-06T15:55:13Z",
+      "side": 1,
+      "message": "Hmm, maybe we should take a step back. This change is to fix the one case of the missing clang variable from https://chromium-review.googlesource.com/#/c/320320 .  Is it feasible to just remove the condition and unconditionally add that cflag?",
+      "parentUuid": "aa0933b1_cb9f4977",
+      "revId": "04d9694673d7941d3a1daa242177454ec56add59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
