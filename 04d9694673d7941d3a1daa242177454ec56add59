@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa0933b1_cb9f4977",
+        "filename": "build/common.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2016-01-06T15:40:35Z",
+      "side": 1,
+      "message": "I think you don\u0027t need this here, since it\u0027s set in both branches of the \u0027conditions\u0027 block below. Gyp will evaluate the conditions block and copy the result of that into the block containing the conditions block.\n\nBut if you always use either this script _or_ chromium\u0027s build/common.gypi then I think you have two options:\n\n1. Always set this to 0. Since this never overlaps with chromium\u0027s build/common.gypi, we don\u0027t have to worry about mismatches and unintentional overrides.\n\n2. Keep what you have (without this line) and also add a hook to download chromium\u0027s clang (add src/tools/clang to your DEPS like v8 and pdfium do, and add a hook to your DEPS to run the update.py script therein), and add a make_global_settings block to set the compiler to clang if clang% is true like e.g. so: https://code.google.com/p/chromium/codesearch#chromium/src/third_party/pdfium/build/standalone.gypi\u0026l\u003d431 See https://codereview.chromium.org/1406843002/ for a complete example of this.\n\nAs is, you\u0027re picking clang compiler flags but you\u0027re not making sure that the compiler is actually clang when you set it.",
+      "revId": "04d9694673d7941d3a1daa242177454ec56add59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
