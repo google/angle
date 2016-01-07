@@ -146,6 +146,30 @@
       "revId": "a6080d617c4237920e90c33fc6cc1697e7345a5d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4afef7bd_482a3f50",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-07T18:13:16Z",
+      "side": 1,
+      "message": "The assignment alignment is a bit janky. I\u0027m good with leaving this alone.",
+      "parentUuid": "eae08b3e_a5d768e6",
+      "range": {
+        "startLine": 202,
+        "startChar": 27,
+        "endLine": 202,
+        "endChar": 30
+      },
+      "revId": "a6080d617c4237920e90c33fc6cc1697e7345a5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
