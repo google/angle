@@ -384,6 +384,9 @@ util_gypi = exec_script("//build/gypi_to_gn.py",
 
 config("angle_util_config") {
   include_dirs = [ "util" ]
+  if (is_linux) {
+    libs = [ "X11" ]
+  }
 }
 
 static_library("angle_util") {
@@ -419,6 +422,7 @@ static_library("angle_util") {
   ]
 
   deps = [
+    ":angle_common",
     ":libEGL",
     ":libGLESv2",
   ]

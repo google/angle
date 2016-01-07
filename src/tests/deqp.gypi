@@ -967,6 +967,14 @@
             '<(deqp_path)/framework/delibs/dethread/win32/deThreadLocalWin32.c',
             '<(deqp_path)/framework/delibs/dethread/win32/deThreadWin32.c',
         ],
+        'deqp_libtester_sources_unix':
+        [
+            '<(deqp_path)/framework/delibs/dethread/unix/deMutexUnix.c',
+            '<(deqp_path)/framework/delibs/dethread/unix/deNamedSemaphoreUnix.c',
+            '<(deqp_path)/framework/delibs/dethread/unix/deSemaphoreUnix.c',
+            '<(deqp_path)/framework/delibs/dethread/unix/deThreadLocalUnix.c',
+            '<(deqp_path)/framework/delibs/dethread/unix/deThreadUnix.c',
+        ],
         'deqp_gpu_test_expectations_sources':
         [
             'third_party/gpu_test_expectations/gpu_info.cc',
@@ -1026,17 +1034,6 @@
                     # dEQP doesn't compile and produces warnings about implicitly defined
                     # functions.
                     '_XOPEN_SOURCE=600',
-                ],
-            }],
-            ['(OS=="linux" and use_x11==1) or OS=="mac"',
-            {
-                'deqp_libtester_sources':
-                [
-                    '<(deqp_path)/framework/delibs/dethread/unix/deMutexUnix.c',
-                    '<(deqp_path)/framework/delibs/dethread/unix/deNamedSemaphoreUnix.c',
-                    '<(deqp_path)/framework/delibs/dethread/unix/deSemaphoreUnix.c',
-                    '<(deqp_path)/framework/delibs/dethread/unix/deThreadLocalUnix.c',
-                    '<(deqp_path)/framework/delibs/dethread/unix/deThreadUnix.c',
                 ],
             }],
         ],
@@ -1375,6 +1372,10 @@
                         ['OS=="win"',
                         {
                             'sources': [ '<@(deqp_libtester_sources_win)', ],
+                        }],
+                        ['(OS=="linux" and use_x11==1) or OS=="mac"',
+                        {
+                            'sources': [ '<@(deqp_libtester_sources_unix)', ],
                         }],
                     ],
                 },

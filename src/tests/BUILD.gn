@@ -3,6 +3,7 @@
 # found in the LICENSE file.
 
 import("//testing/test.gni")
+import("//build/config/chromecast_build.gni")
 import("//third_party/angle/build/angle_common.gni")
 
 unittests_gypi = exec_script("//build/gypi_to_gn.py",
@@ -136,8 +137,8 @@ if (is_win) {
 ### dEQP tests
 ###-----------------------------------------------------
 
-# TODO(jmadill): Linux build
-if (is_win) {
+# TODO(jmadill): Other platforms.
+if (is_win || is_linux) {
   deqp_gypi = exec_script("//build/gypi_to_gn.py",
                           [
                             rebase_path("deqp.gypi"),
@@ -155,15 +156,32 @@ if (is_win) {
     }
     defines = deqp_gypi.deqp_defines
     defines += [ "_MBCS" ]
+
+    if (is_linux) {
+      # Ask the system headers to expose all the regular function otherwise
+      # dEQP doesn't compile and produces warnings about implicitly defined
+      # functions.
+      # This has to be GNU_SOURCE as on Linux dEQP uses syscall()
+      defines += [ "_GNU_SOURCE" ]
+    }
   }
 
   deqp_undefine_configs = [
     "//build/config/compiler:chromium_code",
-    "//build/config/win:lean_and_mean",
-    "//build/config/win:nominmax",
-    "//build/config/win:unicode",
     "//build/config/compiler:no_rtti",
   ]
+
+  if (is_win) {
+    deqp_undefine_configs += [
+      "//build/config/win:lean_and_mean",
+      "//build/config/win:nominmax",
+      "//build/config/win:unicode",
+    ]
+  }
+
+  if (is_linux) {
+    deqp_undefine_configs += [ "//build/config/gcc:no_exceptions" ]
+  }
 
   static_library("angle_deqp_decpp") {
     configs -= deqp_undefine_configs
@@ -177,6 +195,11 @@ if (is_win) {
 
   config("angle_deqp_libtester_config") {
     defines = [ "ANGLE_DEQP_LIBTESTER_IMPLEMENTATION" ]
+
+    if (is_clang) {
+      # TODO(jmadill): Remove this once we fix dEQP.
+      cflags_cc = [ "-Wno-delete-non-virtual-dtor" ]
+    }
   }
 
   static_library("angle_deqp_libtester") {
@@ -191,6 +214,10 @@ if (is_win) {
     sources = rebase_path(deqp_gypi.deqp_libtester_sources, ".", "../..")
     if (is_win) {
       sources += rebase_path(deqp_gypi.deqp_libtester_sources_win, ".", "../..")
+    }
+    if (is_linux) {
+      sources +=
+          rebase_path(deqp_gypi.deqp_libtester_sources_unix, ".", "../..")
     }
   }
 
@@ -210,6 +237,12 @@ if (is_win) {
     public_configs = [ ":angle_deqp_gtest_support_config" ]
     sources = deqp_gypi.deqp_gpu_test_expectations_sources
     sources += [ "//gpu/angle_deqp_tests_main.cc" ]
+
+    # Taken from gpu/BUILD.gn
+    # TODO(jmadill): this should be in a shared location
+    if (is_linux && !is_chromecast) {
+      libs = [ "pci" ]
+    }
   }
 
   target_names = [
@@ -268,6 +301,11 @@ if (is_win) {
       sources = [
         "deqp_support/angle_deqp_gtest.cpp",
       ]
+
+      if (is_linux && !is_component_build) {
+        # Set rpath to find *.so files even in a non-component build.
+        configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
+      }
     }
   }
 }
