@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6aa2db12_8ea51b73",
+        "filename": "src/libANGLE/RefCountObject.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1117984
+      },
+      "writtenOn": "2016-01-07T10:55:19Z",
+      "side": 1,
+      "message": "Remark about formatting:\nI put the implementations in the class, I think that is the way it is done\nin this project. \n\nPersonally I would have preferred to put them outside the class as inline functions. I think that makes it easier for a reader to see what methods \nare provided by a class.",
+      "revId": "6448adfeaf32e4a8f1591d1bc416cc37296643fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
