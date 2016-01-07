@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "cae3c748_24a07c0c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-07T12:39:19Z",
+      "side": 1,
+      "message": "After sleeping on the patch I decided to still go with the other alternative. Besides preserving more backwards compatibility, it also preserves more consistency between ESSL 1.00 and 3.00. And the code for the other alternative isn\u0027t really much more complex.",
+      "parentUuid": "0a4ddf0f_db5f13f8",
+      "revId": "a6080d617c4237920e90c33fc6cc1697e7345a5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a4ddf0f_fb644fc6",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 4
@@ -60,6 +78,30 @@
     },
     {
       "key": {
+        "uuid": "6aa2db12_0e65ab1c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2118,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-07T12:39:19Z",
+      "side": 1,
+      "message": "The previous declaration is looked up by the mangled name, which means that the types will match. Another overloaded function is not considered a previous declaration.",
+      "parentUuid": "0a4ddf0f_fb644fc6",
+      "range": {
+        "startLine": 2118,
+        "startChar": 34,
+        "endLine": 2118,
+        "endChar": 35
+      },
+      "revId": "a6080d617c4237920e90c33fc6cc1697e7345a5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa1773d7_b89d79df",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 4
@@ -71,6 +113,30 @@
       "writtenOn": "2016-01-05T18:23:44Z",
       "side": 1,
       "message": "nit: remove extra spaces before \"\u003d\"",
+      "range": {
+        "startLine": 202,
+        "startChar": 27,
+        "endLine": 202,
+        "endChar": 30
+      },
+      "revId": "a6080d617c4237920e90c33fc6cc1697e7345a5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eae08b3e_a5d768e6",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-07T12:39:19Z",
+      "side": 1,
+      "message": "This was done by git cl format, it apparently aligns assignments even when they\u0027re for default parameter values. Not changing this.",
+      "parentUuid": "aa1773d7_b89d79df",
       "range": {
         "startLine": 202,
         "startChar": 27,
