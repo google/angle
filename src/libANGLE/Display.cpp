@@ -194,7 +194,7 @@ Display *Display::GetDisplayFromAttribs(void *native_display, const AttributeMap
 
     Display *display = nullptr;
 
-    EGLNativeDisplayType displayId = static_cast<EGLNativeDisplayType>(native_display);
+    EGLNativeDisplayType displayId = reinterpret_cast<EGLNativeDisplayType>(native_display);
 
     ANGLEPlatformDisplayMap *displays            = GetANGLEPlatformDisplayMap();
     ANGLEPlatformDisplayMap::const_iterator iter = displays->find(displayId);
