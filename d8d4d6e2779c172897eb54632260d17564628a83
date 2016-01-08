@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a03bb91_2f34a918",
+        "filename": "BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-08T16:24:34Z",
+      "side": 1,
+      "message": "Do we have a formatter for GN files?",
+      "revId": "d8d4d6e2779c172897eb54632260d17564628a83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4afef7bd_ab488db5",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-08T16:24:34Z",
+      "side": 1,
+      "message": "nit: Collapse the two is_win blocks",
+      "revId": "d8d4d6e2779c172897eb54632260d17564628a83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a03bb91_cf91953c",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-08T16:24:34Z",
+      "side": 1,
+      "message": "Use a foreach() instead, that\u0027d be a big improvement over our gyp file!",
+      "revId": "d8d4d6e2779c172897eb54632260d17564628a83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0adf9f57_2e95c7f1",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-08T16:24:34Z",
+      "side": 1,
+      "message": "Likewise, use a foreach",
+      "revId": "d8d4d6e2779c172897eb54632260d17564628a83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
