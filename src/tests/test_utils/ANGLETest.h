@@ -82,7 +82,13 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
 
     virtual void swapBuffers();
 
-    static void drawQuad(GLuint program, const std::string& positionAttribName, GLfloat quadDepth, GLfloat quadScale = 1.0f);
+    static void drawQuad(GLuint program,
+                         const std::string &positionAttribName,
+                         GLfloat positionAttribZ);
+    static void drawQuad(GLuint program,
+                         const std::string &positionAttribName,
+                         GLfloat positionAttribZ,
+                         GLfloat positionAttribXYScale);
     static GLuint compileShader(GLenum type, const std::string &source);
     static bool extensionEnabled(const std::string &extName);
     static bool eglClientExtensionEnabled(const std::string &extName);

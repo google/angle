@@ -94,21 +94,30 @@ void ANGLETest::swapBuffers()
     }
 }
 
-void ANGLETest::drawQuad(GLuint program, const std::string& positionAttribName, GLfloat quadDepth, GLfloat quadScale)
+void ANGLETest::drawQuad(GLuint program,
+                         const std::string &positionAttribName,
+                         GLfloat positionAttribZ)
+{
+    drawQuad(program, positionAttribName, positionAttribZ, 1.0f);
+}
+
+void ANGLETest::drawQuad(GLuint program,
+                         const std::string &positionAttribName,
+                         GLfloat positionAttribZ,
+                         GLfloat positionAttribXYScale)
 {
     GLint positionLocation = glGetAttribLocation(program, positionAttribName.c_str());
 
     glUseProgram(program);
 
-    const GLfloat vertices[] =
-    {
-        -1.0f * quadScale,  1.0f * quadScale, quadDepth,
-        -1.0f * quadScale, -1.0f * quadScale, quadDepth,
-         1.0f * quadScale, -1.0f * quadScale, quadDepth,
+    const GLfloat vertices[] = {
+        -1.0f * positionAttribXYScale,  1.0f * positionAttribXYScale, positionAttribZ,
+        -1.0f * positionAttribXYScale, -1.0f * positionAttribXYScale, positionAttribZ,
+         1.0f * positionAttribXYScale, -1.0f * positionAttribXYScale, positionAttribZ,
 
-        -1.0f * quadScale,  1.0f * quadScale, quadDepth,
-         1.0f * quadScale, -1.0f * quadScale, quadDepth,
-         1.0f * quadScale,  1.0f * quadScale, quadDepth,
+        -1.0f * positionAttribXYScale,  1.0f * positionAttribXYScale, positionAttribZ,
+         1.0f * positionAttribXYScale, -1.0f * positionAttribXYScale, positionAttribZ,
+         1.0f * positionAttribXYScale,  1.0f * positionAttribXYScale, positionAttribZ,
     };
 
     glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
