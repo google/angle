@@ -885,6 +885,9 @@ TEST_P(Texture2DTest, TextureNPOT_GL_ALPHA_UBYTE)
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
+    // Default unpack alignment is 4. The values of 'pixels' below needs it to be 1.
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &tex2D);
     glBindTexture(GL_TEXTURE_2D, tex2D);

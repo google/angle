@@ -427,7 +427,15 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shade
             {
                 // Texture is not sampler complete or it is in use by the framebuffer.  Bind the incomplete texture.
                 gl::Texture *incompleteTexture = getIncompleteTexture(textureType);
-                gl::Error error = setTexture(shaderType, samplerIndex, incompleteTexture);
+
+                gl::Error error = setSamplerState(shaderType, samplerIndex, incompleteTexture,
+                                                  incompleteTexture->getSamplerState());
+                if (error.isError())
+                {
+                    return error;
+                }
+
+                error = setTexture(shaderType, samplerIndex, incompleteTexture);
                 if (error.isError())
                 {
                     return error;
