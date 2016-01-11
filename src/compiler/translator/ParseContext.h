@@ -57,6 +57,7 @@ class TParseContext : angle::NonCopyable
           mDirectiveHandler(ext,
                             mDiagnostics,
                             mShaderVersion,
+                            mShaderType,
                             resources.WEBGL_debug_shader_precision == 1),
           mPreprocessor(&mDiagnostics, &mDirectiveHandler),
           mScanner(nullptr),

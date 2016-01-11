@@ -1513,3 +1513,22 @@ TEST_F(MalformedShaderTest, LocalFunctionPrototype)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// ESSL 3.00 fragment shaders can not use #pragma STDGL invariant(all).
+// ESSL 3.00.4 section 4.6.1. Does not apply to other versions of ESSL.
+TEST_F(MalformedShaderTest, ESSL300FragmentInvariantAll)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "#pragma STDGL invariant(all)\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = vec4(0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
