@@ -578,6 +578,8 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
             TType(EbtFloat, EbpMedium, EvqPointSize, 1)));
         symbolTable.insert(ESSL3_BUILTINS, new TVariable(NewPoolTString("gl_InstanceID"),
             TType(EbtInt, EbpHigh, EvqInstanceID, 1)));
+        symbolTable.insert(ESSL3_BUILTINS, new TVariable(NewPoolTString("gl_VertexID"),
+                                                         TType(EbtInt, EbpHigh, EvqVertexID, 1)));
         break;
 
       default:

@@ -231,10 +231,11 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
             {
                 GLenum componentType = mRenderer->getVertexComponentType(vertexFormatType);
 
-                if (shaderAttribute.name == "gl_InstanceID")
+                if (shaderAttribute.name == "gl_InstanceID" ||
+                    shaderAttribute.name == "gl_VertexID")
                 {
-                    // The input type of the instance ID in HLSL (uint) differs from the one in ESSL
-                    // (int).
+                    // The input types of the instance ID and vertex ID in HLSL (uint) differs from
+                    // the ones in ESSL (int).
                     structStream << " uint";
                 }
                 else
@@ -250,6 +251,10 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
             if (shaderAttribute.name == "gl_InstanceID")
             {
                 structStream << "SV_InstanceID";
+            }
+            else if (shaderAttribute.name == "gl_VertexID")
+            {
+                structStream << "SV_VertexID";
             }
             else
             {
