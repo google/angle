@@ -1086,6 +1086,13 @@ TEST_P(Texture2DTest, CopySubImageFloat_RGB_RG)
 
 TEST_P(Texture2DTest, CopySubImageFloat_RGB_RGB)
 {
+    // TODO (bug 1284): Investigate RGBA32f D3D SDK Layers messages on D3D11_FL9_3
+    if (isD3D11_FL93())
+    {
+        std::cout << "Test skipped on Feature Level 9_3." << std::endl;
+        return;
+    }
+
     testFloatCopySubImage(3, 3);
 }
 
@@ -1101,11 +1108,25 @@ TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RG)
 
 TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RGB)
 {
+    // TODO (bug 1284): Investigate RGBA32f D3D SDK Layers messages on D3D11_FL9_3
+    if (isD3D11_FL93())
+    {
+        std::cout << "Test skipped on Feature Level 9_3." << std::endl;
+        return;
+    }
+
     testFloatCopySubImage(4, 3);
 }
 
 TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RGBA)
 {
+    // TODO (bug 1284): Investigate RGBA32f D3D SDK Layers messages on D3D11_FL9_3
+    if (isD3D11_FL93())
+    {
+        std::cout << "Test skipped on Feature Level 9_3." << std::endl;
+        return;
+    }
+
     testFloatCopySubImage(4, 4);
 }
 

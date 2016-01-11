@@ -1394,8 +1394,36 @@ void SetPositionLayerTexCoord3DVertex(PositionLayerTexCoord3DVertex* vertex, flo
 HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
 {
 #if defined(_DEBUG)
-    return resource->SetPrivateData(WKPDID_D3DDebugObjectName,
-                                    static_cast<unsigned int>(strlen(name)), name);
+    UINT existingDataSize = 0;
+    resource->GetPrivateData(WKPDID_D3DDebugObjectName, &existingDataSize, nullptr);
+    // Don't check the HRESULT- if it failed then that probably just means that no private data
+    // exists yet
+
+    if (existingDataSize > 0)
+    {
+        // In some cases, ANGLE will try to apply two names to one object, which causes
+        // a D3D SDK Layers warning. This can occur if, for example, you 'create' two objects
+        // (e.g.Rasterizer States) with identical DESCs on the same device. D3D11 will optimize
+        // these calls and return the same object both times.
+        static const char *multipleNamesUsed = "Multiple names set by ANGLE";
+
+        // Remove the existing name
+        HRESULT hr = resource->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+        if (FAILED(hr))
+        {
+            return hr;
+        }
+
+        // Apply the new name
+        return resource->SetPrivateData(WKPDID_D3DDebugObjectName,
+                                        static_cast<unsigned int>(strlen(multipleNamesUsed)),
+                                        multipleNamesUsed);
+    }
+    else
+    {
+        return resource->SetPrivateData(WKPDID_D3DDebugObjectName,
+                                        static_cast<unsigned int>(strlen(name)), name);
+    }
 #else
     return S_OK;
 #endif

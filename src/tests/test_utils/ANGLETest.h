@@ -123,13 +123,19 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     bool isD3DSM3() const;
     EGLint getPlatformRenderer() const;
 
+    void ignoreD3D11SDKLayersWarnings();
+
   private:
     bool createEGLContext();
     bool destroyEGLContext();
 
+    void checkD3D11SDKLayersMessages();
+
     EGLWindow *mEGLWindow;
     int mWidth;
     int mHeight;
+
+    bool mIgnoreD3D11SDKLayersWarnings;
 
     static OSWindow *mOSWindow;
 };

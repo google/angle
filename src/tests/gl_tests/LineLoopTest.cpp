@@ -134,12 +134,20 @@ class LineLoopTest : public ANGLETest
 
 TEST_P(LineLoopTest, LineLoopUByteIndices)
 {
+    // Disable D3D11 SDK Layers warnings checks, see ANGLE issue 667 for details
+    // On Win7, the D3D SDK Layers emits a false warning for these tests.
+    // This doesn't occur on Windows 10 (Version 1511) though.
+    ignoreD3D11SDKLayersWarnings();
+
     static const GLubyte indices[] = { 0, 7, 6, 9, 8, 0 };
     runTest(GL_UNSIGNED_BYTE, 0, indices + 1);
 }
 
 TEST_P(LineLoopTest, LineLoopUShortIndices)
 {
+    // Disable D3D11 SDK Layers warnings checks, see ANGLE issue 667 for details
+    ignoreD3D11SDKLayersWarnings();
+
     static const GLushort indices[] = { 0, 7, 6, 9, 8, 0 };
     runTest(GL_UNSIGNED_SHORT, 0, indices + 1);
 }
@@ -151,12 +159,18 @@ TEST_P(LineLoopTest, LineLoopUIntIndices)
         return;
     }
 
+    // Disable D3D11 SDK Layers warnings checks, see ANGLE issue 667 for details
+    ignoreD3D11SDKLayersWarnings();
+
     static const GLuint indices[] = { 0, 7, 6, 9, 8, 0 };
     runTest(GL_UNSIGNED_INT, 0, indices + 1);
 }
 
 TEST_P(LineLoopTest, LineLoopUByteIndexBuffer)
 {
+    // Disable D3D11 SDK Layers warnings checks, see ANGLE issue 667 for details
+    ignoreD3D11SDKLayersWarnings();
+
     static const GLubyte indices[] = { 0, 7, 6, 9, 8, 0 };
 
     GLuint buf;
@@ -171,6 +185,9 @@ TEST_P(LineLoopTest, LineLoopUByteIndexBuffer)
 
 TEST_P(LineLoopTest, LineLoopUShortIndexBuffer)
 {
+    // Disable D3D11 SDK Layers warnings checks, see ANGLE issue 667 for details
+    ignoreD3D11SDKLayersWarnings();
+
     static const GLushort indices[] = { 0, 7, 6, 9, 8, 0 };
 
     GLuint buf;
@@ -189,6 +206,9 @@ TEST_P(LineLoopTest, LineLoopUIntIndexBuffer)
     {
         return;
     }
+
+    // Disable D3D11 SDK Layers warnings checks, see ANGLE issue 667 for details
+    ignoreD3D11SDKLayersWarnings();
 
     static const GLuint indices[] = { 0, 7, 6, 9, 8, 0 };
 
