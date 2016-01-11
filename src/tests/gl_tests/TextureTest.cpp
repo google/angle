@@ -444,6 +444,38 @@ TEST_P(TextureCubeTest, CubeMapBug)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test drawing with two texture types accessed from the same shader and check that the result of
+// drawing is correct.
+TEST_P(TextureCubeTest, CubeMapDraw)
+{
+    GLubyte texData[4];
+    texData[0] = 0;
+    texData[1] = 60;
+    texData[2] = 0;
+    texData[3] = 255;
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
+    texData[1] = 120;
+    glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    texData);
+    EXPECT_GL_ERROR(GL_NO_ERROR);
+
+    glUseProgram(mProgram);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    glUniform1i(mTextureCubeUniformLocation, 1);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    int px = getWindowWidth() - 1;
+    int py = 0;
+    EXPECT_PIXEL_NEAR(px, py, 0, 180, 0, 255, 2);
+}
+
 // Copy of a test in conformance/textures/texture-mips, to test generate mipmaps
 TEST_P(Texture2DTestWithDrawScale, MipmapsTwice)
 {
