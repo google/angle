@@ -16,7 +16,7 @@
 #include "common/angleutils.h"
 
 #if !defined(TRACE_OUTPUT_FILE)
-#define TRACE_OUTPUT_FILE "debug.txt"
+#define TRACE_OUTPUT_FILE "angle_debug.txt"
 #endif
 
 namespace gl
@@ -91,7 +91,7 @@ bool DebugAnnotationsActive();
 #if defined(_MSC_VER)
 #define EVENT(message, ...) gl::ScopedPerfEventHelper scopedPerfEventHelper ## __LINE__("%s" message "\n", __FUNCTION__, __VA_ARGS__);
 #else
-#define EVENT(message, ...) gl::ScopedPerfEventHelper scopedPerfEventHelper(message "\n", ##__VA_ARGS__);
+#define EVENT(message, ...) gl::ScopedPerfEventHelper scopedPerfEventHelper("%s" message "\n", __FUNCTION__, ##__VA_ARGS__);
 #endif // _MSC_VER
 #else
 #define EVENT(message, ...) (void(0))
