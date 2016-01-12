@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7be6290_6cefb36a",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1414,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-12T18:56:43Z",
+      "side": 1,
+      "message": "did you try adding these to OpenGL - do the work? If not, and the test is valid, it\u0027s worth noting.",
+      "range": {
+        "startLine": 1413,
+        "startChar": 29,
+        "endLine": 1414,
+        "endChar": 51
+      },
+      "revId": "1bcdb8e7967a077a72ac14e49f1a145e95b1cff5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
