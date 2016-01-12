@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a73a4ef4_c08ade89",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-12T20:05:06Z",
+      "side": 1,
+      "message": "VertexID?",
+      "range": {
+        "startLine": 415,
+        "startChar": 44,
+        "endLine": 415,
+        "endChar": 54
+      },
+      "revId": "a1a0306430c2ea54f865abe0d6e561c1598d931a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e730c614_4276d2ba",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-12T20:05:06Z",
+      "side": 1,
+      "message": "odd that git cl format didn\u0027t align this",
+      "range": {
+        "startLine": 340,
+        "startChar": 32,
+        "endLine": 340,
+        "endChar": 33
+      },
+      "revId": "a1a0306430c2ea54f865abe0d6e561c1598d931a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "873d4af0_1f18a355",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-12T20:05:06Z",
+      "side": 1,
+      "message": "this error message is not correct, probably add a different check",
+      "range": {
+        "startLine": 235,
+        "startChar": 18,
+        "endLine": 238,
+        "endChar": 29
+      },
+      "revId": "a1a0306430c2ea54f865abe0d6e561c1598d931a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
