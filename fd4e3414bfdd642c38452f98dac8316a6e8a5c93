@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6744d688_1e50adb6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-12T18:52:48Z",
+      "side": 1,
+      "message": "nit: sets up",
+      "range": {
+        "startLine": 14,
+        "startChar": 34,
+        "endLine": 14,
+        "endChar": 40
+      },
+      "revId": "fd4e3414bfdd642c38452f98dac8316a6e8a5c93",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "473fd2e8_7d0d7713",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-12T18:52:48Z",
+      "side": 1,
+      "message": "override instead of virtual",
+      "range": {
+        "startLine": 252,
+        "startChar": 4,
+        "endLine": 252,
+        "endChar": 11
+      },
+      "revId": "fd4e3414bfdd642c38452f98dac8316a6e8a5c93",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27a9fe5f_8dab09f0",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1171,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-12T18:52:48Z",
+      "side": 1,
+      "message": "thank you for researching this.",
+      "range": {
+        "startLine": 1169,
+        "startChar": 9,
+        "endLine": 1171,
+        "endChar": 56
+      },
+      "revId": "fd4e3414bfdd642c38452f98dac8316a6e8a5c93",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
