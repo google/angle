@@ -1242,9 +1242,8 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Data &data
         *outExecutable = nullptr;
     }
 
-    // We only uses a geometry shader for point sprite emulation, or for fixing the provoking
-    // vertex problem. Otherwise, return a null shader.
-    if (drawMode != GL_POINTS && !mUsesFlatInterpolation)
+    // Return a null shader if the current rendering doesn't use a geometry shader
+    if (!usesGeometryShader(drawMode))
     {
         return gl::Error(GL_NO_ERROR);
     }
