@@ -284,6 +284,33 @@ class Texture2DTestWithDrawScale : public Texture2DTest
     GLint mDrawScaleUniformLocation;
 };
 
+class Sampler2DAsFunctionParameterTest : public Texture2DTest
+{
+  protected:
+    Sampler2DAsFunctionParameterTest() : Texture2DTest() {}
+
+    std::string getFragmentShaderSource() override
+    {
+        return std::string(SHADER_SOURCE
+        (
+            precision highp float;
+            uniform sampler2D tex;
+            varying vec2 texcoord;
+
+            vec4 computeFragColor(sampler2D aTex)
+            {
+                return texture2D(aTex, texcoord);
+            }
+
+            void main()
+            {
+                gl_FragColor = computeFragColor(tex);
+            }
+        )
+        );
+    }
+};
+
 class TextureCubeTest : public TexCoordDrawTest
 {
   protected:
@@ -474,6 +501,24 @@ TEST_P(TextureCubeTest, CubeMapDraw)
     int px = getWindowWidth() - 1;
     int py = 0;
     EXPECT_PIXEL_NEAR(px, py, 0, 180, 0, 255, 2);
+}
+
+TEST_P(Sampler2DAsFunctionParameterTest, Sampler2DAsFunctionParameter)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    GLubyte texData[4];
+    texData[0] = 0;
+    texData[1] = 128;
+    texData[2] = 0;
+    texData[3] = 255;
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+    glUseProgram(mProgram);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_NEAR(0, 0, 0, 128, 0, 255, 2);
 }
 
 // Copy of a test in conformance/textures/texture-mips, to test generate mipmaps
@@ -1238,6 +1283,7 @@ TEST_P(TextureLimitsTest, DrawWithTexturePastMaximum)
 ANGLE_INSTANTIATE_TEST(Texture2DTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
 ANGLE_INSTANTIATE_TEST(TextureCubeTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
 ANGLE_INSTANTIATE_TEST(Texture2DTestWithDrawScale, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
+ANGLE_INSTANTIATE_TEST(Sampler2DAsFunctionParameterTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
 ANGLE_INSTANTIATE_TEST(Texture2DArrayTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL());
 
