@@ -370,6 +370,117 @@ class TextureCubeTest : public TexCoordDrawTest
     GLint mTextureCubeUniformLocation;
 };
 
+class SamplerArrayTest : public TexCoordDrawTest
+{
+  protected:
+    SamplerArrayTest()
+        : TexCoordDrawTest(),
+          mTexture2DA(0),
+          mTexture2DB(0),
+          mTexture0UniformLocation(-1),
+          mTexture1UniformLocation(-1)
+    {
+    }
+
+    std::string getFragmentShaderSource() override
+    {
+        return std::string(SHADER_SOURCE
+        (
+            precision mediump float;
+            uniform highp sampler2D tex2DArray[2];
+            varying vec2 texcoord;
+            void main()
+            {
+                gl_FragColor = texture2D(tex2DArray[0], texcoord);
+                gl_FragColor += texture2D(tex2DArray[1], texcoord);
+            }
+        )
+        );
+    }
+
+    void SetUp() override
+    {
+        TexCoordDrawTest::SetUp();
+
+        mTexture0UniformLocation = glGetUniformLocation(mProgram, "tex2DArray[0]");
+        ASSERT_NE(-1, mTexture0UniformLocation);
+        mTexture1UniformLocation = glGetUniformLocation(mProgram, "tex2DArray[1]");
+        ASSERT_NE(-1, mTexture1UniformLocation);
+
+        mTexture2DA = create2DTexture();
+        mTexture2DB = create2DTexture();
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void TearDown() override
+    {
+        glDeleteTextures(1, &mTexture2DA);
+        glDeleteTextures(1, &mTexture2DB);
+        TexCoordDrawTest::TearDown();
+    }
+
+    void testSamplerArrayDraw()
+    {
+        GLubyte texData[4];
+        texData[0] = 0;
+        texData[1] = 60;
+        texData[2] = 0;
+        texData[3] = 255;
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, mTexture2DA);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+
+        texData[1] = 120;
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, mTexture2DB);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+        EXPECT_GL_ERROR(GL_NO_ERROR);
+
+        glUseProgram(mProgram);
+        glUniform1i(mTexture0UniformLocation, 0);
+        glUniform1i(mTexture1UniformLocation, 1);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_NEAR(0, 0, 0, 180, 0, 255, 2);
+    }
+
+    GLuint mTexture2DA;
+    GLuint mTexture2DB;
+    GLint mTexture0UniformLocation;
+    GLint mTexture1UniformLocation;
+};
+
+
+class SamplerArrayAsFunctionParameterTest : public SamplerArrayTest
+{
+  protected:
+    SamplerArrayAsFunctionParameterTest() : SamplerArrayTest() {}
+
+    std::string getFragmentShaderSource() override
+    {
+        return std::string(SHADER_SOURCE
+        (
+            precision mediump float;
+            uniform highp sampler2D tex2DArray[2];
+            varying vec2 texcoord;
+
+            vec4 computeFragColor(highp sampler2D aTex2DArray[2])
+            {
+                return texture2D(aTex2DArray[0], texcoord) + texture2D(aTex2DArray[1], texcoord);
+            }
+
+            void main()
+            {
+                gl_FragColor = computeFragColor(tex2DArray);
+            }
+        )
+        );
+    }
+};
+
+
 class Texture2DArrayTestES3 : public TexCoordDrawTest
 {
   protected:
@@ -519,6 +630,19 @@ TEST_P(Sampler2DAsFunctionParameterTest, Sampler2DAsFunctionParameter)
     EXPECT_GL_NO_ERROR();
 
     EXPECT_PIXEL_NEAR(0, 0, 0, 128, 0, 255, 2);
+}
+
+// Test drawing with two textures passed to the shader in a sampler array.
+TEST_P(SamplerArrayTest, SamplerArrayDraw)
+{
+    testSamplerArrayDraw();
+}
+
+// Test drawing with two textures passed to the shader in a sampler array which is passed to a
+// user-defined function in the shader.
+TEST_P(SamplerArrayAsFunctionParameterTest, SamplerArrayAsFunctionParameter)
+{
+    testSamplerArrayDraw();
 }
 
 // Copy of a test in conformance/textures/texture-mips, to test generate mipmaps
@@ -1284,6 +1408,8 @@ ANGLE_INSTANTIATE_TEST(Texture2DTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3()
 ANGLE_INSTANTIATE_TEST(TextureCubeTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
 ANGLE_INSTANTIATE_TEST(Texture2DTestWithDrawScale, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
 ANGLE_INSTANTIATE_TEST(Sampler2DAsFunctionParameterTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
+ANGLE_INSTANTIATE_TEST(SamplerArrayTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
+ANGLE_INSTANTIATE_TEST(SamplerArrayAsFunctionParameterTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
 ANGLE_INSTANTIATE_TEST(Texture2DArrayTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL());
 
