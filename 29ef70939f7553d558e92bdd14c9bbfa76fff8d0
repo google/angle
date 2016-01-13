@@ -22,6 +22,30 @@
       "revId": "29ef70939f7553d558e92bdd14c9bbfa76fff8d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7bb669e_ad036993",
+        "filename": "src/common/debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-13T16:42:37Z",
+      "side": 1,
+      "message": "Can you provide an example? We have %s in almost every message string, for all the GL entry point usages of the EVENT macro.",
+      "parentUuid": "c7be6290_cf5ed1c8",
+      "range": {
+        "startLine": 94,
+        "startChar": 81,
+        "endLine": 94,
+        "endChar": 88
+      },
+      "revId": "29ef70939f7553d558e92bdd14c9bbfa76fff8d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
