@@ -22,6 +22,30 @@
       "revId": "8874f4ce42223ca20d991a18a01d747414ad79d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67f216a9_aeb85730",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1285,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-13T12:03:37Z",
+      "side": 1,
+      "message": "I ran into problems on Intel when I tried enabling these new tests on OpenGL. There seems to be at least an issue with how RGB values are encoded, on Intel I get an SRGB value from readPixels in some cases, whereas NVIDIA always gives a linear value. It\u0027s affected by some other test, which makes debugging complicated. There\u0027s some other problems in these tests on OpenGL as well. I\u0027ll address some of these in a follow-up patch.",
+      "parentUuid": "e730c614_62c8362b",
+      "range": {
+        "startLine": 1285,
+        "startChar": 23,
+        "endLine": 1285,
+        "endChar": 55
+      },
+      "revId": "8874f4ce42223ca20d991a18a01d747414ad79d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
