@@ -57,6 +57,24 @@
       "revId": "6448adfeaf32e4a8f1591d1bc416cc37296643fd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8780ea14_07e896d0",
+        "filename": "src/libANGLE/RefCountObject.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1117984
+      },
+      "writtenOn": "2016-01-13T22:24:02Z",
+      "side": 1,
+      "message": "So in that case it does not matter if I put the code in the .h or .cpp file, LTCG will do what it seems best.",
+      "parentUuid": "27673e34_da3c856b",
+      "revId": "6448adfeaf32e4a8f1591d1bc416cc37296643fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
