@@ -14,7 +14,7 @@ namespace
 class TexCoordDrawTest : public ANGLETest
 {
   protected:
-    TexCoordDrawTest() : ANGLETest(), mProgram(0)
+    TexCoordDrawTest() : ANGLETest(), mProgram(0), mFramebuffer(0), mFramebufferColorTexture(0)
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -52,12 +52,40 @@ class TexCoordDrawTest : public ANGLETest
         mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
         ASSERT_NE(0u, mProgram);
         ASSERT_GL_NO_ERROR();
+
+        setUpFramebuffer();
     }
 
     void TearDown() override
     {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glDeleteFramebuffers(1, &mFramebuffer);
+        glDeleteTextures(1, &mFramebufferColorTexture);
         glDeleteProgram(mProgram);
         ANGLETest::TearDown();
+    }
+
+    void setUpFramebuffer()
+    {
+        // We use an FBO to work around an issue where the default framebuffer applies SRGB
+        // conversion (particularly known to happen incorrectly on Intel GL drivers). It's not
+        // clear whether this issue can even be fixed on all backends. For example GLES 3.0.4 spec
+        // section 4.4 says that the format of the default framebuffer is entirely up to the window
+        // system, so it might be SRGB, and GLES 3.0 doesn't have a "FRAMEBUFFER_SRGB" to turn off
+        // SRGB conversion like desktop GL does.
+        // TODO(oetuaho): Get rid of this if the underlying issue is fixed.
+        glGenFramebuffers(1, &mFramebuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+
+        glGenTextures(1, &mFramebufferColorTexture);
+        glBindTexture(GL_TEXTURE_2D, mFramebufferColorTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, nullptr);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                               mFramebufferColorTexture, 0);
+        ASSERT_GL_NO_ERROR();
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     // Returns the created texture ID.
@@ -72,6 +100,10 @@ class TexCoordDrawTest : public ANGLETest
     }
 
     GLuint mProgram;
+    GLuint mFramebuffer;
+
+  private:
+    GLuint mFramebufferColorTexture;
 };
 
 class Texture2DTest : public TexCoordDrawTest
@@ -1406,12 +1438,20 @@ TEST_P(TextureLimitsTest, DrawWithTexturePastMaximum)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-// TODO(geofflang): Figure out why tests below fail on Intel OpenGL:
+// TODO(oetuaho): Enable all below tests on OpenGL. Requires a fix for ANGLE bug 1278.
 ANGLE_INSTANTIATE_TEST(Texture2DTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
-ANGLE_INSTANTIATE_TEST(TextureCubeTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
-ANGLE_INSTANTIATE_TEST(Texture2DTestWithDrawScale, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
-ANGLE_INSTANTIATE_TEST(Sampler2DAsFunctionParameterTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
-ANGLE_INSTANTIATE_TEST(SamplerArrayTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
+ANGLE_INSTANTIATE_TEST(TextureCubeTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(Texture2DTestWithDrawScale,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_D3D11_FL9_3(),
+                       ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(Sampler2DAsFunctionParameterTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_D3D11_FL9_3(),
+                       ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(SamplerArrayTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL());
 ANGLE_INSTANTIATE_TEST(SamplerArrayAsFunctionParameterTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
 ANGLE_INSTANTIATE_TEST(Texture2DArrayTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL());
