@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7be6290_cf5ed1c8",
+        "filename": "src/common/debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-13T15:04:24Z",
+      "side": 1,
+      "message": "This may also suffer from crashing if there is a % in the message string.",
+      "range": {
+        "startLine": 94,
+        "startChar": 81,
+        "endLine": 94,
+        "endChar": 88
+      },
+      "revId": "29ef70939f7553d558e92bdd14c9bbfa76fff8d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
