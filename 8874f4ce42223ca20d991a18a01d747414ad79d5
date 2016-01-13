@@ -70,6 +70,30 @@
       "revId": "8874f4ce42223ca20d991a18a01d747414ad79d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c701023f_b170c021",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1285,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-13T14:39:26Z",
+      "side": 1,
+      "message": "Yeah, the bug was for an issue that\u0027s visible on the NVIDIA driver, Intel drivers show the SRGB issue which is different (possibly Intel drivers also have other issues affecting this?) and the tests also have one simple bug which I\u0027ll fix shortly.",
+      "parentUuid": "c7be6290_2f31ad95",
+      "range": {
+        "startLine": 1285,
+        "startChar": 23,
+        "endLine": 1285,
+        "endChar": 55
+      },
+      "revId": "8874f4ce42223ca20d991a18a01d747414ad79d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
