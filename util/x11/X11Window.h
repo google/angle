@@ -48,6 +48,7 @@ class X11Window : public OSWindow
     Display *mDisplay;
     Window mWindow;
     int mRequestedVisualId;
+    bool mVisible;
 };
 
 #endif // UTIL_X11_WINDOW_H

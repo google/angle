@@ -157,7 +157,8 @@ X11Window::X11Window()
       TEST_EVENT(None),
       mDisplay(nullptr),
       mWindow(0),
-      mRequestedVisualId(-1)
+      mRequestedVisualId(-1),
+      mVisible(false)
 {
 }
 
@@ -167,7 +168,8 @@ X11Window::X11Window(int visualId)
       TEST_EVENT(None),
       mDisplay(nullptr),
       mWindow(0),
-      mRequestedVisualId(visualId)
+      mRequestedVisualId(visualId),
+      mVisible(false)
 {
 }
 
@@ -347,7 +349,7 @@ bool X11Window::resize(int width, int height)
 
 void X11Window::setVisible(bool isVisible)
 {
-    if (isVisible)
+    if (mVisible != isVisible)
     {
         XMapWindow(mDisplay, mWindow);
 
@@ -363,6 +365,7 @@ void X11Window::setVisible(bool isVisible)
         XUnmapWindow(mDisplay, mWindow);
         XFlush(mDisplay);
     }
+    mVisible = isVisible;
 }
 
 void X11Window::signalTestEvent()
