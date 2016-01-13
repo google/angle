@@ -46,6 +46,30 @@
       "revId": "8874f4ce42223ca20d991a18a01d747414ad79d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7be6290_2f31ad95",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1285,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-13T13:52:38Z",
+      "side": 1,
+      "message": "OK, I see you opened a bug. I\u0027m not sure if it applies here, but one thing we do: if a test fails on OpenGL/Intel, but works on other vendors, we can enable the test with a skip for Intel. Intel tends to have more bugs than Nvidia/AMD, and we don\u0027t spend a lot of time investigating them.",
+      "parentUuid": "67f216a9_aeb85730",
+      "range": {
+        "startLine": 1285,
+        "startChar": 23,
+        "endLine": 1285,
+        "endChar": 55
+      },
+      "revId": "8874f4ce42223ca20d991a18a01d747414ad79d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
