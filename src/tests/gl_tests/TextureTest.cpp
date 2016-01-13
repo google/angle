@@ -811,7 +811,7 @@ TEST_P(Texture2DTest, TexStorageWithPBO)
         glUniform1i(mTexture2DUniformLocation, 0);
         drawQuad(mProgram, "position", 0.5f);
         glDeleteTextures(1, &tex2D);
-        glDeleteTextures(1, &pbo);
+        glDeleteBuffers(1, &pbo);
         EXPECT_GL_NO_ERROR();
         EXPECT_PIXEL_EQ(3 * width / 4, 3 * height / 4, 0, 0, 0, 255);
         EXPECT_PIXEL_EQ(width / 4, height / 4, 255, 0, 0, 255);
