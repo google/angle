@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "07f79a9a_0bca3dc5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-13T09:08:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6744d688_1e50adb6",
+      "range": {
+        "startLine": 14,
+        "startChar": 34,
+        "endLine": 14,
+        "endChar": 40
+      },
+      "revId": "fd4e3414bfdd642c38452f98dac8316a6e8a5c93",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "473fd2e8_7d0d7713",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "47ed12c9_cdd68976",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-13T09:08:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "473fd2e8_7d0d7713",
+      "range": {
+        "startLine": 252,
+        "startChar": 4,
+        "endLine": 252,
+        "endChar": 11
+      },
+      "revId": "fd4e3414bfdd642c38452f98dac8316a6e8a5c93",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "27a9fe5f_8dab09f0",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2016-01-12T18:52:48Z",
       "side": 1,
       "message": "thank you for researching this.",
+      "range": {
+        "startLine": 1169,
+        "startChar": 9,
+        "endLine": 1171,
+        "endChar": 56
+      },
+      "revId": "fd4e3414bfdd642c38452f98dac8316a6e8a5c93",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7088e64_b3e3a232",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1171,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-13T09:08:46Z",
+      "side": 1,
+      "message": "No problem.",
+      "parentUuid": "27a9fe5f_8dab09f0",
       "range": {
         "startLine": 1169,
         "startChar": 9,
