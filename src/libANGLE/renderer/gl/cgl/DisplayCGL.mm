@@ -256,4 +256,15 @@ void DisplayCGL::generateCaps(egl::Caps *outCaps) const
     outCaps->textureNPOT = true;
 }
 
+egl::Error DisplayCGL::waitClient() const
+{
+    // TODO(cwallez) UNIMPLEMENTED()
+    return egl::Error(EGL_SUCCESS);
+}
+
+egl::Error DisplayCGL::waitNative(EGLint engine) const
+{
+    // TODO(cwallez) UNIMPLEMENTED()
+    return egl::Error(EGL_SUCCESS);
+}
 }

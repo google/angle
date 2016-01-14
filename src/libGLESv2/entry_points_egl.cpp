@@ -745,20 +745,56 @@ EGLBoolean EGLAPIENTRY WaitGL(void)
 {
     EVENT("()");
 
-    UNIMPLEMENTED();   // FIXME
+    Display *display = GetGlobalDisplay();
+
+    Error error = ValidateDisplay(display);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+
+    // eglWaitGL like calling eglWaitClient with the OpenGL ES API bound. Since we only implement
+    // OpenGL ES we can do the call directly.
+    error = display->waitClient();
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
 
     SetGlobalError(Error(EGL_SUCCESS));
-    return 0;
+    return EGL_TRUE;
 }
 
 EGLBoolean EGLAPIENTRY WaitNative(EGLint engine)
 {
     EVENT("(EGLint engine = %d)", engine);
 
-    UNIMPLEMENTED();   // FIXME
+    Display *display = GetGlobalDisplay();
+
+    Error error = ValidateDisplay(display);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+
+    if (engine != EGL_CORE_NATIVE_ENGINE)
+    {
+        SetGlobalError(
+            Error(EGL_BAD_PARAMETER, "the 'engine' parameter has an unrecognized value"));
+    }
+
+    error = display->waitNative(engine);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
 
     SetGlobalError(Error(EGL_SUCCESS));
-    return 0;
+    return EGL_TRUE;
 }
 
 EGLBoolean EGLAPIENTRY SwapBuffers(EGLDisplay dpy, EGLSurface surface)
@@ -1063,10 +1099,24 @@ EGLBoolean EGLAPIENTRY WaitClient(void)
 {
     EVENT("()");
 
-    UNIMPLEMENTED();   // FIXME
+    Display *display = GetGlobalDisplay();
+
+    Error error = ValidateDisplay(display);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+
+    error = display->waitClient();
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
 
     SetGlobalError(Error(EGL_SUCCESS));
-    return 0;
+    return EGL_TRUE;
 }
 
 // EGL 1.4

@@ -796,6 +796,16 @@ void Display::notifyDeviceLost()
     }
 }
 
+Error Display::waitClient() const
+{
+    return mImplementation->waitClient();
+}
+
+Error Display::waitNative(EGLint engine) const
+{
+    return mImplementation->waitNative(engine);
+}
+
 const Caps &Display::getCaps() const
 {
     return mCaps;

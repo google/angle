@@ -639,6 +639,18 @@ std::string DisplayGLX::getVendorString() const
     return "";
 }
 
+egl::Error DisplayGLX::waitClient() const
+{
+    mGLX.waitGL();
+    return egl::Error(EGL_SUCCESS);
+}
+
+egl::Error DisplayGLX::waitNative(EGLint engine) const
+{
+    mGLX.waitX();
+    return egl::Error(EGL_SUCCESS);
+}
+
 void DisplayGLX::syncXCommands() const
 {
     if (mUsesNewXDisplay)

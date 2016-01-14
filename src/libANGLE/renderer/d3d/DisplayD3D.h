@@ -59,6 +59,9 @@ class DisplayD3D : public DisplayImpl
 
     std::string getVendorString() const override;
 
+    egl::Error waitClient() const override;
+    egl::Error waitNative(EGLint engine) const override;
+
   private:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
