@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "e759a674_8894756e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-01-14T21:05:42Z",
+      "side": 1,
+      "message": "Yes.  This works for both arrays instanced and elements instanced only because the elements instanced buffer has already been expanded to match the indices 1 to 1 in counts.  I did this work earlier to support indexed GL_POINTS rendering a while ago.",
+      "parentUuid": "e7344668_623bb60d",
+      "range": {
+        "startLine": 238,
+        "startChar": 16,
+        "endLine": 239,
+        "endChar": 69
+      },
+      "revId": "f0e2a557bcaec4a216ce030417e9e1c18f877cf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "47fef2bd_c52bbabc",
         "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
         "patchSetId": 2
@@ -53,6 +77,30 @@
       "writtenOn": "2016-01-14T19:58:03Z",
       "side": 1,
       "message": "this isn\u0027t necessarily true. there can be a non-zero divisor, and a normal call to DrawElements. In this case, it\u0027s like calling DrawElementsInstanced with an instance count of one. does this code work in that case?",
+      "range": {
+        "startLine": 400,
+        "startChar": 0,
+        "endLine": 401,
+        "endChar": 84
+      },
+      "revId": "f0e2a557bcaec4a216ce030417e9e1c18f877cf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27673e34_2f08d206",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-01-14T21:05:42Z",
+      "side": 1,
+      "message": "oh!  I didn\u0027t know that was valid.  Ok.  I will need to adjust some things a bit.  If I cannot make that assumption here by inspecting these values, then I will need to somehow push the type of rendering call used.  I do not want to enter this codepath if we are not rendering instanced points (with emulation).",
+      "parentUuid": "47fef2bd_c52bbabc",
       "range": {
         "startLine": 400,
         "startChar": 0,
@@ -111,6 +159,30 @@
     },
     {
       "key": {
+        "uuid": "07495aa4_934dc7c5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1885,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-01-14T21:05:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c737426a_613896c8",
+      "range": {
+        "startLine": 1882,
+        "startChar": 15,
+        "endLine": 1885,
+        "endChar": 34
+      },
+      "revId": "f0e2a557bcaec4a216ce030417e9e1c18f877cf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6703f691_464fd2b9",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 2
@@ -122,6 +194,30 @@
       "writtenOn": "2016-01-14T19:58:03Z",
       "side": 1,
       "message": "git cl format",
+      "range": {
+        "startLine": 1261,
+        "startChar": 52,
+        "endLine": 1261,
+        "endChar": 54
+      },
+      "revId": "f0e2a557bcaec4a216ce030417e9e1c18f877cf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c75ca266_cce202be",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1261,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-01-14T21:05:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6703f691_464fd2b9",
       "range": {
         "startLine": 1261,
         "startChar": 52,
@@ -157,6 +253,30 @@
     },
     {
       "key": {
+        "uuid": "07495aa4_733e3b0a",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-01-14T21:05:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c737426a_c152c216",
+      "range": {
+        "startLine": 157,
+        "startChar": 15,
+        "endLine": 157,
+        "endChar": 22
+      },
+      "revId": "f0e2a557bcaec4a216ce030417e9e1c18f877cf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "27fd7ec1_276df4d3",
         "filename": "src/tests/gl_tests/InstancingTest.cpp",
         "patchSetId": 2
@@ -168,6 +288,30 @@
       "writtenOn": "2016-01-14T19:58:03Z",
       "side": 1,
       "message": "nit: you can fit these two lines in one line",
+      "range": {
+        "startLine": 375,
+        "startChar": 0,
+        "endLine": 376,
+        "endChar": 13
+      },
+      "revId": "f0e2a557bcaec4a216ce030417e9e1c18f877cf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07495aa4_53433f9a",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-01-14T21:05:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27fd7ec1_276df4d3",
       "range": {
         "startLine": 375,
         "startChar": 0,
