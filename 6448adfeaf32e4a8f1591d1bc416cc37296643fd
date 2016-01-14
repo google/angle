@@ -99,6 +99,24 @@
       "revId": "6448adfeaf32e4a8f1591d1bc416cc37296643fd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07623a24_b0f281c1",
+        "filename": "src/libANGLE/RefCountObject.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2016-01-14T20:00:24Z",
+      "side": 1,
+      "message": "In the LTCG case, it is generally better to put all code in the .cpp file and let the compiler do the right thing. For paths that show up as hot, you can inline as appropriate.\n\nNot a big deal here, but in general, the more code you put in header files, the more header files you have to include in more places, the more code the compiler has to parse and the more entangled your code gets. I usually avoid putting code in header files whenever possible.  \n\nWhile it is true that Angle applications are content driven, the content is in the heap. CPU instruction caches are at a premium. Smaller code is, generally speaking, faster code, especially on mobile hardware.",
+      "parentUuid": "8780ea14_07e896d0",
+      "revId": "6448adfeaf32e4a8f1591d1bc416cc37296643fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
