@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "87562a44_14fc0588",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1277,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-01-14T19:16:00Z",
+      "side": 1,
+      "message": "You mean glTexImage2D?",
+      "range": {
+        "startLine": 1277,
+        "startChar": 4,
+        "endLine": 1277,
+        "endChar": 16
+      },
+      "revId": "d541898c92bda9d1910f26aaba401e895e4eb7b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
