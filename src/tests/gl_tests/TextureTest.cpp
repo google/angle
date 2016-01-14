@@ -512,7 +512,6 @@ class SamplerArrayAsFunctionParameterTest : public SamplerArrayTest
     }
 };
 
-
 class Texture2DArrayTestES3 : public TexCoordDrawTest
 {
   protected:
@@ -564,6 +563,81 @@ class Texture2DArrayTestES3 : public TexCoordDrawTest
 
     GLuint m2DArrayTexture;
     GLint mTextureArrayLocation;
+};
+
+class ShadowSamplerPlusSampler3DTestES3 : public TexCoordDrawTest
+{
+  protected:
+    ShadowSamplerPlusSampler3DTestES3()
+        : TexCoordDrawTest(),
+          mTextureShadow(0),
+          mTexture3D(0),
+          mTextureShadowUniformLocation(-1),
+          mTexture3DUniformLocation(-1),
+          mDepthRefUniformLocation(-1)
+    {
+    }
+
+    std::string getVertexShaderSource() override
+    {
+        return std::string(
+            "#version 300 es\n"
+            "out vec2 texcoord;\n"
+            "in vec4 position;\n"
+            "void main()\n"
+            "{\n"
+            "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
+            "    texcoord = (position.xy * 0.5) + 0.5;\n"
+            "}\n");
+    }
+
+    std::string getFragmentShaderSource() override
+    {
+        return std::string(
+            "#version 300 es\n"
+            "precision highp float;\n"
+            "uniform highp sampler2DShadow tex2DShadow;\n"
+            "uniform highp sampler3D tex3D;\n"
+            "in vec2 texcoord;\n"
+            "uniform float depthRef;\n"
+            "out vec4 fragColor;\n"
+            "void main()\n"
+            "{\n"
+            "    fragColor = vec4(texture(tex2DShadow, vec3(texcoord, depthRef)) * 0.5);\n"
+            "    fragColor += texture(tex3D, vec3(texcoord, 0.0));\n"
+            "}\n");
+    }
+
+    void SetUp() override
+    {
+        TexCoordDrawTest::SetUp();
+
+        glGenTextures(1, &mTexture3D);
+
+        glGenTextures(1, &mTextureShadow);
+        glBindTexture(GL_TEXTURE_2D, mTextureShadow);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+
+        mTextureShadowUniformLocation = glGetUniformLocation(mProgram, "tex2DShadow");
+        ASSERT_NE(-1, mTextureShadowUniformLocation);
+        mTexture3DUniformLocation = glGetUniformLocation(mProgram, "tex3D");
+        ASSERT_NE(-1, mTexture3DUniformLocation);
+        mDepthRefUniformLocation = glGetUniformLocation(mProgram, "depthRef");
+        ASSERT_NE(-1, mDepthRefUniformLocation);
+    }
+
+    void TearDown() override
+    {
+        glDeleteTextures(1, &mTextureShadow);
+        glDeleteTextures(1, &mTexture3D);
+        TexCoordDrawTest::TearDown();
+    }
+
+    GLuint mTextureShadow;
+    GLuint mTexture3D;
+    GLint mTextureShadowUniformLocation;
+    GLint mTexture3DUniformLocation;
+    GLint mDepthRefUniformLocation;
 };
 
 TEST_P(Texture2DTest, NegativeAPISubImage)
@@ -1042,6 +1116,45 @@ TEST_P(Texture2DArrayTestES3, RedefineInittableArray)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test shadow sampler and regular non-shadow sampler coexisting in the same shader.
+// This test is needed especially to confirm that sampler registers get assigned correctly on
+// the HLSL backend even when there's a mix of different HLSL sampler and texture types.
+TEST_P(ShadowSamplerPlusSampler3DTestES3, ShadowSamplerPlusSampler3DDraw)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_3D, mTexture3D);
+    GLubyte texData[4];
+    texData[0] = 0;
+    texData[1] = 60;
+    texData[2] = 0;
+    texData[3] = 255;
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, 1, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mTextureShadow);
+    GLfloat depthTexData[1];
+    depthTexData[0] = 0.5f;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
+                 depthTexData);
+
+    glUseProgram(mProgram);
+    glUniform1f(mDepthRefUniformLocation, 0.3f);
+    glUniform1i(mTexture3DUniformLocation, 0);
+    glUniform1i(mTextureShadowUniformLocation, 1);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    // The shader writes 0.5 * <comparison result (1.0)> + <texture color>
+    EXPECT_PIXEL_NEAR(0, 0, 128, 188, 128, 255, 2);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_GREATER);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    // The shader writes 0.5 * <comparison result (0.0)> + <texture color>
+    EXPECT_PIXEL_NEAR(0, 0, 0, 60, 0, 255, 2);
+}
+
 class TextureLimitsTest : public ANGLETest
 {
   protected:
@@ -1453,6 +1566,7 @@ ANGLE_INSTANTIATE_TEST(Sampler2DAsFunctionParameterTest,
                        ES2_OPENGL());
 ANGLE_INSTANTIATE_TEST(SamplerArrayTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL());
 ANGLE_INSTANTIATE_TEST(SamplerArrayAsFunctionParameterTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
+ANGLE_INSTANTIATE_TEST(ShadowSamplerPlusSampler3DTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(Texture2DArrayTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL());
 
