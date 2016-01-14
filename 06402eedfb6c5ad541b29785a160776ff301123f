@@ -177,6 +177,24 @@
     },
     {
       "key": {
+        "uuid": "a7bb2ef1_58e1dd28",
+        "filename": "include/GLES2/gl2ext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2925,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2016-01-14T18:54:56Z",
+      "side": 1,
+      "message": "Yes, we\u0027ll need to reserve more enums; we only have 8 remaining in the GL namespace (0x93A8 to 0x93AF). I\u0027ve requested a block; Khronos bug ID 15423.",
+      "parentUuid": "2ac3835c_5abc15d7",
+      "revId": "06402eedfb6c5ad541b29785a160776ff301123f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ac3835c_fae321ed",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 2
