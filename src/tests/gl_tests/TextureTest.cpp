@@ -640,6 +640,107 @@ class ShadowSamplerPlusSampler3DTestES3 : public TexCoordDrawTest
     GLint mDepthRefUniformLocation;
 };
 
+class SamplerTypeMixTestES3 : public TexCoordDrawTest
+{
+  protected:
+    SamplerTypeMixTestES3()
+        : TexCoordDrawTest(),
+          mTexture2D(0),
+          mTextureCube(0),
+          mTexture2DShadow(0),
+          mTextureCubeShadow(0),
+          mTexture2DUniformLocation(-1),
+          mTextureCubeUniformLocation(-1),
+          mTexture2DShadowUniformLocation(-1),
+          mTextureCubeShadowUniformLocation(-1),
+          mDepthRefUniformLocation(-1)
+    {
+    }
+
+    std::string getVertexShaderSource() override
+    {
+        return std::string(
+            "#version 300 es\n"
+            "out vec2 texcoord;\n"
+            "in vec4 position;\n"
+            "void main()\n"
+            "{\n"
+            "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
+            "    texcoord = (position.xy * 0.5) + 0.5;\n"
+            "}\n");
+    }
+
+    std::string getFragmentShaderSource() override
+    {
+        return std::string(
+            "#version 300 es\n"
+            "precision highp float;\n"
+            "uniform highp sampler2D tex2D;\n"
+            "uniform highp samplerCube texCube;\n"
+            "uniform highp sampler2DShadow tex2DShadow;\n"
+            "uniform highp samplerCubeShadow texCubeShadow;\n"
+            "in vec2 texcoord;\n"
+            "uniform float depthRef;\n"
+            "out vec4 fragColor;\n"
+            "void main()\n"
+            "{\n"
+            "    fragColor = texture(tex2D, texcoord);\n"
+            "    fragColor += texture(texCube, vec3(1.0, 0.0, 0.0));\n"
+            "    fragColor += vec4(texture(tex2DShadow, vec3(texcoord, depthRef)) * 0.25);\n"
+            "    fragColor += vec4(texture(texCubeShadow, vec4(1.0, 0.0, 0.0, depthRef)) * "
+            "0.125);\n"
+            "}\n");
+    }
+
+    void SetUp() override
+    {
+        TexCoordDrawTest::SetUp();
+
+        glGenTextures(1, &mTexture2D);
+        glGenTextures(1, &mTextureCube);
+
+        glGenTextures(1, &mTexture2DShadow);
+        glBindTexture(GL_TEXTURE_2D, mTexture2DShadow);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+
+        glGenTextures(1, &mTextureCubeShadow);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCubeShadow);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+
+        mTexture2DUniformLocation = glGetUniformLocation(mProgram, "tex2D");
+        ASSERT_NE(-1, mTexture2DUniformLocation);
+        mTextureCubeUniformLocation = glGetUniformLocation(mProgram, "texCube");
+        ASSERT_NE(-1, mTextureCubeUniformLocation);
+        mTexture2DShadowUniformLocation = glGetUniformLocation(mProgram, "tex2DShadow");
+        ASSERT_NE(-1, mTexture2DShadowUniformLocation);
+        mTextureCubeShadowUniformLocation = glGetUniformLocation(mProgram, "texCubeShadow");
+        ASSERT_NE(-1, mTextureCubeShadowUniformLocation);
+        mDepthRefUniformLocation = glGetUniformLocation(mProgram, "depthRef");
+        ASSERT_NE(-1, mDepthRefUniformLocation);
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void TearDown() override
+    {
+        glDeleteTextures(1, &mTexture2D);
+        glDeleteTextures(1, &mTextureCube);
+        glDeleteTextures(1, &mTexture2DShadow);
+        glDeleteTextures(1, &mTextureCubeShadow);
+        TexCoordDrawTest::TearDown();
+    }
+
+    GLuint mTexture2D;
+    GLuint mTextureCube;
+    GLuint mTexture2DShadow;
+    GLuint mTextureCubeShadow;
+    GLint mTexture2DUniformLocation;
+    GLint mTextureCubeUniformLocation;
+    GLint mTexture2DShadowUniformLocation;
+    GLint mTextureCubeShadowUniformLocation;
+    GLint mDepthRefUniformLocation;
+};
+
 TEST_P(Texture2DTest, NegativeAPISubImage)
 {
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
@@ -1155,6 +1256,71 @@ TEST_P(ShadowSamplerPlusSampler3DTestES3, ShadowSamplerPlusSampler3DDraw)
     EXPECT_PIXEL_NEAR(0, 0, 0, 60, 0, 255, 2);
 }
 
+// Test multiple different sampler types in the same shader.
+// This test makes sure that even if sampler / texture registers get grouped together based on type
+// or otherwise get shuffled around in the HLSL backend of the shader translator, the D3D renderer
+// still has the right register index information for each ESSL sampler.
+// The tested ESSL samplers have the following types in D3D11 HLSL:
+// sampler2D:         Texture2D   + SamplerState
+// samplerCube:       TextureCube + SamplerState
+// sampler2DShadow:   Texture2D   + SamplerComparisonState
+// samplerCubeShadow: TextureCube + SamplerComparisonState
+TEST_P(SamplerTypeMixTestES3, SamplerTypeMixDraw)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    GLubyte texData[4];
+    texData[0] = 0;
+    texData[1] = 0;
+    texData[2] = 120;
+    texData[3] = 255;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
+    texData[0] = 0;
+    texData[1] = 90;
+    texData[2] = 0;
+    texData[3] = 255;
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_RGBA8, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    texData);
+
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, mTexture2DShadow);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+    GLfloat depthTexData[1];
+    depthTexData[0] = 0.5f;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
+                 depthTexData);
+
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCubeShadow);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+    depthTexData[0] = 0.2f;
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_DEPTH_COMPONENT32F, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, 0, 0, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT,
+                    depthTexData);
+
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(mProgram);
+    glUniform1f(mDepthRefUniformLocation, 0.3f);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    glUniform1i(mTextureCubeUniformLocation, 1);
+    glUniform1i(mTexture2DShadowUniformLocation, 2);
+    glUniform1i(mTextureCubeShadowUniformLocation, 3);
+
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    // The shader writes:
+    // <texture 2d color> +
+    // <cube map color> +
+    // 0.25 * <comparison result (1.0)> +
+    // 0.125 * <comparison result (0.0)>
+    EXPECT_PIXEL_NEAR(0, 0, 64, 154, 184, 255, 2);
+}
+
 class TextureLimitsTest : public ANGLETest
 {
   protected:
@@ -1567,6 +1733,7 @@ ANGLE_INSTANTIATE_TEST(Sampler2DAsFunctionParameterTest,
 ANGLE_INSTANTIATE_TEST(SamplerArrayTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL());
 ANGLE_INSTANTIATE_TEST(SamplerArrayAsFunctionParameterTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
 ANGLE_INSTANTIATE_TEST(ShadowSamplerPlusSampler3DTestES3, ES3_D3D11(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(SamplerTypeMixTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(Texture2DArrayTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL());
 
