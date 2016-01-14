@@ -1,0 +1,222 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c737426a_81911a1a",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-14T18:34:50Z",
+      "side": 1,
+      "message": "This needs to be updated, it should end with _ANGLE. I suggest renaming it to EGL_EXPERIMENTAL_DIRECT_RENDERING_ANGLE, the PLATFORM part doesn\u0027t need necessary.",
+      "range": {
+        "startLine": 527,
+        "startChar": 8,
+        "endLine": 527,
+        "endChar": 56
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a73ece47_60bdf27e",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-14T18:34:50Z",
+      "side": 1,
+      "message": "Is this an avoidable cost? Is dx_ViewScale required when this extension is not enabled?",
+      "range": {
+        "startLine": 193,
+        "startChar": 46,
+        "endLine": 193,
+        "endChar": 47
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8741cad9_bf7317ee",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-14T18:34:50Z",
+      "side": 1,
+      "message": "nit: name this for it\u0027s purpose instead of just \u0027modified\u0027, directRenderingClearParams?",
+      "range": {
+        "startLine": 105,
+        "startChar": 24,
+        "endLine": 105,
+        "endChar": 38
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7344668_e226e6f6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 980,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-14T18:34:50Z",
+      "side": 1,
+      "message": "Chromium still disallows us from using the initializer list constructors, I believe.  You\u0027ll have to push each element.",
+      "range": {
+        "startLine": 980,
+        "startChar": 45,
+        "endLine": 980,
+        "endChar": 46
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7344668_022c2ad3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1467,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-14T18:34:50Z",
+      "side": 1,
+      "message": "use framebufferObject.",
+      "range": {
+        "startLine": 1467,
+        "startChar": 36,
+        "endLine": 1467,
+        "endChar": 74
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6703f691_e63d9e0c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1470,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-14T18:34:50Z",
+      "side": 1,
+      "message": "getFirstColorbuffer",
+      "range": {
+        "startLine": 1470,
+        "startChar": 53,
+        "endLine": 1470,
+        "endChar": 70
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a73ece47_20b7eaa0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-14T18:34:50Z",
+      "side": 1,
+      "message": "Question for Jamie: do we need to force all of this or can we be more selective?",
+      "range": {
+        "startLine": 121,
+        "startChar": 8,
+        "endLine": 123,
+        "endChar": 87
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27fd7ec1_6769acf9",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-14T18:34:50Z",
+      "side": 1,
+      "message": "nit: error message.",
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c737426a_a1c21e0c",
+        "filename": "src/tests/egl_tests/EGLDirectRenderingD3D11Test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-14T18:34:50Z",
+      "side": 1,
+      "message": "We should be very careful that this doesn\u0027t get broken.  I would add a new flag to the EGLPlatformParameters structure for this and then make overloads for the D3D11 test types (see how the OPENGL ones have overloads in angle_test_configs.h) and then add the new configuration to some existing tests.",
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7096eb1_68fe231e",
+        "filename": "src/tests/egl_tests/EGLDirectRenderingD3D11Test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-14T18:34:50Z",
+      "side": 1,
+      "message": "nit: 2016",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
