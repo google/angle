@@ -195,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "27fd7ec1_cdb3e127",
+        "filename": "include/GLES2/gl2ext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2925,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2016-01-15T18:58:34Z",
+      "side": 1,
+      "message": "Khronos has allocated us a new block: 0x9690-0x969F. We also have the remaining ones from the old block: 0x93A8-0x93AF. I think it would be best to use a contiguous range for the enums in this extension, so I\u0027d suggest using 0x9690-0x969A for these (note that these values are in hexadecimal, not decimal notation, so 0x969A follows 0x9699).\n\nOther extensions should continue to draw from 0x93A8-0x93A until it is exhausted.",
+      "parentUuid": "a7bb2ef1_58e1dd28",
+      "revId": "06402eedfb6c5ad541b29785a160776ff301123f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ac3835c_fae321ed",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 2
