@@ -512,6 +512,11 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
                 out << "    float2 dx_ViewScale : packoffset(c3);\n";
             }
 
+            if (mOutputType == SH_HLSL_4_1_OUTPUT)
+            {
+                mUniformHLSL->samplerMetadataUniforms(out, "c4");
+            }
+
             out << "};\n";
         }
         else
@@ -613,6 +618,11 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
             out << "    float4 dx_ViewAdjust : packoffset(c1);\n";
             out << "    float2 dx_ViewCoords : packoffset(c2);\n";
             out << "    float2 dx_ViewScale  : packoffset(c3);\n";
+
+            if (mOutputType == SH_HLSL_4_1_OUTPUT)
+            {
+                mUniformHLSL->samplerMetadataUniforms(out, "c4");
+            }
 
             out << "};\n"
                    "\n";

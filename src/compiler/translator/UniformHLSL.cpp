@@ -246,6 +246,15 @@ void UniformHLSL::uniformsHeader(TInfoSinkBase &out,
     }
 }
 
+void UniformHLSL::samplerMetadataUniforms(TInfoSinkBase &out, const char *reg)
+{
+    // If mSamplerRegister is 0 the shader doesn't use any textures.
+    if (mSamplerRegister > 0)
+    {
+        out << "    int samplerMetadata[" << mSamplerRegister << "] : packoffset(" << reg << ");\n";
+    }
+}
+
 TString UniformHLSL::interfaceBlocksHeader(const ReferencedSymbols &referencedInterfaceBlocks)
 {
     TString interfaceBlocks;

@@ -14,6 +14,7 @@
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/d3d/HLSLCompiler.h"
+#include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h"
@@ -336,6 +337,36 @@ class Renderer11 : public RendererD3D
 
     void updateHistograms();
 
+    class SamplerMetadataD3D11 final : angle::NonCopyable
+    {
+      public:
+        SamplerMetadataD3D11();
+        ~SamplerMetadataD3D11();
+
+        struct dx_SamplerMetadata
+        {
+            int baseLevel[4];
+        };
+
+        void initData(unsigned int samplerCount);
+        void update(unsigned int samplerIndex, unsigned int baseLevel);
+
+        const dx_SamplerMetadata *getData() const;
+        size_t sizeBytes() const;
+        bool isDirty() const { return mDirty; }
+
+      private:
+        std::vector<dx_SamplerMetadata> mSamplerMetadata;
+        bool mDirty;
+    };
+
+    template <class TShaderConstants>
+    void applyDriverConstantsIfNeeded(TShaderConstants *appliedConstants,
+                                      const TShaderConstants &constants,
+                                      SamplerMetadataD3D11 *samplerMetadata,
+                                      size_t samplerMetadataReferencedBytes,
+                                      ID3D11Buffer *driverConstantBuffer);
+
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;
     HMODULE mDCompModule;
@@ -395,6 +426,7 @@ class Renderer11 : public RendererD3D
 
     dx_VertexConstants11 mAppliedVertexConstants;
     ID3D11Buffer *mDriverConstantBufferVS;
+    SamplerMetadataD3D11 mSamplerMetadataVS;
     ID3D11Buffer *mCurrentVertexConstantBuffer;
     unsigned int mCurrentConstantBufferVS[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
     GLintptr mCurrentConstantBufferVSOffset[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
@@ -402,6 +434,7 @@ class Renderer11 : public RendererD3D
 
     dx_PixelConstants11 mAppliedPixelConstants;
     ID3D11Buffer *mDriverConstantBufferPS;
+    SamplerMetadataD3D11 mSamplerMetadataPS;
     ID3D11Buffer *mCurrentPixelConstantBuffer;
     unsigned int mCurrentConstantBufferPS[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
     GLintptr mCurrentConstantBufferPSOffset[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];

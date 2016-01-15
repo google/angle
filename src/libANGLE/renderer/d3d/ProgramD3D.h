@@ -145,7 +145,7 @@ class ProgramD3D : public ProgramImpl
                             unsigned int samplerIndex,
                             const gl::Caps &caps) const;
     GLenum getSamplerTextureType(gl::SamplerType type, unsigned int samplerIndex) const;
-    GLint getUsedSamplerRange(gl::SamplerType type) const;
+    GLuint getUsedSamplerRange(gl::SamplerType type) const;
     void updateSamplerMapping();
 
     bool usesPointSize() const { return mUsesPointSize; }

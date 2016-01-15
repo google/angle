@@ -343,6 +343,16 @@ void SetBufferData(ID3D11DeviceContext *context, ID3D11Buffer *constantBuffer, c
 }
 
 WorkaroundsD3D GenerateWorkarounds(D3D_FEATURE_LEVEL featureLevel);
+
+enum ReservedConstantBufferSlot
+{
+    RESERVED_CONSTANT_BUFFER_SLOT_DEFAULT_UNIFORM_BLOCK = 0,
+    RESERVED_CONSTANT_BUFFER_SLOT_DRIVER                = 1,
+
+    RESERVED_CONSTANT_BUFFER_SLOT_COUNT = 2
+};
+
+void InitConstantBufferDesc(D3D11_BUFFER_DESC *constantBufferDescription, size_t byteWidth);
 }  // namespace d3d11
 
 // A helper class which wraps a 2D or 3D texture.
