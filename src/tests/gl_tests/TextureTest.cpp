@@ -598,6 +598,71 @@ class Texture2DArrayTestES3 : public TexCoordDrawTest
     GLint mTextureArrayLocation;
 };
 
+class TextureSizeTextureArrayTest : public TexCoordDrawTest
+{
+  protected:
+    TextureSizeTextureArrayTest()
+        : TexCoordDrawTest(),
+          mTexture2DA(0),
+          mTexture2DB(0),
+          mTexture0Location(-1),
+          mTexture1Location(-1)
+    {
+    }
+
+    std::string getVertexShaderSource() override
+    {
+        return std::string(
+            "#version 300 es\n"
+            "in vec4 position;\n"
+            "void main()\n"
+            "{\n"
+            "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
+            "}\n");
+    }
+
+    std::string getFragmentShaderSource() override
+    {
+        return std::string(
+            "#version 300 es\n"
+            "precision highp float;\n"
+            "uniform highp sampler2D tex2DArray[2];\n"
+            "out vec4 fragColor;\n"
+            "void main()\n"
+            "{\n"
+            "    float red = float(textureSize(tex2DArray[0], 0).x) / 255.0;\n"
+            "    float green = float(textureSize(tex2DArray[1], 0).x) / 255.0;\n"
+            "    fragColor = vec4(red, green, 0.0, 1.0);\n"
+            "}\n");
+    }
+
+    void SetUp() override
+    {
+        TexCoordDrawTest::SetUp();
+
+        mTexture0Location = glGetUniformLocation(mProgram, "tex2DArray[0]");
+        ASSERT_NE(-1, mTexture0Location);
+        mTexture1Location = glGetUniformLocation(mProgram, "tex2DArray[1]");
+        ASSERT_NE(-1, mTexture1Location);
+
+        mTexture2DA = create2DTexture();
+        mTexture2DB = create2DTexture();
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void TearDown() override
+    {
+        glDeleteTextures(1, &mTexture2DA);
+        glDeleteTextures(1, &mTexture2DB);
+        TexCoordDrawTest::TearDown();
+    }
+
+    GLuint mTexture2DA;
+    GLuint mTexture2DB;
+    GLint mTexture0Location;
+    GLint mTexture1Location;
+};
+
 class ShadowSamplerPlusSampler3DTestES3 : public TexCoordDrawTest
 {
   protected:
@@ -1420,6 +1485,53 @@ TEST_P(SamplerTypeMixTestES3, SamplerTypeMixDraw)
     EXPECT_PIXEL_NEAR(0, 0, 64, 154, 184, 255, 2);
 }
 
+// Test different base levels on textures accessed through the same sampler array.
+// Calling textureSize() on the samplers hits the D3D sampler metadata workaround.
+TEST_P(TextureSizeTextureArrayTest, BaseLevelVariesInTextureArray)
+{
+    if ((isAMD() || isIntel()) && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    {
+        std::cout << "Test skipped on Intel and AMD D3D." << std::endl;
+        return;
+    }
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2DA);
+    GLsizei size = 64;
+    for (GLint level = 0; level < 7; ++level)
+    {
+        ASSERT_LT(0, size);
+        glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+        size = size / 2;
+    }
+    ASSERT_EQ(0, size);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mTexture2DB);
+    size = 128;
+    for (GLint level = 0; level < 8; ++level)
+    {
+        ASSERT_LT(0, size);
+        glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+        size = size / 2;
+    }
+    ASSERT_EQ(0, size);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 3);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(mProgram);
+    glUniform1i(mTexture0Location, 0);
+    glUniform1i(mTexture1Location, 1);
+
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    // Red channel: width of level 1 of texture A: 32.
+    // Green channel: width of level 3 of texture B: 16.
+    EXPECT_PIXEL_NEAR(0, 0, 32, 16, 0, 255, 2);
+}
+
 class TextureLimitsTest : public ANGLETest
 {
   protected:
@@ -1860,6 +1972,7 @@ ANGLE_INSTANTIATE_TEST(ShadowSamplerPlusSampler3DTestES3,
                        ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(SamplerTypeMixTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(Texture2DArrayTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(TextureSizeTextureArrayTest, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());
 
 } // namespace
