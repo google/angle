@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e759a674_08522565",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c737426a_81911a1a",
+      "range": {
+        "startLine": 527,
+        "startChar": 8,
+        "endLine": 527,
+        "endChar": 56
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a73ece47_60bdf27e",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 4
@@ -96,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "e759a674_8ec59db9",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "This (and the other D3D9 changes) are consequences of the change to the shared dx_[Vertex/Pixel]Constants structs in RendererD3D.h. I\u0027ll see if I can create separate structs.",
+      "parentUuid": "07f87ad1_23360abc",
+      "range": {
+        "startLine": 193,
+        "startChar": 46,
+        "endLine": 193,
+        "endChar": 47
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8741cad9_9fa9734e",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 4
@@ -107,6 +155,30 @@
       "writtenOn": "2016-01-14T20:37:10Z",
       "side": 1,
       "message": "make this a part of the metadata structure, it\u0027s why I made that structure, because we were becoming inundated with countless little flags. You\u0027ll be able to remove it from all the parameter lists of the functions.",
+      "range": {
+        "startLine": 1416,
+        "startChar": 46,
+        "endLine": 1416,
+        "endChar": 81
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "274e5eac_088fc450",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1416,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8741cad9_9fa9734e",
       "range": {
         "startLine": 1416,
         "startChar": 46,
@@ -142,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "4768b202_068b3a8f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "07f87ad1_c365f6c2",
+      "range": {
+        "startLine": 101,
+        "startChar": 0,
+        "endLine": 104,
+        "endChar": 5
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8741cad9_bf7317ee",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
         "patchSetId": 4
@@ -165,6 +261,30 @@
     },
     {
       "key": {
+        "uuid": "c75ca266_914ae701",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8741cad9_bf7317ee",
+      "range": {
+        "startLine": 105,
+        "startChar": 24,
+        "endLine": 105,
+        "endChar": 38
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "27fd7ec1_e7123c39",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
         "patchSetId": 4
@@ -176,6 +296,30 @@
       "writtenOn": "2016-01-14T20:37:10Z",
       "side": 1,
       "message": "comment is incomplete... \" if we\u0027re rendering to the default FBO directly\"",
+      "range": {
+        "startLine": 352,
+        "startChar": 77,
+        "endLine": 352,
+        "endChar": 92
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "676db610_4407eca1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27fd7ec1_e7123c39",
       "range": {
         "startLine": 352,
         "startChar": 77,
@@ -235,6 +379,30 @@
     },
     {
       "key": {
+        "uuid": "87562a44_14ed25ab",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 980,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7344668_e226e6f6",
+      "range": {
+        "startLine": 980,
+        "startChar": 45,
+        "endLine": 980,
+        "endChar": 46
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a73ece47_20360abc",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
@@ -246,6 +414,30 @@
       "writtenOn": "2016-01-14T20:37:10Z",
       "side": 1,
       "message": "can you use range-for here?",
+      "range": {
+        "startLine": 1011,
+        "startChar": 4,
+        "endLine": 1011,
+        "endChar": 88
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e759a674_cb42e724",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1011,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a73ece47_20360abc",
       "range": {
         "startLine": 1011,
         "startChar": 4,
@@ -305,6 +497,30 @@
     },
     {
       "key": {
+        "uuid": "27673e34_2f357217",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1467,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7344668_022c2ad3",
+      "range": {
+        "startLine": 1467,
+        "startChar": 36,
+        "endLine": 1467,
+        "endChar": 74
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a73ece47_006666ce",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
@@ -316,6 +532,30 @@
       "writtenOn": "2016-01-14T20:37:10Z",
       "side": 1,
       "message": "just pass the FBO directly to statemanager, call it updateDirectRendering",
+      "range": {
+        "startLine": 1468,
+        "startChar": 18,
+        "endLine": 1468,
+        "endChar": 36
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e759a674_cb714778",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1468,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a73ece47_006666ce",
       "range": {
         "startLine": 1468,
         "startChar": 18,
@@ -375,6 +615,30 @@
     },
     {
       "key": {
+        "uuid": "274e5eac_c8379c1f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1470,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6703f691_e63d9e0c",
+      "range": {
+        "startLine": 1470,
+        "startChar": 53,
+        "endLine": 1470,
+        "endChar": 70
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8741cad9_dfc85b30",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
@@ -386,6 +650,30 @@
       "writtenOn": "2016-01-14T20:37:10Z",
       "side": 1,
       "message": "s/NULL/nullptr",
+      "range": {
+        "startLine": 3682,
+        "startChar": 35,
+        "endLine": 3682,
+        "endChar": 39
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c75ca266_8c764a6d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3682,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8741cad9_dfc85b30",
       "range": {
         "startLine": 3682,
         "startChar": 35,
@@ -445,6 +733,30 @@
     },
     {
       "key": {
+        "uuid": "678e9643_3aa03662",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "That seems like a lot of work for a small optimization, or am I missing something?\n\nThe states are only set to dirty once when an FBO changes (i.e. a transition between default FBO -\u003e non-default FBO) or if the default FBO changes size.\n\nChecking if the currently applied state differs from the desired state would potentially save setting the viewport/scissor rect dirty if the inverted new viewport/scissor rect happens to equal the old non-inverted one, but that seems like a lot of validation for an unlikely scenario?",
+      "parentUuid": "6703f691_e626bef6",
+      "range": {
+        "startLine": 121,
+        "startChar": 8,
+        "endLine": 123,
+        "endChar": 87
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a73ece47_c05f1ef4",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 4
@@ -456,6 +768,30 @@
       "writtenOn": "2016-01-14T20:37:10Z",
       "side": 1,
       "message": "prefix with mCur to indicate they\u0027re cache variables, also suggest you use std::optional to invalidate them",
+      "range": {
+        "startLine": 104,
+        "startChar": 2,
+        "endLine": 105,
+        "endChar": 42
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4768b202_436b6430",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "I don\u0027t think they need to use optional, their default values are valid?",
+      "parentUuid": "a73ece47_c05f1ef4",
       "range": {
         "startLine": 104,
         "startChar": 2,
@@ -491,6 +827,30 @@
     },
     {
       "key": {
+        "uuid": "678e9643_5f7a54c4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47fef2bd_e58b5609",
+      "range": {
+        "startLine": 55,
+        "startChar": 5,
+        "endLine": 59,
+        "endChar": 84
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "07f87ad1_c39296d0",
         "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.cpp",
         "patchSetId": 4
@@ -502,6 +862,30 @@
       "writtenOn": "2016-01-14T20:37:10Z",
       "side": 1,
       "message": "don\u0027t think this needs to change",
+      "range": {
+        "startLine": 279,
+        "startChar": 11,
+        "endLine": 284,
+        "endChar": 30
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "676db610_44e40c29",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "It does due to changes to shared structs in RendererD3D.h. I\u0027ll see if I can create separate 9 and 11 structs.",
+      "parentUuid": "07f87ad1_c39296d0",
       "range": {
         "startLine": 279,
         "startChar": 11,
@@ -531,6 +915,24 @@
     },
     {
       "key": {
+        "uuid": "27673e34_0f3fd6ae",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27fd7ec1_6769acf9",
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c737426a_a1c21e0c",
         "filename": "src/tests/egl_tests/EGLDirectRenderingD3D11Test.cpp",
         "patchSetId": 4
@@ -548,6 +950,24 @@
     },
     {
       "key": {
+        "uuid": "c75ca266_c7281d57",
+        "filename": "src/tests/egl_tests/EGLDirectRenderingD3D11Test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c737426a_a1c21e0c",
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7096eb1_68fe231e",
         "filename": "src/tests/egl_tests/EGLDirectRenderingD3D11Test.cpp",
         "patchSetId": 4
@@ -559,6 +979,30 @@
       "writtenOn": "2016-01-14T18:34:50Z",
       "side": 1,
       "message": "nit: 2016",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c75ca266_2c59fedd",
+        "filename": "src/tests/egl_tests/EGLDirectRenderingD3D11Test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-15T00:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7096eb1_68fe231e",
       "range": {
         "startLine": 2,
         "startChar": 13,
