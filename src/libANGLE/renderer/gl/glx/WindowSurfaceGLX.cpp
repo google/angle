@@ -16,6 +16,11 @@
 namespace rx
 {
 
+static int IgnoreX11Errors(Display *, XErrorEvent *)
+{
+    return 0;
+}
+
 WindowSurfaceGLX::WindowSurfaceGLX(const FunctionsGLX &glx,
                                    DisplayGLX *glxDisplay,
                                    RendererGL *renderer,
@@ -44,7 +49,14 @@ WindowSurfaceGLX::~WindowSurfaceGLX()
 
     if (mWindow)
     {
+        // When destroying the window, it may happen that the window has already been
+        // destroyed by the application (this happens in Chromium). There is no way to
+        // atomically check that a window exists and to destroy it so instead we call
+        // XDestroyWindow, ignoring any errors.
+        auto oldErrorHandler = XSetErrorHandler(IgnoreX11Errors);
         XDestroyWindow(mDisplay, mWindow);
+        XSync(mDisplay, False);
+        XSetErrorHandler(oldErrorHandler);
     }
 
     mGLXDisplay->syncXCommands();
