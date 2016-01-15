@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "6777760f_46d0d24e",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1277,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-15T09:37:00Z",
+      "side": 1,
+      "message": "Yep, should be glTexImage2D. Fixed now.",
+      "parentUuid": "27fd7ec1_875dc82e",
+      "range": {
+        "startLine": 1277,
+        "startChar": 4,
+        "endLine": 1277,
+        "endChar": 16
+      },
+      "revId": "d541898c92bda9d1910f26aaba401e895e4eb7b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c737426a_a14d3e75",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 2
@@ -60,6 +84,30 @@
       "writtenOn": "2016-01-14T19:37:03Z",
       "side": 1,
       "message": "we don\u0027t need to define the other sides? Won\u0027t this be cube-incomplete?",
+      "range": {
+        "startLine": 1286,
+        "startChar": 4,
+        "endLine": 1286,
+        "endChar": 19
+      },
+      "revId": "d541898c92bda9d1910f26aaba401e895e4eb7b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a77deeee_8b93b120",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1286,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-15T09:37:00Z",
+      "side": 1,
+      "message": "glTexStorage2D above will allocate all the faces, this just defines the content for the face that will be used. I moved the glTexStorage2D call so it\u0027s a bit clearer.",
+      "parentUuid": "c737426a_a14d3e75",
       "range": {
         "startLine": 1286,
         "startChar": 4,
