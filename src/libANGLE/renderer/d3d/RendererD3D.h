@@ -44,6 +44,7 @@ class DeviceD3D;
 class EGLImageD3D;
 class ImageD3D;
 class IndexBuffer;
+class SamplerMetadataD3D11;
 class ProgramD3D;
 class RenderTargetD3D;
 class ShaderExecutableD3D;
@@ -161,6 +162,9 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     virtual gl::Error applyUniforms(const ProgramD3D &programD3D,
                                     GLenum drawMode,
                                     const std::vector<D3DUniform *> &uniformArray) = 0;
+    virtual gl::Error applySamplerMetadata(SamplerMetadataD3D11 *samplerMetadata,
+                                           unsigned int samplerCount,
+                                           gl::SamplerType type) = 0;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize) = 0;
     virtual gl::Error applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances, SourceIndexData *sourceIndexInfo) = 0;
     virtual gl::Error applyIndexBuffer(const gl::Data &data,
@@ -341,7 +345,6 @@ struct dx_PixelConstants
     float viewCoords[4];
     float depthFront[4];
 };
-
 }
 
 #endif // LIBANGLE_RENDERER_D3D_RENDERERD3D_H_

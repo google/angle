@@ -1700,6 +1700,13 @@ gl::Error Renderer9::applyUniforms(const ProgramD3D &programD3D,
     return gl::Error(GL_NO_ERROR);
 }
 
+gl::Error Renderer9::applySamplerMetadata(SamplerMetadataD3D11 *samplerMetadata,
+                                          unsigned int samplerCount,
+                                          gl::SamplerType type)
+{
+    return gl::Error(GL_NO_ERROR);
+}
+
 void Renderer9::applyUniformnfv(const D3DUniform *targetUniform, const GLfloat *v)
 {
     if (targetUniform->isReferencedByFragmentShader())
