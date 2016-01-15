@@ -116,14 +116,14 @@ int main(int argc, char *argv[])
                 if (window->getWidth() != width || window->getHeight() != height)
                 {
                     std::cout << "Discrepancy between set dimensions and retrieved dimensions" << std::endl;
-                    std::cout << "Width: " << window->getWidth() << " vs. " << width << std::endl;
-                    std::cout << "Height: " << window->getHeight() << " vs. " << height << std::endl;
+                    std::cout << "Width: " << width << " vs. " << window->getWidth() << std::endl;
+                    std::cout << "Height: " << height << " vs. " << window->getHeight() << std::endl;
                 }
                 if (window->getX() != x || window->getY() != y)
                 {
                     std::cout << "Discrepancy between set position and retrieved position" << std::endl;
-                    std::cout << "X: " << window->getX() << " vs. " << x << std::endl;
-                    std::cout << "Y: " << window->getY() << " vs. " << y << std::endl;
+                    std::cout << "X: " << x << " vs. " << window->getX() << std::endl;
+                    std::cout << "Y: " << y << " vs. " << window->getY() << std::endl;
                 }
             }
         }
