@@ -83,7 +83,9 @@ class DisplayImpl : angle::NonCopyable
     virtual egl::Error getDevice(DeviceImpl **device) = 0;
 
     virtual egl::Error waitClient() const = 0;
-    virtual egl::Error waitNative(EGLint engine) const = 0;
+    virtual egl::Error waitNative(EGLint engine,
+                                  egl::Surface *drawSurface,
+                                  egl::Surface *readSurface) const = 0;
 
     const egl::Caps &getCaps() const;
 

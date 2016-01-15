@@ -68,7 +68,9 @@ class DisplayGLX : public DisplayGL
     std::string getVendorString() const override;
 
     egl::Error waitClient() const override;
-    egl::Error waitNative(EGLint engine) const override;
+    egl::Error waitNative(EGLint engine,
+                          egl::Surface *drawSurface,
+                          egl::Surface *readSurface) const override;
 
     // Synchronizes with the X server, if the display has been opened by ANGLE.
     // Calling this is required at the end of every functions that does buffered

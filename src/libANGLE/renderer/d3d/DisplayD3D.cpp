@@ -346,10 +346,11 @@ egl::Error DisplayD3D::waitClient() const
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error DisplayD3D::waitNative(EGLint engine) const
+egl::Error DisplayD3D::waitNative(EGLint engine,
+                                  egl::Surface *drawSurface,
+                                  egl::Surface *readSurface) const
 {
     // Unimplemented as it is a noop on D3D
     return egl::Error(EGL_SUCCESS);
 }
-
 }

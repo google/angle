@@ -817,9 +817,9 @@ Error Display::waitClient() const
     return mImplementation->waitClient();
 }
 
-Error Display::waitNative(EGLint engine) const
+Error Display::waitNative(EGLint engine, egl::Surface *drawSurface, egl::Surface *readSurface) const
 {
-    return mImplementation->waitNative(engine);
+    return mImplementation->waitNative(engine, drawSurface, readSurface);
 }
 
 const Caps &Display::getCaps() const

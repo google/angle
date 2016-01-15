@@ -480,6 +480,7 @@
             'libANGLE/renderer/gl/glx/FunctionsGLX.h',
             'libANGLE/renderer/gl/glx/PbufferSurfaceGLX.cpp',
             'libANGLE/renderer/gl/glx/PbufferSurfaceGLX.h',
+            'libANGLE/renderer/gl/glx/SurfaceGLX.h',
             'libANGLE/renderer/gl/glx/WindowSurfaceGLX.cpp',
             'libANGLE/renderer/gl/glx/WindowSurfaceGLX.h',
             'libANGLE/renderer/gl/glx/functionsglx_typedefs.h',

@@ -645,8 +645,37 @@ egl::Error DisplayGLX::waitClient() const
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error DisplayGLX::waitNative(EGLint engine) const
+egl::Error DisplayGLX::waitNative(EGLint engine,
+                                  egl::Surface *drawSurface,
+                                  egl::Surface *readSurface) const
 {
+    // eglWaitNative is used to notice the driver of changes in X11 for the current surface, such as
+    // changes of the window size. We use this event to update the child window of WindowSurfaceGLX
+    // to match its parent window's size.
+    // Handling eglWaitNative this way helps the application control when resize happens. This is
+    // important because drivers have a tendency to clobber the back buffer when the windows are
+    // resized. See http://crbug.com/326995
+    if (drawSurface != nullptr)
+    {
+        SurfaceGLX *glxDrawSurface = GetImplAs<SurfaceGLX>(drawSurface);
+        egl::Error error = glxDrawSurface->checkForResize();
+        if (error.isError())
+        {
+            return error;
+        }
+    }
+
+    if (readSurface != drawSurface && readSurface != nullptr)
+    {
+        SurfaceGLX *glxReadSurface = GetImplAs<SurfaceGLX>(readSurface);
+        egl::Error error = glxReadSurface->checkForResize();
+        if (error.isError())
+        {
+            return error;
+        }
+    }
+
+    // We still need to forward the resizing of the child window to the driver.
     mGLX.waitX();
     return egl::Error(EGL_SUCCESS);
 }

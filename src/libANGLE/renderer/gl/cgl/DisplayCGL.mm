@@ -262,7 +262,9 @@ egl::Error DisplayCGL::waitClient() const
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error DisplayCGL::waitNative(EGLint engine) const
+egl::Error DisplayCGL::waitNative(EGLint engine,
+                                  egl::Surface *drawSurface,
+                                  egl::Surface *readSurface) const
 {
     // TODO(cwallez) UNIMPLEMENTED()
     return egl::Error(EGL_SUCCESS);

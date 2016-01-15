@@ -786,7 +786,7 @@ EGLBoolean EGLAPIENTRY WaitNative(EGLint engine)
             Error(EGL_BAD_PARAMETER, "the 'engine' parameter has an unrecognized value"));
     }
 
-    error = display->waitNative(engine);
+    error = display->waitNative(engine, GetGlobalDrawSurface(), GetGlobalReadSurface());
     if (error.isError())
     {
         SetGlobalError(error);
