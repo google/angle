@@ -10,6 +10,7 @@
 
 #include <EGL/eglext.h>
 #include <sstream>
+#include <VersionHelpers.h>
 
 #include "common/tls.h"
 #include "common/utilities.h"
@@ -559,19 +560,19 @@ Renderer11::Renderer11(egl::Display *display)
         switch (requestedDeviceType)
         {
             case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
-                mDriverType = D3D_DRIVER_TYPE_HARDWARE;
+                mRequestedDriverType = D3D_DRIVER_TYPE_HARDWARE;
                 break;
 
             case EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE:
-                mDriverType = D3D_DRIVER_TYPE_WARP;
+                mRequestedDriverType = D3D_DRIVER_TYPE_WARP;
                 break;
 
             case EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE:
-                mDriverType = D3D_DRIVER_TYPE_REFERENCE;
+                mRequestedDriverType = D3D_DRIVER_TYPE_REFERENCE;
                 break;
 
             case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
-                mDriverType = D3D_DRIVER_TYPE_NULL;
+                mRequestedDriverType = D3D_DRIVER_TYPE_NULL;
                 break;
 
             default:
@@ -583,6 +584,10 @@ Renderer11::Renderer11(egl::Display *display)
         mEGLDevice = GetImplAs<DeviceD3D>(display->getDevice());
         ASSERT(mEGLDevice != nullptr);
         mCreatedWithDeviceEXT = true;
+
+        // Also set EGL_PLATFORM_ANGLE_ANGLE variables, in case they're used elsewhere in ANGLE
+        // mAvailableFeatureLevels defaults to empty
+        mRequestedDriverType = D3D_DRIVER_TYPE_UNKNOWN;
     }
 
     initializeDebugAnnotator();
@@ -790,10 +795,11 @@ egl::Error Renderer11::initializeD3DDevice()
 #ifdef _DEBUG
         {
             TRACE_EVENT0("gpu.angle", "D3D11CreateDevice (Debug)");
-            result = D3D11CreateDevice(
-                NULL, mDriverType, NULL, D3D11_CREATE_DEVICE_DEBUG, mAvailableFeatureLevels.data(),
-                static_cast<unsigned int>(mAvailableFeatureLevels.size()), D3D11_SDK_VERSION,
-                &mDevice, &(mRenderer11DeviceCaps.featureLevel), &mDeviceContext);
+            result = D3D11CreateDevice(nullptr, mRequestedDriverType, nullptr,
+                                       D3D11_CREATE_DEVICE_DEBUG, mAvailableFeatureLevels.data(),
+                                       static_cast<unsigned int>(mAvailableFeatureLevels.size()),
+                                       D3D11_SDK_VERSION, &mDevice,
+                                       &(mRenderer11DeviceCaps.featureLevel), &mDeviceContext);
         }
 
         if (!mDevice || FAILED(result))
@@ -807,10 +813,10 @@ egl::Error Renderer11::initializeD3DDevice()
             SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.D3D11CreateDeviceMS");
             TRACE_EVENT0("gpu.angle", "D3D11CreateDevice");
 
-            result = D3D11CreateDevice(NULL, mDriverType, NULL, 0, mAvailableFeatureLevels.data(),
-                                       static_cast<unsigned int>(mAvailableFeatureLevels.size()),
-                                       D3D11_SDK_VERSION, &mDevice,
-                                       &(mRenderer11DeviceCaps.featureLevel), &mDeviceContext);
+            result = D3D11CreateDevice(
+                nullptr, mRequestedDriverType, nullptr, 0, mAvailableFeatureLevels.data(),
+                static_cast<unsigned int>(mAvailableFeatureLevels.size()), D3D11_SDK_VERSION,
+                &mDevice, &(mRenderer11DeviceCaps.featureLevel), &mDeviceContext);
 
             // Cleanup done by destructor
             if (!mDevice || FAILED(result))
@@ -2548,8 +2554,9 @@ bool Renderer11::testDeviceResettable()
     D3D_FEATURE_LEVEL dummyFeatureLevel;
     ID3D11DeviceContext* dummyContext;
 
+    ASSERT(mRequestedDriverType != D3D_DRIVER_TYPE_UNKNOWN);
     HRESULT result = D3D11CreateDevice(
-        NULL, mDriverType, NULL,
+        NULL, mRequestedDriverType, NULL,
                                        #if defined(_DEBUG)
         D3D11_CREATE_DEVICE_DEBUG,
                                        #else
@@ -2616,6 +2623,8 @@ void Renderer11::release()
     }
 
     mCompiler.release();
+
+    mSupportsShareHandles.reset();
 }
 
 bool Renderer11::resetDevice()
@@ -2685,33 +2694,94 @@ unsigned int Renderer11::getReservedFragmentUniformBuffers() const
     return 2;
 }
 
+d3d11::ANGLED3D11DeviceType Renderer11::getDeviceType() const
+{
+    if (mCreatedWithDeviceEXT)
+    {
+        return d3d11::GetDeviceType(mDevice);
+    }
+
+    if ((mRequestedDriverType == D3D_DRIVER_TYPE_SOFTWARE) ||
+        (mRequestedDriverType == D3D_DRIVER_TYPE_REFERENCE) ||
+        (mRequestedDriverType == D3D_DRIVER_TYPE_NULL))
+    {
+        return d3d11::ANGLE_D3D11_DEVICE_TYPE_SOFTWARE_REF_OR_NULL;
+    }
+
+    if (mRequestedDriverType == D3D_DRIVER_TYPE_WARP)
+    {
+        return d3d11::ANGLE_D3D11_DEVICE_TYPE_WARP;
+    }
+
+    return d3d11::ANGLE_D3D11_DEVICE_TYPE_HARDWARE;
+}
+
 bool Renderer11::getShareHandleSupport() const
 {
+    if (mSupportsShareHandles.valid())
+    {
+        return mSupportsShareHandles.value();
+    }
+
     // We only currently support share handles with BGRA surfaces, because
     // chrome needs BGRA. Once chrome fixes this, we should always support them.
     if (!getRendererExtensions().textureFormatBGRA8888)
     {
+        mSupportsShareHandles = false;
         return false;
     }
 
     // PIX doesn't seem to support using share handles, so disable them.
     if (gl::DebugAnnotationsActive())
     {
+        mSupportsShareHandles = false;
         return false;
     }
 
     // Also disable share handles on Feature Level 9_3, since it doesn't support share handles on RGBA8 textures/swapchains.
     if (mRenderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3)
     {
+        mSupportsShareHandles = false;
         return false;
     }
 
-    // Also disable on non-hardware drivers, since sharing doesn't work cross-driver.
-    if (mDriverType != D3D_DRIVER_TYPE_HARDWARE)
+    // Find out which type of D3D11 device the Renderer11 is using
+    d3d11::ANGLED3D11DeviceType deviceType = getDeviceType();
+    if (deviceType == d3d11::ANGLE_D3D11_DEVICE_TYPE_UNKNOWN)
     {
+        mSupportsShareHandles = false;
         return false;
     }
 
+    if (deviceType == d3d11::ANGLE_D3D11_DEVICE_TYPE_SOFTWARE_REF_OR_NULL)
+    {
+        // Software/Reference/NULL devices don't support share handles
+        mSupportsShareHandles = false;
+        return false;
+    }
+
+    if (deviceType == d3d11::ANGLE_D3D11_DEVICE_TYPE_WARP)
+    {
+#ifndef ANGLE_ENABLE_WINDOWS_STORE
+        if (!IsWindows8OrGreater())
+        {
+            // WARP on Windows 7 doesn't support shared handles
+            mSupportsShareHandles = false;
+            return false;
+        }
+#endif  // ANGLE_ENABLE_WINDOWS_STORE
+
+        // WARP on Windows 8.0+ supports shared handles when shared with another WARP device
+        // TODO: allow applications to query for HARDWARE or WARP-specific share handles,
+        //       to prevent them trying to use a WARP share handle with an a HW device (or
+        //       vice-versa)
+        //       e.g. by creating EGL_D3D11_[HARDWARE/WARP]_DEVICE_SHARE_HANDLE_ANGLE
+        mSupportsShareHandles = true;
+        return true;
+    }
+
+    ASSERT(mCreatedWithDeviceEXT || mRequestedDriverType == D3D_DRIVER_TYPE_HARDWARE);
+    mSupportsShareHandles = true;
     return true;
 }
 

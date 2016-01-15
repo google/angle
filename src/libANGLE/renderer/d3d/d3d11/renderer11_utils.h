@@ -65,6 +65,16 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
 namespace d3d11
 {
 
+enum ANGLED3D11DeviceType
+{
+    ANGLE_D3D11_DEVICE_TYPE_UNKNOWN,
+    ANGLE_D3D11_DEVICE_TYPE_HARDWARE,
+    ANGLE_D3D11_DEVICE_TYPE_SOFTWARE_REF_OR_NULL,
+    ANGLE_D3D11_DEVICE_TYPE_WARP,
+};
+
+ANGLED3D11DeviceType GetDeviceType(ID3D11Device *device);
+
 void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
 
 void GenerateInitialTextureData(GLint internalFormat, const Renderer11DeviceCaps &renderer11DeviceCaps, GLuint width, GLuint height, GLuint depth,

@@ -1252,6 +1252,72 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
 namespace d3d11
 {
 
+ANGLED3D11DeviceType GetDeviceType(ID3D11Device *device)
+{
+    // Note that this function returns an ANGLED3D11DeviceType rather than a D3D_DRIVER_TYPE value,
+    // since it is difficult to tell Software and Reference devices apart
+
+    IDXGIDevice *dxgiDevice     = nullptr;
+    IDXGIAdapter *dxgiAdapter   = nullptr;
+    IDXGIAdapter2 *dxgiAdapter2 = nullptr;
+
+    ANGLED3D11DeviceType retDeviceType = ANGLE_D3D11_DEVICE_TYPE_UNKNOWN;
+
+    HRESULT hr = device->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxgiDevice);
+    if (SUCCEEDED(hr))
+    {
+        hr = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&dxgiAdapter);
+        if (SUCCEEDED(hr))
+        {
+            std::wstring adapterString;
+            HRESULT adapter2hr =
+                dxgiAdapter->QueryInterface(__uuidof(dxgiAdapter2), (void **)&dxgiAdapter2);
+            if (SUCCEEDED(adapter2hr))
+            {
+                // On D3D_FEATURE_LEVEL_9_*, IDXGIAdapter::GetDesc returns "Software Adapter"
+                // for the description string. Try to use IDXGIAdapter2::GetDesc2 to get the
+                // actual hardware values if possible.
+                DXGI_ADAPTER_DESC2 adapterDesc2;
+                dxgiAdapter2->GetDesc2(&adapterDesc2);
+                adapterString = std::wstring(adapterDesc2.Description);
+            }
+            else
+            {
+                DXGI_ADAPTER_DESC adapterDesc;
+                dxgiAdapter->GetDesc(&adapterDesc);
+                adapterString = std::wstring(adapterDesc.Description);
+            }
+
+            // Both Reference and Software adapters will be 'Software Adapter'
+            const bool isSoftwareDevice =
+                (adapterString.find(std::wstring(L"Software Adapter")) != std::string::npos);
+            const bool isNullDevice = (adapterString == L"");
+            const bool isWARPDevice =
+                (adapterString.find(std::wstring(L"Basic Render")) != std::string::npos);
+
+            if (isSoftwareDevice || isNullDevice)
+            {
+                ASSERT(!isWARPDevice);
+                retDeviceType = ANGLE_D3D11_DEVICE_TYPE_SOFTWARE_REF_OR_NULL;
+            }
+            else if (isWARPDevice)
+            {
+                retDeviceType = ANGLE_D3D11_DEVICE_TYPE_WARP;
+            }
+            else
+            {
+                retDeviceType = ANGLE_D3D11_DEVICE_TYPE_HARDWARE;
+            }
+        }
+    }
+
+    SafeRelease(dxgiDevice);
+    SafeRelease(dxgiAdapter);
+    SafeRelease(dxgiAdapter2);
+
+    return retDeviceType;
+}
+
 void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset)
 {
     const DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(format);
