@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "870c6ac1_2aeedf18",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:22:10Z",
+      "side": 1,
+      "message": "I know you\u0027re not currently marking me as a reviewer, but I saw this patch and thought I\u0027d offer one piece of feedback:\n\nthese metadata uniforms should go into either the driver constant buffer, or a new constant buffer block. (Since they\u0027re D3D11 only). We shouldn\u0027t need to add a new Sh entry point to query the metadata register. See the driver constant uniforms in the D3D11 renderer.",
+      "range": {
+        "startLine": 239,
+        "startChar": 0,
+        "endLine": 246,
+        "endChar": 5
+      },
+      "revId": "608e3e79a99a48f24c71e8637a39c91cb57bde7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
