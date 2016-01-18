@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "a7096eb1_0e056fef",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 759,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-18T19:21:07Z",
+      "side": 1,
+      "message": "I was suggesting display::waitGL.  With your explanation, this is fine though.",
+      "parentUuid": "27fd7ec1_39d19327",
+      "range": {
+        "startLine": 757,
+        "startChar": 4,
+        "endLine": 759,
+        "endChar": 34
+      },
+      "revId": "3d74c5d1a0d05ed9bfc587749227a5154990e4ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "870c6ac1_4ad7d344",
         "filename": "src/libGLESv2/entry_points_egl.cpp",
         "patchSetId": 2
