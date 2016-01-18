@@ -116,6 +116,30 @@
       "revId": "cccf47724a1beba87b06a0733b92742a2821fcf4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7096eb1_ae41c322",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-18T19:40:59Z",
+      "side": 1,
+      "message": "Good point, can DisplayGLX call into global_state?",
+      "parentUuid": "8741cad9_ff98bfa0",
+      "range": {
+        "startLine": 133,
+        "startChar": 4,
+        "endLine": 133,
+        "endChar": 37
+      },
+      "revId": "cccf47724a1beba87b06a0733b92742a2821fcf4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
