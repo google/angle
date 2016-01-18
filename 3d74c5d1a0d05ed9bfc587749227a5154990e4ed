@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8741cad9_5fc3eb7f",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-18T19:14:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47fef2bd_25072ea3",
+      "range": {
+        "startLine": 350,
+        "startChar": 0,
+        "endLine": 358,
+        "endChar": 1
+      },
+      "revId": "3d74c5d1a0d05ed9bfc587749227a5154990e4ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c737426a_443fa0ad",
         "filename": "src/libGLESv2/entry_points_egl.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "27fd7ec1_39d19327",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 759,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-18T19:14:08Z",
+      "side": 1,
+      "message": "Do you mean adding eglWaitClient (it is below) or display-\u003ewaitGL?\n\nThe spec says eglWaitGL() is equivalent to:\n              EGLenum api \u003d eglQueryAPI();\n              eglBindAPI(EGL_OPENGL_ES_API);\n              eglWaitClient();\n              eglBindAPI(api);",
+      "parentUuid": "c737426a_443fa0ad",
+      "range": {
+        "startLine": 757,
+        "startChar": 4,
+        "endLine": 759,
+        "endChar": 34
+      },
+      "revId": "3d74c5d1a0d05ed9bfc587749227a5154990e4ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "870c6ac1_4ad7d344",
         "filename": "src/libGLESv2/entry_points_egl.cpp",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2016-01-18T16:27:38Z",
       "side": 1,
       "message": "Let\u0027s still pass the engine parameter in.",
+      "range": {
+        "startLine": 789,
+        "startChar": 21,
+        "endLine": 789,
+        "endChar": 31
+      },
+      "revId": "3d74c5d1a0d05ed9bfc587749227a5154990e4ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8741cad9_7fc02f72",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 789,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-18T19:14:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "870c6ac1_4ad7d344",
       "range": {
         "startLine": 789,
         "startChar": 21,
