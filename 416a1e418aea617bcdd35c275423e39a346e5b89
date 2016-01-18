@@ -22,6 +22,30 @@
       "revId": "416a1e418aea617bcdd35c275423e39a346e5b89",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7096eb1_ee121b39",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
+        "patchSetId": 3
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-18T19:23:57Z",
+      "side": 1,
+      "message": "Eventually when I try to run Chromium on ANGLE on Mac I\u0027ll hit the same type of problem so I\u0027ll have to implement these I think.",
+      "parentUuid": "8741cad9_3fbaa7f6",
+      "range": {
+        "startLine": 260,
+        "startChar": 3,
+        "endLine": 260,
+        "endChar": 35
+      },
+      "revId": "416a1e418aea617bcdd35c275423e39a346e5b89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
