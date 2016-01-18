@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0726ba4f_334c284a",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 651,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-18T19:40:18Z",
+      "side": 1,
+      "message": "Whoops, done.",
+      "parentUuid": "a73ece47_83884092",
+      "range": {
+        "startLine": 651,
+        "startChar": 89,
+        "endLine": 651,
+        "endChar": 112
+      },
+      "revId": "cccf47724a1beba87b06a0733b92742a2821fcf4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a73ece47_2385b478",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2016-01-18T19:24:17Z",
       "side": 1,
       "message": "nit: http://crbug.com/326995",
+      "range": {
+        "startLine": 652,
+        "startChar": 201,
+        "endLine": 652,
+        "endChar": 221
+      },
+      "revId": "cccf47724a1beba87b06a0733b92742a2821fcf4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "47fef2bd_05e1d217",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-18T19:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a73ece47_2385b478",
       "range": {
         "startLine": 652,
         "startChar": 201,
