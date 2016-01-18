@@ -277,6 +277,39 @@ class Texture2DTest : public TexCoordDrawTest
     GLint mTexture2DUniformLocation;
 };
 
+class Texture2DTestES3 : public Texture2DTest
+{
+  protected:
+    Texture2DTestES3() : Texture2DTest() {}
+
+    std::string getVertexShaderSource() override
+    {
+        return std::string(
+            "#version 300 es\n"
+            "out vec2 texcoord;\n"
+            "in vec4 position;\n"
+            "void main()\n"
+            "{\n"
+            "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
+            "    texcoord = (position.xy * 0.5) + 0.5;\n"
+            "}\n");
+    }
+
+    std::string getFragmentShaderSource() override
+    {
+        return std::string(
+            "#version 300 es\n"
+            "precision highp float;\n"
+            "uniform highp sampler2D tex;\n"
+            "in vec2 texcoord;\n"
+            "out vec4 fragColor;\n"
+            "void main()\n"
+            "{\n"
+            "    fragColor = texture(tex, texcoord);\n"
+            "}\n");
+    }
+};
+
 class Texture2DTestWithDrawScale : public Texture2DTest
 {
   protected:
@@ -1182,6 +1215,42 @@ TEST_P(Texture2DTest, NPOTSubImageParameters)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test to check that texture completeness is determined correctly when the texture base level is
+// greater than 0, and also that level 0 is not sampled when base level is greater than 0.
+TEST_P(Texture2DTestES3, DrawWithBaseLevel1)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    GLubyte texDataRed[4u * 4u * 4u];
+    for (size_t i = 0u; i < 4u * 4u; ++i)
+    {
+        texDataRed[i * 4u]      = 255u;
+        texDataRed[i * 4u + 1u] = 0u;
+        texDataRed[i * 4u + 2u] = 0u;
+        texDataRed[i * 4u + 3u] = 255u;
+    }
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataRed);
+    GLubyte texDataGreen[2u * 2u * 4u];
+    for (size_t i = 0u; i < 2u * 2u; ++i)
+    {
+        texDataGreen[i * 4u]      = 0u;
+        texDataGreen[i * 4u + 1u] = 255u;
+        texDataGreen[i * 4u + 2u] = 0u;
+        texDataGreen[i * 4u + 3u] = 255u;
+    }
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataGreen);
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataGreen);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+}
+
 // In the D3D11 renderer, we need to initialize some texture formats, to fill empty channels. EG RBA->RGBA8, with 1.0
 // in the alpha channel. This test covers a bug where redefining array textures with these formats does not work as
 // expected.
@@ -1732,6 +1801,7 @@ ANGLE_INSTANTIATE_TEST(Sampler2DAsFunctionParameterTest,
                        ES2_OPENGL());
 ANGLE_INSTANTIATE_TEST(SamplerArrayTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL());
 ANGLE_INSTANTIATE_TEST(SamplerArrayAsFunctionParameterTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
+ANGLE_INSTANTIATE_TEST(Texture2DTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(ShadowSamplerPlusSampler3DTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(SamplerTypeMixTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(Texture2DArrayTestES3, ES3_D3D11(), ES3_OPENGL());
