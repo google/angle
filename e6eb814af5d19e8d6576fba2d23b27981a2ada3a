@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7344668_22428e42",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2556,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:52:19Z",
+      "side": 1,
+      "message": "assert(not unknown)",
+      "range": {
+        "startLine": 2556,
+        "startChar": 14,
+        "endLine": 2556,
+        "endChar": 34
+      },
+      "revId": "e6eb814af5d19e8d6576fba2d23b27981a2ada3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7344668_e22ca687",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2713,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:52:19Z",
+      "side": 1,
+      "message": "see enum suggestion",
+      "range": {
+        "startLine": 2713,
+        "startChar": 9,
+        "endLine": 2713,
+        "endChar": 36
+      },
+      "revId": "e6eb814af5d19e8d6576fba2d23b27981a2ada3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6703f691_e6435e4a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2718,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:52:19Z",
+      "side": 1,
+      "message": "this seems moderately heavyweight - we might want to cache the results of getShareHandleSupport somewhere since the function is becoming a largeish.",
+      "range": {
+        "startLine": 2718,
+        "startChar": 28,
+        "endLine": 2718,
+        "endChar": 41
+      },
+      "revId": "e6eb814af5d19e8d6576fba2d23b27981a2ada3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0726ba4f_731e2051",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1253,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:52:19Z",
+      "side": 1,
+      "message": "this function is pretty good, but make it return a custom enum defined in the header. Probably values specific to what this might return (HARDWARE/SOFTWARE_REF_OR_NULL/WARP) is fine.",
+      "range": {
+        "startLine": 1253,
+        "startChar": 0,
+        "endLine": 1253,
+        "endChar": 86
+      },
+      "revId": "e6eb814af5d19e8d6576fba2d23b27981a2ada3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
