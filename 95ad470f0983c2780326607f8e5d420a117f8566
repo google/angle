@@ -1,0 +1,400 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7096eb1_ae58a33e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "add a tag BUG\u003dangleproject:#### with an associated bug ID, opening one if there isn\u0027t an existing one.\n\nalso please write a second paragraph with some discussion of the CL, for book keeping purposes.",
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7344668_a24d3e75",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "I think Status is either Complete, Draft, or something along those lines.",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 19,
+        "endChar": 39
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7344668_c252c216",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "I don\u0027t understand this line - is this a requirement for all compressed textures? I don\u0027t see any specific validation in your extension below where you specify anything about mip levels being equal to one or two.",
+      "range": {
+        "startLine": 46,
+        "startChar": 31,
+        "endLine": 47,
+        "endChar": 18
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a73ece47_8324c08a",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "I don\u0027t understand this line.",
+      "range": {
+        "startLine": 123,
+        "startChar": 31,
+        "endLine": 124,
+        "endChar": 77
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0726ba4f_5321a489",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "multiple",
+      "range": {
+        "startLine": 129,
+        "startChar": 26,
+        "endLine": 129,
+        "endChar": 34
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7096eb1_6e8aabd4",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1000,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "use git cl format to clean up the formatting.",
+      "range": {
+        "startLine": 1000,
+        "startChar": 8,
+        "endLine": 1000,
+        "endChar": 32
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "47fef2bd_05eb1209",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "Please use the format TODO(yourname): Reason\nAnd also add UNIMPLEMENTED, assuming these are not implemented yet.",
+      "range": {
+        "startLine": 1022,
+        "startChar": 9,
+        "endLine": 1022,
+        "endChar": 15
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7344668_623896c8",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "please add an error message here as the second argument to Error",
+      "range": {
+        "startLine": 165,
+        "startChar": 43,
+        "endLine": 165,
+        "endChar": 58
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "870c6ac1_ca1d03f8",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "please add an error message here as the second argument to Error",
+      "range": {
+        "startLine": 375,
+        "startChar": 43,
+        "endLine": 375,
+        "endChar": 63
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27fd7ec1_5e6e7542",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "please add an error message here as the second argument to Error",
+      "range": {
+        "startLine": 380,
+        "startChar": 43,
+        "endLine": 380,
+        "endChar": 58
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7096eb1_4e87e7ca",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "please add an error message here as the second argument to Error",
+      "range": {
+        "startLine": 693,
+        "startChar": 43,
+        "endLine": 693,
+        "endChar": 63
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7096eb1_2e94b3f5",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 698,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "please add an error message here as the second argument to Error",
+      "range": {
+        "startLine": 698,
+        "startChar": 43,
+        "endLine": 698,
+        "endChar": 58
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7096eb1_0e91ef05",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 829,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "please add an error message here as the second argument to Error",
+      "range": {
+        "startLine": 829,
+        "startChar": 39,
+        "endLine": 829,
+        "endChar": 54
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7096eb1_ce63d7ed",
+        "filename": "src/tests/gl_tests/ETCLossyDecodeTextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "suggest you name this after the test: ETCTextureTest.cpp",
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27fd7ec1_3e6bb932",
+        "filename": "src/tests/gl_tests/ETCLossyDecodeTextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "add a header with the file name and description of contents, see other test files.",
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27fd7ec1_1e68fd31",
+        "filename": "src/tests/gl_tests/ETCLossyDecodeTextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "comment before each test",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 6
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8741cad9_ff1d1ff7",
+        "filename": "src/tests/gl_tests/ETCLossyDecodeTextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "make this a member of the fixture: mTexture",
+      "range": {
+        "startLine": 42,
+        "startChar": 11,
+        "endLine": 42,
+        "endChar": 14
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7096eb1_ee5e9b2b",
+        "filename": "src/tests/gl_tests/ETCLossyDecodeTextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T13:46:46Z",
+      "side": 1,
+      "message": "nit: }  // anonymous namespace",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 1
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
