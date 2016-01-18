@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "27fd7ec1_f999bb94",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-18T14:00:49Z",
+      "side": 1,
+      "message": "in order to work around the 9_3 problem we might have to use different a different SH_HLSL_BLAH flag. We might want to use SH_HLSL_SM3, SH_HLSL_SM4_FL9_3 and SH_HLSL_SM4_1 or something like that.",
+      "range": {
+        "startLine": 195,
+        "startChar": 26,
+        "endLine": 195,
+        "endChar": 42
+      },
+      "revId": "9119efb2ec3d5cef1f3e7213d29e3d9234344b4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
