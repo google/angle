@@ -229,19 +229,12 @@ egl::Error DisplayD3D::getDevice(DeviceImpl **device)
     return mRenderer->getEGLDevice(device);
 }
 
-egl::Error DisplayD3D::createContext(const egl::Config *config, const gl::Context *shareContext, const egl::AttributeMap &attribs,
-                                     gl::Context **outContext)
+gl::Context *DisplayD3D::createContext(const egl::Config *config,
+                                       const gl::Context *shareContext,
+                                       const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-
-    EGLint clientVersion = attribs.get(EGL_CONTEXT_CLIENT_VERSION, 1);
-    bool notifyResets = (attribs.get(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT, EGL_NO_RESET_NOTIFICATION_EXT) == EGL_LOSE_CONTEXT_ON_RESET_EXT);
-    bool robustAccess = (attribs.get(EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT, EGL_FALSE) == EGL_TRUE);
-    bool debug           = (attribs.get(EGL_CONTEXT_OPENGL_DEBUG, EGL_FALSE) == EGL_TRUE);
-
-    *outContext = new gl::Context(config, clientVersion, shareContext, mRenderer, notifyResets,
-                                  robustAccess, debug);
-    return egl::Error(EGL_SUCCESS);
+    return new gl::Context(config, shareContext, mRenderer, attribs);
 }
 
 egl::Error DisplayD3D::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context)

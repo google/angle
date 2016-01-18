@@ -524,6 +524,7 @@ void Renderer9::generateDisplayExtensions(egl::DisplayExtensions *outExtensions)
     outExtensions->postSubBuffer       = true;
     outExtensions->createContext       = true;
     outExtensions->deviceQuery         = true;
+    outExtensions->createContextNoError = true;
 
     outExtensions->image               = true;
     outExtensions->imageBase           = true;

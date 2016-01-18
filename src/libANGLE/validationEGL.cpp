@@ -248,6 +248,17 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
             }
             break;
 
+          case EGL_CONTEXT_OPENGL_NO_ERROR_KHR:
+              if (!display->getExtensions().createContextNoError)
+              {
+                  return Error(EGL_BAD_ATTRIBUTE, "Invalid Context attribute.");
+              }
+              if (value != EGL_TRUE && value != EGL_FALSE)
+              {
+                  return Error(EGL_BAD_ATTRIBUTE, "Attribute must be EGL_TRUE or EGL_FALSE.");
+              }
+              break;
+
           default:
             return Error(EGL_BAD_ATTRIBUTE);
         }

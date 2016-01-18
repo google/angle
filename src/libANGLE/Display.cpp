@@ -695,12 +695,8 @@ Error Display::createContext(const Config *configuration, gl::Context *shareCont
         }
     }
 
-    gl::Context *context = nullptr;
-    Error error = mImplementation->createContext(configuration, shareContext, attribs, &context);
-    if (error.isError())
-    {
-        return error;
-    }
+    gl::Context *context = *outContext =
+        mImplementation->createContext(configuration, shareContext, attribs);
 
     ASSERT(context != nullptr);
     mContextSet.insert(context);

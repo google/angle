@@ -42,7 +42,8 @@ class MockValidationContext : public ValidationContext
                           const TextureCapsMap &textureCaps,
                           const Extensions &extensions,
                           const ResourceManager *resourceManager,
-                          const Limitations &limitations);
+                          const Limitations &limitations,
+                          bool skipValidation);
 
     MOCK_METHOD1(recordError, void(const Error &));
 };
@@ -53,14 +54,16 @@ MockValidationContext::MockValidationContext(GLint clientVersion,
                                              const TextureCapsMap &textureCaps,
                                              const Extensions &extensions,
                                              const ResourceManager *resourceManager,
-                                             const Limitations &limitations)
+                                             const Limitations &limitations,
+                                             bool skipValidation)
     : ValidationContext(clientVersion,
                         state,
                         caps,
                         textureCaps,
                         extensions,
                         resourceManager,
-                        limitations)
+                        limitations,
+                        skipValidation)
 {
 }
 
@@ -115,8 +118,8 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
     state.setDrawFramebufferBinding(framebuffer);
     state.setProgram(program);
 
-    MockValidationContext testContext(3, state, caps, textureCaps, extensions, nullptr,
-                                      limitations);
+    MockValidationContext testContext(3, state, caps, textureCaps, extensions, nullptr, limitations,
+                                      false);
 
     // Set the expectation for the validation error here.
     Error expectedError(GL_INVALID_OPERATION, g_ExceedsMaxElementErrorMessage);

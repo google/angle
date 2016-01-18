@@ -64,8 +64,9 @@ class DisplayImpl : angle::NonCopyable
                                    egl::ImageSibling *buffer,
                                    const egl::AttributeMap &attribs) = 0;
 
-    virtual egl::Error createContext(const egl::Config *config, const gl::Context *shareContext, const egl::AttributeMap &attribs,
-                                     gl::Context **outContext) = 0;
+    virtual gl::Context *createContext(const egl::Config *config,
+                                       const gl::Context *shareContext,
+                                       const egl::AttributeMap &attribs) = 0;
 
     virtual egl::Error makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context) = 0;
 

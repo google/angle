@@ -52,37 +52,79 @@ void MarkTransformFeedbackBufferUsage(gl::TransformFeedback *transformFeedback)
         }
     }
 }
+
+// Attribute map queries.
+EGLint GetClientVersion(const egl::AttributeMap &attribs)
+{
+    return attribs.get(EGL_CONTEXT_CLIENT_VERSION, 1);
+}
+
+GLenum GetResetStrategy(const egl::AttributeMap &attribs)
+{
+    EGLenum attrib = attribs.get(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT,
+                                 EGL_NO_RESET_NOTIFICATION_EXT);
+    switch (attrib)
+    {
+        case EGL_NO_RESET_NOTIFICATION:
+            return GL_NO_RESET_NOTIFICATION_EXT;
+        case EGL_LOSE_CONTEXT_ON_RESET:
+            return GL_LOSE_CONTEXT_ON_RESET_EXT;
+        default:
+            UNREACHABLE();
+            return GL_NONE;
+    }
+}
+
+bool GetRobustAccess(const egl::AttributeMap &attribs)
+{
+    return (attribs.get(EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT, EGL_FALSE) == EGL_TRUE);
+}
+
+bool GetDebug(const egl::AttributeMap &attribs)
+{
+    return (attribs.get(EGL_CONTEXT_OPENGL_DEBUG, EGL_FALSE) == EGL_TRUE);
+}
+
+bool GetNoError(const egl::AttributeMap &attribs)
+{
+    return (attribs.get(EGL_CONTEXT_OPENGL_NO_ERROR_KHR, EGL_FALSE) == EGL_TRUE);
+}
+
 }  // anonymous namespace
 
 namespace gl
 {
 
 Context::Context(const egl::Config *config,
-                 int clientVersion,
                  const Context *shareContext,
                  rx::Renderer *renderer,
-                 bool notifyResets,
-                 bool robustAccess,
-                 bool debug)
-    : ValidationContext(clientVersion,
+                 const egl::AttributeMap &attribs)
+    : ValidationContext(GetClientVersion(attribs),
                         mState,
                         mCaps,
                         mTextureCaps,
                         mExtensions,
                         nullptr,
-                        mLimitations),
+                        mLimitations,
+                        GetNoError(attribs)),
+      mCompiler(nullptr),
       mRenderer(renderer),
+      mClientVersion(GetClientVersion(attribs)),
       mConfig(config),
-      mCurrentSurface(nullptr)
+      mClientType(EGL_OPENGL_ES_API),
+      mHasBeenCurrent(false),
+      mContextLost(false),
+      mResetStatus(GL_NO_ERROR),
+      mResetStrategy(GetResetStrategy(attribs)),
+      mRobustAccess(GetRobustAccess(attribs)),
+      mCurrentSurface(nullptr),
+      mResourceManager(nullptr)
 {
-    ASSERT(robustAccess == false);   // Unimplemented
+    ASSERT(!mRobustAccess);  // Unimplemented
 
-    initCaps(clientVersion);
-    mState.initialize(mCaps, mExtensions, clientVersion, debug);
+    initCaps(mClientVersion);
 
-    mClientVersion = clientVersion;
-
-    mClientType = EGL_OPENGL_ES_API;
+    mState.initialize(mCaps, mExtensions, mClientVersion, GetDebug(attribs));
 
     mFenceNVHandleAllocator.setBaseHandle(0);
 
@@ -147,12 +189,6 @@ Context::Context(const egl::Config *config,
         // BindTransformFeedback is called with id of zero
         bindTransformFeedback(0);
     }
-
-    mHasBeenCurrent = false;
-    mContextLost = false;
-    mResetStatus = GL_NO_ERROR;
-    mResetStrategy = (notifyResets ? GL_LOSE_CONTEXT_ON_RESET_EXT : GL_NO_RESET_NOTIFICATION_EXT);
-    mRobustAccess = robustAccess;
 
     mCompiler = new Compiler(mRenderer, getData());
 }

@@ -577,6 +577,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
     extensions->unpackSubimage         = true;
     extensions->packSubimage           = true;
     extensions->vertexArrayObject      = true;
+    extensions->noError                = true;
 
     // D3D9 has no concept of separate masks and refs for front and back faces in the depth stencil
     // state.

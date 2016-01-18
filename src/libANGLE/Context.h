@@ -33,6 +33,7 @@ class Renderer;
 
 namespace egl
 {
+class AttributeMap;
 class Surface;
 struct Config;
 }
@@ -59,12 +60,9 @@ class Context final : public ValidationContext
 {
   public:
     Context(const egl::Config *config,
-            int clientVersion,
             const Context *shareContext,
             rx::Renderer *renderer,
-            bool notifyResets,
-            bool robustAccess,
-            bool debug);
+            const egl::AttributeMap &attribs);
 
     virtual ~Context();
 

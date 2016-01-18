@@ -1084,6 +1084,8 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
 
     outExtensions->deviceQuery = true;
 
+    outExtensions->createContextNoError = true;
+
     outExtensions->image                 = true;
     outExtensions->imageBase             = true;
     outExtensions->glTexture2DImage      = true;

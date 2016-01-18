@@ -152,6 +152,7 @@ Extensions::Extensions()
       maxDebugLoggedMessages(0),
       maxDebugGroupStackDepth(0),
       maxLabelLength(0),
+      noError(false),
       colorBufferFloat(false)
 {
 }
@@ -218,6 +219,8 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_EXT_color_buffer_float",           colorBufferFloat,          &extensionStrings);
     InsertExtensionString("GL_OES_vertex_array_object",          vertexArrayObject,         &extensionStrings);
     InsertExtensionString("GL_KHR_debug",                        debug,                     &extensionStrings);
+    // TODO(jmadill): Enable this when complete.
+    //InsertExtensionString("GL_KHR_no_error",                     noError,                   &extensionStrings);
     // clang-format on
 
     return extensionStrings;
@@ -622,7 +625,8 @@ DisplayExtensions::DisplayExtensions()
       glRenderbufferImage(false),
       getAllProcAddresses(false),
       flexibleSurfaceCompatibility(false),
-      directComposition(false)
+      directComposition(false),
+      createContextNoError(false)
 {
 }
 
@@ -652,6 +656,8 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_KHR_gl_renderbuffer_image",                 glRenderbufferImage,            &extensionStrings);
     InsertExtensionString("EGL_KHR_get_all_proc_addresses",                getAllProcAddresses,            &extensionStrings);
     InsertExtensionString("EGL_ANGLE_flexible_surface_compatibility",      flexibleSurfaceCompatibility,   &extensionStrings);
+    // TODO(jmadill): Enable this when complete.
+    //InsertExtensionString("KHR_create_context_no_error",                   createContextNoError,           &extensionStrings);
     // clang-format on
 
     return extensionStrings;
