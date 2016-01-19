@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "e7344668_82527aeb",
+        "filename": "infra/config/OWNERS",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-19T19:59:51Z",
+      "side": 1,
+      "message": "still would be good to include at least geofflang@chromium.org as well IMO",
+      "parentUuid": "e798c691_4b6b4d31",
+      "revId": "240450814b767cbc0d3dc2ff46cd921303aca622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e798c691_2b9b6937",
         "filename": "infra/config/cq.cfg",
         "patchSetId": 1
