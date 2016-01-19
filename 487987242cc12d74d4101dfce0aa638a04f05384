@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7096eb1_5138a60e",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-19T22:17:12Z",
+      "side": 1,
+      "message": "I\u0027m worried this might break some builds on platforms other than Windows, can it be #if defined(ANGLE_PLATFORM_WINDOWS) \u0026\u0026 !defined(NDEBUG)?",
+      "revId": "487987242cc12d74d4101dfce0aa638a04f05384",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
