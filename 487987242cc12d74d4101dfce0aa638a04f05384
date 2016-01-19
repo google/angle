@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "e7344668_42a9d2f5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1350,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-19T22:44:42Z",
+      "side": 1,
+      "message": "I\u0027m wondering if this might lead to some unreasonably long names -- maybe it\u0027d be better to just indicate it has multiple ownership and mention that we should clean up our code to re-use existing handles better?",
+      "range": {
+        "startLine": 1348,
+        "startChar": 0,
+        "endLine": 1350,
+        "endChar": 34
+      },
+      "revId": "487987242cc12d74d4101dfce0aa638a04f05384",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8741cad9_e27588ad",
+        "filename": "src/tests/gl_tests/BlendMinMaxTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-19T22:44:42Z",
+      "side": 1,
+      "message": "do you feel confident enough to add your own username to these TODOs?",
+      "range": {
+        "startLine": 182,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 16
+      },
+      "revId": "487987242cc12d74d4101dfce0aa638a04f05384",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c737426a_a4a8ecb0",
+        "filename": "src/tests/gl_tests/LineLoopTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-19T22:44:42Z",
+      "side": 1,
+      "message": "can we make a note that Win10 (possibly Win8?) should pass these? We can even use the IsWinXOrGreater to filter these.",
+      "range": {
+        "startLine": 138,
+        "startChar": 4,
+        "endLine": 138,
+        "endChar": 32
+      },
+      "revId": "487987242cc12d74d4101dfce0aa638a04f05384",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7096eb1_5138a60e",
         "filename": "src/tests/test_utils/ANGLETest.cpp",
         "patchSetId": 9
@@ -13,6 +82,24 @@
       "writtenOn": "2016-01-19T22:17:12Z",
       "side": 1,
       "message": "I\u0027m worried this might break some builds on platforms other than Windows, can it be #if defined(ANGLE_PLATFORM_WINDOWS) \u0026\u0026 !defined(NDEBUG)?",
+      "revId": "487987242cc12d74d4101dfce0aa638a04f05384",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0726ba4f_56d7521d",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-19T22:44:42Z",
+      "side": 1,
+      "message": "Also dropping this into a helper function would go a long way.",
+      "parentUuid": "a7096eb1_5138a60e",
       "revId": "487987242cc12d74d4101dfce0aa638a04f05384",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
