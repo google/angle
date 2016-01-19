@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c75ca266_e10b883b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2556,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:17:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7344668_22428e42",
+      "range": {
+        "startLine": 2556,
+        "startChar": 14,
+        "endLine": 2556,
+        "endChar": 34
+      },
+      "revId": "e6eb814af5d19e8d6576fba2d23b27981a2ada3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e7344668_e22ca687",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2016-01-18T13:52:19Z",
       "side": 1,
       "message": "see enum suggestion",
+      "range": {
+        "startLine": 2713,
+        "startChar": 9,
+        "endLine": 2713,
+        "endChar": 36
+      },
+      "revId": "e6eb814af5d19e8d6576fba2d23b27981a2ada3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07623a24_59b4f10f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2713,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:17:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7344668_e22ca687",
       "range": {
         "startLine": 2713,
         "startChar": 9,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "07495aa4_e7d8c044",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2718,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:17:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6703f691_e6435e4a",
+      "range": {
+        "startLine": 2718,
+        "startChar": 28,
+        "endLine": 2718,
+        "endChar": 41
+      },
+      "revId": "e6eb814af5d19e8d6576fba2d23b27981a2ada3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0726ba4f_731e2051",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 6
@@ -82,6 +154,30 @@
       "writtenOn": "2016-01-18T13:52:19Z",
       "side": 1,
       "message": "this function is pretty good, but make it return a custom enum defined in the header. Probably values specific to what this might return (HARDWARE/SOFTWARE_REF_OR_NULL/WARP) is fine.",
+      "range": {
+        "startLine": 1253,
+        "startChar": 0,
+        "endLine": 1253,
+        "endChar": 86
+      },
+      "revId": "e6eb814af5d19e8d6576fba2d23b27981a2ada3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2752dead_d94cf4c8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1253,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:17:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0726ba4f_731e2051",
       "range": {
         "startLine": 1253,
         "startChar": 0,
