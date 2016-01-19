@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "870c6ac1_4d912d17",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 906,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-19T20:27:22Z",
+      "side": 1,
+      "message": "Why would it be not safe?",
+      "revId": "161d1571cd912cca56556b654da62a47e007f142",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
