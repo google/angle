@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0726ba4f_d3c5b48f",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 724,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-19T18:29:48Z",
+      "side": 1,
+      "message": "nit: we should probably switch over (gradually) to a more correct naming scheme - HLSL has shader models 3,4,5 etc, whereas D3D has feature levels 9_3,10,11, etc. So in this case it would be HLSL4 or just HLSLTextureCoordsCount",
+      "range": {
+        "startLine": 724,
+        "startChar": 25,
+        "endLine": 724,
+        "endChar": 49
+      },
+      "revId": "6346e93557a8d7b3eee85479dcda81e7ce8d7961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0726ba4f_f3ca309d",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-19T18:29:48Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 27,
+        "startChar": 9,
+        "endLine": 27,
+        "endChar": 40
+      },
+      "revId": "6346e93557a8d7b3eee85479dcda81e7ce8d7961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
