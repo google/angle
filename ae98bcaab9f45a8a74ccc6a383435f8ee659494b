@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7344668_027c2a4d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2703,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-19T22:48:31Z",
+      "side": 1,
+      "message": "since we\u0027re returning directly from each if statement now we can remove all uses of else in this function.",
+      "range": {
+        "startLine": 2703,
+        "startChar": 4,
+        "endLine": 2703,
+        "endChar": 8
+      },
+      "revId": "ae98bcaab9f45a8a74ccc6a383435f8ee659494b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
