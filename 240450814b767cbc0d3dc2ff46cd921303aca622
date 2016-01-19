@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e798c691_4b6b4d31",
+        "filename": "infra/config/OWNERS",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1141499
+      },
+      "writtenOn": "2016-01-19T19:46:41Z",
+      "side": 1,
+      "message": "i haven\u0027t seen owner files in this repo. This one is a sign whom to contact, not a cop :)",
+      "parentUuid": "2771fe1c_2a939bd5",
+      "revId": "240450814b767cbc0d3dc2ff46cd921303aca622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e798c691_2b9b6937",
         "filename": "infra/config/cq.cfg",
         "patchSetId": 1
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "47727221_eb4b4531",
+        "filename": "infra/config/cq.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1141499
+      },
+      "writtenOn": "2016-01-19T19:46:41Z",
+      "side": 1,
+      "message": "true, but I suspect I\u0027ll need to flip it back and force a few times, so i\u0027m keeping it for now. Once Gerrit CQs run on CQ.golo, I\u0027ll get rid of this.",
+      "parentUuid": "e798c691_2b9b6937",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 19
+      },
+      "revId": "240450814b767cbc0d3dc2ff46cd921303aca622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e783661b_7012e837",
         "filename": "infra/config/cq.cfg",
         "patchSetId": 1
@@ -53,6 +95,30 @@
       "writtenOn": "2016-01-19T12:56:43Z",
       "side": 1,
       "message": "Is this planned to be different for most projects? I\u0027d recommend making this value a default and omitting this field. IMHO the config for a project should have only the essential information and the rest should work by default.",
+      "range": {
+        "startLine": 9,
+        "startChar": 2,
+        "endLine": 9,
+        "endChar": 44
+      },
+      "revId": "240450814b767cbc0d3dc2ff46cd921303aca622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07931a6b_14135a3e",
+        "filename": "infra/config/cq.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1141499
+      },
+      "writtenOn": "2016-01-19T19:46:41Z",
+      "side": 1,
+      "message": "This is experimental option, I can still delete it at will. Thus, it\u0027s here for not too long.",
+      "parentUuid": "e783661b_7012e837",
       "range": {
         "startLine": 9,
         "startChar": 2,
