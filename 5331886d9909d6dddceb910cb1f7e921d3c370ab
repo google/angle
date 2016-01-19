@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e759a674_23529f65",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2738,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:17:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8741cad9_e2fa6864",
+      "range": {
+        "startLine": 2738,
+        "startChar": 4,
+        "endLine": 2738,
+        "endChar": 8
+      },
+      "revId": "5331886d9909d6dddceb910cb1f7e921d3c370ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c737426a_a4f9cce7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2016-01-19T20:09:26Z",
       "side": 1,
       "message": "nit: else if",
+      "range": {
+        "startLine": 2747,
+        "startChar": 8,
+        "endLine": 2747,
+        "endChar": 10
+      },
+      "revId": "5331886d9909d6dddceb910cb1f7e921d3c370ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07623a24_f46864f7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2747,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:17:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c737426a_a4f9cce7",
       "range": {
         "startLine": 2747,
         "startChar": 8,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "07495aa4_e7fa8026",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1303,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:17:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6703f691_264f3642",
+      "range": {
+        "startLine": 1303,
+        "startChar": 16,
+        "endLine": 1303,
+        "endChar": 28
+      },
+      "revId": "5331886d9909d6dddceb910cb1f7e921d3c370ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6703f691_064c3a49",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 7
@@ -105,6 +177,30 @@
       "writtenOn": "2016-01-19T20:09:26Z",
       "side": 1,
       "message": "can we assume this is hardware? is there any other type of device? I didn\u0027t notice you are conservative with that guess here.",
+      "range": {
+        "startLine": 1314,
+        "startChar": 11,
+        "endLine": 1314,
+        "endChar": 24
+      },
+      "revId": "5331886d9909d6dddceb910cb1f7e921d3c370ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4768b202_a527d3f2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1314,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:17:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6703f691_064c3a49",
       "range": {
         "startLine": 1314,
         "startChar": 11,
