@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "47727221_0b5fc129",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 772,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-19T16:09:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6703f691_e637debb",
+      "range": {
+        "startLine": 724,
+        "startChar": 12,
+        "endLine": 772,
+        "endChar": 13
+      },
+      "revId": "bcf2499379a88b90a45e1d70fbea2514d268b870",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7096eb1_8e303f93",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2016-01-19T14:02:57Z",
       "side": 1,
       "message": "Going from the earlier suggestion, in all places you use this comparison, it could be made into a helper function with a nice name and updated to check for FL9_3 if needed.",
+      "range": {
+        "startLine": 865,
+        "startChar": 27,
+        "endLine": 865,
+        "endChar": 43
+      },
+      "revId": "bcf2499379a88b90a45e1d70fbea2514d268b870",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c786622d_cf35b1b0",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 865,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-19T16:09:14Z",
+      "side": 1,
+      "message": "Yep, I\u0027ll work on this tomorrow.",
+      "parentUuid": "a7096eb1_8e303f93",
       "range": {
         "startLine": 865,
         "startChar": 27,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e783661b_90cf5cda",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-19T16:09:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6703f691_26217679",
+      "range": {
+        "startLine": 125,
+        "startChar": 4,
+        "endLine": 125,
+        "endChar": 11
+      },
+      "revId": "bcf2499379a88b90a45e1d70fbea2514d268b870",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a73ece47_235934de",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 3
@@ -82,6 +154,30 @@
       "writtenOn": "2016-01-19T14:02:57Z",
       "side": 1,
       "message": "you should be able to hopefully simplify this code when we use the driver constants.",
+      "range": {
+        "startLine": 133,
+        "startChar": 12,
+        "endLine": 133,
+        "endChar": 43
+      },
+      "revId": "bcf2499379a88b90a45e1d70fbea2514d268b870",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2771fe1c_0a4b3f0b",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-19T16:09:14Z",
+      "side": 1,
+      "message": "I don\u0027t think that will have an effect on this code.",
+      "parentUuid": "a73ece47_235934de",
       "range": {
         "startLine": 133,
         "startChar": 12,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "6777760f_cc84e37f",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-19T16:09:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "870c6ac1_cd907d3a",
+      "range": {
+        "startLine": 226,
+        "startChar": 8,
+        "endLine": 226,
+        "endChar": 88
+      },
+      "revId": "bcf2499379a88b90a45e1d70fbea2514d268b870",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6703f691_061e7a3d",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 3
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "c786622d_4f0d4113",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-19T16:09:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6703f691_061e7a3d",
+      "range": {
+        "startLine": 231,
+        "startChar": 13,
+        "endLine": 231,
+        "endChar": 14
+      },
+      "revId": "bcf2499379a88b90a45e1d70fbea2514d268b870",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c737426a_c475f062",
         "filename": "src/compiler/translator/UtilsHLSL.h",
         "patchSetId": 3
@@ -151,6 +295,30 @@
       "writtenOn": "2016-01-19T14:02:57Z",
       "side": 1,
       "message": "nit: Probably would drop the \"E\", since that\u0027s an artifact from the old shader translator code we originally copied. Probably would use the caps/underscores style like in ShaderVars.h",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 18
+      },
+      "revId": "bcf2499379a88b90a45e1d70fbea2514d268b870",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07931a6b_d489d20c",
+        "filename": "src/compiler/translator/UtilsHLSL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-19T16:09:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c737426a_c475f062",
       "range": {
         "startLine": 27,
         "startChar": 4,
