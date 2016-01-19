@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c75ca266_107087ae",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1350,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:51:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7344668_42a9d2f5",
+      "range": {
+        "startLine": 1348,
+        "startChar": 0,
+        "endLine": 1350,
+        "endChar": 34
+      },
+      "revId": "487987242cc12d74d4101dfce0aa638a04f05384",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8741cad9_e27588ad",
         "filename": "src/tests/gl_tests/BlendMinMaxTest.cpp",
         "patchSetId": 9
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "07495aa4_e2326e97",
+        "filename": "src/tests/gl_tests/BlendMinMaxTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:51:32Z",
+      "side": 1,
+      "message": "I opened bug 1284 for these. I\u0027d prefer to leave the bug ID here rather than my username.",
+      "parentUuid": "8741cad9_e27588ad",
+      "range": {
+        "startLine": 182,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 16
+      },
+      "revId": "487987242cc12d74d4101dfce0aa638a04f05384",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c737426a_a4a8ecb0",
         "filename": "src/tests/gl_tests/LineLoopTest.cpp",
         "patchSetId": 9
@@ -59,6 +107,30 @@
       "writtenOn": "2016-01-19T22:44:42Z",
       "side": 1,
       "message": "can we make a note that Win10 (possibly Win8?) should pass these? We can even use the IsWinXOrGreater to filter these.",
+      "range": {
+        "startLine": 138,
+        "startChar": 4,
+        "endLine": 138,
+        "endChar": 32
+      },
+      "revId": "487987242cc12d74d4101dfce0aa638a04f05384",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2752dead_f72bf769",
+        "filename": "src/tests/gl_tests/LineLoopTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:51:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c737426a_a4a8ecb0",
       "range": {
         "startLine": 138,
         "startChar": 4,
@@ -100,6 +172,42 @@
       "side": 1,
       "message": "Also dropping this into a helper function would go a long way.",
       "parentUuid": "a7096eb1_5138a60e",
+      "revId": "487987242cc12d74d4101dfce0aa638a04f05384",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4768b202_dbf2b0c2",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:51:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7096eb1_5138a60e",
+      "revId": "487987242cc12d74d4101dfce0aa638a04f05384",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "87562a44_7ea0b362",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:51:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0726ba4f_56d7521d",
       "revId": "487987242cc12d74d4101dfce0aa638a04f05384",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
