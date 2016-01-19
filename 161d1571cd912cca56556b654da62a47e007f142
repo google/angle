@@ -16,6 +16,24 @@
       "revId": "161d1571cd912cca56556b654da62a47e007f142",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a73ece47_26e62202",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 906,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-19T21:04:02Z",
+      "side": 1,
+      "message": "I was wondering if setting a NULL vertex array should also set the dirty object flag.",
+      "parentUuid": "870c6ac1_4d912d17",
+      "revId": "161d1571cd912cca56556b654da62a47e007f142",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
