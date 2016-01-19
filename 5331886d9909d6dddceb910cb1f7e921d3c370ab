@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8741cad9_e2fa6864",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2738,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-19T20:09:26Z",
+      "side": 1,
+      "message": "can probably make this else if",
+      "range": {
+        "startLine": 2738,
+        "startChar": 4,
+        "endLine": 2738,
+        "endChar": 8
+      },
+      "revId": "5331886d9909d6dddceb910cb1f7e921d3c370ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c737426a_a4f9cce7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2747,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-19T20:09:26Z",
+      "side": 1,
+      "message": "nit: else if",
+      "range": {
+        "startLine": 2747,
+        "startChar": 8,
+        "endLine": 2747,
+        "endChar": 10
+      },
+      "revId": "5331886d9909d6dddceb910cb1f7e921d3c370ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27fd7ec1_6bd73245",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-19T20:09:26Z",
+      "side": 1,
+      "message": "make this mutable. it\u0027s not pretty but it\u0027s how we handle cache variables in other places in the code - this allows us to keep the const modifiers.",
+      "range": {
+        "startLine": 481,
+        "startChar": 19,
+        "endLine": 481,
+        "endChar": 40
+      },
+      "revId": "5331886d9909d6dddceb910cb1f7e921d3c370ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6703f691_264f3642",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1303,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-19T20:09:26Z",
+      "side": 1,
+      "message": "can we make this else and ASSERT inside that it\u0027s not software or null?",
+      "range": {
+        "startLine": 1303,
+        "startChar": 16,
+        "endLine": 1303,
+        "endChar": 28
+      },
+      "revId": "5331886d9909d6dddceb910cb1f7e921d3c370ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6703f691_064c3a49",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1314,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-19T20:09:26Z",
+      "side": 1,
+      "message": "can we assume this is hardware? is there any other type of device? I didn\u0027t notice you are conservative with that guess here.",
+      "range": {
+        "startLine": 1314,
+        "startChar": 11,
+        "endLine": 1314,
+        "endChar": 24
+      },
+      "revId": "5331886d9909d6dddceb910cb1f7e921d3c370ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
