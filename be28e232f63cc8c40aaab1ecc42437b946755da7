@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "07495aa4_e7844038",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2755,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:17:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8741cad9_c2f9646e",
+      "range": {
+        "startLine": 2755,
+        "startChar": 4,
+        "endLine": 2755,
+        "endChar": 8
+      },
+      "revId": "be28e232f63cc8c40aaab1ecc42437b946755da7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "27fd7ec1_2b681a32",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 8
@@ -59,6 +83,30 @@
       "writtenOn": "2016-01-19T21:11:05Z",
       "side": 1,
       "message": "can flatten the else block because the previous ifs both return immediately",
+      "range": {
+        "startLine": 2774,
+        "startChar": 4,
+        "endLine": 2775,
+        "endChar": 5
+      },
+      "revId": "be28e232f63cc8c40aaab1ecc42437b946755da7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "676db610_41599383",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2775,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-19T23:17:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27fd7ec1_2b681a32",
       "range": {
         "startLine": 2774,
         "startChar": 4,
