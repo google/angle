@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "87562a44_c34e4c70",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7344668_a24d3e75",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 19,
+        "endChar": 39
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e7344668_c252c216",
         "filename": "extensions/ANGLE_lossy_etc_decode.txt",
         "patchSetId": 4
@@ -53,6 +77,30 @@
       "writtenOn": "2016-01-18T13:46:46Z",
       "side": 1,
       "message": "I don\u0027t understand this line - is this a requirement for all compressed textures? I don\u0027t see any specific validation in your extension below where you specify anything about mip levels being equal to one or two.",
+      "range": {
+        "startLine": 46,
+        "startChar": 31,
+        "endLine": 47,
+        "endChar": 18
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e759a674_639e5728",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "It\u0027s the same as the restriction in ANGLE_texture_compression_dxt. If the real compression format is DXT, the dimension restriction will be applied.",
+      "parentUuid": "e7344668_c252c216",
       "range": {
         "startLine": 46,
         "startChar": 31,
@@ -88,6 +136,30 @@
     },
     {
       "key": {
+        "uuid": "c75ca266_1c04239b",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a73ece47_8324c08a",
+      "range": {
+        "startLine": 123,
+        "startChar": 31,
+        "endLine": 124,
+        "endChar": 77
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0726ba4f_5321a489",
         "filename": "extensions/ANGLE_lossy_etc_decode.txt",
         "patchSetId": 4
@@ -99,6 +171,30 @@
       "writtenOn": "2016-01-18T13:46:46Z",
       "side": 1,
       "message": "multiple",
+      "range": {
+        "startLine": 129,
+        "startChar": 26,
+        "endLine": 129,
+        "endChar": 34
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "274e5eac_b5fb7d67",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0726ba4f_5321a489",
       "range": {
         "startLine": 129,
         "startChar": 26,
@@ -134,6 +230,30 @@
     },
     {
       "key": {
+        "uuid": "27673e34_955e4c28",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1000,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7096eb1_6e8aabd4",
+      "range": {
+        "startLine": 1000,
+        "startChar": 8,
+        "endLine": 1000,
+        "endChar": 32
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "47fef2bd_05eb1209",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 4
@@ -145,6 +265,30 @@
       "writtenOn": "2016-01-18T13:46:46Z",
       "side": 1,
       "message": "Please use the format TODO(yourname): Reason\nAnd also add UNIMPLEMENTED, assuming these are not implemented yet.",
+      "range": {
+        "startLine": 1022,
+        "startChar": 9,
+        "endLine": 1022,
+        "endChar": 15
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "87562a44_83fbb467",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47fef2bd_05eb1209",
       "range": {
         "startLine": 1022,
         "startChar": 9,
@@ -180,6 +324,30 @@
     },
     {
       "key": {
+        "uuid": "4768b202_0533279d",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7344668_623896c8",
+      "range": {
+        "startLine": 165,
+        "startChar": 43,
+        "endLine": 165,
+        "endChar": 58
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "870c6ac1_ca1d03f8",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 4
@@ -191,6 +359,30 @@
       "writtenOn": "2016-01-18T13:46:46Z",
       "side": 1,
       "message": "please add an error message here as the second argument to Error",
+      "range": {
+        "startLine": 375,
+        "startChar": 43,
+        "endLine": 375,
+        "endChar": 63
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "676db610_014f9bba",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "870c6ac1_ca1d03f8",
       "range": {
         "startLine": 375,
         "startChar": 43,
@@ -226,6 +418,30 @@
     },
     {
       "key": {
+        "uuid": "2752dead_bc955628",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27fd7ec1_5e6e7542",
+      "range": {
+        "startLine": 380,
+        "startChar": 43,
+        "endLine": 380,
+        "endChar": 58
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7096eb1_4e87e7ca",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 4
@@ -237,6 +453,30 @@
       "writtenOn": "2016-01-18T13:46:46Z",
       "side": 1,
       "message": "please add an error message here as the second argument to Error",
+      "range": {
+        "startLine": 693,
+        "startChar": 43,
+        "endLine": 693,
+        "endChar": 63
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "274e5eac_35380dc7",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7096eb1_4e87e7ca",
       "range": {
         "startLine": 693,
         "startChar": 43,
@@ -272,6 +512,30 @@
     },
     {
       "key": {
+        "uuid": "c75ca266_bc2c173d",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 698,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7096eb1_2e94b3f5",
+      "range": {
+        "startLine": 698,
+        "startChar": 43,
+        "endLine": 698,
+        "endChar": 58
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7096eb1_0e91ef05",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 4
@@ -283,6 +547,30 @@
       "writtenOn": "2016-01-18T13:46:46Z",
       "side": 1,
       "message": "please add an error message here as the second argument to Error",
+      "range": {
+        "startLine": 829,
+        "startChar": 39,
+        "endLine": 829,
+        "endChar": 54
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07623a24_549318d4",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 829,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7096eb1_0e91ef05",
       "range": {
         "startLine": 829,
         "startChar": 39,
@@ -312,6 +600,24 @@
     },
     {
       "key": {
+        "uuid": "4768b202_4556bfaf",
+        "filename": "src/tests/gl_tests/ETCLossyDecodeTextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7096eb1_ce63d7ed",
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "27fd7ec1_3e6bb932",
         "filename": "src/tests/gl_tests/ETCLossyDecodeTextureTest.cpp",
         "patchSetId": 4
@@ -329,6 +635,24 @@
     },
     {
       "key": {
+        "uuid": "07623a24_5427985a",
+        "filename": "src/tests/gl_tests/ETCLossyDecodeTextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27fd7ec1_3e6bb932",
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "27fd7ec1_1e68fd31",
         "filename": "src/tests/gl_tests/ETCLossyDecodeTextureTest.cpp",
         "patchSetId": 4
@@ -340,6 +664,30 @@
       "writtenOn": "2016-01-18T13:46:46Z",
       "side": 1,
       "message": "comment before each test",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 6
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "274e5eac_5505d9ee",
+        "filename": "src/tests/gl_tests/ETCLossyDecodeTextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27fd7ec1_1e68fd31",
       "range": {
         "startLine": 38,
         "startChar": 0,
@@ -375,6 +723,30 @@
     },
     {
       "key": {
+        "uuid": "2752dead_9ce3bac2",
+        "filename": "src/tests/gl_tests/ETCLossyDecodeTextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8741cad9_ff1d1ff7",
+      "range": {
+        "startLine": 42,
+        "startChar": 11,
+        "endLine": 42,
+        "endChar": 14
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7096eb1_ee5e9b2b",
         "filename": "src/tests/gl_tests/ETCLossyDecodeTextureTest.cpp",
         "patchSetId": 4
@@ -386,6 +758,30 @@
       "writtenOn": "2016-01-18T13:46:46Z",
       "side": 1,
       "message": "nit: }  // anonymous namespace",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 1
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27673e34_d5b9e493",
+        "filename": "src/tests/gl_tests/ETCLossyDecodeTextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-01-19T22:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7096eb1_ee5e9b2b",
       "range": {
         "startLine": 71,
         "startChar": 0,
