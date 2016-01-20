@@ -743,7 +743,14 @@ class FunctionsGL
     PFNGLVERTEXARRAYVERTEXBUFFERPROC vertexArrayVertexBuffer;
     PFNGLVERTEXARRAYVERTEXBUFFERSPROC vertexArrayVertexBuffers;
 
+    // ES 3.2
+    PFNGLBLENDBARRIERPROC blendBarrier;
+    PFNGLPRIMITIVEBOUNDINGBOXPROC primitiveBoundingBox;
+
   private:
+    void initializeProcsDesktopGL();
+    void initializeProcsGLES();
+
     virtual void *loadProcAddress(const std::string &function) = 0;
 };
 
