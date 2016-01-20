@@ -175,6 +175,18 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     ReleaseDC(dummyWindow, dummyDeviceContext);
     DestroyWindow(dummyWindow);
 
+    const egl::AttributeMap &displayAttributes = display->getAttributeMap();
+    EGLint requestedDisplayType =
+        displayAttributes.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
+    if (requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE &&
+        !mFunctionsWGL->hasExtension("WGL_EXT_create_context_es2_profile") &&
+        !mFunctionsWGL->hasExtension("WGL_EXT_create_context_es_profile"))
+    {
+        return egl::Error(EGL_NOT_INITIALIZED,
+                          "Cannot create an OpenGL ES platform on Windows without "
+                          "the WGL_EXT_create_context_es(2)_profile extension.");
+    }
+
     // Create the real intermediate context and windows
     mWindow = CreateWindowExA(0,
                               reinterpret_cast<const char *>(mWindowClass),
@@ -230,14 +242,21 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         // TODO: handle robustness
 
         int mask = 0;
-        // Request core profile
-        mask |= WGL_CONTEXT_CORE_PROFILE_BIT_ARB;
+
+        if (requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE)
+        {
+            mask |= WGL_CONTEXT_ES_PROFILE_BIT_EXT;
+        }
+        else
+        {
+            // Request core profile
+            mask |= WGL_CONTEXT_CORE_PROFILE_BIT_ARB;
+        }
 
         std::vector<int> contextCreationAttributes;
 
         // Don't request a specific version unless the user wants one.  WGL will return the highest version
         // that the driver supports if no version is requested.
-        const egl::AttributeMap &displayAttributes = display->getAttributeMap();
         EGLint requestedMajorVersion = displayAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE);
         EGLint requestedMinorVersion = displayAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE);
         if (requestedMajorVersion != EGL_DONT_CARE && requestedMinorVersion != EGL_DONT_CARE)
@@ -247,6 +266,20 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
 
             contextCreationAttributes.push_back(WGL_CONTEXT_MINOR_VERSION_ARB);
             contextCreationAttributes.push_back(requestedMinorVersion);
+        }
+        else
+        {
+            // the ES profile will give us ES version 1.1 unless a higher version is requested.
+            // Requesting version 2.0 will give us the highest compatible version available (2.0,
+            // 3.0, 3.1, etc).
+            if (requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE)
+            {
+                contextCreationAttributes.push_back(WGL_CONTEXT_MAJOR_VERSION_ARB);
+                contextCreationAttributes.push_back(2);
+
+                contextCreationAttributes.push_back(WGL_CONTEXT_MINOR_VERSION_ARB);
+                contextCreationAttributes.push_back(0);
+            }
         }
 
         // Set the flag attributes
