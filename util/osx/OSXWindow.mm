@@ -120,7 +120,7 @@ static float YCoordToFromCG(float y)
 
     - (void) windowDidResize: (NSNotification*) notification
     {
-        NSSize windowSize = [mWindow->getNSWindow() frame].size;
+        NSSize windowSize = [[mWindow->getNSWindow() contentView] frame].size;
         Event event;
         event.Type = Event::EVENT_RESIZED;
         event.Size.Width = windowSize.width;
@@ -130,7 +130,7 @@ static float YCoordToFromCG(float y)
 
     - (void) windowDidMove: (NSNotification*) notification
     {
-        NSRect screenspace = [mWindow->getNSWindow() contentRectForFrameRect:[mWindow->getNSWindow() frame]];
+        NSRect screenspace = [mWindow->getNSWindow() frame];
         Event event;
         event.Type = Event::EVENT_MOVED;
         event.Move.X = screenspace.origin.x;
