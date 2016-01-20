@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "076cfa46_d7ab8cee",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-20T15:14:53Z",
+      "side": 1,
+      "message": "Sounds like a good idea. Though I think it should technically refer to \"shader profile\" rather than \"shader model\", https://msdn.microsoft.com/en-us/library/windows/desktop/bb509626(v\u003dvs.85).aspx , so maybe make them SH_HLSL_SP3_OUTPUT, SH_HLSL_SP4_OUTPUT and SH_HLSL_SP4_FL9_3_OUTPUT instead. Or would some other variation be even clearer? The DX docs use something like \"*S_4_0_LEVEL_9_3\" so we could follow that.",
+      "parentUuid": "e76b6668_4aaed3a3",
+      "range": {
+        "startLine": 103,
+        "startChar": 1,
+        "endLine": 106,
+        "endChar": 32
+      },
+      "revId": "89d09be289b592b09affeb99c29103bc6abb0176",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "870c6ac1_0d4c5549",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 5
