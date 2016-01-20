@@ -22,6 +22,30 @@
       "revId": "8d1257261978e31ff602cd54eab859be5490d386",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "47efd232_fd4d8774",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-01-20T18:32:09Z",
+      "side": 1,
+      "message": "I added this bool to prevent this code from being entered for non-instanced rendering calls using divisors of non-zero.  To support that case, the emulation would require the outer for-loop to properly render each instanced attribute correctly.\nI ran ES3 dEQP points rendering tests and discovered that non-instanced GL render calls with divisors of non-zero do not work with this emulation without major additions to the non-instanced code paths.  That will have to come in a later patch as it is most likely more intrusive.\nSeems odd to set a divisor and not use the instanced version of the api call, but it is being in the dEQP tests.  The GL documentation suggest using the instanced calls for non-zero divisors.\n\nWhat are your thoughts?",
+      "parentUuid": "870c6ac1_ad2b0924",
+      "range": {
+        "startLine": 406,
+        "startChar": 47,
+        "endLine": 406,
+        "endChar": 69
+      },
+      "revId": "8d1257261978e31ff602cd54eab859be5490d386",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
