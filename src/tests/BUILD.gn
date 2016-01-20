@@ -137,8 +137,10 @@ if (is_win) {
 ### dEQP tests
 ###-----------------------------------------------------
 
+# TODO(jmadill): Resolve issues with dEQP build.
 # TODO(jmadill): Other platforms.
-if (is_win || is_linux) {
+#if (is_win || is_linux) {
+if (false) {
   deqp_gypi = exec_script("//build/gypi_to_gn.py",
                           [
                             rebase_path("deqp.gypi"),
