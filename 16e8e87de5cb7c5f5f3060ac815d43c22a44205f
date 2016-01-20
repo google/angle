@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0726ba4f_f6921ed0",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T21:14:58Z",
+      "side": 1,
+      "message": "please add an error message here as the optional second parameter for the Error constructor",
+      "range": {
+        "startLine": 420,
+        "startChar": 35,
+        "endLine": 420,
+        "endChar": 50
+      },
+      "revId": "16e8e87de5cb7c5f5f3060ac815d43c22a44205f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7096eb1_516e6642",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T21:14:58Z",
+      "side": 1,
+      "message": "I think these are going to conflict with https://chromium-review.googlesource.com/#/c/319823/. I\u0027d suggest rebasing on top of that, and if you want to help us clean up the entry points, refactoring all the entry points you touched to use the same design pattern.",
+      "range": {
+        "startLine": 181,
+        "startChar": 13,
+        "endLine": 181,
+        "endChar": 48
+      },
+      "revId": "16e8e87de5cb7c5f5f3060ac815d43c22a44205f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
