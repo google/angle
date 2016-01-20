@@ -177,6 +177,7 @@ WindowSurfaceCGL::~WindowSurfaceCGL()
 
     if (mSwapLayer != nil)
     {
+        [mSwapLayer removeFromSuperlayer];
         [mSwapLayer release];
         mSwapLayer = nil;
     }
