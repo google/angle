@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "870c6ac1_6d94f108",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T13:49:23Z",
+      "side": 1,
+      "message": "nit: probably skill include the break",
+      "range": {
+        "startLine": 671,
+        "startChar": 12,
+        "endLine": 671,
+        "endChar": 23
+      },
+      "revId": "f7ce59fbe37e612aff0334bf328f1482f7d1f5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c737426a_e418340a",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1479,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T13:49:23Z",
+      "side": 1,
+      "message": "make this an init call and pass in the used sampler counts",
+      "range": {
+        "startLine": 1470,
+        "startChar": 4,
+        "endLine": 1479,
+        "endChar": 5
+      },
+      "revId": "f7ce59fbe37e612aff0334bf328f1482f7d1f5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7344668_424c724a",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T13:49:23Z",
+      "side": 1,
+      "message": "make this private and make this a normal class. make mutator/accessor methods, etc.",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 153,
+        "endChar": 41
+      },
+      "revId": "f7ce59fbe37e612aff0334bf328f1482f7d1f5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c737426a_24ee1c19",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T13:49:23Z",
+      "side": 1,
+      "message": "implement this in Renderer9.cpp, keep this abstract virtual.",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 172,
+        "endChar": 5
+      },
+      "revId": "f7ce59fbe37e612aff0334bf328f1482f7d1f5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "47fef2bd_08e327f2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T13:49:23Z",
+      "side": 1,
+      "message": "InitConstantBufferDesc",
+      "range": {
+        "startLine": 88,
+        "startChar": 5,
+        "endLine": 88,
+        "endChar": 24
+      },
+      "revId": "f7ce59fbe37e612aff0334bf328f1482f7d1f5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "870c6ac1_8dae0552",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2418,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T13:49:23Z",
+      "side": 1,
+      "message": "s/NULL/nullptr",
+      "range": {
+        "startLine": 2418,
+        "startChar": 75,
+        "endLine": 2418,
+        "endChar": 79
+      },
+      "revId": "f7ce59fbe37e612aff0334bf328f1482f7d1f5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
