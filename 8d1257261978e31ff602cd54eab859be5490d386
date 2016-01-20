@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "870c6ac1_ad2b0924",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T17:37:22Z",
+      "side": 1,
+      "message": "sorry, I\u0027m not sure if I understand -\n\neven if the draw call is DrawElements (not instanced), the divisor still matters. it\u0027s treated as though the number of instances is \u003d\u003d 1. I think this impacts this code below.",
+      "range": {
+        "startLine": 406,
+        "startChar": 47,
+        "endLine": 406,
+        "endChar": 69
+      },
+      "revId": "8d1257261978e31ff602cd54eab859be5490d386",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
