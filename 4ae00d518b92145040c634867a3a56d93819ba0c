@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7096eb1_51b66645",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T16:45:24Z",
+      "side": 1,
+      "message": "Can you add a comment explaining where the virtual parentheses would be around: version || exts1 \u0026\u0026 exts2",
+      "range": {
+        "startLine": 47,
+        "startChar": 33,
+        "endLine": 47,
+        "endChar": 53
+      },
+      "revId": "4ae00d518b92145040c634867a3a56d93819ba0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
