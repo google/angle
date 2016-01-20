@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "870c6ac1_cd92bdd0",
+        "filename": "src/tests/gl_tests/LineLoopTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T13:56:01Z",
+      "side": 1,
+      "message": "what did you think about the idea of making a function to check if we\u0027re not on Win 10?",
+      "range": {
+        "startLine": 140,
+        "startChar": 4,
+        "endLine": 140,
+        "endChar": 32
+      },
+      "revId": "e2cb9c958bdf010420b1d236726bfaa4b2432bb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a73ece47_06a51e71",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T13:56:01Z",
+      "side": 1,
+      "message": "make this check early return to flatten the if. You can also do the same with the extension string query.",
+      "range": {
+        "startLine": 174,
+        "startChar": 3,
+        "endLine": 177,
+        "endChar": 5
+      },
+      "revId": "e2cb9c958bdf010420b1d236726bfaa4b2432bb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
