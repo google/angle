@@ -138,6 +138,30 @@
       "revId": "7f22854a8cd76086c8e66454af10493474dc6cbf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a73ece47_861e0e4e",
+        "filename": "src/tests/gl_tests/ETCTextureTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T17:55:02Z",
+      "side": 1,
+      "message": "I believe any inline comments must be preceded by two spaces as a style formatting rule.",
+      "parentUuid": "8741cad9_4218f460",
+      "range": {
+        "startLine": 79,
+        "startChar": 1,
+        "endLine": 79,
+        "endChar": 3
+      },
+      "revId": "7f22854a8cd76086c8e66454af10493474dc6cbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
