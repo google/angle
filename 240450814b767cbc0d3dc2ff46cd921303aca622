@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "07931a6b_df5bab7c",
+        "filename": "infra/config/OWNERS",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1141499
+      },
+      "writtenOn": "2016-01-20T16:13:49Z",
+      "side": 1,
+      "message": "all right, added.",
+      "parentUuid": "e7344668_82527aeb",
+      "revId": "240450814b767cbc0d3dc2ff46cd921303aca622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e798c691_2b9b6937",
         "filename": "infra/config/cq.cfg",
         "patchSetId": 1
