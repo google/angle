@@ -69,7 +69,7 @@ std::ostream &operator<<(std::ostream& stream, const PlatformParameters &pp)
         stream << "OPENGL";
         break;
       case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
-        stream << "GLES";
+          stream << "OPENGLES";
         break;
       case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
         stream << "DEFAULT";
@@ -336,6 +336,12 @@ EGLPlatformParameters OPENGLES()
     return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE);
 }
 
+EGLPlatformParameters OPENGLES(EGLint major, EGLint minor)
+{
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE, major, minor,
+                                 EGL_DONT_CARE);
+}
+
 } // namespace egl_platform
 
 // ANGLE tests platforms
@@ -504,9 +510,19 @@ PlatformParameters ES2_OPENGLES()
     return PlatformParameters(2, 0, egl_platform::OPENGLES());
 }
 
+PlatformParameters ES2_OPENGLES(EGLint major, EGLint minor)
+{
+    return PlatformParameters(2, 0, egl_platform::OPENGLES(major, minor));
+}
+
 PlatformParameters ES3_OPENGLES()
 {
     return PlatformParameters(3, 0, egl_platform::OPENGLES());
+}
+
+PlatformParameters ES3_OPENGLES(EGLint major, EGLint minor)
+{
+    return PlatformParameters(3, 0, egl_platform::OPENGLES(major, minor));
 }
 
 PlatformParameters ES2_OPENGL()

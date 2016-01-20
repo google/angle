@@ -1220,6 +1220,15 @@ TEST_P(Texture2DTest, TextureNPOT_GL_ALPHA_UBYTE)
 // ANGLE previously rejected this if GL_OES_texture_npot wasn't active, which is incorrect.
 TEST_P(Texture2DTest, NPOTSubImageParameters)
 {
+    // TODO(geofflang): Allow the GL backend to accept SubImage calls with a null data ptr. (bug
+    // 1278)
+    if (getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE ||
+        getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE)
+    {
+        std::cout << "Test disabled on OpenGL." << std::endl;
+        return;
+    }
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
 
@@ -1808,24 +1817,49 @@ TEST_P(TextureLimitsTest, DrawWithTexturePastMaximum)
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // TODO(oetuaho): Enable all below tests on OpenGL. Requires a fix for ANGLE bug 1278.
-ANGLE_INSTANTIATE_TEST(Texture2DTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
-ANGLE_INSTANTIATE_TEST(TextureCubeTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(Texture2DTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_D3D11_FL9_3(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(TextureCubeTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_D3D11_FL9_3(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES());
 ANGLE_INSTANTIATE_TEST(Texture2DTestWithDrawScale,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
-                       ES2_OPENGL());
+                       ES2_OPENGL(),
+                       ES2_OPENGLES());
 ANGLE_INSTANTIATE_TEST(Sampler2DAsFunctionParameterTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
-                       ES2_OPENGL());
-ANGLE_INSTANTIATE_TEST(SamplerArrayTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL());
-ANGLE_INSTANTIATE_TEST(SamplerArrayAsFunctionParameterTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3());
-ANGLE_INSTANTIATE_TEST(Texture2DTestES3, ES3_D3D11(), ES3_OPENGL());
-ANGLE_INSTANTIATE_TEST(ShadowSamplerPlusSampler3DTestES3, ES3_D3D11(), ES3_OPENGL());
-ANGLE_INSTANTIATE_TEST(SamplerTypeMixTestES3, ES3_D3D11(), ES3_OPENGL());
-ANGLE_INSTANTIATE_TEST(Texture2DArrayTestES3, ES3_D3D11(), ES3_OPENGL());
-ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL());
+                       ES2_OPENGL(),
+                       ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(SamplerArrayTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_D3D11_FL9_3(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(SamplerArrayAsFunctionParameterTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_D3D11_FL9_3(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(Texture2DTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(ShadowSamplerPlusSampler3DTestES3,
+                       ES3_D3D11(),
+                       ES3_OPENGL(),
+                       ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(SamplerTypeMixTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(Texture2DArrayTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());
 
 } // namespace

@@ -151,6 +151,13 @@ TEST_P(ReadPixelsTest, PBOWithOtherTarget)
 
 TEST_P(ReadPixelsTest, PBOWithExistingData)
 {
+    // TODO(geofflang): Figure out why this fails on AMD OpenGL (http://anglebug.com/1291)
+    if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    {
+        std::cout << "Test disabled on AMD OpenGL." << std::endl;
+        return;
+    }
+
     // Clear backbuffer to red
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -345,4 +352,4 @@ TEST_P(ReadPixelsTest, MultisampledPBO)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_INSTANTIATE_TEST(ReadPixelsTest, ES3_D3D11());
+ANGLE_INSTANTIATE_TEST(ReadPixelsTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
