@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6703f691_665f6ec5",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T16:52:03Z",
+      "side": 1,
+      "message": "nit: these can be moved lower",
+      "range": {
+        "startLine": 181,
+        "startChar": 0,
+        "endLine": 185,
+        "endChar": 56
+      },
+      "revId": "e2dacd37366e8d16fdd9140949518d7dcbd7a35f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0726ba4f_b684a6c8",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T16:52:03Z",
+      "side": 1,
+      "message": "nit: didn\u0027t notice this before, should be reinterpret_cast, as with the next one",
+      "range": {
+        "startLine": 195,
+        "startChar": 9,
+        "endLine": 195,
+        "endChar": 40
+      },
+      "revId": "e2dacd37366e8d16fdd9140949518d7dcbd7a35f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
