@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0726ba4f_3660960b",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T13:49:23Z",
+      "side": 1,
+      "message": "probably pass the out to this function rather than returning a TString, to use the stream operators.",
+      "range": {
+        "startLine": 512,
+        "startChar": 16,
+        "endLine": 512,
+        "endChar": 63
+      },
+      "revId": "24fda36a6711ba4aec6575efdf0ea451eb5e1858",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7096eb1_f1379abb",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T13:49:23Z",
+      "side": 1,
+      "message": "I\u0027d make this an update function that passes the samplerIndex and new baseLevel",
+      "range": {
+        "startLine": 675,
+        "startChar": 0,
+        "endLine": 679,
+        "endChar": 5
+      },
+      "revId": "24fda36a6711ba4aec6575efdf0ea451eb5e1858",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e76b6668_0ab8dbe4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2435,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T13:49:23Z",
+      "side": 1,
+      "message": "maybe here an isBufferInitialized() and initializeBuffer(mDevice)",
+      "range": {
+        "startLine": 2433,
+        "startChar": 4,
+        "endLine": 2435,
+        "endChar": 10
+      },
+      "revId": "24fda36a6711ba4aec6575efdf0ea451eb5e1858",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e76b6668_6aab9792",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2456,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T13:49:23Z",
+      "side": 1,
+      "message": "here can make an isDirty and getBuffer queries",
+      "range": {
+        "startLine": 2456,
+        "startChar": 8,
+        "endLine": 2456,
+        "endChar": 31
+      },
+      "revId": "24fda36a6711ba4aec6575efdf0ea451eb5e1858",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
