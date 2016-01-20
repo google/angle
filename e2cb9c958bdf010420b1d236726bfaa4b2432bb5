@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "870c6ac1_cdc99dd2",
+        "filename": "src/tests/gl_tests/BlendMinMaxTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T16:52:03Z",
+      "side": 1,
+      "message": "nit: you can wrap this i think to one line",
+      "range": {
+        "startLine": 182,
+        "startChar": 5,
+        "endLine": 183,
+        "endChar": 16
+      },
+      "revId": "e2cb9c958bdf010420b1d236726bfaa4b2432bb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "870c6ac1_cd92bdd0",
         "filename": "src/tests/gl_tests/LineLoopTest.cpp",
         "patchSetId": 10
@@ -37,6 +60,30 @@
       "side": 1,
       "message": "IsWindows10OrGreater and related #defines are only available in the Windows 10 SDK, while ANGLE uses the Win8 SDK. \n\nAlso, you need to manifest the application correctly for it to work, and I don\u0027t think ANGLE is set up for that (see \u0027Remarks in https://msdn.microsoft.com/en-us/library/windows/desktop/dn905474(v\u003dvs.85).aspx).",
       "parentUuid": "870c6ac1_cd92bdd0",
+      "range": {
+        "startLine": 140,
+        "startChar": 4,
+        "endLine": 140,
+        "endChar": 32
+      },
+      "revId": "e2cb9c958bdf010420b1d236726bfaa4b2432bb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27fd7ec1_90bdf181",
+        "filename": "src/tests/gl_tests/LineLoopTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T16:52:03Z",
+      "side": 1,
+      "message": "Ah, OK, good to know. Thanks.",
+      "parentUuid": "4768b202_b1c435b9",
       "range": {
         "startLine": 140,
         "startChar": 4,
