@@ -328,18 +328,25 @@ class State : angle::NonCopyable
         DIRTY_BIT_GENERATE_MIPMAP_HINT,
         DIRTY_BIT_SHADER_DERIVATIVE_HINT,
         DIRTY_BIT_READ_FRAMEBUFFER_BINDING,
-        DIRTY_BIT_READ_FRAMEBUFFER_OBJECT,
         DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING,
-        DIRTY_BIT_DRAW_FRAMEBUFFER_OBJECT,
         DIRTY_BIT_RENDERBUFFER_BINDING,
         DIRTY_BIT_VERTEX_ARRAY_BINDING,
-        DIRTY_BIT_VERTEX_ARRAY_OBJECT,
         DIRTY_BIT_PROGRAM_BINDING,
-        DIRTY_BIT_PROGRAM_OBJECT,
         DIRTY_BIT_CURRENT_VALUE_0,
         DIRTY_BIT_CURRENT_VALUE_MAX = DIRTY_BIT_CURRENT_VALUE_0 + MAX_VERTEX_ATTRIBS,
         DIRTY_BIT_INVALID           = DIRTY_BIT_CURRENT_VALUE_MAX,
         DIRTY_BIT_MAX               = DIRTY_BIT_INVALID,
+    };
+
+    // TODO(jmadill): Consider storing dirty objects in a list instead of by binding.
+    enum DirtyObjectType
+    {
+        DIRTY_OBJECT_READ_FRAMEBUFFER,
+        DIRTY_OBJECT_DRAW_FRAMEBUFFER,
+        DIRTY_OBJECT_VERTEX_ARRAY,
+        DIRTY_OBJECT_PROGRAM,
+        DIRTY_OBJECT_UNKNOWN,
+        DIRTY_OBJECT_MAX = DIRTY_OBJECT_UNKNOWN,
     };
 
     typedef std::bitset<DIRTY_BIT_MAX> DirtyBits;
@@ -347,6 +354,11 @@ class State : angle::NonCopyable
     void clearDirtyBits() { mDirtyBits.reset(); }
     void clearDirtyBits(const DirtyBits &bitset) { mDirtyBits &= ~bitset; }
     void setAllDirtyBits() { mDirtyBits.set(); }
+
+    typedef std::bitset<DIRTY_OBJECT_MAX> DirtyObjects;
+    void clearDirtyObjects() { mDirtyObjects.reset(); }
+    void setAllDirtyObjects() { mDirtyObjects.set(); }
+    void syncDirtyObjects();
 
     // Dirty bit masks
     const DirtyBits &unpackStateBitMask() const { return mUnpackStateBitMask; }
@@ -430,6 +442,8 @@ class State : angle::NonCopyable
     DirtyBits mPackStateBitMask;
     DirtyBits mClearStateBitMask;
     DirtyBits mBlitStateBitMask;
+
+    DirtyObjects mDirtyObjects;
 };
 
 }

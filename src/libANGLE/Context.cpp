@@ -1919,21 +1919,19 @@ void Context::initCaps(GLuint clientVersion)
 void Context::syncRendererState()
 {
     const State::DirtyBits &dirtyBits = mState.getDirtyBits();
-    if (dirtyBits.any())
-    {
-        mRenderer->syncState(mState, dirtyBits);
-        mState.clearDirtyBits();
-    }
+    mRenderer->syncState(mState, dirtyBits);
+    mState.clearDirtyBits();
+    mState.syncDirtyObjects();
 }
 
 void Context::syncRendererState(const State::DirtyBits &bitMask)
 {
     const State::DirtyBits &dirtyBits = (mState.getDirtyBits() & bitMask);
-    if (dirtyBits.any())
-    {
-        mRenderer->syncState(mState, dirtyBits);
-        mState.clearDirtyBits(dirtyBits);
-    }
+    mRenderer->syncState(mState, dirtyBits);
+    mState.clearDirtyBits(dirtyBits);
+
+    // TODO(jmadill): Filter objects by bitMask somehow?
+    mState.syncDirtyObjects();
 }
 
 void Context::blitFramebuffer(GLint srcX0,

@@ -111,6 +111,11 @@ void StateManager11::setViewportBounds(const int width, const int height)
 
 void StateManager11::syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits)
 {
+    if (!dirtyBits.any())
+    {
+        return;
+    }
+
     for (unsigned int dirtyBit : angle::IterateBitSet(dirtyBits))
     {
         switch (dirtyBit)

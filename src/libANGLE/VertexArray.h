@@ -109,6 +109,7 @@ class VertexArray final : public LabeledObject
     typedef std::bitset<DIRTY_BIT_MAX> DirtyBits;
 
     void syncImplState();
+    bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
   private:
     GLuint mId;
