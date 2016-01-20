@@ -28,8 +28,11 @@ class Shader;
 class ValidationContext;
 
 bool ValidCap(const Context *context, GLenum cap);
-bool ValidTextureTarget(const Context *context, GLenum target);
+bool ValidTextureTarget(const ValidationContext *context, GLenum target);
+bool ValidTexture2DTarget(const ValidationContext *context, GLenum target);
+bool ValidTexture3DTarget(const ValidationContext *context, GLenum target);
 bool ValidTexture2DDestinationTarget(const ValidationContext *context, GLenum target);
+bool ValidTexture3DDestinationTarget(const ValidationContext *context, GLenum target);
 bool ValidFramebufferTarget(GLenum target);
 bool ValidBufferTarget(const Context *context, GLenum target);
 bool ValidBufferParameter(const Context *context, GLenum pname);

@@ -202,12 +202,14 @@ ES3FormatCombinationSet BuildES3FormatSet()
 
 static bool ValidateTexImageFormatCombination(gl::Context *context, GLenum internalFormat, GLenum format, GLenum type)
 {
-    // Note: dEQP 2013.4 expects an INVALID_VALUE error for TexImage3D with an invalid
-    // internal format. (dEQP-GLES3.functional.negative_api.texture.teximage3d)
+    // For historical reasons, glTexImage2D and glTexImage3D pass in their internal format as a
+    // GLint instead of a GLenum. Therefor an invalid internal format gives a GL_INVALID_VALUE
+    // error instead of a GL_INVALID_ENUM error. As this validation function is only called in
+    // the validation codepaths for glTexImage2D/3D, we record a GL_INVALID_VALUE error.
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
     if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
-        context->recordError(Error(GL_INVALID_ENUM));
+        context->recordError(Error(GL_INVALID_VALUE));
         return false;
     }
 
@@ -260,16 +262,23 @@ static bool ValidateTexImageFormatCombination(gl::Context *context, GLenum inter
     return true;
 }
 
-bool ValidateES3TexImageParameters(Context *context, GLenum target, GLint level, GLenum internalformat, bool isCompressed, bool isSubImage,
-                                   GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                                   GLint border, GLenum format, GLenum type, const GLvoid *pixels)
+bool ValidateES3TexImageParametersBase(Context *context,
+                                       GLenum target,
+                                       GLint level,
+                                       GLenum internalformat,
+                                       bool isCompressed,
+                                       bool isSubImage,
+                                       GLint xoffset,
+                                       GLint yoffset,
+                                       GLint zoffset,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       GLsizei depth,
+                                       GLint border,
+                                       GLenum format,
+                                       GLenum type,
+                                       const GLvoid *pixels)
 {
-    if (!ValidTexture2DDestinationTarget(context, target))
-    {
-        context->recordError(Error(GL_INVALID_ENUM));
-        return false;
-    }
-
     // Validate image size
     if (!ValidImageSizeParameters(context, target, level, width, height, depth, isSubImage))
     {
@@ -500,6 +509,62 @@ bool ValidateES3TexImageParameters(Context *context, GLenum target, GLint level,
     }
 
     return true;
+}
+
+bool ValidateES3TexImage2DParameters(Context *context,
+                                     GLenum target,
+                                     GLint level,
+                                     GLenum internalformat,
+                                     bool isCompressed,
+                                     bool isSubImage,
+                                     GLint xoffset,
+                                     GLint yoffset,
+                                     GLint zoffset,
+                                     GLsizei width,
+                                     GLsizei height,
+                                     GLsizei depth,
+                                     GLint border,
+                                     GLenum format,
+                                     GLenum type,
+                                     const GLvoid *pixels)
+{
+    if (!ValidTexture2DDestinationTarget(context, target))
+    {
+        context->recordError(Error(GL_INVALID_ENUM));
+        return false;
+    }
+
+    return ValidateES3TexImageParametersBase(context, target, level, internalformat, isCompressed,
+                                             isSubImage, xoffset, yoffset, zoffset, width, height,
+                                             depth, border, format, type, pixels);
+}
+
+bool ValidateES3TexImage3DParameters(Context *context,
+                                     GLenum target,
+                                     GLint level,
+                                     GLenum internalformat,
+                                     bool isCompressed,
+                                     bool isSubImage,
+                                     GLint xoffset,
+                                     GLint yoffset,
+                                     GLint zoffset,
+                                     GLsizei width,
+                                     GLsizei height,
+                                     GLsizei depth,
+                                     GLint border,
+                                     GLenum format,
+                                     GLenum type,
+                                     const GLvoid *pixels)
+{
+    if (!ValidTexture3DDestinationTarget(context, target))
+    {
+        context->recordError(Error(GL_INVALID_ENUM));
+        return false;
+    }
+
+    return ValidateES3TexImageParametersBase(context, target, level, internalformat, isCompressed,
+                                             isSubImage, xoffset, yoffset, zoffset, width, height,
+                                             depth, border, format, type, pixels);
 }
 
 struct EffectiveInternalFormatInfo
@@ -786,19 +851,19 @@ static bool IsValidES3CopyTexImageCombination(GLenum textureInternalFormat, GLen
     return false;
 }
 
-bool ValidateES3CopyTexImageParameters(ValidationContext *context,
-                                       GLenum target,
-                                       GLint level,
-                                       GLenum internalformat,
-                                       bool isSubImage,
-                                       GLint xoffset,
-                                       GLint yoffset,
-                                       GLint zoffset,
-                                       GLint x,
-                                       GLint y,
-                                       GLsizei width,
-                                       GLsizei height,
-                                       GLint border)
+bool ValidateES3CopyTexImageParametersBase(ValidationContext *context,
+                                           GLenum target,
+                                           GLint level,
+                                           GLenum internalformat,
+                                           bool isSubImage,
+                                           GLint xoffset,
+                                           GLint yoffset,
+                                           GLint zoffset,
+                                           GLint x,
+                                           GLint y,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLint border)
 {
     GLenum textureInternalFormat;
     if (!ValidateCopyTexImageParametersBase(context, target, level, internalformat, isSubImage,
@@ -850,8 +915,63 @@ bool ValidateES3CopyTexImageParameters(ValidationContext *context,
     return (width > 0 && height > 0);
 }
 
-bool ValidateES3TexStorageParameters(Context *context, GLenum target, GLsizei levels, GLenum internalformat,
-                                     GLsizei width, GLsizei height, GLsizei depth)
+bool ValidateES3CopyTexImage2DParameters(ValidationContext *context,
+                                         GLenum target,
+                                         GLint level,
+                                         GLenum internalformat,
+                                         bool isSubImage,
+                                         GLint xoffset,
+                                         GLint yoffset,
+                                         GLint zoffset,
+                                         GLint x,
+                                         GLint y,
+                                         GLsizei width,
+                                         GLsizei height,
+                                         GLint border)
+{
+    if (!ValidTexture2DDestinationTarget(context, target))
+    {
+        context->recordError(Error(GL_INVALID_ENUM));
+        return false;
+    }
+
+    return ValidateES3CopyTexImageParametersBase(context, target, level, internalformat, isSubImage,
+                                                 xoffset, yoffset, zoffset, x, y, width, height,
+                                                 border);
+}
+
+bool ValidateES3CopyTexImage3DParameters(ValidationContext *context,
+                                         GLenum target,
+                                         GLint level,
+                                         GLenum internalformat,
+                                         bool isSubImage,
+                                         GLint xoffset,
+                                         GLint yoffset,
+                                         GLint zoffset,
+                                         GLint x,
+                                         GLint y,
+                                         GLsizei width,
+                                         GLsizei height,
+                                         GLint border)
+{
+    if (!ValidTexture3DDestinationTarget(context, target))
+    {
+        context->recordError(Error(GL_INVALID_ENUM));
+        return false;
+    }
+
+    return ValidateES3CopyTexImageParametersBase(context, target, level, internalformat, isSubImage,
+                                                 xoffset, yoffset, zoffset, x, y, width, height,
+                                                 border);
+}
+
+bool ValidateES3TexStorageParametersBase(Context *context,
+                                         GLenum target,
+                                         GLsizei levels,
+                                         GLenum internalformat,
+                                         GLsizei width,
+                                         GLsizei height,
+                                         GLsizei depth)
 {
     if (width < 1 || height < 1 || depth < 1 || levels < 1)
     {
@@ -927,7 +1047,7 @@ bool ValidateES3TexStorageParameters(Context *context, GLenum target, GLsizei le
         break;
 
       default:
-        context->recordError(Error(GL_INVALID_ENUM));
+          UNREACHABLE();
         return false;
     }
 
@@ -958,6 +1078,42 @@ bool ValidateES3TexStorageParameters(Context *context, GLenum target, GLsizei le
     }
 
     return true;
+}
+
+bool ValidateES3TexStorage2DParameters(Context *context,
+                                       GLenum target,
+                                       GLsizei levels,
+                                       GLenum internalformat,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       GLsizei depth)
+{
+    if (!ValidTexture2DTarget(context, target))
+    {
+        context->recordError(Error(GL_INVALID_ENUM));
+        return false;
+    }
+
+    return ValidateES3TexStorageParametersBase(context, target, levels, internalformat, width,
+                                               height, depth);
+}
+
+bool ValidateES3TexStorage3DParameters(Context *context,
+                                       GLenum target,
+                                       GLsizei levels,
+                                       GLenum internalformat,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       GLsizei depth)
+{
+    if (!ValidTexture3DTarget(context, target))
+    {
+        context->recordError(Error(GL_INVALID_ENUM));
+        return false;
+    }
+
+    return ValidateES3TexStorageParametersBase(context, target, levels, internalformat, width,
+                                               height, depth);
 }
 
 bool ValidateFramebufferTextureLayer(Context *context, GLenum target, GLenum attachment,
@@ -1283,8 +1439,8 @@ bool ValidateCompressedTexImage3D(Context *context,
     }
 
     // validateES3TexImageFormat sets the error code if there is an error
-    if (!ValidateES3TexImageParameters(context, target, level, internalformat, true, false, 0, 0, 0,
-                                       width, height, depth, border, GL_NONE, GL_NONE, data))
+    if (!ValidateES3TexImage3DParameters(context, target, level, internalformat, true, false, 0, 0,
+                                         0, width, height, depth, border, GL_NONE, GL_NONE, data))
     {
         return false;
     }
@@ -1555,8 +1711,8 @@ bool ValidateCopyTexSubImage3D(Context *context,
         return false;
     }
 
-    return ValidateES3CopyTexImageParameters(context, target, level, GL_NONE, true, xoffset,
-                                             yoffset, zoffset, x, y, width, height, 0);
+    return ValidateES3CopyTexImage3DParameters(context, target, level, GL_NONE, true, xoffset,
+                                               yoffset, zoffset, x, y, width, height, 0);
 }
 
 }  // namespace gl
