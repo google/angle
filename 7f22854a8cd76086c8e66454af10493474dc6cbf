@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7096eb1_d19256d0",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T15:04:09Z",
+      "side": 1,
+      "message": "how about, \"xoffset and yoffset must also be aligned to 4x4 texel block boundaries, since ETC encoding makes it difficult to modify non-aligned regions.\"",
+      "range": {
+        "startLine": 123,
+        "startChar": 31,
+        "endLine": 125,
+        "endChar": 39
+      },
+      "revId": "7f22854a8cd76086c8e66454af10493474dc6cbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "870c6ac1_2d85d978",
+        "filename": "src/tests/gl_tests/ETCTextureTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T15:04:09Z",
+      "side": 1,
+      "message": "init mTexture to zero using an initializer list",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 18
+      },
+      "revId": "7f22854a8cd76086c8e66454af10493474dc6cbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6703f691_4633529d",
+        "filename": "src/tests/gl_tests/ETCTextureTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T15:04:09Z",
+      "side": 1,
+      "message": "nit: you can make this an ASSERT_GL_NO_ERROR()",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 26
+      },
+      "revId": "7f22854a8cd76086c8e66454af10493474dc6cbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27fd7ec1_7038350f",
+        "filename": "src/tests/gl_tests/ETCTextureTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T15:04:09Z",
+      "side": 1,
+      "message": "I believe there should be two spaces here - git cl format should clean this up",
+      "range": {
+        "startLine": 79,
+        "startChar": 1,
+        "endLine": 79,
+        "endChar": 3
+      },
+      "revId": "7f22854a8cd76086c8e66454af10493474dc6cbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
