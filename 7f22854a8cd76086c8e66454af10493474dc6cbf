@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "27fd7ec1_309bdd37",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-20T16:52:42Z",
+      "side": 1,
+      "message": "nit: double except looks weird",
+      "range": {
+        "startLine": 46,
+        "startChar": 32,
+        "endLine": 46,
+        "endChar": 38
+      },
+      "revId": "7f22854a8cd76086c8e66454af10493474dc6cbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7096eb1_d19256d0",
         "filename": "extensions/ANGLE_lossy_etc_decode.txt",
         "patchSetId": 6
@@ -82,6 +105,30 @@
       "writtenOn": "2016-01-20T15:04:09Z",
       "side": 1,
       "message": "I believe there should be two spaces here - git cl format should clean this up",
+      "range": {
+        "startLine": 79,
+        "startChar": 1,
+        "endLine": 79,
+        "endChar": 3
+      },
+      "revId": "7f22854a8cd76086c8e66454af10493474dc6cbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8741cad9_4218f460",
+        "filename": "src/tests/gl_tests/ETCTextureTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-20T16:52:42Z",
+      "side": 1,
+      "message": "I have always wondered why git cl format puts to space, what\u0027s the rational?",
+      "parentUuid": "27fd7ec1_7038350f",
       "range": {
         "startLine": 79,
         "startChar": 1,
