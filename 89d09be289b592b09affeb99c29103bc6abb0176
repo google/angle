@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e76b6668_4aaed3a3",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T13:43:56Z",
+      "side": 1,
+      "message": "I\u0027d suggest making SH_HLSL_SM3_OUTPUT duplicate SH_HLSL9_OUTPUT and remove SH_HLSL_OUTPUT (doesn\u0027t show up in code search). Also SH_HLSL_SM4_1_OUTPUT mirrors SH_HLSL11_OUTPUT, and rename the next to SH_HLSL_SM4_FL9_3_OUTPUT You can make ANGLE use the new enums, and eventually we can migrate Chrome and remove the old names.",
+      "range": {
+        "startLine": 103,
+        "startChar": 1,
+        "endLine": 106,
+        "endChar": 32
+      },
+      "revId": "89d09be289b592b09affeb99c29103bc6abb0176",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "870c6ac1_0d4c5549",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3170,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T13:43:56Z",
+      "side": 1,
+      "message": "nit: you can remove the else here",
+      "range": {
+        "startLine": 3170,
+        "startChar": 8,
+        "endLine": 3170,
+        "endChar": 12
+      },
+      "revId": "89d09be289b592b09affeb99c29103bc6abb0176",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
