@@ -857,8 +857,7 @@ Query *Context::getQuery(GLuint handle) const
 Texture *Context::getTargetTexture(GLenum target) const
 {
     ASSERT(ValidTextureTarget(this, target));
-
-    return getSamplerTexture(mState.getActiveSampler(), target);
+    return mState.getTargetTexture(target);
 }
 
 Texture *Context::getSamplerTexture(unsigned int sampler, GLenum type) const
@@ -1936,4 +1935,346 @@ void Context::syncRendererState(const State::DirtyBits &bitMask)
         mState.clearDirtyBits(dirtyBits);
     }
 }
+
+void Context::blitFramebuffer(GLint srcX0,
+                              GLint srcY0,
+                              GLint srcX1,
+                              GLint srcY1,
+                              GLint dstX0,
+                              GLint dstY0,
+                              GLint dstX1,
+                              GLint dstY1,
+                              GLbitfield mask,
+                              GLenum filter)
+{
+    Framebuffer *readFramebuffer = mState.getReadFramebuffer();
+    ASSERT(readFramebuffer);
+
+    Framebuffer *drawFramebuffer = mState.getDrawFramebuffer();
+    ASSERT(drawFramebuffer);
+
+    Rectangle srcArea(srcX0, srcY0, srcX1 - srcX0, srcY1 - srcY0);
+    Rectangle dstArea(dstX0, dstY0, dstX1 - dstX0, dstY1 - dstY0);
+
+    syncRendererState(mState.blitStateBitMask());
+
+    Error error = drawFramebuffer->blit(mState, srcArea, dstArea, mask, filter, readFramebuffer);
+    if (error.isError())
+    {
+        recordError(error);
+        return;
+    }
 }
+
+void Context::clear(GLbitfield mask)
+{
+    // Sync the clear state
+    syncRendererState(mState.clearStateBitMask());
+
+    Error error = mState.getDrawFramebuffer()->clear(mData, mask);
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *values)
+{
+    // Sync the clear state
+    syncRendererState(mState.clearStateBitMask());
+
+    Error error = mState.getDrawFramebuffer()->clearBufferfv(mData, buffer, drawbuffer, values);
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::clearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *values)
+{
+    // Sync the clear state
+    syncRendererState(mState.clearStateBitMask());
+
+    Error error = mState.getDrawFramebuffer()->clearBufferuiv(mData, buffer, drawbuffer, values);
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::clearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *values)
+{
+    // Sync the clear state
+    syncRendererState(mState.clearStateBitMask());
+
+    Error error = mState.getDrawFramebuffer()->clearBufferiv(mData, buffer, drawbuffer, values);
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil)
+{
+    Framebuffer *framebufferObject = mState.getDrawFramebuffer();
+    ASSERT(framebufferObject);
+
+    // If a buffer is not present, the clear has no effect
+    if (framebufferObject->getDepthbuffer() == nullptr &&
+        framebufferObject->getStencilbuffer() == nullptr)
+    {
+        return;
+    }
+
+    // Sync the clear state
+    syncRendererState(mState.clearStateBitMask());
+
+    Error error = framebufferObject->clearBufferfi(mData, buffer, drawbuffer, depth, stencil);
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::readPixels(GLint x,
+                         GLint y,
+                         GLsizei width,
+                         GLsizei height,
+                         GLenum format,
+                         GLenum type,
+                         GLvoid *pixels)
+{
+    // Sync pack state
+    syncRendererState(mState.packStateBitMask());
+
+    Framebuffer *framebufferObject = mState.getReadFramebuffer();
+    ASSERT(framebufferObject);
+
+    Rectangle area(x, y, width, height);
+    Error error = framebufferObject->readPixels(mState, area, format, type, pixels);
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::copyTexImage2D(GLenum target,
+                             GLint level,
+                             GLenum internalformat,
+                             GLint x,
+                             GLint y,
+                             GLsizei width,
+                             GLsizei height,
+                             GLint border)
+{
+    Rectangle sourceArea(x, y, width, height);
+
+    const Framebuffer *framebuffer = mState.getReadFramebuffer();
+    Texture *texture =
+        getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+    Error error = texture->copyImage(target, level, sourceArea, internalformat, framebuffer);
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::copyTexSubImage2D(GLenum target,
+                                GLint level,
+                                GLint xoffset,
+                                GLint yoffset,
+                                GLint x,
+                                GLint y,
+                                GLsizei width,
+                                GLsizei height)
+{
+    Offset destOffset(xoffset, yoffset, 0);
+    Rectangle sourceArea(x, y, width, height);
+
+    const Framebuffer *framebuffer = mState.getReadFramebuffer();
+    Texture *texture =
+        getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+    Error error = texture->copySubImage(target, level, destOffset, sourceArea, framebuffer);
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::copyTexSubImage3D(GLenum target,
+                                GLint level,
+                                GLint xoffset,
+                                GLint yoffset,
+                                GLint zoffset,
+                                GLint x,
+                                GLint y,
+                                GLsizei width,
+                                GLsizei height)
+{
+    Offset destOffset(xoffset, yoffset, zoffset);
+    Rectangle sourceArea(x, y, width, height);
+
+    const Framebuffer *framebuffer = mState.getReadFramebuffer();
+    Texture *texture               = getTargetTexture(target);
+    Error error = texture->copySubImage(target, level, destOffset, sourceArea, framebuffer);
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::framebufferTexture2D(GLenum target,
+                                   GLenum attachment,
+                                   GLenum textarget,
+                                   GLuint texture,
+                                   GLint level)
+{
+    Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
+    ASSERT(framebuffer);
+
+    if (texture != 0)
+    {
+        Texture *textureObj = getTexture(texture);
+
+        ImageIndex index = ImageIndex::MakeInvalid();
+
+        if (textarget == GL_TEXTURE_2D)
+        {
+            index = ImageIndex::Make2D(level);
+        }
+        else
+        {
+            ASSERT(IsCubeMapTextureTarget(textarget));
+            index = ImageIndex::MakeCube(textarget, level);
+        }
+
+        framebuffer->setAttachment(GL_TEXTURE, attachment, index, textureObj);
+    }
+    else
+    {
+        framebuffer->resetAttachment(attachment);
+    }
+}
+
+void Context::framebufferRenderbuffer(GLenum target,
+                                      GLenum attachment,
+                                      GLenum renderbuffertarget,
+                                      GLuint renderbuffer)
+{
+    Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
+    ASSERT(framebuffer);
+
+    if (renderbuffer != 0)
+    {
+        Renderbuffer *renderbufferObject = getRenderbuffer(renderbuffer);
+        framebuffer->setAttachment(GL_RENDERBUFFER, attachment, gl::ImageIndex::MakeInvalid(),
+                                   renderbufferObject);
+    }
+    else
+    {
+        framebuffer->resetAttachment(attachment);
+    }
+}
+
+void Context::framebufferTextureLayer(GLenum target,
+                                      GLenum attachment,
+                                      GLuint texture,
+                                      GLint level,
+                                      GLint layer)
+{
+    Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
+    ASSERT(framebuffer);
+
+    if (texture != 0)
+    {
+        Texture *textureObject = getTexture(texture);
+
+        ImageIndex index = ImageIndex::MakeInvalid();
+
+        if (textureObject->getTarget() == GL_TEXTURE_3D)
+        {
+            index = ImageIndex::Make3D(level, layer);
+        }
+        else
+        {
+            ASSERT(textureObject->getTarget() == GL_TEXTURE_2D_ARRAY);
+            index = ImageIndex::Make2DArray(level, layer);
+        }
+
+        framebuffer->setAttachment(GL_TEXTURE, attachment, index, textureObject);
+    }
+    else
+    {
+        framebuffer->resetAttachment(attachment);
+    }
+}
+
+void Context::drawBuffers(GLsizei n, const GLenum *bufs)
+{
+    Framebuffer *framebuffer = mState.getDrawFramebuffer();
+    ASSERT(framebuffer);
+    framebuffer->setDrawBuffers(n, bufs);
+}
+
+void Context::readBuffer(GLenum mode)
+{
+    Framebuffer *readFBO = mState.getReadFramebuffer();
+    readFBO->setReadBuffer(mode);
+}
+
+void Context::discardFramebuffer(GLenum target, GLsizei numAttachments, const GLenum *attachments)
+{
+    Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
+    ASSERT(framebuffer);
+
+    // The specification isn't clear what should be done when the framebuffer isn't complete.
+    // We leave it up to the framebuffer implementation to decide what to do.
+    Error error = framebuffer->discard(numAttachments, attachments);
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::invalidateFramebuffer(GLenum target,
+                                    GLsizei numAttachments,
+                                    const GLenum *attachments)
+{
+    Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
+    ASSERT(framebuffer);
+
+    if (framebuffer->checkStatus(mData) == GL_FRAMEBUFFER_COMPLETE)
+    {
+        Error error = framebuffer->invalidate(numAttachments, attachments);
+        if (error.isError())
+        {
+            recordError(error);
+            return;
+        }
+    }
+}
+
+void Context::invalidateSubFramebuffer(GLenum target,
+                                       GLsizei numAttachments,
+                                       const GLenum *attachments,
+                                       GLint x,
+                                       GLint y,
+                                       GLsizei width,
+                                       GLsizei height)
+{
+    Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
+    ASSERT(framebuffer);
+
+    if (framebuffer->checkStatus(mData) == GL_FRAMEBUFFER_COMPLETE)
+    {
+        Rectangle area(x, y, width, height);
+        Error error = framebuffer->invalidateSub(numAttachments, attachments, area);
+        if (error.isError())
+        {
+            recordError(error);
+            return;
+        }
+    }
+}
+
+}  // namespace gl

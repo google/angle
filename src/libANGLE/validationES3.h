@@ -13,16 +13,26 @@
 
 namespace gl
 {
-
 class Context;
+class ValidationContext;
 
 bool ValidateES3TexImageParameters(Context *context, GLenum target, GLint level, GLenum internalformat, bool isCompressed, bool isSubImage,
                                    GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                    GLint border, GLenum format, GLenum type, const GLvoid *pixels);
 
-bool ValidateES3CopyTexImageParameters(Context *context, GLenum target, GLint level, GLenum internalformat,
-                                       bool isSubImage, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y,
-                                       GLsizei width, GLsizei height, GLint border);
+bool ValidateES3CopyTexImageParameters(ValidationContext *context,
+                                       GLenum target,
+                                       GLint level,
+                                       GLenum internalformat,
+                                       bool isSubImage,
+                                       GLint xoffset,
+                                       GLint yoffset,
+                                       GLint zoffset,
+                                       GLint x,
+                                       GLint y,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       GLint border);
 
 bool ValidateES3TexStorageParameters(Context *context, GLenum target, GLsizei levels, GLenum internalformat,
                                      GLsizei width, GLsizei height, GLsizei depth);
@@ -38,7 +48,7 @@ bool ValidateES3RenderbufferStorageParameters(Context *context, GLenum target, G
 bool ValidateInvalidateFramebuffer(Context *context, GLenum target, GLsizei numAttachments,
                                    const GLenum *attachments);
 
-bool ValidateClearBuffer(Context *context);
+bool ValidateClearBuffer(ValidationContext *context);
 
 bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLuint* params);
 
@@ -72,6 +82,46 @@ bool ValidateGetProgramBinary(Context *context,
                               GLenum *binaryFormat,
                               void *binary);
 bool ValidateProgramParameter(Context *context, GLuint program, GLenum pname, GLint value);
-}
+bool ValidateBlitFramebuffer(Context *context,
+                             GLint srcX0,
+                             GLint srcY0,
+                             GLint srcX1,
+                             GLint srcY1,
+                             GLint dstX0,
+                             GLint dstY0,
+                             GLint dstX1,
+                             GLint dstY1,
+                             GLbitfield mask,
+                             GLenum filter);
+bool ValidateClearBufferiv(ValidationContext *context,
+                           GLenum buffer,
+                           GLint drawbuffer,
+                           const GLint *value);
+bool ValidateClearBufferuiv(ValidationContext *context,
+                            GLenum buffer,
+                            GLint drawbuffer,
+                            const GLuint *value);
+bool ValidateClearBufferfv(ValidationContext *context,
+                           GLenum buffer,
+                           GLint drawbuffer,
+                           const GLfloat *value);
+bool ValidateClearBufferfi(ValidationContext *context,
+                           GLenum buffer,
+                           GLint drawbuffer,
+                           GLfloat depth,
+                           GLint stencil);
+bool ValidateDrawBuffers(ValidationContext *context, GLsizei n, const GLenum *bufs);
+bool ValidateCopyTexSubImage3D(Context *context,
+                               GLenum target,
+                               GLint level,
+                               GLint xoffset,
+                               GLint yoffset,
+                               GLint zoffset,
+                               GLint x,
+                               GLint y,
+                               GLsizei width,
+                               GLsizei height);
+
+}  // namespace gl
 
 #endif // LIBANGLE_VALIDATION_ES3_H_

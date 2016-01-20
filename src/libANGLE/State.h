@@ -149,6 +149,7 @@ class State : angle::NonCopyable
     void setActiveSampler(unsigned int active);
     unsigned int getActiveSampler() const;
     void setSamplerTexture(GLenum type, Texture *texture);
+    Texture *getTargetTexture(GLenum target) const;
     Texture *getSamplerTexture(unsigned int sampler, GLenum type) const;
     GLuint getSamplerTextureId(unsigned int sampler, GLenum type) const;
     void detachTexture(const TextureMap &zeroTextures, GLuint texture);

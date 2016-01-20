@@ -175,6 +175,12 @@ class Context final : public ValidationContext
     bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
     bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams);
 
+    void clear(GLbitfield mask);
+    void clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *values);
+    void clearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *values);
+    void clearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *values);
+    void clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil);
+
     Error drawArrays(GLenum mode, GLint first, GLsizei count);
     Error drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount);
 
@@ -196,6 +202,83 @@ class Context final : public ValidationContext
                             GLenum type,
                             const GLvoid *indices,
                             const IndexRange &indexRange);
+
+    void blitFramebuffer(GLint srcX0,
+                         GLint srcY0,
+                         GLint srcX1,
+                         GLint srcY1,
+                         GLint dstX0,
+                         GLint dstY0,
+                         GLint dstX1,
+                         GLint dstY1,
+                         GLbitfield mask,
+                         GLenum filter);
+
+    void readPixels(GLint x,
+                    GLint y,
+                    GLsizei width,
+                    GLsizei height,
+                    GLenum format,
+                    GLenum type,
+                    GLvoid *pixels);
+
+    void copyTexImage2D(GLenum target,
+                        GLint level,
+                        GLenum internalformat,
+                        GLint x,
+                        GLint y,
+                        GLsizei width,
+                        GLsizei height,
+                        GLint border);
+
+    void copyTexSubImage2D(GLenum target,
+                           GLint level,
+                           GLint xoffset,
+                           GLint yoffset,
+                           GLint x,
+                           GLint y,
+                           GLsizei width,
+                           GLsizei height);
+
+    void copyTexSubImage3D(GLenum target,
+                           GLint level,
+                           GLint xoffset,
+                           GLint yoffset,
+                           GLint zoffset,
+                           GLint x,
+                           GLint y,
+                           GLsizei width,
+                           GLsizei height);
+
+    void framebufferTexture2D(GLenum target,
+                              GLenum attachment,
+                              GLenum textarget,
+                              GLuint texture,
+                              GLint level);
+
+    void framebufferRenderbuffer(GLenum target,
+                                 GLenum attachment,
+                                 GLenum renderbuffertarget,
+                                 GLuint renderbuffer);
+
+    void framebufferTextureLayer(GLenum target,
+                                 GLenum attachment,
+                                 GLuint texture,
+                                 GLint level,
+                                 GLint layer);
+
+    void drawBuffers(GLsizei n, const GLenum *bufs);
+    void readBuffer(GLenum mode);
+
+    void discardFramebuffer(GLenum target, GLsizei numAttachments, const GLenum *attachments);
+    void invalidateFramebuffer(GLenum target, GLsizei numAttachments, const GLenum *attachments);
+    void invalidateSubFramebuffer(GLenum target,
+                                  GLsizei numAttachments,
+                                  const GLenum *attachments,
+                                  GLint x,
+                                  GLint y,
+                                  GLsizei width,
+                                  GLsizei height);
 
     Error flush();
     Error finish();

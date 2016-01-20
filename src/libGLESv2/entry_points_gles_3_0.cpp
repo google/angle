@@ -35,13 +35,12 @@ void GL_APIENTRY ReadBuffer(GLenum mode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateReadBuffer(context, mode))
+        if (!context->skipValidation() && !ValidateReadBuffer(context, mode))
         {
             return;
         }
 
-        Framebuffer *readFBO = context->getState().getReadFramebuffer();
-        readFBO->setReadBuffer(mode);
+        context->readBuffer(mode);
     }
 }
 
@@ -171,29 +170,14 @@ void GL_APIENTRY CopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (!ValidateES3CopyTexImageParameters(context, target, level, GL_NONE, true, xoffset, yoffset, zoffset,
-                                               x, y, width, height, 0))
+        if (!context->skipValidation() &&
+            !ValidateCopyTexSubImage3D(context, target, level, xoffset, yoffset, zoffset, x, y,
+                                       width, height))
         {
             return;
         }
 
-        Offset destOffset(xoffset, yoffset, zoffset);
-        Rectangle sourceArea(x, y, width, height);
-
-        const Framebuffer *framebuffer = context->getState().getReadFramebuffer();
-        Texture *texture = context->getTargetTexture(target);
-        Error error = texture->copySubImage(target, level, destOffset, sourceArea, framebuffer);
-        if (error.isError())
-        {
-            context->recordError(error);
-            return;
-        }
+        context->copyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height);
     }
 }
 
@@ -207,8 +191,8 @@ void GL_APIENTRY CompressedTexImage3D(GLenum target, GLint level, GLenum interna
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!gl::ValidateCompressedTexImage3D(context, target, level, internalformat, width, height,
-                                              depth, border, imageSize, data))
+        if (!ValidateCompressedTexImage3D(context, target, level, internalformat, width, height,
+                                          depth, border, imageSize, data))
         {
             return;
         }
@@ -537,13 +521,12 @@ void GL_APIENTRY DrawBuffers(GLsizei n, const GLenum* bufs)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!context->skipValidation() && !ValidateDrawBuffers(context, n, bufs))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
-        DrawBuffersEXT(n, bufs);
+        context->drawBuffers(n, bufs);
     }
 }
 
@@ -664,35 +647,15 @@ void GL_APIENTRY BlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint sr
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (!ValidateBlitFramebufferParameters(context, srcX0, srcY0, srcX1, srcY1,
-                                               dstX0, dstY0, dstX1, dstY1, mask, filter,
-                                               false))
+        if (!context->skipValidation() &&
+            !ValidateBlitFramebuffer(context, srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1,
+                                     dstY1, mask, filter))
         {
             return;
         }
 
-        Framebuffer *readFramebuffer = context->getState().getReadFramebuffer();
-        ASSERT(readFramebuffer);
-
-        Framebuffer *drawFramebuffer = context->getState().getDrawFramebuffer();
-        ASSERT(drawFramebuffer);
-
-        Rectangle srcArea(srcX0, srcY0, srcX1 - srcX0, srcY1 - srcY0);
-        Rectangle dstArea(dstX0, dstY0, dstX1 - dstX0, dstY1 - dstY0);
-
-        Error error =
-            drawFramebuffer->blit(context, srcArea, dstArea, mask, filter, readFramebuffer);
-        if (error.isError())
-        {
-            context->recordError(error);
-            return;
-        }
+        context->blitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask,
+                                 filter);
     }
 }
 
@@ -728,37 +691,13 @@ void GL_APIENTRY FramebufferTextureLayer(GLenum target, GLenum attachment, GLuin
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateFramebufferTextureLayer(context, target, attachment, texture,
-                                             level, layer))
+        if (!context->skipValidation() &&
+            !ValidateFramebufferTextureLayer(context, target, attachment, texture, level, layer))
         {
             return;
         }
 
-        Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
-        ASSERT(framebuffer);
-
-        if (texture != 0)
-        {
-            Texture *textureObject = context->getTexture(texture);
-
-            ImageIndex index = ImageIndex::MakeInvalid();
-
-            if (textureObject->getTarget() == GL_TEXTURE_3D)
-            {
-                index = ImageIndex::Make3D(level, layer);
-            }
-            else
-            {
-                ASSERT(textureObject->getTarget() == GL_TEXTURE_2D_ARRAY);
-                index = ImageIndex::Make2DArray(level, layer);
-            }
-
-            framebuffer->setAttachment(GL_TEXTURE, attachment, index, textureObject);
-        }
-        else
-        {
-            framebuffer->resetAttachment(attachment);
-        }
+        context->framebufferTextureLayer(target, attachment, texture, level, layer);
     }
 }
 
@@ -1674,43 +1613,13 @@ void GL_APIENTRY ClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint* val
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateClearBuffer(context))
+        if (!context->skipValidation() &&
+            !ValidateClearBufferiv(context, buffer, drawbuffer, value))
         {
             return;
         }
 
-        switch (buffer)
-        {
-          case GL_COLOR:
-            if (drawbuffer < 0 || static_cast<GLuint>(drawbuffer) >= context->getCaps().maxDrawBuffers)
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
-            break;
-
-          case GL_STENCIL:
-            if (drawbuffer != 0)
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        Framebuffer *framebufferObject = context->getState().getDrawFramebuffer();
-        ASSERT(framebufferObject);
-
-        Error error = framebufferObject->clearBufferiv(context, buffer, drawbuffer, value);
-        if (error.isError())
-        {
-            context->recordError(error);
-            return;
-        }
+        context->clearBufferiv(buffer, drawbuffer, value);
     }
 }
 
@@ -1722,35 +1631,13 @@ void GL_APIENTRY ClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint* v
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateClearBuffer(context))
+        if (!context->skipValidation() &&
+            !ValidateClearBufferuiv(context, buffer, drawbuffer, value))
         {
             return;
         }
 
-        switch (buffer)
-        {
-          case GL_COLOR:
-            if (drawbuffer < 0 || static_cast<GLuint>(drawbuffer) >= context->getCaps().maxDrawBuffers)
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        Framebuffer *framebufferObject = context->getState().getDrawFramebuffer();
-        ASSERT(framebufferObject);
-
-        Error error = framebufferObject->clearBufferuiv(context, buffer, drawbuffer, value);
-        if (error.isError())
-        {
-            context->recordError(error);
-            return;
-        }
+        context->clearBufferuiv(buffer, drawbuffer, value);
     }
 }
 
@@ -1762,43 +1649,13 @@ void GL_APIENTRY ClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat* v
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateClearBuffer(context))
+        if (!context->skipValidation() &&
+            !ValidateClearBufferfv(context, buffer, drawbuffer, value))
         {
             return;
         }
 
-        switch (buffer)
-        {
-          case GL_COLOR:
-            if (drawbuffer < 0 || static_cast<GLuint>(drawbuffer) >= context->getCaps().maxDrawBuffers)
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
-            break;
-
-          case GL_DEPTH:
-            if (drawbuffer != 0)
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        Framebuffer *framebufferObject = context->getState().getDrawFramebuffer();
-        ASSERT(framebufferObject);
-
-        Error error = framebufferObject->clearBufferfv(context, buffer, drawbuffer, value);
-        if (error.isError())
-        {
-            context->recordError(error);
-            return;
-        }
+        context->clearBufferfv(buffer, drawbuffer, value);
     }
 }
 
@@ -1810,41 +1667,13 @@ void GL_APIENTRY ClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, G
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateClearBuffer(context))
+        if (!context->skipValidation() &&
+            !ValidateClearBufferfi(context, buffer, drawbuffer, depth, stencil))
         {
             return;
         }
 
-        switch (buffer)
-        {
-          case GL_DEPTH_STENCIL:
-            if (drawbuffer != 0)
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        Framebuffer *framebufferObject = context->getState().getDrawFramebuffer();
-        ASSERT(framebufferObject);
-
-        // If a buffer is not present, the clear has no effect
-        if (framebufferObject->getDepthbuffer() == nullptr && framebufferObject->getStencilbuffer() == nullptr)
-        {
-            return;
-        }
-
-        Error error = framebufferObject->clearBufferfi(context, buffer, drawbuffer, depth, stencil);
-        if (error.isError())
-        {
-            context->recordError(error);
-            return;
-        }
+        context->clearBufferfi(buffer, drawbuffer, depth, stencil);
     }
 }
 
@@ -3150,23 +2979,13 @@ void GL_APIENTRY InvalidateFramebuffer(GLenum target, GLsizei numAttachments, co
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateInvalidateFramebuffer(context, target, numAttachments, attachments))
+        if (!context->skipValidation() &&
+            !ValidateInvalidateFramebuffer(context, target, numAttachments, attachments))
         {
             return;
         }
 
-        Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
-        ASSERT(framebuffer);
-
-        if (framebuffer->checkStatus(context->getData()) == GL_FRAMEBUFFER_COMPLETE)
-        {
-            Error error = framebuffer->invalidate(numAttachments, attachments);
-            if (error.isError())
-            {
-                context->recordError(error);
-                return;
-            }
-        }
+        context->invalidateFramebuffer(target, numAttachments, attachments);
     }
 }
 
@@ -3179,24 +2998,13 @@ void GL_APIENTRY InvalidateSubFramebuffer(GLenum target, GLsizei numAttachments,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateInvalidateFramebuffer(context, target, numAttachments, attachments))
+        if (!context->skipValidation() &&
+            !ValidateInvalidateFramebuffer(context, target, numAttachments, attachments))
         {
             return;
         }
 
-        Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
-        ASSERT(framebuffer);
-
-        if (framebuffer->checkStatus(context->getData()) == GL_FRAMEBUFFER_COMPLETE)
-        {
-            Rectangle area(x, y, width, height);
-            Error error = framebuffer->invalidateSub(numAttachments, attachments, area);
-            if (error.isError())
-            {
-                context->recordError(error);
-                return;
-            }
-        }
+        context->invalidateSubFramebuffer(target, numAttachments, attachments, x, y, width, height);
     }
 }
 

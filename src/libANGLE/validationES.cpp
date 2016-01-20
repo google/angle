@@ -144,7 +144,7 @@ bool ValidTextureTarget(const Context *context, GLenum target)
 // usable as the destination of a 2D operation-- so a cube face is valid, but
 // GL_TEXTURE_CUBE_MAP is not.
 // Note: duplicate of IsInternalTextureTarget
-bool ValidTexture2DDestinationTarget(const Context *context, GLenum target)
+bool ValidTexture2DDestinationTarget(const ValidationContext *context, GLenum target)
 {
     switch (target)
     {
@@ -230,21 +230,30 @@ bool ValidBufferParameter(const Context *context, GLenum pname)
     }
 }
 
-bool ValidMipLevel(const Context *context, GLenum target, GLint level)
+bool ValidMipLevel(const ValidationContext *context, GLenum target, GLint level)
 {
+    const auto &caps    = context->getCaps();
     size_t maxDimension = 0;
     switch (target)
     {
-      case GL_TEXTURE_2D:                  maxDimension = context->getCaps().max2DTextureSize;       break;
+        case GL_TEXTURE_2D:
+            maxDimension = caps.max2DTextureSize;
+            break;
       case GL_TEXTURE_CUBE_MAP:
       case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
       case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
       case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
       case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
       case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z: maxDimension = context->getCaps().maxCubeMapTextureSize;  break;
-      case GL_TEXTURE_3D:                  maxDimension = context->getCaps().max3DTextureSize;       break;
-      case GL_TEXTURE_2D_ARRAY:            maxDimension = context->getCaps().max2DTextureSize;       break;
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+          maxDimension = caps.maxCubeMapTextureSize;
+          break;
+      case GL_TEXTURE_3D:
+          maxDimension = caps.max3DTextureSize;
+          break;
+      case GL_TEXTURE_2D_ARRAY:
+          maxDimension = caps.max2DTextureSize;
+          break;
       default: UNREACHABLE();
     }
 
@@ -297,7 +306,10 @@ bool CompressedTextureFormatRequiresExactSize(GLenum internalFormat)
     }
 }
 
-bool ValidCompressedImageSize(const Context *context, GLenum internalFormat, GLsizei width, GLsizei height)
+bool ValidCompressedImageSize(const ValidationContext *context,
+                              GLenum internalFormat,
+                              GLsizei width,
+                              GLsizei height)
 {
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
     if (!formatInfo.compressed)
@@ -545,45 +557,23 @@ bool ValidateFramebufferRenderbufferParameters(gl::Context *context, GLenum targ
     return true;
 }
 
-static bool IsPartialBlit(gl::Context *context, const gl::FramebufferAttachment *readBuffer, const gl::FramebufferAttachment *writeBuffer,
-                          GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
-                          GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1)
-{
-    const Extents &writeSize = writeBuffer->getSize();
-    const Extents &readSize  = readBuffer->getSize();
-
-    if (srcX0 != 0 || srcY0 != 0 || dstX0 != 0 || dstY0 != 0 || dstX1 != writeSize.width ||
-        dstY1 != writeSize.height || srcX1 != readSize.width || srcY1 != readSize.height)
-    {
-        return true;
-    }
-    else if (context->getState().isScissorTestEnabled())
-    {
-        const Rectangle &scissor = context->getState().getScissor();
-
-        return scissor.x > 0 || scissor.y > 0 || scissor.width < writeSize.width ||
-               scissor.height < writeSize.height;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
-                                       GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask,
-                                       GLenum filter, bool fromAngleExtension)
+bool ValidateBlitFramebufferParameters(gl::Context *context,
+                                       GLint srcX0,
+                                       GLint srcY0,
+                                       GLint srcX1,
+                                       GLint srcY1,
+                                       GLint dstX0,
+                                       GLint dstY0,
+                                       GLint dstX1,
+                                       GLint dstY1,
+                                       GLbitfield mask,
+                                       GLenum filter)
 {
     switch (filter)
     {
       case GL_NEAREST:
         break;
       case GL_LINEAR:
-        if (fromAngleExtension)
-        {
-            context->recordError(Error(GL_INVALID_ENUM));
-            return false;
-        }
         break;
       default:
         context->recordError(Error(GL_INVALID_ENUM));
@@ -603,13 +593,6 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
         return false;
     }
 
-    if (fromAngleExtension && (srcX1 - srcX0 != dstX1 - dstX0 || srcY1 - srcY0 != dstY1 - dstY0))
-    {
-        ERR("Scaling and flipping in BlitFramebufferANGLE not supported by this implementation.");
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
     // ES3.0 spec, section 4.3.2 states that linear filtering is only available for the
     // color buffer, leaving only nearest being unfiltered from above
     if ((mask & ~GL_COLOR_BUFFER_BIT) != 0 && filter != GL_NEAREST)
@@ -620,11 +603,6 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
 
     if (context->getState().getReadFramebuffer()->id() == context->getState().getDrawFramebuffer()->id())
     {
-        if (fromAngleExtension)
-        {
-            ERR("Blits with the same source and destination framebuffer are not supported by this "
-                "implementation.");
-        }
         context->recordError(Error(GL_INVALID_OPERATION));
         return false;
     }
@@ -737,54 +715,6 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
                 context->recordError(Error(GL_INVALID_OPERATION));
                 return false;
             }
-
-            if (fromAngleExtension)
-            {
-                const FramebufferAttachment *readColorAttachment = readFramebuffer->getReadColorbuffer();
-                if (!readColorAttachment ||
-                    (!(readColorAttachment->type() == GL_TEXTURE && readColorAttachment->getTextureImageIndex().type == GL_TEXTURE_2D) &&
-                    readColorAttachment->type() != GL_RENDERBUFFER &&
-                    readColorAttachment->type() != GL_FRAMEBUFFER_DEFAULT))
-                {
-                    context->recordError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-
-                for (size_t colorAttachment = 0;
-                     colorAttachment < drawFramebuffer->getNumColorBuffers(); ++colorAttachment)
-                {
-                    if (drawFramebuffer->isEnabledColorAttachment(colorAttachment))
-                    {
-                        const FramebufferAttachment *attachment = drawFramebuffer->getColorbuffer(colorAttachment);
-                        ASSERT(attachment);
-
-                        if (!(attachment->type() == GL_TEXTURE && attachment->getTextureImageIndex().type == GL_TEXTURE_2D) &&
-                            attachment->type() != GL_RENDERBUFFER &&
-                            attachment->type() != GL_FRAMEBUFFER_DEFAULT)
-                        {
-                            context->recordError(Error(GL_INVALID_OPERATION));
-                            return false;
-                        }
-
-                        // Return an error if the destination formats do not match
-                        if (attachment->getInternalFormat() != readColorBuffer->getInternalFormat())
-                        {
-                            context->recordError(Error(GL_INVALID_OPERATION));
-                            return false;
-                        }
-                    }
-                }
-
-                int readSamples = readFramebuffer->getSamples(context->getData());
-
-                if (readSamples != 0 && IsPartialBlit(context, readColorBuffer, drawColorBuffer,
-                                                      srcX0, srcY0, srcX1, srcY1,
-                                                      dstX0, dstY0, dstX1, dstY1))
-                {
-                    context->recordError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-            }
         }
     }
 
@@ -809,23 +739,6 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
                 {
                     context->recordError(Error(GL_INVALID_OPERATION));
                     return false;
-                }
-
-                if (fromAngleExtension)
-                {
-                    if (IsPartialBlit(context, readBuffer, drawBuffer,
-                                      srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1))
-                    {
-                        ERR("Only whole-buffer depth and stencil blits are supported by this implementation.");
-                        context->recordError(Error(GL_INVALID_OPERATION)); // only whole-buffer copies are permitted
-                        return false;
-                    }
-
-                    if (readBuffer->getSamples() != 0 || drawBuffer->getSamples() != 0)
-                    {
-                        context->recordError(Error(GL_INVALID_OPERATION));
-                        return false;
-                    }
                 }
             }
         }
@@ -1056,10 +969,22 @@ bool ValidateSamplerObjectParameter(gl::Context *context, GLenum pname)
     }
 }
 
-bool ValidateReadPixelsParameters(gl::Context *context, GLint x, GLint y, GLsizei width, GLsizei height,
-                                  GLenum format, GLenum type, GLsizei *bufSize, GLvoid *pixels)
+bool ValidateReadPixels(Context *context,
+                        GLint x,
+                        GLint y,
+                        GLsizei width,
+                        GLsizei height,
+                        GLenum format,
+                        GLenum type,
+                        GLvoid *pixels)
 {
-    gl::Framebuffer *framebuffer = context->getState().getReadFramebuffer();
+    if (width < 0 || height < 0)
+    {
+        context->recordError(Error(GL_INVALID_VALUE, "width and height must be positive"));
+        return false;
+    }
+
+    Framebuffer *framebuffer = context->getState().getReadFramebuffer();
     ASSERT(framebuffer);
 
     if (framebuffer->checkStatus(context->getData()) != GL_FRAMEBUFFER_COMPLETE)
@@ -1096,6 +1021,25 @@ bool ValidateReadPixelsParameters(gl::Context *context, GLint x, GLint y, GLsize
         return false;
     }
 
+    return true;
+}
+
+bool ValidateReadnPixelsEXT(Context *context,
+                            GLint x,
+                            GLint y,
+                            GLsizei width,
+                            GLsizei height,
+                            GLenum format,
+                            GLenum type,
+                            GLsizei bufSize,
+                            GLvoid *pixels)
+{
+    if (bufSize < 0)
+    {
+        context->recordError(Error(GL_INVALID_VALUE, "bufSize must be a positive number"));
+        return false;
+    }
+
     GLenum sizedInternalFormat = GetSizedInternalFormat(format, type);
     const InternalFormat &sizedFormatInfo = GetInternalFormatInfo(sizedInternalFormat);
 
@@ -1103,17 +1047,14 @@ bool ValidateReadPixelsParameters(gl::Context *context, GLint x, GLint y, GLsize
         sizedFormatInfo.computeRowPitch(type, width, context->getState().getPackAlignment(),
                                         context->getState().getPackRowLength());
     // sized query sanity check
-    if (bufSize)
+    int requiredSize = outputPitch * height;
+    if (requiredSize > bufSize)
     {
-        int requiredSize = outputPitch * height;
-        if (requiredSize > *bufSize)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return false;
-        }
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
     }
 
-    return true;
+    return ValidateReadPixels(context, x, y, width, height, format, type, pixels);
 }
 
 bool ValidateBeginQuery(gl::Context *context, GLenum target, GLuint id)
@@ -1359,9 +1300,20 @@ bool ValidateStateQuery(gl::Context *context, GLenum pname, GLenum *nativeType, 
     return true;
 }
 
-bool ValidateCopyTexImageParametersBase(gl::Context *context, GLenum target, GLint level, GLenum internalformat, bool isSubImage,
-                                        GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height,
-                                        GLint border, GLenum *textureFormatOut)
+bool ValidateCopyTexImageParametersBase(ValidationContext *context,
+                                        GLenum target,
+                                        GLint level,
+                                        GLenum internalformat,
+                                        bool isSubImage,
+                                        GLint xoffset,
+                                        GLint yoffset,
+                                        GLint zoffset,
+                                        GLint x,
+                                        GLint y,
+                                        GLsizei width,
+                                        GLsizei height,
+                                        GLint border,
+                                        GLenum *textureFormatOut)
 {
 
     if (!ValidTexture2DDestinationTarget(context, target))
@@ -1394,14 +1346,15 @@ bool ValidateCopyTexImageParametersBase(gl::Context *context, GLenum target, GLi
         return false;
     }
 
-    gl::Framebuffer *framebuffer = context->getState().getReadFramebuffer();
+    const gl::Framebuffer *framebuffer = context->getState().getReadFramebuffer();
     if (framebuffer->checkStatus(context->getData()) != GL_FRAMEBUFFER_COMPLETE)
     {
         context->recordError(Error(GL_INVALID_FRAMEBUFFER_OPERATION));
         return false;
     }
 
-    if (context->getState().getReadFramebuffer()->id() != 0 && framebuffer->getSamples(context->getData()) != 0)
+    const auto &state = context->getState();
+    if (state.getReadFramebuffer()->id() != 0 && framebuffer->getSamples(context->getData()) != 0)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1438,7 +1391,8 @@ bool ValidateCopyTexImageParametersBase(gl::Context *context, GLenum target, GLi
         return false;
     }
 
-    gl::Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+    gl::Texture *texture =
+        state.getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
     if (!texture)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
@@ -2300,4 +2254,128 @@ bool ValidateGetProgramBinaryBase(Context *context,
 
     return true;
 }
+
+bool ValidateCopyTexImage2D(ValidationContext *context,
+                            GLenum target,
+                            GLint level,
+                            GLenum internalformat,
+                            GLint x,
+                            GLint y,
+                            GLsizei width,
+                            GLsizei height,
+                            GLint border)
+{
+    if (context->getClientVersion() < 3)
+    {
+        return ValidateES2CopyTexImageParameters(context, target, level, internalformat, false, 0,
+                                                 0, x, y, width, height, border);
+    }
+
+    ASSERT(context->getClientVersion() == 3);
+    return ValidateES3CopyTexImageParameters(context, target, level, internalformat, false, 0, 0, 0,
+                                             x, y, width, height, border);
 }
+
+bool ValidateFramebufferRenderbuffer(Context *context,
+                                     GLenum target,
+                                     GLenum attachment,
+                                     GLenum renderbuffertarget,
+                                     GLuint renderbuffer)
+{
+    if (!ValidFramebufferTarget(target) ||
+        (renderbuffertarget != GL_RENDERBUFFER && renderbuffer != 0))
+    {
+        context->recordError(Error(GL_INVALID_ENUM));
+        return false;
+    }
+
+    return ValidateFramebufferRenderbufferParameters(context, target, attachment,
+                                                     renderbuffertarget, renderbuffer);
+}
+
+bool ValidateDrawBuffersBase(ValidationContext *context, GLsizei n, const GLenum *bufs)
+{
+    // INVALID_VALUE is generated if n is negative or greater than value of MAX_DRAW_BUFFERS
+    if (n < 0 || static_cast<GLuint>(n) > context->getCaps().maxDrawBuffers)
+    {
+        context->recordError(
+            Error(GL_INVALID_VALUE, "n must be non-negative and no greater than MAX_DRAW_BUFFERS"));
+        return false;
+    }
+
+    ASSERT(context->getState().getDrawFramebuffer());
+    GLuint frameBufferId      = context->getState().getDrawFramebuffer()->id();
+    GLuint maxColorAttachment = GL_COLOR_ATTACHMENT0_EXT + context->getCaps().maxColorAttachments;
+
+    // This should come first before the check for the default frame buffer
+    // because when we switch to ES3.1+, invalid enums will return INVALID_ENUM
+    // rather than INVALID_OPERATION
+    for (int colorAttachment = 0; colorAttachment < n; colorAttachment++)
+    {
+        const GLenum attachment = GL_COLOR_ATTACHMENT0_EXT + colorAttachment;
+
+        if (bufs[colorAttachment] != GL_NONE && bufs[colorAttachment] != GL_BACK &&
+            (bufs[colorAttachment] < GL_COLOR_ATTACHMENT0_EXT ||
+             bufs[colorAttachment] >= maxColorAttachment))
+        {
+            // Value in bufs is not NONE, BACK, or GL_COLOR_ATTACHMENTi
+            // In the 3.0 specs, the error should return GL_INVALID_OPERATION.
+            // When we move to 3.1 specs, we should change the error to be GL_INVALID_ENUM
+            context->recordError(Error(GL_INVALID_OPERATION, "Invalid buffer value"));
+            return false;
+        }
+        else if (bufs[colorAttachment] != GL_NONE && bufs[colorAttachment] != attachment &&
+                 frameBufferId != 0)
+        {
+            // INVALID_OPERATION-GL is bound to buffer and ith argument
+            // is not COLOR_ATTACHMENTi or NONE
+            context->recordError(
+                Error(GL_INVALID_OPERATION, "Ith value does not match COLOR_ATTACHMENTi or NONE"));
+            return false;
+        }
+    }
+
+    // INVALID_OPERATION is generated if GL is bound to the default framebuffer
+    // and n is not 1 or bufs is bound to value other than BACK and NONE
+    if (frameBufferId == 0)
+    {
+        if (n != 1)
+        {
+            context->recordError(Error(GL_INVALID_OPERATION,
+                                       "n must be 1 when GL is bound to the default framebuffer"));
+            return false;
+        }
+
+        if (bufs[0] != GL_NONE && bufs[0] != GL_BACK)
+        {
+            context->recordError(Error(
+                GL_INVALID_OPERATION,
+                "Only NONE or BACK are valid values when drawing to the default framebuffer"));
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ValidateCopyTexSubImage2D(Context *context,
+                               GLenum target,
+                               GLint level,
+                               GLint xoffset,
+                               GLint yoffset,
+                               GLint x,
+                               GLint y,
+                               GLsizei width,
+                               GLsizei height)
+{
+    if (context->getClientVersion() < 3)
+    {
+        return ValidateES2CopyTexImageParameters(context, target, level, GL_NONE, true, xoffset,
+                                                 yoffset, x, y, width, height, 0);
+    }
+
+    return ValidateES3CopyTexImageParameters(context, target, level, GL_NONE, true, xoffset,
+                                             yoffset, 0, x, y, width, height, 0);
+}
+
+}  // namespace gl
