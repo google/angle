@@ -131,6 +131,30 @@
     },
     {
       "key": {
+        "uuid": "47fef2bd_e85e8b2b",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T15:04:09Z",
+      "side": 1,
+      "message": "Aha, I understand. I think the wording a bit strange. How about: \"except that the texture dimensions must be 1, 2, or a multiple of four\". Otherwise it\u0027s like \"x must be equal to 5, unless x is one or two\"",
+      "parentUuid": "e759a674_639e5728",
+      "range": {
+        "startLine": 46,
+        "startChar": 31,
+        "endLine": 47,
+        "endChar": 18
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a73ece47_8324c08a",
         "filename": "extensions/ANGLE_lossy_etc_decode.txt",
         "patchSetId": 4
@@ -166,6 +190,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "a73ece47_8324c08a",
+      "range": {
+        "startLine": 123,
+        "startChar": 31,
+        "endLine": 124,
+        "endChar": 77
+      },
+      "revId": "95ad470f0983c2780326607f8e5d420a117f8566",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a73ece47_86912e1a",
+        "filename": "extensions/ANGLE_lossy_etc_decode.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T15:04:09Z",
+      "side": 1,
+      "message": "how about, \"xoffset and yoffset must also be aligned to 4x4 texel block boundaries, since ETC encoding makes it difficult to modify non-aligned regions.\"",
+      "parentUuid": "c75ca266_1c04239b",
       "range": {
         "startLine": 123,
         "startChar": 31,
