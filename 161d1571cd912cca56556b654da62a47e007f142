@@ -70,6 +70,24 @@
       "revId": "161d1571cd912cca56556b654da62a47e007f142",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27fd7ec1_d0db6911",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 906,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-20T16:20:24Z",
+      "side": 1,
+      "message": "Removed the TODO, I\u0027m pretty sure the code is correct.",
+      "parentUuid": "27fd7ec1_108c6120",
+      "revId": "161d1571cd912cca56556b654da62a47e007f142",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
