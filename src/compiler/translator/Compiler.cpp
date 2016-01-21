@@ -322,7 +322,10 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         if (success && (compileOptions & SH_CLAMP_INDIRECT_ARRAY_BOUNDS))
             arrayBoundsClamper.MarkIndirectArrayBoundsForClamping(root);
 
-        if (success && shaderType == GL_VERTEX_SHADER && (compileOptions & SH_INIT_GL_POSITION))
+        // gl_Position is always written in compatibility output mode
+        if (success && shaderType == GL_VERTEX_SHADER &&
+            ((compileOptions & SH_INIT_GL_POSITION) ||
+             (outputType == SH_GLSL_COMPATIBILITY_OUTPUT)))
             initializeGLPosition(root);
 
         // This pass might emit short circuits so keep it before the short circuit unfolding
