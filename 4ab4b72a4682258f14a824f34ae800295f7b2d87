@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "473992b3_8d26e1f5",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1753,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-21T18:35:16Z",
+      "side": 1,
+      "message": "Could mReadFramebuffer be null here if we do the following:\n - Somehow dirty READ_FRAMEBUFFER\n - setReadFramebufferBinding(nullptr)\n - syncDirtyObjects()",
+      "revId": "4ab4b72a4682258f14a824f34ae800295f7b2d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "673e969d_f4f650b5",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1756,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-21T18:35:16Z",
+      "side": 1,
+      "message": "Ditto",
+      "revId": "4ab4b72a4682258f14a824f34ae800295f7b2d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7540ee5_50080c08",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-21T18:35:16Z",
+      "side": 1,
+      "message": "This variable seems like it could be removed by putting the building of the cache in a function.",
+      "revId": "4ab4b72a4682258f14a824f34ae800295f7b2d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
