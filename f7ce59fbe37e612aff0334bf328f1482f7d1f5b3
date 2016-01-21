@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8780ea14_d0fe3282",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-21T16:17:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "870c6ac1_6d94f108",
+      "range": {
+        "startLine": 671,
+        "startChar": 12,
+        "endLine": 671,
+        "endChar": 23
+      },
+      "revId": "f7ce59fbe37e612aff0334bf328f1482f7d1f5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c737426a_e418340a",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 3
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "7453a627_a6e846cf",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-21T16:17:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7344668_424c724a",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 153,
+        "endChar": 41
+      },
+      "revId": "f7ce59fbe37e612aff0334bf328f1482f7d1f5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c737426a_24ee1c19",
         "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
         "patchSetId": 3
@@ -82,6 +130,30 @@
       "writtenOn": "2016-01-20T13:49:23Z",
       "side": 1,
       "message": "implement this in Renderer9.cpp, keep this abstract virtual.",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 172,
+        "endChar": 5
+      },
+      "revId": "f7ce59fbe37e612aff0334bf328f1482f7d1f5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8780ea14_b001be4f",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-21T16:17:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c737426a_24ee1c19",
       "range": {
         "startLine": 167,
         "startChar": 0,
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "c786622d_5296ca34",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-21T16:17:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47fef2bd_08e327f2",
+      "range": {
+        "startLine": 88,
+        "startChar": 5,
+        "endLine": 88,
+        "endChar": 24
+      },
+      "revId": "f7ce59fbe37e612aff0334bf328f1482f7d1f5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "870c6ac1_8dae0552",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -128,6 +224,30 @@
       "writtenOn": "2016-01-20T13:49:23Z",
       "side": 1,
       "message": "s/NULL/nullptr",
+      "range": {
+        "startLine": 2418,
+        "startChar": 75,
+        "endLine": 2418,
+        "endChar": 79
+      },
+      "revId": "f7ce59fbe37e612aff0334bf328f1482f7d1f5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a77deeee_9cd69520",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2418,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-21T16:17:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "870c6ac1_8dae0552",
       "range": {
         "startLine": 2418,
         "startChar": 75,
