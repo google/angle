@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c73662c7_a9639ded",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-21T16:23:45Z",
+      "side": 1,
+      "message": "nit: I\u0027d suggest we use HLSL_4_1_OUTPUT - I don\u0027t think we really can support 4_0 in some edge cases, and the plan is ANGLE won\u0027t target ES3 on 4_0.",
+      "range": {
+        "startLine": 110,
+        "startChar": 4,
+        "endLine": 110,
+        "endChar": 20
+      },
+      "revId": "dfe133535af00896d7e9b6c1a9f9f326c8a4cb52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
