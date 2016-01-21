@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c73662c7_694c454b",
+        "filename": "src/tests/angle_unittests.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-21T19:10:27Z",
+      "side": 1,
+      "message": "nit: spaces.  git cl format doesn\u0027t cover this one.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 3
+      },
+      "revId": "a27441be03c9f06759334b49cc415b17f0c72f8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
