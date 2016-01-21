@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c73662c7_c90c511a",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 803,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-21T16:30:34Z",
+      "side": 1,
+      "message": "nit: you can make this a bit more concise using\n\n else\n {\n    ASSERT(standard \u003d\u003d STANDARD_GL_ES);\n    initializeProcsGLES();\n }\n\nWe use this pattern elsewhere as well.",
+      "range": {
+        "startLine": 796,
+        "startChar": 4,
+        "endLine": 803,
+        "endChar": 5
+      },
+      "revId": "fe60c51f464b49b95ba4c7ac711f17485d86e94b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
