@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "07431a35_eb0f5179",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-21T16:01:58Z",
+      "side": 1,
+      "message": "This comment still needs to be addressed.",
+      "parentUuid": "c737426a_87fb6a2b",
+      "range": {
+        "startLine": 420,
+        "startChar": 35,
+        "endLine": 420,
+        "endChar": 50
+      },
+      "revId": "16e8e87de5cb7c5f5f3060ac815d43c22a44205f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0726ba4f_769feed3",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 1
@@ -60,6 +84,30 @@
       "writtenOn": "2016-01-20T21:34:29Z",
       "side": 1,
       "message": "Change this to an UNREACHABLE(); now since this enum is validated already.",
+      "range": {
+        "startLine": 1049,
+        "startChar": 8,
+        "endLine": 1049,
+        "endChar": 53
+      },
+      "revId": "16e8e87de5cb7c5f5f3060ac815d43c22a44205f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c73662c7_e952f515",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1049,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-21T16:01:58Z",
+      "side": 1,
+      "message": "This still needs to be addressed too.",
+      "parentUuid": "0726ba4f_769feed3",
       "range": {
         "startLine": 1049,
         "startChar": 8,
