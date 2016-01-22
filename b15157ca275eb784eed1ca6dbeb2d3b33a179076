@@ -48,6 +48,52 @@
     },
     {
       "key": {
+        "uuid": "d433721e_61a8369a",
+        "filename": "src/angle.gyp",
+        "patchSetId": 8
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-22T19:44:26Z",
+      "side": 1,
+      "message": "I\u0027ll let Corentin comment on this, he worked on this more than me.",
+      "range": {
+        "startLine": 33,
+        "startChar": 12,
+        "endLine": 34,
+        "endChar": 27
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "943d7af0_7fa3afbe",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-22T19:44:26Z",
+      "side": 1,
+      "message": "I think this display is considered an OpenGLES display, it should go in the EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE section when my WGL patch lands.",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 36
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b43a7ef4_60a8329a",
         "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
         "patchSetId": 8
@@ -62,6 +108,29 @@
       "range": {
         "startLine": 39,
         "startChar": 9,
+        "endLine": 39,
+        "endChar": 59
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14a42a86_c3ac76af",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-22T19:44:26Z",
+      "side": 1,
+      "message": "Could you elaborate?  ANGLE doesn\u0027t have an OpenGL ES 1 frontend, if that\u0027s that it means.",
+      "range": {
+        "startLine": 39,
+        "startChar": 8,
         "endLine": 39,
         "endChar": 59
       },
@@ -87,6 +156,29 @@
         "startChar": 9,
         "endLine": 755,
         "endChar": 33
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74448688_3e992993",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 756,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-22T19:44:26Z",
+      "side": 1,
+      "message": "note: my FunctionsGL patch has now landed.",
+      "range": {
+        "startLine": 750,
+        "startChar": 3,
+        "endLine": 756,
+        "endChar": 31
       },
       "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -278,6 +370,29 @@
     },
     {
       "key": {
+        "uuid": "943d7af0_7ff56fa7",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-22T19:44:26Z",
+      "side": 1,
+      "message": "I think a lot of these members and logic can live within the WindowSurfaceDRM class instead of putting all the logic in the DisplayDRM class.",
+      "range": {
+        "startLine": 46,
+        "startChar": 11,
+        "endLine": 46,
+        "endChar": 17
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8730eace_675632b0",
         "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.h",
         "patchSetId": 8
@@ -363,6 +478,29 @@
         "startChar": 4,
         "endLine": 58,
         "endChar": 10
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74448688_7ea3b1be",
+        "filename": "src/libANGLE/renderer/gl/cros/FunctionsEGL.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-22T19:44:26Z",
+      "side": 1,
+      "message": "Eventually, we should flush out the rest of this to include all EGL functions.",
+      "range": {
+        "startLine": 21,
+        "startChar": 6,
+        "endLine": 21,
+        "endChar": 18
       },
       "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
