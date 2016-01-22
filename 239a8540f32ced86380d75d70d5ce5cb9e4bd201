@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "f436b6dd_9260dc0d",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T14:56:59Z",
+      "side": 1,
+      "message": "Ah, OK I think I understand. Yeah maybe splitting them is a good idea.",
+      "parentUuid": "e759a674_8ec59db9",
+      "range": {
+        "startLine": 193,
+        "startChar": 46,
+        "endLine": 193,
+        "endChar": 47
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8741cad9_9fa9734e",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 4
@@ -757,6 +781,30 @@
     },
     {
       "key": {
+        "uuid": "07431a35_0b273d90",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T14:56:59Z",
+      "side": 1,
+      "message": "I\u0027m fine with with leaving as you have it with a note or TODO that we should investigate always checking for redundant state changes.\n\nThe design of this class mostly assumes state changes are coming from GL, rather than internal workarounds - I think we could fix this but it\u0027s not so important for this CL, because as you say it\u0027s a good chance the state changes are not redundant.",
+      "parentUuid": "678e9643_3aa03662",
+      "range": {
+        "startLine": 121,
+        "startChar": 8,
+        "endLine": 123,
+        "endChar": 87
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a73ece47_c05f1ef4",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 4
@@ -792,6 +840,30 @@
       "side": 1,
       "message": "I don\u0027t think they need to use optional, their default values are valid?",
       "parentUuid": "a73ece47_c05f1ef4",
+      "range": {
+        "startLine": 104,
+        "startChar": 2,
+        "endLine": 105,
+        "endChar": 42
+      },
+      "revId": "239a8540f32ced86380d75d70d5ce5cb9e4bd201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07431a35_2b24f988",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T14:56:59Z",
+      "side": 1,
+      "message": "Sure. But imagine this scenario:\n\n - setDirectRendering(off)\n - in another code path, do some internal rendering\n - invalidate all state\n - setDirectRendering(off)\n\nIn setDirectRendering we wouldn\u0027t enter the body of the if, but we might want to. The Optional would allow us to do this. Thoughts? \n\n(Also I have a CL which adds an \u0027invalidateEverything\u0027 method to StateManager11 but it\u0027s still working its way through review.)",
+      "parentUuid": "4768b202_436b6430",
       "range": {
         "startLine": 104,
         "startChar": 2,
