@@ -48,6 +48,23 @@
     },
     {
       "key": {
+        "uuid": "07431a35_8b188d09",
+        "filename": "src/angle.gyp",
+        "patchSetId": 8
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T20:00:04Z",
+      "side": 1,
+      "message": "Looks ok to just have Linux",
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d433721e_61a8369a",
         "filename": "src/angle.gyp",
         "patchSetId": 8
@@ -140,6 +157,23 @@
     },
     {
       "key": {
+        "uuid": "d433721e_e1b3a605",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T20:00:04Z",
+      "side": 1,
+      "message": "I imagine that it means GLES 2 is not supportable on GL \u003c 2 but it isn\u0027t 100% clear",
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "943d7af0_5fa86b99",
         "filename": "src/libANGLE/renderer/gl/FunctionsGL.h",
         "patchSetId": 8
@@ -209,6 +243,46 @@
     },
     {
       "key": {
+        "uuid": "b43a7ef4_60bf92c9",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T20:00:04Z",
+      "side": 1,
+      "message": "b?",
+      "range": {
+        "startLine": 217,
+        "startChar": 17,
+        "endLine": 217,
+        "endChar": 18
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74448688_beac19ae",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T20:00:04Z",
+      "side": 1,
+      "message": "Use __builtin_ctzl?",
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "344e8eac_3c993193",
         "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
         "patchSetId": 8
@@ -255,6 +329,52 @@
     },
     {
       "key": {
+        "uuid": "344e8eac_bcac21ae",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T20:00:04Z",
+      "side": 1,
+      "message": "nit: this could be replaced by a break statement",
+      "range": {
+        "startLine": 248,
+        "startChar": 20,
+        "endLine": 248,
+        "endChar": 26
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b43a7ef4_a0d07a21",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T20:00:04Z",
+      "side": 1,
+      "message": "this never gets reset to false even if we end up not choosing this crtc",
+      "range": {
+        "startLine": 256,
+        "startChar": 8,
+        "endLine": 256,
+        "endChar": 24
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14a42a86_83b67ef7",
         "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
         "patchSetId": 8
@@ -272,6 +392,40 @@
         "endLine": 471,
         "endChar": 1
       },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d433721e_01ce8a87",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T20:00:04Z",
+      "side": 1,
+      "message": "Why move the buffer around like this (even in debug code)",
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d433721e_41eb72d1",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T20:00:04Z",
+      "side": 1,
+      "message": "Is this to handle presenting the latest buffer in the pageFlipHandler?",
       "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -347,6 +501,23 @@
     },
     {
       "key": {
+        "uuid": "14498aa4_7ba3bfbe",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T20:00:04Z",
+      "side": 1,
+      "message": "You used DisplayGLX as a start but a lot of code there can be removed. Also DIsplayCGL should be closer to what DisplayDRM will do.",
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "943d7af0_bfac17ae",
         "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.h",
         "patchSetId": 8
@@ -381,6 +552,30 @@
       "writtenOn": "2016-01-22T19:44:26Z",
       "side": 1,
       "message": "I think a lot of these members and logic can live within the WindowSurfaceDRM class instead of putting all the logic in the DisplayDRM class.",
+      "range": {
+        "startLine": 46,
+        "startChar": 11,
+        "endLine": 46,
+        "endChar": 17
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "943d7af0_7f472fa7",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T20:00:04Z",
+      "side": 1,
+      "message": "I assume that for now it is only test code that assumes there\u0027s only one window.",
+      "parentUuid": "943d7af0_7ff56fa7",
       "range": {
         "startLine": 46,
         "startChar": 11,
@@ -548,6 +743,40 @@
         "endLine": 100,
         "endChar": 77
       },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "943d7af0_3fc00757",
+        "filename": "src/tests/egl_tests/EGLSurfaceTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T20:00:04Z",
+      "side": 1,
+      "message": "We like to use reinterpret_cast for this. Is this caused by a difference in the EGL native types on ChromeOS compared to the other platforms? Can we fix the OSWindow interface instead?\nHappens in other places too.",
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "344e8eac_1c9ef57a",
+        "filename": "util/cros/CrosWindow.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T20:00:04Z",
+      "side": 1,
+      "message": "How does hello_triangle work with a noop CrOS window?",
       "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false

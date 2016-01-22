@@ -22,6 +22,23 @@
       "revId": "c29968bbba8459cb17dd8f01e5a943106af7b55c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4307614_62a8369a",
+        "filename": "build/standalone.gypi",
+        "patchSetId": 8
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T20:00:04Z",
+      "side": 0,
+      "message": "I think this is going to break standalone builds on Linux",
+      "revId": "c29968bbba8459cb17dd8f01e5a943106af7b55c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
