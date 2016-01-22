@@ -70,6 +70,30 @@
       "revId": "8d1257261978e31ff602cd54eab859be5490d386",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14cb4a3e_8bb68df7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-01-22T16:52:06Z",
+      "side": 1,
+      "message": "To be honest.  The same tests pass/fail even without this bool here.  I only added it because I thought you wanted to ensure that this code didn\u0027t be run for non-instanced calls using a divisor of non-zero. :) Hahaha.  Actually, I can remove all of this tracking because it doesn\u0027t change anything.  I would prefer to not have to track this bool.  It makes things cleaner for the entire patch.\n\nThe dEQP tests where I discovered failures were dEQP GLES3 points rendering tests.  I forced emulation to be enabled for non-FL93 so I could see how good the emulation impl was.  The following 5 failures called out this divisor usage difference.\n\ndEQP-GLES3.functional.draw.draw_arrays.points.instanced_attributes\ndEQP-GLES3.functional.draw.draw_arrays_instanced.points.instanced_attributes\ndEQP-GLES3.functional.draw.draw_elements_instanced.points.multiple_attributes\ndEQP-GLES3.functional.draw.draw_elements_instanced.points.instanced_attributes\ndEQP-GLES3.functional.draw.draw_elements_instanced.points.default_attribute",
+      "parentUuid": "a7096eb1_71da8a6e",
+      "range": {
+        "startLine": 406,
+        "startChar": 47,
+        "endLine": 406,
+        "endChar": 69
+      },
+      "revId": "8d1257261978e31ff602cd54eab859be5490d386",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
