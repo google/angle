@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "14498aa4_9b34cb1a",
+        "filename": "src/tests/gl_tests/BufferDataTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-22T21:25:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d45c5266_d9cad371",
+      "range": {
+        "startLine": 290,
+        "startChar": 64,
+        "endLine": 290,
+        "endChar": 74
+      },
+      "revId": "aee87cbf6098441e3319b8bbf8dc79a80b106284",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b43a7ef4_a04d1ac6",
         "filename": "src/tests/gl_tests/GLSLTest.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2016-01-22T21:01:53Z",
       "side": 1,
       "message": "same for the other bug references",
+      "range": {
+        "startLine": 466,
+        "startChar": 81,
+        "endLine": 466,
+        "endChar": 92
+      },
+      "revId": "aee87cbf6098441e3319b8bbf8dc79a80b106284",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14a42a86_83cd1e8d",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-22T21:25:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b43a7ef4_a04d1ac6",
       "range": {
         "startLine": 466,
         "startChar": 81,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "344e8eac_1cf0b5b7",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 863,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-22T21:25:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4595674_7a0c598b",
+      "range": {
+        "startLine": 841,
+        "startChar": 0,
+        "endLine": 863,
+        "endChar": 1
+      },
+      "revId": "aee87cbf6098441e3319b8bbf8dc79a80b106284",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14498aa4_fb5a2f78",
         "filename": "src/tests/gl_tests/PointSpritesTest.cpp",
         "patchSetId": 6
@@ -82,6 +154,30 @@
       "writtenOn": "2016-01-22T21:01:53Z",
       "side": 1,
       "message": "this is interesting.. do you know what\u0027s happening here?",
+      "range": {
+        "startLine": 171,
+        "startChar": 12,
+        "endLine": 171,
+        "endChar": 24
+      },
+      "revId": "aee87cbf6098441e3319b8bbf8dc79a80b106284",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4307614_c2de622f",
+        "filename": "src/tests/gl_tests/PointSpritesTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-22T21:25:22Z",
+      "side": 1,
+      "message": "As far as I can tell, it\u0027s because the window has even dimensions putting the point exactly between pixels and the drivers round to differently.  Using a point size of 2 makes sure that the pixels being checked should always be drawn.",
+      "parentUuid": "14498aa4_fb5a2f78",
       "range": {
         "startLine": 171,
         "startChar": 12,
