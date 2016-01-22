@@ -12,6 +12,40 @@
 #include "OSWindow.h"
 #include "system_utils.h"
 
+namespace angle
+{
+
+GLColor::GLColor() : R(0), G(0), B(0), A(0)
+{
+}
+
+GLColor::GLColor(GLubyte r, GLubyte g, GLubyte b, GLubyte a) : R(r), G(g), B(b), A(a)
+{
+}
+
+GLColor ReadColor(GLint x, GLint y)
+{
+    GLColor actual;
+    glReadPixels((x), (y), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &actual.R);
+    EXPECT_GL_NO_ERROR();
+    return actual;
+}
+
+bool operator==(const GLColor &a, const GLColor &b)
+{
+    return a.R == b.R && a.G == b.G && a.B == b.B && a.A == b.A;
+}
+
+std::ostream &operator<<(std::ostream &ostream, const GLColor &color)
+{
+    ostream << "(" << static_cast<unsigned int>(color.R) << ", "
+            << static_cast<unsigned int>(color.G) << ", " << static_cast<unsigned int>(color.B)
+            << ", " << static_cast<unsigned int>(color.A) << ")";
+    return ostream;
+}
+
+}  // namespace angle
+
 ANGLETest::ANGLETest()
     : mEGLWindow(nullptr), mWidth(16), mHeight(16), mIgnoreD3D11SDKLayersWarnings(false)
 {
