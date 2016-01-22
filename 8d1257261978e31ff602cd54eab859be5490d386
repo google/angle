@@ -46,6 +46,30 @@
       "revId": "8d1257261978e31ff602cd54eab859be5490d386",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7096eb1_71da8a6e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T14:39:06Z",
+      "side": 1,
+      "message": "Can you reference where the spec (or docs) where you\u0027re referring to? My main desire is to keep the intrusiveness, extra parameters, etc as miminal as we can to keep the code relatively clean and maintainable. I don\u0027t understand the patches too well, but am hoping that if I do we can maybe figure out a way to keep it as clean as we can. Which tests, (if any) does the bool instancedRenderingUsed flag make pass?",
+      "parentUuid": "47efd232_fd4d8774",
+      "range": {
+        "startLine": 406,
+        "startChar": 47,
+        "endLine": 406,
+        "endChar": 69
+      },
+      "revId": "8d1257261978e31ff602cd54eab859be5490d386",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
