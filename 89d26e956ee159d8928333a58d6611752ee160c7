@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4595674_7a4739a7",
+        "filename": "extensions/EGL_ANGLE_experimental_direct_rendering.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T21:19:43Z",
+      "side": 1,
+      "message": "might be worth mentioning the lack of conformance in the \u0027new behaviour\u0027 section (first paragraph) as well as in the issue discussion.",
+      "range": {
+        "startLine": 94,
+        "startChar": 3,
+        "endLine": 101,
+        "endChar": 20
+      },
+      "revId": "89d26e956ee159d8928333a58d6611752ee160c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
