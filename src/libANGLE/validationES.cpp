@@ -383,6 +383,8 @@ bool ValidQueryType(const Context *context, GLenum queryType)
         return true;
       case GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN:
         return (context->getClientVersion() >= 3);
+      case GL_TIME_ELAPSED_EXT:
+          return context->getExtensions().disjointTimerQuery;
       default:
         return false;
     }
@@ -1095,17 +1097,63 @@ bool ValidateReadnPixelsEXT(Context *context,
     return ValidateReadPixels(context, x, y, width, height, format, type, pixels);
 }
 
-bool ValidateBeginQuery(gl::Context *context, GLenum target, GLuint id)
+bool ValidateGenQueriesBase(gl::Context *context, GLsizei n, const GLuint *ids)
+{
+    if (n < 0)
+    {
+        context->recordError(Error(GL_INVALID_VALUE, "Query count < 0"));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n, const GLuint *ids)
+{
+    if (!context->getExtensions().occlusionQueryBoolean &&
+        !context->getExtensions().disjointTimerQuery)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Query extension not enabled"));
+        return false;
+    }
+
+    return ValidateGenQueriesBase(context, n, ids);
+}
+
+bool ValidateDeleteQueriesBase(gl::Context *context, GLsizei n, const GLuint *ids)
+{
+    if (n < 0)
+    {
+        context->recordError(Error(GL_INVALID_VALUE, "Query count < 0"));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n, const GLuint *ids)
+{
+    if (!context->getExtensions().occlusionQueryBoolean &&
+        !context->getExtensions().disjointTimerQuery)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Query extension not enabled"));
+        return false;
+    }
+
+    return ValidateDeleteQueriesBase(context, n, ids);
+}
+
+bool ValidateBeginQueryBase(gl::Context *context, GLenum target, GLuint id)
 {
     if (!ValidQueryType(context, target))
     {
-        context->recordError(Error(GL_INVALID_ENUM));
+        context->recordError(Error(GL_INVALID_ENUM, "Invalid query target"));
         return false;
     }
 
     if (id == 0)
     {
-        context->recordError(Error(GL_INVALID_OPERATION));
+        context->recordError(Error(GL_INVALID_OPERATION, "Query id is 0"));
         return false;
     }
 
@@ -1124,9 +1172,12 @@ bool ValidateBeginQuery(gl::Context *context, GLenum target, GLuint id)
     //    b) There are no active queries for the requested target (and in the case
     //       of GL_ANY_SAMPLES_PASSED_EXT and GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT,
     //       no query may be active for either if glBeginQuery targets either.
+
+    // TODO(ewell): I think this needs to be changed for timer and occlusion queries to work at the
+    // same time
     if (context->getState().isQueryActive())
     {
-        context->recordError(Error(GL_INVALID_OPERATION));
+        context->recordError(Error(GL_INVALID_OPERATION, "Other query is active"));
         return false;
     }
 
@@ -1135,37 +1186,208 @@ bool ValidateBeginQuery(gl::Context *context, GLenum target, GLuint id)
     // check that name was obtained with glGenQueries
     if (!queryObject)
     {
-        context->recordError(Error(GL_INVALID_OPERATION));
+        context->recordError(Error(GL_INVALID_OPERATION, "Invalid query id"));
         return false;
     }
 
     // check for type mismatch
     if (queryObject->getType() != target)
     {
-        context->recordError(Error(GL_INVALID_OPERATION));
+        context->recordError(Error(GL_INVALID_OPERATION, "Query type does not match target"));
         return false;
     }
 
     return true;
 }
 
-bool ValidateEndQuery(gl::Context *context, GLenum target)
+bool ValidateBeginQueryEXT(gl::Context *context, GLenum target, GLuint id)
+{
+    if (!context->getExtensions().occlusionQueryBoolean &&
+        !context->getExtensions().disjointTimerQuery)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Query extension not enabled"));
+        return false;
+    }
+
+    return ValidateBeginQueryBase(context, target, id);
+}
+
+bool ValidateEndQueryBase(gl::Context *context, GLenum target)
 {
     if (!ValidQueryType(context, target))
     {
-        context->recordError(Error(GL_INVALID_ENUM));
+        context->recordError(Error(GL_INVALID_ENUM, "Invalid query target"));
         return false;
     }
 
     const Query *queryObject = context->getState().getActiveQuery(target);
 
-    if (queryObject == NULL)
+    if (queryObject == nullptr)
     {
-        context->recordError(Error(GL_INVALID_OPERATION));
+        context->recordError(Error(GL_INVALID_OPERATION, "Query target not active"));
         return false;
     }
 
     return true;
+}
+
+bool ValidateEndQueryEXT(gl::Context *context, GLenum target)
+{
+    if (!context->getExtensions().occlusionQueryBoolean &&
+        !context->getExtensions().disjointTimerQuery)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Query extension not enabled"));
+        return false;
+    }
+
+    return ValidateEndQueryBase(context, target);
+}
+
+bool ValidateQueryCounterEXT(Context *context, GLuint id, GLenum target)
+{
+    if (!context->getExtensions().disjointTimerQuery)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Disjoint timer query not enabled"));
+        return false;
+    }
+
+    if (target != GL_TIMESTAMP_EXT)
+    {
+        context->recordError(Error(GL_INVALID_ENUM, "Invalid query target"));
+        return false;
+    }
+
+    Query *queryObject = context->getQuery(id, true, target);
+    if (queryObject == nullptr)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Invalid query id"));
+        return false;
+    }
+
+    if (context->getState().isQueryActive(queryObject))
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Query is active"));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetQueryivBase(Context *context, GLenum target, GLenum pname)
+{
+    if (!ValidQueryType(context, target) && target != GL_TIMESTAMP_EXT)
+    {
+        context->recordError(Error(GL_INVALID_ENUM, "Invalid query type"));
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_CURRENT_QUERY_EXT:
+            if (target == GL_TIMESTAMP_EXT)
+            {
+                context->recordError(
+                    Error(GL_INVALID_ENUM, "Cannot use current query for timestamp"));
+                return false;
+            }
+            break;
+        case GL_QUERY_COUNTER_BITS_EXT:
+            if (!context->getExtensions().disjointTimerQuery ||
+                (target != GL_TIMESTAMP_EXT && target != GL_TIME_ELAPSED_EXT))
+            {
+                context->recordError(Error(GL_INVALID_ENUM, "Invalid pname"));
+                return false;
+            }
+            break;
+        default:
+            context->recordError(Error(GL_INVALID_ENUM, "Invalid pname"));
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetQueryivEXT(Context *context, GLenum target, GLenum pname, GLint *params)
+{
+    if (!context->getExtensions().occlusionQueryBoolean &&
+        !context->getExtensions().disjointTimerQuery)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Query extension not enabled"));
+        return false;
+    }
+
+    return ValidateGetQueryivBase(context, target, pname);
+}
+
+bool ValidateGetQueryObjectValueBase(Context *context, GLuint id, GLenum pname)
+{
+    Query *queryObject = context->getQuery(id, false, GL_NONE);
+
+    if (!queryObject)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Query does not exist"));
+        return false;
+    }
+
+    if (context->getState().isQueryActive(queryObject))
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Query currently active"));
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_QUERY_RESULT_EXT:
+        case GL_QUERY_RESULT_AVAILABLE_EXT:
+            break;
+
+        default:
+            context->recordError(Error(GL_INVALID_ENUM, "Invalid pname enum"));
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetQueryObjectivEXT(Context *context, GLuint id, GLenum pname, GLint *params)
+{
+    if (!context->getExtensions().disjointTimerQuery)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Timer query extension not enabled"));
+        return false;
+    }
+    return ValidateGetQueryObjectValueBase(context, id, pname);
+}
+
+bool ValidateGetQueryObjectuivEXT(Context *context, GLuint id, GLenum pname, GLuint *params)
+{
+    if (!context->getExtensions().disjointTimerQuery &&
+        !context->getExtensions().occlusionQueryBoolean)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Query extension not enabled"));
+        return false;
+    }
+    return ValidateGetQueryObjectValueBase(context, id, pname);
+}
+
+bool ValidateGetQueryObjecti64vEXT(Context *context, GLuint id, GLenum pname, GLint64 *params)
+{
+    if (!context->getExtensions().disjointTimerQuery)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Timer query extension not enabled"));
+        return false;
+    }
+    return ValidateGetQueryObjectValueBase(context, id, pname);
+}
+
+bool ValidateGetQueryObjectui64vEXT(Context *context, GLuint id, GLenum pname, GLuint64 *params)
+{
+    if (!context->getExtensions().disjointTimerQuery)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Timer query extension not enabled"));
+        return false;
+    }
+    return ValidateGetQueryObjectValueBase(context, id, pname);
 }
 
 static bool ValidateUniformCommonBase(gl::Context *context,

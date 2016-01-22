@@ -558,6 +558,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
     SafeRelease(eventQuery);
 
     extensions->timerQuery = false; // Unimplemented
+    extensions->disjointTimerQuery     = false;
     extensions->robustness = true;
     extensions->blendMinMax = true;
     extensions->framebufferBlit = true;

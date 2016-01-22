@@ -1350,14 +1350,34 @@ void GL_APIENTRY glEndQueryEXT(GLenum target)
     return gl::EndQueryEXT(target);
 }
 
+void GL_APIENTRY glQueryCounterEXT(GLuint id, GLenum target)
+{
+    return gl::QueryCounterEXT(id, target);
+}
+
 void GL_APIENTRY glGetQueryivEXT(GLenum target, GLenum pname, GLint *params)
 {
     return gl::GetQueryivEXT(target, pname, params);
 }
 
+void GL_APIENTRY glGetQueryObjectivEXT(GLuint id, GLenum pname, GLint *params)
+{
+    return gl::GetQueryObjectivEXT(id, pname, params);
+}
+
 void GL_APIENTRY glGetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
 {
     return gl::GetQueryObjectuivEXT(id, pname, params);
+}
+
+void GL_APIENTRY glGetQueryObjecti64vEXT(GLuint id, GLenum pname, GLint64 *params)
+{
+    return gl::GetQueryObjecti64vEXT(id, pname, params);
+}
+
+void GL_APIENTRY glGetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *params)
+{
+    return gl::GetQueryObjectui64vEXT(id, pname, params);
 }
 
 void GL_APIENTRY glDrawBuffersEXT(GLsizei n, const GLenum *bufs)

@@ -1116,6 +1116,72 @@ bool ValidateES3TexStorage3DParameters(Context *context,
                                                height, depth);
 }
 
+bool ValidateGenQueries(gl::Context *context, GLsizei n, const GLuint *ids)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "GLES version < 3.0"));
+        return false;
+    }
+
+    return ValidateGenQueriesBase(context, n, ids);
+}
+
+bool ValidateDeleteQueries(gl::Context *context, GLsizei n, const GLuint *ids)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "GLES version < 3.0"));
+        return false;
+    }
+
+    return ValidateDeleteQueriesBase(context, n, ids);
+}
+
+bool ValidateBeginQuery(gl::Context *context, GLenum target, GLuint id)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "GLES version < 3.0"));
+        return false;
+    }
+
+    return ValidateBeginQueryBase(context, target, id);
+}
+
+bool ValidateEndQuery(gl::Context *context, GLenum target)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "GLES version < 3.0"));
+        return false;
+    }
+
+    return ValidateEndQueryBase(context, target);
+}
+
+bool ValidateGetQueryiv(Context *context, GLenum target, GLenum pname, GLint *params)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "GLES version < 3.0"));
+        return false;
+    }
+
+    return ValidateGetQueryivBase(context, target, pname);
+}
+
+bool ValidateGetQueryObjectuiv(Context *context, GLuint id, GLenum pname, GLuint *params)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "GLES version < 3.0"));
+        return false;
+    }
+
+    return ValidateGetQueryObjectValueBase(context, id, pname);
+}
+
 bool ValidateFramebufferTextureLayer(Context *context, GLenum target, GLenum attachment,
                                      GLuint texture, GLint level, GLint layer)
 {

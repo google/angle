@@ -1774,6 +1774,19 @@ void FunctionsGL::initializeProcsGLES()
     AssignGLExtensionEntryPoint(extensions, "GL_EXT_occlusion_query_boolean", loadProcAddress("glGetQueryivEXT"), &getQueryiv);
     AssignGLExtensionEntryPoint(extensions, "GL_EXT_occlusion_query_boolean", loadProcAddress("glGetQueryObjectuivEXT"), &getQueryObjectuiv);
 
+    // GL_EXT_disjoint_timer_query
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_disjoint_timer_query", loadProcAddress("glGenQueriesEXT"), &genQueries);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_disjoint_timer_query", loadProcAddress("glDeleteQueriesEXT"), &deleteQueries);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_disjoint_timer_query", loadProcAddress("glIsQueryEXT"), &isQuery);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_disjoint_timer_query", loadProcAddress("glBeginQueryEXT"), &beginQuery);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_disjoint_timer_query", loadProcAddress("glEndQueryEXT"), &endQuery);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_disjoint_timer_query", loadProcAddress("glQueryCounterEXT"), &queryCounter);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_disjoint_timer_query", loadProcAddress("glGetQueryivEXT"), &getQueryiv);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_disjoint_timer_query", loadProcAddress("glGetQueryObjectivEXT"), &getQueryObjectiv);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_disjoint_timer_query", loadProcAddress("glGetQueryObjectuivEXT"), &getQueryObjectuiv);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_disjoint_timer_query", loadProcAddress("glGetQueryObjecti64vEXT"), &getQueryObjecti64v);
+    AssignGLExtensionEntryPoint(extensions, "GL_EXT_disjoint_timer_query", loadProcAddress("glGetQueryObjectui64vEXT"), &getQueryObjectui64v);
+
     // GL_OES_EGL_image
     AssignGLExtensionEntryPoint(extensions, "GL_OES_EGL_image", loadProcAddress("glEGLImageTargetRenderbufferStorageOES"), &eglImageTargetRenderbufferStorageOES);
     AssignGLExtensionEntryPoint(extensions, "GL_OES_EGL_image", loadProcAddress("glEGLImageTargetTexture2DOES"), &eglImageTargetTexture2DOES);

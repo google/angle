@@ -151,6 +151,13 @@ static gl::TypePrecision QueryTypePrecision(const FunctionsGL *functions, GLenum
     return precision;
 }
 
+static GLint QueryQueryValue(const FunctionsGL *functions, GLenum target, GLenum name)
+{
+    GLint result;
+    functions->getQueryiv(target, name, &result);
+    return result;
+}
+
 static void LimitVersion(gl::Version *curVersion, const gl::Version &maxVersion)
 {
     if (*curVersion >= maxVersion)
@@ -612,6 +619,17 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     extensions->debugMarker =
         functions->isAtLeastGL(gl::Version(4, 3)) || functions->hasGLExtension("GL_KHR_debug") ||
         functions->isAtLeastGLES(gl::Version(3, 2)) || functions->hasGLESExtension("GL_KHR_debug");
+    if (functions->isAtLeastGL(gl::Version(3, 3)) ||
+        functions->hasGLExtension("GL_ARB_timer_query") ||
+        functions->hasGLESExtension("GL_EXT_disjoint_timer_query"))
+    {
+        // TODO(ewell): Extension is disabled by default until all functionality is implemented
+        extensions->disjointTimerQuery = false;
+        extensions->queryCounterBitsTimeElapsed =
+            QueryQueryValue(functions, GL_TIME_ELAPSED, GL_QUERY_COUNTER_BITS);
+        extensions->queryCounterBitsTimestamp =
+            QueryQueryValue(functions, GL_TIMESTAMP, GL_QUERY_COUNTER_BITS);
+    }
 
     // ANGLE emulates vertex array objects in its GL layer
     extensions->vertexArrayObject = true;

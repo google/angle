@@ -198,6 +198,10 @@ EXPORTS
     glObjectPtrLabelKHR             @311
     glGetObjectPtrLabelKHR          @312
     glGetPointervKHR                @313
+    glQueryCounterEXT               @314
+    glGetQueryObjectivEXT           @315
+    glGetQueryObjecti64vEXT         @316
+    glGetQueryObjectui64vEXT        @317
 
     ; GLES 3.0 Functions
     glReadBuffer                    @180

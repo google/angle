@@ -180,14 +180,15 @@ void State::initialize(const Caps &caps,
 
     mSamplers.resize(caps.maxCombinedTextureImageUnits);
 
-    mActiveQueries[GL_ANY_SAMPLES_PASSED].set(NULL);
-    mActiveQueries[GL_ANY_SAMPLES_PASSED_CONSERVATIVE].set(NULL);
-    mActiveQueries[GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN].set(NULL);
+    mActiveQueries[GL_ANY_SAMPLES_PASSED].set(nullptr);
+    mActiveQueries[GL_ANY_SAMPLES_PASSED_CONSERVATIVE].set(nullptr);
+    mActiveQueries[GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN].set(nullptr);
+    mActiveQueries[GL_TIME_ELAPSED_EXT].set(nullptr);
 
-    mProgram = NULL;
+    mProgram = nullptr;
 
-    mReadFramebuffer = NULL;
-    mDrawFramebuffer = NULL;
+    mReadFramebuffer = nullptr;
+    mDrawFramebuffer = nullptr;
 
     mPrimitiveRestart = false;
 
@@ -1005,10 +1006,22 @@ void State::detachTransformFeedback(GLuint transformFeedback)
 
 bool State::isQueryActive() const
 {
-    for (State::ActiveQueryMap::const_iterator i = mActiveQueries.begin();
-        i != mActiveQueries.end(); i++)
+    for (auto &iter : mActiveQueries)
     {
-        if (i->second.get() != NULL)
+        if (iter.second.get() != NULL)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool State::isQueryActive(Query *query) const
+{
+    for (auto &iter : mActiveQueries)
+    {
+        if (iter.second.get() == query)
         {
             return true;
         }

@@ -40,12 +40,32 @@ Error Query::end()
     return mQuery->end();
 }
 
+Error Query::queryCounter()
+{
+    return mQuery->queryCounter();
+}
+
+Error Query::getResult(GLint *params)
+{
+    return mQuery->getResult(params);
+}
+
 Error Query::getResult(GLuint *params)
 {
     return mQuery->getResult(params);
 }
 
-Error Query::isResultAvailable(GLuint *available)
+Error Query::getResult(GLint64 *params)
+{
+    return mQuery->getResult(params);
+}
+
+Error Query::getResult(GLuint64 *params)
+{
+    return mQuery->getResult(params);
+}
+
+Error Query::isResultAvailable(bool *available)
 {
     return mQuery->isResultAvailable(available);
 }

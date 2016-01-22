@@ -105,8 +105,22 @@ bool ValidateReadnPixelsEXT(Context *context,
                             GLsizei bufSize,
                             GLvoid *pixels);
 
-bool ValidateBeginQuery(Context *context, GLenum target, GLuint id);
-bool ValidateEndQuery(Context *context, GLenum target);
+bool ValidateGenQueriesBase(gl::Context *context, GLsizei n, const GLuint *ids);
+bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n, const GLuint *ids);
+bool ValidateDeleteQueriesBase(gl::Context *context, GLsizei n, const GLuint *ids);
+bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n, const GLuint *ids);
+bool ValidateBeginQueryBase(Context *context, GLenum target, GLuint id);
+bool ValidateBeginQueryEXT(Context *context, GLenum target, GLuint id);
+bool ValidateEndQueryBase(Context *context, GLenum target);
+bool ValidateEndQueryEXT(Context *context, GLenum target);
+bool ValidateQueryCounterEXT(Context *context, GLuint id, GLenum target);
+bool ValidateGetQueryivBase(Context *context, GLenum target, GLenum pname);
+bool ValidateGetQueryivEXT(Context *context, GLenum target, GLenum pname, GLint *params);
+bool ValidateGetQueryObjectValueBase(Context *context, GLenum target, GLenum pname);
+bool ValidateGetQueryObjectivEXT(Context *context, GLuint id, GLenum pname, GLint *params);
+bool ValidateGetQueryObjectuivEXT(Context *context, GLuint id, GLenum pname, GLuint *params);
+bool ValidateGetQueryObjecti64vEXT(Context *context, GLuint id, GLenum pname, GLint64 *params);
+bool ValidateGetQueryObjectui64vEXT(Context *context, GLuint id, GLenum pname, GLuint64 *params);
 
 bool ValidateUniform(Context *context, GLenum uniformType, GLint location, GLsizei count);
 bool ValidateUniformMatrix(Context *context, GLenum matrixType, GLint location, GLsizei count,

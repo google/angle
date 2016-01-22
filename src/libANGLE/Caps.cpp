@@ -124,6 +124,9 @@ Extensions::Extensions()
       occlusionQueryBoolean(false),
       fence(false),
       timerQuery(false),
+      disjointTimerQuery(false),
+      queryCounterBitsTimeElapsed(0),
+      queryCounterBitsTimestamp(0),
       robustness(false),
       blendMinMax(false),
       framebufferBlit(false),
@@ -194,6 +197,7 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_EXT_occlusion_query_boolean",      occlusionQueryBoolean,     &extensionStrings);
     InsertExtensionString("GL_NV_fence",                         fence,                     &extensionStrings);
     InsertExtensionString("GL_ANGLE_timer_query",                timerQuery,                &extensionStrings);
+    InsertExtensionString("GL_EXT_disjoint_timer_query",         disjointTimerQuery,        &extensionStrings);
     InsertExtensionString("GL_EXT_robustness",                   robustness,                &extensionStrings);
     InsertExtensionString("GL_EXT_blend_minmax",                 blendMinMax,               &extensionStrings);
     InsertExtensionString("GL_ANGLE_framebuffer_blit",           framebufferBlit,           &extensionStrings);

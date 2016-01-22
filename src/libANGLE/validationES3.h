@@ -141,6 +141,18 @@ bool ValidateES3TexStorage3DParameters(Context *context,
                                        GLsizei height,
                                        GLsizei depth);
 
+bool ValidateGenQueries(Context *context, GLsizei n, const GLuint *ids);
+
+bool ValidateDeleteQueries(Context *context, GLsizei n, const GLuint *ids);
+
+bool ValidateBeginQuery(Context *context, GLenum target, GLuint id);
+
+bool ValidateEndQuery(Context *context, GLenum target);
+
+bool ValidateGetQueryiv(Context *context, GLenum target, GLenum pname, GLint *params);
+
+bool ValidateGetQueryObjectuiv(Context *context, GLuint id, GLenum pname, GLuint *params);
+
 bool ValidateFramebufferTextureLayer(Context *context, GLenum target, GLenum attachment,
                                      GLuint texture, GLint level, GLint layer);
 

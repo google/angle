@@ -27,6 +27,57 @@
 namespace gl
 {
 
+void GL_APIENTRY GenQueriesEXT(GLsizei n, GLuint *ids)
+{
+    EVENT("(GLsizei n = %d, GLuint* ids = 0x%0.8p)", n, ids);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateGenQueriesEXT(context, n, ids))
+        {
+            return;
+        }
+
+        for (GLsizei i = 0; i < n; i++)
+        {
+            ids[i] = context->createQuery();
+        }
+    }
+}
+
+void GL_APIENTRY DeleteQueriesEXT(GLsizei n, const GLuint *ids)
+{
+    EVENT("(GLsizei n = %d, const GLuint *ids = 0x%0.8p)", n, ids);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateDeleteQueriesEXT(context, n, ids))
+        {
+            return;
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            context->deleteQuery(ids[i]);
+        }
+    }
+}
+
+GLboolean GL_APIENTRY IsQueryEXT(GLuint id)
+{
+    EVENT("(GLuint id = %d)", id);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        return (context->getQuery(id, false, GL_NONE) != NULL) ? GL_TRUE : GL_FALSE;
+    }
+
+    return GL_FALSE;
+}
+
 void GL_APIENTRY BeginQueryEXT(GLenum target, GLuint id)
 {
     EVENT("(GLenum target = 0x%X, GLuint %d)", target, id);
@@ -34,7 +85,7 @@ void GL_APIENTRY BeginQueryEXT(GLenum target, GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateBeginQuery(context, target, id))
+        if (!ValidateBeginQueryEXT(context, target, id))
         {
             return;
         }
@@ -48,7 +99,150 @@ void GL_APIENTRY BeginQueryEXT(GLenum target, GLuint id)
     }
 }
 
-void GL_APIENTRY DeleteFencesNV(GLsizei n, const GLuint* fences)
+void GL_APIENTRY EndQueryEXT(GLenum target)
+{
+    EVENT("GLenum target = 0x%X)", target);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateEndQueryEXT(context, target))
+        {
+            return;
+        }
+
+        Error error = context->endQuery(target);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
+    }
+}
+
+void GL_APIENTRY QueryCounterEXT(GLuint id, GLenum target)
+{
+    EVENT("GLuint id = %d, GLenum target = 0x%X)", id, target);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateQueryCounterEXT(context, id, target))
+        {
+            return;
+        }
+
+        Error error = context->queryCounter(id, target);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
+    }
+}
+
+void GL_APIENTRY GetQueryivEXT(GLenum target, GLenum pname, GLint *params)
+{
+    EVENT("GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", target, pname,
+          params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateGetQueryivEXT(context, target, pname, params))
+        {
+            return;
+        }
+
+        context->getQueryiv(target, pname, params);
+    }
+}
+
+void GL_APIENTRY GetQueryObjectivEXT(GLuint id, GLenum pname, GLint *params)
+{
+    EVENT("(GLuint id = %d, GLenum pname = 0x%X, GLuint *params = 0x%0.8p)", id, pname, params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateGetQueryObjectivEXT(context, id, pname, params))
+        {
+            return;
+        }
+
+        Error error = context->getQueryObjectiv(id, pname, params);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
+    }
+}
+
+void GL_APIENTRY GetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
+{
+    EVENT("(GLuint id = %d, GLenum pname = 0x%X, GLuint *params = 0x%0.8p)", id, pname, params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateGetQueryObjectuivEXT(context, id, pname, params))
+        {
+            return;
+        }
+
+        Error error = context->getQueryObjectuiv(id, pname, params);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
+    }
+}
+
+void GL_APIENTRY GetQueryObjecti64vEXT(GLuint id, GLenum pname, GLint64 *params)
+{
+    EVENT("(GLuint id = %d, GLenum pname = 0x%X, GLuint *params = 0x%0.16p)", id, pname, params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateGetQueryObjecti64vEXT(context, id, pname, params))
+        {
+            return;
+        }
+
+        Error error = context->getQueryObjecti64v(id, pname, params);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
+    }
+}
+
+void GL_APIENTRY GetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *params)
+{
+    EVENT("(GLuint id = %d, GLenum pname = 0x%X, GLuint *params = 0x%0.16p)", id, pname, params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateGetQueryObjectui64vEXT(context, id, pname, params))
+        {
+            return;
+        }
+
+        Error error = context->getQueryObjectui64v(id, pname, params);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
+    }
+}
+
+void GL_APIENTRY DeleteFencesNV(GLsizei n, const GLuint *fences)
 {
     EVENT("(GLsizei n = %d, const GLuint* fences = 0x%0.8p)", n, fences);
 
@@ -68,29 +262,13 @@ void GL_APIENTRY DeleteFencesNV(GLsizei n, const GLuint* fences)
     }
 }
 
-void GL_APIENTRY DeleteQueriesEXT(GLsizei n, const GLuint *ids)
+void GL_APIENTRY DrawArraysInstancedANGLE(GLenum mode,
+                                          GLint first,
+                                          GLsizei count,
+                                          GLsizei primcount)
 {
-    EVENT("(GLsizei n = %d, const GLuint *ids = 0x%0.8p)", n, ids);
-
-    Context *context = GetValidGlobalContext();
-    if (context)
-    {
-        if (n < 0)
-        {
-            context->recordError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        for (int i = 0; i < n; i++)
-        {
-            context->deleteQuery(ids[i]);
-        }
-    }
-}
-
-void GL_APIENTRY DrawArraysInstancedANGLE(GLenum mode, GLint first, GLsizei count, GLsizei primcount)
-{
-    EVENT("(GLenum mode = 0x%X, GLint first = %d, GLsizei count = %d, GLsizei primcount = %d)", mode, first, count, primcount);
+    EVENT("(GLenum mode = 0x%X, GLint first = %d, GLsizei count = %d, GLsizei primcount = %d)",
+          mode, first, count, primcount);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -109,43 +287,29 @@ void GL_APIENTRY DrawArraysInstancedANGLE(GLenum mode, GLint first, GLsizei coun
     }
 }
 
-void GL_APIENTRY DrawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei primcount)
+void GL_APIENTRY DrawElementsInstancedANGLE(GLenum mode,
+                                            GLsizei count,
+                                            GLenum type,
+                                            const GLvoid *indices,
+                                            GLsizei primcount)
 {
-    EVENT("(GLenum mode = 0x%X, GLsizei count = %d, GLenum type = 0x%X, const GLvoid* indices = 0x%0.8p, GLsizei primcount = %d)",
-          mode, count, type, indices, primcount);
+    EVENT(
+        "(GLenum mode = 0x%X, GLsizei count = %d, GLenum type = 0x%X, const GLvoid* indices = "
+        "0x%0.8p, GLsizei primcount = %d)",
+        mode, count, type, indices, primcount);
 
     Context *context = GetValidGlobalContext();
     if (context)
     {
         IndexRange indexRange;
-        if (!ValidateDrawElementsInstancedANGLE(context, mode, count, type, indices, primcount, &indexRange))
+        if (!ValidateDrawElementsInstancedANGLE(context, mode, count, type, indices, primcount,
+                                                &indexRange))
         {
             return;
         }
 
         Error error =
             context->drawElementsInstanced(mode, count, type, indices, primcount, indexRange);
-        if (error.isError())
-        {
-            context->recordError(error);
-            return;
-        }
-    }
-}
-
-void GL_APIENTRY EndQueryEXT(GLenum target)
-{
-    EVENT("GLenum target = 0x%X)", target);
-
-    Context *context = GetValidGlobalContext();
-    if (context)
-    {
-        if (!ValidateEndQuery(context, target))
-        {
-            return;
-        }
-
-        Error error = context->endQuery(target);
         if (error.isError())
         {
             context->recordError(error);
@@ -179,7 +343,7 @@ void GL_APIENTRY FinishFenceNV(GLuint fence)
     }
 }
 
-void GL_APIENTRY GenFencesNV(GLsizei n, GLuint* fences)
+void GL_APIENTRY GenFencesNV(GLsizei n, GLuint *fences)
 {
     EVENT("(GLsizei n = %d, GLuint* fences = 0x%0.8p)", n, fences);
 
@@ -195,26 +359,6 @@ void GL_APIENTRY GenFencesNV(GLsizei n, GLuint* fences)
         for (int i = 0; i < n; i++)
         {
             fences[i] = context->createFenceNV();
-        }
-    }
-}
-
-void GL_APIENTRY GenQueriesEXT(GLsizei n, GLuint* ids)
-{
-    EVENT("(GLsizei n = %d, GLuint* ids = 0x%0.8p)", n, ids);
-
-    Context *context = GetValidGlobalContext();
-    if (context)
-    {
-        if (n < 0)
-        {
-            context->recordError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        for (GLsizei i = 0; i < n; i++)
-        {
-            ids[i] = context->createQuery();
         }
     }
 }
@@ -288,84 +432,6 @@ GLenum GL_APIENTRY GetGraphicsResetStatusEXT(void)
     }
 
     return GL_NO_ERROR;
-}
-
-void GL_APIENTRY GetQueryivEXT(GLenum target, GLenum pname, GLint *params)
-{
-    EVENT("GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", target, pname, params);
-
-    Context *context = GetValidGlobalContext();
-    if (context)
-    {
-        if (!ValidQueryType(context, target))
-        {
-            context->recordError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        switch (pname)
-        {
-          case GL_CURRENT_QUERY_EXT:
-            params[0] = context->getState().getActiveQueryId(target);
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
-            return;
-        }
-    }
-}
-
-void GL_APIENTRY GetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
-{
-    EVENT("(GLuint id = %d, GLenum pname = 0x%X, GLuint *params = 0x%0.8p)", id, pname, params);
-
-    Context *context = GetValidGlobalContext();
-    if (context)
-    {
-        Query *queryObject = context->getQuery(id, false, GL_NONE);
-
-        if (!queryObject)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (context->getState().getActiveQueryId(queryObject->getType()) == id)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        switch(pname)
-        {
-          case GL_QUERY_RESULT_EXT:
-            {
-                Error error = queryObject->getResult(params);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_QUERY_RESULT_AVAILABLE_EXT:
-            {
-                Error error = queryObject->isResultAvailable(params);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
-            return;
-        }
-    }
 }
 
 void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader, GLsizei bufsize, GLsizei* length, GLchar* source)
@@ -451,19 +517,6 @@ GLboolean GL_APIENTRY IsFenceNV(GLuint fence)
         // GL_NV_fence spec:
         // A name returned by GenFencesNV, but not yet set via SetFenceNV, is not the name of an existing fence.
         return fenceObject->isSet();
-    }
-
-    return GL_FALSE;
-}
-
-GLboolean GL_APIENTRY IsQueryEXT(GLuint id)
-{
-    EVENT("(GLuint id = %d)", id);
-
-    Context *context = GetValidGlobalContext();
-    if (context)
-    {
-        return (context->getQuery(id, false, GL_NONE) != NULL) ? GL_TRUE : GL_FALSE;
     }
 
     return GL_FALSE;

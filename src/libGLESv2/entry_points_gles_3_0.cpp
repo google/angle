@@ -273,15 +273,8 @@ void GL_APIENTRY GenQueries(GLsizei n, GLuint* ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!ValidateGenQueries(context, n, ids))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (n < 0)
-        {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -299,19 +292,12 @@ void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint* ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!ValidateDeleteQueries(context, n, ids))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
-        if (n < 0)
-        {
-            context->recordError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        for (GLsizei i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
         {
             context->deleteQuery(ids[i]);
         }
@@ -344,12 +330,6 @@ void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
         if (!ValidateBeginQuery(context, target, id))
         {
             return;
@@ -371,12 +351,6 @@ void GL_APIENTRY EndQuery(GLenum target)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
         if (!ValidateEndQuery(context, target))
         {
             return;
@@ -398,28 +372,12 @@ void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint* params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!ValidateGetQueryiv(context, target, pname, params))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
-        if (!ValidQueryType(context, target))
-        {
-            context->recordError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        switch (pname)
-        {
-          case GL_CURRENT_QUERY:
-            params[0] = static_cast<GLint>(context->getState().getActiveQueryId(target));
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
-            return;
-        }
+        context->getQueryiv(target, pname, params);
     }
 }
 
@@ -430,52 +388,15 @@ void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!ValidateGetQueryObjectuiv(context, id, pname, params))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
-        Query *queryObject = context->getQuery(id, false, GL_NONE);
-
-        if (!queryObject)
+        Error error = context->getQueryObjectuiv(id, pname, params);
+        if (error.isError())
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (context->getState().getActiveQueryId(queryObject->getType()) == id)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        switch(pname)
-        {
-          case GL_QUERY_RESULT_EXT:
-            {
-                Error error = queryObject->getResult(params);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_QUERY_RESULT_AVAILABLE_EXT:
-            {
-                Error error = queryObject->isResultAvailable(params);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
+            context->recordError(error);
             return;
         }
     }
