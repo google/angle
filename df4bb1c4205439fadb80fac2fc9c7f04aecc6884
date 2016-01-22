@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7540ee5_536d76d2",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T14:30:47Z",
+      "side": 1,
+      "message": "ASSERT(registerCount) (or check for nullptr)",
+      "range": {
+        "startLine": 107,
+        "startChar": 5,
+        "endLine": 107,
+        "endChar": 18
+      },
+      "revId": "df4bb1c4205439fadb80fac2fc9c7f04aecc6884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07431a35_8b124d38",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T14:30:47Z",
+      "side": 1,
+      "message": "comment that since this is the first group, it has a fixed offset of zero.",
+      "range": {
+        "startLine": 160,
+        "startChar": 24,
+        "endLine": 160,
+        "endChar": 39
+      },
+      "revId": "df4bb1c4205439fadb80fac2fc9c7f04aecc6884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c73662c7_ccf1bfc0",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T14:30:47Z",
+      "side": 1,
+      "message": "I\u0027d probably do something like \n const char *samplerTypeName \u003d IsComparisonSampler(textureGroup) ? \"SamplerComparisonState\" : \"SamplerState\"\n out \u003c\u003c \"uniform \" \u003c\u003c samplerTypeName \u003c\u003c \" samplers\" \u003c\u003c ...",
+      "range": {
+        "startLine": 171,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 5
+      },
+      "revId": "df4bb1c4205439fadb80fac2fc9c7f04aecc6884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27481e4f_6c1e1b3f",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T14:30:47Z",
+      "side": 1,
+      "message": "I think I\u0027d just use a C array of TVectors here, using a MAX define. It does mean that there\u0027s some bogus slots for the comparison guards you define, but I\u0027m okay with that. You could also redefine those guards to not reserve new values. Do you agree?",
+      "range": {
+        "startLine": 196,
+        "startChar": 4,
+        "endLine": 196,
+        "endChar": 65
+      },
+      "revId": "df4bb1c4205439fadb80fac2fc9c7f04aecc6884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
