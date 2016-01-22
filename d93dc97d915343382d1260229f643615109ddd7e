@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d46292ed_ac314b29",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-22T07:53:41Z",
+      "side": 1,
+      "message": "The whitespace changes will be fixed.",
+      "revId": "d93dc97d915343382d1260229f643615109ddd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d46292ed_0c23b7e6",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-22T07:53:41Z",
+      "side": 1,
+      "message": "Destructor should probably call reset() to make this class safer, even though that doesn\u0027t currently lead to bugs.",
+      "revId": "d93dc97d915343382d1260229f643615109ddd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
