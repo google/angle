@@ -1,0 +1,361 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14498aa4_1b943b28",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "Factor this out of the functions?",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "344e8eac_5c751dce",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "// Project each pixel on the (maxColor, minColor) line to decide which BC1 code to assign to it.\n\nI don\u0027t think you need to compute the base colors since you know by linearity the dot product of the 1/3 and 2/3 base colors. Changing the code to do\n\n  dir \u003d max - min\n  dotMax \u003d dot(dir, max)\n  dotMin \u003d dot(dir, min)\n  dot \u003d dot(dir, rgba)\n  // figure out what codeword to assign\n\nIs almost equivalent (up to +-1 in rgba I think?), more readable (imho) and probably a bit faster.",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14a42a86_a3e5baf6",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "nit: decodedColors\n\nAlso we generally avoid abbreviations in ANGLE so all occurrences of Clr would be Color.",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b43a7ef4_80f29686",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "did you forget about the non opaque case?",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d433721e_4176d2df",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "nit: direction",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "344e8eac_3c7651df",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "nit: uint16_t min \u003d ...",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4307614_c237821d",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 725,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "// Find the best BC1 code for each pixel",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b43a7ef4_60e032b9",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "// Same colors, BC1 index 0 is the color in both opaque and transparent mode",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14a42a86_83e8becf",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "// BC1 index 3 is transparent",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d45c5266_f9e877d0",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "// In opaque mode switching the two colors is doing the following code swaps: 0 \u003c-\u003e 1 and 2 \u003c-\u003e 3. This is equivalent to flipping the first bit of each code (5 \u003d 0b0101)",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b43a7ef4_e0eba298",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "// In transparent mode switching the colors is doing the following code swap: 0 \u003c-\u003e 1. 0xA selects the second bit of each code, bits \u003e\u003e 1 selects the first bit of the code when the seconds bit is set (case 2 and 3). We invert all the non-selected bits, that is the first bit when the code is 0 or 1.",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14498aa4_bb8267ea",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "// Encode the opaqueness in the order of the two BC1 colors",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "943d7af0_9f85d3c5",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 818,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "A lot of code could be put in common with decodeIndividualOrDifferential\n\nIt would be great if you could put a comment here with a high-level overview of the transcoding (we compute the max intensity and min intensity pixel values to use as our two BC1 colors and then map pixels to BC1 by projecting on the line between the two colors and choosing the right fraction).\n\nHigh level optimization for this case: compute the BC1 code words for the subblock colors only (8 of them) and then map the ETC1 codes to BC1 code directly, avoiding the need to decode in RGB8.\n\nAlso you might want to explain why you chose the min and max intensity colors for the base BC1 colors. It seems to me that it could lead to artifacts when the two ETC1 base colors are the same intensity but very different. How about doing a principal component analysis of the distribution of colors? I think it might be made fast enough.",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "344e8eac_9c7fa5b6",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 834,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "We should probably either make constants for 8 and 4, or use [][]",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4307614_a2023e51",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 870,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "nit: const auto\u0026",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b43a7ef4_40d1aef0",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 872,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "These comments I add for myself during the review, but it would be great to have more commented code overall. Right now it is pretty opaque.\n// Compute the colors that pixels can have in each subblock both for the decoding of the RGBA data and ????",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "943d7af0_5f84ebc8",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 875,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "Here you are iterating over the modifiers, not the blocks",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14a42a86_23fa2a99",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 883,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "// 1 and 3 are the argmax and argmin of valueMappingTable",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74448688_3eebe9d2",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 885,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "// Decode the block in rgbaBlock and store the inverse valueTableMapping of {min(modifier index), max(modifier index)}",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4595674_fa318928",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 888,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "These for blocks should definitely be moved in their own function (lots of arguments though :S)",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4595674_3a8f811b",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-22T23:20:19Z",
+      "side": 1,
+      "message": "// Get the \"min\" and \"max\" pixel colors that have been used.",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
