@@ -91,6 +91,30 @@
       "revId": "df4bb1c4205439fadb80fac2fc9c7f04aecc6884",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "347beeaf_74fd2859",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-22T16:18:47Z",
+      "side": 1,
+      "message": "Agreed, I\u0027ll still address this later.",
+      "parentUuid": "27481e4f_6c1e1b3f",
+      "range": {
+        "startLine": 196,
+        "startChar": 4,
+        "endLine": 196,
+        "endChar": 65
+      },
+      "revId": "df4bb1c4205439fadb80fac2fc9c7f04aecc6884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
