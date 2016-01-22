@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "c73662c7_4ce6af02",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T15:05:16Z",
+      "side": 1,
+      "message": "this should go in renderer11_utils likely.",
+      "range": {
+        "startLine": 490,
+        "startChar": 0,
+        "endLine": 498,
+        "endChar": 1
+      },
+      "revId": "d93dc97d915343382d1260229f643615109ddd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d46292ed_0c23b7e6",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
         "patchSetId": 6
@@ -30,6 +53,47 @@
       "writtenOn": "2016-01-22T07:53:41Z",
       "side": 1,
       "message": "Destructor should probably call reset() to make this class safer, even though that doesn\u0027t currently lead to bugs.",
+      "revId": "d93dc97d915343382d1260229f643615109ddd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "473992b3_4d4f9940",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T15:05:16Z",
+      "side": 1,
+      "message": "Also please place both the constructor and destructor in the cpp.",
+      "parentUuid": "d46292ed_0c23b7e6",
+      "revId": "d93dc97d915343382d1260229f643615109ddd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c73662c7_8c10a7a2",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T15:05:16Z",
+      "side": 1,
+      "message": "nit: place the implementation in the cpp.",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 5
+      },
       "revId": "d93dc97d915343382d1260229f643615109ddd7e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
