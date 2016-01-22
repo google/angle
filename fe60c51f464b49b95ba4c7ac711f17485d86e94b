@@ -22,6 +22,30 @@
       "revId": "fe60c51f464b49b95ba4c7ac711f17485d86e94b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c73662c7_cc6e1f04",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 803,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-22T17:49:54Z",
+      "side": 1,
+      "message": "Used a small switch statement instead, I think it looks a little cleaner despite it being unlikely that there will ever be new standard types.",
+      "parentUuid": "c73662c7_c90c511a",
+      "range": {
+        "startLine": 796,
+        "startChar": 4,
+        "endLine": 803,
+        "endChar": 5
+      },
+      "revId": "fe60c51f464b49b95ba4c7ac711f17485d86e94b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
