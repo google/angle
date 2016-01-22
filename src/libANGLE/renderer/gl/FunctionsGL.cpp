@@ -762,7 +762,9 @@ FunctionsGL::FunctionsGL()
       vertexArrayVertexBuffer(nullptr),
       vertexArrayVertexBuffers(nullptr),
       blendBarrier(nullptr),
-      primitiveBoundingBox(nullptr)
+      primitiveBoundingBox(nullptr),
+      eglImageTargetRenderbufferStorageOES(nullptr),
+      eglImageTargetTexture2DOES(nullptr)
 {
 }
 
@@ -1771,6 +1773,10 @@ void FunctionsGL::initializeProcsGLES()
     AssignGLExtensionEntryPoint(extensions, "GL_EXT_occlusion_query_boolean", loadProcAddress("glEndQueryEXT"), &endQuery);
     AssignGLExtensionEntryPoint(extensions, "GL_EXT_occlusion_query_boolean", loadProcAddress("glGetQueryivEXT"), &getQueryiv);
     AssignGLExtensionEntryPoint(extensions, "GL_EXT_occlusion_query_boolean", loadProcAddress("glGetQueryObjectuivEXT"), &getQueryObjectuiv);
+
+    // GL_OES_EGL_image
+    AssignGLExtensionEntryPoint(extensions, "GL_OES_EGL_image", loadProcAddress("glEGLImageTargetRenderbufferStorageOES"), &eglImageTargetRenderbufferStorageOES);
+    AssignGLExtensionEntryPoint(extensions, "GL_OES_EGL_image", loadProcAddress("glEGLImageTargetTexture2DOES"), &eglImageTargetTexture2DOES);
 
     // 2.0
     if (isAtLeastGLES(gl::Version(2, 0)))
