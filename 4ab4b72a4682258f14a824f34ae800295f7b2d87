@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c73662c7_acd64bea",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 845,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:15:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "673e969d_42d76244",
+      "range": {
+        "startLine": 839,
+        "startChar": 4,
+        "endLine": 845,
+        "endChar": 5
+      },
+      "revId": "4ab4b72a4682258f14a824f34ae800295f7b2d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "27481e4f_ac6563c3",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 15
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f436b6dd_52a8344b",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 901,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:15:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27481e4f_ac6563c3",
+      "range": {
+        "startLine": 900,
+        "startChar": 8,
+        "endLine": 901,
+        "endChar": 59
+      },
+      "revId": "4ab4b72a4682258f14a824f34ae800295f7b2d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "473992b3_8d26e1f5",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 15
@@ -59,6 +107,24 @@
       "writtenOn": "2016-01-21T18:35:16Z",
       "side": 1,
       "message": "Could mReadFramebuffer be null here if we do the following:\n - Somehow dirty READ_FRAMEBUFFER\n - setReadFramebufferBinding(nullptr)\n - syncDirtyObjects()",
+      "revId": "4ab4b72a4682258f14a824f34ae800295f7b2d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7540ee5_53857677",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1753,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:15:05Z",
+      "side": 1,
+      "message": "I don\u0027t think so. As far as I could see the only time it\u0027s possible it\u0027s ever null is when the context is not current, in which case we shouldn\u0027t be syncing state on it! I\u0027ve put in ASSERTs to validate this is a programming error.",
+      "parentUuid": "473992b3_8d26e1f5",
       "revId": "4ab4b72a4682258f14a824f34ae800295f7b2d87",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -93,6 +159,24 @@
       "writtenOn": "2016-01-21T18:35:16Z",
       "side": 1,
       "message": "This variable seems like it could be removed by putting the building of the cache in a function.",
+      "revId": "4ab4b72a4682258f14a824f34ae800295f7b2d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7540ee5_b3e0624b",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:15:05Z",
+      "side": 1,
+      "message": "Kinda not clear what you mean, but I redesigned this to use Optional, PTAL. (The only reason I was using the bool was to make the initial call to update force a cache update)",
+      "parentUuid": "a7540ee5_50080c08",
       "revId": "4ab4b72a4682258f14a824f34ae800295f7b2d87",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
