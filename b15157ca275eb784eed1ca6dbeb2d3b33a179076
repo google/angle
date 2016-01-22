@@ -1,0 +1,441 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d433721e_81a3babd",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "probably put chromeos%: 0, to keep a default value of zero to make sure the build doesn\u0027t break, but allow the user to override it (%)",
+      "range": {
+        "startLine": 15,
+        "startChar": 9,
+        "endLine": 15,
+        "endChar": 29
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14a42a86_23a8ea98",
+        "filename": "src/angle.gyp",
+        "patchSetId": 8
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "yeah, Corentin might know more about this too",
+      "range": {
+        "startLine": 33,
+        "startChar": 65,
+        "endLine": 33,
+        "endChar": 89
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b43a7ef4_60a8329a",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "yes, but no s on supportable ;P",
+      "range": {
+        "startLine": 39,
+        "startChar": 9,
+        "endLine": 39,
+        "endChar": 59
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "943d7af0_5fa86b99",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "hopefully Geoff\u0027s changes landed/can land soon so we can rebase this out",
+      "range": {
+        "startLine": 755,
+        "startChar": 9,
+        "endLine": 755,
+        "endChar": 33
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4e87667_25faf898",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 5
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "344e8eac_3c993193",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "nit: obviously this is a WIP CL but generally you can use // TODO(yourldap): Comment",
+      "range": {
+        "startLine": 232,
+        "startChar": 6,
+        "endLine": 232,
+        "endChar": 9
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b43a7ef4_40c08e57",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "nit s/NULL/nullptr",
+      "range": {
+        "startLine": 245,
+        "startChar": 17,
+        "endLine": 245,
+        "endChar": 21
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14a42a86_83b67ef7",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "these are pretty mysterious, can you clear up what they\u0027re doing?",
+      "range": {
+        "startLine": 464,
+        "startChar": 0,
+        "endLine": 471,
+        "endChar": 1
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4307614_42c09257",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "probably can remove",
+      "range": {
+        "startLine": 552,
+        "startChar": 0,
+        "endLine": 552,
+        "endChar": 18
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14498aa4_3b993793",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "use c++ casts instead of c style for ANGLE/Chromium code",
+      "range": {
+        "startLine": 558,
+        "startChar": 22,
+        "endLine": 558,
+        "endChar": 35
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4307614_e2b3a605",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "do we need to use this-\u003e here? assuming no, avoid using this when we don\u0027t have to.",
+      "range": {
+        "startLine": 575,
+        "startChar": 34,
+        "endLine": 575,
+        "endChar": 40
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "943d7af0_bfac17ae",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "what\u0027s DRM? would be good to define this somewhere - obviously overlaps with digital rights management or whatever",
+      "range": {
+        "startLine": 7,
+        "startChar": 17,
+        "endLine": 7,
+        "endChar": 20
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8730eace_675632b0",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "seems like this should rather be a class than a struct with private data",
+      "range": {
+        "startLine": 55,
+        "startChar": 8,
+        "endLine": 62,
+        "endChar": 25
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b43a7ef4_00b7a6f5",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "git cl format would probably modify the formatting in places (eg here)",
+      "range": {
+        "startLine": 116,
+        "startChar": 93,
+        "endLine": 116,
+        "endChar": 118
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b43a7ef4_e0b3a205",
+        "filename": "src/libANGLE/renderer/gl/cros/DisplayDRM.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "nit: close namespaces with comment\n}  // namespace rx",
+      "range": {
+        "startLine": 162,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 1
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d45c5266_39994f93",
+        "filename": "src/libANGLE/renderer/gl/cros/FunctionsEGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "SafeDelete",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 10
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4595674_baac31ae",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 8
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "you\u0027ll need to update the GN build as well",
+      "range": {
+        "startLine": 488,
+        "startChar": 9,
+        "endLine": 488,
+        "endChar": 32
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d45c5266_199e0b7b",
+        "filename": "src/tests/egl_tests/EGLSurfaceTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "c++ cast here",
+      "range": {
+        "startLine": 100,
+        "startChar": 70,
+        "endLine": 100,
+        "endChar": 77
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "943d7af0_dfcabb71",
+        "filename": "util/util.gyp",
+        "patchSetId": 8
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-22T19:40:36Z",
+      "side": 1,
+      "message": "gn build for this stuff too",
+      "range": {
+        "startLine": 69,
+        "startChar": 9,
+        "endLine": 69,
+        "endChar": 26
+      },
+      "revId": "b15157ca275eb784eed1ca6dbeb2d3b33a179076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
