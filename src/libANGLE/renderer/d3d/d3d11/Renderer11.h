@@ -254,14 +254,22 @@ class Renderer11 : public RendererD3D
 
     void unapplyRenderTargets();
     void setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView);
-    gl::Error packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams &params, uint8_t *pixelsOut);
+    gl::Error packPixels(const TextureHelper11 &textureHelper,
+                         const PackPixelsParams &params,
+                         uint8_t *pixelsOut);
 
     bool getLUID(LUID *adapterLuid) const override;
     VertexConversionType getVertexConversionType(gl::VertexFormatType vertexFormatType) const override;
     GLenum getVertexComponentType(gl::VertexFormatType vertexFormatType) const override;
 
-    gl::Error readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,
-                              GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels);
+    gl::Error readTextureData(const TextureHelper11 &textureHelper,
+                              unsigned int subResource,
+                              const gl::Rectangle &area,
+                              GLenum format,
+                              GLenum type,
+                              GLuint outputPitch,
+                              const gl::PixelPackState &pack,
+                              uint8_t *pixels);
 
     void setShaderResource(gl::SamplerType shaderType, UINT resourceSlot, ID3D11ShaderResourceView *srv);
 

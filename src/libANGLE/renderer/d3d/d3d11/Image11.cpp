@@ -475,7 +475,10 @@ gl::Error Image11::copy(const gl::Offset &destOffset, const gl::Box &sourceArea,
         ASSERT(dim == D3D11_RESOURCE_DIMENSION_TEXTURE2D);
         ASSERT(sourceArea.z == 0 && sourceArea.depth == 1);
         gl::Rectangle sourceRect(sourceArea.x, sourceArea.y, sourceArea.width, sourceArea.height);
-        error = mRenderer->readTextureData(source2D, sourceSubResource, sourceRect, formatInfo.format, formatInfo.type, mappedImage.RowPitch, gl::PixelPackState(), dataOffset);
+        TextureHelper11 sourceHelper(source2D);
+        error = mRenderer->readTextureData(sourceHelper, sourceSubResource, sourceRect,
+                                           formatInfo.format, formatInfo.type, mappedImage.RowPitch,
+                                           gl::PixelPackState(), dataOffset);
 
         unmap();
 

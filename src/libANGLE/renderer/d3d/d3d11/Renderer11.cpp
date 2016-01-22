@@ -3587,28 +3587,31 @@ RenderbufferImpl *Renderer11::createRenderbuffer()
     return renderbuffer;
 }
 
-gl::Error Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,
-                                      GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels)
+gl::Error Renderer11::readTextureData(const TextureHelper11 &textureHelper,
+                                      unsigned int subResource,
+                                      const gl::Rectangle &area,
+                                      GLenum format,
+                                      GLenum type,
+                                      GLuint outputPitch,
+                                      const gl::PixelPackState &pack,
+                                      uint8_t *pixels)
 {
     ASSERT(area.width >= 0);
     ASSERT(area.height >= 0);
 
-    D3D11_TEXTURE2D_DESC textureDesc;
-    texture->GetDesc(&textureDesc);
+    const gl::Extents &texSize = textureHelper.getExtents();
 
     // Clamp read region to the defined texture boundaries, preventing out of bounds reads
     // and reads of uninitialized data.
     gl::Rectangle safeArea;
-    safeArea.x      = gl::clamp(area.x, 0, static_cast<int>(textureDesc.Width));
-    safeArea.y      = gl::clamp(area.y, 0, static_cast<int>(textureDesc.Height));
-    safeArea.width  = gl::clamp(area.width + std::min(area.x, 0), 0,
-                                static_cast<int>(textureDesc.Width) - safeArea.x);
-    safeArea.height = gl::clamp(area.height + std::min(area.y, 0), 0,
-                                static_cast<int>(textureDesc.Height) - safeArea.y);
+    safeArea.x      = gl::clamp(area.x, 0, texSize.width);
+    safeArea.y      = gl::clamp(area.y, 0, texSize.height);
+    safeArea.width  = gl::clamp(area.width + std::min(area.x, 0), 0, texSize.width - safeArea.x);
+    safeArea.height = gl::clamp(area.height + std::min(area.y, 0), 0, texSize.height - safeArea.y);
 
     ASSERT(safeArea.x >= 0 && safeArea.y >= 0);
-    ASSERT(safeArea.x + safeArea.width  <= static_cast<int>(textureDesc.Width));
-    ASSERT(safeArea.y + safeArea.height <= static_cast<int>(textureDesc.Height));
+    ASSERT(safeArea.x + safeArea.width <= texSize.width);
+    ASSERT(safeArea.y + safeArea.height <= texSize.height);
 
     if (safeArea.width == 0 || safeArea.height == 0)
     {
@@ -3621,7 +3624,7 @@ gl::Error Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int sub
     stagingDesc.Height = safeArea.height;
     stagingDesc.MipLevels = 1;
     stagingDesc.ArraySize = 1;
-    stagingDesc.Format = textureDesc.Format;
+    stagingDesc.Format             = textureHelper.getFormat();
     stagingDesc.SampleDesc.Count = 1;
     stagingDesc.SampleDesc.Quality = 0;
     stagingDesc.Usage = D3D11_USAGE_STAGING;
@@ -3629,22 +3632,29 @@ gl::Error Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int sub
     stagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
     stagingDesc.MiscFlags = 0;
 
-    ID3D11Texture2D* stagingTex = NULL;
-    HRESULT result = mDevice->CreateTexture2D(&stagingDesc, NULL, &stagingTex);
+    ID3D11Texture2D *stagingTex = nullptr;
+    HRESULT result = mDevice->CreateTexture2D(&stagingDesc, nullptr, &stagingTex);
     if (FAILED(result))
     {
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal staging texture for ReadPixels, HRESULT: 0x%X.", result);
     }
 
-    ID3D11Texture2D* srcTex = NULL;
-    if (textureDesc.SampleDesc.Count > 1)
+    ID3D11Texture2D *texture = textureHelper.getTexture2D();
+    if (!texture)
+    {
+        // TODO(jmadill): Implement for 3D Textures.
+        return gl::Error(GL_OUT_OF_MEMORY, "Renderer11::readTextureData called with 3D Texture.");
+    }
+
+    ID3D11Texture2D *srcTex = nullptr;
+    if (textureHelper.getSampleCount() > 1)
     {
         D3D11_TEXTURE2D_DESC resolveDesc;
-        resolveDesc.Width = textureDesc.Width;
-        resolveDesc.Height = textureDesc.Height;
+        resolveDesc.Width              = static_cast<UINT>(texSize.width);
+        resolveDesc.Height             = static_cast<UINT>(texSize.height);
         resolveDesc.MipLevels = 1;
         resolveDesc.ArraySize = 1;
-        resolveDesc.Format = textureDesc.Format;
+        resolveDesc.Format             = textureHelper.getFormat();
         resolveDesc.SampleDesc.Count = 1;
         resolveDesc.SampleDesc.Quality = 0;
         resolveDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -3652,14 +3662,15 @@ gl::Error Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int sub
         resolveDesc.CPUAccessFlags = 0;
         resolveDesc.MiscFlags = 0;
 
-        result = mDevice->CreateTexture2D(&resolveDesc, NULL, &srcTex);
+        result = mDevice->CreateTexture2D(&resolveDesc, nullptr, &srcTex);
         if (FAILED(result))
         {
             SafeRelease(stagingTex);
             return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal resolve texture for ReadPixels, HRESULT: 0x%X.", result);
         }
 
-        mDeviceContext->ResolveSubresource(srcTex, 0, texture, subResource, textureDesc.Format);
+        mDeviceContext->ResolveSubresource(srcTex, 0, texture, subResource,
+                                           textureHelper.getFormat());
         subResource = 0;
     }
     else
@@ -3681,17 +3692,25 @@ gl::Error Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int sub
     SafeRelease(srcTex);
 
     PackPixelsParams packParams(safeArea, format, type, outputPitch, pack, 0);
-    gl::Error error = packPixels(stagingTex, packParams, pixels);
+    TextureHelper11 stagingHelper(stagingTex);
+    gl::Error error = packPixels(stagingHelper, packParams, pixels);
 
     SafeRelease(stagingTex);
 
     return error;
 }
 
-gl::Error Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams &params, uint8_t *pixelsOut)
+gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
+                                 const PackPixelsParams &params,
+                                 uint8_t *pixelsOut)
 {
-    D3D11_TEXTURE2D_DESC textureDesc;
-    readTexture->GetDesc(&textureDesc);
+    ID3D11Texture2D *readTexture = textureHelper.getTexture2D();
+
+    if (readTexture == nullptr)
+    {
+        // TODO(jmadill): Implement packPixels for 3D textures.
+        return gl::Error(GL_OUT_OF_MEMORY, "Renderer11::packPixels called with 3D Texture.");
+    }
 
     D3D11_MAPPED_SUBRESOURCE mapping;
     HRESULT hr = mDeviceContext->Map(readTexture, 0, D3D11_MAP_READ, 0, &mapping);
@@ -3714,7 +3733,7 @@ gl::Error Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsP
         inputPitch = static_cast<int>(mapping.RowPitch);
     }
 
-    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(textureDesc.Format);
+    const d3d11::DXGIFormat &dxgiFormatInfo    = d3d11::GetDXGIFormatInfo(textureHelper.getFormat());
     const gl::InternalFormat &sourceFormatInfo = gl::GetInternalFormatInfo(dxgiFormatInfo.internalFormat);
     if (sourceFormatInfo.format == params.format && sourceFormatInfo.type == params.type)
     {
@@ -3726,9 +3745,8 @@ gl::Error Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsP
     }
     else
     {
-        const d3d11::DXGIFormat &sourceDXGIFormatInfo = d3d11::GetDXGIFormatInfo(textureDesc.Format);
-        ColorCopyFunction fastCopyFunc = sourceDXGIFormatInfo.getFastCopyFunction(params.format, params.type);
-
+        ColorCopyFunction fastCopyFunc =
+            dxgiFormatInfo.getFastCopyFunction(params.format, params.type);
         GLenum sizedDestInternalFormat = gl::GetSizedInternalFormat(params.format, params.type);
         const gl::InternalFormat &destFormatInfo = gl::GetInternalFormatInfo(sizedDestInternalFormat);
 
@@ -3748,7 +3766,7 @@ gl::Error Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsP
         }
         else
         {
-            ColorReadFunction colorReadFunction = sourceDXGIFormatInfo.colorReadFunction;
+            ColorReadFunction colorReadFunction   = dxgiFormatInfo.colorReadFunction;
             ColorWriteFunction colorWriteFunction = GetColorWriteFunction(params.format, params.type);
 
             uint8_t temp[16]; // Maximum size of any Color<T> type used.

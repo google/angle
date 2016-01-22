@@ -47,7 +47,7 @@ D3D11_TEXTURE_ADDRESS_MODE ConvertTextureWrap(GLenum wrap);
 
 D3D11_QUERY ConvertQueryType(GLenum queryType);
 
-}
+}  // namespace gl_d3d11
 
 namespace d3d11_gl
 {
@@ -60,7 +60,7 @@ GLint GetMaximumClientVersion(D3D_FEATURE_LEVEL featureLevel);
 void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, const Renderer11DeviceCaps &renderer11DeviceCaps, gl::Caps *caps,
                   gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions, gl::Limitations *limitations);
 
-}
+}  // namespace d3d11_gl
 
 namespace d3d11
 {
@@ -334,8 +334,37 @@ void SetBufferData(ID3D11DeviceContext *context, ID3D11Buffer *constantBuffer, c
 }
 
 WorkaroundsD3D GenerateWorkarounds(D3D_FEATURE_LEVEL featureLevel);
-}
+}  // namespace d3d11
 
-}
+// A helper class which wraps a 2D or 3D texture.
+class TextureHelper11 : angle::NonCopyable
+{
+  public:
+    TextureHelper11();
+    explicit TextureHelper11(ID3D11Resource *resource);
+    TextureHelper11(TextureHelper11 &&toCopy);
+    ~TextureHelper11();
+    TextureHelper11 &operator=(TextureHelper11 &&texture);
+
+    GLenum getTextureType() const { return mTextureType; }
+    gl::Extents getExtents() const { return mExtents; }
+    DXGI_FORMAT getFormat() const { return mFormat; }
+    int getSampleCount() const { return mSampleCount; }
+    ID3D11Texture2D *getTexture2D() const { return mTexture2D; }
+    ID3D11Texture3D *getTexture3D() const { return mTexture3D; }
+    ID3D11Resource *getResource() const;
+
+  private:
+    void reset();
+
+    GLenum mTextureType;
+    gl::Extents mExtents;
+    DXGI_FORMAT mFormat;
+    int mSampleCount;
+    ID3D11Texture2D *mTexture2D;
+    ID3D11Texture3D *mTexture3D;
+};
+
+}  // namespace rx
 
 #endif // LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_UTILS_H_
