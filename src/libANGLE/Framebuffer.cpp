@@ -300,7 +300,7 @@ void Framebuffer::setDrawBuffers(size_t count, const GLenum *buffers)
     ASSERT(count <= drawStates.size());
     std::copy(buffers, buffers + count, drawStates.begin());
     std::fill(drawStates.begin() + count, drawStates.end(), GL_NONE);
-    mImpl->setDrawBuffers(count, buffers);
+    mDirtyBits.set(DIRTY_BIT_DRAW_BUFFERS);
 }
 
 GLenum Framebuffer::getReadBufferState() const
@@ -314,7 +314,7 @@ void Framebuffer::setReadBuffer(GLenum buffer)
            (buffer >= GL_COLOR_ATTACHMENT0 &&
             (buffer - GL_COLOR_ATTACHMENT0) < mData.mColorAttachments.size()));
     mData.mReadBufferState = buffer;
-    mImpl->setReadBuffer(buffer);
+    mDirtyBits.set(DIRTY_BIT_READ_BUFFER);
 }
 
 bool Framebuffer::isEnabledColorAttachment(size_t colorAttachment) const
@@ -567,6 +567,7 @@ GLenum Framebuffer::checkStatus(const gl::Data &data) const
         return GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS;
     }
 
+    syncState();
     if (!mImpl->checkStatus())
     {
         return GL_FRAMEBUFFER_UNSUPPORTED;
@@ -740,32 +741,33 @@ void Framebuffer::setAttachment(GLenum type,
 
         mData.mDepthAttachment.attach(type, binding, textureIndex, attachmentObj);
         mData.mStencilAttachment.attach(type, binding, textureIndex, attachmentObj);
-        mImpl->onUpdateDepthStencilAttachment();
+        mDirtyBits.set(DIRTY_BIT_DEPTH_ATTACHMENT);
+        mDirtyBits.set(DIRTY_BIT_STENCIL_ATTACHMENT);
     }
     else
     {
         switch (binding)
         {
-          case GL_DEPTH:
-          case GL_DEPTH_ATTACHMENT:
-            mData.mDepthAttachment.attach(type, binding, textureIndex, resource);
-            mImpl->onUpdateDepthAttachment();
+            case GL_DEPTH:
+            case GL_DEPTH_ATTACHMENT:
+                mData.mDepthAttachment.attach(type, binding, textureIndex, resource);
+                mDirtyBits.set(DIRTY_BIT_DEPTH_ATTACHMENT);
             break;
-          case GL_STENCIL:
-          case GL_STENCIL_ATTACHMENT:
-            mData.mStencilAttachment.attach(type, binding, textureIndex, resource);
-            mImpl->onUpdateStencilAttachment();
+            case GL_STENCIL:
+            case GL_STENCIL_ATTACHMENT:
+                mData.mStencilAttachment.attach(type, binding, textureIndex, resource);
+                mDirtyBits.set(DIRTY_BIT_STENCIL_ATTACHMENT);
             break;
-          case GL_BACK:
-            mData.mColorAttachments[0].attach(type, binding, textureIndex, resource);
-            mImpl->onUpdateColorAttachment(0);
+            case GL_BACK:
+                mData.mColorAttachments[0].attach(type, binding, textureIndex, resource);
+                mDirtyBits.set(DIRTY_BIT_COLOR_ATTACHMENT_0);
             break;
-          default:
+            default:
             {
                 size_t colorIndex = binding - GL_COLOR_ATTACHMENT0;
                 ASSERT(colorIndex < mData.mColorAttachments.size());
                 mData.mColorAttachments[colorIndex].attach(type, binding, textureIndex, resource);
-                mImpl->onUpdateColorAttachment(colorIndex);
+                mDirtyBits.set(DIRTY_BIT_COLOR_ATTACHMENT_0 + colorIndex);
             }
             break;
         }
@@ -777,4 +779,13 @@ void Framebuffer::resetAttachment(GLenum binding)
     setAttachment(GL_NONE, binding, ImageIndex::MakeInvalid(), nullptr);
 }
 
+void Framebuffer::syncState() const
+{
+    if (mDirtyBits.any())
+    {
+        mImpl->syncState(mDirtyBits);
+        mDirtyBits.reset();
+    }
 }
+
+}  // namespace gl

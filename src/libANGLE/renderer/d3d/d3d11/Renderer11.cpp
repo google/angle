@@ -1551,7 +1551,7 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
     bool missingColorRenderTarget = true;
 
     const FramebufferD3D *framebufferD3D = GetImplAs<FramebufferD3D>(framebuffer);
-    const gl::AttachmentList &colorbuffers = framebufferD3D->getColorAttachmentsForRender(getWorkarounds());
+    const gl::AttachmentList &colorbuffers = framebufferD3D->getColorAttachmentsForRender();
 
     for (size_t colorAttachment = 0; colorAttachment < colorbuffers.size(); ++colorAttachment)
     {

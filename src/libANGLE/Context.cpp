@@ -2065,6 +2065,9 @@ void Context::copyTexImage2D(GLenum target,
                              GLsizei height,
                              GLint border)
 {
+    // Only sync the read FBO
+    mState.syncDirtyObject(GL_READ_FRAMEBUFFER);
+
     Rectangle sourceArea(x, y, width, height);
 
     const Framebuffer *framebuffer = mState.getReadFramebuffer();
@@ -2086,6 +2089,9 @@ void Context::copyTexSubImage2D(GLenum target,
                                 GLsizei width,
                                 GLsizei height)
 {
+    // Only sync the read FBO
+    mState.syncDirtyObject(GL_READ_FRAMEBUFFER);
+
     Offset destOffset(xoffset, yoffset, 0);
     Rectangle sourceArea(x, y, width, height);
 
@@ -2109,6 +2115,9 @@ void Context::copyTexSubImage3D(GLenum target,
                                 GLsizei width,
                                 GLsizei height)
 {
+    // Only sync the read FBO
+    mState.syncDirtyObject(GL_READ_FRAMEBUFFER);
+
     Offset destOffset(xoffset, yoffset, zoffset);
     Rectangle sourceArea(x, y, width, height);
 
@@ -2152,6 +2161,8 @@ void Context::framebufferTexture2D(GLenum target,
     {
         framebuffer->resetAttachment(attachment);
     }
+
+    mState.setObjectDirty(target);
 }
 
 void Context::framebufferRenderbuffer(GLenum target,
@@ -2172,6 +2183,8 @@ void Context::framebufferRenderbuffer(GLenum target,
     {
         framebuffer->resetAttachment(attachment);
     }
+
+    mState.setObjectDirty(target);
 }
 
 void Context::framebufferTextureLayer(GLenum target,
@@ -2205,6 +2218,8 @@ void Context::framebufferTextureLayer(GLenum target,
     {
         framebuffer->resetAttachment(attachment);
     }
+
+    mState.setObjectDirty(target);
 }
 
 void Context::drawBuffers(GLsizei n, const GLenum *bufs)
@@ -2212,16 +2227,21 @@ void Context::drawBuffers(GLsizei n, const GLenum *bufs)
     Framebuffer *framebuffer = mState.getDrawFramebuffer();
     ASSERT(framebuffer);
     framebuffer->setDrawBuffers(n, bufs);
+    mState.setObjectDirty(GL_DRAW_FRAMEBUFFER);
 }
 
 void Context::readBuffer(GLenum mode)
 {
     Framebuffer *readFBO = mState.getReadFramebuffer();
     readFBO->setReadBuffer(mode);
+    mState.setObjectDirty(GL_READ_FRAMEBUFFER);
 }
 
 void Context::discardFramebuffer(GLenum target, GLsizei numAttachments, const GLenum *attachments)
 {
+    // Only sync the FBO
+    mState.syncDirtyObject(target);
+
     Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
@@ -2238,6 +2258,9 @@ void Context::invalidateFramebuffer(GLenum target,
                                     GLsizei numAttachments,
                                     const GLenum *attachments)
 {
+    // Only sync the FBO
+    mState.syncDirtyObject(target);
+
     Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
@@ -2260,6 +2283,9 @@ void Context::invalidateSubFramebuffer(GLenum target,
                                        GLsizei width,
                                        GLsizei height)
 {
+    // Only sync the FBO
+    mState.syncDirtyObject(target);
+
     Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
 

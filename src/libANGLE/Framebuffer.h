@@ -67,6 +67,7 @@ class Framebuffer final : public LabeledObject
         const FramebufferAttachment *getDepthStencilAttachment() const;
 
         const std::vector<GLenum> &getDrawBufferStates() const { return mDrawBufferStates; }
+        GLenum getReadBufferState() const { return mReadBufferState; }
         const std::vector<FramebufferAttachment> &getColorAttachments() const { return mColorAttachments; }
 
         bool attachmentsHaveSameDimensions() const;
@@ -168,12 +169,33 @@ class Framebuffer final : public LabeledObject
                GLenum filter,
                const Framebuffer *sourceFramebuffer);
 
+    enum DirtyBitType
+    {
+        DIRTY_BIT_COLOR_ATTACHMENT_0,
+        DIRTY_BIT_COLOR_ATTACHMENT_MAX =
+            DIRTY_BIT_COLOR_ATTACHMENT_0 + gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS,
+        DIRTY_BIT_DEPTH_ATTACHMENT = DIRTY_BIT_COLOR_ATTACHMENT_MAX,
+        DIRTY_BIT_STENCIL_ATTACHMENT,
+        DIRTY_BIT_DRAW_BUFFERS,
+        DIRTY_BIT_READ_BUFFER,
+        DIRTY_BIT_UNKNOWN,
+        DIRTY_BIT_MAX = DIRTY_BIT_UNKNOWN,
+    };
+
+    typedef std::bitset<DIRTY_BIT_MAX> DirtyBits;
+    bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
+
+    void syncState() const;
+
   protected:
     void detachResourceById(GLenum resourceType, GLuint resourceId);
 
     Data mData;
     rx::FramebufferImpl *mImpl;
     GLuint mId;
+
+    // TODO(jmadill): See if we can make this non-mutable.
+    mutable DirtyBits mDirtyBits;
 };
 
 }

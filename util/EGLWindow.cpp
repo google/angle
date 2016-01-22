@@ -86,6 +86,7 @@ EGLWindow::EGLWindow(EGLint glesMajorVersion,
       mStencilBits(-1),
       mMultisample(false),
       mDebug(false),
+      mNoError(false),
       mSwapInterval(-1)
 {
 }
@@ -230,6 +231,13 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
 
         contextAttributes.push_back(EGL_CONTEXT_OPENGL_DEBUG);
         contextAttributes.push_back(mDebug ? EGL_TRUE : EGL_FALSE);
+
+        // TODO(jmadill): Check for the extension string.
+        // bool hasKHRCreateContextNoError = strstr(displayExtensions,
+        // "EGL_KHR_create_context_no_error") != nullptr;
+
+        contextAttributes.push_back(EGL_CONTEXT_OPENGL_NO_ERROR_KHR);
+        contextAttributes.push_back(mNoError ? EGL_TRUE : EGL_FALSE);
     }
     contextAttributes.push_back(EGL_NONE);
 

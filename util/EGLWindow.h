@@ -60,6 +60,7 @@ class EGLWindow : angle::NonCopyable
     void setConfigStencilBits(int bits) { mStencilBits = bits; }
     void setMultisample(bool multisample) { mMultisample = multisample; }
     void setDebugEnabled(bool debug) { mDebug = debug; }
+    void setNoErrorEnabled(bool noError) { mNoError = noError; }
     void setSwapInterval(EGLint swapInterval) { mSwapInterval = swapInterval; }
 
     static EGLBoolean FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *config);
@@ -104,6 +105,7 @@ class EGLWindow : angle::NonCopyable
     int mStencilBits;
     bool mMultisample;
     bool mDebug;
+    bool mNoError;
     EGLint mSwapInterval;
 };
 

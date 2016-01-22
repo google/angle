@@ -25,8 +25,7 @@ namespace rx
 {
 
 Framebuffer11::Framebuffer11(const gl::Framebuffer::Data &data, Renderer11 *renderer)
-    : FramebufferD3D(data),
-      mRenderer(renderer)
+    : FramebufferD3D(data, renderer), mRenderer(renderer)
 {
     ASSERT(mRenderer != nullptr);
 }
