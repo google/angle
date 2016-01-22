@@ -86,10 +86,10 @@ class MultiWindowSample : public SampleApplication
         int baseY = rootWindow.osWindow->getY();
         for (auto &window : mWindows)
         {
-            int x      = baseX + static_cast<int>(RandomBetween(0, 512));
-            int y      = baseY + static_cast<int>(RandomBetween(0, 512));
-            int width = static_cast<int>(RandomBetween(128, 512));
-            int height = static_cast<int>(RandomBetween(128, 512));
+            int x      = baseX + mRNG.randomIntBetween(0, 512);
+            int y      = baseY + mRNG.randomIntBetween(0, 512);
+            int width  = mRNG.randomIntBetween(128, 512);
+            int height = mRNG.randomIntBetween(128, 512);
             window.osWindow->setPosition(x, y);
             window.osWindow->resize(width, height);
         }
@@ -191,6 +191,8 @@ class MultiWindowSample : public SampleApplication
         EGLSurface surface;
     };
     std::vector<window> mWindows;
+
+    RNG mRNG;
 };
 
 int main(int argc, char **argv)

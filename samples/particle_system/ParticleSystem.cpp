@@ -98,16 +98,16 @@ class ParticleSystemSample : public SampleApplication
         // Fill in particle data array
         for (size_t i = 0; i < mParticleCount; i++)
         {
-            mParticles[i].lifetime = RandomBetween(0.0f, 1.0f);
+            mParticles[i].lifetime = mRNG.randomFloatBetween(0.0f, 1.0f);
 
-            float endAngle = RandomBetween(0, 2.0f * float(M_PI));
-            float endRadius = RandomBetween(0.0f, 2.0f);
+            float endAngle              = mRNG.randomFloatBetween(0, 2.0f * float(M_PI));
+            float endRadius             = mRNG.randomFloatBetween(0.0f, 2.0f);
             mParticles[i].endPosition.x = sinf(endAngle) * endRadius;
             mParticles[i].endPosition.y = cosf(endAngle) * endRadius;
             mParticles[i].endPosition.z = 0.0f;
 
-            float startAngle = RandomBetween(0, 2.0f * float(M_PI));
-            float startRadius = RandomBetween(0.0f, 0.25f);
+            float startAngle              = mRNG.randomFloatBetween(0, 2.0f * float(M_PI));
+            float startRadius             = mRNG.randomFloatBetween(0.0f, 0.25f);
             mParticles[i].startPosition.x = sinf(startAngle) * startRadius;
             mParticles[i].startPosition.y = cosf(startAngle) * startRadius;
             mParticles[i].startPosition.z = 0.0f;
@@ -129,12 +129,9 @@ class ParticleSystemSample : public SampleApplication
         return true;
     }
 
-    virtual void destroy()
-    {
-        glDeleteProgram(mProgram);
-    }
+    void destroy() override { glDeleteProgram(mProgram); }
 
-    virtual void step(float dt, double totalTime)
+    void step(float dt, double totalTime) override
     {
         // Use the program object
         glUseProgram(mProgram);
@@ -145,16 +142,14 @@ class ParticleSystemSample : public SampleApplication
             mParticleTime = 0.0f;
 
             // Pick a new start location and color
-            Vector3 centerPos(RandomBetween(-0.5f, 0.5f),
-                              RandomBetween(-0.5f, 0.5f),
-                              RandomBetween(-0.5f, 0.5f));
+            Vector3 centerPos(mRNG.randomFloatBetween(-0.5f, 0.5f),
+                              mRNG.randomFloatBetween(-0.5f, 0.5f),
+                              mRNG.randomFloatBetween(-0.5f, 0.5f));
             glUniform3fv(mCenterPositionLoc, 1, centerPos.data());
 
             // Random color
-            Vector4 color(RandomBetween(0.0f, 1.0f),
-                          RandomBetween(0.0f, 1.0f),
-                          RandomBetween(0.0f, 1.0f),
-                          0.5f);
+            Vector4 color(mRNG.randomFloatBetween(0.0f, 1.0f), mRNG.randomFloatBetween(0.0f, 1.0f),
+                          mRNG.randomFloatBetween(0.0f, 1.0f), 0.5f);
             glUniform4fv(mColorLoc, 1, color.data());
         }
 
@@ -224,6 +219,7 @@ class ParticleSystemSample : public SampleApplication
     static const size_t mParticleCount = 1024;
     std::array<Particle, mParticleCount> mParticles;
     float mParticleTime;
+    RNG mRNG;
 };
 
 int main(int argc, char **argv)

@@ -30,8 +30,6 @@ SampleApplication::SampleApplication(const std::string &name,
 
     // Disable vsync
     mEGLWindow->setSwapInterval(0);
-
-    angle::RandomInitFromTime();
 }
 
 SampleApplication::~SampleApplication()

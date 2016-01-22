@@ -64,6 +64,7 @@ class PointSpritesBenchmark : public ANGLERenderTest,
   private:
     GLuint mProgram;
     GLuint mBuffer;
+    RNG mRNG;
 };
 
 std::string PointSpritesParams::suffix() const
@@ -78,7 +79,7 @@ std::string PointSpritesParams::suffix() const
 }
 
 PointSpritesBenchmark::PointSpritesBenchmark()
-    : ANGLERenderTest("PointSprites", GetParam())
+    : ANGLERenderTest("PointSprites", GetParam()), mRNG(1)
 {
 }
 
@@ -152,7 +153,7 @@ void PointSpritesBenchmark::initializeBenchmark()
     std::vector<float> vertexPositions(params.count * 2);
     for (size_t pointIndex = 0; pointIndex < vertexPositions.size(); ++pointIndex)
     {
-        vertexPositions[pointIndex] = RandomBetween(-1.0f, 1.0f);
+        vertexPositions[pointIndex] = mRNG.randomNegativeOneToOne();
     }
 
     glGenBuffers(1, &mBuffer);

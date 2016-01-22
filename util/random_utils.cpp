@@ -8,30 +8,68 @@
 //
 
 #include "random_utils.h"
-#include <time.h>
+
+#include <chrono>
+
 #include <cstdlib>
 
 namespace angle
 {
 
-void RandomInitFromTime()
+// Seed from clock
+RNG::RNG()
 {
-    srand(static_cast<unsigned int>(time(NULL)));
+    long long timeSeed = std::chrono::system_clock::now().time_since_epoch().count();
+    mGenerator.seed(static_cast<unsigned int>(timeSeed));
 }
 
-float RandomFloat()
+// Seed from fixed number.
+RNG::RNG(unsigned int seed) : mGenerator(seed)
 {
-    return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 }
 
-float RandomBetween(float min, float max)
+RNG::~RNG()
 {
-    return min + RandomFloat() * (max - min);
 }
 
-float RandomNegativeOneToOne()
+void RNG::reseed(unsigned int newSeed)
 {
-    return RandomBetween(0.0f, 1.0f);
+    mGenerator.seed(newSeed);
+}
+
+int RNG::randomInt()
+{
+    std::uniform_int_distribution<int> intDistribution;
+    return intDistribution(mGenerator);
+}
+
+int RNG::randomIntBetween(int min, int max)
+{
+    std::uniform_int_distribution<int> intDistribution(min, max);
+    return intDistribution(mGenerator);
+}
+
+unsigned int RNG::randomUInt()
+{
+    std::uniform_int_distribution<unsigned int> uintDistribution;
+    return uintDistribution(mGenerator);
+}
+
+float RNG::randomFloat()
+{
+    std::uniform_real_distribution<float> floatDistribution;
+    return floatDistribution(mGenerator);
+}
+
+float RNG::randomFloatBetween(float min, float max)
+{
+    std::uniform_real_distribution<float> floatDistribution(min, max);
+    return floatDistribution(mGenerator);
+}
+
+float RNG::randomNegativeOneToOne()
+{
+    return randomFloatBetween(-1.0f, 1.0f);
 }
 
 }  // namespace angle

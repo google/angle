@@ -35,6 +35,12 @@ size_t VectorSizeBytes(const std::vector<T> &vec)
     return sizeof(T) * vec.size();
 }
 
+Vector3 RandomVector3(RNG *rng)
+{
+    return Vector3(rng->randomNegativeOneToOne(), rng->randomNegativeOneToOne(),
+                   rng->randomNegativeOneToOne());
+}
+
 struct InstancingPerfParams final : public RenderTestParams
 {
     // Common default options
@@ -93,6 +99,7 @@ class InstancingPerfBenchmark : public ANGLERenderTest,
     std::vector<Vector3> mTranslateData;
     std::vector<float> mSizeData;
     std::vector<Vector3> mColorData;
+    angle::RNG mRNG;
 };
 
 InstancingPerfBenchmark::InstancingPerfBenchmark()
@@ -155,8 +162,7 @@ void InstancingPerfBenchmark::initializeBenchmark()
                 indexData.push_back(baseIndexData[indexIndex] + pointIndex * pointVertexStride);
             }
 
-            Vector3 randVec(RandomNegativeOneToOne(), RandomNegativeOneToOne(),
-                            RandomNegativeOneToOne());
+            Vector3 randVec = RandomVector3(&mRNG);
             for (GLuint vertexIndex = 0; vertexIndex < 4; ++vertexIndex)
             {
                 positionData.push_back(basePositionData[vertexIndex]);
@@ -181,8 +187,7 @@ void InstancingPerfBenchmark::initializeBenchmark()
 
         for (GLuint pointIndex = 0; pointIndex < mNumPoints; ++pointIndex)
         {
-            Vector3 randVec(RandomNegativeOneToOne(), RandomNegativeOneToOne(),
-                            RandomNegativeOneToOne());
+            Vector3 randVec = RandomVector3(&mRNG);
             mTranslateData.push_back(randVec);
         }
 
