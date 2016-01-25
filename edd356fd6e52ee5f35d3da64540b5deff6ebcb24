@@ -163,6 +163,40 @@
     },
     {
       "key": {
+        "uuid": "b43a7ef4_40ac0ec9",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-25T19:05:50Z",
+      "side": 1,
+      "message": "It seems this will prevent the OpenGL backend from working on Vista with Chrome.",
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4307614_45eb7cd1",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 612,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-25T19:05:50Z",
+      "side": 1,
+      "message": "This is not true for WindowSurfaceWGL",
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14498aa4_fbb34f4e",
         "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
         "patchSetId": 23
