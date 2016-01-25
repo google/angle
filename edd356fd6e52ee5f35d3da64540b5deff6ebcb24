@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4307614_65bfa0c9",
+        "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-25T18:56:21Z",
+      "side": 1,
+      "message": "I\u0027d really lean towards return createSwapChain(); here",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 121,
+        "endChar": 35
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4595674_ba6f11d1",
+        "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-25T18:56:21Z",
+      "side": 1,
+      "message": "do you know when this might happen?",
+      "range": {
+        "startLine": 128,
+        "startChar": 8,
+        "endLine": 128,
+        "endChar": 38
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "943d7af0_a2840080",
+        "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-25T18:56:21Z",
+      "side": 1,
+      "message": "same as above",
+      "range": {
+        "startLine": 159,
+        "startChar": 4,
+        "endLine": 165,
+        "endChar": 35
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14a42a86_a3893a0f",
+        "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-25T18:56:21Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 208,
+        "startChar": 4,
+        "endLine": 215,
+        "endChar": 1
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "344e8eac_1ffd475a",
+        "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-25T18:56:21Z",
+      "side": 1,
+      "message": "is this unimplemented or unreachable? might want to comment if the former.",
+      "range": {
+        "startLine": 219,
+        "startChar": 4,
+        "endLine": 219,
+        "endChar": 17
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "344e8eac_5ff7cf77",
+        "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-25T18:56:21Z",
+      "side": 1,
+      "message": "nit: namespace comment",
+      "range": {
+        "startLine": 576,
+        "startChar": 0,
+        "endLine": 576,
+        "endChar": 1
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "344e8eac_3ff8036a",
+        "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-25T18:56:21Z",
+      "side": 1,
+      "message": "nit: }  // namespace rx",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 1
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14498aa4_fbb34f4e",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-25T18:56:21Z",
+      "side": 1,
+      "message": "is it possible there is more than one refcount of zero when you release a d3d device? can you comment as to why or why not?",
+      "range": {
+        "startLine": 676,
+        "startChar": 12,
+        "endLine": 676,
+        "endChar": 17
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
