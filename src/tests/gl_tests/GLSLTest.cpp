@@ -809,6 +809,16 @@ TEST_P(GLSLTest, InvariantAll)
 
 TEST_P(GLSLTest, MaxVaryingVec4)
 {
+#if defined(__APPLE__)
+    // TODO(geofflang): Find out why this doesn't compile on Apple AND OpenGL drivers
+    // (http://anglebug.com/1291)
+    if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    {
+        std::cout << "Test disabled on Apple AMD OpenGL." << std::endl;
+        return;
+    }
+#endif
+
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
@@ -926,6 +936,16 @@ TEST_P(GLSLTest, TwiceMaxVaryingVec2)
         return;
     }
 
+#if defined(__APPLE__)
+    // TODO(geofflang): Find out why this doesn't compile on Apple AND OpenGL drivers
+    // (http://anglebug.com/1291)
+    if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    {
+        std::cout << "Test disabled on Apple AMD OpenGL." << std::endl;
+        return;
+    }
+#endif
+
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
@@ -947,6 +967,16 @@ TEST_P(GLSLTest, MaxVaryingVec2Arrays)
         std::cout << "Test disabled on OpenGL ES." << std::endl;
         return;
     }
+
+#if defined(__APPLE__)
+    // TODO(geofflang): Find out why this doesn't compile on Apple AND OpenGL drivers
+    // (http://anglebug.com/1291)
+    if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    {
+        std::cout << "Test disabled on Apple AMD OpenGL." << std::endl;
+        return;
+    }
+#endif
 
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
