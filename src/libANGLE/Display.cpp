@@ -180,6 +180,8 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap)
       case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
 #if defined(ANGLE_PLATFORM_WINDOWS)
           impl = new rx::DisplayWGL();
+#elif defined(ANGLE_USE_X11)
+          impl = new rx::DisplayGLX();
 #else
           // No GLES support on this platform, fail display creation.
           impl = nullptr;

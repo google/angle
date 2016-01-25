@@ -89,13 +89,18 @@ class DisplayGLX : public DisplayGL
   private:
     const FunctionsGL *getFunctionsGL() const override;
 
-    glx::Context initializeContext(glx::FBConfig config, const egl::AttributeMap &eglAttributes);
+    egl::Error initializeContext(glx::FBConfig config,
+                                 const egl::AttributeMap &eglAttributes,
+                                 glx::Context *context);
 
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 
     int getGLXFBConfigAttrib(glx::FBConfig config, int attrib) const;
-    glx::Context createContextAttribs(glx::FBConfig, const std::vector<int> &attribs) const;
+    egl::Error createContextAttribs(glx::FBConfig,
+                                    gl::Version version,
+                                    int profileMask,
+                                    glx::Context *context) const;
 
     FunctionsGL *mFunctionsGL;
 
@@ -112,6 +117,8 @@ class DisplayGLX : public DisplayGL
     bool mIsMesa;
     bool mHasMultisample;
     bool mHasARBCreateContext;
+    bool mHasARBCreateContextProfile;
+    bool mHasEXTCreateContextES2Profile;
 
     enum class SwapControl
     {
