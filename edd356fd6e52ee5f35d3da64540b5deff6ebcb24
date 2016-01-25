@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "14a42a86_c369d6fd",
+        "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T20:39:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4307614_65bfa0c9",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 121,
+        "endChar": 35
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f4595674_ba6f11d1",
         "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
         "patchSetId": 23
@@ -36,6 +60,30 @@
       "writtenOn": "2016-01-25T18:56:21Z",
       "side": 1,
       "message": "do you know when this might happen?",
+      "range": {
+        "startLine": 128,
+        "startChar": 8,
+        "endLine": 128,
+        "endChar": 38
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4307614_c50b0c40",
+        "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T20:39:07Z",
+      "side": 1,
+      "message": "I think this can only happen after an internal error.",
+      "parentUuid": "f4595674_ba6f11d1",
       "range": {
         "startLine": 128,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "b43a7ef4_a3a9a49d",
+        "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T20:39:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "943d7af0_a2840080",
+      "range": {
+        "startLine": 159,
+        "startChar": 4,
+        "endLine": 165,
+        "endChar": 35
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14a42a86_a3893a0f",
         "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
         "patchSetId": 23
@@ -82,6 +154,30 @@
       "writtenOn": "2016-01-25T18:56:21Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 208,
+        "startChar": 4,
+        "endLine": 215,
+        "endChar": 1
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "943d7af0_e25288b6",
+        "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T20:39:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14a42a86_a3893a0f",
       "range": {
         "startLine": 208,
         "startChar": 4,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "14498aa4_db52d3b6",
+        "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T20:39:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "344e8eac_1ffd475a",
+      "range": {
+        "startLine": 219,
+        "startChar": 4,
+        "endLine": 219,
+        "endChar": 17
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "344e8eac_5ff7cf77",
         "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
         "patchSetId": 23
@@ -128,6 +248,30 @@
       "writtenOn": "2016-01-25T18:56:21Z",
       "side": 1,
       "message": "nit: namespace comment",
+      "range": {
+        "startLine": 576,
+        "startChar": 0,
+        "endLine": 576,
+        "endChar": 1
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b43a7ef4_03b7b0f5",
+        "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T20:39:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "344e8eac_5ff7cf77",
       "range": {
         "startLine": 576,
         "startChar": 0,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "14a42a86_e366522b",
+        "filename": "src/libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T20:39:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "344e8eac_3ff8036a",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 1
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b43a7ef4_40ac0ec9",
         "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
         "patchSetId": 23
@@ -174,6 +342,24 @@
       "writtenOn": "2016-01-25T19:05:50Z",
       "side": 1,
       "message": "It seems this will prevent the OpenGL backend from working on Vista with Chrome.",
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74448688_9e667d2a",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T20:39:07Z",
+      "side": 1,
+      "message": "Chrome doesn\u0027t use the GPU on Vista so we\u0027re safe.",
+      "parentUuid": "b43a7ef4_40ac0ec9",
       "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -197,6 +383,24 @@
     },
     {
       "key": {
+        "uuid": "f4307614_25a8f84a",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 612,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T20:39:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4307614_45eb7cd1",
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14498aa4_fbb34f4e",
         "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
         "patchSetId": 23
@@ -208,6 +412,30 @@
       "writtenOn": "2016-01-25T18:56:21Z",
       "side": 1,
       "message": "is it possible there is more than one refcount of zero when you release a d3d device? can you comment as to why or why not?",
+      "range": {
+        "startLine": 676,
+        "startChar": 12,
+        "endLine": 676,
+        "endChar": 17
+      },
+      "revId": "edd356fd6e52ee5f35d3da64540b5deff6ebcb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4595674_7af3b954",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T20:39:07Z",
+      "side": 1,
+      "message": "Whoops, this was a bug... the check that this iter is the handle that should be removed was missing :|",
+      "parentUuid": "14498aa4_fbb34f4e",
       "range": {
         "startLine": 676,
         "startChar": 12,
