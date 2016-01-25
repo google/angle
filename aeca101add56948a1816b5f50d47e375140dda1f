@@ -1,0 +1,429 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14a42a86_a357fa4e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "Put this on a new line.",
+      "range": {
+        "startLine": 7,
+        "startChar": 50,
+        "endLine": 8,
+        "endChar": 74
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b43a7ef4_20cbcacd",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "I would just set this to false and keep a patch on your stack that adds in the complete check.",
+      "range": {
+        "startLine": 612,
+        "startChar": 4,
+        "endLine": 615,
+        "endChar": 66
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14498aa4_7b0a9f00",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "No need for the parens.",
+      "range": {
+        "startLine": 387,
+        "startChar": 17,
+        "endLine": 387,
+        "endChar": 62
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14498aa4_1b155b1d",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "New entry points need to be added to entry_points_gles_2_0_ext.h and egl::GetProcAddress in entry_points_egl.cpp.",
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14a42a86_432406f0",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "Don\u0027t re-order the entry points if possible, it makes it hard to review the diff.",
+      "range": {
+        "startLine": 30,
+        "startChar": 17,
+        "endLine": 30,
+        "endChar": 30
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74448688_3e3da90b",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "I realize that some of these entry points are older, but we should move the validation into ValidationES.h",
+      "range": {
+        "startLine": 138,
+        "startChar": 8,
+        "endLine": 142,
+        "endChar": 9
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74448688_defc858a",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "Same about validation.",
+      "range": {
+        "startLine": 166,
+        "startChar": 8,
+        "endLine": 176,
+        "endChar": 9
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14498aa4_9bf96b34",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "This won\u0027t be sufficient, especially when the sizes of the types may not match.  We\u0027ll need to use a temporary and then do a static_cast of the result afterwards or we\u0027ll have to add new methods on the Query classes to handle the new types I think.",
+      "range": {
+        "startLine": 182,
+        "startChar": 53,
+        "endLine": 182,
+        "endChar": 63
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "344e8eac_bf50935a",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "This should be an UNREACHABLE after the validation is moved.",
+      "range": {
+        "startLine": 202,
+        "startChar": 12,
+        "endLine": 204,
+        "endChar": 19
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "943d7af0_e2028820",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "Same about validation.",
+      "range": {
+        "startLine": 218,
+        "startChar": 8,
+        "endLine": 228,
+        "endChar": 9
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74448688_1e426d97",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "At the very least, these should have the context check and then an UNREACHABLE.",
+      "range": {
+        "startLine": 261,
+        "startChar": 0,
+        "endLine": 269,
+        "endChar": 1
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4595674_1aa8bd4a",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "git cl format clobbered this.  To fix it, wrap this code block in comments like...\n\n    // clang-format off\n    ... custom formatted code ...\n    // clang-format on",
+      "range": {
+        "startLine": 33,
+        "startChar": 8,
+        "endLine": 42,
+        "endChar": 59
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14498aa4_3b10172d",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "Add comments before each test with a basic description of what the test does.",
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14a42a86_6394a229",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "I\u0027d call this TimeElapsedBasicUsage",
+      "range": {
+        "startLine": 61,
+        "startChar": 25,
+        "endLine": 61,
+        "endChar": 36
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "344e8eac_7f472ba7",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "Don\u0027t need these, just glDisable(GL_DEPTH_TEST)",
+      "range": {
+        "startLine": 70,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 79
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14498aa4_5bf8832f",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "nit: old comment.",
+      "range": {
+        "startLine": 76,
+        "startChar": 42,
+        "endLine": 76,
+        "endChar": 88
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d45c5266_d989330f",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "Add a timeout to this, limit it to 1000 attempts to avoid the possibility of the test hanging.",
+      "range": {
+        "startLine": 83,
+        "startChar": 4,
+        "endLine": 84,
+        "endChar": 29
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d433721e_c1fca225",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "nit: static_cast",
+      "range": {
+        "startLine": 98,
+        "startChar": 22,
+        "endLine": 98,
+        "endChar": 30
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "943d7af0_224c707b",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-25T16:02:58Z",
+      "side": 1,
+      "message": "We should test all the cases listed in the errors section of the extension.",
+      "range": {
+        "startLine": 101,
+        "startChar": 25,
+        "endLine": 101,
+        "endChar": 39
+      },
+      "revId": "aeca101add56948a1816b5f50d47e375140dda1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
