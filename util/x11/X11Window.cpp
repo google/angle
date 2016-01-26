@@ -349,7 +349,12 @@ bool X11Window::resize(int width, int height)
 
 void X11Window::setVisible(bool isVisible)
 {
-    if (mVisible != isVisible)
+    if (mVisible == isVisible)
+    {
+        return;
+    }
+
+    if (isVisible)
     {
         XMapWindow(mDisplay, mWindow);
 
