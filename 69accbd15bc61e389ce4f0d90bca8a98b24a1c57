@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54722221_a5f97e33",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-26T16:29:23Z",
+      "side": 0,
+      "message": "The renaming is good, but I have a point about the indirection.\n\nThis logic was correct because if mData.mDrawBufferStates[colorAttachment] !\u003d GL_NONE, mData.mDrawBufferStates[colorAttachment] \u003d\u003d (GL_COLOR_ATTACHMENT0 + colorAttachment). (See ES3 spec: \"If the GL is bound to a draw framebuffer object, the ith buffer listed in bufs\nmust be COLOR_ATTACHMENTi or NONE\"). You could add an ASSERT instead to indicate to the reader what\u0027s happening.\n\nI checked and the 3.1 and 3.2 specs both have this restriction so I\u0027d be fine with leaving out the indirection you added for now, though I\u0027d be okay with the way you have it since it\u0027s probably correct as well.",
+      "range": {
+        "startLine": 320,
+        "startChar": 0,
+        "endLine": 338,
+        "endChar": 1
+      },
+      "revId": "69accbd15bc61e389ce4f0d90bca8a98b24a1c57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
