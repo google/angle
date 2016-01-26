@@ -22,6 +22,30 @@
       "revId": "7b18b2410aeaac041df7c48eadbbe3ba79de3426",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34712e1d_04e97668",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T18:36:38Z",
+      "side": 1,
+      "message": "Ah, yea, this isn\u0027t an issue.  There are no duplicate D3D devices or handles in the map.",
+      "parentUuid": "d486122d_2ce49b5e",
+      "range": {
+        "startLine": 679,
+        "startChar": 16,
+        "endLine": 679,
+        "endChar": 21
+      },
+      "revId": "7b18b2410aeaac041df7c48eadbbe3ba79de3426",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
