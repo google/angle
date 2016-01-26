@@ -470,15 +470,15 @@ TEST_P(GLSLTest, ScopedStructsOrderBug)
         std::cout << "Test disabled on Apple OpenGL." << std::endl;
         return;
     }
-#elif defined(_WIN32)
-    // TODO(geofflang): Find out why this doesn't compile on Windows AMD OpenGL drivers
+#endif
+
+    // TODO(geofflang): Find out why this doesn't compile on AMD OpenGL drivers
     // (http://anglebug.com/1291)
     if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
-        std::cout << "Test disabled on Windows AMD OpenGL." << std::endl;
+        std::cout << "Test disabled on AMD OpenGL." << std::endl;
         return;
     }
-#endif
 
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
