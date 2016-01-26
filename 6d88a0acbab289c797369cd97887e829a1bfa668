@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d4e9b2fb_f119e80b",
+        "filename": "src/tests/gl_tests/OcclusionQueriesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-26T14:56:04Z",
+      "side": 1,
+      "message": "I guess I can\u0027t think of a good reason why a test should be non-deterministic.",
+      "parentUuid": "d433721e_e1d9e6a4",
+      "range": {
+        "startLine": 16,
+        "startChar": 47,
+        "endLine": 16,
+        "endChar": 48
+      },
+      "revId": "6d88a0acbab289c797369cd97887e829a1bfa668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14498aa4_7b429fef",
         "filename": "src/tests/perf_tests/PointSprites.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2016-01-25T20:11:31Z",
       "side": 1,
       "message": "ditto?",
+      "range": {
+        "startLine": 82,
+        "startChar": 56,
+        "endLine": 82,
+        "endChar": 57
+      },
+      "revId": "6d88a0acbab289c797369cd97887e829a1bfa668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4e9b2fb_d11ee4f1",
+        "filename": "src/tests/perf_tests/PointSprites.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-26T14:56:04Z",
+      "side": 1,
+      "message": "Ditto. Non-determinism (variance, flakiness) seems like something we should try to minimize in tests.",
+      "parentUuid": "14498aa4_7b429fef",
       "range": {
         "startLine": 82,
         "startChar": 56,
