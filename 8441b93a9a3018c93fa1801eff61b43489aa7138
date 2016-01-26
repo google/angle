@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "144d0a10_1b06db36",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "nit: rename to GetQueryObjectParameter",
+      "range": {
+        "startLine": 40,
+        "startChar": 10,
+        "endLine": 40,
+        "endChar": 24
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54894239_cdf069f6",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 5
@@ -48,6 +71,52 @@
     },
     {
       "key": {
+        "uuid": "d486122d_6f23e5e5",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "nit: Move local variable definitions into the case.",
+      "range": {
+        "startLine": 51,
+        "startChar": 11,
+        "endLine": 56,
+        "endChar": 25
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4987691_22902efe",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "nit: put the return here, remove it from below.",
+      "range": {
+        "startLine": 58,
+        "startChar": 12,
+        "endLine": 58,
+        "endChar": 26
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54894239_2d1f2df0",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 5
@@ -82,6 +151,29 @@
       "writtenOn": "2016-01-26T22:07:18Z",
       "side": 1,
       "message": "why not use queryCounter() here? I think it might interact with an extension that also uses queryCounter, if there is one.",
+      "range": {
+        "startLine": 39,
+        "startChar": 10,
+        "endLine": 39,
+        "endChar": 19
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54722221_a8023351",
+        "filename": "src/libANGLE/Query.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "I\u0027d call this queryCounter instead of timestamp to match the entry point.",
       "range": {
         "startLine": 39,
         "startChar": 10,
@@ -140,6 +232,29 @@
     },
     {
       "key": {
+        "uuid": "54722221_4847ffa6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "This is currently discarding the error.\n\nIt would be cleaner to early-out in the error case and only assign the result afterwards...\n\n    gl::Error error \u003d getResultBase();\n    if (error.isError())\n    {\n        return error;\n    }\n\n    *params \u003d static_cast\u003cGLint\u003e(mResult);\n    return gl::Error(GL_NO_ERROR);",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 25
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f4987691_628636d1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
         "patchSetId": 5
@@ -151,6 +266,29 @@
       "writtenOn": "2016-01-26T22:07:18Z",
       "side": 1,
       "message": "use c++ casts. in a few other places but won\u0027t comment more.",
+      "range": {
+        "startLine": 95,
+        "startChar": 18,
+        "endLine": 95,
+        "endChar": 25
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34712e1d_4497eebc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "static_cast, below too.",
       "range": {
         "startLine": 95,
         "startChar": 18,
@@ -186,6 +324,29 @@
     },
     {
       "key": {
+        "uuid": "34712e1d_c4aafeee",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Query9.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "Same issues as Query11.",
+      "range": {
+        "startLine": 97,
+        "startChar": 4,
+        "endLine": 101,
+        "endChar": 5
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "146c2a47_63f86230",
         "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
         "patchSetId": 5
@@ -209,6 +370,75 @@
     },
     {
       "key": {
+        "uuid": "54722221_a84dd3c5",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "nit: add new lines to match the other cases.",
+      "range": {
+        "startLine": 28,
+        "startChar": 8,
+        "endLine": 31,
+        "endChar": 29
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "144d0a10_5b97830a",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "Make this a large comment on one line and git cl format will properly wrap it.",
+      "range": {
+        "startLine": 81,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 70
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34712e1d_64730a7c",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "You can probably merge the getResult calls into a templated member.  It wouldn\u0027t even need to be defined in the header in this case.  Something like \"getResultHelper(T* params)\"",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 1
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "544302e2_9dbf4319",
         "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
         "patchSetId": 5
@@ -225,6 +455,52 @@
         "startChar": 24,
         "endLine": 223,
         "endChar": 43
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d486122d_cfee91ab",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "nit: static_cast",
+      "range": {
+        "startLine": 227,
+        "startChar": 62,
+        "endLine": 227,
+        "endChar": 72
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "144d0a10_7b94bf04",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "I\u0027d flip this if-statement.  It\u0027s much more readable to check...\n\n   if (mFunctions-\u003egetQueryObjectui64v !\u003d nullptr)\n   {\n       // Do something using mFunctions-\u003egetQueryObjectui64v\n   }\n   else\n   {\n       ASSERT(mFunctions-\u003egetQueryObjectuiv !\u003d nullptr)\n       // Do something using mFunctions-\u003egetQueryObjectuiv\n   }",
+      "range": {
+        "startLine": 223,
+        "startChar": 8,
+        "endLine": 234,
+        "endChar": 9
       },
       "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -301,6 +577,29 @@
     },
     {
       "key": {
+        "uuid": "b47d1eef_0876e7de",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1101,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "Add error messages to the recordError callsites.",
+      "range": {
+        "startLine": 1101,
+        "startChar": 8,
+        "endLine": 1101,
+        "endChar": 54
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54722221_c85a0f79",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 5
@@ -324,6 +623,52 @@
     },
     {
       "key": {
+        "uuid": "34712e1d_84d2c680",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1207,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "nit: nullptr",
+      "range": {
+        "startLine": 1207,
+        "startChar": 23,
+        "endLine": 1207,
+        "endChar": 27
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54722221_481e1fa3",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1218,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "I think that this check is un-needed.  The query\u0027s type is set when it is started and it\u0027s not possible to call BeginQuery with a GL_TIMESTAMP query.",
+      "range": {
+        "startLine": 1213,
+        "startChar": 4,
+        "endLine": 1218,
+        "endChar": 5
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "34984e85_ac66c329",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 5
@@ -340,6 +685,29 @@
         "startChar": 56,
         "endLine": 1226,
         "endChar": 88
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54722221_082427ef",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1226,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-26T22:11:10Z",
+      "side": 1,
+      "message": "We shouldn\u0027t be checking for ES3 contexts on the extension entry point.",
+      "range": {
+        "startLine": 1226,
+        "startChar": 56,
+        "endLine": 1226,
+        "endChar": 87
       },
       "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
