@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54d5c231_b01d96a6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-26T22:07:18Z",
+      "side": 1,
+      "message": "nit: format this as\n\nFirst line (\u003c65 chars)\n\u003cblank line\u003e\nSecond paragraph with description (clipped to 71 chars)",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 74
+      },
+      "revId": "7e6b073df67c762192d362a200bdb80f6f4ba327",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54d0623b_58032158",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-26T22:07:18Z",
+      "side": 1,
+      "message": "nit: BUG\u003dangleproject:1265",
+      "range": {
+        "startLine": 10,
+        "startChar": 4,
+        "endLine": 10,
+        "endChar": 8
+      },
+      "revId": "7e6b073df67c762192d362a200bdb80f6f4ba327",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34cf6ea1_74c02874",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-26T22:07:18Z",
+      "side": 1,
+      "message": "nit: GL_EXT_disjoint_timer_query",
+      "range": {
+        "startLine": 194,
+        "startChar": 7,
+        "endLine": 194,
+        "endChar": 34
+      },
+      "revId": "7e6b073df67c762192d362a200bdb80f6f4ba327",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
