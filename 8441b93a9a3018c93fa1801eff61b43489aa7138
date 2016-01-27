@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "34712e1d_c4559ea1",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-01-27T16:28:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54894239_cdf069f6",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 45
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f4987691_82893ae3",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 5
@@ -370,6 +394,30 @@
     },
     {
       "key": {
+        "uuid": "d486122d_4ff38154",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1778,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-01-27T16:28:15Z",
+      "side": 1,
+      "message": "Yes, the function simply assigns the function pointer if it finds an address to load. But since theoretically GL_EXT_disjoint_timer_query can exist without the occlusion query extension existing, I duplicate it for completeness.",
+      "parentUuid": "146c2a47_63f86230",
+      "range": {
+        "startLine": 1778,
+        "startChar": 92,
+        "endLine": 1778,
+        "endChar": 107
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54722221_a84dd3c5",
         "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
         "patchSetId": 5
@@ -450,6 +498,30 @@
       "writtenOn": "2016-01-26T22:07:18Z",
       "side": 1,
       "message": "it\u0027s confirmed it\u0027s ok to getQueryObject64 for other query values than the timer ones? I feel like at least a comment is warranted here.",
+      "range": {
+        "startLine": 223,
+        "startChar": 24,
+        "endLine": 223,
+        "endChar": 43
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d486122d_0f10a92c",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-01-27T16:28:15Z",
+      "side": 1,
+      "message": "The GL spec gives no indication that it is timer specific and it passes the tests.",
+      "parentUuid": "544302e2_9dbf4319",
       "range": {
         "startLine": 223,
         "startChar": 24,
@@ -669,6 +741,30 @@
     },
     {
       "key": {
+        "uuid": "f4987691_626d16d7",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1218,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-01-27T16:28:15Z",
+      "side": 1,
+      "message": "The purpose of this check is to ensure the query in question is not active (i.e. a beginQuery was called on it). However, other queries can be active so we need to be more detailed than a check for an active query.",
+      "parentUuid": "54722221_481e1fa3",
+      "range": {
+        "startLine": 1213,
+        "startChar": 4,
+        "endLine": 1218,
+        "endChar": 5
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "34984e85_ac66c329",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 5
@@ -749,6 +845,30 @@
       "writtenOn": "2016-01-26T22:07:18Z",
       "side": 1,
       "message": "this should go in context-\u003egenQueries(n, ids)",
+      "range": {
+        "startLine": 42,
+        "startChar": 8,
+        "endLine": 45,
+        "endChar": 9
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "144d0a10_fbf76fef",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-01-27T16:28:15Z",
+      "side": 1,
+      "message": "Most of this is old code that is already written that I can refactor in a separate CL.",
+      "parentUuid": "f4987691_e26006e5",
       "range": {
         "startLine": 42,
         "startChar": 8,
@@ -1071,6 +1191,30 @@
       "writtenOn": "2016-01-26T22:07:18Z",
       "side": 1,
       "message": "expectations should be (expected, actual) so in this case the zero should be first. You can use 0ull for 64-bit I think.",
+      "range": {
+        "startLine": 155,
+        "startChar": 4,
+        "endLine": 155,
+        "endChar": 13
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b47d1eef_08ca6729",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-01-27T16:28:15Z",
+      "side": 1,
+      "message": "Are you sure? It works as expected with the current ordering.",
+      "parentUuid": "b47d1eef_287babc7",
       "range": {
         "startLine": 155,
         "startChar": 4,
