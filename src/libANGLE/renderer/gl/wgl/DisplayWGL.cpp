@@ -329,6 +329,13 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     mFunctionsGL = new FunctionsGLWindows(mOpenGLModule, mFunctionsWGL->getProcAddress);
     mFunctionsGL->initialize();
 
+    // Intel OpenGL ES drivers are not currently supported due to bugs in the driver and ANGLE
+    VendorID vendor = GetVendorID(mFunctionsGL);
+    if (requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE && vendor == VENDOR_ID_INTEL)
+    {
+        return egl::Error(EGL_NOT_INITIALIZED, "Intel OpenGL ES drivers are not supported.");
+    }
+
     // Create DXGI swap chains for windows that come from other processes.  Windows is unable to
     // SetPixelFormat on windows from other processes when a sandbox is enabled.
     HDC nativeDisplay = display->getNativeDisplayId();

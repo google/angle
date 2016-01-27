@@ -22,7 +22,7 @@
 
 namespace rx
 {
-static VendorID GetVendorID(const FunctionsGL *functions)
+VendorID GetVendorID(const FunctionsGL *functions)
 {
     std::string nativeVendorString(reinterpret_cast<const char *>(functions->getString(GL_VENDOR)));
     if (nativeVendorString.find("Intel") != std::string::npos)
