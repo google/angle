@@ -210,6 +210,30 @@
     },
     {
       "key": {
+        "uuid": "54722221_a85233e7",
+        "filename": "src/libANGLE/Query.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-27T16:55:18Z",
+      "side": 1,
+      "message": "also a restatement of this comment",
+      "parentUuid": "54722221_a8023351",
+      "range": {
+        "startLine": 39,
+        "startChar": 10,
+        "endLine": 39,
+        "endChar": 19
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54722221_88ac97ae",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 5
@@ -881,6 +905,30 @@
     },
     {
       "key": {
+        "uuid": "b47d1eef_888817de",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-27T16:55:18Z",
+      "side": 1,
+      "message": "OK I\u0027m fine with adding that in a follow up CL.",
+      "parentUuid": "144d0a10_fbf76fef",
+      "range": {
+        "startLine": 42,
+        "startChar": 8,
+        "endLine": 45,
+        "endChar": 9
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "144d0a10_3b9e3725",
         "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
         "patchSetId": 5
@@ -1215,6 +1263,30 @@
       "side": 1,
       "message": "Are you sure? It works as expected with the current ordering.",
       "parentUuid": "b47d1eef_287babc7",
+      "range": {
+        "startLine": 155,
+        "startChar": 4,
+        "endLine": 155,
+        "endChar": 13
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b47d1eef_6884c3c9",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-27T16:55:18Z",
+      "side": 1,
+      "message": "yes, quite sure. the compile works and failures happen the same way, but the error message is incorrect if you have the params reversed. You get \"expected: actual, actual: expected\" instead of the correct message.",
+      "parentUuid": "b47d1eef_08ca6729",
       "range": {
         "startLine": 155,
         "startChar": 4,
