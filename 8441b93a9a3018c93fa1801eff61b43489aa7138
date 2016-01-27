@@ -511,6 +511,30 @@
     },
     {
       "key": {
+        "uuid": "b47d1eef_8821f78d",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-27T20:11:15Z",
+      "side": 1,
+      "message": "This still needs to be addressed.  It can also be easily applied to Query9 and Query11.  Please fix the casts too.",
+      "parentUuid": "34712e1d_64730a7c",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 1
+      },
+      "revId": "8441b93a9a3018c93fa1801eff61b43489aa7138",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "544302e2_9dbf4319",
         "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
         "patchSetId": 5
