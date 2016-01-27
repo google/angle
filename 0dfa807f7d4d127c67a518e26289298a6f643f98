@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54722221_c855afa1",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-27T21:54:18Z",
+      "side": 0,
+      "message": "This is a bug, but it should be checking for the GL_EXT_sRGB extension.",
+      "range": {
+        "startLine": 144,
+        "startChar": 4,
+        "endLine": 145,
+        "endChar": 257
+      },
+      "revId": "0dfa807f7d4d127c67a518e26289298a6f643f98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
