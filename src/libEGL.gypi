@@ -41,21 +41,4 @@
             ],
         },
     ],
-    'conditions':
-    [
-        ['angle_standalone==0 and OS!="win"',
-        {
-            'targets':
-            [
-                {
-                    'target_name': 'libEGL_ANGLE',
-                    'type': 'loadable_module',
-                    'dependencies':
-                    [
-                        'libEGL',
-                    ],
-                },
-            ],
-        }],
-    ],
 }

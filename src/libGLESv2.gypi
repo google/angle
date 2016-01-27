@@ -826,21 +826,4 @@
             ],
         },
     ],
-    'conditions':
-    [
-        ['angle_standalone==0 and OS!="win"',
-        {
-            'targets':
-            [
-                {
-                    'target_name': 'libGLESv2_ANGLE',
-                    'type': 'loadable_module',
-                    'dependencies':
-                    [
-                        'libGLESv2',
-                    ],
-                },
-            ],
-        }],
-    ],
 }
