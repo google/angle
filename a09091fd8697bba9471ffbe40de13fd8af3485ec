@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "34984e85_8c6f47d1",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-27T20:11:15Z",
+      "side": 1,
+      "message": "Since timestamp queries are not \"active\", they should not be part of this map.  I realize this is for the validation  to avoid an assert but we should find another way to do that, I would suggest adding a State::isQueryActive(Query *query) method.",
+      "range": {
+        "startLine": 187,
+        "startChar": 4,
+        "endLine": 187,
+        "endChar": 50
+      },
+      "revId": "a09091fd8697bba9471ffbe40de13fd8af3485ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "544302e2_8086f8cd",
         "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
         "patchSetId": 6
