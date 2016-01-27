@@ -3,10 +3,20 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
+// ReadPixelsTest:
+//   Tests calls related to glReadPixels.
+//
 
 #include "test_utils/ANGLETest.h"
 
+#include <array>
+
+#include "random_utils.h"
+
 using namespace angle;
+
+namespace
+{
 
 class ReadPixelsTest : public ANGLETest
 {
@@ -20,77 +30,9 @@ class ReadPixelsTest : public ANGLETest
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
     }
-
-    virtual void SetUp()
-    {
-        ANGLETest::SetUp();
-
-        glGenBuffers(1, &mPBO);
-        glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
-        glBufferData(GL_PIXEL_PACK_BUFFER, 4 * getWindowWidth() * getWindowHeight(), NULL, GL_STATIC_DRAW);
-        glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
-
-        const char *vertexShaderSrc = SHADER_SOURCE
-        (
-            attribute vec4 aTest;
-            attribute vec2 aPosition;
-            varying vec4 vTest;
-
-            void main()
-            {
-                vTest = aTest;
-                gl_Position = vec4(aPosition, 0.0, 1.0);
-                gl_PointSize = 1.0;
-            }
-        );
-
-        const char *fragmentShaderSrc = SHADER_SOURCE
-        (
-            precision mediump float;
-            varying vec4 vTest;
-
-            void main()
-            {
-                gl_FragColor = vTest;
-            }
-        );
-
-        mProgram = CompileProgram(vertexShaderSrc, fragmentShaderSrc);
-
-        glGenTextures(1, &mTexture);
-        glBindTexture(GL_TEXTURE_2D, mTexture);
-        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 4, 1);
-
-        glGenFramebuffers(1, &mFBO);
-        glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture, 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-        glGenBuffers(1, &mPositionVBO);
-        glBindBuffer(GL_ARRAY_BUFFER, mPositionVBO);
-        glBufferData(GL_ARRAY_BUFFER, 128, NULL, GL_DYNAMIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        ASSERT_GL_NO_ERROR();
-    }
-
-    virtual void TearDown()
-    {
-        ANGLETest::TearDown();
-
-        glDeleteBuffers(1, &mPBO);
-        glDeleteProgram(mProgram);
-        glDeleteTextures(1, &mTexture);
-        glDeleteFramebuffers(1, &mFBO);
-    }
-
-    GLuint mPBO;
-    GLuint mProgram;
-    GLuint mTexture;
-    GLuint mFBO;
-    GLuint mPositionVBO;
 };
 
+// Test out of bounds reads.
 TEST_P(ReadPixelsTest, OutOfBounds)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
@@ -124,7 +66,49 @@ TEST_P(ReadPixelsTest, OutOfBounds)
     }
 }
 
-TEST_P(ReadPixelsTest, PBOWithOtherTarget)
+class ReadPixelsPBOTest : public ReadPixelsTest
+{
+  protected:
+    ReadPixelsPBOTest() : mPBO(0), mTexture(0), mFBO(0) {}
+
+    void SetUp() override
+    {
+        ANGLETest::SetUp();
+
+        glGenBuffers(1, &mPBO);
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
+        glBufferData(GL_PIXEL_PACK_BUFFER, 4 * getWindowWidth() * getWindowHeight(), nullptr,
+                     GL_STATIC_DRAW);
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+
+        glGenTextures(1, &mTexture);
+        glBindTexture(GL_TEXTURE_2D, mTexture);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 4, 1);
+
+        glGenFramebuffers(1, &mFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void TearDown() override
+    {
+        ANGLETest::TearDown();
+
+        glDeleteBuffers(1, &mPBO);
+        glDeleteTextures(1, &mTexture);
+        glDeleteFramebuffers(1, &mFBO);
+    }
+
+    GLuint mPBO;
+    GLuint mTexture;
+    GLuint mFBO;
+};
+
+// Test that binding a PBO to ARRAY_BUFFER works as expected.
+TEST_P(ReadPixelsPBOTest, ArrayBufferTarget)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -149,7 +133,8 @@ TEST_P(ReadPixelsTest, PBOWithOtherTarget)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_P(ReadPixelsTest, PBOWithExistingData)
+// Test that using a PBO does not overwrite existing data.
+TEST_P(ReadPixelsPBOTest, ExistingDataPreserved)
 {
     // TODO(geofflang): Figure out why this fails on AMD OpenGL (http://anglebug.com/1291)
     if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
@@ -194,7 +179,8 @@ TEST_P(ReadPixelsTest, PBOWithExistingData)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_P(ReadPixelsTest, PBOAndSubData)
+// Test that calling SubData preserves PBO data.
+TEST_P(ReadPixelsPBOTest, SubDataPreservesContents)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -222,7 +208,8 @@ TEST_P(ReadPixelsTest, PBOAndSubData)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_P(ReadPixelsTest, PBOAndSubDataOffset)
+// Same as the prior test, but with an offset.
+TEST_P(ReadPixelsPBOTest, SubDataOffsetPreservesContents)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -255,7 +242,53 @@ TEST_P(ReadPixelsTest, PBOAndSubDataOffset)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_P(ReadPixelsTest, DrawWithPBO)
+class ReadPixelsPBODrawTest : public ReadPixelsPBOTest
+{
+  protected:
+    ReadPixelsPBODrawTest() : mProgram(0), mPositionVBO(0) {}
+
+    void SetUp() override
+    {
+        ReadPixelsPBOTest::SetUp();
+
+        const char *vertexShaderSrc =
+            "attribute vec4 aTest; attribute vec2 aPosition; varying vec4 vTest;\n"
+            "void main()\n"
+            "{\n"
+            "    vTest        = aTest;\n"
+            "    gl_Position  = vec4(aPosition, 0.0, 1.0);\n"
+            "    gl_PointSize = 1.0;\n"
+            "}";
+
+        const char *fragmentShaderSrc =
+            "precision mediump float; varying vec4 vTest;\n"
+            "void main()\n"
+            "{\n"
+            "    gl_FragColor = vTest;\n"
+            "}";
+
+        mProgram = CompileProgram(vertexShaderSrc, fragmentShaderSrc);
+        ASSERT_NE(0u, mProgram);
+
+        glGenBuffers(1, &mPositionVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, mPositionVBO);
+        glBufferData(GL_ARRAY_BUFFER, 128, NULL, GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    void TearDown() override
+    {
+        glDeleteProgram(mProgram);
+        glDeleteBuffers(1, &mPositionVBO);
+        ReadPixelsPBOTest::TearDown();
+    }
+
+    GLuint mProgram;
+    GLuint mPositionVBO;
+};
+
+// Test that we can draw with PBO data.
+TEST_P(ReadPixelsPBODrawTest, DrawWithPBO)
 {
     unsigned char data[4] = { 1, 2, 3, 4 };
 
@@ -307,21 +340,52 @@ TEST_P(ReadPixelsTest, DrawWithPBO)
     EXPECT_EQ(4, data[3]);
 }
 
-TEST_P(ReadPixelsTest, MultisampledPBO)
+class ReadPixelsMultisampleTest : public ReadPixelsTest
+{
+  protected:
+    ReadPixelsMultisampleTest() : mFBO(0), mRBO(0), mPBO(0) {}
+
+    void SetUp() override
+    {
+        ANGLETest::SetUp();
+
+        glGenFramebuffers(1, &mFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+
+        glGenRenderbuffers(1, &mRBO);
+        glBindRenderbuffer(GL_RENDERBUFFER, mRBO);
+
+        glGenBuffers(1, &mPBO);
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
+        glBufferData(GL_PIXEL_PACK_BUFFER, 4 * getWindowWidth() * getWindowHeight(), nullptr,
+                     GL_STATIC_DRAW);
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void TearDown() override
+    {
+        ANGLETest::TearDown();
+
+        glDeleteFramebuffers(1, &mFBO);
+        glDeleteRenderbuffers(1, &mRBO);
+        glDeleteBuffers(1, &mPBO);
+    }
+
+    GLuint mFBO;
+    GLuint mRBO;
+    GLuint mPBO;
+};
+
+// Test ReadPixels from a multisampled framebuffer.
+TEST_P(ReadPixelsMultisampleTest, BasicClear)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_ANGLE_framebuffer_multisample"))
     {
         std::cout << "Test skipped because ES3 or GL_ANGLE_framebuffer_multisample is not available." << std::endl;
         return;
     }
-
-    GLuint fbo;
-    glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-    GLuint rbo;
-    glGenRenderbuffers(1, &rbo);
-    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 
     if (extensionEnabled("GL_ANGLE_framebuffer_multisample"))
     {
@@ -332,24 +396,23 @@ TEST_P(ReadPixelsTest, MultisampledPBO)
         glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_RGBA8, 4, 4);
     }
 
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
-
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mRBO);
     ASSERT_GL_NO_ERROR();
 
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
-
     EXPECT_GL_NO_ERROR();
 
     glReadPixels(0, 0, 1, 1, GL_RGBA8, GL_UNSIGNED_BYTE, NULL);
-
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-
-    glDeleteRenderbuffers(1, &rbo);
-    glDeleteFramebuffers(1, &fbo);
 }
 
+}  // anonymous namespace
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_INSTANTIATE_TEST(ReadPixelsTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(ReadPixelsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(ReadPixelsPBOTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(ReadPixelsPBODrawTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(ReadPixelsMultisampleTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
