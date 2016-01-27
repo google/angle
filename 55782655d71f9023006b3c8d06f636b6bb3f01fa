@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "34712e1d_47ba90da",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-27T15:31:10Z",
+      "side": 1,
+      "message": "small nit: don\u0027t use the assignment operator",
+      "range": {
+        "startLine": 387,
+        "startChar": 8,
+        "endLine": 387,
+        "endChar": 20
+      },
+      "revId": "55782655d71f9023006b3c8d06f636b6bb3f01fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
