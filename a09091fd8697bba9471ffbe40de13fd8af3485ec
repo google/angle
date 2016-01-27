@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "544302e2_8086f8cd",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-27T16:55:18Z",
+      "side": 1,
+      "message": "still this a comment detailing that this is defined in a certain extension, but can apply to others, is warranted",
+      "range": {
+        "startLine": 224,
+        "startChar": 24,
+        "endLine": 224,
+        "endChar": 43
+      },
+      "revId": "a09091fd8697bba9471ffbe40de13fd8af3485ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54894239_70610eb4",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 617,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-27T16:55:18Z",
+      "side": 1,
+      "message": "same comment about the comment, see previous patch",
+      "range": {
+        "startLine": 615,
+        "startChar": 4,
+        "endLine": 617,
+        "endChar": 100
+      },
+      "revId": "a09091fd8697bba9471ffbe40de13fd8af3485ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54722221_485c5f01",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-27T16:55:18Z",
+      "side": 1,
+      "message": "nit: end each string line with \\n for better debugging (otherwise ends up as one big line)",
+      "range": {
+        "startLine": 35,
+        "startChar": 59,
+        "endLine": 35,
+        "endChar": 60
+      },
+      "revId": "a09091fd8697bba9471ffbe40de13fd8af3485ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4987691_c244e233",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-27T16:55:18Z",
+      "side": 1,
+      "message": "I\u0027ve never actually used the \u003c\u003c operator with the ASSERT macros. have you checked that it works as expected? (Ie you could make the macro fail intentionally)",
+      "range": {
+        "startLine": 65,
+        "startChar": 31,
+        "endLine": 65,
+        "endChar": 64
+      },
+      "revId": "a09091fd8697bba9471ffbe40de13fd8af3485ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
