@@ -569,6 +569,14 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     caps->maxFragmentUniformComponents =
         std::min(caps->maxFragmentUniformVectors / 4, caps->maxFragmentUniformComponents);
 
+    // If it is not possible to support reading buffer data back, a shadow copy of the buffers must
+    // be held. This disallows writing to buffers indirectly through transform feedback, thus
+    // disallowing ES3.
+    if (!CanMapBufferForRead(functions))
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
+    }
+
     // Extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
     extensions->elementIndexUint = functions->standard == STANDARD_GL_DESKTOP ||
@@ -662,4 +670,55 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 
 }
 
+bool CanMapBufferForRead(const FunctionsGL *functions)
+{
+    return (functions->mapBufferRange != nullptr) ||
+           (functions->mapBuffer != nullptr && functions->standard == STANDARD_GL_DESKTOP);
+}
+
+uint8_t *MapBufferRangeWithFallback(const FunctionsGL *functions,
+                                    GLenum target,
+                                    size_t offset,
+                                    size_t length,
+                                    GLbitfield access)
+{
+    if (functions->mapBufferRange != nullptr)
+    {
+        return reinterpret_cast<uint8_t *>(
+            functions->mapBufferRange(target, offset, length, access));
+    }
+    else if (functions->mapBuffer != nullptr &&
+             (functions->standard == STANDARD_GL_DESKTOP || access == GL_MAP_WRITE_BIT))
+    {
+        // Only the read and write bits are supported
+        ASSERT((access & (GL_MAP_READ_BIT | GL_MAP_WRITE_BIT)) != 0);
+
+        GLenum accessEnum = 0;
+        if (access == (GL_MAP_READ_BIT | GL_MAP_WRITE_BIT))
+        {
+            accessEnum = GL_READ_WRITE;
+        }
+        else if (access == GL_MAP_READ_BIT)
+        {
+            accessEnum = GL_READ_ONLY;
+        }
+        else if (access == GL_MAP_WRITE_BIT)
+        {
+            accessEnum = GL_WRITE_ONLY;
+        }
+        else
+        {
+            UNREACHABLE();
+            return nullptr;
+        }
+
+        return reinterpret_cast<uint8_t *>(functions->mapBuffer(target, accessEnum)) + offset;
+    }
+    else
+    {
+        // No options available
+        UNREACHABLE();
+        return nullptr;
+    }
+}
 }
