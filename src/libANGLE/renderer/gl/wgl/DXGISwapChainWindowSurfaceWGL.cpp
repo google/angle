@@ -223,9 +223,8 @@ egl::Error DXGISwapChainWindowSurfaceWGL::bindTexImage(gl::Texture *texture, EGL
     SafeRelease(colorBuffer);
     if (mTextureHandle == nullptr)
     {
-        DWORD error = GetLastError();
         return egl::Error(EGL_BAD_ALLOC, "Failed to register D3D object, error: 0x%08x.",
-                          HRESULT_CODE(error));
+                          HRESULT_CODE(GetLastError()));
     }
 
     if (!mFunctionsWGL->dxLockObjectsNV(mDeviceHandle, 1, &mTextureHandle))
@@ -233,9 +232,8 @@ egl::Error DXGISwapChainWindowSurfaceWGL::bindTexImage(gl::Texture *texture, EGL
         mFunctionsWGL->dxUnregisterObjectNV(mDeviceHandle, mTextureHandle);
         mTextureHandle = nullptr;
 
-        DWORD error = GetLastError();
         return egl::Error(EGL_BAD_ALLOC, "Failed to lock D3D object, error: 0x%08x.",
-                          HRESULT_CODE(error));
+                          HRESULT_CODE(GetLastError()));
     }
 
     mTextureID = textureID;
@@ -249,16 +247,14 @@ egl::Error DXGISwapChainWindowSurfaceWGL::releaseTexImage(EGLint buffer)
 
     if (!mFunctionsWGL->dxUnlockObjectsNV(mDeviceHandle, 1, &mTextureHandle))
     {
-        DWORD error = GetLastError();
         return egl::Error(EGL_BAD_ALLOC, "Failed to unlock D3D object, error: 0x%08x.",
-                          HRESULT_CODE(error));
+                          HRESULT_CODE(GetLastError()));
     }
 
     if (!mFunctionsWGL->dxUnregisterObjectNV(mDeviceHandle, mTextureHandle))
     {
-        DWORD error = GetLastError();
         return egl::Error(EGL_BAD_ALLOC, "Failed to unregister D3D object, error: 0x%08x.",
-                          HRESULT_CODE(error));
+                          HRESULT_CODE(GetLastError()));
     }
 
     mTextureID     = 0;
@@ -315,18 +311,16 @@ egl::Error DXGISwapChainWindowSurfaceWGL::setObjectsLocked(bool locked)
     {
         if (!mFunctionsWGL->dxLockObjectsNV(mDeviceHandle, count, resources))
         {
-            DWORD error = GetLastError();
             return egl::Error(EGL_BAD_ALLOC, "Failed to lock object, error: 0x%08x.",
-                              HRESULT_CODE(error));
+                              HRESULT_CODE(GetLastError()));
         }
     }
     else
     {
         if (!mFunctionsWGL->dxUnlockObjectsNV(mDeviceHandle, count, resources))
         {
-            DWORD error = GetLastError();
             return egl::Error(EGL_BAD_ALLOC, "Failed to lock object, error: 0x%08x.",
-                              HRESULT_CODE(error));
+                              HRESULT_CODE(GetLastError()));
         }
     }
 
@@ -500,9 +494,8 @@ egl::Error DXGISwapChainWindowSurfaceWGL::createSwapChain()
     SafeRelease(colorBuffer);
     if (mRenderbufferBufferHandle == nullptr)
     {
-        DWORD error = GetLastError();
         return egl::Error(EGL_BAD_ALLOC, "Failed to register D3D object, error: 0x%X.",
-                          HRESULT_CODE(error));
+                          HRESULT_CODE(GetLastError()));
     }
 
     // Rebind the surface to the texture if needed.
@@ -512,9 +505,8 @@ egl::Error DXGISwapChainWindowSurfaceWGL::createSwapChain()
                                                            GL_TEXTURE_2D, WGL_ACCESS_READ_WRITE_NV);
         if (mTextureHandle == nullptr)
         {
-            DWORD error = GetLastError();
             return egl::Error(EGL_BAD_ALLOC, "Failed to register D3D object, error: 0x%X.",
-                              HRESULT_CODE(error));
+                              HRESULT_CODE(GetLastError()));
         }
     }
 
