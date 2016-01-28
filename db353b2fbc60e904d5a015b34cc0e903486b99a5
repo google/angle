@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4d7967c_2a069f68",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1059,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T22:06:09Z",
+      "side": 1,
+      "message": "nit: please still use git cl format to format this (even if it\u0027s a bit ugly it\u0027s ok)",
+      "range": {
+        "startLine": 1059,
+        "startChar": 88,
+        "endLine": 1059,
+        "endChar": 107
+      },
+      "revId": "db353b2fbc60e904d5a015b34cc0e903486b99a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
