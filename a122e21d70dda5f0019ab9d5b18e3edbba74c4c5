@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "34712e1d_aad06b21",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-28T18:26:14Z",
+      "side": 1,
+      "message": "Understood, we try to store the caps as the GL spec specifies them even if it involves a cast at some point.  Many other caps also a stored as GLuints and queried as GLints.",
+      "parentUuid": "f4987691_e29b6699",
+      "range": {
+        "startLine": 196,
+        "startChar": 4,
+        "endLine": 196,
+        "endChar": 9
+      },
+      "revId": "a122e21d70dda5f0019ab9d5b18e3edbba74c4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54722221_cb44c950",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 10
