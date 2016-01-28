@@ -1,0 +1,372 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "144d0a10_9ea5f9db",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "this can be a const method, and don\u0027t qualify the return value as const, that seems to annoy some compilers.",
+      "range": {
+        "startLine": 253,
+        "startChar": 15,
+        "endLine": 253,
+        "endChar": 37
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "342bee19_14647420",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "you use this pattern all over the place:\n\n if (framebufferAtttachment-\u003etype() \u003d\u003d GL_FRAMEBUFFER_DEFAULT \u0026\u0026 mRenderer-\u003epresentFastPathEnabled())\n\nCan you make this a helper function? Maybe something in renderer11_utils:\n\n bool ShouldInvertY(framebufferAttachment, renderer)\n\nNot sure on the name.. or UseFastPresentPath or something",
+      "range": {
+        "startLine": 332,
+        "startChar": 11,
+        "endLine": 332,
+        "endChar": 99
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54722221_ab1ead4c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "https://chromium-review.googlesource.com/#/c/323472/ refactors readTextureData to take a FBO attachment - you\u0027ll be able to get rid of this parameter",
+      "range": {
+        "startLine": 481,
+        "startChar": 65,
+        "endLine": 481,
+        "endChar": 70
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "144d0a10_3eb7050d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "can we flatten this by doing\n\n if (!colorBufferformatCaps.renderable)\n   continue;",
+      "range": {
+        "startLine": 1022,
+        "startChar": 8,
+        "endLine": 1022,
+        "endChar": 45
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d486122d_9e0da9c7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1029,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "and a continue here?",
+      "range": {
+        "startLine": 1028,
+        "startChar": 16,
+        "endLine": 1029,
+        "endChar": 17
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d486122d_de0721a1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "store a ref to getFirstColorBuffer to both speed this up a small amount and to clean up the auto formatting",
+      "range": {
+        "startLine": 117,
+        "startChar": 4,
+        "endLine": 119,
+        "endChar": 42
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4987691_a2a55ed2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "wrap this in a block\n\n namespace\n {\n // here\n }  // anonymous namespace",
+      "range": {
+        "startLine": 34,
+        "startChar": 5,
+        "endLine": 34,
+        "endChar": 26
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4987691_828b7a49",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "I think specifying copy should be an error for other platform as well? Maybe the extension should have specified default? What do you think?",
+      "range": {
+        "startLine": 301,
+        "startChar": 38,
+        "endLine": 301,
+        "endChar": 50
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d486122d_1ec53990",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "I feel like this will produce a compile error on clang, please check existing code for examples.",
+      "range": {
+        "startLine": 57,
+        "startChar": 18,
+        "endLine": 57,
+        "endChar": 32
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34712e1d_aadb0b3d",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "ASSERT_EGL_TRUE",
+      "range": {
+        "startLine": 58,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 17
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34712e1d_8ade4f2e",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "ASSERT_EGL_TRUE",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 75,
+        "endChar": 17
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54722221_4bf37954",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "same as for display",
+      "range": {
+        "startLine": 81,
+        "startChar": 8,
+        "endLine": 81,
+        "endChar": 17
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "342bee19_34ec10b1",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 143,
+        "startChar": 8,
+        "endLine": 143,
+        "endChar": 17
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54722221_6bf83530",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "ASSERT_EGL_TRUE",
+      "range": {
+        "startLine": 146,
+        "startChar": 25,
+        "endLine": 146,
+        "endChar": 36
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b47d1eef_6802039f",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "probably should keep ASSERTs out of TearDown. We don\u0027t have any other test that I know of that does.",
+      "range": {
+        "startLine": 175,
+        "startChar": 8,
+        "endLine": 175,
+        "endChar": 19
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34712e1d_eae503f6",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T18:37:28Z",
+      "side": 1,
+      "message": "you can use angle::GLColor for these (See the header)",
+      "range": {
+        "startLine": 284,
+        "startChar": 13,
+        "endLine": 284,
+        "endChar": 19
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
