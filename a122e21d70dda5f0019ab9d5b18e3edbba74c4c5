@@ -25,6 +25,75 @@
     },
     {
       "key": {
+        "uuid": "544302e2_266cdc49",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-28T18:08:43Z",
+      "side": 1,
+      "message": "nit: These should be GLuints, they\u0027re listed as Z+ type in the spec meaning positive integer.",
+      "range": {
+        "startLine": 196,
+        "startChar": 4,
+        "endLine": 196,
+        "endChar": 9
+      },
+      "revId": "a122e21d70dda5f0019ab9d5b18e3edbba74c4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54722221_cb44c950",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 859,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-28T18:08:43Z",
+      "side": 1,
+      "message": "A nested switch would work well here.  Remember to put an UNREACHABLE in the default case.",
+      "range": {
+        "startLine": 848,
+        "startChar": 12,
+        "endLine": 859,
+        "endChar": 13
+      },
+      "revId": "a122e21d70dda5f0019ab9d5b18e3edbba74c4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "544302e2_91aacc8f",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 862,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-28T18:08:43Z",
+      "side": 1,
+      "message": "This should be checked in the validation code only.",
+      "range": {
+        "startLine": 862,
+        "startChar": 12,
+        "endLine": 862,
+        "endChar": 48
+      },
+      "revId": "a122e21d70dda5f0019ab9d5b18e3edbba74c4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "34712e1d_c794c066",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 10
@@ -64,6 +133,29 @@
         "startChar": 21,
         "endLine": 66,
         "endChar": 41
+      },
+      "revId": "a122e21d70dda5f0019ab9d5b18e3edbba74c4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "144d0a10_deab81b0",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-28T18:08:43Z",
+      "side": 1,
+      "message": "Nice, much cleaner.",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 1
       },
       "revId": "a122e21d70dda5f0019ab9d5b18e3edbba74c4c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
