@@ -33,7 +33,7 @@ class ParticleSystemSample : public SampleApplication
     {
     }
 
-    virtual bool initialize()
+    bool initialize() override
     {
         const std::string vs = SHADER_SOURCE
         (
@@ -157,7 +157,7 @@ class ParticleSystemSample : public SampleApplication
         glUniform1f(mTimeLoc, mParticleTime);
     }
 
-    virtual void draw()
+    void draw() override
     {
         // Set the viewport
         glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());

@@ -37,9 +37,7 @@ class FunctionsGLWindows : public FunctionsGL
         ASSERT(mGetProcAddressWGL);
     }
 
-    virtual ~FunctionsGLWindows()
-    {
-    }
+    ~FunctionsGLWindows() override {}
 
   private:
     void *loadProcAddress(const std::string &function) override

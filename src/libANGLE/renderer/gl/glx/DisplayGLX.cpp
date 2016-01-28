@@ -42,9 +42,7 @@ class FunctionsGLGLX : public FunctionsGL
     {
     }
 
-    virtual ~FunctionsGLGLX()
-    {
-    }
+    ~FunctionsGLGLX() override {}
 
   private:
     void *loadProcAddress(const std::string &function) override

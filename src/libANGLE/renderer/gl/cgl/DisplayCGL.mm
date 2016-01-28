@@ -33,7 +33,7 @@ class FunctionsGLCGL : public FunctionsGL
   public:
     FunctionsGLCGL(void *dylibHandle) : mDylibHandle(dylibHandle) {}
 
-    virtual ~FunctionsGLCGL() { dlclose(mDylibHandle); }
+    ~FunctionsGLCGL() override { dlclose(mDylibHandle); }
 
   private:
     void *loadProcAddress(const std::string &function) override
