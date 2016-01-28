@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d4da92a8_09d12925",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T21:50:52Z",
+      "side": 1,
+      "message": "nit: you can simplify this for loop as you did the outer one using a range-for",
+      "range": {
+        "startLine": 1027,
+        "startChar": 8,
+        "endLine": 1030,
+        "endChar": 99
+      },
+      "revId": "a28585c541dfc2227498456fdf1a97bd0c056965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4aeb6f8_1235cc14",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1064,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T21:50:52Z",
+      "side": 1,
+      "message": "nit: to make this a bit cleaner, I\u0027d probably leave it as it was before, then in a second line, do\n\n  // comment\n  if (mPresentFast)\n   conformant \u003d 0;",
+      "range": {
+        "startLine": 1060,
+        "startChar": 12,
+        "endLine": 1064,
+        "endChar": 40
+      },
+      "revId": "a28585c541dfc2227498456fdf1a97bd0c056965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94bbba3a_0f03e558",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T21:50:52Z",
+      "side": 1,
+      "message": "nit: use \"const auto *\" so format doesn\u0027t do this weird spacing thing",
+      "range": {
+        "startLine": 117,
+        "startChar": 10,
+        "endLine": 117,
+        "endChar": 35
+      },
+      "revId": "a28585c541dfc2227498456fdf1a97bd0c056965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94bbba3a_6f00b14a",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T21:50:52Z",
+      "side": 1,
+      "message": "Use this as an angle::GLColor pointer and then use EXPECT_EQ in the places below. (should just work)",
+      "range": {
+        "startLine": 279,
+        "startChar": 8,
+        "endLine": 279,
+        "endChar": 81
+      },
+      "revId": "a28585c541dfc2227498456fdf1a97bd0c056965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
