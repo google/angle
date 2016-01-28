@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d486122d_dedc8197",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T17:47:30Z",
+      "side": 1,
+      "message": "nit: GL_EXT_disjoint_timer_query",
+      "range": {
+        "startLine": 194,
+        "startChar": 7,
+        "endLine": 194,
+        "endChar": 34
+      },
+      "revId": "a122e21d70dda5f0019ab9d5b18e3edbba74c4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34712e1d_c794c066",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1024,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T17:47:30Z",
+      "side": 1,
+      "message": "use range-for: for (auto \u0026iter : mActiveQueries)",
+      "range": {
+        "startLine": 1023,
+        "startChar": 8,
+        "endLine": 1024,
+        "endChar": 40
+      },
+      "revId": "a122e21d70dda5f0019ab9d5b18e3edbba74c4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "544302e2_4669e838",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T17:47:30Z",
+      "side": 1,
+      "message": "nit: error message",
+      "range": {
+        "startLine": 66,
+        "startChar": 21,
+        "endLine": 66,
+        "endChar": 41
+      },
+      "revId": "a122e21d70dda5f0019ab9d5b18e3edbba74c4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54722221_eb41853d",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T17:47:30Z",
+      "side": 1,
+      "message": "nit: should be // TODO(ewell): \u003cexplanation\u003e in the prior line",
+      "range": {
+        "startLine": 626,
+        "startChar": 48,
+        "endLine": 626,
+        "endChar": 70
+      },
+      "revId": "a122e21d70dda5f0019ab9d5b18e3edbba74c4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "544302e2_119ebc7a",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T17:47:30Z",
+      "side": 1,
+      "message": "It\u0027s nice if the queries you gen are part of the fixture so they get released if the test early-exits. So in this case you could make mQuery1 and mQuery2, init them to zero, and delete them in TearDown (instead of the bottom of each test)",
+      "range": {
+        "startLine": 110,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 32
+      },
+      "revId": "a122e21d70dda5f0019ab9d5b18e3edbba74c4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
