@@ -805,10 +805,8 @@ EGLint SwapChain11::present(EGLint x, EGLint y, EGLint width, EGLint height)
 
     if (result == DXGI_ERROR_DEVICE_REMOVED)
     {
-        ID3D11Device *device  = mRenderer->getDevice();
-        HRESULT removedReason = device->GetDeviceRemovedReason();
-        UNUSED_TRACE_VARIABLE(removedReason);
-        ERR("Present failed: the D3D11 device was removed: 0x%08X", removedReason);
+        ERR("Present failed: the D3D11 device was removed: 0x%08X",
+            mRenderer->getDevice()->GetDeviceRemovedReason());
         return EGL_CONTEXT_LOST;
     }
     else if (result == DXGI_ERROR_DEVICE_RESET)

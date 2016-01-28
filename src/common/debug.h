@@ -114,11 +114,7 @@ bool DebugAnnotationsActive();
 #define UNUSED_ASSERTION_VARIABLE(variable) ((void)variable)
 #endif
 
-#ifndef ANGLE_ENABLE_DEBUG_TRACE
-#define UNUSED_TRACE_VARIABLE(variable) ((void)variable)
-#else
-#define UNUSED_TRACE_VARIABLE(variable)
-#endif
+#define UNUSED_VARIABLE(variable) ((void)variable)
 
 // A macro to indicate unimplemented functionality
 
