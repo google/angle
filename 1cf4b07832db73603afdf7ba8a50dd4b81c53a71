@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f4987691_82725a25",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-28T20:02:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d486122d_3e83dd2c",
+      "range": {
+        "startLine": 18,
+        "startChar": 31,
+        "endLine": 18,
+        "endChar": 47
+      },
+      "revId": "1cf4b07832db73603afdf7ba8a50dd4b81c53a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "34984e85_4ce9df35",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f4987691_22926e78",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-28T20:02:32Z",
+      "side": 1,
+      "message": "That\u0027s actually what I did \u003e_\u003e\n\nOh, I added the BUG after formatting, that explains it.",
+      "parentUuid": "34984e85_4ce9df35",
+      "range": {
+        "startLine": 288,
+        "startChar": 90,
+        "endLine": 288,
+        "endChar": 105
+      },
+      "revId": "1cf4b07832db73603afdf7ba8a50dd4b81c53a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54722221_4b5c5901",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2016-01-28T19:41:25Z",
       "side": 1,
       "message": "\"We might still get an OpenGL ES backend go through this\" isn\u0027t grammatically correct, please rephrase.",
+      "range": {
+        "startLine": 289,
+        "startChar": 42,
+        "endLine": 289,
+        "endChar": 97
+      },
+      "revId": "1cf4b07832db73603afdf7ba8a50dd4b81c53a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34712e1d_0aa33f71",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-28T20:02:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54722221_4b5c5901",
       "range": {
         "startLine": 289,
         "startChar": 42,
