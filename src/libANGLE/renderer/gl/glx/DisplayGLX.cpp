@@ -17,6 +17,7 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/glx/PbufferSurfaceGLX.h"
 #include "libANGLE/renderer/gl/glx/WindowSurfaceGLX.h"
+#include "libANGLE/renderer/gl/renderergl_utils.h"
 
 namespace rx
 {
@@ -283,6 +284,18 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
 
     mFunctionsGL = new FunctionsGLGLX(mGLX.getProc);
     mFunctionsGL->initialize();
+
+    // TODO(cwallez, angleproject:1303) Disable the OpenGL ES backend on Linux NVIDIA and Intel as
+    // it has problems on our automated testing. An OpenGL ES backend might not trigger this test if
+    // there is no Desktop OpenGL support, but that's not the case in our automated testing.
+    VendorID vendor = GetVendorID(mFunctionsGL);
+    bool isOpenGLES =
+        eglAttributes.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE) ==
+        EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE;
+    if (isOpenGLES && (vendor == VENDOR_ID_INTEL || vendor == VENDOR_ID_NVIDIA))
+    {
+        return egl::Error(EGL_NOT_INITIALIZED, "Intel or NVIDIA OpenGL ES drivers are not supported.");
+    }
 
     syncXCommands();
 
