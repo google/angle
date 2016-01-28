@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d486122d_3e83dd2c",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T19:41:25Z",
+      "side": 1,
+      "message": "nit: r after g",
+      "range": {
+        "startLine": 18,
+        "startChar": 31,
+        "endLine": 18,
+        "endChar": 47
+      },
+      "revId": "1cf4b07832db73603afdf7ba8a50dd4b81c53a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34984e85_4ce9df35",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T19:41:25Z",
+      "side": 1,
+      "message": "nit: git cl format would complain here - put it in one big line and let git cl format wrap it.",
+      "range": {
+        "startLine": 288,
+        "startChar": 90,
+        "endLine": 288,
+        "endChar": 105
+      },
+      "revId": "1cf4b07832db73603afdf7ba8a50dd4b81c53a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54722221_4b5c5901",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T19:41:25Z",
+      "side": 1,
+      "message": "\"We might still get an OpenGL ES backend go through this\" isn\u0027t grammatically correct, please rephrase.",
+      "range": {
+        "startLine": 289,
+        "startChar": 42,
+        "endLine": 289,
+        "endChar": 97
+      },
+      "revId": "1cf4b07832db73603afdf7ba8a50dd4b81c53a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
