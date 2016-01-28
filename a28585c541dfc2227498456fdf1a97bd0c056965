@@ -187,6 +187,30 @@
       "revId": "a28585c541dfc2227498456fdf1a97bd0c056965",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94bbba3a_0f4e45c0",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-28T22:06:09Z",
+      "side": 1,
+      "message": "Ah yes, didn\u0027t notice. I\u0027m OK with a slight abuse of the GLColor struct and reordering the fields in the expected colors.",
+      "parentUuid": "b45fdef8_58ce5d88",
+      "range": {
+        "startLine": 279,
+        "startChar": 8,
+        "endLine": 279,
+        "endChar": 81
+      },
+      "revId": "a28585c541dfc2227498456fdf1a97bd0c056965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
