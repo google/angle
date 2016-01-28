@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "342bee19_946f2403",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-28T17:58:32Z",
+      "side": 1,
+      "message": "Did you mean to use MapBuffer?",
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "146c2a47_264cb87b",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-28T17:58:32Z",
+      "side": 1,
+      "message": "MapBufferRange",
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d486122d_1e21b947",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-28T17:58:32Z",
+      "side": 1,
+      "message": "UnmapBUffer",
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
