@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "94b2daf4_aac5d2b6",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-28T21:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "144d0a10_9ea5f9db",
+      "range": {
+        "startLine": 253,
+        "startChar": 15,
+        "endLine": 253,
+        "endChar": 37
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "342bee19_14647420",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2016-01-28T18:37:28Z",
       "side": 1,
       "message": "you use this pattern all over the place:\n\n if (framebufferAtttachment-\u003etype() \u003d\u003d GL_FRAMEBUFFER_DEFAULT \u0026\u0026 mRenderer-\u003epresentFastPathEnabled())\n\nCan you make this a helper function? Maybe something in renderer11_utils:\n\n bool ShouldInvertY(framebufferAttachment, renderer)\n\nNot sure on the name.. or UseFastPresentPath or something",
+      "range": {
+        "startLine": 332,
+        "startChar": 11,
+        "endLine": 332,
+        "endChar": 99
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14beeac6_857ac498",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-28T21:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "342bee19_14647420",
       "range": {
         "startLine": 332,
         "startChar": 11,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "f4b5d6da_70fd6d59",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-28T21:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "144d0a10_3eb7050d",
+      "range": {
+        "startLine": 1022,
+        "startChar": 8,
+        "endLine": 1022,
+        "endChar": 45
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d486122d_9e0da9c7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 10
@@ -105,6 +177,30 @@
       "writtenOn": "2016-01-28T18:37:28Z",
       "side": 1,
       "message": "and a continue here?",
+      "range": {
+        "startLine": 1028,
+        "startChar": 16,
+        "endLine": 1029,
+        "endChar": 17
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54c4e260_cd96a40e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1029,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-28T21:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d486122d_9e0da9c7",
       "range": {
         "startLine": 1028,
         "startChar": 16,
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "f49a3677_2d19e663",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-28T21:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d486122d_de0721a1",
+      "range": {
+        "startLine": 117,
+        "startChar": 4,
+        "endLine": 119,
+        "endChar": 42
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f4987691_a2a55ed2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 10
@@ -163,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "b4a43ebb_e66e1f44",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-28T21:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4987691_a2a55ed2",
+      "range": {
+        "startLine": 34,
+        "startChar": 5,
+        "endLine": 34,
+        "endChar": 26
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f4987691_828b7a49",
         "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
         "patchSetId": 10
@@ -174,6 +318,30 @@
       "writtenOn": "2016-01-28T18:37:28Z",
       "side": 1,
       "message": "I think specifying copy should be an error for other platform as well? Maybe the extension should have specified default? What do you think?",
+      "range": {
+        "startLine": 301,
+        "startChar": 38,
+        "endLine": 301,
+        "endChar": 50
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f40956de_9da7277b",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-28T21:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4987691_828b7a49",
       "range": {
         "startLine": 301,
         "startChar": 38,
@@ -232,6 +400,30 @@
     },
     {
       "key": {
+        "uuid": "74f48602_9e4c3d25",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-28T21:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34712e1d_aadb0b3d",
+      "range": {
+        "startLine": 58,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 17
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "34712e1d_8ade4f2e",
         "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
         "patchSetId": 10
@@ -243,6 +435,30 @@
       "writtenOn": "2016-01-28T18:37:28Z",
       "side": 1,
       "message": "ASSERT_EGL_TRUE",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 75,
+        "endChar": 17
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "741d661a_3989cbe1",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-28T21:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34712e1d_8ade4f2e",
       "range": {
         "startLine": 75,
         "startChar": 8,
@@ -278,6 +494,30 @@
     },
     {
       "key": {
+        "uuid": "34fe8ee6_bcab01b1",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-28T21:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54722221_4bf37954",
+      "range": {
+        "startLine": 81,
+        "startChar": 8,
+        "endLine": 81,
+        "endChar": 17
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "342bee19_34ec10b1",
         "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
         "patchSetId": 10
@@ -289,6 +529,30 @@
       "writtenOn": "2016-01-28T18:37:28Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 143,
+        "startChar": 8,
+        "endLine": 143,
+        "endChar": 17
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f40956de_9dce073b",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-28T21:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "342bee19_34ec10b1",
       "range": {
         "startLine": 143,
         "startChar": 8,
@@ -324,6 +588,30 @@
     },
     {
       "key": {
+        "uuid": "34176efe_149e54d6",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-28T21:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54722221_6bf83530",
+      "range": {
+        "startLine": 146,
+        "startChar": 25,
+        "endLine": 146,
+        "endChar": 36
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b47d1eef_6802039f",
         "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
         "patchSetId": 10
@@ -347,6 +635,30 @@
     },
     {
       "key": {
+        "uuid": "94065ace_7ae975d2",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-28T21:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b47d1eef_6802039f",
+      "range": {
+        "startLine": 175,
+        "startChar": 8,
+        "endLine": 175,
+        "endChar": 19
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "34712e1d_eae503f6",
         "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
         "patchSetId": 10
@@ -358,6 +670,30 @@
       "writtenOn": "2016-01-28T18:37:28Z",
       "side": 1,
       "message": "you can use angle::GLColor for these (See the header)",
+      "range": {
+        "startLine": 284,
+        "startChar": 13,
+        "endLine": 284,
+        "endChar": 19
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5418622c_95ed4476",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-01-28T21:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34712e1d_eae503f6",
       "range": {
         "startLine": 284,
         "startChar": 13,
