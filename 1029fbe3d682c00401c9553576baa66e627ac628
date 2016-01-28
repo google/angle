@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "544302e2_31ce5888",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-28T18:14:34Z",
+      "side": 1,
+      "message": "In this cases, I intended to use the real functions because the extensions they expose (OES_map_buffer and EXT_map_buffer_range) would not be available without these functions.\n\nIn the getIndexRange method, we don\u0027t know what\u0027s available.",
+      "parentUuid": "342bee19_946f2403",
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "146c2a47_264cb87b",
         "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
         "patchSetId": 5
