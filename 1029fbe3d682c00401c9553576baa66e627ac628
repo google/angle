@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "d486122d_3e1f5df0",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-01-28T18:22:30Z",
+      "side": 1,
+      "message": "Ok, MapBuffer is unused then.",
+      "parentUuid": "544302e2_31ce5888",
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "146c2a47_264cb87b",
         "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
         "patchSetId": 5
