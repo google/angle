@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "f4987691_e29b6699",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-01-28T18:24:03Z",
+      "side": 1,
+      "message": "I use GLints because they are retrieved with the command glGetQueryiv which returns a signed int despite the values never being negative.",
+      "parentUuid": "544302e2_266cdc49",
+      "range": {
+        "startLine": 196,
+        "startChar": 4,
+        "endLine": 196,
+        "endChar": 9
+      },
+      "revId": "a122e21d70dda5f0019ab9d5b18e3edbba74c4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54722221_cb44c950",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 10
@@ -197,6 +221,30 @@
       "writtenOn": "2016-01-28T17:47:30Z",
       "side": 1,
       "message": "It\u0027s nice if the queries you gen are part of the fixture so they get released if the test early-exits. So in this case you could make mQuery1 and mQuery2, init them to zero, and delete them in TearDown (instead of the bottom of each test)",
+      "range": {
+        "startLine": 110,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 32
+      },
+      "revId": "a122e21d70dda5f0019ab9d5b18e3edbba74c4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4987691_02976a6f",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-01-28T18:24:03Z",
+      "side": 1,
+      "message": "I can fix that later. Doing so would require checking for the extension in the constructor.",
+      "parentUuid": "544302e2_119ebc7a",
       "range": {
         "startLine": 110,
         "startChar": 0,
