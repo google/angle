@@ -1065,6 +1065,11 @@ void Context::getIntegerv(GLenum pname, GLint *params)
           *params = mExtensions.maxLabelLength;
           break;
 
+      // GL_EXT_disjoint_timer_query
+      case GL_GPU_DISJOINT_EXT:
+          *params = mRenderer->getGPUDisjoint();
+          break;
+
       default:
         mState.getIntegerv(getData(), pname, params);
         break;
@@ -1092,6 +1097,11 @@ void Context::getInteger64v(GLenum pname, GLint64 *params)
       case GL_MAX_SERVER_WAIT_TIMEOUT:
         *params = mCaps.maxServerWaitTimeout;
         break;
+
+      // GL_EXT_disjoint_timer_query
+      case GL_TIMESTAMP_EXT:
+          *params = mRenderer->getTimestamp();
+          break;
       default:
         UNREACHABLE();
         break;
@@ -1312,6 +1322,22 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
         *type = GL_FLOAT;
         *numParams = 1;
         return true;
+      case GL_TIMESTAMP_EXT:
+          if (!mExtensions.disjointTimerQuery)
+          {
+              return false;
+          }
+          *type      = GL_INT_64_ANGLEX;
+          *numParams = 1;
+          return true;
+      case GL_GPU_DISJOINT_EXT:
+          if (!mExtensions.disjointTimerQuery)
+          {
+              return false;
+          }
+          *type      = GL_INT;
+          *numParams = 1;
+          return true;
     }
 
     if (mExtensions.debug)

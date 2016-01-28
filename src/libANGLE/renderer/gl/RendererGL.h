@@ -104,6 +104,9 @@ class RendererGL : public Renderer
 
     void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits) override;
 
+    GLint getGPUDisjoint() override;
+    GLint64 getTimestamp() override;
+
     const gl::Version &getMaxSupportedESVersion() const;
     const FunctionsGL *getFunctions() const { return mFunctions; }
     StateManagerGL *getStateManager() const { return mStateManager; }

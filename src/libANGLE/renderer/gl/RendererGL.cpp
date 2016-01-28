@@ -416,4 +416,17 @@ void RendererGL::syncState(const gl::State &state, const gl::State::DirtyBits &d
 {
     mStateManager->syncState(state, dirtyBits);
 }
+
+GLint RendererGL::getGPUDisjoint()
+{
+    // TODO(ewell): On GLES backends we should find a way to reliably query disjoint events
+    return 0;
+}
+
+GLint64 RendererGL::getTimestamp()
+{
+    GLint64 result = 0;
+    mFunctions->getInteger64v(GL_TIMESTAMP, &result);
+    return result;
+}
 }

@@ -623,8 +623,7 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
         functions->hasGLExtension("GL_ARB_timer_query") ||
         functions->hasGLESExtension("GL_EXT_disjoint_timer_query"))
     {
-        // TODO(ewell): Extension is disabled by default until all functionality is implemented
-        extensions->disjointTimerQuery = false;
+        extensions->disjointTimerQuery = true;
         extensions->queryCounterBitsTimeElapsed =
             QueryQueryValue(functions, GL_TIME_ELAPSED, GL_QUERY_COUNTER_BITS);
         extensions->queryCounterBitsTimestamp =

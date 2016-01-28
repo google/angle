@@ -91,6 +91,9 @@ class Renderer : public ImplFactory
 
     virtual void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits) = 0;
 
+    virtual GLint getGPUDisjoint() = 0;
+    virtual GLint64 getTimestamp() = 0;
+
     // Renderer capabilities
     const gl::Caps &getRendererCaps() const;
     const gl::TextureCapsMap &getRendererTextureCaps() const;

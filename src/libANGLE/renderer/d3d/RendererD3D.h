@@ -243,6 +243,9 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     void pushGroupMarker(GLsizei length, const char *marker) override;
     void popGroupMarker() override;
 
+    GLint getGPUDisjoint() override;
+    GLint64 getTimestamp() override;
+
     // In D3D11, faster than calling setTexture a jillion times
     virtual gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) = 0;
 
