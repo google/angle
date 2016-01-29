@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9489faaa_88697b3c",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-29T20:07:37Z",
+      "side": 1,
+      "message": "Is this way of iterating over an enum okay?",
+      "revId": "ac641777d17590599102a2cdf59df41dc03ef221",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
