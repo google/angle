@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f44a3641_52abb4f3",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2016-01-29T15:29:17Z",
+      "side": 1,
+      "message": "Do you want to keep the is_win || is_linux bits now that there\u0027s an explicit flag? Alternatively, bot configs could only set the flag on on win and linux bots.",
+      "revId": "b5c1dd9a36df8a4a4102607e16c554c012489106",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d44d325b_3185507b",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2016-01-29T15:29:17Z",
+      "side": 1,
+      "message": "Do you want to keep the is_win || is_linux bits? (This could only be set to true on these platforms per bot config...)",
+      "revId": "b5c1dd9a36df8a4a4102607e16c554c012489106",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
