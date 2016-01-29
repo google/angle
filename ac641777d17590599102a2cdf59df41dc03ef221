@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "f465d6c4_e9a041c4",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-29T22:27:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1148bc77_a38b9a05",
+      "revId": "ac641777d17590599102a2cdf59df41dc03ef221",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "314dc087_849c262c",
         "filename": "src/compiler/translator/UtilsHLSL.h",
         "patchSetId": 9
@@ -48,6 +66,30 @@
       "writtenOn": "2016-01-29T20:59:22Z",
       "side": 1,
       "message": "nit: I would probably make MAX and UNKNOWN aliases to not duplicate them and not use a spot in the array",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 20
+      },
+      "revId": "ac641777d17590599102a2cdf59df41dc03ef221",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9462dabe_c07994a7",
+        "filename": "src/compiler/translator/UtilsHLSL.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-01-29T22:27:36Z",
+      "side": 1,
+      "message": "Aliasing them is reasonable, but I think it makes sense to have all the enum values in the array to avoid any possibility of out-of-range access.",
+      "parentUuid": "314dc087_849c262c",
       "range": {
         "startLine": 48,
         "startChar": 4,
