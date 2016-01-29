@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b42d1e79_68e0c315",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-29T14:43:42Z",
+      "side": 1,
+      "message": "is it acceptable to receive a null value out of the query?",
+      "range": {
+        "startLine": 207,
+        "startChar": 27,
+        "endLine": 207,
+        "endChar": 31
+      },
+      "revId": "8859cdc09203f407f4eeaeb500c94f13593575c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1e88867_085dcbc9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-29T14:43:42Z",
+      "side": 1,
+      "message": "nit: ANGLE\u0027s wrap is 100 chars, this comment can fit in one line.",
+      "range": {
+        "startLine": 207,
+        "startChar": 8,
+        "endLine": 208,
+        "endChar": 23
+      },
+      "revId": "8859cdc09203f407f4eeaeb500c94f13593575c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1f29053_c01c5e56",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-01-29T14:43:42Z",
+      "side": 1,
+      "message": "just put this outside of the if/else block to merge the duplicated calls here and below",
+      "range": {
+        "startLine": 209,
+        "startChar": 7,
+        "endLine": 209,
+        "endChar": 86
+      },
+      "revId": "8859cdc09203f407f4eeaeb500c94f13593575c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
