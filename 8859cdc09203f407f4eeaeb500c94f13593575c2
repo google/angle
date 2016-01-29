@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9462dabe_20a17014",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2016-01-29T22:31:17Z",
+      "side": 1,
+      "message": "It\u0027s fine by the extension spec, and both gecko and chrome (the only users of this) are fine with it.",
+      "parentUuid": "b42d1e79_68e0c315",
+      "range": {
+        "startLine": 207,
+        "startChar": 27,
+        "endLine": 207,
+        "endChar": 31
+      },
+      "revId": "8859cdc09203f407f4eeaeb500c94f13593575c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f1e88867_085dcbc9",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "9489faaa_93da8c97",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2016-01-29T22:31:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f1e88867_085dcbc9",
+      "range": {
+        "startLine": 207,
+        "startChar": 8,
+        "endLine": 208,
+        "endChar": 23
+      },
+      "revId": "8859cdc09203f407f4eeaeb500c94f13593575c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b1f29053_c01c5e56",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 4
@@ -59,6 +107,30 @@
       "writtenOn": "2016-01-29T14:43:42Z",
       "side": 1,
       "message": "just put this outside of the if/else block to merge the duplicated calls here and below",
+      "range": {
+        "startLine": 209,
+        "startChar": 7,
+        "endLine": 209,
+        "endChar": 86
+      },
+      "revId": "8859cdc09203f407f4eeaeb500c94f13593575c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "548b02a3_d7f7a4ef",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2016-01-29T22:31:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b1f29053_c01c5e56",
       "range": {
         "startLine": 209,
         "startChar": 7,
