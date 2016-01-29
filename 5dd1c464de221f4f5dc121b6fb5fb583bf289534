@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74272699_26943604",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-29T17:25:38Z",
+      "side": 1,
+      "message": "Remember that we still need to handle doing something other than a draw call between begin/end.",
+      "range": {
+        "startLine": 627,
+        "startChar": 41,
+        "endLine": 627,
+        "endChar": 45
+      },
+      "revId": "5dd1c464de221f4f5dc121b6fb5fb583bf289534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1eb8461_c1e7c2fe",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-01-29T17:25:38Z",
+      "side": 1,
+      "message": "Put this into a new test case.",
+      "range": {
+        "startLine": 289,
+        "startChar": 4,
+        "endLine": 304,
+        "endChar": 32
+      },
+      "revId": "5dd1c464de221f4f5dc121b6fb5fb583bf289534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
