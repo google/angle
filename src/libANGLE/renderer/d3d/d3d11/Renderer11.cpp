@@ -858,6 +858,8 @@ egl::Error Renderer11::initializeD3DDevice()
         mRenderer11DeviceCaps.featureLevel = mDevice->GetFeatureLevel();
     }
 
+    d3d11::SetDebugName(mDeviceContext, "DeviceContext");
+
     return egl::Error(EGL_SUCCESS);
 }
 
