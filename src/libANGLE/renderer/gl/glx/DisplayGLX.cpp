@@ -791,7 +791,7 @@ void DisplayGLX::setSwapInterval(glx::Drawable drawable, SwapControlData *data)
         {
             mGLX.swapIntervalMESA(data->targetSwapInterval);
         }
-        else if (mSwapControl == SwapControl::Mesa)
+        else if (mSwapControl == SwapControl::SGI)
         {
             mGLX.swapIntervalSGI(data->targetSwapInterval);
         }
