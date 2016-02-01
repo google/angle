@@ -111,8 +111,8 @@ class Context final : public ValidationContext
     void bindArrayBuffer(GLuint buffer);
     void bindElementArrayBuffer(GLuint buffer);
     void bindTexture(GLenum target, GLuint handle);
-    void bindReadFramebuffer(GLuint framebuffer);
-    void bindDrawFramebuffer(GLuint framebuffer);
+    void bindReadFramebuffer(GLuint framebufferHandle);
+    void bindDrawFramebuffer(GLuint framebufferHandle);
     void bindRenderbuffer(GLuint renderbuffer);
     void bindVertexArray(GLuint vertexArray);
     void bindSampler(GLuint textureUnit, GLuint sampler);
@@ -319,6 +319,7 @@ class Context final : public ValidationContext
   private:
     void checkVertexArrayAllocation(GLuint vertexArray);
     void checkTransformFeedbackAllocation(GLuint transformFeedback);
+    Framebuffer *checkFramebufferAllocation(GLuint framebufferHandle);
 
     void detachBuffer(GLuint buffer);
     void detachTexture(GLuint texture);
@@ -391,6 +392,6 @@ class Context final : public ValidationContext
     ResourceManager *mResourceManager;
 };
 
-}
+}  // namespace gl
 
 #endif   // LIBANGLE_CONTEXT_H_

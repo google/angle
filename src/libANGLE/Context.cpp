@@ -686,24 +686,16 @@ void Context::bindTexture(GLenum target, GLuint handle)
     mState.setSamplerTexture(target, texture);
 }
 
-void Context::bindReadFramebuffer(GLuint framebuffer)
+void Context::bindReadFramebuffer(GLuint framebufferHandle)
 {
-    if (!getFramebuffer(framebuffer))
-    {
-        mFramebufferMap[framebuffer] = new Framebuffer(mCaps, mRenderer, framebuffer);
-    }
-
-    mState.setReadFramebufferBinding(getFramebuffer(framebuffer));
+    Framebuffer *framebuffer = checkFramebufferAllocation(framebufferHandle);
+    mState.setReadFramebufferBinding(framebuffer);
 }
 
-void Context::bindDrawFramebuffer(GLuint framebuffer)
+void Context::bindDrawFramebuffer(GLuint framebufferHandle)
 {
-    if (!getFramebuffer(framebuffer))
-    {
-        mFramebufferMap[framebuffer] = new Framebuffer(mCaps, mRenderer, framebuffer);
-    }
-
-    mState.setDrawFramebufferBinding(getFramebuffer(framebuffer));
+    Framebuffer *framebuffer = checkFramebufferAllocation(framebufferHandle);
+    mState.setDrawFramebufferBinding(framebuffer);
 }
 
 void Context::bindRenderbuffer(GLuint renderbuffer)
@@ -887,16 +879,8 @@ Error Context::getQueryObjectui64v(GLuint id, GLenum pname, GLuint64 *params)
 
 Framebuffer *Context::getFramebuffer(unsigned int handle) const
 {
-    FramebufferMap::const_iterator framebuffer = mFramebufferMap.find(handle);
-
-    if (framebuffer == mFramebufferMap.end())
-    {
-        return NULL;
-    }
-    else
-    {
-        return framebuffer->second;
-    }
+    auto framebufferIt = mFramebufferMap.find(handle);
+    return ((framebufferIt == mFramebufferMap.end()) ? nullptr : framebufferIt->second);
 }
 
 FenceNV *Context::getFenceNV(unsigned int handle)
@@ -1685,6 +1669,7 @@ EGLenum Context::getRenderBuffer() const
 
 void Context::checkVertexArrayAllocation(GLuint vertexArray)
 {
+    // Only called after a prior call to Gen.
     if (!getVertexArray(vertexArray))
     {
         VertexArray *vertexArrayObject =
@@ -1695,6 +1680,7 @@ void Context::checkVertexArrayAllocation(GLuint vertexArray)
 
 void Context::checkTransformFeedbackAllocation(GLuint transformFeedback)
 {
+    // Only called after a prior call to Gen.
     if (!getTransformFeedback(transformFeedback))
     {
         TransformFeedback *transformFeedbackObject =
@@ -1702,6 +1688,27 @@ void Context::checkTransformFeedbackAllocation(GLuint transformFeedback)
         transformFeedbackObject->addRef();
         mTransformFeedbackMap[transformFeedback] = transformFeedbackObject;
     }
+}
+
+Framebuffer *Context::checkFramebufferAllocation(GLuint framebuffer)
+{
+    // Can be called from Bind without a prior call to Gen.
+    auto framebufferIt = mFramebufferMap.find(framebuffer);
+    bool neverCreated = framebufferIt == mFramebufferMap.end();
+    if (neverCreated || framebufferIt->second == nullptr)
+    {
+        Framebuffer *newFBO = new Framebuffer(mCaps, mRenderer, framebuffer);
+        if (neverCreated)
+        {
+            mFramebufferHandleAllocator.reserve(framebuffer);
+            mFramebufferMap[framebuffer] = newFBO;
+            return newFBO;
+        }
+
+        framebufferIt->second = newFBO;
+    }
+
+    return framebufferIt->second;
 }
 
 bool Context::isVertexArrayGenerated(GLuint vertexArray)
