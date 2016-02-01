@@ -409,6 +409,152 @@ TEST_P(ReadPixelsMultisampleTest, BasicClear)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+class ReadPixelsTextureTest : public ANGLETest
+{
+  public:
+    ReadPixelsTextureTest() : mFBO(0), mTexture(0)
+    {
+        setWindowWidth(32);
+        setWindowHeight(32);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+    }
+
+    void SetUp() override
+    {
+        ANGLETest::SetUp();
+
+        glGenTextures(1, &mTexture);
+        glGenFramebuffers(1, &mFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+    }
+
+    void TearDown() override
+    {
+        glDeleteFramebuffers(1, &mFBO);
+        glDeleteTextures(1, &mTexture);
+
+        ANGLETest::TearDown();
+    }
+
+    void testRead(GLenum textureTarget, GLint levels, GLint attachmentLevel, GLint attachmentLayer)
+    {
+        glBindTexture(textureTarget, mTexture);
+        glTexStorage3D(textureTarget, levels, GL_RGBA8, 4, 4, 4);
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture, attachmentLevel,
+                                  attachmentLayer);
+
+        initializeTextureData(textureTarget, levels);
+        verifyColor(attachmentLevel, attachmentLayer);
+    }
+
+    // Give each {level,layer} pair a (probably) unique color via random.
+    GLuint getColorValue(GLint level, GLint layer)
+    {
+        mRNG.reseed(level + layer * 32);
+        return mRNG.randomUInt();
+    }
+
+    void verifyColor(GLint level, GLint layer)
+    {
+        angle::GLColor colorValue(getColorValue(level, layer));
+        EXPECT_PIXEL_COLOR_EQ(0, 0, colorValue);
+    }
+
+    void initializeTextureData(GLenum textureTarget, GLint levels)
+    {
+        for (GLint level = 0; level < levels; ++level)
+        {
+            GLint mipSize = 4 >> level;
+            GLint layers  = (textureTarget == GL_TEXTURE_3D ? mipSize : 4);
+
+            size_t layerSize = mipSize * mipSize;
+            std::vector<GLuint> textureData(layers * layerSize);
+
+            for (GLint layer = 0; layer < layers; ++layer)
+            {
+                GLuint colorValue = getColorValue(level, layer);
+                size_t offset = (layer * layerSize);
+                std::fill(textureData.begin() + offset, textureData.begin() + offset + layerSize,
+                          colorValue);
+            }
+
+            glTexSubImage3D(textureTarget, level, 0, 0, 0, mipSize, mipSize, layers, GL_RGBA,
+                            GL_UNSIGNED_BYTE, textureData.data());
+        }
+    }
+
+    angle::RNG mRNG;
+    GLuint mFBO;
+    GLuint mTexture;
+};
+
+// Test 3D attachment readback.
+TEST_P(ReadPixelsTextureTest, BasicAttachment3D)
+{
+    testRead(GL_TEXTURE_3D, 1, 0, 0);
+}
+
+// Test 3D attachment readback, non-zero mip.
+TEST_P(ReadPixelsTextureTest, MipAttachment3D)
+{
+    testRead(GL_TEXTURE_3D, 2, 1, 0);
+}
+
+// Test 3D attachment readback, non-zero layer.
+TEST_P(ReadPixelsTextureTest, LayerAttachment3D)
+{
+    if (isD3D11())
+    {
+        // TODO(jmadill): Fix ReadPixels from non-zero layer attachments.
+        std::cout << "Test disabled on D3D11." << std::endl;
+        return;
+    }
+
+    testRead(GL_TEXTURE_3D, 1, 0, 1);
+}
+
+// Test 3D attachment readback, non-zero mip and layer.
+TEST_P(ReadPixelsTextureTest, MipLayerAttachment3D)
+{
+    if (isD3D11())
+    {
+        // TODO(jmadill): Fix ReadPixels from non-zero layer attachments.
+        std::cout << "Test disabled on D3D11." << std::endl;
+        return;
+    }
+
+    testRead(GL_TEXTURE_3D, 2, 1, 1);
+}
+
+// Test 2D array attachment readback.
+TEST_P(ReadPixelsTextureTest, BasicAttachment2DArray)
+{
+    testRead(GL_TEXTURE_2D_ARRAY, 1, 0, 0);
+}
+
+// Test 3D attachment readback, non-zero mip.
+TEST_P(ReadPixelsTextureTest, MipAttachment2DArray)
+{
+    testRead(GL_TEXTURE_2D_ARRAY, 2, 1, 0);
+}
+
+// Test 3D attachment readback, non-zero layer.
+TEST_P(ReadPixelsTextureTest, LayerAttachment2DArray)
+{
+    testRead(GL_TEXTURE_2D_ARRAY, 1, 0, 1);
+}
+
+// Test 3D attachment readback, non-zero mip and layer.
+TEST_P(ReadPixelsTextureTest, MipLayerAttachment2DArray)
+{
+    testRead(GL_TEXTURE_2D_ARRAY, 2, 1, 1);
+}
+
+// TODO(jmadill): Tests for PBOs with 3D and layer attachments.
+
 }  // anonymous namespace
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
@@ -416,3 +562,4 @@ ANGLE_INSTANTIATE_TEST(ReadPixelsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES()
 ANGLE_INSTANTIATE_TEST(ReadPixelsPBOTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(ReadPixelsPBODrawTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(ReadPixelsMultisampleTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(ReadPixelsTextureTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());

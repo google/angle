@@ -283,7 +283,7 @@ gl::Error Framebuffer11::readPixelsImpl(const gl::Rectangle &area,
     ASSERT(renderTargetResource);
 
     unsigned int subresourceIndex = renderTarget->getSubresourceIndex();
-    TextureHelper11 textureHelper(renderTargetResource);
+    TextureHelper11 textureHelper = TextureHelper11::MakeAndReference(renderTargetResource);
 
     gl::Buffer *packBuffer = pack.pixelBuffer.get();
     if (packBuffer != nullptr)

@@ -341,10 +341,13 @@ class TextureHelper11 : angle::NonCopyable
 {
   public:
     TextureHelper11();
-    explicit TextureHelper11(ID3D11Resource *resource);
     TextureHelper11(TextureHelper11 &&toCopy);
     ~TextureHelper11();
     TextureHelper11 &operator=(TextureHelper11 &&texture);
+
+    static TextureHelper11 MakeAndReference(ID3D11Resource *genericResource);
+    static TextureHelper11 MakeAndPossess2D(ID3D11Texture2D *texToOwn);
+    static TextureHelper11 MakeAndPossess3D(ID3D11Texture3D *texToOwn);
 
     GLenum getTextureType() const { return mTextureType; }
     gl::Extents getExtents() const { return mExtents; }
@@ -356,6 +359,7 @@ class TextureHelper11 : angle::NonCopyable
 
   private:
     void reset();
+    void initDesc();
 
     GLenum mTextureType;
     gl::Extents mExtents;
@@ -364,6 +368,11 @@ class TextureHelper11 : angle::NonCopyable
     ID3D11Texture2D *mTexture2D;
     ID3D11Texture3D *mTexture3D;
 };
+
+gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
+                                                        DXGI_FORMAT dxgiFormat,
+                                                        const gl::Extents &size,
+                                                        ID3D11Device *device);
 
 }  // namespace rx
 

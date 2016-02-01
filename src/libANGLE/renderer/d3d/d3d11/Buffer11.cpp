@@ -1393,7 +1393,7 @@ gl::Error Buffer11::PackStorage::flushQueuedPackCommand()
 
     if (mQueuedPackCommand)
     {
-        TextureHelper11 stagingHelper(mStagingTexture);
+        TextureHelper11 stagingHelper = TextureHelper11::MakeAndReference(mStagingTexture);
 
         gl::Error error =
             mRenderer->packPixels(stagingHelper, *mQueuedPackCommand, mMemoryBuffer.data());

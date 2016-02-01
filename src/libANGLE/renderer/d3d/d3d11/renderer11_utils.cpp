@@ -1500,21 +1500,53 @@ TextureHelper11::TextureHelper11()
 {
 }
 
-TextureHelper11::TextureHelper11(ID3D11Resource *resource)
-    : mTextureType(GL_NONE),
-      mFormat(DXGI_FORMAT_UNKNOWN),
-      mSampleCount(0),
-      mTexture2D(nullptr),
-      mTexture3D(nullptr)
+TextureHelper11::TextureHelper11(TextureHelper11 &&toCopy)
+    : mTextureType(toCopy.mTextureType),
+      mExtents(toCopy.mExtents),
+      mFormat(toCopy.mFormat),
+      mSampleCount(toCopy.mSampleCount),
+      mTexture2D(toCopy.mTexture2D),
+      mTexture3D(toCopy.mTexture3D)
 {
-    mTexture2D = d3d11::DynamicCastComObject<ID3D11Texture2D>(resource);
-    mTexture3D = d3d11::DynamicCastComObject<ID3D11Texture3D>(resource);
+    toCopy.reset();
+}
 
-    if (mTexture2D)
+// static
+TextureHelper11 TextureHelper11::MakeAndReference(ID3D11Resource *genericResource)
+{
+    TextureHelper11 newHelper;
+    newHelper.mTexture2D   = d3d11::DynamicCastComObject<ID3D11Texture2D>(genericResource);
+    newHelper.mTexture3D   = d3d11::DynamicCastComObject<ID3D11Texture3D>(genericResource);
+    newHelper.mTextureType = newHelper.mTexture2D ? GL_TEXTURE_2D : GL_TEXTURE_3D;
+    newHelper.initDesc();
+    return newHelper;
+}
+
+// static
+TextureHelper11 TextureHelper11::MakeAndPossess2D(ID3D11Texture2D *texToOwn)
+{
+    TextureHelper11 newHelper;
+    newHelper.mTexture2D   = texToOwn;
+    newHelper.mTextureType = GL_TEXTURE_2D;
+    newHelper.initDesc();
+    return newHelper;
+}
+
+// static
+TextureHelper11 TextureHelper11::MakeAndPossess3D(ID3D11Texture3D *texToOwn)
+{
+    TextureHelper11 newHelper;
+    newHelper.mTexture3D   = texToOwn;
+    newHelper.mTextureType = GL_TEXTURE_3D;
+    newHelper.initDesc();
+    return newHelper;
+}
+
+void TextureHelper11::initDesc()
+{
+    if (mTextureType == GL_TEXTURE_2D)
     {
         ASSERT(!mTexture3D);
-        mTextureType = GL_TEXTURE_2D;
-
         D3D11_TEXTURE2D_DESC desc2D;
         mTexture2D->GetDesc(&desc2D);
 
@@ -1526,9 +1558,7 @@ TextureHelper11::TextureHelper11(ID3D11Resource *resource)
     }
     else
     {
-        ASSERT(mTexture3D);
-        mTextureType = GL_TEXTURE_3D;
-
+        ASSERT(mTexture3D && mTextureType == GL_TEXTURE_3D);
         D3D11_TEXTURE3D_DESC desc3D;
         mTexture3D->GetDesc(&desc3D);
 
@@ -1538,17 +1568,6 @@ TextureHelper11::TextureHelper11(ID3D11Resource *resource)
         mFormat         = desc3D.Format;
         mSampleCount    = 1;
     }
-}
-
-TextureHelper11::TextureHelper11(TextureHelper11 &&toCopy)
-    : mTextureType(toCopy.mTextureType),
-      mExtents(toCopy.mExtents),
-      mFormat(toCopy.mFormat),
-      mSampleCount(toCopy.mSampleCount),
-      mTexture2D(toCopy.mTexture2D),
-      mTexture3D(toCopy.mTexture3D)
-{
-    toCopy.reset();
 }
 
 TextureHelper11::~TextureHelper11()
@@ -1586,6 +1605,60 @@ void TextureHelper11::reset()
     mSampleCount = 0;
     mTexture2D   = nullptr;
     mTexture3D   = nullptr;
+}
+
+gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
+                                                        DXGI_FORMAT dxgiFormat,
+                                                        const gl::Extents &size,
+                                                        ID3D11Device *device)
+{
+    if (textureType == GL_TEXTURE_2D)
+    {
+        D3D11_TEXTURE2D_DESC stagingDesc;
+        stagingDesc.Width              = size.width;
+        stagingDesc.Height             = size.height;
+        stagingDesc.MipLevels          = 1;
+        stagingDesc.ArraySize          = 1;
+        stagingDesc.Format             = dxgiFormat;
+        stagingDesc.SampleDesc.Count   = 1;
+        stagingDesc.SampleDesc.Quality = 0;
+        stagingDesc.Usage              = D3D11_USAGE_STAGING;
+        stagingDesc.BindFlags          = 0;
+        stagingDesc.CPUAccessFlags     = D3D11_CPU_ACCESS_READ;
+        stagingDesc.MiscFlags          = 0;
+
+        ID3D11Texture2D *stagingTex = nullptr;
+        HRESULT result = device->CreateTexture2D(&stagingDesc, nullptr, &stagingTex);
+        if (FAILED(result))
+        {
+            return gl::Error(GL_OUT_OF_MEMORY, "CreateStagingTextureFor failed, HRESULT: 0x%X.",
+                             result);
+        }
+
+        return TextureHelper11::MakeAndPossess2D(stagingTex);
+    }
+    ASSERT(textureType == GL_TEXTURE_3D);
+
+    D3D11_TEXTURE3D_DESC stagingDesc;
+    stagingDesc.Width          = size.width;
+    stagingDesc.Height         = size.height;
+    stagingDesc.Depth          = 1;
+    stagingDesc.MipLevels      = 1;
+    stagingDesc.Format         = dxgiFormat;
+    stagingDesc.Usage          = D3D11_USAGE_STAGING;
+    stagingDesc.BindFlags      = 0;
+    stagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+    stagingDesc.MiscFlags      = 0;
+
+    ID3D11Texture3D *stagingTex = nullptr;
+    HRESULT result = device->CreateTexture3D(&stagingDesc, nullptr, &stagingTex);
+    if (FAILED(result))
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "CreateStagingTextureFor failed, HRESULT: 0x%X.",
+                         result);
+    }
+
+    return TextureHelper11::MakeAndPossess3D(stagingTex);
 }
 
 }  // namespace rx

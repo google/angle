@@ -23,6 +23,11 @@ GLColor::GLColor(GLubyte r, GLubyte g, GLubyte b, GLubyte a) : R(r), G(g), B(b),
 {
 }
 
+GLColor::GLColor(GLuint colorValue) : R(0), G(0), B(0), A(0)
+{
+    memcpy(&R, &colorValue, sizeof(GLuint));
+}
+
 GLColor ReadColor(GLint x, GLint y)
 {
     GLColor actual;

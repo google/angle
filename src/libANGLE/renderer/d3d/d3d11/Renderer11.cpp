@@ -3634,35 +3634,22 @@ gl::Error Renderer11::readTextureData(const TextureHelper11 &textureHelper,
         return gl::Error(GL_NO_ERROR);
     }
 
-    D3D11_TEXTURE2D_DESC stagingDesc;
-    stagingDesc.Width = safeArea.width;
-    stagingDesc.Height = safeArea.height;
-    stagingDesc.MipLevels = 1;
-    stagingDesc.ArraySize = 1;
-    stagingDesc.Format             = textureHelper.getFormat();
-    stagingDesc.SampleDesc.Count = 1;
-    stagingDesc.SampleDesc.Quality = 0;
-    stagingDesc.Usage = D3D11_USAGE_STAGING;
-    stagingDesc.BindFlags = 0;
-    stagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-    stagingDesc.MiscFlags = 0;
-
-    ID3D11Texture2D *stagingTex = nullptr;
-    HRESULT result = mDevice->CreateTexture2D(&stagingDesc, nullptr, &stagingTex);
-    if (FAILED(result))
+    gl::Extents safeSize(safeArea.width, safeArea.height, 1);
+    auto errorOrResult = CreateStagingTexture(textureHelper.getTextureType(),
+                                              textureHelper.getFormat(), safeSize, mDevice);
+    if (errorOrResult.isError())
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal staging texture for ReadPixels, HRESULT: 0x%X.", result);
+        return errorOrResult.getError();
     }
 
-    ID3D11Texture2D *texture = textureHelper.getTexture2D();
-    if (!texture)
-    {
-        // TODO(jmadill): Implement for 3D Textures.
-        return gl::Error(GL_OUT_OF_MEMORY, "Renderer11::readTextureData called with 3D Texture.");
-    }
+    TextureHelper11 stagingHelper(errorOrResult.getResult());
+    TextureHelper11 resolvedTextureHelper;
 
-    ID3D11Texture2D *srcTex = nullptr;
-    if (textureHelper.getSampleCount() > 1)
+    // "srcTexture" usually points to the source texture.
+    // For 2D multisampled textures, it points to the multisampled resolve texture.
+    const TextureHelper11 *srcTexture = &textureHelper;
+
+    if (textureHelper.getTextureType() == GL_TEXTURE_2D && textureHelper.getSampleCount() > 1)
     {
         D3D11_TEXTURE2D_DESC resolveDesc;
         resolveDesc.Width              = static_cast<UINT>(texSize.width);
@@ -3677,21 +3664,22 @@ gl::Error Renderer11::readTextureData(const TextureHelper11 &textureHelper,
         resolveDesc.CPUAccessFlags = 0;
         resolveDesc.MiscFlags = 0;
 
-        result = mDevice->CreateTexture2D(&resolveDesc, nullptr, &srcTex);
+        ID3D11Texture2D *resolveTex2D = nullptr;
+        HRESULT result = mDevice->CreateTexture2D(&resolveDesc, nullptr, &resolveTex2D);
         if (FAILED(result))
         {
-            SafeRelease(stagingTex);
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal resolve texture for ReadPixels, HRESULT: 0x%X.", result);
+            return gl::Error(GL_OUT_OF_MEMORY,
+                             "Renderer11::readTextureData failed to create internal resolve "
+                             "texture for ReadPixels, HRESULT: 0x%X.",
+                             result);
         }
 
-        mDeviceContext->ResolveSubresource(srcTex, 0, texture, subResource,
-                                           textureHelper.getFormat());
+        mDeviceContext->ResolveSubresource(resolveTex2D, 0, textureHelper.getTexture2D(),
+                                           subResource, textureHelper.getFormat());
+        resolvedTextureHelper = TextureHelper11::MakeAndReference(resolveTex2D);
+
         subResource = 0;
-    }
-    else
-    {
-        srcTex = texture;
-        srcTex->AddRef();
+        srcTexture  = &resolvedTextureHelper;
     }
 
     D3D11_BOX srcBox;
@@ -3702,33 +3690,21 @@ gl::Error Renderer11::readTextureData(const TextureHelper11 &textureHelper,
     srcBox.front  = 0;
     srcBox.back   = 1;
 
-    mDeviceContext->CopySubresourceRegion(stagingTex, 0, 0, 0, 0, srcTex, subResource, &srcBox);
-
-    SafeRelease(srcTex);
+    mDeviceContext->CopySubresourceRegion(stagingHelper.getResource(), 0, 0, 0, 0,
+                                          srcTexture->getResource(), subResource, &srcBox);
 
     PackPixelsParams packParams(safeArea, format, type, outputPitch, pack, 0);
-    TextureHelper11 stagingHelper(stagingTex);
-    gl::Error error = packPixels(stagingHelper, packParams, pixels);
-
-    SafeRelease(stagingTex);
-
-    return error;
+    return packPixels(stagingHelper, packParams, pixels);
 }
 
 gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
                                  const PackPixelsParams &params,
                                  uint8_t *pixelsOut)
 {
-    ID3D11Texture2D *readTexture = textureHelper.getTexture2D();
-
-    if (readTexture == nullptr)
-    {
-        // TODO(jmadill): Implement packPixels for 3D textures.
-        return gl::Error(GL_OUT_OF_MEMORY, "Renderer11::packPixels called with 3D Texture.");
-    }
+    ID3D11Resource *readResource = textureHelper.getResource();
 
     D3D11_MAPPED_SUBRESOURCE mapping;
-    HRESULT hr = mDeviceContext->Map(readTexture, 0, D3D11_MAP_READ, 0, &mapping);
+    HRESULT hr = mDeviceContext->Map(readResource, 0, D3D11_MAP_READ, 0, &mapping);
     if (FAILED(hr))
     {
         ASSERT(hr == E_OUTOFMEMORY);
@@ -3806,7 +3782,7 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
         }
     }
 
-    mDeviceContext->Unmap(readTexture, 0);
+    mDeviceContext->Unmap(readResource, 0);
 
     return gl::Error(GL_NO_ERROR);
 }

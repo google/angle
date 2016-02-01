@@ -45,6 +45,7 @@ struct GLColor
 {
     GLColor();
     GLColor(GLubyte r, GLubyte g, GLubyte b, GLubyte a);
+    GLColor(GLuint colorValue);
 
     GLubyte R, G, B, A;
 };
@@ -65,6 +66,8 @@ GLColor ReadColor(GLint x, GLint y);
 
 #define EXPECT_PIXEL_EQ(x, y, r, g, b, a) \
     EXPECT_EQ(angle::MakeGLColor(r, g, b, a), angle::ReadColor(x, y))
+
+#define EXPECT_PIXEL_COLOR_EQ(x, y, angleColor) EXPECT_EQ(angleColor, angle::ReadColor(x, y))
 
 // TODO(jmadill): Figure out how we can use GLColor's nice printing with EXPECT_NEAR.
 #define EXPECT_PIXEL_NEAR(x, y, r, g, b, a, abs_error) \

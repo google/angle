@@ -48,7 +48,23 @@ class Error final
     mutable std::unique_ptr<std::string> mMessage;
 };
 
-}
+template <typename T>
+class ErrorOrResult
+{
+  public:
+    ErrorOrResult(const gl::Error &error) : mError(error) {}
+    ErrorOrResult(T &&result) : mError(GL_NO_ERROR), mResult(std::move(result)) {}
+
+    bool isError() const { return mError.isError(); }
+    const gl::Error &getError() const { return mError; }
+    T &&getResult() { return std::move(mResult); }
+
+  private:
+    Error mError;
+    T mResult;
+};
+
+}  // namespace gl
 
 namespace egl
 {
@@ -79,7 +95,7 @@ class Error final
     mutable std::unique_ptr<std::string> mMessage;
 };
 
-}
+}  // namespace egl
 
 #include "Error.inl"
 

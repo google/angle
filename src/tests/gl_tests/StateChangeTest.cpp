@@ -144,13 +144,6 @@ TEST_P(StateChangeTest, CopyTexSubImage2DSync)
 // Ensure that CopyTexSubImage3D syncs framebuffer changes.
 TEST_P(StateChangeTestES3, CopyTexSubImage3DSync)
 {
-    if (isD3D11())
-    {
-        // TODO(jmadill): Fix the bug in the D3D11 back-end.
-        std::cout << "Test diabled on D3D11." << std::endl;
-        return;
-    }
-
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 
     // Init first texture to red
