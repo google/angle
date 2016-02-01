@@ -250,7 +250,7 @@ if (build_angle_deqp_tests) {
     }
   }
 
-  target_names = [
+  api_names = [
     "gles2",
     "gles3",
     "egl",
@@ -272,13 +272,13 @@ if (build_angle_deqp_tests) {
             1,
             2,
           ]) {
-    target_name = target_names[index]
-    config_name = "angle_deqp_lib${target_name}_config"
+    api_name = api_names[index]
+    config_name = "angle_deqp_lib${api_name}_config"
     config(config_name) {
       defines = [ target_defines[index] ]
     }
 
-    shared_library_name = "angle_deqp_lib${target_name}"
+    shared_library_name = "angle_deqp_lib${api_name}"
     shared_library(shared_library_name) {
       deps = [
         ":angle_deqp_libtester",
@@ -295,7 +295,7 @@ if (build_angle_deqp_tests) {
       ]
     }
 
-    test_name = "angle_deqp_${target_name}_tests"
+    test_name = "angle_deqp_${api_name}_tests"
     test(test_name) {
       deps = [
         ":${shared_library_name}",
@@ -305,6 +305,10 @@ if (build_angle_deqp_tests) {
       # Must be included outside of the source set for the define
       sources = [
         "deqp_support/angle_deqp_gtest.cpp",
+      ]
+
+      data = [
+        "deqp_support/deqp_${api_name}_test_expectations.txt",
       ]
 
       if (is_linux && !is_component_build) {
