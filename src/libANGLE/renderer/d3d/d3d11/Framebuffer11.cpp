@@ -269,21 +269,8 @@ gl::Error Framebuffer11::readPixelsImpl(const gl::Rectangle &area,
                                         const gl::PixelPackState &pack,
                                         uint8_t *pixels) const
 {
-    const gl::FramebufferAttachment *colorbuffer = mData.getReadAttachment();
-    ASSERT(colorbuffer);
-
-    RenderTarget11 *renderTarget = nullptr;
-    gl::Error error = colorbuffer->getRenderTarget(&renderTarget);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    ID3D11Resource *renderTargetResource = renderTarget->getTexture();
-    ASSERT(renderTargetResource);
-
-    unsigned int subresourceIndex = renderTarget->getSubresourceIndex();
-    TextureHelper11 textureHelper = TextureHelper11::MakeAndReference(renderTargetResource);
+    const gl::FramebufferAttachment *readAttachment = mData.getReadAttachment();
+    ASSERT(readAttachment);
 
     gl::Buffer *packBuffer = pack.pixelBuffer.get();
     if (packBuffer != nullptr)
@@ -295,27 +282,28 @@ gl::Error Framebuffer11::readPixelsImpl(const gl::Rectangle &area,
                              "Unimplemented pixel store parameters in readPixelsImpl");
         }
 
+        RenderTarget11 *renderTarget = nullptr;
+        gl::Error error = readAttachment->getRenderTarget(&renderTarget);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        ID3D11Resource *renderTargetResource = renderTarget->getTexture();
+        ASSERT(renderTargetResource);
+
+        unsigned int subresourceIndex = renderTarget->getSubresourceIndex();
+        TextureHelper11 textureHelper = TextureHelper11::MakeAndReference(renderTargetResource);
+
         Buffer11 *packBufferStorage = GetImplAs<Buffer11>(packBuffer);
         PackPixelsParams packParams(area, format, type, static_cast<GLuint>(outputPitch), pack,
                                     reinterpret_cast<ptrdiff_t>(pixels));
 
-        error = packBufferStorage->packPixels(textureHelper, subresourceIndex, packParams);
-        if (error.isError())
-        {
-            return error;
-        }
-    }
-    else
-    {
-        error = mRenderer->readTextureData(textureHelper, subresourceIndex, area, format, type,
-                                           static_cast<GLuint>(outputPitch), pack, pixels);
-        if (error.isError())
-        {
-            return error;
-        }
+        return packBufferStorage->packPixels(textureHelper, subresourceIndex, packParams);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return mRenderer->readFromAttachment(*readAttachment, area, format, type,
+                                         static_cast<GLuint>(outputPitch), pack, pixels);
 }
 
 gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectangle &destArea, const gl::Rectangle *scissor,

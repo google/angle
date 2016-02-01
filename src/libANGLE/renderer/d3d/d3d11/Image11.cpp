@@ -338,21 +338,24 @@ gl::Error Image11::copyFromFramebuffer(const gl::Offset &destOffset,
     const gl::FramebufferAttachment *srcAttachment = sourceFBO->getReadColorbuffer();
     ASSERT(srcAttachment);
 
-    RenderTargetD3D *renderTarget = nullptr;
-    gl::Error error = srcAttachment->getRenderTarget(&renderTarget);
-    if (error.isError())
+    const auto &d3d11Format = d3d11::GetTextureFormatInfo(srcAttachment->getInternalFormat(),
+                                                          mRenderer->getRenderer11DeviceCaps());
+
+    if (d3d11Format.texFormat == mDXGIFormat)
     {
-        return error;
-    }
+        RenderTargetD3D *renderTarget = nullptr;
+        gl::Error error = srcAttachment->getRenderTarget(&renderTarget);
+        if (error.isError())
+        {
+            return error;
+        }
 
-    RenderTarget11 *rt11 = GetAs<RenderTarget11>(renderTarget);
-    ASSERT(rt11->getTexture());
+        RenderTarget11 *rt11 = GetAs<RenderTarget11>(renderTarget);
+        ASSERT(rt11->getTexture());
 
-    TextureHelper11 textureHelper  = TextureHelper11::MakeAndReference(rt11->getTexture());
-    unsigned int sourceSubResource = rt11->getSubresourceIndex();
+        TextureHelper11 textureHelper = TextureHelper11::MakeAndReference(rt11->getTexture());
+        unsigned int sourceSubResource = rt11->getSubresourceIndex();
 
-    if (textureHelper.getFormat() == mDXGIFormat)
-    {
         gl::Box sourceBox(sourceArea.x, sourceArea.y, 0, sourceArea.width, sourceArea.height, 1);
         return copyWithoutConversion(destOffset, sourceBox, textureHelper, sourceSubResource);
     }
@@ -360,7 +363,7 @@ gl::Error Image11::copyFromFramebuffer(const gl::Offset &destOffset,
     // This format requires conversion, so we must copy the texture to staging and manually convert
     // via readPixels
     D3D11_MAPPED_SUBRESOURCE mappedImage;
-    error = map(D3D11_MAP_WRITE, &mappedImage);
+    gl::Error error = map(D3D11_MAP_WRITE, &mappedImage);
     if (error.isError())
     {
         return error;
@@ -376,24 +379,14 @@ gl::Error Image11::copyFromFramebuffer(const gl::Offset &destOffset,
 
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
 
-    // Currently in ANGLE, the source data may only need to be converted if the source is the
-    // current framebuffer and OpenGL ES framebuffers must be 2D textures therefore we should not
-    // need to convert 3D textures between different formats.
-    ASSERT(textureHelper.getTextureType() == GL_TEXTURE_2D);
-    error = mRenderer->readTextureData(textureHelper, sourceSubResource, sourceArea,
-                                       formatInfo.format, formatInfo.type, mappedImage.RowPitch,
-                                       gl::PixelPackState(), dataOffset);
+    error = mRenderer->readFromAttachment(*srcAttachment, sourceArea, formatInfo.format,
+                                          formatInfo.type, mappedImage.RowPitch,
+                                          gl::PixelPackState(), dataOffset);
 
     unmap();
-
-    if (error.isError())
-    {
-        return error;
-    }
-
     mDirty = true;
 
-    return gl::Error(GL_NO_ERROR);
+    return error;
 }
 
 gl::Error Image11::copyWithoutConversion(const gl::Offset &destOffset,

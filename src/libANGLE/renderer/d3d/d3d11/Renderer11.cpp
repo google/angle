@@ -3602,27 +3602,41 @@ RenderbufferImpl *Renderer11::createRenderbuffer()
     return renderbuffer;
 }
 
-gl::Error Renderer11::readTextureData(const TextureHelper11 &textureHelper,
-                                      unsigned int subResource,
-                                      const gl::Rectangle &area,
-                                      GLenum format,
-                                      GLenum type,
-                                      GLuint outputPitch,
-                                      const gl::PixelPackState &pack,
-                                      uint8_t *pixels)
+gl::Error Renderer11::readFromAttachment(const gl::FramebufferAttachment &srcAttachment,
+                                         const gl::Rectangle &sourceArea,
+                                         GLenum format,
+                                         GLenum type,
+                                         GLuint outputPitch,
+                                         const gl::PixelPackState &pack,
+                                         uint8_t *pixelsOut)
 {
-    ASSERT(area.width >= 0);
-    ASSERT(area.height >= 0);
+    ASSERT(sourceArea.width >= 0);
+    ASSERT(sourceArea.height >= 0);
+
+    RenderTargetD3D *renderTarget = nullptr;
+    gl::Error error = srcAttachment.getRenderTarget(&renderTarget);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    RenderTarget11 *rt11 = GetAs<RenderTarget11>(renderTarget);
+    ASSERT(rt11->getTexture());
+
+    TextureHelper11 textureHelper = TextureHelper11::MakeAndReference(rt11->getTexture());
+    unsigned int sourceSubResource = rt11->getSubresourceIndex();
 
     const gl::Extents &texSize = textureHelper.getExtents();
 
     // Clamp read region to the defined texture boundaries, preventing out of bounds reads
     // and reads of uninitialized data.
     gl::Rectangle safeArea;
-    safeArea.x      = gl::clamp(area.x, 0, texSize.width);
-    safeArea.y      = gl::clamp(area.y, 0, texSize.height);
-    safeArea.width  = gl::clamp(area.width + std::min(area.x, 0), 0, texSize.width - safeArea.x);
-    safeArea.height = gl::clamp(area.height + std::min(area.y, 0), 0, texSize.height - safeArea.y);
+    safeArea.x = gl::clamp(sourceArea.x, 0, texSize.width);
+    safeArea.y = gl::clamp(sourceArea.y, 0, texSize.height);
+    safeArea.width =
+        gl::clamp(sourceArea.width + std::min(sourceArea.x, 0), 0, texSize.width - safeArea.x);
+    safeArea.height =
+        gl::clamp(sourceArea.height + std::min(sourceArea.y, 0), 0, texSize.height - safeArea.y);
 
     ASSERT(safeArea.x >= 0 && safeArea.y >= 0);
     ASSERT(safeArea.x + safeArea.width <= texSize.width);
@@ -3675,11 +3689,11 @@ gl::Error Renderer11::readTextureData(const TextureHelper11 &textureHelper,
         }
 
         mDeviceContext->ResolveSubresource(resolveTex2D, 0, textureHelper.getTexture2D(),
-                                           subResource, textureHelper.getFormat());
+                                           sourceSubResource, textureHelper.getFormat());
         resolvedTextureHelper = TextureHelper11::MakeAndReference(resolveTex2D);
 
-        subResource = 0;
-        srcTexture  = &resolvedTextureHelper;
+        sourceSubResource = 0;
+        srcTexture        = &resolvedTextureHelper;
     }
 
     D3D11_BOX srcBox;
@@ -3687,14 +3701,20 @@ gl::Error Renderer11::readTextureData(const TextureHelper11 &textureHelper,
     srcBox.right  = static_cast<UINT>(safeArea.x + safeArea.width);
     srcBox.top    = static_cast<UINT>(safeArea.y);
     srcBox.bottom = static_cast<UINT>(safeArea.y + safeArea.height);
-    srcBox.front  = 0;
-    srcBox.back   = 1;
+
+    // Select the correct layer from a 3D attachment
+    srcBox.front = 0;
+    if (textureHelper.getTextureType() == GL_TEXTURE_3D)
+    {
+        srcBox.front = static_cast<UINT>(srcAttachment.layer());
+    }
+    srcBox.back = srcBox.front + 1;
 
     mDeviceContext->CopySubresourceRegion(stagingHelper.getResource(), 0, 0, 0, 0,
-                                          srcTexture->getResource(), subResource, &srcBox);
+                                          srcTexture->getResource(), sourceSubResource, &srcBox);
 
     PackPixelsParams packParams(safeArea, format, type, outputPitch, pack, 0);
-    return packPixels(stagingHelper, packParams, pixels);
+    return packPixels(stagingHelper, packParams, pixelsOut);
 }
 
 gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
