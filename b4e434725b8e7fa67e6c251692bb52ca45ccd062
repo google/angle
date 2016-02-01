@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "91910c10_df877bcc",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-01T16:51:30Z",
+      "side": 1,
+      "message": "nit: you can update or remove this comment",
+      "range": {
+        "startLine": 626,
+        "startChar": 8,
+        "endLine": 626,
+        "endChar": 95
+      },
+      "revId": "b4e434725b8e7fa67e6c251692bb52ca45ccd062",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31a22064_7f2aebbc",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-01T16:51:30Z",
+      "side": 1,
+      "message": "nit: I would probably make this a new ES3-only test case if it can\u0027t run in ES2",
+      "range": {
+        "startLine": 313,
+        "startChar": 8,
+        "endLine": 313,
+        "endChar": 24
+      },
+      "revId": "b4e434725b8e7fa67e6c251692bb52ca45ccd062",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
