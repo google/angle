@@ -69,6 +69,30 @@
       "revId": "b4e434725b8e7fa67e6c251692bb52ca45ccd062",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f18408ce_c2d802a1",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-01T18:46:12Z",
+      "side": 1,
+      "message": "Yeah, you could make a new test case like this:\n\n class TimerQueriesTestES3 : public TimerQueriesTest\n\nWe do this in a few places.",
+      "parentUuid": "314dc087_275d74fc",
+      "range": {
+        "startLine": 313,
+        "startChar": 8,
+        "endLine": 313,
+        "endChar": 24
+      },
+      "revId": "b4e434725b8e7fa67e6c251692bb52ca45ccd062",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
