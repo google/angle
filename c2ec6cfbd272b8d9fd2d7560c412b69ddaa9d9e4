@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "71af3862_498e651e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-02T18:25:29Z",
+      "side": 1,
+      "message": "True. I\u0027m going to land this CL today, you can either rebase on top of it and the prior CL (visible in the related CLs) or wait until it lands.",
+      "parentUuid": "b121b0e4_4801df98",
+      "range": {
+        "startLine": 481,
+        "startChar": 65,
+        "endLine": 481,
+        "endChar": 70
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "144d0a10_3eb7050d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 10
