@@ -526,7 +526,7 @@ gl::Error Image11::createStagingTexture()
         if (d3d11::GetTextureFormatInfo(mInternalFormat, mRenderer->getRenderer11DeviceCaps()).dataInitializerFunction != NULL)
         {
             std::vector<D3D11_SUBRESOURCE_DATA> initialData;
-            std::vector< std::vector<BYTE> > textureData;
+            std::vector<std::vector<BYTE>> textureData;
             d3d11::GenerateInitialTextureData(mInternalFormat, mRenderer->getRenderer11DeviceCaps(), width, height, mDepth,
                                               lodOffset + 1, &initialData, &textureData);
 
@@ -566,7 +566,7 @@ gl::Error Image11::createStagingTexture()
         if (d3d11::GetTextureFormatInfo(mInternalFormat, mRenderer->getRenderer11DeviceCaps()).dataInitializerFunction != NULL)
         {
             std::vector<D3D11_SUBRESOURCE_DATA> initialData;
-            std::vector< std::vector<BYTE> > textureData;
+            std::vector<std::vector<BYTE>> textureData;
             d3d11::GenerateInitialTextureData(mInternalFormat, mRenderer->getRenderer11DeviceCaps(), width, height, 1,
                                               lodOffset + 1, &initialData, &textureData);
 

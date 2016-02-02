@@ -31,7 +31,7 @@ class Context;
 struct Caps;
 struct Data;
 
-typedef std::map< GLenum, BindingPointer<Texture> > TextureMap;
+typedef std::map<GLenum, BindingPointer<Texture>> TextureMap;
 
 class State : angle::NonCopyable
 {
@@ -415,18 +415,18 @@ class State : angle::NonCopyable
     // Texture and sampler bindings
     size_t mActiveSampler;   // Active texture unit selector - GL_TEXTURE0
 
-    typedef std::vector< BindingPointer<Texture> > TextureBindingVector;
+    typedef std::vector<BindingPointer<Texture>> TextureBindingVector;
     typedef std::map<GLenum, TextureBindingVector> TextureBindingMap;
     TextureBindingMap mSamplerTextures;
 
-    typedef std::vector< BindingPointer<Sampler> > SamplerBindingVector;
+    typedef std::vector<BindingPointer<Sampler>> SamplerBindingVector;
     SamplerBindingVector mSamplers;
 
-    typedef std::map< GLenum, BindingPointer<Query> > ActiveQueryMap;
+    typedef std::map<GLenum, BindingPointer<Query>> ActiveQueryMap;
     ActiveQueryMap mActiveQueries;
 
     BindingPointer<Buffer> mGenericUniformBuffer;
-    typedef std::vector< OffsetBindingPointer<Buffer> > BufferVector;
+    typedef std::vector<OffsetBindingPointer<Buffer>> BufferVector;
     BufferVector mUniformBuffers;
 
     BindingPointer<TransformFeedback> mTransformFeedback;
