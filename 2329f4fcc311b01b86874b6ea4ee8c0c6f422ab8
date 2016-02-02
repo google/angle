@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5422228b_f47c86fd",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-02T01:37:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b167f00d_381249a5",
+      "range": {
+        "startLine": 493,
+        "startChar": 22,
+        "endLine": 493,
+        "endChar": 42
+      },
+      "revId": "2329f4fcc311b01b86874b6ea4ee8c0c6f422ab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91910c10_bf9cf72b",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2016-02-01T14:50:02Z",
       "side": 1,
       "message": "this magic constant here is a bit irksome. I wonder if there\u0027s a danger in letting these reserved buffers be assigned in random places and if this should be tracked centrally somewhere.",
+      "range": {
+        "startLine": 543,
+        "startChar": 44,
+        "endLine": 543,
+        "endChar": 45
+      },
+      "revId": "2329f4fcc311b01b86874b6ea4ee8c0c6f422ab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d468d2a0_db609ee5",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-02T01:37:22Z",
+      "side": 1,
+      "message": "It certainly hurts code maintainability. I\u0027ve enumerated the reserved indices in renderer11_utils.h to make this a bit better.",
+      "parentUuid": "91910c10_bf9cf72b",
       "range": {
         "startLine": 543,
         "startChar": 44,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d468d2a0_5b1f2e4a",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-02T01:37:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d18704d0_c4ea5095",
+      "range": {
+        "startLine": 135,
+        "startChar": 13,
+        "endLine": 135,
+        "endChar": 33
+      },
+      "revId": "2329f4fcc311b01b86874b6ea4ee8c0c6f422ab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f18408ce_e2fbc628",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
         "patchSetId": 10
@@ -82,6 +154,30 @@
       "writtenOn": "2016-02-01T14:50:02Z",
       "side": 1,
       "message": "you can use a std::vector here.",
+      "range": {
+        "startLine": 150,
+        "startChar": 4,
+        "endLine": 150,
+        "endChar": 22
+      },
+      "revId": "2329f4fcc311b01b86874b6ea4ee8c0c6f422ab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9489faaa_34228691",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-02T01:37:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f18408ce_e2fbc628",
       "range": {
         "startLine": 150,
         "startChar": 4,
