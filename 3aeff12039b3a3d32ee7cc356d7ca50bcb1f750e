@@ -16,6 +16,24 @@
       "revId": "3aeff12039b3a3d32ee7cc356d7ca50bcb1f750e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "314dc087_2a0bfb03",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1517,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-02T13:23:43Z",
+      "side": 1,
+      "message": "DynamicCastComObject increases the refcount.",
+      "parentUuid": "31a22064_bf05d39b",
+      "revId": "3aeff12039b3a3d32ee7cc356d7ca50bcb1f750e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
