@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "b121b0e4_4801df98",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-02-02T18:21:22Z",
+      "side": 1,
+      "message": "That patch doesn\u0027t rebase cleanly on master.",
+      "parentUuid": "31ea20c5_1c1375ac",
+      "range": {
+        "startLine": 481,
+        "startChar": 65,
+        "endLine": 481,
+        "endChar": 70
+      },
+      "revId": "c2ec6cfbd272b8d9fd2d7560c412b69ddaa9d9e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "144d0a10_3eb7050d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 10
