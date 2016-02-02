@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31ea20c5_fce409fc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-02T17:18:29Z",
+      "side": 1,
+      "message": "nit: also if we\u0027re using the fast path. could also place this comment inside the if (plus a rewrapping)",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 66
+      },
+      "revId": "e8d1c8746ec6f2a4c35bfd6cd0c98c58fce32b4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91b2ecf4_b7d1c827",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-02T17:18:29Z",
+      "side": 1,
+      "message": "using fast present",
+      "range": {
+        "startLine": 330,
+        "startChar": 49,
+        "endLine": 330,
+        "endChar": 57
+      },
+      "revId": "e8d1c8746ec6f2a4c35bfd6cd0c98c58fce32b4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51edd4c8_ad069d67",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 3769,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-02T17:18:29Z",
+      "side": 1,
+      "message": "nit: reformat this comment",
+      "range": {
+        "startLine": 3765,
+        "startChar": 8,
+        "endLine": 3769,
+        "endChar": 99
+      },
+      "revId": "e8d1c8746ec6f2a4c35bfd6cd0c98c58fce32b4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
