@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31d060e4_6fe32d59",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-02T21:14:10Z",
+      "side": 1,
+      "message": "Why not use the typedef? (ditto in other places in this file)",
+      "revId": "886d01439ef67e57ca720b3b13e5018bb25e0db4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71af3862_a934b9b0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-02T21:14:10Z",
+      "side": 1,
+      "message": "Don\u0027t we want to swap the semantic indices too?",
+      "revId": "886d01439ef67e57ca720b3b13e5018bb25e0db4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1b530ae_cbd48919",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-02T21:14:10Z",
+      "side": 1,
+      "message": "Nice that we can use std::array now. Also it seems that we are allowed to use using instead of typedef, which would be much better.",
+      "revId": "886d01439ef67e57ca720b3b13e5018bb25e0db4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
