@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "91b82ca8_5beaa3cd",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-02-03T04:34:07Z",
+      "side": 1,
+      "message": "I\u0027m not sure why you\u0027d ever want to implement map in terms of maprange (as MapBuffer does) because the underlying gl would never have maprange without also having map ?",
+      "parentUuid": "f4987691_c2a062c4",
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "146c2a47_264cb87b",
         "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
         "patchSetId": 5
@@ -84,6 +102,63 @@
       "writtenOn": "2016-01-28T17:58:32Z",
       "side": 1,
       "message": "MapBufferRange",
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51c15418_f6929619",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-02-03T04:34:07Z",
+      "side": 1,
+      "message": "these are only relevant when mShadowBufferData is true",
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51c15418_969f9220",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-02-03T04:34:07Z",
+      "side": 1,
+      "message": "check mIsMapped ?   In the shadowing case, someone could call unmap before map then we be passing random numbers to bufferSubData ?",
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1be2490_af9cbd2b",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-02-03T04:34:07Z",
+      "side": 1,
+      "message": "*result is not set in this case",
+      "range": {
+        "startLine": 156,
+        "startChar": 65,
+        "endLine": 156,
+        "endChar": 67
+      },
       "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
