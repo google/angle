@@ -1,0 +1,280 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d1be2490_2f1a0dfc",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T15:56:33Z",
+      "side": 1,
+      "message": "Ack, I didn\u0027t notice this but there are slight mistakes in the naming here.  It\u0027s hard to notice the ordering problems.\n\nThe extension should be named EGL_ANGLE_experimental_present_path, the enums are correct though.  You can update the extension spec in this CL.",
+      "range": {
+        "startLine": 525,
+        "startChar": 8,
+        "endLine": 525,
+        "endChar": 43
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1be2490_cf0ed1c0",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T15:56:33Z",
+      "side": 1,
+      "message": "nit: experimentalPresentPath",
+      "range": {
+        "startLine": 530,
+        "startChar": 9,
+        "endLine": 530,
+        "endChar": 25
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71af3862_ac4da74a",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T15:56:33Z",
+      "side": 1,
+      "message": "nit: 1.0f? It might have some integer conversion happening otherwise.",
+      "range": {
+        "startLine": 670,
+        "startChar": 52,
+        "endLine": 670,
+        "endChar": 53
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51c15418_01e11abb",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T15:56:33Z",
+      "side": 1,
+      "message": "nit: others use the f suffix but not these.",
+      "range": {
+        "startLine": 969,
+        "startChar": 79,
+        "endLine": 969,
+        "endChar": 82
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11a43c86_b7a65029",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1504,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T15:56:33Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this use the UsePresentPathFast function?",
+      "range": {
+        "startLine": 1504,
+        "startChar": 38,
+        "endLine": 1504,
+        "endChar": 97
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1be2490_0fce29b3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2983,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T15:56:33Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this use the UsePresentPathFast function?",
+      "range": {
+        "startLine": 2983,
+        "startChar": 30,
+        "endLine": 2983,
+        "endChar": 80
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71af3862_6c91efc8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T15:56:33Z",
+      "side": 1,
+      "message": "nit: remember to update this comment.",
+      "range": {
+        "startLine": 119,
+        "startChar": 7,
+        "endLine": 119,
+        "endChar": 42
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91b82ca8_96ceb285",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T15:56:33Z",
+      "side": 1,
+      "message": "nit: remember to update this string.",
+      "range": {
+        "startLine": 237,
+        "startChar": 39,
+        "endLine": 237,
+        "endChar": 74
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11a43c86_176f2494",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T15:56:33Z",
+      "side": 1,
+      "message": "nit: remember to update this string.",
+      "range": {
+        "startLine": 312,
+        "startChar": 34,
+        "endLine": 312,
+        "endChar": 69
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1a450bb_108e041d",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T15:56:33Z",
+      "side": 1,
+      "message": "You should assert that the extension is available before using it.",
+      "range": {
+        "startLine": 52,
+        "startChar": 11,
+        "endLine": 53,
+        "endChar": 74
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1b530ae_6e16cb2c",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T15:56:33Z",
+      "side": 1,
+      "message": "nit: whitespace. May need to format again.",
+      "range": {
+        "startLine": 225,
+        "startChar": 34,
+        "endLine": 225,
+        "endChar": 35
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1be2490_efd4f53f",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T15:56:33Z",
+      "side": 1,
+      "message": "This should check for the extension first.",
+      "range": {
+        "startLine": 169,
+        "startChar": 4,
+        "endLine": 173,
+        "endChar": 5
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
