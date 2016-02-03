@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9124acf4_3084c933",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31d060e4_55ea7ecd",
+      "range": {
+        "startLine": 236,
+        "startChar": 98,
+        "endLine": 236,
+        "endChar": 110
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "11a43c86_973794b5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2016-02-03T15:34:18Z",
       "side": 1,
       "message": "make this into a local static helper function taking a bool, and use it instead of the hard-coded 1 below, just for readability",
+      "range": {
+        "startLine": 247,
+        "startChar": 4,
+        "endLine": 247,
+        "endChar": 26
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b121b0e4_3cde6993",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "11a43c86_973794b5",
       "range": {
         "startLine": 247,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "31c3005d_88f82768",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "I have to call this here to ensure that data step rate gets reset and a new the input layout is created with numIndicesPerInstnace.  I really only need to call it one additional time to reconfigure the inputlayout to match what is expected for looped instanced rendering calls. (emulatedInstancedId \u003d\u003d 1) is that condition.  The rest of the calls (instancedId 2-n) do not need a new layout.",
+      "parentUuid": "b1a450bb_b04c58c8",
+      "range": {
+        "startLine": 421,
+        "startChar": 8,
+        "endLine": 421,
+        "endChar": 25
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "31a94060_ea35c316",
         "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
         "patchSetId": 9
@@ -82,6 +154,30 @@
       "writtenOn": "2016-02-03T15:34:18Z",
       "side": 1,
       "message": "hard coded 1",
+      "range": {
+        "startLine": 428,
+        "startChar": 73,
+        "endLine": 428,
+        "endChar": 74
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5116b490_bfba4724",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31a94060_ea35c316",
       "range": {
         "startLine": 428,
         "startChar": 73,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "5116b490_9fb78b3e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1be2490_0f4389f4",
+      "range": {
+        "startLine": 431,
+        "startChar": 29,
+        "endLine": 431,
+        "endChar": 30
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91b82ca8_9b6c9b4b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
         "patchSetId": 9
@@ -128,6 +248,30 @@
       "writtenOn": "2016-02-03T15:34:18Z",
       "side": 1,
       "message": "hey Cooper, as I mentioned in our chat yesterday, this would be require much less caching if you simply reset the full buffer set. In this case it would be\n\n IASetVertexBuffers(0, gl::MAX_VERTEX_ATTRBIS, mCurrentBuffers, mCurrentVertexStrides, mCurrentVertexOffsets)\n\nThis would allow you to not cache mStartSlot and mNumBuffers.",
+      "range": {
+        "startLine": 440,
+        "startChar": 0,
+        "endLine": 442,
+        "endChar": 75
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11f7dc9a_a52a324d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "I can\u0027t do that.  The crash on some mobile GPUs was due to specifying a non-exact buffer count.  The driver would attempt to peek at the other buffers because the count indicated that all were useful.  I have to cache these values to ensure I only send the correct size down.",
+      "parentUuid": "91b82ca8_9b6c9b4b",
       "range": {
         "startLine": 440,
         "startChar": 0,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "71c9f878_ca6f733e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "I can\u0027t.  I need the data step rate to be recalculated and set in the input layout.  I mentioned below that numIndicesPerInstance is actually the count parameter passed through from the draw call.  Emulation supports instanced and non instanced rendering of points.  This value is never 0.  EmulationInstanceId of 1 tells me that I have entered the for-loop rendering for instanced rendered emulated points.",
+      "parentUuid": "f1308814_48a2736e",
+      "range": {
+        "startLine": 453,
+        "startChar": 12,
+        "endLine": 453,
+        "endChar": 30
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f1308814_0807cb34",
         "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
         "patchSetId": 9
@@ -174,6 +342,30 @@
       "writtenOn": "2016-02-03T15:34:18Z",
       "side": 1,
       "message": "can\u0027t this check be numIndicesPerInstance !\u003d 0, allow you to skip caching the bool?",
+      "range": {
+        "startLine": 612,
+        "startChar": 24,
+        "endLine": 612,
+        "endChar": 49
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5116b490_1f255b54",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 612,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "No.  The value of numIndicesPerInstance is the count parameter specified in the draw call.  Points emulation requires different Step rates depending if it is a instanced rendered call or non instanced rendered call.  I pass through count which becomes the new step rate in instanced rendering calls.  I needed an indicator to ensure that the data step rate is 1 for non instanced rendering and the \u0027count\u0027 for instanced rendering.",
+      "parentUuid": "f1308814_0807cb34",
       "range": {
         "startLine": 612,
         "startChar": 24,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "31c3005d_68966bc3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1713,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Not that I can see.  I would need translatedIndexData for drawElements calls and that isn\u0027t provided.  Are you suggesting that I attempt to plumb that value all the way through?",
+      "parentUuid": "b1b530ae_ee1f1b48",
+      "range": {
+        "startLine": 1713,
+        "startChar": 63,
+        "endLine": 1713,
+        "endChar": 68
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91b82ca8_16a2c2bb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 9
@@ -220,6 +436,30 @@
       "writtenOn": "2016-02-03T15:34:18Z",
       "side": 1,
       "message": "This is a bit confusing - here the first draw call will be using \u0027count\u0027 instead of \u0027elementsToRender\u0027 for \u0027numElementsPerInstance\u0027 in applyVertexBuffers. Is that correct?",
+      "range": {
+        "startLine": 1982,
+        "startChar": 28,
+        "endLine": 1982,
+        "endChar": 48
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31c3005d_084ed745",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1982,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "All of the draw calls in this emulated path use elementsToRender.  Count would not be the correct param to use here.  For a pure instanced call (no emulation), count would work.  I debugged through the calls into applyVertexBuffers and discovered that count is not used directly.  drawElements calls always pull out the indexInfo.indexRange.vertexCount for use in applyVertexBuffers.  This code path matches that code path. Look at \u0027RendererD3D::genericDrawElements( )\u0027 and you will see what I am talking about.",
+      "parentUuid": "91b82ca8_16a2c2bb",
       "range": {
         "startLine": 1982,
         "startChar": 28,
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "3115c084_78a0e9c2",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31a94060_aa2fcbc4",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 11
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "51c15418_417642de",
         "filename": "src/tests/gl_tests/InstancingTest.cpp",
         "patchSetId": 9
@@ -266,6 +530,30 @@
       "writtenOn": "2016-02-03T15:34:18Z",
       "side": 1,
       "message": "the !\u003d 0 check is redundant, you can just use glDeleteProgram(0), which will no op.",
+      "range": {
+        "startLine": 26,
+        "startChar": 8,
+        "endLine": 26,
+        "endChar": 26
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5116b490_7a71fde3",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51c15418_417642de",
       "range": {
         "startLine": 26,
         "startChar": 8,
@@ -301,6 +589,30 @@
     },
     {
       "key": {
+        "uuid": "5116b490_5a76c1dd",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31d060e4_95e786ff",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 11
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "31d060e4_b5e402fb",
         "filename": "src/tests/gl_tests/InstancingTest.cpp",
         "patchSetId": 9
@@ -312,6 +624,30 @@
       "writtenOn": "2016-02-03T15:34:18Z",
       "side": 1,
       "message": "return void",
+      "range": {
+        "startLine": 107,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 8
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f127a8f2_39c15b5d",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31d060e4_b5e402fb",
       "range": {
         "startLine": 107,
         "startChar": 4,
@@ -347,6 +683,30 @@
     },
     {
       "key": {
+        "uuid": "11f7dc9a_a01fc048",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b1a450bb_102524ed",
+      "range": {
+        "startLine": 119,
+        "startChar": 8,
+        "endLine": 122,
+        "endChar": 9
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "11a43c86_f75368ec",
         "filename": "src/tests/gl_tests/InstancingTest.cpp",
         "patchSetId": 9
@@ -358,6 +718,30 @@
       "writtenOn": "2016-02-03T15:34:18Z",
       "side": 1,
       "message": "remove this",
+      "range": {
+        "startLine": 133,
+        "startChar": 7,
+        "endLine": 133,
+        "endChar": 20
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3115c084_b889c151",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "11a43c86_f75368ec",
       "range": {
         "startLine": 133,
         "startChar": 7,
@@ -393,6 +777,30 @@
     },
     {
       "key": {
+        "uuid": "31fce07c_0606aeff",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f1308814_88ac7b5f",
+      "range": {
+        "startLine": 136,
+        "startChar": 4,
+        "endLine": 136,
+        "endChar": 8
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "31a94060_4a8e571e",
         "filename": "src/tests/gl_tests/InstancingTest.cpp",
         "patchSetId": 9
@@ -416,6 +824,30 @@
     },
     {
       "key": {
+        "uuid": "f127a8f2_19c61775",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31a94060_4a8e571e",
+      "range": {
+        "startLine": 363,
+        "startChar": 4,
+        "endLine": 363,
+        "endChar": 28
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71af3862_0c5ddbfb",
         "filename": "src/tests/gl_tests/InstancingTest.cpp",
         "patchSetId": 9
@@ -427,6 +859,30 @@
       "writtenOn": "2016-02-03T15:34:18Z",
       "side": 1,
       "message": "can we remove the parameter for program?",
+      "range": {
+        "startLine": 369,
+        "startChar": 22,
+        "endLine": 369,
+        "endChar": 30
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31fce07c_6610522c",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71af3862_0c5ddbfb",
       "range": {
         "startLine": 369,
         "startChar": 22,
@@ -485,6 +941,30 @@
     },
     {
       "key": {
+        "uuid": "5116b490_5adfe1fb",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b1a450bb_302a28bc",
+      "range": {
+        "startLine": 384,
+        "startChar": 4,
+        "endLine": 384,
+        "endChar": 13
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "31d060e4_55135eab",
         "filename": "src/tests/gl_tests/InstancingTest.cpp",
         "patchSetId": 9
@@ -496,6 +976,30 @@
       "writtenOn": "2016-02-03T15:34:18Z",
       "side": 1,
       "message": "make this mVertexBuffer as part of the the InstancingPointsTest fixture, like mProgram",
+      "range": {
+        "startLine": 386,
+        "startChar": 11,
+        "endLine": 386,
+        "endChar": 23
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31fce07c_c62dc669",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-03T18:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31d060e4_55135eab",
       "range": {
         "startLine": 386,
         "startChar": 11,
