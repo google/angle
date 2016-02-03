@@ -221,6 +221,9 @@ D3D11_QUERY ConvertQueryType(GLenum queryType)
       case GL_ANY_SAMPLES_PASSED_EXT:
       case GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT:   return D3D11_QUERY_OCCLUSION;
       case GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN: return D3D11_QUERY_SO_STATISTICS;
+      case GL_TIME_ELAPSED_EXT:
+          // Two internal queries are also created for begin/end timestamps
+          return D3D11_QUERY_TIMESTAMP_DISJOINT;
       default: UNREACHABLE();                        return D3D11_QUERY_EVENT;
     }
 }
@@ -1198,7 +1201,10 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     extensions->occlusionQueryBoolean = GetOcclusionQuerySupport(featureLevel);
     extensions->fence = GetEventQuerySupport(featureLevel);
     extensions->timerQuery = false; // Unimplemented
-    extensions->disjointTimerQuery       = false;
+    extensions->disjointTimerQuery          = true;
+    extensions->queryCounterBitsTimeElapsed = 64;
+    extensions->queryCounterBitsTimestamp =
+        0;  // Timestamps cannot be supported due to D3D11 limitations
     extensions->robustness = true;
     extensions->blendMinMax = true;
     extensions->framebufferBlit = GetFramebufferBlitSupport(featureLevel);

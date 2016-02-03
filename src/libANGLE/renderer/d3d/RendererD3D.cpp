@@ -45,7 +45,8 @@ RendererD3D::RendererD3D(egl::Display *display)
       mAnnotator(nullptr),
       mPresentPathFastEnabled(false),
       mScratchMemoryBufferResetCounter(0),
-      mWorkaroundsInitialized(false)
+      mWorkaroundsInitialized(false),
+      mDisjoint(false)
 {
 }
 
@@ -666,14 +667,24 @@ void RendererD3D::popGroupMarker()
     getAnnotator()->endEvent();
 }
 
+void RendererD3D::setGPUDisjoint()
+{
+    mDisjoint = true;
+}
+
 GLint RendererD3D::getGPUDisjoint()
 {
-    return 0;
+    bool disjoint = mDisjoint;
+
+    // Disjoint flag is cleared when read
+    mDisjoint = false;
+
+    return disjoint;
 }
 
 GLint64 RendererD3D::getTimestamp()
 {
-    UNIMPLEMENTED();
+    // D3D has no way to get an actual timestamp reliably so 0 is returned
     return 0;
 }
 

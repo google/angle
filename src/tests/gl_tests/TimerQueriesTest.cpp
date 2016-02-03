@@ -289,7 +289,6 @@ TEST_P(TimerQueriesTest, Timestamp)
 
 class TimerQueriesTestES3 : public TimerQueriesTest
 {
-
 };
 
 // Tests getting timestamps via glGetInteger64v
@@ -336,6 +335,4 @@ ANGLE_INSTANTIATE_TEST(TimerQueriesTest,
                        ES2_OPENGL(),
                        ES3_OPENGL());
 
-ANGLE_INSTANTIATE_TEST(TimerQueriesTestES3,
-                       ES3_D3D11(),
-                       ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(TimerQueriesTestES3, ES3_D3D11(), ES3_OPENGL());

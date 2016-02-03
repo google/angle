@@ -243,6 +243,8 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     void pushGroupMarker(GLsizei length, const char *marker) override;
     void popGroupMarker() override;
 
+    void setGPUDisjoint();
+
     GLint getGPUDisjoint() override;
     GLint64 getTimestamp() override;
 
@@ -330,6 +332,8 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     mutable bool mWorkaroundsInitialized;
     mutable WorkaroundsD3D mWorkarounds;
+
+    bool mDisjoint;
 };
 
 }

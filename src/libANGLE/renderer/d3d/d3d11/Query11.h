@@ -42,6 +42,8 @@ class Query11 : public QueryImpl
 
     Renderer11 *mRenderer;
     ID3D11Query *mQuery;
+    ID3D11Query *mTimestampBeginQuery;
+    ID3D11Query *mTimestampEndQuery;
 };
 
 }
