@@ -284,7 +284,7 @@ gl::Error RendererD3D::generateSwizzles(const gl::Data &data, gl::SamplerType ty
 {
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.state->getProgram());
 
-    unsigned int samplerRange = programD3D->getUsedSamplerRange(type);
+    unsigned int samplerRange = static_cast<unsigned int>(programD3D->getUsedSamplerRange(type));
 
     for (unsigned int i = 0; i < samplerRange; i++)
     {
@@ -419,8 +419,6 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shade
                 {
                     return error;
                 }
-
-                programD3D->setSamplerMetadata(shaderType, samplerIndex, texture->getBaseLevel());
             }
             else
             {

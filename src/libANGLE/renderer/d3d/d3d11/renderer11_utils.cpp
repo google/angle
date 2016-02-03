@@ -751,19 +751,21 @@ static size_t GetMaximumVertexUniformVectors(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
+static size_t GetReservedVertexUniformBuffers()
+{
+    // Reserve one buffer for the application uniforms, and one for driver uniforms
+    return 2;
+}
+
 static size_t GetMaximumVertexUniformBlocks(D3D_FEATURE_LEVEL featureLevel)
 {
     switch (featureLevel)
     {
       case D3D_FEATURE_LEVEL_11_1:
-      case D3D_FEATURE_LEVEL_11_0:
-          return D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT -
-                 d3d11::RESERVED_CONSTANT_BUFFER_SLOT_COUNT;
+      case D3D_FEATURE_LEVEL_11_0: return D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - GetReservedVertexUniformBuffers();
 
       case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0:
-          return D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT -
-                 d3d11::RESERVED_CONSTANT_BUFFER_SLOT_COUNT;
+      case D3D_FEATURE_LEVEL_10_0: return D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - GetReservedVertexUniformBuffers();
 
       // Uniform blocks not supported on D3D11 Feature Level 9
       case D3D_FEATURE_LEVEL_9_3:
@@ -866,19 +868,21 @@ static size_t GetMaximumPixelUniformVectors(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
+static size_t GetReservedPixelUniformBuffers()
+{
+    // Reserve one buffer for the application uniforms, and one for driver uniforms
+    return 2;
+}
+
 static size_t GetMaximumPixelUniformBlocks(D3D_FEATURE_LEVEL featureLevel)
 {
     switch (featureLevel)
     {
       case D3D_FEATURE_LEVEL_11_1:
-      case D3D_FEATURE_LEVEL_11_0:
-          return D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT -
-                 d3d11::RESERVED_CONSTANT_BUFFER_SLOT_COUNT;
+      case D3D_FEATURE_LEVEL_11_0: return D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - GetReservedPixelUniformBuffers();
 
       case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0:
-          return D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT -
-                 d3d11::RESERVED_CONSTANT_BUFFER_SLOT_COUNT;
+      case D3D_FEATURE_LEVEL_10_0: return D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - GetReservedPixelUniformBuffers();
 
       // Uniform blocks not supported on D3D11 Feature Level 9
       case D3D_FEATURE_LEVEL_9_3:
@@ -1483,16 +1487,6 @@ WorkaroundsD3D GenerateWorkarounds(D3D_FEATURE_LEVEL featureLevel)
     workarounds.zeroMaxLodWorkaround = (featureLevel <= D3D_FEATURE_LEVEL_9_3);
     workarounds.useInstancedPointSpriteEmulation = (featureLevel <= D3D_FEATURE_LEVEL_9_3);
     return workarounds;
-}
-
-void InitConstantBufferDesc(D3D11_BUFFER_DESC *constantBufferDescription, size_t byteWidth)
-{
-    constantBufferDescription->ByteWidth           = static_cast<UINT>(byteWidth);
-    constantBufferDescription->Usage               = D3D11_USAGE_DEFAULT;
-    constantBufferDescription->BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
-    constantBufferDescription->CPUAccessFlags      = 0;
-    constantBufferDescription->MiscFlags           = 0;
-    constantBufferDescription->StructureByteStride = 0;
 }
 
 }  // namespace d3d11

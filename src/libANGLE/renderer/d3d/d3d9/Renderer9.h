@@ -120,9 +120,6 @@ class Renderer9 : public RendererD3D
     gl::Error applyUniforms(const ProgramD3D &programD3D,
                             GLenum drawMode,
                             const std::vector<D3DUniform *> &uniformArray) override;
-    gl::Error applySamplerMetadata(SamplerMetadataD3D11 *samplerMetadata,
-                                   unsigned int samplerCount,
-                                   gl::SamplerType type) override;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize);
     virtual gl::Error applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances, SourceIndexData *sourceInfo);
     gl::Error applyIndexBuffer(const gl::Data &data,
