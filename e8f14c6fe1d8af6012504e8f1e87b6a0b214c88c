@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d1be2490_0f2aa922",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-03T14:51:01Z",
+      "side": 1,
+      "message": "nit: git cl format",
+      "range": {
+        "startLine": 129,
+        "startChar": 4,
+        "endLine": 134,
+        "endChar": 23
+      },
+      "revId": "e8f14c6fe1d8af6012504e8f1e87b6a0b214c88c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
