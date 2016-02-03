@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b1b530ae_2e10d32a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-03T16:02:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31d060e4_6fe32d59",
+      "revId": "886d01439ef67e57ca720b3b13e5018bb25e0db4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71af3862_a934b9b0",
         "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "51c15418_21f3f68e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-03T16:02:30Z",
+      "side": 1,
+      "message": "Good catch, fixed. It\u0027s a bit disturbing that it\u0027s so easy to break this and it\u0027s not trivial to make a test for it.",
+      "parentUuid": "71af3862_a934b9b0",
+      "revId": "886d01439ef67e57ca720b3b13e5018bb25e0db4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b1b530ae_cbd48919",
         "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2016-02-02T21:14:10Z",
       "side": 1,
       "message": "Nice that we can use std::array now. Also it seems that we are allowed to use using instead of typedef, which would be much better.",
+      "revId": "886d01439ef67e57ca720b3b13e5018bb25e0db4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11a43c86_f785a87c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-03T16:02:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b1b530ae_cbd48919",
       "revId": "886d01439ef67e57ca720b3b13e5018bb25e0db4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
