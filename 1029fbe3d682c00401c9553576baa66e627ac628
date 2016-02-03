@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "71af3862_aca60729",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T16:17:01Z",
+      "side": 1,
+      "message": "ES3 only adds mapRange, regular map is added in the OES_map_buffer extension.",
+      "parentUuid": "91b82ca8_5beaa3cd",
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "146c2a47_264cb87b",
         "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
         "patchSetId": 5
@@ -125,6 +143,24 @@
     },
     {
       "key": {
+        "uuid": "91b82ca8_d64f4abb",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T16:17:01Z",
+      "side": 1,
+      "message": "Yea, I figured there is no real cost to the assignment and it reduces the chance of bugs showing up later by assuming the values are valid.",
+      "parentUuid": "51c15418_f6929619",
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "51c15418_969f9220",
         "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
         "patchSetId": 5
@@ -142,6 +178,24 @@
     },
     {
       "key": {
+        "uuid": "31a94060_6a7c73bd",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T16:17:01Z",
+      "side": 1,
+      "message": "Added an assert.  It\u0027s an error to call unmap on a buffer that is not mapped.",
+      "parentUuid": "51c15418_969f9220",
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1be2490_af9cbd2b",
         "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
         "patchSetId": 5
@@ -153,6 +207,30 @@
       "writtenOn": "2016-02-03T04:34:07Z",
       "side": 1,
       "message": "*result is not set in this case",
+      "range": {
+        "startLine": 156,
+        "startChar": 65,
+        "endLine": 156,
+        "endChar": 67
+      },
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71af3862_4c751362",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T16:17:01Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "d1be2490_af9cbd2b",
       "range": {
         "startLine": 156,
         "startChar": 65,
