@@ -127,6 +127,24 @@
     },
     {
       "key": {
+        "uuid": "31d060e4_35c6d2c3",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T19:29:33Z",
+      "side": 1,
+      "message": "Yea, either that or just allow us to map a buffer internally without doing complex checks each time.",
+      "parentUuid": "f1308814_c8fb2329",
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "146c2a47_264cb87b",
         "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
         "patchSetId": 5
@@ -226,6 +244,24 @@
       "side": 1,
       "message": "I guess there\u0027s checking and gl error generation at a higher level?  Sorry about my ignorance - this is what you get with reviews from someone new to the project.  (:",
       "parentUuid": "31a94060_6a7c73bd",
+      "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51c15418_c105529b",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-03T19:29:33Z",
+      "side": 1,
+      "message": "Yep, exactly.  The code in the renderer space can safely assume that all input is validated and shouldn\u0027t generate any GL errors except OUT_OF_MEMORY.\n\nThese are good questions and reviews are probably a good way to get a general knowledge of the rest of the GL code.",
+      "parentUuid": "d1be2490_f2037e56",
       "revId": "1029fbe3d682c00401c9553576baa66e627ac628",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
