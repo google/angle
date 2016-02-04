@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7177380f_662eae7f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-04T19:12:15Z",
+      "side": 1,
+      "message": "nullptr",
+      "range": {
+        "startLine": 25,
+        "startChar": 27,
+        "endLine": 25,
+        "endChar": 31
+      },
+      "revId": "5cde7f59ee414d060832de962dfcacbd895e04d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "116c3c47_a66d08d9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-04T19:12:15Z",
+      "side": 1,
+      "message": "nit: Store the ID3D11Device locally instead of grabbing it 3 times.",
+      "range": {
+        "startLine": 59,
+        "startChar": 21,
+        "endLine": 59,
+        "endChar": 43
+      },
+      "revId": "5cde7f59ee414d060832de962dfcacbd895e04d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "116c3c47_c66a04be",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-04T19:12:15Z",
+      "side": 1,
+      "message": "nit: same for ID3D11DeviceContext",
+      "range": {
+        "startLine": 79,
+        "startChar": 8,
+        "endLine": 79,
+        "endChar": 37
+      },
+      "revId": "5cde7f59ee414d060832de962dfcacbd895e04d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11935c6b_0b1b3d03",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-04T19:12:15Z",
+      "side": 1,
+      "message": "This assert should only be made if the query type is TIME_ELAPSED",
+      "range": {
+        "startLine": 87,
+        "startChar": 4,
+        "endLine": 88,
+        "endChar": 31
+      },
+      "revId": "5cde7f59ee414d060832de962dfcacbd895e04d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f183281b_ad30898e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-04T19:12:15Z",
+      "side": 1,
+      "message": "I would just leave this empty and move the logic that forces mQueryFinished to true in the testQuery case for GL_TIMESTAMP_EXT.  It keeps all the logic together.",
+      "range": {
+        "startLine": 108,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 16
+      },
+      "revId": "5cde7f59ee414d060832de962dfcacbd895e04d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3171401d_e488da0a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-04T19:12:15Z",
+      "side": 1,
+      "message": "nit: add a newline between these.",
+      "range": {
+        "startLine": 211,
+        "startChar": 11,
+        "endLine": 212,
+        "endChar": 37
+      },
+      "revId": "5cde7f59ee414d060832de962dfcacbd895e04d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3171401d_247cb2bc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-04T19:12:15Z",
+      "side": 1,
+      "message": "You probably shouldn\u0027t assume that these will be ready if the disjoint event is.  You should be checking the result and only set mQueryFinish if they are all ready.",
+      "range": {
+        "startLine": 230,
+        "startChar": 20,
+        "endLine": 231,
+        "endChar": 87
+      },
+      "revId": "5cde7f59ee414d060832de962dfcacbd895e04d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3171401d_0477b6dc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-04T19:12:15Z",
+      "side": 1,
+      "message": "This is likely not the order of operations you want.",
+      "range": {
+        "startLine": 232,
+        "startChar": 56,
+        "endLine": 232,
+        "endChar": 88
+      },
+      "revId": "5cde7f59ee414d060832de962dfcacbd895e04d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f183281b_edb1a148",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-04T19:12:15Z",
+      "side": 1,
+      "message": "nit: add a newline between these.",
+      "range": {
+        "startLine": 235,
+        "startChar": 12,
+        "endLine": 236,
+        "endChar": 34
+      },
+      "revId": "5cde7f59ee414d060832de962dfcacbd895e04d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91802c15_e74d424a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-04T19:12:15Z",
+      "side": 1,
+      "message": "nit: add a newline between these.",
+      "range": {
+        "startLine": 241,
+        "startChar": 8,
+        "endLine": 242,
+        "endChar": 16
+      },
+      "revId": "5cde7f59ee414d060832de962dfcacbd895e04d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11935c6b_6b1a01fd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-04T19:12:15Z",
+      "side": 1,
+      "message": "Do these need to be stored as members?  It doesn\u0027t look like they\u0027re referenced beyond computing the result.",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 20
+      },
+      "revId": "5cde7f59ee414d060832de962dfcacbd895e04d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
