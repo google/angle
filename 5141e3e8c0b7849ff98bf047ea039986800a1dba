@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "91802c15_878726cd",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-04T17:29:06Z",
+      "side": 1,
+      "message": "Thanks, nit: adding the comment would be good here too",
+      "parentUuid": "3115c084_9e866d3f",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14a42a86_a3e5baf6",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 8
@@ -451,6 +469,24 @@
       "side": 1,
       "message": "I\u0027ll add a comment here to describe the transcode algorithm.\n\nFor you advises, correct, a optimized way to compute this is only decode subblock\u0027s endpoints, not all pixels. Also, PCA can give us higher quality of BC1 endpoints with limited cost. I have some prototype on them but recently I\u0027m super busy on other projects, doesn\u0027t have enough bandwidth on ANGLE, sorry about that.",
       "parentUuid": "943d7af0_9f85d3c5",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d186242d_e91b5549",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 818,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-04T17:29:06Z",
+      "side": 1,
+      "message": "In the comment can you also point out the potential improvements?",
+      "parentUuid": "f127a8f2_24680e9a",
       "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
