@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5116b490_c27e43b9",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-02-04T18:06:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1be2490_2f1a0dfc",
+      "range": {
+        "startLine": 525,
+        "startChar": 8,
+        "endLine": 525,
+        "endChar": 43
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1be2490_cf0ed1c0",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 16
@@ -36,6 +60,30 @@
       "writtenOn": "2016-02-03T15:56:33Z",
       "side": 1,
       "message": "nit: experimentalPresentPath",
+      "range": {
+        "startLine": 530,
+        "startChar": 9,
+        "endLine": 530,
+        "endChar": 25
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5116b490_02897b0c",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-02-04T18:06:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1be2490_cf0ed1c0",
       "range": {
         "startLine": 530,
         "startChar": 9,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "31fce07c_ec9c202d",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-02-04T18:06:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71af3862_ac4da74a",
+      "range": {
+        "startLine": 670,
+        "startChar": 52,
+        "endLine": 670,
+        "endChar": 53
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "51c15418_01e11abb",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 16
@@ -82,6 +154,30 @@
       "writtenOn": "2016-02-03T15:56:33Z",
       "side": 1,
       "message": "nit: others use the f suffix but not these.",
+      "range": {
+        "startLine": 969,
+        "startChar": 79,
+        "endLine": 969,
+        "endChar": 82
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71c9f878_a0edf342",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-02-04T18:06:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51c15418_01e11abb",
       "range": {
         "startLine": 969,
         "startChar": 79,
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "3115c084_abce8add",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2983,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-02-04T18:06:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1be2490_0fce29b3",
+      "range": {
+        "startLine": 2983,
+        "startChar": 30,
+        "endLine": 2983,
+        "endChar": 80
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71af3862_6c91efc8",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 16
@@ -151,6 +271,30 @@
       "writtenOn": "2016-02-03T15:56:33Z",
       "side": 1,
       "message": "nit: remember to update this comment.",
+      "range": {
+        "startLine": 119,
+        "startChar": 7,
+        "endLine": 119,
+        "endChar": 42
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31fce07c_8cc59c19",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-02-04T18:06:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71af3862_6c91efc8",
       "range": {
         "startLine": 119,
         "startChar": 7,
@@ -186,6 +330,30 @@
     },
     {
       "key": {
+        "uuid": "11f7dc9a_a8296277",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-02-04T18:06:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91b82ca8_96ceb285",
+      "range": {
+        "startLine": 237,
+        "startChar": 39,
+        "endLine": 237,
+        "endChar": 74
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "11a43c86_176f2494",
         "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
         "patchSetId": 16
@@ -197,6 +365,30 @@
       "writtenOn": "2016-02-03T15:56:33Z",
       "side": 1,
       "message": "nit: remember to update this string.",
+      "range": {
+        "startLine": 312,
+        "startChar": 34,
+        "endLine": 312,
+        "endChar": 69
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d19b848b_67bc0681",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-02-04T18:06:52Z",
+      "side": 1,
+      "message": "That one\u0027s referring to the enum rather than the extension name.",
+      "parentUuid": "11a43c86_176f2494",
       "range": {
         "startLine": 312,
         "startChar": 34,
@@ -232,6 +424,30 @@
     },
     {
       "key": {
+        "uuid": "711bb8b8_c6e3f7c3",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-02-04T18:06:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b1a450bb_108e041d",
+      "range": {
+        "startLine": 52,
+        "startChar": 11,
+        "endLine": 53,
+        "endChar": 74
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b1b530ae_6e16cb2c",
         "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
         "patchSetId": 16
@@ -255,6 +471,30 @@
     },
     {
       "key": {
+        "uuid": "31fce07c_acbb3888",
+        "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-02-04T18:06:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b1b530ae_6e16cb2c",
+      "range": {
+        "startLine": 225,
+        "startChar": 34,
+        "endLine": 225,
+        "endChar": 35
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1be2490_efd4f53f",
         "filename": "util/EGLWindow.cpp",
         "patchSetId": 16
@@ -266,6 +506,30 @@
       "writtenOn": "2016-02-03T15:56:33Z",
       "side": 1,
       "message": "This should check for the extension first.",
+      "range": {
+        "startLine": 169,
+        "startChar": 4,
+        "endLine": 173,
+        "endChar": 5
+      },
+      "revId": "f9a8206381d06b5df24fa2f2b3c559825febc235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f127a8f2_515d032d",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-02-04T18:06:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1be2490_efd4f53f",
       "range": {
         "startLine": 169,
         "startChar": 4,
