@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "74c64632_f7029252",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14498aa4_1b943b28",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "344e8eac_5c751dce",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2016-01-22T23:20:19Z",
       "side": 1,
       "message": "// Project each pixel on the (maxColor, minColor) line to decide which BC1 code to assign to it.\n\nI don\u0027t think you need to compute the base colors since you know by linearity the dot product of the 1/3 and 2/3 base colors. Changing the code to do\n\n  dir \u003d max - min\n  dotMax \u003d dot(dir, max)\n  dotMin \u003d dot(dir, min)\n  dot \u003d dot(dir, rgba)\n  // figure out what codeword to assign\n\nIs almost equivalent (up to +-1 in rgba I think?), more readable (imho) and probably a bit faster.",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3115c084_9e866d3f",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "344e8eac_5c751dce",
       "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "d4be1290_4fc5018f",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14a42a86_a3e5baf6",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b43a7ef4_80f29686",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 8
@@ -64,6 +118,24 @@
       "writtenOn": "2016-01-22T23:20:19Z",
       "side": 1,
       "message": "did you forget about the non opaque case?",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54c14218_d3a0cc11",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "No, in non-opaque case, only [0] and [1] are referenced. It\u0027s a little confused here. I can make it more explicit.",
+      "parentUuid": "b43a7ef4_80f29686",
       "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "34d04ee4_a0b602f7",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d433721e_4176d2df",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "344e8eac_3c7651df",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 8
@@ -98,6 +188,24 @@
       "writtenOn": "2016-01-22T23:20:19Z",
       "side": 1,
       "message": "nit: uint16_t min \u003d ...",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54c14218_93aa44ee",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "344e8eac_3c7651df",
       "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "54c14218_b3a74025",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 725,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4307614_c237821d",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b43a7ef4_60e032b9",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 8
@@ -132,6 +258,24 @@
       "writtenOn": "2016-01-22T23:20:19Z",
       "side": 1,
       "message": "// Same colors, BC1 index 0 is the color in both opaque and transparent mode",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54aa2254_0e562f11",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b43a7ef4_60e032b9",
       "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "d4be1290_0fcf09b1",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14a42a86_83e8becf",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d45c5266_f9e877d0",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 8
@@ -166,6 +328,24 @@
       "writtenOn": "2016-01-22T23:20:19Z",
       "side": 1,
       "message": "// In opaque mode switching the two colors is doing the following code swaps: 0 \u003c-\u003e 1 and 2 \u003c-\u003e 3. This is equivalent to flipping the first bit of each code (5 \u003d 0b0101)",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4be1290_6fca45a2",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d45c5266_f9e877d0",
       "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -189,6 +369,24 @@
     },
     {
       "key": {
+        "uuid": "f4bb169e_3e4c81c9",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b43a7ef4_e0eba298",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14498aa4_bb8267ea",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 8
@@ -200,6 +398,24 @@
       "writtenOn": "2016-01-22T23:20:19Z",
       "side": 1,
       "message": "// Encode the opaqueness in the order of the two BC1 colors",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4be1290_efd5d539",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14498aa4_bb8267ea",
       "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -223,6 +439,24 @@
     },
     {
       "key": {
+        "uuid": "f127a8f2_24680e9a",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 818,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "I\u0027ll add a comment here to describe the transcode algorithm.\n\nFor you advises, correct, a optimized way to compute this is only decode subblock\u0027s endpoints, not all pixels. Also, PCA can give us higher quality of BC1 endpoints with limited cost. I have some prototype on them but recently I\u0027m super busy on other projects, doesn\u0027t have enough bandwidth on ANGLE, sorry about that.",
+      "parentUuid": "943d7af0_9f85d3c5",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "344e8eac_9c7fa5b6",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 8
@@ -234,6 +468,24 @@
       "writtenOn": "2016-01-22T23:20:19Z",
       "side": 1,
       "message": "We should probably either make constants for 8 and 4, or use [][]",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4bb169e_5e8ff519",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 834,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "344e8eac_9c7fa5b6",
       "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -257,6 +509,24 @@
     },
     {
       "key": {
+        "uuid": "b4b51eae_9c925507",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 870,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4307614_a2023e51",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b43a7ef4_40d1aef0",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 8
@@ -268,6 +538,24 @@
       "writtenOn": "2016-01-22T23:20:19Z",
       "side": 1,
       "message": "These comments I add for myself during the review, but it would be great to have more commented code overall. Right now it is pretty opaque.\n// Compute the colors that pixels can have in each subblock both for the decoding of the RGBA data and ????",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54c14218_53213c46",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 872,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b43a7ef4_40d1aef0",
       "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -291,6 +579,24 @@
     },
     {
       "key": {
+        "uuid": "54aa2254_4e2e6783",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 875,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "It should be modifierIdx.",
+      "parentUuid": "943d7af0_5f84ebc8",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14a42a86_23fa2a99",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 8
@@ -302,6 +608,24 @@
       "writtenOn": "2016-01-22T23:20:19Z",
       "side": 1,
       "message": "// 1 and 3 are the argmax and argmin of valueMappingTable",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4be1290_afdfdd57",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 883,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14a42a86_23fa2a99",
       "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -325,6 +649,24 @@
     },
     {
       "key": {
+        "uuid": "74af2662_8fcd3d8d",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 885,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "74448688_3eebe9d2",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f4595674_fa318928",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 8
@@ -342,6 +684,24 @@
     },
     {
       "key": {
+        "uuid": "74c64632_d796760e",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 888,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4595674_fa318928",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f4595674_3a8f811b",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 8
@@ -353,6 +713,24 @@
       "writtenOn": "2016-01-22T23:20:19Z",
       "side": 1,
       "message": "// Get the \"min\" and \"max\" pixel colors that have been used.",
+      "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34d04ee4_a0ffe27c",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-02-04T02:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4595674_3a8f811b",
       "revId": "5141e3e8c0b7849ff98bf047ea039986800a1dba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
