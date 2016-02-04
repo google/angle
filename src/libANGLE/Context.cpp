@@ -316,6 +316,9 @@ void Context::makeCurrent(egl::Surface *surface)
         }
         mFramebufferMap[0] = newDefault;
     }
+
+    // Notify the renderer of a context switch
+    mRenderer->onMakeCurrent(getData());
 }
 
 void Context::releaseSurface()

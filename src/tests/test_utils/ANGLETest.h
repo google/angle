@@ -142,6 +142,7 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     bool isD3D9() const;
     // Is D3D9 or SM9_3 renderer.
     bool isD3DSM3() const;
+    bool isOSX() const;
     EGLint getPlatformRenderer() const;
 
     void ignoreD3D11SDKLayersWarnings();

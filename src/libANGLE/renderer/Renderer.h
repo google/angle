@@ -91,8 +91,12 @@ class Renderer : public ImplFactory
 
     virtual void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits) = 0;
 
+    // Disjoint timer queries
     virtual GLint getGPUDisjoint() = 0;
     virtual GLint64 getTimestamp() = 0;
+
+    // Context switching
+    virtual void onMakeCurrent(const gl::Data &data) = 0;
 
     // Renderer capabilities
     const gl::Caps &getRendererCaps() const;

@@ -463,6 +463,15 @@ bool ANGLETest::isD3DSM3() const
     return isD3D9() || isD3D11_FL93();
 }
 
+bool ANGLETest::isOSX() const
+{
+#ifdef __APPLE__
+    return true;
+#else
+    return false;
+#endif
+}
+
 EGLint ANGLETest::getPlatformRenderer() const
 {
     assert(mEGLWindow);

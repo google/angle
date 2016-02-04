@@ -429,4 +429,10 @@ GLint64 RendererGL::getTimestamp()
     mFunctions->getInteger64v(GL_TIMESTAMP, &result);
     return result;
 }
+
+void RendererGL::onMakeCurrent(const gl::Data &data)
+{
+    // Queries need to be paused/resumed on context switches
+    mStateManager->onMakeCurrent(data);
+}
 }

@@ -107,6 +107,8 @@ class RendererGL : public Renderer
     GLint getGPUDisjoint() override;
     GLint64 getTimestamp() override;
 
+    void onMakeCurrent(const gl::Data &data) override;
+
     const gl::Version &getMaxSupportedESVersion() const;
     const FunctionsGL *getFunctions() const { return mFunctions; }
     StateManagerGL *getStateManager() const { return mStateManager; }

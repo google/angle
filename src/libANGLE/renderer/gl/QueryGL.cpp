@@ -68,7 +68,8 @@ QueryGL::~QueryGL()
 gl::Error QueryGL::begin()
 {
     mResultSum = 0;
-    return gl::Error(GL_NO_ERROR);
+    mStateManager->onBeginQuery(this);
+    return resume();
 }
 
 gl::Error QueryGL::end()

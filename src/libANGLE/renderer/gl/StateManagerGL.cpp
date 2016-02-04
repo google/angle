@@ -47,7 +47,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mTransformFeedback(0),
       mQueries(),
       mPrevDrawTransformFeedback(nullptr),
-      mPrevDrawQueries(),
+      mCurrentQueries(),
       mPrevDrawContext(0),
       mUnpackAlignment(4),
       mUnpackRowLength(0),
@@ -577,9 +577,14 @@ void StateManagerGL::endQuery(GLenum type, GLuint query)
     mFunctions->endQuery(type);
 }
 
+void StateManagerGL::onBeginQuery(QueryGL *query)
+{
+    mCurrentQueries.insert(query);
+}
+
 void StateManagerGL::onDeleteQueryObject(QueryGL *query)
 {
-    mPrevDrawQueries.erase(query);
+    mCurrentQueries.erase(query);
 }
 
 gl::Error StateManagerGL::setDrawArraysState(const gl::Data &data,
@@ -633,7 +638,7 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::Data &data,
     return setGenericDrawState(data);
 }
 
-gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
+gl::Error StateManagerGL::onMakeCurrent(const gl::Data &data)
 {
     const gl::State &state = *data.state;
 
@@ -645,15 +650,34 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
             mPrevDrawTransformFeedback->syncPausedState(true);
         }
 
-        for (QueryGL *prevQuery : mPrevDrawQueries)
+        for (QueryGL *prevQuery : mCurrentQueries)
         {
             prevQuery->pause();
         }
     }
+    mCurrentQueries.clear();
     mPrevDrawTransformFeedback = nullptr;
-    mPrevDrawQueries.clear();
-
     mPrevDrawContext = data.context;
+
+    // Set the current query state
+    for (GLenum queryType : QueryTypes)
+    {
+        gl::Query *query = state.getActiveQuery(queryType);
+        if (query != nullptr)
+        {
+            QueryGL *queryGL = GetImplAs<QueryGL>(query);
+            queryGL->resume();
+
+            mCurrentQueries.insert(queryGL);
+        }
+    }
+
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
+{
+    const gl::State &state = *data.state;
 
     // Sync the current program state
     const gl::Program *program = state.getProgram();
@@ -749,19 +773,6 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
     {
         bindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
         mPrevDrawTransformFeedback = nullptr;
-    }
-
-    // Set the current query state
-    for (GLenum queryType : QueryTypes)
-    {
-        gl::Query *query = state.getActiveQuery(queryType);
-        if (query != nullptr)
-        {
-            QueryGL *queryGL = GetImplAs<QueryGL>(query);
-            queryGL->resume();
-
-            mPrevDrawQueries.insert(queryGL);
-        }
     }
 
     return gl::Error(GL_NO_ERROR);
