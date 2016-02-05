@@ -332,6 +332,30 @@
     },
     {
       "key": {
+        "uuid": "31c3005d_db358417",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-05T21:25:03Z",
+      "side": 1,
+      "message": "Issue 1176 has the details.  It took a while to debug this.  By tracking the number of buffers actually used, we could avoid special cases for individual drivers.  I am not sure workarounds is the correct thing here.",
+      "parentUuid": "f183281b_4d1f0d9d",
+      "range": {
+        "startLine": 440,
+        "startChar": 0,
+        "endLine": 442,
+        "endChar": 75
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f1308814_48a2736e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
         "patchSetId": 9
@@ -568,6 +592,30 @@
     },
     {
       "key": {
+        "uuid": "715f38cc_89705de2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1713,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-05T21:25:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f183281b_6d24d1ee",
+      "range": {
+        "startLine": 1713,
+        "startChar": 63,
+        "endLine": 1713,
+        "endChar": 68
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91b82ca8_16a2c2bb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 9
@@ -627,6 +675,30 @@
       "side": 1,
       "message": "Sorry, I don\u0027t understand what you\u0027re saying. This draw call is preceded by the first input layout cache apply, which uses the \u0027count\u0027 from the draw call as the parameter, see the reference. This is a different value than will be used below in the updateVertexOffsets call.",
       "parentUuid": "31c3005d_084ed745",
+      "range": {
+        "startLine": 1982,
+        "startChar": 28,
+        "endLine": 1982,
+        "endChar": 48
+      },
+      "revId": "1f44b2c96062da72130a5bdaf28f380c06aa0fd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71c9f878_00dce792",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1982,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-05T21:25:03Z",
+      "side": 1,
+      "message": "In RendererD3D is where you can find the case I am talking about.  For genericDrawArrays, count is used directly as it is the count of the things to render.  For genericDrawElements this is not the case. Count is used when applying the index buffer (which is not used for emulation) and \u0027vertexCount\u0027 is extracted from indexInfo.  DrawElements is somehow a special case where I need to not use count for looping here.\n\nFrom RenderD3D::genericDrawElements:\n\nTranslatedIndexData indexInfo;\n    indexInfo.indexRange \u003d indexRange;\n\n    SourceIndexData sourceIndexInfo;\n\n    error \u003d applyIndexBuffer(data, indices, count, mode, type, \u0026indexInfo, \u0026sourceIndexInfo);\n    if (error.isError())\n    {\n        return error;\n    }\n\n    applyTransformFeedbackBuffers(*data.state);\n    // Transform feedback is not allowed for DrawElements, this error should have been caught at the API validation\n    // layer.\n    ASSERT(!data.state-\u003eisTransformFeedbackActiveUnpaused());\n\n    size_t vertexCount \u003d indexInfo.indexRange.vertexCount();\n    error \u003d applyVertexBuffer(*data.state, mode, static_cast\u003cGLsizei\u003e(indexInfo.indexRange.start),\n                              static_cast\u003cGLsizei\u003e(vertexCount), instances, \u0026sourceIndexInfo);\n    if (error.isError())\n    {\n        return error;\n    }\n\n    error \u003d applyTextures(data);",
+      "parentUuid": "d186242d_2979eda4",
       "range": {
         "startLine": 1982,
         "startChar": 28,
