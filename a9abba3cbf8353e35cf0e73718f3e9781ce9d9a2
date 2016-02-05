@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "71dad865_2e5a6779",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T15:11:34Z",
+      "side": 1,
+      "message": "use either static_cast\u003cUINT64\u003e(1...0) or just 1...0ull, with a static asssert that UINT64 and unsigned long long are the same number of bits. also catch overflows and set mResult to numeric_limits\u003cGLuint64\u003e::max().",
+      "range": {
+        "startLine": 237,
+        "startChar": 30,
+        "endLine": 237,
+        "endChar": 66
+      },
+      "revId": "a9abba3cbf8353e35cf0e73718f3e9781ce9d9a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51d5d431_2d5a6d79",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T15:11:34Z",
+      "side": 1,
+      "message": "can you comment here as to why this is hard?",
+      "range": {
+        "startLine": 244,
+        "startChar": 41,
+        "endLine": 244,
+        "endChar": 51
+      },
+      "revId": "a9abba3cbf8353e35cf0e73718f3e9781ce9d9a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51d0743b_758a6846",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T15:11:34Z",
+      "side": 1,
+      "message": "comment here (just one short line) that we also create two internal queries to track begin/end of the time elapsed.",
+      "range": {
+        "startLine": 224,
+        "startChar": 11,
+        "endLine": 224,
+        "endChar": 30
+      },
+      "revId": "a9abba3cbf8353e35cf0e73718f3e9781ce9d9a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11ca7c91_73fcc021",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T15:11:34Z",
+      "side": 1,
+      "message": "comment here that we mask off this functionality because it\u0027s hard to support.",
+      "range": {
+        "startLine": 1205,
+        "startChar": 16,
+        "endLine": 1205,
+        "endChar": 41
+      },
+      "revId": "a9abba3cbf8353e35cf0e73718f3e9781ce9d9a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

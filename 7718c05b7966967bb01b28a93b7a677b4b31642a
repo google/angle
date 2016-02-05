@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f10fa8af_0a68bbc3",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T15:11:34Z",
+      "side": 0,
+      "message": "I think we can still run this on D3D9, it\u0027s fine if we validate the extension doesn\u0027t show up.",
+      "range": {
+        "startLine": 333,
+        "startChar": 23,
+        "endLine": 333,
+        "endChar": 31
+      },
+      "revId": "7718c05b7966967bb01b28a93b7a677b4b31642a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
