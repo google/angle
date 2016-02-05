@@ -163,6 +163,30 @@
     },
     {
       "key": {
+        "uuid": "b1f0d0dd_9054d400",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-05T17:54:24Z",
+      "side": 1,
+      "message": "Still need to address this.",
+      "parentUuid": "3171401d_247cb2bc",
+      "range": {
+        "startLine": 230,
+        "startChar": 20,
+        "endLine": 231,
+        "endChar": 87
+      },
+      "revId": "5cde7f59ee414d060832de962dfcacbd895e04d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3171401d_0477b6dc",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
         "patchSetId": 3
