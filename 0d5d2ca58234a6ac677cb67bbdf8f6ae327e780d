@@ -22,6 +22,30 @@
       "revId": "0d5d2ca58234a6ac677cb67bbdf8f6ae327e780d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1e9c4fb_71e4d8cc",
+        "filename": "src/compiler/translator/Common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-05T20:07:56Z",
+      "side": 1,
+      "message": "Done. git cl format just got more annoying to use on Linux because it looks for GN that isn\u0027t present in angle. This means the formatting has to be done in the chromium checkout.\n(or I have to create an ugly symlink :S)",
+      "parentUuid": "51d0743b_b80a35fd",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 6
+      },
+      "revId": "0d5d2ca58234a6ac677cb67bbdf8f6ae327e780d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
