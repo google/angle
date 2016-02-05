@@ -14,11 +14,15 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 
+namespace gl
+{
+class FramebufferAttachment;
+}
+
 namespace rx
 {
 class Renderer11;
 struct SourceIndexData;
-class TextureHelper11;
 struct TranslatedAttribute;
 
 enum BufferUsage
@@ -63,8 +67,7 @@ class Buffer11 : public BufferD3D
     ID3D11Buffer *getConstantBufferRange(GLintptr offset, GLsizeiptr size);
     ID3D11ShaderResourceView *getSRV(DXGI_FORMAT srvFormat);
     bool isMapped() const { return mMappedStorage != NULL; }
-    gl::Error packPixels(const TextureHelper11 &srcTexture,
-                         UINT srcSubresource,
+    gl::Error packPixels(const gl::FramebufferAttachment &readAttachment,
                          const PackPixelsParams &params);
     size_t getTotalCPUBufferMemoryBytes() const;
 

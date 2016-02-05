@@ -439,15 +439,40 @@ class ReadPixelsTextureTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
-    void testRead(GLenum textureTarget, GLint levels, GLint attachmentLevel, GLint attachmentLayer)
+    void initTexture(GLenum textureTarget,
+                     GLint levels,
+                     GLint attachmentLevel,
+                     GLint attachmentLayer)
     {
         glBindTexture(textureTarget, mTexture);
         glTexStorage3D(textureTarget, levels, GL_RGBA8, 4, 4, 4);
         glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture, attachmentLevel,
                                   attachmentLayer);
-
         initializeTextureData(textureTarget, levels);
+    }
+
+    void testRead(GLenum textureTarget, GLint levels, GLint attachmentLevel, GLint attachmentLayer)
+    {
+        initTexture(textureTarget, levels, attachmentLevel, attachmentLayer);
         verifyColor(attachmentLevel, attachmentLayer);
+    }
+
+    void initPBO()
+    {
+        glGenBuffers(1, &mBuffer);
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, mBuffer);
+        glBufferData(GL_PIXEL_PACK_BUFFER, sizeof(angle::GLColor), nullptr, GL_STREAM_COPY);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void testPBORead(GLenum textureTarget,
+                     GLint levels,
+                     GLint attachmentLevel,
+                     GLint attachmentLayer)
+    {
+        initPBO();
+        initTexture(textureTarget, levels, attachmentLevel, attachmentLayer);
+        verifyPBO(attachmentLevel, attachmentLayer);
     }
 
     // Give each {level,layer} pair a (probably) unique color via random.
@@ -461,6 +486,21 @@ class ReadPixelsTextureTest : public ANGLETest
     {
         angle::GLColor colorValue(getColorValue(level, layer));
         EXPECT_PIXEL_COLOR_EQ(0, 0, colorValue);
+    }
+
+    void verifyPBO(GLint level, GLint layer)
+    {
+        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+        angle::GLColor expectedColor(getColorValue(level, layer));
+        void *mapPointer =
+            glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, sizeof(angle::GLColor), GL_MAP_READ_BIT);
+        ASSERT_NE(nullptr, mapPointer);
+        angle::GLColor actualColor;
+        memcpy(&actualColor, mapPointer, sizeof(angle::GLColor));
+        glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(expectedColor, actualColor);
     }
 
     void initializeTextureData(GLenum textureTarget, GLint levels)
@@ -489,6 +529,7 @@ class ReadPixelsTextureTest : public ANGLETest
     angle::RNG mRNG;
     GLuint mFBO;
     GLuint mTexture;
+    GLuint mBuffer;
 };
 
 // Test 3D attachment readback.
@@ -539,7 +580,53 @@ TEST_P(ReadPixelsTextureTest, MipLayerAttachment2DArray)
     testRead(GL_TEXTURE_2D_ARRAY, 2, 1, 1);
 }
 
-// TODO(jmadill): Tests for PBOs with 3D and layer attachments.
+// Test 3D attachment PBO readback.
+TEST_P(ReadPixelsTextureTest, BasicAttachment3DPBO)
+{
+    testPBORead(GL_TEXTURE_3D, 1, 0, 0);
+}
+
+// Test 3D attachment readback, non-zero mip.
+TEST_P(ReadPixelsTextureTest, MipAttachment3DPBO)
+{
+    testPBORead(GL_TEXTURE_3D, 2, 1, 0);
+}
+
+// Test 3D attachment readback, non-zero layer.
+TEST_P(ReadPixelsTextureTest, LayerAttachment3DPBO)
+{
+    testPBORead(GL_TEXTURE_3D, 1, 0, 1);
+}
+
+// Test 3D attachment readback, non-zero mip and layer.
+TEST_P(ReadPixelsTextureTest, MipLayerAttachment3DPBO)
+{
+    testPBORead(GL_TEXTURE_3D, 2, 1, 1);
+}
+
+// Test 2D array attachment readback.
+TEST_P(ReadPixelsTextureTest, BasicAttachment2DArrayPBO)
+{
+    testPBORead(GL_TEXTURE_2D_ARRAY, 1, 0, 0);
+}
+
+// Test 3D attachment readback, non-zero mip.
+TEST_P(ReadPixelsTextureTest, MipAttachment2DArrayPBO)
+{
+    testPBORead(GL_TEXTURE_2D_ARRAY, 2, 1, 0);
+}
+
+// Test 3D attachment readback, non-zero layer.
+TEST_P(ReadPixelsTextureTest, LayerAttachment2DArrayPBO)
+{
+    testPBORead(GL_TEXTURE_2D_ARRAY, 1, 0, 1);
+}
+
+// Test 3D attachment readback, non-zero mip and layer.
+TEST_P(ReadPixelsTextureTest, MipLayerAttachment2DArrayPBO)
+{
+    testPBORead(GL_TEXTURE_2D_ARRAY, 2, 1, 1);
+}
 
 }  // anonymous namespace
 
