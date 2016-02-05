@@ -148,6 +148,10 @@ void dEQPCaseList::initialize()
     }
 
     std::ifstream caseListStream(caseListPath);
+    if (caseListStream.fail())
+    {
+        FAIL() << "Failed to load the case list.";
+    }
 
     while (!caseListStream.eof())
     {
