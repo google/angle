@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11ca7c91_134eac45",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1328,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-05T19:29:28Z",
+      "side": 1,
+      "message": "This looks like a good candidate for std::unique_ptr.  Not a request, just noting.",
+      "range": {
+        "startLine": 1328,
+        "startChar": 4,
+        "endLine": 1328,
+        "endChar": 22
+      },
+      "revId": "bd7f7ad3a7cfd856269ce717a31b2e5be5927630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
