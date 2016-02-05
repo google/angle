@@ -1,0 +1,326 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "711d781a_96cf0c37",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:12:04Z",
+      "side": 1,
+      "message": "remove the srcIndexData separate parameter, pass a pointer instead of const \u0026",
+      "range": {
+        "startLine": 198,
+        "startChar": 39,
+        "endLine": 198,
+        "endChar": 73
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1b8d03e_10db043f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:12:04Z",
+      "side": 1,
+      "message": "you no longer need to cache this as far as i can see",
+      "range": {
+        "startLine": 214,
+        "startChar": 4,
+        "endLine": 214,
+        "endChar": 26
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "711d781a_36bf1878",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:12:04Z",
+      "side": 1,
+      "message": "this is starting to look a lot better",
+      "range": {
+        "startLine": 417,
+        "startChar": 28,
+        "endLine": 417,
+        "endChar": 71
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "311780fe_343a70bf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:12:04Z",
+      "side": 1,
+      "message": "this argument is unreferenced as far as i can see",
+      "range": {
+        "startLine": 418,
+        "startChar": 17,
+        "endLine": 418,
+        "endChar": 24
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "711d781a_d68224be",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:12:04Z",
+      "side": 1,
+      "message": "this argument is unreferenced as far as i can see",
+      "range": {
+        "startLine": 420,
+        "startChar": 12,
+        "endLine": 420,
+        "endChar": 33
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1aec8f8_d29ce450",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:12:04Z",
+      "side": 1,
+      "message": "if you only use this method internally, make it a local static method at the top of the file (not a class member)",
+      "range": {
+        "startLine": 422,
+        "startChar": 29,
+        "endLine": 422,
+        "endChar": 51
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1b8d03e_30de082f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:12:04Z",
+      "side": 1,
+      "message": "I still think we can get rid of mStartSlot and mNumBuffers here.. can you let me know if you understand what I\u0027m suggesting. If not we can chat again over GVC.",
+      "range": {
+        "startLine": 436,
+        "startChar": 20,
+        "endLine": 436,
+        "endChar": 38
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91bbcc3a_efbae1d7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:12:04Z",
+      "side": 1,
+      "message": "nit: FLAG_INSTANCED_RENDERING_ACTIVE",
+      "range": {
+        "startLine": 472,
+        "startChar": 47,
+        "endLine": 472,
+        "endChar": 73
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1aec8f8_f297682b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:12:04Z",
+      "side": 1,
+      "message": "pass this either as a const Optional\u003cint\u003e \u0026 or use a sentinel value 0 to indicate instance rendering is not used",
+      "range": {
+        "startLine": 551,
+        "startChar": 45,
+        "endLine": 552,
+        "endChar": 76
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71a2d812_2ed50713",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:12:04Z",
+      "side": 1,
+      "message": "split this into another if statement to clean up the formatting",
+      "range": {
+        "startLine": 612,
+        "startChar": 20,
+        "endLine": 615,
+        "endChar": 32
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "311780fe_f44f586c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1713,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:12:04Z",
+      "side": 1,
+      "message": "it seems to me like you can remove this parameter as it\u0027s always going to be zero",
+      "range": {
+        "startLine": 1713,
+        "startChar": 74,
+        "endLine": 1713,
+        "endChar": 75
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91bbcc3a_6fcf1183",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1713,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:12:04Z",
+      "side": 1,
+      "message": "just had a thought - can we just check if any attribute has a divisor \u003e 0 somewhere, instead of going by the instance count? I feel like this might handle the edge case we were talking about earlier.",
+      "range": {
+        "startLine": 1713,
+        "startChar": 59,
+        "endLine": 1713,
+        "endChar": 72
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91bbcc3a_0fd2c52a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1911,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:12:04Z",
+      "side": 1,
+      "message": "maybe make this a do-while loop? to avoid the odd call here. or just have a redundant call to updateVertexOffsets",
+      "range": {
+        "startLine": 1911,
+        "startChar": 28,
+        "endLine": 1911,
+        "endChar": 48
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1b1c458_71b6d8fa",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1981,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:12:04Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 1981,
+        "startChar": 28,
+        "endLine": 1981,
+        "endChar": 48
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
