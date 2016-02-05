@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b1f0d0dd_d0fdbc59",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1172,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T15:18:18Z",
+      "side": 1,
+      "message": "this looks more like what I was expecting. Were you able to repro any failures with 8 and 16 bit types with the previous CL?",
+      "range": {
+        "startLine": 1160,
+        "startChar": 23,
+        "endLine": 1172,
+        "endChar": 31
+      },
+      "revId": "e2a7fd8d23fd8073d7cff34703660ed69d3b5cf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51d0743b_3594f063",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1062,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T15:18:18Z",
+      "side": 1,
+      "message": "can you try replacing the formats in the texture format tables? ideally that\u0027s what we would do. you should be able to regenerate the tables by modifying the json and using the python script to regenerate them if needed. it might have some side effects, but that would be ideal.\n\nlet me know if you can or can\u0027t get that to work. I can work with you on that. in any case this kind of logic belongs in the format utils section of the code.",
+      "range": {
+        "startLine": 1062,
+        "startChar": 12,
+        "endLine": 1062,
+        "endChar": 32
+      },
+      "revId": "e2a7fd8d23fd8073d7cff34703660ed69d3b5cf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
