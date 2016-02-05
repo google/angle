@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51d0743b_b80a35fd",
+        "filename": "src/compiler/translator/Common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T20:00:32Z",
+      "side": 1,
+      "message": "nit: git cl format would have some edits here, better run it",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 6
+      },
+      "revId": "0d5d2ca58234a6ac677cb67bbdf8f6ae327e780d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
