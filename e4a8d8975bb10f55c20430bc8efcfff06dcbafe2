@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f10fa8af_2a1fff39",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-05T18:03:09Z",
+      "side": 0,
+      "message": "This shouldn\u0027t be removed.",
+      "range": {
+        "startLine": 640,
+        "startChar": 82,
+        "endLine": 640,
+        "endChar": 94
+      },
+      "revId": "e4a8d8975bb10f55c20430bc8efcfff06dcbafe2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

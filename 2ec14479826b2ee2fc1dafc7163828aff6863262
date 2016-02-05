@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "71dad865_cefd235a",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-05T18:03:09Z",
+      "side": 1,
+      "message": "Should remove this comment.",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 37
+      },
+      "revId": "2ec14479826b2ee2fc1dafc7163828aff6863262",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1e6c827_72e61847",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-05T18:03:09Z",
+      "side": 1,
+      "message": "This name is pretty vague.  How about renaming  it to onMakeCurrent.  It also is touching the transform feedback state.",
+      "range": {
+        "startLine": 641,
+        "startChar": 26,
+        "endLine": 641,
+        "endChar": 39
+      },
+      "revId": "2ec14479826b2ee2fc1dafc7163828aff6863262",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
