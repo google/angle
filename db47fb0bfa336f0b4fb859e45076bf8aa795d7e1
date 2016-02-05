@@ -62,6 +62,76 @@
       "revId": "db47fb0bfa336f0b4fb859e45076bf8aa795d7e1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51d0743b_d86171e9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T19:46:42Z",
+      "side": 1,
+      "message": "+1, I think we can assume something that ends in 64 is 64 bits though, can probably skip this check.",
+      "parentUuid": "f10fa8af_4a5473d5",
+      "range": {
+        "startLine": 254,
+        "startChar": 24,
+        "endLine": 254,
+        "endChar": 30
+      },
+      "revId": "db47fb0bfa336f0b4fb859e45076bf8aa795d7e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f10fa8af_ea8b279b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T19:46:42Z",
+      "side": 1,
+      "message": "this seems good, but with static_assert",
+      "range": {
+        "startLine": 255,
+        "startChar": 24,
+        "endLine": 255,
+        "endChar": 30
+      },
+      "revId": "db47fb0bfa336f0b4fb859e45076bf8aa795d7e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11ca7c91_932e3c34",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1207,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T19:46:42Z",
+      "side": 1,
+      "message": "put this in a line above the assignment, to avoid the awkward formatting. it\u0027s fine if it breaks the equals sign alignment",
+      "range": {
+        "startLine": 1207,
+        "startChar": 12,
+        "endLine": 1207,
+        "endChar": 70
+      },
+      "revId": "db47fb0bfa336f0b4fb859e45076bf8aa795d7e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
