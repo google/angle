@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51d0743b_b80c758a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-05T18:13:38Z",
+      "side": 1,
+      "message": "I realize this code is just copied, but std::map::erase also returns the next iterator.",
+      "range": {
+        "startLine": 471,
+        "startChar": 35,
+        "endLine": 471,
+        "endChar": 50
+      },
+      "revId": "0186c9ce893f6c0a6eda9ebeb2e12159fadb8794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
