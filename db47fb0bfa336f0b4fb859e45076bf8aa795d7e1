@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11ca7c91_93c51cb8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-05T19:32:13Z",
+      "side": 1,
+      "message": "nit: move initialization below at ref.",
+      "range": {
+        "startLine": 229,
+        "startChar": 20,
+        "endLine": 229,
+        "endChar": 39
+      },
+      "revId": "db47fb0bfa336f0b4fb859e45076bf8aa795d7e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f10fa8af_2a513fe5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-05T19:32:13Z",
+      "side": 1,
+      "message": "ref",
+      "revId": "db47fb0bfa336f0b4fb859e45076bf8aa795d7e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f10fa8af_4a5473d5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-05T19:32:13Z",
+      "side": 1,
+      "message": "nit: static_assert",
+      "range": {
+        "startLine": 254,
+        "startChar": 24,
+        "endLine": 254,
+        "endChar": 30
+      },
+      "revId": "db47fb0bfa336f0b4fb859e45076bf8aa795d7e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
