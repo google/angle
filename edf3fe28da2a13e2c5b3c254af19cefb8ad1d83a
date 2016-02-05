@@ -22,6 +22,75 @@
       "revId": "edf3fe28da2a13e2c5b3c254af19cefb8ad1d83a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51d0743b_3844e54d",
+        "filename": "src/libANGLE/renderer/gl/QueryGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T19:54:28Z",
+      "side": 1,
+      "message": "remove this comment",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 37
+      },
+      "revId": "edf3fe28da2a13e2c5b3c254af19cefb8ad1d83a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91f3cce9_0fdfa558",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T19:54:28Z",
+      "side": 1,
+      "message": "nit: prefix with a short description",
+      "range": {
+        "startLine": 219,
+        "startChar": 0,
+        "endLine": 219,
+        "endChar": 6
+      },
+      "revId": "edf3fe28da2a13e2c5b3c254af19cefb8ad1d83a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31cf80a1_37cf5284",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T19:54:28Z",
+      "side": 1,
+      "message": "can we give this struct a constructor and destructor? To cleanly delete on an failure or sudden exit, etc.  also you can probably define it out of the class body.",
+      "range": {
+        "startLine": 264,
+        "startChar": 11,
+        "endLine": 264,
+        "endChar": 22
+      },
+      "revId": "edf3fe28da2a13e2c5b3c254af19cefb8ad1d83a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
