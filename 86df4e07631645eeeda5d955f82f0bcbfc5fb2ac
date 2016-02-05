@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b1f0d0dd_f0e7a093",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-05T18:28:26Z",
+      "side": 1,
+      "message": "This should depend on everything being ready otherwise we could mark the query as ready without actually recording the result.  I would move all the GetData checks above this if-statement.",
+      "range": {
+        "startLine": 228,
+        "startChar": 20,
+        "endLine": 228,
+        "endChar": 42
+      },
+      "revId": "86df4e07631645eeeda5d955f82f0bcbfc5fb2ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51d0743b_b81eb59e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-05T18:28:26Z",
+      "side": 1,
+      "message": "This is not printing the correct error.",
+      "range": {
+        "startLine": 244,
+        "startChar": 90,
+        "endLine": 244,
+        "endChar": 96
+      },
+      "revId": "86df4e07631645eeeda5d955f82f0bcbfc5fb2ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
