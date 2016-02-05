@@ -309,6 +309,8 @@ if (build_angle_deqp_tests) {
 
       data = [
         "deqp_support/deqp_${api_name}_test_expectations.txt",
+        "../../../deqp/src/android/cts/master/${api_name}-master.txt",
+        "../../../deqp/src/data/",
       ]
 
       if (is_linux && !is_component_build) {
