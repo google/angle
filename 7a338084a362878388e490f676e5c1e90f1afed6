@@ -22,6 +22,30 @@
       "revId": "7a338084a362878388e490f676e5c1e90f1afed6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1e9c4fb_11890c0d",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-05T17:59:10Z",
+      "side": 1,
+      "message": "Good point. Done",
+      "parentUuid": "51d5d431_6d82b5ef",
+      "range": {
+        "startLine": 312,
+        "startChar": 8,
+        "endLine": 312,
+        "endChar": 43
+      },
+      "revId": "7a338084a362878388e490f676e5c1e90f1afed6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
