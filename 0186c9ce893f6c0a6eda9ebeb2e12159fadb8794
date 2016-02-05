@@ -22,6 +22,30 @@
       "revId": "0186c9ce893f6c0a6eda9ebeb2e12159fadb8794",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1f0d0dd_b043582b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-05T22:26:49Z",
+      "side": 1,
+      "message": "it does in c++11, hence the original workaround, since it was broken in 99 C++. Updated to 11 syntax.",
+      "parentUuid": "51d0743b_b80c758a",
+      "range": {
+        "startLine": 471,
+        "startChar": 35,
+        "endLine": 471,
+        "endChar": 50
+      },
+      "revId": "0186c9ce893f6c0a6eda9ebeb2e12159fadb8794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
