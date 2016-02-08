@@ -401,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "9d33e01f_41e532f5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-08T21:16:02Z",
+      "side": 1,
+      "message": "That sounds confusing to me.  const Option\u003cint\u003e \u0026 ?.",
+      "parentUuid": "f1aec8f8_f297682b",
+      "range": {
+        "startLine": 551,
+        "startChar": 45,
+        "endLine": 552,
+        "endChar": 76
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71a2d812_2ed50713",
         "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
         "patchSetId": 11
@@ -412,6 +436,30 @@
       "writtenOn": "2016-02-05T22:12:04Z",
       "side": 1,
       "message": "split this into another if statement to clean up the formatting",
+      "range": {
+        "startLine": 612,
+        "startChar": 20,
+        "endLine": 615,
+        "endChar": 32
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9d33e01f_01ccca7f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-08T21:16:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71a2d812_2ed50713",
       "range": {
         "startLine": 612,
         "startChar": 20,
@@ -470,6 +518,30 @@
     },
     {
       "key": {
+        "uuid": "dd7558ba_f38b90d8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1713,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-08T21:16:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "311780fe_f44f586c",
+      "range": {
+        "startLine": 1713,
+        "startChar": 74,
+        "endLine": 1713,
+        "endChar": 75
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91bbcc3a_0fd2c52a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 11
@@ -493,6 +565,30 @@
     },
     {
       "key": {
+        "uuid": "dd7558ba_536284e7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1911,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-08T21:16:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91bbcc3a_0fd2c52a",
+      "range": {
+        "startLine": 1911,
+        "startChar": 28,
+        "endLine": 1911,
+        "endChar": 48
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1b1c458_71b6d8fa",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 11
@@ -504,6 +600,30 @@
       "writtenOn": "2016-02-05T22:12:04Z",
       "side": 1,
       "message": "same here",
+      "range": {
+        "startLine": 1981,
+        "startChar": 28,
+        "endLine": 1981,
+        "endChar": 48
+      },
+      "revId": "c8faebf7dd60bd461f788f473e59bf750df96b78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd30a413_a2a7ded0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1981,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-08T21:16:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1b1c458_71b6d8fa",
       "range": {
         "startLine": 1981,
         "startChar": 28,
