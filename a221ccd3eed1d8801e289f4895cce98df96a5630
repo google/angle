@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd7a1ca9_54e58cf4",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-08T20:03:23Z",
+      "side": 1,
+      "message": "nit: remove static on these, this is all in a namespace {} block so it\u0027s redundant.",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 6
+      },
+      "revId": "a221ccd3eed1d8801e289f4895cce98df96a5630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bdd264e5_d2ff647c",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-08T20:03:23Z",
+      "side": 1,
+      "message": "nit: try using EXIT_FAILURE (http://www.cplusplus.com/reference/cstdlib/EXIT_FAILURE/)",
+      "range": {
+        "startLine": 48,
+        "startChar": 9,
+        "endLine": 48,
+        "endChar": 11
+      },
+      "revId": "a221ccd3eed1d8801e289f4895cce98df96a5630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dd7558ba_b3df581e",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-08T20:03:23Z",
+      "side": 1,
+      "message": "remove static here",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 6
+      },
+      "revId": "a221ccd3eed1d8801e289f4895cce98df96a5630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
