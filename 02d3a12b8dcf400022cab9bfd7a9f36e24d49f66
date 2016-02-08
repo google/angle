@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bd118444_3d50dba8",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-08T17:54:19Z",
+      "side": 1,
+      "message": "Added description.",
+      "parentUuid": "fd05bcfe_3ca331da",
+      "revId": "02d3a12b8dcf400022cab9bfd7a9f36e24d49f66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7df2ac56_008da65e",
         "filename": "src/tests/gl_tests/ClearTest.cpp",
         "patchSetId": 6
@@ -30,6 +48,30 @@
       "writtenOn": "2016-02-08T15:39:13Z",
       "side": 1,
       "message": "nit: tabs",
+      "range": {
+        "startLine": 366,
+        "startChar": 9,
+        "endLine": 366,
+        "endChar": 10
+      },
+      "revId": "02d3a12b8dcf400022cab9bfd7a9f36e24d49f66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1df7f048_9d0ec3bf",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-08T17:54:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7df2ac56_008da65e",
       "range": {
         "startLine": 366,
         "startChar": 9,
