@@ -2377,7 +2377,7 @@ void Program::defineUniformBlock(const sh::InterfaceBlock &interfaceBlock, GLenu
     // Track the first and last uniform index to determine the range of active uniforms in the
     // block.
     size_t firstBlockUniformIndex = mData.mUniforms.size();
-    defineUniformBlockMembers(interfaceBlock.fields, "", blockIndex);
+    defineUniformBlockMembers(interfaceBlock.fields, interfaceBlock.fieldPrefix(), blockIndex);
     size_t lastBlockUniformIndex = mData.mUniforms.size();
 
     std::vector<unsigned int> blockUniformIndexes;

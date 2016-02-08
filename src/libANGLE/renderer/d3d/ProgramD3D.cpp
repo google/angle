@@ -2063,8 +2063,8 @@ size_t ProgramD3D::getUniformBlockInfo(const sh::InterfaceBlock &interfaceBlock)
         encoder = &hlslEncoder;
     }
 
-    GetUniformBlockInfo(interfaceBlock.fields, "", encoder, interfaceBlock.isRowMajorLayout,
-                        &mBlockInfo);
+    GetUniformBlockInfo(interfaceBlock.fields, interfaceBlock.fieldPrefix(), encoder,
+                        interfaceBlock.isRowMajorLayout, &mBlockInfo);
 
     return encoder->getBlockSize();
 }
