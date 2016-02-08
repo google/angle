@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5d6a48da_97cb2469",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-08T19:47:46Z",
+      "side": 1,
+      "message": "nit: hasing -\u003e hashing (PolyGerrit doesn\u0027t let me highlight only part of a line)",
+      "revId": "71f5687685e8dbed33e353664174ebf3a02e1b8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
