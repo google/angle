@@ -24,6 +24,22 @@ namespace rx
 struct RenderTargetDesc;
 struct Renderer11DeviceCaps;
 
+struct dx_VertexConstants11
+{
+    float depthRange[4];
+    float viewAdjust[4];
+    float viewCoords[4];
+    float viewScale[4];
+};
+
+struct dx_PixelConstants11
+{
+    float depthRange[4];
+    float viewCoords[4];
+    float depthFront[4];
+    float viewScale[4];
+};
+
 class StateManager11 final : angle::NonCopyable
 {
   public:
@@ -46,8 +62,11 @@ class StateManager11 final : angle::NonCopyable
 
     void setViewport(const gl::Caps *caps, const gl::Rectangle &viewport, float zNear, float zFar);
 
-    const dx_VertexConstants &getVertexConstants() const { return mVertexConstants; }
-    const dx_PixelConstants &getPixelConstants() const { return mPixelConstants; }
+    void updatePresentPath(bool presentPathFastActive,
+                           const gl::FramebufferAttachment *framebufferAttachment);
+
+    const dx_VertexConstants11 &getVertexConstants() const { return mVertexConstants; }
+    const dx_PixelConstants11 &getPixelConstants() const { return mPixelConstants; }
 
     void updateStencilSizeIfChanged(bool depthStencilInitialized, unsigned int stencilSize);
 
@@ -90,7 +109,7 @@ class StateManager11 final : angle::NonCopyable
     Optional<bool> mCurDisableDepth;
     Optional<bool> mCurDisableStencil;
 
-    // Currenly applied rasterizer state
+    // Currently applied rasterizer state
     bool mRasterizerStateIsDirty;
     gl::RasterizerState mCurRasterState;
 
@@ -106,8 +125,8 @@ class StateManager11 final : angle::NonCopyable
     float mCurFar;
 
     // Things needed in viewport state
-    dx_VertexConstants mVertexConstants;
-    dx_PixelConstants mPixelConstants;
+    dx_VertexConstants11 mVertexConstants;
+    dx_PixelConstants11 mPixelConstants;
 
     // Render target variables
     gl::Extents mViewportBounds;

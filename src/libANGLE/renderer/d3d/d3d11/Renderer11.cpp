@@ -473,6 +473,10 @@ Renderer11::Renderer11(egl::Display *display)
             default:
                 UNREACHABLE();
         }
+
+        const EGLenum presentPath = attributes.get(EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE,
+                                                   EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE);
+        mPresentPathFastEnabled = (presentPath == EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE);
     }
     else if (display->getPlatform() == EGL_PLATFORM_DEVICE_EXT)
     {
@@ -483,6 +487,7 @@ Renderer11::Renderer11(egl::Display *display)
         // Also set EGL_PLATFORM_ANGLE_ANGLE variables, in case they're used elsewhere in ANGLE
         // mAvailableFeatureLevels defaults to empty
         mRequestedDriverType = D3D_DRIVER_TYPE_UNKNOWN;
+        mPresentPathFastEnabled = false;
     }
 
     initializeDebugAnnotator();
@@ -871,14 +876,24 @@ void Renderer11::populateRenderer11DeviceCaps()
 
 egl::ConfigSet Renderer11::generateConfigs() const
 {
-    static const GLenum colorBufferFormats[] = {
-        // 32-bit supported formats
-        GL_BGRA8_EXT, GL_RGBA8_OES,
-        // 24-bit supported formats
-        GL_RGB8_OES,
+    std::vector<GLenum> colorBufferFormats;
+
+    // 32-bit supported formats
+    colorBufferFormats.push_back(GL_BGRA8_EXT);
+    colorBufferFormats.push_back(GL_RGBA8_OES);
+
+    // 24-bit supported formats
+    colorBufferFormats.push_back(GL_RGB8_OES);
+
+    if (!mPresentPathFastEnabled)
+    {
         // 16-bit supported formats
-        GL_RGBA4, GL_RGB5_A1, GL_RGB565,
-    };
+        // These aren't valid D3D11 swapchain formats, so don't expose them as configs
+        // if present path fast is active
+        colorBufferFormats.push_back(GL_RGBA4);
+        colorBufferFormats.push_back(GL_RGB5_A1);
+        colorBufferFormats.push_back(GL_RGB565);
+    }
 
     static const GLenum depthStencilBufferFormats[] =
     {
@@ -890,67 +905,87 @@ egl::ConfigSet Renderer11::generateConfigs() const
     const gl::Caps &rendererCaps = getRendererCaps();
     const gl::TextureCapsMap &rendererTextureCaps = getRendererTextureCaps();
 
-    const EGLint optimalSurfaceOrientation = EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE;
+    const EGLint optimalSurfaceOrientation =
+        mPresentPathFastEnabled ? 0 : EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE;
 
     egl::ConfigSet configs;
-    for (size_t formatIndex = 0; formatIndex < ArraySize(colorBufferFormats); formatIndex++)
+    for (GLenum colorBufferInternalFormat : colorBufferFormats)
     {
-        GLenum colorBufferInternalFormat = colorBufferFormats[formatIndex];
         const gl::TextureCaps &colorBufferFormatCaps = rendererTextureCaps.get(colorBufferInternalFormat);
-        if (colorBufferFormatCaps.renderable)
+        if (!colorBufferFormatCaps.renderable)
         {
-            for (size_t depthStencilIndex = 0; depthStencilIndex < ArraySize(depthStencilBufferFormats); depthStencilIndex++)
+            continue;
+        }
+
+        for (GLenum depthStencilBufferInternalFormat : depthStencilBufferFormats)
+        {
+            const gl::TextureCaps &depthStencilBufferFormatCaps =
+                rendererTextureCaps.get(depthStencilBufferInternalFormat);
+            if (!depthStencilBufferFormatCaps.renderable &&
+                depthStencilBufferInternalFormat != GL_NONE)
             {
-                GLenum depthStencilBufferInternalFormat = depthStencilBufferFormats[depthStencilIndex];
-                const gl::TextureCaps &depthStencilBufferFormatCaps = rendererTextureCaps.get(depthStencilBufferInternalFormat);
-                if (depthStencilBufferFormatCaps.renderable || depthStencilBufferInternalFormat == GL_NONE)
-                {
-                    const gl::InternalFormat &colorBufferFormatInfo = gl::GetInternalFormatInfo(colorBufferInternalFormat);
-                    const gl::InternalFormat &depthStencilBufferFormatInfo = gl::GetInternalFormatInfo(depthStencilBufferInternalFormat);
-
-                    egl::Config config;
-                    config.renderTargetFormat = colorBufferInternalFormat;
-                    config.depthStencilFormat = depthStencilBufferInternalFormat;
-                    config.bufferSize = colorBufferFormatInfo.pixelBytes * 8;
-                    config.redSize = colorBufferFormatInfo.redBits;
-                    config.greenSize = colorBufferFormatInfo.greenBits;
-                    config.blueSize = colorBufferFormatInfo.blueBits;
-                    config.luminanceSize = colorBufferFormatInfo.luminanceBits;
-                    config.alphaSize = colorBufferFormatInfo.alphaBits;
-                    config.alphaMaskSize = 0;
-                    config.bindToTextureRGB = (colorBufferFormatInfo.format == GL_RGB);
-                    config.bindToTextureRGBA = (colorBufferFormatInfo.format == GL_RGBA || colorBufferFormatInfo.format == GL_BGRA_EXT);
-                    config.colorBufferType = EGL_RGB_BUFFER;
-                    config.configCaveat = EGL_NONE;
-                    config.configID = static_cast<EGLint>(configs.size() + 1);
-                    // Can only support a conformant ES2 with feature level greater than 10.0.
-                    config.conformant = (mRenderer11DeviceCaps.featureLevel >= D3D_FEATURE_LEVEL_10_0) ? (EGL_OPENGL_ES2_BIT | EGL_OPENGL_ES3_BIT_KHR) : 0;
-                    config.depthSize = depthStencilBufferFormatInfo.depthBits;
-                    config.level = 0;
-                    config.matchNativePixmap = EGL_NONE;
-                    config.maxPBufferWidth = rendererCaps.max2DTextureSize;
-                    config.maxPBufferHeight = rendererCaps.max2DTextureSize;
-                    config.maxPBufferPixels = rendererCaps.max2DTextureSize * rendererCaps.max2DTextureSize;
-                    config.maxSwapInterval = 4;
-                    config.minSwapInterval = 0;
-                    config.nativeRenderable = EGL_FALSE;
-                    config.nativeVisualID = 0;
-                    config.nativeVisualType = EGL_NONE;
-                    // Can't support ES3 at all without feature level 10.0
-                    config.renderableType = EGL_OPENGL_ES2_BIT | ((mRenderer11DeviceCaps.featureLevel >= D3D_FEATURE_LEVEL_10_0) ? EGL_OPENGL_ES3_BIT_KHR : 0);
-                    config.sampleBuffers = 0; // FIXME: enumerate multi-sampling
-                    config.samples = 0;
-                    config.stencilSize = depthStencilBufferFormatInfo.stencilBits;
-                    config.surfaceType = EGL_PBUFFER_BIT | EGL_WINDOW_BIT | EGL_SWAP_BEHAVIOR_PRESERVED_BIT;
-                    config.transparentType = EGL_NONE;
-                    config.transparentRedValue = 0;
-                    config.transparentGreenValue = 0;
-                    config.transparentBlueValue = 0;
-                    config.optimalOrientation    = optimalSurfaceOrientation;
-
-                    configs.add(config);
-                }
+                continue;
             }
+
+            const gl::InternalFormat &colorBufferFormatInfo =
+                gl::GetInternalFormatInfo(colorBufferInternalFormat);
+            const gl::InternalFormat &depthStencilBufferFormatInfo =
+                gl::GetInternalFormatInfo(depthStencilBufferInternalFormat);
+
+            egl::Config config;
+            config.renderTargetFormat = colorBufferInternalFormat;
+            config.depthStencilFormat = depthStencilBufferInternalFormat;
+            config.bufferSize         = colorBufferFormatInfo.pixelBytes * 8;
+            config.redSize            = colorBufferFormatInfo.redBits;
+            config.greenSize          = colorBufferFormatInfo.greenBits;
+            config.blueSize           = colorBufferFormatInfo.blueBits;
+            config.luminanceSize      = colorBufferFormatInfo.luminanceBits;
+            config.alphaSize          = colorBufferFormatInfo.alphaBits;
+            config.alphaMaskSize      = 0;
+            config.bindToTextureRGB   = (colorBufferFormatInfo.format == GL_RGB);
+            config.bindToTextureRGBA = (colorBufferFormatInfo.format == GL_RGBA ||
+                                        colorBufferFormatInfo.format == GL_BGRA_EXT);
+            config.colorBufferType = EGL_RGB_BUFFER;
+            config.configCaveat    = EGL_NONE;
+            config.configID        = static_cast<EGLint>(configs.size() + 1);
+            // Can only support a conformant ES2 with feature level greater than 10.0.
+            config.conformant = (mRenderer11DeviceCaps.featureLevel >= D3D_FEATURE_LEVEL_10_0)
+                                    ? (EGL_OPENGL_ES2_BIT | EGL_OPENGL_ES3_BIT_KHR)
+                                    : 0;
+
+            // PresentPathFast may not be conformant
+            if (mPresentPathFastEnabled)
+            {
+                config.conformant = 0;
+            }
+
+            config.depthSize         = depthStencilBufferFormatInfo.depthBits;
+            config.level             = 0;
+            config.matchNativePixmap = EGL_NONE;
+            config.maxPBufferWidth   = rendererCaps.max2DTextureSize;
+            config.maxPBufferHeight  = rendererCaps.max2DTextureSize;
+            config.maxPBufferPixels  = rendererCaps.max2DTextureSize * rendererCaps.max2DTextureSize;
+            config.maxSwapInterval   = 4;
+            config.minSwapInterval   = 0;
+            config.nativeRenderable  = EGL_FALSE;
+            config.nativeVisualID    = 0;
+            config.nativeVisualType  = EGL_NONE;
+            // Can't support ES3 at all without feature level 10.0
+            config.renderableType =
+                EGL_OPENGL_ES2_BIT | ((mRenderer11DeviceCaps.featureLevel >= D3D_FEATURE_LEVEL_10_0)
+                                          ? EGL_OPENGL_ES3_BIT_KHR
+                                          : 0);
+            config.sampleBuffers         = 0;  // FIXME: enumerate multi-sampling
+            config.samples               = 0;
+            config.stencilSize           = depthStencilBufferFormatInfo.stencilBits;
+            config.surfaceType           = EGL_PBUFFER_BIT | EGL_WINDOW_BIT | EGL_SWAP_BEHAVIOR_PRESERVED_BIT;
+            config.transparentType       = EGL_NONE;
+            config.transparentRedValue   = 0;
+            config.transparentGreenValue = 0;
+            config.transparentBlueValue  = 0;
+            config.optimalOrientation    = optimalSurfaceOrientation;
+
+            configs.add(config);
         }
     }
 
@@ -971,7 +1006,9 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
     outExtensions->keyedMutex = true;
     outExtensions->querySurfacePointer = true;
     outExtensions->windowFixedSize     = true;
-    outExtensions->surfaceOrientation  = true;
+
+    // If present path fast is active then the surface orientation extension isn't supported
+    outExtensions->surfaceOrientation = !mPresentPathFastEnabled;
 
     // D3D11 does not support present with dirty rectangles until DXGI 1.2.
     outExtensions->postSubBuffer = mRenderer11DeviceCaps.supportsDXGI1_2;
@@ -1351,6 +1388,12 @@ gl::Error Renderer11::updateState(const gl::Data &data, GLenum drawMode)
     {
         return error;
     }
+
+    // Set the present path state
+    const bool presentPathFastActive =
+        UsePresentPathFast(this, framebufferObject->getFirstColorbuffer());
+    mStateManager.updatePresentPath(presentPathFastActive,
+                                    framebufferObject->getFirstColorbuffer());
 
     // Setting viewport state
     mStateManager.setViewport(data.caps, data.state->getViewport(), data.state->getNearPlane(),
@@ -2097,7 +2140,7 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
     if (!mDriverConstantBufferVS)
     {
         D3D11_BUFFER_DESC constantBufferDescription = {0};
-        constantBufferDescription.ByteWidth = sizeof(dx_VertexConstants);
+        constantBufferDescription.ByteWidth           = sizeof(dx_VertexConstants11);
         constantBufferDescription.Usage = D3D11_USAGE_DEFAULT;
         constantBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         constantBufferDescription.CPUAccessFlags = 0;
@@ -2116,7 +2159,7 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
     if (!mDriverConstantBufferPS)
     {
         D3D11_BUFFER_DESC constantBufferDescription = {0};
-        constantBufferDescription.ByteWidth = sizeof(dx_PixelConstants);
+        constantBufferDescription.ByteWidth           = sizeof(dx_PixelConstants11);
         constantBufferDescription.Usage = D3D11_USAGE_DEFAULT;
         constantBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         constantBufferDescription.CPUAccessFlags = 0;
@@ -2132,27 +2175,27 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
         mDeviceContext->PSSetConstantBuffers(1, 1, &mDriverConstantBufferPS);
     }
 
-    const dx_VertexConstants &vertexConstants = mStateManager.getVertexConstants();
-    if (memcmp(&vertexConstants, &mAppliedVertexConstants, sizeof(dx_VertexConstants)) != 0)
+    const dx_VertexConstants11 &vertexConstants = mStateManager.getVertexConstants();
+    if (memcmp(&vertexConstants, &mAppliedVertexConstants, sizeof(dx_VertexConstants11)) != 0)
     {
         ASSERT(mDriverConstantBufferVS != nullptr);
         if (mDriverConstantBufferVS)
         {
             mDeviceContext->UpdateSubresource(mDriverConstantBufferVS, 0, NULL, &vertexConstants,
                                               16, 0);
-            memcpy(&mAppliedVertexConstants, &vertexConstants, sizeof(dx_VertexConstants));
+            memcpy(&mAppliedVertexConstants, &vertexConstants, sizeof(dx_VertexConstants11));
         }
     }
 
-    const dx_PixelConstants &pixelConstants = mStateManager.getPixelConstants();
-    if (memcmp(&pixelConstants, &mAppliedPixelConstants, sizeof(dx_PixelConstants)) != 0)
+    const dx_PixelConstants11 &pixelConstants = mStateManager.getPixelConstants();
+    if (memcmp(&pixelConstants, &mAppliedPixelConstants, sizeof(dx_PixelConstants11)) != 0)
     {
         ASSERT(mDriverConstantBufferPS != nullptr);
         if (mDriverConstantBufferPS)
         {
             mDeviceContext->UpdateSubresource(mDriverConstantBufferPS, 0, NULL, &pixelConstants, 16,
                                               0);
-            memcpy(&mAppliedPixelConstants, &pixelConstants, sizeof(dx_PixelConstants));
+            memcpy(&mAppliedPixelConstants, &pixelConstants, sizeof(dx_PixelConstants11));
         }
     }
 
@@ -2206,8 +2249,8 @@ void Renderer11::markAllStateDirty()
         mAppliedTFOffsets[i] = 0;
     }
 
-    memset(&mAppliedVertexConstants, 0, sizeof(dx_VertexConstants));
-    memset(&mAppliedPixelConstants, 0, sizeof(dx_PixelConstants));
+    memset(&mAppliedVertexConstants, 0, sizeof(dx_VertexConstants11));
+    memset(&mAppliedPixelConstants, 0, sizeof(dx_PixelConstants11));
 
     mInputLayoutCache.markDirty();
 
@@ -2602,6 +2645,13 @@ gl::Error Renderer11::copyImage2D(const gl::Framebuffer *framebuffer, const gl::
     gl::Box sourceArea(sourceRect.x, sourceRect.y, 0, sourceRect.width, sourceRect.height, 1);
     gl::Extents sourceSize(sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(), 1);
 
+    const bool invertSource = UsePresentPathFast(this, colorbuffer);
+    if (invertSource)
+    {
+        sourceArea.y      = sourceSize.height - sourceRect.y;
+        sourceArea.height = -sourceArea.height;
+    }
+
     gl::Box destArea(destOffset.x, destOffset.y, 0, sourceRect.width, sourceRect.height, 1);
     gl::Extents destSize(destRenderTarget->getWidth(), destRenderTarget->getHeight(), 1);
 
@@ -2653,6 +2703,13 @@ gl::Error Renderer11::copyImageCube(const gl::Framebuffer *framebuffer, const gl
 
     gl::Box sourceArea(sourceRect.x, sourceRect.y, 0, sourceRect.width, sourceRect.height, 1);
     gl::Extents sourceSize(sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(), 1);
+
+    const bool invertSource = UsePresentPathFast(this, colorbuffer);
+    if (invertSource)
+    {
+        sourceArea.y      = sourceSize.height - sourceRect.y;
+        sourceArea.height = -sourceArea.height;
+    }
 
     gl::Box destArea(destOffset.x, destOffset.y, 0, sourceRect.width, sourceRect.height, 1);
     gl::Extents destSize(destRenderTarget->getWidth(), destRenderTarget->getHeight(), 1);
@@ -3333,6 +3390,8 @@ gl::Error Renderer11::readFromAttachment(const gl::FramebufferAttachment &srcAtt
     ASSERT(sourceArea.width >= 0);
     ASSERT(sourceArea.height >= 0);
 
+    const bool invertTexture = UsePresentPathFast(this, &srcAttachment);
+
     RenderTargetD3D *renderTarget = nullptr;
     gl::Error error = srcAttachment.getRenderTarget(&renderTarget);
     if (error.isError())
@@ -3348,15 +3407,21 @@ gl::Error Renderer11::readFromAttachment(const gl::FramebufferAttachment &srcAtt
 
     const gl::Extents &texSize = textureHelper.getExtents();
 
+    gl::Rectangle actualArea = sourceArea;
+    if (invertTexture)
+    {
+        actualArea.y = texSize.height - actualArea.y - actualArea.height;
+    }
+
     // Clamp read region to the defined texture boundaries, preventing out of bounds reads
     // and reads of uninitialized data.
     gl::Rectangle safeArea;
-    safeArea.x = gl::clamp(sourceArea.x, 0, texSize.width);
-    safeArea.y = gl::clamp(sourceArea.y, 0, texSize.height);
+    safeArea.x = gl::clamp(actualArea.x, 0, texSize.width);
+    safeArea.y = gl::clamp(actualArea.y, 0, texSize.height);
     safeArea.width =
-        gl::clamp(sourceArea.width + std::min(sourceArea.x, 0), 0, texSize.width - safeArea.x);
+        gl::clamp(actualArea.width + std::min(actualArea.x, 0), 0, texSize.width - safeArea.x);
     safeArea.height =
-        gl::clamp(sourceArea.height + std::min(sourceArea.y, 0), 0, texSize.height - safeArea.y);
+        gl::clamp(actualArea.height + std::min(actualArea.y, 0), 0, texSize.height - safeArea.y);
 
     ASSERT(safeArea.x >= 0 && safeArea.y >= 0);
     ASSERT(safeArea.x + safeArea.width <= texSize.width);
@@ -3433,8 +3498,30 @@ gl::Error Renderer11::readFromAttachment(const gl::FramebufferAttachment &srcAtt
     mDeviceContext->CopySubresourceRegion(stagingHelper.getResource(), 0, 0, 0, 0,
                                           srcTexture->getResource(), sourceSubResource, &srcBox);
 
-    PackPixelsParams packParams(safeArea, format, type, outputPitch, pack, 0);
-    return packPixels(stagingHelper, packParams, pixelsOut);
+    if (invertTexture)
+    {
+        gl::PixelPackState invertTexturePack;
+
+        // Create a new PixelPackState with reversed row order. Note that we can't just assign
+        // 'invertTexturePack' to be 'pack' (or memcpy) since that breaks the ref counting/object
+        // tracking in the 'pixelBuffer' members, causing leaks. Instead we must use
+        // pixelBuffer.set() twice, which performs the addRef/release correctly
+        invertTexturePack.alignment = pack.alignment;
+        invertTexturePack.pixelBuffer.set(pack.pixelBuffer.get());
+        invertTexturePack.reverseRowOrder = !pack.reverseRowOrder;
+
+        PackPixelsParams packParams(safeArea, format, type, outputPitch, invertTexturePack, 0);
+        error = packPixels(stagingHelper, packParams, pixelsOut);
+
+        invertTexturePack.pixelBuffer.set(nullptr);
+
+        return error;
+    }
+    else
+    {
+        PackPixelsParams packParams(safeArea, format, type, outputPitch, pack, 0);
+        return packPixels(stagingHelper, packParams, pixelsOut);
+    }
 }
 
 gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,

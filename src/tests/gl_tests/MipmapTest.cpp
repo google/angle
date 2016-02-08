@@ -928,7 +928,8 @@ TEST_P(MipmapTestES3, MipmapsForTexture3D)
 // Note: we run these tests against 9_3 on WARP due to hardware driver issues on Win7
 ANGLE_INSTANTIATE_TEST(MipmapTest,
                        ES2_D3D9(),
-                       ES2_D3D11(),
+                       ES2_D3D11(EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE),
+                       ES2_D3D11(EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE),
                        ES2_D3D11_FL9_3_WARP(),
                        ES2_OPENGL(),
                        ES3_OPENGL(),

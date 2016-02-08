@@ -113,6 +113,25 @@ std::ostream &operator<<(std::ostream& stream, const PlatformParameters &pp)
         break;
     }
 
+    switch (pp.eglParameters.presentPath)
+    {
+        case EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE:
+            stream << "_PRESENT_PATH_COPY";
+            break;
+
+        case EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE:
+            stream << "_PRESENT_PATH_FAST";
+            break;
+
+        case EGL_DONT_CARE:
+            // default
+            break;
+
+        default:
+            UNREACHABLE();
+            break;
+    }
+
     return stream;
 }
 
@@ -163,6 +182,12 @@ EGLPlatformParameters D3D11()
         EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
         EGL_DONT_CARE, EGL_DONT_CARE,
         EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
+}
+
+EGLPlatformParameters D3D11(EGLenum presentPath)
+{
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, EGL_DONT_CARE, EGL_DONT_CARE,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE, presentPath);
 }
 
 EGLPlatformParameters D3D11_FL11_1()
@@ -358,6 +383,11 @@ PlatformParameters ES2_D3D9_REFERENCE()
 PlatformParameters ES2_D3D11()
 {
     return PlatformParameters(2, 0, egl_platform::D3D11());
+}
+
+PlatformParameters ES2_D3D11(EGLenum presentPath)
+{
+    return PlatformParameters(2, 0, egl_platform::D3D11(presentPath));
 }
 
 PlatformParameters ES2_D3D11_FL11_0()

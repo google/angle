@@ -215,6 +215,23 @@ void StateManager11::setViewportBounds(const int width, const int height)
     }
 }
 
+void StateManager11::updatePresentPath(bool presentPathFastActive,
+                                       const gl::FramebufferAttachment *framebufferAttachment)
+{
+    const int colorBufferHeight =
+        framebufferAttachment ? framebufferAttachment->getSize().height : 0;
+
+    if ((mCurPresentPathFastEnabled != presentPathFastActive) ||
+        (presentPathFastActive && (colorBufferHeight != mCurPresentPathFastColorBufferHeight)))
+    {
+        mCurPresentPathFastEnabled           = presentPathFastActive;
+        mCurPresentPathFastColorBufferHeight = colorBufferHeight;
+        mViewportStateIsDirty                = true;  // Viewport may need to be vertically inverted
+        mScissorStateIsDirty                 = true;  // Scissor rect may need to be vertically inverted
+        mRasterizerStateIsDirty              = true;  // Cull Mode may need to be inverted
+    }
+}
+
 void StateManager11::syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits)
 {
     if (!dirtyBits.any())
@@ -571,8 +588,34 @@ gl::Error StateManager11::setRasterizerState(const gl::RasterizerState &rasterSt
     }
 
     ID3D11RasterizerState *dxRasterState = nullptr;
-    gl::Error error = mRenderer->getStateCache().getRasterizerState(rasterState, mCurScissorEnabled,
-                                                                    &dxRasterState);
+    gl::Error error(GL_NO_ERROR);
+
+    if (mCurPresentPathFastEnabled)
+    {
+        gl::RasterizerState modifiedRasterState = rasterState;
+
+        // If prseent path fast is active then we need invert the front face state.
+        // This ensures that both gl_FrontFacing is correct, and front/back culling
+        // is performed correctly.
+        if (modifiedRasterState.frontFace == GL_CCW)
+        {
+            modifiedRasterState.frontFace = GL_CW;
+        }
+        else
+        {
+            ASSERT(modifiedRasterState.frontFace == GL_CW);
+            modifiedRasterState.frontFace = GL_CCW;
+        }
+
+        error = mRenderer->getStateCache().getRasterizerState(modifiedRasterState,
+                                                              mCurScissorEnabled, &dxRasterState);
+    }
+    else
+    {
+        error = mRenderer->getStateCache().getRasterizerState(rasterState, mCurScissorEnabled,
+                                                              &dxRasterState);
+    }
+
     if (error.isError())
     {
         return error;
@@ -591,13 +634,19 @@ void StateManager11::setScissorRectangle(const gl::Rectangle &scissor, bool enab
     if (!mScissorStateIsDirty)
         return;
 
+    int modifiedScissorY = scissor.y;
+    if (mCurPresentPathFastEnabled)
+    {
+        modifiedScissorY = mCurPresentPathFastColorBufferHeight - scissor.height - scissor.y;
+    }
+
     if (enabled)
     {
         D3D11_RECT rect;
         rect.left   = std::max(0, scissor.x);
-        rect.top    = std::max(0, scissor.y);
+        rect.top    = std::max(0, modifiedScissorY);
         rect.right  = scissor.x + std::max(0, scissor.width);
-        rect.bottom = scissor.y + std::max(0, scissor.height);
+        rect.bottom = modifiedScissorY + std::max(0, scissor.height);
 
         mRenderer->getDeviceContext()->RSSetScissorRects(1, &rect);
     }
@@ -639,7 +688,22 @@ void StateManager11::setViewport(const gl::Caps *caps,
 
     D3D11_VIEWPORT dxViewport;
     dxViewport.TopLeftX = static_cast<float>(dxViewportTopLeftX);
-    dxViewport.TopLeftY = static_cast<float>(dxViewportTopLeftY);
+
+    if (mCurPresentPathFastEnabled)
+    {
+        // When present path fast is active and we're rendering to framebuffer 0, we must invert
+        // the viewport in Y-axis.
+        // NOTE: We delay the inversion until right before the call to RSSetViewports, and leave
+        // dxViewportTopLeftY unchanged. This allows us to calculate viewAdjust below using the
+        // unaltered dxViewportTopLeftY value.
+        dxViewport.TopLeftY = static_cast<float>(mCurPresentPathFastColorBufferHeight -
+                                                 dxViewportTopLeftY - dxViewportHeight);
+    }
+    else
+    {
+        dxViewport.TopLeftY = static_cast<float>(dxViewportTopLeftY);
+    }
+
     dxViewport.Width    = static_cast<float>(dxViewportWidth);
     dxViewport.Height   = static_cast<float>(dxViewportHeight);
     dxViewport.MinDepth = actualZNear;
@@ -687,6 +751,16 @@ void StateManager11::setViewport(const gl::Caps *caps,
     mPixelConstants.depthRange[0] = actualZNear;
     mPixelConstants.depthRange[1] = actualZFar;
     mPixelConstants.depthRange[2] = actualZFar - actualZNear;
+
+    mPixelConstants.viewScale[0] = 1.0f;
+    mPixelConstants.viewScale[1] = mCurPresentPathFastEnabled ? 1.0f : -1.0f;
+    mPixelConstants.viewScale[2] = 1.0f;
+    mPixelConstants.viewScale[3] = 1.0f;
+
+    mVertexConstants.viewScale[0] = mPixelConstants.viewScale[0];
+    mVertexConstants.viewScale[1] = mPixelConstants.viewScale[1];
+    mVertexConstants.viewScale[2] = mPixelConstants.viewScale[2];
+    mVertexConstants.viewScale[3] = mPixelConstants.viewScale[3];
 
     mViewportStateIsDirty = false;
 }
