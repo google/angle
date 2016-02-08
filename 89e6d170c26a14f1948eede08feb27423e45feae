@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d6200ed_a9f93d98",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1474,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-08T15:48:28Z",
+      "side": 1,
+      "message": "nit: naming inconsistency between applyRenderTarget and syncFramebuffer?",
+      "revId": "89e6d170c26a14f1948eede08feb27423e45feae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9debe062_a4a72c7f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2234,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-08T15:48:28Z",
+      "side": 1,
+      "message": "nit: markAllStateDirty",
+      "revId": "89e6d170c26a14f1948eede08feb27423e45feae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7df2ac56_a0939a80",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-08T15:48:28Z",
+      "side": 1,
+      "message": "Are there any changes to code moved here?",
+      "revId": "89e6d170c26a14f1948eede08feb27423e45feae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
