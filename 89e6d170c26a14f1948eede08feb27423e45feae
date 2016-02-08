@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7df2ac56_c3fc6861",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1474,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-08T17:50:08Z",
+      "side": 1,
+      "message": "Temporarily - this is intentional. The apply methods will go away when we can move the entire draw logic into the Renderer11/Renderer9.",
+      "parentUuid": "9d6200ed_a9f93d98",
+      "revId": "89e6d170c26a14f1948eede08feb27423e45feae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9debe062_a4a72c7f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2016-02-08T15:48:28Z",
       "side": 1,
       "message": "nit: markAllStateDirty",
+      "revId": "89e6d170c26a14f1948eede08feb27423e45feae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd118444_dd3f9f6b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2234,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-08T17:50:08Z",
+      "side": 1,
+      "message": "Again, intentional, and temporarily inconsistent. markAllStateDirty will go away at some point.",
+      "parentUuid": "9debe062_a4a72c7f",
       "revId": "89e6d170c26a14f1948eede08feb27423e45feae",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "9debe062_64ec8472",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-08T17:50:08Z",
+      "side": 1,
+      "message": "Should be formatting only.",
+      "parentUuid": "7df2ac56_a0939a80",
+      "revId": "89e6d170c26a14f1948eede08feb27423e45feae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bde8a466_a2bcbefe",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 3
@@ -64,6 +118,30 @@
       "writtenOn": "2016-02-08T16:42:45Z",
       "side": 1,
       "message": "I would try to avoid the circular dependencies when possible but I didn\u0027t look deeply into why it\u0027s needed here.",
+      "range": {
+        "startLine": 46,
+        "startChar": 19,
+        "endLine": 46,
+        "endChar": 39
+      },
+      "revId": "89e6d170c26a14f1948eede08feb27423e45feae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7df2ac56_8306603d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-08T17:50:08Z",
+      "side": 1,
+      "message": "Can fix this in the future if it becomes an issue. The one thing I could think of is for unit testing StateManager11 - if that becomes a thing we can make a data / state class member similar to Framebuffer/Program/Shader/etc.",
+      "parentUuid": "bde8a466_a2bcbefe",
       "range": {
         "startLine": 46,
         "startChar": 19,
