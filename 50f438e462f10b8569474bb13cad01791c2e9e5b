@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d4e1083_a5e27ee6",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-08T18:52:40Z",
+      "side": 1,
+      "message": "floating point textures aren\u0027t available without extensions in ES2.  I\u0027d go with unsigned byte data.",
+      "range": {
+        "startLine": 201,
+        "startChar": 60,
+        "endLine": 201,
+        "endChar": 68
+      },
+      "revId": "50f438e462f10b8569474bb13cad01791c2e9e5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
