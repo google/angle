@@ -50,6 +50,29 @@
       "revId": "89e6d170c26a14f1948eede08feb27423e45feae",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bde8a466_a2bcbefe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-08T16:42:45Z",
+      "side": 1,
+      "message": "I would try to avoid the circular dependencies when possible but I didn\u0027t look deeply into why it\u0027s needed here.",
+      "range": {
+        "startLine": 46,
+        "startChar": 19,
+        "endLine": 46,
+        "endChar": 39
+      },
+      "revId": "89e6d170c26a14f1948eede08feb27423e45feae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
