@@ -37,8 +37,6 @@ const int ScratchMemoryBufferLifetime = 1000;
 
 }  // anonymous namespace
 
-const uintptr_t RendererD3D::DirtyPointer = std::numeric_limits<uintptr_t>::max();
-
 RendererD3D::RendererD3D(egl::Display *display)
     : mDisplay(display),
       mDeviceLost(false),

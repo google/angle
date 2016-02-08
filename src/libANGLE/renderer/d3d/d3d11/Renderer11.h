@@ -145,9 +145,6 @@ class Renderer11 : public RendererD3D
                                SourceIndexData *sourceIndexInfo) override;
     void applyTransformFeedbackBuffers(const gl::State &state) override;
 
-    virtual void markAllStateDirty();
-    void markRenderTargetStateDirty();
-
     // lost device
     bool testDeviceLost() override;
     bool testDeviceResettable() override;
@@ -254,6 +251,7 @@ class Renderer11 : public RendererD3D
     virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
 
+    void markAllStateDirty();
     void unapplyRenderTargets();
     void setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView);
     gl::Error packPixels(const TextureHelper11 &textureHelper,
@@ -272,8 +270,6 @@ class Renderer11 : public RendererD3D
                                  const gl::PixelPackState &pack,
                                  uint8_t *pixels);
 
-    void setShaderResource(gl::SamplerType shaderType, UINT resourceSlot, ID3D11ShaderResourceView *srv);
-
     gl::Error blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTargetD3D *readRenderTarget,
                                    RenderTargetD3D *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,
                                    bool colorBlit, bool depthBlit, bool stencilBlit);
@@ -283,6 +279,7 @@ class Renderer11 : public RendererD3D
 
     RendererClass getRendererClass() const override { return RENDERER_D3D11; }
     InputLayoutCache *getInputLayoutCache() { return &mInputLayoutCache; }
+    StateManager11 *getStateManager() { return &mStateManager; }
 
     void onSwap();
     void onBufferDelete(const Buffer11 *deleted);
@@ -329,7 +326,6 @@ class Renderer11 : public RendererD3D
                               int instances);
 
     ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
-    void unsetConflictingSRVs(gl::SamplerType shaderType, uintptr_t resource, const gl::ImageIndex &index);
 
     void populateRenderer11DeviceCaps();
 
@@ -365,49 +361,6 @@ class Renderer11 : public RendererD3D
 
     std::vector<bool> mForceSetPixelSamplerStates;
     std::vector<gl::SamplerState> mCurPixelSamplerStates;
-
-    // Currently applied textures
-    struct SRVRecord
-    {
-        uintptr_t srv;
-        uintptr_t resource;
-        D3D11_SHADER_RESOURCE_VIEW_DESC desc;
-    };
-
-    // A cache of current SRVs that also tracks the highest 'used' (non-NULL) SRV
-    // We might want to investigate a more robust approach that is also fast when there's
-    // a large gap between used SRVs (e.g. if SRV 0 and 7 are non-NULL, this approach will
-    // waste time on SRVs 1-6.)
-    class SRVCache : angle::NonCopyable
-    {
-      public:
-        SRVCache()
-            : mHighestUsedSRV(0)
-        {
-        }
-
-        void initialize(size_t size)
-        {
-            mCurrentSRVs.resize(size);
-        }
-
-        size_t size() const { return mCurrentSRVs.size(); }
-        size_t highestUsed() const { return mHighestUsedSRV; }
-
-        const SRVRecord &operator[](size_t index) const { return mCurrentSRVs[index]; }
-        void clear();
-        void update(size_t resourceIndex, ID3D11ShaderResourceView *srv);
-
-      private:
-        std::vector<SRVRecord> mCurrentSRVs;
-        size_t mHighestUsedSRV;
-    };
-
-    SRVCache mCurVertexSRVs;
-    SRVCache mCurPixelSRVs;
-
-    // A block of NULL pointers, cached so we don't re-allocate every draw call
-    std::vector<ID3D11ShaderResourceView*> mNullSRVs;
 
     StateManager11 mStateManager;
 

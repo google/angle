@@ -10,12 +10,13 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_UTILS_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_UTILS_H_
 
+#include <array>
+#include <vector>
+
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
-
-#include <vector>
 
 namespace gl
 {
@@ -27,6 +28,8 @@ namespace rx
 class RenderTarget11;
 struct WorkaroundsD3D;
 struct Renderer11DeviceCaps;
+
+using RenderTargetArray = std::array<ID3D11RenderTargetView *, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>;
 
 namespace gl_d3d11
 {

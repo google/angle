@@ -2007,14 +2007,14 @@ void Renderer9::markAllStateDirty()
     for (unsigned int i = 0; i < mCurVertexTextures.size(); i++)
     {
         mCurVertexSamplerStates[i].forceSet = true;
-        mCurVertexTextures[i] = DirtyPointer;
+        mCurVertexTextures[i]               = angle::DirtyPointer;
     }
 
     ASSERT(mCurPixelSamplerStates.size() == mCurPixelTextures.size());
     for (unsigned int i = 0; i < mCurPixelSamplerStates.size(); i++)
     {
         mCurPixelSamplerStates[i].forceSet = true;
-        mCurPixelTextures[i] = DirtyPointer;
+        mCurPixelTextures[i]               = angle::DirtyPointer;
     }
 
     mAppliedIBSerial = 0;

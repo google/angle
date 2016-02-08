@@ -172,8 +172,6 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
                                        SourceIndexData *sourceIndexInfo) = 0;
     virtual void applyTransformFeedbackBuffers(const gl::State& state) = 0;
 
-    virtual void markAllStateDirty() = 0;
-
     virtual unsigned int getReservedVertexUniformVectors() const = 0;
     virtual unsigned int getReservedFragmentUniformVectors() const = 0;
     virtual unsigned int getReservedVertexUniformBuffers() const = 0;
@@ -263,7 +261,6 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     static unsigned int GetBlendSampleMask(const gl::Data &data, int samples);
     // dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
-    static const uintptr_t DirtyPointer;
 
     egl::Display *mDisplay;
     bool mDeviceLost;
