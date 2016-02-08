@@ -302,8 +302,7 @@ TEST_P(CopyTexImageTest, SubImageRGBToL)
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(CopyTexImageTest,
                        ES2_D3D9(),
-                       ES2_D3D11(EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE),
-                       ES2_D3D11(EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE),
+                       ES2_D3D11(),
                        ES2_OPENGL(),
                        ES2_OPENGL(3, 3),
                        ES2_OPENGLES());

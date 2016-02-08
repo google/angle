@@ -52,7 +52,6 @@ EGLPlatformParameters D3D9_NULL();
 EGLPlatformParameters D3D9_REFERENCE();
 
 EGLPlatformParameters D3D11();
-EGLPlatformParameters D3D11(EGLenum presentPath);
 EGLPlatformParameters D3D11_FL11_1();
 EGLPlatformParameters D3D11_FL11_0();
 EGLPlatformParameters D3D11_FL10_1();
@@ -89,7 +88,6 @@ PlatformParameters ES2_D3D9();
 PlatformParameters ES2_D3D9_REFERENCE();
 
 PlatformParameters ES2_D3D11();
-PlatformParameters ES2_D3D11(EGLenum presentPath);
 PlatformParameters ES2_D3D11_FL11_0();
 PlatformParameters ES2_D3D11_FL10_1();
 PlatformParameters ES2_D3D11_FL10_0();

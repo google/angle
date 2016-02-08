@@ -24,7 +24,6 @@ class FramebufferAttachment;
 
 namespace rx
 {
-class Renderer11;
 class RenderTarget11;
 struct WorkaroundsD3D;
 struct Renderer11DeviceCaps;
@@ -374,8 +373,6 @@ gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
                                                         DXGI_FORMAT dxgiFormat,
                                                         const gl::Extents &size,
                                                         ID3D11Device *device);
-
-bool UsePresentPathFast(const Renderer11 *renderer, const gl::FramebufferAttachment *colorbuffer);
 
 }  // namespace rx
 

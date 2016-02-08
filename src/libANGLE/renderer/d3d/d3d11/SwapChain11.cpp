@@ -31,17 +31,6 @@
 namespace rx
 {
 
-namespace
-{
-bool NeedsOffscreenTexture(Renderer11 *renderer, NativeWindow nativeWindow, EGLint orientation)
-{
-    // We don't need an offscreen texture if either orientation = INVERT_Y,
-    // or present path fast is enabled and we're not rendering onto an offscreen surface.
-    return orientation != EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE &&
-           !(renderer->presentPathFastEnabled() && nativeWindow.getNativeWindow());
-}
-}  // anonymous namespace
-
 SwapChain11::SwapChain11(Renderer11 *renderer,
                          NativeWindow nativeWindow,
                          HANDLE shareHandle,
@@ -63,7 +52,7 @@ SwapChain11::SwapChain11(Renderer11 *renderer,
       mBackBufferTexture(nullptr),
       mBackBufferRTView(nullptr),
       mBackBufferSRView(nullptr),
-      mNeedsOffscreenTexture(NeedsOffscreenTexture(renderer, nativeWindow, orientation)),
+      mNeedsOffscreenTexture(orientation != EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE),
       mOffscreenTexture(nullptr),
       mOffscreenRTView(nullptr),
       mOffscreenSRView(nullptr),
@@ -79,8 +68,6 @@ SwapChain11::SwapChain11(Renderer11 *renderer,
       mColorRenderTarget(this, renderer, false),
       mDepthStencilRenderTarget(this, renderer, true)
 {
-    // Sanity check that if present path fast is active then we're using the default orientation
-    ASSERT(!mRenderer->presentPathFastEnabled() || orientation == 0);
 }
 
 SwapChain11::~SwapChain11()

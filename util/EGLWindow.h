@@ -34,16 +34,10 @@ struct EGLPlatformParameters
     EGLint majorVersion;
     EGLint minorVersion;
     EGLint deviceType;
-    EGLint presentPath;
 
     EGLPlatformParameters();
     explicit EGLPlatformParameters(EGLint renderer);
     EGLPlatformParameters(EGLint renderer, EGLint majorVersion, EGLint minorVersion, EGLint deviceType);
-    EGLPlatformParameters(EGLint renderer,
-                          EGLint majorVersion,
-                          EGLint minorVersion,
-                          EGLint deviceType,
-                          EGLint presentPath);
 };
 
 bool operator<(const EGLPlatformParameters &a, const EGLPlatformParameters &b);

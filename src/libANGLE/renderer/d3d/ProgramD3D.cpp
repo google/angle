@@ -401,13 +401,11 @@ D3DVarying::D3DVarying(const std::string &semanticNameIn,
 ProgramD3DMetadata::ProgramD3DMetadata(int rendererMajorShaderModel,
                                        const std::string &shaderModelSuffix,
                                        bool usesInstancedPointSpriteEmulation,
-                                       bool usesViewScale,
                                        const ShaderD3D *vertexShader,
                                        const ShaderD3D *fragmentShader)
     : mRendererMajorShaderModel(rendererMajorShaderModel),
       mShaderModelSuffix(shaderModelSuffix),
       mUsesInstancedPointSpriteEmulation(usesInstancedPointSpriteEmulation),
-      mUsesViewScale(usesViewScale),
       mVertexShader(vertexShader),
       mFragmentShader(fragmentShader)
 {
@@ -446,11 +444,6 @@ bool ProgramD3DMetadata::usesPointSize() const
 bool ProgramD3DMetadata::usesInsertedPointCoordValue() const
 {
     return !usesPointSize() && usesPointCoord() && mRendererMajorShaderModel >= 4;
-}
-
-bool ProgramD3DMetadata::usesViewScale() const
-{
-    return mUsesViewScale;
 }
 
 bool ProgramD3DMetadata::addsPointCoordToVertexShader() const
@@ -1266,8 +1259,7 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Data &data
     }
 
     std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(
-        geometryShaderType, data, mData, mRenderer->presentPathFastEnabled(),
-        mGeometryShaderPreamble);
+        geometryShaderType, data, mData, mGeometryShaderPreamble);
 
     gl::InfoLog tempInfoLog;
     gl::InfoLog *currentInfoLog = infoLog ? infoLog : &tempInfoLog;
@@ -1395,8 +1387,7 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
     }
 
     ProgramD3DMetadata metadata(mRenderer->getMajorShaderModel(), mRenderer->getShaderModelSuffix(),
-                                usesInstancedPointSpriteEmulation(),
-                                mRenderer->presentPathFastEnabled(), vertexShaderD3D,
+                                usesInstancedPointSpriteEmulation(), vertexShaderD3D,
                                 fragmentShaderD3D);
 
     varyingPacking.enableBuiltins(SHADER_VERTEX, metadata);
