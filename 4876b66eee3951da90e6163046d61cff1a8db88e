@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d6200ed_691a25b7",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-08T16:27:36Z",
+      "side": 1,
+      "message": "Displays should be compared with EGL_NO_DISPLAY",
+      "range": {
+        "startLine": 272,
+        "startChar": 79,
+        "endLine": 272,
+        "endChar": 86
+      },
+      "revId": "4876b66eee3951da90e6163046d61cff1a8db88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd118444_bd32abd0",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-08T16:27:36Z",
+      "side": 1,
+      "message": "These are no longer needed.",
+      "range": {
+        "startLine": 384,
+        "startChar": 4,
+        "endLine": 385,
+        "endChar": 52
+      },
+      "revId": "4876b66eee3951da90e6163046d61cff1a8db88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
