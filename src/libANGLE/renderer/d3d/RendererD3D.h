@@ -162,14 +162,18 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
                                     GLenum drawMode,
                                     const std::vector<D3DUniform *> &uniformArray) = 0;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize) = 0;
-    virtual gl::Error applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances, SourceIndexData *sourceIndexInfo) = 0;
+    virtual gl::Error applyVertexBuffer(const gl::State &state,
+                                        GLenum mode,
+                                        GLint first,
+                                        GLsizei count,
+                                        GLsizei instances,
+                                        TranslatedIndexData *indexInfo) = 0;
     virtual gl::Error applyIndexBuffer(const gl::Data &data,
                                        const GLvoid *indices,
                                        GLsizei count,
                                        GLenum mode,
                                        GLenum type,
-                                       TranslatedIndexData *indexInfo,
-                                       SourceIndexData *sourceIndexInfo) = 0;
+                                       TranslatedIndexData *indexInfo) = 0;
     virtual void applyTransformFeedbackBuffers(const gl::State& state) = 0;
 
     virtual unsigned int getReservedVertexUniformVectors() const = 0;

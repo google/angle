@@ -1476,7 +1476,12 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
     return mStateManager.syncFramebuffer(framebuffer);
 }
 
-gl::Error Renderer11::applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances, SourceIndexData *sourceInfo)
+gl::Error Renderer11::applyVertexBuffer(const gl::State &state,
+                                        GLenum mode,
+                                        GLint first,
+                                        GLsizei count,
+                                        GLsizei instances,
+                                        TranslatedIndexData *indexInfo)
 {
     gl::Error error = mVertexDataManager->prepareVertexData(state, first, count, &mTranslatedAttribCache, instances);
     if (error.isError())
@@ -1485,12 +1490,18 @@ gl::Error Renderer11::applyVertexBuffer(const gl::State &state, GLenum mode, GLi
     }
 
     // If index information is passed, mark it with the current changed status.
-    if (sourceInfo)
+    if (indexInfo)
     {
-        sourceInfo->srcIndicesChanged = mAppliedIBChanged;
+        indexInfo->srcIndexData.srcIndicesChanged = mAppliedIBChanged;
     }
 
-    return mInputLayoutCache.applyVertexBuffers(mTranslatedAttribCache, mode, state.getProgram(), sourceInfo);
+    GLsizei numIndicesPerInstance = 0;
+    if (instances > 0)
+    {
+        numIndicesPerInstance = count;
+    }
+    return mInputLayoutCache.applyVertexBuffers(mTranslatedAttribCache, mode, state.getProgram(),
+                                                indexInfo, numIndicesPerInstance);
 }
 
 gl::Error Renderer11::applyIndexBuffer(const gl::Data &data,
@@ -1498,14 +1509,13 @@ gl::Error Renderer11::applyIndexBuffer(const gl::Data &data,
                                        GLsizei count,
                                        GLenum mode,
                                        GLenum type,
-                                       TranslatedIndexData *indexInfo,
-                                       SourceIndexData *sourceIndexInfo)
+                                       TranslatedIndexData *indexInfo)
 {
     gl::VertexArray *vao           = data.state->getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
-    gl::Error error                = mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices,
-                                                          indexInfo, sourceIndexInfo,
-                                                          data.state->isPrimitiveRestartEnabled());
+    gl::Error error =
+        mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices, indexInfo,
+                                            data.state->isPrimitiveRestartEnabled());
     if (error.isError())
     {
         return error;
@@ -1676,14 +1686,38 @@ gl::Error Renderer11::drawArraysImpl(const gl::Data &data,
         return drawTriangleFan(data, count, GL_NONE, nullptr, 0, instances);
     }
 
-    if (instances > 0)
-    {
-        mDeviceContext->DrawInstanced(count, instances, 0, 0);
-        return gl::Error(GL_NO_ERROR);
-    }
-
     bool useInstancedPointSpriteEmulation =
         programD3D->usesPointSize() && getWorkarounds().useInstancedPointSpriteEmulation;
+
+    if (instances > 0)
+    {
+        if (mode == GL_POINTS && useInstancedPointSpriteEmulation)
+        {
+            // If pointsprite emulation is used with glDrawArraysInstanced then we need to take a
+            // less efficent code path.
+            // Instanced rendering of emulated pointsprites requires a loop to draw each batch of
+            // points. An offset into the instanced data buffer is calculated and applied on each
+            // iteration to ensure all instances are rendered correctly.
+
+            // Each instance being rendered requires the inputlayout cache to reapply buffers and
+            // offsets.
+            for (GLsizei i = 0; i < instances; i++)
+            {
+                gl::Error error = mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(i);
+                if (error.isError())
+                {
+                    return error;
+                }
+
+                mDeviceContext->DrawIndexedInstanced(6, count, 0, 0, 0);
+            }
+        }
+        else
+        {
+            mDeviceContext->DrawInstanced(count, instances, 0, 0);
+        }
+        return gl::Error(GL_NO_ERROR);
+    }
 
     // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
     // Emulating instanced point sprites for FL9_3 requires the topology to be
@@ -1719,16 +1753,41 @@ gl::Error Renderer11::drawElementsImpl(const gl::Data &data,
         return drawTriangleFan(data, count, type, indices, minIndex, instances);
     }
 
+    const ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.state->getProgram());
     if (instances > 0)
     {
-        mDeviceContext->DrawIndexedInstanced(count, instances, 0, -minIndex, 0);
+        if (mode == GL_POINTS && programD3D->usesInstancedPointSpriteEmulation())
+        {
+            // If pointsprite emulation is used with glDrawElementsInstanced then we need to take a
+            // less efficent code path.
+            // Instanced rendering of emulated pointsprites requires a loop to draw each batch of
+            // points. An offset into the instanced data buffer is calculated and applied on each
+            // iteration to ensure all instances are rendered correctly.
+            GLsizei elementsToRender = static_cast<GLsizei>(indexInfo.indexRange.vertexCount());
+
+            // Each instance being rendered requires the inputlayout cache to reapply buffers and
+            // offsets.
+            for (GLsizei i = 0; i < instances; i++)
+            {
+                gl::Error error = mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(i);
+                if (error.isError())
+                {
+                    return error;
+                }
+
+                mDeviceContext->DrawIndexedInstanced(6, elementsToRender, 0, 0, 0);
+            }
+        }
+        else
+        {
+            mDeviceContext->DrawIndexedInstanced(count, instances, 0, -minIndex, 0);
+        }
         return gl::Error(GL_NO_ERROR);
     }
 
     // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
     // Emulating instanced point sprites for FL9_3 requires the topology to be
     // D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST and DrawIndexedInstanced is called instead.
-    const ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.state->getProgram());
     if (mode == GL_POINTS && programD3D->usesInstancedPointSpriteEmulation())
     {
         // The count parameter passed to drawElements represents the total number of instances

@@ -156,9 +156,7 @@ gl::Error RendererD3D::genericDrawElements(const gl::Data &data,
     TranslatedIndexData indexInfo;
     indexInfo.indexRange = indexRange;
 
-    SourceIndexData sourceIndexInfo;
-
-    error = applyIndexBuffer(data, indices, count, mode, type, &indexInfo, &sourceIndexInfo);
+    error = applyIndexBuffer(data, indices, count, mode, type, &indexInfo);
     if (error.isError())
     {
         return error;
@@ -171,7 +169,7 @@ gl::Error RendererD3D::genericDrawElements(const gl::Data &data,
 
     size_t vertexCount = indexInfo.indexRange.vertexCount();
     error = applyVertexBuffer(*data.state, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
-                              static_cast<GLsizei>(vertexCount), instances, &sourceIndexInfo);
+                              static_cast<GLsizei>(vertexCount), instances, &indexInfo);
     if (error.isError())
     {
         return error;
