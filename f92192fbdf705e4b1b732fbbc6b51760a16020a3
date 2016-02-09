@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "3d8e7442_8ede5b54",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-09T20:27:18Z",
+      "side": 1,
+      "message": "Can you try removing this? I just tried and it compiled file to use a SortedAttribArray in InputLayoutCache.h, and reference it in the cpp.",
+      "parentUuid": "5da7a8bf_359cd887",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 51
+      },
+      "revId": "f92192fbdf705e4b1b732fbbc6b51760a16020a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3d8e7442_0ead0b67",
         "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h",
         "patchSetId": 13
