@@ -353,7 +353,6 @@ class Renderer11 : public RendererD3D
     // current render target states
     uintptr_t mAppliedRTVs[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS];
     uintptr_t mAppliedDSV;
-    bool mDepthStencilInitialized;
 
     // Currently applied sampler states
     std::vector<bool> mForceSetVertexSamplerStates;
