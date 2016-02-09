@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7da46cba_f0498008",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-09T13:38:30Z",
+      "side": 1,
+      "message": "nit: init this in the initializer list",
+      "range": {
+        "startLine": 145,
+        "startChar": 4,
+        "endLine": 145,
+        "endChar": 28
+      },
+      "revId": "f92192fbdf705e4b1b732fbbc6b51760a16020a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dd92b865_2b6f1990",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-09T13:38:30Z",
+      "side": 1,
+      "message": "how come you\u0027re including this header? can you forward declare any types you\u0027re using?",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 51
+      },
+      "revId": "f92192fbdf705e4b1b732fbbc6b51760a16020a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3d8e7442_0ead0b67",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-09T13:38:30Z",
+      "side": 1,
+      "message": "put this in the cpp file itself.. is it used anywhere else?",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 2
+      },
+      "revId": "f92192fbdf705e4b1b732fbbc6b51760a16020a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1d89b03a_ed01a5e7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1713,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-09T13:38:30Z",
+      "side": 1,
+      "message": "instead of passing two parameters here, pass zero if instances \u003d\u003d 0 and count otherwise. then, in InputLayoutCache, instead of testing instancedRenderingActive, test for \u003e 0.",
+      "range": {
+        "startLine": 1713,
+        "startChar": 59,
+        "endLine": 1713,
+        "endChar": 80
+      },
+      "revId": "f92192fbdf705e4b1b732fbbc6b51760a16020a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
