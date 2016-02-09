@@ -126,7 +126,7 @@ TEST_P(TimerQueriesTest, TimeElapsed)
 
     swapBuffers();
 
-    int timeout  = 10000;
+    int timeout  = 200000;
     GLuint ready = GL_FALSE;
     while (ready == GL_FALSE && timeout > 0)
     {
@@ -498,7 +498,7 @@ TEST_P(TimerQueriesTest, Timestamp)
 
     swapBuffers();
 
-    int timeout  = 10000;
+    int timeout  = 200000;
     GLuint ready = GL_FALSE;
     while (ready == GL_FALSE && timeout > 0)
     {
