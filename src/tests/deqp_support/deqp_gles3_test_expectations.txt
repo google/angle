@@ -230,11 +230,6 @@
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.cube.base_level.linear_linear = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.nearest_nearest = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.linear_nearest = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.swizzle.multi_channel.luminance_all_zero = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.swizzle.multi_channel.luminance_alpha_all_zero = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.swizzle.multi_channel.rg_all_zero = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.swizzle.multi_channel.rgb_all_zero = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.swizzle.multi_channel.rgba_all_zero = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.teximage2d_depth.depth_component32f = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.teximage2d_depth.depth32f_stencil8 = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.teximage2d_depth_pbo.depth_component32f = FAIL

@@ -30,7 +30,10 @@ namespace rx
 {
 
 TextureStorage11::SwizzleCacheValue::SwizzleCacheValue()
-    : swizzleRed(GL_NONE), swizzleGreen(GL_NONE), swizzleBlue(GL_NONE), swizzleAlpha(GL_NONE)
+    : swizzleRed(GL_INVALID_INDEX),
+      swizzleGreen(GL_INVALID_INDEX),
+      swizzleBlue(GL_INVALID_INDEX),
+      swizzleAlpha(GL_INVALID_INDEX)
 {
 }
 
