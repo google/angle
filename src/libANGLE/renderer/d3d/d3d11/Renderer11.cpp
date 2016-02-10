@@ -3974,6 +3974,11 @@ void Renderer11::onBufferDelete(const Buffer11 *deleted)
     mAliveBuffers.erase(deleted);
 }
 
+void Renderer11::onMakeCurrent(const gl::Data &data)
+{
+    mStateManager.onMakeCurrent(data);
+}
+
 ID3D11Texture2D *Renderer11::resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource)
 {
     D3D11_TEXTURE2D_DESC textureDesc;

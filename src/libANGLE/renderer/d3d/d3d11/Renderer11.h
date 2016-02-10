@@ -287,6 +287,7 @@ class Renderer11 : public RendererD3D
 
     void onSwap();
     void onBufferDelete(const Buffer11 *deleted);
+    void onMakeCurrent(const gl::Data &data) override;
 
     egl::Error getEGLDevice(DeviceImpl **device) override;
 

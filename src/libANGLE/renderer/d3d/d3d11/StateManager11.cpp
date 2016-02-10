@@ -10,6 +10,7 @@
 
 #include "common/BitSetIterator.h"
 #include "common/utilities.h"
+#include "libANGLE/Query.h"
 #include "libANGLE/renderer/d3d/d3d11/Framebuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
@@ -127,6 +128,9 @@ void StateManager11::SRVCache::clear()
     memset(&mCurrentSRVs[0], 0, sizeof(SRVRecord) * mCurrentSRVs.size());
     mHighestUsedSRV = 0;
 }
+
+static const GLenum QueryTypes[] = {GL_ANY_SAMPLES_PASSED, GL_ANY_SAMPLES_PASSED_CONSERVATIVE,
+                                    GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, GL_TIME_ELAPSED_EXT};
 
 StateManager11::StateManager11(Renderer11 *renderer)
     : mRenderer(renderer),
@@ -823,6 +827,40 @@ void StateManager11::setRenderTarget(ID3D11RenderTargetView *renderTarget,
                                      ID3D11DepthStencilView *depthStencil)
 {
     mRenderer->getDeviceContext()->OMSetRenderTargets(1, &renderTarget, depthStencil);
+}
+
+void StateManager11::onBeginQuery(Query11 *query)
+{
+    mCurrentQueries.insert(query);
+}
+
+void StateManager11::onDeleteQueryObject(Query11 *query)
+{
+    mCurrentQueries.erase(query);
+}
+
+gl::Error StateManager11::onMakeCurrent(const gl::Data &data)
+{
+    const gl::State &state = *data.state;
+
+    for (Query11 *query : mCurrentQueries)
+    {
+        query->pause();
+    }
+    mCurrentQueries.clear();
+
+    for (GLenum queryType : QueryTypes)
+    {
+        gl::Query *query = state.getActiveQuery(queryType);
+        if (query != nullptr)
+        {
+            Query11 *query11 = GetImplAs<Query11>(query);
+            query11->resume();
+            mCurrentQueries.insert(query11);
+        }
+    }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 void StateManager11::setShaderResource(gl::SamplerType shaderType,

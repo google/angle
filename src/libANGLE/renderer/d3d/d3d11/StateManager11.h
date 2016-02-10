@@ -16,6 +16,7 @@
 #include "libANGLE/State.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderStateCache.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+#include "libANGLE/renderer/d3d/d3d11/Query11.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 
 namespace rx
@@ -84,6 +85,10 @@ class StateManager11 final : angle::NonCopyable
     void setRenderTarget(ID3D11RenderTargetView *renderTarget,
                          ID3D11DepthStencilView *depthStencil);
 
+    void onBeginQuery(Query11 *query);
+    void onDeleteQueryObject(Query11 *query);
+    gl::Error onMakeCurrent(const gl::Data &data);
+
   private:
     void unsetConflictingSRVs(gl::SamplerType shaderType,
                               uintptr_t resource,
@@ -138,6 +143,9 @@ class StateManager11 final : angle::NonCopyable
     // Current RenderTarget state
     std::array<uintptr_t, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS> mAppliedRTVs;
     uintptr_t mAppliedDSV;
+
+    // Queries that are currently active in this state
+    std::set<Query11 *> mCurrentQueries;
 
     // Currently applied textures
     struct SRVRecord
