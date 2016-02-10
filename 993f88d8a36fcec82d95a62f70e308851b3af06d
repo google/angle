@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3dacb4b4_e7b130c4",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-10T17:37:22Z",
+      "side": 1,
+      "message": "if mSamplerRegister \u003d\u003d 0 the shader doesn\u0027t use textures, I assume? (couldn\u0027t hurt to comment this)",
+      "range": {
+        "startLine": 251,
+        "startChar": 8,
+        "endLine": 251,
+        "endChar": 24
+      },
+      "revId": "993f88d8a36fcec82d95a62f70e308851b3af06d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5dbec8e3_5d942bba",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-10T17:37:22Z",
+      "side": 1,
+      "message": "we don\u0027t usually have failsafes like this. totally fine be me to keep it but it\u0027s ok to lose them in refactoring if necessary.",
+      "range": {
+        "startLine": 529,
+        "startChar": 4,
+        "endLine": 532,
+        "endChar": 5
+      },
+      "revId": "993f88d8a36fcec82d95a62f70e308851b3af06d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5dbec8e3_dd871b90",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-10T17:37:22Z",
+      "side": 1,
+      "message": "move this to a public member function to test if the applied sampler metadata matches the current sampler metadata",
+      "range": {
+        "startLine": 534,
+        "startChar": 8,
+        "endLine": 535,
+        "endChar": 63
+      },
+      "revId": "993f88d8a36fcec82d95a62f70e308851b3af06d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fdb5bcf8_02fd2ed0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-10T17:37:22Z",
+      "side": 1,
+      "message": "for these tests, check if the applied constants are OR the applied sampler metadata is dirty using the public member function.\n\nif either is dirty, map the buffer, copy in the vertex constants here, and pass a pointer to metadata::apply. change apply to do a simple memcpy into the mapped pointer, and update it\u0027s applied data cache values.",
+      "range": {
+        "startLine": 2183,
+        "startChar": 4,
+        "endLine": 2183,
+        "endChar": 94
+      },
+      "revId": "993f88d8a36fcec82d95a62f70e308851b3af06d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bdc1846e_00ad2a66",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-10T17:37:22Z",
+      "side": 1,
+      "message": "make these private members of the SamplerMetadata class",
+      "range": {
+        "startLine": 396,
+        "startChar": 58,
+        "endLine": 396,
+        "endChar": 83
+      },
+      "revId": "993f88d8a36fcec82d95a62f70e308851b3af06d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1da7f0d2_26c95c70",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-10T17:37:22Z",
+      "side": 1,
+      "message": "I think we can remove the union with the aforementioned design refactor.",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 9
+      },
+      "revId": "993f88d8a36fcec82d95a62f70e308851b3af06d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
