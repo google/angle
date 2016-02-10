@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7dbb8cf2_9e7e3df1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-10T17:47:33Z",
+      "side": 1,
+      "message": "I think there\u0027ll be a problem here where we\u0027re still binding the SNORM/UNORM/FLOAT SRVs to shaders that use them as INT types (pre-generated blit shaders in libANGLE\\renderer\\d3d\\d3d11\\shaders). Did you try running the blit end2end_tests in debug?",
+      "range": {
+        "startLine": 781,
+        "startChar": 4,
+        "endLine": 781,
+        "endChar": 90
+      },
+      "revId": "6109a479bb6dd2d48f36b124af18bf782f2e9fa1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd0d03a_5b943bba",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2629,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-10T17:47:33Z",
+      "side": 1,
+      "message": "I think this line pulls in the workaround-typed SRVs",
+      "range": {
+        "startLine": 2629,
+        "startChar": 40,
+        "endLine": 2629,
+        "endChar": 83
+      },
+      "revId": "6109a479bb6dd2d48f36b124af18bf782f2e9fa1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7dbb8cf2_7e8da95d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-10T17:47:33Z",
+      "side": 1,
+      "message": "not sure, don\u0027t have any recollection. you can try putting a breakpoint and running end2end_tests or the dEQP tests.",
+      "range": {
+        "startLine": 464,
+        "startChar": 8,
+        "endLine": 464,
+        "endChar": 87
+      },
+      "revId": "6109a479bb6dd2d48f36b124af18bf782f2e9fa1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd0d03a_7b5017d8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_data.json",
+        "patchSetId": 9
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-10T17:47:33Z",
+      "side": 1,
+      "message": "are these separate or related changes?",
+      "range": {
+        "startLine": 547,
+        "startChar": 23,
+        "endLine": 547,
+        "endChar": 44
+      },
+      "revId": "6109a479bb6dd2d48f36b124af18bf782f2e9fa1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
