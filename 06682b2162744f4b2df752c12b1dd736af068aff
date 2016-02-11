@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7df0ecdc_d99de794",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-11T14:29:48Z",
+      "side": 1,
+      "message": "I suggested leaving this one as unimplemented because it\u0027s not possible to write a custom function for it with the current architecture.  As is, we just wont support BGRA8 textures when it\u0027s possible we could on ES drivers.  Given that it\u0027s an APPLE extension, it is probably only exposed on IOS devices.",
+      "parentUuid": "bd0fc4b0_7eab79a0",
+      "range": {
+        "startLine": 186,
+        "startChar": 7,
+        "endLine": 187,
+        "endChar": 51
+      },
+      "revId": "06682b2162744f4b2df752c12b1dd736af068aff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9d1200d7_bd057761",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
         "patchSetId": 4
