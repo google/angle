@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bde6e426_c7297c82",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 931,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-11T20:52:56Z",
+      "side": 1,
+      "message": "This skips dest11-\u003einvalidateSwizzleCache",
+      "revId": "b89c5c5dbefa1c507eb016a28a81c867542587f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
