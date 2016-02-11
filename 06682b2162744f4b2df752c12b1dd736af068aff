@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bd0fc4b0_7eab79a0",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-11T12:59:07Z",
+      "side": 1,
+      "message": "I\u0027d suggest we add this rather than leave it as a TODO.. you can add an ExtOrExt Support function or a custom one for BGRA",
+      "range": {
+        "startLine": 186,
+        "startChar": 7,
+        "endLine": 187,
+        "endChar": 51
+      },
+      "revId": "06682b2162744f4b2df752c12b1dd736af068aff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9d1200d7_bd057761",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-11T12:59:07Z",
+      "side": 1,
+      "message": "I believe this should be supported only if OES_depth_texture is supported, I looked in EXT_texture_storage and it said \"If OES_depth_texture is supported:\" before accepting DEPTH_COMPONENT32_OES. Maybe I\u0027m missing something?",
+      "range": {
+        "startLine": 208,
+        "startChar": 215,
+        "endLine": 208,
+        "endChar": 234
+      },
+      "revId": "06682b2162744f4b2df752c12b1dd736af068aff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
