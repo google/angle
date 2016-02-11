@@ -1212,7 +1212,8 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
     else UNREACHABLE();
 
     ASSERT(metadata != nullptr);
-    metadata->update(index, texture->getBaseLevel());
+    metadata->update(index, texture->getBaseLevel(),
+                     texture->getInternalFormat(texture->getTarget(), texture->getBaseLevel()));
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -2287,12 +2288,68 @@ void Renderer11::SamplerMetadataD3D11::initData(unsigned int samplerCount)
     mSamplerMetadata.resize(samplerCount);
 }
 
-void Renderer11::SamplerMetadataD3D11::update(unsigned int samplerIndex, unsigned int baseLevel)
+void Renderer11::SamplerMetadataD3D11::update(unsigned int samplerIndex,
+                                              unsigned int baseLevel,
+                                              GLenum internalFormat)
 {
-    if (mSamplerMetadata[samplerIndex].baseLevel[0] != static_cast<int>(baseLevel))
+    if (mSamplerMetadata[samplerIndex].parameters[0] != static_cast<int>(baseLevel))
     {
-        mSamplerMetadata[samplerIndex].baseLevel[0] = static_cast<int>(baseLevel);
-        mDirty                                      = true;
+        mSamplerMetadata[samplerIndex].parameters[0] = static_cast<int>(baseLevel);
+        mDirty                                       = true;
+    }
+
+    // internalFormatBits == 0 means a 32-bit texture in the case of integer textures. In the case
+    // of non-integer textures, internalFormatBits is meaningless. We avoid updating the constant
+    // buffer unnecessarily by changing the data only in case the texture is an integer texture and
+    // the value has changed.
+    bool needInternalFormatBits = false;
+    int internalFormatBits = 0;
+    switch (internalFormat)
+    {
+        case GL_RGBA32I:
+        case GL_RGBA32UI:
+        case GL_RGB32I:
+        case GL_RGB32UI:
+        case GL_RG32I:
+        case GL_RG32UI:
+        case GL_R32I:
+        case GL_R32UI:
+            needInternalFormatBits = true;
+            break;
+        case GL_RGBA16I:
+        case GL_RGBA16UI:
+        case GL_RGB16I:
+        case GL_RGB16UI:
+        case GL_RG16I:
+        case GL_RG16UI:
+        case GL_R16I:
+        case GL_R16UI:
+            needInternalFormatBits = true;
+            internalFormatBits     = 16;
+            break;
+        case GL_RGBA8I:
+        case GL_RGBA8UI:
+        case GL_RGB8I:
+        case GL_RGB8UI:
+        case GL_RG8I:
+        case GL_RG8UI:
+        case GL_R8I:
+        case GL_R8UI:
+            needInternalFormatBits = true;
+            internalFormatBits     = 8;
+            break;
+        case GL_RGB10_A2UI:
+            needInternalFormatBits = true;
+            internalFormatBits     = 10;
+            break;
+        default:
+            break;
+    }
+    if (needInternalFormatBits &&
+        mSamplerMetadata[samplerIndex].parameters[1] != internalFormatBits)
+    {
+        mSamplerMetadata[samplerIndex].parameters[1] = internalFormatBits;
+        mDirty                                       = true;
     }
 }
 

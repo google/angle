@@ -345,11 +345,11 @@ class Renderer11 : public RendererD3D
 
         struct dx_SamplerMetadata
         {
-            int baseLevel[4];
+            int parameters[4];
         };
 
         void initData(unsigned int samplerCount);
-        void update(unsigned int samplerIndex, unsigned int baseLevel);
+        void update(unsigned int samplerIndex, unsigned int baseLevel, GLenum internalFormat);
 
         const dx_SamplerMetadata *getData() const;
         size_t sizeBytes() const;
