@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fde3fc1c_40645e8b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-11T15:35:13Z",
+      "side": 1,
+      "message": "The newly added objects need to be released.",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 64,
+        "endChar": 36
+      },
+      "revId": "a1a565e8fbbb9c6961738510fb6bf291fbb80342",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ddaf464_549424ba",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-11T15:35:13Z",
+      "side": 1,
+      "message": "I\u0027d make sure all the members are null\u0027d.\n\n   mActiveQuery \u003d Query11Info();\n\nshould do.",
+      "range": {
+        "startLine": 152,
+        "startChar": 8,
+        "endLine": 152,
+        "endChar": 20
+      },
+      "revId": "a1a565e8fbbb9c6961738510fb6bf291fbb80342",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bde6e426_41b57cf8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-11T15:35:13Z",
+      "side": 1,
+      "message": "const ref",
+      "range": {
+        "startLine": 219,
+        "startChar": 8,
+        "endLine": 219,
+        "endChar": 25
+      },
+      "revId": "a1a565e8fbbb9c6961738510fb6bf291fbb80342",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9de920fd_a08f8417",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-11T15:35:13Z",
+      "side": 1,
+      "message": "I don\u0027t think this logic is quite right.  testQuery will do nothing when mQueryFinished is true, causing this loop to only execute once, even if there are multiple pending queries.  testQuery should probably become a const method that signals when the query is done through a parameter.",
+      "range": {
+        "startLine": 221,
+        "startChar": 8,
+        "endLine": 232,
+        "endChar": 34
+      },
+      "revId": "a1a565e8fbbb9c6961738510fb6bf291fbb80342",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd0fc4b0_be61f111",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-11T15:35:13Z",
+      "side": 1,
+      "message": "I believe this will leak D3D11 objects.  The created queries are never released.",
+      "range": {
+        "startLine": 236,
+        "startChar": 8,
+        "endLine": 236,
+        "endChar": 36
+      },
+      "revId": "a1a565e8fbbb9c6961738510fb6bf291fbb80342",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bde6e426_e19b508f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-11T15:35:13Z",
+      "side": 1,
+      "message": "Doesn\u0027t look like this is referenced outside of Query11.  Make it a private struct of Query11.\n\nAlso, I think a name like QueryState would be more fitting.",
+      "range": {
+        "startLine": 20,
+        "startChar": 7,
+        "endLine": 20,
+        "endChar": 18
+      },
+      "revId": "a1a565e8fbbb9c6961738510fb6bf291fbb80342",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bde6e426_81ab649f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-11T15:35:13Z",
+      "side": 1,
+      "message": "const ref.",
+      "range": {
+        "startLine": 48,
+        "startChar": 24,
+        "endLine": 48,
+        "endChar": 35
+      },
+      "revId": "a1a565e8fbbb9c6961738510fb6bf291fbb80342",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd0fc4b0_5e72f5ec",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-11T15:35:13Z",
+      "side": 1,
+      "message": "These should be removed or replaced with the new struct.",
+      "range": {
+        "startLine": 59,
+        "startChar": 4,
+        "endLine": 61,
+        "endChar": 36
+      },
+      "revId": "a1a565e8fbbb9c6961738510fb6bf291fbb80342",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
