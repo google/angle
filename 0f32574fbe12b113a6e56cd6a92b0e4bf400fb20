@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7d09ccae_1196ae01",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2234,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-11T14:57:33Z",
+      "side": 1,
+      "message": "how about we mark dirty here if the value changed",
+      "range": {
+        "startLine": 2234,
+        "startChar": 4,
+        "endLine": 2234,
+        "endChar": 78
+      },
+      "revId": "0f32574fbe12b113a6e56cd6a92b0e4bf400fb20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7df0ecdc_19948f67",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2273,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-11T14:57:33Z",
+      "side": 1,
+      "message": "and we just check for dirty here",
+      "range": {
+        "startLine": 2273,
+        "startChar": 8,
+        "endLine": 2273,
+        "endChar": 80
+      },
+      "revId": "0f32574fbe12b113a6e56cd6a92b0e4bf400fb20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
