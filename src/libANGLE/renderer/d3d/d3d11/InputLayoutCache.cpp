@@ -136,7 +136,7 @@ bool InputLayoutCache::PackedAttributeLayout::operator<(const PackedAttributeLay
     return memcmp(attributeData, other.attributeData, sizeof(uint32_t) * numAttributes) < 0;
 }
 
-InputLayoutCache::InputLayoutCache() : mCacheSize(kDefaultCacheSize), mUnsortedAttributesCount(0)
+InputLayoutCache::InputLayoutCache() : mUnsortedAttributesCount(0), mCacheSize(kDefaultCacheSize)
 {
     mCounter = 0;
     mDevice = NULL;
