@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "3de034e0_0196ac01",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-11T13:17:39Z",
+      "side": 1,
+      "message": "Right, I added this just because the previous code had it, though I suppose there\u0027s not much reason to keep it around.",
+      "parentUuid": "5dbec8e3_5d942bba",
+      "range": {
+        "startLine": 529,
+        "startChar": 4,
+        "endLine": 532,
+        "endChar": 5
+      },
+      "revId": "993f88d8a36fcec82d95a62f70e308851b3af06d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5dbec8e3_dd871b90",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 5
@@ -94,6 +118,30 @@
     },
     {
       "key": {
+        "uuid": "7dd62c0e_83a800b5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2183,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-11T13:17:39Z",
+      "side": 1,
+      "message": "I ended up doing this slightly differently, but I think I kept to the general idea of this suggestion.",
+      "parentUuid": "fdb5bcf8_02fd2ed0",
+      "range": {
+        "startLine": 2183,
+        "startChar": 4,
+        "endLine": 2183,
+        "endChar": 94
+      },
+      "revId": "993f88d8a36fcec82d95a62f70e308851b3af06d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bdc1846e_00ad2a66",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
         "patchSetId": 5
@@ -117,6 +165,30 @@
     },
     {
       "key": {
+        "uuid": "5da5e8c5_02b2cc30",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-11T13:17:39Z",
+      "side": 1,
+      "message": "Done. Note that this required also making the sampler metadata object per renderer rather than per program (not sure if you already thought of this). But this option seems much nicer overall.",
+      "parentUuid": "bdc1846e_00ad2a66",
+      "range": {
+        "startLine": 396,
+        "startChar": 58,
+        "endLine": 396,
+        "endChar": 83
+      },
+      "revId": "993f88d8a36fcec82d95a62f70e308851b3af06d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1da7f0d2_26c95c70",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 5
@@ -128,6 +200,30 @@
       "writtenOn": "2016-02-10T17:37:22Z",
       "side": 1,
       "message": "I think we can remove the union with the aforementioned design refactor.",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 9
+      },
+      "revId": "993f88d8a36fcec82d95a62f70e308851b3af06d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9d9da072_14fd1ad1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-11T13:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1da7f0d2_26c95c70",
       "range": {
         "startLine": 45,
         "startChar": 4,
