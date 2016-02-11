@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9d1200d7_9d8993e6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-11T16:41:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd53033_963df277",
+      "range": {
+        "startLine": 419,
+        "startChar": 12,
+        "endLine": 419,
+        "endChar": 50
+      },
+      "revId": "d5916090cf84a8701a4fb20b6ba6524143421e15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9d1200d7_dd6cab0b",
         "filename": "src/tests/gl_tests/InstancingTest.cpp",
         "patchSetId": 15
@@ -36,6 +60,30 @@
       "writtenOn": "2016-02-11T14:58:46Z",
       "side": 1,
       "message": "Just as a FYI: You can wrap these in \n\n    // clang-format off\n    ....\n    // clang-format on",
+      "range": {
+        "startLine": 139,
+        "startChar": 8,
+        "endLine": 150,
+        "endChar": 48
+      },
+      "revId": "d5916090cf84a8701a4fb20b6ba6524143421e15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd53033_a1a546cc",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2016-02-11T16:41:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d1200d7_dd6cab0b",
       "range": {
         "startLine": 139,
         "startChar": 8,
