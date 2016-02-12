@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3d4834fd_24fdb65a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2337,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-12T20:36:59Z",
+      "side": 1,
+      "message": "nit: I might be missing something but I thought that for such a thing to work you needed to add \"extern\" to the template declaration.",
+      "revId": "cc583d93c2e30f55a5243539846c62922fee93d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
