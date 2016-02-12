@@ -217,6 +217,42 @@ Context::Context(const egl::Config *config,
     }
 
     mCompiler = new Compiler(mRenderer, getData());
+
+    // Initialize dirty bit masks
+    // TODO(jmadill): additional ES3 state
+    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_ALIGNMENT);
+    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_ROW_LENGTH);
+    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_IMAGE_HEIGHT);
+    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_SKIP_IMAGES);
+    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_SKIP_ROWS);
+    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_SKIP_PIXELS);
+    // No dirty objects.
+
+    // Readpixels uses the pack state and read FBO
+    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_ALIGNMENT);
+    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_REVERSE_ROW_ORDER);
+    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_ROW_LENGTH);
+    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_SKIP_ROWS);
+    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_SKIP_PIXELS);
+    mReadPixelsDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
+
+    mClearDirtyBits.set(State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);
+    mClearDirtyBits.set(State::DIRTY_BIT_SCISSOR_TEST_ENABLED);
+    mClearDirtyBits.set(State::DIRTY_BIT_SCISSOR);
+    mClearDirtyBits.set(State::DIRTY_BIT_VIEWPORT);
+    mClearDirtyBits.set(State::DIRTY_BIT_CLEAR_COLOR);
+    mClearDirtyBits.set(State::DIRTY_BIT_CLEAR_DEPTH);
+    mClearDirtyBits.set(State::DIRTY_BIT_CLEAR_STENCIL);
+    mClearDirtyBits.set(State::DIRTY_BIT_COLOR_MASK);
+    mClearDirtyBits.set(State::DIRTY_BIT_DEPTH_MASK);
+    mClearDirtyBits.set(State::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
+    mClearDirtyBits.set(State::DIRTY_BIT_STENCIL_WRITEMASK_BACK);
+    mClearDirtyObjects.set(State::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
+
+    mBlitDirtyBits.set(State::DIRTY_BIT_SCISSOR_TEST_ENABLED);
+    mBlitDirtyBits.set(State::DIRTY_BIT_SCISSOR);
+    mBlitDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
+    mBlitDirtyObjects.set(State::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
 }
 
 Context::~Context()
@@ -2044,14 +2080,14 @@ void Context::syncRendererState()
     mState.syncDirtyObjects();
 }
 
-void Context::syncRendererState(const State::DirtyBits &bitMask)
+void Context::syncRendererState(const State::DirtyBits &bitMask,
+                                const State::DirtyObjects &objectMask)
 {
     const State::DirtyBits &dirtyBits = (mState.getDirtyBits() & bitMask);
     mRenderer->syncState(mState, dirtyBits);
     mState.clearDirtyBits(dirtyBits);
 
-    // TODO(jmadill): Filter objects by bitMask somehow?
-    mState.syncDirtyObjects();
+    mState.syncDirtyObjects(objectMask);
 }
 
 void Context::blitFramebuffer(GLint srcX0,
@@ -2074,7 +2110,7 @@ void Context::blitFramebuffer(GLint srcX0,
     Rectangle srcArea(srcX0, srcY0, srcX1 - srcX0, srcY1 - srcY0);
     Rectangle dstArea(dstX0, dstY0, dstX1 - dstX0, dstY1 - dstY0);
 
-    syncRendererState(mState.blitStateBitMask());
+    syncStateForBlit();
 
     Error error = drawFramebuffer->blit(mState, srcArea, dstArea, mask, filter, readFramebuffer);
     if (error.isError())
@@ -2086,8 +2122,7 @@ void Context::blitFramebuffer(GLint srcX0,
 
 void Context::clear(GLbitfield mask)
 {
-    // Sync the clear state
-    syncRendererState(mState.clearStateBitMask());
+    syncStateForClear();
 
     Error error = mState.getDrawFramebuffer()->clear(mData, mask);
     if (error.isError())
@@ -2098,8 +2133,7 @@ void Context::clear(GLbitfield mask)
 
 void Context::clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *values)
 {
-    // Sync the clear state
-    syncRendererState(mState.clearStateBitMask());
+    syncStateForClear();
 
     Error error = mState.getDrawFramebuffer()->clearBufferfv(mData, buffer, drawbuffer, values);
     if (error.isError())
@@ -2110,8 +2144,7 @@ void Context::clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *valu
 
 void Context::clearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *values)
 {
-    // Sync the clear state
-    syncRendererState(mState.clearStateBitMask());
+    syncStateForClear();
 
     Error error = mState.getDrawFramebuffer()->clearBufferuiv(mData, buffer, drawbuffer, values);
     if (error.isError())
@@ -2122,8 +2155,7 @@ void Context::clearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *valu
 
 void Context::clearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *values)
 {
-    // Sync the clear state
-    syncRendererState(mState.clearStateBitMask());
+    syncStateForClear();
 
     Error error = mState.getDrawFramebuffer()->clearBufferiv(mData, buffer, drawbuffer, values);
     if (error.isError())
@@ -2144,8 +2176,7 @@ void Context::clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLin
         return;
     }
 
-    // Sync the clear state
-    syncRendererState(mState.clearStateBitMask());
+    syncStateForClear();
 
     Error error = framebufferObject->clearBufferfi(mData, buffer, drawbuffer, depth, stencil);
     if (error.isError())
@@ -2162,8 +2193,7 @@ void Context::readPixels(GLint x,
                          GLenum type,
                          GLvoid *pixels)
 {
-    // Sync pack state
-    syncRendererState(mState.packStateBitMask());
+    syncStateForReadPixels();
 
     Framebuffer *framebufferObject = mState.getReadFramebuffer();
     ASSERT(framebufferObject);
@@ -2431,8 +2461,7 @@ void Context::texImage2D(GLenum target,
                          GLenum type,
                          const GLvoid *pixels)
 {
-    // Sync the unpack state
-    syncRendererState(mState.unpackStateBitMask());
+    syncStateForTexImage();
 
     Extents size(width, height, 1);
     Texture *texture =
@@ -2456,8 +2485,7 @@ void Context::texImage3D(GLenum target,
                          GLenum type,
                          const GLvoid *pixels)
 {
-    // Sync the unpack state
-    syncRendererState(mState.unpackStateBitMask());
+    syncStateForTexImage();
 
     Extents size(width, height, depth);
     Texture *texture = getTargetTexture(target);
@@ -2485,8 +2513,7 @@ void Context::texSubImage2D(GLenum target,
         return;
     }
 
-    // Sync the unpack state
-    syncRendererState(mState.unpackStateBitMask());
+    syncStateForTexImage();
 
     Box area(xoffset, yoffset, 0, width, height, 1);
     Texture *texture =
@@ -2517,8 +2544,7 @@ void Context::texSubImage3D(GLenum target,
         return;
     }
 
-    // Sync the unpack state
-    syncRendererState(mState.unpackStateBitMask());
+    syncStateForTexImage();
 
     Box area(xoffset, yoffset, zoffset, width, height, depth);
     Texture *texture = getTargetTexture(target);
@@ -2539,8 +2565,7 @@ void Context::compressedTexImage2D(GLenum target,
                                    GLsizei imageSize,
                                    const GLvoid *data)
 {
-    // Sync the unpack state
-    syncRendererState(mState.unpackStateBitMask());
+    syncStateForTexImage();
 
     Extents size(width, height, 1);
     Texture *texture =
@@ -2564,8 +2589,7 @@ void Context::compressedTexImage3D(GLenum target,
                                    GLsizei imageSize,
                                    const GLvoid *data)
 {
-    // Sync the unpack state
-    syncRendererState(mState.unpackStateBitMask());
+    syncStateForTexImage();
 
     Extents size(width, height, depth);
     Texture *texture = getTargetTexture(target);
@@ -2588,8 +2612,7 @@ void Context::compressedTexSubImage2D(GLenum target,
                                       GLsizei imageSize,
                                       const GLvoid *data)
 {
-    // Sync the unpack state
-    syncRendererState(mState.unpackStateBitMask());
+    syncStateForTexImage();
 
     Box area(xoffset, yoffset, 0, width, height, 1);
     Texture *texture =
@@ -2621,8 +2644,7 @@ void Context::compressedTexSubImage3D(GLenum target,
         return;
     }
 
-    // Sync the unpack state
-    syncRendererState(mState.unpackStateBitMask());
+    syncStateForTexImage();
 
     Box area(xoffset, yoffset, zoffset, width, height, depth);
     Texture *texture = getTargetTexture(target);
@@ -2633,6 +2655,26 @@ void Context::compressedTexSubImage3D(GLenum target,
     {
         recordError(error);
     }
+}
+
+void Context::syncStateForReadPixels()
+{
+    syncRendererState(mReadPixelsDirtyBits, mReadPixelsDirtyObjects);
+}
+
+void Context::syncStateForTexImage()
+{
+    syncRendererState(mTexImageDirtyBits, mTexImageDirtyObjects);
+}
+
+void Context::syncStateForClear()
+{
+    syncRendererState(mClearDirtyBits, mClearDirtyObjects);
+}
+
+void Context::syncStateForBlit()
+{
+    syncRendererState(mBlitDirtyBits, mBlitDirtyObjects);
 }
 
 }  // namespace gl

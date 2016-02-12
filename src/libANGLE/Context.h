@@ -390,10 +390,13 @@ class Context final : public ValidationContext
 
     State &getState() { return mState; }
 
-    void syncRendererState();
-    void syncRendererState(const State::DirtyBits &bitMask);
-
   private:
+    void syncRendererState();
+    void syncRendererState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);
+    void syncStateForReadPixels();
+    void syncStateForTexImage();
+    void syncStateForClear();
+    void syncStateForBlit();
     void checkVertexArrayAllocation(GLuint vertexArray);
     void checkTransformFeedbackAllocation(GLuint transformFeedback);
     Framebuffer *checkFramebufferAllocation(GLuint framebufferHandle);
@@ -467,6 +470,15 @@ class Context final : public ValidationContext
     egl::Surface *mCurrentSurface;
 
     ResourceManager *mResourceManager;
+
+    State::DirtyBits mTexImageDirtyBits;
+    State::DirtyObjects mTexImageDirtyObjects;
+    State::DirtyBits mReadPixelsDirtyBits;
+    State::DirtyObjects mReadPixelsDirtyObjects;
+    State::DirtyBits mClearDirtyBits;
+    State::DirtyObjects mClearDirtyObjects;
+    State::DirtyBits mBlitDirtyBits;
+    State::DirtyObjects mBlitDirtyObjects;
 };
 
 }  // namespace gl

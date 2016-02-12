@@ -364,12 +364,6 @@ class State : angle::NonCopyable
     void syncDirtyObject(GLenum target);
     void setObjectDirty(GLenum target);
 
-    // Dirty bit masks
-    const DirtyBits &unpackStateBitMask() const { return mUnpackStateBitMask; }
-    const DirtyBits &packStateBitMask() const { return mPackStateBitMask; }
-    const DirtyBits &clearStateBitMask() const { return mClearStateBitMask; }
-    const DirtyBits &blitStateBitMask() const { return mBlitStateBitMask; }
-
   private:
     // Cached values from Context's caps
     GLuint mMaxDrawBuffers;
@@ -442,15 +436,10 @@ class State : angle::NonCopyable
     Debug mDebug;
 
     DirtyBits mDirtyBits;
-    DirtyBits mUnpackStateBitMask;
-    DirtyBits mPackStateBitMask;
-    DirtyBits mClearStateBitMask;
-    DirtyBits mBlitStateBitMask;
-
     DirtyObjects mDirtyObjects;
 };
 
-}
+}  // namespace gl
 
 #endif // LIBANGLE_STATE_H_
 

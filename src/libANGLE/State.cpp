@@ -44,35 +44,6 @@ State::State()
       mActiveSampler(0),
       mPrimitiveRestart(false)
 {
-    // Initialize dirty bit masks
-    // TODO(jmadill): additional ES3 state
-    mUnpackStateBitMask.set(DIRTY_BIT_UNPACK_ALIGNMENT);
-    mUnpackStateBitMask.set(DIRTY_BIT_UNPACK_ROW_LENGTH);
-    mUnpackStateBitMask.set(DIRTY_BIT_UNPACK_IMAGE_HEIGHT);
-    mUnpackStateBitMask.set(DIRTY_BIT_UNPACK_SKIP_IMAGES);
-    mUnpackStateBitMask.set(DIRTY_BIT_UNPACK_SKIP_ROWS);
-    mUnpackStateBitMask.set(DIRTY_BIT_UNPACK_SKIP_PIXELS);
-
-    mPackStateBitMask.set(DIRTY_BIT_PACK_ALIGNMENT);
-    mPackStateBitMask.set(DIRTY_BIT_PACK_REVERSE_ROW_ORDER);
-    mPackStateBitMask.set(DIRTY_BIT_PACK_ROW_LENGTH);
-    mPackStateBitMask.set(DIRTY_BIT_PACK_SKIP_ROWS);
-    mPackStateBitMask.set(DIRTY_BIT_PACK_SKIP_PIXELS);
-
-    mClearStateBitMask.set(DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);
-    mClearStateBitMask.set(DIRTY_BIT_SCISSOR_TEST_ENABLED);
-    mClearStateBitMask.set(DIRTY_BIT_SCISSOR);
-    mClearStateBitMask.set(DIRTY_BIT_VIEWPORT);
-    mClearStateBitMask.set(DIRTY_BIT_CLEAR_COLOR);
-    mClearStateBitMask.set(DIRTY_BIT_CLEAR_DEPTH);
-    mClearStateBitMask.set(DIRTY_BIT_CLEAR_STENCIL);
-    mClearStateBitMask.set(DIRTY_BIT_COLOR_MASK);
-    mClearStateBitMask.set(DIRTY_BIT_DEPTH_MASK);
-    mClearStateBitMask.set(DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
-    mClearStateBitMask.set(DIRTY_BIT_STENCIL_WRITEMASK_BACK);
-
-    mBlitStateBitMask.set(DIRTY_BIT_SCISSOR_TEST_ENABLED);
-    mBlitStateBitMask.set(DIRTY_BIT_SCISSOR);
 }
 
 State::~State()
