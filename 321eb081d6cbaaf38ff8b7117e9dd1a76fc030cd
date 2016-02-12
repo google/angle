@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bde6e426_0fd1da77",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-12T14:30:13Z",
+      "side": 1,
+      "message": "using non-const \u0026 is against the style guide. we do it in a few places but we shouldn\u0027t if we don\u0027t have to - here you can use a pointer.\n\nalso call this queryState (something other than query) to avoid the \u0027query.query\u0027 name",
+      "range": {
+        "startLine": 235,
+        "startChar": 40,
+        "endLine": 235,
+        "endChar": 41
+      },
+      "revId": "321eb081d6cbaaf38ff8b7117e9dd1a76fc030cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5df328ea_fe82cd81",
+        "filename": "src/tests/gl_tests/TimerQueriesTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-12T14:30:13Z",
+      "side": 1,
+      "message": "are these necessary?",
+      "range": {
+        "startLine": 387,
+        "startChar": 4,
+        "endLine": 387,
+        "endChar": 12
+      },
+      "revId": "321eb081d6cbaaf38ff8b7117e9dd1a76fc030cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
