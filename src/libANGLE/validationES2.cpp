@@ -8,6 +8,7 @@
 
 #include "libANGLE/validationES2.h"
 #include "libANGLE/validationES.h"
+#include "libANGLE/validationES3.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/Framebuffer.h"
@@ -1751,6 +1752,134 @@ bool ValidateDrawBuffersEXT(ValidationContext *context, GLsizei n, const GLenum 
     }
 
     return ValidateDrawBuffersBase(context, n, bufs);
+}
+
+bool ValidateTexImage2D(Context *context,
+                        GLenum target,
+                        GLint level,
+                        GLint internalformat,
+                        GLsizei width,
+                        GLsizei height,
+                        GLint border,
+                        GLenum format,
+                        GLenum type,
+                        const GLvoid *pixels)
+{
+    if (context->getClientVersion() < 3)
+    {
+        return ValidateES2TexImageParameters(context, target, level, internalformat, false, false,
+                                             0, 0, width, height, border, format, type, pixels);
+    }
+
+    ASSERT(context->getClientVersion() >= 3);
+    return ValidateES3TexImage2DParameters(context, target, level, internalformat, false, false, 0,
+                                           0, 0, width, height, 1, border, format, type, pixels);
+}
+
+bool ValidateTexSubImage2D(Context *context,
+                           GLenum target,
+                           GLint level,
+                           GLint xoffset,
+                           GLint yoffset,
+                           GLsizei width,
+                           GLsizei height,
+                           GLenum format,
+                           GLenum type,
+                           const GLvoid *pixels)
+{
+
+    if (context->getClientVersion() < 3)
+    {
+        return ValidateES2TexImageParameters(context, target, level, GL_NONE, false, true, xoffset,
+                                             yoffset, width, height, 0, format, type, pixels);
+    }
+
+    ASSERT(context->getClientVersion() >= 3);
+    return ValidateES3TexImage2DParameters(context, target, level, GL_NONE, false, true, xoffset,
+                                           yoffset, 0, width, height, 1, 0, format, type, pixels);
+}
+
+bool ValidateCompressedTexImage2D(Context *context,
+                                  GLenum target,
+                                  GLint level,
+                                  GLenum internalformat,
+                                  GLsizei width,
+                                  GLsizei height,
+                                  GLint border,
+                                  GLsizei imageSize,
+                                  const GLvoid *data)
+{
+    if (context->getClientVersion() < 3)
+    {
+        if (!ValidateES2TexImageParameters(context, target, level, internalformat, true, false, 0,
+                                           0, width, height, border, GL_NONE, GL_NONE, data))
+        {
+            return false;
+        }
+    }
+    else
+    {
+        ASSERT(context->getClientVersion() >= 3);
+        if (!ValidateES3TexImage2DParameters(context, target, level, internalformat, true, false, 0,
+                                             0, 0, width, height, 1, border, GL_NONE, GL_NONE,
+                                             data))
+        {
+            return false;
+        }
+    }
+
+    const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
+    if (imageSize < 0 ||
+        static_cast<GLuint>(imageSize) !=
+            formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
+    {
+        context->recordError(Error(GL_INVALID_VALUE));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateCompressedTexSubImage2D(Context *context,
+                                     GLenum target,
+                                     GLint level,
+                                     GLint xoffset,
+                                     GLint yoffset,
+                                     GLsizei width,
+                                     GLsizei height,
+                                     GLenum format,
+                                     GLsizei imageSize,
+                                     const GLvoid *data)
+{
+    if (context->getClientVersion() < 3)
+    {
+        if (!ValidateES2TexImageParameters(context, target, level, GL_NONE, true, true, xoffset,
+                                           yoffset, width, height, 0, GL_NONE, GL_NONE, data))
+        {
+            return false;
+        }
+    }
+    else
+    {
+        ASSERT(context->getClientVersion() >= 3);
+        if (!ValidateES3TexImage2DParameters(context, target, level, GL_NONE, true, true, xoffset,
+                                             yoffset, 0, width, height, 1, 0, GL_NONE, GL_NONE,
+                                             data))
+        {
+            return false;
+        }
+    }
+
+    const InternalFormat &formatInfo = GetInternalFormatInfo(format);
+    if (imageSize < 0 ||
+        static_cast<GLuint>(imageSize) !=
+            formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
+    {
+        context->recordError(Error(GL_INVALID_VALUE));
+        return false;
+    }
+
+    return true;
 }
 
 }  // namespace gl

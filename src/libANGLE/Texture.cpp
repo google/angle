@@ -369,7 +369,7 @@ egl::Surface *Texture::getBoundSurface() const
     return mBoundSurface;
 }
 
-Error Texture::setImage(Context *context,
+Error Texture::setImage(const PixelUnpackState &unpackState,
                         GLenum target,
                         size_t level,
                         GLenum internalFormat,
@@ -384,16 +384,8 @@ Error Texture::setImage(Context *context,
     releaseTexImageInternal();
     orphanImages();
 
-    // Hack: allow nullptr for testing
-    if (context != nullptr)
-    {
-        // Sync the unpack state
-        context->syncRendererState(context->getState().unpackStateBitMask());
-    }
-
-    const PixelUnpackState defaultUnpack;
-    const PixelUnpackState &unpack = context ? context->getState().getUnpackState() : defaultUnpack;
-    Error error = mTexture->setImage(target, level, internalFormat, size, format, type, unpack, pixels);
+    Error error =
+        mTexture->setImage(target, level, internalFormat, size, format, type, unpackState, pixels);
     if (error.isError())
     {
         return error;
@@ -404,7 +396,7 @@ Error Texture::setImage(Context *context,
     return Error(GL_NO_ERROR);
 }
 
-Error Texture::setSubImage(Context *context,
+Error Texture::setSubImage(const PixelUnpackState &unpackState,
                            GLenum target,
                            size_t level,
                            const Box &area,
@@ -413,15 +405,10 @@ Error Texture::setSubImage(Context *context,
                            const uint8_t *pixels)
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
-
-    // Sync the unpack state
-    context->syncRendererState(context->getState().unpackStateBitMask());
-
-    const PixelUnpackState &unpack = context->getState().getUnpackState();
-    return mTexture->setSubImage(target, level, area, format, type, unpack, pixels);
+    return mTexture->setSubImage(target, level, area, format, type, unpackState, pixels);
 }
 
-Error Texture::setCompressedImage(Context *context,
+Error Texture::setCompressedImage(const PixelUnpackState &unpackState,
                                   GLenum target,
                                   size_t level,
                                   GLenum internalFormat,
@@ -435,11 +422,8 @@ Error Texture::setCompressedImage(Context *context,
     releaseTexImageInternal();
     orphanImages();
 
-    // Sync the unpack state
-    context->syncRendererState(context->getState().unpackStateBitMask());
-
-    const PixelUnpackState &unpack = context->getState().getUnpackState();
-    Error error = mTexture->setCompressedImage(target, level, internalFormat, size, unpack, imageSize, pixels);
+    Error error = mTexture->setCompressedImage(target, level, internalFormat, size, unpackState,
+                                               imageSize, pixels);
     if (error.isError())
     {
         return error;
@@ -450,7 +434,7 @@ Error Texture::setCompressedImage(Context *context,
     return Error(GL_NO_ERROR);
 }
 
-Error Texture::setCompressedSubImage(Context *context,
+Error Texture::setCompressedSubImage(const PixelUnpackState &unpackState,
                                      GLenum target,
                                      size_t level,
                                      const Box &area,
@@ -460,11 +444,8 @@ Error Texture::setCompressedSubImage(Context *context,
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
-    // Sync the unpack state
-    context->syncRendererState(context->getState().unpackStateBitMask());
-
-    const PixelUnpackState &unpack = context->getState().getUnpackState();
-    return mTexture->setCompressedSubImage(target, level, area, format, unpack, imageSize, pixels);
+    return mTexture->setCompressedSubImage(target, level, area, format, unpackState, imageSize,
+                                           pixels);
 }
 
 Error Texture::copyImage(GLenum target, size_t level, const Rectangle &sourceArea, GLenum internalFormat,

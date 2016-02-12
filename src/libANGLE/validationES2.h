@@ -128,6 +128,45 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                                   GLenum filter);
 
 bool ValidateClear(ValidationContext *context, GLbitfield mask);
+bool ValidateTexImage2D(Context *context,
+                        GLenum target,
+                        GLint level,
+                        GLint internalformat,
+                        GLsizei width,
+                        GLsizei height,
+                        GLint border,
+                        GLenum format,
+                        GLenum type,
+                        const GLvoid *pixels);
+bool ValidateTexSubImage2D(Context *context,
+                           GLenum target,
+                           GLint level,
+                           GLint xoffset,
+                           GLint yoffset,
+                           GLsizei width,
+                           GLsizei height,
+                           GLenum format,
+                           GLenum type,
+                           const GLvoid *pixels);
+bool ValidateCompressedTexImage2D(Context *context,
+                                  GLenum target,
+                                  GLint level,
+                                  GLenum internalformat,
+                                  GLsizei width,
+                                  GLsizei height,
+                                  GLint border,
+                                  GLsizei imageSize,
+                                  const GLvoid *data);
+bool ValidateCompressedTexSubImage2D(Context *context,
+                                     GLenum target,
+                                     GLint level,
+                                     GLint xoffset,
+                                     GLint yoffset,
+                                     GLsizei width,
+                                     GLsizei height,
+                                     GLenum format,
+                                     GLsizei imageSize,
+                                     const GLvoid *data);
 
 }  // namespace gl
 

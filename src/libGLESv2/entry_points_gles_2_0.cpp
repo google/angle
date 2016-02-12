@@ -674,38 +674,15 @@ void GL_APIENTRY CompressedTexImage2D(GLenum target, GLint level, GLenum interna
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3 &&
-            !ValidateES2TexImageParameters(context, target, level, internalformat, true, false,
-                                           0, 0, width, height, border, GL_NONE, GL_NONE, data))
+        if (!context->skipValidation() &&
+            !ValidateCompressedTexImage2D(context, target, level, internalformat, width, height,
+                                          border, imageSize, data))
         {
             return;
         }
 
-        if (context->getClientVersion() >= 3 &&
-            !ValidateES3TexImage2DParameters(context, target, level, internalformat, true, false, 0,
-                                             0, 0, width, height, 1, border, GL_NONE, GL_NONE,
-                                             data))
-        {
-            return;
-        }
-
-        const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
-        if (imageSize < 0 || static_cast<GLuint>(imageSize) != formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
-        {
-            context->recordError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        Extents size(width, height, 1);
-        Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
-        Error error =
-            texture->setCompressedImage(context, target, level, internalformat, size, imageSize,
-                                        reinterpret_cast<const uint8_t *>(data));
-        if (error.isError())
-        {
-            context->recordError(error);
-            return;
-        }
+        context->compressedTexImage2D(target, level, internalformat, width, height, border,
+                                      imageSize, data);
     }
 }
 
@@ -720,38 +697,15 @@ void GL_APIENTRY CompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3 &&
-            !ValidateES2TexImageParameters(context, target, level, GL_NONE, true, true,
-                                           xoffset, yoffset, width, height, 0, GL_NONE, GL_NONE, data))
+        if (!context->skipValidation() &&
+            !ValidateCompressedTexSubImage2D(context, target, level, xoffset, yoffset, width,
+                                             height, format, imageSize, data))
         {
             return;
         }
 
-        if (context->getClientVersion() >= 3 &&
-            !ValidateES3TexImage2DParameters(context, target, level, GL_NONE, true, true, xoffset,
-                                             yoffset, 0, width, height, 1, 0, GL_NONE, GL_NONE,
-                                             data))
-        {
-            return;
-        }
-
-        const InternalFormat &formatInfo = GetInternalFormatInfo(format);
-        if (imageSize < 0 || static_cast<GLuint>(imageSize) != formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
-        {
-            context->recordError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        Box area(xoffset, yoffset, 0, width, height, 1);
-        Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
-        Error error =
-            texture->setCompressedSubImage(context, target, level, area, format, imageSize,
-                                           reinterpret_cast<const uint8_t *>(data));
-        if (error.isError())
-        {
-            context->recordError(error);
-            return;
-        }
+        context->compressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format,
+                                         imageSize, data);
     }
 }
 
@@ -3440,30 +3394,15 @@ void GL_APIENTRY TexImage2D(GLenum target, GLint level, GLint internalformat, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3 &&
-            !ValidateES2TexImageParameters(context, target, level, internalformat, false, false,
-                                           0, 0, width, height, border, format, type, pixels))
+        if (!context->skipValidation() &&
+            !ValidateTexImage2D(context, target, level, internalformat, width, height, border,
+                                format, type, pixels))
         {
             return;
         }
 
-        if (context->getClientVersion() >= 3 &&
-            !ValidateES3TexImage2DParameters(context, target, level, internalformat, false, false,
-                                             0, 0, 0, width, height, 1, border, format, type,
-                                             pixels))
-        {
-            return;
-        }
-
-        Extents size(width, height, 1);
-        Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
-        Error error = texture->setImage(context, target, level, internalformat, size, format, type,
-                                        reinterpret_cast<const uint8_t *>(pixels));
-        if (error.isError())
-        {
-            context->recordError(error);
-            return;
-        }
+        context->texImage2D(target, level, internalformat, width, height, border, format, type,
+                            pixels);
     }
 }
 
@@ -3592,35 +3531,15 @@ void GL_APIENTRY TexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3 &&
-            !ValidateES2TexImageParameters(context, target, level, GL_NONE, false, true,
-                                           xoffset, yoffset, width, height, 0, format, type, pixels))
+        if (!context->skipValidation() &&
+            !ValidateTexSubImage2D(context, target, level, xoffset, yoffset, width, height, format,
+                                   type, pixels))
         {
             return;
         }
 
-        if (context->getClientVersion() >= 3 &&
-            !ValidateES3TexImage2DParameters(context, target, level, GL_NONE, false, true, xoffset,
-                                             yoffset, 0, width, height, 1, 0, format, type, pixels))
-        {
-            return;
-        }
-
-        // Zero sized uploads are valid but no-ops
-        if (width == 0 || height == 0)
-        {
-            return;
-        }
-
-        Box area(xoffset, yoffset, 0, width, height, 1);
-        Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
-        Error error = texture->setSubImage(context, target, level, area, format, type,
-                                           reinterpret_cast<const uint8_t *>(pixels));
-        if (error.isError())
-        {
-            context->recordError(error);
-            return;
-        }
+        context->texSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
+                               pixels);
     }
 }
 

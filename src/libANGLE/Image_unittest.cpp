@@ -87,10 +87,12 @@ TEST(ImageTest, RespecificationReleasesReferences)
     gl::Texture *texture = new gl::Texture(textureImpl, 1, GL_TEXTURE_2D);
     texture->addRef();
 
+    gl::PixelUnpackState defaultUnpackState;
+
     EXPECT_CALL(*textureImpl, setImage(_, _, _, _, _, _, _, _))
         .WillOnce(Return(gl::Error(GL_NO_ERROR)))
         .RetiresOnSaturation();
-    texture->setImage(nullptr, GL_TEXTURE_2D, 0, GL_RGBA8, gl::Extents(1, 1, 1), GL_RGBA,
+    texture->setImage(defaultUnpackState, GL_TEXTURE_2D, 0, GL_RGBA8, gl::Extents(1, 1, 1), GL_RGBA,
                       GL_UNSIGNED_BYTE, nullptr);
 
     rx::MockImageImpl *imageImpl = new rx::MockImageImpl();
@@ -110,7 +112,7 @@ TEST(ImageTest, RespecificationReleasesReferences)
         .WillOnce(Return(gl::Error(GL_NO_ERROR)))
         .RetiresOnSaturation();
 
-    texture->setImage(nullptr, GL_TEXTURE_2D, 0, GL_RGBA8, gl::Extents(1, 1, 1), GL_RGBA,
+    texture->setImage(defaultUnpackState, GL_TEXTURE_2D, 0, GL_RGBA8, gl::Extents(1, 1, 1), GL_RGBA,
                       GL_UNSIGNED_BYTE, nullptr);
 
     EXPECT_EQ(texture->getRefCount(), 1u);

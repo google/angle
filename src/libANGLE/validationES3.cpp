@@ -1781,4 +1781,89 @@ bool ValidateCopyTexSubImage3D(Context *context,
                                                yoffset, zoffset, x, y, width, height, 0);
 }
 
+bool ValidateTexImage3D(Context *context,
+                        GLenum target,
+                        GLint level,
+                        GLint internalformat,
+                        GLsizei width,
+                        GLsizei height,
+                        GLsizei depth,
+                        GLint border,
+                        GLenum format,
+                        GLenum type,
+                        const GLvoid *pixels)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    return ValidateES3TexImage3DParameters(context, target, level, internalformat, false, false, 0,
+                                           0, 0, width, height, depth, border, format, type,
+                                           pixels);
+}
+
+bool ValidateTexSubImage3D(Context *context,
+                           GLenum target,
+                           GLint level,
+                           GLint xoffset,
+                           GLint yoffset,
+                           GLint zoffset,
+                           GLsizei width,
+                           GLsizei height,
+                           GLsizei depth,
+                           GLenum format,
+                           GLenum type,
+                           const GLvoid *pixels)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    return ValidateES3TexImage3DParameters(context, target, level, GL_NONE, false, true, xoffset,
+                                           yoffset, zoffset, width, height, depth, 0, format, type,
+                                           pixels);
+}
+
+bool ValidateCompressedTexSubImage3D(Context *context,
+                                     GLenum target,
+                                     GLint level,
+                                     GLint xoffset,
+                                     GLint yoffset,
+                                     GLint zoffset,
+                                     GLsizei width,
+                                     GLsizei height,
+                                     GLsizei depth,
+                                     GLenum format,
+                                     GLsizei imageSize,
+                                     const GLvoid *data)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    const InternalFormat &formatInfo = GetInternalFormatInfo(format);
+    if (imageSize < 0 ||
+        static_cast<GLuint>(imageSize) !=
+            formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
+    {
+        context->recordError(Error(GL_INVALID_VALUE));
+        return false;
+    }
+
+    if (!data)
+    {
+        context->recordError(Error(GL_INVALID_VALUE));
+        return false;
+    }
+
+    return ValidateES3TexImage3DParameters(context, target, level, GL_NONE, true, true, 0, 0, 0,
+                                           width, height, depth, 0, GL_NONE, GL_NONE, data);
+}
+
 }  // namespace gl

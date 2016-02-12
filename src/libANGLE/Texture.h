@@ -30,7 +30,6 @@ class Surface;
 
 namespace gl
 {
-class Context;
 class Framebuffer;
 struct Data;
 
@@ -118,7 +117,7 @@ class Texture final : public egl::ImageSibling,
     bool isCubeComplete() const;
     size_t getMipCompleteLevels() const;
 
-    Error setImage(Context *context,
+    Error setImage(const PixelUnpackState &unpackState,
                    GLenum target,
                    size_t level,
                    GLenum internalFormat,
@@ -126,7 +125,7 @@ class Texture final : public egl::ImageSibling,
                    GLenum format,
                    GLenum type,
                    const uint8_t *pixels);
-    Error setSubImage(Context *context,
+    Error setSubImage(const PixelUnpackState &unpackState,
                       GLenum target,
                       size_t level,
                       const Box &area,
@@ -134,14 +133,14 @@ class Texture final : public egl::ImageSibling,
                       GLenum type,
                       const uint8_t *pixels);
 
-    Error setCompressedImage(Context *context,
+    Error setCompressedImage(const PixelUnpackState &unpackState,
                              GLenum target,
                              size_t level,
                              GLenum internalFormat,
                              const Extents &size,
                              size_t imageSize,
                              const uint8_t *pixels);
-    Error setCompressedSubImage(Context *context,
+    Error setCompressedSubImage(const PixelUnpackState &unpackState,
                                 GLenum target,
                                 size_t level,
                                 const Box &area,

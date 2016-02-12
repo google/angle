@@ -2421,4 +2421,218 @@ void Context::invalidateSubFramebuffer(GLenum target,
     }
 }
 
+void Context::texImage2D(GLenum target,
+                         GLint level,
+                         GLint internalformat,
+                         GLsizei width,
+                         GLsizei height,
+                         GLint border,
+                         GLenum format,
+                         GLenum type,
+                         const GLvoid *pixels)
+{
+    // Sync the unpack state
+    syncRendererState(mState.unpackStateBitMask());
+
+    Extents size(width, height, 1);
+    Texture *texture =
+        getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+    Error error = texture->setImage(mState.getUnpackState(), target, level, internalformat, size,
+                                    format, type, reinterpret_cast<const uint8_t *>(pixels));
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::texImage3D(GLenum target,
+                         GLint level,
+                         GLint internalformat,
+                         GLsizei width,
+                         GLsizei height,
+                         GLsizei depth,
+                         GLint border,
+                         GLenum format,
+                         GLenum type,
+                         const GLvoid *pixels)
+{
+    // Sync the unpack state
+    syncRendererState(mState.unpackStateBitMask());
+
+    Extents size(width, height, depth);
+    Texture *texture = getTargetTexture(target);
+    Error error = texture->setImage(mState.getUnpackState(), target, level, internalformat, size,
+                                    format, type, reinterpret_cast<const uint8_t *>(pixels));
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::texSubImage2D(GLenum target,
+                            GLint level,
+                            GLint xoffset,
+                            GLint yoffset,
+                            GLsizei width,
+                            GLsizei height,
+                            GLenum format,
+                            GLenum type,
+                            const GLvoid *pixels)
+{
+    // Zero sized uploads are valid but no-ops
+    if (width == 0 || height == 0)
+    {
+        return;
+    }
+
+    // Sync the unpack state
+    syncRendererState(mState.unpackStateBitMask());
+
+    Box area(xoffset, yoffset, 0, width, height, 1);
+    Texture *texture =
+        getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+    Error error = texture->setSubImage(mState.getUnpackState(), target, level, area, format, type,
+                                       reinterpret_cast<const uint8_t *>(pixels));
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::texSubImage3D(GLenum target,
+                            GLint level,
+                            GLint xoffset,
+                            GLint yoffset,
+                            GLint zoffset,
+                            GLsizei width,
+                            GLsizei height,
+                            GLsizei depth,
+                            GLenum format,
+                            GLenum type,
+                            const GLvoid *pixels)
+{
+    // Zero sized uploads are valid but no-ops
+    if (width == 0 || height == 0 || depth == 0)
+    {
+        return;
+    }
+
+    // Sync the unpack state
+    syncRendererState(mState.unpackStateBitMask());
+
+    Box area(xoffset, yoffset, zoffset, width, height, depth);
+    Texture *texture = getTargetTexture(target);
+    Error error = texture->setSubImage(mState.getUnpackState(), target, level, area, format, type,
+                                       reinterpret_cast<const uint8_t *>(pixels));
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::compressedTexImage2D(GLenum target,
+                                   GLint level,
+                                   GLenum internalformat,
+                                   GLsizei width,
+                                   GLsizei height,
+                                   GLint border,
+                                   GLsizei imageSize,
+                                   const GLvoid *data)
+{
+    // Sync the unpack state
+    syncRendererState(mState.unpackStateBitMask());
+
+    Extents size(width, height, 1);
+    Texture *texture =
+        getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+    Error error =
+        texture->setCompressedImage(mState.getUnpackState(), target, level, internalformat, size,
+                                    imageSize, reinterpret_cast<const uint8_t *>(data));
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::compressedTexImage3D(GLenum target,
+                                   GLint level,
+                                   GLenum internalformat,
+                                   GLsizei width,
+                                   GLsizei height,
+                                   GLsizei depth,
+                                   GLint border,
+                                   GLsizei imageSize,
+                                   const GLvoid *data)
+{
+    // Sync the unpack state
+    syncRendererState(mState.unpackStateBitMask());
+
+    Extents size(width, height, depth);
+    Texture *texture = getTargetTexture(target);
+    Error error =
+        texture->setCompressedImage(mState.getUnpackState(), target, level, internalformat, size,
+                                    imageSize, reinterpret_cast<const uint8_t *>(data));
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::compressedTexSubImage2D(GLenum target,
+                                      GLint level,
+                                      GLint xoffset,
+                                      GLint yoffset,
+                                      GLsizei width,
+                                      GLsizei height,
+                                      GLenum format,
+                                      GLsizei imageSize,
+                                      const GLvoid *data)
+{
+    // Sync the unpack state
+    syncRendererState(mState.unpackStateBitMask());
+
+    Box area(xoffset, yoffset, 0, width, height, 1);
+    Texture *texture =
+        getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+    Error error =
+        texture->setCompressedSubImage(mState.getUnpackState(), target, level, area, format,
+                                       imageSize, reinterpret_cast<const uint8_t *>(data));
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
+void Context::compressedTexSubImage3D(GLenum target,
+                                      GLint level,
+                                      GLint xoffset,
+                                      GLint yoffset,
+                                      GLint zoffset,
+                                      GLsizei width,
+                                      GLsizei height,
+                                      GLsizei depth,
+                                      GLenum format,
+                                      GLsizei imageSize,
+                                      const GLvoid *data)
+{
+    // Zero sized uploads are valid but no-ops
+    if (width == 0 || height == 0)
+    {
+        return;
+    }
+
+    // Sync the unpack state
+    syncRendererState(mState.unpackStateBitMask());
+
+    Box area(xoffset, yoffset, zoffset, width, height, depth);
+    Texture *texture = getTargetTexture(target);
+    Error error =
+        texture->setCompressedSubImage(mState.getUnpackState(), target, level, area, format,
+                                       imageSize, reinterpret_cast<const uint8_t *>(data));
+    if (error.isError())
+    {
+        recordError(error);
+    }
+}
+
 }  // namespace gl
