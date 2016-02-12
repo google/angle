@@ -62,7 +62,8 @@ TextureState::TextureState()
       baseLevel(0),
       maxLevel(1000),
       immutableFormat(false),
-      immutableLevels(0)
+      immutableLevels(0),
+      usage(GL_NONE)
 {
 }
 
