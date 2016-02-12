@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fdce9ca2_91474b96",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-12T17:51:03Z",
+      "side": 1,
+      "message": "Do the timestamp queries need to be released too?",
+      "range": {
+        "startLine": 55,
+        "startChar": 4,
+        "endLine": 55,
+        "endChar": 36
+      },
+      "revId": "5f653b6d332c35a0d650ff160d0542bb925eab0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5df328ea_29b26112",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-12T17:51:03Z",
+      "side": 1,
+      "message": "We should try to avoid making copies.  I don\u0027t think it causes any bugs in this case but if we need to modify the state of the QueryState object then it wont be updated in mPendingQueries. I would suggest...\n\n  QueryState *query \u003d \u0026mPendingQueries.front();",
+      "range": {
+        "startLine": 210,
+        "startChar": 8,
+        "endLine": 210,
+        "endChar": 25
+      },
+      "revId": "5f653b6d332c35a0d650ff160d0542bb925eab0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
