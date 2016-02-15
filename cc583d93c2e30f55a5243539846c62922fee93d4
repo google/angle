@@ -16,6 +16,24 @@
       "revId": "cc583d93c2e30f55a5243539846c62922fee93d4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dc45060_fe46b51e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2337,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-15T08:23:19Z",
+      "side": 1,
+      "message": "The users of the header file can\u0027t instantiate the template function, since the function definition is not inline. That\u0027s why this is needed (though some compilers may work without it), and without the \"extern\" keyword since that would mean that the template is instantiated somewhere else.",
+      "parentUuid": "3d4834fd_24fdb65a",
+      "revId": "cc583d93c2e30f55a5243539846c62922fee93d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
